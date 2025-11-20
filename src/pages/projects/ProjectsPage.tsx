@@ -1,0 +1,159 @@
+// File: /src/pages/projects/ProjectsPage.tsx
+// Projects list and management page
+
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { AppLayout } from '@/components/layout/AppLayout'
+import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Input } from '@/components/ui/input'
+import { Plus, Search, MapPin, Calendar } from 'lucide-react'
+import { format } from 'date-fns'
+import { CreateProjectDialog } from '@/features/projects/components/CreateProjectDialog'
+
+export function ProjectsPage() {
+  const { data: projects, isLoading, error } = useMyProjects()
+  const [searchQuery, setSearchQuery] = useState('')
+  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+
+  // Filter projects based on search query
+  const filteredProjects = projects?.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    project.address?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  // Status badge variant mapping
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case 'planning':
+        return 'secondary'
+      case 'active':
+        return 'success'
+      case 'on_hold':
+        return 'warning'
+      case 'completed':
+        return 'default'
+      case 'archived':
+        return 'outline'
+      default:
+        return 'default'
+    }
+  }
+
+  const formatStatus = (status: string) => {
+    return status.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())
+  }
+
+  return (
+    <AppLayout>
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
+            <p className="text-gray-600 mt-1">
+              Manage and track your construction projects
+            </p>
+          </div>
+          <CreateProjectDialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Project
+            </Button>
+          </CreateProjectDialog>
+        </div>
+
+        {/* Search bar */}
+        <div className="mb-6 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search projects by name or address..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        {/* Loading state */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <p className="text-gray-500">Loading projects...</p>
+          </div>
+        )}
+
+        {/* Error state */}
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-red-600">Error loading projects: {error.message}</p>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!isLoading && !error && filteredProjects && filteredProjects.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 mb-4">
+              {searchQuery ? 'No projects found matching your search.' : 'No projects yet.'}
+            </p>
+            {!searchQuery && (
+              <Button onClick={() => setCreateDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create your first project
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Project grid */}
+        {filteredProjects && filteredProjects.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProjects.map((project) => (
+              <Link key={project.id} to={`/projects/${project.id}`}>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg">{project.name}</CardTitle>
+                        {project.project_number && (
+                          <p className="text-sm text-gray-500 mt-1">
+                            #{project.project_number}
+                          </p>
+                        )}
+                      </div>
+                      <Badge variant={getStatusVariant(project.status)}>
+                        {formatStatus(project.status)}
+                      </Badge>
+                    </div>
+                    {project.address && (
+                      <CardDescription className="flex items-start gap-2 mt-2">
+                        <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                        <span>{project.address}</span>
+                      </CardDescription>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2 text-sm">
+                      {project.start_date && (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Calendar className="h-4 w-4" />
+                          <span>Started {format(new Date(project.start_date), 'MMM d, yyyy')}</span>
+                        </div>
+                      )}
+                      {project.description && (
+                        <p className="text-gray-600 line-clamp-2 mt-2">
+                          {project.description}
+                        </p>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </AppLayout>
+  )
+}

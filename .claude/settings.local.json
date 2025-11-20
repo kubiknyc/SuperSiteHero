@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx claude-code-templates@latest:*)",
+      "Bash(node --version:*)",
+      "Bash(npm --version:*)",
+      "Bash(powershell -Command \"npx claude-code-templates@latest --mcp ''database/supabase,database/postgresql-integration,devtools/ios-simulator-mcp,integration/memory-integration,browser_automation/playwright-mcp-server,integration/github-integration,filesystem/filesystem-access''\")",
+      "Bash(powershell -Command \"npx claude-code-templates@latest --mcp=integration/github-integration --yes\")",
+      "Bash(powershell -Command \"Get-Command node -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")",
+      "Bash(npm install:*)",
+      "Bash(powershell -Command \"npm --version\")",
+      "Bash(npm run type-check:*)",
+      "Bash(powershell -Command \"npm run type-check\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
