@@ -1,6 +1,7 @@
 // File: /src/types/database.ts
 // TypeScript type definitions for Supabase database tables
 // Complete type definitions for all 42 database tables
+// Auto-generated from database schema
 
 export type Json =
   | string
@@ -28,6 +29,11 @@ export interface Database {
         Insert: Omit<Project, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Project, 'id'>>
       }
+      project_users: {
+        Row: ProjectUser
+        Insert: Omit<ProjectUser, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ProjectUser, 'id'>>
+      }
       contacts: {
         Row: Contact
         Insert: Omit<Contact, 'id' | 'created_at' | 'updated_at'>
@@ -38,35 +44,185 @@ export interface Database {
         Insert: Omit<Subcontractor, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Subcontractor, 'id'>>
       }
+      folders: {
+        Row: Folder
+        Insert: Omit<Folder, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Folder, 'id'>>
+      }
       documents: {
         Row: Document
         Insert: Omit<Document, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Document, 'id'>>
+      }
+      document_markups: {
+        Row: DocumentMarkup
+        Insert: Omit<DocumentMarkup, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<DocumentMarkup, 'id'>>
       }
       daily_reports: {
         Row: DailyReport
         Insert: Omit<DailyReport, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<DailyReport, 'id'>>
       }
+      daily_report_workforce: {
+        Row: DailyReportWorkforce
+        Insert: Omit<DailyReportWorkforce, 'id' | 'created_at'>
+        Update: Partial<Omit<DailyReportWorkforce, 'id'>>
+      }
+      daily_report_equipment: {
+        Row: DailyReportEquipment
+        Insert: Omit<DailyReportEquipment, 'id' | 'created_at'>
+        Update: Partial<Omit<DailyReportEquipment, 'id'>>
+      }
+      daily_report_deliveries: {
+        Row: DailyReportDelivery
+        Insert: Omit<DailyReportDelivery, 'id' | 'created_at'>
+        Update: Partial<Omit<DailyReportDelivery, 'id'>>
+      }
+      daily_report_visitors: {
+        Row: DailyReportVisitor
+        Insert: Omit<DailyReportVisitor, 'id' | 'created_at'>
+        Update: Partial<Omit<DailyReportVisitor, 'id'>>
+      }
+      daily_report_safety_incidents: {
+        Row: DailyReportSafetyIncident
+        Insert: Omit<DailyReportSafetyIncident, 'id' | 'created_at'>
+        Update: Partial<Omit<DailyReportSafetyIncident, 'id'>>
+      }
+      workflow_types: {
+        Row: WorkflowType
+        Insert: Omit<WorkflowType, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<WorkflowType, 'id'>>
+      }
       workflow_items: {
         Row: WorkflowItem
         Insert: Omit<WorkflowItem, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<WorkflowItem, 'id'>>
+      }
+      workflow_item_comments: {
+        Row: WorkflowItemComment
+        Insert: Omit<WorkflowItemComment, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<WorkflowItemComment, 'id'>>
+      }
+      workflow_item_history: {
+        Row: WorkflowItemHistory
+        Insert: Omit<WorkflowItemHistory, 'id' | 'changed_at'>
+        Update: Partial<Omit<WorkflowItemHistory, 'id'>>
+      }
+      change_order_bids: {
+        Row: ChangeOrderBid
+        Insert: Omit<ChangeOrderBid, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ChangeOrderBid, 'id'>>
+      }
+      submittal_procurement: {
+        Row: SubmittalProcurement
+        Insert: Omit<SubmittalProcurement, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<SubmittalProcurement, 'id'>>
       }
       tasks: {
         Row: Task
         Insert: Omit<Task, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Task, 'id'>>
       }
+      schedule_items: {
+        Row: ScheduleItem
+        Insert: Omit<ScheduleItem, 'id' | 'created_at'>
+        Update: Partial<Omit<ScheduleItem, 'id'>>
+      }
+      checklist_templates: {
+        Row: ChecklistTemplate
+        Insert: Omit<ChecklistTemplate, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ChecklistTemplate, 'id'>>
+      }
+      checklists: {
+        Row: Checklist
+        Insert: Omit<Checklist, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Checklist, 'id'>>
+      }
       punch_items: {
         Row: PunchItem
         Insert: Omit<PunchItem, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<PunchItem, 'id'>>
       }
+      safety_incidents: {
+        Row: SafetyIncident
+        Insert: Omit<SafetyIncident, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<SafetyIncident, 'id'>>
+      }
+      toolbox_talks: {
+        Row: ToolboxTalk
+        Insert: Omit<ToolboxTalk, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<ToolboxTalk, 'id'>>
+      }
+      inspections: {
+        Row: Inspection
+        Insert: Omit<Inspection, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Inspection, 'id'>>
+      }
+      permits: {
+        Row: Permit
+        Insert: Omit<Permit, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Permit, 'id'>>
+      }
+      tests: {
+        Row: Test
+        Insert: Omit<Test, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Test, 'id'>>
+      }
+      site_instructions: {
+        Row: SiteInstruction
+        Insert: Omit<SiteInstruction, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<SiteInstruction, 'id'>>
+      }
+      material_received: {
+        Row: MaterialReceived
+        Insert: Omit<MaterialReceived, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<MaterialReceived, 'id'>>
+      }
+      meetings: {
+        Row: Meeting
+        Insert: Omit<Meeting, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Meeting, 'id'>>
+      }
+      notices: {
+        Row: Notice
+        Insert: Omit<Notice, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Notice, 'id'>>
+      }
+      site_conditions: {
+        Row: SiteCondition
+        Insert: Omit<SiteCondition, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<SiteCondition, 'id'>>
+      }
+      closeout_items: {
+        Row: CloseoutItem
+        Insert: Omit<CloseoutItem, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<CloseoutItem, 'id'>>
+      }
       photos: {
         Row: Photo
         Insert: Omit<Photo, 'id' | 'created_at' | 'updated_at'>
         Update: Partial<Omit<Photo, 'id'>>
+      }
+      assemblies: {
+        Row: Assembly
+        Insert: Omit<Assembly, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<Assembly, 'id'>>
+      }
+      takeoff_items: {
+        Row: TakeoffItem
+        Insert: Omit<TakeoffItem, 'id' | 'created_at' | 'updated_at'>
+        Update: Partial<Omit<TakeoffItem, 'id'>>
+      }
+      notifications: {
+        Row: Notification
+        Insert: Omit<Notification, 'id' | 'created_at'>
+        Update: Partial<Omit<Notification, 'id'>>
+      }
+      messages: {
+        Row: Message
+        Insert: Omit<Message, 'id' | 'created_at'>
+        Update: Partial<Omit<Message, 'id'>>
       }
     }
     Views: {
@@ -174,6 +330,20 @@ export interface ProjectFeatures {
   workflows: boolean
   takeoff: boolean
   daily_reports: boolean
+}
+
+export interface ProjectUser {
+  id: string
+  project_id: string
+  user_id: string
+  can_edit: boolean
+  can_delete: boolean
+  is_admin: boolean
+  role_on_project: string | null
+  added_at: string
+  added_by: string | null
+  created_at: string
+  updated_at: string
 }
 
 export interface Contact {
@@ -297,6 +467,18 @@ export type DocumentType =
 
 export type DocumentStatus = 'current' | 'superseded' | 'archived' | 'void'
 
+export interface DocumentMarkup {
+  id: string
+  document_id: string
+  page_number: number
+  markup_data: Json
+  markup_type: string
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
 // =============================================
 // Daily Reports
 // =============================================
@@ -331,7 +513,7 @@ export interface DailyReport {
   pdf_url: string | null
   pdf_generated_at: string | null
   // Computed fields (populated by views or joins)
-  total_workers?: number | null // Sum of worker_count from daily_report_workforce
+  total_workers?: number | null
   // Metadata
   created_at: string
   updated_at: string
@@ -387,6 +569,13 @@ export interface DailyReportVisitor {
   purpose: string | null
   arrival_time: string | null
   departure_time: string | null
+  created_at: string
+}
+
+export interface DailyReportSafetyIncident {
+  id: string
+  daily_report_id: string
+  safety_incident_id: string
   created_at: string
 }
 
@@ -450,6 +639,17 @@ export interface WorkflowItemComment {
   deleted_at: string | null
 }
 
+export interface WorkflowItemHistory {
+  id: string
+  workflow_item_id: string
+  action: string
+  field_changed: string | null
+  old_value: string | null
+  new_value: string | null
+  changed_at: string
+  changed_by: string | null
+}
+
 export interface ChangeOrderBid {
   id: string
   workflow_item_id: string
@@ -477,6 +677,24 @@ export type ChangeOrderBidStatus =
   | 'awarded'
   | 'declined'
   | 'rejected'
+
+export interface SubmittalProcurement {
+  id: string
+  workflow_item_id: string
+  project_id: string
+  procurement_status: string
+  approval_date: string | null
+  order_date: string | null
+  expected_delivery_date: string | null
+  actual_delivery_date: string | null
+  lead_time_days: number | null
+  vendor: string | null
+  order_number: string | null
+  notes: string | null
+  created_at: string
+  updated_at: string
+  deleted_at: string | null
+}
 
 // =============================================
 // Tasks & Schedule
@@ -650,6 +868,279 @@ export type IncidentType = 'injury' | 'near_miss' | 'property_damage' | 'environ
 export type IncidentSeverity = 'minor' | 'moderate' | 'serious' | 'fatal'
 export type SafetyIncidentStatus = 'open' | 'under_investigation' | 'corrective_actions_pending' | 'closed'
 
+export interface ToolboxTalk {
+  id: string
+  project_id: string
+  talk_number: string | null
+  talk_date: string
+  topic: string
+  description: string | null
+  presenter_id: string | null
+  presenter_name: string | null
+  duration_minutes: number | null
+  attendees: Json
+  attendee_count: number | null
+  safety_topics: string[]
+  hazards_discussed: string | null
+  handout_url: string | null
+  signature_sheet_url: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+// =============================================
+// Inspections, Permits, Tests
+// =============================================
+
+export interface Inspection {
+  id: string
+  project_id: string
+  inspection_type: string
+  inspection_name: string
+  description: string | null
+  scheduled_date: string | null
+  scheduled_time: string | null
+  inspector_name: string | null
+  inspector_company: string | null
+  inspector_phone: string | null
+  reminder_sent: boolean
+  reminder_days_before: number
+  result: string | null
+  result_date: string | null
+  inspector_notes: string | null
+  failure_reasons: string | null
+  corrective_actions_required: string | null
+  reinspection_scheduled_date: string | null
+  related_checklist_id: string | null
+  related_permit_id: string | null
+  notify_subcontractors: string[]
+  status: string
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface Permit {
+  id: string
+  project_id: string
+  permit_type: string
+  permit_name: string
+  permit_number: string | null
+  issuing_agency: string | null
+  agency_contact: string | null
+  agency_phone: string | null
+  application_date: string | null
+  issue_date: string | null
+  expiration_date: string | null
+  renewal_date: string | null
+  status: string
+  permit_document_url: string | null
+  requires_inspections: boolean
+  renewal_reminder_sent: boolean
+  renewal_reminder_days_before: number
+  work_cannot_proceed_without: boolean
+  notes: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface Test {
+  id: string
+  project_id: string
+  test_type: string
+  test_name: string
+  specification_reference: string | null
+  scheduled_date: string | null
+  actual_test_date: string | null
+  testing_agency: string | null
+  technician_name: string | null
+  technician_contact: string | null
+  required_frequency: string | null
+  test_number: number | null
+  result: string | null
+  result_value: string | null
+  acceptance_criteria: string | null
+  test_report_url: string | null
+  certificate_url: string | null
+  failure_notes: string | null
+  corrective_actions: string | null
+  retest_required: boolean
+  retest_scheduled_date: string | null
+  retest_id: string | null
+  related_inspection_id: string | null
+  related_submittal_id: string | null
+  required_for_closeout: boolean
+  status: string
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+// =============================================
+// Additional Features
+// =============================================
+
+export interface SiteInstruction {
+  id: string
+  project_id: string
+  instruction_number: string | null
+  reference_number: string | null
+  title: string
+  description: string
+  subcontractor_id: string
+  issued_to_user_id: string | null
+  requires_acknowledgment: boolean
+  acknowledged: boolean
+  acknowledged_by: string | null
+  acknowledged_at: string | null
+  acknowledgment_signature: string | null
+  requires_completion_tracking: boolean
+  completion_status: string
+  completed_at: string | null
+  completed_by: string | null
+  verified_by: string | null
+  related_to_type: string | null
+  related_to_id: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface MaterialReceived {
+  id: string
+  project_id: string
+  delivery_date: string
+  delivery_time: string | null
+  delivery_ticket_number: string | null
+  material_description: string
+  quantity: string | null
+  vendor: string | null
+  vendor_contact: string | null
+  submittal_procurement_id: string | null
+  daily_report_delivery_id: string | null
+  storage_location: string | null
+  received_by: string | null
+  condition: string
+  condition_notes: string | null
+  status: string
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface Meeting {
+  id: string
+  project_id: string
+  meeting_type: string
+  meeting_name: string | null
+  meeting_date: string
+  meeting_time: string | null
+  location: string | null
+  duration_minutes: number | null
+  attendees: Json
+  agenda: string | null
+  discussion_notes: string | null
+  decisions: string | null
+  action_items: Json
+  minutes_pdf_url: string | null
+  distributed_to: string[]
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface Notice {
+  id: string
+  project_id: string
+  notice_type: string
+  subject: string
+  description: string | null
+  direction: string
+  from_party: string | null
+  to_party: string | null
+  notice_date: string
+  received_date: string | null
+  reference_number: string | null
+  document_url: string | null
+  response_required: boolean
+  response_due_date: string | null
+  response_status: string | null
+  response_document_url: string | null
+  response_date: string | null
+  status: string
+  is_critical: boolean
+  notes: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface SiteCondition {
+  id: string
+  project_id: string
+  condition_type: string
+  category: string | null
+  discovered_date: string
+  location: string | null
+  title: string
+  description: string
+  impact_description: string | null
+  cost_impact: number | null
+  schedule_impact: number | null
+  related_rfi_id: string | null
+  related_change_order_id: string | null
+  related_site_instruction_id: string | null
+  before_photos: Json
+  after_photos: Json
+  status: string
+  resolution: string | null
+  resolved_date: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface CloseoutItem {
+  id: string
+  project_id: string
+  item_type: string
+  item_name: string
+  description: string | null
+  system_category: string | null
+  equipment_name: string | null
+  manufacturer: string | null
+  model_number: string | null
+  serial_number: string | null
+  warranty_start_date: string | null
+  warranty_end_date: string | null
+  warranty_duration_years: number | null
+  warranty_contact_name: string | null
+  warranty_contact_phone: string | null
+  warranty_contact_email: string | null
+  document_urls: Json
+  related_submittal_id: string | null
+  related_drawing_id: string | null
+  is_collected: boolean
+  collected_date: string | null
+  is_delivered_to_owner: boolean
+  delivered_date: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
 // =============================================
 // Photos
 // =============================================
@@ -699,6 +1190,91 @@ export type PhotoCategory =
   | 'general'
 
 // =============================================
+// Takeoff & Assemblies
+// =============================================
+
+export interface Assembly {
+  id: string
+  company_id: string | null
+  name: string
+  assembly_number: string | null
+  description: string | null
+  category: string | null
+  trade: string | null
+  assembly_level: string
+  unit_of_measure: string
+  items: Json
+  variables: Json
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+export interface TakeoffItem {
+  id: string
+  project_id: string
+  document_id: string
+  name: string
+  description: string | null
+  measurement_type: string
+  measurement_data: Json
+  page_number: number
+  quantity: number | null
+  unit: string | null
+  multiplier: number
+  waste_factor: number
+  final_quantity: number | null
+  color: string
+  line_width: number
+  takeoff_tags: Json
+  layer: string | null
+  is_visible: boolean
+  assembly_id: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+  deleted_at: string | null
+}
+
+// =============================================
+// Communication
+// =============================================
+
+export interface Notification {
+  id: string
+  user_id: string
+  notification_type: string
+  title: string
+  message: string | null
+  related_to_type: string | null
+  related_to_id: string | null
+  related_to_url: string | null
+  priority: string
+  is_read: boolean
+  read_at: string | null
+  action_taken: boolean
+  action_taken_at: string | null
+  created_at: string
+}
+
+export interface Message {
+  id: string
+  project_id: string | null
+  message_type: string
+  subject: string | null
+  body: string
+  from_user_id: string
+  to_user_ids: string[]
+  parent_message_id: string | null
+  thread_id: string | null
+  is_read: boolean
+  read_at: string | null
+  created_at: string
+  deleted_at: string | null
+}
+
+// =============================================
 // Utility Types
 // =============================================
 
@@ -710,3 +1286,15 @@ export type UpdateInput<T> = Partial<Omit<T, 'id'>> & { id: string }
 
 // Helper type for database queries with relations
 export type WithRelations<T, R extends Record<string, any>> = T & R
+
+// =============================================
+// Supabase Type Helpers
+// =============================================
+
+// Type helpers for better Supabase TypeScript integration
+export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
+export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
+export type TablesUpdate<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
+
+// Enum types for better autocomplete
+export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T]

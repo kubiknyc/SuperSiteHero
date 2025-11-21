@@ -12,6 +12,8 @@ import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { ProjectsPage } from './pages/projects/ProjectsPage'
 import { DailyReportsPage } from './pages/daily-reports/DailyReportsPage'
+import { ChangeOrdersPage } from './pages/change-orders/ChangeOrdersPage'
+import { ChangeOrderDetailPage } from './pages/change-orders/ChangeOrderDetailPage'
 // TODO: Import remaining pages
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
           <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
           <Route path="/daily-reports" element={<ProtectedRoute><DailyReportsPage /></ProtectedRoute>} />
+          <Route path="/change-orders" element={<ProtectedRoute><ChangeOrdersPage /></ProtectedRoute>} />
+          <Route path="/change-orders/:id" element={<ProtectedRoute><ChangeOrderDetailPage /></ProtectedRoute>} />
 
           {/* TODO: Add routes for all features:
            * - Documents

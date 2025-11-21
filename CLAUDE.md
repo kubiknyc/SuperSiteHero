@@ -21,6 +21,8 @@ npm run type-check       # TypeScript type checking without emit
 npm run lint             # ESLint with React/TypeScript rules
 ```
 
+**Note**: This project is developed on Windows. File paths use backslashes in the system but forward slashes in code imports.
+
 ## Architecture & Code Organization
 
 ### Multi-Tenant Data Isolation
@@ -41,20 +43,26 @@ src/features/<feature-name>/
 └── (optional) types, utils, etc.
 ```
 
-**Pattern for hooks**:
-- `useX(id)` - Fetch single entity
-- `useXs(filters)` - Fetch collection
-- `useCreateX()` - Returns mutation with `queryClient.invalidateQueries`
-- `useUpdateX()` - Returns mutation with optimistic updates where appropriate
-- `useDeleteX()` - Returns mutation with cache cleanup
+**Pattern for hooks** (see `src/features/projects/hooks/useProjects.ts` as reference):
+- `useX(id)` - Fetch single entity with `useQuery`, enabled when id exists
+- `useXs(filters)` - Fetch collection with `useQuery`
+- `useCreateX()` - Returns mutation with `queryClient.invalidateQueries(['entity'])` on success
+- `useUpdateX()` - Returns mutation with `queryClient.invalidateQueries` for both list and single item
+- `useDeleteX()` - Returns mutation with cache cleanup via `invalidateQueries`
+
+**Important**: Always include `company_id` from `userProfile` when creating entities
 
 ### Type System (Critical!)
 
-All database types are centralized in `src/types/database.ts` (~711 lines):
+All database types are centralized in `src/types/database.ts` (~712 lines):
 - **Do NOT manually write DB types** - they are the single source of truth
-- Use helper types: `CreateInput<T>`, `UpdateInput<T>`, `WithRelations<T, R>`
+- Use helper types defined at the bottom of this file:
+  - `CreateInput<T>` - Omits auto-generated fields (id, created_at, updated_at)
+  - `UpdateInput<T>` - Makes all fields optional except id
+  - `WithRelations<T, R>` - For queries with joined relations
 - When adding new tables, update this file comprehensively with all fields
 - Enum types (UserRole, ProjectStatus, etc.) must match database constraints
+- The `Database` interface at the top defines the Supabase schema with Row/Insert/Update types for each table
 
 ### State Management Layers
 
@@ -67,6 +75,7 @@ All database types are centralized in `src/types/database.ts` (~711 lines):
    - Manages Supabase session
    - Provides `userProfile` with company_id and role
    - Auto-refreshes tokens
+   - **Note**: User profile fetching from database is stubbed (see TODOs in AuthContext)
 
 3. **Local State**: Zustand (when needed for global UI state)
    - Currently minimal usage
@@ -81,6 +90,8 @@ All database types are centralized in `src/types/database.ts` (~711 lines):
 Built with **shadcn/ui** pattern (copy-paste, not npm package):
 - Components in `src/components/ui/` are customizable primitives
 - Use `cn()` helper from `src/lib/utils.ts` for className merging
+  - `cn()` combines `clsx` (conditional classes) and `tailwind-merge` (conflict resolution)
+  - Example: `cn('px-4 py-2', isActive && 'bg-blue-500', className)`
 - Styling: TailwindCSS with design tokens
 - Icons: `lucide-react`
 
@@ -88,6 +99,7 @@ Built with **shadcn/ui** pattern (copy-paste, not npm package):
 ```typescript
 import { Button, Card, Badge } from '@/components/ui'
 import { useToast } from '@/components/ui/toast'
+import { cn } from '@/lib/utils'
 ```
 
 ### Authentication & Authorization
@@ -223,12 +235,13 @@ VITE_SUPABASE_ANON_KEY=your-anon-key
 
 ## Key Files Reference
 
-- `src/types/database.ts` - Complete database type definitions (711 lines)
+- `src/types/database.ts` - Complete database type definitions (712 lines, includes helper types)
 - `src/lib/auth/AuthContext.tsx` - Authentication state & methods
 - `src/lib/supabase.ts` - Supabase client configuration
+- `src/lib/utils.ts` - Utility functions (cn() for className merging)
 - `src/components/layout/AppLayout.tsx` - Main layout with sidebar
 - `src/App.tsx` - Route definitions
-- `src/main.tsx` - App entry point with providers
+- `src/main.tsx` - App entry point with providers (QueryClient configured here)
 - `migrations/` - Database migration SQL files (12 files, 42 tables)
 - `masterplan.md` - Complete feature specifications
 - `database-schema.md` - Detailed schema documentation

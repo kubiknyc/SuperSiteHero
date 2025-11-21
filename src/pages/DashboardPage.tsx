@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
 import {
   ClipboardList,
-  CircleAlert,
+  AlertCircle,
   ListChecks,
   Shield,
   Plus,
@@ -25,7 +25,7 @@ import {
 import { format } from 'date-fns'
 
 export function DashboardPage() {
-  const { data: projects, isLoading } = useMyProjects()
+  const { data: projects } = useMyProjects()
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
 
   // Get the selected project or the first active project
@@ -47,7 +47,7 @@ export function DashboardPage() {
       title: 'Open RFIs',
       value: '5',
       change: '2 awaiting response',
-      icon: CircleAlert,
+      icon: AlertCircle,
       color: 'text-orange-600',
       bgColor: 'bg-orange-100',
     },
@@ -117,7 +117,7 @@ export function DashboardPage() {
     {
       title: 'Submit RFI',
       description: 'Request information from architect',
-      icon: CircleAlert,
+      icon: AlertCircle,
       href: '/rfis/new',
       color: 'bg-orange-600',
     },
@@ -194,10 +194,10 @@ export function DashboardPage() {
                     <span>Started {format(new Date(selectedProject.start_date), 'MMM d, yyyy')}</span>
                   </div>
                 )}
-                {selectedProject.estimated_end_date && (
+                {selectedProject.end_date && (
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4" />
-                    <span>Est. completion {format(new Date(selectedProject.estimated_end_date), 'MMM d, yyyy')}</span>
+                    <span>Est. completion {format(new Date(selectedProject.end_date), 'MMM d, yyyy')}</span>
                   </div>
                 )}
               </div>
@@ -272,7 +272,7 @@ export function DashboardPage() {
                     >
                       <div className="rounded-full bg-gray-100 p-2 mt-1">
                         {activity.type === 'daily_report' && <FileText className="h-4 w-4 text-gray-600" />}
-                        {activity.type === 'rfi' && <CircleAlert className="h-4 w-4 text-orange-600" />}
+                        {activity.type === 'rfi' && <AlertCircle className="h-4 w-4 text-orange-600" />}
                         {activity.type === 'task' && <ClipboardList className="h-4 w-4 text-blue-600" />}
                         {activity.type === 'punch' && <ListChecks className="h-4 w-4 text-purple-600" />}
                       </div>

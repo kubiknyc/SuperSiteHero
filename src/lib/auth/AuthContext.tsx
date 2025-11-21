@@ -23,15 +23,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Fetch user profile from database
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      if (error) {
+        console.error('Error fetching user profile:', error)
+        return
+      }
+
+      setUserProfile(data)
+    } catch (error) {
+      console.error('Unexpected error fetching user profile:', error)
+    }
+  }
+
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
 
-      // TODO: Fetch user profile from database
+      // Fetch user profile from database
       if (session?.user) {
-        // fetchUserProfile(session.user.id)
+        fetchUserProfile(session.user.id)
       }
 
       setLoading(false)
@@ -42,9 +62,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session)
       setUser(session?.user ?? null)
 
-      // TODO: Fetch/clear user profile
+      // Fetch/clear user profile
       if (session?.user) {
-        // fetchUserProfile(session.user.id)
+        fetchUserProfile(session.user.id)
       } else {
         setUserProfile(null)
       }

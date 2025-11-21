@@ -11,7 +11,7 @@ import {
   FileText,
   ClipboardList,
   ListChecks,
-  CircleAlert,
+  AlertCircle,
   Shield,
   Users,
   Settings,
@@ -19,6 +19,7 @@ import {
   HardHat,
   Wifi,
   WifiOff,
+  FileEdit,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -36,9 +37,10 @@ const navigation: NavItem[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
+  { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
   { name: 'Tasks', href: '/tasks', icon: ClipboardList },
   { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },
-  { name: 'RFIs', href: '/rfis', icon: CircleAlert },
+  { name: 'RFIs', href: '/rfis', icon: AlertCircle },
   { name: 'Safety', href: '/safety', icon: Shield },
   { name: 'Contacts', href: '/contacts', icon: Users },
 ]
