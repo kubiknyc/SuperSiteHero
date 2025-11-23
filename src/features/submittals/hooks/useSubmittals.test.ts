@@ -93,7 +93,6 @@ const mockProcurement = (overrides: Partial<SubmittalProcurement> = {}): Submitt
   id: faker.string.uuid(),
   workflow_item_id: faker.string.uuid(),
   vendor_name: faker.company.name(),
-  product_description: faker.commerce.productDescription(),
   model_number: faker.string.alphanumeric(10),
   quantity: faker.number.int({ min: 1, max: 100 }),
   unit_price: faker.number.float({ min: 10, max: 1000, fractionDigits: 2 }),

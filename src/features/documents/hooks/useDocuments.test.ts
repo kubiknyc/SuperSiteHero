@@ -47,7 +47,7 @@ const mockDocument = (overrides: Partial<Document> = {}): Document => ({
   name: faker.system.fileName(),
   description: faker.lorem.sentence(),
   file_url: faker.internet.url(),
-  file_size: faker.number.int({ min: 1000, max: 10000000 }),
+  file_size: faker.number.int({ min: 1000, max: 10000000 }).toString(),
   file_type: faker.helpers.arrayElement(['application/pdf', 'image/jpeg', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
   version: 1,
   supersedes_document_id: null,

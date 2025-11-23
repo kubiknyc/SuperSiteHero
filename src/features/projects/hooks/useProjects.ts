@@ -130,9 +130,9 @@ export function useMyProjects() {
     queryFn: async () => {
       if (!userProfile?.id) throw new Error('No user ID found')
 
-      // Query project_assignments to get user's projects
+      // Query project_users to get user's projects
       const { data, error } = await supabase
-        .from('project_assignments')
+        .from('project_users')
         .select(`
           project:projects(*)
         `)

@@ -54,7 +54,7 @@ export const projectsApi = {
    */
   async getUserProjects(userId: string): Promise<Project[]> {
     try {
-      const assignments = await apiClient.select('project_assignments', {
+      const assignments = await apiClient.select('project_users', {
         filters: [{ column: 'user_id', operator: 'eq', value: userId }],
         select: 'project:projects(*)',
       })

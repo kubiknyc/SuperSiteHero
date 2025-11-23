@@ -81,7 +81,7 @@ export function useCreateTask() {
   const { userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: async (task: CreateInput<Task>) => {
+    mutationFn: async (task: CreateInput<'tasks'>) => {
       if (!userProfile?.id) {
         throw new Error('User profile required')
       }

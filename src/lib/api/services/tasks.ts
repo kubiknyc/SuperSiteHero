@@ -54,7 +54,7 @@ export const tasksApi = {
    */
   async getUserTasks(userId: string, projectId?: string): Promise<Task[]> {
     try {
-      const filters = [{ column: 'assigned_to_user_id', operator: 'eq', value: userId }]
+      const filters = [{ column: 'assigned_to_user_id', operator: 'eq' as const, value: userId }]
 
       if (projectId) {
         filters.push({ column: 'project_id', operator: 'eq' as const, value: projectId })

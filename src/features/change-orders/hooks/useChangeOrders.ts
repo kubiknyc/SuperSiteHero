@@ -140,7 +140,7 @@ export function useChangeOrder(changeOrderId: string | undefined) {
         .single()
 
       if (error) throw error
-      return data as ChangeOrderDetailWithRelations | null
+      return data as any as ChangeOrderDetailWithRelations | null
     },
     enabled: !!changeOrderId,
   })

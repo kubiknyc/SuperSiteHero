@@ -35,7 +35,7 @@ class ApiClient {
     options?: QueryOptions & { select?: string }
   ): Promise<T[]> {
     try {
-      let query = supabase.from(table).select(options?.select || '*')
+      let query = supabase.from(table as any).select(options?.select || '*')
 
       // Apply filters
       if (options?.filters) {
@@ -104,7 +104,7 @@ class ApiClient {
   ): Promise<T> {
     try {
       const { data, error } = await supabase
-        .from(table)
+        .from(table as any)
         .select(options?.select || '*')
         .eq('id', id)
         .single()
@@ -122,7 +122,7 @@ class ApiClient {
   async insert<T>(table: string, record: any): Promise<T> {
     try {
       const { data, error } = await supabase
-        .from(table)
+        .from(table as any)
         .insert(record)
         .select()
         .single()
@@ -140,7 +140,7 @@ class ApiClient {
   async insertMany<T>(table: string, records: any[]): Promise<T[]> {
     try {
       const { data, error } = await supabase
-        .from(table)
+        .from(table as any)
         .insert(records)
         .select()
 
@@ -161,7 +161,7 @@ class ApiClient {
   ): Promise<T> {
     try {
       const { data, error } = await supabase
-        .from(table)
+        .from(table as any)
         .update(updates)
         .eq('id', id)
         .select()
@@ -180,7 +180,7 @@ class ApiClient {
   async delete(table: string, id: string): Promise<void> {
     try {
       const { error } = await supabase
-        .from(table)
+        .from(table as any)
         .delete()
         .eq('id', id)
 
@@ -198,7 +198,7 @@ class ApiClient {
     callback: (query: any) => any
   ): Promise<T[]> {
     try {
-      const query = supabase.from(table)
+      const query = supabase.from(table as any)
       const result = callback(query)
       const { data, error } = await result
 

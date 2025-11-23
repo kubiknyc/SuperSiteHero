@@ -61,7 +61,7 @@ export function useCreateChangeOrder() {
       description?: string
       priority?: string
       cost_impact?: number
-      schedule_impact?: string
+      schedule_impact?: number
       assignees?: string[]
     }) => {
       if (!userProfile?.id) throw new Error('User not authenticated')

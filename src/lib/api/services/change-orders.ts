@@ -158,7 +158,7 @@ export const changeOrdersApi = {
         .single()
 
       if (error) throw error
-      return data as ChangeOrderDetailWithRelations
+      return data as any as ChangeOrderDetailWithRelations
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -181,7 +181,7 @@ export const changeOrdersApi = {
       description?: string
       priority?: string
       cost_impact?: number
-      schedule_impact?: string
+      schedule_impact?: number
       assignees?: string[]
     }
   ): Promise<WorkflowItem> {

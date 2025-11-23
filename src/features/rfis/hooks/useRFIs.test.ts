@@ -105,7 +105,6 @@ const mockHistory = (overrides: Partial<WorkflowItemHistory> = {}): WorkflowItem
   workflow_item_id: faker.string.uuid(),
   changed_by: faker.string.uuid(),
   changed_at: faker.date.recent().toISOString(),
-  field_name: 'status',
   old_value: 'pending',
   new_value: 'submitted',
   ...overrides,

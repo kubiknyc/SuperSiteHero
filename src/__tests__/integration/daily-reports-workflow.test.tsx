@@ -52,9 +52,9 @@ const DailyReportsPage = () => {
     const newReport = {
       project_id: 'project-123',
       report_date: formData.get('report_date') as string,
-      weather_conditions: formData.get('weather_conditions') as string,
-      work_completed_summary: formData.get('work_summary') as string,
-      submitted_by: 'user-123',
+      weather_condition: formData.get('weather_condition') as string,
+      work_completed: formData.get('work_summary') as string,
+      reporter_id: 'user-123',
     };
 
     const { data } = await supabase
@@ -84,7 +84,7 @@ const DailyReportsPage = () => {
             required
             aria-label="Report Date"
           />
-          <select name="weather_conditions" required aria-label="Weather">
+          <select name="weather_condition" required aria-label="Weather">
             <option value="">Select Weather</option>
             <option value="sunny">Sunny</option>
             <option value="cloudy">Cloudy</option>
@@ -111,8 +111,8 @@ const DailyReportsPage = () => {
             {reports.map((report) => (
               <li key={report.id}>
                 <h3>{report.report_date}</h3>
-                <p>Weather: {report.weather_conditions}</p>
-                <p>{report.work_completed_summary}</p>
+                <p>Weather: {report.weather_condition}</p>
+                <p>{report.work_completed}</p>
                 <button aria-label={`Edit report ${report.report_date}`}>
                   Edit
                 </button>
@@ -151,12 +151,10 @@ const mockDailyReport = (overrides: Partial<DailyReport> = {}): DailyReport => (
   id: faker.string.uuid(),
   project_id: 'project-123',
   report_date: faker.date.recent().toISOString().split('T')[0],
-  weather_conditions: faker.helpers.arrayElement(['sunny', 'cloudy', 'rainy']),
+  weather_condition: faker.helpers.arrayElement(['sunny', 'cloudy', 'rainy']),
   temperature_high: faker.number.int({ min: 60, max: 95 }),
   temperature_low: faker.number.int({ min: 40, max: 70 }),
-  work_completed_summary: faker.lorem.paragraph(),
-  materials_used_summary: faker.lorem.sentence(),
-  safety_incidents: 'None',
+  work_completed: faker.lorem.paragraph(),
   visitor_log: faker.lorem.sentence(),
   notes: faker.lorem.paragraph(),
   submitted_by: 'user-123',
@@ -335,8 +333,8 @@ describe('Daily Reports Workflow Integration', () => {
       const newReport = mockDailyReport({
         id: 'new-report-123',
         report_date: '2024-01-20',
-        weather_conditions: 'sunny',
-        work_completed_summary: 'Completed foundation work',
+        weather_condition: 'sunny',
+        work_completed: 'Completed foundation work',
       });
 
       vi.mocked(supabase.from).mockImplementation((table) => {

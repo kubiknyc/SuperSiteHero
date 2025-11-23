@@ -38,7 +38,6 @@ vi.mock('@/lib/auth/AuthContext', () => ({
 const mockPunchItem = (overrides: Partial<PunchItem> = {}): PunchItem => ({
   id: faker.string.uuid(),
   project_id: faker.string.uuid(),
-  location: faker.location.buildingNumber() + ' ' + faker.location.street(),
   description: faker.lorem.sentence(),
   status: faker.helpers.arrayElement(['open', 'in_progress', 'completed', 'verified', 'rejected']),
   priority: faker.helpers.arrayElement(['low', 'medium', 'high', 'critical']),

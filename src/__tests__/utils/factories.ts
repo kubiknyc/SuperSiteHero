@@ -116,7 +116,7 @@ export const mockSupabaseResponse = <T>(data: T, error: Error | null = null) => 
   return {
     data: error ? null : data,
     error,
-    count: null,
+    count: null as number | null,
     status: error ? 500 : 200,
     statusText: error ? 'Internal Server Error' : 'OK',
   };

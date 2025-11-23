@@ -36,15 +36,13 @@ const mockDailyReport = (overrides: Partial<DailyReport> = {}): DailyReport => (
   id: faker.string.uuid(),
   project_id: faker.string.uuid(),
   report_date: faker.date.recent().toISOString().split('T')[0],
-  weather_conditions: faker.helpers.arrayElement(['sunny', 'cloudy', 'rainy', 'windy']),
+  weather_condition: faker.helpers.arrayElement(['sunny', 'cloudy', 'rainy', 'windy']),
   temperature_high: faker.number.int({ min: 60, max: 95 }),
   temperature_low: faker.number.int({ min: 40, max: 70 }),
-  work_completed_summary: faker.lorem.paragraph(),
-  materials_used_summary: faker.lorem.sentence(),
-  safety_incidents: faker.lorem.sentence(),
+  work_completed: faker.lorem.paragraph(),
   visitor_log: faker.lorem.sentence(),
   notes: faker.lorem.paragraph(),
-  submitted_by: faker.string.uuid(),
+  reporter_id: faker.string.uuid(),
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
   ...overrides,
@@ -212,15 +210,13 @@ describe('useCreateDailyReport', () => {
     const input: CreateInput<'daily_reports'> = {
       project_id: projectId,
       report_date: '2024-01-15',
-      weather_conditions: 'sunny',
+      weather_condition: 'sunny',
       temperature_high: 75,
       temperature_low: 60,
-      work_completed_summary: 'Completed foundation work',
-      materials_used_summary: 'Concrete, rebar',
-      safety_incidents: 'None',
+      work_completed: 'Completed foundation work',
       visitor_log: 'Inspector visited',
       notes: 'Good progress today',
-      submitted_by: 'user-123',
+      reporter_id: 'user-123',
     };
 
     const mockCreatedReport = mockDailyReport({
@@ -256,8 +252,8 @@ describe('useCreateDailyReport', () => {
     const input: CreateInput<'daily_reports'> = {
       project_id: 'project-123',
       report_date: '2024-01-15',
-      weather_conditions: 'sunny',
-      submitted_by: 'user-123',
+      weather_condition: 'sunny',
+      reporter_id: 'user-123',
     };
 
     const mockError = new Error('Duplicate report for date');
@@ -290,7 +286,7 @@ describe('useUpdateDailyReport', () => {
     const projectId = 'project-123';
     const updates = {
       id: reportId,
-      work_completed_summary: 'Updated work summary',
+      work_completed: 'Updated work summary',
       notes: 'Updated notes with additional details',
     };
 
@@ -331,7 +327,7 @@ describe('useUpdateDailyReport', () => {
   it('should handle update conflicts', async () => {
     const updates = {
       id: 'report-123',
-      work_completed_summary: 'Conflicting update',
+      work_completed: 'Conflicting update',
     };
 
     const mockError = new Error('Report has been modified by another user');
