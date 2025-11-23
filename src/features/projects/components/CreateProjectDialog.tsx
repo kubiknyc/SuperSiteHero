@@ -17,6 +17,8 @@ interface CreateProjectDialogProps {
 }
 
 export function CreateProjectDialog({ children, open, onOpenChange }: CreateProjectDialogProps) {
+  console.log('🟡 DIALOG RENDER - CreateProjectDialog rendered, open:', open)
+
   const [formData, setFormData] = useState({
     name: '',
     project_number: '',
@@ -43,6 +45,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('🟢 FORM SUBMIT - Form onSubmit handler called!')
     console.log('Form submission started')
 
     // Step 1: Validate client-side
@@ -305,6 +308,9 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
             <Button
               type="submit"
               disabled={createProject.isPending}
+              onClick={(e) => {
+                console.log('🔵 BUTTON CLICKED - Submit button was clicked!')
+              }}
             >
               {createProject.isPending ? 'Creating...' : 'Create Project'}
             </Button>
