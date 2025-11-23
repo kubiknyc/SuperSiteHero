@@ -10,6 +10,7 @@ import { CreatePunchItemDialog } from '@/features/punch-lists/components/CreateP
 import { EditPunchItemDialog } from '@/features/punch-lists/components/EditPunchItemDialog'
 import { DeletePunchItemConfirmation } from '@/features/punch-lists/components/DeletePunchItemConfirmation'
 import { PunchItemStatusBadge } from '@/features/punch-lists/components/PunchItemStatusBadge'
+import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -72,6 +73,70 @@ export function PunchListsPage() {
     setEditingPunchItem(punchItem)
     setEditDialogOpen(true)
   }
+
+  const tableColumns = [
+    {
+      key: 'title',
+      header: 'Title',
+      render: (item: PunchItem) => <span className="font-medium">{item.title}</span>,
+    },
+    {
+      key: 'trade',
+      header: 'Trade',
+      render: (item: PunchItem) => <span>{item.trade || '-'}</span>,
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (item: PunchItem) => <PunchItemStatusBadge status={item.status} />,
+      className: 'w-32',
+    },
+    {
+      key: 'priority',
+      header: 'Priority',
+      render: (item: PunchItem) => <PunchItemStatusBadge status={item.status} priority={item.priority} />,
+      className: 'w-32',
+    },
+    {
+      key: 'location',
+      header: 'Location',
+      render: (item: PunchItem) => (
+        <span>
+          {[item.building, item.floor, item.room]
+            .filter(Boolean)
+            .join(' / ') || '-'}
+        </span>
+      ),
+    },
+    {
+      key: 'dueDate',
+      header: 'Due Date',
+      render: (item: PunchItem) => (
+        <span>
+          {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
+        </span>
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (item: PunchItem) => (
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e: React.MouseEvent) => handleEdit(e, item)}
+            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <DeletePunchItemConfirmation punchItem={item} />
+        </div>
+      ),
+      className: 'w-20',
+    },
+  ]
 
   return (
     <AppLayout>
@@ -204,78 +269,15 @@ export function PunchListsPage() {
         {filteredPunchItems && filteredPunchItems.length > 0 && (
           <div className="hidden md:block">
             <Card>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50 border-b">
-                    <tr>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Title
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Trade
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Priority
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
-                      </th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Due Date
-                      </th>
-                      <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {filteredPunchItems.map((item) => (
-                      <tr
-                        key={item.id}
-                        onClick={() => handleRowClick(item.id)}
-                        className="hover:bg-gray-50 cursor-pointer transition-colors"
-                      >
-                        <td className="px-4 py-4 text-sm font-medium text-gray-900">
-                          {item.title}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-gray-600">
-                          {item.trade}
-                        </td>
-                        <td className="px-4 py-4 text-sm">
-                          <PunchItemStatusBadge status={item.status} />
-                        </td>
-                        <td className="px-4 py-4 text-sm">
-                          <PunchItemStatusBadge status={item.status} priority={item.priority} />
-                        </td>
-                        <td className="px-4 py-4 text-sm text-gray-600">
-                          {[item.building, item.floor, item.room]
-                            .filter(Boolean)
-                            .join(' / ') || '-'}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-gray-600">
-                          {item.due_date ? item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : 'N/A' : '-'}
-                        </td>
-                        <td className="px-4 py-4 text-sm text-right">
-                          <div className="flex items-center justify-end gap-2" onClick={(e) => e.stopPropagation()}>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => handleEdit(e, item)}
-                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <DeletePunchItemConfirmation punchItem={item} />
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <CardContent className="p-0">
+                <VirtualizedTable<PunchItem>
+                  data={filteredPunchItems}
+                  columns={tableColumns}
+                  estimatedRowHeight={73}
+                  onRowClick={(item) => handleRowClick(item.id)}
+                  emptyMessage="No punch items available"
+                />
+              </CardContent>
             </Card>
           </div>
         )}

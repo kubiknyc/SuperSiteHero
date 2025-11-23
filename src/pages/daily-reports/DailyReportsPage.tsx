@@ -11,14 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import {
   Plus,
   FileText,
@@ -31,6 +24,7 @@ import {
   Clock,
 } from 'lucide-react'
 import { format } from 'date-fns'
+import type { DailyReport } from '@/types/database'
 
 export function DailyReportsPage() {
   const { data: projects } = useMyProjects()
@@ -66,6 +60,97 @@ export function DailyReportsPage() {
   const formatStatus = (status: string) => {
     return status.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())
   }
+
+  const tableColumns = [
+    {
+      key: 'date',
+      header: 'Date',
+      render: (report: DailyReport) => (
+        <div className="flex items-center gap-2">
+          <Calendar className="h-4 w-4 text-gray-400" />
+          {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
+        </div>
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'weather',
+      header: 'Weather',
+      render: (report: DailyReport) => (
+        <div className="flex items-center gap-2">
+          <Cloud className="h-4 w-4 text-gray-400" />
+          {report.weather_condition || 'Not recorded'}
+        </div>
+      ),
+    },
+    {
+      key: 'temperature',
+      header: 'Temperature',
+      render: (report: DailyReport) => (
+        <>
+          {report.temperature_high && report.temperature_low ? (
+            <div className="flex items-center gap-2">
+              <Thermometer className="h-4 w-4 text-gray-400" />
+              {report.temperature_high}°/{report.temperature_low}°
+            </div>
+          ) : (
+            <span className="text-gray-400">-</span>
+          )}
+        </>
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'workforce',
+      header: 'Workforce',
+      render: (report: DailyReport) => (
+        <div className="flex items-center gap-2">
+          <Users className="h-4 w-4 text-gray-400" />
+          {report.total_workers || 0} workers
+        </div>
+      ),
+      className: 'w-24',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (report: DailyReport) => (
+        <Badge variant={getStatusVariant(report.status ?? 'draft')}>
+          {formatStatus(report.status ?? 'draft')}
+        </Badge>
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'createdBy',
+      header: 'Created By',
+      render: (report: DailyReport) => (
+        <span className="text-sm text-gray-600">{report.created_by || 'Unknown'}</span>
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (report: DailyReport) => (
+        <div className="flex items-center justify-end gap-2">
+          <Link to={`/daily-reports/${report.id}`}>
+            <Button variant="ghost" size="sm">
+              <Eye className="h-4 w-4" />
+            </Button>
+          </Link>
+          {report.status === 'draft' && (
+            <Link to={`/daily-reports/${report.id}/edit`}>
+              <Button variant="ghost" size="sm">
+                <Edit className="h-4 w-4" />
+              </Button>
+            </Link>
+          )}
+        </div>
+      ),
+      className: 'w-24',
+    },
+  ]
 
   return (
     <AppLayout>
@@ -174,77 +259,12 @@ export function DailyReportsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Weather</TableHead>
-                    <TableHead>Temperature</TableHead>
-                    <TableHead>Workforce</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Created By</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredReports.map((report) => (
-                    <TableRow key={report.id}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-gray-400" />
-                          {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Cloud className="h-4 w-4 text-gray-400" />
-                          {report.weather_condition || 'Not recorded'}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {report.temperature_high && report.temperature_low ? (
-                          <div className="flex items-center gap-2">
-                            <Thermometer className="h-4 w-4 text-gray-400" />
-                            {report.temperature_high}°/{report.temperature_low}°
-                          </div>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-gray-400" />
-                          {report.total_workers || 0} workers
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={getStatusVariant(report.status ?? 'draft')}>
-                          {formatStatus(report.status ?? 'draft')}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {report.created_by || 'Unknown'}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Link to={`/daily-reports/${report.id}`}>
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </Link>
-                          {report.status === 'draft' && (
-                            <Link to={`/daily-reports/${report.id}/edit`}>
-                              <Button variant="ghost" size="sm">
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <VirtualizedTable<DailyReport>
+                data={filteredReports}
+                columns={tableColumns}
+                estimatedRowHeight={73}
+                emptyMessage="No reports available"
+              />
             </CardContent>
           </Card>
         )}

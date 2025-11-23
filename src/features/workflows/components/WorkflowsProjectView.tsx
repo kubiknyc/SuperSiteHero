@@ -6,16 +6,9 @@ import { useWorkflowItems, useDeleteWorkflowItem } from '../hooks/useWorkflowIte
 import { CreateWorkflowItemDialog } from './CreateWorkflowItemDialog'
 import { EditWorkflowItemDialog } from './EditWorkflowItemDialog'
 import { WorkflowItemStatusBadge } from './WorkflowItemStatusBadge'
+import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import type { WorkflowItem } from '@/types/database'
 import { format } from 'date-fns'
 import { Trash2, Edit2, Plus } from 'lucide-react'
@@ -52,6 +45,97 @@ export function WorkflowsProjectView({
     }
   }
 
+  const tableColumns = [
+    {
+      key: 'refNumber',
+      header: 'Reference #',
+      render: (item: WorkflowItem) => (
+        <span className="font-medium text-sm">{item.reference_number || '-'}</span>
+      ),
+      className: 'w-28',
+    },
+    {
+      key: 'title',
+      header: 'Title',
+      render: (item: WorkflowItem) => <span>{item.title}</span>,
+    },
+    {
+      key: 'discipline',
+      header: 'Discipline',
+      render: (item: WorkflowItem) => (
+        <span className="text-sm text-gray-600">{item.discipline || '-'}</span>
+      ),
+      className: 'w-28',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (item: WorkflowItem) => (
+        <WorkflowItemStatusBadge
+          status={item.status}
+          priority={item.priority ?? undefined}
+        />
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'priority',
+      header: 'Priority',
+      render: (item: WorkflowItem) => (
+        <span className="text-sm">
+          {item.priority ? item.priority.charAt(0).toUpperCase() + item.priority.slice(1) : '-'}
+        </span>
+      ),
+      className: 'w-20',
+    },
+    {
+      key: 'dueDate',
+      header: 'Due Date',
+      render: (item: WorkflowItem) => (
+        <span className="text-sm">
+          {item.due_date ? format(new Date(item.due_date), 'MMM dd, yyyy') : '-'}
+        </span>
+      ),
+      className: 'w-28',
+    },
+    {
+      key: 'costImpact',
+      header: 'Cost Impact',
+      render: (item: WorkflowItem) => (
+        <span className="text-sm">
+          {item.cost_impact ? `$${item.cost_impact.toLocaleString()}` : '-'}
+        </span>
+      ),
+      className: 'w-24',
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (item: WorkflowItem) => (
+        <div className="flex justify-end gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setEditingItem(item)}
+            disabled={deleteItem.isPending}
+          >
+            <Edit2 className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleDelete(item.id)}
+            disabled={deleteItem.isPending}
+            className="text-red-600 hover:text-red-700"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      ),
+      className: 'w-20',
+    },
+  ]
+
   if (error) {
     return (
       <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
@@ -84,87 +168,22 @@ export function WorkflowsProjectView({
       />
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Reference #</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Discipline</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Due Date</TableHead>
-              <TableHead>Cost Impact</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={8} className="py-8 text-center text-gray-500">
-                  Loading {workflowTypeName.toLowerCase()}...
-                </TableCell>
-              </TableRow>
-            ) : filteredItems.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={8} className="py-8 text-center text-gray-500">
-                  No {workflowTypeName.toLowerCase()} found
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredItems.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium text-sm">
-                    {item.reference_number || '-'}
-                  </TableCell>
-                  <TableCell>{item.title}</TableCell>
-                  <TableCell className="text-sm text-gray-600">
-                    {item.discipline || '-'}
-                  </TableCell>
-                  <TableCell>
-                    <WorkflowItemStatusBadge
-                      status={item.status}
-                      priority={item.priority ?? undefined}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-sm">
-                      {item.priority ? item.priority.charAt(0).toUpperCase() + item.priority.slice(1) : '-'}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {item.due_date ? format(new Date(item.due_date), 'MMM dd, yyyy') : '-'}
-                  </TableCell>
-                  <TableCell className="text-sm">
-                    {item.cost_impact ? `$${item.cost_impact.toLocaleString()}` : '-'}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setEditingItem(item)}
-                        disabled={deleteItem.isPending}
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(item.id)}
-                        disabled={deleteItem.isPending}
-                        className="text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      {isLoading ? (
+        <div className="py-8 text-center text-gray-500">
+          Loading {workflowTypeName.toLowerCase()}...
+        </div>
+      ) : filteredItems.length === 0 ? (
+        <div className="py-8 text-center text-gray-500">
+          No {workflowTypeName.toLowerCase()} found
+        </div>
+      ) : (
+        <VirtualizedTable<WorkflowItem>
+          data={filteredItems}
+          columns={tableColumns}
+          estimatedRowHeight={73}
+          emptyMessage={`No ${workflowTypeName.toLowerCase()} available`}
+        />
+      )}
 
       {/* Dialogs */}
       {workflowTypeId && (

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
+import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { useDocuments } from '../hooks/useDocuments'
 import { useDeleteDocumentWithNotification } from '../hooks/useDocumentMutations'
 import { DocumentUpload } from './DocumentUpload'
@@ -74,6 +75,93 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
         return <File {...iconProps} className="h-4 w-4 text-gray-600" />
     }
   }
+
+  const tableColumns = [
+    {
+      key: 'name',
+      header: 'Name',
+      render: (doc: Document) => (
+        <div className="flex items-center gap-2">
+          {getIconForType(doc.file_name)}
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-gray-900 truncate">{doc.name}</p>
+            {doc.drawing_number && (
+              <p className="text-xs text-gray-600">#{doc.drawing_number}</p>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      render: (doc: Document) => (
+        <Badge variant="outline" className="capitalize">
+          {doc.document_type}
+        </Badge>
+      ),
+      className: 'w-32',
+    },
+    {
+      key: 'size',
+      header: 'Size',
+      render: (doc: Document) => (
+        <span className="text-gray-600">{formatFileSize(doc.file_size)}</span>
+      ),
+      className: 'w-20',
+    },
+    {
+      key: 'uploaded',
+      header: 'Uploaded',
+      render: (doc: Document) => (
+        <span className="text-gray-600">
+          {doc.created_at ? format(new Date(doc.created_at), 'MMM d, yyyy') : 'N/A'}
+        </span>
+      ),
+      className: 'w-28',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      render: (doc: Document) => (
+        <Badge
+          variant={doc.status === 'current' ? 'default' : 'secondary'}
+          className={cn(
+            doc.status === 'current' && 'bg-green-100 text-green-800',
+            doc.status === 'superseded' && 'bg-yellow-100 text-yellow-800',
+            doc.status === 'archived' && 'bg-gray-100 text-gray-800',
+            doc.status === 'void' && 'bg-red-100 text-red-800'
+          )}
+        >
+          {doc.status}
+        </Badge>
+      ),
+      className: 'w-28',
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (doc: Document) => (
+        <div className="flex justify-end gap-2">
+          <a href={doc.file_url} download target="_blank" rel="noopener noreferrer">
+            <Button variant="ghost" size="sm" title="Download">
+              <Download className="h-4 w-4" />
+            </Button>
+          </a>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleDelete(doc.id)}
+            disabled={deleteDocument.isPending}
+            title="Delete"
+          >
+            <Trash2 className="h-4 w-4 text-red-600" />
+          </Button>
+        </div>
+      ),
+      className: 'w-20',
+    },
+  ]
 
   if (!projectId) {
     return (
@@ -153,79 +241,12 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
               <p className="text-gray-500">No documents found</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Name</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Type</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Size</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Uploaded</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filtered.map((doc: Document) => (
-                    <tr key={doc.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          {getIconForType(doc.file_name)}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-gray-900 truncate">{doc.name}</p>
-                            {doc.drawing_number && (
-                              <p className="text-xs text-gray-600">#{doc.drawing_number}</p>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge variant="outline" className="capitalize">
-                          {doc.document_type}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-gray-600">
-                        {formatFileSize(doc.file_size)}
-                      </td>
-                      <td className="py-3 px-4 text-gray-600">
-                        {doc.created_at ? format(new Date(doc.created_at), 'MMM d, yyyy') : 'N/A'}
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge
-                          variant={doc.status === 'current' ? 'default' : 'secondary'}
-                          className={cn(
-                            doc.status === 'current' && 'bg-green-100 text-green-800',
-                            doc.status === 'superseded' && 'bg-yellow-100 text-yellow-800',
-                            doc.status === 'archived' && 'bg-gray-100 text-gray-800',
-                            doc.status === 'void' && 'bg-red-100 text-red-800'
-                          )}
-                        >
-                          {doc.status}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex justify-end gap-2">
-                          <a href={doc.file_url} download target="_blank" rel="noopener noreferrer">
-                            <Button variant="ghost" size="sm" title="Download">
-                              <Download className="h-4 w-4" />
-                            </Button>
-                          </a>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(doc.id)}
-                            disabled={deleteDocument.isPending}
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <VirtualizedTable<Document>
+              data={filtered}
+              columns={tableColumns}
+              estimatedRowHeight={73}
+              emptyMessage="No documents available"
+            />
           )}
         </CardContent>
       </Card>

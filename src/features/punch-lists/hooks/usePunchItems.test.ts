@@ -251,16 +251,8 @@ describe('useCreatePunchItem', () => {
 
     const createdPunchItem = mockPunchItem(input);
 
-    vi.mocked(supabase.from).mockReturnValue({
-      insert: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({
-            data: createdPunchItem,
-            error: null,
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.createPunchItem).mockResolvedValue(createdPunchItem);
 
     const queryClient = new QueryClient();
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');

@@ -44,16 +44,26 @@ function sendToAnalytics(metric: PerformanceMetric) {
     })
   }
 
-  // Example: Send to Google Analytics
-  // if (window.gtag) {
-  //   window.gtag('event', metric.name, {
-  //     value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
-  //     metric_id: metric.id,
-  //     metric_value: metric.value,
-  //     metric_delta: metric.delta,
-  //     metric_rating: metric.rating,
-  //   })
-  // }
+  // Send to Google Analytics 4 (gtag)
+  // Requires: Global Site Tag loaded from gtag and GA_ID env variable set
+  if (import.meta.env.PROD && typeof window !== 'undefined' && (window as any).gtag) {
+    try {
+      (window as any).gtag('event', metric.name, {
+        value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
+        metric_id: metric.id,
+        metric_value: metric.value,
+        metric_delta: Math.round(metric.delta),
+        metric_rating: metric.rating,
+        // Add custom event properties
+        event_category: 'web_vitals',
+        event_label: metric.name,
+      })
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error('[GA] Failed to send metric:', error)
+      }
+    }
+  }
 
   // Store metrics in local storage for debugging
   if (import.meta.env.DEV) {
