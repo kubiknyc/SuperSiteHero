@@ -4,12 +4,8 @@
 import { useState } from 'react'
 import { useCreateProjectWithNotification } from '../hooks/useProjectsMutations'
 import { useFormValidation, projectCreateSchema } from '@/lib/validation'
-import { useNotifications } from '@/lib/notifications/useNotifications'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError, SelectWithError } from '@/components/form/ValidationError'
 import type { ProjectStatus } from '@/types/database'
@@ -34,10 +30,9 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
     status: 'planning' as ProjectStatus,
   })
 
-  // Use the three hooks for full-stack integration
+  // Use the hooks for full-stack integration
   const createProject = useCreateProjectWithNotification()
   const { validate, getFieldError, clearErrors } = useFormValidation(projectCreateSchema)
-  const { showError } = useNotifications()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData((prev) => ({
@@ -48,15 +43,20 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('Form submission started')
 
     // Step 1: Validate client-side
     const validation = validate(formData)
+    console.log('Validation result:', validation)
+
     if (!validation.success) {
+      console.log('Validation failed:', validation.errors)
       return // Errors automatically shown in InputWithError components
     }
 
     // Step 2: Call API (with notifications handled by mutation hook)
     try {
+      console.log('Submitting project data...')
       await createProject.mutateAsync({
         name: validation.data.name,
         project_number: validation.data.project_number || null,
@@ -84,6 +84,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
         },
       } as any)
 
+      console.log('Project created successfully')
       // Step 3: Success! Toast shown automatically by mutation hook
       // Reset form and close dialog
       setFormData({
