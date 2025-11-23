@@ -302,7 +302,10 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={createProject.isPending}>
+            <Button
+              type="submit"
+              disabled={createProject.isPending}
+            >
               {createProject.isPending ? 'Creating...' : 'Create Project'}
             </Button>
           </DialogFooter>
