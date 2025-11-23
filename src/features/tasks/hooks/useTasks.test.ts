@@ -42,16 +42,18 @@ const mockTask = (overrides: Partial<Task> = {}): Task => ({
   priority: faker.helpers.arrayElement(['low', 'medium', 'high', 'urgent']),
   assigned_to_user_id: faker.string.uuid(),
   assigned_to_subcontractor_id: null,
+  assigned_to_type: 'user',
   due_date: faker.date.future().toISOString().split('T')[0],
   start_date: faker.date.recent().toISOString().split('T')[0],
   completed_date: null,
-  estimated_hours: faker.number.int({ min: 1, max: 40 }),
-  actual_hours: null,
-  dependencies: [],
   created_by: faker.string.uuid(),
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
   deleted_at: null,
+  location: null,
+  parent_task_id: null,
+  related_to_id: null,
+  related_to_type: null,
   ...overrides,
 });
 
@@ -322,17 +324,16 @@ describe('useCreateTask', () => {
   });
 
   it('should create task with user profile', async () => {
-    const input: CreateInput<Task> = {
+    const input = {
       project_id: 'project-123',
       title: 'Install electrical wiring',
       description: 'Complete electrical installation in building A',
       status: 'pending',
       priority: 'high',
       assigned_to_user_id: 'worker-456',
+      assigned_to_type: 'user',
       due_date: '2024-02-01',
       start_date: '2024-01-20',
-      tags: ['electrical', 'urgent'],
-      estimated_hours: 8,
     };
 
     const mockCreatedTask = mockTask({
@@ -369,7 +370,7 @@ describe('useCreateTask', () => {
   });
 
   it('should handle validation errors', async () => {
-    const invalidInput: CreateInput<Task> = {
+    const invalidInput = {
       project_id: 'project-123',
       title: '', // Invalid: empty title
       status: 'pending',
@@ -396,7 +397,7 @@ describe('useCreateTask', () => {
   });
 
   it('should handle duplicate task creation', async () => {
-    const input: CreateInput<Task> = {
+    const input = {
       project_id: 'project-123',
       title: 'Duplicate task',
       status: 'pending',
@@ -430,7 +431,7 @@ describe('useCreateTask', () => {
       userProfile: null,
     })) as any;
 
-    const input: CreateInput<Task> = {
+    const input = {
       project_id: 'project-123',
       title: 'Test task',
       status: 'pending',

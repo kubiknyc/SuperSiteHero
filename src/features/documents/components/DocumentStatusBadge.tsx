@@ -10,8 +10,10 @@ interface DocumentStatusBadgeProps {
   className?: string
 }
 
+type ValidDocumentStatus = 'current' | 'superseded' | 'archived' | 'void'
+
 // Status display labels (capitalize first letter)
-const STATUS_LABELS: Record<DocumentStatus, string> = {
+const STATUS_LABELS: Record<ValidDocumentStatus, string> = {
   current: 'Current',
   superseded: 'Superseded',
   archived: 'Archived',
@@ -19,7 +21,7 @@ const STATUS_LABELS: Record<DocumentStatus, string> = {
 }
 
 // Status color classes using Tailwind
-const STATUS_COLORS: Record<DocumentStatus, string> = {
+const STATUS_COLORS: Record<ValidDocumentStatus, string> = {
   current: 'bg-green-100 text-green-800 border-green-200',
   superseded: 'bg-amber-100 text-amber-800 border-amber-200',
   archived: 'bg-gray-100 text-gray-800 border-gray-200',
@@ -47,16 +49,25 @@ export function DocumentStatusBadge({
   status,
   className,
 }: DocumentStatusBadgeProps) {
+  // Handle null status gracefully
+  if (!status) {
+    return (
+      <Badge variant="outline" className={cn('bg-gray-100 text-gray-800', className)}>
+        Unknown
+      </Badge>
+    )
+  }
+
   return (
     <Badge
       variant="outline"
       className={cn(
-        STATUS_COLORS[status],
+        STATUS_COLORS[status as ValidDocumentStatus],
         'font-medium',
         className
       )}
     >
-      {STATUS_LABELS[status]}
+      {STATUS_LABELS[status as ValidDocumentStatus]}
     </Badge>
   )
 }

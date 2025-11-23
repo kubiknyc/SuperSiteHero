@@ -182,7 +182,7 @@ export function DashboardPage() {
                   )}
                 </div>
                 <Badge variant={selectedProject.status === 'active' ? 'success' : 'secondary'}>
-                  {selectedProject.status.replace('_', ' ').toUpperCase()}
+                  {(selectedProject.status ?? 'unknown').replace('_', ' ').toUpperCase()}
                 </Badge>
               </div>
             </CardHeader>

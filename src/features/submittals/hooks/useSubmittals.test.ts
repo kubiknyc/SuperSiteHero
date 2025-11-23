@@ -48,7 +48,7 @@ const mockSubmittal = (overrides: Partial<WorkflowItem> = {}): WorkflowItem => (
   workflow_type_id: 'submittal-type-123',
   project_id: faker.string.uuid(),
   number: faker.number.int({ min: 1, max: 100 }),
-  custom_id: null,
+  reference_number: null,
   title: faker.lorem.sentence(),
   description: faker.lorem.paragraph(),
   more_information: null,
@@ -56,19 +56,17 @@ const mockSubmittal = (overrides: Partial<WorkflowItem> = {}): WorkflowItem => (
   status: faker.helpers.arrayElement(['pending', 'submitted', 'approved', 'rejected']),
   priority: faker.helpers.arrayElement(['low', 'normal', 'high']),
   raised_by: faker.string.uuid(),
-  raised_date: faker.date.recent().toISOString(),
   due_date: faker.date.future().toISOString().split('T')[0],
   opened_date: null,
   closed_date: null,
   resolution: null,
-  resolution_date: null,
+  cost_impact: null,
+  schedule_impact: null,
   assignees: [],
   created_by: faker.string.uuid(),
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
   deleted_at: null,
-  metadata: {},
-  sequence_number: faker.number.int({ min: 1, max: 100 }),
   ...overrides,
 });
 
@@ -79,12 +77,17 @@ const mockWorkflowType = (overrides: Partial<WorkflowType> = {}): WorkflowType =
   name_singular: 'Submittal',
   name_plural: 'Submittals',
   prefix: 'SUB',
-  description: 'Submittal tracking',
   statuses: ['pending', 'submitted', 'approved', 'rejected'],
   priorities: ['low', 'normal', 'high'],
-  fields: {},
+  has_cost_impact: false,
+  has_schedule_impact: false,
+  is_active: true,
+  is_custom: false,
+  is_default: true,
+  requires_approval: true,
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
+  deleted_at: null,
   ...overrides,
 });
 
@@ -92,15 +95,15 @@ const mockWorkflowType = (overrides: Partial<WorkflowType> = {}): WorkflowType =
 const mockProcurement = (overrides: Partial<SubmittalProcurement> = {}): SubmittalProcurement => ({
   id: faker.string.uuid(),
   workflow_item_id: faker.string.uuid(),
-  vendor_name: faker.company.name(),
-  model_number: faker.string.alphanumeric(10),
-  quantity: faker.number.int({ min: 1, max: 100 }),
-  unit_price: faker.number.float({ min: 10, max: 1000, fractionDigits: 2 }),
-  total_cost: faker.number.float({ min: 100, max: 10000, fractionDigits: 2 }),
+  project_id: faker.string.uuid(),
+  vendor: faker.company.name(),
+  order_number: faker.string.alphanumeric(10),
+  order_date: faker.date.recent().toISOString(),
   lead_time_days: faker.number.int({ min: 7, max: 90 }),
   expected_delivery_date: faker.date.future().toISOString().split('T')[0],
   actual_delivery_date: null,
-  status: faker.helpers.arrayElement(['pending', 'ordered', 'received']),
+  approval_date: null,
+  procurement_status: faker.helpers.arrayElement(['pending', 'ordered', 'received']),
   notes: faker.lorem.sentence(),
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
@@ -340,7 +343,7 @@ describe('useMySubmittals', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toHaveLength(2);
-    expect(result.current.data?.every(s => s.assignees.includes(mockUserProfile.id))).toBe(true);
+    expect(result.current.data?.every(s => s.assignees?.includes(mockUserProfile.id))).toBe(true);
   });
 
   it('should filter by project when projectId provided', async () => {

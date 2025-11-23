@@ -316,11 +316,11 @@ export function TasksPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <h3 className="font-semibold text-lg text-gray-900">{task.title}</h3>
-                        <Badge variant={getStatusColor(task.status)}>
-                          {formatStatus(task.status)}
+                        <Badge variant={getStatusColor(task.status ?? 'pending')}>
+                          {formatStatus(task.status ?? 'pending')}
                         </Badge>
-                        <Badge className={getPriorityColor(task.priority)}>
-                          {task.priority}
+                        <Badge className={getPriorityColor(task.priority ?? 'normal')}>
+                          {task.priority ?? 'normal'}
                         </Badge>
                       </div>
 

@@ -128,8 +128,8 @@ export function ProjectsPage() {
                         </p>
                       )}
                     </div>
-                    <Badge variant={getStatusVariant(project.status)}>
-                      {formatStatus(project.status)}
+                    <Badge variant={getStatusVariant(project.status ?? 'planning')}>
+                      {formatStatus(project.status ?? 'planning')}
                     </Badge>
                   </div>
                   {project.address && (

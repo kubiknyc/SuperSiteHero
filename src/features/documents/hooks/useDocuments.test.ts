@@ -45,20 +45,29 @@ const mockDocument = (overrides: Partial<Document> = {}): Document => ({
   project_id: faker.string.uuid(),
   folder_id: null,
   name: faker.system.fileName(),
+  file_name: faker.system.fileName(),
   description: faker.lorem.sentence(),
   file_url: faker.internet.url(),
-  file_size: faker.number.int({ min: 1000, max: 10000000 }).toString(),
+  file_size: faker.number.int({ min: 1000, max: 10000000 }),
   file_type: faker.helpers.arrayElement(['application/pdf', 'image/jpeg', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']),
-  version: 1,
+  version: '1',
   supersedes_document_id: null,
   document_type: faker.helpers.arrayElement(['drawing', 'specification', 'contract', 'photo', 'other']),
   status: faker.helpers.arrayElement(['draft', 'in_review', 'approved', 'superseded']),
-  tags: [],
-  uploaded_by: faker.string.uuid(),
   created_by: faker.string.uuid(),
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
   deleted_at: null,
+  discipline: null,
+  drawing_number: null,
+  is_latest_version: true,
+  is_pinned: false,
+  issue_date: null,
+  received_date: null,
+  requires_approval: false,
+  revision: null,
+  specification_section: null,
+  search_vector: null,
   ...overrides,
 });
 
@@ -230,9 +239,9 @@ describe('useDocumentVersions', () => {
   it('should fetch all versions of a document', async () => {
     const documentId = 'doc-123';
     const versions = [
-      mockDocument({ id: documentId, version: 3 }),
-      mockDocument({ id: 'doc-456', supersedes_document_id: documentId, version: 2 }),
-      mockDocument({ id: 'doc-789', supersedes_document_id: documentId, version: 1 }),
+      mockDocument({ id: documentId, version: '3' }),
+      mockDocument({ id: 'doc-456', supersedes_document_id: documentId, version: '2' }),
+      mockDocument({ id: 'doc-789', supersedes_document_id: documentId, version: '1' }),
     ];
 
     vi.mocked(supabase.from).mockReturnValue({

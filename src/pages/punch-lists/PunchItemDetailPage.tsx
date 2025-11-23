@@ -40,7 +40,7 @@ export function PunchItemDetailPage() {
 
     await updateStatus.mutateAsync({
       punchItemId: punchItem.id,
-      status: newStatus,
+      status: newStatus ?? 'open',
     })
   }
 

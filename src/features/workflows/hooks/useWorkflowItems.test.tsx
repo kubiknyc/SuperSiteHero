@@ -19,6 +19,34 @@ vi.mock('@/lib/api', () => ({
   },
 }))
 
+// Helper function to create a complete WorkflowItem mock
+const createMockWorkflowItem = (overrides: any = {}) => ({
+  id: '1',
+  workflow_type_id: 'rfi',
+  project_id: 'proj-1',
+  title: 'Test Item',
+  description: null,
+  status: 'open',
+  priority: null,
+  raised_by: null,
+  opened_date: null,
+  due_date: null,
+  closed_date: null,
+  resolution: null,
+  created_by: null,
+  created_at: '2025-01-01T00:00:00Z',
+  updated_at: '2025-01-01T00:00:00Z',
+  deleted_at: null,
+  assignees: null,
+  cost_impact: null,
+  discipline: null,
+  more_information: null,
+  number: null,
+  reference_number: null,
+  schedule_impact: null,
+  ...overrides,
+})
+
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: {
@@ -203,7 +231,7 @@ describe('Workflow Items Hooks', () => {
   describe('useUpdateWorkflowItem', () => {
     it('should update a workflow item', async () => {
       const updates = { title: 'Updated Title' }
-      const updatedItem = { id: '1', ...updates, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z', project_id: 'proj-1', workflow_type_id: 'rfi' }
+      const updatedItem = createMockWorkflowItem({ ...updates })
 
       vi.mocked(apiModule.workflowsApi.updateWorkflowItem).mockResolvedValue(updatedItem)
 
@@ -211,7 +239,7 @@ describe('Workflow Items Hooks', () => {
         wrapper: createWrapper(),
       })
 
-      result.current.mutate({ id: '1', updates })
+      result.current.mutate({ id: '1', ...updates })
 
       await waitFor(() => {
         expect(result.current.data).toEqual(updatedItem)
@@ -237,15 +265,11 @@ describe('Workflow Items Hooks', () => {
 
   describe('useUpdateWorkflowItemStatus', () => {
     it('should update workflow item status', async () => {
-      const updatedItem = {
+      const updatedItem = createMockWorkflowItem({
         id: '1',
         status: 'approved',
-        created_at: '2025-01-01T00:00:00Z',
-        updated_at: '2025-01-01T00:00:00Z',
-        project_id: 'proj-1',
-        workflow_type_id: 'rfi',
         title: 'Test',
-      }
+      })
 
       vi.mocked(apiModule.workflowsApi.updateWorkflowItemStatus).mockResolvedValue(updatedItem)
 

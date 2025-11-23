@@ -43,6 +43,7 @@ import {
 } from '@/components/ui'
 import { DocumentTypeIcon } from '@/features/documents/components/DocumentTypeIcon'
 import { DocumentStatusBadge } from '@/features/documents/components/DocumentStatusBadge'
+import { DocumentViewer } from '@/features/documents/components/viewers'
 import {
   useDocument,
   useDocumentVersions,
@@ -242,6 +243,16 @@ export function DocumentDetailPage() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Document Viewer */}
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <DocumentViewer
+            document={document}
+            allowMarkup={false}
+            readOnly={true}
+            height="h-96"
+          />
         </div>
 
         {/* Main Layout */}

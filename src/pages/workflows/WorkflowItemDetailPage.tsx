@@ -133,7 +133,7 @@ export function WorkflowItemDetailPage() {
                 <p className="text-sm text-gray-600 mb-2">Current Status</p>
                 <WorkflowItemStatusBadge
                   status={item.status}
-                  priority={item.priority}
+                  priority={item.priority ?? undefined}
                 />
               </div>
 

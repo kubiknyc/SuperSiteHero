@@ -56,12 +56,12 @@ export function useCreateProject() {
   const { userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: async (project: CreateInput<Project>) => {
+    mutationFn: async (project: CreateInput<'projects'>) => {
       if (!userProfile?.company_id) {
         throw new Error('No company ID found')
       }
 
-      const { data, error } = await supabase
+      const { data, error} = await supabase
         .from('projects')
         .insert({
           ...project,

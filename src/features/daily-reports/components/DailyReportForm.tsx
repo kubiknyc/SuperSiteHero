@@ -68,7 +68,7 @@ export function DailyReportForm({
 
   useEffect(() => {
     if (!store.draftReport) {
-      store.initializeDraft(projectId, reportDate)
+      store.initializeDraft(projectId, reportDate ?? new Date().toISOString().split('T')[0])
     }
   }, [projectId, reportDate, store])
 

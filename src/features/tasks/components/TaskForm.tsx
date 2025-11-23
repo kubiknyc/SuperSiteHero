@@ -136,7 +136,7 @@ export function TaskForm({
               <Label htmlFor="status">Status</Label>
               <Select
                 id="status"
-                value={formData.status}
+                value={formData.status ?? 'pending'}
                 onChange={(e) => handleChange('status', e.target.value)}
               >
                 <option value="pending">Pending</option>
@@ -150,7 +150,7 @@ export function TaskForm({
               <Label htmlFor="priority">Priority</Label>
               <Select
                 id="priority"
-                value={formData.priority}
+                value={formData.priority ?? 'normal'}
                 onChange={(e) => handleChange('priority', e.target.value)}
               >
                 <option value="low">Low</option>

@@ -165,7 +165,7 @@ export function SubmittalDetailPage() {
                             )}
                           </div>
                           <Select
-                            value={record.procurement_status}
+                            value={record.procurement_status ?? 'pending_approval'}
                             onChange={(e) => handleProcurementStatusChange(record.id, e.target.value)}
                             disabled={updateProcurementStatus.isPending}
                             className="w-48"

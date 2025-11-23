@@ -10,8 +10,11 @@ interface PunchItemStatusBadgeProps {
   className?: string
 }
 
+type ValidPunchItemStatus = 'open' | 'in_progress' | 'ready_for_review' | 'completed' | 'verified' | 'rejected'
+type ValidPriority = 'low' | 'normal' | 'high'
+
 // Status color mappings
-const statusColors: Record<PunchItemStatus, string> = {
+const statusColors: Record<ValidPunchItemStatus, string> = {
   open: 'bg-gray-100 text-gray-800 border-gray-300',
   in_progress: 'bg-blue-100 text-blue-800 border-blue-300',
   ready_for_review: 'bg-yellow-100 text-yellow-800 border-yellow-300',
@@ -21,7 +24,7 @@ const statusColors: Record<PunchItemStatus, string> = {
 }
 
 // Status label mappings
-const statusLabels: Record<PunchItemStatus, string> = {
+const statusLabels: Record<ValidPunchItemStatus, string> = {
   open: 'Open',
   in_progress: 'In Progress',
   ready_for_review: 'Ready for Review',
@@ -31,14 +34,14 @@ const statusLabels: Record<PunchItemStatus, string> = {
 }
 
 // Priority color mappings
-const priorityColors: Record<Priority, string> = {
+const priorityColors: Record<ValidPriority, string> = {
   low: 'bg-green-100 text-green-800 border-green-300',
   normal: 'bg-gray-100 text-gray-800 border-gray-300',
   high: 'bg-red-100 text-red-800 border-red-300',
 }
 
 // Priority label mappings
-const priorityLabels: Record<Priority, string> = {
+const priorityLabels: Record<ValidPriority, string> = {
   low: 'Low',
   normal: 'Normal',
   high: 'High',
@@ -49,16 +52,19 @@ export function PunchItemStatusBadge({
   priority,
   className,
 }: PunchItemStatusBadgeProps) {
+  // Handle null status gracefully
+  const safeStatus = (status || 'open') as ValidPunchItemStatus
+
   return (
     <div className={cn('flex items-center gap-2', className)}>
       {/* Status Badge */}
       <span
         className={cn(
           'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold',
-          statusColors[status]
+          statusColors[safeStatus]
         )}
       >
-        {statusLabels[status]}
+        {statusLabels[safeStatus]}
       </span>
 
       {/* Priority Badge (optional) */}
@@ -66,10 +72,10 @@ export function PunchItemStatusBadge({
         <span
           className={cn(
             'inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold',
-            priorityColors[priority]
+            priorityColors[priority as ValidPriority]
           )}
         >
-          {priorityLabels[priority]}
+          {priorityLabels[priority as ValidPriority]}
         </span>
       )}
     </div>

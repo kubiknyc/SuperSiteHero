@@ -137,8 +137,8 @@ export function TaskDetailPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{task.title}</h1>
               <div className="flex items-center gap-2 mt-2">
-                <Badge variant={getStatusColor(task.status)}>
-                  {task.status.replace(/_/g, ' ')}
+                <Badge variant={getStatusColor(task.status ?? 'pending')}>
+                  {(task.status ?? 'pending').replace(/_/g, ' ')}
                 </Badge>
                 {isOverdue && (
                   <Badge variant="destructive">Overdue</Badge>
@@ -193,9 +193,9 @@ export function TaskDetailPage() {
 
             <div>
               <p className="text-sm font-medium text-gray-600 mb-2">Priority</p>
-              <div className={`flex items-center gap-2 text-lg font-semibold ${getPriorityColor(task.priority)}`}>
+              <div className={`flex items-center gap-2 text-lg font-semibold ${getPriorityColor(task.priority ?? 'normal')}`}>
                 <Flag className="h-5 w-5" />
-                {task.priority.toUpperCase()}
+                {(task.priority ?? 'normal').toUpperCase()}
               </div>
             </div>
 

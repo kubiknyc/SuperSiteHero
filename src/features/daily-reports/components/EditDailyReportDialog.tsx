@@ -87,7 +87,7 @@ export function EditDailyReportDialog({
     try {
       await updateReport.mutateAsync({
         id: report.id,
-        data: validation.data,
+        data: validation.data as Partial<Omit<DailyReport, 'id' | 'created_at' | 'updated_at'>>,
       })
 
       // Step 3: Success! Toast shown automatically by mutation hook

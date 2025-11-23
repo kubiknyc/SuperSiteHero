@@ -155,9 +155,9 @@ export function RFICommentThread({
                         {getDisplayName(comment.created_by || '')}
                       </span>
                       <span className="text-xs text-gray-500">
-                        {formatDistanceToNow(new Date(comment.created_at), {
+                        {comment.created_at ? formatDistanceToNow(new Date(comment.created_at), {
                           addSuffix: true,
-                        })}
+                        }) : 'Unknown time'}
                       </span>
                     </div>
                     <div className="text-sm text-gray-700 break-words">

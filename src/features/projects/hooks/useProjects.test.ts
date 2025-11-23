@@ -135,6 +135,7 @@ describe('useCreateProject', () => {
       description: 'Test project',
       status: 'active' as const,
       start_date: '2024-01-01',
+      company_id: 'company-123', // Add company_id to input
     };
 
     const mockCreatedProject = mockProject({
@@ -165,7 +166,7 @@ describe('useCreateProject', () => {
       ...input,
       company_id: 'company-123',
     });
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects'], exact: false });
   });
 });
 
@@ -209,8 +210,8 @@ describe('useUpdateProject', () => {
       status: 'completed',
     });
     expect(mockEq).toHaveBeenCalledWith('id', 'project-123');
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects'] });
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects', 'project-123'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects'], exact: false });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects', 'project-123'], exact: false });
   });
 });
 
@@ -241,7 +242,7 @@ describe('useDeleteProject', () => {
 
     expect(mockDelete).toHaveBeenCalled();
     expect(mockEq).toHaveBeenCalledWith('id', projectId);
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['projects'], exact: false });
   });
 
   it('should handle deletion errors', async () => {

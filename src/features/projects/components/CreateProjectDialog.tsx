@@ -287,7 +287,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
               <SelectWithError
                 id="status"
                 name="status"
-                value={formData.status}
+                value={formData.status || ''}
                 onChange={handleChange}
                 error={getFieldError('status')}
                 disabled={createProject.isPending}

@@ -254,7 +254,7 @@ export function CreateProjectDialogEnhanced({
           {/* Status */}
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
-            <Select name="status" value={formData.status} onChange={handleChange}>
+            <Select name="status" value={formData.status || ''} onChange={handleChange}>
               <option value="planning">Planning</option>
               <option value="active">Active</option>
               <option value="on_hold">On Hold</option>

@@ -21,6 +21,22 @@ vi.mock('@/lib/supabase', () => ({
   },
 }));
 
+// Mock API Service
+vi.mock('@/lib/api', async () => {
+  const actual = await vi.importActual('@/lib/api');
+  return {
+    ...actual,
+    punchListsApi: {
+      getPunchItemsByProject: vi.fn(),
+      getPunchItem: vi.fn(),
+      createPunchItem: vi.fn(),
+      updatePunchItem: vi.fn(),
+      deletePunchItem: vi.fn(),
+      updatePunchItemStatus: vi.fn(),
+    },
+  };
+});
+
 // Mock Auth Context
 const mockUserProfile = {
   id: 'user-123',
@@ -38,19 +54,29 @@ vi.mock('@/lib/auth/AuthContext', () => ({
 const mockPunchItem = (overrides: Partial<PunchItem> = {}): PunchItem => ({
   id: faker.string.uuid(),
   project_id: faker.string.uuid(),
+  title: faker.lorem.sentence(),
   description: faker.lorem.sentence(),
   status: faker.helpers.arrayElement(['open', 'in_progress', 'completed', 'verified', 'rejected']),
   priority: faker.helpers.arrayElement(['low', 'medium', 'high', 'critical']),
   trade: faker.helpers.arrayElement(['Electrical', 'Plumbing', 'HVAC', 'Drywall', 'Painting']),
   assigned_to: faker.string.uuid(),
+  area: null,
+  building: null,
+  floor: null,
+  room: null,
+  location_notes: null,
+  number: null,
+  subcontractor_id: null,
+  rejection_notes: null,
+  completed_date: null,
   marked_complete_by: null,
   marked_complete_at: null,
   verified_by: null,
   verified_at: null,
+  verified_date: null,
   due_date: faker.date.future().toISOString().split('T')[0],
-  photo_urls: [],
-  notes: faker.lorem.paragraph(),
   created_at: faker.date.past().toISOString(),
+  created_by: null,
   updated_at: faker.date.recent().toISOString(),
   deleted_at: null,
   ...overrides,
@@ -69,18 +95,8 @@ describe('usePunchItems', () => {
       mockPunchItem({ project_id: projectId }),
     ];
 
-    vi.mocked(supabase.from).mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          is: vi.fn().mockReturnValue({
-            order: vi.fn().mockResolvedValue({
-              data: punchItems,
-              error: null,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.getPunchItemsByProject).mockResolvedValue(punchItems);
 
     const { result } = renderHook(() => usePunchItems(projectId), {
       wrapper: createWrapper(),
@@ -109,18 +125,8 @@ describe('usePunchItems', () => {
       mockPunchItem({ project_id: projectId, deleted_at: null }),
     ];
 
-    vi.mocked(supabase.from).mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          is: vi.fn().mockReturnValue({
-            order: vi.fn().mockResolvedValue({
-              data: activePunchItems,
-              error: null,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.getPunchItemsByProject).mockResolvedValue(activePunchItems);
 
     const { result } = renderHook(() => usePunchItems(projectId), {
       wrapper: createWrapper(),
@@ -154,7 +160,10 @@ describe('usePunchItems', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error).toEqual(mockError);
+    expect(result.current.error).toMatchObject({
+      message: 'Failed to fetch punch items',
+      code: 'FETCH_PUNCH_ITEMS_ERROR'
+    });
   });
 });
 
@@ -217,7 +226,10 @@ describe('usePunchItem', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error).toEqual(mockError);
+    expect(result.current.error).toMatchObject({
+      message: 'Failed to fetch punch item',
+      code: 'FETCH_PUNCH_ITEM_ERROR'
+    });
   });
 });
 
@@ -260,8 +272,8 @@ describe('useCreatePunchItem', () => {
     const created = await result.current.mutateAsync(input as any);
 
     expect(created).toEqual(createdPunchItem);
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items'] });
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', createdPunchItem.project_id] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items'], exact: false });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', createdPunchItem.project_id], exact: false });
   });
 
   it('should throw error when user is not authenticated', async () => {
@@ -360,8 +372,8 @@ describe('useUpdatePunchItem', () => {
     const updated = await result.current.mutateAsync({ id: punchItemId, ...updates });
 
     expect(updated).toEqual(updatedPunchItem);
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', punchItemId] });
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', updatedPunchItem.project_id] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', punchItemId], exact: false });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', updatedPunchItem.project_id], exact: false });
   });
 
   it('should handle update errors', async () => {
@@ -384,7 +396,7 @@ describe('useUpdatePunchItem', () => {
       wrapper: createWrapper(),
     });
 
-    await expect(result.current.mutateAsync({ id: 'punch-123' })).rejects.toThrow('Update failed');
+    await expect(result.current.mutateAsync({ id: 'punch-123' })).rejects.toThrow('Failed to update punch item');
   });
 });
 
@@ -413,7 +425,7 @@ describe('useDeletePunchItem', () => {
 
     await result.current.mutateAsync(punchItemId);
 
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items'] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items'], exact: false });
   });
 
   it('should set deleted_at timestamp', async () => {
@@ -588,8 +600,8 @@ describe('useUpdatePunchItemStatus', () => {
       status: 'completed',
     });
 
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items'] });
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', punchItemId] });
-    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', projectId] });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items'], exact: false });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', punchItemId], exact: false });
+    expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['punch-items', projectId], exact: false });
   });
 });

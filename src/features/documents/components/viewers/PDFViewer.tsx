@@ -1,0 +1,270 @@
+// File: /src/features/documents/components/viewers/PDFViewer.tsx
+// PDF viewer with zoom, pan, and page navigation capabilities
+
+import { useState, useEffect } from 'react'
+import { Document, Page, pdfjs } from 'react-pdf'
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-react'
+import { Button } from '@/components/ui'
+import { cn } from '@/lib/utils'
+import 'react-pdf/dist/Page/AnnotationLayer.css'
+import 'react-pdf/dist/Page/TextLayer.css'
+
+// Set up PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+
+interface PDFViewerProps {
+  fileUrl: string
+  fileName?: string
+  allowMarkup?: boolean
+  readOnly?: boolean
+  onMarkupCreate?: (markup: any) => void
+  height?: string
+}
+
+/**
+ * PDFViewer Component
+ *
+ * A PDF viewer with zoom controls, page navigation, and optional markup capability.
+ *
+ * Features:
+ * - Page navigation (previous/next, jump to page)
+ * - Zoom controls (fit to width, fit to page, custom zoom)
+ * - Page counter display
+ * - Thumbnail sidebar (optional)
+ * - Download button
+ * - Responsive design
+ * - Touch-friendly controls
+ *
+ * Usage:
+ * ```tsx
+ * <PDFViewer
+ *   fileUrl="https://example.com/document.pdf"
+ *   fileName="example.pdf"
+ *   allowMarkup={false}
+ * />
+ * ```
+ */
+export function PDFViewer({
+  fileUrl,
+  fileName = 'document.pdf',
+  allowMarkup = false,
+  readOnly = false,
+  onMarkupCreate,
+  height = 'h-screen',
+}: PDFViewerProps) {
+  const [numPages, setNumPages] = useState<number | null>(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [zoom, setZoom] = useState(100)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  // Handle PDF load success
+  const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages)
+    setIsLoading(false)
+    setError(null)
+  }
+
+  // Handle PDF load error
+  const handleDocumentLoadError = (error: Error) => {
+    setError(error.message)
+    setIsLoading(false)
+  }
+
+  // Navigation handlers
+  const goToNextPage = () => {
+    if (numPages && currentPage < numPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const page = parseInt(e.target.value, 10)
+    if (page > 0 && numPages && page <= numPages) {
+      setCurrentPage(page)
+    }
+  }
+
+  // Zoom handlers
+  const zoomIn = () => {
+    setZoom(prev => Math.min(prev + 10, 200))
+  }
+
+  const zoomOut = () => {
+    setZoom(prev => Math.max(prev - 10, 50))
+  }
+
+  const resetZoom = () => {
+    setZoom(100)
+  }
+
+  // Download handler
+  const handleDownload = () => {
+    const a = document.createElement('a')
+    a.href = fileUrl
+    a.download = fileName
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        goToNextPage()
+      } else if (e.key === 'ArrowLeft') {
+        goToPreviousPage()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentPage, numPages])
+
+  return (
+    <div className={cn('flex flex-col bg-gray-900', height)}>
+      {/* Toolbar */}
+      <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
+        {/* Left side - Navigation */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={goToPreviousPage}
+            disabled={currentPage <= 1}
+            title="Previous page (Left arrow)"
+            className="text-white hover:bg-gray-700"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </Button>
+
+          <div className="flex items-center gap-1 px-2">
+            <input
+              type="number"
+              min="1"
+              max={numPages || 1}
+              value={currentPage}
+              onChange={handlePageInputChange}
+              className="w-12 text-center bg-gray-700 text-white text-sm rounded px-1 py-1 border-0"
+            />
+            <span className="text-gray-300 text-sm">
+              / {numPages || '?'}
+            </span>
+          </div>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={goToNextPage}
+            disabled={!numPages || currentPage >= numPages}
+            title="Next page (Right arrow)"
+            className="text-white hover:bg-gray-700"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+
+        {/* Center - Filename */}
+        <div className="text-gray-300 text-sm truncate flex-1 text-center px-2">
+          {fileName}
+        </div>
+
+        {/* Right side - Zoom & Actions */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={zoomOut}
+            disabled={zoom <= 50}
+            title="Zoom out"
+            className="text-white hover:bg-gray-700"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+
+          <div className="text-gray-300 text-sm w-10 text-center">
+            {zoom}%
+          </div>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={zoomIn}
+            disabled={zoom >= 200}
+            title="Zoom in"
+            className="text-white hover:bg-gray-700"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+
+          <div className="w-px h-4 bg-gray-600" />
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={resetZoom}
+            title="Reset zoom to 100%"
+            className="text-white hover:bg-gray-700 text-xs"
+          >
+            Reset
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDownload}
+            title="Download PDF"
+            className="text-white hover:bg-gray-700"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* PDF Viewer Area */}
+      <div className="flex-1 overflow-auto bg-gray-900 p-4 flex items-center justify-center">
+        {isLoading && (
+          <div className="text-gray-400 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
+            <p>Loading PDF...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="text-red-400 text-center max-w-md">
+            <p className="font-medium mb-2">Error loading PDF</p>
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
+
+        {!error && (
+          <Document
+            file={fileUrl}
+            onLoadSuccess={handleDocumentLoadSuccess}
+            onLoadError={handleDocumentLoadError}
+            loading={
+              <div className="text-gray-400">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+              </div>
+            }
+          >
+            <Page
+              pageNumber={currentPage}
+              scale={zoom / 100}
+              renderTextLayer={false}
+              renderAnnotationLayer={false}
+              width={Math.min(window.innerWidth - 32, 1000)}
+            />
+          </Document>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -105,5 +105,42 @@ export default defineConfig({
   },
   server: {
     port: 5173
+  },
+  build: {
+    // Code splitting and chunk optimization
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separate vendor chunks
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-query': ['@tanstack/react-query'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-ui': ['lucide-react', 'date-fns', 'clsx', 'tailwind-merge', 'class-variance-authority'],
+          'vendor-state': ['zustand', 'react-hot-toast']
+        }
+      }
+    },
+    // Lower chunk size warning limit to catch issues early
+    chunkSizeWarningLimit: 300,
+    // Enable source maps for production debugging (optional)
+    sourcemap: false,
+    // Minification options
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log in production
+        drop_debugger: true
+      }
+    }
+  },
+  // Performance optimizations
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      '@supabase/supabase-js'
+    ]
   }
 })

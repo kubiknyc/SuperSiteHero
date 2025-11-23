@@ -126,8 +126,8 @@ export function ProjectDetailPage() {
 
         {/* Status badge */}
         <div className="mb-6">
-          <Badge variant={getStatusVariant(project.status)}>
-            {formatStatus(project.status)}
+          <Badge variant={getStatusVariant(project.status ?? 'planning')}>
+            {formatStatus(project.status ?? 'planning')}
           </Badge>
         </div>
 
@@ -232,8 +232,8 @@ export function ProjectDetailPage() {
               <CardContent className="space-y-4 text-sm">
                 <div>
                   <Label className="text-xs text-gray-600">Status</Label>
-                  <Badge variant={getStatusVariant(project.status)} className="mt-1">
-                    {formatStatus(project.status)}
+                  <Badge variant={getStatusVariant(project.status ?? 'planning')} className="mt-1">
+                    {formatStatus(project.status ?? 'planning')}
                   </Badge>
                 </div>
               </CardContent>

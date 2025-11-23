@@ -92,7 +92,7 @@ export function DocumentLibraryPage() {
     const buildTree = (parentId: string | null): FolderType[] => {
       return allFolders
         .filter(folder => folder.parent_folder_id === parentId)
-        .sort((a, b) => a.sort_order - b.sort_order)
+        .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
     }
 
     return buildTree(null)
@@ -103,7 +103,7 @@ export function DocumentLibraryPage() {
     if (!allFolders) return []
     return allFolders
       .filter(folder => folder.parent_folder_id === parentId)
-      .sort((a, b) => a.sort_order - b.sort_order)
+      .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
   }
 
   // Build breadcrumb path
@@ -402,7 +402,7 @@ export function DocumentLibraryPage() {
                         <Label htmlFor="status-filter">Status</Label>
                         <Select
                           id="status-filter"
-                          value={statusFilter}
+                          value={statusFilter ?? 'all'}
                           onChange={(e) => setStatusFilter(e.target.value as DocumentStatus | 'all')}
                           className="mt-1"
                         >

@@ -46,7 +46,7 @@ const mockRFI = (overrides: Partial<WorkflowItem> = {}): WorkflowItem => ({
   workflow_type_id: 'rfi-type-123',
   project_id: faker.string.uuid(),
   number: faker.number.int({ min: 1, max: 100 }),
-  custom_id: null,
+  reference_number: null,
   title: faker.lorem.sentence(),
   description: faker.lorem.paragraph(),
   more_information: faker.lorem.paragraph(),
@@ -54,19 +54,17 @@ const mockRFI = (overrides: Partial<WorkflowItem> = {}): WorkflowItem => ({
   status: faker.helpers.arrayElement(['pending', 'submitted', 'approved', 'rejected', 'closed']),
   priority: faker.helpers.arrayElement(['low', 'normal', 'high']),
   raised_by: faker.string.uuid(),
-  raised_date: faker.date.recent().toISOString(),
   due_date: faker.date.future().toISOString().split('T')[0],
   opened_date: faker.date.recent().toISOString(),
   closed_date: null,
   resolution: null,
-  resolution_date: null,
+  cost_impact: null,
+  schedule_impact: null,
   assignees: [faker.string.uuid()],
   created_by: faker.string.uuid(),
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
   deleted_at: null,
-  metadata: {},
-  sequence_number: faker.number.int({ min: 1, max: 100 }),
   ...overrides,
 });
 
@@ -77,12 +75,17 @@ const mockWorkflowType = (overrides: Partial<WorkflowType> = {}): WorkflowType =
   name_singular: 'RFI',
   name_plural: 'RFIs',
   prefix: 'RFI',
-  description: 'Request for Information',
   statuses: ['pending', 'submitted', 'approved', 'rejected', 'closed'],
   priorities: ['low', 'normal', 'high'],
-  fields: {},
+  has_cost_impact: false,
+  has_schedule_impact: false,
+  is_active: true,
+  is_custom: false,
+  is_default: true,
+  requires_approval: true,
   created_at: faker.date.past().toISOString(),
   updated_at: faker.date.recent().toISOString(),
+  deleted_at: null,
   ...overrides,
 });
 
@@ -103,6 +106,8 @@ const mockComment = (overrides: Partial<WorkflowItemComment> = {}): WorkflowItem
 const mockHistory = (overrides: Partial<WorkflowItemHistory> = {}): WorkflowItemHistory => ({
   id: faker.string.uuid(),
   workflow_item_id: faker.string.uuid(),
+  action: 'status_changed',
+  field_changed: 'status',
   changed_by: faker.string.uuid(),
   changed_at: faker.date.recent().toISOString(),
   old_value: 'pending',
@@ -362,7 +367,7 @@ describe('useMyRFIs', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toHaveLength(2);
-    expect(result.current.data?.every(rfi => rfi.assignees.includes(mockUserProfile.id))).toBe(true);
+    expect(result.current.data?.every(rfi => rfi.assignees?.includes(mockUserProfile.id))).toBe(true);
   });
 
   it('should filter by project when projectId provided', async () => {

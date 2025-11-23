@@ -218,8 +218,8 @@ export function DailyReportsPage() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant={getStatusVariant(report.status)}>
-                          {formatStatus(report.status)}
+                        <Badge variant={getStatusVariant(report.status ?? 'draft')}>
+                          {formatStatus(report.status ?? 'draft')}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-sm text-gray-600">

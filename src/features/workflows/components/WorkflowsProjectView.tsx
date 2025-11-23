@@ -124,7 +124,7 @@ export function WorkflowsProjectView({
                   <TableCell>
                     <WorkflowItemStatusBadge
                       status={item.status}
-                      priority={item.priority}
+                      priority={item.priority ?? undefined}
                     />
                   </TableCell>
                   <TableCell>

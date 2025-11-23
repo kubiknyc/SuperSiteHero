@@ -135,7 +135,7 @@ export function EditPunchItemDialog({
               <Label htmlFor="priority">Priority</Label>
               <Select
                 id="priority"
-                value={priority}
+                value={priority || ''}
                 onChange={(e) => setPriority(e.target.value as Priority)}
               >
                 <option value="low">Low</option>
@@ -149,7 +149,7 @@ export function EditPunchItemDialog({
               <Label htmlFor="status">Status</Label>
               <Select
                 id="status"
-                value={status}
+                value={status || ''}
                 onChange={(e) => setStatus(e.target.value as PunchItemStatus)}
               >
                 <option value="open">Open</option>

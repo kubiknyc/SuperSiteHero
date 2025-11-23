@@ -87,7 +87,7 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
   }
 
   // Get assignees display text
-  const getAssigneesText = (assignees: string[]): string => {
+  const getAssigneesText = (assignees: string[] | null): string => {
     if (!assignees || assignees.length === 0) return 'Unassigned'
     if (assignees.length === 1) return assignees[0].substring(0, 8)
     return `${assignees[0].substring(0, 8)} +${assignees.length - 1}`

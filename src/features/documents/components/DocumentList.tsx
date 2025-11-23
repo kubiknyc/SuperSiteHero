@@ -70,7 +70,7 @@ export function DocumentList({
   }
 
   // Format date in readable format
-  const formatDate = (dateString: string): string => {
+  const formatDate = (dateString: string | null): string => {
     try {
       return dateString ? format(new Date(dateString), 'MMM d, yyyy') : 'N/A'
     } catch {

@@ -234,7 +234,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
       {uploadOpen && (
         <DocumentUpload
           projectId={projectId}
-          folderId={folderId}
+          folderId={folderId ?? null}
           onUploadSuccess={() => {
             setSearchTerm('')
             setUploadOpen(false)

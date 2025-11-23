@@ -46,7 +46,7 @@ describe('RLS Policy Tests', () => {
         .from('projects')
         .insert({
           name: 'Unauthorized Project',
-          company_id: 'test-company-id',
+          company_id: '00000000-0000-0000-0000-000000000001',
         })
 
       expect(error).toBeTruthy()
@@ -90,8 +90,8 @@ describe('RLS Policy Tests', () => {
       const { error } = await anonClient
         .from('daily_reports')
         .insert({
-          project_id: 'test-project-id',
-          reporter_id: 'test-user-id',
+          project_id: '00000000-0000-0000-0000-000000000001',
+          reporter_id: '00000000-0000-0000-0000-000000000002',
           report_date: new Date().toISOString().split('T')[0],
           status: 'draft',
         })
@@ -116,13 +116,13 @@ describe('RLS Policy Tests', () => {
     })
 
     it('should NOT allow anonymous users to create workflow items', async () => {
-      const { error } = await anonClient
+      const { error} = await anonClient
         .from('workflow_items')
         .insert({
-          project_id: 'test-project-id',
-          workflow_type_id: 'test-type-id',
+          project_id: '00000000-0000-0000-0000-000000000001',
+          workflow_type_id: '00000000-0000-0000-0000-000000000002',
           title: 'Unauthorized Item',
-          status_id: 'test-status-id',
+          status: 'open',
         })
 
       expect(error).toBeTruthy()
@@ -150,7 +150,9 @@ describe('RLS Policy Tests', () => {
         .insert({
           project_id: 'test-project-id',
           name: 'Unauthorized Document',
-          type: 'other',
+          document_type: 'other',
+          file_name: 'test.pdf',
+          file_url: 'https://example.com/test.pdf',
           status: 'pending',
         })
 
@@ -178,9 +180,10 @@ describe('RLS Policy Tests', () => {
       const { error } = await anonClient
         .from('users')
         .insert({
-          id: 'test-user-id',
+          id: '00000000-0000-0000-0000-000000000001',
           email: 'test@example.com',
           role: 'superintendent',
+          company_id: '00000000-0000-0000-0000-000000000002',
         })
 
       expect(error).toBeTruthy()
@@ -216,6 +219,7 @@ describe('RLS Policy Tests', () => {
         .from('companies')
         .insert({
           name: 'Unauthorized Company',
+          slug: 'unauthorized-company',
         })
 
       expect(error).toBeTruthy()
@@ -242,9 +246,10 @@ describe('RLS Policy Tests', () => {
         .from('safety_incidents')
         .insert({
           project_id: 'test-project-id',
-          incident_date: new Date().toISOString(),
+          incident_date: new Date().toISOString().split('T')[0],
+          incident_type: 'near_miss',
+          description: 'Test incident',
           severity: 'low',
-          type: 'near_miss',
         })
 
       expect(error).toBeTruthy()

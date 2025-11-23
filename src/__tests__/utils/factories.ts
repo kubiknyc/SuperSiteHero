@@ -16,17 +16,8 @@ export interface MockUser {
   updated_at: string;
 }
 
-export interface MockProject {
-  id: string;
-  name: string;
-  description: string;
-  company_id: string;
-  status: 'active' | 'completed' | 'on_hold';
-  start_date: string;
-  end_date: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// Import the actual Project type from database
+import type { Project } from '@/types/database';
 
 export interface MockDailyLog {
   id: string;
@@ -63,10 +54,9 @@ export const mockUser = (overrides: Partial<MockUser> = {}): MockUser => {
 /**
  * Generate a mock project
  */
-export const mockProject = (overrides: Partial<MockProject> = {}): MockProject => {
+export const mockProject = (overrides: Partial<Project> = {}): Project => {
   const startDate = faker.date.past();
-
-  return {
+  const defaultValues: Project = {
     id: faker.string.uuid(),
     name: `${faker.company.name()} Construction Project`,
     description: faker.lorem.paragraph(),
@@ -76,8 +66,32 @@ export const mockProject = (overrides: Partial<MockProject> = {}): MockProject =
     end_date: faker.date.future({ refDate: startDate }).toISOString().split('T')[0],
     created_at: faker.date.past().toISOString(),
     updated_at: faker.date.recent().toISOString(),
-    ...overrides,
+    // Add all required nullable fields
+    address: null,
+    budget: null,
+    city: null,
+    contract_value: null,
+    created_by: null,
+    deleted_at: null,
+    features_enabled: null,
+    final_completion_date: null,
+    latitude: null,
+    longitude: null,
+    project_number: null,
+    state: null,
+    substantial_completion_date: null,
+    weather_units: null,
+    zip: null,
   };
+
+  // Merge overrides, ensuring null values are preserved
+  const result = { ...defaultValues };
+  for (const key in overrides) {
+    if (overrides.hasOwnProperty(key)) {
+      (result as any)[key] = overrides[key as keyof Project];
+    }
+  }
+  return result;
 };
 
 /**

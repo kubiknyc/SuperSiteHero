@@ -138,9 +138,9 @@ export async function getProjectHealthReport(projectId: string): Promise<Project
     return {
       projectId,
       projectName: project.name,
-      status: project.status,
-      startDate: project.start_date,
-      estimatedEndDate: project.end_date,
+      status: project.status ?? 'unknown',
+      startDate: project.start_date ?? '',
+      estimatedEndDate: project.end_date ?? '',
       contractValue: project.contract_value,
       budget: project.budget,
       scheduleVariance: null, // Would need schedule data
@@ -328,7 +328,8 @@ export async function getPunchListReport(projectId: string): Promise<PunchListRe
     let rejections = 0
 
     items?.forEach(item => {
-      byStatus[item.status] = (byStatus[item.status] || 0) + 1
+      const status = item.status ?? 'unknown'
+      byStatus[status] = (byStatus[status] || 0) + 1
 
       // Track by trade
       if (item.trade) {
@@ -405,8 +406,10 @@ export async function getSafetyIncidentReport(
     let resolutionTimes: number[] = []
 
     incidents?.forEach(incident => {
-      byType[incident.incident_type] = (byType[incident.incident_type] || 0) + 1
-      bySeverity[incident.severity] = (bySeverity[incident.severity] || 0) + 1
+      const incidentType = incident.incident_type ?? 'unknown'
+      const severity = incident.severity ?? 'unknown'
+      byType[incidentType] = (byType[incidentType] || 0) + 1
+      bySeverity[severity] = (bySeverity[severity] || 0) + 1
 
       if (incident.status === 'closed' && incident.created_at) {
         const time = new Date(incident.incident_date).getTime() - new Date(incident.created_at).getTime()

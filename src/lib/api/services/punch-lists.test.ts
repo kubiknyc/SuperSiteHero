@@ -143,10 +143,20 @@ describe('punchListsApi', () => {
         verified_date: null,
         rejection_notes: null,
         created_by: null,
+        created_at: null,
         deleted_at: null,
+        marked_complete_by: null,
+        marked_complete_at: null,
+        verified_by: null,
+        verified_at: null,
       }
 
-      const createdItem = { id: '1', marked_complete_by: null, verified_by: null, created_at: '2025-01-01T00:00:00Z', updated_at: '2025-01-01T00:00:00Z', ...newItem }
+      const createdItem = {
+        ...newItem,
+        id: '1',
+        created_at: '2025-01-01T00:00:00Z',
+        updated_at: '2025-01-01T00:00:00Z',
+      }
 
       vi.mocked(apiClientModule.apiClient.insert).mockResolvedValue(createdItem)
 

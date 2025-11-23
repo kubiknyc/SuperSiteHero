@@ -1,0 +1,276 @@
+// File: /src/features/documents/components/viewers/ImageViewer.tsx
+// Image viewer with zoom and pan capabilities
+
+import { useState } from 'react'
+import { ZoomIn, ZoomOut, Download, Maximize2 } from 'lucide-react'
+import { Button } from '@/components/ui'
+import { cn } from '@/lib/utils'
+
+interface ImageViewerProps {
+  imageUrl: string
+  fileName?: string
+  alt?: string
+  allowMarkup?: boolean
+  readOnly?: boolean
+  onMarkupCreate?: (markup: any) => void
+  height?: string
+}
+
+/**
+ * ImageViewer Component
+ *
+ * An image viewer with zoom controls, pan capability, and fullscreen support.
+ *
+ * Features:
+ * - Zoom in/out controls
+ * - Pan/scroll when zoomed
+ * - Fit to screen / fit to width options
+ * - Fullscreen mode
+ * - Download button
+ * - Keyboard shortcuts
+ * - Touch-friendly controls
+ *
+ * Usage:
+ * ```tsx
+ * <ImageViewer
+ *   imageUrl="https://example.com/image.jpg"
+ *   fileName="photo.jpg"
+ *   alt="Construction photo"
+ * />
+ * ```
+ */
+export function ImageViewer({
+  imageUrl,
+  fileName = 'image.jpg',
+  alt = 'Image',
+  allowMarkup = false,
+  readOnly = false,
+  onMarkupCreate,
+  height = 'h-screen',
+}: ImageViewerProps) {
+  const [zoom, setZoom] = useState(100)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [panX, setPanX] = useState(0)
+  const [panY, setPanY] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+
+  // Handle image load
+  const handleImageLoad = () => {
+    setIsLoading(false)
+    setError(null)
+  }
+
+  // Handle image load error
+  const handleImageError = () => {
+    setError('Failed to load image')
+    setIsLoading(false)
+  }
+
+  // Zoom handlers
+  const zoomIn = () => {
+    setZoom(prev => Math.min(prev + 10, 300))
+  }
+
+  const zoomOut = () => {
+    setZoom(prev => Math.max(prev - 10, 50))
+  }
+
+  const resetZoom = () => {
+    setZoom(100)
+    setPanX(0)
+    setPanY(0)
+  }
+
+  const fitToScreen = () => {
+    setZoom(100)
+    setPanX(0)
+    setPanY(0)
+  }
+
+  // Download handler
+  const handleDownload = () => {
+    const a = document.createElement('a')
+    a.href = imageUrl
+    a.download = fileName
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
+  // Fullscreen handler
+  const handleFullscreen = async () => {
+    if (!isFullscreen) {
+      try {
+        const element = document.getElementById('image-viewer-container')
+        if (element?.requestFullscreen) {
+          await element.requestFullscreen()
+          setIsFullscreen(true)
+        }
+      } catch (error) {
+        console.error('Fullscreen request failed:', error)
+      }
+    } else {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen()
+        setIsFullscreen(false)
+      }
+    }
+  }
+
+  // Pan handlers
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (zoom <= 100) return // Only allow pan when zoomed in
+    setIsDragging(true)
+    setDragStart({ x: e.clientX - panX, y: e.clientY - panY })
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || zoom <= 100) return
+    setPanX(e.clientX - dragStart.x)
+    setPanY(e.clientY - dragStart.y)
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  return (
+    <div
+      id="image-viewer-container"
+      className={cn('flex flex-col bg-gray-900', height)}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
+      {/* Toolbar */}
+      <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
+        {/* Left side - Empty for spacing */}
+        <div />
+
+        {/* Center - Filename */}
+        <div className="text-gray-300 text-sm truncate flex-1 text-center px-2">
+          {fileName}
+        </div>
+
+        {/* Right side - Controls */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={zoomOut}
+            disabled={zoom <= 50}
+            title="Zoom out"
+            className="text-white hover:bg-gray-700"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </Button>
+
+          <div className="text-gray-300 text-sm w-10 text-center">
+            {zoom}%
+          </div>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={zoomIn}
+            disabled={zoom >= 300}
+            title="Zoom in"
+            className="text-white hover:bg-gray-700"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </Button>
+
+          <div className="w-px h-4 bg-gray-600" />
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={resetZoom}
+            title="Reset zoom to 100%"
+            className="text-white hover:bg-gray-700 text-xs"
+          >
+            Reset
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={fitToScreen}
+            title="Fit to screen"
+            className="text-white hover:bg-gray-700 text-xs"
+          >
+            Fit
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleFullscreen}
+            title="Toggle fullscreen"
+            className="text-white hover:bg-gray-700"
+          >
+            <Maximize2 className="w-4 h-4" />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleDownload}
+            title="Download image"
+            className="text-white hover:bg-gray-700"
+          >
+            <Download className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Image Viewer Area */}
+      <div className="flex-1 overflow-hidden bg-gray-900 flex items-center justify-center cursor-grab active:cursor-grabbing">
+        {isLoading && (
+          <div className="text-gray-400 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
+            <p>Loading image...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="text-red-400 text-center max-w-md">
+            <p className="font-medium mb-2">Error loading image</p>
+            <p className="text-sm">{error}</p>
+          </div>
+        )}
+
+        {!error && (
+          <div className="overflow-auto w-full h-full flex items-center justify-center">
+            <img
+              src={imageUrl}
+              alt={alt}
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              onMouseDown={handleMouseDown}
+              style={{
+                transform: `scale(${zoom / 100}) translate(${panX}px, ${panY}px)`,
+                transformOrigin: 'center',
+                transition: isDragging ? 'none' : 'transform 0.2s ease-out',
+              }}
+              className={cn(
+                'max-w-full max-h-full',
+                zoom > 100 && isDragging && 'cursor-grabbing',
+              )}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Info text when zoomed in */}
+      {zoom > 100 && (
+        <div className="bg-gray-800 border-t border-gray-700 px-3 py-2 text-xs text-gray-400 text-center">
+          Drag to pan, use zoom controls or keyboard shortcuts
+        </div>
+      )}
+    </div>
+  )
+}

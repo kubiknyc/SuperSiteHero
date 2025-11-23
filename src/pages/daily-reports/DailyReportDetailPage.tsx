@@ -127,8 +127,8 @@ export function DailyReportDetailPage() {
                 Daily Report - {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
               </h1>
               <div className="flex items-center gap-2 mt-2">
-                <Badge variant={getStatusColor(report.status)}>
-                  {report.status.replace('_', ' ')}
+                <Badge variant={getStatusColor(report.status ?? 'draft')}>
+                  {(report.status ?? 'draft').replace('_', ' ')}
                 </Badge>
               </div>
             </div>

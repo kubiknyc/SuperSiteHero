@@ -210,7 +210,7 @@ describe('Projects Workflow Integration Tests', () => {
 describe('Project CRUD Operations', () => {
   it('should perform complete CRUD cycle', async () => {
     const user = userEvent.setup();
-    let createdProjectId: string | null = null;
+    let createdProjectId: string = '';
 
     // CREATE
     server.use(
@@ -236,8 +236,11 @@ describe('Project CRUD Operations', () => {
 
         if (id === createdProjectId) {
           return HttpResponse.json([
-            mockProject({ id: createdProjectId, name: 'CRUD Test Project' })
-          ]);
+            mockProject({
+              id: createdProjectId!,
+              name: 'CRUD Test Project',
+            })
+          ] as any);
         }
 
         return HttpResponse.json(mockProjects);
