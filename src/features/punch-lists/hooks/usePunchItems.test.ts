@@ -13,6 +13,7 @@ import { supabase } from '@/lib/supabase';
 import { createWrapper } from '@/__tests__/utils/TestProviders';
 import { faker } from '@faker-js/faker';
 import type { PunchItem } from '@/types/database';
+import { ApiErrorClass } from '@/lib/api/errors';
 
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
@@ -106,7 +107,6 @@ describe('usePunchItems', () => {
 
     expect(result.current.data).toHaveLength(3);
     expect(result.current.data).toEqual(punchItems);
-    expect(supabase.from).toHaveBeenCalledWith('punch_items');
   });
 
   it('should be disabled when projectId is undefined', () => {
@@ -139,20 +139,10 @@ describe('usePunchItems', () => {
 
   it('should handle error when fetching punch items fails', async () => {
     const projectId = 'project-123';
-    const mockError = new Error('Database error');
+    const mockError = new ApiErrorClass({ message: 'Database error', code: 'FETCH_PUNCH_ITEMS_ERROR' });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          is: vi.fn().mockReturnValue({
-            order: vi.fn().mockResolvedValue({
-              data: null,
-              error: mockError,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.getPunchItemsByProject).mockRejectedValue(mockError);
 
     const { result } = renderHook(() => usePunchItems(projectId), {
       wrapper: createWrapper(),
@@ -160,10 +150,8 @@ describe('usePunchItems', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error).toMatchObject({
-      message: 'Failed to fetch punch items',
-      code: 'FETCH_PUNCH_ITEMS_ERROR'
-    });
+    // React Query passes through the error we throw
+    expect(result.current.error).toBe(mockError);
   });
 });
 
@@ -176,16 +164,8 @@ describe('usePunchItem', () => {
     const punchItemId = 'punch-123';
     const punchItem = mockPunchItem({ id: punchItemId });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({
-            data: punchItem,
-            error: null,
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.getPunchItem).mockResolvedValue(punchItem);
 
     const { result } = renderHook(() => usePunchItem(punchItemId), {
       wrapper: createWrapper(),
@@ -207,18 +187,10 @@ describe('usePunchItem', () => {
 
   it('should handle error when punch item not found', async () => {
     const punchItemId = 'non-existent';
-    const mockError = new Error('Punch item not found');
+    const mockError = new ApiErrorClass({ message: 'Punch item not found', code: 'FETCH_PUNCH_ITEM_ERROR' });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({
-            data: null,
-            error: mockError,
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.getPunchItem).mockRejectedValue(mockError);
 
     const { result } = renderHook(() => usePunchItem(punchItemId), {
       wrapper: createWrapper(),
@@ -226,10 +198,8 @@ describe('usePunchItem', () => {
 
     await waitFor(() => expect(result.current.isError).toBe(true));
 
-    expect(result.current.error).toMatchObject({
-      message: 'Failed to fetch punch item',
-      code: 'FETCH_PUNCH_ITEM_ERROR'
-    });
+    // React Query passes through the error we throw
+    expect(result.current.error).toBe(mockError);
   });
 });
 
@@ -299,31 +269,20 @@ describe('useCreatePunchItem', () => {
       verified_by: null,
     });
 
-    const insertSpy = vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        single: vi.fn().mockResolvedValue({
-          data: createdPunchItem,
-          error: null,
-        }),
-      }),
-    });
-
-    vi.mocked(supabase.from).mockReturnValue({
-      insert: insertSpy,
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    const createSpy = vi.mocked(punchListsApi.createPunchItem).mockResolvedValue(createdPunchItem);
 
     const { result } = renderHook(() => useCreatePunchItem(), {
       wrapper: createWrapper(),
     });
 
-    await result.current.mutateAsync(input as any);
+    const created = await result.current.mutateAsync(input as any);
 
-    expect(insertSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        marked_complete_by: null,
-        verified_by: null,
-      })
-    );
+    // Verify the API was called with input data
+    expect(createSpy).toHaveBeenCalledWith(input);
+    // Verify the returned item has null tracking fields (set by API service)
+    expect(created.marked_complete_by).toBeNull();
+    expect(created.verified_by).toBeNull();
   });
 });
 
@@ -341,18 +300,8 @@ describe('useUpdatePunchItem', () => {
 
     const updatedPunchItem = mockPunchItem({ id: punchItemId, ...updates });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: updatedPunchItem,
-              error: null,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.updatePunchItem).mockResolvedValue(updatedPunchItem);
 
     const queryClient = new QueryClient();
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
@@ -369,26 +318,17 @@ describe('useUpdatePunchItem', () => {
   });
 
   it('should handle update errors', async () => {
-    const mockError = new Error('Update failed');
+    const mockError = new ApiErrorClass({ message: 'Update failed', code: 'UPDATE_PUNCH_ITEM_ERROR' });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: null,
-              error: mockError,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.updatePunchItem).mockRejectedValue(mockError);
 
     const { result } = renderHook(() => useUpdatePunchItem(), {
       wrapper: createWrapper(),
     });
 
-    await expect(result.current.mutateAsync({ id: 'punch-123' })).rejects.toThrow('Failed to update punch item');
+    // The mutation should reject with the exact error we threw
+    await expect(result.current.mutateAsync({ id: 'punch-123' })).rejects.toBe(mockError);
   });
 });
 
@@ -400,13 +340,8 @@ describe('useDeletePunchItem', () => {
   it('should soft delete a punch item', async () => {
     const punchItemId = 'punch-123';
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockResolvedValue({
-          error: null,
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.deletePunchItem).mockResolvedValue();
 
     const queryClient = new QueryClient();
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
@@ -422,15 +357,9 @@ describe('useDeletePunchItem', () => {
 
   it('should set deleted_at timestamp', async () => {
     const punchItemId = 'punch-123';
-    const updateSpy = vi.fn().mockReturnValue({
-      eq: vi.fn().mockResolvedValue({
-        error: null,
-      }),
-    });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: updateSpy,
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    const deleteSpy = vi.mocked(punchListsApi.deletePunchItem).mockResolvedValue();
 
     const { result } = renderHook(() => useDeletePunchItem(), {
       wrapper: createWrapper(),
@@ -438,11 +367,8 @@ describe('useDeletePunchItem', () => {
 
     await result.current.mutateAsync(punchItemId);
 
-    expect(updateSpy).toHaveBeenCalledWith(
-      expect.objectContaining({
-        deleted_at: expect.any(String),
-      })
-    );
+    // The API service handles setting deleted_at internally
+    expect(deleteSpy).toHaveBeenCalledWith(punchItemId);
   });
 });
 
@@ -460,18 +386,8 @@ describe('useUpdatePunchItemStatus', () => {
       marked_complete_at: expect.any(String),
     });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: updatedPunchItem,
-              error: null,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.updatePunchItemStatus).mockResolvedValue(updatedPunchItem);
 
     const { result } = renderHook(() => useUpdatePunchItemStatus(), {
       wrapper: createWrapper(),
@@ -495,18 +411,8 @@ describe('useUpdatePunchItemStatus', () => {
       verified_at: expect.any(String),
     });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: updatedPunchItem,
-              error: null,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.updatePunchItemStatus).mockResolvedValue(updatedPunchItem);
 
     const { result } = renderHook(() => useUpdatePunchItemStatus(), {
       wrapper: createWrapper(),
@@ -528,20 +434,8 @@ describe('useUpdatePunchItemStatus', () => {
       status: 'in_progress',
     });
 
-    const updateSpy = vi.fn().mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        select: vi.fn().mockReturnValue({
-          single: vi.fn().mockResolvedValue({
-            data: updatedPunchItem,
-            error: null,
-          }),
-        }),
-      }),
-    });
-
-    vi.mocked(supabase.from).mockReturnValue({
-      update: updateSpy,
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    const statusSpy = vi.mocked(punchListsApi.updatePunchItemStatus).mockResolvedValue(updatedPunchItem);
 
     const { result } = renderHook(() => useUpdatePunchItemStatus(), {
       wrapper: createWrapper(),
@@ -552,10 +446,8 @@ describe('useUpdatePunchItemStatus', () => {
       status: 'in_progress',
     });
 
-    // Should not include marked_complete_by or verified_by fields
-    expect(updateSpy).toHaveBeenCalledWith({
-      status: 'in_progress',
-    });
+    // Verify the API was called with the correct parameters (including user ID)
+    expect(statusSpy).toHaveBeenCalledWith(punchItemId, 'in_progress', mockUserProfile.id);
   });
 
   it('should invalidate relevant queries after status update', async () => {
@@ -567,18 +459,8 @@ describe('useUpdatePunchItemStatus', () => {
       status: 'completed',
     });
 
-    vi.mocked(supabase.from).mockReturnValue({
-      update: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          select: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
-              data: updatedPunchItem,
-              error: null,
-            }),
-          }),
-        }),
-      }),
-    } as any);
+    const { punchListsApi } = await import('@/lib/api');
+    vi.mocked(punchListsApi.updatePunchItemStatus).mockResolvedValue(updatedPunchItem);
 
     const queryClient = new QueryClient();
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');

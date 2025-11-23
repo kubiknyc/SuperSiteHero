@@ -16,6 +16,7 @@ import {
 } from '@/components/ui'
 import { DocumentTypeIcon } from './DocumentTypeIcon'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
+import { highlightSearchTerm } from '../hooks/useDocumentSearch'
 import type { Document } from '@/types/database'
 
 interface DocumentListProps {
@@ -24,6 +25,7 @@ interface DocumentListProps {
   onEdit: (doc: Document) => void
   onDelete: (doc: Document) => void
   onView: (doc: Document) => void
+  searchTerm?: string
 }
 
 /**
@@ -59,6 +61,7 @@ export function DocumentList({
   onEdit,
   onDelete,
   onView,
+  searchTerm = '',
 }: DocumentListProps) {
   // Format file size in human-readable format
   const formatFileSize = (bytes: number | null): string => {
@@ -138,10 +141,14 @@ export function DocumentList({
                       <DocumentTypeIcon type={doc.document_type} className="flex-shrink-0" />
                       <div className="min-w-0 flex-1">
                         <p className="font-medium text-gray-900 truncate">
-                          {doc.name}
+                          {searchTerm
+                            ? highlightSearchTerm(doc.name, searchTerm)
+                            : doc.name}
                         </p>
                         <p className="text-sm text-gray-500 truncate">
-                          {doc.file_name}
+                          {searchTerm && doc.drawing_number
+                            ? highlightSearchTerm(doc.drawing_number, searchTerm)
+                            : doc.drawing_number || doc.file_name}
                         </p>
                       </div>
                     </div>

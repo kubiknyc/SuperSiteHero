@@ -29,7 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  Input
+  Input,
 } from '@/components/ui'
 import { DocumentUpload } from '@/features/documents/components/DocumentUpload'
 import { DocumentList } from '@/features/documents/components/DocumentList'
@@ -66,6 +66,7 @@ export function DocumentLibraryPage() {
   // State
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<DocumentStatus | 'all'>('all')
   const [typeFilter, setTypeFilter] = useState<DocumentType | 'all'>('all')
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
@@ -133,9 +134,18 @@ export function DocumentLibraryPage() {
     return documents.filter(doc => {
       const statusMatch = statusFilter === 'all' || doc.status === statusFilter
       const typeMatch = typeFilter === 'all' || doc.document_type === typeFilter
-      return statusMatch && typeMatch
+
+      // Search term matching
+      const searchLower = searchTerm.toLowerCase()
+      const searchMatch = !searchTerm ||
+        doc.name.toLowerCase().includes(searchLower) ||
+        doc.description?.toLowerCase().includes(searchLower) ||
+        doc.drawing_number?.toLowerCase().includes(searchLower) ||
+        doc.specification_section?.toLowerCase().includes(searchLower)
+
+      return statusMatch && typeMatch && searchMatch
     })
-  }, [documents, statusFilter, typeFilter])
+  }, [documents, statusFilter, typeFilter, searchTerm])
 
   // Toggle folder expansion
   const toggleFolder = (folderId: string) => {
@@ -396,9 +406,23 @@ export function DocumentLibraryPage() {
                 {/* Filters and View Toggle */}
                 <Card>
                   <CardContent className="p-4">
-                    <div className="flex flex-col md:flex-row gap-4 items-end">
-                      {/* Status Filter */}
+                    <div className="flex flex-col gap-4">
+                      {/* Search Input */}
                       <div className="flex-1">
+                        <Label htmlFor="search-docs">Search Documents</Label>
+                        <Input
+                          id="search-docs"
+                          type="text"
+                          placeholder="Search by name, drawing number, or section..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+
+                      <div className="flex flex-col md:flex-row gap-4 items-end">
+                        {/* Status Filter */}
+                        <div className="flex-1">
                         <Label htmlFor="status-filter">Status</Label>
                         <Select
                           id="status-filter"
@@ -454,6 +478,7 @@ export function DocumentLibraryPage() {
                           <Grid3x3 className="w-4 h-4" />
                         </Button>
                       </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -466,6 +491,7 @@ export function DocumentLibraryPage() {
                     onView={handleViewDocument}
                     onEdit={handleEditDocument}
                     onDelete={handleDeleteDocument}
+                    searchTerm={searchTerm}
                   />
                 ) : (
                   // Grid view (simplified for now)
