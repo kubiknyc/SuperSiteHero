@@ -2,6 +2,7 @@
 // Dialog (Modal) component using Radix UI primitives
 
 import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@/lib/utils'
 
 // Dialog Root Component
@@ -42,12 +43,13 @@ const DialogContext = React.createContext<{
 
 const DialogTrigger = React.forwardRef<
   HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ onClick, ...props }, ref) => {
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+>(({ onClick, asChild = false, ...props }, ref) => {
   const { onOpenChange } = React.useContext(DialogContext)
+  const Comp = asChild ? Slot : 'button'
 
   return (
-    <button
+    <Comp
       ref={ref}
       onClick={(e) => {
         onOpenChange(true)
