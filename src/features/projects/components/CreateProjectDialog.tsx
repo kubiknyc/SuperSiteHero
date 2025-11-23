@@ -131,7 +131,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         {children}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
