@@ -7,6 +7,7 @@ import { ToastProvider } from './lib/notifications/ToastContext'
 import { ErrorBoundary } from './components/errors/ErrorBoundary'
 import { ToastContainer } from './components/notifications/ToastContainer'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
+import { DebugAuth } from './components/DebugAuth'
 
 // Page imports
 import { LoginPage } from './pages/auth/LoginPage'
@@ -84,6 +85,9 @@ function App() {
 
             {/* Toast notification container - displays all toasts throughout app */}
             <ToastContainer />
+
+            {/* Debug component - REMOVE AFTER TESTING */}
+            <DebugAuth />
           </AuthProvider>
         </ToastProvider>
       </BrowserRouter>

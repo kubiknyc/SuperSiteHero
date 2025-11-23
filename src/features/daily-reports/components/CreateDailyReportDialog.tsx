@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react'
 import { useCreateDailyReportWithNotification } from '../hooks/useDailyReportsMutations'
 import { useFormValidation, dailyReportCreateSchema } from '@/lib/validation'
+import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -36,6 +37,7 @@ export function CreateDailyReportDialog({
     status: 'draft' as const,
   })
 
+  const { userProfile } = useAuth()
   const createReport = useCreateDailyReportWithNotification()
   const { validate, getFieldError, clearErrors } = useFormValidation(dailyReportCreateSchema)
 
@@ -63,11 +65,17 @@ export function CreateDailyReportDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (!userProfile?.id) {
+      console.error('User not authenticated')
+      return
+    }
+
     const submitData = {
       ...formData,
       temperature_high: formData.temperature_high ? Number(formData.temperature_high) : null,
       temperature_low: formData.temperature_low ? Number(formData.temperature_low) : null,
       total_workers: formData.total_workers ? Number(formData.total_workers) : null,
+      reporter_id: userProfile.id,
     }
 
     // Step 1: Validate client-side
@@ -78,7 +86,7 @@ export function CreateDailyReportDialog({
 
     // Step 2: Call API (with notifications handled by mutation hook)
     try {
-      await createReport.mutateAsync(validation.data)
+      await createReport.mutateAsync(validation.data as any)
 
       // Step 3: Success! Toast shown automatically by mutation hook
       onSuccess?.()

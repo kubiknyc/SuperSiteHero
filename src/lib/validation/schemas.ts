@@ -102,6 +102,10 @@ export const dailyReportCreateSchema = z.object({
     .min(1, 'Project is required')
     .uuid('Invalid project ID'),
 
+  reporter_id: z
+    .string()
+    .uuid('Invalid reporter ID'),
+
   report_date: z
     .string()
     .refine((date) => !isNaN(Date.parse(date)), 'Invalid date')

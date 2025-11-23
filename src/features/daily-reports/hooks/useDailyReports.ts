@@ -16,7 +16,7 @@ export function useDailyReports(projectId: string | undefined) {
         .from('daily_reports')
         .select('*')
         .eq('project_id', projectId)
-        .order('report_date', { ascending: false })
+        .order('report_date', { ascending: false }) as any
 
       if (error) throw error
       return data as DailyReport[]
@@ -36,7 +36,7 @@ export function useDailyReport(reportId: string | undefined) {
         .from('daily_reports')
         .select('*')
         .eq('id', reportId)
-        .single()
+        .single() as any
 
       if (error) throw error
       return data as DailyReport
@@ -50,7 +50,7 @@ export function useCreateDailyReport() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (report: CreateInput<DailyReport>) => {
+    mutationFn: async (report: CreateInput<'daily_reports'>) => {
       const { data, error } = await supabase
         .from('daily_reports')
         .insert(report as any)
