@@ -71,10 +71,26 @@ export function useCreateProject() {
         .single()
 
       if (error) throw error
+
+      // Assign the creator to the project
+      if (userProfile?.id) {
+        try {
+          await supabase
+            .from('project_users')
+            .insert({
+              project_id: data.id,
+              user_id: userProfile.id,
+            })
+        } catch (err) {
+          console.error('Failed to assign user to project:', err)
+          // Don't throw - project was created successfully
+        }
+      }
+
       return data as Project
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
+      queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
     },
   })
 }
@@ -96,8 +112,8 @@ export function useUpdateProject() {
       return data as Project
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
-      queryClient.invalidateQueries({ queryKey: ['projects', data.id] })
+      queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['projects', data.id], exact: false })
     },
   })
 }
@@ -116,7 +132,7 @@ export function useDeleteProject() {
       if (error) throw error
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
+      queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
     },
   })
 }

@@ -76,7 +76,8 @@ export const projectsApi = {
    */
   async createProject(
     companyId: string,
-    data: Omit<Project, 'id' | 'created_at' | 'updated_at'>
+    data: Omit<Project, 'id' | 'created_at' | 'updated_at'>,
+    userId?: string
   ): Promise<Project> {
     try {
       if (!companyId) {
@@ -86,10 +87,25 @@ export const projectsApi = {
         })
       }
 
-      return await apiClient.insert<Project>('projects', {
+      const project = await apiClient.insert<Project>('projects', {
         ...data,
         company_id: companyId,
       })
+
+      // If userId provided, assign the creator to the project
+      if (userId) {
+        try {
+          await apiClient.insert('project_users', {
+            project_id: project.id,
+            user_id: userId,
+          })
+        } catch (error) {
+          console.error('Failed to assign user to project:', error)
+          // Don't throw - project was created successfully, just couldn't assign user
+        }
+      }
+
+      return project
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error

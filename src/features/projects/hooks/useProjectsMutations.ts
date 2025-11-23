@@ -19,13 +19,15 @@ export function useCreateProjectWithNotification() {
       if (!userProfile?.company_id) {
         throw new Error('No company ID found')
       }
-      return projectsApi.createProject(userProfile.company_id, project)
+      return projectsApi.createProject(userProfile.company_id, project, userProfile?.id)
     },
     successMessage: (data) => `Project "${data.name}" created successfully`,
     errorMessage: (error) => `Failed to create project: ${error.message}`,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
-      queryClient.invalidateQueries({ queryKey: ['my-projects'] })
+      console.log('🟢 CREATE PROJECT SUCCESS - Invalidating queries...')
+      queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['my-projects'], exact: false })
+      console.log('🟢 CREATE PROJECT - Queries invalidated')
     },
   })
 }
@@ -47,8 +49,8 @@ export function useUpdateProjectWithNotification() {
     successMessage: (data) => `Project "${data.name}" updated successfully`,
     errorMessage: (error) => `Failed to update project: ${error.message}`,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
-      queryClient.invalidateQueries({ queryKey: ['projects', data.id] })
+      queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['projects', data.id], exact: false })
     },
   })
 }
@@ -66,8 +68,8 @@ export function useDeleteProjectWithNotification() {
     successMessage: 'Project deleted successfully',
     errorMessage: (error) => `Failed to delete project: ${error.message}`,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['projects'] })
-      queryClient.invalidateQueries({ queryKey: ['my-projects'] })
+      queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['my-projects'], exact: false })
     },
   })
 }
