@@ -35,3 +35,10 @@ build/
 # PWA
 dev-dist/
 nul
+
+# MCP configuration (contains tokens)
+.mcp.json
+.mcp.json.backup
+
+# Large migration files
+migrations/COMBINED_ALL_MIGRATIONS.sql

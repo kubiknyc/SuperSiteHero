@@ -5,20 +5,16 @@ import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
-import {
-  useChangeOrder,
-  useUpdateChangeOrder,
-  useDeleteChangeOrder,
-  useAddChangeOrderComment,
-} from '@/features/change-orders/hooks/useChangeOrders'
+import { useChangeOrder } from '@/features/change-orders/hooks/useChangeOrders'
+import { useUpdateChangeOrderStatusWithNotification, useAddChangeOrderCommentWithNotification } from '@/features/change-orders/hooks/useChangeOrderMutations'
+import { EditChangeOrderDialog } from '@/features/change-orders/components/EditChangeOrderDialog'
+import { DeleteChangeOrderConfirmation } from '@/features/change-orders/components/DeleteChangeOrderConfirmation'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
-import { useToast } from '@/components/ui/toast'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
   ArrowLeft,
@@ -28,8 +24,6 @@ import {
   User,
   Calendar,
   MessageSquare,
-  Trash2,
-  Save,
   AlertCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -38,138 +32,32 @@ export function ChangeOrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { userProfile } = useAuth()
-  const { addToast } = useToast()
 
   const { data: changeOrder, isLoading, error } = useChangeOrder(id)
-  const updateChangeOrder = useUpdateChangeOrder()
-  const deleteChangeOrder = useDeleteChangeOrder()
-  const addComment = useAddChangeOrderComment()
+  const updateStatus = useUpdateChangeOrderStatusWithNotification()
+  const addComment = useAddChangeOrderCommentWithNotification()
 
-  // Edit mode state
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedTitle, setEditedTitle] = useState('')
-  const [editedDescription, setEditedDescription] = useState('')
-  const [editedPriority, setEditedPriority] = useState<'low' | 'normal' | 'high'>('normal')
-  const [editedCostImpact, setEditedCostImpact] = useState('')
-  const [editedScheduleImpact, setEditedScheduleImpact] = useState('')
-
-  // Comment state
+  // Dialog and comment state
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [newComment, setNewComment] = useState('')
-
-  // Initialize edit form when entering edit mode
-  const handleStartEdit = () => {
-    if (changeOrder) {
-      setEditedTitle(changeOrder.title || '')
-      setEditedDescription(changeOrder.description || '')
-      setEditedPriority(changeOrder.priority)
-      setEditedCostImpact(changeOrder.cost_impact?.toString() || '')
-      setEditedScheduleImpact(changeOrder.schedule_impact?.toString() || '')
-      setIsEditing(true)
-    }
-  }
-
-  const handleCancelEdit = () => {
-    setIsEditing(false)
-  }
-
-  const handleSaveEdit = async () => {
-    if (!changeOrder) return
-
-    try {
-      await updateChangeOrder.mutateAsync({
-        id: changeOrder.id,
-        title: editedTitle.trim(),
-        description: editedDescription.trim() || null,
-        priority: editedPriority,
-        cost_impact: editedCostImpact ? parseFloat(editedCostImpact) : null,
-        schedule_impact: editedScheduleImpact ? parseInt(editedScheduleImpact) : null,
-      })
-
-      addToast({
-        title: 'Success',
-        description: 'Change order updated successfully',
-        variant: 'success',
-      })
-      setIsEditing(false)
-    } catch (error) {
-      console.error('Failed to update change order:', error)
-      addToast({
-        title: 'Error',
-        description: 'Failed to update change order',
-        variant: 'destructive',
-      })
-    }
-  }
 
   const handleStatusChange = async (newStatus: string) => {
     if (!changeOrder) return
-
-    try {
-      await updateChangeOrder.mutateAsync({
-        id: changeOrder.id,
-        status: newStatus,
-      })
-
-      addToast({
-        title: 'Success',
-        description: 'Status updated successfully',
-        variant: 'success',
-      })
-    } catch (error) {
-      console.error('Failed to update status:', error)
-      addToast({
-        title: 'Error',
-        description: 'Failed to update status',
-        variant: 'destructive',
-      })
-    }
-  }
-
-  const handleDelete = async () => {
-    if (!changeOrder || !window.confirm('Are you sure you want to delete this change order?')) return
-
-    try {
-      await deleteChangeOrder.mutateAsync(changeOrder.id)
-      addToast({
-        title: 'Success',
-        description: 'Change order deleted successfully',
-        variant: 'success',
-      })
-      navigate('/change-orders')
-    } catch (error) {
-      console.error('Failed to delete change order:', error)
-      addToast({
-        title: 'Error',
-        description: 'Failed to delete change order',
-        variant: 'destructive',
-      })
-    }
+    await updateStatus.mutateAsync({
+      changeOrderId: changeOrder.id,
+      status: newStatus,
+    })
   }
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!changeOrder || !newComment.trim()) return
 
-    try {
-      await addComment.mutateAsync({
-        workflow_item_id: changeOrder.id,
-        comment: newComment.trim(),
-      })
-
-      addToast({
-        title: 'Success',
-        description: 'Comment added successfully',
-        variant: 'success',
-      })
-      setNewComment('')
-    } catch (error) {
-      console.error('Failed to add comment:', error)
-      addToast({
-        title: 'Error',
-        description: 'Failed to add comment',
-        variant: 'destructive',
-      })
-    }
+    await addComment.mutateAsync({
+      workflow_item_id: changeOrder.id,
+      comment: newComment.trim(),
+    })
+    setNewComment('')
   }
 
   const getStatusColor = (status: string) => {
@@ -247,18 +135,15 @@ export function ChangeOrderDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {!isEditing && (
-              <>
-                <Button variant="outline" onClick={handleStartEdit}>
-                  <FileEdit className="w-4 h-4 mr-2" />
-                  Edit
-                </Button>
-                <Button variant="destructive" onClick={handleDelete}>
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
-                </Button>
-              </>
-            )}
+            <Button variant="outline" size="sm" onClick={() => setEditDialogOpen(true)}>
+              <FileEdit className="w-4 h-4 mr-2" />
+              Edit
+            </Button>
+            <DeleteChangeOrderConfirmation
+              changeOrderId={changeOrder.id}
+              changeOrderNumber={changeOrder.number}
+              onSuccess={() => navigate('/change-orders')}
+            />
           </div>
         </div>
 
@@ -271,100 +156,34 @@ export function ChangeOrderDetailPage() {
                 <CardTitle>Change Order Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                {isEditing ? (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="title">Title</Label>
-                      <Input
-                        id="title"
-                        value={editedTitle}
-                        onChange={(e) => setEditedTitle(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={editedDescription}
-                        onChange={(e) => setEditedDescription(e.target.value)}
-                        rows={6}
-                      />
-                    </div>
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="priority">Priority</Label>
-                        <Select
-                          id="priority"
-                          value={editedPriority}
-                          onChange={(e) => setEditedPriority(e.target.value as 'low' | 'normal' | 'high')}
-                        >
-                          <option value="low">Low</option>
-                          <option value="normal">Normal</option>
-                          <option value="high">High</option>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="cost-impact">Cost Impact ($)</Label>
-                        <Input
-                          id="cost-impact"
-                          type="number"
-                          step="0.01"
-                          value={editedCostImpact}
-                          onChange={(e) => setEditedCostImpact(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="schedule-impact">Schedule Impact (days)</Label>
-                        <Input
-                          id="schedule-impact"
-                          type="number"
-                          value={editedScheduleImpact}
-                          onChange={(e) => setEditedScheduleImpact(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-end gap-2 pt-4">
-                      <Button variant="outline" onClick={handleCancelEdit}>
-                        Cancel
-                      </Button>
-                      <Button onClick={handleSaveEdit} disabled={updateChangeOrder.isPending}>
-                        <Save className="w-4 h-4 mr-2" />
-                        {updateChangeOrder.isPending ? 'Saving...' : 'Save Changes'}
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <Label className="text-gray-600">Title</Label>
-                      <p className="text-lg font-medium mt-1">{changeOrder.title}</p>
-                    </div>
-                    {changeOrder.description && (
-                      <div>
-                        <Label className="text-gray-600">Description</Label>
-                        <p className="mt-1 whitespace-pre-wrap">{changeOrder.description}</p>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
-                        <Label className="text-gray-600">Priority</Label>
-                        <Badge variant="outline" className="capitalize mt-1">
-                          {changeOrder.priority}
-                        </Badge>
-                      </div>
-                      <div>
-                        <Label className="text-gray-600">Cost Impact</Label>
-                        <p className="font-medium mt-1">{formatCurrency(changeOrder.cost_impact)}</p>
-                      </div>
-                      <div>
-                        <Label className="text-gray-600">Schedule Impact</Label>
-                        <p className="font-medium mt-1">
-                          {changeOrder.schedule_impact !== null ? `${changeOrder.schedule_impact} days` : 'Not specified'}
-                        </p>
-                      </div>
-                    </div>
-                  </>
+                <div>
+                  <Label className="text-gray-600">Title</Label>
+                  <p className="text-lg font-medium mt-1">{changeOrder.title}</p>
+                </div>
+                {changeOrder.description && (
+                  <div>
+                    <Label className="text-gray-600">Description</Label>
+                    <p className="mt-1 whitespace-pre-wrap">{changeOrder.description}</p>
+                  </div>
                 )}
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-gray-600">Priority</Label>
+                    <Badge variant="outline" className="capitalize mt-1">
+                      {changeOrder.priority}
+                    </Badge>
+                  </div>
+                  <div>
+                    <Label className="text-gray-600">Cost Impact</Label>
+                    <p className="font-medium mt-1">{formatCurrency(changeOrder.cost_impact)}</p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-600">Schedule Impact</Label>
+                    <p className="font-medium mt-1">
+                      {changeOrder.schedule_impact !== null ? `${changeOrder.schedule_impact} days` : 'Not specified'}
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -432,7 +251,7 @@ export function ChangeOrderDetailPage() {
                                 {comment.created_by_user?.first_name} {comment.created_by_user?.last_name}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {format(new Date(comment.created_at), 'MMM d, yyyy h:mm a')}
+                                {comment.created_at ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                               </span>
                             </div>
                             <p className="text-sm whitespace-pre-wrap">{comment.comment}</p>
@@ -514,14 +333,14 @@ export function ChangeOrderDetailPage() {
                   <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <Label className="text-gray-600">Created</Label>
-                    <p className="text-sm">{format(new Date(changeOrder.created_at), 'MMM d, yyyy h:mm a')}</p>
+                    <p className="text-sm">{changeOrder.created_at ? format(new Date(changeOrder.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
                   <div className="flex-1">
                     <Label className="text-gray-600">Updated</Label>
-                    <p className="text-sm">{format(new Date(changeOrder.updated_at), 'MMM d, yyyy h:mm a')}</p>
+                    <p className="text-sm">{changeOrder.updated_at ? format(new Date(changeOrder.updated_at), 'MMM d, yyyy h:mm a') : 'N/A'}</p>
                   </div>
                 </div>
                 {totalCost !== null && (
@@ -546,6 +365,13 @@ export function ChangeOrderDetailPage() {
             </Card>
           </div>
         </div>
+
+        {/* Edit Dialog */}
+        <EditChangeOrderDialog
+          changeOrder={changeOrder}
+          open={editDialogOpen}
+          onOpenChange={setEditDialogOpen}
+        />
       </div>
     </AppLayout>
   )

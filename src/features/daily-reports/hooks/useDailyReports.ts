@@ -53,7 +53,7 @@ export function useCreateDailyReport() {
     mutationFn: async (report: CreateInput<DailyReport>) => {
       const { data, error } = await supabase
         .from('daily_reports')
-        .insert(report)
+        .insert(report as any)
         .select()
         .single()
 
@@ -75,7 +75,7 @@ export function useUpdateDailyReport() {
     mutationFn: async ({ id, ...updates }: Partial<DailyReport> & { id: string }) => {
       const { data, error } = await supabase
         .from('daily_reports')
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()

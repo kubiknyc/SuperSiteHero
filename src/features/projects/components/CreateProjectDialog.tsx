@@ -2,14 +2,16 @@
 // Dialog for creating a new project
 
 import { useState } from 'react'
-import { useCreateProject } from '../hooks/useProjects'
+import { useCreateProjectWithNotification } from '../hooks/useProjectsMutations'
+import { useFormValidation, projectCreateSchema } from '@/lib/validation'
+import { useNotifications } from '@/lib/notifications/useNotifications'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { useToast } from '@/components/ui/toast'
+import { InputWithError, TextareaWithError, SelectWithError } from '@/components/form/ValidationError'
 import type { ProjectStatus } from '@/types/database'
 
 interface CreateProjectDialogProps {
@@ -26,14 +28,16 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
     address: '',
     city: '',
     state: '',
-    zip_code: '',
+    zip: '',
     start_date: '',
-    estimated_end_date: '',
+    end_date: '',
     status: 'planning' as ProjectStatus,
   })
 
-  const createProject = useCreateProject()
-  const { addToast } = useToast()
+  // Use the three hooks for full-stack integration
+  const createProject = useCreateProjectWithNotification()
+  const { validate, getFieldError, clearErrors } = useFormValidation(projectCreateSchema)
+  const { showError } = useNotifications()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData((prev) => ({
@@ -45,18 +49,25 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Step 1: Validate client-side
+    const validation = validate(formData)
+    if (!validation.success) {
+      return // Errors automatically shown in InputWithError components
+    }
+
+    // Step 2: Call API (with notifications handled by mutation hook)
     try {
       await createProject.mutateAsync({
-        name: formData.name,
-        project_number: formData.project_number || null,
-        description: formData.description || null,
-        address: formData.address || null,
-        city: formData.city || null,
-        state: formData.state || null,
-        zip_code: formData.zip_code || null,
-        start_date: formData.start_date || null,
-        estimated_end_date: formData.estimated_end_date || null,
-        status: formData.status,
+        name: validation.data.name,
+        project_number: validation.data.project_number || null,
+        description: validation.data.description || null,
+        address: validation.data.address || null,
+        city: validation.data.city || null,
+        state: validation.data.state || null,
+        zip: validation.data.zip || null,
+        start_date: validation.data.start_date || null,
+        end_date: validation.data.end_date || null,
+        status: validation.data.status,
         weather_units: 'imperial',
         features_enabled: {
           daily_reports: true,
@@ -71,14 +82,9 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
           photos: true,
           takeoff: true,
         },
-      })
+      } as any)
 
-      addToast({
-        title: 'Success',
-        description: 'Project created successfully',
-        variant: 'success',
-      })
-
+      // Step 3: Success! Toast shown automatically by mutation hook
       // Reset form and close dialog
       setFormData({
         name: '',
@@ -87,24 +93,44 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
         address: '',
         city: '',
         state: '',
-        zip_code: '',
+        zip: '',
         start_date: '',
-        estimated_end_date: '',
+        end_date: '',
         status: 'planning',
       })
+      clearErrors()
       onOpenChange?.(false)
     } catch (error) {
-      addToast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to create project',
-        variant: 'destructive',
-      })
+      // Error toast shown automatically by mutation hook
+      console.error('Failed to create project:', error)
     }
   }
 
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      // Closing dialog - only reset if not submitting
+      if (!createProject.isPending) {
+        setFormData({
+          name: '',
+          project_number: '',
+          description: '',
+          address: '',
+          city: '',
+          state: '',
+          zip: '',
+          start_date: '',
+          end_date: '',
+          status: 'planning',
+        })
+        clearErrors()
+      }
+    }
+    onOpenChange?.(newOpen)
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger>
         {children}
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -123,85 +149,98 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
                 <Label htmlFor="name">
                   Project Name <span className="text-red-500">*</span>
                 </Label>
-                <Input
+                <InputWithError
                   id="name"
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="New Office Building"
-                  required
+                  error={getFieldError('name')}
+                  disabled={createProject.isPending}
                 />
               </div>
 
               <div className="col-span-2 sm:col-span-1 space-y-2">
                 <Label htmlFor="project_number">Project Number</Label>
-                <Input
+                <InputWithError
                   id="project_number"
                   name="project_number"
                   value={formData.project_number}
                   onChange={handleChange}
                   placeholder="2024-001"
+                  error={getFieldError('project_number')}
+                  disabled={createProject.isPending}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea
+              <TextareaWithError
                 id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Brief description of the project..."
                 rows={3}
+                error={getFieldError('description')}
+                disabled={createProject.isPending}
               />
             </div>
 
             {/* Location */}
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
-              <Input
+              <InputWithError
                 id="address"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="123 Main Street"
+                error={getFieldError('address')}
+                disabled={createProject.isPending}
               />
             </div>
 
             <div className="grid grid-cols-6 gap-4">
               <div className="col-span-3 space-y-2">
                 <Label htmlFor="city">City</Label>
-                <Input
+                <InputWithError
                   id="city"
                   name="city"
                   value={formData.city}
                   onChange={handleChange}
                   placeholder="Springfield"
+                  error={getFieldError('city')}
+                  disabled={createProject.isPending}
                 />
               </div>
 
               <div className="col-span-2 space-y-2">
                 <Label htmlFor="state">State</Label>
-                <Input
+                <InputWithError
                   id="state"
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
                   placeholder="IL"
                   maxLength={2}
+                  error={getFieldError('state')}
+                  disabled={createProject.isPending}
                 />
               </div>
 
               <div className="col-span-1 space-y-2">
-                <Label htmlFor="zip_code">ZIP</Label>
-                <Input
-                  id="zip_code"
-                  name="zip_code"
-                  value={formData.zip_code}
+                <Label htmlFor="zip">ZIP</Label>
+                <InputWithError
+                  id="zip"
+                  name="zip"
+                  value={formData.zip}
                   onChange={handleChange}
                   placeholder="62701"
                   maxLength={10}
+                  error={getFieldError('zip')}
+                  disabled={createProject.isPending}
                 />
               </div>
             </div>
@@ -210,40 +249,46 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="start_date">Start Date</Label>
-                <Input
+                <InputWithError
                   id="start_date"
                   name="start_date"
                   type="date"
                   value={formData.start_date}
                   onChange={handleChange}
+                  error={getFieldError('start_date')}
+                  disabled={createProject.isPending}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="estimated_end_date">Estimated End Date</Label>
-                <Input
-                  id="estimated_end_date"
-                  name="estimated_end_date"
+                <Label htmlFor="end_date">Estimated End Date</Label>
+                <InputWithError
+                  id="end_date"
+                  name="end_date"
                   type="date"
-                  value={formData.estimated_end_date}
+                  value={formData.end_date}
                   onChange={handleChange}
+                  error={getFieldError('end_date')}
+                  disabled={createProject.isPending}
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="status">Status</Label>
-              <Select
+              <SelectWithError
                 id="status"
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
+                error={getFieldError('status')}
+                disabled={createProject.isPending}
               >
                 <option value="planning">Planning</option>
                 <option value="active">Active</option>
                 <option value="on_hold">On Hold</option>
                 <option value="completed">Completed</option>
-              </Select>
+              </SelectWithError>
             </div>
           </div>
 
@@ -251,7 +296,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange?.(false)}
+              onClick={() => handleOpenChange(false)}
               disabled={createProject.isPending}
             >
               Cancel

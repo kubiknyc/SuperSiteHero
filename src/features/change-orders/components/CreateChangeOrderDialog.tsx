@@ -8,8 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
-import { useToast } from '@/components/ui/toast'
-import { useCreateChangeOrder } from '../hooks/useChangeOrders'
+import { useCreateChangeOrderWithNotification } from '../hooks/useChangeOrderMutations'
 import { Plus } from 'lucide-react'
 
 interface CreateChangeOrderDialogProps {
@@ -25,18 +24,12 @@ export function CreateChangeOrderDialog({ projectId, workflowTypeId }: CreateCha
   const [costImpact, setCostImpact] = useState('')
   const [scheduleImpact, setScheduleImpact] = useState('')
 
-  const { addToast } = useToast()
-  const createChangeOrder = useCreateChangeOrder()
+  const createChangeOrder = useCreateChangeOrderWithNotification()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!title.trim()) {
-      addToast({
-        title: 'Validation Error',
-        description: 'Title is required',
-        variant: 'destructive',
-      })
       return
     }
 
@@ -52,13 +45,7 @@ export function CreateChangeOrderDialog({ projectId, workflowTypeId }: CreateCha
         assignees: [],
       })
 
-      addToast({
-        title: 'Success',
-        description: 'Change order created successfully',
-        variant: 'success',
-      })
-
-      // Reset form
+      // Reset form and close dialog
       setTitle('')
       setDescription('')
       setPriority('normal')
@@ -67,11 +54,7 @@ export function CreateChangeOrderDialog({ projectId, workflowTypeId }: CreateCha
       setOpen(false)
     } catch (error) {
       console.error('Failed to create change order:', error)
-      addToast({
-        title: 'Error',
-        description: 'Failed to create change order',
-        variant: 'destructive',
-      })
+      // Error toast is shown automatically by the mutation hook
     }
   }
 

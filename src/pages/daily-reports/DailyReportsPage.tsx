@@ -192,7 +192,7 @@ export function DailyReportsPage() {
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-4 w-4 text-gray-400" />
-                          {format(new Date(report.report_date), 'MMM d, yyyy')}
+                          {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
                         </div>
                       </TableCell>
                       <TableCell>

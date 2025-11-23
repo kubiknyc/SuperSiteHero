@@ -27,13 +27,13 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
     return statusColors[status] || 'bg-gray-100 text-gray-800'
   }
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = (priority: string | null) => {
     const priorityColors: Record<string, string> = {
       low: 'border-l-gray-400',
       normal: 'border-l-blue-400',
       high: 'border-l-orange-400',
     }
-    return priorityColors[priority] || 'border-l-gray-400'
+    return priorityColors[priority || 'normal'] || 'border-l-gray-400'
   }
 
   const formatCurrency = (amount: number | null) => {
@@ -112,7 +112,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
                   )}
 
                   <span>
-                    Created: {format(new Date(co.created_at), 'MMM d, yyyy')}
+                    Created: {co.created_at ? co.created_at ? format(new Date(co.created_at), 'MMM d, yyyy') : 'N/A' : 'Unknown'}
                   </span>
 
                   {co.bids && co.bids.length > 0 && (

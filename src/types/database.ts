@@ -1,8 +1,3 @@
-// File: /src/types/database.ts
-// TypeScript type definitions for Supabase database tables
-// Complete type definitions for all 42 database tables
-// Auto-generated from database schema
-
 export type Json =
   | string
   | number
@@ -11,1290 +6,3745 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[]
 
-export interface Database {
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.5"
+  }
   public: {
     Tables: {
-      companies: {
-        Row: Company
-        Insert: Omit<Company, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Company, 'id'>>
-      }
-      users: {
-        Row: UserProfile
-        Insert: Omit<UserProfile, 'created_at' | 'updated_at'>
-        Update: Partial<Omit<UserProfile, 'id'>>
-      }
-      projects: {
-        Row: Project
-        Insert: Omit<Project, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Project, 'id'>>
-      }
-      project_users: {
-        Row: ProjectUser
-        Insert: Omit<ProjectUser, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<ProjectUser, 'id'>>
-      }
-      contacts: {
-        Row: Contact
-        Insert: Omit<Contact, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Contact, 'id'>>
-      }
-      subcontractors: {
-        Row: Subcontractor
-        Insert: Omit<Subcontractor, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Subcontractor, 'id'>>
-      }
-      folders: {
-        Row: Folder
-        Insert: Omit<Folder, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Folder, 'id'>>
-      }
-      documents: {
-        Row: Document
-        Insert: Omit<Document, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Document, 'id'>>
-      }
-      document_markups: {
-        Row: DocumentMarkup
-        Insert: Omit<DocumentMarkup, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<DocumentMarkup, 'id'>>
-      }
-      daily_reports: {
-        Row: DailyReport
-        Insert: Omit<DailyReport, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<DailyReport, 'id'>>
-      }
-      daily_report_workforce: {
-        Row: DailyReportWorkforce
-        Insert: Omit<DailyReportWorkforce, 'id' | 'created_at'>
-        Update: Partial<Omit<DailyReportWorkforce, 'id'>>
-      }
-      daily_report_equipment: {
-        Row: DailyReportEquipment
-        Insert: Omit<DailyReportEquipment, 'id' | 'created_at'>
-        Update: Partial<Omit<DailyReportEquipment, 'id'>>
-      }
-      daily_report_deliveries: {
-        Row: DailyReportDelivery
-        Insert: Omit<DailyReportDelivery, 'id' | 'created_at'>
-        Update: Partial<Omit<DailyReportDelivery, 'id'>>
-      }
-      daily_report_visitors: {
-        Row: DailyReportVisitor
-        Insert: Omit<DailyReportVisitor, 'id' | 'created_at'>
-        Update: Partial<Omit<DailyReportVisitor, 'id'>>
-      }
-      daily_report_safety_incidents: {
-        Row: DailyReportSafetyIncident
-        Insert: Omit<DailyReportSafetyIncident, 'id' | 'created_at'>
-        Update: Partial<Omit<DailyReportSafetyIncident, 'id'>>
-      }
-      workflow_types: {
-        Row: WorkflowType
-        Insert: Omit<WorkflowType, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WorkflowType, 'id'>>
-      }
-      workflow_items: {
-        Row: WorkflowItem
-        Insert: Omit<WorkflowItem, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WorkflowItem, 'id'>>
-      }
-      workflow_item_comments: {
-        Row: WorkflowItemComment
-        Insert: Omit<WorkflowItemComment, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<WorkflowItemComment, 'id'>>
-      }
-      workflow_item_history: {
-        Row: WorkflowItemHistory
-        Insert: Omit<WorkflowItemHistory, 'id' | 'changed_at'>
-        Update: Partial<Omit<WorkflowItemHistory, 'id'>>
+      assemblies: {
+        Row: {
+          assembly_level: string
+          assembly_number: string | null
+          category: string | null
+          company_id: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          items: Json
+          name: string
+          trade: string | null
+          unit_of_measure: string
+          updated_at: string | null
+          variables: Json | null
+        }
+        Insert: {
+          assembly_level: string
+          assembly_number?: string | null
+          category?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          items?: Json
+          name: string
+          trade?: string | null
+          unit_of_measure: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Update: {
+          assembly_level?: string
+          assembly_number?: string | null
+          category?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          items?: Json
+          name?: string
+          trade?: string | null
+          unit_of_measure?: string
+          updated_at?: string | null
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assemblies_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assemblies_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       change_order_bids: {
-        Row: ChangeOrderBid
-        Insert: Omit<ChangeOrderBid, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<ChangeOrderBid, 'id'>>
-      }
-      submittal_procurement: {
-        Row: SubmittalProcurement
-        Insert: Omit<SubmittalProcurement, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<SubmittalProcurement, 'id'>>
-      }
-      tasks: {
-        Row: Task
-        Insert: Omit<Task, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Task, 'id'>>
-      }
-      schedule_items: {
-        Row: ScheduleItem
-        Insert: Omit<ScheduleItem, 'id' | 'created_at'>
-        Update: Partial<Omit<ScheduleItem, 'id'>>
+        Row: {
+          awarded_at: string | null
+          awarded_by: string | null
+          bid_status: string | null
+          created_at: string | null
+          deleted_at: string | null
+          duration_days: number | null
+          exclusions: string | null
+          id: string
+          is_awarded: boolean | null
+          lump_sum_cost: number | null
+          notes: string | null
+          project_id: string
+          subcontractor_id: string
+          submitted_at: string | null
+          submitted_by: string | null
+          supporting_documents: Json | null
+          updated_at: string | null
+          workflow_item_id: string
+        }
+        Insert: {
+          awarded_at?: string | null
+          awarded_by?: string | null
+          bid_status?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          duration_days?: number | null
+          exclusions?: string | null
+          id?: string
+          is_awarded?: boolean | null
+          lump_sum_cost?: number | null
+          notes?: string | null
+          project_id: string
+          subcontractor_id: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+          supporting_documents?: Json | null
+          updated_at?: string | null
+          workflow_item_id: string
+        }
+        Update: {
+          awarded_at?: string | null
+          awarded_by?: string | null
+          bid_status?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          duration_days?: number | null
+          exclusions?: string | null
+          id?: string
+          is_awarded?: boolean | null
+          lump_sum_cost?: number | null
+          notes?: string | null
+          project_id?: string
+          subcontractor_id?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+          supporting_documents?: Json | null
+          updated_at?: string | null
+          workflow_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "change_order_bids_awarded_by_fkey"
+            columns: ["awarded_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "change_order_bids_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "change_order_bids_subcontractor_id_fkey"
+            columns: ["subcontractor_id"]
+            isOneToOne: false
+            referencedRelation: "subcontractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "change_order_bids_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "change_order_bids_workflow_item_id_fkey"
+            columns: ["workflow_item_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       checklist_templates: {
-        Row: ChecklistTemplate
-        Insert: Omit<ChecklistTemplate, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<ChecklistTemplate, 'id'>>
+        Row: {
+          category: string | null
+          company_id: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          items: Json
+          name: string
+          template_level: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          items?: Json
+          name: string
+          template_level: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          items?: Json
+          name?: string
+          template_level?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checklist_templates_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklist_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       checklists: {
-        Row: Checklist
-        Insert: Omit<Checklist, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Checklist, 'id'>>
-      }
-      punch_items: {
-        Row: PunchItem
-        Insert: Omit<PunchItem, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<PunchItem, 'id'>>
-      }
-      safety_incidents: {
-        Row: SafetyIncident
-        Insert: Omit<SafetyIncident, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<SafetyIncident, 'id'>>
-      }
-      toolbox_talks: {
-        Row: ToolboxTalk
-        Insert: Omit<ToolboxTalk, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<ToolboxTalk, 'id'>>
-      }
-      inspections: {
-        Row: Inspection
-        Insert: Omit<Inspection, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Inspection, 'id'>>
-      }
-      permits: {
-        Row: Permit
-        Insert: Omit<Permit, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Permit, 'id'>>
-      }
-      tests: {
-        Row: Test
-        Insert: Omit<Test, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Test, 'id'>>
-      }
-      site_instructions: {
-        Row: SiteInstruction
-        Insert: Omit<SiteInstruction, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<SiteInstruction, 'id'>>
-      }
-      material_received: {
-        Row: MaterialReceived
-        Insert: Omit<MaterialReceived, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<MaterialReceived, 'id'>>
-      }
-      meetings: {
-        Row: Meeting
-        Insert: Omit<Meeting, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Meeting, 'id'>>
-      }
-      notices: {
-        Row: Notice
-        Insert: Omit<Notice, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Notice, 'id'>>
-      }
-      site_conditions: {
-        Row: SiteCondition
-        Insert: Omit<SiteCondition, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<SiteCondition, 'id'>>
+        Row: {
+          category: string | null
+          checklist_template_id: string | null
+          completed_at: string | null
+          completed_by: string | null
+          created_at: string | null
+          created_by: string | null
+          daily_report_id: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          is_completed: boolean | null
+          items: Json
+          name: string
+          project_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          checklist_template_id?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          daily_report_id?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          is_completed?: boolean | null
+          items?: Json
+          name: string
+          project_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          checklist_template_id?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          daily_report_id?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          is_completed?: boolean | null
+          items?: Json
+          name?: string
+          project_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checklists_checklist_template_id_fkey"
+            columns: ["checklist_template_id"]
+            isOneToOne: false
+            referencedRelation: "checklist_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklists_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklists_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklists_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklists_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       closeout_items: {
-        Row: CloseoutItem
-        Insert: Omit<CloseoutItem, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<CloseoutItem, 'id'>>
+        Row: {
+          collected_date: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          delivered_date: string | null
+          description: string | null
+          document_urls: Json | null
+          equipment_name: string | null
+          id: string
+          is_collected: boolean | null
+          is_delivered_to_owner: boolean | null
+          item_name: string
+          item_type: string
+          manufacturer: string | null
+          model_number: string | null
+          project_id: string
+          related_drawing_id: string | null
+          related_submittal_id: string | null
+          serial_number: string | null
+          system_category: string | null
+          updated_at: string | null
+          warranty_contact_email: string | null
+          warranty_contact_name: string | null
+          warranty_contact_phone: string | null
+          warranty_duration_years: number | null
+          warranty_end_date: string | null
+          warranty_start_date: string | null
+        }
+        Insert: {
+          collected_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          delivered_date?: string | null
+          description?: string | null
+          document_urls?: Json | null
+          equipment_name?: string | null
+          id?: string
+          is_collected?: boolean | null
+          is_delivered_to_owner?: boolean | null
+          item_name: string
+          item_type: string
+          manufacturer?: string | null
+          model_number?: string | null
+          project_id: string
+          related_drawing_id?: string | null
+          related_submittal_id?: string | null
+          serial_number?: string | null
+          system_category?: string | null
+          updated_at?: string | null
+          warranty_contact_email?: string | null
+          warranty_contact_name?: string | null
+          warranty_contact_phone?: string | null
+          warranty_duration_years?: number | null
+          warranty_end_date?: string | null
+          warranty_start_date?: string | null
+        }
+        Update: {
+          collected_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          delivered_date?: string | null
+          description?: string | null
+          document_urls?: Json | null
+          equipment_name?: string | null
+          id?: string
+          is_collected?: boolean | null
+          is_delivered_to_owner?: boolean | null
+          item_name?: string
+          item_type?: string
+          manufacturer?: string | null
+          model_number?: string | null
+          project_id?: string
+          related_drawing_id?: string | null
+          related_submittal_id?: string | null
+          serial_number?: string | null
+          system_category?: string | null
+          updated_at?: string | null
+          warranty_contact_email?: string | null
+          warranty_contact_name?: string | null
+          warranty_contact_phone?: string | null
+          warranty_duration_years?: number | null
+          warranty_end_date?: string | null
+          warranty_start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "closeout_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "closeout_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "closeout_items_related_drawing_id_fkey"
+            columns: ["related_drawing_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "closeout_items_related_submittal_id_fkey"
+            columns: ["related_submittal_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      photos: {
-        Row: Photo
-        Insert: Omit<Photo, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Photo, 'id'>>
+      companies: {
+        Row: {
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string | null
+          deleted_at: string | null
+          email: string | null
+          id: string
+          logo_url: string | null
+          max_projects: number | null
+          name: string
+          phone: string | null
+          primary_color: string | null
+          settings: Json | null
+          slug: string
+          state: string | null
+          subscription_status: string | null
+          subscription_tier: string | null
+          updated_at: string | null
+          zip: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          max_projects?: number | null
+          name: string
+          phone?: string | null
+          primary_color?: string | null
+          settings?: Json | null
+          slug: string
+          state?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          updated_at?: string | null
+          zip?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          id?: string
+          logo_url?: string | null
+          max_projects?: number | null
+          name?: string
+          phone?: string | null
+          primary_color?: string | null
+          settings?: Json | null
+          slug?: string
+          state?: string | null
+          subscription_status?: string | null
+          subscription_tier?: string | null
+          updated_at?: string | null
+          zip?: string | null
+        }
+        Relationships: []
       }
-      assemblies: {
-        Row: Assembly
-        Insert: Omit<Assembly, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<Assembly, 'id'>>
+      contacts: {
+        Row: {
+          address: string | null
+          city: string | null
+          company_name: string | null
+          contact_type: string
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          is_emergency_contact: boolean | null
+          is_primary: boolean | null
+          last_name: string | null
+          notes: string | null
+          phone_fax: string | null
+          phone_mobile: string | null
+          phone_office: string | null
+          project_id: string
+          state: string | null
+          title: string | null
+          trade: string | null
+          updated_at: string | null
+          zip: string | null
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          company_name?: string | null
+          contact_type: string
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          is_emergency_contact?: boolean | null
+          is_primary?: boolean | null
+          last_name?: string | null
+          notes?: string | null
+          phone_fax?: string | null
+          phone_mobile?: string | null
+          phone_office?: string | null
+          project_id: string
+          state?: string | null
+          title?: string | null
+          trade?: string | null
+          updated_at?: string | null
+          zip?: string | null
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          company_name?: string | null
+          contact_type?: string
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          is_emergency_contact?: boolean | null
+          is_primary?: boolean | null
+          last_name?: string | null
+          notes?: string | null
+          phone_fax?: string | null
+          phone_mobile?: string | null
+          phone_office?: string | null
+          project_id?: string
+          state?: string | null
+          title?: string | null
+          trade?: string | null
+          updated_at?: string | null
+          zip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contacts_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      takeoff_items: {
-        Row: TakeoffItem
-        Insert: Omit<TakeoffItem, 'id' | 'created_at' | 'updated_at'>
-        Update: Partial<Omit<TakeoffItem, 'id'>>
+      daily_report_deliveries: {
+        Row: {
+          created_at: string | null
+          daily_report_id: string
+          delivery_ticket_number: string | null
+          delivery_time: string | null
+          id: string
+          material_description: string
+          notes: string | null
+          quantity: string | null
+          vendor: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          daily_report_id: string
+          delivery_ticket_number?: string | null
+          delivery_time?: string | null
+          id?: string
+          material_description: string
+          notes?: string | null
+          quantity?: string | null
+          vendor?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          daily_report_id?: string
+          delivery_ticket_number?: string | null
+          delivery_time?: string | null
+          id?: string
+          material_description?: string
+          notes?: string | null
+          quantity?: string | null
+          vendor?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_report_deliveries_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+        ]
       }
-      notifications: {
-        Row: Notification
-        Insert: Omit<Notification, 'id' | 'created_at'>
-        Update: Partial<Omit<Notification, 'id'>>
+      daily_report_equipment: {
+        Row: {
+          created_at: string | null
+          daily_report_id: string
+          equipment_description: string | null
+          equipment_type: string
+          hours_used: number | null
+          id: string
+          notes: string | null
+          owner: string | null
+          quantity: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          daily_report_id: string
+          equipment_description?: string | null
+          equipment_type: string
+          hours_used?: number | null
+          id?: string
+          notes?: string | null
+          owner?: string | null
+          quantity?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          daily_report_id?: string
+          equipment_description?: string | null
+          equipment_type?: string
+          hours_used?: number | null
+          id?: string
+          notes?: string | null
+          owner?: string | null
+          quantity?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_report_equipment_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_report_safety_incidents: {
+        Row: {
+          created_at: string | null
+          daily_report_id: string
+          id: string
+          safety_incident_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          daily_report_id: string
+          id?: string
+          safety_incident_id: string
+        }
+        Update: {
+          created_at?: string | null
+          daily_report_id?: string
+          id?: string
+          safety_incident_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_report_safety_incidents_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_report_safety_incidents_safety_incident_id_fkey"
+            columns: ["safety_incident_id"]
+            isOneToOne: false
+            referencedRelation: "safety_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_report_visitors: {
+        Row: {
+          arrival_time: string | null
+          company: string | null
+          created_at: string | null
+          daily_report_id: string
+          departure_time: string | null
+          id: string
+          purpose: string | null
+          visitor_name: string
+        }
+        Insert: {
+          arrival_time?: string | null
+          company?: string | null
+          created_at?: string | null
+          daily_report_id: string
+          departure_time?: string | null
+          id?: string
+          purpose?: string | null
+          visitor_name: string
+        }
+        Update: {
+          arrival_time?: string | null
+          company?: string | null
+          created_at?: string | null
+          daily_report_id?: string
+          departure_time?: string | null
+          id?: string
+          purpose?: string | null
+          visitor_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_report_visitors_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_report_workforce: {
+        Row: {
+          activity: string | null
+          created_at: string | null
+          daily_report_id: string
+          entry_type: string | null
+          hours_worked: number | null
+          id: string
+          subcontractor_id: string | null
+          team_name: string | null
+          trade: string | null
+          worker_count: number | null
+          worker_name: string | null
+        }
+        Insert: {
+          activity?: string | null
+          created_at?: string | null
+          daily_report_id: string
+          entry_type?: string | null
+          hours_worked?: number | null
+          id?: string
+          subcontractor_id?: string | null
+          team_name?: string | null
+          trade?: string | null
+          worker_count?: number | null
+          worker_name?: string | null
+        }
+        Update: {
+          activity?: string | null
+          created_at?: string | null
+          daily_report_id?: string
+          entry_type?: string | null
+          hours_worked?: number | null
+          id?: string
+          subcontractor_id?: string | null
+          team_name?: string | null
+          trade?: string | null
+          worker_count?: number | null
+          worker_name?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_report_workforce_daily_report_id_fkey"
+            columns: ["daily_report_id"]
+            isOneToOne: false
+            referencedRelation: "daily_reports"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_report_workforce_subcontractor_id_fkey"
+            columns: ["subcontractor_id"]
+            isOneToOne: false
+            referencedRelation: "subcontractors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_reports: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          comments: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          issues: string | null
+          observations: string | null
+          pdf_generated_at: string | null
+          pdf_url: string | null
+          precipitation: number | null
+          production_data: Json | null
+          project_id: string
+          report_date: string
+          report_number: string | null
+          reporter_id: string
+          reviewer_id: string | null
+          status: string | null
+          submitted_at: string | null
+          temperature_high: number | null
+          temperature_low: number | null
+          total_workers: number | null
+          updated_at: string | null
+          weather_condition: string | null
+          weather_delay_notes: string | null
+          weather_delays: boolean | null
+          weather_source: string | null
+          wind_speed: number | null
+          work_completed: string | null
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          comments?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          issues?: string | null
+          observations?: string | null
+          pdf_generated_at?: string | null
+          pdf_url?: string | null
+          precipitation?: number | null
+          production_data?: Json | null
+          project_id: string
+          report_date: string
+          report_number?: string | null
+          reporter_id: string
+          reviewer_id?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          temperature_high?: number | null
+          temperature_low?: number | null
+          total_workers?: number | null
+          updated_at?: string | null
+          weather_condition?: string | null
+          weather_delay_notes?: string | null
+          weather_delays?: boolean | null
+          weather_source?: string | null
+          wind_speed?: number | null
+          work_completed?: string | null
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          comments?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          issues?: string | null
+          observations?: string | null
+          pdf_generated_at?: string | null
+          pdf_url?: string | null
+          precipitation?: number | null
+          production_data?: Json | null
+          project_id?: string
+          report_date?: string
+          report_number?: string | null
+          reporter_id?: string
+          reviewer_id?: string | null
+          status?: string | null
+          submitted_at?: string | null
+          temperature_high?: number | null
+          temperature_low?: number | null
+          total_workers?: number | null
+          updated_at?: string | null
+          weather_condition?: string | null
+          weather_delay_notes?: string | null
+          weather_delays?: boolean | null
+          weather_source?: string | null
+          wind_speed?: number | null
+          work_completed?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "daily_reports_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_reports_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_reports_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_reports_reporter_id_fkey"
+            columns: ["reporter_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_reports_reviewer_id_fkey"
+            columns: ["reviewer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_markups: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          document_id: string
+          id: string
+          is_shared: boolean | null
+          markup_data: Json
+          markup_type: string
+          page_number: number | null
+          project_id: string
+          related_to_id: string | null
+          related_to_type: string | null
+          shared_with_roles: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          document_id: string
+          id?: string
+          is_shared?: boolean | null
+          markup_data: Json
+          markup_type: string
+          page_number?: number | null
+          project_id: string
+          related_to_id?: string | null
+          related_to_type?: string | null
+          shared_with_roles?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          document_id?: string
+          id?: string
+          is_shared?: boolean | null
+          markup_data?: Json
+          markup_type?: string
+          page_number?: number | null
+          project_id?: string
+          related_to_id?: string | null
+          related_to_type?: string | null
+          shared_with_roles?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_markups_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_markups_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "document_markups_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          discipline: string | null
+          document_type: string
+          drawing_number: string | null
+          file_name: string
+          file_size: number | null
+          file_type: string | null
+          file_url: string
+          folder_id: string | null
+          id: string
+          is_latest_version: boolean | null
+          is_pinned: boolean | null
+          issue_date: string | null
+          name: string
+          project_id: string
+          received_date: string | null
+          requires_approval: boolean | null
+          revision: string | null
+          search_vector: unknown
+          specification_section: string | null
+          status: string | null
+          supersedes_document_id: string | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          discipline?: string | null
+          document_type: string
+          drawing_number?: string | null
+          file_name: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url: string
+          folder_id?: string | null
+          id?: string
+          is_latest_version?: boolean | null
+          is_pinned?: boolean | null
+          issue_date?: string | null
+          name: string
+          project_id: string
+          received_date?: string | null
+          requires_approval?: boolean | null
+          revision?: string | null
+          search_vector?: unknown
+          specification_section?: string | null
+          status?: string | null
+          supersedes_document_id?: string | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          discipline?: string | null
+          document_type?: string
+          drawing_number?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_type?: string | null
+          file_url?: string
+          folder_id?: string | null
+          id?: string
+          is_latest_version?: boolean | null
+          is_pinned?: boolean | null
+          issue_date?: string | null
+          name?: string
+          project_id?: string
+          received_date?: string | null
+          requires_approval?: boolean | null
+          revision?: string | null
+          search_vector?: unknown
+          specification_section?: string | null
+          status?: string | null
+          supersedes_document_id?: string | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_supersedes_document_id_fkey"
+            columns: ["supersedes_document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      folders: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          name: string
+          parent_folder_id: string | null
+          project_id: string
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          parent_folder_id?: string | null
+          project_id: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          parent_folder_id?: string | null
+          project_id?: string
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "folders_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "folders_parent_folder_id_fkey"
+            columns: ["parent_folder_id"]
+            isOneToOne: false
+            referencedRelation: "folders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "folders_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inspections: {
+        Row: {
+          corrective_actions_required: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          failure_reasons: string | null
+          id: string
+          inspection_name: string
+          inspection_type: string
+          inspector_company: string | null
+          inspector_name: string | null
+          inspector_notes: string | null
+          inspector_phone: string | null
+          notify_subcontractors: string[] | null
+          project_id: string
+          reinspection_scheduled_date: string | null
+          related_checklist_id: string | null
+          related_permit_id: string | null
+          reminder_days_before: number | null
+          reminder_sent: boolean | null
+          result: string | null
+          result_date: string | null
+          scheduled_date: string | null
+          scheduled_time: string | null
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          corrective_actions_required?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          failure_reasons?: string | null
+          id?: string
+          inspection_name: string
+          inspection_type: string
+          inspector_company?: string | null
+          inspector_name?: string | null
+          inspector_notes?: string | null
+          inspector_phone?: string | null
+          notify_subcontractors?: string[] | null
+          project_id: string
+          reinspection_scheduled_date?: string | null
+          related_checklist_id?: string | null
+          related_permit_id?: string | null
+          reminder_days_before?: number | null
+          reminder_sent?: boolean | null
+          result?: string | null
+          result_date?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          corrective_actions_required?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          failure_reasons?: string | null
+          id?: string
+          inspection_name?: string
+          inspection_type?: string
+          inspector_company?: string | null
+          inspector_name?: string | null
+          inspector_notes?: string | null
+          inspector_phone?: string | null
+          notify_subcontractors?: string[] | null
+          project_id?: string
+          reinspection_scheduled_date?: string | null
+          related_checklist_id?: string | null
+          related_permit_id?: string | null
+          reminder_days_before?: number | null
+          reminder_sent?: boolean | null
+          result?: string | null
+          result_date?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inspections_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspections_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspections_related_checklist_id_fkey"
+            columns: ["related_checklist_id"]
+            isOneToOne: false
+            referencedRelation: "checklists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inspections_related_permit_id_fkey"
+            columns: ["related_permit_id"]
+            isOneToOne: false
+            referencedRelation: "permits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_received: {
+        Row: {
+          condition: string | null
+          condition_notes: string | null
+          created_at: string | null
+          created_by: string | null
+          daily_report_delivery_id: string | null
+          deleted_at: string | null
+          delivery_date: string
+          delivery_ticket_number: string | null
+          delivery_time: string | null
+          id: string
+          material_description: string
+          project_id: string
+          quantity: string | null
+          received_by: string | null
+          status: string | null
+          storage_location: string | null
+          submittal_procurement_id: string | null
+          updated_at: string | null
+          vendor: string | null
+          vendor_contact: string | null
+        }
+        Insert: {
+          condition?: string | null
+          condition_notes?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          daily_report_delivery_id?: string | null
+          deleted_at?: string | null
+          delivery_date: string
+          delivery_ticket_number?: string | null
+          delivery_time?: string | null
+          id?: string
+          material_description: string
+          project_id: string
+          quantity?: string | null
+          received_by?: string | null
+          status?: string | null
+          storage_location?: string | null
+          submittal_procurement_id?: string | null
+          updated_at?: string | null
+          vendor?: string | null
+          vendor_contact?: string | null
+        }
+        Update: {
+          condition?: string | null
+          condition_notes?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          daily_report_delivery_id?: string | null
+          deleted_at?: string | null
+          delivery_date?: string
+          delivery_ticket_number?: string | null
+          delivery_time?: string | null
+          id?: string
+          material_description?: string
+          project_id?: string
+          quantity?: string | null
+          received_by?: string | null
+          status?: string | null
+          storage_location?: string | null
+          submittal_procurement_id?: string | null
+          updated_at?: string | null
+          vendor?: string | null
+          vendor_contact?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_received_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_received_daily_report_delivery_id_fkey"
+            columns: ["daily_report_delivery_id"]
+            isOneToOne: false
+            referencedRelation: "daily_report_deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_received_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_received_received_by_fkey"
+            columns: ["received_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_received_submittal_procurement_id_fkey"
+            columns: ["submittal_procurement_id"]
+            isOneToOne: false
+            referencedRelation: "submittal_procurement"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meetings: {
+        Row: {
+          action_items: Json | null
+          agenda: string | null
+          attendees: Json | null
+          created_at: string | null
+          created_by: string | null
+          decisions: string | null
+          deleted_at: string | null
+          discussion_notes: string | null
+          distributed_to: string[] | null
+          duration_minutes: number | null
+          id: string
+          location: string | null
+          meeting_date: string
+          meeting_name: string | null
+          meeting_time: string | null
+          meeting_type: string
+          minutes_pdf_url: string | null
+          project_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          action_items?: Json | null
+          agenda?: string | null
+          attendees?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          decisions?: string | null
+          deleted_at?: string | null
+          discussion_notes?: string | null
+          distributed_to?: string[] | null
+          duration_minutes?: number | null
+          id?: string
+          location?: string | null
+          meeting_date: string
+          meeting_name?: string | null
+          meeting_time?: string | null
+          meeting_type: string
+          minutes_pdf_url?: string | null
+          project_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          action_items?: Json | null
+          agenda?: string | null
+          attendees?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          decisions?: string | null
+          deleted_at?: string | null
+          discussion_notes?: string | null
+          distributed_to?: string[] | null
+          duration_minutes?: number | null
+          id?: string
+          location?: string | null
+          meeting_date?: string
+          meeting_name?: string | null
+          meeting_time?: string | null
+          meeting_type?: string
+          minutes_pdf_url?: string | null
+          project_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meetings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "meetings_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       messages: {
-        Row: Message
-        Insert: Omit<Message, 'id' | 'created_at'>
-        Update: Partial<Omit<Message, 'id'>>
+        Row: {
+          body: string
+          created_at: string | null
+          deleted_at: string | null
+          from_user_id: string
+          id: string
+          is_read: boolean | null
+          read_at: string | null
+          subject: string | null
+          to_user_ids: string[] | null
+          updated_at: string | null
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          deleted_at?: string | null
+          from_user_id: string
+          id?: string
+          is_read?: boolean | null
+          read_at?: string | null
+          subject?: string | null
+          to_user_ids?: string[] | null
+          updated_at?: string | null
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          deleted_at?: string | null
+          from_user_id?: string
+          id?: string
+          is_read?: boolean | null
+          read_at?: string | null
+          subject?: string | null
+          to_user_ids?: string[] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_from_user_id_fkey"
+            columns: ["from_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notices: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          direction: string
+          document_url: string | null
+          from_party: string | null
+          id: string
+          is_critical: boolean | null
+          notes: string | null
+          notice_date: string
+          notice_type: string
+          project_id: string
+          received_date: string | null
+          reference_number: string | null
+          response_date: string | null
+          response_document_url: string | null
+          response_due_date: string | null
+          response_required: boolean | null
+          response_status: string | null
+          status: string | null
+          subject: string
+          to_party: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          direction: string
+          document_url?: string | null
+          from_party?: string | null
+          id?: string
+          is_critical?: boolean | null
+          notes?: string | null
+          notice_date: string
+          notice_type: string
+          project_id: string
+          received_date?: string | null
+          reference_number?: string | null
+          response_date?: string | null
+          response_document_url?: string | null
+          response_due_date?: string | null
+          response_required?: boolean | null
+          response_status?: string | null
+          status?: string | null
+          subject: string
+          to_party?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          direction?: string
+          document_url?: string | null
+          from_party?: string | null
+          id?: string
+          is_critical?: boolean | null
+          notes?: string | null
+          notice_date?: string
+          notice_type?: string
+          project_id?: string
+          received_date?: string | null
+          reference_number?: string | null
+          response_date?: string | null
+          response_document_url?: string | null
+          response_due_date?: string | null
+          response_required?: boolean | null
+          response_status?: string | null
+          status?: string | null
+          subject?: string
+          to_party?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notices_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notices_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          deleted_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string | null
+          read_at: string | null
+          related_to_id: string | null
+          related_to_type: string | null
+          title: string
+          type: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          read_at?: string | null
+          related_to_id?: string | null
+          related_to_type?: string | null
+          title: string
+          type?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          deleted_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          read_at?: string | null
+          related_to_id?: string | null
+          related_to_type?: string | null
+          title?: string
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      permits: {
+        Row: {
+          agency_contact: string | null
+          agency_phone: string | null
+          application_date: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          expiration_date: string | null
+          id: string
+          issue_date: string | null
+          issuing_agency: string | null
+          notes: string | null
+          permit_document_url: string | null
+          permit_name: string
+          permit_number: string | null
+          permit_type: string
+          project_id: string
+          renewal_date: string | null
+          renewal_reminder_days_before: number | null
+          renewal_reminder_sent: boolean | null
+          requires_inspections: boolean | null
+          status: string | null
+          updated_at: string | null
+          work_cannot_proceed_without: boolean | null
+        }
+        Insert: {
+          agency_contact?: string | null
+          agency_phone?: string | null
+          application_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          expiration_date?: string | null
+          id?: string
+          issue_date?: string | null
+          issuing_agency?: string | null
+          notes?: string | null
+          permit_document_url?: string | null
+          permit_name: string
+          permit_number?: string | null
+          permit_type: string
+          project_id: string
+          renewal_date?: string | null
+          renewal_reminder_days_before?: number | null
+          renewal_reminder_sent?: boolean | null
+          requires_inspections?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+          work_cannot_proceed_without?: boolean | null
+        }
+        Update: {
+          agency_contact?: string | null
+          agency_phone?: string | null
+          application_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          expiration_date?: string | null
+          id?: string
+          issue_date?: string | null
+          issuing_agency?: string | null
+          notes?: string | null
+          permit_document_url?: string | null
+          permit_name?: string
+          permit_number?: string | null
+          permit_type?: string
+          project_id?: string
+          renewal_date?: string | null
+          renewal_reminder_days_before?: number | null
+          renewal_reminder_sent?: boolean | null
+          requires_inspections?: boolean | null
+          status?: string | null
+          updated_at?: string | null
+          work_cannot_proceed_without?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "permits_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "permits_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      photos: {
+        Row: {
+          area: string | null
+          building: string | null
+          caption: string | null
+          captured_at: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          file_name: string
+          file_size: number | null
+          file_url: string
+          floor: string | null
+          grid: string | null
+          height: number | null
+          id: string
+          is_360: boolean | null
+          is_after_photo: boolean | null
+          is_before_photo: boolean | null
+          is_pinned: boolean | null
+          latitude: number | null
+          linked_items: Json | null
+          location_notes: string | null
+          longitude: number | null
+          paired_photo_id: string | null
+          photo_category: string | null
+          project_id: string
+          project_phase: string | null
+          tags: string[] | null
+          thumbnail_url: string | null
+          updated_at: string | null
+          width: number | null
+        }
+        Insert: {
+          area?: string | null
+          building?: string | null
+          caption?: string | null
+          captured_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          file_name: string
+          file_size?: number | null
+          file_url: string
+          floor?: string | null
+          grid?: string | null
+          height?: number | null
+          id?: string
+          is_360?: boolean | null
+          is_after_photo?: boolean | null
+          is_before_photo?: boolean | null
+          is_pinned?: boolean | null
+          latitude?: number | null
+          linked_items?: Json | null
+          location_notes?: string | null
+          longitude?: number | null
+          paired_photo_id?: string | null
+          photo_category?: string | null
+          project_id: string
+          project_phase?: string | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          updated_at?: string | null
+          width?: number | null
+        }
+        Update: {
+          area?: string | null
+          building?: string | null
+          caption?: string | null
+          captured_at?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          file_name?: string
+          file_size?: number | null
+          file_url?: string
+          floor?: string | null
+          grid?: string | null
+          height?: number | null
+          id?: string
+          is_360?: boolean | null
+          is_after_photo?: boolean | null
+          is_before_photo?: boolean | null
+          is_pinned?: boolean | null
+          latitude?: number | null
+          linked_items?: Json | null
+          location_notes?: string | null
+          longitude?: number | null
+          paired_photo_id?: string | null
+          photo_category?: string | null
+          project_id?: string
+          project_phase?: string | null
+          tags?: string[] | null
+          thumbnail_url?: string | null
+          updated_at?: string | null
+          width?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photos_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photos_paired_photo_id_fkey"
+            columns: ["paired_photo_id"]
+            isOneToOne: false
+            referencedRelation: "photos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "photos_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      project_users: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          can_approve: boolean | null
+          can_delete: boolean | null
+          can_edit: boolean | null
+          id: string
+          project_id: string
+          project_role: string | null
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          can_approve?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          id?: string
+          project_id: string
+          project_role?: string | null
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          can_approve?: boolean | null
+          can_delete?: boolean | null
+          can_edit?: boolean | null
+          id?: string
+          project_id?: string
+          project_role?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "project_users_assigned_by_fkey"
+            columns: ["assigned_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_users_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "project_users_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      projects: {
+        Row: {
+          address: string | null
+          budget: number | null
+          city: string | null
+          company_id: string
+          contract_value: number | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          end_date: string | null
+          features_enabled: Json | null
+          final_completion_date: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          name: string
+          project_number: string | null
+          start_date: string | null
+          state: string | null
+          status: string | null
+          substantial_completion_date: string | null
+          updated_at: string | null
+          weather_units: string | null
+          zip: string | null
+        }
+        Insert: {
+          address?: string | null
+          budget?: number | null
+          city?: string | null
+          company_id: string
+          contract_value?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          features_enabled?: Json | null
+          final_completion_date?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name: string
+          project_number?: string | null
+          start_date?: string | null
+          state?: string | null
+          status?: string | null
+          substantial_completion_date?: string | null
+          updated_at?: string | null
+          weather_units?: string | null
+          zip?: string | null
+        }
+        Update: {
+          address?: string | null
+          budget?: number | null
+          city?: string | null
+          company_id?: string
+          contract_value?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          features_enabled?: Json | null
+          final_completion_date?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          name?: string
+          project_number?: string | null
+          start_date?: string | null
+          state?: string | null
+          status?: string | null
+          substantial_completion_date?: string | null
+          updated_at?: string | null
+          weather_units?: string | null
+          zip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "projects_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "projects_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      punch_items: {
+        Row: {
+          area: string | null
+          assigned_to: string | null
+          building: string | null
+          completed_date: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          due_date: string | null
+          floor: string | null
+          id: string
+          location_notes: string | null
+          marked_complete_at: string | null
+          marked_complete_by: string | null
+          number: number | null
+          priority: string | null
+          project_id: string
+          rejection_notes: string | null
+          room: string | null
+          status: string | null
+          subcontractor_id: string | null
+          title: string
+          trade: string
+          updated_at: string | null
+          verified_at: string | null
+          verified_by: string | null
+          verified_date: string | null
+        }
+        Insert: {
+          area?: string | null
+          assigned_to?: string | null
+          building?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          floor?: string | null
+          id?: string
+          location_notes?: string | null
+          marked_complete_at?: string | null
+          marked_complete_by?: string | null
+          number?: number | null
+          priority?: string | null
+          project_id: string
+          rejection_notes?: string | null
+          room?: string | null
+          status?: string | null
+          subcontractor_id?: string | null
+          title: string
+          trade: string
+          updated_at?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          verified_date?: string | null
+        }
+        Update: {
+          area?: string | null
+          assigned_to?: string | null
+          building?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          floor?: string | null
+          id?: string
+          location_notes?: string | null
+          marked_complete_at?: string | null
+          marked_complete_by?: string | null
+          number?: number | null
+          priority?: string | null
+          project_id?: string
+          rejection_notes?: string | null
+          room?: string | null
+          status?: string | null
+          subcontractor_id?: string | null
+          title?: string
+          trade?: string
+          updated_at?: string | null
+          verified_at?: string | null
+          verified_by?: string | null
+          verified_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "punch_items_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "punch_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "punch_items_marked_complete_by_fkey"
+            columns: ["marked_complete_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "punch_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "punch_items_subcontractor_id_fkey"
+            columns: ["subcontractor_id"]
+            isOneToOne: false
+            referencedRelation: "subcontractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "punch_items_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      safety_incidents: {
+        Row: {
+          body_part: string | null
+          company: string | null
+          contributing_factors: string | null
+          corrective_actions: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string
+          followup_notes: string | null
+          id: string
+          immediate_actions: string | null
+          incident_date: string
+          incident_number: string | null
+          incident_time: string | null
+          incident_type: string
+          injury_type: string | null
+          location: string | null
+          notified_users: string[] | null
+          osha_report_number: string | null
+          person_involved: string | null
+          project_id: string
+          reported_to_osha: boolean | null
+          reported_to_owner: boolean | null
+          requires_followup: boolean | null
+          root_cause: string | null
+          serious_incident: boolean | null
+          severity: string | null
+          status: string | null
+          subcontractor_id: string | null
+          treatment: string | null
+          updated_at: string | null
+          witness_names: string | null
+        }
+        Insert: {
+          body_part?: string | null
+          company?: string | null
+          contributing_factors?: string | null
+          corrective_actions?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description: string
+          followup_notes?: string | null
+          id?: string
+          immediate_actions?: string | null
+          incident_date: string
+          incident_number?: string | null
+          incident_time?: string | null
+          incident_type: string
+          injury_type?: string | null
+          location?: string | null
+          notified_users?: string[] | null
+          osha_report_number?: string | null
+          person_involved?: string | null
+          project_id: string
+          reported_to_osha?: boolean | null
+          reported_to_owner?: boolean | null
+          requires_followup?: boolean | null
+          root_cause?: string | null
+          serious_incident?: boolean | null
+          severity?: string | null
+          status?: string | null
+          subcontractor_id?: string | null
+          treatment?: string | null
+          updated_at?: string | null
+          witness_names?: string | null
+        }
+        Update: {
+          body_part?: string | null
+          company?: string | null
+          contributing_factors?: string | null
+          corrective_actions?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string
+          followup_notes?: string | null
+          id?: string
+          immediate_actions?: string | null
+          incident_date?: string
+          incident_number?: string | null
+          incident_time?: string | null
+          incident_type?: string
+          injury_type?: string | null
+          location?: string | null
+          notified_users?: string[] | null
+          osha_report_number?: string | null
+          person_involved?: string | null
+          project_id?: string
+          reported_to_osha?: boolean | null
+          reported_to_owner?: boolean | null
+          requires_followup?: boolean | null
+          root_cause?: string | null
+          serious_incident?: boolean | null
+          severity?: string | null
+          status?: string | null
+          subcontractor_id?: string | null
+          treatment?: string | null
+          updated_at?: string | null
+          witness_names?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "safety_incidents_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "safety_incidents_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "safety_incidents_subcontractor_id_fkey"
+            columns: ["subcontractor_id"]
+            isOneToOne: false
+            referencedRelation: "subcontractors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_items: {
+        Row: {
+          assigned_to: string | null
+          baseline_finish_date: string | null
+          baseline_start_date: string | null
+          created_at: string | null
+          duration_days: number | null
+          finish_date: string | null
+          id: string
+          imported_at: string | null
+          is_critical: boolean | null
+          last_updated_at: string | null
+          percent_complete: number | null
+          predecessors: string | null
+          project_id: string
+          start_date: string | null
+          successors: string | null
+          task_id: string | null
+          task_name: string
+          wbs: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          baseline_finish_date?: string | null
+          baseline_start_date?: string | null
+          created_at?: string | null
+          duration_days?: number | null
+          finish_date?: string | null
+          id?: string
+          imported_at?: string | null
+          is_critical?: boolean | null
+          last_updated_at?: string | null
+          percent_complete?: number | null
+          predecessors?: string | null
+          project_id: string
+          start_date?: string | null
+          successors?: string | null
+          task_id?: string | null
+          task_name: string
+          wbs?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          baseline_finish_date?: string | null
+          baseline_start_date?: string | null
+          created_at?: string | null
+          duration_days?: number | null
+          finish_date?: string | null
+          id?: string
+          imported_at?: string | null
+          is_critical?: boolean | null
+          last_updated_at?: string | null
+          percent_complete?: number | null
+          predecessors?: string | null
+          project_id?: string
+          start_date?: string | null
+          successors?: string | null
+          task_id?: string | null
+          task_name?: string
+          wbs?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_conditions: {
+        Row: {
+          after_photos: Json | null
+          before_photos: Json | null
+          category: string | null
+          condition_type: string
+          cost_impact: number | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string
+          discovered_date: string
+          id: string
+          impact_description: string | null
+          location: string | null
+          project_id: string
+          related_change_order_id: string | null
+          related_rfi_id: string | null
+          related_site_instruction_id: string | null
+          resolution: string | null
+          resolved_date: string | null
+          schedule_impact: number | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          after_photos?: Json | null
+          before_photos?: Json | null
+          category?: string | null
+          condition_type: string
+          cost_impact?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description: string
+          discovered_date: string
+          id?: string
+          impact_description?: string | null
+          location?: string | null
+          project_id: string
+          related_change_order_id?: string | null
+          related_rfi_id?: string | null
+          related_site_instruction_id?: string | null
+          resolution?: string | null
+          resolved_date?: string | null
+          schedule_impact?: number | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          after_photos?: Json | null
+          before_photos?: Json | null
+          category?: string | null
+          condition_type?: string
+          cost_impact?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string
+          discovered_date?: string
+          id?: string
+          impact_description?: string | null
+          location?: string | null
+          project_id?: string
+          related_change_order_id?: string | null
+          related_rfi_id?: string | null
+          related_site_instruction_id?: string | null
+          resolution?: string | null
+          resolved_date?: string | null
+          schedule_impact?: number | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_conditions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_conditions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_conditions_related_change_order_id_fkey"
+            columns: ["related_change_order_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_conditions_related_rfi_id_fkey"
+            columns: ["related_rfi_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_conditions_related_site_instruction_id_fkey"
+            columns: ["related_site_instruction_id"]
+            isOneToOne: false
+            referencedRelation: "site_instructions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      site_instructions: {
+        Row: {
+          acknowledged: boolean | null
+          acknowledged_at: string | null
+          acknowledged_by: string | null
+          acknowledgment_signature: string | null
+          completed_at: string | null
+          completed_by: string | null
+          completion_status: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string
+          id: string
+          instruction_number: string | null
+          issued_to_user_id: string | null
+          project_id: string
+          reference_number: string | null
+          related_to_id: string | null
+          related_to_type: string | null
+          requires_acknowledgment: boolean | null
+          requires_completion_tracking: boolean | null
+          subcontractor_id: string
+          title: string
+          updated_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          acknowledged?: boolean | null
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          acknowledgment_signature?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          completion_status?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description: string
+          id?: string
+          instruction_number?: string | null
+          issued_to_user_id?: string | null
+          project_id: string
+          reference_number?: string | null
+          related_to_id?: string | null
+          related_to_type?: string | null
+          requires_acknowledgment?: boolean | null
+          requires_completion_tracking?: boolean | null
+          subcontractor_id: string
+          title: string
+          updated_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          acknowledged?: boolean | null
+          acknowledged_at?: string | null
+          acknowledged_by?: string | null
+          acknowledgment_signature?: string | null
+          completed_at?: string | null
+          completed_by?: string | null
+          completion_status?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string
+          id?: string
+          instruction_number?: string | null
+          issued_to_user_id?: string | null
+          project_id?: string
+          reference_number?: string | null
+          related_to_id?: string | null
+          related_to_type?: string | null
+          requires_acknowledgment?: boolean | null
+          requires_completion_tracking?: boolean | null
+          subcontractor_id?: string
+          title?: string
+          updated_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_instructions_acknowledged_by_fkey"
+            columns: ["acknowledged_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_instructions_completed_by_fkey"
+            columns: ["completed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_instructions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_instructions_issued_to_user_id_fkey"
+            columns: ["issued_to_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_instructions_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_instructions_subcontractor_id_fkey"
+            columns: ["subcontractor_id"]
+            isOneToOne: false
+            referencedRelation: "subcontractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_instructions_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subcontractors: {
+        Row: {
+          company_name: string
+          contact_id: string | null
+          contract_amount: number | null
+          contract_end_date: string | null
+          contract_start_date: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          insurance_certificate_url: string | null
+          insurance_expiration: string | null
+          license_expiration: string | null
+          license_number: string | null
+          performance_notes: string | null
+          project_id: string
+          retainage_percentage: number | null
+          scope_document_url: string | null
+          scope_of_work: string | null
+          status: string | null
+          trade: string
+          updated_at: string | null
+        }
+        Insert: {
+          company_name: string
+          contact_id?: string | null
+          contract_amount?: number | null
+          contract_end_date?: string | null
+          contract_start_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          insurance_certificate_url?: string | null
+          insurance_expiration?: string | null
+          license_expiration?: string | null
+          license_number?: string | null
+          performance_notes?: string | null
+          project_id: string
+          retainage_percentage?: number | null
+          scope_document_url?: string | null
+          scope_of_work?: string | null
+          status?: string | null
+          trade: string
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string
+          contact_id?: string | null
+          contract_amount?: number | null
+          contract_end_date?: string | null
+          contract_start_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          insurance_certificate_url?: string | null
+          insurance_expiration?: string | null
+          license_expiration?: string | null
+          license_number?: string | null
+          performance_notes?: string | null
+          project_id?: string
+          retainage_percentage?: number | null
+          scope_document_url?: string | null
+          scope_of_work?: string | null
+          status?: string | null
+          trade?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "subcontractors_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subcontractors_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "subcontractors_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submittal_procurement: {
+        Row: {
+          actual_delivery_date: string | null
+          approval_date: string | null
+          created_at: string | null
+          deleted_at: string | null
+          expected_delivery_date: string | null
+          id: string
+          lead_time_days: number | null
+          notes: string | null
+          order_date: string | null
+          order_number: string | null
+          procurement_status: string | null
+          project_id: string
+          updated_at: string | null
+          vendor: string | null
+          workflow_item_id: string
+        }
+        Insert: {
+          actual_delivery_date?: string | null
+          approval_date?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          expected_delivery_date?: string | null
+          id?: string
+          lead_time_days?: number | null
+          notes?: string | null
+          order_date?: string | null
+          order_number?: string | null
+          procurement_status?: string | null
+          project_id: string
+          updated_at?: string | null
+          vendor?: string | null
+          workflow_item_id: string
+        }
+        Update: {
+          actual_delivery_date?: string | null
+          approval_date?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          expected_delivery_date?: string | null
+          id?: string
+          lead_time_days?: number | null
+          notes?: string | null
+          order_date?: string | null
+          order_number?: string | null
+          procurement_status?: string | null
+          project_id?: string
+          updated_at?: string | null
+          vendor?: string | null
+          workflow_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submittal_procurement_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submittal_procurement_workflow_item_id_fkey"
+            columns: ["workflow_item_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      takeoff_items: {
+        Row: {
+          assembly_id: string | null
+          color: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          document_id: string
+          final_quantity: number | null
+          id: string
+          is_visible: boolean | null
+          layer: string | null
+          line_width: number | null
+          measurement_data: Json
+          measurement_type: string
+          multiplier: number | null
+          name: string
+          page_number: number | null
+          project_id: string
+          quantity: number | null
+          takeoff_tags: Json | null
+          unit: string | null
+          updated_at: string | null
+          waste_factor: number | null
+        }
+        Insert: {
+          assembly_id?: string | null
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          document_id: string
+          final_quantity?: number | null
+          id?: string
+          is_visible?: boolean | null
+          layer?: string | null
+          line_width?: number | null
+          measurement_data: Json
+          measurement_type: string
+          multiplier?: number | null
+          name: string
+          page_number?: number | null
+          project_id: string
+          quantity?: number | null
+          takeoff_tags?: Json | null
+          unit?: string | null
+          updated_at?: string | null
+          waste_factor?: number | null
+        }
+        Update: {
+          assembly_id?: string | null
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          document_id?: string
+          final_quantity?: number | null
+          id?: string
+          is_visible?: boolean | null
+          layer?: string | null
+          line_width?: number | null
+          measurement_data?: Json
+          measurement_type?: string
+          multiplier?: number | null
+          name?: string
+          page_number?: number | null
+          project_id?: string
+          quantity?: number | null
+          takeoff_tags?: Json | null
+          unit?: string | null
+          updated_at?: string | null
+          waste_factor?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "takeoff_items_assembly_id_fkey"
+            columns: ["assembly_id"]
+            isOneToOne: false
+            referencedRelation: "assemblies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "takeoff_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "takeoff_items_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "takeoff_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assigned_to_subcontractor_id: string | null
+          assigned_to_type: string | null
+          assigned_to_user_id: string | null
+          completed_date: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          location: string | null
+          parent_task_id: string | null
+          priority: string | null
+          project_id: string
+          related_to_id: string | null
+          related_to_type: string | null
+          start_date: string | null
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to_subcontractor_id?: string | null
+          assigned_to_type?: string | null
+          assigned_to_user_id?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          location?: string | null
+          parent_task_id?: string | null
+          priority?: string | null
+          project_id: string
+          related_to_id?: string | null
+          related_to_type?: string | null
+          start_date?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to_subcontractor_id?: string | null
+          assigned_to_type?: string | null
+          assigned_to_user_id?: string | null
+          completed_date?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          location?: string | null
+          parent_task_id?: string | null
+          priority?: string | null
+          project_id?: string
+          related_to_id?: string | null
+          related_to_type?: string | null
+          start_date?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_assigned_to_subcontractor_id_fkey"
+            columns: ["assigned_to_subcontractor_id"]
+            isOneToOne: false
+            referencedRelation: "subcontractors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_assigned_to_user_id_fkey"
+            columns: ["assigned_to_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_parent_task_id_fkey"
+            columns: ["parent_task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tests: {
+        Row: {
+          acceptance_criteria: string | null
+          actual_test_date: string | null
+          certificate_url: string | null
+          corrective_actions: string | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          failure_notes: string | null
+          id: string
+          project_id: string
+          related_inspection_id: string | null
+          related_submittal_id: string | null
+          required_for_closeout: boolean | null
+          required_frequency: string | null
+          result: string | null
+          result_value: string | null
+          retest_id: string | null
+          retest_required: boolean | null
+          retest_scheduled_date: string | null
+          scheduled_date: string | null
+          specification_reference: string | null
+          status: string | null
+          technician_contact: string | null
+          technician_name: string | null
+          test_name: string
+          test_number: number | null
+          test_report_url: string | null
+          test_type: string
+          testing_agency: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          acceptance_criteria?: string | null
+          actual_test_date?: string | null
+          certificate_url?: string | null
+          corrective_actions?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          failure_notes?: string | null
+          id?: string
+          project_id: string
+          related_inspection_id?: string | null
+          related_submittal_id?: string | null
+          required_for_closeout?: boolean | null
+          required_frequency?: string | null
+          result?: string | null
+          result_value?: string | null
+          retest_id?: string | null
+          retest_required?: boolean | null
+          retest_scheduled_date?: string | null
+          scheduled_date?: string | null
+          specification_reference?: string | null
+          status?: string | null
+          technician_contact?: string | null
+          technician_name?: string | null
+          test_name: string
+          test_number?: number | null
+          test_report_url?: string | null
+          test_type: string
+          testing_agency?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          acceptance_criteria?: string | null
+          actual_test_date?: string | null
+          certificate_url?: string | null
+          corrective_actions?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          failure_notes?: string | null
+          id?: string
+          project_id?: string
+          related_inspection_id?: string | null
+          related_submittal_id?: string | null
+          required_for_closeout?: boolean | null
+          required_frequency?: string | null
+          result?: string | null
+          result_value?: string | null
+          retest_id?: string | null
+          retest_required?: boolean | null
+          retest_scheduled_date?: string | null
+          scheduled_date?: string | null
+          specification_reference?: string | null
+          status?: string | null
+          technician_contact?: string | null
+          technician_name?: string | null
+          test_name?: string
+          test_number?: number | null
+          test_report_url?: string | null
+          test_type?: string
+          testing_agency?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tests_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tests_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tests_related_inspection_id_fkey"
+            columns: ["related_inspection_id"]
+            isOneToOne: false
+            referencedRelation: "inspections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tests_related_submittal_id_fkey"
+            columns: ["related_submittal_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tests_retest_id_fkey"
+            columns: ["retest_id"]
+            isOneToOne: false
+            referencedRelation: "tests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      toolbox_talks: {
+        Row: {
+          attendance_count: number | null
+          attendees: Json | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          duration_minutes: number | null
+          handout_url: string | null
+          id: string
+          osha_compliant: boolean | null
+          project_id: string
+          talk_date: string
+          topic: string
+          trainer_id: string | null
+          trainer_name: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          attendance_count?: number | null
+          attendees?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          handout_url?: string | null
+          id?: string
+          osha_compliant?: boolean | null
+          project_id: string
+          talk_date: string
+          topic: string
+          trainer_id?: string | null
+          trainer_name?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          attendance_count?: number | null
+          attendees?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          duration_minutes?: number | null
+          handout_url?: string | null
+          id?: string
+          osha_compliant?: boolean | null
+          project_id?: string
+          talk_date?: string
+          topic?: string
+          trainer_id?: string | null
+          trainer_name?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "toolbox_talks_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "toolbox_talks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "toolbox_talks_trainer_id_fkey"
+            columns: ["trainer_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          avatar_url: string | null
+          company_id: string | null
+          created_at: string | null
+          deleted_at: string | null
+          email: string
+          first_name: string | null
+          id: string
+          is_active: boolean | null
+          last_name: string | null
+          last_seen_at: string | null
+          notification_preferences: Json | null
+          phone: string | null
+          role: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email: string
+          first_name?: string | null
+          id: string
+          is_active?: boolean | null
+          last_name?: string | null
+          last_seen_at?: string | null
+          notification_preferences?: Json | null
+          phone?: string | null
+          role: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_name?: string | null
+          last_seen_at?: string | null
+          notification_preferences?: Json | null
+          phone?: string | null
+          role?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "users_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_item_comments: {
+        Row: {
+          comment: string
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          id: string
+          mentioned_users: string[] | null
+          updated_at: string | null
+          workflow_item_id: string
+        }
+        Insert: {
+          comment: string
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          mentioned_users?: string[] | null
+          updated_at?: string | null
+          workflow_item_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          id?: string
+          mentioned_users?: string[] | null
+          updated_at?: string | null
+          workflow_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_item_comments_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_item_comments_workflow_item_id_fkey"
+            columns: ["workflow_item_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_item_history: {
+        Row: {
+          action: string
+          changed_at: string | null
+          changed_by: string | null
+          field_changed: string | null
+          id: string
+          new_value: string | null
+          old_value: string | null
+          workflow_item_id: string
+        }
+        Insert: {
+          action: string
+          changed_at?: string | null
+          changed_by?: string | null
+          field_changed?: string | null
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          workflow_item_id: string
+        }
+        Update: {
+          action?: string
+          changed_at?: string | null
+          changed_by?: string | null
+          field_changed?: string | null
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          workflow_item_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_item_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_item_history_workflow_item_id_fkey"
+            columns: ["workflow_item_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_items: {
+        Row: {
+          assignees: string[] | null
+          closed_date: string | null
+          cost_impact: number | null
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          discipline: string | null
+          due_date: string | null
+          id: string
+          more_information: string | null
+          number: number | null
+          opened_date: string | null
+          priority: string | null
+          project_id: string
+          raised_by: string | null
+          reference_number: string | null
+          resolution: string | null
+          schedule_impact: number | null
+          status: string
+          title: string | null
+          updated_at: string | null
+          workflow_type_id: string
+        }
+        Insert: {
+          assignees?: string[] | null
+          closed_date?: string | null
+          cost_impact?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          discipline?: string | null
+          due_date?: string | null
+          id?: string
+          more_information?: string | null
+          number?: number | null
+          opened_date?: string | null
+          priority?: string | null
+          project_id: string
+          raised_by?: string | null
+          reference_number?: string | null
+          resolution?: string | null
+          schedule_impact?: number | null
+          status?: string
+          title?: string | null
+          updated_at?: string | null
+          workflow_type_id: string
+        }
+        Update: {
+          assignees?: string[] | null
+          closed_date?: string | null
+          cost_impact?: number | null
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          discipline?: string | null
+          due_date?: string | null
+          id?: string
+          more_information?: string | null
+          number?: number | null
+          opened_date?: string | null
+          priority?: string | null
+          project_id?: string
+          raised_by?: string | null
+          reference_number?: string | null
+          resolution?: string | null
+          schedule_impact?: number | null
+          status?: string
+          title?: string | null
+          updated_at?: string | null
+          workflow_type_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_items_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_items_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_items_raised_by_fkey"
+            columns: ["raised_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_items_workflow_type_id_fkey"
+            columns: ["workflow_type_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflow_types: {
+        Row: {
+          company_id: string
+          created_at: string | null
+          deleted_at: string | null
+          has_cost_impact: boolean | null
+          has_schedule_impact: boolean | null
+          id: string
+          is_active: boolean | null
+          is_custom: boolean | null
+          is_default: boolean | null
+          name_plural: string
+          name_singular: string
+          prefix: string | null
+          priorities: Json | null
+          requires_approval: boolean | null
+          statuses: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string | null
+          deleted_at?: string | null
+          has_cost_impact?: boolean | null
+          has_schedule_impact?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          is_custom?: boolean | null
+          is_default?: boolean | null
+          name_plural: string
+          name_singular: string
+          prefix?: string | null
+          priorities?: Json | null
+          requires_approval?: boolean | null
+          statuses?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string | null
+          deleted_at?: string | null
+          has_cost_impact?: boolean | null
+          has_schedule_impact?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          is_custom?: boolean | null
+          is_default?: boolean | null
+          name_plural?: string
+          name_singular?: string
+          prefix?: string | null
+          priorities?: Json | null
+          requires_approval?: boolean | null
+          statuses?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_types_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
     }
     Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
       [_ in never]: never
     }
   }
 }
 
-// =============================================
-// Core Types
-// =============================================
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
 
-export interface Company {
-  id: string
-  name: string
-  slug: string
-  email: string | null
-  phone: string | null
-  address: string | null
-  city: string | null
-  state: string | null
-  zip: string | null
-  country: string
-  logo_url: string | null
-  primary_color: string | null
-  subscription_tier: SubscriptionTier
-  subscription_status: SubscriptionStatus
-  max_projects: number
-  settings: Json
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-export type SubscriptionTier = 'free' | 'small' | 'medium' | 'large' | 'enterprise'
-export type SubscriptionStatus = 'active' | 'suspended' | 'cancelled'
-
-export interface UserProfile {
-  id: string
-  company_id: string
-  email: string
-  first_name: string | null
-  last_name: string | null
-  phone: string | null
-  avatar_url: string | null
-  role: UserRole
-  notification_preferences: NotificationPreferences
-  is_active: boolean
-  last_seen_at: string | null
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
-export type UserRole =
-  | 'superintendent'
-  | 'project_manager'
-  | 'office_admin'
-  | 'field_employee'
-  | 'subcontractor'
-  | 'architect'
-
-export interface NotificationPreferences {
-  email: boolean
-  push: boolean
-  in_app: boolean
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
-export interface Project {
-  id: string
-  company_id: string
-  name: string
-  project_number: string | null
-  description: string | null
-  address: string | null
-  city: string | null
-  state: string | null
-  zip: string | null
-  latitude: number | null
-  longitude: number | null
-  start_date: string | null
-  end_date: string | null
-  substantial_completion_date: string | null
-  final_completion_date: string | null
-  contract_value: number | null
-  budget: number | null
-  status: ProjectStatus
-  weather_units: 'imperial' | 'metric'
-  features_enabled: ProjectFeatures
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
 
-export type ProjectStatus = 'active' | 'on_hold' | 'completed' | 'archived'
-
-export interface ProjectFeatures {
-  workflows: boolean
-  takeoff: boolean
-  daily_reports: boolean
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
 }
-
-export interface ProjectUser {
-  id: string
-  project_id: string
-  user_id: string
-  can_edit: boolean
-  can_delete: boolean
-  is_admin: boolean
-  role_on_project: string | null
-  added_at: string
-  added_by: string | null
-  created_at: string
-  updated_at: string
-}
-
-export interface Contact {
-  id: string
-  project_id: string
-  first_name: string | null
-  last_name: string | null
-  company_name: string | null
-  title: string | null
-  contact_type: ContactType
-  trade: string | null
-  email: string | null
-  phone_office: string | null
-  phone_mobile: string | null
-  phone_fax: string | null
-  address: string | null
-  city: string | null
-  state: string | null
-  zip: string | null
-  notes: string | null
-  is_primary: boolean
-  is_emergency_contact: boolean
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type ContactType =
-  | 'gc_team'
-  | 'subcontractor'
-  | 'architect'
-  | 'engineer'
-  | 'owner'
-  | 'inspector'
-  | 'vendor'
-  | 'utility'
-  | 'other'
-
-export interface Subcontractor {
-  id: string
-  project_id: string
-  contact_id: string | null
-  company_name: string
-  trade: string
-  contract_amount: number | null
-  contract_start_date: string | null
-  contract_end_date: string | null
-  retainage_percentage: number
-  scope_of_work: string | null
-  scope_document_url: string | null
-  license_number: string | null
-  license_expiration: string | null
-  insurance_certificate_url: string | null
-  insurance_expiration: string | null
-  status: SubcontractorStatus
-  performance_notes: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type SubcontractorStatus = 'active' | 'on_hold' | 'completed' | 'terminated'
-
-// =============================================
-// Document Management
-// =============================================
-
-export interface Folder {
-  id: string
-  project_id: string
-  parent_folder_id: string | null
-  name: string
-  description: string | null
-  sort_order: number
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface Document {
-  id: string
-  project_id: string
-  folder_id: string | null
-  name: string
-  description: string | null
-  document_type: DocumentType
-  discipline: string | null
-  file_url: string
-  file_name: string
-  file_size: number | null
-  file_type: string | null
-  version: string
-  revision: string | null
-  is_latest_version: boolean
-  supersedes_document_id: string | null
-  drawing_number: string | null
-  specification_section: string | null
-  issue_date: string | null
-  received_date: string | null
-  status: DocumentStatus
-  is_pinned: boolean
-  requires_approval: boolean
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type DocumentType =
-  | 'drawing'
-  | 'specification'
-  | 'submittal'
-  | 'shop_drawing'
-  | 'scope'
-  | 'general'
-  | 'photo'
-  | 'other'
-
-export type DocumentStatus = 'current' | 'superseded' | 'archived' | 'void'
-
-export interface DocumentMarkup {
-  id: string
-  document_id: string
-  page_number: number
-  markup_data: Json
-  markup_type: string
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-// =============================================
-// Daily Reports
-// =============================================
-
-export interface DailyReport {
-  id: string
-  project_id: string
-  report_date: string
-  report_number: string | null
-  reporter_id: string
-  reviewer_id: string | null
-  // Weather
-  weather_condition: string | null
-  temperature_high: number | null
-  temperature_low: number | null
-  precipitation: number | null
-  wind_speed: number | null
-  weather_source: 'manual' | 'api'
-  weather_delays: boolean
-  weather_delay_notes: string | null
-  // Work
-  work_completed: string | null
-  production_data: Json | null
-  issues: string | null
-  observations: string | null
-  comments: string | null
-  // Status
-  status: DailyReportStatus
-  submitted_at: string | null
-  approved_at: string | null
-  approved_by: string | null
-  pdf_url: string | null
-  pdf_generated_at: string | null
-  // Computed fields (populated by views or joins)
-  total_workers?: number | null
-  // Metadata
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type DailyReportStatus = 'draft' | 'in_review' | 'approved' | 'submitted'
-
-export interface DailyReportWorkforce {
-  id: string
-  daily_report_id: string
-  subcontractor_id: string | null
-  trade: string | null
-  entry_type: 'team' | 'individual'
-  team_name: string | null
-  worker_count: number | null
-  worker_name: string | null
-  activity: string | null
-  hours_worked: number | null
-  created_at: string
-}
-
-export interface DailyReportEquipment {
-  id: string
-  daily_report_id: string
-  equipment_type: string
-  equipment_description: string | null
-  quantity: number
-  owner: string | null
-  hours_used: number | null
-  notes: string | null
-  created_at: string
-}
-
-export interface DailyReportDelivery {
-  id: string
-  daily_report_id: string
-  material_description: string
-  quantity: string | null
-  vendor: string | null
-  delivery_ticket_number: string | null
-  delivery_time: string | null
-  notes: string | null
-  created_at: string
-}
-
-export interface DailyReportVisitor {
-  id: string
-  daily_report_id: string
-  visitor_name: string
-  company: string | null
-  purpose: string | null
-  arrival_time: string | null
-  departure_time: string | null
-  created_at: string
-}
-
-export interface DailyReportSafetyIncident {
-  id: string
-  daily_report_id: string
-  safety_incident_id: string
-  created_at: string
-}
-
-// =============================================
-// Workflows
-// =============================================
-
-export interface WorkflowType {
-  id: string
-  company_id: string
-  name_singular: string
-  name_plural: string
-  prefix: string | null
-  is_default: boolean
-  is_custom: boolean
-  has_cost_impact: boolean
-  has_schedule_impact: boolean
-  requires_approval: boolean
-  statuses: Json
-  priorities: Json
-  is_active: boolean
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
-}
-
-export interface WorkflowItem {
-  id: string
-  project_id: string
-  workflow_type_id: string
-  number: number | null
-  reference_number: string | null
-  title: string | null
-  description: string | null
-  more_information: string | null
-  resolution: string | null
-  assignees: string[]
-  raised_by: string | null
-  due_date: string | null
-  opened_date: string | null
-  closed_date: string | null
-  status: string
-  priority: 'low' | 'normal' | 'high'
-  cost_impact: number | null
-  schedule_impact: number | null
-  discipline: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface WorkflowItemComment {
-  id: string
-  workflow_item_id: string
-  comment: string
-  mentioned_users: string[]
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface WorkflowItemHistory {
-  id: string
-  workflow_item_id: string
-  action: string
-  field_changed: string | null
-  old_value: string | null
-  new_value: string | null
-  changed_at: string
-  changed_by: string | null
-}
-
-export interface ChangeOrderBid {
-  id: string
-  workflow_item_id: string
-  project_id: string
-  subcontractor_id: string
-  bid_status: ChangeOrderBidStatus
-  lump_sum_cost: number | null
-  duration_days: number | null
-  exclusions: string | null
-  notes: string | null
-  supporting_documents: Json
-  is_awarded: boolean
-  awarded_at: string | null
-  awarded_by: string | null
-  created_at: string
-  updated_at: string
-  submitted_at: string | null
-  submitted_by: string | null
-  deleted_at: string | null
-}
-
-export type ChangeOrderBidStatus =
-  | 'requested'
-  | 'submitted'
-  | 'awarded'
-  | 'declined'
-  | 'rejected'
-
-export interface SubmittalProcurement {
-  id: string
-  workflow_item_id: string
-  project_id: string
-  procurement_status: string
-  approval_date: string | null
-  order_date: string | null
-  expected_delivery_date: string | null
-  actual_delivery_date: string | null
-  lead_time_days: number | null
-  vendor: string | null
-  order_number: string | null
-  notes: string | null
-  created_at: string
-  updated_at: string
-  deleted_at: string | null
-}
-
-// =============================================
-// Tasks & Schedule
-// =============================================
-
-export interface Task {
-  id: string
-  project_id: string
-  title: string
-  description: string | null
-  assigned_to_type: 'user' | 'subcontractor' | 'team' | null
-  assigned_to_user_id: string | null
-  assigned_to_subcontractor_id: string | null
-  due_date: string | null
-  start_date: string | null
-  completed_date: string | null
-  status: TaskStatus
-  priority: Priority
-  parent_task_id: string | null
-  related_to_type: string | null
-  related_to_id: string | null
-  location: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled'
-export type Priority = 'low' | 'normal' | 'high'
-
-export interface ScheduleItem {
-  id: string
-  project_id: string
-  task_id: string | null
-  task_name: string
-  wbs: string | null
-  start_date: string | null
-  finish_date: string | null
-  baseline_start_date: string | null
-  baseline_finish_date: string | null
-  duration_days: number | null
-  percent_complete: number
-  predecessors: string | null
-  successors: string | null
-  is_critical: boolean
-  assigned_to: string | null
-  imported_at: string | null
-  last_updated_at: string
-  created_at: string
-}
-
-// =============================================
-// Checklists
-// =============================================
-
-export interface ChecklistTemplate {
-  id: string
-  company_id: string | null
-  name: string
-  description: string | null
-  category: string | null
-  template_level: 'system' | 'company' | 'project'
-  items: Json
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface Checklist {
-  id: string
-  project_id: string
-  checklist_template_id: string | null
-  name: string
-  description: string | null
-  category: string | null
-  items: Json
-  is_completed: boolean
-  completed_at: string | null
-  completed_by: string | null
-  daily_report_id: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-// =============================================
-// Punch Lists
-// =============================================
-
-export interface PunchItem {
-  id: string
-  project_id: string
-  number: number | null
-  title: string
-  description: string | null
-  building: string | null
-  floor: string | null
-  room: string | null
-  area: string | null
-  location_notes: string | null
-  trade: string
-  subcontractor_id: string | null
-  assigned_to: string | null
-  status: PunchItemStatus
-  priority: Priority
-  due_date: string | null
-  completed_date: string | null
-  verified_date: string | null
-  marked_complete_by: string | null
-  marked_complete_at: string | null
-  verified_by: string | null
-  verified_at: string | null
-  rejection_notes: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type PunchItemStatus =
-  | 'open'
-  | 'in_progress'
-  | 'ready_for_review'
-  | 'completed'
-  | 'verified'
-  | 'rejected'
-
-// =============================================
-// Safety
-// =============================================
-
-export interface SafetyIncident {
-  id: string
-  project_id: string
-  incident_number: string | null
-  incident_type: IncidentType
-  severity: IncidentSeverity | null
-  incident_date: string
-  incident_time: string | null
-  location: string | null
-  person_involved: string | null
-  company: string | null
-  subcontractor_id: string | null
-  witness_names: string | null
-  description: string
-  root_cause: string | null
-  contributing_factors: string | null
-  injury_type: string | null
-  body_part: string | null
-  treatment: string | null
-  reported_to_osha: boolean
-  osha_report_number: string | null
-  reported_to_owner: boolean
-  immediate_actions: string | null
-  corrective_actions: string | null
-  requires_followup: boolean
-  followup_notes: string | null
-  serious_incident: boolean
-  notified_users: string[]
-  status: SafetyIncidentStatus
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type IncidentType = 'injury' | 'near_miss' | 'property_damage' | 'environmental'
-export type IncidentSeverity = 'minor' | 'moderate' | 'serious' | 'fatal'
-export type SafetyIncidentStatus = 'open' | 'under_investigation' | 'corrective_actions_pending' | 'closed'
-
-export interface ToolboxTalk {
-  id: string
-  project_id: string
-  talk_number: string | null
-  talk_date: string
-  topic: string
-  description: string | null
-  presenter_id: string | null
-  presenter_name: string | null
-  duration_minutes: number | null
-  attendees: Json
-  attendee_count: number | null
-  safety_topics: string[]
-  hazards_discussed: string | null
-  handout_url: string | null
-  signature_sheet_url: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-// =============================================
-// Inspections, Permits, Tests
-// =============================================
-
-export interface Inspection {
-  id: string
-  project_id: string
-  inspection_type: string
-  inspection_name: string
-  description: string | null
-  scheduled_date: string | null
-  scheduled_time: string | null
-  inspector_name: string | null
-  inspector_company: string | null
-  inspector_phone: string | null
-  reminder_sent: boolean
-  reminder_days_before: number
-  result: string | null
-  result_date: string | null
-  inspector_notes: string | null
-  failure_reasons: string | null
-  corrective_actions_required: string | null
-  reinspection_scheduled_date: string | null
-  related_checklist_id: string | null
-  related_permit_id: string | null
-  notify_subcontractors: string[]
-  status: string
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface Permit {
-  id: string
-  project_id: string
-  permit_type: string
-  permit_name: string
-  permit_number: string | null
-  issuing_agency: string | null
-  agency_contact: string | null
-  agency_phone: string | null
-  application_date: string | null
-  issue_date: string | null
-  expiration_date: string | null
-  renewal_date: string | null
-  status: string
-  permit_document_url: string | null
-  requires_inspections: boolean
-  renewal_reminder_sent: boolean
-  renewal_reminder_days_before: number
-  work_cannot_proceed_without: boolean
-  notes: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface Test {
-  id: string
-  project_id: string
-  test_type: string
-  test_name: string
-  specification_reference: string | null
-  scheduled_date: string | null
-  actual_test_date: string | null
-  testing_agency: string | null
-  technician_name: string | null
-  technician_contact: string | null
-  required_frequency: string | null
-  test_number: number | null
-  result: string | null
-  result_value: string | null
-  acceptance_criteria: string | null
-  test_report_url: string | null
-  certificate_url: string | null
-  failure_notes: string | null
-  corrective_actions: string | null
-  retest_required: boolean
-  retest_scheduled_date: string | null
-  retest_id: string | null
-  related_inspection_id: string | null
-  related_submittal_id: string | null
-  required_for_closeout: boolean
-  status: string
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-// =============================================
-// Additional Features
-// =============================================
-
-export interface SiteInstruction {
-  id: string
-  project_id: string
-  instruction_number: string | null
-  reference_number: string | null
-  title: string
-  description: string
-  subcontractor_id: string
-  issued_to_user_id: string | null
-  requires_acknowledgment: boolean
-  acknowledged: boolean
-  acknowledged_by: string | null
-  acknowledged_at: string | null
-  acknowledgment_signature: string | null
-  requires_completion_tracking: boolean
-  completion_status: string
-  completed_at: string | null
-  completed_by: string | null
-  verified_by: string | null
-  related_to_type: string | null
-  related_to_id: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface MaterialReceived {
-  id: string
-  project_id: string
-  delivery_date: string
-  delivery_time: string | null
-  delivery_ticket_number: string | null
-  material_description: string
-  quantity: string | null
-  vendor: string | null
-  vendor_contact: string | null
-  submittal_procurement_id: string | null
-  daily_report_delivery_id: string | null
-  storage_location: string | null
-  received_by: string | null
-  condition: string
-  condition_notes: string | null
-  status: string
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface Meeting {
-  id: string
-  project_id: string
-  meeting_type: string
-  meeting_name: string | null
-  meeting_date: string
-  meeting_time: string | null
-  location: string | null
-  duration_minutes: number | null
-  attendees: Json
-  agenda: string | null
-  discussion_notes: string | null
-  decisions: string | null
-  action_items: Json
-  minutes_pdf_url: string | null
-  distributed_to: string[]
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface Notice {
-  id: string
-  project_id: string
-  notice_type: string
-  subject: string
-  description: string | null
-  direction: string
-  from_party: string | null
-  to_party: string | null
-  notice_date: string
-  received_date: string | null
-  reference_number: string | null
-  document_url: string | null
-  response_required: boolean
-  response_due_date: string | null
-  response_status: string | null
-  response_document_url: string | null
-  response_date: string | null
-  status: string
-  is_critical: boolean
-  notes: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface SiteCondition {
-  id: string
-  project_id: string
-  condition_type: string
-  category: string | null
-  discovered_date: string
-  location: string | null
-  title: string
-  description: string
-  impact_description: string | null
-  cost_impact: number | null
-  schedule_impact: number | null
-  related_rfi_id: string | null
-  related_change_order_id: string | null
-  related_site_instruction_id: string | null
-  before_photos: Json
-  after_photos: Json
-  status: string
-  resolution: string | null
-  resolved_date: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface CloseoutItem {
-  id: string
-  project_id: string
-  item_type: string
-  item_name: string
-  description: string | null
-  system_category: string | null
-  equipment_name: string | null
-  manufacturer: string | null
-  model_number: string | null
-  serial_number: string | null
-  warranty_start_date: string | null
-  warranty_end_date: string | null
-  warranty_duration_years: number | null
-  warranty_contact_name: string | null
-  warranty_contact_phone: string | null
-  warranty_contact_email: string | null
-  document_urls: Json
-  related_submittal_id: string | null
-  related_drawing_id: string | null
-  is_collected: boolean
-  collected_date: string | null
-  is_delivered_to_owner: boolean
-  delivered_date: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-// =============================================
-// Photos
-// =============================================
-
-export interface Photo {
-  id: string
-  project_id: string
-  file_url: string
-  thumbnail_url: string | null
-  file_name: string
-  file_size: number | null
-  width: number | null
-  height: number | null
-  is_360: boolean
-  captured_at: string
-  latitude: number | null
-  longitude: number | null
-  caption: string | null
-  description: string | null
-  building: string | null
-  floor: string | null
-  area: string | null
-  grid: string | null
-  location_notes: string | null
-  photo_category: PhotoCategory | null
-  tags: string[]
-  project_phase: string | null
-  linked_items: Json
-  is_before_photo: boolean
-  is_after_photo: boolean
-  paired_photo_id: string | null
-  is_pinned: boolean
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export type PhotoCategory =
-  | 'progress'
-  | 'safety'
-  | 'issue'
-  | 'condition'
-  | 'delivery'
-  | 'inspection'
-  | 'closeout'
-  | 'general'
-
-// =============================================
-// Takeoff & Assemblies
-// =============================================
-
-export interface Assembly {
-  id: string
-  company_id: string | null
-  name: string
-  assembly_number: string | null
-  description: string | null
-  category: string | null
-  trade: string | null
-  assembly_level: string
-  unit_of_measure: string
-  items: Json
-  variables: Json
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-export interface TakeoffItem {
-  id: string
-  project_id: string
-  document_id: string
-  name: string
-  description: string | null
-  measurement_type: string
-  measurement_data: Json
-  page_number: number
-  quantity: number | null
-  unit: string | null
-  multiplier: number
-  waste_factor: number
-  final_quantity: number | null
-  color: string
-  line_width: number
-  takeoff_tags: Json
-  layer: string | null
-  is_visible: boolean
-  assembly_id: string | null
-  created_at: string
-  updated_at: string
-  created_by: string | null
-  deleted_at: string | null
-}
-
-// =============================================
-// Communication
-// =============================================
-
-export interface Notification {
-  id: string
-  user_id: string
-  notification_type: string
-  title: string
-  message: string | null
-  related_to_type: string | null
-  related_to_id: string | null
-  related_to_url: string | null
-  priority: string
-  is_read: boolean
-  read_at: string | null
-  action_taken: boolean
-  action_taken_at: string | null
-  created_at: string
-}
-
-export interface Message {
-  id: string
-  project_id: string | null
-  message_type: string
-  subject: string | null
-  body: string
-  from_user_id: string
-  to_user_ids: string[]
-  parent_message_id: string | null
-  thread_id: string | null
-  is_read: boolean
-  read_at: string | null
-  created_at: string
-  deleted_at: string | null
-}
-
-// =============================================
-// Utility Types
-// =============================================
-
-// Helper type for creating new records (omits auto-generated fields)
-export type CreateInput<T> = Omit<T, 'id' | 'created_at' | 'updated_at'>
-
-// Helper type for updating records (makes all fields optional except id)
-export type UpdateInput<T> = Partial<Omit<T, 'id'>> & { id: string }
-
-// Helper type for database queries with relations
-export type WithRelations<T, R extends Record<string, any>> = T & R
-
-// =============================================
-// Supabase Type Helpers
-// =============================================
-
-// Type helpers for better Supabase TypeScript integration
-export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
-export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
-export type TablesUpdate<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
-
-// Enum types for better autocomplete
-export type Enums<T extends keyof Database['public']['Enums']> = Database['public']['Enums'][T]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {},
+  },
+} as const
+
+// Custom type aliases for convenience
+export type DailyReport = Database['public']['Tables']['daily_reports']['Row']
+export type CreateInput<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
+export type UpdateInput<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
+
+// Table row types
+export type Document = Database['public']['Tables']['documents']['Row']
+export type DocumentType = Database['public']['Tables']['documents']['Row']['document_type']
+export type DocumentStatus = Database['public']['Tables']['documents']['Row']['status']
+export type Folder = Database['public']['Tables']['folders']['Row']
+export type WorkflowItem = Database['public']['Tables']['workflow_items']['Row']
+export type Project = Database['public']['Tables']['projects']['Row']
+export type ProjectStatus = Database['public']['Tables']['projects']['Row']['status']
+export type ChangeOrderBid = Database['public']['Tables']['change_order_bids']['Row']
+export type Contact = Database['public']['Tables']['contacts']['Row']
+export type Subcontractor = Database['public']['Tables']['subcontractors']['Row']
+export type WorkforceEntry = Database['public']['Tables']['daily_report_workforce']['Row']
+export type DraftReport = Partial<Database['public']['Tables']['daily_reports']['Insert']>
+
+// Additional type exports
+export type UserProfile = Database['public']['Tables']['users']['Row']
+export type Task = Database['public']['Tables']['tasks']['Row']
+export type TaskStatus = Database['public']['Tables']['tasks']['Row']['status']
+export type PunchItem = Database['public']['Tables']['punch_items']['Row']
+export type PunchItemStatus = Database['public']['Tables']['punch_items']['Row']['status']
+export type Priority = Database['public']['Tables']['punch_items']['Row']['priority']
+export type WorkflowType = Database['public']['Tables']['workflow_types']['Row']
+export type WorkflowItemComment = Database['public']['Tables']['workflow_item_comments']['Row']
+export type WorkflowItemHistory = Database['public']['Tables']['workflow_item_history']['Row']
+export type SubmittalProcurement = Database['public']['Tables']['submittal_procurement']['Row']

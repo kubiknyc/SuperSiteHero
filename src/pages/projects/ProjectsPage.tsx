@@ -9,14 +9,19 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Plus, Search, MapPin, Calendar } from 'lucide-react'
+import { Plus, Search, MapPin, Calendar, Edit } from 'lucide-react'
 import { format } from 'date-fns'
 import { CreateProjectDialog } from '@/features/projects/components/CreateProjectDialog'
+import { EditProjectDialog } from '@/features/projects/components/EditProjectDialog'
+import { DeleteProjectConfirmation } from '@/features/projects/components/DeleteProjectConfirmation'
+import type { Project } from '@/types/database'
 
 export function ProjectsPage() {
-  const { data: projects, isLoading, error } = useMyProjects()
+  const { data: projects, isLoading, error, refetch } = useMyProjects()
   const [searchQuery, setSearchQuery] = useState('')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [editingProject, setEditingProject] = useState<Project | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
 
   // Filter projects based on search query
   const filteredProjects = projects?.filter((project) =>
@@ -110,48 +115,84 @@ export function ProjectsPage() {
         {filteredProjects && filteredProjects.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProjects.map((project) => (
-              <Link key={project.id} to={`/projects/${project.id}`}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
+              <Card key={project.id} className="hover:shadow-lg transition-shadow h-full flex flex-col">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <Link to={`/projects/${project.id}`} className="hover:underline">
                         <CardTitle className="text-lg">{project.name}</CardTitle>
-                        {project.project_number && (
-                          <p className="text-sm text-gray-500 mt-1">
-                            #{project.project_number}
-                          </p>
-                        )}
-                      </div>
-                      <Badge variant={getStatusVariant(project.status)}>
-                        {formatStatus(project.status)}
-                      </Badge>
-                    </div>
-                    {project.address && (
-                      <CardDescription className="flex items-start gap-2 mt-2">
-                        <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
-                        <span>{project.address}</span>
-                      </CardDescription>
-                    )}
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2 text-sm">
-                      {project.start_date && (
-                        <div className="flex items-center gap-2 text-gray-600">
-                          <Calendar className="h-4 w-4" />
-                          <span>Started {format(new Date(project.start_date), 'MMM d, yyyy')}</span>
-                        </div>
-                      )}
-                      {project.description && (
-                        <p className="text-gray-600 line-clamp-2 mt-2">
-                          {project.description}
+                      </Link>
+                      {project.project_number && (
+                        <p className="text-sm text-gray-500 mt-1">
+                          #{project.project_number}
                         </p>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
-              </Link>
+                    <Badge variant={getStatusVariant(project.status)}>
+                      {formatStatus(project.status)}
+                    </Badge>
+                  </div>
+                  {project.address && (
+                    <CardDescription className="flex items-start gap-2 mt-2">
+                      <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <span>{project.address}</span>
+                    </CardDescription>
+                  )}
+                </CardHeader>
+                <CardContent className="flex-1">
+                  <div className="space-y-2 text-sm">
+                    {project.start_date && (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Calendar className="h-4 w-4" />
+                        <span>Started {project.start_date ? format(new Date(project.start_date), 'MMM d, yyyy') : 'N/A'}</span>
+                      </div>
+                    )}
+                    {project.description && (
+                      <p className="text-gray-600 line-clamp-2 mt-2">
+                        {project.description}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+
+                {/* Edit and Delete actions */}
+                <div className="border-t pt-4 px-6 pb-6 flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setEditingProject(project)
+                      setEditDialogOpen(true)
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                  <DeleteProjectConfirmation
+                    projectId={project.id}
+                    projectName={project.name}
+                    onSuccess={() => refetch()}
+                  />
+                </div>
+              </Card>
             ))}
           </div>
+        )}
+
+        {/* Edit Project Dialog */}
+        {editingProject && (
+          <EditProjectDialog
+            project={editingProject}
+            open={editDialogOpen}
+            onOpenChange={(open) => {
+              setEditDialogOpen(open)
+              if (!open) {
+                setEditingProject(null)
+                refetch()
+              }
+            }}
+          />
         )}
       </div>
     </AppLayout>

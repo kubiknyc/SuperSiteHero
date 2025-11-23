@@ -191,13 +191,13 @@ export function DashboardPage() {
                 {selectedProject.start_date && (
                   <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    <span>Started {format(new Date(selectedProject.start_date), 'MMM d, yyyy')}</span>
+                    <span>Started {selectedProject.start_date ? format(new Date(selectedProject.start_date), 'MMM d, yyyy') : 'N/A'}</span>
                   </div>
                 )}
                 {selectedProject.end_date && (
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4" />
-                    <span>Est. completion {format(new Date(selectedProject.end_date), 'MMM d, yyyy')}</span>
+                    <span>Est. completion {selectedProject.end_date ? format(new Date(selectedProject.end_date), 'MMM d, yyyy') : 'N/A'}</span>
                   </div>
                 )}
               </div>
