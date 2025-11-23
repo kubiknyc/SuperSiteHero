@@ -60,6 +60,10 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
     // Step 2: Call API (with notifications handled by mutation hook)
     try {
       console.log('Submitting project data...')
+
+      // Type guard: validation.data is guaranteed to exist when success is true
+      if (!validation.data) return
+
       await createProject.mutateAsync({
         name: validation.data.name,
         project_number: validation.data.project_number || null,

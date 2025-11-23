@@ -2,8 +2,8 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useMutationWithNotification } from '@/lib/hooks/useMutationWithNotification'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { punchListsApi } from '@/lib/api'
 import type { PunchItem } from '@/types/database'
-import { supabase } from '@/lib/supabase'
 
 export function useCreatePunchItemWithNotification() {
   const queryClient = useQueryClient()
@@ -17,24 +17,13 @@ export function useCreatePunchItemWithNotification() {
     mutationFn: async (punchItem) => {
       if (!userProfile?.id) throw new Error('User not authenticated')
 
-      const { data, error } = await supabase
-        .from('punch_items')
-        .insert({
-          ...punchItem,
-          marked_complete_by: null,
-          verified_by: null,
-        })
-        .select()
-        .single()
-
-      if (error) throw error
-      return data as PunchItem
+      return punchListsApi.createPunchItem(punchItem)
     },
     successMessage: (data) => `Punch item "${data.title}" created successfully`,
     errorMessage: (error) => `Failed to create punch item: ${error.message}`,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['punch-items'] })
-      queryClient.invalidateQueries({ queryKey: ['punch-items', data.project_id] })
+      queryClient.invalidateQueries({ queryKey: ['punch-items'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['punch-items', data.project_id], exact: false })
     },
   })
 }
@@ -48,22 +37,14 @@ export function useUpdatePunchItemWithNotification() {
     { id: string; updates: Partial<Omit<PunchItem, 'id' | 'created_at' | 'updated_at'>> }
   >({
     mutationFn: async ({ id, updates }) => {
-      const { data, error } = await supabase
-        .from('punch_items')
-        .update(updates as any)
-        .eq('id', id)
-        .select()
-        .single()
-
-      if (error) throw error
-      return data as PunchItem
+      return punchListsApi.updatePunchItem(id, updates)
     },
     successMessage: (data) => `Punch item "${data.title}" updated successfully`,
     errorMessage: (error) => `Failed to update punch item: ${error.message}`,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['punch-items'] })
-      queryClient.invalidateQueries({ queryKey: ['punch-items', data.id] })
-      queryClient.invalidateQueries({ queryKey: ['punch-items', data.project_id] })
+      queryClient.invalidateQueries({ queryKey: ['punch-items'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['punch-items', data.id], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['punch-items', data.project_id], exact: false })
     },
   })
 }
@@ -73,17 +54,12 @@ export function useDeletePunchItemWithNotification() {
 
   return useMutationWithNotification<void, Error, string>({
     mutationFn: async (punchItemId) => {
-      const { error } = await supabase
-        .from('punch_items')
-        .update({ deleted_at: new Date().toISOString() })
-        .eq('id', punchItemId)
-
-      if (error) throw error
+      return punchListsApi.deletePunchItem(punchItemId)
     },
     successMessage: 'Punch item deleted successfully',
     errorMessage: (error) => `Failed to delete punch item: ${error.message}`,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['punch-items'] })
+      queryClient.invalidateQueries({ queryKey: ['punch-items'], exact: false })
     },
   })
 }
@@ -98,34 +74,14 @@ export function useUpdatePunchItemStatusWithNotification() {
     { punchItemId: string; status: string }
   >({
     mutationFn: async ({ punchItemId, status }) => {
-      const updates: Partial<PunchItem> = {
-        status: status as any,
-      }
-
-      if (status === 'completed' && userProfile?.id) {
-        updates.marked_complete_by = userProfile.id
-        updates.marked_complete_at = new Date().toISOString()
-      } else if (status === 'verified' && userProfile?.id) {
-        updates.verified_by = userProfile.id
-        updates.verified_at = new Date().toISOString()
-      }
-
-      const { data, error } = await supabase
-        .from('punch_items')
-        .update(updates as any)
-        .eq('id', punchItemId)
-        .select()
-        .single()
-
-      if (error) throw error
-      return data as PunchItem
+      return punchListsApi.updatePunchItemStatus(punchItemId, status, userProfile?.id)
     },
     successMessage: (data) => `Punch item status updated to "${data.status}"`,
     errorMessage: (error) => `Failed to update punch item status: ${error.message}`,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['punch-items'] })
-      queryClient.invalidateQueries({ queryKey: ['punch-items', data.id] })
-      queryClient.invalidateQueries({ queryKey: ['punch-items', data.project_id] })
+      queryClient.invalidateQueries({ queryKey: ['punch-items'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['punch-items', data.id], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['punch-items', data.project_id], exact: false })
     },
   })
 }

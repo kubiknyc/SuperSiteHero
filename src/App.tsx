@@ -7,8 +7,6 @@ import { ToastProvider } from './lib/notifications/ToastContext'
 import { ErrorBoundary } from './components/errors/ErrorBoundary'
 import { ToastContainer } from './components/notifications/ToastContainer'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
-import { DebugAuth } from './components/DebugAuth'
-
 // Page imports
 import { LoginPage } from './pages/auth/LoginPage'
 import { SignupPage } from './pages/auth/SignupPage'
@@ -32,6 +30,8 @@ import { SubmittalsPage } from './pages/submittals/SubmittalsPage'
 import { SubmittalDetailPage } from './pages/submittals/SubmittalDetailPage'
 import { PunchListsPage } from './pages/punch-lists/PunchListsPage'
 import { PunchItemDetailPage } from './pages/punch-lists/PunchItemDetailPage'
+import { WorkflowsPage } from './pages/workflows/WorkflowsPage'
+import { WorkflowItemDetailPage } from './pages/workflows/WorkflowItemDetailPage'
 import { ReportsPage } from './pages/reports/ReportsPage'
 // TODO: Import remaining pages
 
@@ -57,6 +57,8 @@ function App() {
               <Route path="/daily-reports/:id/edit" element={<ProtectedRoute><DailyReportEditPage /></ProtectedRoute>} />
               <Route path="/change-orders" element={<ProtectedRoute><ChangeOrdersPage /></ProtectedRoute>} />
               <Route path="/change-orders/:id" element={<ProtectedRoute><ChangeOrderDetailPage /></ProtectedRoute>} />
+              <Route path="/workflows" element={<ProtectedRoute><WorkflowsPage /></ProtectedRoute>} />
+              <Route path="/workflows/:id" element={<ProtectedRoute><WorkflowItemDetailPage /></ProtectedRoute>} />
               <Route path="/tasks" element={<ProtectedRoute><TasksPage /></ProtectedRoute>} />
               <Route path="/tasks/new" element={<ProtectedRoute><TaskCreatePage /></ProtectedRoute>} />
               <Route path="/tasks/:id" element={<ProtectedRoute><TaskDetailPage /></ProtectedRoute>} />
@@ -85,9 +87,6 @@ function App() {
 
             {/* Toast notification container - displays all toasts throughout app */}
             <ToastContainer />
-
-            {/* Debug component - REMOVE AFTER TESTING */}
-            <DebugAuth />
           </AuthProvider>
         </ToastProvider>
       </BrowserRouter>

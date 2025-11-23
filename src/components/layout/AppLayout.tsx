@@ -19,6 +19,7 @@ import {
   LogOut,
   HardHat,
   FileEdit,
+  Workflow,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -37,6 +38,7 @@ const navigation: NavItem[] = [
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
   { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
+  { name: 'Workflows', href: '/workflows', icon: Workflow },
   { name: 'Tasks', href: '/tasks', icon: ClipboardList },
   { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },
   { name: 'RFIs', href: '/rfis', icon: AlertCircle },

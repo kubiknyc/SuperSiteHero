@@ -5,6 +5,7 @@ import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
 import type { DailyReport } from '@/types/database'
 import type { QueryOptions } from '../types'
+import { dailyReportCreateSchema, dailyReportUpdateSchema } from '@/lib/validation'
 
 export const dailyReportsApi = {
   /**
@@ -114,7 +115,17 @@ export const dailyReportsApi = {
     data: Omit<DailyReport, 'id' | 'created_at' | 'updated_at'>
   ): Promise<DailyReport> {
     try {
-      return await apiClient.insert<DailyReport>('daily_reports', data)
+      // Validate input data
+      const validation = dailyReportCreateSchema.safeParse(data)
+      if (!validation.success) {
+        throw new ApiErrorClass({
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid daily report data',
+          details: validation.error.issues,
+        })
+      }
+
+      return await apiClient.insert<DailyReport>('daily_reports', validation.data)
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -140,7 +151,17 @@ export const dailyReportsApi = {
         })
       }
 
-      return await apiClient.update<DailyReport>('daily_reports', reportId, updates)
+      // Validate update data
+      const validation = dailyReportUpdateSchema.safeParse(updates)
+      if (!validation.success) {
+        throw new ApiErrorClass({
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid update data',
+          details: validation.error.issues,
+        })
+      }
+
+      return await apiClient.update<DailyReport>('daily_reports', reportId, validation.data)
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
