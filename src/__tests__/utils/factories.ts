@@ -87,7 +87,7 @@ export const mockProject = (overrides: Partial<Project> = {}): Project => {
   // Merge overrides, ensuring null values are preserved
   const result = { ...defaultValues };
   for (const key in overrides) {
-    if (overrides.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(overrides, key)) {
       (result as any)[key] = overrides[key as keyof Project];
     }
   }

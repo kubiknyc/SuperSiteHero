@@ -1,11 +1,13 @@
 // File: /src/components/layout/AppLayout.tsx
 // Main application layout with sidebar navigation
 
-import { type ReactNode } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { cn } from '@/lib/utils'
 import { SyncStatusBar } from '@/components/sync/SyncStatusBar'
+import { OfflineIndicator } from '@/components/OfflineIndicator'
+import { initOfflineListeners } from '@/stores/offline-store'
 import {
   LayoutDashboard,
   FolderOpen,
@@ -20,7 +22,10 @@ import {
   HardHat,
   FileEdit,
   Workflow,
+  CheckCircle2,
+  CheckSquare,
 } from 'lucide-react'
+import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { Button } from '@/components/ui/button'
 
 interface AppLayoutProps {
@@ -33,14 +38,20 @@ interface NavItem {
   icon: React.ComponentType<{ className?: string }>
 }
 
-const navigation: NavItem[] = [
+interface NavItemWithBadge extends NavItem {
+  badge?: React.ComponentType
+}
+
+const navigation: NavItemWithBadge[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
   { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
   { name: 'Workflows', href: '/workflows', icon: Workflow },
   { name: 'Tasks', href: '/tasks', icon: ClipboardList },
+  { name: 'Approvals', href: '/approvals', icon: CheckCircle2, badge: PendingApprovalsBadge },
   { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },
+  { name: 'Checklists', href: '/checklists/templates', icon: CheckSquare },
   { name: 'RFIs', href: '/rfis', icon: AlertCircle },
   { name: 'Safety', href: '/safety', icon: Shield },
   { name: 'Contacts', href: '/contacts', icon: Users },
@@ -49,6 +60,12 @@ const navigation: NavItem[] = [
 export function AppLayout({ children }: AppLayoutProps) {
   const { signOut, userProfile } = useAuth()
   const location = useLocation()
+
+  // Initialize offline event listeners
+  useEffect(() => {
+    const cleanup = initOfflineListeners()
+    return cleanup
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -70,8 +87,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {navigation.map((item) => {
-            const isActive = location.pathname === item.href
+            const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
             const Icon = item.icon
+            const Badge = item.badge
 
             return (
               <Link
@@ -85,7 +103,8 @@ export function AppLayout({ children }: AppLayoutProps) {
                 )}
               >
                 <Icon className="h-5 w-5" />
-                {item.name}
+                <span className="flex-1">{item.name}</span>
+                {Badge && <Badge />}
               </Link>
             )
           })}
@@ -94,8 +113,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* User profile and settings */}
         <div className="p-4 border-t border-gray-800 space-y-3">
           {/* Sync status indicators */}
-          <div className="pb-2">
+          <div className="pb-2 flex items-center justify-between gap-2">
             <SyncStatusBar />
+            <OfflineIndicator />
           </div>
 
           {/* User info */}

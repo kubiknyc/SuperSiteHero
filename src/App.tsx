@@ -2,7 +2,7 @@
 // Main application component with routing and authentication
 // Phase 2 Performance: Implements route-based code splitting with React.lazy()
 
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './lib/auth/AuthContext'
 import { ToastProvider } from './lib/notifications/ToastContext'
@@ -10,6 +10,8 @@ import { ErrorBoundary } from './components/errors/ErrorBoundary'
 import { ToastContainer } from './components/notifications/ToastContainer'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
+import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
+import { initSyncManager } from './lib/offline/sync-manager'
 
 // Auth pages - loaded eagerly as they are the first pages users see
 import { LoginPage } from './pages/auth/LoginPage'
@@ -58,10 +60,58 @@ const PunchItemDetailPage = lazy(() => import('./pages/punch-lists/PunchItemDeta
 const WorkflowsPage = lazy(() => import('./pages/workflows/WorkflowsPage').then(m => ({ default: m.WorkflowsPage })))
 const WorkflowItemDetailPage = lazy(() => import('./pages/workflows/WorkflowItemDetailPage').then(m => ({ default: m.WorkflowItemDetailPage })))
 
+// Checklists feature
+const TemplatesPage = lazy(() => import('./features/checklists/pages/TemplatesPage').then(m => ({ default: m.default })))
+const TemplateItemsPage = lazy(() => import('./features/checklists/pages/TemplateItemsPage').then(m => ({ default: m.TemplateItemsPage })))
+const ExecutionsPage = lazy(() => import('./features/checklists/pages/ExecutionsPage').then(m => ({ default: m.ExecutionsPage })))
+
 // Reports feature
 const ReportsPage = lazy(() => import('./pages/reports/ReportsPage').then(m => ({ default: m.ReportsPage })))
 
+// Approvals feature
+const MyApprovalsPage = lazy(() => import('./pages/approvals/MyApprovalsPage').then(m => ({ default: m.MyApprovalsPage })))
+const ApprovalRequestPage = lazy(() => import('./pages/approvals/ApprovalRequestPage').then(m => ({ default: m.ApprovalRequestPage })))
+const ApprovalWorkflowsPage = lazy(() => import('./pages/settings/ApprovalWorkflowsPage').then(m => ({ default: m.ApprovalWorkflowsPage })))
+
 function App() {
+  // Initialize IndexedDB for offline functionality
+  useEffect(() => {
+    let cleanupSync: (() => void) | null = null;
+
+    const initOfflineDatabase = async () => {
+      try {
+        console.log('[App] Initializing offline database...')
+        await initDatabase()
+        console.log('[App] Offline database initialized successfully')
+
+        // Request persistent storage to prevent eviction
+        const isPersistent = await requestPersistentStorage()
+        if (isPersistent) {
+          console.log('[App] Persistent storage granted')
+        } else {
+          console.log('[App] Persistent storage not granted - data may be evicted under storage pressure')
+        }
+
+        // Initialize background sync manager
+        console.log('[App] Initializing background sync manager...')
+        cleanupSync = initSyncManager()
+        console.log('[App] Background sync manager initialized')
+      } catch (error) {
+        console.error('[App] Failed to initialize offline database:', error)
+        // Don't block app startup on IndexedDB failure
+      }
+    }
+
+    initOfflineDatabase()
+
+    // Cleanup on unmount
+    return () => {
+      if (cleanupSync) {
+        cleanupSync()
+      }
+    }
+  }, [])
+
   return (
     <ErrorBoundary>
       <BrowserRouter>
@@ -115,8 +165,18 @@ function App() {
                 <Route path="/punch-lists" element={<ProtectedRoute><PunchListsPage /></ProtectedRoute>} />
                 <Route path="/punch-lists/:id" element={<ProtectedRoute><PunchItemDetailPage /></ProtectedRoute>} />
 
+                {/* Checklists feature */}
+                <Route path="/checklists/templates" element={<ProtectedRoute><TemplatesPage /></ProtectedRoute>} />
+                <Route path="/checklists/templates/:templateId/items" element={<ProtectedRoute><TemplateItemsPage /></ProtectedRoute>} />
+                <Route path="/checklists/executions" element={<ProtectedRoute><ExecutionsPage /></ProtectedRoute>} />
+
                 {/* Reports feature */}
                 <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+
+                {/* Approvals feature */}
+                <Route path="/approvals" element={<ProtectedRoute><MyApprovalsPage /></ProtectedRoute>} />
+                <Route path="/approvals/:id" element={<ProtectedRoute><ApprovalRequestPage /></ProtectedRoute>} />
+                <Route path="/settings/approval-workflows" element={<ProtectedRoute><ApprovalWorkflowsPage /></ProtectedRoute>} />
 
                 {/* Redirect unknown routes to dashboard */}
                 <Route path="*" element={<Navigate to="/" replace />} />

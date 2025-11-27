@@ -3718,33 +3718,30 @@ export const Constants = {
   },
 } as const
 
-// Custom type aliases for convenience
-export type DailyReport = Database['public']['Tables']['daily_reports']['Row']
-export type CreateInput<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
-export type UpdateInput<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
-
-// Table row types
-export type Document = Database['public']['Tables']['documents']['Row']
-export type DocumentType = Database['public']['Tables']['documents']['Row']['document_type']
-export type DocumentStatus = Database['public']['Tables']['documents']['Row']['status']
-export type Folder = Database['public']['Tables']['folders']['Row']
-export type WorkflowItem = Database['public']['Tables']['workflow_items']['Row']
-export type Project = Database['public']['Tables']['projects']['Row']
-export type ProjectStatus = Database['public']['Tables']['projects']['Row']['status']
-export type ChangeOrderBid = Database['public']['Tables']['change_order_bids']['Row']
-export type Contact = Database['public']['Tables']['contacts']['Row']
-export type Subcontractor = Database['public']['Tables']['subcontractors']['Row']
-export type WorkforceEntry = Database['public']['Tables']['daily_report_workforce']['Row']
-export type DraftReport = Partial<Database['public']['Tables']['daily_reports']['Insert']>
-
-// Additional type exports
-export type UserProfile = Database['public']['Tables']['users']['Row']
-export type Task = Database['public']['Tables']['tasks']['Row']
-export type TaskStatus = Database['public']['Tables']['tasks']['Row']['status']
-export type PunchItem = Database['public']['Tables']['punch_items']['Row']
-export type PunchItemStatus = Database['public']['Tables']['punch_items']['Row']['status']
-export type Priority = Database['public']['Tables']['punch_items']['Row']['priority']
-export type WorkflowType = Database['public']['Tables']['workflow_types']['Row']
-export type WorkflowItemComment = Database['public']['Tables']['workflow_item_comments']['Row']
-export type WorkflowItemHistory = Database['public']['Tables']['workflow_item_history']['Row']
-export type SubmittalProcurement = Database['public']['Tables']['submittal_procurement']['Row']
+// Re-export commonly used types from database-extensions for backwards compatibility
+// This allows existing imports from '@/types/database' to work without changes
+export type {
+  Document,
+  Folder,
+  Project,
+  PunchItem,
+  WorkflowItem,
+  WorkflowType,
+  DailyReport,
+  User,
+  Company,
+  DocumentType,
+  DocumentStatus,
+  PunchItemStatus,
+  WorkflowItemStatus,
+  // Additional exports for full compatibility
+  Task,
+  UserProfile,
+  Priority,
+  TaskStatus,
+  ProjectStatus,
+  WorkflowItemComment,
+  WorkflowItemHistory,
+  SubmittalProcurement,
+  CreateInput,
+} from './database-extensions'

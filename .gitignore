@@ -40,5 +40,14 @@ nul
 .mcp.json
 .mcp.json.backup
 
+# Claude Code Settings (may contain sensitive credentials)
+.claude/settings.local.json
+
 # Large migration files
 migrations/COMBINED_ALL_MIGRATIONS.sql
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+auth.json

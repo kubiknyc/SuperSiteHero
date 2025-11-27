@@ -27,6 +27,8 @@ import {
   AlertCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
+import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 
 export function ChangeOrderDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -34,6 +36,7 @@ export function ChangeOrderDetailPage() {
   const { userProfile } = useAuth()
 
   const { data: changeOrder, isLoading, error } = useChangeOrder(id)
+  const { data: approvalStatus } = useEntityApprovalStatus('change_order', id)
   const updateStatus = useUpdateChangeOrderStatusWithNotification()
   const addComment = useAddChangeOrderCommentWithNotification()
 
@@ -311,6 +314,32 @@ export function ChangeOrderDetailPage() {
                 <Badge className={cn('w-full justify-center', getStatusColor(changeOrder.status))}>
                   {changeOrder.status.replace('_', ' ')}
                 </Badge>
+
+                {/* Approval Status */}
+                {approvalStatus?.has_active_request && (
+                  <div className="pt-2 border-t">
+                    <Label className="text-gray-600">Approval Status</Label>
+                    <div className="mt-2">
+                      <ApprovalStatusBadge
+                        status={approvalStatus.status!}
+                        conditions={approvalStatus.conditions}
+                        showConditions
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit for Approval */}
+                {approvalStatus?.can_submit && (
+                  <div className="pt-2">
+                    <SubmitForApprovalButton
+                      entityType="change_order"
+                      entityId={changeOrder.id}
+                      entityName={changeOrder.title}
+                      projectId={changeOrder.project_id}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 

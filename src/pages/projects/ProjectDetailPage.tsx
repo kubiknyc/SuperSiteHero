@@ -24,6 +24,9 @@ export function ProjectDetailPage() {
   const navigate = useNavigate()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
 
+  // Call hooks before any conditional returns
+  const { data: project, isLoading, error } = useProject(projectId || '')
+
   if (!projectId) {
     return (
       <AppLayout>
@@ -35,8 +38,6 @@ export function ProjectDetailPage() {
       </AppLayout>
     )
   }
-
-  const { data: project, isLoading, error } = useProject(projectId)
 
   if (isLoading) {
     return (

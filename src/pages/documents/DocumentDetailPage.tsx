@@ -44,6 +44,10 @@ import {
 import { DocumentTypeIcon } from '@/features/documents/components/DocumentTypeIcon'
 import { DocumentStatusBadge } from '@/features/documents/components/DocumentStatusBadge'
 import { DocumentViewer } from '@/features/documents/components/viewers'
+import { DocumentVersionHistory } from '@/features/documents/components/DocumentVersionHistory'
+import { UploadDocumentVersion } from '@/features/documents/components/UploadDocumentVersion'
+import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
+import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import {
   useDocument,
   useDocumentVersions,
@@ -87,6 +91,7 @@ export function DocumentDetailPage() {
   // Queries
   const { data: document, isLoading, error } = useDocument(documentId)
   const { data: versions, isLoading: versionsLoading } = useDocumentVersions(documentId)
+  const { data: approvalStatus } = useEntityApprovalStatus('document', documentId)
 
   // Mutations
   const updateDocument = useUpdateDocumentWithNotification()
@@ -231,7 +236,7 @@ export function DocumentDetailPage() {
           <div className="flex-1 min-w-0">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">{document.name}</h1>
             <div className="flex flex-wrap items-center gap-2">
-              <DocumentStatusBadge status={document.status} />
+              <DocumentStatusBadge status={document.status ?? 'draft'} />
               {document.is_pinned && (
                 <Badge className="bg-amber-100 text-amber-800">
                   <Pin className="w-3 h-3 mr-1" />
@@ -249,9 +254,10 @@ export function DocumentDetailPage() {
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <DocumentViewer
             document={document}
-            allowMarkup={false}
-            readOnly={true}
+            allowMarkup={true}
+            readOnly={false}
             height="h-96"
+            enableMarkup={false}
           />
         </div>
 
@@ -404,6 +410,12 @@ export function DocumentDetailPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex flex-wrap gap-3">
+                  <UploadDocumentVersion
+                    documentId={document.id}
+                    documentName={document.name}
+                    projectId={document.project_id}
+                  />
+                  <DocumentVersionHistory documentId={document.id} />
                   <Button onClick={handleEditOpen} variant="outline">
                     <Edit className="w-4 h-4 mr-2" />
                     Edit Metadata
@@ -439,25 +451,42 @@ export function DocumentDetailPage() {
                 <div>
                   <Label className="text-gray-600">Document Status</Label>
                   <div className="mt-2">
-                    <DocumentStatusBadge status={document.status} className="text-base px-3 py-1" />
+                    <DocumentStatusBadge status={document.status ?? 'draft'} className="text-base px-3 py-1" />
                   </div>
                 </div>
 
-                {document.requires_approval && (
+                {/* Approval Status */}
+                {approvalStatus?.has_active_request && (
+                  <div>
+                    <Label className="text-gray-600">Approval Status</Label>
+                    <div className="mt-2">
+                      <ApprovalStatusBadge
+                        status={approvalStatus.status!}
+                        conditions={approvalStatus.conditions}
+                        showConditions
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit for Approval */}
+                {document.requires_approval && approvalStatus?.can_submit && (
+                  <div className="pt-2">
+                    <SubmitForApprovalButton
+                      entityType="document"
+                      entityId={document.id}
+                      entityName={document.name}
+                      projectId={document.project_id}
+                    />
+                  </div>
+                )}
+
+                {document.requires_approval && !approvalStatus?.has_active_request && !approvalStatus?.can_submit && (
                   <div>
                     <Label className="text-gray-600">Approval Status</Label>
                     <div className="mt-2 flex items-center gap-2">
-                      {document.status === 'current' ? (
-                        <>
-                          <CheckCircle2 className="w-5 h-5 text-green-600" />
-                          <span className="text-sm font-medium text-green-700">Approved</span>
-                        </>
-                      ) : (
-                        <>
-                          <Clock className="w-5 h-5 text-amber-600" />
-                          <span className="text-sm font-medium text-amber-700">Pending</span>
-                        </>
-                      )}
+                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      <span className="text-sm font-medium text-green-700">Already Approved</span>
                     </div>
                   </div>
                 )}
@@ -504,7 +533,7 @@ export function DocumentDetailPage() {
                             <span className="font-medium text-gray-900">
                               Version {version.version}
                             </span>
-                            <DocumentStatusBadge status={version.status} className="text-xs" />
+                            <DocumentStatusBadge status={version.status ?? 'draft'} className="text-xs" />
                           </div>
                           {version.revision && (
                             <p className="text-sm text-gray-600">Revision {version.revision}</p>

@@ -530,7 +530,7 @@ export function DocumentLibraryPage() {
                               <h4 className="font-medium text-gray-900 text-sm mb-2 line-clamp-2">
                                 {doc.name}
                               </h4>
-                              <DocumentStatusBadge status={doc.status} className="text-xs" />
+                              <DocumentStatusBadge status={doc.status ?? 'draft'} className="text-xs" />
                               <p className="text-xs text-gray-500 mt-2">
                                 v{doc.version}
                               </p>

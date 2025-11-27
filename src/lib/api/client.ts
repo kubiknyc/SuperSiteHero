@@ -95,6 +95,74 @@ class ApiClient {
   }
 
   /**
+   * Fetch records with total count for pagination
+   * Phase 3: Server-side pagination support
+   */
+  async selectWithCount<T>(
+    table: string,
+    options?: QueryOptions & { select?: string }
+  ): Promise<{ data: T[]; count: number }> {
+    try {
+      let query = supabase.from(table as any).select(options?.select || '*', { count: 'exact' })
+
+      // Apply filters
+      if (options?.filters) {
+        for (const filter of options.filters) {
+          switch (filter.operator) {
+            case 'eq':
+              query = query.eq(filter.column, filter.value)
+              break
+            case 'neq':
+              query = query.neq(filter.column, filter.value)
+              break
+            case 'gt':
+              query = query.gt(filter.column, filter.value)
+              break
+            case 'gte':
+              query = query.gte(filter.column, filter.value)
+              break
+            case 'lt':
+              query = query.lt(filter.column, filter.value)
+              break
+            case 'lte':
+              query = query.lte(filter.column, filter.value)
+              break
+            case 'like':
+              query = query.like(filter.column, filter.value)
+              break
+            case 'ilike':
+              query = query.ilike(filter.column, filter.value)
+              break
+            case 'in':
+              query = query.in(filter.column, filter.value)
+              break
+          }
+        }
+      }
+
+      // Apply ordering
+      if (options?.orderBy) {
+        query = query.order(options.orderBy.column, {
+          ascending: options.orderBy.ascending !== false,
+        })
+      }
+
+      // Apply pagination
+      if (options?.pagination?.limit) {
+        const offset = options.pagination.offset || (options.pagination.page || 0) * options.pagination.limit
+        query = query.range(offset, offset + options.pagination.limit - 1)
+      }
+
+      const { data, error, count } = await query
+
+      if (error) throw error
+      return { data: data as T[], count: count || 0 }
+    } catch (error) {
+      throw this.handleError(error)
+    }
+  }
+
+  /**
    * Fetch a single record by ID
    */
   async selectOne<T>(

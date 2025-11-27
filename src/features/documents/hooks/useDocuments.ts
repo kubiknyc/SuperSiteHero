@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { documentsApi } from '@/lib/api/services/documents'
 import type { Document, Folder } from '@/types/database'
 
 // =============================================
@@ -316,5 +317,101 @@ export function useDeleteFolder() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['folders'] })
     },
+  })
+}
+
+// =============================================
+// Version Control Hooks
+// =============================================
+
+/**
+ * Get all versions of a document using API service
+ */
+export function useDocumentVersionHistory(documentId: string | undefined) {
+  return useQuery({
+    queryKey: ['documents', documentId, 'version-history'],
+    queryFn: async () => {
+      if (!documentId) throw new Error('Document ID required')
+      return await documentsApi.getDocumentVersions(documentId)
+    },
+    enabled: !!documentId,
+  })
+}
+
+/**
+ * Get the latest version of a document
+ */
+export function useLatestDocumentVersion(documentId: string | undefined) {
+  return useQuery({
+    queryKey: ['documents', documentId, 'latest-version'],
+    queryFn: async () => {
+      if (!documentId) throw new Error('Document ID required')
+      return await documentsApi.getLatestVersion(documentId)
+    },
+    enabled: !!documentId,
+  })
+}
+
+/**
+ * Create a new version of a document
+ */
+export function useCreateDocumentVersion() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      documentId,
+      newFileUrl,
+      versionNotes,
+    }: {
+      documentId: string
+      newFileUrl: string
+      versionNotes?: string
+    }) => {
+      return await documentsApi.createDocumentVersion(documentId, newFileUrl, versionNotes)
+    },
+    onSuccess: (data, variables) => {
+      // Invalidate all related queries
+      queryClient.invalidateQueries({ queryKey: ['documents'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['documents', variables.documentId], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['documents', data.id], exact: false })
+    },
+  })
+}
+
+/**
+ * Revert to a previous document version
+ */
+export function useRevertDocumentVersion() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (versionId: string) => {
+      return await documentsApi.revertToVersion(versionId)
+    },
+    onSuccess: (data) => {
+      // Invalidate all related queries
+      queryClient.invalidateQueries({ queryKey: ['documents'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['documents', data.id], exact: false })
+    },
+  })
+}
+
+/**
+ * Compare two document versions
+ */
+export function useCompareDocumentVersions(
+  version1Id: string | undefined,
+  version2Id: string | undefined
+) {
+  return useQuery({
+    queryKey: ['documents', 'compare', version1Id, version2Id],
+    queryFn: async () => {
+      if (!version1Id || !version2Id) {
+        throw new Error('Both version IDs required for comparison')
+      }
+      return await documentsApi.compareVersions(version1Id, version2Id)
+    },
+    enabled: !!version1Id && !!version2Id,
   })
 }

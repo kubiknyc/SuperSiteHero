@@ -1,12 +1,15 @@
 // File: /src/features/documents/components/viewers/ImageViewer.tsx
 // Image viewer with zoom and pan capabilities
 
-import { useState } from 'react'
-import { ZoomIn, ZoomOut, Download, Maximize2 } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { DrawingCanvas } from '../DrawingCanvas'
 
 interface ImageViewerProps {
+  documentId: string
+  projectId: string
   imageUrl: string
   fileName?: string
   alt?: string
@@ -14,6 +17,7 @@ interface ImageViewerProps {
   readOnly?: boolean
   onMarkupCreate?: (markup: any) => void
   height?: string
+  enableMarkup?: boolean
 }
 
 /**
@@ -40,6 +44,8 @@ interface ImageViewerProps {
  * ```
  */
 export function ImageViewer({
+  documentId,
+  projectId,
   imageUrl,
   fileName = 'image.jpg',
   alt = 'Image',
@@ -47,6 +53,7 @@ export function ImageViewer({
   readOnly = false,
   onMarkupCreate,
   height = 'h-screen',
+  enableMarkup: initialEnableMarkup = false,
 }: ImageViewerProps) {
   const [zoom, setZoom] = useState(100)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -56,11 +63,19 @@ export function ImageViewer({
   const [panY, setPanY] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [enableMarkup, setEnableMarkup] = useState(initialEnableMarkup)
+  const [imageWidth, setImageWidth] = useState(800)
+  const [imageHeight, setImageHeight] = useState(600)
+
+  const imageRef = useRef<HTMLImageElement>(null)
 
   // Handle image load
-  const handleImageLoad = () => {
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     setIsLoading(false)
     setError(null)
+    const img = e.currentTarget
+    setImageWidth(img.naturalWidth)
+    setImageHeight(img.naturalHeight)
   }
 
   // Handle image load error
@@ -224,11 +239,26 @@ export function ImageViewer({
           >
             <Download className="w-4 h-4" />
           </Button>
+
+          {allowMarkup && !readOnly && (
+            <>
+              <div className="w-px h-4 bg-gray-600" />
+              <Button
+                variant={enableMarkup ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setEnableMarkup(!enableMarkup)}
+                title={enableMarkup ? 'Disable markup' : 'Enable markup'}
+                className={enableMarkup ? '' : 'text-white hover:bg-gray-700'}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
       {/* Image Viewer Area */}
-      <div className="flex-1 overflow-hidden bg-gray-900 flex items-center justify-center cursor-grab active:cursor-grabbing">
+      <div className="flex-1 overflow-hidden bg-gray-900 flex items-center justify-center cursor-grab active:cursor-grabbing relative">
         {isLoading && (
           <div className="text-gray-400 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
@@ -244,13 +274,14 @@ export function ImageViewer({
         )}
 
         {!error && (
-          <div className="overflow-auto w-full h-full flex items-center justify-center">
+          <div className="overflow-auto w-full h-full flex items-center justify-center relative">
             <img
+              ref={imageRef}
               src={imageUrl}
               alt={alt}
               onLoad={handleImageLoad}
               onError={handleImageError}
-              onMouseDown={handleMouseDown}
+              onMouseDown={enableMarkup ? undefined : handleMouseDown}
               style={{
                 transform: `scale(${zoom / 100}) translate(${panX}px, ${panY}px)`,
                 transformOrigin: 'center',
@@ -258,9 +289,29 @@ export function ImageViewer({
               }}
               className={cn(
                 'max-w-full max-h-full',
-                zoom > 100 && isDragging && 'cursor-grabbing',
+                zoom > 100 && isDragging && !enableMarkup && 'cursor-grabbing',
               )}
             />
+
+            {/* Drawing Canvas Overlay */}
+            {enableMarkup && allowMarkup && !readOnly && (
+              <div
+                className="absolute top-1/2 left-1/2 pointer-events-auto"
+                style={{
+                  transform: `translate(-50%, -50%) scale(${zoom / 100})`,
+                  transformOrigin: 'center',
+                }}
+              >
+                <DrawingCanvas
+                  documentId={documentId}
+                  projectId={projectId}
+                  pageNumber={null}
+                  width={imageWidth}
+                  height={imageHeight}
+                  readOnly={false}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>

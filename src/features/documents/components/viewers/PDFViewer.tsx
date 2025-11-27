@@ -1,11 +1,12 @@
 // File: /src/features/documents/components/viewers/PDFViewer.tsx
 // PDF viewer with zoom, pan, and page navigation capabilities
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
-import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { UnifiedDrawingCanvas } from '../markup/UnifiedDrawingCanvas'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
@@ -13,12 +14,15 @@ import 'react-pdf/dist/Page/TextLayer.css'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
 
 interface PDFViewerProps {
+  documentId: string
+  projectId: string
   fileUrl: string
   fileName?: string
   allowMarkup?: boolean
   readOnly?: boolean
   onMarkupCreate?: (markup: any) => void
   height?: string
+  enableMarkup?: boolean
 }
 
 /**
@@ -45,18 +49,26 @@ interface PDFViewerProps {
  * ```
  */
 export function PDFViewer({
+  documentId,
+  projectId,
   fileUrl,
   fileName = 'document.pdf',
   allowMarkup = false,
   readOnly = false,
   onMarkupCreate,
   height = 'h-screen',
+  enableMarkup: initialEnableMarkup = false,
 }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
   const [zoom, setZoom] = useState(100)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [enableMarkup, setEnableMarkup] = useState(initialEnableMarkup)
+  const [pageWidth, setPageWidth] = useState(800)
+  const [pageHeight, setPageHeight] = useState(600)
+
+  const pageContainerRef = useRef<HTMLDivElement>(null)
 
   // Handle PDF load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -225,11 +237,26 @@ export function PDFViewer({
           >
             <Download className="w-4 h-4" />
           </Button>
+
+          {allowMarkup && !readOnly && (
+            <>
+              <div className="w-px h-4 bg-gray-600" />
+              <Button
+                variant={enableMarkup ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setEnableMarkup(!enableMarkup)}
+                title={enableMarkup ? 'Disable markup' : 'Enable markup'}
+                className={enableMarkup ? '' : 'text-white hover:bg-gray-700'}
+              >
+                <Pencil className="w-4 h-4" />
+              </Button>
+            </>
+          )}
         </div>
       </div>
 
       {/* PDF Viewer Area */}
-      <div className="flex-1 overflow-auto bg-gray-900 p-4 flex items-center justify-center">
+      <div className="flex-1 overflow-auto bg-gray-900 p-4 flex items-center justify-center relative">
         {isLoading && (
           <div className="text-gray-400 text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
@@ -245,24 +272,45 @@ export function PDFViewer({
         )}
 
         {!error && (
-          <Document
-            file={fileUrl}
-            onLoadSuccess={handleDocumentLoadSuccess}
-            onLoadError={handleDocumentLoadError}
-            loading={
-              <div className="text-gray-400">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+          <div ref={pageContainerRef} className="relative">
+            <Document
+              file={fileUrl}
+              onLoadSuccess={handleDocumentLoadSuccess}
+              onLoadError={handleDocumentLoadError}
+              loading={
+                <div className="text-gray-400">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
+                </div>
+              }
+            >
+              <Page
+                pageNumber={currentPage}
+                scale={zoom / 100}
+                renderTextLayer={false}
+                renderAnnotationLayer={false}
+                width={Math.min(window.innerWidth - 32, 1000)}
+                onLoadSuccess={(page) => {
+                  const viewport = page.getViewport({ scale: zoom / 100 })
+                  setPageWidth(viewport.width)
+                  setPageHeight(viewport.height)
+                }}
+              />
+            </Document>
+
+            {/* Drawing Canvas Overlay */}
+            {enableMarkup && allowMarkup && !readOnly && (
+              <div className="absolute top-0 left-0 pointer-events-auto">
+                <UnifiedDrawingCanvas
+                  documentId={documentId}
+                  projectId={projectId}
+                  pageNumber={currentPage}
+                  width={pageWidth}
+                  height={pageHeight}
+                  readOnly={false}
+                />
               </div>
-            }
-          >
-            <Page
-              pageNumber={currentPage}
-              scale={zoom / 100}
-              renderTextLayer={false}
-              renderAnnotationLayer={false}
-              width={Math.min(window.innerWidth - 32, 1000)}
-            />
-          </Document>
+            )}
+          </div>
         )}
       </div>
     </div>

@@ -15,6 +15,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
+import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 
 export function RFIDetailPage() {
   const { rfiId } = useParams<{ rfiId: string }>()
@@ -26,6 +28,7 @@ export function RFIDetailPage() {
   const { data: rfi, isLoading, error } = useRFI(rfiId)
   const { data: comments } = useRFIComments(rfiId)
   const { data: workflowType } = useRFIWorkflowType()
+  const { data: approvalStatus } = useEntityApprovalStatus('rfi', rfiId)
   const updateStatus = useChangeRFIStatusWithNotification()
   const updateRFI = useUpdateRFIWithNotification()
   const deleteRFI = useDeleteRFIWithNotification()
@@ -277,6 +280,32 @@ export function RFIDetailPage() {
                 <Badge className={cn('w-full justify-center capitalize', getStatusColor(rfi.status))}>
                   {rfi.status}
                 </Badge>
+
+                {/* Approval Status */}
+                {approvalStatus?.has_active_request && (
+                  <div className="pt-2 border-t">
+                    <Label className="text-gray-600">Approval Status</Label>
+                    <div className="mt-2">
+                      <ApprovalStatusBadge
+                        status={approvalStatus.status!}
+                        conditions={approvalStatus.conditions}
+                        showConditions
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit for Approval */}
+                {approvalStatus?.can_submit && (
+                  <div className="pt-2">
+                    <SubmitForApprovalButton
+                      entityType="rfi"
+                      entityId={rfi.id}
+                      entityName={rfi.title}
+                      projectId={rfi.project_id}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 

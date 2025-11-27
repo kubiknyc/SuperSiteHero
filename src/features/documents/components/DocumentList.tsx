@@ -163,7 +163,7 @@ export function DocumentList({
 
                   {/* Status column */}
                   <TableCell>
-                    <DocumentStatusBadge status={doc.status} />
+                    <DocumentStatusBadge status={doc.status ?? 'draft'} />
                   </TableCell>
 
                   {/* Version column */}

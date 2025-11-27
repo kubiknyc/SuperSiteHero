@@ -148,7 +148,7 @@ describe('RLS Policy Tests', () => {
       const { error } = await anonClient
         .from('documents')
         .insert({
-          project_id: 'test-project-id',
+          project_id: '00000000-0000-0000-0000-000000000001',
           name: 'Unauthorized Document',
           document_type: 'other',
           file_name: 'test.pdf',
@@ -245,7 +245,7 @@ describe('RLS Policy Tests', () => {
       const { error } = await anonClient
         .from('safety_incidents')
         .insert({
-          project_id: 'test-project-id',
+          project_id: '00000000-0000-0000-0000-000000000001',
           incident_date: new Date().toISOString().split('T')[0],
           incident_type: 'near_miss',
           description: 'Test incident',

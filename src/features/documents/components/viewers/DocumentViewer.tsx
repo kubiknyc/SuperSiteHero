@@ -13,6 +13,7 @@ interface DocumentViewerProps {
   readOnly?: boolean
   onMarkupCreate?: (markup: any) => void
   height?: string
+  enableMarkup?: boolean
 }
 
 /**
@@ -45,6 +46,7 @@ export function DocumentViewer({
   readOnly = false,
   onMarkupCreate,
   height = 'h-screen',
+  enableMarkup = false,
 }: DocumentViewerProps) {
   const fileType = document.file_type?.toLowerCase() || ''
   const fileName = document.file_name || document.name || 'document'
@@ -59,12 +61,15 @@ export function DocumentViewer({
   if (isPDF) {
     return (
       <PDFViewer
+        documentId={document.id}
+        projectId={document.project_id}
         fileUrl={document.file_url}
         fileName={fileName}
         allowMarkup={allowMarkup && !readOnly}
         readOnly={readOnly}
         onMarkupCreate={onMarkupCreate}
         height={height}
+        enableMarkup={enableMarkup}
       />
     )
   }
@@ -73,6 +78,8 @@ export function DocumentViewer({
   if (isImage) {
     return (
       <ImageViewer
+        documentId={document.id}
+        projectId={document.project_id}
         imageUrl={document.file_url}
         fileName={fileName}
         alt={document.name || 'Document image'}
@@ -80,6 +87,7 @@ export function DocumentViewer({
         readOnly={readOnly}
         onMarkupCreate={onMarkupCreate}
         height={height}
+        enableMarkup={enableMarkup}
       />
     )
   }

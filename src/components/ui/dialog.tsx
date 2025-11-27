@@ -5,6 +5,15 @@ import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@/lib/utils'
 
+// Dialog Context - must be defined before Dialog component
+const DialogContext = React.createContext<{
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}>({
+  open: false,
+  onOpenChange: () => {},
+})
+
 // Dialog Root Component
 export interface DialogProps {
   open?: boolean
@@ -32,14 +41,6 @@ const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) => {
     </DialogContext.Provider>
   )
 }
-
-const DialogContext = React.createContext<{
-  open: boolean
-  onOpenChange: (open: boolean) => void
-}>({
-  open: false,
-  onOpenChange: () => {},
-})
 
 const DialogTrigger = React.forwardRef<
   HTMLButtonElement,

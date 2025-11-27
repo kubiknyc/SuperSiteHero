@@ -18,3 +18,13 @@ export {
   type DocumentFiltersInput,
   type DocumentStats,
 } from './useDocumentFilters'
+export {
+  useDocumentComments,
+  useCreateComment,
+  useUpdateComment,
+  useDeleteComment,
+  buildCommentTree,
+  countCommentsWithReplies,
+  type DocumentComment,
+  type CommentThread,
+} from './useDocumentComments'

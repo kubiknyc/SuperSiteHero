@@ -6,6 +6,9 @@ import { Upload, X, FileIcon } from 'lucide-react'
 import { Card, CardContent, Button, Select, Label } from '@/components/ui'
 import { useCreateDocumentWithNotification } from '@/features/documents/hooks/useDocumentsMutations'
 import { cn } from '@/lib/utils'
+import { uploadFile } from '@/features/documents/utils/fileUtils'
+import { documentsApi } from '@/lib/api/services/documents'
+import toast from 'react-hot-toast'
 import type { Document, DocumentType } from '@/types/database'
 
 interface DocumentUploadProps {
@@ -54,7 +57,10 @@ export function DocumentUpload({
 }: DocumentUploadProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [documentType, setDocumentType] = useState<DocumentType>('general')
+  const [versionNotes, setVersionNotes] = useState<string>('')
   const [isDragging, setIsDragging] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<number>(0)
+  const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const createDocument = useCreateDocumentWithNotification()
@@ -102,59 +108,111 @@ export function DocumentUpload({
   const handleUpload = async () => {
     if (!selectedFile) return
 
-    // Extract file name without extension
-    const fileName = selectedFile.name
-    const lastDotIndex = fileName.lastIndexOf('.')
-    const nameWithoutExtension =
-      lastDotIndex !== -1 ? fileName.substring(0, lastDotIndex) : fileName
+    setIsUploading(true)
+    setUploadProgress(0)
 
-    // In a real implementation, this would upload to Supabase Storage
-    // For now, we use a placeholder URL
-    const placeholderUrl = `https://storage.example.com/documents/${projectId}/${selectedFile.name}`
+    try {
+      // Extract file name without extension
+      const fileName = selectedFile.name
+      const lastDotIndex = fileName.lastIndexOf('.')
+      const nameWithoutExtension =
+        lastDotIndex !== -1 ? fileName.substring(0, lastDotIndex) : fileName
 
-    const documentData = {
-      project_id: projectId,
-      folder_id: folderId,
-      name: nameWithoutExtension,
-      description: null as string | null,
-      document_type: documentType,
-      discipline: null as string | null,
-      file_url: placeholderUrl,
-      file_name: selectedFile.name,
-      file_size: selectedFile.size,
-      file_type: selectedFile.type,
-      version: '1.0',
-      revision: null as string | null,
-      is_latest_version: true,
-      supersedes_document_id: null as string | null,
-      drawing_number: null as string | null,
-      specification_section: null as string | null,
-      issue_date: null as string | null,
-      received_date: new Date().toISOString(),
-      status: 'current' as const,
-      is_pinned: false,
-      requires_approval: false,
-      deleted_at: null as string | null,
-      created_by: null as string | null, // Will be set by mutation hook
-    }
+      // Check if a document with the same name already exists
+      const existingDocument = await documentsApi.findDocumentByName(
+        projectId,
+        nameWithoutExtension,
+        folderId
+      )
 
-    createDocument.mutate(documentData as any, {
-      onSuccess: (document) => {
-        onUploadSuccess(document)
+      // Upload file to Supabase Storage
+      const { publicUrl } = await uploadFile(
+        selectedFile,
+        projectId,
+        'documents',
+        (progress) => setUploadProgress(progress)
+      )
+
+      if (existingDocument) {
+        // Document exists - create a new version
+        const newVersion = await documentsApi.createDocumentVersion(
+          existingDocument.id,
+          publicUrl,
+          versionNotes || `Updated version of ${nameWithoutExtension}`
+        )
+
+        onUploadSuccess(newVersion)
+        toast.success(`New version created! Now at v${newVersion.version}`)
+
         // Reset form
         setSelectedFile(null)
         setDocumentType('general')
+        setVersionNotes('')
+        setUploadProgress(0)
         if (fileInputRef.current) {
           fileInputRef.current.value = ''
         }
-      },
-    })
+      } else {
+        // New document - create it
+        const documentData = {
+          project_id: projectId,
+          folder_id: folderId,
+          name: nameWithoutExtension,
+          description: null as string | null,
+          document_type: documentType,
+          discipline: null as string | null,
+          file_url: publicUrl,
+          file_name: selectedFile.name,
+          file_size: selectedFile.size,
+          file_type: selectedFile.type,
+          version: '1.0',
+          revision: null as string | null,
+          is_latest_version: true,
+          supersedes_document_id: null as string | null,
+          drawing_number: null as string | null,
+          specification_section: null as string | null,
+          issue_date: null as string | null,
+          received_date: new Date().toISOString(),
+          status: 'current' as const,
+          is_pinned: false,
+          requires_approval: false,
+          deleted_at: null as string | null,
+          created_by: null as string | null, // Will be set by mutation hook
+        }
+
+        createDocument.mutate(documentData as any, {
+          onSuccess: (document) => {
+            onUploadSuccess(document)
+            toast.success('Document uploaded successfully!')
+            // Reset form
+            setSelectedFile(null)
+            setDocumentType('general')
+            setVersionNotes('')
+            setUploadProgress(0)
+            if (fileInputRef.current) {
+              fileInputRef.current.value = ''
+            }
+          },
+          onError: (error) => {
+            toast.error('Failed to create document record')
+            console.error('Document creation error:', error)
+          },
+        })
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed'
+      toast.error(errorMessage)
+      console.error('Upload error:', error)
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   // Handle cancel
   const handleCancel = () => {
     setSelectedFile(null)
     setDocumentType('general')
+    setVersionNotes('')
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -256,35 +314,55 @@ export function DocumentUpload({
               </Select>
             </div>
 
+            <div>
+              <Label htmlFor="version-notes">
+                Version Notes <span className="text-gray-500 text-sm">(optional)</span>
+              </Label>
+              <textarea
+                id="version-notes"
+                value={versionNotes}
+                onChange={(e) => setVersionNotes(e.target.value)}
+                placeholder="Describe what changed in this version..."
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Add notes about this upload. If uploading a new version, these notes will be saved with the version history.
+              </p>
+            </div>
+
             {/* Action buttons */}
             <div className="flex justify-end space-x-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                disabled={createDocument.isPending}
+                disabled={isUploading}
               >
                 Cancel
               </Button>
               <Button
                 type="button"
                 onClick={handleUpload}
-                disabled={createDocument.isPending}
+                disabled={isUploading}
               >
-                {createDocument.isPending ? 'Uploading...' : 'Upload'}
+                {isUploading ? 'Uploading...' : 'Upload'}
               </Button>
             </div>
           </div>
         )}
 
         {/* Upload progress/status */}
-        {createDocument.isPending && (
+        {isUploading && (
           <div className="mt-4">
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full animate-pulse w-3/4"></div>
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
             </div>
             <p className="text-sm text-gray-600 mt-2 text-center">
-              Uploading document...
+              Uploading document... {uploadProgress}%
             </p>
           </div>
         )}

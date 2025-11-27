@@ -15,6 +15,8 @@ import { Select } from '@/components/ui/select'
 import { ArrowLeft, AlertCircle, Trash2, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SubmittalStatusBadge } from '@/features/submittals/components'
+import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
+import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 
 export function SubmittalDetailPage() {
   const { submittalId } = useParams<{ submittalId: string }>()
@@ -23,6 +25,7 @@ export function SubmittalDetailPage() {
   const { data: submittal, isLoading, error } = useSubmittal(submittalId)
   const { data: comments } = useSubmittalComments(submittalId)
   const { data: procurementRecords } = useSubmittalProcurement(submittalId)
+  const { data: approvalStatus } = useEntityApprovalStatus('submittal', submittalId)
   const updateStatus = useUpdateSubmittalStatusWithNotification()
   const updateProcurementStatus = useUpdateSubmittalProcurementStatusWithNotification()
   const deleteSubmittal = useDeleteSubmittalWithNotification()
@@ -248,6 +251,32 @@ export function SubmittalDetailPage() {
                   </Select>
                 </div>
                 <SubmittalStatusBadge status={submittal.status} />
+
+                {/* Approval Status */}
+                {approvalStatus?.has_active_request && (
+                  <div className="pt-2 border-t">
+                    <Label className="text-gray-600">Approval Status</Label>
+                    <div className="mt-2">
+                      <ApprovalStatusBadge
+                        status={approvalStatus.status!}
+                        conditions={approvalStatus.conditions}
+                        showConditions
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* Submit for Approval */}
+                {approvalStatus?.can_submit && (
+                  <div className="pt-2">
+                    <SubmitForApprovalButton
+                      entityType="submittal"
+                      entityId={submittal.id}
+                      entityName={submittal.title}
+                      projectId={submittal.project_id}
+                    />
+                  </div>
+                )}
               </CardContent>
             </Card>
 
