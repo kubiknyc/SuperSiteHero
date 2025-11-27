@@ -8,6 +8,9 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Check, X, Minus, Camera, PenTool } from 'lucide-react'
+import { PhotoGallery } from './PhotoGallery'
+import { PhotoCaptureDialog } from './PhotoCaptureDialog'
+import { SignatureCaptureDialog } from './SignatureCaptureDialog'
 import type {
   ChecklistResponse,
   ChecklistTemplateItem,
@@ -31,6 +34,8 @@ export function ResponseFormItem({
   disabled = false,
 }: ResponseFormItemProps) {
   const [notes, setNotes] = useState(response.notes || '')
+  const [photoDialogOpen, setPhotoDialogOpen] = useState(false)
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false)
 
   const handleNotesBlur = () => {
     if (notes !== response.notes) {
@@ -211,47 +216,78 @@ export function ResponseFormItem({
     )
   }
 
-  // Photo input (placeholder - will be implemented in Phase 3.2)
+  // Photo input
   const renderPhotoInput = () => {
     const photoUrls = response.photo_urls || []
     const config = templateItem.config as any
     const minPhotos = config?.min_photos || 0
     const maxPhotos = config?.max_photos || 5
 
+    // Extract checklist ID from response
+    const checklistId = response.checklist_id
+
+    const handlePhotosUpdated = (newPhotoUrls: string[]) => {
+      onChange({ photo_urls: newPhotoUrls })
+    }
+
     return (
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
-          <Camera className="w-4 h-4" />
-          <span>
-            {photoUrls.length} / {maxPhotos} photos
-            {minPhotos > 0 && ` (minimum ${minPhotos} required)`}
-          </span>
-        </div>
-
-        {photoUrls.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {photoUrls.map((url, index) => (
-              <div key={index} className="relative aspect-square rounded-lg overflow-hidden border">
-                <img src={url} alt={`Photo ${index + 1}`} className="w-full h-full object-cover" />
-              </div>
-            ))}
+        {photoUrls.length > 0 ? (
+          <PhotoGallery
+            photos={photoUrls}
+            readOnly={disabled}
+            maxPhotos={maxPhotos}
+            minPhotos={minPhotos}
+          />
+        ) : (
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Camera className="w-4 h-4" />
+            <span>
+              No photos yet
+              {minPhotos > 0 && ` (minimum ${minPhotos} required)`}
+            </span>
           </div>
         )}
 
-        <Button type="button" variant="outline" disabled>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setPhotoDialogOpen(true)}
+          disabled={disabled}
+        >
           <Camera className="w-4 h-4 mr-2" />
-          Add Photo (Coming in Phase 3.2)
+          {photoUrls.length > 0 ? 'Manage Photos' : 'Add Photos'}
         </Button>
+
+        {/* Photo Capture Dialog */}
+        <PhotoCaptureDialog
+          open={photoDialogOpen}
+          onOpenChange={setPhotoDialogOpen}
+          checklistId={checklistId}
+          responseId={response.id}
+          currentPhotos={photoUrls}
+          minPhotos={minPhotos}
+          maxPhotos={maxPhotos}
+          onPhotosUpdated={handlePhotosUpdated}
+          disabled={disabled}
+        />
       </div>
     )
   }
 
-  // Signature input (placeholder - will be implemented in Phase 3.2)
+  // Signature input
   const renderSignatureInput = () => {
     const signatureUrl = response.signature_url
     const config = templateItem.config as any
     const role = config?.role
     const title = config?.title
+
+    // Extract checklist ID from response
+    const checklistId = response.checklist_id
+
+    const handleSignatureUpdated = (newSignatureUrl: string | null) => {
+      onChange({ signature_url: newSignatureUrl })
+    }
 
     return (
       <div className="space-y-3">
@@ -273,10 +309,28 @@ export function ResponseFormItem({
           </div>
         )}
 
-        <Button type="button" variant="outline" disabled>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setSignatureDialogOpen(true)}
+          disabled={disabled}
+        >
           <PenTool className="w-4 h-4 mr-2" />
-          Capture Signature (Coming in Phase 3.2)
+          {signatureUrl ? 'Update Signature' : 'Capture Signature'}
         </Button>
+
+        {/* Signature Capture Dialog */}
+        <SignatureCaptureDialog
+          open={signatureDialogOpen}
+          onOpenChange={setSignatureDialogOpen}
+          checklistId={checklistId}
+          responseId={response.id}
+          currentSignature={signatureUrl}
+          role={role}
+          title={title}
+          onSignatureUpdated={handleSignatureUpdated}
+          disabled={disabled}
+        />
       </div>
     )
   }

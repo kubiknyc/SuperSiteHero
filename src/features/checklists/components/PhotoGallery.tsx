@@ -1,0 +1,176 @@
+// File: /src/features/checklists/components/PhotoGallery.tsx
+// Photo gallery display with preview and delete functionality
+// Phase: 3.2 - Photo & Signature Capture
+
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { X, ZoomIn, Camera } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+
+interface PhotoGalleryProps {
+  photos: string[]
+  onDeletePhoto?: (url: string, index: number) => void
+  readOnly?: boolean
+  maxPhotos?: number
+  minPhotos?: number
+}
+
+export function PhotoGallery({
+  photos,
+  onDeletePhoto,
+  readOnly = false,
+  maxPhotos,
+  minPhotos = 0,
+}: PhotoGalleryProps) {
+  const [previewPhoto, setPreviewPhoto] = useState<string | null>(null)
+  const [deletingIndex, setDeletingIndex] = useState<number | null>(null)
+
+  const handleDelete = (url: string, index: number) => {
+    // Prevent deletion if it would go below minimum
+    if (photos.length <= minPhotos) {
+      return
+    }
+
+    // Confirm deletion
+    if (!confirm('Are you sure you want to delete this photo?')) {
+      return
+    }
+
+    setDeletingIndex(index)
+    onDeletePhoto?.(url, index)
+
+    // Clear deleting state after a delay
+    setTimeout(() => setDeletingIndex(null), 500)
+  }
+
+  if (photos.length === 0) {
+    return (
+      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+        <Camera className="w-12 h-12 mx-auto text-gray-400 mb-2" />
+        <p className="text-sm text-gray-600">No photos yet</p>
+        {minPhotos > 0 && (
+          <p className="text-xs text-gray-500 mt-1">
+            Minimum {minPhotos} photo{minPhotos > 1 ? 's' : ''} required
+          </p>
+        )}
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="space-y-3">
+        {/* Photo count indicator */}
+        <div className="flex items-center justify-between text-sm text-gray-600">
+          <span>
+            {photos.length} photo{photos.length > 1 ? 's' : ''}
+            {maxPhotos && ` / ${maxPhotos} max`}
+          </span>
+          {minPhotos > 0 && photos.length < minPhotos && (
+            <span className="text-red-600 text-xs">
+              {minPhotos - photos.length} more required
+            </span>
+          )}
+        </div>
+
+        {/* Photo grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {photos.map((url, index) => (
+            <div
+              key={`${url}-${index}`}
+              className={`relative group aspect-square rounded-lg overflow-hidden border transition-opacity ${
+                deletingIndex === index ? 'opacity-50' : ''
+              }`}
+            >
+              {/* Photo image */}
+              <img
+                src={url}
+                alt={`Photo ${index + 1}`}
+                className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => setPreviewPhoto(url)}
+                loading="lazy"
+              />
+
+              {/* Overlay with actions */}
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center gap-2">
+                {/* Preview button */}
+                <button
+                  type="button"
+                  onClick={() => setPreviewPhoto(url)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white rounded-full p-2 hover:bg-gray-100"
+                  title="Preview"
+                >
+                  <ZoomIn className="w-4 h-4 text-gray-700" />
+                </button>
+
+                {/* Delete button */}
+                {!readOnly && onDeletePhoto && (
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(url, index)}
+                    disabled={photos.length <= minPhotos}
+                    className={`opacity-0 group-hover:opacity-100 transition-opacity rounded-full p-2 ${
+                      photos.length <= minPhotos
+                        ? 'bg-gray-300 cursor-not-allowed'
+                        : 'bg-red-600 hover:bg-red-700'
+                    }`}
+                    title={
+                      photos.length <= minPhotos
+                        ? `Cannot delete (minimum ${minPhotos} required)`
+                        : 'Delete photo'
+                    }
+                  >
+                    <X className="w-4 h-4 text-white" />
+                  </button>
+                )}
+              </div>
+
+              {/* Photo index badge */}
+              <div className="absolute top-2 left-2 bg-black bg-opacity-60 text-white text-xs px-2 py-1 rounded">
+                {index + 1}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Full-screen preview dialog */}
+      <Dialog open={!!previewPhoto} onOpenChange={() => setPreviewPhoto(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh]">
+          <DialogHeader>
+            <DialogTitle>Photo Preview</DialogTitle>
+          </DialogHeader>
+          <div className="flex items-center justify-center p-4">
+            {previewPhoto && (
+              <img
+                src={previewPhoto}
+                alt="Full size preview"
+                className="max-w-full max-h-[70vh] object-contain"
+              />
+            )}
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" onClick={() => setPreviewPhoto(null)}>
+              Close
+            </Button>
+            {previewPhoto && (
+              <a
+                href={previewPhoto}
+                download={`photo-${Date.now()}.jpg`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button>Download</Button>
+              </a>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  )
+}
