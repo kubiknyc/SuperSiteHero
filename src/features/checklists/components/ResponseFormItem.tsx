@@ -1,0 +1,325 @@
+// File: /src/features/checklists/components/ResponseFormItem.tsx
+// Polymorphic form input component for different checklist item types
+// Phase: 3.1 - Checklist Execution UI
+
+import { useState } from 'react'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Check, X, Minus, Camera, PenTool } from 'lucide-react'
+import type {
+  ChecklistResponse,
+  ChecklistTemplateItem,
+  ScoreValue,
+  CheckboxResponseData,
+  TextResponseData,
+  NumberResponseData,
+} from '@/types/checklists'
+
+interface ResponseFormItemProps {
+  response: ChecklistResponse
+  templateItem: ChecklistTemplateItem
+  onChange: (updates: Partial<ChecklistResponse>) => void
+  disabled?: boolean
+}
+
+export function ResponseFormItem({
+  response,
+  templateItem,
+  onChange,
+  disabled = false,
+}: ResponseFormItemProps) {
+  const [notes, setNotes] = useState(response.notes || '')
+
+  const handleNotesBlur = () => {
+    if (notes !== response.notes) {
+      onChange({ notes: notes.trim() || null })
+    }
+  }
+
+  // Render based on item type
+  const renderInput = () => {
+    switch (templateItem.item_type) {
+      case 'checkbox':
+        return renderCheckboxInput()
+      case 'text':
+        return renderTextInput()
+      case 'number':
+        return renderNumberInput()
+      case 'photo':
+        return renderPhotoInput()
+      case 'signature':
+        return renderSignatureInput()
+      default:
+        return null
+    }
+  }
+
+  // Checkbox (Pass/Fail/NA) input
+  const renderCheckboxInput = () => {
+    const currentValue = (response.response_data as CheckboxResponseData)?.value || 'unchecked'
+    const scoreValue = response.score_value
+
+    const handleScoreChange = (value: ScoreValue) => {
+      onChange({
+        score_value: value,
+        response_data: { value } as CheckboxResponseData,
+      })
+    }
+
+    return (
+      <div className="space-y-3">
+        {templateItem.scoring_enabled && templateItem.pass_fail_na_scoring ? (
+          // Pass/Fail/NA scoring buttons
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant={scoreValue === 'pass' ? 'default' : 'outline'}
+              size="lg"
+              onClick={() => handleScoreChange('pass')}
+              disabled={disabled}
+              className={scoreValue === 'pass' ? 'bg-green-600 hover:bg-green-700' : ''}
+            >
+              <Check className="w-4 h-4 mr-2" />
+              Pass
+            </Button>
+            <Button
+              type="button"
+              variant={scoreValue === 'fail' ? 'default' : 'outline'}
+              size="lg"
+              onClick={() => handleScoreChange('fail')}
+              disabled={disabled}
+              className={scoreValue === 'fail' ? 'bg-red-600 hover:bg-red-700' : ''}
+            >
+              <X className="w-4 h-4 mr-2" />
+              Fail
+            </Button>
+            <Button
+              type="button"
+              variant={scoreValue === 'na' ? 'default' : 'outline'}
+              size="lg"
+              onClick={() => handleScoreChange('na')}
+              disabled={disabled}
+              className={scoreValue === 'na' ? 'bg-gray-600 hover:bg-gray-700' : ''}
+            >
+              <Minus className="w-4 h-4 mr-2" />
+              N/A
+            </Button>
+          </div>
+        ) : (
+          // Simple checkbox
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id={`checkbox-${response.id}`}
+              checked={currentValue === 'checked'}
+              onChange={(e) =>
+                onChange({
+                  response_data: {
+                    value: e.target.checked ? 'checked' : 'unchecked',
+                  } as CheckboxResponseData,
+                })
+              }
+              disabled={disabled}
+              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <Label
+              htmlFor={`checkbox-${response.id}`}
+              className="text-base font-normal cursor-pointer"
+            >
+              {currentValue === 'checked' ? 'Checked' : 'Unchecked'}
+            </Label>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+  // Text input
+  const renderTextInput = () => {
+    const currentValue = (response.response_data as TextResponseData)?.value || ''
+    const config = templateItem.config as any
+    const isMultiline = config?.multiline
+    const maxLength = config?.max_length
+    const placeholder = config?.placeholder || 'Enter text...'
+
+    const handleChange = (value: string) => {
+      onChange({
+        response_data: { value } as TextResponseData,
+      })
+    }
+
+    if (isMultiline) {
+      return (
+        <textarea
+          value={currentValue}
+          onChange={(e) => handleChange(e.target.value)}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          disabled={disabled}
+          rows={4}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+        />
+      )
+    }
+
+    return (
+      <Input
+        type="text"
+        value={currentValue}
+        onChange={(e) => handleChange(e.target.value)}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        disabled={disabled}
+      />
+    )
+  }
+
+  // Number input
+  const renderNumberInput = () => {
+    const currentValue = (response.response_data as NumberResponseData)?.value || 0
+    const config = templateItem.config as any
+    const min = config?.min
+    const max = config?.max
+    const units = config?.units
+    const decimalPlaces = config?.decimal_places || 0
+
+    const handleChange = (value: number) => {
+      onChange({
+        response_data: {
+          value,
+          units,
+        } as NumberResponseData,
+      })
+    }
+
+    return (
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          value={currentValue}
+          onChange={(e) => handleChange(parseFloat(e.target.value) || 0)}
+          min={min}
+          max={max}
+          step={decimalPlaces > 0 ? 1 / Math.pow(10, decimalPlaces) : 1}
+          disabled={disabled}
+          className="max-w-xs"
+        />
+        {units && <span className="text-sm text-gray-600">{units}</span>}
+      </div>
+    )
+  }
+
+  // Photo input (placeholder - will be implemented in Phase 3.2)
+  const renderPhotoInput = () => {
+    const photoUrls = response.photo_urls || []
+    const config = templateItem.config as any
+    const minPhotos = config?.min_photos || 0
+    const maxPhotos = config?.max_photos || 5
+
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-sm text-gray-600">
+          <Camera className="w-4 h-4" />
+          <span>
+            {photoUrls.length} / {maxPhotos} photos
+            {minPhotos > 0 && ` (minimum ${minPhotos} required)`}
+          </span>
+        </div>
+
+        {photoUrls.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {photoUrls.map((url, index) => (
+              <div key={index} className="relative aspect-square rounded-lg overflow-hidden border">
+                <img src={url} alt={`Photo ${index + 1}`} className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <Button type="button" variant="outline" disabled>
+          <Camera className="w-4 h-4 mr-2" />
+          Add Photo (Coming in Phase 3.2)
+        </Button>
+      </div>
+    )
+  }
+
+  // Signature input (placeholder - will be implemented in Phase 3.2)
+  const renderSignatureInput = () => {
+    const signatureUrl = response.signature_url
+    const config = templateItem.config as any
+    const role = config?.role
+    const title = config?.title
+
+    return (
+      <div className="space-y-3">
+        {(role || title) && (
+          <div className="text-sm text-gray-600">
+            {role && <div>Role: {role}</div>}
+            {title && <div>Title: {title}</div>}
+          </div>
+        )}
+
+        {signatureUrl ? (
+          <div className="border rounded-lg p-4 bg-gray-50">
+            <img src={signatureUrl} alt="Signature" className="max-w-xs h-24 object-contain" />
+          </div>
+        ) : (
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <PenTool className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+            <p className="text-sm text-gray-600">No signature captured</p>
+          </div>
+        )}
+
+        <Button type="button" variant="outline" disabled>
+          <PenTool className="w-4 h-4 mr-2" />
+          Capture Signature (Coming in Phase 3.2)
+        </Button>
+      </div>
+    )
+  }
+
+  return (
+    <div className="border rounded-lg p-4 bg-white">
+      {/* Item Header */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <Label className="text-base font-medium">
+              {templateItem.label}
+              {templateItem.is_required && <span className="text-red-500 ml-1">*</span>}
+            </Label>
+            <Badge variant="outline" className="text-xs">
+              {templateItem.item_type}
+            </Badge>
+          </div>
+          {templateItem.description && (
+            <p className="text-sm text-gray-600 mt-1">{templateItem.description}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Item Input */}
+      <div className="mb-3">{renderInput()}</div>
+
+      {/* Notes Section */}
+      <div>
+        <Label htmlFor={`notes-${response.id}`} className="text-sm text-gray-700 mb-1">
+          Notes (optional)
+        </Label>
+        <textarea
+          id={`notes-${response.id}`}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          onBlur={handleNotesBlur}
+          placeholder="Add any additional notes..."
+          rows={2}
+          disabled={disabled}
+          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+        />
+      </div>
+    </div>
+  )
+}

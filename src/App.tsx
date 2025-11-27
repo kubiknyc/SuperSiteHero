@@ -64,6 +64,8 @@ const WorkflowItemDetailPage = lazy(() => import('./pages/workflows/WorkflowItem
 const TemplatesPage = lazy(() => import('./features/checklists/pages/TemplatesPage').then(m => ({ default: m.default })))
 const TemplateItemsPage = lazy(() => import('./features/checklists/pages/TemplateItemsPage').then(m => ({ default: m.TemplateItemsPage })))
 const ExecutionsPage = lazy(() => import('./features/checklists/pages/ExecutionsPage').then(m => ({ default: m.ExecutionsPage })))
+const ActiveExecutionPage = lazy(() => import('./features/checklists/pages/ActiveExecutionPage').then(m => ({ default: m.ActiveExecutionPage })))
+const ExecutionDetailPage = lazy(() => import('./features/checklists/pages/ExecutionDetailPage').then(m => ({ default: m.ExecutionDetailPage })))
 
 // Reports feature
 const ReportsPage = lazy(() => import('./pages/reports/ReportsPage').then(m => ({ default: m.ReportsPage })))
@@ -169,6 +171,8 @@ function App() {
                 <Route path="/checklists/templates" element={<ProtectedRoute><TemplatesPage /></ProtectedRoute>} />
                 <Route path="/checklists/templates/:templateId/items" element={<ProtectedRoute><TemplateItemsPage /></ProtectedRoute>} />
                 <Route path="/checklists/executions" element={<ProtectedRoute><ExecutionsPage /></ProtectedRoute>} />
+                <Route path="/checklists/executions/:executionId/fill" element={<ProtectedRoute><ActiveExecutionPage /></ProtectedRoute>} />
+                <Route path="/checklists/executions/:executionId" element={<ProtectedRoute><ExecutionDetailPage /></ProtectedRoute>} />
 
                 {/* Reports feature */}
                 <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
