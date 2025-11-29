@@ -3,8 +3,94 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { sendEmail } from '@/lib/email/email-service'
+import { generateDocumentCommentEmail } from '@/lib/email/templates'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
+
+// Helper to get user details for notifications
+async function getUserDetails(userId: string): Promise<{ email: string; full_name: string | null } | null> {
+  const { data } = await supabase
+    .from('users')
+    .select('email, full_name')
+    .eq('id', userId)
+    .single()
+  return data
+}
+
+// Helper to get document details
+async function getDocumentDetails(documentId: string): Promise<{
+  name: string
+  document_number: string | null
+  project_id: string
+  created_by: string | null
+} | null> {
+  const { data } = await supabase
+    .from('documents')
+    .select('name, document_number, project_id, created_by')
+    .eq('id', documentId)
+    .single()
+  return data
+}
+
+// Helper to get project name
+async function getProjectName(projectId: string): Promise<string> {
+  const { data } = await supabase
+    .from('projects')
+    .select('name')
+    .eq('id', projectId)
+    .single()
+  return data?.name || 'Unknown Project'
+}
+
+// Send notification for document comment
+async function notifyDocumentComment(
+  documentId: string,
+  comment: string,
+  commenterId: string
+): Promise<void> {
+  try {
+    const [document, commenter] = await Promise.all([
+      getDocumentDetails(documentId),
+      getUserDetails(commenterId),
+    ])
+
+    if (!document || !document.created_by) return
+
+    // Don't notify if commenter is the document owner
+    if (document.created_by === commenterId) return
+
+    const [documentOwner, projectName] = await Promise.all([
+      getUserDetails(document.created_by),
+      getProjectName(document.project_id),
+    ])
+
+    if (!documentOwner?.email) return
+
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const { html, text } = generateDocumentCommentEmail({
+      recipientName: documentOwner.full_name || documentOwner.email.split('@')[0],
+      documentName: document.name,
+      documentNumber: document.document_number ?? undefined,
+      projectName,
+      commentBy: commenter?.full_name || 'Someone',
+      commentAt: new Date().toLocaleString(),
+      comment,
+      isMention: false,
+      viewUrl: `${appUrl}/projects/${document.project_id}/documents/${documentId}`,
+    })
+
+    await sendEmail({
+      to: { email: documentOwner.email, name: documentOwner.full_name ?? undefined },
+      subject: `New Comment on ${document.name}`,
+      html,
+      text,
+      tags: ['document', 'comment'],
+    })
+  } catch (error) {
+    console.error('[DocumentComment] Failed to send notification:', error)
+  }
+}
 
 // Define types locally since document_comments table may not be in generated types yet
 export interface DocumentComment {
@@ -92,7 +178,7 @@ export function useCreateComment(documentId: string, projectId: string) {
     queryKey: ['auth-user'],
     queryFn: async () => {
       const { data, error } = await supabase.auth.getUser()
-      if (error) throw error
+      if (error) {throw error}
       return data.user
     },
   })
@@ -102,7 +188,7 @@ export function useCreateComment(documentId: string, projectId: string) {
       comment_text: string
       parent_comment_id?: string | null
     }) => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await db
         .from('document_comments')
@@ -118,6 +204,11 @@ export function useCreateComment(documentId: string, projectId: string) {
       if (error) {
         console.error('Error creating comment:', error)
         throw error
+      }
+
+      // Send email notification asynchronously (don't block the UI)
+      if (data?.[0] && user?.id) {
+        notifyDocumentComment(documentId, payload.comment_text, user.id).catch(console.error)
       }
 
       return data?.[0]
@@ -232,7 +323,7 @@ export function buildCommentTree(comments: DocumentComment[]): CommentThread[] {
     if (comment.parent_comment_id) {
       const parent = map.get(comment.parent_comment_id)
       if (parent) {
-        if (!parent.replies) parent.replies = []
+        if (!parent.replies) {parent.replies = []}
         parent.replies.push(node)
       }
     } else {

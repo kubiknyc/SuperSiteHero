@@ -47,11 +47,31 @@ export function SignupPage() {
       return
     }
 
-    // Validate password length
-    if (formData.password.length < 8) {
+    // Validate password strength
+    const validatePassword = (password: string): { valid: boolean; error?: string } => {
+      if (password.length < 8) {
+        return { valid: false, error: 'Password must be at least 8 characters long' }
+      }
+      if (!/[A-Z]/.test(password)) {
+        return { valid: false, error: 'Password must contain at least one uppercase letter' }
+      }
+      if (!/[a-z]/.test(password)) {
+        return { valid: false, error: 'Password must contain at least one lowercase letter' }
+      }
+      if (!/[0-9]/.test(password)) {
+        return { valid: false, error: 'Password must contain at least one number' }
+      }
+      if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        return { valid: false, error: 'Password must contain at least one special character (!@#$%^&*(),.?":{}|<>)' }
+      }
+      return { valid: true }
+    }
+
+    const passwordValidation = validatePassword(formData.password)
+    if (!passwordValidation.valid) {
       addToast({
         title: 'Error',
-        description: 'Password must be at least 8 characters long',
+        description: passwordValidation.error,
         variant: 'destructive',
       })
       setLoading(false)
@@ -72,7 +92,7 @@ export function SignupPage() {
         },
       })
 
-      if (authError) throw authError
+      if (authError) {throw authError}
 
       addToast({
         title: 'Success',
@@ -180,7 +200,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 disabled={loading}
               />
-              <p className="text-xs text-gray-500">Must be at least 8 characters</p>
+              <p className="text-xs text-gray-500">Must be at least 8 characters with uppercase, lowercase, number, and special character</p>
             </div>
 
             <div className="space-y-2">

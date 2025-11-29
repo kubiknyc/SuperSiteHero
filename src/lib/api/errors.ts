@@ -15,7 +15,8 @@ export class ApiErrorClass extends Error implements ApiError {
     super(error.message)
     this.code = error.code
     this.status = error.status
-    this.details = error.details
+    // Only include detailed error info in development mode to prevent information leakage
+    this.details = import.meta.env.DEV ? error.details : undefined
     this.name = 'ApiError'
   }
 

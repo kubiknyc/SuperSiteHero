@@ -101,7 +101,7 @@ export function LinkMarkupDialog({
         .order('created_at', { ascending: false })
         .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).map(item => ({
         id: item.id,
         type: 'rfi' as LinkableItemType,
@@ -125,7 +125,7 @@ export function LinkMarkupDialog({
         .order('created_at', { ascending: false })
         .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).map(item => ({
         id: item.id,
         type: 'task' as LinkableItemType,
@@ -148,7 +148,7 @@ export function LinkMarkupDialog({
         .order('created_at', { ascending: false })
         .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).map((item: any) => ({
         id: item.id,
         type: 'punch_item' as LinkableItemType,

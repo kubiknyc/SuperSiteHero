@@ -26,7 +26,7 @@ export function useProjectHealthReport(projectId: string | undefined) {
   return useQuery({
     queryKey: ['reports', 'project-health', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return getProjectHealthReport(projectId)
     },
     enabled: !!projectId,
@@ -76,7 +76,7 @@ export function usePunchListReport(projectId: string | undefined) {
   return useQuery({
     queryKey: ['reports', 'punch-list', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return getPunchListReport(projectId)
     },
     enabled: !!projectId,
@@ -110,7 +110,7 @@ export function useFinancialSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: ['reports', 'financial', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return getFinancialSummary(projectId)
     },
     enabled: !!projectId,
@@ -124,7 +124,7 @@ export function useDocumentSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: ['reports', 'documents', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return getDocumentSummary(projectId)
     },
     enabled: !!projectId,

@@ -260,7 +260,7 @@ CREATE POLICY "Users can create actions for requests they can approve"
       WHERE r.id = request_id
         AND (
           auth.uid()::text = ANY(s.approver_ids)
-          OR (SELECT action FROM (VALUES (NEW.action)) AS t(action)) = 'comment'
+          OR action = 'comment'
         )
     )
   );

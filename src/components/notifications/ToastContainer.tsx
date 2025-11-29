@@ -7,7 +7,7 @@ import { X, CheckCircle, AlertCircle, AlertTriangle, Info } from 'lucide-react'
 export function ToastContainer() {
   const { toasts, removeToast } = useToast()
 
-  if (toasts.length === 0) return null
+  if (toasts.length === 0) {return null}
 
   return (
     <div className="fixed bottom-0 right-0 z-50 flex flex-col gap-2 p-4 pointer-events-none">

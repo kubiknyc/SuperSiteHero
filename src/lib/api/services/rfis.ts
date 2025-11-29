@@ -4,8 +4,30 @@
 import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
 import { supabase } from '@/lib/supabase'
+import { sendEmail } from '@/lib/email/email-service'
+import { generateRfiAssignedEmail, generateRfiAnsweredEmail } from '@/lib/email/templates'
 import type { WorkflowItem, WorkflowType } from '@/types/database'
 import type { QueryOptions } from '../types'
+
+// Helper to get user details for notifications
+async function getUserDetails(userId: string): Promise<{ email: string; full_name: string | null } | null> {
+  const { data } = await supabase
+    .from('users')
+    .select('email, full_name')
+    .eq('id', userId)
+    .single()
+  return data
+}
+
+// Helper to get project name
+async function getProjectName(projectId: string): Promise<string> {
+  const { data } = await supabase
+    .from('projects')
+    .select('name')
+    .eq('id', projectId)
+    .single()
+  return data?.name || 'Unknown Project'
+}
 
 export const rfisApi = {
   /**
@@ -20,7 +42,7 @@ export const rfisApi = {
         .ilike('name_singular', 'RFI')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'RFI_TYPE_NOT_FOUND',
@@ -143,7 +165,8 @@ export const rfisApi = {
    */
   async updateRFI(
     rfiId: string,
-    updates: Partial<Omit<WorkflowItem, 'id' | 'created_at' | 'updated_at'>>
+    updates: Partial<Omit<WorkflowItem, 'id' | 'created_at' | 'updated_at'>>,
+    options?: { currentUserId?: string }
   ): Promise<WorkflowItem> {
     try {
       if (!rfiId) {
@@ -153,7 +176,19 @@ export const rfisApi = {
         })
       }
 
-      return await apiClient.update<WorkflowItem>('workflow_items', rfiId, updates)
+      // Get existing RFI to check for assignment changes
+      const existingRfi = await this.getRFI(rfiId)
+      const wasAssigned = (existingRfi as any).assigned_to
+      const newAssignee = (updates as any).assigned_to
+
+      const result = await apiClient.update<WorkflowItem>('workflow_items', rfiId, updates)
+
+      // Send notification if assignee changed
+      if (newAssignee && newAssignee !== wasAssigned) {
+        this._notifyRfiAssigned(result, options?.currentUserId).catch(console.error)
+      }
+
+      return result
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -161,6 +196,47 @@ export const rfisApi = {
             code: 'UPDATE_RFI_ERROR',
             message: 'Failed to update RFI',
           })
+    }
+  },
+
+  /**
+   * Send email notification when RFI is assigned
+   */
+  async _notifyRfiAssigned(rfi: WorkflowItem, assignedById?: string): Promise<void> {
+    try {
+      const assignedTo = (rfi as any).assigned_to
+      if (!assignedTo) return
+
+      const [assignee, assigner, projectName] = await Promise.all([
+        getUserDetails(assignedTo),
+        assignedById ? getUserDetails(assignedById) : Promise.resolve(null),
+        getProjectName(rfi.project_id),
+      ])
+
+      if (!assignee?.email) return
+
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const { html, text } = generateRfiAssignedEmail({
+        recipientName: assignee.full_name || assignee.email.split('@')[0],
+        rfiNumber: `RFI-${rfi.number}`,
+        subject: rfi.title,
+        projectName,
+        assignedBy: assigner?.full_name || 'Someone',
+        dueDate: rfi.due_date ? new Date(rfi.due_date).toLocaleDateString() : undefined,
+        priority: (rfi as any).priority,
+        question: rfi.description ?? '',
+        viewUrl: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+      })
+
+      await sendEmail({
+        to: { email: assignee.email, name: assignee.full_name ?? undefined },
+        subject: `RFI Assigned: ${rfi.title}`,
+        html,
+        text,
+        tags: ['rfi', 'assigned'],
+      })
+    } catch (error) {
+      console.error('[RFI] Failed to send assignment notification:', error)
     }
   },
 
@@ -202,7 +278,7 @@ export const rfisApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -217,7 +293,12 @@ export const rfisApi = {
   /**
    * Add an answer/resolution to an RFI
    */
-  async answerRFI(rfiId: string, answer: string, status?: string): Promise<WorkflowItem> {
+  async answerRFI(
+    rfiId: string,
+    answer: string,
+    status?: string,
+    options?: { answeredById?: string }
+  ): Promise<WorkflowItem> {
     try {
       const updates: any = {
         resolution: answer,
@@ -235,8 +316,14 @@ export const rfisApi = {
         .select()
         .single()
 
-      if (error) throw error
-      return data as WorkflowItem
+      if (error) {throw error}
+
+      const result = data as WorkflowItem
+
+      // Send notification to RFI creator
+      this._notifyRfiAnswered(result, answer, options?.answeredById).catch(console.error)
+
+      return result
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -244,6 +331,46 @@ export const rfisApi = {
             code: 'ANSWER_RFI_ERROR',
             message: 'Failed to answer RFI',
           })
+    }
+  },
+
+  /**
+   * Send email notification when RFI is answered
+   */
+  async _notifyRfiAnswered(rfi: WorkflowItem, answer: string, answeredById?: string): Promise<void> {
+    try {
+      if (!rfi.created_by) return
+
+      const [creator, answerer, projectName] = await Promise.all([
+        getUserDetails(rfi.created_by),
+        answeredById ? getUserDetails(answeredById) : Promise.resolve(null),
+        getProjectName(rfi.project_id),
+      ])
+
+      if (!creator?.email) return
+
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const { html, text } = generateRfiAnsweredEmail({
+        recipientName: creator.full_name || creator.email.split('@')[0],
+        rfiNumber: `RFI-${rfi.number}`,
+        subject: rfi.title,
+        projectName,
+        answeredBy: answerer?.full_name || 'Someone',
+        answeredAt: new Date().toLocaleDateString(),
+        question: rfi.description ?? '',
+        answer,
+        viewUrl: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+      })
+
+      await sendEmail({
+        to: { email: creator.email, name: creator.full_name ?? undefined },
+        subject: `RFI Answered: ${rfi.title}`,
+        html,
+        text,
+        tags: ['rfi', 'answered'],
+      })
+    } catch (error) {
+      console.error('[RFI] Failed to send answer notification:', error)
     }
   },
 }

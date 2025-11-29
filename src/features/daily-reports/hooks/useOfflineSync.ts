@@ -82,7 +82,7 @@ export function useOfflineSync() {
             .select()
             .single()
 
-          if (error) throw error
+          if (error) {throw error}
           reportId = createdReport.id
         } else {
           const { error } = await supabase
@@ -90,7 +90,7 @@ export function useOfflineSync() {
             .update(reportData as any)
             .eq('id', reportId)
 
-          if (error) throw error
+          if (error) {throw error}
         }
 
         // Sync related data
@@ -153,7 +153,7 @@ export function useOfflineSync() {
 
       const { error } = await supabase.from('daily_report_workforce').insert(workforceData as any)
 
-      if (error) throw error
+      if (error) {throw error}
     }
   }
 
@@ -174,7 +174,7 @@ export function useOfflineSync() {
 
       const { error } = await supabase.from('daily_report_equipment').insert(equipmentData as any)
 
-      if (error) throw error
+      if (error) {throw error}
     }
   }
 
@@ -195,7 +195,7 @@ export function useOfflineSync() {
 
       const { error } = await supabase.from('daily_report_deliveries').insert(deliveryData as any)
 
-      if (error) throw error
+      if (error) {throw error}
     }
   }
 
@@ -215,7 +215,7 @@ export function useOfflineSync() {
 
       const { error } = await supabase.from('daily_report_visitors').insert(visitorData as any)
 
-      if (error) throw error
+      if (error) {throw error}
     }
   }
 

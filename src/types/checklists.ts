@@ -3,6 +3,8 @@
 // Generated: 2025-11-26
 // Phase: 1.2 - TypeScript Types and Interfaces
 
+import type { PhotoOcrData } from './ocr'
+
 /**
  * Checklist item types
  */
@@ -201,6 +203,7 @@ export interface NumberResponseData {
 export interface PhotoResponseData {
   photo_urls: string[]
   captions?: string[]
+  ocr_data?: Record<string, PhotoOcrData> // Maps photo URL to OCR data
 }
 
 export interface SignatureResponseData {

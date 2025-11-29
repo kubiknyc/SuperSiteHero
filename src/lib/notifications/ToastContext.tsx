@@ -13,6 +13,7 @@ interface ToastContextType {
   error: (title: string, message?: string, options?: ToastOptions) => string
   warning: (title: string, message?: string, options?: ToastOptions) => string
   info: (title: string, message?: string, options?: ToastOptions) => string
+  showToast: (options: { type: ToastType; title: string; message?: string }) => string
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
@@ -80,6 +81,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     [addToast]
   )
 
+  const showToast = useCallback(
+    (options: { type: ToastType; title: string; message?: string }) =>
+      addToast(options.type, options.title, options.message),
+    [addToast]
+  )
+
   const value: ToastContextType = {
     toasts,
     addToast,
@@ -89,6 +96,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     error,
     warning,
     info,
+    showToast,
   }
 
   return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>
@@ -101,3 +109,7 @@ export function useToast() {
   }
   return context
 }
+
+// Re-export toast from sonner for convenience
+// This allows direct imports: import { toast } from '@/lib/notifications/ToastContext'
+export { toast } from 'sonner'

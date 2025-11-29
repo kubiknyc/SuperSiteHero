@@ -17,7 +17,7 @@ export function useApprovalHistory(requestId: string | undefined) {
   return useQuery({
     queryKey: ['approval-actions', 'history', requestId],
     queryFn: async () => {
-      if (!requestId) throw new Error('Request ID required')
+      if (!requestId) {throw new Error('Request ID required')}
       return approvalActionsApi.getHistory(requestId)
     },
     enabled: !!requestId,

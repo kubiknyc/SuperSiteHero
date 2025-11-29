@@ -78,7 +78,7 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
 
   // Check and update MFA status
   const refreshMFAStatus = async () => {
-    if (!user || !userProfile) return
+    if (!user || !userProfile) {return}
 
     try {
       // Check enrollment status
@@ -111,7 +111,7 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
 
   // Check if MFA is required for current user
   const checkMFARequired = async (): Promise<boolean> => {
-    if (!userProfile) return false
+    if (!userProfile) {return false}
 
     const roleRequired = await isRoleMFARequired(userProfile.role)
     const preferences = await getUserMFAPreferences(userProfile.id)
@@ -178,7 +178,7 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string): Promise<{ requiresMFA: boolean; factorId?: string }> => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
+    if (error) {throw error}
 
     // Check if MFA is required
     if (data.session && data.user) {
@@ -207,7 +207,7 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
     }
 
     const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    if (error) {throw error}
 
     // Clear MFA state
     setMFA({

@@ -132,3 +132,41 @@ export interface SyncEvent {
   error?: Error;
   timestamp: number;
 }
+
+/**
+ * Photo metadata extracted from EXIF
+ */
+export interface PhotoMetadata {
+  latitude?: number;        // GPS latitude
+  longitude?: number;       // GPS longitude
+  altitude?: number;        // GPS altitude in meters
+  timestamp?: Date;         // Photo capture timestamp
+  make?: string;            // Camera make
+  model?: string;           // Camera model
+  orientation?: number;     // Image orientation (1-8)
+  width?: number;           // Image width in pixels
+  height?: number;          // Image height in pixels
+  focalLength?: number;     // Focal length in mm
+  exposureTime?: number;    // Exposure time in seconds
+  fNumber?: number;         // F-number/aperture
+  iso?: number;             // ISO speed
+}
+
+/**
+ * Photo queued for upload when online
+ */
+export interface QueuedPhoto {
+  id: string;               // UUID
+  checklistId: string;      // Checklist ID
+  responseId: string;       // Response ID
+  file: Blob;               // Photo file data
+  fileName: string;         // Original file name
+  fileSize: number;         // File size in bytes
+  mimeType: string;         // MIME type (image/jpeg, etc.)
+  timestamp: number;        // When queued
+  retryCount: number;       // Number of upload attempts
+  status: 'pending' | 'uploading' | 'failed' | 'uploaded';
+  error?: string;           // Error message if failed
+  uploadedUrl?: string;     // URL after successful upload
+  metadata?: PhotoMetadata; // EXIF metadata
+}

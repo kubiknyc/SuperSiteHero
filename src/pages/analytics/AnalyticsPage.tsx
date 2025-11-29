@@ -1,0 +1,99 @@
+// File: /src/pages/analytics/AnalyticsPage.tsx
+// Project Analytics Page - Displays predictive analytics dashboard
+
+import { useParams, useSearchParams, Link } from 'react-router-dom'
+import { cn } from '@/lib/utils'
+import { Button, Card, CardContent } from '@/components/ui'
+import { PredictiveAnalyticsDashboard } from '@/features/analytics/components'
+import { useProjects } from '@/features/projects/hooks/useProjects'
+
+/**
+ * AnalyticsPage Component
+ *
+ * Displays the predictive analytics dashboard for a project.
+ * Shows risk scores, budget/schedule predictions, trends, and recommendations.
+ *
+ * URL: /projects/:projectId/analytics
+ *
+ * Usage:
+ * Navigate to /projects/abc-123/analytics to view analytics for that project.
+ */
+export function AnalyticsPage() {
+  const { projectId } = useParams<{ projectId: string }>()
+  const [searchParams] = useSearchParams()
+  const { data: projects } = useProjects()
+
+  // If no projectId in URL, show project selector
+  if (!projectId) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+          Predictive Analytics
+        </h1>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <span className="text-4xl">📊</span>
+              <h2 className="text-xl font-medium mt-4">Select a Project</h2>
+              <p className="text-gray-500 mt-2">
+                Choose a project to view its predictive analytics dashboard
+              </p>
+
+              {projects && projects.length > 0 ? (
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl mx-auto">
+                  {projects.map((project) => (
+                    <Link
+                      key={project.id}
+                      to={`/projects/${project.id}/analytics`}
+                      className="p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors text-left"
+                    >
+                      <h3 className="font-medium text-gray-900">
+                        {project.name}
+                      </h3>
+                      <p className="text-sm text-gray-500 truncate">
+                        {project.project_number || 'No project number'}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-gray-400 mt-4">
+                  No projects available. Create a project first.
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto py-6 px-4">
+      {/* Breadcrumb */}
+      <nav className="mb-6 text-sm">
+        <ol className="flex items-center gap-2 text-gray-500">
+          <li>
+            <Link to="/projects" className="hover:text-blue-600">
+              Projects
+            </Link>
+          </li>
+          <li>/</li>
+          <li>
+            <Link to={`/projects/${projectId}`} className="hover:text-blue-600">
+              Project Details
+            </Link>
+          </li>
+          <li>/</li>
+          <li className="text-gray-900 font-medium">Analytics</li>
+        </ol>
+      </nav>
+
+      {/* Dashboard */}
+      <PredictiveAnalyticsDashboard projectId={projectId} />
+    </div>
+  )
+}
+
+export default AnalyticsPage

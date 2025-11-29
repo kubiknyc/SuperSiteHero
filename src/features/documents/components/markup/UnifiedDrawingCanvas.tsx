@@ -128,7 +128,7 @@ export function UnifiedDrawingCanvas({
 
   // Extract unique creators from existing markups for layer visibility
   const creators = useMemo(() => {
-    if (!existingMarkups) return []
+    if (!existingMarkups) {return []}
     const uniqueCreators = new Map<string, { id: string; name: string }>()
     existingMarkups.forEach(markup => {
       if (markup.created_by && !uniqueCreators.has(markup.created_by)) {
@@ -147,7 +147,7 @@ export function UnifiedDrawingCanvas({
       arrow: 0, rectangle: 0, circle: 0, text: 0, freehand: 0, cloud: 0
     }
     shapes.forEach(shape => {
-      if (shape.type in counts) counts[shape.type as MarkupType]++
+      if (shape.type in counts) {counts[shape.type as MarkupType]++}
     })
     return counts
   }, [shapes])
@@ -156,9 +156,9 @@ export function UnifiedDrawingCanvas({
   const filteredShapes = useMemo(() => {
     return shapes.filter(shape => {
       // Filter by type
-      if (!filter.types.includes(shape.type as MarkupType)) return false
+      if (!filter.types.includes(shape.type as MarkupType)) {return false}
       // Filter by hidden layers (by creator)
-      if (shape.createdBy && filter.hiddenLayers.includes(shape.createdBy)) return false
+      if (shape.createdBy && filter.hiddenLayers.includes(shape.createdBy)) {return false}
       return true
     })
   }, [shapes, filter])
@@ -196,7 +196,7 @@ export function UnifiedDrawingCanvas({
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (readOnly) return
+      if (readOnly) {return}
 
       // Ctrl/Cmd + Z: Undo
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
@@ -339,10 +339,10 @@ export function UnifiedDrawingCanvas({
 
   // Handle mouse down - start drawing or panning
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (readOnly) return
+    if (readOnly) {return}
 
     const pos = e.target.getStage()?.getPointerPosition()
-    if (!pos) return
+    if (!pos) {return}
 
     // Pan mode
     if (tool === 'pan') {
@@ -364,7 +364,7 @@ export function UnifiedDrawingCanvas({
     }
 
     // Eraser mode - handled in handleShapeClick
-    if (tool === 'eraser') return
+    if (tool === 'eraser') {return}
 
     // Drawing mode
     setIsDrawing(true)
@@ -402,10 +402,10 @@ export function UnifiedDrawingCanvas({
 
   // Handle mouse move - update current shape or pan
   const handleMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (readOnly) return
+    if (readOnly) {return}
 
     const pos = e.target.getStage()?.getPointerPosition()
-    if (!pos) return
+    if (!pos) {return}
 
     // Pan mode
     if (tool === 'pan' && isPanning.current) {
@@ -420,7 +420,7 @@ export function UnifiedDrawingCanvas({
     }
 
     // Drawing mode
-    if (!isDrawing || !currentShape) return
+    if (!isDrawing || !currentShape) {return}
 
     const canvasPoint = getCanvasPoint(pos)
     const updatedShape = { ...currentShape }
@@ -453,7 +453,7 @@ export function UnifiedDrawingCanvas({
 
   // Handle mouse up - finish drawing or panning
   const handleMouseUp = () => {
-    if (readOnly) return
+    if (readOnly) {return}
 
     // End panning
     if (tool === 'pan') {
@@ -462,7 +462,7 @@ export function UnifiedDrawingCanvas({
     }
 
     // End drawing
-    if (!isDrawing || !currentShape) return
+    if (!isDrawing || !currentShape) {return}
 
     setIsDrawing(false)
 
@@ -484,17 +484,17 @@ export function UnifiedDrawingCanvas({
 
   // Handle mouse wheel - zoom
   const handleWheel = (e: Konva.KonvaEventObject<WheelEvent>) => {
-    if (readOnly) return
+    if (readOnly) {return}
 
     e.evt.preventDefault()
 
     const scaleBy = 1.1
     const stage = e.target.getStage()
-    if (!stage) return
+    if (!stage) {return}
 
     const oldScale = stage.scaleX()
     const pointer = stage.getPointerPosition()
-    if (!pointer) return
+    if (!pointer) {return}
 
     const mousePointTo = {
       x: (pointer.x - stage.x()) / oldScale,
@@ -523,17 +523,17 @@ export function UnifiedDrawingCanvas({
         strokeWidth: shape.strokeWidth,
       }
 
-      if (shape.width !== undefined) markupData.width = shape.width
-      if (shape.height !== undefined) markupData.height = shape.height
-      if (shape.radius !== undefined) markupData.radius = shape.radius
-      if (shape.points) markupData.points = shape.points
-      if (shape.text) markupData.text = shape.text
-      if (shape.fill) markupData.fill = shape.fill
-      if (shape.rotation) markupData.rotation = shape.rotation
-      if (shape.scaleX) markupData.scaleX = shape.scaleX
-      if (shape.scaleY) markupData.scaleY = shape.scaleY
-      if (shape.pointerLength) markupData.pointerLength = shape.pointerLength
-      if (shape.pointerWidth) markupData.pointerWidth = shape.pointerWidth
+      if (shape.width !== undefined) {markupData.width = shape.width}
+      if (shape.height !== undefined) {markupData.height = shape.height}
+      if (shape.radius !== undefined) {markupData.radius = shape.radius}
+      if (shape.points) {markupData.points = shape.points}
+      if (shape.text) {markupData.text = shape.text}
+      if (shape.fill) {markupData.fill = shape.fill}
+      if (shape.rotation) {markupData.rotation = shape.rotation}
+      if (shape.scaleX) {markupData.scaleX = shape.scaleX}
+      if (shape.scaleY) {markupData.scaleY = shape.scaleY}
+      if (shape.pointerLength) {markupData.pointerLength = shape.pointerLength}
+      if (shape.pointerWidth) {markupData.pointerWidth = shape.pointerWidth}
 
       await createMarkup.mutateAsync({
         document_id: documentId,
@@ -589,14 +589,14 @@ export function UnifiedDrawingCanvas({
 
   // Handle undo
   const handleUndo = () => {
-    if (historyStep === 0) return
+    if (historyStep === 0) {return}
     setHistoryStep(historyStep - 1)
     setShapes(history[historyStep - 1])
   }
 
   // Handle redo
   const handleRedo = () => {
-    if (historyStep === history.length - 1) return
+    if (historyStep === history.length - 1) {return}
     setHistoryStep(historyStep + 1)
     setShapes(history[historyStep + 1])
   }
@@ -624,7 +624,7 @@ export function UnifiedDrawingCanvas({
 
   // Handle link markup to RFI/Task/Punch
   const handleLinkMarkup = async (itemId: string, itemType: LinkableItemType) => {
-    if (!selectedShapeId) return
+    if (!selectedShapeId) {return}
 
     // Update the shape with link info
     const updatedShapes = shapes.map(shape => {
@@ -663,7 +663,7 @@ export function UnifiedDrawingCanvas({
 
   // Handle unlink markup
   const handleUnlinkMarkup = async () => {
-    if (!selectedShapeId) return
+    if (!selectedShapeId) {return}
 
     // Update the shape to remove link
     const updatedShapes = shapes.map(shape => {

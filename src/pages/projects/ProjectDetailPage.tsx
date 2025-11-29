@@ -10,13 +10,14 @@ import { DeleteProjectConfirmation } from '@/features/projects/components/Delete
 import { DocumentsList } from '@/features/documents/components'
 import { RFIsList } from '@/features/rfis/components'
 import { SubmittalsList } from '@/features/submittals/components'
+import { SubcontractorPortalAccessList } from '@/features/subcontractor-portal/components'
 import { Button } from '@/components/ui/button'
 import { PunchListsProjectView } from '@/features/punch-lists/components'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Edit, Loader2 } from 'lucide-react'
+import { ArrowLeft, Edit, Loader2, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 
 export function ProjectDetailPage() {
@@ -113,6 +114,10 @@ export function ProjectDetailPage() {
             )}
           </div>
           <div className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate(`/projects/${projectId}/schedule`)}>
+              <Calendar className="h-4 w-4 mr-2" />
+              Schedule
+            </Button>
             <Button onClick={() => setEditDialogOpen(true)}>
               <Edit className="h-4 w-4 mr-2" />
               Edit
@@ -196,6 +201,9 @@ export function ProjectDetailPage() {
 
             {/* Punch Lists */}
             <PunchListsProjectView projectId={project.id} />
+
+            {/* Subcontractor Portal Access */}
+            <SubcontractorPortalAccessList projectId={project.id} />
           </div>
 
           {/* Sidebar */}

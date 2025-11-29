@@ -7,11 +7,13 @@ import type {
   QueuedMutation,
   UserDownload,
   Conflict,
+  QueuedPhoto,
 } from '@/types/offline';
+import { logger } from '@/lib/utils/logger';
 
 // Database name and version
 const DB_NAME = 'supersitehero-offline';
-const DB_VERSION = 1;
+const DB_VERSION = 2; // Incremented for photo queue store
 
 // Store names
 export const STORES = {
@@ -19,6 +21,7 @@ export const STORES = {
   SYNC_QUEUE: 'syncQueue',
   DOWNLOADS: 'downloads',
   CONFLICTS: 'conflicts',
+  PHOTO_QUEUE: 'photoQueue',
 } as const;
 
 /**
@@ -59,6 +62,16 @@ export type OfflineDB = IDBPDatabase<{
       resolved: boolean;
     };
   };
+  photoQueue: {
+    key: string;
+    value: QueuedPhoto;
+    indexes: {
+      status: QueuedPhoto['status'];
+      timestamp: number;
+      checklistId: string;
+      responseId: string;
+    };
+  };
 }>;
 
 let dbInstance: OfflineDB | null = null;
@@ -74,7 +87,7 @@ export async function initDatabase(): Promise<OfflineDB> {
   try {
     dbInstance = await openDB<any>(DB_NAME, DB_VERSION, {
       upgrade(db, oldVersion, newVersion, transaction) {
-        console.log(`Upgrading database from version ${oldVersion} to ${newVersion}`);
+        logger.log(`Upgrading database from version ${oldVersion} to ${newVersion}`);
 
         // Create cachedData store
         if (!db.objectStoreNames.contains(STORES.CACHED_DATA)) {
@@ -84,7 +97,7 @@ export async function initDatabase(): Promise<OfflineDB> {
           cachedDataStore.createIndex('table', 'table', { unique: false });
           cachedDataStore.createIndex('timestamp', 'timestamp', { unique: false });
           cachedDataStore.createIndex('expiresAt', 'expiresAt', { unique: false });
-          console.log('Created cachedData store with indexes');
+          logger.log('Created cachedData store with indexes');
         }
 
         // Create syncQueue store
@@ -95,7 +108,7 @@ export async function initDatabase(): Promise<OfflineDB> {
           syncQueueStore.createIndex('status', 'status', { unique: false });
           syncQueueStore.createIndex('timestamp', 'timestamp', { unique: false });
           syncQueueStore.createIndex('priority', 'priority', { unique: false });
-          console.log('Created syncQueue store with indexes');
+          logger.log('Created syncQueue store with indexes');
         }
 
         // Create downloads store
@@ -105,7 +118,7 @@ export async function initDatabase(): Promise<OfflineDB> {
           });
           downloadsStore.createIndex('status', 'status', { unique: false });
           downloadsStore.createIndex('resourceId', 'resourceId', { unique: false });
-          console.log('Created downloads store with indexes');
+          logger.log('Created downloads store with indexes');
         }
 
         // Create conflicts store
@@ -115,27 +128,39 @@ export async function initDatabase(): Promise<OfflineDB> {
           });
           conflictsStore.createIndex('table', 'table', { unique: false });
           conflictsStore.createIndex('resolved', 'resolved', { unique: false });
-          console.log('Created conflicts store with indexes');
+          logger.log('Created conflicts store with indexes');
+        }
+
+        // Create photoQueue store
+        if (!db.objectStoreNames.contains(STORES.PHOTO_QUEUE)) {
+          const photoQueueStore = db.createObjectStore(STORES.PHOTO_QUEUE, {
+            keyPath: 'id',
+          });
+          photoQueueStore.createIndex('status', 'status', { unique: false });
+          photoQueueStore.createIndex('timestamp', 'timestamp', { unique: false });
+          photoQueueStore.createIndex('checklistId', 'checklistId', { unique: false });
+          photoQueueStore.createIndex('responseId', 'responseId', { unique: false });
+          logger.log('Created photoQueue store with indexes');
         }
       },
       blocked() {
-        console.warn(
+        logger.warn(
           'IndexedDB upgrade blocked. Please close other tabs with this site open.'
         );
       },
       blocking() {
-        console.warn('This connection is blocking a newer version of the database.');
+        logger.warn('This connection is blocking a newer version of the database.');
       },
       terminated() {
-        console.error('IndexedDB connection was unexpectedly terminated.');
+        logger.error('IndexedDB connection was unexpectedly terminated.');
         dbInstance = null;
       },
     });
 
-    console.log('IndexedDB initialized successfully');
+    logger.log('IndexedDB initialized successfully');
     return dbInstance;
   } catch (error) {
-    console.error('Failed to initialize IndexedDB:', error);
+    logger.error('Failed to initialize IndexedDB:', error);
     throw new Error('Failed to initialize offline database');
   }
 }
@@ -157,7 +182,7 @@ export function closeDatabase(): void {
   if (dbInstance) {
     dbInstance.close();
     dbInstance = null;
-    console.log('IndexedDB connection closed');
+    logger.log('IndexedDB connection closed');
   }
 }
 
@@ -168,9 +193,9 @@ export async function deleteDatabase(): Promise<void> {
   closeDatabase();
   try {
     await indexedDB.deleteDatabase(DB_NAME);
-    console.log('IndexedDB database deleted');
+    logger.log('IndexedDB database deleted');
   } catch (error) {
-    console.error('Failed to delete database:', error);
+    logger.error('Failed to delete database:', error);
     throw error;
   }
 }
@@ -282,7 +307,7 @@ export async function cleanupExpiredCache(): Promise<number> {
   }
 
   await tx.done;
-  console.log(`Cleaned up ${deletedCount} expired cache entries`);
+  logger.log(`Cleaned up ${deletedCount} expired cache entries`);
   return deletedCount;
 }
 

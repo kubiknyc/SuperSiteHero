@@ -45,7 +45,7 @@ export function ApprovalWorkflowsPage() {
   const duplicateMutation = useDuplicateWorkflow()
 
   const handleCreate = async (input: CreateWorkflowInput) => {
-    if (!companyId) return
+    if (!companyId) {return}
     try {
       await createMutation.mutateAsync({ ...input, company_id: companyId })
       setViewMode('list')
@@ -55,7 +55,7 @@ export function ApprovalWorkflowsPage() {
   }
 
   const handleUpdate = async (input: CreateWorkflowInput) => {
-    if (!editingWorkflowId) return
+    if (!editingWorkflowId) {return}
     try {
       await updateMutation.mutateAsync({
         workflowId: editingWorkflowId,
@@ -86,7 +86,7 @@ export function ApprovalWorkflowsPage() {
 
   const handleDuplicate = async (workflow: ApprovalWorkflow) => {
     const newName = prompt('Enter a name for the duplicated workflow:', `${workflow.name} (Copy)`)
-    if (!newName?.trim()) return
+    if (!newName?.trim()) {return}
 
     try {
       await duplicateMutation.mutateAsync({

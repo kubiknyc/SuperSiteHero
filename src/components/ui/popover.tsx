@@ -91,7 +91,7 @@ export function PopoverContent({
 
   // Close on outside click
   React.useEffect(() => {
-    if (!open) return
+    if (!open) {return}
 
     const handleClickOutside = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -105,7 +105,7 @@ export function PopoverContent({
 
   // Close on escape key
   React.useEffect(() => {
-    if (!open) return
+    if (!open) {return}
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -117,7 +117,7 @@ export function PopoverContent({
     return () => document.removeEventListener('keydown', handleEscape)
   }, [open, setOpen])
 
-  if (!open) return null
+  if (!open) {return null}
 
   const alignmentClasses = {
     start: 'left-0',

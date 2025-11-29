@@ -118,7 +118,7 @@ export function useCreateRFIWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     successMessage: (data) => `RFI #${data.number} created successfully`,
@@ -164,7 +164,7 @@ export function useUpdateRFIWithNotification() {
       const cleanedUpdates: Partial<WorkflowItem> = {}
 
       if (updates.title !== undefined) {
-        cleanedUpdates.title = updates.title.trim() || null
+        cleanedUpdates.title = updates.title.trim() || 'Untitled'
       }
       if (updates.description !== undefined) {
         cleanedUpdates.description = updates.description.trim() || null
@@ -192,7 +192,7 @@ export function useUpdateRFIWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     successMessage: (data) => `RFI #${data.number} updated successfully`,
@@ -272,7 +272,7 @@ export function useChangeRFIStatusWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     successMessage: (data) => getStatusChangeMessage(data.status),
@@ -338,7 +338,7 @@ export function useAddRFICommentWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemComment
     },
     successMessage: 'Comment added successfully',
@@ -374,7 +374,7 @@ export function useDeleteRFIWithNotification() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', rfiId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     successMessage: 'RFI deleted successfully',
     errorMessage: (error) => `Failed to delete RFI: ${error.message}`,

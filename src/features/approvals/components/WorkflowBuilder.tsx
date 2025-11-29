@@ -72,7 +72,7 @@ export function WorkflowBuilder({
   }
 
   const handleRemoveStep = (index: number) => {
-    if (steps.length <= 1) return
+    if (steps.length <= 1) {return}
     const newSteps = steps.filter((_, i) => i !== index)
     // Reorder steps
     setSteps(newSteps.map((step, i) => ({ ...step, step_order: i + 1 })))

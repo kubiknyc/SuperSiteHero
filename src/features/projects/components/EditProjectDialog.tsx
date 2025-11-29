@@ -85,7 +85,7 @@ export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDi
     // Step 2: Call API (with notifications handled by mutation hook)
     try {
       // Type guard: validation.data is guaranteed to exist when success is true
-      if (!validation.data) return
+      if (!validation.data) {return}
 
       await updateProject.mutateAsync({
         id: project.id,

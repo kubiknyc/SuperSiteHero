@@ -1,6 +1,16 @@
 // File: /src/lib/utils/pdfExport.ts
 // PDF export utilities
 
+import DOMPurify from 'dompurify'
+
+/**
+ * Escape HTML special characters for safe title insertion
+ */
+function escapeHtml(text: string): string {
+  return text.replace(/[<>&'"]/g, c =>
+    ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&#39;', '"': '&quot;' }[c] || c))
+}
+
 /**
  * Export HTML element to PDF using browser print functionality
  * This is a simple approach that works across browsers
@@ -19,8 +29,9 @@ export function exportToPDF(elementId: string, filename: string) {
     return
   }
 
-  // Get the HTML content
-  const content = element.innerHTML
+  // Sanitize HTML content to prevent XSS
+  const content = DOMPurify.sanitize(element.innerHTML)
+  const escapedFilename = escapeHtml(filename)
 
   // Write to print window
   printWindow.document.write(`
@@ -29,7 +40,7 @@ export function exportToPDF(elementId: string, filename: string) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>${filename}</title>
+      <title>${escapedFilename}</title>
       <style>
         body {
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
@@ -178,7 +189,7 @@ export function formatReportDate(date: string | Date): string {
  * Format currency for reports
  */
 export function formatCurrency(value: number | null): string {
-  if (value === null || value === undefined) return 'N/A'
+  if (value === null || value === undefined) {return 'N/A'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

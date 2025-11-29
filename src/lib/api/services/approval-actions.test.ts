@@ -4,28 +4,32 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { approvalActionsApi } from './approval-actions'
+import { supabase } from '@/lib/supabase'
 
-// Mock Supabase
+// Mock Supabase chain
 const mockSupabaseChain = {
   select: vi.fn().mockReturnThis(),
   insert: vi.fn().mockReturnThis(),
   update: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
+  in: vi.fn().mockReturnThis(),
   single: vi.fn().mockReturnThis(),
   order: vi.fn().mockResolvedValue({ data: [], error: null }),
-}
-
-const mockAuth = {
-  getUser: vi.fn().mockResolvedValue({
-    data: { user: { id: 'user-1' } },
-    error: null,
+  // Make the chain thenable (promise-like) so it can be awaited
+  then: vi.fn(function(this: any, onFulfilled: any) {
+    return Promise.resolve({ data: [], error: null }).then(onFulfilled)
   }),
 }
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     from: vi.fn(() => mockSupabaseChain),
-    auth: mockAuth,
+    auth: {
+      getUser: vi.fn().mockResolvedValue({
+        data: { user: { id: 'user-1' } },
+        error: null,
+      }),
+    },
   },
 }))
 
@@ -70,9 +74,15 @@ describe('approvalActionsApi', () => {
     mockSupabaseChain.insert.mockReturnThis()
     mockSupabaseChain.update.mockReturnThis()
     mockSupabaseChain.eq.mockReturnThis()
+    mockSupabaseChain.in.mockReturnThis()
     mockSupabaseChain.single.mockReturnThis()
     mockSupabaseChain.order.mockResolvedValue({ data: [], error: null })
-    mockAuth.getUser.mockResolvedValue({
+    // Reset the thenable to resolve with empty data
+    mockSupabaseChain.then.mockImplementation(function(this: any, onFulfilled: any) {
+      return Promise.resolve({ data: [], error: null }).then(onFulfilled)
+    })
+    // Reset auth mock
+    vi.mocked(supabase.auth.getUser).mockResolvedValue({
       data: { user: { id: 'user-1' } },
       error: null,
     })
@@ -81,16 +91,21 @@ describe('approvalActionsApi', () => {
   describe('approve', () => {
     it('should approve and move to next step', async () => {
       // First call: fetch request
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: mockRequest, error: null })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: mockRequest, error: null }).then(onFulfilled)
+      )
       // Second call: insert action
-      mockSupabaseChain.single.mockResolvedValueOnce({ error: null })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
       // Third call: update request
-      mockSupabaseChain.eq.mockResolvedValueOnce({ error: null })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
       // Fourth call: fetch updated request
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: { ...mockRequest, current_step: 2 },
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: { ...mockRequest, current_step: 2 }, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalActionsApi.approve('req-1')
 
@@ -108,18 +123,23 @@ describe('approvalActionsApi', () => {
       }
 
       // User-1 is not an approver for step 2, mock user-3
-      mockAuth.getUser.mockResolvedValue({
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({
         data: { user: { id: 'user-3' } },
         error: null,
       })
 
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: lastStepRequest, error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.eq.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: { ...lastStepRequest, status: 'approved', completed_at: expect.any(String) },
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: lastStepRequest, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: { ...lastStepRequest, status: 'approved', completed_at: expect.any(String) }, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalActionsApi.approve('req-1')
 
@@ -127,7 +147,7 @@ describe('approvalActionsApi', () => {
     })
 
     it('should throw error if not authorized', async () => {
-      mockAuth.getUser.mockResolvedValue({
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({
         data: { user: { id: 'unauthorized-user' } },
         error: null,
       })
@@ -139,7 +159,11 @@ describe('approvalActionsApi', () => {
 
     it('should throw error if request is not pending', async () => {
       mockSupabaseChain.single.mockResolvedValueOnce({
-        data: { ...mockRequest, status: 'approved' },
+        data: {
+          ...mockRequest,
+          status: 'approved',
+          workflow: mockRequest.workflow
+        },
         error: null,
       })
 
@@ -158,17 +182,25 @@ describe('approvalActionsApi', () => {
         },
       }
 
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: singleStepRequest, error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.eq.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: {
-          ...singleStepRequest,
-          status: 'approved_with_conditions',
-          conditions: 'Must fix minor issues',
-        },
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: singleStepRequest, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({
+          data: {
+            ...singleStepRequest,
+            status: 'approved_with_conditions',
+            conditions: 'Must fix minor issues',
+          },
+          error: null,
+        }).then(onFulfilled)
+      )
 
       const result = await approvalActionsApi.approveWithConditions(
         'req-1',
@@ -187,13 +219,18 @@ describe('approvalActionsApi', () => {
 
   describe('reject', () => {
     it('should reject the request', async () => {
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: mockRequest, error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.eq.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: { ...mockRequest, status: 'rejected' },
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: mockRequest, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: { ...mockRequest, status: 'rejected' }, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalActionsApi.reject('req-1', 'Does not meet requirements')
 
@@ -208,12 +245,15 @@ describe('approvalActionsApi', () => {
 
   describe('delegate', () => {
     it('should delegate to another user', async () => {
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: mockRequest, error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({ error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: mockRequest,
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: mockRequest, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: mockRequest, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalActionsApi.delegate('req-1', 'user-4', 'Please review')
 
@@ -228,17 +268,21 @@ describe('approvalActionsApi', () => {
 
   describe('addComment', () => {
     it('should add a comment to the request', async () => {
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: mockRequest, error: null })
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: {
-          id: 'action-1',
-          request_id: 'req-1',
-          action: 'comment',
-          comment: 'Need more info',
-          user: { id: 'user-1', full_name: 'John' },
-        },
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: mockRequest, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({
+          data: {
+            id: 'action-1',
+            request_id: 'req-1',
+            action: 'comment',
+            comment: 'Need more info',
+            user: { id: 'user-1', full_name: 'John' },
+          },
+          error: null,
+        }).then(onFulfilled)
+      )
 
       const result = await approvalActionsApi.addComment('req-1', 'Need more info')
 
@@ -293,27 +337,32 @@ describe('approvalActionsApi', () => {
     })
 
     it('should throw error if not authenticated', async () => {
-      mockAuth.getUser.mockResolvedValue({ data: { user: null }, error: null })
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({ data: { user: null }, error: null })
 
       await expect(approvalActionsApi._performAction('req-1', 'approve'))
         .rejects.toThrow('You must be logged in to perform this action')
     })
 
     it('should throw error if request not found', async () => {
-      mockSupabaseChain.single.mockResolvedValueOnce({ data: null, error: null })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: null, error: null }).then(onFulfilled)
+      )
 
       await expect(approvalActionsApi._performAction('req-1', 'approve'))
         .rejects.toThrow('Approval request not found')
     })
 
     it('should throw error if step not found', async () => {
-      mockSupabaseChain.single.mockResolvedValueOnce({
-        data: {
-          ...mockRequest,
-          current_step: 99, // Non-existent step
-        },
-        error: null,
-      })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({
+          data: {
+            ...mockRequest,
+            current_step: 99, // Non-existent step
+            workflow: mockRequest.workflow
+          },
+          error: null,
+        }).then(onFulfilled)
+      )
 
       await expect(approvalActionsApi._performAction('req-1', 'approve'))
         .rejects.toThrow('Current approval step not found')

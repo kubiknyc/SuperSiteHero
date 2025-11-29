@@ -65,7 +65,7 @@ export function DocumentList({
 }: DocumentListProps) {
   // Format file size in human-readable format
   const formatFileSize = (bytes: number | null): string => {
-    if (!bytes || bytes === 0) return 'N/A'
+    if (!bytes || bytes === 0) {return 'N/A'}
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))

@@ -17,7 +17,7 @@ export function useDocumentMarkups(
   return useQuery({
     queryKey: ['markups', documentId, pageNumber],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
       return await markupsApi.getDocumentMarkups(documentId, pageNumber)
     },
     enabled: !!documentId,
@@ -31,7 +31,7 @@ export function useMarkup(markupId: string | undefined) {
   return useQuery({
     queryKey: ['markups', markupId],
     queryFn: async () => {
-      if (!markupId) throw new Error('Markup ID required')
+      if (!markupId) {throw new Error('Markup ID required')}
       return await markupsApi.getMarkup(markupId)
     },
     enabled: !!markupId,
@@ -49,7 +49,7 @@ export function useCreateMarkup() {
     mutationFn: async (
       markup: Omit<DocumentMarkup, 'id' | 'created_at' | 'updated_at' | 'deleted_at' | 'created_by'>
     ) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return await markupsApi.createMarkup({
         ...markup,
@@ -130,7 +130,7 @@ export function useBatchCreateMarkups() {
     mutationFn: async (
       markups: Omit<DocumentMarkup, 'id' | 'created_at' | 'updated_at' | 'deleted_at' | 'created_by'>[]
     ) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const markupsWithCreator = markups.map(markup => ({
         ...markup,

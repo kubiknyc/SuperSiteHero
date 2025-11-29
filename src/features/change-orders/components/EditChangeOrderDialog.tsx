@@ -71,7 +71,7 @@ export function EditChangeOrderDialog({
     }
   }
 
-  if (!changeOrder) return null
+  if (!changeOrder) {return null}
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

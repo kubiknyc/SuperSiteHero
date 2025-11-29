@@ -15,7 +15,7 @@ export function useCreatePunchItemWithNotification() {
     Omit<PunchItem, 'id' | 'created_at' | 'updated_at'>
   >({
     mutationFn: async (punchItem) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return punchListsApi.createPunchItem(punchItem)
     },

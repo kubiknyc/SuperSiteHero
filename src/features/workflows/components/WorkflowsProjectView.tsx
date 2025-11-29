@@ -200,7 +200,7 @@ export function WorkflowsProjectView({
           workflowItem={editingItem}
           open={!!editingItem}
           onOpenChange={(open) => {
-            if (!open) setEditingItem(null)
+            if (!open) {setEditingItem(null)}
           }}
         />
       )}

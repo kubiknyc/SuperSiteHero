@@ -293,6 +293,110 @@ export type WorkflowItemCreateInput = z.infer<typeof workflowItemCreateSchema>
 export type WorkflowItemUpdateInput = z.infer<typeof workflowItemUpdateSchema>
 
 // ============================================================================
+// NOTICE SCHEMAS
+// ============================================================================
+
+export const noticeCreateSchema = z.object({
+  project_id: z
+    .string()
+    .min(1, 'Project is required')
+    .uuid('Invalid project ID'),
+
+  notice_type: z.enum(
+    ['claim', 'delay', 'change_directive', 'cure', 'completion', 'termination', 'insurance', 'payment', 'deficiency', 'stop_work', 'general'],
+    { message: 'Notice type is required' }
+  ),
+
+  subject: z
+    .string()
+    .min(1, 'Subject is required')
+    .min(5, 'Subject must be at least 5 characters')
+    .max(255, 'Subject cannot exceed 255 characters'),
+
+  direction: z.enum(['incoming', 'outgoing'], {
+    message: 'Direction is required',
+  }),
+
+  description: z
+    .string()
+    .max(2000, 'Description cannot exceed 2000 characters')
+    .optional()
+    .nullable(),
+
+  from_party: z
+    .string()
+    .max(255, 'From party cannot exceed 255 characters')
+    .optional()
+    .nullable(),
+
+  to_party: z
+    .string()
+    .max(255, 'To party cannot exceed 255 characters')
+    .optional()
+    .nullable(),
+
+  notice_date: z
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), 'Invalid notice date'),
+
+  received_date: z
+    .string()
+    .refine((date) => !date || !isNaN(Date.parse(date)), 'Invalid received date')
+    .optional()
+    .nullable(),
+
+  response_due_date: z
+    .string()
+    .refine((date) => !date || !isNaN(Date.parse(date)), 'Invalid response due date')
+    .optional()
+    .nullable(),
+
+  response_required: z.boolean().optional().default(false),
+
+  is_critical: z.boolean().optional().default(false),
+
+  reference_number: z
+    .string()
+    .max(50, 'Reference number cannot exceed 50 characters')
+    .optional()
+    .nullable(),
+
+  document_url: z
+    .string()
+    .url('Invalid document URL')
+    .optional()
+    .nullable(),
+
+  notes: z
+    .string()
+    .max(2000, 'Notes cannot exceed 2000 characters')
+    .optional()
+    .nullable(),
+})
+
+export const noticeUpdateSchema = noticeCreateSchema.partial()
+
+export const noticeResponseSchema = z.object({
+  response_date: z
+    .string()
+    .refine((date) => !isNaN(Date.parse(date)), 'Invalid response date'),
+
+  response_status: z.enum(['pending', 'in_progress', 'submitted', 'accepted', 'rejected'], {
+    message: 'Response status is required',
+  }),
+
+  response_document_url: z
+    .string()
+    .url('Invalid response document URL')
+    .optional()
+    .nullable(),
+})
+
+export type NoticeCreateSchemaInput = z.infer<typeof noticeCreateSchema>
+export type NoticeUpdateSchemaInput = z.infer<typeof noticeUpdateSchema>
+export type NoticeResponseSchemaInput = z.infer<typeof noticeResponseSchema>
+
+// ============================================================================
 // BATCH VALIDATION HELPER
 // ============================================================================
 

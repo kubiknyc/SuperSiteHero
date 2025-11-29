@@ -72,7 +72,7 @@ export const changeOrdersApi = {
         .ilike('name_singular', '%change%order%')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -121,7 +121,7 @@ export const changeOrdersApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ChangeOrderWithRelations[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -157,7 +157,7 @@ export const changeOrdersApi = {
         .eq('id', changeOrderId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as any as ChangeOrderDetailWithRelations
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -219,7 +219,7 @@ export const changeOrdersApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return newChangeOrder
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -246,7 +246,7 @@ export const changeOrdersApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -268,7 +268,7 @@ export const changeOrdersApi = {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', changeOrderId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -299,7 +299,7 @@ export const changeOrdersApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -335,7 +335,7 @@ export const changeOrdersApi = {
         .insert(bids)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -359,7 +359,7 @@ export const changeOrdersApi = {
         .eq('id', bidId)
         .single()
 
-      if (bidError) throw bidError
+      if (bidError) {throw bidError}
       if (!bid) {
         throw new ApiErrorClass({
           code: 'BID_NOT_FOUND',
@@ -386,7 +386,7 @@ export const changeOrdersApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     } catch (error) {
       throw error instanceof ApiErrorClass

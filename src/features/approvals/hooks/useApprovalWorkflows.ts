@@ -26,7 +26,7 @@ export function useApprovalWorkflows(
   return useQuery({
     queryKey: ['approval-workflows', companyId, workflowType, isActive],
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return approvalWorkflowsApi.getWorkflows({
         company_id: companyId,
         workflow_type: workflowType,
@@ -47,7 +47,7 @@ export function useActiveWorkflowsByType(
   return useQuery({
     queryKey: ['approval-workflows', 'active', companyId, workflowType],
     queryFn: async () => {
-      if (!companyId || !workflowType) throw new Error('Company ID and workflow type required')
+      if (!companyId || !workflowType) {throw new Error('Company ID and workflow type required')}
       return approvalWorkflowsApi.getActiveWorkflowsByType(companyId, workflowType)
     },
     enabled: !!companyId && !!workflowType,
@@ -61,7 +61,7 @@ export function useApprovalWorkflow(workflowId: string | undefined) {
   return useQuery({
     queryKey: ['approval-workflows', workflowId],
     queryFn: async () => {
-      if (!workflowId) throw new Error('Workflow ID required')
+      if (!workflowId) {throw new Error('Workflow ID required')}
       return approvalWorkflowsApi.getWorkflow(workflowId)
     },
     enabled: !!workflowId,

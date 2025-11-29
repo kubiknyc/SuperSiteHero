@@ -97,7 +97,7 @@ export function useWorkflowItemsOptimized(
   const query = useQuery<(WorkflowItemEssential | WorkflowItemWithRelations)[]>({
     queryKey: ['workflow-items-optimized', projectId, workflowTypeId, options?.fetchFullData],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const fields = options?.fetchFullData ? DETAIL_VIEW_FIELDS : LIST_VIEW_FIELDS
 
@@ -114,8 +114,8 @@ export function useWorkflowItemsOptimized(
 
       const { data, error } = await query
 
-      if (error) throw error
-      if (!data || !Array.isArray(data)) return []
+      if (error) {throw error}
+      if (!data || !Array.isArray(data)) {return []}
       return data as unknown as (WorkflowItemEssential | WorkflowItemWithRelations)[]
     },
     enabled: !!projectId,
@@ -150,7 +150,7 @@ export function useWorkflowItemOptimized(workflowItemId: string | undefined) {
   return useQuery<WorkflowItemWithRelations | null>({
     queryKey: ['workflow-item-detail', workflowItemId],
     queryFn: async () => {
-      if (!workflowItemId) throw new Error('Workflow item ID required')
+      if (!workflowItemId) {throw new Error('Workflow item ID required')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -158,7 +158,7 @@ export function useWorkflowItemOptimized(workflowItemId: string | undefined) {
         .eq('id', workflowItemId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Try to get workflow type from cache
       const cachedTypes = queryClient.getQueryData<any[]>(['workflow-types-cache'])
@@ -191,7 +191,7 @@ export function useCreateWorkflowItemOptimized() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return result
     },
     onSuccess: (data) => {
@@ -221,7 +221,7 @@ export function useUpdateWorkflowItemOptimized() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -245,15 +245,15 @@ export function useBatchWorkflowItems(itemIds: string[]) {
   return useQuery<WorkflowItemEssential[]>({
     queryKey: ['workflow-items-batch', itemIds],
     queryFn: async () => {
-      if (itemIds.length === 0) return []
+      if (itemIds.length === 0) {return []}
 
       const { data, error } = await supabase
         .from('workflow_items')
         .select(LIST_VIEW_FIELDS)
         .in('id', itemIds)
 
-      if (error) throw error
-      if (!data || !Array.isArray(data)) return []
+      if (error) {throw error}
+      if (!data || !Array.isArray(data)) {return []}
       return data as unknown as WorkflowItemEssential[]
     },
     enabled: itemIds.length > 0,
@@ -268,7 +268,7 @@ export function usePrefetchWorkflowItems(projectId: string | undefined) {
   const queryClient = useQueryClient()
 
   return async (workflowTypeId?: string) => {
-    if (!projectId) return
+    if (!projectId) {return}
 
     await queryClient.prefetchQuery({
       queryKey: ['workflow-items-optimized', projectId, workflowTypeId, false],
@@ -280,7 +280,7 @@ export function usePrefetchWorkflowItems(projectId: string | undefined) {
           .is('deleted_at', null)
           .order('created_at', { ascending: false })
 
-        if (error) throw error
+        if (error) {throw error}
         return data || []
       },
       staleTime: 5 * 60 * 1000,

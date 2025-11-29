@@ -45,7 +45,7 @@ export function DocumentComments({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newComment.trim()) return
+    if (!newComment.trim()) {return}
 
     try {
       await createComment.mutateAsync({
@@ -140,7 +140,7 @@ function CommentItem({ comment, documentId, projectId, depth }: CommentItemProps
   const createReply = useCreateComment(documentId, projectId)
 
   const handleUpdate = async () => {
-    if (!editText.trim()) return
+    if (!editText.trim()) {return}
     try {
       await updateComment.mutateAsync({ comment_text: editText.trim() })
       setIsEditing(false)
@@ -151,7 +151,7 @@ function CommentItem({ comment, documentId, projectId, depth }: CommentItemProps
   }
 
   const handleDelete = async () => {
-    if (!confirm('Are you sure you want to delete this comment?')) return
+    if (!confirm('Are you sure you want to delete this comment?')) {return}
     try {
       await deleteComment.mutateAsync()
       toast.success('Comment deleted')
@@ -161,7 +161,7 @@ function CommentItem({ comment, documentId, projectId, depth }: CommentItemProps
   }
 
   const handleReply = async () => {
-    if (!replyText.trim()) return
+    if (!replyText.trim()) {return}
     try {
       await createReply.mutateAsync({
         comment_text: replyText.trim(),

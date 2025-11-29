@@ -72,13 +72,13 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
 
   // Check if RFI is overdue
   const isOverdue = (dueDate: string | null): boolean => {
-    if (!dueDate) return false
+    if (!dueDate) {return false}
     return isPast(new Date(dueDate))
   }
 
   // Format date with fallback
   const formatDate = (date: string | null): string => {
-    if (!date) return '-'
+    if (!date) {return '-'}
     try {
       return date ? format(new Date(date), 'MMM d, yyyy') : 'N/A'
     } catch {
@@ -88,8 +88,8 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
 
   // Get assignees display text
   const getAssigneesText = (assignees: string[] | null): string => {
-    if (!assignees || assignees.length === 0) return 'Unassigned'
-    if (assignees.length === 1) return assignees[0].substring(0, 8)
+    if (!assignees || assignees.length === 0) {return 'Unassigned'}
+    if (assignees.length === 1) {return assignees[0].substring(0, 8)}
     return `${assignees[0].substring(0, 8)} +${assignees.length - 1}`
   }
 

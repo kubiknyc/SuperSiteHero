@@ -40,7 +40,7 @@ export function TemplateItemsPage() {
   const handleAddItem = async (
     item: Omit<CreateChecklistTemplateItemDTO, 'checklist_template_id' | 'sort_order'>
   ) => {
-    if (!templateId) return
+    if (!templateId) {return}
 
     try {
       const newItem = await createItem.mutateAsync({
@@ -73,8 +73,8 @@ export function TemplateItemsPage() {
   }
 
   const handleDeleteItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) return
-    if (!templateId) return
+    if (!confirm('Are you sure you want to delete this item?')) {return}
+    if (!templateId) {return}
 
     try {
       await deleteItem.mutateAsync({ itemId, templateId })
@@ -86,7 +86,7 @@ export function TemplateItemsPage() {
   }
 
   const handleReorderItems = async (items: ChecklistTemplateItem[]) => {
-    if (!templateId) return
+    if (!templateId) {return}
 
     try {
       await reorderItems.mutateAsync({

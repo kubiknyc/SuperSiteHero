@@ -37,7 +37,14 @@ export default defineConfig({
         runtimeCaching: [
           // Cache API responses with network-first strategy
           {
-            urlPattern: ({ url }) => url.origin === 'https://nxlznnrocrffnbzjaaae.supabase.co',
+            urlPattern: ({ url }) => {
+              const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
+              try {
+                return supabaseUrl && url.origin === new URL(supabaseUrl).origin;
+              } catch {
+                return false;
+              }
+            },
             handler: 'NetworkFirst',
             options: {
               cacheName: 'supabase-api',
@@ -111,12 +118,15 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Separate vendor chunks
+          // Separate vendor chunks for better caching and parallel loading
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-query': ['@tanstack/react-query'],
           'vendor-supabase': ['@supabase/supabase-js'],
           'vendor-ui': ['lucide-react', 'date-fns', 'clsx', 'tailwind-merge', 'class-variance-authority'],
-          'vendor-state': ['zustand', 'react-hot-toast']
+          'vendor-state': ['zustand', 'react-hot-toast'],
+          // Additional chunks for larger libraries - load separately for better caching
+          'vendor-forms': ['zod', 'react-hook-form'],
+          'vendor-charts': ['recharts'],
         }
       }
     },
@@ -141,6 +151,14 @@ export default defineConfig({
       'react-router-dom',
       '@tanstack/react-query',
       '@supabase/supabase-js'
+    ],
+    exclude: [
+      'tesseract.js' // Exclude tesseract.js from pre-bundling (large library)
     ]
+  },
+  // Web Worker configuration
+  worker: {
+    format: 'es', // Use ES modules for workers
+    plugins: () => []
   }
 })

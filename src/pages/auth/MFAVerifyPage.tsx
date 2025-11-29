@@ -81,7 +81,7 @@ export function MFAVerifyPage() {
   }
 
   const handleVerify = async () => {
-    if (verificationCode.length !== 6 || !challenge) return
+    if (verificationCode.length !== 6 || !challenge) {return}
 
     setIsVerifying(true)
     setAttempts(prev => prev + 1)

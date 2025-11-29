@@ -88,7 +88,7 @@ export function DocumentLibraryPage() {
 
   // Build folder tree structure
   const folderTree = useMemo(() => {
-    if (!allFolders) return []
+    if (!allFolders) {return []}
 
     const buildTree = (parentId: string | null): FolderType[] => {
       return allFolders
@@ -101,7 +101,7 @@ export function DocumentLibraryPage() {
 
   // Get child folders for a given parent
   const getChildFolders = (parentId: string): FolderType[] => {
-    if (!allFolders) return []
+    if (!allFolders) {return []}
     return allFolders
       .filter(folder => folder.parent_folder_id === parentId)
       .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
@@ -109,7 +109,7 @@ export function DocumentLibraryPage() {
 
   // Build breadcrumb path
   const breadcrumbPath = useMemo(() => {
-    if (!currentFolderId || !allFolders) return []
+    if (!currentFolderId || !allFolders) {return []}
 
     const path: FolderType[] = []
     let folderId: string | null = currentFolderId
@@ -129,7 +129,7 @@ export function DocumentLibraryPage() {
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
-    if (!documents) return []
+    if (!documents) {return []}
 
     return documents.filter(doc => {
       const statusMatch = statusFilter === 'all' || doc.status === statusFilter
@@ -167,7 +167,7 @@ export function DocumentLibraryPage() {
 
   // Handle create folder
   const handleCreateFolder = () => {
-    if (!newFolderName.trim() || !selectedProjectId) return
+    if (!newFolderName.trim() || !selectedProjectId) {return}
 
     createFolder.mutate(
       {

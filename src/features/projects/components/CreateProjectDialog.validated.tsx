@@ -79,7 +79,7 @@ export function CreateProjectDialogValidated({
     try {
       // Validation passed, data is guaranteed to be correct type
       // Type guard: validation.data is guaranteed to exist when success is true
-      if (!validation.data) return
+      if (!validation.data) {return}
 
       await createProject.mutateAsync({
         name: validation.data.name,

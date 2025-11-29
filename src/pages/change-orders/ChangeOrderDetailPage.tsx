@@ -45,7 +45,7 @@ export function ChangeOrderDetailPage() {
   const [newComment, setNewComment] = useState('')
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
     await updateStatus.mutateAsync({
       changeOrderId: changeOrder.id,
       status: newStatus,
@@ -54,7 +54,7 @@ export function ChangeOrderDetailPage() {
 
   const handleAddComment = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!changeOrder || !newComment.trim()) return
+    if (!changeOrder || !newComment.trim()) {return}
 
     await addComment.mutateAsync({
       workflow_item_id: changeOrder.id,
@@ -76,7 +76,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const formatCurrency = (amount: number | null) => {
-    if (amount === null) return 'Not specified'
+    if (amount === null) {return 'Not specified'}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',

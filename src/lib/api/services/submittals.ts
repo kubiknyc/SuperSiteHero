@@ -20,7 +20,7 @@ export const submittalsApi = {
         .ilike('name_singular', 'Submittal')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'SUBMITTAL_TYPE_NOT_FOUND',
@@ -188,7 +188,7 @@ export const submittalsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -218,7 +218,7 @@ export const submittalsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalProcurement
     } catch (error) {
       throw error instanceof ApiErrorClass

@@ -34,7 +34,7 @@ export function RFIDetailPage() {
   const deleteRFI = useDeleteRFIWithNotification()
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!rfi) return
+    if (!rfi) {return}
     await updateStatus.mutateAsync({
       rfiId: rfi.id,
       newStatus: newStatus,
@@ -43,7 +43,7 @@ export function RFIDetailPage() {
 
   const handleAnswerSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!rfi || !answerText.trim()) return
+    if (!rfi || !answerText.trim()) {return}
 
     await updateRFI.mutateAsync({
       id: rfi.id,
@@ -62,7 +62,7 @@ export function RFIDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) return
+    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) {return}
     await deleteRFI.mutateAsync(rfi.id)
     navigate(-1)
   }

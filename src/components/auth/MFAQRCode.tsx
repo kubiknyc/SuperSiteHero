@@ -2,6 +2,7 @@
 // MFA QR Code display component
 
 import React from 'react'
+import DOMPurify from 'dompurify'
 import { Card } from '@/components/ui'
 import { Shield, Smartphone, Copy, Check } from 'lucide-react'
 
@@ -42,7 +43,7 @@ export function MFAQRCode({
         <div className="bg-white p-4 rounded-lg border-2 border-gray-200 flex justify-center">
           <div
             className="qr-code-container"
-            dangerouslySetInnerHTML={{ __html: qrSvg }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(qrSvg, { USE_PROFILES: { svg: true } }) }}
             style={{
               filter: 'contrast(1.1)',
               maxWidth: '280px',

@@ -44,7 +44,7 @@ WITH CHECK (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
@@ -60,7 +60,7 @@ USING (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
@@ -76,7 +76,7 @@ USING (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
@@ -96,7 +96,7 @@ WITH CHECK (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
@@ -112,7 +112,7 @@ USING (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
@@ -128,7 +128,7 @@ USING (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
@@ -144,31 +144,12 @@ USING (
     JOIN project_users pu ON pu.project_id = c.project_id
     WHERE c.id::text = (storage.foldername(name))[1]
       AND c.deleted_at IS NULL
-      AND pu.deleted_at IS NULL
+      -- project_users doesn't have deleted_at column
   )
 );
 
 -- ============================================================================
--- COMMENTS
+-- COMMENTS (commented out due to storage.objects permission requirements)
 -- ============================================================================
-
-COMMENT ON POLICY "Users can upload photos to their project checklists" ON storage.objects IS
-'Allows project members to upload photos to checklist responses';
-
-COMMENT ON POLICY "Users can view photos from their project checklists" ON storage.objects IS
-'Allows project members to view photos from checklist responses';
-
-COMMENT ON POLICY "Users can delete photos from their project checklists" ON storage.objects IS
-'Allows project members to delete photos from checklist responses';
-
-COMMENT ON POLICY "Users can upload signatures to their project checklists" ON storage.objects IS
-'Allows project members to upload signatures to checklist responses';
-
-COMMENT ON POLICY "Users can view signatures from their project checklists" ON storage.objects IS
-'Allows project members to view signatures from checklist responses';
-
-COMMENT ON POLICY "Users can update signatures in their project checklists" ON storage.objects IS
-'Allows project members to replace signatures in checklist responses';
-
-COMMENT ON POLICY "Users can delete signatures from their project checklists" ON storage.objects IS
-'Allows project members to delete signatures from checklist responses';
+-- Note: COMMENT ON POLICY for storage.objects requires special permissions
+-- The policies themselves are documented in the CREATE POLICY statements above

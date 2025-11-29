@@ -24,8 +24,11 @@ import {
   Workflow,
   CheckCircle2,
   CheckSquare,
+  MessageSquare,
+  Mail,
 } from 'lucide-react'
 import { PendingApprovalsBadge } from '@/features/approvals/components'
+import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
 import { Button } from '@/components/ui/button'
 
 interface AppLayoutProps {
@@ -45,9 +48,11 @@ interface NavItemWithBadge extends NavItem {
 const navigation: NavItemWithBadge[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderOpen },
+  { name: 'Messages', href: '/messages', icon: MessageSquare, badge: UnreadMessagesBadge },
   { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
   { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
   { name: 'Workflows', href: '/workflows', icon: Workflow },
+  { name: 'Notices', href: '/notices', icon: Mail },
   { name: 'Tasks', href: '/tasks', icon: ClipboardList },
   { name: 'Approvals', href: '/approvals', icon: CheckCircle2, badge: PendingApprovalsBadge },
   { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },

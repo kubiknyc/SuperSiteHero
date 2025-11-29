@@ -21,8 +21,8 @@ export function useChangeOrders(projectId: string | undefined) {
   return useQuery<ChangeOrderWithRelations[]>({
     queryKey: ['change-orders', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
-      if (!userProfile?.company_id) throw new Error('No company ID found')
+      if (!projectId) {throw new Error('Project ID required')}
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
 
       return changeOrdersApi.getProjectChangeOrders(projectId, userProfile.company_id)
     },
@@ -38,7 +38,7 @@ export function useChangeOrder(changeOrderId: string | undefined) {
   return useQuery<ChangeOrderDetailWithRelations | null>({
     queryKey: ['change-orders', changeOrderId],
     queryFn: async () => {
-      if (!changeOrderId) throw new Error('Change Order ID required')
+      if (!changeOrderId) {throw new Error('Change Order ID required')}
       return changeOrdersApi.getChangeOrder(changeOrderId)
     },
     enabled: !!changeOrderId,
@@ -64,7 +64,7 @@ export function useCreateChangeOrder() {
       schedule_impact?: number
       assignees?: string[]
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return changeOrdersApi.createChangeOrder(
         input.projectId,
@@ -140,7 +140,7 @@ export function useAddChangeOrderComment() {
 
   return useMutation({
     mutationFn: async (input: { workflowItemId: string; comment: string }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return changeOrdersApi.addComment(input.workflowItemId, userProfile.id, input.comment)
     },
@@ -169,7 +169,7 @@ export function useRequestBids() {
       projectId: string
       subcontractorIds: string[]
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return changeOrdersApi.requestBids(
         input.workflowItemId,
@@ -199,7 +199,7 @@ export function useAwardBid() {
 
   return useMutation({
     mutationFn: async (bidId: string) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return changeOrdersApi.awardBid(bidId, userProfile.id)
     },

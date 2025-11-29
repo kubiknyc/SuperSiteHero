@@ -3,6 +3,7 @@
 
 import { OfflineClient } from '../api/offline-client';
 import { useOfflineStore } from '@/stores/offline-store';
+import { logger } from '@/lib/utils/logger';
 
 /**
  * Background sync manager
@@ -19,11 +20,11 @@ export class SyncManager {
    * Sets up event listeners and periodic sync checks
    */
   static initialize(): () => void {
-    console.log('[SyncManager] Initializing background sync');
+    logger.log('[SyncManager] Initializing background sync');
 
     // Listen for online event
     const handleOnline = () => {
-      console.log('[SyncManager] Network restored - triggering sync');
+      logger.log('[SyncManager] Network restored - triggering sync');
       this.triggerSync();
     };
 
@@ -44,7 +45,7 @@ export class SyncManager {
 
     // Return cleanup function
     return () => {
-      console.log('[SyncManager] Cleaning up background sync');
+      logger.log('[SyncManager] Cleaning up background sync');
       window.removeEventListener('online', handleOnline);
       if (this.syncInterval) {
         clearInterval(this.syncInterval);
@@ -63,10 +64,10 @@ export class SyncManager {
       if ('sync' in registration) {
         // @ts-ignore - Background Sync API may not be in TypeScript types
         await registration.sync.register('offline-sync');
-        console.log('[SyncManager] Background sync registered with Service Worker');
+        logger.log('[SyncManager] Background sync registered with Service Worker');
       }
     } catch (error) {
-      console.error('[SyncManager] Failed to register background sync:', error);
+      logger.error('[SyncManager] Failed to register background sync:', error);
     }
   }
 
@@ -76,26 +77,26 @@ export class SyncManager {
   static async triggerSync(): Promise<void> {
     // Prevent concurrent syncs
     if (this.syncInProgress) {
-      console.log('[SyncManager] Sync already in progress, skipping');
+      logger.log('[SyncManager] Sync already in progress, skipping');
       return;
     }
 
     // Rate limiting - prevent syncing too frequently
     const now = Date.now();
     if (now - this.lastSyncAttempt < this.MIN_SYNC_INTERVAL) {
-      console.log('[SyncManager] Sync rate limited, try again later');
+      logger.log('[SyncManager] Sync rate limited, try again later');
       return;
     }
 
     // Check if online
     const { isOnline, pendingSyncs } = useOfflineStore.getState();
     if (!isOnline) {
-      console.log('[SyncManager] Cannot sync while offline');
+      logger.log('[SyncManager] Cannot sync while offline');
       return;
     }
 
     if (pendingSyncs === 0) {
-      console.log('[SyncManager] No pending syncs');
+      logger.log('[SyncManager] No pending syncs');
       return;
     }
 
@@ -103,10 +104,10 @@ export class SyncManager {
     this.lastSyncAttempt = now;
 
     try {
-      console.log(`[SyncManager] Starting sync for ${pendingSyncs} pending mutations`);
+      logger.log(`[SyncManager] Starting sync for ${pendingSyncs} pending mutations`);
       const result = await OfflineClient.processSyncQueue();
 
-      console.log(`[SyncManager] Sync completed:`, result);
+      logger.log(`[SyncManager] Sync completed:`, result);
 
       // Show notification if there are failures
       if (result.failed > 0) {
@@ -123,11 +124,11 @@ export class SyncManager {
 
       // If there are still pending syncs and online, schedule retry
       if (result.remaining > 0 && isOnline) {
-        console.log(`[SyncManager] ${result.remaining} items remaining, scheduling retry`);
+        logger.log(`[SyncManager] ${result.remaining} items remaining, scheduling retry`);
         setTimeout(() => this.triggerSync(), 10000); // Retry after 10 seconds
       }
     } catch (error) {
-      console.error('[SyncManager] Sync failed:', error);
+      logger.error('[SyncManager] Sync failed:', error);
       this.showSyncNotification('Sync failed - will retry automatically', 'error');
 
       // Schedule retry with exponential backoff
@@ -146,7 +147,7 @@ export class SyncManager {
     type: 'success' | 'warning' | 'error'
   ): void {
     // This can be integrated with your toast notification system
-    console.log(`[SyncManager] [${type.toUpperCase()}]`, message);
+    logger.log(`[SyncManager] [${type.toUpperCase()}]`, message);
 
     // If Notification API is available and permitted, show native notification
     if ('Notification' in window && Notification.permission === 'granted') {

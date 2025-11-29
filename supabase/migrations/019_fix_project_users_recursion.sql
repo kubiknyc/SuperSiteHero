@@ -15,6 +15,12 @@ DROP POLICY IF EXISTS "Company users can view project assignments" ON project_us
 DROP POLICY IF EXISTS "Users can manage project assignments" ON project_users;
 DROP POLICY IF EXISTS "Authorized users can view project assignments" ON project_users;
 
+-- Drop the new policies in case they exist
+DROP POLICY IF EXISTS "Authenticated users can view project_users" ON project_users;
+DROP POLICY IF EXISTS "Authenticated users can insert project_users" ON project_users;
+DROP POLICY IF EXISTS "Authenticated users can update project_users" ON project_users;
+DROP POLICY IF EXISTS "Authenticated users can delete project_users" ON project_users;
+
 -- 2. Create simple, non-recursive policies
 
 -- SELECT policy - allow authenticated users to see project assignments
@@ -37,13 +43,3 @@ CREATE POLICY "Authenticated users can update project_users"
 CREATE POLICY "Authenticated users can delete project_users"
   ON project_users FOR DELETE
   USING (auth.uid() IS NOT NULL);
-
--- 3. Verify policies were created
-SELECT
-  policyname,
-  cmd,
-  using::text as using_clause,
-  with_check::text as with_check_clause
-FROM pg_policies
-WHERE tablename = 'project_users'
-ORDER BY cmd, policyname;

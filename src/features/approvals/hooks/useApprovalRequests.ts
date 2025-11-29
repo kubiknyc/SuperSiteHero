@@ -32,7 +32,7 @@ export function useApprovalRequest(requestId: string | undefined) {
   return useQuery({
     queryKey: ['approval-requests', requestId],
     queryFn: async () => {
-      if (!requestId) throw new Error('Request ID required')
+      if (!requestId) {throw new Error('Request ID required')}
       return approvalRequestsApi.getRequest(requestId)
     },
     enabled: !!requestId,
@@ -46,7 +46,7 @@ export function usePendingApprovals(userId: string | undefined) {
   return useQuery({
     queryKey: ['approval-requests', 'pending', userId],
     queryFn: async () => {
-      if (!userId) throw new Error('User ID required')
+      if (!userId) {throw new Error('User ID required')}
       return approvalRequestsApi.getPendingForUser(userId)
     },
     enabled: !!userId,
@@ -66,7 +66,7 @@ export function useEntityApprovalStatus(
   return useQuery({
     queryKey: ['approval-requests', 'entity-status', entityType, entityId],
     queryFn: async () => {
-      if (!entityType || !entityId) throw new Error('Entity type and ID required')
+      if (!entityType || !entityId) {throw new Error('Entity type and ID required')}
       return approvalRequestsApi.getEntityStatus(entityType, entityId)
     },
     enabled: !!entityType && !!entityId,
@@ -80,7 +80,7 @@ export function useCanUserApprove(requestId: string | undefined, userId: string 
   return useQuery({
     queryKey: ['approval-requests', 'can-approve', requestId, userId],
     queryFn: async () => {
-      if (!requestId || !userId) return false
+      if (!requestId || !userId) {return false}
       return approvalRequestsApi.canUserApprove(requestId, userId)
     },
     enabled: !!requestId && !!userId,

@@ -38,14 +38,14 @@ export function TasksPage() {
 
   // Filter tasks
   const filteredTasks = useMemo(() => {
-    if (!tasks) return []
+    if (!tasks) {return []}
 
     return tasks.filter((task) => {
       // Status filter
-      if (statusFilter !== 'all' && task.status !== statusFilter) return false
+      if (statusFilter !== 'all' && task.status !== statusFilter) {return false}
 
       // Priority filter
-      if (priorityFilter !== 'all' && task.priority !== priorityFilter) return false
+      if (priorityFilter !== 'all' && task.priority !== priorityFilter) {return false}
 
       // Search filter
       if (searchQuery) {
@@ -64,7 +64,7 @@ export function TasksPage() {
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!filteredTasks) return { total: 0, pending: 0, inProgress: 0, completed: 0, overdue: 0 }
+    if (!filteredTasks) {return { total: 0, pending: 0, inProgress: 0, completed: 0, overdue: 0 }}
 
     const pending = filteredTasks.filter((t) => t.status === 'pending').length
     const inProgress = filteredTasks.filter((t) => t.status === 'in_progress').length

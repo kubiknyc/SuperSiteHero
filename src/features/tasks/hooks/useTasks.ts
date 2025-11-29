@@ -11,7 +11,7 @@ export function useTasks(projectId: string | undefined) {
   return useQuery({
     queryKey: ['tasks', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('tasks')
@@ -20,7 +20,7 @@ export function useTasks(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Task[]
     },
     enabled: !!projectId,
@@ -32,7 +32,7 @@ export function useTask(taskId: string | undefined) {
   return useQuery({
     queryKey: ['tasks', taskId],
     queryFn: async () => {
-      if (!taskId) throw new Error('Task ID required')
+      if (!taskId) {throw new Error('Task ID required')}
 
       const { data, error } = await supabase
         .from('tasks')
@@ -40,7 +40,7 @@ export function useTask(taskId: string | undefined) {
         .eq('id', taskId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Task
     },
     enabled: !!taskId,
@@ -54,7 +54,7 @@ export function useMyTasks(projectId?: string) {
   return useQuery({
     queryKey: ['my-tasks', projectId, userProfile?.id],
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User ID required')
+      if (!userProfile?.id) {throw new Error('User ID required')}
 
       let query = supabase
         .from('tasks')
@@ -68,7 +68,7 @@ export function useMyTasks(projectId?: string) {
 
       const { data, error } = await query.order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Task[]
     },
     enabled: !!userProfile?.id,
@@ -95,7 +95,7 @@ export function useCreateTask() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Task
     },
     onSuccess: (data) => {
@@ -118,7 +118,7 @@ export function useUpdateTask() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Task
     },
     onSuccess: (data) => {
@@ -140,7 +140,7 @@ export function useDeleteTask() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', taskId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })

@@ -110,8 +110,8 @@ export async function getProjectHealthReport(projectId: string): Promise<Project
       .eq('id', projectId)
       .single()
 
-    if (projectError) throw projectError
-    if (!project) throw new Error('Project not found')
+    if (projectError) {throw projectError}
+    if (!project) {throw new Error('Project not found')}
 
     // Get workflow items (RFIs, Change Orders, Submittals)
     const { data: workflowItems } = await supabase
@@ -265,7 +265,7 @@ export async function getWorkflowSummary(
     const byStatus: Record<string, number> = {}
     let totalCostImpact = 0
     let totalScheduleImpact = 0
-    let responseTimes: number[] = []
+    const responseTimes: number[] = []
 
     items?.forEach(item => {
       byStatus[item.status] = (byStatus[item.status] || 0) + 1
@@ -324,7 +324,7 @@ export async function getPunchListReport(projectId: string): Promise<PunchListRe
     const byTrade = new Map<string, { count: number; completed: number }>()
     const byLocation = new Map<string, number>()
     let totalDaysOpen = 0
-    let itemsOverdue = 0
+    const itemsOverdue = 0
     let rejections = 0
 
     items?.forEach(item => {
@@ -403,7 +403,7 @@ export async function getSafetyIncidentReport(
     // Aggregate incidents
     const byType: Record<string, number> = {}
     const bySeverity: Record<string, number> = {}
-    let resolutionTimes: number[] = []
+    const resolutionTimes: number[] = []
 
     incidents?.forEach(incident => {
       const incidentType = incident.incident_type ?? 'unknown'

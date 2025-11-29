@@ -24,8 +24,8 @@ function getRating(
   value: number,
   threshold: { good: number; needsImprovement: number }
 ): MetricRating {
-  if (value <= threshold.good) return 'good'
-  if (value <= threshold.needsImprovement) return 'needs-improvement'
+  if (value <= threshold.good) {return 'good'}
+  if (value <= threshold.needsImprovement) {return 'needs-improvement'}
   return 'poor'
 }
 

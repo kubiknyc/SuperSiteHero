@@ -69,7 +69,7 @@ export function useCreateChangeOrderWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     successMessage: (data) => `Change Order #${data.number} created successfully`,
@@ -100,7 +100,7 @@ export function useUpdateChangeOrderWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     successMessage: (data) => `Change Order #${data.number} updated successfully`,
@@ -126,7 +126,7 @@ export function useDeleteChangeOrderWithNotification() {
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq('id', changeOrderId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     successMessage: 'Change order deleted successfully',
     errorMessage: (error) => `Failed to delete change order: ${error.message}`,
@@ -155,7 +155,7 @@ export function useUpdateChangeOrderStatusWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     successMessage: (data) => `Status updated to "${data.status}"`,
@@ -181,7 +181,7 @@ export function useAddChangeOrderCommentWithNotification() {
     { workflow_item_id: string; comment: string }
   >({
     mutationFn: async ({ workflow_item_id, comment }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await supabase
         .from('workflow_item_comments')
@@ -194,7 +194,7 @@ export function useAddChangeOrderCommentWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemComment
     },
     successMessage: 'Comment added successfully',
@@ -236,7 +236,7 @@ export function useRequestBidsWithNotification() {
         .insert(bids as any)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ChangeOrderBid[]
     },
     successMessage: (data) => `Bids requested from ${data.length} subcontractor${data.length !== 1 ? 's' : ''}`,
@@ -260,7 +260,7 @@ export function useAwardBidWithNotification() {
     string
   >({
     mutationFn: async (bidId) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       // Get the bid to find workflow_item_id
       const { data: bid, error: bidError } = await supabase
@@ -269,8 +269,8 @@ export function useAwardBidWithNotification() {
         .eq('id', bidId)
         .single()
 
-      if (bidError) throw bidError
-      if (!bid) throw new Error('Bid not found')
+      if (bidError) {throw bidError}
+      if (!bid) {throw new Error('Bid not found')}
 
       // Unmark all other bids for this CO
       await supabase
@@ -291,7 +291,7 @@ export function useAwardBidWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ChangeOrderBid
     },
     successMessage: 'Bid awarded successfully',

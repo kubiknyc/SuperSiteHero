@@ -35,7 +35,7 @@ export function useProject(projectId: string | undefined) {
   return useQuery({
     queryKey: ['projects', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return projectsApi.getProject(projectId)
     },
     enabled: !!projectId,
@@ -117,7 +117,7 @@ export function useMyProjects() {
   return useQuery({
     queryKey: ['my-projects', userProfile?.id],
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('No user ID found')
+      if (!userProfile?.id) {throw new Error('No user ID found')}
       return projectsApi.getUserProjects(userProfile.id)
     },
     enabled: !!userProfile?.id,
@@ -134,8 +134,8 @@ export function useSearchProjects(query: string) {
   return useQuery({
     queryKey: ['projects-search', userProfile?.company_id, query],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('No company ID found')
-      if (!query) return []
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
+      if (!query) {return []}
       return projectsApi.searchProjects(userProfile.company_id, query)
     },
     enabled: !!userProfile?.company_id && !!query,

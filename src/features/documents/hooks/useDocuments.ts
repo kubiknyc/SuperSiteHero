@@ -18,7 +18,7 @@ export function useDocuments(projectId: string | undefined, folderId?: string | 
   return useQuery({
     queryKey: ['documents', projectId, folderId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('documents')
@@ -37,7 +37,7 @@ export function useDocuments(projectId: string | undefined, folderId?: string | 
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document[]
     },
     enabled: !!projectId,
@@ -51,7 +51,7 @@ export function useDocument(documentId: string | undefined) {
   return useQuery({
     queryKey: ['documents', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -59,7 +59,7 @@ export function useDocument(documentId: string | undefined) {
         .eq('id', documentId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document
     },
     enabled: !!documentId,
@@ -74,7 +74,7 @@ export function useDocumentVersions(documentId: string | undefined) {
   return useQuery({
     queryKey: ['documents', documentId, 'versions'],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       // Find all documents in this version chain
       // This includes documents that supersede this one, and documents this supersedes
@@ -85,7 +85,7 @@ export function useDocumentVersions(documentId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document[]
     },
     enabled: !!documentId,
@@ -105,7 +105,7 @@ export function useFolders(projectId: string | undefined, parentFolderId?: strin
   return useQuery({
     queryKey: ['folders', projectId, parentFolderId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('folders')
@@ -124,7 +124,7 @@ export function useFolders(projectId: string | undefined, parentFolderId?: strin
 
       const { data, error } = await query.order('sort_order', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder[]
     },
     enabled: !!projectId,
@@ -138,7 +138,7 @@ export function useFolder(folderId: string | undefined) {
   return useQuery({
     queryKey: ['folders', folderId],
     queryFn: async () => {
-      if (!folderId) throw new Error('Folder ID required')
+      if (!folderId) {throw new Error('Folder ID required')}
 
       const { data, error } = await supabase
         .from('folders')
@@ -146,7 +146,7 @@ export function useFolder(folderId: string | undefined) {
         .eq('id', folderId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder
     },
     enabled: !!folderId,
@@ -166,7 +166,7 @@ export function useCreateDocument() {
 
   return useMutation({
     mutationFn: async (document: Omit<Document, 'id' | 'created_at' | 'updated_at'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -177,7 +177,7 @@ export function useCreateDocument() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document
     },
     onSuccess: (data) => {
@@ -203,7 +203,7 @@ export function useUpdateDocument() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document
     },
     onSuccess: (data) => {
@@ -229,7 +229,7 @@ export function useDeleteDocument() {
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq('id', documentId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['documents'] })
@@ -250,7 +250,7 @@ export function useCreateFolder() {
 
   return useMutation({
     mutationFn: async (folder: Omit<Folder, 'id' | 'created_at' | 'updated_at'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await supabase
         .from('folders')
@@ -261,7 +261,7 @@ export function useCreateFolder() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder
     },
     onSuccess: (data) => {
@@ -287,7 +287,7 @@ export function useUpdateFolder() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder
     },
     onSuccess: (data) => {
@@ -312,7 +312,7 @@ export function useDeleteFolder() {
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq('id', folderId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['folders'] })
@@ -331,7 +331,7 @@ export function useDocumentVersionHistory(documentId: string | undefined) {
   return useQuery({
     queryKey: ['documents', documentId, 'version-history'],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
       return await documentsApi.getDocumentVersions(documentId)
     },
     enabled: !!documentId,
@@ -345,7 +345,7 @@ export function useLatestDocumentVersion(documentId: string | undefined) {
   return useQuery({
     queryKey: ['documents', documentId, 'latest-version'],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
       return await documentsApi.getLatestVersion(documentId)
     },
     enabled: !!documentId,

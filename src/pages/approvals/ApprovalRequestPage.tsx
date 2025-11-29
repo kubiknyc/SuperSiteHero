@@ -69,7 +69,7 @@ export function ApprovalRequestPage() {
   const currentStep = steps.find((s) => s.step_order === request?.current_step)
 
   const handleApprove = async () => {
-    if (!id) return
+    if (!id) {return}
     try {
       await approveMutation.mutateAsync({ requestId: id })
     } catch (error) {
@@ -81,7 +81,7 @@ export function ApprovalRequestPage() {
     conditions: string,
     comment?: string
   ) => {
-    if (!id) return
+    if (!id) {return}
     try {
       await approveWithConditionsMutation.mutateAsync({
         requestId: id,
@@ -95,7 +95,7 @@ export function ApprovalRequestPage() {
   }
 
   const handleReject = async () => {
-    if (!id || !rejectComment.trim()) return
+    if (!id || !rejectComment.trim()) {return}
     try {
       await rejectMutation.mutateAsync({
         requestId: id,
@@ -109,7 +109,7 @@ export function ApprovalRequestPage() {
   }
 
   const handleCancel = async () => {
-    if (!id) return
+    if (!id) {return}
     try {
       await cancelMutation.mutateAsync(id)
       navigate('/approvals')
@@ -119,7 +119,7 @@ export function ApprovalRequestPage() {
   }
 
   const handleAddComment = async () => {
-    if (!id || !newComment.trim()) return
+    if (!id || !newComment.trim()) {return}
     try {
       await addCommentMutation.mutateAsync({
         requestId: id,

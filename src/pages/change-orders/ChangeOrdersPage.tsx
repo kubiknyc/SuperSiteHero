@@ -31,7 +31,7 @@ export function ChangeOrdersPage() {
   const { data: workflowType } = useQuery({
     queryKey: ['workflow-type-change-order', userProfile?.company_id],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('No company ID found')
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
 
       const { data, error } = await supabase
         .from('workflow_types')
@@ -40,7 +40,7 @@ export function ChangeOrdersPage() {
         .ilike('name_singular', '%change%order%')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!userProfile?.company_id,
@@ -50,14 +50,14 @@ export function ChangeOrdersPage() {
 
   // Filter change orders
   const filteredChangeOrders = useMemo(() => {
-    if (!changeOrders) return []
+    if (!changeOrders) {return []}
 
     return changeOrders.filter((co) => {
       // Status filter
-      if (statusFilter !== 'all' && co.status !== statusFilter) return false
+      if (statusFilter !== 'all' && co.status !== statusFilter) {return false}
 
       // Priority filter
-      if (priorityFilter !== 'all' && co.priority !== priorityFilter) return false
+      if (priorityFilter !== 'all' && co.priority !== priorityFilter) {return false}
 
       // Search filter
       if (searchQuery) {
@@ -77,7 +77,7 @@ export function ChangeOrdersPage() {
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!filteredChangeOrders) return { total: 0, draft: 0, pending: 0, approved: 0, totalCost: 0 }
+    if (!filteredChangeOrders) {return { total: 0, draft: 0, pending: 0, approved: 0, totalCost: 0 }}
 
     const draft = filteredChangeOrders.filter((co) => co.status === 'draft').length
     const pending = filteredChangeOrders.filter((co) => co.status === 'submitted' || co.status === 'under_review').length

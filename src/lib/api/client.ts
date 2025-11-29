@@ -87,7 +87,7 @@ class ApiClient {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T[]
     } catch (error) {
       throw this.handleError(error)
@@ -155,7 +155,7 @@ class ApiClient {
 
       const { data, error, count } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return { data: data as T[], count: count || 0 }
     } catch (error) {
       throw this.handleError(error)
@@ -177,7 +177,7 @@ class ApiClient {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T
     } catch (error) {
       throw this.handleError(error)
@@ -195,7 +195,7 @@ class ApiClient {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T
     } catch (error) {
       throw this.handleError(error)
@@ -212,7 +212,7 @@ class ApiClient {
         .insert(records)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T[]
     } catch (error) {
       throw this.handleError(error)
@@ -235,7 +235,7 @@ class ApiClient {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T
     } catch (error) {
       throw this.handleError(error)
@@ -252,7 +252,7 @@ class ApiClient {
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw this.handleError(error)
     }
@@ -270,7 +270,7 @@ class ApiClient {
       const result = callback(query)
       const { data, error } = await result
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T[]
     } catch (error) {
       throw this.handleError(error)

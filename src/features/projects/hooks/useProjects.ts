@@ -19,11 +19,12 @@ export function useProjects() {
 
       const { data, error } = await supabase
         .from('projects')
-        .select('*')
+        .select('id, name, status, address, start_date, end_date, company_id, created_at, budget')
         .eq('company_id', userProfile.company_id)
         .order('created_at', { ascending: false })
+        .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Project[]
     },
     enabled: !!userProfile?.company_id,
@@ -35,7 +36,7 @@ export function useProject(projectId: string | undefined) {
   return useQuery({
     queryKey: ['projects', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('projects')
@@ -43,7 +44,7 @@ export function useProject(projectId: string | undefined) {
         .eq('id', projectId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Project
     },
     enabled: !!projectId,
@@ -70,7 +71,7 @@ export function useCreateProject() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Assign the creator to the project
       if (userProfile?.id) {
@@ -108,7 +109,7 @@ export function useUpdateProject() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Project
     },
     onSuccess: (data) => {
@@ -129,7 +130,7 @@ export function useDeleteProject() {
         .delete()
         .eq('id', projectId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
@@ -144,17 +145,18 @@ export function useMyProjects() {
   return useQuery({
     queryKey: ['my-projects', userProfile?.id],
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('No user ID found')
+      if (!userProfile?.id) {throw new Error('No user ID found')}
 
-      // Query project_users to get user's projects
+      // Query project_users to get user's projects with specific columns
       const { data, error } = await supabase
         .from('project_users')
         .select(`
-          project:projects(*)
+          project:projects(id, name, status, address, start_date, end_date, company_id, created_at, budget)
         `)
         .eq('user_id', userProfile.id)
+        .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Extract projects from the joined data
       return data.map((assignment: any) => assignment.project) as Project[]

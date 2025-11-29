@@ -88,7 +88,7 @@ export const rfisApiOptimized = {
         .ilike('name_singular', 'RFI')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'RFI_TYPE_NOT_FOUND',
@@ -244,7 +244,7 @@ export const rfisApiOptimized = {
     viewType: 'list' | 'card' = 'list'
   ): Promise<RFIEssential[] | RFICard[]> {
     try {
-      if (rfiIds.length === 0) return []
+      if (rfiIds.length === 0) {return []}
 
       const fields = RFI_FIELD_SELECTIONS[viewType]
       const { data, error } = await supabase
@@ -298,7 +298,7 @@ export const rfisApiOptimized = {
         .eq('workflow_type_id', workflowTypeId)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       const summary = {
         total: count || 0,

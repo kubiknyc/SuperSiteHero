@@ -17,6 +17,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 
 interface CreatePunchItemDialogProps {
   projectId: string
@@ -43,6 +44,7 @@ export function CreatePunchItemDialog({
   const [priority, setPriority] = useState<Priority>('normal')
   const [status, setStatus] = useState<PunchItemStatus>('open')
   const [dueDate, setDueDate] = useState('')
+  const [assignee, setAssignee] = useState<Assignee | null>(null)
 
   // Reset form when dialog closes
   React.useEffect(() => {
@@ -58,6 +60,7 @@ export function CreatePunchItemDialog({
       setPriority('normal')
       setStatus('open')
       setDueDate('')
+      setAssignee(null)
     }
   }, [open])
 
@@ -83,8 +86,10 @@ export function CreatePunchItemDialog({
         status,
         due_date: dueDate || null,
         number: null,
-        subcontractor_id: null,
-        assigned_to: null,
+        location: null,  // Generated column
+        punch_list_id: null,  // Optional reference to punch list
+        subcontractor_id: assignee?.type === 'subcontractor' ? assignee.id : null,
+        assigned_to: assignee?.type === 'user' ? assignee.id : null,
         completed_date: null,
         verified_date: null,
         marked_complete_by: null,
@@ -179,6 +184,17 @@ export function CreatePunchItemDialog({
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
+              />
+            </div>
+
+            {/* Assignee */}
+            <div className="md:col-span-2">
+              <AssigneeSelector
+                projectId={projectId}
+                value={assignee}
+                onChange={setAssignee}
+                label="Assign To"
+                placeholder="Select team member or subcontractor..."
               />
             </div>
 

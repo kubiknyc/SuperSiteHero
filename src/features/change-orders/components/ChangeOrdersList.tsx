@@ -37,7 +37,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
   }
 
   const formatCurrency = (amount: number | null) => {
-    if (amount === null) return 'TBD'
+    if (amount === null) {return 'TBD'}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',

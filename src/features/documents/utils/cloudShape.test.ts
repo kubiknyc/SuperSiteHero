@@ -12,7 +12,7 @@ function generateCloudPath(
   height: number,
   numBumps: number = 8
 ): string {
-  if (width === 0 || height === 0) return ''
+  if (width === 0 || height === 0) {return ''}
 
   const absWidth = Math.abs(width)
   const absHeight = Math.abs(height)

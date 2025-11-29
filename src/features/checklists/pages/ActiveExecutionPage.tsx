@@ -68,7 +68,7 @@ export function ActiveExecutionPage() {
     const completed = execution.responses.filter((r) => {
       // Consider a response completed if it has data
       const data = r.response_data as any
-      if (!data) return false
+      if (!data) {return false}
 
       switch (r.item_type) {
         case 'checkbox':
@@ -95,7 +95,7 @@ export function ActiveExecutionPage() {
 
   // Group responses by section
   const sections = useMemo(() => {
-    if (!execution?.responses || !templateItems.length) return []
+    if (!execution?.responses || !templateItems.length) {return []}
 
     // Create a map of responses by template item ID for quick lookup
     const responseMap = new Map(
@@ -142,7 +142,7 @@ export function ActiveExecutionPage() {
   }
 
   const handleSaveMetadata = async () => {
-    if (!executionId) return
+    if (!executionId) {return}
 
     try {
       await updateExecution.mutateAsync({
@@ -160,7 +160,7 @@ export function ActiveExecutionPage() {
   }
 
   const handleSubmit = async () => {
-    if (!executionId || !execution) return
+    if (!executionId || !execution) {return}
 
     // Check if all required items are completed
     const requiredItems = templateItems.filter((item) => item.is_required)
@@ -169,10 +169,10 @@ export function ActiveExecutionPage() {
 
     const missingRequired = requiredItems.filter((item) => {
       const response = responseMap.get(item.id)
-      if (!response) return true
+      if (!response) {return true}
 
       const data = response.response_data as any
-      if (!data) return true
+      if (!data) {return true}
 
       switch (response.item_type) {
         case 'checkbox':

@@ -332,7 +332,7 @@ export class OfflineClient {
       const sortedMutations = pendingMutations.sort((a, b) => {
         const priorityOrder = { high: 0, normal: 1, low: 2 };
         const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
-        if (priorityDiff !== 0) return priorityDiff;
+        if (priorityDiff !== 0) {return priorityDiff;}
         return a.timestamp - b.timestamp;
       });
 

@@ -52,7 +52,7 @@ export function SyncStatusIndicator() {
   }
 
   const content = getIndicatorContent()
-  if (!content) return null
+  if (!content) {return null}
 
   return (
     <div

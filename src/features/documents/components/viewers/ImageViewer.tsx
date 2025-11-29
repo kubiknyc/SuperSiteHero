@@ -137,13 +137,13 @@ export function ImageViewer({
 
   // Pan handlers
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (zoom <= 100) return // Only allow pan when zoomed in
+    if (zoom <= 100) {return} // Only allow pan when zoomed in
     setIsDragging(true)
     setDragStart({ x: e.clientX - panX, y: e.clientY - panY })
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || zoom <= 100) return
+    if (!isDragging || zoom <= 100) {return}
     setPanX(e.clientX - dragStart.x)
     setPanY(e.clientY - dragStart.y)
   }

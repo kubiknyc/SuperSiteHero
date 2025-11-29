@@ -10,7 +10,7 @@ export function useWorkflowItems(projectId: string | undefined, workflowTypeId?:
   return useQuery({
     queryKey: ['workflow-items', projectId, workflowTypeId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       return workflowsApi.getWorkflowItemsByProject(projectId, workflowTypeId)
     },
@@ -23,7 +23,7 @@ export function useWorkflowItem(workflowItemId: string | undefined) {
   return useQuery({
     queryKey: ['workflow-items', workflowItemId],
     queryFn: async () => {
-      if (!workflowItemId) throw new Error('Workflow item ID required')
+      if (!workflowItemId) {throw new Error('Workflow item ID required')}
 
       return workflowsApi.getWorkflowItem(workflowItemId)
     },

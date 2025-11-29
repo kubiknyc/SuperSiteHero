@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCreateDocumentVersion } from '../hooks/useDocuments'
+import { validateFile } from '../utils/fileUtils'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -46,6 +47,13 @@ export function UploadDocumentVersion({
       return
     }
 
+    // Validate file before upload
+    const validation = validateFile(file)
+    if (!validation.valid) {
+      toast.error(validation.error || 'Invalid file type or size')
+      return
+    }
+
     setUploading(true)
 
     try {
@@ -58,7 +66,7 @@ export function UploadDocumentVersion({
         .from('documents')
         .upload(filePath, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {throw uploadError}
 
       // Get public URL for the uploaded file
       const {

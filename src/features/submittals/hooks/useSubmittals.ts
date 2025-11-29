@@ -16,7 +16,7 @@ export function useSubmittalWorkflowType() {
   return useQuery({
     queryKey: ['submittal-workflow-type', userProfile?.company_id],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('Company ID required')
+      if (!userProfile?.company_id) {throw new Error('Company ID required')}
       return submittalsApi.getSubmittalWorkflowType(userProfile.company_id)
     },
     enabled: !!userProfile?.company_id,
@@ -31,7 +31,7 @@ export function useSubmittals(projectId: string | undefined, workflowTypeId: str
   return useQuery({
     queryKey: ['submittals', projectId, workflowTypeId],
     queryFn: async () => {
-      if (!projectId || !workflowTypeId) throw new Error('Project ID and workflow type ID required')
+      if (!projectId || !workflowTypeId) {throw new Error('Project ID and workflow type ID required')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -41,7 +41,7 @@ export function useSubmittals(projectId: string | undefined, workflowTypeId: str
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!projectId && !!workflowTypeId,
@@ -55,7 +55,7 @@ export function useSubmittal(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['submittals', submittalId],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -63,7 +63,7 @@ export function useSubmittal(submittalId: string | undefined) {
         .eq('id', submittalId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     enabled: !!submittalId,
@@ -97,7 +97,7 @@ export function useMySubmittals(projectId?: string | undefined) {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!userProfile?.id && !!workflowType?.id,
@@ -115,7 +115,7 @@ export function useSubmittalsByStatus(
   return useQuery({
     queryKey: ['submittals', projectId, workflowTypeId, 'status', status],
     queryFn: async () => {
-      if (!projectId || !workflowTypeId) throw new Error('Project ID and workflow type ID required')
+      if (!projectId || !workflowTypeId) {throw new Error('Project ID and workflow type ID required')}
 
       let query = supabase
         .from('workflow_items')
@@ -130,7 +130,7 @@ export function useSubmittalsByStatus(
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!projectId && !!workflowTypeId,
@@ -144,7 +144,7 @@ export function useSubmittalComments(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['submittals', submittalId, 'comments'],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('workflow_item_comments')
@@ -153,7 +153,7 @@ export function useSubmittalComments(submittalId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!submittalId,
@@ -167,7 +167,7 @@ export function useSubmittalProcurement(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['submittals', submittalId, 'procurement'],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittal_procurement')
@@ -176,7 +176,7 @@ export function useSubmittalProcurement(submittalId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalProcurement[]
     },
     enabled: !!submittalId,

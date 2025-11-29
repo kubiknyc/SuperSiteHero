@@ -10,7 +10,7 @@ interface IssuesSectionProps {
 }
 
 export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSectionProps) {
-  if (!draft) return null
+  if (!draft) {return null}
 
   return (
     <Card>

@@ -38,7 +38,7 @@ export function DailyReportsPage() {
 
   // Filter reports by date if date filter is set
   const filteredReports = reports?.filter((report) => {
-    if (!dateFilter) return true
+    if (!dateFilter) {return true}
     return report.report_date === dateFilter
   })
 

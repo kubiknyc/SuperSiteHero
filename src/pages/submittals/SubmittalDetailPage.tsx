@@ -31,7 +31,7 @@ export function SubmittalDetailPage() {
   const deleteSubmittal = useDeleteSubmittalWithNotification()
 
   const handleStatusChange = async (newStatus: string) => {
-    if (!submittal) return
+    if (!submittal) {return}
     await updateStatus.mutateAsync({
       submittalId: submittal.id,
       status: newStatus,
@@ -46,7 +46,7 @@ export function SubmittalDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!submittal || !window.confirm('Are you sure you want to delete this submittal?')) return
+    if (!submittal || !window.confirm('Are you sure you want to delete this submittal?')) {return}
     await deleteSubmittal.mutateAsync(submittal.id)
     navigate(-1)
   }

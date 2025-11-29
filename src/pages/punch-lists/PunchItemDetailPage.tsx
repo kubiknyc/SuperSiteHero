@@ -30,7 +30,7 @@ export function PunchItemDetailPage() {
   const deletePunchItem = useDeletePunchItemWithNotification()
 
   const handleStatusChange = async (newStatus: PunchItemStatus) => {
-    if (!punchItem) return
+    if (!punchItem) {return}
 
     // If rejecting, require notes
     if (newStatus === 'rejected' && !showRejectionForm) {
@@ -46,7 +46,7 @@ export function PunchItemDetailPage() {
 
   const handleReject = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!punchItem || !rejectionNotes.trim()) return
+    if (!punchItem || !rejectionNotes.trim()) {return}
 
     // Update with rejection notes (would need to modify the mutation to accept notes)
     await updateStatus.mutateAsync({
@@ -59,7 +59,7 @@ export function PunchItemDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!punchItem || !window.confirm(`Are you sure you want to delete "${punchItem.title}"?`)) return
+    if (!punchItem || !window.confirm(`Are you sure you want to delete "${punchItem.title}"?`)) {return}
     await deletePunchItem.mutateAsync(punchItem.id)
     navigate('/punch-lists')
   }

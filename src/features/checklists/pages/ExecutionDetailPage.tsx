@@ -38,7 +38,7 @@ export function ExecutionDetailPage() {
 
   // Group responses by section
   const sections = useMemo(() => {
-    if (!execution?.responses || !templateItems.length) return []
+    if (!execution?.responses || !templateItems.length) {return []}
 
     const responseMap = new Map(
       execution.responses.map((r) => [r.checklist_template_item_id, r])

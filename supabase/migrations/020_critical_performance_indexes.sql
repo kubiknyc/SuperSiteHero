@@ -17,8 +17,7 @@
 -- The project_users table is checked by RLS policies on nearly every query
 -- This composite index is essential for performance
 CREATE INDEX IF NOT EXISTS idx_project_users_user_project
-  ON project_users(user_id, project_id)
-  WHERE deleted_at IS NULL;
+  ON project_users(user_id, project_id);
 
 -- ============================================
 -- WORKFLOW ITEMS - Most Frequently Queried Table
@@ -85,7 +84,7 @@ CREATE INDEX IF NOT EXISTS idx_documents_project_status
 -- ============================================
 -- Filter incidents by project and severity (reporting)
 CREATE INDEX IF NOT EXISTS idx_safety_incidents_project_severity
-  ON safety_incidents(project_id, severity_level)
+  ON safety_incidents(project_id, severity)
   WHERE deleted_at IS NULL;
 
 -- Recent incidents query optimization
@@ -98,7 +97,7 @@ CREATE INDEX IF NOT EXISTS idx_safety_incidents_project_date
 -- ============================================
 -- Status filtering for inspections
 CREATE INDEX IF NOT EXISTS idx_inspections_project_status
-  ON inspections(project_id, inspection_status)
+  ON inspections(project_id, status)
   WHERE deleted_at IS NULL;
 
 -- Permit lookups by project

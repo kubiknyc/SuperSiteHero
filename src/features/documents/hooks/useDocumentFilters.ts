@@ -127,7 +127,7 @@ export function useAvailableDisciplines(projectId: string) {
         .not('discipline', 'is', null)
         .order('discipline', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Get unique disciplines
       const disciplines = new Set<string>()
@@ -164,7 +164,7 @@ export function useDocumentStats(projectId: string) {
         .eq('project_id', projectId)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       const stats: DocumentStats = {
         totalDocuments: data?.length || 0,

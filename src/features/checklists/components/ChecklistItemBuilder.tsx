@@ -65,7 +65,7 @@ export function ChecklistItemBuilder({
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault()
-    if (draggedIndex === null || draggedIndex === index) return
+    if (draggedIndex === null || draggedIndex === index) {return}
 
     const newItems = [...items]
     const draggedItem = newItems[draggedIndex]
@@ -90,7 +90,7 @@ export function ChecklistItemBuilder({
   }
 
   const handleAddItem = () => {
-    if (!newItem.label.trim()) return
+    if (!newItem.label.trim()) {return}
 
     onAddItem({
       label: newItem.label,

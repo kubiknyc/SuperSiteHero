@@ -13,7 +13,11 @@ const mockSupabaseChain = {
   delete: vi.fn().mockReturnThis(),
   eq: vi.fn().mockReturnThis(),
   single: vi.fn().mockReturnThis(),
-  order: vi.fn().mockResolvedValue({ data: [], error: null }),
+  order: vi.fn().mockReturnThis(),
+  // Make the chain thenable (promise-like) so it can be awaited
+  then: vi.fn(function(this: any, onFulfilled: any) {
+    return Promise.resolve({ data: [], error: null }).then(onFulfilled)
+  }),
 }
 
 vi.mock('@/lib/supabase', () => ({
@@ -25,14 +29,18 @@ vi.mock('@/lib/supabase', () => ({
 describe('approvalWorkflowsApi', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    // Reset mock chain
+    // Reset mock chain - all methods return 'this' for chaining
     mockSupabaseChain.select.mockReturnThis()
     mockSupabaseChain.insert.mockReturnThis()
     mockSupabaseChain.update.mockReturnThis()
     mockSupabaseChain.delete.mockReturnThis()
     mockSupabaseChain.eq.mockReturnThis()
     mockSupabaseChain.single.mockReturnThis()
-    mockSupabaseChain.order.mockResolvedValue({ data: [], error: null })
+    mockSupabaseChain.order.mockReturnThis()
+    // Reset the thenable to resolve with empty data
+    mockSupabaseChain.then.mockImplementation(function(this: any, onFulfilled: any) {
+      return Promise.resolve({ data: [], error: null }).then(onFulfilled)
+    })
   })
 
   describe('getWorkflows', () => {
@@ -85,7 +93,9 @@ describe('approvalWorkflowsApi', () => {
     })
 
     it('should sort steps by step_order', async () => {
-      mockSupabaseChain.order.mockResolvedValue({ data: mockWorkflows, error: null })
+      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
+        Promise.resolve({ data: mockWorkflows, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalWorkflowsApi.getWorkflows({ company_id: 'comp-1' })
 
@@ -101,7 +111,9 @@ describe('approvalWorkflowsApi', () => {
     })
 
     it('should filter by workflow type', async () => {
-      mockSupabaseChain.order.mockResolvedValue({ data: [], error: null })
+      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
+        Promise.resolve({ data: [], error: null }).then(onFulfilled)
+      )
 
       await approvalWorkflowsApi.getWorkflows({
         company_id: 'comp-1',
@@ -112,7 +124,9 @@ describe('approvalWorkflowsApi', () => {
     })
 
     it('should filter by is_active status', async () => {
-      mockSupabaseChain.order.mockResolvedValue({ data: [], error: null })
+      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
+        Promise.resolve({ data: [], error: null }).then(onFulfilled)
+      )
 
       await approvalWorkflowsApi.getWorkflows({
         company_id: 'comp-1',
@@ -213,8 +227,12 @@ describe('approvalWorkflowsApi', () => {
     ]
 
     it('should create a workflow with steps', async () => {
-      mockSupabaseChain.single.mockResolvedValue({ data: createdWorkflow, error: null })
-      mockSupabaseChain.select.mockResolvedValue({ data: createdSteps, error: null })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: createdWorkflow, error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: createdSteps, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalWorkflowsApi.createWorkflow(createInput)
 
@@ -265,8 +283,12 @@ describe('approvalWorkflowsApi', () => {
         steps: [],
       }
 
-      mockSupabaseChain.eq.mockResolvedValue({ error: null })
-      mockSupabaseChain.single.mockResolvedValue({ data: mockUpdatedWorkflow, error: null })
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ error: null }).then(onFulfilled)
+      )
+      mockSupabaseChain.then.mockImplementationOnce((onFulfilled) =>
+        Promise.resolve({ data: mockUpdatedWorkflow, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalWorkflowsApi.updateWorkflow('wf-1', {
         name: 'Updated Name',
@@ -284,7 +306,9 @@ describe('approvalWorkflowsApi', () => {
 
   describe('deleteWorkflow', () => {
     it('should soft delete a workflow', async () => {
-      mockSupabaseChain.eq.mockResolvedValue({ error: null })
+      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
+        Promise.resolve({ error: null }).then(onFulfilled)
+      )
 
       await approvalWorkflowsApi.deleteWorkflow('wf-1')
 
@@ -329,7 +353,9 @@ describe('approvalWorkflowsApi', () => {
     })
 
     it('should throw error for missing new name', async () => {
-      mockSupabaseChain.single.mockResolvedValue({ data: existingWorkflow, error: null })
+      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
+        Promise.resolve({ data: existingWorkflow, error: null }).then(onFulfilled)
+      )
 
       await expect(approvalWorkflowsApi.duplicateWorkflow('wf-1', ''))
         .rejects.toThrow('New workflow name is required')
@@ -349,7 +375,9 @@ describe('approvalWorkflowsApi', () => {
         },
       ]
 
-      mockSupabaseChain.order.mockResolvedValue({ data: mockWorkflows, error: null })
+      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
+        Promise.resolve({ data: mockWorkflows, error: null }).then(onFulfilled)
+      )
 
       const result = await approvalWorkflowsApi.getActiveWorkflowsByType('comp-1', 'document')
 

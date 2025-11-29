@@ -9,7 +9,7 @@ export const safeFormat = (
   formatStr: string = 'MMM d, yyyy',
   fallback: string = 'N/A'
 ): string => {
-  if (!dateValue) return fallback
+  if (!dateValue) {return fallback}
 
   try {
     let date: Date
@@ -40,7 +40,7 @@ export const safeFormatWithTime = (dateValue: string | null | undefined, fallbac
 }
 
 export const safeGetDay = (dateValue: string | null | undefined): number | null => {
-  if (!dateValue) return null
+  if (!dateValue) {return null}
 
   try {
     const date = parseISO(dateValue)

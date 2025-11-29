@@ -83,7 +83,7 @@ export function SubmitForApprovalButton({
   }
 
   const handleSubmit = async () => {
-    if (!selectedWorkflow) return
+    if (!selectedWorkflow) {return}
 
     try {
       await createRequest.mutateAsync({

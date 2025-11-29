@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import DOMPurify from 'dompurify'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { enrollMFA, verifyMFAEnrollment, formatTOTPSecret, generateBackupCodes, updateUserMFAPreferences } from '@/lib/auth/mfa'
 import { Button, Card, Input, Alert, Badge } from '@/components/ui'
@@ -41,7 +42,7 @@ export function MFASetupPage() {
   }
 
   const handleVerifyCode = async () => {
-    if (!enrollmentData || verificationCode.length !== 6) return
+    if (!enrollmentData || verificationCode.length !== 6) {return}
 
     setIsVerifying(true)
     try {
@@ -196,7 +197,7 @@ Use these codes if you lose access to your authenticator app.
               </p>
 
               <div className="bg-white p-4 rounded-lg border flex justify-center">
-                <div dangerouslySetInnerHTML={{ __html: enrollmentData.qr }} />
+                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(enrollmentData.qr, { USE_PROFILES: { svg: true } }) }} />
               </div>
 
               <div className="border-t pt-4">

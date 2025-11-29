@@ -14,7 +14,7 @@ export function useDailyReports(projectId: string | undefined) {
   return useQuery({
     queryKey: ['daily-reports', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return dailyReportsApi.getProjectReports(projectId)
     },
     enabled: !!projectId,
@@ -29,7 +29,7 @@ export function useDailyReport(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-reports', reportId],
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
       return dailyReportsApi.getReport(reportId)
     },
     enabled: !!reportId,

@@ -22,7 +22,7 @@ console.log('🔍 Verifying RLS Policy Fix...\n');
 console.log('1️⃣ Authenticating as kubiknyc@gmail.com...');
 const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
   email: 'kubiknyc@gmail.com',
-  password: process.env.USER_PASSWORD || 'Alfa134679!' // You may need to provide the actual password
+  password: process.env.USER_PASSWORD || (() => { throw new Error('USER_PASSWORD environment variable is required') })()
 });
 
 if (authError) {

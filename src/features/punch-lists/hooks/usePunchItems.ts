@@ -9,7 +9,7 @@ export function usePunchItems(projectId: string | undefined) {
   return useQuery({
     queryKey: ['punch-items', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       return punchListsApi.getPunchItemsByProject(projectId)
     },
@@ -22,7 +22,7 @@ export function usePunchItem(punchItemId: string | undefined) {
   return useQuery({
     queryKey: ['punch-items', punchItemId],
     queryFn: async () => {
-      if (!punchItemId) throw new Error('Punch item ID required')
+      if (!punchItemId) {throw new Error('Punch item ID required')}
 
       return punchListsApi.getPunchItem(punchItemId)
     },
@@ -37,7 +37,7 @@ export function useCreatePunchItem() {
 
   return useMutation({
     mutationFn: async (punchItem: Omit<PunchItem, 'id' | 'created_at' | 'updated_at'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       return punchListsApi.createPunchItem(punchItem)
     },

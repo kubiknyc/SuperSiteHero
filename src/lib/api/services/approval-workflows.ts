@@ -52,7 +52,7 @@ export const approvalWorkflowsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Sort steps by step_order within each workflow
       return (data || []).map((workflow: ApprovalWorkflow) => ({
@@ -93,7 +93,7 @@ export const approvalWorkflowsApi = {
         .eq('id', workflowId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'WORKFLOW_NOT_FOUND',
@@ -167,7 +167,7 @@ export const approvalWorkflowsApi = {
         .select()
         .single()
 
-      if (workflowError) throw workflowError
+      if (workflowError) {throw workflowError}
 
       // Create steps
       const stepsToInsert = input.steps.map((step, index) => ({
@@ -226,9 +226,9 @@ export const approvalWorkflowsApi = {
 
       // Build update object
       const updates: Record<string, any> = {}
-      if (input.name !== undefined) updates.name = input.name.trim()
-      if (input.description !== undefined) updates.description = input.description
-      if (input.is_active !== undefined) updates.is_active = input.is_active
+      if (input.name !== undefined) {updates.name = input.name.trim()}
+      if (input.description !== undefined) {updates.description = input.description}
+      if (input.is_active !== undefined) {updates.is_active = input.is_active}
 
       // Update workflow if there are field updates
       if (Object.keys(updates).length > 0) {
@@ -237,7 +237,7 @@ export const approvalWorkflowsApi = {
           .update(updates)
           .eq('id', workflowId)
 
-        if (updateError) throw updateError
+        if (updateError) {throw updateError}
       }
 
       // Replace steps if provided
@@ -248,7 +248,7 @@ export const approvalWorkflowsApi = {
           .delete()
           .eq('workflow_id', workflowId)
 
-        if (deleteError) throw deleteError
+        if (deleteError) {throw deleteError}
 
         // Insert new steps
         if (input.steps.length > 0) {
@@ -267,7 +267,7 @@ export const approvalWorkflowsApi = {
             .from('approval_steps')
             .insert(stepsToInsert)
 
-          if (insertError) throw insertError
+          if (insertError) {throw insertError}
         }
       }
 
@@ -302,7 +302,7 @@ export const approvalWorkflowsApi = {
         .update({ is_active: false })
         .eq('id', workflowId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error

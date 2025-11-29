@@ -106,7 +106,7 @@ export function DocumentUpload({
 
   // Handle upload
   const handleUpload = async () => {
-    if (!selectedFile) return
+    if (!selectedFile) {return}
 
     setIsUploading(true)
     setUploadProgress(0)
@@ -220,7 +220,7 @@ export function DocumentUpload({
 
   // Format file size
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes'
+    if (bytes === 0) {return '0 Bytes'}
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))

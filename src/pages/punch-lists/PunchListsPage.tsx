@@ -43,21 +43,21 @@ export function PunchListsPage() {
 
   // Filter punch items
   const filteredPunchItems = useMemo(() => {
-    if (!punchItems) return []
+    if (!punchItems) {return []}
 
     return punchItems.filter((item) => {
       // Status filter
-      if (statusFilter !== 'all' && item.status !== statusFilter) return false
+      if (statusFilter !== 'all' && item.status !== statusFilter) {return false}
 
       // Priority filter
-      if (priorityFilter !== 'all' && item.priority !== priorityFilter) return false
+      if (priorityFilter !== 'all' && item.priority !== priorityFilter) {return false}
 
       // Trade search
       if (tradeSearch) {
         const query = tradeSearch.toLowerCase()
         const trade = item.trade?.toLowerCase() || ''
         const title = item.title?.toLowerCase() || ''
-        if (!trade.includes(query) && !title.includes(query)) return false
+        if (!trade.includes(query) && !title.includes(query)) {return false}
       }
 
       return true

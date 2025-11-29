@@ -85,7 +85,7 @@ export function mergeErrors(
  * Check if errors object has any errors
  */
 export function hasErrors(errors?: Record<string, string[]>): boolean {
-  if (!errors) return false
+  if (!errors) {return false}
   return Object.values(errors).some((msgs) => msgs.length > 0)
 }
 
@@ -93,7 +93,7 @@ export function hasErrors(errors?: Record<string, string[]>): boolean {
  * Get first error message from errors object
  */
 export function getFirstError(errors?: Record<string, string[]>): string | undefined {
-  if (!errors) return undefined
+  if (!errors) {return undefined}
 
   for (const messages of Object.values(errors)) {
     if (messages.length > 0) {
@@ -108,7 +108,7 @@ export function getFirstError(errors?: Record<string, string[]>): string | undef
  * Format validation errors for display
  */
 export function formatValidationErrors(errors?: Record<string, string[]>): string {
-  if (!errors) return ''
+  if (!errors) {return ''}
 
   return Object.entries(errors)
     .flatMap(([field, messages]) =>

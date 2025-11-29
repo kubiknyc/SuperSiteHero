@@ -35,10 +35,10 @@ export async function checkMFAStatus(): Promise<{
 }> {
   try {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) throw new Error('No authenticated user')
+    if (!user) {throw new Error('No authenticated user')}
 
     const { data, error } = await supabase.auth.mfa.listFactors()
-    if (error) throw error
+    if (error) {throw error}
 
     const verifiedFactors = data?.totp?.filter(f => f.status === 'verified') || []
 
@@ -71,8 +71,8 @@ export async function enrollMFA(factorFriendlyName?: string): Promise<MFAEnrollm
       friendlyName: factorFriendlyName || 'SuperSiteHero App'
     })
 
-    if (error) throw error
-    if (!data) throw new Error('No enrollment data received')
+    if (error) {throw error}
+    if (!data) {throw new Error('No enrollment data received')}
 
     return {
       qr: data.totp.qr_code,
@@ -99,7 +99,7 @@ export async function verifyMFAEnrollment(
       code
     })
 
-    if (error) throw error
+    if (error) {throw error}
     return !!data
   } catch (error) {
     console.error('Error verifying MFA enrollment:', error)
@@ -120,7 +120,7 @@ export async function verifyMFACode(
       code
     })
 
-    if (response.error) throw response.error
+    if (response.error) {throw response.error}
     return response
   } catch (error) {
     console.error('Error verifying MFA code:', error)
@@ -137,7 +137,7 @@ export async function unenrollMFA(factorId: string): Promise<boolean> {
       factorId
     })
 
-    if (error) throw error
+    if (error) {throw error}
     return true
   } catch (error) {
     console.error('Error unenrolling from MFA:', error)
@@ -155,8 +155,8 @@ export async function getMFAChallenge(): Promise<{
   try {
     const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
 
-    if (error) throw error
-    if (!data) return null
+    if (error) {throw error}
+    if (!data) {return null}
 
     // Check if MFA is required
     if (data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
@@ -169,7 +169,7 @@ export async function getMFAChallenge(): Promise<{
           factorId: verifiedFactor.id
         })
 
-        if (challengeError) throw challengeError
+        if (challengeError) {throw challengeError}
 
         return {
           factorId: verifiedFactor.id,
@@ -186,19 +186,24 @@ export async function getMFAChallenge(): Promise<{
 }
 
 /**
- * Generate backup codes
+ * Generate backup codes using cryptographically secure random values
  */
 export async function generateBackupCodes(): Promise<string[]> {
   // Note: Supabase doesn't have built-in backup codes yet
   // This is a placeholder for future implementation
-  // For now, we'll generate random codes locally
+  // Using crypto.getRandomValues for secure random generation
   const codes: string[] = []
   for (let i = 0; i < 10; i++) {
-    const code = Math.random().toString(36).substring(2, 10).toUpperCase()
+    const array = new Uint8Array(5)
+    crypto.getRandomValues(array)
+    const code = Array.from(array)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('')
+      .toUpperCase()
     codes.push(code)
   }
 
-  // Store these codes securely (encrypted) in the database
+  // TODO: Store these codes securely (hashed) in the database
   // This would require a custom table for backup codes
 
   return codes

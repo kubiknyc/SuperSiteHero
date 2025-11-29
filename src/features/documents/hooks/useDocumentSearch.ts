@@ -46,9 +46,10 @@ export function useDocumentSearch(
     queryFn: async () => {
       let query = supabase
         .from('documents')
-        .select('*')
+        .select('id, name, file_type, file_url, folder_id, project_id, created_at, drawing_number, description, specification_section')
         .is('deleted_at', null)
         .order('name', { ascending: true })
+        .limit(50)
 
       if (projectId) {
         query = query.eq('project_id', projectId)

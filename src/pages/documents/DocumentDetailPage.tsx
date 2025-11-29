@@ -46,6 +46,7 @@ import { DocumentStatusBadge } from '@/features/documents/components/DocumentSta
 import { DocumentViewer } from '@/features/documents/components/viewers'
 import { DocumentVersionHistory } from '@/features/documents/components/DocumentVersionHistory'
 import { UploadDocumentVersion } from '@/features/documents/components/UploadDocumentVersion'
+import { DocumentAiPanel } from '@/features/documents/components/DocumentAiPanel'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import {
@@ -99,7 +100,7 @@ export function DocumentDetailPage() {
 
   // Handle pin toggle
   const handlePinToggle = () => {
-    if (!document) return
+    if (!document) {return}
     updateDocument.mutate({
       id: document.id,
       updates: { is_pinned: !document.is_pinned }
@@ -108,7 +109,7 @@ export function DocumentDetailPage() {
 
   // Handle edit dialog open
   const handleEditOpen = () => {
-    if (!document) return
+    if (!document) {return}
     setEditFormData({
       name: document.name,
       description: document.description,
@@ -126,7 +127,7 @@ export function DocumentDetailPage() {
 
   // Handle edit save
   const handleEditSave = () => {
-    if (!document) return
+    if (!document) {return}
     updateDocument.mutate(
       {
         id: document.id,
@@ -142,7 +143,7 @@ export function DocumentDetailPage() {
 
   // Handle delete
   const handleDelete = () => {
-    if (!document) return
+    if (!document) {return}
     deleteDocument.mutate(document.id, {
       onSuccess: () => {
         navigate('/documents')
@@ -152,7 +153,7 @@ export function DocumentDetailPage() {
 
   // Format file size
   const formatFileSize = (bytes: number | null): string => {
-    if (!bytes || bytes === 0) return 'Unknown size'
+    if (!bytes || bytes === 0) {return 'Unknown size'}
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
@@ -161,7 +162,7 @@ export function DocumentDetailPage() {
 
   // Get file icon component
   const getFileIcon = () => {
-    if (!document) return <File className="w-20 h-20 text-gray-400" />
+    if (!document) {return <File className="w-20 h-20 text-gray-400" />}
 
     const ext = document.file_name.split('.').pop()?.toLowerCase()
 
@@ -581,6 +582,13 @@ export function DocumentDetailPage() {
                 </CardContent>
               </Card>
             )}
+
+            {/* AI Analysis Panel */}
+            <DocumentAiPanel
+              documentId={document.id}
+              projectId={document.project_id}
+              onNavigateToDocument={(id) => navigate(`/documents/${id}`)}
+            />
           </div>
         </div>
       </div>

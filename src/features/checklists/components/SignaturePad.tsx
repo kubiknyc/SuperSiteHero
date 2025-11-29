@@ -50,13 +50,13 @@ export function SignaturePad({
   }, [hasSignature, isDrawing, lines])
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    if (disabled) return
+    if (disabled) {return}
 
     setIsDrawing(true)
     setHasSignature(true)
 
     const pos = e.target.getStage()?.getPointerPosition()
-    if (!pos) return
+    if (!pos) {return}
 
     setLines([
       ...lines,
@@ -70,14 +70,14 @@ export function SignaturePad({
   }
 
   const handleMouseMove = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
-    if (!isDrawing || disabled) return
+    if (!isDrawing || disabled) {return}
 
     const stage = e.target.getStage()
     const pos = stage?.getPointerPosition()
-    if (!pos) return
+    if (!pos) {return}
 
     const lastLine = lines[lines.length - 1]
-    if (!lastLine) return
+    if (!lastLine) {return}
 
     // Add point to the current line
     lastLine.points = lastLine.points.concat([pos.x, pos.y])
@@ -87,12 +87,12 @@ export function SignaturePad({
   }
 
   const handleMouseUp = () => {
-    if (disabled) return
+    if (disabled) {return}
     setIsDrawing(false)
   }
 
   const captureSignature = () => {
-    if (!stageRef.current) return
+    if (!stageRef.current) {return}
 
     try {
       // Export to data URL

@@ -1,0 +1,422 @@
+/**
+ * Incident Report Form Component
+ *
+ * OSHA-compliant incident report form with severity classification,
+ * root cause analysis, and photo documentation.
+ */
+
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  RadixSelect as Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { cn } from '@/lib/utils'
+import type {
+  CreateIncidentDTO,
+  UpdateIncidentDTO,
+  SafetyIncident,
+  IncidentSeverity,
+  IncidentType,
+  RootCauseCategory,
+} from '@/types/safety-incidents'
+import {
+  SEVERITY_CONFIG,
+  INCIDENT_TYPE_CONFIG,
+  ROOT_CAUSE_LABELS,
+  isSeriousIncident,
+} from '@/types/safety-incidents'
+import { AlertTriangle, Info } from 'lucide-react'
+
+interface IncidentReportFormProps {
+  projectId?: string
+  companyId?: string
+  incident?: SafetyIncident
+  onSubmit?: (data: CreateIncidentDTO | UpdateIncidentDTO) => void
+  onSuccess?: ((incidentId: string) => void) | (() => void)
+  onCancel?: () => void
+  isSubmitting?: boolean
+}
+
+type FormData = {
+  incident_date: string
+  incident_time: string
+  location: string
+  weather_conditions: string
+  description: string
+  severity: IncidentSeverity
+  incident_type: IncidentType
+  immediate_actions: string
+  root_cause_category: RootCauseCategory | ''
+  root_cause: string
+  preventive_measures: string
+  osha_recordable: boolean
+  osha_report_number: string
+  days_away_from_work: number
+  days_restricted_duty: number
+}
+
+export function IncidentReportForm({
+  projectId,
+  companyId,
+  incident,
+  onSubmit,
+  onSuccess,
+  onCancel,
+  isSubmitting = false,
+}: IncidentReportFormProps) {
+  const isEditing = !!incident
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
+    defaultValues: {
+      incident_date: incident?.incident_date || new Date().toISOString().split('T')[0],
+      incident_time: incident?.incident_time || '',
+      location: incident?.location || '',
+      weather_conditions: incident?.weather_conditions || '',
+      description: incident?.description || '',
+      severity: incident?.severity || 'near_miss',
+      incident_type: incident?.incident_type || 'near_miss',
+      immediate_actions: incident?.immediate_actions || '',
+      root_cause_category: incident?.root_cause_category || '',
+      root_cause: incident?.root_cause || '',
+      preventive_measures: incident?.preventive_measures || '',
+      osha_recordable: incident?.osha_recordable || false,
+      osha_report_number: incident?.osha_report_number || '',
+      days_away_from_work: incident?.days_away_from_work || 0,
+      days_restricted_duty: incident?.days_restricted_duty || 0,
+    },
+  })
+
+  const selectedSeverity = watch('severity')
+  const oshaRecordable = watch('osha_recordable')
+  const isSerious = isSeriousIncident(selectedSeverity)
+
+  const handleFormSubmit = (data: FormData) => {
+    if (isEditing) {
+      const updateData: UpdateIncidentDTO = {
+        incident_date: data.incident_date,
+        incident_time: data.incident_time || null,
+        location: data.location || null,
+        weather_conditions: data.weather_conditions || null,
+        description: data.description,
+        severity: data.severity,
+        incident_type: data.incident_type,
+        immediate_actions: data.immediate_actions || null,
+        root_cause_category: data.root_cause_category || null,
+        root_cause: data.root_cause || null,
+        preventive_measures: data.preventive_measures || null,
+        osha_recordable: data.osha_recordable,
+        osha_report_number: data.osha_report_number || null,
+        days_away_from_work: data.days_away_from_work,
+        days_restricted_duty: data.days_restricted_duty,
+      }
+      onSubmit?.(updateData)
+      if (onSuccess) {(onSuccess as () => void)()}
+    } else {
+      if (!projectId || !companyId) {
+        console.error('projectId and companyId are required for creating incidents')
+        return
+      }
+      const createData: CreateIncidentDTO = {
+        project_id: projectId,
+        company_id: companyId,
+        incident_date: data.incident_date,
+        incident_time: data.incident_time || null,
+        location: data.location || null,
+        weather_conditions: data.weather_conditions || null,
+        description: data.description,
+        severity: data.severity,
+        incident_type: data.incident_type,
+        immediate_actions: data.immediate_actions || null,
+        osha_recordable: data.osha_recordable,
+      }
+      onSubmit?.(createData)
+      if (onSuccess) {(onSuccess as () => void)()}
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
+      {/* Severity Warning */}
+      {isSerious && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
+          <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
+          <div>
+            <h4 className="font-medium text-red-800">Serious Incident</h4>
+            <p className="text-sm text-red-700 mt-1">
+              This severity level ({SEVERITY_CONFIG[selectedSeverity].label}) requires
+              immediate notification to project managers and may require OSHA reporting.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Basic Information */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="incident_date">Date of Incident *</Label>
+          <Input
+            id="incident_date"
+            type="date"
+            {...register('incident_date', { required: 'Date is required' })}
+            className={cn(errors.incident_date && 'border-red-500')}
+          />
+          {errors.incident_date && (
+            <p className="text-sm text-red-500 mt-1">{errors.incident_date.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Label htmlFor="incident_time">Time of Incident</Label>
+          <Input
+            id="incident_time"
+            type="time"
+            {...register('incident_time')}
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="location">Location on Site</Label>
+          <Input
+            id="location"
+            placeholder="e.g., Building A, Floor 3"
+            {...register('location')}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="weather_conditions">Weather Conditions</Label>
+          <Input
+            id="weather_conditions"
+            placeholder="e.g., Rainy, 45°F"
+            {...register('weather_conditions')}
+          />
+        </div>
+      </div>
+
+      {/* Classification */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="severity">Severity Level *</Label>
+          <Select
+            value={selectedSeverity}
+            onValueChange={(value) => setValue('severity', value as IncidentSeverity)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select severity" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(SEVERITY_CONFIG).map(([key, config]) => (
+                <SelectItem key={key} value={key}>
+                  <span className="flex items-center gap-2">
+                    <span
+                      className={cn(
+                        'w-2 h-2 rounded-full',
+                        config.color === 'green' && 'bg-green-500',
+                        config.color === 'yellow' && 'bg-yellow-500',
+                        config.color === 'orange' && 'bg-orange-500',
+                        config.color === 'red' && 'bg-red-500',
+                        config.color === 'purple' && 'bg-purple-500'
+                      )}
+                    />
+                    {config.label}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-gray-500 mt-1">
+            {SEVERITY_CONFIG[selectedSeverity].description}
+          </p>
+        </div>
+
+        <div>
+          <Label htmlFor="incident_type">Incident Type *</Label>
+          <Select
+            value={watch('incident_type')}
+            onValueChange={(value) => setValue('incident_type', value as IncidentType)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(INCIDENT_TYPE_CONFIG).map(([key, config]) => (
+                <SelectItem key={key} value={key}>
+                  {config.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Description */}
+      <div>
+        <Label htmlFor="description">Description of Incident *</Label>
+        <Textarea
+          id="description"
+          rows={4}
+          placeholder="Describe what happened, who was involved, and the circumstances..."
+          {...register('description', {
+            required: 'Description is required',
+            minLength: { value: 20, message: 'Please provide more detail (at least 20 characters)' },
+          })}
+          className={cn(errors.description && 'border-red-500')}
+        />
+        {errors.description && (
+          <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+        )}
+      </div>
+
+      <div>
+        <Label htmlFor="immediate_actions">Immediate Actions Taken</Label>
+        <Textarea
+          id="immediate_actions"
+          rows={3}
+          placeholder="What was done immediately after the incident..."
+          {...register('immediate_actions')}
+        />
+      </div>
+
+      {/* Root Cause Analysis (for editing/investigation) */}
+      {isEditing && (
+        <>
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">
+              Root Cause Analysis
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="root_cause_category">Root Cause Category</Label>
+                <Select
+                  value={watch('root_cause_category') || ''}
+                  onValueChange={(value) =>
+                    setValue('root_cause_category', value as RootCauseCategory)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {Object.entries(ROOT_CAUSE_LABELS).map(([key, label]) => (
+                      <SelectItem key={key} value={key}>
+                        {label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <Label htmlFor="root_cause">Root Cause Description</Label>
+              <Textarea
+                id="root_cause"
+                rows={3}
+                placeholder="Detailed analysis of the root cause..."
+                {...register('root_cause')}
+              />
+            </div>
+
+            <div className="mt-4">
+              <Label htmlFor="preventive_measures">Preventive Measures</Label>
+              <Textarea
+                id="preventive_measures"
+                rows={3}
+                placeholder="What measures will be taken to prevent recurrence..."
+                {...register('preventive_measures')}
+              />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* OSHA Information */}
+      <div className="border-t pt-6">
+        <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
+          OSHA Tracking
+          <span className="text-sm font-normal text-gray-500">(if applicable)</span>
+        </h3>
+
+        <div className="flex items-center gap-2 mb-4">
+          <input
+            type="checkbox"
+            id="osha_recordable"
+            {...register('osha_recordable')}
+            className="h-4 w-4 rounded border-gray-300"
+          />
+          <Label htmlFor="osha_recordable" className="font-normal">
+            This incident is OSHA recordable
+          </Label>
+        </div>
+
+        {oshaRecordable && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
+            <div>
+              <Label htmlFor="osha_report_number">OSHA Report Number</Label>
+              <Input
+                id="osha_report_number"
+                placeholder="e.g., 300-123"
+                {...register('osha_report_number')}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="days_away_from_work">Days Away from Work</Label>
+              <Input
+                id="days_away_from_work"
+                type="number"
+                min="0"
+                {...register('days_away_from_work', { valueAsNumber: true })}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="days_restricted_duty">Days on Restricted Duty</Label>
+              <Input
+                id="days_restricted_duty"
+                type="number"
+                min="0"
+                {...register('days_restricted_duty', { valueAsNumber: true })}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Form Actions */}
+      <div className="flex justify-end gap-3 pt-4 border-t">
+        {onCancel && (
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
+        )}
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting
+            ? 'Saving...'
+            : isEditing
+            ? 'Update Incident'
+            : 'Report Incident'}
+        </Button>
+      </div>
+    </form>
+  )
+}
+
+export default IncidentReportForm

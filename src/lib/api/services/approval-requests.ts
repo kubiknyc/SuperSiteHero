@@ -6,6 +6,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
+import { sendApprovalRequestNotification, type NotificationRecipient } from '@/lib/notifications/notification-service'
 import type {
   ApprovalRequest,
   ApprovalStatus,
@@ -69,7 +70,7 @@ export const approvalRequestsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // If filtering by pending_for_user, we need to filter in JS
       // since it requires checking step approvers
@@ -78,7 +79,7 @@ export const approvalRequestsApi = {
       if (filters?.pending_for_user) {
         const userId = filters.pending_for_user
         requests = requests.filter((request) => {
-          if (request.status !== 'pending') return false
+          if (request.status !== 'pending') {return false}
           const currentStep = request.workflow?.steps?.find(
             (s) => s.step_order === request.current_step
           )
@@ -147,7 +148,7 @@ export const approvalRequestsApi = {
         .eq('id', requestId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'REQUEST_NOT_FOUND',
@@ -294,12 +295,51 @@ export const approvalRequestsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
-      // TODO: Trigger email notification when Email Integration is implemented
+      // Fetch full request with relations to get workflow details
+      const fullRequest = await this.getRequest(data.id)
 
-      // Fetch full request with relations
-      return this.getRequest(data.id)
+      // Send email notification to first step approvers
+      try {
+        const firstStep = fullRequest.workflow?.steps?.find((s) => s.step_order === 1)
+        if (firstStep?.approver_ids?.length) {
+          // Fetch approver user details
+          const { data: approvers } = await db
+            .from('users')
+            .select('id, email, full_name')
+            .in('id', firstStep.approver_ids)
+
+          if (approvers?.length) {
+            const recipients: NotificationRecipient[] = approvers.map((u: any) => ({
+              userId: u.id,
+              email: u.email,
+              name: u.full_name,
+            }))
+
+            // Get project name
+            const { data: project } = await db
+              .from('projects')
+              .select('name')
+              .eq('id', input.project_id)
+              .single()
+
+            await sendApprovalRequestNotification(recipients, {
+              entityType: input.entity_type,
+              entityName: `${input.entity_type.replace('_', ' ')} #${input.entity_id.slice(0, 8)}`,
+              projectName: project?.name || 'Unknown Project',
+              initiatedBy: user.email || 'Unknown',
+              stepName: firstStep.name || `Step ${firstStep.step_order}`,
+              approvalUrl: `${import.meta.env.VITE_APP_URL || ''}/approvals/${data.id}`,
+            })
+          }
+        }
+      } catch (notifyError) {
+        // Log but don't fail the request creation
+        console.error('[ApprovalRequests] Failed to send notification:', notifyError)
+      }
+
+      return fullRequest
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -358,7 +398,7 @@ export const approvalRequestsApi = {
         })
         .eq('id', requestId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Return updated request
       return this.getRequest(requestId)
@@ -404,7 +444,7 @@ export const approvalRequestsApi = {
         .limit(1)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
 
       if (!data) {
         return {

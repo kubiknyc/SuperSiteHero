@@ -1,7 +1,7 @@
 // File: /src/features/punch-lists/components/PunchListsProjectView.tsx
 // Punch lists view for project detail page
 
-import { useState } from 'react'
+import { useState, useCallback, useMemo, memo } from 'react'
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,34 @@ interface PunchListsProjectViewProps {
   projectId: string | undefined
 }
 
+// Memoized row component to prevent re-renders when other rows change
+interface PunchItemRowProps {
+  item: PunchItem
+}
+
+const PunchItemRow = memo(function PunchItemRow({ item }: PunchItemRowProps) {
+  return (
+    <tr className="border-b hover:bg-gray-50">
+      <td className="py-3 px-4 font-medium text-gray-900">{item.number}</td>
+      <td className="py-3 px-4">
+        <a href={`/punch-lists/${item.id}`} className="text-blue-600 hover:underline">
+          {item.title}
+        </a>
+      </td>
+      <td className="py-3 px-4 text-gray-600 capitalize">{item.trade}</td>
+      <td className="py-3 px-4 text-gray-600 text-sm">
+        {[item.building, item.floor, item.room].filter(Boolean).join(' / ')}
+      </td>
+      <td className="py-3 px-4">
+        <PunchItemStatusBadge status={item.status} priority={item.priority} />
+      </td>
+      <td className="py-3 px-4 text-gray-600 text-sm">
+        {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
+      </td>
+    </tr>
+  )
+})
+
 export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps) {
   const [createOpen, setCreateOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -26,8 +54,8 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
 
   const { data: punchItems, isLoading, error } = usePunchItems(projectId)
 
-  // Filter punch items
-  const filtered = (punchItems || []).filter((item) => {
+  // Filter punch items - memoized to prevent recalculation on every render
+  const filtered = useMemo(() => (punchItems || []).filter((item) => {
     const matchesSearch =
       item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.trade?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -36,7 +64,15 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
     const matchesStatus = statusFilter ? item.status === statusFilter : true
 
     return matchesSearch && matchesStatus
-  })
+  }), [punchItems, searchTerm, statusFilter])
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+  }, [])
+
+  const handleStatusFilterChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setStatusFilter(e.target.value)
+  }, [])
 
   if (!projectId) {
     return (
@@ -71,13 +107,13 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
     )
   }
 
-  // Calculate statistics
-  const stats = {
+  // Calculate statistics - memoized to prevent recalculation on every render
+  const stats = useMemo(() => ({
     total: punchItems?.length || 0,
     open: punchItems?.filter((p) => p.status === 'open').length || 0,
     inProgress: punchItems?.filter((p) => p.status === 'in_progress').length || 0,
     verified: punchItems?.filter((p) => p.status === 'verified').length || 0,
-  }
+  }), [punchItems])
 
   return (
     <>
@@ -102,10 +138,10 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
             <Input
               placeholder="Search by title, trade, or area..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               className="flex-1"
             />
-            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <Select value={statusFilter} onChange={handleStatusFilterChange}>
               <option value="">All Statuses</option>
               <option value="open">Open</option>
               <option value="in_progress">In Progress</option>
@@ -137,24 +173,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
                 </thead>
                 <tbody>
                   {filtered.map((item: PunchItem) => (
-                    <tr key={item.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4 font-medium text-gray-900">{item.number}</td>
-                      <td className="py-3 px-4">
-                        <a href={`/punch-lists/${item.id}`} className="text-blue-600 hover:underline">
-                          {item.title}
-                        </a>
-                      </td>
-                      <td className="py-3 px-4 text-gray-600 capitalize">{item.trade}</td>
-                      <td className="py-3 px-4 text-gray-600 text-sm">
-                        {[item.building, item.floor, item.room].filter(Boolean).join(' / ')}
-                      </td>
-                      <td className="py-3 px-4">
-                        <PunchItemStatusBadge status={item.status} priority={item.priority} />
-                      </td>
-                      <td className="py-3 px-4 text-gray-600 text-sm">
-                        {item.due_date ? item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : 'N/A' : '-'}
-                      </td>
-                    </tr>
+                    <PunchItemRow key={item.id} item={item} />
                   ))}
                 </tbody>
               </table>

@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { SignaturePad } from './SignaturePad'
+import { SignatureTemplateManager } from './SignatureTemplateManager'
 import { uploadSignature, deleteSignature } from '../utils/storageUtils'
 import { PenTool, Save, X } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -50,6 +51,10 @@ export function SignatureCaptureDialog({
     setSignatureDataUrl(null)
   }
 
+  const handleTemplateSelect = (dataUrl: string) => {
+    setSignatureDataUrl(dataUrl)
+  }
+
   const handleSave = async () => {
     if (!signatureDataUrl) {
       toast.error('Please capture a signature first')
@@ -86,7 +91,7 @@ export function SignatureCaptureDialog({
   }
 
   const handleRemove = async () => {
-    if (!currentSignature) return
+    if (!currentSignature) {return}
 
     if (!confirm('Are you sure you want to remove this signature?')) {
       return
@@ -128,7 +133,7 @@ export function SignatureCaptureDialog({
           )}
         </DialogHeader>
 
-        <div className="py-4">
+        <div className="py-4 space-y-4">
           <SignaturePad
             onSignatureCapture={handleSignatureCapture}
             onClear={handleClear}
@@ -139,10 +144,18 @@ export function SignatureCaptureDialog({
           />
 
           {currentSignature && !signatureDataUrl && (
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="text-sm text-gray-600">
               You can draw a new signature to replace the existing one, or remove it entirely.
             </p>
           )}
+
+          {/* Signature Templates */}
+          <div className="border-t pt-4">
+            <SignatureTemplateManager
+              currentSignature={signatureDataUrl}
+              onTemplateSelect={handleTemplateSelect}
+            />
+          </div>
         </div>
 
         <DialogFooter className="gap-2">

@@ -28,7 +28,7 @@ import {
  * Format bytes to human-readable string
  */
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) {return '0 Bytes';}
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -39,7 +39,7 @@ function formatBytes(bytes: number): string {
  * Format timestamp to relative time
  */
 function formatRelativeTime(timestamp: number | null): string {
-  if (!timestamp) return 'Never';
+  if (!timestamp) {return 'Never';}
 
   const now = Date.now();
   const diff = now - timestamp;
@@ -49,9 +49,9 @@ function formatRelativeTime(timestamp: number | null): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (seconds < 60) return 'Just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
+  if (seconds < 60) {return 'Just now';}
+  if (minutes < 60) {return `${minutes}m ago`;}
+  if (hours < 24) {return `${hours}h ago`;}
   return `${days}d ago`;
 }
 
@@ -79,7 +79,7 @@ export function OfflineIndicator() {
 
   // Handle manual sync
   const handleManualSync = async () => {
-    if (!isOnline || isSyncing || isSyncingManually) return;
+    if (!isOnline || isSyncing || isSyncingManually) {return;}
 
     setIsSyncingManually(true);
     try {

@@ -46,7 +46,7 @@ export function DrawingMarkupCanvas({
 
   // Handle mouse down - start drawing
   const handleMouseDown = (e: any) => {
-    if (readOnly || tool === 'select') return
+    if (readOnly || tool === 'select') {return}
 
     if (tool === 'pan') {
       isPanning.current = true
@@ -142,7 +142,7 @@ export function DrawingMarkupCanvas({
       return
     }
 
-    if (!isDrawing || !currentAnnotation || readOnly) return
+    if (!isDrawing || !currentAnnotation || readOnly) {return}
 
     const stage = e.target.getStage()
     const point = stage.getPointerPosition()
@@ -198,7 +198,7 @@ export function DrawingMarkupCanvas({
       return
     }
 
-    if (!isDrawing || !currentAnnotation || readOnly) return
+    if (!isDrawing || !currentAnnotation || readOnly) {return}
 
     setIsDrawing(false)
 
@@ -233,7 +233,7 @@ export function DrawingMarkupCanvas({
 
   // Render annotation based on type
   const renderAnnotation = (annotation: Annotation, index: number) => {
-    if (!annotation.visible) return null
+    if (!annotation.visible) {return null}
 
     const commonProps = {
       key: annotation.id || index,

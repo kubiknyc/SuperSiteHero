@@ -10,7 +10,7 @@ export function useDailyReports(projectId: string | undefined) {
   return useQuery({
     queryKey: ['daily-reports', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('daily_reports')
@@ -18,7 +18,7 @@ export function useDailyReports(projectId: string | undefined) {
         .eq('project_id', projectId)
         .order('report_date', { ascending: false }) as any
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReport[]
     },
     enabled: !!projectId,
@@ -30,7 +30,7 @@ export function useDailyReport(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-reports', reportId],
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase
         .from('daily_reports')
@@ -38,7 +38,7 @@ export function useDailyReport(reportId: string | undefined) {
         .eq('id', reportId)
         .single() as any
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReport
     },
     enabled: !!reportId,
@@ -57,7 +57,7 @@ export function useCreateDailyReport() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReport
     },
     onSuccess: (data) => {
@@ -80,7 +80,7 @@ export function useUpdateDailyReport() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReport
     },
     onSuccess: (data) => {
@@ -102,7 +102,7 @@ export function useDeleteDailyReport() {
         .delete()
         .eq('id', reportId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['daily-reports'] })

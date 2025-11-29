@@ -27,6 +27,32 @@
 -- ============================================
 
 -- =============================================
+-- DROP EXISTING POLICIES FIRST
+-- =============================================
+DROP POLICY IF EXISTS "Users can view change order bids for assigned projects" ON change_order_bids;
+DROP POLICY IF EXISTS "Users can create change order bids in assigned projects" ON change_order_bids;
+DROP POLICY IF EXISTS "Users can update change order bids in assigned projects" ON change_order_bids;
+DROP POLICY IF EXISTS "Users can view safety incidents in assigned projects" ON safety_incidents;
+DROP POLICY IF EXISTS "Users can report safety incidents in assigned projects" ON safety_incidents;
+DROP POLICY IF EXISTS "Users can update safety incidents in assigned projects" ON safety_incidents;
+DROP POLICY IF EXISTS "Only authorized users can delete safety incidents" ON safety_incidents;
+DROP POLICY IF EXISTS "Users can view comments on assigned workflow items" ON workflow_item_comments;
+DROP POLICY IF EXISTS "Users can comment on workflow items in assigned projects" ON workflow_item_comments;
+DROP POLICY IF EXISTS "Users can view workflow item history" ON workflow_item_history;
+DROP POLICY IF EXISTS "System can create history records" ON workflow_item_history;
+DROP POLICY IF EXISTS "Users can view project folders" ON folders;
+DROP POLICY IF EXISTS "Users can manage project folders" ON folders;
+DROP POLICY IF EXISTS "Users can update project folders" ON folders;
+DROP POLICY IF EXISTS "Users can view document markups" ON document_markups;
+DROP POLICY IF EXISTS "Users can create document markups" ON document_markups;
+DROP POLICY IF EXISTS "Users can view project inspections" ON inspections;
+DROP POLICY IF EXISTS "Users can manage project inspections" ON inspections;
+DROP POLICY IF EXISTS "Users can update project inspections" ON inspections;
+DROP POLICY IF EXISTS "Users can view project permits" ON permits;
+DROP POLICY IF EXISTS "Users can manage project permits" ON permits;
+DROP POLICY IF EXISTS "Users can update project permits" ON permits;
+
+-- =============================================
 -- CRITICAL: CHANGE_ORDER_BIDS
 -- Why Critical: Contains competitive bid data and cost information
 -- Regulatory: Bid integrity is important for contract management
@@ -173,46 +199,8 @@ CREATE POLICY "Users can create document markups"
 
 -- =============================================
 -- CHECKLISTS & CHECKLIST_ITEMS
--- Why Important: Task and quality management
+-- Skipped: Will be handled by migration 024_enhanced_inspection_checklists.sql
 -- =============================================
-CREATE POLICY "Users can view project checklists"
-  ON checklists FOR SELECT
-  USING (
-    project_id IN (SELECT project_id FROM project_users WHERE user_id = auth.uid())
-    OR assigned_to_user_id = auth.uid()
-  );
-
-CREATE POLICY "Users can manage project checklists"
-  ON checklists FOR INSERT
-  WITH CHECK (
-    project_id IN (SELECT project_id FROM project_users WHERE user_id = auth.uid())
-  );
-
-CREATE POLICY "Users can update project checklists"
-  ON checklists FOR UPDATE
-  USING (
-    project_id IN (SELECT project_id FROM project_users WHERE user_id = auth.uid() AND can_edit = true)
-    OR assigned_to_user_id = auth.uid()
-  );
-
--- Checklist items follow same pattern
-CREATE POLICY "Users can view checklist items"
-  ON checklist_items FOR SELECT
-  USING (
-    checklist_id IN (
-      SELECT id FROM checklists
-      WHERE project_id IN (SELECT project_id FROM project_users WHERE user_id = auth.uid())
-    )
-  );
-
-CREATE POLICY "Users can manage checklist items"
-  ON checklist_items FOR ALL
-  USING (
-    checklist_id IN (
-      SELECT id FROM checklists
-      WHERE project_id IN (SELECT project_id FROM project_users WHERE user_id = auth.uid())
-    )
-  );
 
 -- =============================================
 -- INSPECTIONS & PERMITS
@@ -255,6 +243,16 @@ CREATE POLICY "Users can update project permits"
     project_id IN (SELECT project_id FROM project_users WHERE user_id = auth.uid() AND can_edit = true)
   );
 
+-- =============================================
+-- REMAINING POLICIES SKIPPED
+-- The following tables don't exist yet in the remote database
+-- They will be created and secured in later migrations
+-- Skipped tables: soil_tests, material_tests, photo_albums, photo_album_items,
+-- takeoff_items, change_order_items, submittal_items, subcontractor_performance,
+-- equipment_log, daily_report_entries, document_reviews
+-- =============================================
+
+/*
 -- =============================================
 -- SOIL_TESTS & MATERIAL_TESTS
 -- Why Important: Quality assurance and compliance
@@ -516,6 +514,7 @@ CREATE POLICY "Block deletes on document_reviews"
 --
 -- Expected: 40+ tables with RLS enabled
 -- =============================================
+*/
 
 DO $$
 BEGIN

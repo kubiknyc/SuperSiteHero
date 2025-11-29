@@ -12,6 +12,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
+import { logger } from './lib/utils/logger'
 
 // Auth pages - loaded eagerly as they are the first pages users see
 import { LoginPage } from './pages/auth/LoginPage'
@@ -75,6 +76,33 @@ const MyApprovalsPage = lazy(() => import('./pages/approvals/MyApprovalsPage').t
 const ApprovalRequestPage = lazy(() => import('./pages/approvals/ApprovalRequestPage').then(m => ({ default: m.ApprovalRequestPage })))
 const ApprovalWorkflowsPage = lazy(() => import('./pages/settings/ApprovalWorkflowsPage').then(m => ({ default: m.ApprovalWorkflowsPage })))
 
+// Schedule / Gantt Charts feature
+const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
+
+// Predictive Analytics feature
+const AnalyticsPage = lazy(() => import('./pages/analytics/AnalyticsPage').then(m => ({ default: m.AnalyticsPage })))
+
+// Safety Incidents feature
+const IncidentsListPage = lazy(() => import('./features/safety/pages/IncidentsListPage').then(m => ({ default: m.IncidentsListPage })))
+const IncidentDetailPage = lazy(() => import('./features/safety/pages/IncidentDetailPage').then(m => ({ default: m.IncidentDetailPage })))
+const CreateIncidentPage = lazy(() => import('./features/safety/pages/CreateIncidentPage').then(m => ({ default: m.CreateIncidentPage })))
+
+// Messaging feature
+const MessagesPage = lazy(() => import('./features/messaging/pages/MessagesPage').then(m => ({ default: m.MessagesPage })))
+
+// Notices feature
+const NoticesPage = lazy(() => import('./pages/notices/NoticesPage').then(m => ({ default: m.NoticesPage })))
+const NoticeDetailPage = lazy(() => import('./pages/notices/NoticeDetailPage').then(m => ({ default: m.NoticeDetailPage })))
+
+// Subcontractor Portal feature
+const SubcontractorLayout = lazy(() => import('./features/subcontractor-portal/components/SubcontractorLayout').then(m => ({ default: m.SubcontractorLayout })))
+const SubcontractorDashboardPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorDashboardPage').then(m => ({ default: m.SubcontractorDashboardPage })))
+const SubcontractorBidsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorBidsPage').then(m => ({ default: m.SubcontractorBidsPage })))
+const BidDetailPage = lazy(() => import('./pages/subcontractor-portal/BidDetailPage').then(m => ({ default: m.BidDetailPage })))
+const SubcontractorPunchItemsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorPunchItemsPage').then(m => ({ default: m.SubcontractorPunchItemsPage })))
+const SubcontractorTasksPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorTasksPage').then(m => ({ default: m.SubcontractorTasksPage })))
+const AcceptInvitationPage = lazy(() => import('./pages/auth/AcceptInvitationPage').then(m => ({ default: m.AcceptInvitationPage })))
+
 function App() {
   // Initialize IndexedDB for offline functionality
   useEffect(() => {
@@ -82,24 +110,24 @@ function App() {
 
     const initOfflineDatabase = async () => {
       try {
-        console.log('[App] Initializing offline database...')
+        logger.log('[App] Initializing offline database...')
         await initDatabase()
-        console.log('[App] Offline database initialized successfully')
+        logger.log('[App] Offline database initialized successfully')
 
         // Request persistent storage to prevent eviction
         const isPersistent = await requestPersistentStorage()
         if (isPersistent) {
-          console.log('[App] Persistent storage granted')
+          logger.log('[App] Persistent storage granted')
         } else {
-          console.log('[App] Persistent storage not granted - data may be evicted under storage pressure')
+          logger.log('[App] Persistent storage not granted - data may be evicted under storage pressure')
         }
 
         // Initialize background sync manager
-        console.log('[App] Initializing background sync manager...')
+        logger.log('[App] Initializing background sync manager...')
         cleanupSync = initSyncManager()
-        console.log('[App] Background sync manager initialized')
+        logger.log('[App] Background sync manager initialized')
       } catch (error) {
-        console.error('[App] Failed to initialize offline database:', error)
+        logger.error('[App] Failed to initialize offline database:', error)
         // Don't block app startup on IndexedDB failure
       }
     }
@@ -116,7 +144,12 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <ToastProvider>
           <AuthProvider>
             <Suspense fallback={<RouteLoadingFallback />}>
@@ -125,6 +158,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/invite/:token" element={<AcceptInvitationPage />} />
 
                 {/* Protected routes - lazy loaded for code splitting */}
                 <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
@@ -181,6 +215,35 @@ function App() {
                 <Route path="/approvals" element={<ProtectedRoute><MyApprovalsPage /></ProtectedRoute>} />
                 <Route path="/approvals/:id" element={<ProtectedRoute><ApprovalRequestPage /></ProtectedRoute>} />
                 <Route path="/settings/approval-workflows" element={<ProtectedRoute><ApprovalWorkflowsPage /></ProtectedRoute>} />
+
+                {/* Schedule / Gantt Charts feature */}
+                <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
+
+                {/* Predictive Analytics feature */}
+                <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
+
+                {/* Safety Incidents feature */}
+                <Route path="/safety" element={<ProtectedRoute><IncidentsListPage /></ProtectedRoute>} />
+                <Route path="/safety/new" element={<ProtectedRoute><CreateIncidentPage /></ProtectedRoute>} />
+                <Route path="/safety/:id" element={<ProtectedRoute><IncidentDetailPage /></ProtectedRoute>} />
+
+                {/* Messaging feature */}
+                <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
+                <Route path="/messages/:conversationId" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
+
+                {/* Notices feature */}
+                <Route path="/notices" element={<ProtectedRoute><NoticesPage /></ProtectedRoute>} />
+                <Route path="/notices/:id" element={<ProtectedRoute><NoticeDetailPage /></ProtectedRoute>} />
+
+                {/* Subcontractor Portal feature - role-protected routes */}
+                <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
+                  <Route index element={<SubcontractorDashboardPage />} />
+                  <Route path="bids" element={<SubcontractorBidsPage />} />
+                  <Route path="bids/:bidId" element={<BidDetailPage />} />
+                  <Route path="punch-items" element={<SubcontractorPunchItemsPage />} />
+                  <Route path="tasks" element={<SubcontractorTasksPage />} />
+                </Route>
 
                 {/* Redirect unknown routes to dashboard */}
                 <Route path="*" element={<Navigate to="/" replace />} />

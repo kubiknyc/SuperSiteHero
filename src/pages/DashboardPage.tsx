@@ -22,6 +22,7 @@ import {
   MapPin,
   Clock,
 } from 'lucide-react'
+import { NoticesWidget } from '@/features/notices/components'
 import { format } from 'date-fns'
 
 export function DashboardPage() {
@@ -325,6 +326,9 @@ export function DashboardPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Notices Widget */}
+            <NoticesWidget projectId={selectedProject?.id} />
 
             {/* Empty state for projects */}
             {(!projects || projects.length === 0) && (

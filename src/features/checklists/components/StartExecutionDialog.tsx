@@ -103,7 +103,7 @@ export function StartExecutionDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!templateId || !name) return
+    if (!templateId || !name) {return}
 
     try {
       // Step 1: Create execution

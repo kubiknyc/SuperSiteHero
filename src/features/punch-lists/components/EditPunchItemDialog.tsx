@@ -5,6 +5,7 @@ import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { useUpdatePunchItemWithNotification } from '../hooks/usePunchItemsMutations'
 import type { PunchItem, PunchItemStatus, Priority } from '@/types/database'
+import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 import {
   Dialog,
   DialogContent,
@@ -43,6 +44,7 @@ export function EditPunchItemDialog({
   const [priority, setPriority] = useState<Priority>('normal')
   const [status, setStatus] = useState<PunchItemStatus>('open')
   const [dueDate, setDueDate] = useState('')
+  const [assignee, setAssignee] = useState<Assignee | null>(null)
 
   // Load punch item data when dialog opens
   useEffect(() => {
@@ -58,6 +60,20 @@ export function EditPunchItemDialog({
       setPriority(punchItem.priority)
       setStatus(punchItem.status)
       setDueDate(punchItem.due_date || '')
+      // Initialize assignee from existing data
+      if (punchItem.subcontractor_id) {
+        setAssignee({
+          type: 'subcontractor',
+          id: punchItem.subcontractor_id,
+        })
+      } else if (punchItem.assigned_to) {
+        setAssignee({
+          type: 'user',
+          id: punchItem.assigned_to,
+        })
+      } else {
+        setAssignee(null)
+      }
     }
   }, [punchItem, open])
 
@@ -83,6 +99,8 @@ export function EditPunchItemDialog({
           priority,
           status,
           due_date: dueDate || null,
+          subcontractor_id: assignee?.type === 'subcontractor' ? assignee.id : null,
+          assigned_to: assignee?.type === 'user' ? assignee.id : null,
         },
       },
       {
@@ -171,6 +189,20 @@ export function EditPunchItemDialog({
                 onChange={(e) => setDueDate(e.target.value)}
               />
             </div>
+
+            {/* Assignee */}
+            {punchItem && (
+              <div className="md:col-span-2">
+                <AssigneeSelector
+                  projectId={punchItem.project_id}
+                  value={assignee}
+                  onChange={setAssignee}
+                  label="Assign To"
+                  placeholder="Select assignee..."
+                  showUnassigned={true}
+                />
+              </div>
+            )}
 
             {/* Building */}
             <div>

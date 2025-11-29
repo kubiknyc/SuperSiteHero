@@ -14,14 +14,17 @@ export interface FileValidationSuccess {
 
 export type FileValidationResult = FileValidationError | FileValidationSuccess
 
+// UUID regex for validating project IDs to prevent path traversal
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
 /**
  * Validate file before upload
  */
 export function validateFile(
   file: File,
-  maxSizeMB: number = 100
+  maxSizeMB: number = 50
 ): FileValidationResult {
-  // Check file size (default 100MB)
+  // Check file size (default 50MB)
   const maxSizeBytes = maxSizeMB * 1024 * 1024
   if (file.size > maxSizeBytes) {
     return {
@@ -67,19 +70,27 @@ export function getFileExtension(fileName: string): string {
 
 /**
  * Generate a unique file name for storage
+ * Includes path traversal protection via UUID validation
  */
 export function generateStorageFileName(
   projectId: string,
   originalFileName: string,
   timestamp: number = Date.now()
 ): string {
+  // Validate projectId is a valid UUID to prevent path traversal attacks
+  if (!UUID_REGEX.test(projectId)) {
+    throw new Error('Invalid project ID format')
+  }
+
   const ext = getFileExtension(originalFileName)
+  // Sanitize extension to prevent double-extension attacks
+  const cleanExt = ext.replace(/[^a-zA-Z0-9]/g, '').substring(0, 10)
   const cleanName = originalFileName
     .replace(/\.[^/.]+$/, '') // Remove extension
     .replace(/[^a-zA-Z0-9-_]/g, '_') // Replace special chars
     .substring(0, 50) // Limit name length
 
-  return `${projectId}/${timestamp}-${cleanName}.${ext}`
+  return `${projectId}/${timestamp}-${cleanName}.${cleanExt}`
 }
 
 /**
@@ -186,7 +197,7 @@ export async function getSignedDownloadUrl(
  * Format file size for display
  */
 export function formatFileSize(bytes: number | null): string {
-  if (!bytes) return 'Unknown'
+  if (!bytes) {return 'Unknown'}
 
   const units = ['B', 'KB', 'MB', 'GB']
   let size = bytes
@@ -208,10 +219,10 @@ export function getFileTypeIcon(
 ): 'pdf' | 'doc' | 'sheet' | 'image' | 'file' {
   const ext = getFileExtension(fileName).toLowerCase()
 
-  if (ext === 'pdf') return 'pdf'
-  if (['doc', 'docx'].includes(ext)) return 'doc'
-  if (['xls', 'xlsx', 'csv'].includes(ext)) return 'sheet'
-  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff'].includes(ext)) return 'image'
+  if (ext === 'pdf') {return 'pdf'}
+  if (['doc', 'docx'].includes(ext)) {return 'doc'}
+  if (['xls', 'xlsx', 'csv'].includes(ext)) {return 'sheet'}
+  if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff'].includes(ext)) {return 'image'}
 
   return 'file'
 }

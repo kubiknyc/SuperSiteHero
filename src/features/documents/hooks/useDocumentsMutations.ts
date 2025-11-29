@@ -4,6 +4,17 @@ import { useMutationWithNotification } from '@/lib/hooks/useMutationWithNotifica
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { Document, Folder } from '@/types/database'
 import { supabase } from '@/lib/supabase'
+import { documentAiApi } from '@/lib/api/services/document-ai'
+
+// File types that can be processed by AI
+const PROCESSABLE_FILE_TYPES = [
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
+  'image/tiff',
+  'image/gif',
+  'image/webp',
+]
 
 // =============================================
 // Document Mutations with Notifications
@@ -22,7 +33,7 @@ export function useCreateDocumentWithNotification() {
     Omit<Document, 'id' | 'created_at' | 'updated_at'>
   >({
     mutationFn: async (document) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -33,15 +44,29 @@ export function useCreateDocumentWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document
     },
     successMessage: (data) => `Document "${data.name}" uploaded successfully`,
     errorMessage: (error) => `Failed to upload document: ${error.message}`,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['documents'] })
       queryClient.invalidateQueries({ queryKey: ['documents', data.project_id] })
       queryClient.invalidateQueries({ queryKey: ['documents', data.project_id, data.folder_id] })
+
+      // Trigger AI processing for processable file types
+      if (data.file_type && PROCESSABLE_FILE_TYPES.includes(data.file_type)) {
+        try {
+          await documentAiApi.triggerOcrProcessing({
+            document_id: data.id,
+            priority: 100,
+          })
+          console.log(`AI processing triggered for document ${data.id}`)
+        } catch (error) {
+          // Don't fail the upload if AI processing trigger fails
+          console.error('Failed to trigger AI processing:', error)
+        }
+      }
     },
   })
 }
@@ -65,7 +90,7 @@ export function useUpdateDocumentWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Document
     },
     successMessage: (data) => `Document "${data.name}" updated successfully`,
@@ -93,7 +118,7 @@ export function useDeleteDocumentWithNotification() {
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq('id', documentId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     successMessage: 'Document deleted successfully',
     errorMessage: (error) => `Failed to delete document: ${error.message}`,
@@ -120,7 +145,7 @@ export function useCreateFolderWithNotification() {
     Omit<Folder, 'id' | 'created_at' | 'updated_at'>
   >({
     mutationFn: async (folder) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await supabase
         .from('folders')
@@ -131,7 +156,7 @@ export function useCreateFolderWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder
     },
     successMessage: (data) => `Folder "${data.name}" created successfully`,
@@ -163,7 +188,7 @@ export function useUpdateFolderWithNotification() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder
     },
     successMessage: (data) => `Folder "${data.name}" updated successfully`,
@@ -190,7 +215,7 @@ export function useDeleteFolderWithNotification() {
         .update({ deleted_at: new Date().toISOString() } as any)
         .eq('id', folderId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     successMessage: 'Folder deleted successfully',
     errorMessage: (error) => `Failed to delete folder: ${error.message}`,

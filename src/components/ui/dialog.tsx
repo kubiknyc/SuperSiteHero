@@ -65,7 +65,7 @@ DialogTrigger.displayName = 'DialogTrigger'
 const DialogPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { open } = React.useContext(DialogContext)
 
-  if (!open) return null
+  if (!open) {return null}
 
   return (
     <div className="fixed inset-0 z-50">

@@ -54,7 +54,7 @@ export function useWorkflowTypeByName(typeName: string) {
 export function useWorkflowTypeById(typeId: string | undefined) {
   const { data: workflowTypes = [] } = useWorkflowTypeCache()
 
-  if (!typeId) return undefined
+  if (!typeId) {return undefined}
 
   return workflowTypes.find(type => type.id === typeId)
 }

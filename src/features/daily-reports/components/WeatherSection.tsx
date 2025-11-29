@@ -11,7 +11,7 @@ interface WeatherSectionProps {
 }
 
 export function WeatherSection({ expanded, onToggle, draft, onUpdate }: WeatherSectionProps) {
-  if (!draft) return null
+  if (!draft) {return null}
 
   return (
     <Card>

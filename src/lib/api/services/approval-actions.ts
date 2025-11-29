@@ -6,6 +6,11 @@
 
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
+import {
+  sendApprovalCompletedNotification,
+  sendApprovalRequestNotification,
+  type NotificationRecipient,
+} from '@/lib/notifications/notification-service'
 import type {
   ApprovalActionRecord,
   ApprovalActionType,
@@ -120,7 +125,7 @@ export const approvalActionsApi = {
       .eq('id', requestId)
       .single()
 
-    if (requestError) throw requestError
+    if (requestError) {throw requestError}
     if (!request) {
       throw new ApiErrorClass({
         code: 'REQUEST_NOT_FOUND',
@@ -161,9 +166,7 @@ export const approvalActionsApi = {
       `)
       .single()
 
-    if (actionError) throw actionError
-
-    // TODO: Trigger email notification when Email Integration is implemented
+    if (actionError) {throw actionError}
 
     return action as ApprovalActionRecord
   },
@@ -201,7 +204,7 @@ export const approvalActionsApi = {
         .eq('request_id', requestId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as ApprovalActionRecord[]
     } catch (error) {
@@ -258,7 +261,7 @@ export const approvalActionsApi = {
         .eq('id', requestId)
         .single()
 
-      if (requestError) throw requestError
+      if (requestError) {throw requestError}
       if (!request) {
         throw new ApiErrorClass({
           code: 'REQUEST_NOT_FOUND',
@@ -314,7 +317,7 @@ export const approvalActionsApi = {
           delegated_to: options.delegated_to || null,
         })
 
-      if (actionError) throw actionError
+      if (actionError) {throw actionError}
 
       // Update request status based on action
       let newStatus = request.status
@@ -365,10 +368,8 @@ export const approvalActionsApi = {
           .update(updateData)
           .eq('id', requestId)
 
-        if (updateError) throw updateError
+        if (updateError) {throw updateError}
       }
-
-      // TODO: Trigger email notification when Email Integration is implemented
 
       // Fetch and return updated request
       const { data: updatedRequest, error: fetchError } = await db
@@ -401,7 +402,79 @@ export const approvalActionsApi = {
         .eq('id', requestId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
+
+      // Send notifications based on action result
+      try {
+        // Get project name
+        const { data: project } = await db
+          .from('projects')
+          .select('name')
+          .eq('id', updatedRequest.project_id)
+          .single()
+
+        const projectName = project?.name || 'Unknown Project'
+        const entityName = `${updatedRequest.entity_type.replace('_', ' ')} #${updatedRequest.entity_id.slice(0, 8)}`
+
+        // If request is completed (approved/rejected), notify the initiator
+        if (newStatus !== request.status && (newStatus === 'approved' || newStatus === 'approved_with_conditions' || newStatus === 'rejected')) {
+          // Get initiator details
+          const { data: initiator } = await db
+            .from('users')
+            .select('id, email, full_name')
+            .eq('id', request.initiated_by)
+            .single()
+
+          if (initiator) {
+            const recipient: NotificationRecipient = {
+              userId: initiator.id,
+              email: initiator.email,
+              name: initiator.full_name,
+            }
+
+            await sendApprovalCompletedNotification(recipient, {
+              entityType: updatedRequest.entity_type,
+              entityName,
+              projectName,
+              status: newStatus as 'approved' | 'approved_with_conditions' | 'rejected',
+              actionBy: user.email || 'Unknown',
+              comment: options.comment,
+              conditions: options.conditions,
+              viewUrl: `${import.meta.env.VITE_APP_URL || ''}/approvals/${requestId}`,
+            })
+          }
+        }
+        // If moving to next step, notify next step approvers
+        else if (newStep !== request.current_step) {
+          const nextStep = steps.find((s: any) => s.step_order === newStep)
+          if (nextStep?.approver_ids?.length) {
+            const { data: approvers } = await db
+              .from('users')
+              .select('id, email, full_name')
+              .in('id', nextStep.approver_ids)
+
+            if (approvers?.length) {
+              const recipients: NotificationRecipient[] = approvers.map((u: any) => ({
+                userId: u.id,
+                email: u.email,
+                name: u.full_name,
+              }))
+
+              await sendApprovalRequestNotification(recipients, {
+                entityType: updatedRequest.entity_type,
+                entityName,
+                projectName,
+                initiatedBy: updatedRequest.initiator?.email || 'Unknown',
+                stepName: nextStep.name || `Step ${nextStep.step_order}`,
+                approvalUrl: `${import.meta.env.VITE_APP_URL || ''}/approvals/${requestId}`,
+              })
+            }
+          }
+        }
+      } catch (notifyError) {
+        // Log but don't fail the action
+        console.error('[ApprovalActions] Failed to send notification:', notifyError)
+      }
 
       return updatedRequest as ApprovalRequest
     } catch (error) {

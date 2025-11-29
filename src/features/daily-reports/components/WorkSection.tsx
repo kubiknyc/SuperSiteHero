@@ -10,7 +10,7 @@ interface WorkSectionProps {
 }
 
 export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSectionProps) {
-  if (!draft) return null
+  if (!draft) {return null}
 
   return (
     <Card>

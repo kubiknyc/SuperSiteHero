@@ -72,9 +72,9 @@ export function useChangeOrders(projectId: string | undefined) {
   return useQuery<ChangeOrderWithRelations[]>({
     queryKey: ['change-orders', projectId],
     queryFn: async (): Promise<ChangeOrderWithRelations[]> => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
-      if (!userProfile?.company_id) throw new Error('No company ID found')
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
 
       // First, get the change order workflow type ID
       const { data: workflowTypes, error: wtError } = await supabase
@@ -84,8 +84,8 @@ export function useChangeOrders(projectId: string | undefined) {
         .ilike('name_singular', '%change%order%')
         .single()
 
-      if (wtError) throw wtError
-      if (!workflowTypes) throw new Error('Change order workflow type not found')
+      if (wtError) {throw wtError}
+      if (!workflowTypes) {throw new Error('Change order workflow type not found')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -106,7 +106,7 @@ export function useChangeOrders(projectId: string | undefined) {
         .eq('workflow_type_id', workflowTypes.id)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ChangeOrderWithRelations[]
     },
     enabled: !!projectId && !!userProfile?.company_id,
@@ -118,7 +118,7 @@ export function useChangeOrder(changeOrderId: string | undefined) {
   return useQuery<ChangeOrderDetailWithRelations | null>({
     queryKey: ['change-orders', changeOrderId],
     queryFn: async (): Promise<ChangeOrderDetailWithRelations | null> => {
-      if (!changeOrderId) throw new Error('Change Order ID required')
+      if (!changeOrderId) {throw new Error('Change Order ID required')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -139,7 +139,7 @@ export function useChangeOrder(changeOrderId: string | undefined) {
         .eq('id', changeOrderId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as any as ChangeOrderDetailWithRelations | null
     },
     enabled: !!changeOrderId,
@@ -190,7 +190,7 @@ export function useCreateChangeOrder() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -215,7 +215,7 @@ export function useUpdateChangeOrder() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -241,7 +241,7 @@ export function useDeleteChangeOrder() {
         .update(updateData as any)
         .eq('id', changeOrderId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['change-orders'] })
@@ -256,7 +256,7 @@ export function useAddChangeOrderComment() {
 
   return useMutation<WorkflowItemComment, Error, { workflow_item_id: string; comment: string }>({
     mutationFn: async ({ workflow_item_id, comment }): Promise<WorkflowItemComment> => {
-      if (!userProfile?.id) throw new Error('User profile required')
+      if (!userProfile?.id) {throw new Error('User profile required')}
 
       const insertData = {
         workflow_item_id,
@@ -271,7 +271,7 @@ export function useAddChangeOrderComment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -311,7 +311,7 @@ export function useRequestBids() {
         .insert(bids as ChangeOrderBidInsert[] as any)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -327,7 +327,7 @@ export function useAwardBid() {
 
   return useMutation<ChangeOrderBid, Error, string>({
     mutationFn: async (bidId: string): Promise<ChangeOrderBid> => {
-      if (!userProfile?.id) throw new Error('User profile required')
+      if (!userProfile?.id) {throw new Error('User profile required')}
 
       // First, get the bid to find workflow_item_id
       const { data: bid, error: bidError } = await supabase
@@ -336,8 +336,8 @@ export function useAwardBid() {
         .eq('id', bidId)
         .single()
 
-      if (bidError) throw bidError
-      if (!bid) throw new Error('Bid not found')
+      if (bidError) {throw bidError}
+      if (!bid) {throw new Error('Bid not found')}
 
       // Unmark all other bids for this CO
       const unmarkUpdate: ChangeOrderBidUpdate = { is_awarded: false }
@@ -361,7 +361,7 @@ export function useAwardBid() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {

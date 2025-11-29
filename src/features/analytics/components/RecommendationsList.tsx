@@ -1,0 +1,397 @@
+// File: /src/features/analytics/components/RecommendationsList.tsx
+// Component for displaying AI-generated recommendations
+
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  Button,
+  Badge,
+  Textarea,
+} from '@/components/ui'
+import {
+  useRecommendations,
+  useAcknowledgeRecommendation,
+  useImplementRecommendation,
+  useDismissRecommendation,
+} from '../hooks/useAnalytics'
+import type {
+  AnalyticsRecommendation,
+  RecommendationCategory,
+  RecommendationPriority,
+  RecommendationStatus,
+} from '@/types/analytics'
+
+interface RecommendationsListProps {
+  projectId: string
+  showFilters?: boolean
+  maxItems?: number
+  className?: string
+}
+
+// Category configuration
+const CATEGORY_CONFIG: Record<RecommendationCategory, { icon: string; color: string }> = {
+  budget: { icon: '💰', color: 'bg-emerald-100 text-emerald-700' },
+  schedule: { icon: '📅', color: 'bg-blue-100 text-blue-700' },
+  risk: { icon: '⚠️', color: 'bg-amber-100 text-amber-700' },
+  operational: { icon: '⚙️', color: 'bg-purple-100 text-purple-700' },
+  resource: { icon: '👥', color: 'bg-cyan-100 text-cyan-700' },
+}
+
+// Priority configuration
+const PRIORITY_CONFIG: Record<RecommendationPriority, { color: string; label: string }> = {
+  critical: { color: 'bg-red-100 text-red-700 border-red-200', label: 'Critical' },
+  high: { color: 'bg-orange-100 text-orange-700 border-orange-200', label: 'High' },
+  medium: { color: 'bg-amber-100 text-amber-700 border-amber-200', label: 'Medium' },
+  low: { color: 'bg-gray-100 text-gray-700 border-gray-200', label: 'Low' },
+}
+
+// Status configuration
+const STATUS_CONFIG: Record<RecommendationStatus, { color: string; label: string }> = {
+  pending: { color: 'bg-blue-50 text-blue-700', label: 'Pending' },
+  acknowledged: { color: 'bg-amber-50 text-amber-700', label: 'Acknowledged' },
+  implemented: { color: 'bg-green-50 text-green-700', label: 'Implemented' },
+  dismissed: { color: 'bg-gray-50 text-gray-500', label: 'Dismissed' },
+}
+
+/**
+ * RecommendationsList Component
+ *
+ * Displays AI-generated recommendations with:
+ * - Category and priority badges
+ * - Acknowledge/Implement/Dismiss actions
+ * - Impact and effort indicators
+ *
+ * Usage:
+ * ```tsx
+ * <RecommendationsList projectId="proj-123" />
+ * ```
+ */
+export function RecommendationsList({
+  projectId,
+  showFilters = true,
+  maxItems,
+  className,
+}: RecommendationsListProps) {
+  const [statusFilter, setStatusFilter] = useState<RecommendationStatus[]>(['pending', 'acknowledged'])
+  const [categoryFilter, setCategoryFilter] = useState<RecommendationCategory[]>([])
+
+  const { data: recommendations, isLoading, error } = useRecommendations(
+    projectId,
+    { statuses: statusFilter, categories: categoryFilter.length > 0 ? categoryFilter : undefined }
+  )
+
+  if (isLoading) {
+    return (
+      <Card className={cn('animate-pulse', className)}>
+        <CardHeader>
+          <CardTitle className="h-5 w-48 bg-gray-200 rounded" />
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="p-4 bg-gray-50 rounded-lg">
+                <div className="h-4 w-3/4 bg-gray-200 rounded mb-2" />
+                <div className="h-3 w-full bg-gray-100 rounded" />
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (error) {
+    return (
+      <Card className={cn('border-red-200', className)}>
+        <CardContent className="pt-6">
+          <div className="text-center text-red-600">
+            <p>Failed to load recommendations</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const displayRecommendations = maxItems
+    ? recommendations?.slice(0, maxItems)
+    : recommendations
+
+  return (
+    <Card className={className}>
+      <CardHeader className="pb-3">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <span>💡</span>
+            <span>AI Recommendations</span>
+            {recommendations && (
+              <Badge variant="outline" className="ml-2">
+                {recommendations.length}
+              </Badge>
+            )}
+          </CardTitle>
+        </div>
+
+        {/* Filters */}
+        {showFilters && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {/* Status filters */}
+            <div className="flex gap-1">
+              {(['pending', 'acknowledged', 'implemented', 'dismissed'] as RecommendationStatus[]).map(
+                (status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => {
+                      setStatusFilter((prev) =>
+                        prev.includes(status)
+                          ? prev.filter((s) => s !== status)
+                          : [...prev, status]
+                      )
+                    }}
+                    className={cn(
+                      'px-2 py-1 text-xs rounded-full border transition-colors',
+                      statusFilter.includes(status)
+                        ? STATUS_CONFIG[status].color
+                        : 'bg-white text-gray-400 border-gray-200'
+                    )}
+                  >
+                    {STATUS_CONFIG[status].label}
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+        )}
+      </CardHeader>
+
+      <CardContent>
+        {displayRecommendations?.length === 0 ? (
+          <div className="text-center text-gray-500 py-8">
+            <span className="text-3xl">✨</span>
+            <p className="mt-2">No recommendations</p>
+            <p className="text-sm">No active recommendations for this project</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {displayRecommendations?.map((rec) => (
+              <RecommendationItem key={rec.id} recommendation={rec} />
+            ))}
+          </div>
+        )}
+
+        {maxItems && recommendations && recommendations.length > maxItems && (
+          <p className="text-xs text-gray-400 mt-4 text-center">
+            Showing {maxItems} of {recommendations.length} recommendations
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+/**
+ * Individual recommendation item
+ */
+interface RecommendationItemProps {
+  recommendation: AnalyticsRecommendation
+}
+
+function RecommendationItem({ recommendation }: RecommendationItemProps) {
+  const [showActions, setShowActions] = useState(false)
+  const [dismissReason, setDismissReason] = useState('')
+  const [showDismissForm, setShowDismissForm] = useState(false)
+
+  const acknowledgeMutation = useAcknowledgeRecommendation()
+  const implementMutation = useImplementRecommendation()
+  const dismissMutation = useDismissRecommendation()
+
+  const categoryConfig = CATEGORY_CONFIG[recommendation.category]
+  const priorityConfig = PRIORITY_CONFIG[recommendation.priority]
+  const statusConfig = STATUS_CONFIG[recommendation.status]
+
+  const handleAcknowledge = () => {
+    acknowledgeMutation.mutate({ recommendationId: recommendation.id })
+  }
+
+  const handleImplement = () => {
+    implementMutation.mutate({ recommendationId: recommendation.id })
+  }
+
+  const handleDismiss = () => {
+    if (dismissReason.trim()) {
+      dismissMutation.mutate({
+        recommendationId: recommendation.id,
+        reason: dismissReason,
+      })
+      setShowDismissForm(false)
+    }
+  }
+
+  const isPending = recommendation.status === 'pending'
+  const isAcknowledged = recommendation.status === 'acknowledged'
+  const isActionable = isPending || isAcknowledged
+
+  return (
+    <div
+      className={cn(
+        'p-4 rounded-lg border transition-colors',
+        recommendation.status === 'dismissed'
+          ? 'bg-gray-50 border-gray-100 opacity-60'
+          : recommendation.status === 'implemented'
+          ? 'bg-green-50 border-green-100'
+          : 'bg-white border-gray-200 hover:border-gray-300'
+      )}
+      onMouseEnter={() => setShowActions(true)}
+      onMouseLeave={() => setShowActions(false)}
+    >
+      {/* Header */}
+      <div className="flex items-start gap-3">
+        {/* Category icon */}
+        <span className="text-xl flex-shrink-0">{categoryConfig.icon}</span>
+
+        <div className="flex-1 min-w-0">
+          {/* Title and badges */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <h4 className="font-medium text-sm text-gray-900">
+              {recommendation.title}
+            </h4>
+            <Badge variant="outline" className={cn('text-[10px]', priorityConfig.color)}>
+              {priorityConfig.label}
+            </Badge>
+            <Badge variant="outline" className={cn('text-[10px]', statusConfig.color)}>
+              {statusConfig.label}
+            </Badge>
+          </div>
+
+          {/* Description */}
+          <p className="text-sm text-gray-600 mt-1">{recommendation.description}</p>
+
+          {/* Impact and effort */}
+          {(recommendation.impact || recommendation.effort) && (
+            <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+              {recommendation.impact && (
+                <span>Impact: <strong>{recommendation.impact}</strong></span>
+              )}
+              {recommendation.effort && (
+                <span>Effort: <strong>{recommendation.effort}</strong></span>
+              )}
+            </div>
+          )}
+
+          {/* Actions (for pending/acknowledged) */}
+          {isActionable && showActions && !showDismissForm && (
+            <div className="flex items-center gap-2 mt-3">
+              {isPending && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleAcknowledge}
+                  disabled={acknowledgeMutation.isPending}
+                >
+                  {acknowledgeMutation.isPending ? 'Saving...' : 'Acknowledge'}
+                </Button>
+              )}
+              <Button
+                size="sm"
+                onClick={handleImplement}
+                disabled={implementMutation.isPending}
+              >
+                {implementMutation.isPending ? 'Saving...' : 'Mark Implemented'}
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-gray-500"
+                onClick={() => setShowDismissForm(true)}
+              >
+                Dismiss
+              </Button>
+            </div>
+          )}
+
+          {/* Dismiss form */}
+          {showDismissForm && (
+            <div className="mt-3 space-y-2">
+              <Textarea
+                placeholder="Reason for dismissing..."
+                value={dismissReason}
+                onChange={(e) => setDismissReason(e.target.value)}
+                className="text-sm"
+                rows={2}
+              />
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleDismiss}
+                  disabled={!dismissReason.trim() || dismissMutation.isPending}
+                >
+                  {dismissMutation.isPending ? 'Dismissing...' : 'Confirm Dismiss'}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowDismissForm(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Timestamp */}
+      <div className="mt-2 text-xs text-gray-400">
+        Created {new Date(recommendation.created_at).toLocaleDateString()}
+        {recommendation.implemented_at && (
+          <span>
+            {' '}• Implemented {new Date(recommendation.implemented_at).toLocaleDateString()}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Compact recommendation summary for widgets
+ */
+interface RecommendationSummaryProps {
+  projectId: string
+  className?: string
+}
+
+export function RecommendationSummary({ projectId, className }: RecommendationSummaryProps) {
+  const { data: recommendations } = useRecommendations(projectId, { statuses: ['pending'] })
+
+  if (!recommendations || recommendations.length === 0) {
+    return null
+  }
+
+  const criticalCount = recommendations.filter((r) => r.priority === 'critical').length
+  const highCount = recommendations.filter((r) => r.priority === 'high').length
+
+  return (
+    <div className={cn('flex items-center gap-2', className)}>
+      <span className="text-sm">💡</span>
+      <span className="text-sm text-gray-600">
+        {recommendations.length} pending
+      </span>
+      {criticalCount > 0 && (
+        <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700">
+          {criticalCount} critical
+        </Badge>
+      )}
+      {highCount > 0 && (
+        <Badge variant="outline" className="text-[10px] bg-orange-50 text-orange-700">
+          {highCount} high
+        </Badge>
+      )}
+    </div>
+  )
+}

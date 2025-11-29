@@ -70,7 +70,7 @@ function generateCloudPath(
   height: number,
   numBumps: number = 8
 ): string {
-  if (width === 0 || height === 0) return ''
+  if (width === 0 || height === 0) {return ''}
 
   const absWidth = Math.abs(width)
   const absHeight = Math.abs(height)
@@ -203,7 +203,7 @@ export function DrawingCanvas({
 
   // Extract unique creators from existing markups for layer visibility
   const creators = useMemo(() => {
-    if (!existingMarkups) return []
+    if (!existingMarkups) {return []}
     const uniqueCreators = new Map<string, { id: string; name: string }>()
     existingMarkups.forEach(markup => {
       if (markup.created_by && !uniqueCreators.has(markup.created_by)) {
@@ -222,7 +222,7 @@ export function DrawingCanvas({
       arrow: 0, rectangle: 0, circle: 0, text: 0, freehand: 0, cloud: 0
     }
     shapes.forEach(shape => {
-      if (shape.type in counts) counts[shape.type as MarkupType]++
+      if (shape.type in counts) {counts[shape.type as MarkupType]++}
     })
     return counts
   }, [shapes])
@@ -231,11 +231,11 @@ export function DrawingCanvas({
   const filteredShapes = useMemo(() => {
     return shapes.filter(shape => {
       // Filter by type
-      if (!filter.types.includes(shape.type as MarkupType)) return false
+      if (!filter.types.includes(shape.type as MarkupType)) {return false}
       // Filter by hidden layers (by creator)
-      if (shape.createdBy && filter.hiddenLayers.includes(shape.createdBy)) return false
+      if (shape.createdBy && filter.hiddenLayers.includes(shape.createdBy)) {return false}
       // Filter by "my markups only"
-      if (filter.showMyMarkupsOnly && currentUserId && shape.createdBy !== currentUserId) return false
+      if (filter.showMyMarkupsOnly && currentUserId && shape.createdBy !== currentUserId) {return false}
       return true
     })
   }, [shapes, filter, currentUserId])
@@ -279,10 +279,10 @@ export function DrawingCanvas({
 
   // Handle mouse down - start drawing
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (effectiveReadOnly || tool === 'select') return
+    if (effectiveReadOnly || tool === 'select') {return}
 
     const pos = e.target.getStage()?.getPointerPosition()
-    if (!pos) return
+    if (!pos) {return}
 
     setIsDrawing(true)
 
@@ -323,10 +323,10 @@ export function DrawingCanvas({
 
   // Handle mouse move - update current shape
   const handleMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (!isDrawing || !currentShape || effectiveReadOnly) return
+    if (!isDrawing || !currentShape || effectiveReadOnly) {return}
 
     const pos = e.target.getStage()?.getPointerPosition()
-    if (!pos) return
+    if (!pos) {return}
 
     const updatedShape = { ...currentShape }
 
@@ -361,7 +361,7 @@ export function DrawingCanvas({
 
   // Handle mouse up - finish drawing
   const handleMouseUp = () => {
-    if (!isDrawing || !currentShape || effectiveReadOnly) return
+    if (!isDrawing || !currentShape || effectiveReadOnly) {return}
 
     setIsDrawing(false)
 
@@ -391,18 +391,18 @@ export function DrawingCanvas({
         strokeWidth: shape.strokeWidth,
       }
 
-      if (shape.width !== undefined) markupData.width = shape.width
-      if (shape.height !== undefined) markupData.height = shape.height
-      if (shape.radius !== undefined) markupData.radius = shape.radius
-      if (shape.points) markupData.points = shape.points
-      if (shape.text) markupData.text = shape.text
-      if (shape.fill) markupData.fill = shape.fill
-      if (shape.rotation) markupData.rotation = shape.rotation
-      if (shape.scaleX) markupData.scaleX = shape.scaleX
-      if (shape.scaleY) markupData.scaleY = shape.scaleY
-      if (shape.pointerLength) markupData.pointerLength = shape.pointerLength
-      if (shape.pointerWidth) markupData.pointerWidth = shape.pointerWidth
-      if (shape.numBumps) markupData.numBumps = shape.numBumps
+      if (shape.width !== undefined) {markupData.width = shape.width}
+      if (shape.height !== undefined) {markupData.height = shape.height}
+      if (shape.radius !== undefined) {markupData.radius = shape.radius}
+      if (shape.points) {markupData.points = shape.points}
+      if (shape.text) {markupData.text = shape.text}
+      if (shape.fill) {markupData.fill = shape.fill}
+      if (shape.rotation) {markupData.rotation = shape.rotation}
+      if (shape.scaleX) {markupData.scaleX = shape.scaleX}
+      if (shape.scaleY) {markupData.scaleY = shape.scaleY}
+      if (shape.pointerLength) {markupData.pointerLength = shape.pointerLength}
+      if (shape.pointerWidth) {markupData.pointerWidth = shape.pointerWidth}
+      if (shape.numBumps) {markupData.numBumps = shape.numBumps}
 
       await createMarkup.mutateAsync({
         document_id: documentId,
@@ -552,14 +552,14 @@ export function DrawingCanvas({
 
   // Handle undo
   const handleUndo = () => {
-    if (historyStep === 0) return
+    if (historyStep === 0) {return}
     setHistoryStep(historyStep - 1)
     setShapes(history[historyStep - 1])
   }
 
   // Handle redo
   const handleRedo = () => {
-    if (historyStep === history.length - 1) return
+    if (historyStep === history.length - 1) {return}
     setHistoryStep(historyStep + 1)
     setShapes(history[historyStep + 1])
   }
@@ -878,7 +878,7 @@ export function DrawingCanvas({
                   fill={shape.fill || 'transparent'}
                   draggable={tool === 'select'}
                   sceneFunc={(context, shapeInstance) => {
-                    if (!pathData) return
+                    if (!pathData) {return}
                     const path = new Path2D(pathData)
                     context.beginPath()
                     // @ts-ignore - Path2D works with canvas context
@@ -959,7 +959,7 @@ export function DrawingCanvas({
                       currentShape.height || 0,
                       currentShape.numBumps || 8
                     )
-                    if (!pathData) return
+                    if (!pathData) {return}
                     const path = new Path2D(pathData)
                     context.beginPath()
                     // @ts-ignore - Path2D works with canvas context

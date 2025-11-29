@@ -83,12 +83,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
+    if (error) {throw error}
   }
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    if (error) {throw error}
+
+    // Clear sensitive data from localStorage on logout
+    try {
+      localStorage.removeItem('checklist-signature-templates')
+      localStorage.removeItem('inAppNotifications')
+      localStorage.removeItem('documentSearchHistory')
+      localStorage.removeItem('performance-metrics')
+    } catch {
+      // Ignore errors if localStorage is not available
+    }
   }
 
   const value = {

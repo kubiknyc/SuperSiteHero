@@ -1,13 +1,14 @@
 // File: /src/features/tasks/components/TaskForm.tsx
 // Form for creating and editing tasks
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
+import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 import type { Task, Priority, TaskStatus } from '@/types/database'
 
 export interface TaskFormData {
@@ -18,6 +19,8 @@ export interface TaskFormData {
   status: TaskStatus
   priority: Priority
   location: string | null
+  assigned_to_subcontractor_id: string | null
+  assigned_to_user_id: string | null
 }
 
 interface TaskFormProps {
@@ -41,7 +44,28 @@ export function TaskForm({
     status: (initialData?.status as TaskStatus) || 'pending',
     priority: (initialData?.priority as Priority) || 'normal',
     location: initialData?.location || null,
+    assigned_to_subcontractor_id: initialData?.assigned_to_subcontractor_id || null,
+    assigned_to_user_id: initialData?.assigned_to_user_id || null,
   })
+
+  // Assignee state for the selector
+  const [assignee, setAssignee] = useState<Assignee | null>(() => {
+    if (initialData?.assigned_to_subcontractor_id) {
+      return { type: 'subcontractor', id: initialData.assigned_to_subcontractor_id }
+    } else if (initialData?.assigned_to_user_id) {
+      return { type: 'user', id: initialData.assigned_to_user_id }
+    }
+    return null
+  })
+
+  // Keep formData in sync with assignee changes
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      assigned_to_subcontractor_id: assignee?.type === 'subcontractor' ? assignee.id : null,
+      assigned_to_user_id: assignee?.type === 'user' ? assignee.id : null,
+    }))
+  }, [assignee])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,6 +123,16 @@ export function TaskForm({
               placeholder="e.g., Building A, Floor 2"
             />
           </div>
+
+          {/* Assignee */}
+          <AssigneeSelector
+            projectId={projectId}
+            value={assignee}
+            onChange={setAssignee}
+            label="Assign To"
+            placeholder="Select team member or subcontractor..."
+            showUnassigned={true}
+          />
         </CardContent>
       </Card>
 

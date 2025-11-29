@@ -63,16 +63,16 @@ export function useRFIWorkflowType() {
   return useQuery({
     queryKey: ['rfi-workflow-type', userProfile?.company_id],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('Company ID required')
+      if (!userProfile?.company_id) {throw new Error('Company ID required')}
 
       const { data, error } = await supabase
         .from('workflow_types')
-        .select('*')
+        .select('id, name_singular, name_plural, prefix, company_id')
         .eq('company_id', userProfile.company_id)
         .ilike('name_singular', 'RFI')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowType
     },
     enabled: !!userProfile?.company_id,
@@ -99,13 +99,14 @@ export function useRFIs(projectId: string | undefined, workflowTypeId?: string) 
 
       const { data, error } = await supabase
         .from('workflow_items')
-        .select('*')
+        .select('id, number, title, description, status, priority, due_date, raised_by, created_at, project_id, workflow_type_id, assignees')
         .eq('project_id', projectId)
         .eq('workflow_type_id', workflowTypeId)
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
+        .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!projectId && !!workflowTypeId,
@@ -135,7 +136,7 @@ export function useRFI(rfiId: string | undefined) {
         .is('deleted_at', null)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     enabled: !!rfiId,
@@ -171,7 +172,7 @@ export function useRFIsByStatus(
         .order('due_date', { ascending: true, nullsFirst: false })
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!projectId && !!status,
@@ -212,7 +213,7 @@ export function useMyRFIs(projectId?: string | undefined) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!userProfile?.id,
@@ -242,7 +243,7 @@ export function useRFIComments(rfiId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemComment[]
     },
     enabled: !!rfiId,
@@ -271,7 +272,7 @@ export function useRFIHistory(rfiId: string | undefined) {
         .eq('workflow_item_id', rfiId)
         .order('changed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemHistory[]
     },
     enabled: !!rfiId,
@@ -355,7 +356,7 @@ export function useCreateRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     onSuccess: (data) => {
@@ -395,7 +396,7 @@ export function useUpdateRFI() {
       const cleanedUpdates: Partial<WorkflowItem> = {}
 
       if (updates.title !== undefined) {
-        cleanedUpdates.title = updates.title.trim() || null
+        cleanedUpdates.title = updates.title.trim() || 'Untitled'
       }
       if (updates.description !== undefined) {
         cleanedUpdates.description = updates.description.trim() || null
@@ -423,7 +424,7 @@ export function useUpdateRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     onSuccess: (data) => {
@@ -493,7 +494,7 @@ export function useChangeRFIStatus() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     onSuccess: (data) => {
@@ -548,7 +549,7 @@ export function useAddRFIComment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemComment
     },
     onSuccess: (data) => {
@@ -581,7 +582,7 @@ export function useDeleteRFI() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', rfiId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       // Invalidate all RFI queries to remove deleted item

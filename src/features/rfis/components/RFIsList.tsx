@@ -1,7 +1,7 @@
 // File: /src/features/rfis/components/RFIsList.tsx
 // RFIs list with filtering and actions
 
-import { useState } from 'react'
+import { useState, useCallback, useMemo, memo } from 'react'
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,62 @@ interface RFIsListProps {
   projectId: string | undefined
 }
 
+// Memoized row component to prevent re-renders when other rows change
+interface RFIRowProps {
+  rfi: WorkflowItem
+  workflowTypePrefix: string
+  getStatusColor: (status: string) => string
+  onDelete: (id: string) => void
+  isDeleting: boolean
+}
+
+const RFIRow = memo(function RFIRow({ rfi, workflowTypePrefix, getStatusColor, onDelete, isDeleting }: RFIRowProps) {
+  return (
+    <tr className="border-b hover:bg-gray-50">
+      <td className="py-3 px-4 font-medium text-gray-900">
+        {workflowTypePrefix}-{String(rfi.number).padStart(3, '0')}
+      </td>
+      <td className="py-3 px-4">
+        <div className="flex-1 min-w-0">
+          <a
+            href={`/rfis/${rfi.id}`}
+            className="font-medium text-blue-600 hover:underline truncate"
+          >
+            {rfi.title}
+          </a>
+          {rfi.description && (
+            <p className="text-xs text-gray-600 truncate mt-1">{rfi.description}</p>
+          )}
+        </div>
+      </td>
+      <td className="py-3 px-4">
+        <Badge className={cn('capitalize', getStatusColor(rfi.status))}>
+          {rfi.status}
+        </Badge>
+      </td>
+      <td className="py-3 px-4 text-gray-600 text-sm">
+        {rfi.raised_by ? rfi.raised_by.substring(0, 8) : '-'}
+      </td>
+      <td className="py-3 px-4 text-gray-600 text-sm">
+        {rfi.created_at ? format(new Date(rfi.created_at), 'MMM d, yyyy') : 'N/A'}
+      </td>
+      <td className="py-3 px-4">
+        <div className="flex justify-end gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onDelete(rfi.id)}
+            disabled={isDeleting}
+            title="Delete"
+          >
+            <Trash2 className="h-4 w-4 text-red-600" />
+          </Button>
+        </div>
+      </td>
+    </tr>
+  )
+})
+
 export function RFIsList({ projectId }: RFIsListProps) {
   const [createOpen, setCreateOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -28,8 +84,8 @@ export function RFIsList({ projectId }: RFIsListProps) {
   const { data: rfis, isLoading, error } = useRFIs(projectId, workflowType?.id)
   const deleteRFI = useDeleteRFIWithNotification()
 
-  // Filter RFIs
-  const filtered = (rfis || []).filter((rfi) => {
+  // Filter RFIs - memoized to prevent recalculation on every render
+  const filtered = useMemo(() => (rfis || []).filter((rfi) => {
     const matchesSearch =
       rfi.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       rfi.description?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -37,7 +93,7 @@ export function RFIsList({ projectId }: RFIsListProps) {
     const matchesStatus = filterStatus ? rfi.status === filterStatus : true
 
     return matchesSearch && matchesStatus
-  })
+  }), [rfis, searchTerm, filterStatus])
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
@@ -51,11 +107,19 @@ export function RFIsList({ projectId }: RFIsListProps) {
     return colors[status] || 'bg-gray-100 text-gray-800'
   }
 
-  const handleDelete = async (rfiId: string) => {
+  const handleDelete = useCallback(async (rfiId: string) => {
     if (window.confirm('Are you sure you want to delete this RFI?')) {
       await deleteRFI.mutateAsync(rfiId)
     }
-  }
+  }, [deleteRFI])
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value)
+  }, [])
+
+  const handleStatusFilterChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFilterStatus(e.target.value)
+  }, [])
 
   if (!projectId) {
     return (
@@ -112,10 +176,10 @@ export function RFIsList({ projectId }: RFIsListProps) {
             <Input
               placeholder="Search RFIs..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={handleSearchChange}
               className="flex-1"
             />
-            <Select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+            <Select value={filterStatus} onChange={handleStatusFilterChange}>
               <option value="">All Statuses</option>
               <option value="draft">Draft</option>
               <option value="submitted">Submitted</option>
@@ -147,48 +211,14 @@ export function RFIsList({ projectId }: RFIsListProps) {
                 </thead>
                 <tbody>
                   {filtered.map((rfi: WorkflowItem) => (
-                    <tr key={rfi.id} className="border-b hover:bg-gray-50">
-                      <td className="py-3 px-4 font-medium text-gray-900">
-                        {workflowType?.prefix || 'RFI'}-{String(rfi.number).padStart(3, '0')}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex-1 min-w-0">
-                          <a
-                            href={`/rfis/${rfi.id}`}
-                            className="font-medium text-blue-600 hover:underline truncate"
-                          >
-                            {rfi.title}
-                          </a>
-                          {rfi.description && (
-                            <p className="text-xs text-gray-600 truncate mt-1">{rfi.description}</p>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge className={cn('capitalize', getStatusColor(rfi.status))}>
-                          {rfi.status}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-gray-600 text-sm">
-                        {rfi.raised_by ? rfi.raised_by.substring(0, 8) : '-'}
-                      </td>
-                      <td className="py-3 px-4 text-gray-600 text-sm">
-                        {rfi.created_at ? format(new Date(rfi.created_at), 'MMM d, yyyy') : 'N/A'}
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDelete(rfi.id)}
-                            disabled={deleteRFI.isPending}
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4 text-red-600" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
+                    <RFIRow
+                      key={rfi.id}
+                      rfi={rfi}
+                      workflowTypePrefix={workflowType?.prefix || 'RFI'}
+                      getStatusColor={getStatusColor}
+                      onDelete={handleDelete}
+                      isDeleting={deleteRFI.isPending}
+                    />
                   ))}
                 </tbody>
               </table>

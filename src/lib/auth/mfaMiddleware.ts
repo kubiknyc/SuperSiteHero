@@ -85,7 +85,7 @@ export function isPathMFAProtected(path: string, userRole?: string): boolean {
       ? path.startsWith(route.path.slice(0, -1))
       : path === route.path
 
-    if (!pathMatch) return false
+    if (!pathMatch) {return false}
 
     // Check role requirements
     if (route.roles && userRole) {
@@ -222,7 +222,7 @@ export class MFASession {
    */
   static isVerified(userId: string): boolean {
     const verifiedAt = this.verifiedSessions.get(userId)
-    if (!verifiedAt) return false
+    if (!verifiedAt) {return false}
 
     const elapsed = Date.now() - verifiedAt
     if (elapsed > MFA_SESSION_DURATION) {
@@ -245,7 +245,7 @@ export class MFASession {
    */
   static getRemainingTime(userId: string): number {
     const verifiedAt = this.verifiedSessions.get(userId)
-    if (!verifiedAt) return 0
+    if (!verifiedAt) {return 0}
 
     const elapsed = Date.now() - verifiedAt
     const remaining = MFA_SESSION_DURATION - elapsed

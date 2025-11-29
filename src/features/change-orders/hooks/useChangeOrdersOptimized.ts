@@ -145,8 +145,8 @@ export function useChangeOrdersOptimized(
   const query = useQuery({
     queryKey: ['change-orders-optimized', projectId, viewType],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
-      if (!userProfile?.company_id) throw new Error('No company ID found')
+      if (!projectId) {throw new Error('Project ID required')}
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
 
       // Get workflow type ID from cache or fetch if needed
       let workflowTypeId = changeOrderType?.id
@@ -159,8 +159,8 @@ export function useChangeOrdersOptimized(
           .ilike('name_singular', '%change%order%')
           .single()
 
-        if (wtError) throw wtError
-        if (!workflowTypes) throw new Error('Change order workflow type not found')
+        if (wtError) {throw wtError}
+        if (!workflowTypes) {throw new Error('Change order workflow type not found')}
         workflowTypeId = workflowTypes.id
       }
 
@@ -180,7 +180,7 @@ export function useChangeOrdersOptimized(
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!projectId && !!userProfile?.company_id,
@@ -217,7 +217,7 @@ export function useChangeOrderOptimized(changeOrderId: string | undefined) {
   return useQuery<ChangeOrderDetailWithRelations | null>({
     queryKey: ['change-order-detail', changeOrderId],
     queryFn: async () => {
-      if (!changeOrderId) throw new Error('Change Order ID required')
+      if (!changeOrderId) {throw new Error('Change Order ID required')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -225,7 +225,7 @@ export function useChangeOrderOptimized(changeOrderId: string | undefined) {
         .eq('id', changeOrderId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as any as ChangeOrderDetailWithRelations
     },
     enabled: !!changeOrderId,
@@ -244,11 +244,11 @@ export function useCreateChangeOrderOptimized() {
 
   return useMutation<WorkflowItem, Error, Partial<WorkflowItem> & { project_id: string; title: string }>({
     mutationFn: async (changeOrder) => {
-      if (!userProfile?.id) throw new Error('User profile required')
+      if (!userProfile?.id) {throw new Error('User profile required')}
 
       // Use cached workflow type ID
       const workflowTypeId = changeOrderType?.id || changeOrder.workflow_type_id
-      if (!workflowTypeId) throw new Error('Workflow type ID required')
+      if (!workflowTypeId) {throw new Error('Workflow type ID required')}
 
       // Get next number for this workflow type
       const { data: lastItem } = await supabase
@@ -283,7 +283,7 @@ export function useCreateChangeOrderOptimized() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -313,7 +313,7 @@ export function useUpdateChangeOrderOptimized() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -348,11 +348,11 @@ export function useChangeOrderSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: ['change-orders-summary', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
-      if (!userProfile?.company_id) throw new Error('No company ID found')
+      if (!projectId) {throw new Error('Project ID required')}
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
 
       const workflowTypeId = changeOrderType?.id
-      if (!workflowTypeId) throw new Error('Change order type not found')
+      if (!workflowTypeId) {throw new Error('Change order type not found')}
 
       // Fetch aggregated data
       const { data, error } = await supabase
@@ -361,7 +361,7 @@ export function useChangeOrderSummary(projectId: string | undefined) {
           p_workflow_type_id: workflowTypeId,
         })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // If RPC doesn't exist, fall back to manual aggregation
       if (!data) {
@@ -372,7 +372,7 @@ export function useChangeOrderSummary(projectId: string | undefined) {
           .eq('workflow_type_id', workflowTypeId)
           .is('deleted_at', null)
 
-        if (itemsError) throw itemsError
+        if (itemsError) {throw itemsError}
 
         const summary = {
           total: items?.length || 0,
@@ -403,7 +403,7 @@ export function usePrefetchChangeOrders() {
   const changeOrderType = useWorkflowTypeByName('change order')
 
   return async (projectId: string) => {
-    if (!userProfile?.company_id || !changeOrderType?.id) return
+    if (!userProfile?.company_id || !changeOrderType?.id) {return}
 
     await queryClient.prefetchQuery({
       queryKey: ['change-orders-optimized', projectId, 'list'],
@@ -417,7 +417,7 @@ export function usePrefetchChangeOrders() {
           .order('created_at', { ascending: false })
           .limit(20) // Prefetch only first page
 
-        if (error) throw error
+        if (error) {throw error}
         return data || []
       },
       staleTime: 5 * 60 * 1000,

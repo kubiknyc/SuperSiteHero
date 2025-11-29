@@ -27,7 +27,7 @@ export function ForgotPasswordPage() {
         redirectTo: `${window.location.origin}/reset-password`,
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       setSubmitted(true)
       addToast({

@@ -74,7 +74,7 @@ export function DailyReportForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!store.draftReport) return
+    if (!store.draftReport) {return}
 
     store.addToSyncQueue({
       id: "sync-" + Date.now(),
@@ -92,10 +92,10 @@ export function DailyReportForm({
   }
 
   const getBgClass = () => {
-    if (!isOnline) return 'bg-blue-50 border border-blue-200'
-    if (syncStatus === 'success') return 'bg-green-50 border border-green-200'
-    if (syncStatus === 'syncing') return 'bg-yellow-50 border border-yellow-200'
-    if (syncStatus === 'error') return 'bg-red-50 border border-red-200'
+    if (!isOnline) {return 'bg-blue-50 border border-blue-200'}
+    if (syncStatus === 'success') {return 'bg-green-50 border border-green-200'}
+    if (syncStatus === 'syncing') {return 'bg-yellow-50 border border-yellow-200'}
+    if (syncStatus === 'error') {return 'bg-red-50 border border-red-200'}
     return 'bg-gray-50 border border-gray-200'
   }
 

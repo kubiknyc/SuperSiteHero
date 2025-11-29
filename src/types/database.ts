@@ -1044,6 +1044,7 @@ export type Database = {
           deleted_at: string | null
           description: string | null
           discipline: string | null
+          document_number: string | null  // Document tracking number
           document_type: string
           drawing_number: string | null
           file_name: string
@@ -2099,12 +2100,14 @@ export type Database = {
           due_date: string | null
           floor: string | null
           id: string
+          location: string | null  // Generated column: building > floor > room > area
           location_notes: string | null
           marked_complete_at: string | null
           marked_complete_by: string | null
           number: number | null
           priority: string | null
           project_id: string
+          punch_list_id: string | null  // Reference to punch_lists table
           rejection_notes: string | null
           room: string | null
           status: string | null
@@ -2215,6 +2218,57 @@ export type Database = {
             columns: ["verified_by"]
             isOneToOne: false
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      punch_lists: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          name: string
+          project_id: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          project_id: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          project_id?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "punch_lists_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "punch_lists_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
             referencedColumns: ["id"]
           },
         ]
@@ -3259,6 +3313,7 @@ export type Database = {
           deleted_at: string | null
           email: string
           first_name: string | null
+          full_name: string | null  // Generated column: first_name + last_name
           id: string
           is_active: boolean | null
           last_name: string | null
@@ -3428,7 +3483,7 @@ export type Database = {
           resolution: string | null
           schedule_impact: number | null
           status: string
-          title: string | null
+          title: string  // NOT NULL - required field
           updated_at: string | null
           workflow_type_id: string
         }
@@ -3574,6 +3629,417 @@ export type Database = {
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_channels: {
+        Row: {
+          id: string
+          company_id: string
+          project_id: string | null
+          name: string
+          description: string | null
+          channel_type: string
+          is_private: boolean
+          created_by: string | null
+          created_at: string
+          updated_at: string
+          archived_at: string | null
+          metadata: Json
+        }
+        Insert: {
+          id?: string
+          company_id: string
+          project_id?: string | null
+          name: string
+          description?: string | null
+          channel_type: string
+          is_private?: boolean
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+          archived_at?: string | null
+          metadata?: Json
+        }
+        Update: {
+          id?: string
+          company_id?: string
+          project_id?: string | null
+          name?: string
+          description?: string | null
+          channel_type?: string
+          is_private?: boolean
+          created_by?: string | null
+          created_at?: string
+          updated_at?: string
+          archived_at?: string | null
+          metadata?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_channels_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_channels_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_channels_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_channel_members: {
+        Row: {
+          id: string
+          channel_id: string
+          user_id: string
+          role: string
+          joined_at: string
+          last_read_at: string | null
+          notification_settings: Json
+        }
+        Insert: {
+          id?: string
+          channel_id: string
+          user_id: string
+          role?: string
+          joined_at?: string
+          last_read_at?: string | null
+          notification_settings?: Json
+        }
+        Update: {
+          id?: string
+          channel_id?: string
+          user_id?: string
+          role?: string
+          joined_at?: string
+          last_read_at?: string | null
+          notification_settings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_channel_members_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "chat_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_channel_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_messages: {
+        Row: {
+          id: string
+          channel_id: string
+          user_id: string
+          parent_message_id: string | null
+          content: string
+          message_type: string
+          attachments: Json
+          mentions: Json
+          metadata: Json
+          edited_at: string | null
+          deleted_at: string | null
+          created_at: string
+          linked_rfi_id: string | null
+          linked_task_id: string | null
+          linked_change_order_id: string | null
+        }
+        Insert: {
+          id?: string
+          channel_id: string
+          user_id: string
+          parent_message_id?: string | null
+          content: string
+          message_type?: string
+          attachments?: Json
+          mentions?: Json
+          metadata?: Json
+          edited_at?: string | null
+          deleted_at?: string | null
+          created_at?: string
+          linked_rfi_id?: string | null
+          linked_task_id?: string | null
+          linked_change_order_id?: string | null
+        }
+        Update: {
+          id?: string
+          channel_id?: string
+          user_id?: string
+          parent_message_id?: string | null
+          content?: string
+          message_type?: string
+          attachments?: Json
+          mentions?: Json
+          metadata?: Json
+          edited_at?: string | null
+          deleted_at?: string | null
+          created_at?: string
+          linked_rfi_id?: string | null
+          linked_task_id?: string | null
+          linked_change_order_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "chat_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_messages_parent_message_id_fkey"
+            columns: ["parent_message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_message_reactions: {
+        Row: {
+          id: string
+          message_id: string
+          user_id: string
+          emoji: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          user_id: string
+          emoji: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          user_id?: string
+          emoji?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_message_reactions_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_message_reactions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_read_receipts: {
+        Row: {
+          id: string
+          message_id: string
+          user_id: string
+          read_at: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          user_id: string
+          read_at?: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          user_id?: string
+          read_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_read_receipts_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "chat_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_read_receipts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_typing_indicators: {
+        Row: {
+          channel_id: string
+          user_id: string
+          typing_at: string
+        }
+        Insert: {
+          channel_id: string
+          user_id: string
+          typing_at?: string
+        }
+        Update: {
+          channel_id?: string
+          user_id?: string
+          typing_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_typing_indicators_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "chat_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_typing_indicators_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chat_direct_message_channels: {
+        Row: {
+          id: string
+          channel_id: string
+          user1_id: string
+          user2_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          channel_id: string
+          user1_id: string
+          user2_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          channel_id?: string
+          user1_id?: string
+          user2_id?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_direct_message_channels_channel_id_fkey"
+            columns: ["channel_id"]
+            isOneToOne: false
+            referencedRelation: "chat_channels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_direct_message_channels_user1_id_fkey"
+            columns: ["user1_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chat_direct_message_channels_user2_id_fkey"
+            columns: ["user2_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      typing_indicators: {
+        Row: {
+          conversation_id: string
+          user_id: string
+          typing_at: string
+        }
+        Insert: {
+          conversation_id: string
+          user_id: string
+          typing_at?: string
+        }
+        Update: {
+          conversation_id?: string
+          user_id?: string
+          typing_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "typing_indicators_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "typing_indicators_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_read_receipts: {
+        Row: {
+          id: string
+          message_id: string
+          user_id: string
+          read_at: string
+        }
+        Insert: {
+          id?: string
+          message_id: string
+          user_id: string
+          read_at?: string
+        }
+        Update: {
+          id?: string
+          message_id?: string
+          user_id?: string
+          read_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_read_receipts_message_id_fkey"
+            columns: ["message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_read_receipts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
