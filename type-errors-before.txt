@@ -1,0 +1,5 @@
+
+> construction-management-platform@0.1.0 type-check
+> tsc --noEmit
+
+src/pages/daily-reports/DailyReportDetailPage.tsx(242,9): error TS2322: Type 'unknown' is not assignable to type 'ReactNode'.

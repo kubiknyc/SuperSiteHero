@@ -240,7 +240,7 @@ export function DailyReportDetailPage() {
         </Card>
 
         {/* Issues */}
-        {report.issues && (
+        {report.issues && report.issues.trim() !== '' && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -255,7 +255,7 @@ export function DailyReportDetailPage() {
         )}
 
         {/* Observations */}
-        {report.observations && (
+        {report.observations && report.observations.trim() !== '' && (
           <Card>
             <CardHeader>
               <CardTitle>Observations</CardTitle>

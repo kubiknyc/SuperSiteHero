@@ -9,7 +9,7 @@ const optionalPositiveNumber = z.number().positive('Must be greater than 0').opt
 
 // Weather Section Schema
 export const weatherSchema = z.object({
-  weather_conditions: requiredString,
+  weather_condition: requiredString,
   temperature_high: z.number().min(-50, 'Invalid temperature').max(150, 'Invalid temperature').optional(),
   temperature_low: z.number().min(-50, 'Invalid temperature').max(150, 'Invalid temperature').optional(),
   precipitation: optionalString,

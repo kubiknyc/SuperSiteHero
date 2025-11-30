@@ -101,7 +101,7 @@ export function DailyReportForm({
         work_planned: store.draftReport?.work_planned ?? undefined,
       },
       weather: {
-        weather_conditions: store.draftReport?.weather_conditions || '',
+        weather_condition: store.draftReport?.weather_condition || '',
         temperature_high: store.draftReport?.temperature_high ?? undefined,
         temperature_low: store.draftReport?.temperature_low ?? undefined,
         precipitation: store.draftReport?.precipitation?.toString() ?? undefined,

@@ -11,7 +11,7 @@ export interface DraftReport extends Partial<DailyReport> {
   // Extended fields for form sections (stored locally, combined when saving)
   work_performed?: string
   work_planned?: string
-  weather_conditions?: string
+  weather_condition?: string
   wind_conditions?: string
   weather_notes?: string
   safety_incidents?: string

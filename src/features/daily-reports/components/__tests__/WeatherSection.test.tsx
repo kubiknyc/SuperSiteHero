@@ -11,7 +11,7 @@ describe('WeatherSection', () => {
     id: 'test-id',
     project_id: 'proj-1',
     report_date: '2024-01-15',
-    weather_conditions: '',
+    weather_condition: '',
     temperature_high: undefined,
     temperature_low: undefined,
     weather_notes: '',
@@ -37,7 +37,7 @@ describe('WeatherSection', () => {
     expect(screen.getByLabelText(/Low Temperature/i)).toBeInTheDocument()
   })
 
-  it('should show required indicator for weather_conditions', () => {
+  it('should show required indicator for weather_condition', () => {
     render(
       <WeatherSection
         expanded={true}
@@ -51,7 +51,7 @@ describe('WeatherSection', () => {
     expect(screen.getByLabelText('required')).toBeInTheDocument()
   })
 
-  it('should update store when weather_conditions changes', () => {
+  it('should update store when weather_condition changes', () => {
     render(
       <WeatherSection
         expanded={true}
@@ -64,10 +64,10 @@ describe('WeatherSection', () => {
     const input = screen.getByLabelText(/Weather Condition/i)
     fireEvent.change(input, { target: { value: 'Sunny' } })
 
-    expect(mockOnUpdate).toHaveBeenCalledWith({ weather_conditions: 'Sunny' })
+    expect(mockOnUpdate).toHaveBeenCalledWith({ weather_condition: 'Sunny' })
   })
 
-  it('should validate weather_conditions on blur', async () => {
+  it('should validate weather_condition on blur', async () => {
     render(
       <WeatherSection
         expanded={true}
@@ -85,7 +85,7 @@ describe('WeatherSection', () => {
     })
   })
 
-  it('should clear error when valid weather_conditions is entered', async () => {
+  it('should clear error when valid weather_condition is entered', async () => {
     const { rerender } = render(
       <WeatherSection
         expanded={true}
@@ -110,7 +110,7 @@ describe('WeatherSection', () => {
       <WeatherSection
         expanded={true}
         onToggle={mockOnToggle}
-        draft={{ ...defaultDraft, weather_conditions: 'Sunny' }}
+        draft={{ ...defaultDraft, weather_condition: 'Sunny' }}
         onUpdate={mockOnUpdate}
       />
     )
@@ -144,7 +144,7 @@ describe('WeatherSection', () => {
   it('should update character counter when typing in weather_notes', () => {
     const draftWithNotes: DraftReport = {
       ...defaultDraft,
-      weather_conditions: 'Sunny',
+      weather_condition: 'Sunny',
       weather_delays: true,
       weather_notes: 'Clear skies all day', // 19 characters
     }
@@ -165,7 +165,7 @@ describe('WeatherSection', () => {
     const longNotes = 'x'.repeat(455) // 91% of 500
     const draftWithLongNotes: DraftReport = {
       ...defaultDraft,
-      weather_conditions: 'Sunny',
+      weather_condition: 'Sunny',
       weather_delays: true,
       weather_notes: longNotes,
     }
@@ -187,7 +187,7 @@ describe('WeatherSection', () => {
     const tooLongNotes = 'x'.repeat(505)
     const draftWithTooLongNotes: DraftReport = {
       ...defaultDraft,
-      weather_conditions: 'Sunny',
+      weather_condition: 'Sunny',
       weather_delays: true,
       weather_notes: tooLongNotes,
     }

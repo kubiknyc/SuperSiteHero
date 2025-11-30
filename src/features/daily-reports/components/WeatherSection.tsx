@@ -15,7 +15,7 @@ interface WeatherSectionProps {
 }
 
 interface FieldErrors {
-  weather_conditions?: string
+  weather_condition?: string
   temperature_high?: string
   temperature_low?: string
   weather_notes?: string
@@ -65,20 +65,20 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate }: WeatherS
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               label="Weather Condition"
-              htmlFor="weather_conditions"
+              htmlFor="weather_condition"
               required
-              error={errors.weather_conditions}
+              error={errors.weather_condition}
             >
               <Input
-                id="weather_conditions"
+                id="weather_condition"
                 placeholder="e.g., Sunny, Cloudy, Rainy"
-                value={draft.weather_conditions || ''}
+                value={draft.weather_condition || ''}
                 onChange={(e) => {
-                  onUpdate({ weather_conditions: e.target.value })
-                  validateField('weather_conditions', e.target.value)
+                  onUpdate({ weather_condition: e.target.value })
+                  validateField('weather_condition', e.target.value)
                 }}
-                onBlur={(e) => validateField('weather_conditions', e.target.value)}
-                className={errors.weather_conditions ? 'border-red-500' : ''}
+                onBlur={(e) => validateField('weather_condition', e.target.value)}
+                className={errors.weather_condition ? 'border-red-500' : ''}
               />
             </FormField>
 
