@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://super-site-hero-elis-projects-f6a5d397.vercel.app/sitemap.xml

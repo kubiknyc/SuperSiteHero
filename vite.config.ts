@@ -13,22 +13,19 @@ export default defineConfig({
     // PWA plugin for offline functionality
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+      includeAssets: ['favicon.svg', 'robots.txt', 'icon.svg'],
       manifest: {
         name: 'Construction Management Platform',
         short_name: 'ConstructionMgmt',
         description: 'Field management platform for construction superintendents',
-        theme_color: '#ffffff',
+        theme_color: '#2563eb',
+        background_color: '#ffffff',
         icons: [
           {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            src: 'icon.svg',
+            sizes: 'any',
+            type: 'image/svg+xml',
+            purpose: 'any maskable'
           }
         ]
       },
@@ -38,7 +35,7 @@ export default defineConfig({
           // Cache API responses with network-first strategy
           {
             urlPattern: ({ url }) => {
-              const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
+              const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
               try {
                 return supabaseUrl && url.origin === new URL(supabaseUrl).origin;
               } catch {
