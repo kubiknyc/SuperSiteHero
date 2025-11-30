@@ -50,13 +50,26 @@ ALTER TABLE public.punch_items
 ADD COLUMN IF NOT EXISTS location TEXT
 GENERATED ALWAYS AS (
   CASE
-    WHEN building IS NOT NULL OR floor IS NOT NULL OR room IS NOT NULL OR area IS NOT NULL
-      THEN TRIM(CONCAT_WS(' > ',
-        NULLIF(building, ''),
-        NULLIF(floor, ''),
-        NULLIF(room, ''),
-        NULLIF(area, '')
-      ))
+    WHEN building IS NOT NULL AND floor IS NOT NULL AND room IS NOT NULL AND area IS NOT NULL
+      THEN building || ' > ' || floor || ' > ' || room || ' > ' || area
+    WHEN building IS NOT NULL AND floor IS NOT NULL AND room IS NOT NULL
+      THEN building || ' > ' || floor || ' > ' || room
+    WHEN building IS NOT NULL AND floor IS NOT NULL
+      THEN building || ' > ' || floor
+    WHEN building IS NOT NULL
+      THEN building
+    WHEN floor IS NOT NULL AND room IS NOT NULL AND area IS NOT NULL
+      THEN floor || ' > ' || room || ' > ' || area
+    WHEN floor IS NOT NULL AND room IS NOT NULL
+      THEN floor || ' > ' || room
+    WHEN floor IS NOT NULL
+      THEN floor
+    WHEN room IS NOT NULL AND area IS NOT NULL
+      THEN room || ' > ' || area
+    WHEN room IS NOT NULL
+      THEN room
+    WHEN area IS NOT NULL
+      THEN area
     ELSE NULL
   END
 ) STORED;

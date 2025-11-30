@@ -101,7 +101,22 @@ const SubcontractorBidsPage = lazy(() => import('./pages/subcontractor-portal/Su
 const BidDetailPage = lazy(() => import('./pages/subcontractor-portal/BidDetailPage').then(m => ({ default: m.BidDetailPage })))
 const SubcontractorPunchItemsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorPunchItemsPage').then(m => ({ default: m.SubcontractorPunchItemsPage })))
 const SubcontractorTasksPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorTasksPage').then(m => ({ default: m.SubcontractorTasksPage })))
+const SubcontractorProjectsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorProjectsPage').then(m => ({ default: m.SubcontractorProjectsPage })))
+const SubcontractorCompliancePage = lazy(() => import('./pages/subcontractor-portal/SubcontractorCompliancePage').then(m => ({ default: m.SubcontractorCompliancePage })))
 const AcceptInvitationPage = lazy(() => import('./pages/auth/AcceptInvitationPage').then(m => ({ default: m.AcceptInvitationPage })))
+
+// Client Portal feature
+const ClientPortalLayout = lazy(() => import('./components/layout/ClientPortalLayout').then(m => ({ default: m.ClientPortalLayout })))
+const ClientDashboard = lazy(() => import('./features/client-portal/pages/ClientDashboard').then(m => ({ default: m.ClientDashboard })))
+const ClientProjectDetail = lazy(() => import('./features/client-portal/pages/ClientProjectDetail').then(m => ({ default: m.ClientProjectDetail })))
+const ClientSchedule = lazy(() => import('./features/client-portal/pages/ClientSchedule').then(m => ({ default: m.ClientSchedule })))
+const ClientPhotos = lazy(() => import('./features/client-portal/pages/ClientPhotos').then(m => ({ default: m.ClientPhotos })))
+const ClientDocuments = lazy(() => import('./features/client-portal/pages/ClientDocuments').then(m => ({ default: m.ClientDocuments })))
+const ClientRFIs = lazy(() => import('./features/client-portal/pages/ClientRFIs').then(m => ({ default: m.ClientRFIs })))
+const ClientChangeOrders = lazy(() => import('./features/client-portal/pages/ClientChangeOrders').then(m => ({ default: m.ClientChangeOrders })))
+
+// Photo Management feature
+const PhotoOrganizerPage = lazy(() => import('./features/photos/pages/PhotoOrganizerPage').then(m => ({ default: m.PhotoOrganizerPage })))
 
 function App() {
   // Initialize IndexedDB for offline functionality
@@ -236,13 +251,30 @@ function App() {
                 <Route path="/notices" element={<ProtectedRoute><NoticesPage /></ProtectedRoute>} />
                 <Route path="/notices/:id" element={<ProtectedRoute><NoticeDetailPage /></ProtectedRoute>} />
 
+                {/* Photo Management feature */}
+                <Route path="/photos" element={<ProtectedRoute><PhotoOrganizerPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photos" element={<ProtectedRoute><PhotoOrganizerPage /></ProtectedRoute>} />
+
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
                   <Route index element={<SubcontractorDashboardPage />} />
+                  <Route path="projects" element={<SubcontractorProjectsPage />} />
                   <Route path="bids" element={<SubcontractorBidsPage />} />
                   <Route path="bids/:bidId" element={<BidDetailPage />} />
                   <Route path="punch-items" element={<SubcontractorPunchItemsPage />} />
                   <Route path="tasks" element={<SubcontractorTasksPage />} />
+                  <Route path="compliance" element={<SubcontractorCompliancePage />} />
+                </Route>
+
+                {/* Client Portal feature - role-protected routes */}
+                <Route path="/client" element={<ProtectedRoute requiredRole="client"><ClientPortalLayout /></ProtectedRoute>}>
+                  <Route index element={<ClientDashboard />} />
+                  <Route path="projects/:projectId" element={<ClientProjectDetail />} />
+                  <Route path="projects/:projectId/schedule" element={<ClientSchedule />} />
+                  <Route path="projects/:projectId/photos" element={<ClientPhotos />} />
+                  <Route path="projects/:projectId/documents" element={<ClientDocuments />} />
+                  <Route path="projects/:projectId/rfis" element={<ClientRFIs />} />
+                  <Route path="projects/:projectId/change-orders" element={<ClientChangeOrders />} />
                 </Route>
 
                 {/* Redirect unknown routes to dashboard */}

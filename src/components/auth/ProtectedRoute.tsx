@@ -32,14 +32,17 @@ export function ProtectedRoute({ children, requiredRole, allowedRoles }: Protect
   }
 
   // Check role-based access
-  if (requiredRole || allowedRoles) {
-    const userRole = userProfile?.role
+  const userRole = userProfile?.role
 
+  if (requiredRole || allowedRoles) {
     // If requiredRole is specified, check exact match
     if (requiredRole && userRole !== requiredRole) {
       // Redirect to appropriate page based on role
       if (userRole === 'subcontractor') {
         return <Navigate to="/portal" replace />
+      }
+      if (userRole === 'client') {
+        return <Navigate to="/client" replace />
       }
       return <Navigate to="/" replace />
     }
@@ -50,7 +53,21 @@ export function ProtectedRoute({ children, requiredRole, allowedRoles }: Protect
       if (userRole === 'subcontractor') {
         return <Navigate to="/portal" replace />
       }
+      if (userRole === 'client') {
+        return <Navigate to="/client" replace />
+      }
       return <Navigate to="/" replace />
+    }
+  }
+
+  // Special handling: redirect clients/subcontractors from general routes to their portals
+  // This handles the case where they access the root "/" route
+  if (!requiredRole && !allowedRoles) {
+    if (userRole === 'client') {
+      return <Navigate to="/client" replace />
+    }
+    if (userRole === 'subcontractor') {
+      return <Navigate to="/portal" replace />
     }
   }
 

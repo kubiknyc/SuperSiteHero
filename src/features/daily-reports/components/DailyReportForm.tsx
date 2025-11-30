@@ -1,10 +1,13 @@
 // Daily report form with offline support and auto-save
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useOfflineReportStore } from '@/features/daily-reports/store/offlineReportStore'
 import { useOfflineSync } from '@/features/daily-reports/hooks/useOfflineSync'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormError } from '@/components/ui/form-error'
 import {
   Cloud,
   CloudOff,
@@ -21,6 +24,9 @@ import { WorkforceSection } from './WorkforceSection'
 import { EquipmentSection } from './EquipmentSection'
 import { DeliveriesSection } from './DeliveriesSection'
 import { VisitorsSection } from './VisitorsSection'
+import { PhotosSection } from './PhotosSection'
+import { dailyReportSchema, type DailyReportFormData as ValidatedFormData } from '../validation/dailyReportSchema'
+import toast from 'react-hot-toast'
 
 export interface DailyReportFormData {
   report_date: string
@@ -64,6 +70,18 @@ export function DailyReportForm({
     equipment: false,
     deliveries: false,
     visitors: false,
+    photos: false,
+  })
+
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+
+  // Initialize React Hook Form with Zod validation
+  const {
+    formState: { errors, isValid },
+    trigger,
+  } = useForm<ValidatedFormData>({
+    resolver: zodResolver(dailyReportSchema),
+    mode: 'onBlur',
   })
 
   useEffect(() => {
@@ -72,17 +90,84 @@ export function DailyReportForm({
     }
   }, [projectId, reportDate, store])
 
+  const validateForm = async (): Promise<boolean> => {
+    // Construct form data from store
+    const formData: ValidatedFormData = {
+      project_id: projectId,
+      report_date: reportDate ?? new Date().toISOString().split('T')[0],
+      work: {
+        work_performed: store.draftReport?.work_performed || '',
+        work_completed: store.draftReport?.work_completed,
+        work_planned: store.draftReport?.work_planned,
+      },
+      weather: {
+        weather_conditions: store.draftReport?.weather_conditions || '',
+        temperature_high: store.draftReport?.temperature_high,
+        temperature_low: store.draftReport?.temperature_low,
+        precipitation: store.draftReport?.precipitation,
+        wind_conditions: store.draftReport?.wind_conditions,
+        weather_delays: store.draftReport?.weather_delays,
+        weather_notes: store.draftReport?.weather_notes,
+      },
+      issues: {
+        safety_incidents: store.draftReport?.safety_incidents,
+        quality_issues: store.draftReport?.quality_issues,
+        schedule_delays: store.draftReport?.schedule_delays,
+        general_notes: store.draftReport?.general_notes,
+      },
+      workforce: store.workforce,
+      equipment: store.equipment,
+      deliveries: store.deliveries,
+      visitors: store.visitors,
+      photos: store.photos.map((p) => ({
+        id: p.id,
+        caption: p.caption,
+        uploadStatus: p.uploadStatus,
+      })),
+    }
+
+    const result = dailyReportSchema.safeParse(formData)
+
+    if (!result.success) {
+      const errorMessages = result.error.errors.map((err) => `${err.path.join('.')}: ${err.message}`)
+      setValidationErrors(errorMessages)
+      toast.error('Please fix validation errors before submitting')
+      return false
+    }
+
+    setValidationErrors([])
+    return true
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!store.draftReport) {return}
+    if (!store.draftReport) return
+
+    // Validate form before submission
+    const isFormValid = await validateForm()
+    if (!isFormValid) {
+      // Expand sections with errors for visibility
+      setExpanded({
+        weather: true,
+        work: true,
+        issues: true,
+        workforce: true,
+        equipment: true,
+        deliveries: true,
+        visitors: true,
+        photos: true,
+      })
+      return
+    }
 
     store.addToSyncQueue({
-      id: "sync-" + Date.now(),
+      id: 'sync-' + Date.now(),
       reportId: store.draftReport.id,
       action: store.draftReport.id.includes('temp') ? 'create' : 'update',
     })
 
     store.updateDraft({ status: 'submitted' })
+    toast.success('Daily report submitted successfully')
     onSave?.()
   }
 
@@ -101,6 +186,28 @@ export function DailyReportForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Validation Errors Summary */}
+      {validationErrors.length > 0 && (
+        <Card className="border-red-200 bg-red-50">
+          <CardHeader>
+            <CardTitle className="text-red-700 flex items-center gap-2">
+              <AlertCircle className="h-5 w-5" />
+              Validation Errors
+            </CardTitle>
+            <CardDescription className="text-red-600">
+              Please correct the following errors before submitting
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="list-disc list-inside space-y-1 text-sm text-red-700">
+              {validationErrors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+
       <div className={clsx('rounded-lg p-4 flex items-center justify-between', getBgClass())}>
         <div className="flex items-center gap-2">
           {!isOnline ? (
@@ -232,6 +339,15 @@ export function DailyReportForm({
             entries={store.visitors}
             onAdd={store.addVisitorEntry}
             onRemove={store.removeVisitorEntry}
+          />
+
+          <PhotosSection
+            expanded={expanded.photos}
+            onToggle={() => setExpanded({ ...expanded, photos: !expanded.photos })}
+            photos={store.photos}
+            onAddPhotos={(photos) => photos.forEach(store.addPhoto)}
+            onRemovePhoto={store.removePhoto}
+            onUpdateCaption={store.updatePhotoCaption}
           />
         </>
       )}

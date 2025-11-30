@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Plus, Trash2, Truck } from 'lucide-react'
 import { EquipmentEntry } from '@/features/daily-reports/store/offlineReportStore'
+import { equipmentEntrySchema } from '../validation/dailyReportSchema'
+import toast from 'react-hot-toast'
 
 interface EquipmentSectionProps {
   expanded: boolean
@@ -19,12 +21,21 @@ export function EquipmentSection({
   onRemove,
 }: EquipmentSectionProps) {
   const handleAddNew = () => {
-    const newEntry = {
+    const newEntry: EquipmentEntry = {
       id: crypto.randomUUID(),
-      equipment_type: '',
+      equipment_type: 'New Equipment',
       quantity: 1,
     }
+
+    // Validate before adding
+    const result = equipmentEntrySchema.safeParse(newEntry)
+    if (!result.success) {
+      toast.error('Failed to add equipment entry')
+      return
+    }
+
     onAdd(newEntry)
+    toast.success('Equipment entry added')
   }
 
   return (
@@ -34,9 +45,15 @@ export function EquipmentSection({
         onClick={onToggle}
         className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
       >
-        <div>
-          <CardTitle className="text-base">Equipment</CardTitle>
-          <CardDescription>Equipment used on site</CardDescription>
+        <div className="flex items-center gap-2">
+          <Truck className="h-5 w-5 text-gray-600" />
+          <div className="text-left">
+            <CardTitle className="text-base">
+              Equipment
+              {entries.length > 0 && ` (${entries.length})`}
+            </CardTitle>
+            <CardDescription>Equipment used on site</CardDescription>
+          </div>
         </div>
         {expanded ? (
           <ChevronUp className="h-5 w-5 text-gray-400" />

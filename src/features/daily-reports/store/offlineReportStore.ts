@@ -2,6 +2,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { DailyReport } from '@/types/database'
+import type { DailyReportPhoto } from '../types/photo'
 
 export interface DraftReport extends Partial<DailyReport> {
   id: string
@@ -67,6 +68,7 @@ interface OfflineReportStore {
   equipment: EquipmentEntry[]
   deliveries: DeliveryEntry[]
   visitors: VisitorEntry[]
+  photos: DailyReportPhoto[]
 
   // Sync status
   syncStatus: SyncStatus
@@ -91,6 +93,10 @@ interface OfflineReportStore {
   addVisitorEntry: (entry: VisitorEntry) => void
   updateVisitorEntry: (id: string, updates: Partial<VisitorEntry>) => void
   removeVisitorEntry: (id: string) => void
+  addPhoto: (photo: DailyReportPhoto) => void
+  updatePhoto: (id: string, updates: Partial<DailyReportPhoto>) => void
+  removePhoto: (id: string) => void
+  updatePhotoCaption: (id: string, caption: string) => void
 
   // Sync actions
   setSyncStatus: (status: SyncStatus, error?: string | null) => void
@@ -113,6 +119,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
       equipment: [] as EquipmentEntry[],
       deliveries: [] as DeliveryEntry[],
       visitors: [] as VisitorEntry[],
+      photos: [] as DailyReportPhoto[],
       syncStatus: 'idle' as SyncStatus,
       syncError: null as string | null,
       isOnline: navigator.onLine,
@@ -130,6 +137,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
           equipment: [],
           deliveries: [],
           visitors: [],
+          photos: [],
         })
       },
 
@@ -211,6 +219,30 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
         }))
       },
 
+      addPhoto: (photo) => {
+        set((state) => ({
+          photos: [...state.photos, photo],
+        }))
+      },
+
+      updatePhoto: (id, updates) => {
+        set((state) => ({
+          photos: state.photos.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+        }))
+      },
+
+      removePhoto: (id) => {
+        set((state) => ({
+          photos: state.photos.filter((p) => p.id !== id),
+        }))
+      },
+
+      updatePhotoCaption: (id, caption) => {
+        set((state) => ({
+          photos: state.photos.map((p) => (p.id === id ? { ...p, caption } : p)),
+        }))
+      },
+
       setSyncStatus: (status, error = null) => {
         set({ syncStatus: status, syncError: error })
       },
@@ -253,6 +285,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
           equipment: [],
           deliveries: [],
           visitors: [],
+          photos: [],
           syncQueue: [],
           syncStatus: 'idle',
           syncError: null,

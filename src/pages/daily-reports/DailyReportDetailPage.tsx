@@ -18,7 +18,9 @@ import {
   ArrowLeft,
   CheckCircle2,
   Clock,
+  Camera,
 } from 'lucide-react'
+import { PhotoGallery } from '@/features/daily-reports/components/PhotoGallery'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
 
@@ -283,6 +285,22 @@ export function DailyReportDetailPage() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-700 whitespace-pre-wrap">{report.comments}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Photos */}
+        {report.photos && report.photos.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Camera className="h-5 w-5" />
+                Photos ({report.photos.length})
+              </CardTitle>
+              <CardDescription>Progress documentation with GPS metadata</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PhotoGallery photos={report.photos} readOnly />
             </CardContent>
           </Card>
         )}

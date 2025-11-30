@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { ChevronDown, ChevronUp, Plus, Trash2 } from 'lucide-react'
+import { ChevronDown, ChevronUp, Plus, Trash2, Package } from 'lucide-react'
 import { DeliveryEntry } from '@/features/daily-reports/store/offlineReportStore'
+import { deliveryEntrySchema } from '../validation/dailyReportSchema'
+import toast from 'react-hot-toast'
 
 interface DeliveriesSectionProps {
   expanded: boolean
@@ -19,11 +21,20 @@ export function DeliveriesSection({
   onRemove,
 }: DeliveriesSectionProps) {
   const handleAddNew = () => {
-    const newEntry = {
+    const newEntry: DeliveryEntry = {
       id: crypto.randomUUID(),
-      material_description: '',
+      material_description: 'New Delivery',
     }
+
+    // Validate before adding
+    const result = deliveryEntrySchema.safeParse(newEntry)
+    if (!result.success) {
+      toast.error('Failed to add delivery entry')
+      return
+    }
+
     onAdd(newEntry)
+    toast.success('Delivery entry added')
   }
 
   return (
@@ -33,9 +44,15 @@ export function DeliveriesSection({
         onClick={onToggle}
         className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
       >
-        <div>
-          <CardTitle className="text-base">Deliveries</CardTitle>
-          <CardDescription>Materials delivered to site</CardDescription>
+        <div className="flex items-center gap-2">
+          <Package className="h-5 w-5 text-gray-600" />
+          <div className="text-left">
+            <CardTitle className="text-base">
+              Deliveries
+              {entries.length > 0 && ` (${entries.length})`}
+            </CardTitle>
+            <CardDescription>Materials delivered to site</CardDescription>
+          </div>
         </div>
         {expanded ? (
           <ChevronUp className="h-5 w-5 text-gray-400" />

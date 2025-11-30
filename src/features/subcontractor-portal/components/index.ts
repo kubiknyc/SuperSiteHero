@@ -13,6 +13,11 @@ export {
   TaskStatusButton,
 } from './StatusUpdateButton'
 
+// Compliance components
+export { ExpirationBadge } from './ExpirationBadge'
+export { ComplianceDocumentCard } from './ComplianceDocumentCard'
+export { ComplianceUploadDialog } from './ComplianceUploadDialog'
+
 // GC-side management components
 export { InviteSubcontractorDialog } from './InviteSubcontractorDialog'
 export { SubcontractorPortalAccessList } from './SubcontractorPortalAccessList'
