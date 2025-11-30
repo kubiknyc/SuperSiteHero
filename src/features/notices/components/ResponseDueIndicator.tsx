@@ -43,7 +43,7 @@ export function ResponseDueIndicator({
   const daysUntilDue = getDaysUntilDue(notice)
   const overdue = isResponseOverdue(notice)
 
-  if (daysUntilDue === null) return null
+  if (daysUntilDue === null) {return null}
 
   // Determine urgency level and styling
   let urgencyClass = 'text-gray-600'

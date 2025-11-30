@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/utils'
 
 function formatCurrency(value: number | null): string {
-  if (value === null || value === undefined) return '-'
+  if (value === null || value === undefined) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -29,7 +29,7 @@ function formatCurrency(value: number | null): string {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',

@@ -50,7 +50,7 @@ export function PhotoGrid({
   )
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return ''
+    if (!dateStr) {return ''}
     return new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',

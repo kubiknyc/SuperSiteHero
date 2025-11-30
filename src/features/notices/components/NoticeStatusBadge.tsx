@@ -11,7 +11,7 @@ interface NoticeStatusBadgeProps {
 }
 
 export function NoticeStatusBadge({ status, className }: NoticeStatusBadgeProps) {
-  if (!status) return null
+  if (!status) {return null}
 
   const { label, color } = getNoticeStatusInfo(status)
 

@@ -53,7 +53,7 @@ export function SubcontractorPunchItemsPage() {
   }
 
   const isOverdue = (dueDate: string | null) => {
-    if (!dueDate) return false
+    if (!dueDate) {return false}
     return isPast(new Date(dueDate)) && !isToday(new Date(dueDate))
   }
 

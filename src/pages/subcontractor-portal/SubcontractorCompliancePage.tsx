@@ -53,7 +53,7 @@ export function SubcontractorCompliancePage() {
 
   // Calculate counts
   const counts = useMemo(() => {
-    if (!allDocuments) return { all: 0, expiring: 0, pending: 0, approved: 0, rejected: 0 }
+    if (!allDocuments) {return { all: 0, expiring: 0, pending: 0, approved: 0, rejected: 0 }}
 
     return {
       all: allDocuments.length,
@@ -68,7 +68,7 @@ export function SubcontractorCompliancePage() {
 
   // Filter documents based on active tab
   const filteredDocuments = useMemo(() => {
-    if (!allDocuments) return []
+    if (!allDocuments) {return []}
 
     switch (activeTab) {
       case 'expiring':

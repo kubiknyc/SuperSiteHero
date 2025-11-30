@@ -43,18 +43,18 @@ import type { ClientDocumentView } from '@/types/client-portal'
 
 // File type to icon mapping
 const getFileIcon = (fileType: string | null) => {
-  if (!fileType) return File
+  if (!fileType) {return File}
   const type = fileType.toLowerCase()
-  if (type.includes('pdf')) return FileText
-  if (type.includes('image') || type.includes('png') || type.includes('jpg') || type.includes('jpeg')) return FileImage
-  if (type.includes('spreadsheet') || type.includes('excel') || type.includes('xlsx') || type.includes('xls') || type.includes('csv')) return FileSpreadsheet
-  if (type.includes('document') || type.includes('doc') || type.includes('word')) return FileText
+  if (type.includes('pdf')) {return FileText}
+  if (type.includes('image') || type.includes('png') || type.includes('jpg') || type.includes('jpeg')) {return FileImage}
+  if (type.includes('spreadsheet') || type.includes('excel') || type.includes('xlsx') || type.includes('xls') || type.includes('csv')) {return FileSpreadsheet}
+  if (type.includes('document') || type.includes('doc') || type.includes('word')) {return FileText}
   return File
 }
 
 // Format file size
 const formatFileSize = (bytes: number | null): string => {
-  if (!bytes) return 'Unknown size'
+  if (!bytes) {return 'Unknown size'}
   const units = ['B', 'KB', 'MB', 'GB']
   let size = bytes
   let unitIndex = 0
@@ -75,14 +75,14 @@ export function ClientDocuments() {
 
   // Get unique categories
   const categories = useMemo(() => {
-    if (!documents) return []
+    if (!documents) {return []}
     const cats = new Set(documents.map(d => d.category).filter(Boolean))
     return Array.from(cats) as string[]
   }, [documents])
 
   // Filter documents
   const filteredDocuments = useMemo(() => {
-    if (!documents) return []
+    if (!documents) {return []}
     return documents.filter(doc => {
       const matchesSearch = !searchTerm ||
         doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

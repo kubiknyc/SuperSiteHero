@@ -141,7 +141,7 @@ export function DailyReportForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!store.draftReport) return
+    if (!store.draftReport) {return}
 
     // Validate form before submission
     const isFormValid = await validateForm()

@@ -40,7 +40,7 @@ async function getSubcontractorContactEmail(subcontractorId: string): Promise<{ 
     .eq('id', subcontractorId)
     .single()
 
-  if (!data?.contacts) return null
+  if (!data?.contacts) {return null}
   const contact = data.contacts as any
   return {
     email: contact.email,
@@ -208,7 +208,7 @@ export const tasksApi = {
    */
   async _notifyTaskAssigned(task: Task, assignedById?: string): Promise<void> {
     try {
-      if (!task.assigned_to_user_id) return
+      if (!task.assigned_to_user_id) {return}
 
       const [assignee, assigner, projectName] = await Promise.all([
         getUserDetails(task.assigned_to_user_id),
@@ -216,7 +216,7 @@ export const tasksApi = {
         getProjectName(task.project_id),
       ])
 
-      if (!assignee?.email) return
+      if (!assignee?.email) {return}
 
       const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
       const { html, text } = generateTaskAssignedEmail({
@@ -248,7 +248,7 @@ export const tasksApi = {
    */
   async _notifySubcontractorTaskAssigned(task: Task, assignedById?: string): Promise<void> {
     try {
-      if (!task.assigned_to_subcontractor_id) return
+      if (!task.assigned_to_subcontractor_id) {return}
 
       const [subcontractor, assigner, projectName] = await Promise.all([
         getSubcontractorContactEmail(task.assigned_to_subcontractor_id),
@@ -256,7 +256,7 @@ export const tasksApi = {
         getProjectName(task.project_id),
       ])
 
-      if (!subcontractor?.email) return
+      if (!subcontractor?.email) {return}
 
       const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
       const { html, text } = generateTaskAssignedEmail({

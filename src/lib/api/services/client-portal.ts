@@ -34,7 +34,7 @@ export const clientPortalApi = {
         .select('*')
         .order('name')
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as unknown as ClientProjectView[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -58,7 +58,7 @@ export const clientPortalApi = {
         .single()
 
       if (error) {
-        if (error.code === 'PGRST116') return null // Not found
+        if (error.code === 'PGRST116') {return null} // Not found
         throw error
       }
       return data as unknown as ClientProjectView
@@ -82,7 +82,7 @@ export const clientPortalApi = {
         .from('client_project_summary' as any)
         .select('id, status')
 
-      if (projectsError) throw projectsError
+      if (projectsError) {throw projectsError}
 
       const typedProjects = (projects || []) as unknown as Array<{ id: string; status: string }>
       const projectIds = typedProjects.map(p => p.id)
@@ -94,7 +94,7 @@ export const clientPortalApi = {
         .in('project_id', projectIds)
         .not('status', 'in', '("closed","resolved","cancelled")')
 
-      if (rfisError) throw rfisError
+      if (rfisError) {throw rfisError}
 
       // Get pending change orders
       const { count: pendingCOs, error: cosError } = await supabase
@@ -103,7 +103,7 @@ export const clientPortalApi = {
         .in('project_id', projectIds)
         .eq('status', 'pending')
 
-      if (cosError) throw cosError
+      if (cosError) {throw cosError}
 
       // Get upcoming milestones (next 30 days)
       const thirtyDaysFromNow = new Date()
@@ -117,7 +117,7 @@ export const clientPortalApi = {
         .gte('finish_date', new Date().toISOString())
         .lte('finish_date', thirtyDaysFromNow.toISOString())
 
-      if (milestonesError) throw milestonesError
+      if (milestonesError) {throw milestonesError}
 
       return {
         total_projects: typedProjects.length,
@@ -153,7 +153,7 @@ export const clientPortalApi = {
         .single()
 
       if (error) {
-        if (error.code === 'PGRST116') return null
+        if (error.code === 'PGRST116') {return null}
         throw error
       }
       return data as unknown as ClientPortalSettings
@@ -182,7 +182,7 @@ export const clientPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as unknown as ClientPortalSettings
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -209,7 +209,7 @@ export const clientPortalApi = {
         .eq('project_id', projectId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map(item => ({
         id: item.id,
@@ -248,7 +248,7 @@ export const clientPortalApi = {
         .eq('project_id', projectId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map(item => ({
         id: item.id,
@@ -287,7 +287,7 @@ export const clientPortalApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map(doc => ({
         id: doc.id,
@@ -326,7 +326,7 @@ export const clientPortalApi = {
         .is('deleted_at', null)
         .order('captured_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map(photo => ({
         id: photo.id,
@@ -363,7 +363,7 @@ export const clientPortalApi = {
         .eq('project_id', projectId)
         .order('start_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map(item => ({
         id: item.id,
@@ -428,7 +428,7 @@ export const clientPortalApi = {
           .from('project_users')
           .upsert(projectUserInserts, { onConflict: 'project_id,user_id' })
 
-        if (error) throw error
+        if (error) {throw error}
 
         return { success: true, message: 'Client added to projects' }
       } else {

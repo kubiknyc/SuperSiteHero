@@ -29,7 +29,7 @@ export function useRealtimeMessages(conversationId: string | undefined) {
   const channelRef = useRef<RealtimeChannel | null>(null)
 
   useEffect(() => {
-    if (!conversationId || !userProfile?.id) return
+    if (!conversationId || !userProfile?.id) {return}
 
     // Create a unique channel for this conversation
     const channel = supabase
@@ -150,7 +150,7 @@ export function useTypingIndicator(conversationId: string | undefined) {
 
   // Subscribe to typing broadcasts
   useEffect(() => {
-    if (!conversationId || !userProfile?.id) return
+    if (!conversationId || !userProfile?.id) {return}
 
     const channel = supabase
       .channel(`typing:${conversationId}`)
@@ -158,7 +158,7 @@ export function useTypingIndicator(conversationId: string | undefined) {
         const event = payload.payload as TypingIndicatorEvent
 
         // Don't show our own typing
-        if (event.user_id === userProfile.id) return
+        if (event.user_id === userProfile.id) {return}
 
         if (event.is_typing) {
           setTypingUsers((prev) => ({
@@ -191,7 +191,7 @@ export function useTypingIndicator(conversationId: string | undefined) {
   // Broadcast that user is typing
   const sendTyping = useCallback(
     (isTyping: boolean) => {
-      if (!channelRef.current || !userProfile?.id || !conversationId) return
+      if (!channelRef.current || !userProfile?.id || !conversationId) {return}
 
       // Clear any existing timeout
       if (typingTimeoutRef.current) {
@@ -253,7 +253,7 @@ export function usePresence(conversationId: string | undefined) {
   const channelRef = useRef<RealtimeChannel | null>(null)
 
   useEffect(() => {
-    if (!conversationId || !userProfile?.id) return
+    if (!conversationId || !userProfile?.id) {return}
 
     const channel = supabase.channel(`presence:${conversationId}`, {
       config: {
@@ -337,7 +337,7 @@ export function useRealtimeConversations() {
   const channelRef = useRef<RealtimeChannel | null>(null)
 
   useEffect(() => {
-    if (!userProfile?.id) return
+    if (!userProfile?.id) {return}
 
     // Subscribe to conversation_participants changes for the current user
     const channel = supabase

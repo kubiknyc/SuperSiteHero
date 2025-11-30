@@ -80,7 +80,7 @@ export function MaterialReceivingDetailPage() {
 
   const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
-    if (!files || !materialId) return
+    if (!files || !materialId) {return}
 
     for (const file of Array.from(files)) {
       await uploadPhotoMutation.mutateAsync({

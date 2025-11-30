@@ -32,12 +32,12 @@ export async function sendMentionNotifications(data: MentionNotificationData): P
   } = data
 
   // Don't notify if no one is mentioned
-  if (mentionedUserIds.length === 0) return
+  if (mentionedUserIds.length === 0) {return}
 
   // Filter out the sender (don't notify yourself)
   const usersToNotify = mentionedUserIds.filter((id) => id !== senderId)
 
-  if (usersToNotify.length === 0) return
+  if (usersToNotify.length === 0) {return}
 
   // Get user details for personalized notifications
   const { data: users, error } = await supabase

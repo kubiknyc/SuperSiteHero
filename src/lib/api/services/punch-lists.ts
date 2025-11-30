@@ -50,7 +50,7 @@ async function getSubcontractorContactEmail(subcontractorId: string): Promise<{ 
     .eq('id', subcontractorId)
     .single()
 
-  if (!data?.contacts) return null
+  if (!data?.contacts) {return null}
   const contact = data.contacts as any
   return {
     email: contact.email,
@@ -209,7 +209,7 @@ export const punchListsApi = {
    */
   async _notifyPunchItemAssigned(punchItem: PunchItem, assignedById?: string): Promise<void> {
     try {
-      if (!punchItem.assigned_to) return
+      if (!punchItem.assigned_to) {return}
 
       const [assignee, assigner, projectName, punchListName] = await Promise.all([
         getUserDetails(punchItem.assigned_to),
@@ -218,7 +218,7 @@ export const punchListsApi = {
         punchItem.punch_list_id ? getPunchListName(punchItem.punch_list_id) : Promise.resolve('Punch List'),
       ])
 
-      if (!assignee?.email) return
+      if (!assignee?.email) {return}
 
       const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
       const { html, text} = generatePunchItemAssignedEmail({
@@ -251,7 +251,7 @@ export const punchListsApi = {
    */
   async _notifySubcontractorPunchItemAssigned(punchItem: PunchItem, assignedById?: string): Promise<void> {
     try {
-      if (!punchItem.subcontractor_id) return
+      if (!punchItem.subcontractor_id) {return}
 
       const [subcontractor, assigner, projectName] = await Promise.all([
         getSubcontractorContactEmail(punchItem.subcontractor_id),
@@ -259,7 +259,7 @@ export const punchListsApi = {
         getProjectName(punchItem.project_id),
       ])
 
-      if (!subcontractor?.email) return
+      if (!subcontractor?.email) {return}
 
       const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
 

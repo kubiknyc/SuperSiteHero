@@ -9,7 +9,7 @@ interface FormErrorProps {
 }
 
 export function FormError({ message, className, id }: FormErrorProps) {
-  if (!message) return null
+  if (!message) {return null}
 
   return (
     <div
@@ -33,7 +33,7 @@ interface FormErrorListProps {
 }
 
 export function FormErrorList({ errors, className }: FormErrorListProps) {
-  if (errors.length === 0) return null
+  if (errors.length === 0) {return null}
 
   return (
     <div

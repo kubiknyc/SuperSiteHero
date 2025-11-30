@@ -64,7 +64,7 @@ function AccessSkeleton() {
 }
 
 function getUserDisplayName(user?: { first_name?: string | null; last_name?: string | null; email?: string }): string {
-  if (!user) return 'Unknown'
+  if (!user) {return 'Unknown'}
   if (user.first_name || user.last_name) {
     return [user.first_name, user.last_name].filter(Boolean).join(' ')
   }

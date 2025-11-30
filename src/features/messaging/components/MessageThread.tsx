@@ -92,7 +92,7 @@ export function MessageThread({ conversationId, className }: MessageThreadProps)
 
   // Handle scroll for infinite loading
   const handleScroll = useCallback(() => {
-    if (!containerRef.current) return
+    if (!containerRef.current) {return}
 
     const { scrollTop } = containerRef.current
     // Load more when scrolled near top
@@ -139,14 +139,14 @@ export function MessageThread({ conversationId, className }: MessageThreadProps)
 
   // Format date separator
   const formatDateSeparator = (date: Date) => {
-    if (isToday(date)) return 'Today'
-    if (isYesterday(date)) return 'Yesterday'
+    if (isToday(date)) {return 'Today'}
+    if (isYesterday(date)) {return 'Yesterday'}
     return format(date, 'MMMM d, yyyy')
   }
 
   // Check if should show date separator
   const shouldShowDateSeparator = (message: Message, prevMessage?: Message) => {
-    if (!prevMessage) return true
+    if (!prevMessage) {return true}
     return !isSameDay(new Date(message.created_at), new Date(prevMessage.created_at))
   }
 

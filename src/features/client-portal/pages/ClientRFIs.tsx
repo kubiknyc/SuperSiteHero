@@ -65,7 +65,7 @@ export function ClientRFIs() {
 
   // Filter RFIs
   const filteredRFIs = useMemo(() => {
-    if (!rfis) return []
+    if (!rfis) {return []}
     return rfis.filter(rfi => {
       const matchesSearch = !searchTerm ||
         rfi.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -78,7 +78,7 @@ export function ClientRFIs() {
 
   // Stats
   const stats = useMemo(() => {
-    if (!rfis) return { open: 0, pending: 0, resolved: 0, total: 0 }
+    if (!rfis) {return { open: 0, pending: 0, resolved: 0, total: 0 }}
     return {
       open: rfis.filter(r => r.status === 'open' || r.status === 'in_progress').length,
       pending: rfis.filter(r => r.status === 'pending').length,

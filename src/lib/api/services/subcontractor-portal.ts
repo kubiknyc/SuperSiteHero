@@ -52,14 +52,14 @@ async function getSubcontractorIdsForUser(userId: string): Promise<string[]> {
     .eq('id', userId)
     .single()
 
-  if (!user?.email) return []
+  if (!user?.email) {return []}
 
   const { data: contacts } = await supabase
     .from('contacts')
     .select('id')
     .eq('email', user.email)
 
-  if (!contacts || contacts.length === 0) return []
+  if (!contacts || contacts.length === 0) {return []}
 
   const contactIds = contacts.map((c) => c.id)
 
@@ -82,7 +82,7 @@ async function getSubcontractorForUser(userId: string): Promise<SubcontractorBas
     .eq('id', userId)
     .single()
 
-  if (!user?.email) return null
+  if (!user?.email) {return null}
 
   const { data } = await supabase
     .from('subcontractors')
@@ -98,7 +98,7 @@ async function getSubcontractorForUser(userId: string): Promise<SubcontractorBas
     .limit(1)
     .single()
 
-  if (!data) return null
+  if (!data) {return null}
 
   return {
     id: data.id,
@@ -263,7 +263,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) return []
+      if (subcontractorIds.length === 0) {return []}
 
       const { data, error } = await supabase
         .from('subcontractors')
@@ -284,7 +284,7 @@ export const subcontractorPortalApi = {
         .in('id', subcontractorIds)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Transform and add counts
       const projects: SubcontractorProject[] = await Promise.all(
@@ -367,7 +367,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) return []
+      if (subcontractorIds.length === 0) {return []}
 
       let query = db
         .from('change_order_bids')
@@ -392,7 +392,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data || []
     } catch (error) {
@@ -419,7 +419,7 @@ export const subcontractorPortalApi = {
         .eq('id', bidId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'BID_NOT_FOUND',
@@ -459,7 +459,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // TODO: Notify GC that bid was submitted
 
@@ -489,7 +489,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data
     } catch (error) {
@@ -514,7 +514,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) return []
+      if (subcontractorIds.length === 0) {return []}
 
       let query = supabase
         .from('punch_items')
@@ -550,7 +550,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as any[]
     } catch (error) {
@@ -587,7 +587,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return item as any
     } catch (error) {
@@ -609,7 +609,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) return []
+      if (subcontractorIds.length === 0) {return []}
 
       let query = supabase
         .from('tasks')
@@ -645,7 +645,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as any[]
     } catch (error) {
@@ -681,7 +681,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return task as any
     } catch (error) {
@@ -706,7 +706,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) return []
+      if (subcontractorIds.length === 0) {return []}
 
       let query = db
         .from('subcontractor_compliance_documents')
@@ -736,7 +736,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('expiration_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data || []
     } catch (error) {
@@ -765,7 +765,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return doc
     } catch (error) {
@@ -781,11 +781,11 @@ export const subcontractorPortalApi = {
    */
   async getExpiringDocuments(subcontractorIds: string[]): Promise<ExpiringDocument[]> {
     try {
-      if (subcontractorIds.length === 0) return []
+      if (subcontractorIds.length === 0) {return []}
 
       const { data, error } = await db.rpc('check_expiring_compliance_documents')
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Filter to only this subcontractor's documents
       return (data || []).filter((doc: ExpiringDocument) =>
@@ -818,7 +818,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // TODO: Send invitation email
 
@@ -899,7 +899,7 @@ export const subcontractorPortalApi = {
         })
         .eq('id', invitation.id)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       // Create portal access
       const { error: accessError } = await db.from('subcontractor_portal_access').insert({
@@ -910,7 +910,7 @@ export const subcontractorPortalApi = {
         accepted_at: new Date().toISOString(),
       })
 
-      if (accessError) throw accessError
+      if (accessError) {throw accessError}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -942,7 +942,7 @@ export const subcontractorPortalApi = {
         .eq('project_id', projectId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data || []
     } catch (error) {
@@ -968,7 +968,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return access
     } catch (error) {
@@ -989,7 +989,7 @@ export const subcontractorPortalApi = {
         .update({ is_active: false })
         .eq('id', accessId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw new ApiErrorClass({
         code: 'REVOKE_ACCESS_ERROR',
@@ -1015,7 +1015,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) return null
+      if (subcontractorIds.length === 0) {return null}
 
       const { data, error } = await supabase
         .from('subcontractors')
@@ -1025,7 +1025,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .single()
 
-      if (error) return null
+      if (error) {return null}
 
       return data
     } catch (error) {

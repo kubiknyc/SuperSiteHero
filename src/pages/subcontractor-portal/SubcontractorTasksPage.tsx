@@ -48,7 +48,7 @@ export function SubcontractorTasksPage() {
   const { data: tasks, isLoading, isError } = useSubcontractorTasks(filter)
 
   const isOverdue = (dueDate: string | null) => {
-    if (!dueDate) return false
+    if (!dueDate) {return false}
     return isPast(new Date(dueDate)) && !isToday(new Date(dueDate))
   }
 

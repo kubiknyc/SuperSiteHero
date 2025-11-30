@@ -225,7 +225,7 @@ export function CreateNoticeDialog({
                 value={responseDueDate}
                 onChange={(e) => {
                   setResponseDueDate(e.target.value)
-                  if (e.target.value) setResponseRequired(true)
+                  if (e.target.value) {setResponseRequired(true)}
                 }}
               />
               {/* Quick set buttons */}

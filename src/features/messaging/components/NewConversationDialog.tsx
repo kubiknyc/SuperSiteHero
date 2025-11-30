@@ -101,7 +101,7 @@ export function NewConversationDialog({
           .neq('id', userProfile?.id || '')
           .limit(10)
 
-        if (error) throw error
+        if (error) {throw error}
         setUsers(data || [])
       } catch (error) {
         console.error('Failed to fetch users:', error)
@@ -155,7 +155,7 @@ export function NewConversationDialog({
 
   // Create conversation
   const handleCreate = async () => {
-    if (selectedUsers.length === 0) return
+    if (selectedUsers.length === 0) {return}
 
     try {
       let conversationId: string | undefined
@@ -188,10 +188,10 @@ export function NewConversationDialog({
 
   // Check if can proceed
   const canProceed = () => {
-    if (step === 'type') return true
-    if (step === 'users') return selectedUsers.length > 0
+    if (step === 'type') {return true}
+    if (step === 'users') {return selectedUsers.length > 0}
     if (step === 'details') {
-      if (conversationType === 'project') return !!projectId
+      if (conversationType === 'project') {return !!projectId}
       return true
     }
     return false

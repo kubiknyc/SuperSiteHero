@@ -39,7 +39,7 @@ export function useSubcontractorPunchItems(filter?: SubcontractorItemsFilter) {
   return useQuery<SubcontractorPunchItem[]>({
     queryKey: itemKeys.punchItems(filter),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getPunchItems(userProfile.id, filter)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -75,7 +75,7 @@ export function useUpdatePunchItemStatus() {
       status: PunchItemStatus
       notes?: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.updatePunchItemStatus(punchItemId, userProfile.id, {
         status,
         notes,
@@ -124,7 +124,7 @@ export function useSubcontractorTasks(filter?: SubcontractorItemsFilter) {
   return useQuery<SubcontractorTask[]>({
     queryKey: itemKeys.tasks(filter),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getTasks(userProfile.id, filter)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -160,7 +160,7 @@ export function useUpdateTaskStatus() {
       status: TaskStatus
       notes?: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.updateTaskStatus(taskId, userProfile.id, { status, notes })
     },
     onSuccess: (data) => {

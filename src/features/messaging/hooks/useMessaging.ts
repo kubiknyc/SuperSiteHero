@@ -52,9 +52,9 @@ export function useConversations(filters?: ConversationFilters & { limit?: numbe
   return useQuery({
     queryKey: messagingKeys.conversationsList(filters),
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.getConversations(userProfile.id, filters)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!userProfile?.id,
@@ -71,10 +71,10 @@ export function useConversation(conversationId: string | undefined) {
   return useQuery({
     queryKey: messagingKeys.conversation(conversationId || ''),
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!conversationId) throw new Error('Conversation ID required')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!conversationId) {throw new Error('Conversation ID required')}
       const { data, error } = await messagingApi.getConversation(conversationId, userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!userProfile?.id && !!conversationId,
@@ -91,9 +91,9 @@ export function useCreateConversation() {
 
   return useMutation({
     mutationFn: async (data: CreateConversationDTO) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data: conversation, error } = await messagingApi.createConversation(userProfile.id, data)
-      if (error) throw error
+      if (error) {throw error}
       return conversation
     },
     onSuccess: (conversation) => {
@@ -115,12 +115,12 @@ export function useGetOrCreateDirectConversation() {
 
   return useMutation({
     mutationFn: async (otherUserId: string) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.getOrCreateDirectConversation(
         userProfile.id,
         otherUserId
       )
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {
@@ -147,13 +147,13 @@ export function useUpdateConversation() {
       conversationId: string
       updates: { name?: string }
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.updateConversation(
         conversationId,
         userProfile.id,
         updates
       )
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -176,9 +176,9 @@ export function useLeaveConversation() {
 
   return useMutation({
     mutationFn: async (conversationId: string) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.leaveConversation(conversationId, userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {
@@ -204,10 +204,10 @@ export function useMessages(conversationId: string | undefined, filters?: Messag
   return useQuery({
     queryKey: messagingKeys.messagesList(conversationId || '', filters),
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!conversationId) throw new Error('Conversation ID required')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!conversationId) {throw new Error('Conversation ID required')}
       const { data, error } = await messagingApi.getMessages(conversationId, userProfile.id, filters)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!userProfile?.id && !!conversationId,
@@ -224,8 +224,8 @@ export function useMessagesInfinite(conversationId: string | undefined) {
   return useInfiniteQuery({
     queryKey: messagingKeys.messagesInfinite(conversationId || ''),
     queryFn: async ({ pageParam }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!conversationId) throw new Error('Conversation ID required')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!conversationId) {throw new Error('Conversation ID required')}
 
       const filters: MessageFilters = {
         conversation_id: conversationId,
@@ -234,13 +234,13 @@ export function useMessagesInfinite(conversationId: string | undefined) {
       }
 
       const { data, error } = await messagingApi.getMessages(conversationId, userProfile.id, filters)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => {
       // Return the ID of the oldest message to load more
-      if (lastPage.length < 50) return undefined
+      if (lastPage.length < 50) {return undefined}
       return lastPage[lastPage.length - 1]?.id
     },
     enabled: !!userProfile?.id && !!conversationId,
@@ -257,9 +257,9 @@ export function useSendMessage() {
 
   return useMutation({
     mutationFn: async (data: SendMessageDTO) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data: message, error } = await messagingApi.sendMessage(userProfile.id, data)
-      if (error) throw error
+      if (error) {throw error}
       return message
     },
     onSuccess: (message) => {
@@ -290,9 +290,9 @@ export function useEditMessage() {
 
   return useMutation({
     mutationFn: async ({ messageId, content }: { messageId: string; content: string }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.editMessage(messageId, userProfile.id, content)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (message) => {
@@ -327,9 +327,9 @@ export function useDeleteMessage() {
       messageId: string
       conversationId: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.deleteMessage(messageId, userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return { success: data, conversationId }
     },
     onSuccess: (result) => {
@@ -356,9 +356,9 @@ export function useMarkAsRead() {
 
   return useMutation({
     mutationFn: async (conversationId: string) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.markAsRead(conversationId, userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {
@@ -391,13 +391,13 @@ export function useAddParticipants() {
       conversationId: string
       participantIds: string[]
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.addParticipants(
         conversationId,
         userProfile.id,
         participantIds
       )
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -425,13 +425,13 @@ export function useRemoveParticipant() {
       conversationId: string
       participantUserId: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.removeParticipant(
         conversationId,
         userProfile.id,
         participantUserId
       )
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -465,9 +465,9 @@ export function useAddReaction() {
       emoji: string
       conversationId: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.addReaction(messageId, userProfile.id, emoji)
-      if (error) throw error
+      if (error) {throw error}
       return { data, conversationId }
     },
     onSuccess: (result) => {
@@ -499,9 +499,9 @@ export function useRemoveReaction() {
       messageId: string
       conversationId: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.removeReaction(messageId, userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return { data, conversationId }
     },
     onSuccess: (result) => {
@@ -531,9 +531,9 @@ export function useSearchMessages(query: string, conversationId?: string) {
   return useQuery({
     queryKey: messagingKeys.search(query),
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.searchMessages(userProfile.id, query, conversationId)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!userProfile?.id && query.length >= 2,
@@ -550,10 +550,10 @@ export function useUnreadCount(conversationId: string | undefined) {
   return useQuery({
     queryKey: [...messagingKeys.unreadCount(userProfile?.id || ''), conversationId],
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!conversationId) throw new Error('Conversation ID required')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!conversationId) {throw new Error('Conversation ID required')}
       const { data, error } = await messagingApi.getUnreadCount(conversationId, userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return data || 0
     },
     enabled: !!userProfile?.id && !!conversationId,
@@ -570,9 +570,9 @@ export function useTotalUnreadCount() {
   return useQuery({
     queryKey: messagingKeys.totalUnread(userProfile?.id || ''),
     queryFn: async () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.getUnreadCount(userProfile.id)
-      if (error) throw error
+      if (error) {throw error}
       return data || 0
     },
     enabled: !!userProfile?.id,

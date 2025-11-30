@@ -63,7 +63,7 @@ const statusConfig: Record<string, { label: string; color: string; bgColor: stri
 
 // Format currency
 const formatCurrency = (amount: number | null): string => {
-  if (amount === null) return '-'
+  if (amount === null) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -82,7 +82,7 @@ export function ClientChangeOrders() {
 
   // Filter change orders
   const filteredCOs = useMemo(() => {
-    if (!changeOrders) return []
+    if (!changeOrders) {return []}
     return changeOrders.filter(co => {
       const matchesSearch = !searchTerm ||
         co.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -95,7 +95,7 @@ export function ClientChangeOrders() {
 
   // Calculate totals
   const totals = useMemo(() => {
-    if (!changeOrders) return { approved: 0, pending: 0, total: 0 }
+    if (!changeOrders) {return { approved: 0, pending: 0, total: 0 }}
     return {
       approved: changeOrders
         .filter(co => co.status === 'approved')
@@ -109,7 +109,7 @@ export function ClientChangeOrders() {
 
   // Stats by status
   const stats = useMemo(() => {
-    if (!changeOrders) return { pending: 0, approved: 0, rejected: 0 }
+    if (!changeOrders) {return { pending: 0, approved: 0, rejected: 0 }}
     return {
       pending: changeOrders.filter(co => co.status === 'pending' || co.status === 'submitted').length,
       approved: changeOrders.filter(co => co.status === 'approved').length,

@@ -30,7 +30,7 @@ export function useSubcontractorBids(filter?: BidsFilter) {
   return useQuery<BidWithRelations[]>({
     queryKey: bidKeys.list(filter),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getPendingBids(userProfile.id, filter)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -66,7 +66,7 @@ export function useSubmitBid() {
 
   return useMutation({
     mutationFn: ({ bidId, data }: { bidId: string; data: SubmitBidDTO }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.submitBid(bidId, userProfile.id, data)
     },
     onSuccess: (_, { bidId }) => {
@@ -100,7 +100,7 @@ export function useDeclineBid() {
 
   return useMutation({
     mutationFn: ({ bidId, reason }: { bidId: string; reason?: string }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.declineBid(bidId, userProfile.id, reason)
     },
     onSuccess: () => {

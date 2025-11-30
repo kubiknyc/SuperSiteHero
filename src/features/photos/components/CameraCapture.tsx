@@ -122,7 +122,7 @@ async function compressImage(
 }
 
 async function getCurrentGPS(): Promise<GPSCoordinates | null> {
-  if (!navigator.geolocation) return null
+  if (!navigator.geolocation) {return null}
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
@@ -146,7 +146,7 @@ async function getCurrentGPS(): Promise<GPSCoordinates | null> {
 }
 
 function formatGPS(coords: GPSCoordinates | null): string {
-  if (!coords) return 'No location'
+  if (!coords) {return 'No location'}
   const lat = coords.latitude.toFixed(6)
   const lng = coords.longitude.toFixed(6)
   const latDir = coords.latitude >= 0 ? 'N' : 'S'
@@ -279,7 +279,7 @@ export function CameraCapture({
 
   // Capture photo
   const capturePhoto = useCallback(async () => {
-    if (!videoRef.current || !canvasRef.current || state !== 'ready') return
+    if (!videoRef.current || !canvasRef.current || state !== 'ready') {return}
     if (capturedPhotos.length >= maxPhotos) {
       setError(`Maximum ${maxPhotos} photos allowed`)
       return
@@ -307,8 +307,8 @@ export function CameraCapture({
       const blob = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob(
           (b) => {
-            if (b) resolve(b)
-            else reject(new Error('Failed to create blob'))
+            if (b) {resolve(b)}
+            else {reject(new Error('Failed to create blob'))}
           },
           'image/jpeg',
           0.95
@@ -422,7 +422,7 @@ export function CameraCapture({
 
   // Refresh GPS
   const refreshGPS = useCallback(async () => {
-    if (!enableGps) return
+    if (!enableGps) {return}
     setIsGettingLocation(true)
     const coords = await getCurrentGPS()
     setGpsLocation(coords)

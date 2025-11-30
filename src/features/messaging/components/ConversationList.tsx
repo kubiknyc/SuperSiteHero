@@ -64,12 +64,12 @@ export function ConversationList({
 
   // Filter conversations by search
   const filteredConversations = useMemo(() => {
-    if (!search) return conversations
+    if (!search) {return conversations}
 
     const searchLower = search.toLowerCase()
     return conversations.filter((conv) => {
       // Search by name
-      if (conv.name?.toLowerCase().includes(searchLower)) return true
+      if (conv.name?.toLowerCase().includes(searchLower)) {return true}
 
       // Search by participant names
       const participantNames = conv.participants
@@ -92,7 +92,7 @@ export function ConversationList({
 
   // Get display name for conversation
   const getDisplayName = (conv: Conversation) => {
-    if (conv.name) return conv.name
+    if (conv.name) {return conv.name}
 
     // For direct messages, show the other person's name
     if (conv.type === 'direct') {

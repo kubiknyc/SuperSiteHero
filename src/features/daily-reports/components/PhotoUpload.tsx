@@ -26,7 +26,7 @@ export function PhotoUpload({
 
   const handleFiles = useCallback(
     async (files: FileList | null) => {
-      if (!files || files.length === 0) return
+      if (!files || files.length === 0) {return}
 
       setIsProcessing(true)
 
@@ -93,7 +93,7 @@ export function PhotoUpload({
     e.stopPropagation()
     setIsDragging(false)
 
-    if (disabled) return
+    if (disabled) {return}
 
     handleFiles(e.dataTransfer.files)
   }

@@ -102,7 +102,7 @@ export function useMarkAllNotificationsAsRead() {
 
   return useMutation({
     mutationFn: () => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationsApi.markAllAsRead(user.id)
     },
     onSuccess: () => {
@@ -143,7 +143,7 @@ export function useDeleteAllNotifications() {
 
   return useMutation({
     mutationFn: () => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationsApi.deleteAllNotifications(user.id)
     },
     onSuccess: () => {

@@ -26,10 +26,10 @@ function NoticeCardComponent({ notice }: NoticeCardProps) {
 
   // Determine left border color based on priority/urgency
   const getBorderColor = () => {
-    if (notice.is_critical) return 'border-l-red-500'
-    if (overdue) return 'border-l-red-400'
-    if (daysUntilDue !== null && daysUntilDue <= 3) return 'border-l-orange-400'
-    if (daysUntilDue !== null && daysUntilDue <= 7) return 'border-l-yellow-400'
+    if (notice.is_critical) {return 'border-l-red-500'}
+    if (overdue) {return 'border-l-red-400'}
+    if (daysUntilDue !== null && daysUntilDue <= 3) {return 'border-l-orange-400'}
+    if (daysUntilDue !== null && daysUntilDue <= 7) {return 'border-l-yellow-400'}
     return 'border-l-blue-400'
   }
 

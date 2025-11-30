@@ -46,7 +46,7 @@ export function NoticesPage() {
 
   // Filter notices based on current filters
   const filteredNotices = useMemo(() => {
-    if (!notices) return []
+    if (!notices) {return []}
     return notices
   }, [notices])
 

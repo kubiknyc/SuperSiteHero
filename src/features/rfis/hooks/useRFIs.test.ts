@@ -183,9 +183,11 @@ describe('useRFIs', () => {
         eq: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             is: vi.fn().mockReturnValue({
-              order: vi.fn().mockResolvedValue({
-                data: mockRFIs,
-                error: null,
+              order: vi.fn().mockReturnValue({
+                limit: vi.fn().mockResolvedValue({
+                  data: mockRFIs,
+                  error: null,
+                }),
               }),
             }),
           }),
@@ -224,9 +226,11 @@ describe('useRFIs', () => {
         eq: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
             is: vi.fn().mockReturnValue({
-              order: vi.fn().mockResolvedValue({
-                data: activeRFIs,
-                error: null,
+              order: vi.fn().mockReturnValue({
+                limit: vi.fn().mockResolvedValue({
+                  data: activeRFIs,
+                  error: null,
+                }),
               }),
             }),
           }),
@@ -277,11 +281,16 @@ describe('useRFI', () => {
   });
 
   it('should throw error when rfiId is undefined', () => {
+    // Suppress React error boundary warnings
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     expect(() => {
       renderHook(() => useRFI(undefined), {
         wrapper: createWrapper(),
       });
     }).toThrow('RFI ID is required for useRFI');
+
+    consoleSpy.mockRestore();
   });
 });
 
@@ -326,11 +335,16 @@ describe('useRFIsByStatus', () => {
   });
 
   it('should throw error when projectId is undefined', () => {
+    // Suppress React error boundary warnings
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     expect(() => {
       renderHook(() => useRFIsByStatus(undefined, 'pending'), {
         wrapper: createWrapper(),
       });
     }).toThrow('Project ID is required for useRFIsByStatus');
+
+    consoleSpy.mockRestore();
   });
 });
 
@@ -410,12 +424,16 @@ describe('useMyRFIs', () => {
       userProfile: null,
     })) as any;
 
+    // Suppress React error boundary warnings
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     expect(() => {
       renderHook(() => useMyRFIs(), {
         wrapper: createWrapper(),
       });
     }).toThrow('User must be authenticated to use useMyRFIs');
 
+    consoleSpy.mockRestore();
     vi.mocked(await import('@/lib/auth/AuthContext')).useAuth = originalMock;
   });
 });
@@ -455,11 +473,16 @@ describe('useRFIComments', () => {
   });
 
   it('should throw error when rfiId is undefined', () => {
+    // Suppress React error boundary warnings
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     expect(() => {
       renderHook(() => useRFIComments(undefined), {
         wrapper: createWrapper(),
       });
     }).toThrow('RFI ID is required for useRFIComments');
+
+    consoleSpy.mockRestore();
   });
 });
 
@@ -496,11 +519,16 @@ describe('useRFIHistory', () => {
   });
 
   it('should throw error when rfiId is undefined', () => {
+    // Suppress React error boundary warnings
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
     expect(() => {
       renderHook(() => useRFIHistory(undefined), {
         wrapper: createWrapper(),
       });
     }).toThrow('RFI ID is required for useRFIHistory');
+
+    consoleSpy.mockRestore();
   });
 });
 

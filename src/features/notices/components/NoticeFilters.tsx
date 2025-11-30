@@ -36,12 +36,12 @@ export function NoticeFilters({
 }: NoticeFiltersProps) {
   // Determine which quick filter is active
   const getActiveQuickFilter = (): QuickFilterKey => {
-    if (filters.is_critical === true) return 'critical'
+    if (filters.is_critical === true) {return 'critical'}
     if (filters.status === 'pending_response' || filters.response_required === true) {
       return 'awaiting_response'
     }
-    if (filters.direction === 'outgoing') return 'sent'
-    if (filters.direction === 'incoming') return 'received'
+    if (filters.direction === 'outgoing') {return 'sent'}
+    if (filters.direction === 'incoming') {return 'received'}
     // Note: 'overdue' requires special handling in the parent component
     return 'all'
   }
@@ -50,7 +50,7 @@ export function NoticeFilters({
 
   // Handle quick filter selection
   const handleQuickFilter = (key: QuickFilterKey) => {
-    let newFilters: FilterType = { search: filters.search }
+    const newFilters: FilterType = { search: filters.search }
 
     switch (key) {
       case 'critical':

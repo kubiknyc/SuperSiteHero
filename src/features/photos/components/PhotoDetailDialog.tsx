@@ -100,7 +100,7 @@ export function PhotoDetailDialog({
   }
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return 'Unknown'
+    if (!dateStr) {return 'Unknown'}
     return new Date(dateStr).toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
@@ -112,14 +112,14 @@ export function PhotoDetailDialog({
   }
 
   const formatFileSize = (bytes?: number) => {
-    if (!bytes) return 'Unknown'
-    if (bytes < 1024) return `${bytes} B`
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+    if (!bytes) {return 'Unknown'}
+    if (bytes < 1024) {return `${bytes} B`}
+    if (bytes < 1024 * 1024) {return `${(bytes / 1024).toFixed(1)} KB`}
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
   }
 
   const formatGPS = (lat?: number, lng?: number) => {
-    if (!lat || !lng) return null
+    if (!lat || !lng) {return null}
     const latDir = lat >= 0 ? 'N' : 'S'
     const lngDir = lng >= 0 ? 'E' : 'W'
     return `${Math.abs(lat).toFixed(6)}° ${latDir}, ${Math.abs(lng).toFixed(6)}° ${lngDir}`

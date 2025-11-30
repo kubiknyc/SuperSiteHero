@@ -62,7 +62,7 @@ export function NoticeDocumentUpload({
     e.stopPropagation()
     setIsDragging(false)
 
-    if (disabled) return
+    if (disabled) {return}
 
     const files = e.dataTransfer.files
     if (files && files.length > 0) {
@@ -87,7 +87,7 @@ export function NoticeDocumentUpload({
 
   // Handle upload
   const handleUpload = async () => {
-    if (!selectedFile) return
+    if (!selectedFile) {return}
 
     try {
       const url = await uploadMutation.mutateAsync({
@@ -117,7 +117,7 @@ export function NoticeDocumentUpload({
 
   // Format file size
   const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes'
+    if (bytes === 0) {return '0 Bytes'}
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))

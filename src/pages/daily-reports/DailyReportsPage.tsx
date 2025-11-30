@@ -1,8 +1,8 @@
 // File: /src/pages/daily-reports/DailyReportsPage.tsx
 // Daily reports list and management page
 
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect, useMemo } from 'react'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useDailyReports } from '@/features/daily-reports/hooks/useDailyReports'
@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { VirtualizedTable } from '@/components/ui/virtualized-table'
+import { MultiSelectFilter } from '@/components/ui/multi-select-filter'
 import {
   Plus,
   FileText,
@@ -22,25 +23,161 @@ import {
   Edit,
   Thermometer,
   Clock,
+  Search,
+  X,
+  SlidersHorizontal,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { DailyReport } from '@/types/database'
 
+interface DateRange {
+  from: string
+  to: string
+}
+
+interface WorkerRange {
+  min: string
+  max: string
+}
+
 export function DailyReportsPage() {
   const { data: projects } = useMyProjects()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
-  const [dateFilter, setDateFilter] = useState('')
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  // Initialize state from URL parameters
+  const searchParams = new URLSearchParams(location.search)
+
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(
+    searchParams.get('project') || ''
+  )
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get('search') || ''
+  )
+  const [statusFilter, setStatusFilter] = useState<string[]>(
+    searchParams.get('status')?.split(',').filter(Boolean) || []
+  )
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: searchParams.get('dateFrom') || '',
+    to: searchParams.get('dateTo') || '',
+  })
+  const [weatherFilter, setWeatherFilter] = useState<string[]>(
+    searchParams.get('weather')?.split(',').filter(Boolean) || []
+  )
+  const [workerRange, setWorkerRange] = useState<WorkerRange>({
+    min: searchParams.get('workerMin') || '',
+    max: searchParams.get('workerMax') || '',
+  })
+  const [createdByFilter, setCreatedByFilter] = useState(
+    searchParams.get('createdBy') || ''
+  )
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(
+    searchParams.has('advanced')
+  )
+
+  // Sync filters to URL
+  useEffect(() => {
+    const params = new URLSearchParams()
+
+    if (selectedProjectId) {params.set('project', selectedProjectId)}
+    if (searchQuery) {params.set('search', searchQuery)}
+    if (statusFilter.length > 0) {params.set('status', statusFilter.join(','))}
+    if (dateRange.from) {params.set('dateFrom', dateRange.from)}
+    if (dateRange.to) {params.set('dateTo', dateRange.to)}
+    if (weatherFilter.length > 0) {params.set('weather', weatherFilter.join(','))}
+    if (workerRange.min) {params.set('workerMin', workerRange.min)}
+    if (workerRange.max) {params.set('workerMax', workerRange.max)}
+    if (createdByFilter) {params.set('createdBy', createdByFilter)}
+    if (showAdvancedFilters) {params.set('advanced', 'true')}
+
+    const newSearch = params.toString()
+    const currentSearch = location.search.replace('?', '')
+
+    if (newSearch !== currentSearch) {
+      navigate(`?${newSearch}`, { replace: true })
+    }
+  }, [
+    selectedProjectId,
+    searchQuery,
+    statusFilter,
+    dateRange,
+    weatherFilter,
+    workerRange,
+    createdByFilter,
+    showAdvancedFilters,
+    navigate,
+    location.search,
+  ])
 
   // Use the selected project or first active project
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
 
   const { data: reports, isLoading, error } = useDailyReports(activeProjectId)
 
-  // Filter reports by date if date filter is set
-  const filteredReports = reports?.filter((report) => {
-    if (!dateFilter) {return true}
-    return report.report_date === dateFilter
-  })
+  // Comprehensive filtering logic
+  const filteredReports = useMemo(() => {
+    if (!reports) {return []}
+
+    return reports.filter((report) => {
+      // Text search across multiple fields
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase()
+        const searchableText = [
+          report.report_number,
+          report.work_completed,
+          report.issues,
+          report.observations,
+          report.comments,
+          report.weather_condition,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+
+        if (!searchableText.includes(query)) {return false}
+      }
+
+      // Status filter
+      if (statusFilter.length > 0 && !statusFilter.includes(report.status ?? 'draft')) {
+        return false
+      }
+
+      // Date range filter
+      if (dateRange.from && report.report_date < dateRange.from) {return false}
+      if (dateRange.to && report.report_date > dateRange.to) {return false}
+
+      // Weather condition filter
+      if (
+        weatherFilter.length > 0 &&
+        !weatherFilter.includes(report.weather_condition ?? '')
+      ) {
+        return false
+      }
+
+      // Worker count range
+      if (workerRange.min && (report.total_workers ?? 0) < parseInt(workerRange.min)) {
+        return false
+      }
+      if (workerRange.max && (report.total_workers ?? 0) > parseInt(workerRange.max)) {
+        return false
+      }
+
+      // Created by filter
+      if (createdByFilter && report.created_by !== createdByFilter) {
+        return false
+      }
+
+      return true
+    })
+  }, [
+    reports,
+    searchQuery,
+    statusFilter,
+    dateRange,
+    weatherFilter,
+    workerRange,
+    createdByFilter,
+  ])
 
   // Get status badge variant
   const getStatusVariant = (status: string) => {
@@ -59,6 +196,45 @@ export function DailyReportsPage() {
 
   const formatStatus = (status: string) => {
     return status.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())
+  }
+
+  // Get unique weather conditions from reports
+  const uniqueWeatherConditions = useMemo(() => {
+    if (!reports) {return []}
+    const conditions = new Set(reports.map((r) => r.weather_condition).filter(Boolean))
+    return Array.from(conditions).map((c) => ({ value: c!, label: c! }))
+  }, [reports])
+
+  // Get unique creators
+  const uniqueCreators = useMemo(() => {
+    if (!reports) {return []}
+    const creators = new Set(
+      reports.map((r) => r.created_by).filter((c): c is string => Boolean(c))
+    )
+    return Array.from(creators)
+  }, [reports])
+
+  // Count active filters
+  const activeFilterCount = useMemo(() => {
+    let count = 0
+    if (searchQuery) {count++}
+    if (statusFilter.length > 0) {count += statusFilter.length}
+    if (dateRange.from || dateRange.to) {count++}
+    if (weatherFilter.length > 0) {count += weatherFilter.length}
+    if (workerRange.min || workerRange.max) {count++}
+    if (createdByFilter) {count++}
+    return count
+  }, [searchQuery, statusFilter, dateRange, weatherFilter, workerRange, createdByFilter])
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSearchQuery('')
+    setStatusFilter([])
+    setDateRange({ from: '', to: '' })
+    setWeatherFilter([])
+    setWorkerRange({ min: '', max: '' })
+    setCreatedByFilter('')
+    setShowAdvancedFilters(false)
   }
 
   const tableColumns = [
@@ -173,40 +349,154 @@ export function DailyReportsPage() {
 
         {/* Filters */}
         <Card>
-          <CardContent className="p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Project selector */}
-              {projects && projects.length > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Project
-                  </label>
-                  <Select
-                    value={selectedProjectId}
-                    onChange={(e) => setSelectedProjectId(e.target.value)}
-                  >
-                    <option value="">Select project...</option>
-                    {projects.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.name}
-                      </option>
-                    ))}
-                  </Select>
-                </div>
-              )}
-
-              {/* Date filter */}
+          <CardContent className="p-4 space-y-4">
+            {/* Project selector */}
+            {projects && projects.length > 0 && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Filter by Date
+                  Project
                 </label>
-                <Input
-                  type="date"
-                  value={dateFilter}
-                  onChange={(e) => setDateFilter(e.target.value)}
-                />
+                <Select
+                  value={selectedProjectId}
+                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                >
+                  <option value="">All projects</option>
+                  {projects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </Select>
               </div>
+            )}
+
+            {/* Search bar */}
+            <div className="flex items-center gap-2">
+              <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
+              <Input
+                type="text"
+                placeholder="Search reports by number, work completed, issues..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1"
+              />
+              {activeFilterCount > 0 && (
+                <Button variant="ghost" size="sm" onClick={clearAllFilters}>
+                  <X className="h-4 w-4 mr-1" />
+                  Clear ({activeFilterCount})
+                </Button>
+              )}
             </div>
+
+            {/* Quick filters */}
+            <div className="flex flex-wrap gap-2">
+              <MultiSelectFilter
+                label="Status"
+                options={[
+                  { value: 'draft', label: 'Draft' },
+                  { value: 'submitted', label: 'Submitted' },
+                  { value: 'in_review', label: 'In Review' },
+                  { value: 'approved', label: 'Approved' },
+                ]}
+                value={statusFilter}
+                onChange={setStatusFilter}
+              />
+
+              {uniqueWeatherConditions.length > 0 && (
+                <MultiSelectFilter
+                  label="Weather"
+                  options={uniqueWeatherConditions}
+                  value={weatherFilter}
+                  onChange={setWeatherFilter}
+                />
+              )}
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+              >
+                <SlidersHorizontal className="h-4 w-4 mr-1" />
+                {showAdvancedFilters ? 'Hide' : 'Show'} Advanced
+              </Button>
+            </div>
+
+            {/* Advanced filters panel */}
+            {showAdvancedFilters && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+                {/* Date range */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Date Range
+                  </label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="date"
+                      value={dateRange.from}
+                      onChange={(e) =>
+                        setDateRange((prev) => ({ ...prev, from: e.target.value }))
+                      }
+                      placeholder="From"
+                    />
+                    <Input
+                      type="date"
+                      value={dateRange.to}
+                      onChange={(e) =>
+                        setDateRange((prev) => ({ ...prev, to: e.target.value }))
+                      }
+                      placeholder="To"
+                    />
+                  </div>
+                </div>
+
+                {/* Worker count range */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Worker Count
+                  </label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="number"
+                      value={workerRange.min}
+                      onChange={(e) =>
+                        setWorkerRange((prev) => ({ ...prev, min: e.target.value }))
+                      }
+                      placeholder="Min"
+                      min="0"
+                    />
+                    <Input
+                      type="number"
+                      value={workerRange.max}
+                      onChange={(e) =>
+                        setWorkerRange((prev) => ({ ...prev, max: e.target.value }))
+                      }
+                      placeholder="Max"
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                {/* Created by */}
+                {uniqueCreators.length > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Created By
+                    </label>
+                    <Select
+                      value={createdByFilter}
+                      onChange={(e) => setCreatedByFilter(e.target.value)}
+                    >
+                      <option value="">All users</option>
+                      {uniqueCreators.map((creator) => (
+                        <option key={creator} value={creator}>
+                          {creator}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -233,11 +523,11 @@ export function DailyReportsPage() {
                 No daily reports yet
               </h3>
               <p className="text-gray-600 mb-6">
-                {dateFilter
-                  ? 'No reports found for the selected date.'
+                {activeFilterCount > 0
+                  ? 'No reports match your current filters. Try adjusting your search criteria.'
                   : 'Start documenting your daily activities by creating your first report.'}
               </p>
-              {!dateFilter && (
+              {activeFilterCount === 0 && (
                 <Link to="/daily-reports/new">
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />

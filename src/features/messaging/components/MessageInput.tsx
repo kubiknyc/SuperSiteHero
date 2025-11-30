@@ -49,8 +49,8 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
 
   // Filter participants for mention autocomplete
   const filteredParticipants = participants.filter((p) => {
-    if (p.user_id === userProfile?.id) return false
-    if (!mentionSearch) return true
+    if (p.user_id === userProfile?.id) {return false}
+    if (!mentionSearch) {return true}
 
     const name = p.user?.full_name?.toLowerCase() || ''
     const email = p.user?.email?.toLowerCase() || ''
@@ -138,7 +138,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
   // Handle file selection and upload
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (!files || files.length === 0) return
+    if (!files || files.length === 0) {return}
 
     // Validate file count (max 10 files per message)
     if (files.length > 10) {
@@ -179,8 +179,8 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
   const handleSend = async () => {
     const trimmedContent = content.trim()
 
-    if (!trimmedContent && attachments.length === 0) return
-    if (!isValidMessageContent(trimmedContent) && attachments.length === 0) return
+    if (!trimmedContent && attachments.length === 0) {return}
+    if (!isValidMessageContent(trimmedContent) && attachments.length === 0) {return}
 
     const messageData: SendMessageDTO = {
       conversation_id: conversationId,

@@ -22,11 +22,11 @@ interface FieldErrors {
 export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSectionProps) {
   const [errors, setErrors] = useState<FieldErrors>({})
 
-  if (!draft) return null
+  if (!draft) {return null}
 
   const validateField = (field: keyof FieldErrors, value: any) => {
     const fieldSchema = workSectionSchema.shape[field]
-    if (!fieldSchema) return
+    if (!fieldSchema) {return}
 
     const result = fieldSchema.safeParse(value)
     setErrors((prev) => ({

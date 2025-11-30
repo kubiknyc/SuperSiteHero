@@ -31,7 +31,7 @@ export function useSubcontractorDashboard() {
   return useQuery<SubcontractorDashboardData>({
     queryKey: subcontractorKeys.dashboard(),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getDashboard(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -48,7 +48,7 @@ export function useSubcontractorStats() {
   return useQuery<SubcontractorStats>({
     queryKey: subcontractorKeys.stats(),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getStats(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -66,7 +66,7 @@ export function useSubcontractorProjects() {
   return useQuery<SubcontractorProject[]>({
     queryKey: subcontractorKeys.projects(),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getProjects(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -83,7 +83,7 @@ export function useSubcontractorScope(projectId: string) {
   return useQuery({
     queryKey: [...subcontractorKeys.project(projectId), 'scope'],
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getScope(userProfile.id, projectId)
     },
     enabled: !!userProfile?.id && !!projectId && userProfile.role === 'subcontractor',

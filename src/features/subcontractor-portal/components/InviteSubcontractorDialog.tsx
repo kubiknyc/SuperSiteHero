@@ -70,7 +70,7 @@ export function InviteSubcontractorDialog({
         .is('deleted_at', null)
         .order('company_name')
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as Subcontractor[]
     },
     enabled: !!projectId && open,

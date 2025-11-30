@@ -10,7 +10,7 @@ import { useTotalUnreadCount } from '../hooks'
 export function UnreadMessagesBadge() {
   const { data: unreadCount = 0 } = useTotalUnreadCount()
 
-  if (unreadCount === 0) return null
+  if (unreadCount === 0) {return null}
 
   return (
     <Badge variant="destructive" className="ml-auto h-5 min-w-[20px] px-1.5 text-xs">

@@ -46,7 +46,7 @@ export const noticesApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice[]
   },
 
@@ -61,7 +61,7 @@ export const noticesApi = {
       .is('deleted_at', null)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice
   },
 
@@ -93,7 +93,7 @@ export const noticesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice
   },
 
@@ -157,7 +157,7 @@ export const noticesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice
   },
 
@@ -170,7 +170,7 @@ export const noticesApi = {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', noticeId)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -184,7 +184,7 @@ export const noticesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice
   },
 
@@ -204,7 +204,7 @@ export const noticesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice
   },
 
@@ -230,7 +230,7 @@ export const noticesApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice[]
   },
 
@@ -256,7 +256,7 @@ export const noticesApi = {
       .is('deleted_at', null)
       .order('response_due_date', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice[]
   },
 
@@ -272,7 +272,7 @@ export const noticesApi = {
       .is('deleted_at', null)
       .order('notice_date', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Notice[]
   },
 
@@ -297,7 +297,7 @@ export const noticesApi = {
       .eq('project_id', projectId)
       .is('deleted_at', null)
 
-    if (error) throw error
+    if (error) {throw error}
 
     const total = notices.length
     const critical = notices.filter((n) => n.is_critical).length
@@ -344,7 +344,7 @@ export const noticesApi = {
         upsert: false,
       })
 
-    if (uploadError) throw uploadError
+    if (uploadError) {throw uploadError}
 
     const { data: urlData } = supabase.storage
       .from('documents')
@@ -368,7 +368,7 @@ export const noticesApi = {
       .from('documents')
       .remove([filePath])
 
-    if (error) throw error
+    if (error) {throw error}
   },
 }
 

@@ -55,17 +55,17 @@ async function notifyDocumentComment(
       getUserDetails(commenterId),
     ])
 
-    if (!document || !document.created_by) return
+    if (!document || !document.created_by) {return}
 
     // Don't notify if commenter is the document owner
-    if (document.created_by === commenterId) return
+    if (document.created_by === commenterId) {return}
 
     const [documentOwner, projectName] = await Promise.all([
       getUserDetails(document.created_by),
       getProjectName(document.project_id),
     ])
 
-    if (!documentOwner?.email) return
+    if (!documentOwner?.email) {return}
 
     const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
     const { html, text } = generateDocumentCommentEmail({

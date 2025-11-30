@@ -131,7 +131,7 @@ export const materialReceivingApi = {
         photo_count: 0, // Will be populated separately if needed
       }))
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -204,7 +204,7 @@ export const materialReceivingApi = {
         photo_count: photoCount || 0,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -248,7 +248,7 @@ export const materialReceivingApi = {
 
       return data
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -279,7 +279,7 @@ export const materialReceivingApi = {
 
       return data
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -306,7 +306,7 @@ export const materialReceivingApi = {
         })
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -330,7 +330,7 @@ export const materialReceivingApi = {
 
       return this.updateMaterialReceipt(id, updates)
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -351,7 +351,7 @@ export const materialReceivingApi = {
 
       return this.updateMaterialReceipt(id, updates)
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -386,7 +386,7 @@ export const materialReceivingApi = {
 
       return data || []
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -423,7 +423,7 @@ export const materialReceivingApi = {
 
       return data
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -454,7 +454,7 @@ export const materialReceivingApi = {
 
       return data
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -481,7 +481,7 @@ export const materialReceivingApi = {
         })
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -537,7 +537,7 @@ export const materialReceivingApi = {
         ...metadata,
       })
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -578,7 +578,7 @@ export const materialReceivingApi = {
         unique_vendors: 0,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -612,7 +612,7 @@ export const materialReceivingApi = {
       const vendors = [...new Set((data || []).map((d: any) => d.vendor).filter(Boolean))] as string[]
       return vendors
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',
@@ -646,7 +646,7 @@ export const materialReceivingApi = {
       const locations = [...new Set((data || []).map((d: any) => d.storage_location).filter(Boolean))] as string[]
       return locations
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({
         code: 'UNKNOWN_ERROR',
         message: 'An unexpected error occurred',

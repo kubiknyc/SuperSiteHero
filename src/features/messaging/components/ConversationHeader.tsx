@@ -81,9 +81,9 @@ export function ConversationHeader({
 
   // Get display name
   const getDisplayName = () => {
-    if (!conversation) return 'Loading...'
+    if (!conversation) {return 'Loading...'}
 
-    if (conversation.name) return conversation.name
+    if (conversation.name) {return conversation.name}
 
     // For direct messages, show the other person's name
     if (conversation.type === 'direct') {
@@ -99,7 +99,7 @@ export function ConversationHeader({
 
   // Get subtitle (online status or participant count)
   const getSubtitle = () => {
-    if (!conversation) return ''
+    if (!conversation) {return ''}
 
     if (conversation.type === 'direct') {
       const otherParticipant = conversation.participants?.find(
@@ -117,7 +117,7 @@ export function ConversationHeader({
 
   // Get avatar
   const getAvatar = () => {
-    if (!conversation) return null
+    if (!conversation) {return null}
 
     if (conversation.type === 'direct') {
       const otherParticipant = conversation.participants?.find(
@@ -131,7 +131,7 @@ export function ConversationHeader({
 
   // Check if user is admin
   const isAdmin = () => {
-    if (!conversation) return false
+    if (!conversation) {return false}
     const myParticipant = conversation.participants?.find(
       (p) => p.user_id === userProfile?.id
     )

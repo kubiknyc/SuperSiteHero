@@ -24,11 +24,11 @@ interface FieldErrors {
 export function WeatherSection({ expanded, onToggle, draft, onUpdate }: WeatherSectionProps) {
   const [errors, setErrors] = useState<FieldErrors>({})
 
-  if (!draft) return null
+  if (!draft) {return null}
 
   const validateField = (field: keyof FieldErrors, value: any) => {
     const fieldSchema = weatherSchema.shape[field]
-    if (!fieldSchema) return
+    if (!fieldSchema) {return}
 
     const result = fieldSchema.safeParse(value)
     setErrors((prev) => ({

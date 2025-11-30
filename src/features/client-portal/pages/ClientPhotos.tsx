@@ -50,14 +50,14 @@ export function ClientPhotos() {
 
   // Get unique categories
   const categories = useMemo(() => {
-    if (!photos) return []
+    if (!photos) {return []}
     const cats = new Set(photos.map(p => p.category).filter(Boolean))
     return Array.from(cats) as string[]
   }, [photos])
 
   // Filter photos
   const filteredPhotos = useMemo(() => {
-    if (!photos) return []
+    if (!photos) {return []}
     return photos.filter(photo => {
       const matchesSearch = !searchTerm ||
         photo.caption?.toLowerCase().includes(searchTerm.toLowerCase())

@@ -77,7 +77,7 @@ async function fetchProjectUsers(projectId: string): Promise<ProjectUser[]> {
     `)
     .eq('project_id', projectId)
 
-  if (error) throw error
+  if (error) {throw error}
 
   return (data || [])
     .map((pu: any) => pu.user)
@@ -93,7 +93,7 @@ async function fetchProjectSubcontractors(projectId: string): Promise<ProjectSub
     .is('deleted_at', null)
     .order('company_name')
 
-  if (error) throw error
+  if (error) {throw error}
 
   return data || []
 }
@@ -137,7 +137,7 @@ export function AssigneeSelector({
 
   // Build the select value string
   const selectValue = useMemo(() => {
-    if (!value || !value.type || !value.id) return 'unassigned'
+    if (!value || !value.type || !value.id) {return 'unassigned'}
     return `${value.type}:${value.id}`
   }, [value])
 
@@ -169,7 +169,7 @@ export function AssigneeSelector({
 
   // Get display name for current value
   const displayValue = useMemo(() => {
-    if (!value || !value.type || !value.id) return null
+    if (!value || !value.type || !value.id) {return null}
 
     if (value.type === 'user') {
       const user = users.find((u) => u.id === value.id)

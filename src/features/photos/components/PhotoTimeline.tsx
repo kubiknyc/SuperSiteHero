@@ -93,7 +93,7 @@ export function PhotoTimeline({
   }, [photos, groupBy])
 
   const formatTime = (dateStr?: string) => {
-    if (!dateStr) return ''
+    if (!dateStr) {return ''}
     return new Date(dateStr).toLocaleTimeString('en-US', {
       hour: 'numeric',
       minute: '2-digit',

@@ -31,11 +31,11 @@ vi.mock('@/features/subcontractor-portal/hooks', () => ({
     return labels[type] || type
   },
   isExpired: (date: string | null) => {
-    if (!date) return false
+    if (!date) {return false}
     return new Date(date) < mockDate
   },
   isExpiringSoon: (date: string | null) => {
-    if (!date) return false
+    if (!date) {return false}
     const expDate = new Date(date)
     const daysUntil = Math.ceil((expDate.getTime() - mockDate.getTime()) / (1000 * 60 * 60 * 24))
     return daysUntil > 0 && daysUntil <= 30

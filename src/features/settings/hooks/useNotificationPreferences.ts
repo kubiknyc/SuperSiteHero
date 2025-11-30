@@ -48,7 +48,7 @@ export function useUpdateNotificationPreferences() {
 
   return useMutation({
     mutationFn: (preferences: Partial<NotificationPreferences>) => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationPreferencesApi.updatePreferences(user.id, preferences)
     },
     onSuccess: (data) => {
@@ -71,7 +71,7 @@ export function useResetNotificationPreferences() {
 
   return useMutation({
     mutationFn: () => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationPreferencesApi.resetToDefaults(user.id)
     },
     onSuccess: (data) => {
@@ -94,7 +94,7 @@ export function useEnableAllEmailNotifications() {
 
   return useMutation({
     mutationFn: () => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationPreferencesApi.enableAllEmail(user.id)
     },
     onSuccess: (data) => {
@@ -117,7 +117,7 @@ export function useDisableAllEmailNotifications() {
 
   return useMutation({
     mutationFn: () => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationPreferencesApi.disableAllEmail(user.id)
     },
     onSuccess: (data) => {
@@ -140,7 +140,7 @@ export function useUpdateQuietHours() {
 
   return useMutation({
     mutationFn: (quietHours: NotificationPreferences['quietHours']) => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
       return notificationPreferencesApi.updateQuietHours(user.id, quietHours)
     },
     onSuccess: (data) => {

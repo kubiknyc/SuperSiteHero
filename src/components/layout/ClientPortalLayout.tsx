@@ -52,7 +52,7 @@ export function ClientPortalLayout() {
       { name: 'Overview', href: `/client/projects/${projectId}`, icon: LayoutDashboard },
     ]
 
-    if (!currentProject) return baseNav
+    if (!currentProject) {return baseNav}
 
     const conditionalNav: NavItem[] = []
 

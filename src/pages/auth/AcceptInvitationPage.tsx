@@ -53,7 +53,7 @@ export function AcceptInvitationPage() {
   }, [user, validation, token, accepted])
 
   const handleAccept = async () => {
-    if (!token || !user?.id) return
+    if (!token || !user?.id) {return}
 
     acceptInvitation.mutate(
       { token, userId: user.id },

@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient } from '@tanstack/react-query';
+
+// Unmock the hooks for this test file (they're mocked globally in setup.tsx)
+vi.unmock('@/features/projects/hooks/useProjects');
+
 import {
   useProjects,
   useProject,
@@ -43,12 +47,14 @@ describe('useProjects', () => {
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
-    const mockOrder = vi.fn().mockResolvedValue({ data: mockProjects, error: null });
+    const mockOrder = vi.fn().mockReturnThis();
+    const mockLimit = vi.fn().mockResolvedValue({ data: mockProjects, error: null });
 
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
       eq: mockEq,
       order: mockOrder,
+      limit: mockLimit,
     } as any);
 
     const { result } = renderHook(() => useProjects(), {
@@ -59,9 +65,10 @@ describe('useProjects', () => {
 
     expect(result.current.data).toEqual(mockProjects);
     expect(supabase.from).toHaveBeenCalledWith('projects');
-    expect(mockSelect).toHaveBeenCalledWith('*');
+    expect(mockSelect).toHaveBeenCalledWith('id, name, status, address, start_date, end_date, company_id, created_at, budget');
     expect(mockEq).toHaveBeenCalledWith('company_id', 'company-123');
     expect(mockOrder).toHaveBeenCalledWith('created_at', { ascending: false });
+    expect(mockLimit).toHaveBeenCalledWith(50);
   });
 
   it('should handle error when fetching projects fails', async () => {
@@ -69,12 +76,14 @@ describe('useProjects', () => {
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
-    const mockOrder = vi.fn().mockResolvedValue({ data: null, error: mockError });
+    const mockOrder = vi.fn().mockReturnThis();
+    const mockLimit = vi.fn().mockResolvedValue({ data: null, error: mockError });
 
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
       eq: mockEq,
       order: mockOrder,
+      limit: mockLimit,
     } as any);
 
     const { result } = renderHook(() => useProjects(), {

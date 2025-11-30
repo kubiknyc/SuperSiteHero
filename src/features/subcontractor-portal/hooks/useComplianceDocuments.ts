@@ -32,7 +32,7 @@ export function useComplianceDocuments(filter?: ComplianceDocumentsFilter) {
   return useQuery<ComplianceDocumentWithRelations[]>({
     queryKey: complianceKeys.documents(filter),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getComplianceDocuments(userProfile.id, filter)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -68,7 +68,7 @@ export function useUploadComplianceDocument() {
 
   return useMutation({
     mutationFn: (data: CreateComplianceDocumentDTO) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.uploadComplianceDocument(userProfile.id, data)
     },
     onSuccess: () => {
@@ -124,7 +124,7 @@ export function getDocumentStatusColor(status: string): string {
  * Calculate days until expiration
  */
 export function getDaysUntilExpiration(expirationDate: string | null): number | null {
-  if (!expirationDate) return null
+  if (!expirationDate) {return null}
 
   const expDate = new Date(expirationDate)
   const today = new Date()

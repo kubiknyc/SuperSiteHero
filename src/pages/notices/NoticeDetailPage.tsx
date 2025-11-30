@@ -39,7 +39,7 @@ export function NoticeDetailPage() {
   const deleteMutation = useDeleteNoticeWithNotification()
 
   const handleDelete = async () => {
-    if (!notice) return
+    if (!notice) {return}
 
     if (window.confirm('Are you sure you want to delete this notice?')) {
       try {

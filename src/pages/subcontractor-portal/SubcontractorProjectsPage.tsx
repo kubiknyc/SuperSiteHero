@@ -24,7 +24,7 @@ import {
 import type { SubcontractorProject } from '@/types/subcontractor-portal'
 
 function formatCurrency(value: number | null): string {
-  if (value === null || value === undefined) return '-'
+  if (value === null || value === undefined) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

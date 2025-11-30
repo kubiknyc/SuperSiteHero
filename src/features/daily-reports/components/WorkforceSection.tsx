@@ -36,7 +36,7 @@ export function WorkforceSection({
   }
 
   const handleSaveEdit = () => {
-    if (!editingId) return
+    if (!editingId) {return}
 
     // Validate the entry
     const result = workforceEntrySchema.safeParse(editForm)

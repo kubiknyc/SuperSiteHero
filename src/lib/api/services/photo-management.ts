@@ -150,7 +150,7 @@ export async function getPhotos(filters: PhotoFilters = {}): Promise<Photo[]> {
 
   const { data, error } = await query
 
-  if (error) throw error
+  if (error) {throw error}
   return data?.map(mapPhotoFromDb) || []
 }
 
@@ -166,7 +166,7 @@ export async function getPhoto(id: string): Promise<Photo | null> {
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     throw error
   }
 
@@ -227,7 +227,7 @@ export async function createPhoto(dto: CreatePhotoDTO): Promise<Photo> {
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapPhotoFromDb(data)
 }
 
@@ -239,17 +239,17 @@ export async function updatePhoto(id: string, dto: UpdatePhotoDTO): Promise<Phot
 
   const updateData: Record<string, any> = {}
 
-  if (dto.caption !== undefined) updateData.caption = dto.caption
-  if (dto.description !== undefined) updateData.description = dto.description
-  if (dto.building !== undefined) updateData.building = dto.building
-  if (dto.floor !== undefined) updateData.floor = dto.floor
-  if (dto.area !== undefined) updateData.area = dto.area
-  if (dto.grid !== undefined) updateData.grid = dto.grid
-  if (dto.locationNotes !== undefined) updateData.location_notes = dto.locationNotes
-  if (dto.photoCategory !== undefined) updateData.photo_category = dto.photoCategory
-  if (dto.tags !== undefined) updateData.tags = dto.tags
-  if (dto.projectPhase !== undefined) updateData.project_phase = dto.projectPhase
-  if (dto.isPinned !== undefined) updateData.is_pinned = dto.isPinned
+  if (dto.caption !== undefined) {updateData.caption = dto.caption}
+  if (dto.description !== undefined) {updateData.description = dto.description}
+  if (dto.building !== undefined) {updateData.building = dto.building}
+  if (dto.floor !== undefined) {updateData.floor = dto.floor}
+  if (dto.area !== undefined) {updateData.area = dto.area}
+  if (dto.grid !== undefined) {updateData.grid = dto.grid}
+  if (dto.locationNotes !== undefined) {updateData.location_notes = dto.locationNotes}
+  if (dto.photoCategory !== undefined) {updateData.photo_category = dto.photoCategory}
+  if (dto.tags !== undefined) {updateData.tags = dto.tags}
+  if (dto.projectPhase !== undefined) {updateData.project_phase = dto.projectPhase}
+  if (dto.isPinned !== undefined) {updateData.is_pinned = dto.isPinned}
 
   if (dto.reviewStatus !== undefined) {
     updateData.review_status = dto.reviewStatus
@@ -257,7 +257,7 @@ export async function updatePhoto(id: string, dto: UpdatePhotoDTO): Promise<Phot
     updateData.reviewed_at = new Date().toISOString()
   }
 
-  if (dto.reviewNotes !== undefined) updateData.review_notes = dto.reviewNotes
+  if (dto.reviewNotes !== undefined) {updateData.review_notes = dto.reviewNotes}
 
   const { data, error } = await db
     .from('photos')
@@ -266,7 +266,7 @@ export async function updatePhoto(id: string, dto: UpdatePhotoDTO): Promise<Phot
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapPhotoFromDb(data)
 }
 
@@ -279,7 +279,7 @@ export async function deletePhoto(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 /**
@@ -291,7 +291,7 @@ export async function bulkDeletePhotos(ids: string[]): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .in('id', ids)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 /**
@@ -310,7 +310,7 @@ export async function linkPhotoToEntity(
   }
 
   const column = columnMap[entityType]
-  if (!column) throw new Error(`Invalid entity type: ${entityType}`)
+  if (!column) {throw new Error(`Invalid entity type: ${entityType}`)}
 
   const { data, error } = await db
     .from('photos')
@@ -319,7 +319,7 @@ export async function linkPhotoToEntity(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapPhotoFromDb(data)
 }
 
@@ -338,7 +338,7 @@ export async function unlinkPhotoFromEntity(
   }
 
   const column = columnMap[entityType]
-  if (!column) throw new Error(`Invalid entity type: ${entityType}`)
+  if (!column) {throw new Error(`Invalid entity type: ${entityType}`)}
 
   const { data, error } = await db
     .from('photos')
@@ -347,7 +347,7 @@ export async function unlinkPhotoFromEntity(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapPhotoFromDb(data)
 }
 
@@ -396,7 +396,7 @@ export async function getCollections(filters: CollectionFilters = {}): Promise<P
 
   const { data, error } = await query
 
-  if (error) throw error
+  if (error) {throw error}
   return data?.map(mapCollectionFromDb) || []
 }
 
@@ -415,7 +415,7 @@ export async function getCollection(id: string): Promise<PhotoCollection | null>
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     throw error
   }
 
@@ -435,7 +435,7 @@ export async function getCollectionPhotos(collectionId: string): Promise<Photo[]
     .eq('collection_id', collectionId)
     .order('sort_order')
 
-  if (error) throw error
+  if (error) {throw error}
 
   return data?.map((item: any) => ({
     ...mapPhotoFromDb(item.photo),
@@ -471,7 +471,7 @@ export async function createCollection(dto: CreateCollectionDTO): Promise<PhotoC
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapCollectionFromDb(data)
 }
 
@@ -481,13 +481,13 @@ export async function createCollection(dto: CreateCollectionDTO): Promise<PhotoC
 export async function updateCollection(id: string, dto: UpdateCollectionDTO): Promise<PhotoCollection> {
   const updateData: Record<string, any> = {}
 
-  if (dto.name !== undefined) updateData.name = dto.name
-  if (dto.description !== undefined) updateData.description = dto.description
-  if (dto.coverPhotoId !== undefined) updateData.cover_photo_id = dto.coverPhotoId
-  if (dto.smartCriteria !== undefined) updateData.smart_criteria = dto.smartCriteria
-  if (dto.sortOrder !== undefined) updateData.sort_order = dto.sortOrder
-  if (dto.isPinned !== undefined) updateData.is_pinned = dto.isPinned
-  if (dto.isPublic !== undefined) updateData.is_public = dto.isPublic
+  if (dto.name !== undefined) {updateData.name = dto.name}
+  if (dto.description !== undefined) {updateData.description = dto.description}
+  if (dto.coverPhotoId !== undefined) {updateData.cover_photo_id = dto.coverPhotoId}
+  if (dto.smartCriteria !== undefined) {updateData.smart_criteria = dto.smartCriteria}
+  if (dto.sortOrder !== undefined) {updateData.sort_order = dto.sortOrder}
+  if (dto.isPinned !== undefined) {updateData.is_pinned = dto.isPinned}
+  if (dto.isPublic !== undefined) {updateData.is_public = dto.isPublic}
 
   const { data, error } = await db
     .from('photo_collections')
@@ -496,7 +496,7 @@ export async function updateCollection(id: string, dto: UpdateCollectionDTO): Pr
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapCollectionFromDb(data)
 }
 
@@ -509,7 +509,7 @@ export async function deleteCollection(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 /**
@@ -542,7 +542,7 @@ export async function addPhotoToCollection(
       added_by: user?.id,
     })
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 /**
@@ -558,7 +558,7 @@ export async function removePhotoFromCollection(
     .eq('collection_id', collectionId)
     .eq('photo_id', photoId)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 /**
@@ -599,7 +599,7 @@ export async function getComparisons(projectId: string): Promise<PhotoComparison
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {throw error}
   return data?.map(mapComparisonFromDb) || []
 }
 
@@ -619,7 +619,7 @@ export async function getComparison(id: string): Promise<PhotoComparison | null>
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     throw error
   }
 
@@ -668,7 +668,7 @@ export async function createComparison(dto: CreateComparisonDTO): Promise<PhotoC
     `)
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapComparisonFromDb(data)
 }
 
@@ -694,7 +694,7 @@ export async function completeComparison(
     `)
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapComparisonFromDb(data)
 }
 
@@ -707,7 +707,7 @@ export async function deleteComparison(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 // =============================================
@@ -725,7 +725,7 @@ export async function getPhotoAnnotations(photoId: string): Promise<PhotoAnnotat
     .is('deleted_at', null)
     .order('created_at')
 
-  if (error) throw error
+  if (error) {throw error}
   return data?.map(mapAnnotationFromDb) || []
 }
 
@@ -753,7 +753,7 @@ export async function createAnnotation(dto: CreateAnnotationDTO): Promise<PhotoA
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return mapAnnotationFromDb(data)
 }
 
@@ -766,7 +766,7 @@ export async function deleteAnnotation(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 // =============================================
@@ -782,7 +782,7 @@ export async function logPhotoAccess(
   context?: string
 ): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return
+  if (!user) {return}
 
   const { error } = await db
     .from('photo_access_log')
@@ -793,7 +793,7 @@ export async function logPhotoAccess(
       context,
     })
 
-  if (error) console.error('Failed to log photo access:', error)
+  if (error) {console.error('Failed to log photo access:', error)}
 }
 
 /**
@@ -806,7 +806,7 @@ export async function getPhotoAccessLogs(photoId: string): Promise<PhotoAccessLo
     .eq('photo_id', photoId)
     .order('accessed_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {throw error}
   return data?.map(mapAccessLogFromDb) || []
 }
 
@@ -830,7 +830,7 @@ export async function getPhotosNearLocation(
     p_radius_meters: radiusMeters,
   })
 
-  if (error) throw error
+  if (error) {throw error}
   return data?.map(mapPhotoFromDb) || []
 }
 
@@ -853,11 +853,11 @@ export async function getLocationClusters(
   const clustered = new Set<string>()
 
   for (const photo of photos) {
-    if (clustered.has(photo.id) || !photo.latitude || !photo.longitude) continue
+    if (clustered.has(photo.id) || !photo.latitude || !photo.longitude) {continue}
 
     // Find nearby photos
     const clusterPhotos = photos.filter(p => {
-      if (clustered.has(p.id) || !p.latitude || !p.longitude) return false
+      if (clustered.has(p.id) || !p.latitude || !p.longitude) {return false}
       const distance = calculateDistance(
         photo.latitude!,
         photo.longitude!,
@@ -897,7 +897,7 @@ export async function getPhotoStats(projectId: string): Promise<PhotoStats> {
     p_project_id: projectId,
   })
 
-  if (error) throw error
+  if (error) {throw error}
 
   const stats = data?.[0] || {}
 
@@ -930,7 +930,7 @@ export async function getFilterOptions(projectId: string): Promise<{
     .eq('project_id', projectId)
     .is('deleted_at', null)
 
-  if (error) throw error
+  if (error) {throw error}
 
   const categories = new Set<string>()
   const tags = new Set<string>()
@@ -940,12 +940,12 @@ export async function getFilterOptions(projectId: string): Promise<{
   const projectPhases = new Set<string>()
 
   data?.forEach((photo: any) => {
-    if (photo.photo_category) categories.add(photo.photo_category)
-    if (photo.tags) photo.tags.forEach((t: string) => tags.add(t))
-    if (photo.building) buildings.add(photo.building)
-    if (photo.floor) floors.add(photo.floor)
-    if (photo.area) areas.add(photo.area)
-    if (photo.project_phase) projectPhases.add(photo.project_phase)
+    if (photo.photo_category) {categories.add(photo.photo_category)}
+    if (photo.tags) {photo.tags.forEach((t: string) => tags.add(t))}
+    if (photo.building) {buildings.add(photo.building)}
+    if (photo.floor) {floors.add(photo.floor)}
+    if (photo.area) {areas.add(photo.area)}
+    if (photo.project_phase) {projectPhases.add(photo.project_phase)}
   })
 
   return {

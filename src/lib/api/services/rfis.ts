@@ -205,7 +205,7 @@ export const rfisApi = {
   async _notifyRfiAssigned(rfi: WorkflowItem, assignedById?: string): Promise<void> {
     try {
       const assignedTo = (rfi as any).assigned_to
-      if (!assignedTo) return
+      if (!assignedTo) {return}
 
       const [assignee, assigner, projectName] = await Promise.all([
         getUserDetails(assignedTo),
@@ -213,7 +213,7 @@ export const rfisApi = {
         getProjectName(rfi.project_id),
       ])
 
-      if (!assignee?.email) return
+      if (!assignee?.email) {return}
 
       const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
       const { html, text } = generateRfiAssignedEmail({
@@ -339,7 +339,7 @@ export const rfisApi = {
    */
   async _notifyRfiAnswered(rfi: WorkflowItem, answer: string, answeredById?: string): Promise<void> {
     try {
-      if (!rfi.created_by) return
+      if (!rfi.created_by) {return}
 
       const [creator, answerer, projectName] = await Promise.all([
         getUserDetails(rfi.created_by),
@@ -347,7 +347,7 @@ export const rfisApi = {
         getProjectName(rfi.project_id),
       ])
 
-      if (!creator?.email) return
+      if (!creator?.email) {return}
 
       const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
       const { html, text } = generateRfiAnsweredEmail({

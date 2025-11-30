@@ -105,7 +105,7 @@ function StatsCards({ stats, isLoading }: StatsCardsProps) {
   }
 
   const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 B'
+    if (bytes === 0) {return '0 B'}
     const k = 1024
     const sizes = ['B', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
@@ -181,11 +181,11 @@ interface FilterBarProps {
 function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) {
   const activeFilterCount = useMemo(() => {
     let count = 0
-    if (filters.category) count++
-    if (filters.building) count++
-    if (filters.floor) count++
-    if (filters.hasGps !== undefined) count++
-    if (filters.reviewStatus) count++
+    if (filters.category) {count++}
+    if (filters.building) {count++}
+    if (filters.floor) {count++}
+    if (filters.hasGps !== undefined) {count++}
+    if (filters.reviewStatus) {count++}
     return count
   }, [filters])
 
@@ -338,7 +338,7 @@ export function PhotoOrganizerPage() {
   // Handle photo capture from camera
   const handlePhotoCapture = useCallback(
     async (capturedPhotos: CapturedPhoto[]) => {
-      if (!projectId) return
+      if (!projectId) {return}
 
       for (const captured of capturedPhotos) {
         try {
@@ -388,12 +388,12 @@ export function PhotoOrganizerPage() {
 
   // Handle bulk delete
   const handleBulkDelete = useCallback(async () => {
-    if (selectedPhotoIds.size === 0) return
+    if (selectedPhotoIds.size === 0) {return}
 
     const confirmed = window.confirm(
       `Are you sure you want to delete ${selectedPhotoIds.size} photo(s)?`
     )
-    if (!confirmed) return
+    if (!confirmed) {return}
 
     await bulkDeletePhotos.mutateAsync(Array.from(selectedPhotoIds))
     setSelectedPhotoIds(new Set())

@@ -1,4 +1,8 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// Unmock utils to test the real cn function (it's mocked globally in setup.tsx)
+vi.unmock('@/lib/utils');
+
 import { cn } from './utils';
 
 describe('cn (className merger)', () => {

@@ -111,7 +111,7 @@ describe('DailyReportForm', () => {
 
   it('should validate form before submitting', async () => {
     // Empty draft report should fail validation
-    ;(useOfflineReportStore as any).mockReturnValue({
+    (useOfflineReportStore as any).mockReturnValue({
       draftReport: { id: 'test-id', project_id: 'proj-1', report_date: '2024-01-15', status: 'draft' },
       updateDraft: mockUpdateDraft,
       clearDraft: mockClearDraft,
@@ -145,7 +145,7 @@ describe('DailyReportForm', () => {
   })
 
   it('should display validation error summary when validation fails', async () => {
-    ;(useOfflineReportStore as any).mockReturnValue({
+    (useOfflineReportStore as any).mockReturnValue({
       draftReport: { id: 'test-id', project_id: 'proj-1', report_date: '2024-01-15', status: 'draft' },
       updateDraft: mockUpdateDraft,
       clearDraft: mockClearDraft,

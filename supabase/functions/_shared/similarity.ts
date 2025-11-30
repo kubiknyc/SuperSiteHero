@@ -98,7 +98,7 @@ export function calculateDocumentSimilarity(
  * Tokenize text into words
  */
 function tokenize(text: string): string[] {
-  if (!text) return []
+  if (!text) {return []}
 
   return text
     .toLowerCase()
@@ -243,7 +243,7 @@ function determineSimilarityType(
  * Check if revision A is newer than revision B
  */
 function isNewerRevision(revA?: string, revB?: string): boolean {
-  if (!revA || !revB) return false
+  if (!revA || !revB) {return false}
 
   // Try numeric comparison
   const numA = parseInt(revA, 10)
@@ -274,8 +274,8 @@ function areSimilarNames(name1: string, name2: string): boolean {
   const norm2 = normalize(name2)
 
   // Check if normalized names are equal or one contains the other
-  if (norm1 === norm2) return true
-  if (norm1.includes(norm2) || norm2.includes(norm1)) return true
+  if (norm1 === norm2) {return true}
+  if (norm1.includes(norm2) || norm2.includes(norm1)) {return true}
 
   return false
 }

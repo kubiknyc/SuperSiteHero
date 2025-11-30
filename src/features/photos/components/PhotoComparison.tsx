@@ -85,7 +85,7 @@ export function PhotoComparison({
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent | MouseEvent) => {
-      if (!isDragging || !containerRef.current) return
+      if (!isDragging || !containerRef.current) {return}
 
       const rect = containerRef.current.getBoundingClientRect()
       const x = e.clientX - rect.left
@@ -117,7 +117,7 @@ export function PhotoComparison({
   }
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return 'Unknown date'
+    if (!dateStr) {return 'Unknown date'}
     return new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -449,7 +449,7 @@ export function CreateComparisonDialog({
   const createComparison = useCreateComparison()
 
   const handleCreate = async () => {
-    if (!beforePhotoId || !afterPhotoId || !title) return
+    if (!beforePhotoId || !afterPhotoId || !title) {return}
 
     await createComparison.mutateAsync({
       projectId,
