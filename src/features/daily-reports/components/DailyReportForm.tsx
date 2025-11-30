@@ -97,23 +97,23 @@ export function DailyReportForm({
       report_date: reportDate ?? new Date().toISOString().split('T')[0],
       work: {
         work_performed: store.draftReport?.work_performed || '',
-        work_completed: store.draftReport?.work_completed,
-        work_planned: store.draftReport?.work_planned,
+        work_completed: store.draftReport?.work_completed ?? undefined,
+        work_planned: store.draftReport?.work_planned ?? undefined,
       },
       weather: {
         weather_conditions: store.draftReport?.weather_conditions || '',
-        temperature_high: store.draftReport?.temperature_high,
-        temperature_low: store.draftReport?.temperature_low,
-        precipitation: store.draftReport?.precipitation,
-        wind_conditions: store.draftReport?.wind_conditions,
-        weather_delays: store.draftReport?.weather_delays,
-        weather_notes: store.draftReport?.weather_notes,
+        temperature_high: store.draftReport?.temperature_high ?? undefined,
+        temperature_low: store.draftReport?.temperature_low ?? undefined,
+        precipitation: store.draftReport?.precipitation?.toString() ?? undefined,
+        wind_conditions: store.draftReport?.wind_conditions ?? undefined,
+        weather_delays: store.draftReport?.weather_delays ?? undefined,
+        weather_notes: store.draftReport?.weather_notes ?? undefined,
       },
       issues: {
-        safety_incidents: store.draftReport?.safety_incidents,
-        quality_issues: store.draftReport?.quality_issues,
-        schedule_delays: store.draftReport?.schedule_delays,
-        general_notes: store.draftReport?.general_notes,
+        safety_incidents: store.draftReport?.safety_incidents ?? undefined,
+        quality_issues: store.draftReport?.quality_issues ?? undefined,
+        schedule_delays: store.draftReport?.schedule_delays ?? undefined,
+        general_notes: store.draftReport?.general_notes ?? undefined,
       },
       workforce: store.workforce,
       equipment: store.equipment,
@@ -129,7 +129,7 @@ export function DailyReportForm({
     const result = dailyReportSchema.safeParse(formData)
 
     if (!result.success) {
-      const errorMessages = result.error.errors.map((err) => `${err.path.join('.')}: ${err.message}`)
+      const errorMessages = result.error.issues.map((err) => `${err.path.join('.')}: ${err.message}`)
       setValidationErrors(errorMessages)
       toast.error('Please fix validation errors before submitting')
       return false

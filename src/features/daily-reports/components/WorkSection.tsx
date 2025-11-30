@@ -31,13 +31,13 @@ export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSection
     const result = fieldSchema.safeParse(value)
     setErrors((prev) => ({
       ...prev,
-      [field]: result.success ? undefined : result.error.errors[0]?.message,
+      [field]: result.success ? undefined : result.error.issues[0]?.message,
     }))
   }
 
-  const performedCount = getCharacterCount(draft.work_performed, 2000)
-  const completedCount = getCharacterCount(draft.work_completed, 1000)
-  const plannedCount = getCharacterCount(draft.work_planned, 1000)
+  const performedCount = getCharacterCount(draft.work_performed ?? '', 2000)
+  const completedCount = getCharacterCount(draft.work_completed ?? '', 1000)
+  const plannedCount = getCharacterCount(draft.work_planned ?? '', 1000)
 
   return (
     <Card>

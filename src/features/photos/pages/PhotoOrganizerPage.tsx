@@ -38,7 +38,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Select,
+  RadixSelect,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -192,9 +192,9 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
   return (
     <div className="flex flex-wrap items-center gap-2">
       {/* Category filter */}
-      <Select
+      <RadixSelect
         value={filters.category || 'all'}
-        onValueChange={(value) =>
+        onValueChange={(value: string) =>
           onFiltersChange({ ...filters, category: value === 'all' ? undefined : value })
         }
       >
@@ -209,12 +209,12 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
             </SelectItem>
           ))}
         </SelectContent>
-      </Select>
+      </RadixSelect>
 
       {/* Building filter */}
-      <Select
+      <RadixSelect
         value={filters.building || 'all'}
-        onValueChange={(value) =>
+        onValueChange={(value: string) =>
           onFiltersChange({ ...filters, building: value === 'all' ? undefined : value })
         }
       >
@@ -229,12 +229,12 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
             </SelectItem>
           ))}
         </SelectContent>
-      </Select>
+      </RadixSelect>
 
       {/* Floor filter */}
-      <Select
+      <RadixSelect
         value={filters.floor || 'all'}
-        onValueChange={(value) =>
+        onValueChange={(value: string) =>
           onFiltersChange({ ...filters, floor: value === 'all' ? undefined : value })
         }
       >
@@ -249,12 +249,12 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
             </SelectItem>
           ))}
         </SelectContent>
-      </Select>
+      </RadixSelect>
 
       {/* GPS filter */}
-      <Select
+      <RadixSelect
         value={filters.hasGps === undefined ? 'all' : filters.hasGps ? 'yes' : 'no'}
-        onValueChange={(value) =>
+        onValueChange={(value: string) =>
           onFiltersChange({
             ...filters,
             hasGps: value === 'all' ? undefined : value === 'yes',
@@ -269,7 +269,7 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
           <SelectItem value="yes">With GPS</SelectItem>
           <SelectItem value="no">No GPS</SelectItem>
         </SelectContent>
-      </Select>
+      </RadixSelect>
 
       {/* Clear filters */}
       {activeFilterCount > 0 && (
@@ -477,9 +477,9 @@ export function PhotoOrganizerPage() {
         </Tabs>
 
         {/* Sort */}
-        <Select
+        <RadixSelect
           value={`${filters.sortBy}-${filters.sortOrder}`}
-          onValueChange={(value) => {
+          onValueChange={(value: string) => {
             const [sortBy, sortOrder] = value.split('-') as [
               PhotoFilters['sortBy'],
               PhotoFilters['sortOrder']
@@ -498,7 +498,7 @@ export function PhotoOrganizerPage() {
             <SelectItem value="fileSize-desc">Largest First</SelectItem>
             <SelectItem value="fileSize-asc">Smallest First</SelectItem>
           </SelectContent>
-        </Select>
+        </RadixSelect>
       </div>
 
       {/* Filters */}

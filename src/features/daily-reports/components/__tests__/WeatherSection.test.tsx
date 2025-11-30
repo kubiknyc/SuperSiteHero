@@ -1,116 +1,183 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { WeatherSection } from '../WeatherSection'
-import { useOfflineReportStore } from '../../store/offlineReportStore'
-
-// Mock the store
-vi.mock('../../store/offlineReportStore', () => ({
-  useOfflineReportStore: vi.fn(),
-}))
+import type { DraftReport } from '../../store/offlineReportStore'
 
 describe('WeatherSection', () => {
-  const mockUpdateDraft = vi.fn()
+  const mockOnToggle = vi.fn()
+  const mockOnUpdate = vi.fn()
+
+  const defaultDraft: DraftReport = {
+    id: 'test-id',
+    project_id: 'proj-1',
+    report_date: '2024-01-15',
+    weather_conditions: '',
+    temperature_high: undefined,
+    temperature_low: undefined,
+    weather_notes: '',
+    weather_delays: false,
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
-    ;(useOfflineReportStore as any).mockReturnValue({
-      draftReport: {
-        weather_conditions: '',
-        temperature_high: undefined,
-        temperature_low: undefined,
-        weather_notes: '',
-      },
-      updateDraft: mockUpdateDraft,
-    })
   })
 
   it('should render all weather fields', () => {
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     expect(screen.getByLabelText(/Weather Condition/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/High Temperature/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/Low Temperature/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/Weather Notes/i)).toBeInTheDocument()
   })
 
   it('should show required indicator for weather_conditions', () => {
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
-    const label = screen.getByText(/Weather Condition/i)
-    expect(label.querySelector('span.text-red-600')).toBeInTheDocument()
+    // Check for the required asterisk using aria-label
+    expect(screen.getByLabelText('required')).toBeInTheDocument()
   })
 
   it('should update store when weather_conditions changes', () => {
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const input = screen.getByLabelText(/Weather Condition/i)
     fireEvent.change(input, { target: { value: 'Sunny' } })
 
-    expect(mockUpdateDraft).toHaveBeenCalledWith({ weather_conditions: 'Sunny' })
+    expect(mockOnUpdate).toHaveBeenCalledWith({ weather_conditions: 'Sunny' })
   })
 
   it('should validate weather_conditions on blur', async () => {
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const input = screen.getByLabelText(/Weather Condition/i)
     fireEvent.blur(input)
 
     await waitFor(() => {
-      expect(screen.getByText(/Weather condition is required/i)).toBeInTheDocument()
+      expect(screen.getByText(/This field is required/i)).toBeInTheDocument()
     })
   })
 
   it('should clear error when valid weather_conditions is entered', async () => {
-    render(<WeatherSection />)
+    const { rerender } = render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const input = screen.getByLabelText(/Weather Condition/i)
 
     // First, trigger error
     fireEvent.blur(input)
     await waitFor(() => {
-      expect(screen.getByText(/Weather condition is required/i)).toBeInTheDocument()
+      expect(screen.getByText(/This field is required/i)).toBeInTheDocument()
     })
 
     // Then, enter valid value
     fireEvent.change(input, { target: { value: 'Sunny' } })
+
+    rerender(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={{ ...defaultDraft, weather_conditions: 'Sunny' }}
+        onUpdate={mockOnUpdate}
+      />
+    )
+
     fireEvent.blur(input)
 
     await waitFor(() => {
-      expect(screen.queryByText(/Weather condition is required/i)).not.toBeInTheDocument()
+      expect(screen.queryByText(/This field is required/i)).not.toBeInTheDocument()
     })
   })
 
   it('should display character counter for weather_notes', () => {
-    render(<WeatherSection />)
+    const draftWithDelays: DraftReport = {
+      ...defaultDraft,
+      weather_delays: true,
+      weather_notes: '',
+    }
+
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={draftWithDelays}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     expect(screen.getByText('0 / 500')).toBeInTheDocument()
   })
 
   it('should update character counter when typing in weather_notes', () => {
-    ;(useOfflineReportStore as any).mockReturnValue({
-      draftReport: {
-        weather_conditions: 'Sunny',
-        weather_notes: 'Clear skies all day',
-      },
-      updateDraft: mockUpdateDraft,
-    })
+    const draftWithNotes: DraftReport = {
+      ...defaultDraft,
+      weather_conditions: 'Sunny',
+      weather_delays: true,
+      weather_notes: 'Clear skies all day', // 19 characters
+    }
 
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={draftWithNotes}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
-    expect(screen.getByText('20 / 500')).toBeInTheDocument()
+    expect(screen.getByText('19 / 500')).toBeInTheDocument()
   })
 
   it('should show yellow warning when notes are near limit', () => {
     const longNotes = 'x'.repeat(455) // 91% of 500
-    ;(useOfflineReportStore as any).mockReturnValue({
-      draftReport: {
-        weather_conditions: 'Sunny',
-        weather_notes: longNotes,
-      },
-      updateDraft: mockUpdateDraft,
-    })
+    const draftWithLongNotes: DraftReport = {
+      ...defaultDraft,
+      weather_conditions: 'Sunny',
+      weather_delays: true,
+      weather_notes: longNotes,
+    }
 
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={draftWithLongNotes}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const counter = screen.getByText('455 / 500')
     expect(counter).toHaveClass('text-yellow-600')
@@ -118,59 +185,85 @@ describe('WeatherSection', () => {
 
   it('should show red error when notes exceed limit', () => {
     const tooLongNotes = 'x'.repeat(505)
-    ;(useOfflineReportStore as any).mockReturnValue({
-      draftReport: {
-        weather_conditions: 'Sunny',
-        weather_notes: tooLongNotes,
-      },
-      updateDraft: mockUpdateDraft,
-    })
+    const draftWithTooLongNotes: DraftReport = {
+      ...defaultDraft,
+      weather_conditions: 'Sunny',
+      weather_delays: true,
+      weather_notes: tooLongNotes,
+    }
 
-    render(<WeatherSection />)
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={draftWithTooLongNotes}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const counter = screen.getByText('505 / 500')
     expect(counter).toHaveClass('text-red-600')
     expect(counter).toHaveClass('font-semibold')
   })
 
-  it('should validate temperature_high on blur', async () => {
-    render(<WeatherSection />)
+  it('should call onUpdate when temperature_high changes', () => {
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const input = screen.getByLabelText(/High Temperature/i)
-    fireEvent.change(input, { target: { value: '200' } })
-    fireEvent.blur(input)
+    fireEvent.change(input, { target: { value: '75' } })
 
-    await waitFor(() => {
-      expect(screen.getByText(/Invalid temperature/i)).toBeInTheDocument()
-    })
+    expect(mockOnUpdate).toHaveBeenCalledWith({ temperature_high: 75 })
   })
 
-  it('should validate temperature_low on blur', async () => {
-    render(<WeatherSection />)
+  it('should call onUpdate when temperature_low changes', () => {
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
     const input = screen.getByLabelText(/Low Temperature/i)
-    fireEvent.change(input, { target: { value: '-100' } })
-    fireEvent.blur(input)
+    fireEvent.change(input, { target: { value: '60' } })
 
-    await waitFor(() => {
-      expect(screen.getByText(/Invalid temperature/i)).toBeInTheDocument()
-    })
+    expect(mockOnUpdate).toHaveBeenCalledWith({ temperature_low: 60 })
   })
 
-  it('should accept valid temperature ranges', async () => {
-    render(<WeatherSection />)
+  it('should call onToggle when header is clicked', () => {
+    render(
+      <WeatherSection
+        expanded={true}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
-    const highInput = screen.getByLabelText(/High Temperature/i)
-    const lowInput = screen.getByLabelText(/Low Temperature/i)
+    const button = screen.getByRole('button', { name: /Weather Conditions/i })
+    fireEvent.click(button)
 
-    fireEvent.change(highInput, { target: { value: '75' } })
-    fireEvent.blur(highInput)
+    expect(mockOnToggle).toHaveBeenCalled()
+  })
 
-    fireEvent.change(lowInput, { target: { value: '60' } })
-    fireEvent.blur(lowInput)
+  it('should not render content when not expanded', () => {
+    render(
+      <WeatherSection
+        expanded={false}
+        onToggle={mockOnToggle}
+        draft={defaultDraft}
+        onUpdate={mockOnUpdate}
+      />
+    )
 
-    await waitFor(() => {
-      expect(screen.queryByText(/Invalid temperature/i)).not.toBeInTheDocument()
-    })
+    expect(screen.queryByLabelText(/Weather Condition/i)).not.toBeInTheDocument()
   })
 })

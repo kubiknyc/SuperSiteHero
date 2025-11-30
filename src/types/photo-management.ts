@@ -127,6 +127,7 @@ export interface Photo {
   thumbnailUrl?: string
   fileName: string
   fileSize?: number
+  mimeType?: string
   width?: number
   height?: number
   is360?: boolean
@@ -162,10 +163,12 @@ export interface Photo {
   // Camera metadata
   cameraMake?: string
   cameraModel?: string
+  lensInfo?: string
   focalLength?: number
   aperture?: string
   iso?: number
   exposureTime?: string
+  shutterSpeed?: string
   flashUsed?: boolean
   orientation?: number
 

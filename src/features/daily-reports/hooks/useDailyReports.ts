@@ -27,9 +27,9 @@ export function useDailyReports(projectId: string | undefined) {
 
 // Fetch a single daily report by ID
 export function useDailyReport(reportId: string | undefined) {
-  return useQuery({
+  return useQuery<DailyReport, Error, DailyReport>({
     queryKey: ['daily-reports', reportId],
-    queryFn: async () => {
+    queryFn: async (): Promise<DailyReport> => {
       if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase

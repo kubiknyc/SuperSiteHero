@@ -8,6 +8,16 @@ export interface DraftReport extends Partial<DailyReport> {
   id: string
   project_id: string
   report_date: string
+  // Extended fields for form sections (stored locally, combined when saving)
+  work_performed?: string
+  work_planned?: string
+  weather_conditions?: string
+  wind_conditions?: string
+  weather_notes?: string
+  safety_incidents?: string
+  quality_issues?: string
+  schedule_delays?: string
+  general_notes?: string
 }
 
 export interface WorkforceEntry {

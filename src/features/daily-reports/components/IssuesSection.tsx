@@ -32,7 +32,7 @@ export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSec
     const result = fieldSchema.safeParse(value)
     setErrors((prev) => ({
       ...prev,
-      [field]: result.success ? undefined : result.error.errors[0]?.message,
+      [field]: result.success ? undefined : result.error.issues[0]?.message,
     }))
   }
 

@@ -16,6 +16,23 @@ vi.mock('../client', () => ({
   },
 }))
 
+// Mock supabase for searchPunchItems (which uses supabase directly)
+const mockSupabaseChain = {
+  select: vi.fn().mockReturnThis(),
+  eq: vi.fn().mockReturnThis(),
+  is: vi.fn().mockReturnThis(),
+  or: vi.fn().mockReturnThis(),
+  order: vi.fn().mockReturnThis(),
+  limit: vi.fn().mockResolvedValue({ data: [], error: null }),
+  single: vi.fn().mockResolvedValue({ data: null, error: null }),
+}
+
+vi.mock('@/lib/supabase', () => ({
+  supabase: {
+    from: vi.fn(() => mockSupabaseChain),
+  },
+}))
+
 describe('punchListsApi', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -287,30 +304,17 @@ describe('punchListsApi', () => {
           status: 'open',
           priority: 'high',
           description: null,
-          created_at: '2025-01-01T00:00:00Z',
-          updated_at: '2025-01-01T00:00:00Z',
-          deleted_at: null,
+          number: null,
+          area: null,
+          due_date: null,
           building: null,
           floor: null,
           room: null,
-          area: null,
-          location_notes: null,
-          due_date: null,
-          number: null,
-          subcontractor_id: null,
-          assigned_to: null,
-          completed_date: null,
-          verified_date: null,
-          marked_complete_by: null,
-          marked_complete_at: null,
-          verified_by: null,
-          verified_at: null,
-          rejection_notes: null,
-          created_by: null,
         },
       ]
 
-      vi.mocked(apiClientModule.apiClient.select).mockResolvedValue(mockItems)
+      // Configure supabase mock chain to return mock items
+      mockSupabaseChain.limit.mockResolvedValueOnce({ data: mockItems, error: null })
 
       const result = await punchListsApi.searchPunchItems('proj-1', 'ceiling')
 

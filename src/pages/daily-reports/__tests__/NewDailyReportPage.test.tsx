@@ -2,13 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { NewDailyReportPage } from '../NewDailyReportPage'
-import { useProjects } from '@/features/projects/hooks/useProjects'
-import { useOfflineReportStore } from '@/features/daily-reports/store/offlineReportStore'
+import { useProjects } from '../../../features/projects/hooks/useProjects'
+import { useOfflineReportStore } from '../../../features/daily-reports/store/offlineReportStore'
 import toast from 'react-hot-toast'
 
 // Mock dependencies
-vi.mock('@/features/projects/hooks/useProjects')
-vi.mock('@/features/daily-reports/store/offlineReportStore')
+vi.mock('../../../features/projects/hooks/useProjects')
+vi.mock('../../../features/daily-reports/store/offlineReportStore')
 vi.mock('react-hot-toast')
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')

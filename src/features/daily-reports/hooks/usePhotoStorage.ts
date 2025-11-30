@@ -103,7 +103,7 @@ export function useSavePhotoMetadata() {
       captured_at?: string
       metadata?: Record<string, any>
     }) => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('daily_report_photos')
         .insert(photo)
         .select()
@@ -115,7 +115,7 @@ export function useSavePhotoMetadata() {
 
       return data
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['daily-report-photos', data.daily_report_id] })
     },
   })
@@ -129,7 +129,7 @@ export function useDeletePhotoMetadata() {
 
   return useMutation({
     mutationFn: async (photoId: string) => {
-      const { error } = await supabase.from('daily_report_photos').delete().eq('id', photoId)
+      const { error } = await (supabase as any).from('daily_report_photos').delete().eq('id', photoId)
 
       if (error) {
         throw error
@@ -152,7 +152,7 @@ export function useDailyReportPhotos(reportId: string | undefined) {
         throw new Error('Report ID required')
       }
 
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('daily_report_photos')
         .select('*')
         .eq('daily_report_id', reportId)
@@ -176,7 +176,7 @@ export function useUpdatePhotoCaption() {
 
   return useMutation({
     mutationFn: async ({ photoId, caption }: { photoId: string; caption: string }) => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('daily_report_photos')
         .update({ caption })
         .eq('id', photoId)
@@ -189,7 +189,7 @@ export function useUpdatePhotoCaption() {
 
       return data
     },
-    onSuccess: (data) => {
+    onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['daily-report-photos', data.daily_report_id] })
     },
   })

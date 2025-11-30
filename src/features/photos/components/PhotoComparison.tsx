@@ -16,7 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import {
-  Select,
+  RadixSelect,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -61,7 +61,7 @@ export function PhotoComparison({
   const [isDragging, setIsDragging] = useState(false)
   const [beforePhoto, setBeforePhoto] = useState<Photo | undefined>(initialBefore)
   const [afterPhoto, setAfterPhoto] = useState<Photo | undefined>(initialAfter)
-  const [notes, setNotes] = useState(comparison?.notes || '')
+  const [notes, setNotes] = useState(comparison?.description || '')
 
   const containerRef = useRef<HTMLDivElement>(null)
   const completeComparison = useCompleteComparison()
@@ -71,7 +71,7 @@ export function PhotoComparison({
     if (comparison) {
       setBeforePhoto(comparison.beforePhoto)
       setAfterPhoto(comparison.afterPhoto)
-      setNotes(comparison.notes || '')
+      setNotes(comparison.description || '')
     }
   }, [comparison])
 
@@ -107,10 +107,10 @@ export function PhotoComparison({
   }, [isDragging, handleMouseMove, handleMouseUp])
 
   const handleComplete = async () => {
-    if (comparison && notes) {
+    if (comparison && afterPhoto) {
       await completeComparison.mutateAsync({
         id: comparison.id,
-        notes,
+        afterPhotoId: afterPhoto.id,
       })
       onClose?.()
     }
@@ -457,7 +457,7 @@ export function CreateComparisonDialog({
       afterPhotoId,
       title,
       comparisonType,
-      notes: notes || undefined,
+      description: notes || undefined,
     })
 
     setIsOpen(false)
@@ -498,9 +498,9 @@ export function CreateComparisonDialog({
 
           <div className="space-y-2">
             <Label>Comparison Type</Label>
-            <Select
+            <RadixSelect
               value={comparisonType}
-              onValueChange={(v) => setComparisonType(v as CreateComparisonDTO['comparisonType'])}
+              onValueChange={(v: string) => setComparisonType(v as CreateComparisonDTO['comparisonType'])}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -511,13 +511,13 @@ export function CreateComparisonDialog({
                 <SelectItem value="inspection">Inspection</SelectItem>
                 <SelectItem value="before_after">Before/After</SelectItem>
               </SelectContent>
-            </Select>
+            </RadixSelect>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Before Photo</Label>
-              <Select value={beforePhotoId} onValueChange={setBeforePhotoId}>
+              <RadixSelect value={beforePhotoId} onValueChange={setBeforePhotoId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select photo" />
                 </SelectTrigger>
@@ -528,12 +528,12 @@ export function CreateComparisonDialog({
                     </SelectItem>
                   ))}
                 </SelectContent>
-              </Select>
+              </RadixSelect>
             </div>
 
             <div className="space-y-2">
               <Label>After Photo</Label>
-              <Select value={afterPhotoId} onValueChange={setAfterPhotoId}>
+              <RadixSelect value={afterPhotoId} onValueChange={setAfterPhotoId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select photo" />
                 </SelectTrigger>
@@ -546,7 +546,7 @@ export function CreateComparisonDialog({
                       </SelectItem>
                     ))}
                 </SelectContent>
-              </Select>
+              </RadixSelect>
             </div>
           </div>
 

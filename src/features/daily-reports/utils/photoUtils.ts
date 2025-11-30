@@ -1,7 +1,8 @@
 // Photo processing utilities
 import imageCompression from 'browser-image-compression'
 import exifr from 'exifr'
-import type { GPSCoordinates, EXIFData, PhotoMetadata, PhotoUploadOptions, DEFAULT_UPLOAD_OPTIONS } from '../types/photo'
+import type { GPSCoordinates, EXIFData, PhotoMetadata, PhotoUploadOptions } from '../types/photo'
+import { DEFAULT_UPLOAD_OPTIONS } from '../types/photo'
 
 /**
  * Compress an image file
@@ -47,7 +48,7 @@ export async function extractGPSData(file: File): Promise<GPSCoordinates | null>
     return {
       latitude: gpsData.latitude,
       longitude: gpsData.longitude,
-      altitude: gpsData.altitude,
+      altitude: (gpsData as any).altitude,
     }
   } catch (error) {
     console.error('Error extracting GPS data:', error)
@@ -61,11 +62,6 @@ export async function extractGPSData(file: File): Promise<GPSCoordinates | null>
 export async function extractEXIFData(file: File): Promise<EXIFData | null> {
   try {
     const exif = await exifr.parse(file, {
-      tiff: true,
-      exif: true,
-      gps: false, // GPS handled separately
-      ifd0: true,
-      ifd1: false,
       pick: [
         'Make',
         'Model',

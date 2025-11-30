@@ -76,7 +76,7 @@ export function PhotoDetailDialog({
   const handleSave = async () => {
     await updatePhoto.mutateAsync({
       id: photo.id,
-      updates: {
+      dto: {
         caption: editedCaption,
         tags: editedTags.split(',').map((t) => t.trim()).filter(Boolean),
       },
@@ -289,8 +289,8 @@ export function PhotoDetailDialog({
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Category</Label>
                   <div className="flex items-center gap-2">
-                    <Badge variant={getCategoryBadgeVariant(photo.category) as any}>
-                      {photo.category}
+                    <Badge variant={getCategoryBadgeVariant(photo.photoCategory || '') as any}>
+                      {photo.photoCategory}
                     </Badge>
                     {photo.reviewStatus && (
                       <Badge
@@ -398,21 +398,21 @@ export function PhotoDetailDialog({
                 )}
 
                 {/* Building & Floor */}
-                {(photo.buildingId || photo.floorNumber) && (
+                {(photo.building || photo.floor) && (
                   <>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">Location Info</Label>
                       <div className="grid grid-cols-2 gap-2 text-sm">
-                        {photo.buildingId && (
+                        {photo.building && (
                           <div>
                             <span className="text-muted-foreground">Building:</span>
-                            <p className="font-medium">{photo.buildingId}</p>
+                            <p className="font-medium">{photo.building}</p>
                           </div>
                         )}
-                        {photo.floorNumber && (
+                        {photo.floor && (
                           <div>
                             <span className="text-muted-foreground">Floor:</span>
-                            <p className="font-medium">{photo.floorNumber}</p>
+                            <p className="font-medium">{photo.floor}</p>
                           </div>
                         )}
                       </div>

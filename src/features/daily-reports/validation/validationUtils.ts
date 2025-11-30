@@ -7,7 +7,7 @@ import { z } from 'zod'
 export function formatZodError(error: z.ZodError): Record<string, string> {
   const formattedErrors: Record<string, string> = {}
 
-  error.errors.forEach((err) => {
+  error.issues.forEach((err) => {
     const path = err.path.join('.')
     formattedErrors[path] = err.message
   })
@@ -28,7 +28,7 @@ export function validateField<T>(
     return { success: true }
   }
 
-  const firstError = result.error?.issues?.[0]?.message || result.error?.errors?.[0]?.message
+  const firstError = result.error?.issues?.[0]?.message
   return {
     success: false,
     error: firstError || 'Invalid value',

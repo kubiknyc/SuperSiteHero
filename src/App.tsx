@@ -118,6 +118,10 @@ const ClientChangeOrders = lazy(() => import('./features/client-portal/pages/Cli
 // Photo Management feature
 const PhotoOrganizerPage = lazy(() => import('./features/photos/pages/PhotoOrganizerPage').then(m => ({ default: m.PhotoOrganizerPage })))
 
+// Material Receiving feature
+const MaterialReceivingPage = lazy(() => import('./features/material-receiving/pages/MaterialReceivingPage').then(m => ({ default: m.MaterialReceivingPage })))
+const MaterialReceivingDetailPage = lazy(() => import('./features/material-receiving/pages/MaterialReceivingDetailPage').then(m => ({ default: m.MaterialReceivingDetailPage })))
+
 function App() {
   // Initialize IndexedDB for offline functionality
   useEffect(() => {
@@ -253,6 +257,10 @@ function App() {
 
                 {/* Photo Management feature */}
                 <Route path="/photos" element={<ProtectedRoute><PhotoOrganizerPage /></ProtectedRoute>} />
+
+                {/* Material Receiving feature */}
+                <Route path="/projects/:projectId/material-receiving" element={<ProtectedRoute><MaterialReceivingPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/material-receiving/:materialId" element={<ProtectedRoute><MaterialReceivingDetailPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/photos" element={<ProtectedRoute><PhotoOrganizerPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}

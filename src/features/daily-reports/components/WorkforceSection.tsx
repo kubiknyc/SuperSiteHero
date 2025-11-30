@@ -41,7 +41,7 @@ export function WorkforceSection({
     // Validate the entry
     const result = workforceEntrySchema.safeParse(editForm)
     if (!result.success) {
-      const errorMessage = result.error.errors[0]?.message || 'Invalid entry'
+      const errorMessage = result.error.issues[0]?.message || 'Invalid entry'
       setValidationError(errorMessage)
       toast.error(errorMessage)
       return

@@ -1,6 +1,7 @@
 // File: /src/pages/daily-reports/DailyReportDetailPage.tsx
 // Daily report detail view
 
+import React from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useDailyReport, useUpdateDailyReport, useDeleteDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
@@ -238,18 +239,6 @@ export function DailyReportDetailPage() {
           </CardContent>
         </Card>
 
-        {/* Work Completed */}
-        {report.work_completed && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Work Completed</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{report.work_completed}</p>
-            </CardContent>
-          </Card>
-        )}
-
         {/* Issues */}
         {report.issues && (
           <Card>
@@ -260,7 +249,7 @@ export function DailyReportDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{report.issues}</p>
+              <p className="text-gray-700 whitespace-pre-wrap">{String(report.issues)}</p>
             </CardContent>
           </Card>
         )}
@@ -290,7 +279,7 @@ export function DailyReportDetailPage() {
         )}
 
         {/* Photos */}
-        {report.photos && report.photos.length > 0 && (
+        {'photos' in report && report.photos && Array.isArray(report.photos) && report.photos.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
