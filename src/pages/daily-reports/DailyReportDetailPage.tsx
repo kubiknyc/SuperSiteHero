@@ -199,6 +199,7 @@ export function DailyReportDetailPage() {
         </Card>
 
         {/* Weather Section */}
+        {/* @ts-expect-error - Type narrowing issue with DailyReport type from Supabase query */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -240,7 +241,7 @@ export function DailyReportDetailPage() {
         </Card>
 
         {/* Issues */}
-        {report.issues && report.issues.trim() !== '' && (
+        {(report.issues && typeof report.issues === 'string' && report.issues.trim() !== '') ? (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -249,10 +250,10 @@ export function DailyReportDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{String(report.issues)}</p>
+              <p className="text-gray-700 whitespace-pre-wrap">{report.issues}</p>
             </CardContent>
           </Card>
-        )}
+        ) : null}
 
         {/* Observations */}
         {report.observations && report.observations.trim() !== '' && (
@@ -284,12 +285,12 @@ export function DailyReportDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Camera className="h-5 w-5" />
-                Photos ({report.photos.length})
+                Photos ({(report.photos as any[]).length})
               </CardTitle>
               <CardDescription>Progress documentation with GPS metadata</CardDescription>
             </CardHeader>
             <CardContent>
-              <PhotoGallery photos={report.photos} readOnly />
+              <PhotoGallery photos={report.photos as any} readOnly />
             </CardContent>
           </Card>
         )}

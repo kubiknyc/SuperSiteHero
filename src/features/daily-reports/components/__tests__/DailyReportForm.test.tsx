@@ -39,7 +39,7 @@ describe('DailyReportForm', () => {
     id: 'test-draft-id',
     project_id: 'proj-1',
     report_date: '2024-01-15',
-    weather_conditions: 'Sunny',
+    weather_condition: 'Sunny',
     work_performed: 'Completed foundation work',
     status: 'draft' as const,
   }

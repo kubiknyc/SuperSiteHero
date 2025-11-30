@@ -14,31 +14,31 @@ import {
 describe('weatherSchema', () => {
   it('should validate valid weather data', () => {
     const validData = {
-      weather_conditions: 'Sunny',
+      weather_condition: 'Sunny',
       temperature_high: 75,
       temperature_low: 60,
     }
     expect(() => weatherSchema.parse(validData)).not.toThrow()
   })
 
-  it('should require weather_conditions', () => {
+  it('should require weather_condition', () => {
     const invalidData = { temperature_high: 75 }
     expect(() => weatherSchema.parse(invalidData)).toThrow()
   })
 
   it('should reject temperatures above 150°F', () => {
-    const invalidTemp = { weather_conditions: 'Hot', temperature_high: 200 }
+    const invalidTemp = { weather_condition: 'Hot', temperature_high: 200 }
     expect(() => weatherSchema.parse(invalidTemp)).toThrow(/Invalid temperature/)
   })
 
   it('should reject temperatures below -50°F', () => {
-    const invalidTemp = { weather_conditions: 'Cold', temperature_low: -60 }
+    const invalidTemp = { weather_condition: 'Cold', temperature_low: -60 }
     expect(() => weatherSchema.parse(invalidTemp)).toThrow(/Invalid temperature/)
   })
 
   it('should enforce weather_notes character limit (500)', () => {
     const tooLongNotes = {
-      weather_conditions: 'Rain',
+      weather_condition: 'Rain',
       weather_notes: 'x'.repeat(501)
     }
     expect(() => weatherSchema.parse(tooLongNotes)).toThrow(/Maximum 500 characters/)
@@ -46,14 +46,14 @@ describe('weatherSchema', () => {
 
   it('should allow weather_notes up to 500 characters', () => {
     const validNotes = {
-      weather_conditions: 'Cloudy',
+      weather_condition: 'Cloudy',
       weather_notes: 'x'.repeat(500),
     }
     expect(() => weatherSchema.parse(validNotes)).not.toThrow()
   })
 
   it('should allow optional fields', () => {
-    const minimalData = { weather_conditions: 'Sunny' }
+    const minimalData = { weather_condition: 'Sunny' }
     expect(() => weatherSchema.parse(minimalData)).not.toThrow()
   })
 })
@@ -391,7 +391,7 @@ describe('dailyReportSchema', () => {
         work_performed: 'Completed foundation work',
       },
       weather: {
-        weather_conditions: 'Sunny',
+        weather_condition: 'Sunny',
       },
     }
     expect(() => dailyReportSchema.parse(validReport)).not.toThrow()
@@ -418,7 +418,7 @@ describe('dailyReportSchema', () => {
         work_planned: 'Task 2',
       },
       weather: {
-        weather_conditions: 'Clear',
+        weather_condition: 'Clear',
         temperature_high: 75,
         temperature_low: 60,
       },
