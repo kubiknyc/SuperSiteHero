@@ -34,14 +34,8 @@ export default defineConfig({
         runtimeCaching: [
           // Cache API responses with network-first strategy
           {
-            urlPattern: ({ url }) => {
-              const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-              try {
-                return supabaseUrl && url.origin === new URL(supabaseUrl).origin;
-              } catch {
-                return false;
-              }
-            },
+            // Match Supabase API URLs (regex works in service worker context)
+            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'supabase-api',
