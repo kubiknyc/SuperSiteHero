@@ -4,6 +4,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { generateSafeFilename, dataUrlToFile } from './imageUtils'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Storage bucket names
@@ -53,7 +54,7 @@ export async function uploadChecklistPhoto(
       })
 
     if (error) {
-      console.error('Photo upload error:', error)
+      logger.error('Photo upload error:', error)
       throw new Error(`Failed to upload photo: ${error.message}`)
     }
 
@@ -64,7 +65,7 @@ export async function uploadChecklistPhoto(
 
     return urlData.publicUrl
   } catch (error) {
-    console.error('Upload checklist photo failed:', error)
+    logger.error('Upload checklist photo failed:', error)
     throw error instanceof Error ? error : new Error('Failed to upload photo')
   }
 }
@@ -97,7 +98,7 @@ export async function uploadSignature(
       })
 
     if (error) {
-      console.error('Signature upload error:', error)
+      logger.error('Signature upload error:', error)
       throw new Error(`Failed to upload signature: ${error.message}`)
     }
 
@@ -108,7 +109,7 @@ export async function uploadSignature(
 
     return urlData.publicUrl
   } catch (error) {
-    console.error('Upload signature failed:', error)
+    logger.error('Upload signature failed:', error)
     throw error instanceof Error ? error : new Error('Failed to upload signature')
   }
 }
@@ -130,11 +131,11 @@ export async function deleteChecklistPhoto(url: string): Promise<void> {
     const { error } = await supabase.storage.from(STORAGE_BUCKETS.PHOTOS).remove([path])
 
     if (error) {
-      console.error('Photo delete error:', error)
+      logger.error('Photo delete error:', error)
       throw new Error(`Failed to delete photo: ${error.message}`)
     }
   } catch (error) {
-    console.error('Delete checklist photo failed:', error)
+    logger.error('Delete checklist photo failed:', error)
     throw error instanceof Error ? error : new Error('Failed to delete photo')
   }
 }
@@ -156,11 +157,11 @@ export async function deleteSignature(url: string): Promise<void> {
     const { error } = await supabase.storage.from(STORAGE_BUCKETS.SIGNATURES).remove([path])
 
     if (error) {
-      console.error('Signature delete error:', error)
+      logger.error('Signature delete error:', error)
       throw new Error(`Failed to delete signature: ${error.message}`)
     }
   } catch (error) {
-    console.error('Delete signature failed:', error)
+    logger.error('Delete signature failed:', error)
     throw error instanceof Error ? error : new Error('Failed to delete signature')
   }
 }
@@ -183,7 +184,7 @@ function extractPathFromUrl(url: string, bucket: string): string | null {
 
     return url.substring(index + bucketSegment.length)
   } catch (error) {
-    console.error('Extract path from URL failed:', error)
+    logger.error('Extract path from URL failed:', error)
     return null
   }
 }
@@ -213,7 +214,7 @@ export async function getSignedUrl(
 
     return data.signedUrl
   } catch (error) {
-    console.error('Get signed URL failed:', error)
+    logger.error('Get signed URL failed:', error)
     throw error instanceof Error ? error : new Error('Failed to get signed URL')
   }
 }

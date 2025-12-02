@@ -1,6 +1,8 @@
 // File: /src/features/checklists/utils/signatureTemplates.ts
 // Signature template storage and management using localStorage
 
+import { logger } from '@/lib/utils/logger'
+
 export interface SignatureTemplate {
   id: string
   name: string
@@ -26,7 +28,7 @@ export function getSignatureTemplates(): SignatureTemplate[] {
     const templates = JSON.parse(stored) as SignatureTemplate[]
     return templates.sort((a, b) => (b.lastUsedAt || b.createdAt) - (a.lastUsedAt || a.createdAt))
   } catch (error) {
-    console.error('Failed to load signature templates:', error)
+    logger.error('Failed to load signature templates:', error)
     return []
   }
 }
@@ -75,7 +77,7 @@ export function saveSignatureTemplate(
     localStorage.setItem(STORAGE_KEY, JSON.stringify(templates))
     return existingIndex >= 0 ? templates[existingIndex] : templates[0]
   } catch (error) {
-    console.error('Failed to save signature template:', error)
+    logger.error('Failed to save signature template:', error)
     throw new Error('Failed to save signature template. Storage may be full.')
   }
 }
@@ -90,7 +92,7 @@ export function deleteSignatureTemplate(id: string): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered))
   } catch (error) {
-    console.error('Failed to delete signature template:', error)
+    logger.error('Failed to delete signature template:', error)
     throw new Error('Failed to delete signature template')
   }
 }
@@ -120,7 +122,7 @@ export function updateTemplateUsage(id: string): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(templates))
   } catch (error) {
-    console.error('Failed to update template usage:', error)
+    logger.error('Failed to update template usage:', error)
   }
 }
 
@@ -131,7 +133,7 @@ export function clearAllSignatureTemplates(): void {
   try {
     localStorage.removeItem(STORAGE_KEY)
   } catch (error) {
-    console.error('Failed to clear signature templates:', error)
+    logger.error('Failed to clear signature templates:', error)
   }
 }
 
@@ -179,7 +181,7 @@ export function renameSignatureTemplate(id: string, newName: string): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(templates))
   } catch (error) {
-    console.error('Failed to rename signature template:', error)
+    logger.error('Failed to rename signature template:', error)
     throw new Error('Failed to rename signature template')
   }
 }

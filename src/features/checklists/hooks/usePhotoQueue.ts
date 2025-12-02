@@ -18,6 +18,7 @@ import {
 import { uploadChecklistPhoto } from '../utils/storageUtils'
 import type { QueuedPhoto, PhotoMetadata } from '@/types/offline'
 import toast from 'react-hot-toast'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Hook to manage photo upload queue with automatic sync
@@ -86,7 +87,7 @@ export function usePhotoQueue(responseId?: string) {
       toast.success('Photo queued for upload')
     },
     onError: (error) => {
-      console.error('Failed to queue photo:', error)
+      logger.error('Failed to queue photo:', error)
       toast.error('Failed to queue photo')
     },
   })
@@ -104,7 +105,7 @@ export function usePhotoQueue(responseId?: string) {
       }
     },
     onError: (error) => {
-      console.error('Failed to remove photo:', error)
+      logger.error('Failed to remove photo:', error)
       toast.error('Failed to remove photo')
     },
   })
@@ -112,7 +113,7 @@ export function usePhotoQueue(responseId?: string) {
   // Process photo queue (upload pending photos)
   const processQueue = useCallback(async () => {
     if (!isOnline || isProcessing) {
-      console.log('Skipping queue processing:', { isOnline, isProcessing })
+      logger.log('Skipping queue processing:', { isOnline, isProcessing })
       return
     }
 
@@ -122,12 +123,12 @@ export function usePhotoQueue(responseId?: string) {
       const pending = await getPendingPhotos()
 
       if (pending.length === 0) {
-        console.log('No pending photos to upload')
+        logger.log('No pending photos to upload')
         setIsProcessing(false)
         return
       }
 
-      console.log(`Processing ${pending.length} pending photos`)
+      logger.log(`Processing ${pending.length} pending photos`)
 
       for (const photo of pending) {
         try {
@@ -144,9 +145,9 @@ export function usePhotoQueue(responseId?: string) {
           // Mark as uploaded
           await markPhotoUploaded(photo.id, uploadedUrl)
 
-          console.log(`Successfully uploaded photo ${photo.id}`)
+          logger.log(`Successfully uploaded photo ${photo.id}`)
         } catch (error) {
-          console.error(`Failed to upload photo ${photo.id}:`, error)
+          logger.error(`Failed to upload photo ${photo.id}:`, error)
           await markPhotoFailed(photo.id, String(error))
         }
       }
@@ -160,7 +161,7 @@ export function usePhotoQueue(responseId?: string) {
 
       toast.success(`Uploaded ${pending.length} photo${pending.length > 1 ? 's' : ''}`)
     } catch (error) {
-      console.error('Queue processing error:', error)
+      logger.error('Queue processing error:', error)
       toast.error('Failed to process photo queue')
     } finally {
       setIsProcessing(false)
@@ -170,7 +171,7 @@ export function usePhotoQueue(responseId?: string) {
   // Auto-process queue when online
   useEffect(() => {
     if (isOnline && pendingPhotos.length > 0 && !isProcessing) {
-      console.log('Device is online, processing queue...')
+      logger.log('Device is online, processing queue...')
       processQueue()
     }
   }, [isOnline, pendingPhotos.length, isProcessing, processQueue])
@@ -187,7 +188,7 @@ export function usePhotoQueue(responseId?: string) {
       toast.success(`Cleared ${count} uploaded photo${count > 1 ? 's' : ''}`)
     },
     onError: (error) => {
-      console.error('Failed to clear uploaded photos:', error)
+      logger.error('Failed to clear uploaded photos:', error)
       toast.error('Failed to clear uploaded photos')
     },
   })
@@ -209,7 +210,7 @@ export function usePhotoQueue(responseId?: string) {
       }
     },
     onError: (error) => {
-      console.error('Failed to retry photos:', error)
+      logger.error('Failed to retry photos:', error)
       toast.error('Failed to retry failed photos')
     },
   })

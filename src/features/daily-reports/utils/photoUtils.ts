@@ -3,6 +3,7 @@ import imageCompression from 'browser-image-compression'
 import exifr from 'exifr'
 import type { GPSCoordinates, EXIFData, PhotoMetadata, PhotoUploadOptions } from '../types/photo'
 import { DEFAULT_UPLOAD_OPTIONS } from '../types/photo'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Compress an image file
@@ -28,7 +29,7 @@ export async function compressImage(
       lastModified: Date.now(),
     })
   } catch (error) {
-    console.error('Error compressing image:', error)
+    logger.error('Error compressing image:', error)
     // Return original file if compression fails
     return file
   }
@@ -51,7 +52,7 @@ export async function extractGPSData(file: File): Promise<GPSCoordinates | null>
       altitude: (gpsData as any).altitude,
     }
   } catch (error) {
-    console.error('Error extracting GPS data:', error)
+    logger.error('Error extracting GPS data:', error)
     return null
   }
 }
@@ -92,7 +93,7 @@ export async function extractEXIFData(file: File): Promise<EXIFData | null> {
       flash: exif.Flash,
     }
   } catch (error) {
-    console.error('Error extracting EXIF data:', error)
+    logger.error('Error extracting EXIF data:', error)
     return null
   }
 }

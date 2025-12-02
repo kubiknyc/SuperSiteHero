@@ -19,6 +19,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
+import { logger } from '@/lib/utils/logger'
 import type {
   CreateIncidentDTO,
   UpdateIncidentDTO,
@@ -127,7 +128,7 @@ export function IncidentReportForm({
       if (onSuccess) {(onSuccess as () => void)()}
     } else {
       if (!projectId || !companyId) {
-        console.error('projectId and companyId are required for creating incidents')
+        logger.error('projectId and companyId are required for creating incidents')
         return
       }
       const createData: CreateIncidentDTO = {

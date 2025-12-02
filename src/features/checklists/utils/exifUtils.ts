@@ -3,6 +3,7 @@
 
 import exifr from 'exifr'
 import type { PhotoMetadata } from '@/types/offline'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Extract EXIF metadata from an image file
@@ -13,7 +14,7 @@ export async function extractPhotoMetadata(file: File): Promise<PhotoMetadata> {
     const exif = await exifr.parse(file)
 
     if (!exif) {
-      console.warn('No EXIF data found in image')
+      logger.warn('No EXIF data found in image')
       return {}
     }
 
@@ -82,10 +83,10 @@ export async function extractPhotoMetadata(file: File): Promise<PhotoMetadata> {
       metadata.iso = exif.ISOSpeedRatings
     }
 
-    console.log('Extracted EXIF metadata:', metadata)
+    logger.log('Extracted EXIF metadata:', metadata)
     return metadata
   } catch (error) {
-    console.error('Failed to extract EXIF metadata:', error)
+    logger.error('Failed to extract EXIF metadata:', error)
     return {}
   }
 }
@@ -132,7 +133,7 @@ export async function extractGPSCoordinates(
       altitude,
     }
   } catch (error) {
-    console.error('Failed to extract GPS coordinates:', error)
+    logger.error('Failed to extract GPS coordinates:', error)
     return null
   }
 }
@@ -158,7 +159,7 @@ export async function extractPhotoTimestamp(file: File): Promise<Date | null> {
 
     return null
   } catch (error) {
-    console.error('Failed to extract photo timestamp:', error)
+    logger.error('Failed to extract photo timestamp:', error)
     return null
   }
 }
@@ -222,7 +223,7 @@ export async function getCurrentGPSCoordinates(): Promise<{
   accuracy: number
 } | null> {
   if (!supportsGeolocation()) {
-    console.warn('Geolocation API not supported')
+    logger.warn('Geolocation API not supported')
     return null
   }
 
@@ -236,7 +237,7 @@ export async function getCurrentGPSCoordinates(): Promise<{
         })
       },
       (error) => {
-        console.error('Failed to get current location:', error)
+        logger.error('Failed to get current location:', error)
         resolve(null)
       },
       {

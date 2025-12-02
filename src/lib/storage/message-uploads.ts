@@ -5,6 +5,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { logger } from '@/lib/utils/logger'
 
 export interface UploadedFile {
   url: string
@@ -47,7 +48,7 @@ export async function uploadMessageAttachment(
     })
 
   if (error) {
-    console.error('File upload error:', error)
+    logger.error('File upload error:', error)
     throw new Error(`Failed to upload file: ${error.message}`)
   }
 
@@ -89,7 +90,7 @@ export async function deleteMessageAttachment(filePath: string): Promise<void> {
     .remove([filePath])
 
   if (error) {
-    console.error('File deletion error:', error)
+    logger.error('File deletion error:', error)
     throw new Error(`Failed to delete file: ${error.message}`)
   }
 }
@@ -103,7 +104,7 @@ export async function deleteMessageAttachments(filePaths: string[]): Promise<voi
     .remove(filePaths)
 
   if (error) {
-    console.error('Bulk file deletion error:', error)
+    logger.error('Bulk file deletion error:', error)
     throw new Error(`Failed to delete files: ${error.message}`)
   }
 }

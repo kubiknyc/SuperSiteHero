@@ -7,6 +7,7 @@ import { projectsApi } from '@/lib/api'
 import { getErrorMessage } from '@/lib/api/errors'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { Project } from '@/types/database'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Fetch all projects for the current user's company
@@ -61,7 +62,7 @@ export function useCreateProject() {
       queryClient.invalidateQueries({ queryKey: ['projects'] })
     },
     onError: (error) => {
-      console.error('Error creating project:', getErrorMessage(error))
+      logger.error('Error creating project:', getErrorMessage(error))
     },
   })
 }
@@ -82,7 +83,7 @@ export function useUpdateProject() {
       queryClient.invalidateQueries({ queryKey: ['projects', data.id] })
     },
     onError: (error) => {
-      console.error('Error updating project:', getErrorMessage(error))
+      logger.error('Error updating project:', getErrorMessage(error))
     },
   })
 }
@@ -102,7 +103,7 @@ export function useDeleteProject() {
       queryClient.invalidateQueries({ queryKey: ['projects'] })
     },
     onError: (error) => {
-      console.error('Error deleting project:', getErrorMessage(error))
+      logger.error('Error deleting project:', getErrorMessage(error))
     },
   })
 }

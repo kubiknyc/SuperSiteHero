@@ -264,6 +264,146 @@ describe('RLS Policy Tests', () => {
 })
 
 // ============================================================================
+// Cross-Tenant Isolation Tests (Critical Security)
+// ============================================================================
+
+describe('Cross-Tenant Isolation Tests', () => {
+  let anonClient: SupabaseClient<Database>
+
+  beforeAll(async () => {
+    anonClient = createClient<Database>(supabaseUrl, supabaseAnonKey)
+  })
+
+  describe('Tasks Table RLS', () => {
+    it('should NOT allow anonymous users to read tasks', async () => {
+      const { data, error } = await anonClient
+        .from('tasks')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error.code).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create tasks', async () => {
+      const { error } = await anonClient
+        .from('tasks')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          title: 'Unauthorized Task',
+          status: 'pending',
+          priority: 'medium',
+        })
+
+      expect(error).toBeTruthy()
+      expect(error?.code).toBe('42501')
+    })
+  })
+
+  describe('Punch Items Table RLS', () => {
+    it('should NOT allow anonymous users to read punch items', async () => {
+      const { data, error } = await anonClient
+        .from('punch_items')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error.code).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create punch items', async () => {
+      const { error } = await anonClient
+        .from('punch_items')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          title: 'Unauthorized Punch Item',
+          status: 'open',
+        })
+
+      expect(error).toBeTruthy()
+      expect(error?.code).toBe('42501')
+    })
+  })
+
+  describe('Checklists Table RLS', () => {
+    it('should NOT allow anonymous users to read checklists', async () => {
+      const { data, error } = await anonClient
+        .from('checklists')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error.code).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+  })
+
+  describe('Messages Table RLS', () => {
+    it('should NOT allow anonymous users to read messages', async () => {
+      const { data, error } = await anonClient
+        .from('messages')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error.code).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to send messages', async () => {
+      const { error } = await anonClient
+        .from('messages')
+        .insert({
+          conversation_id: '00000000-0000-0000-0000-000000000001',
+          sender_id: '00000000-0000-0000-0000-000000000002',
+          content: 'Unauthorized Message',
+        })
+
+      expect(error).toBeTruthy()
+      expect(error?.code).toBe('42501')
+    })
+  })
+
+  describe('Contacts Table RLS', () => {
+    it('should NOT allow anonymous users to read contacts', async () => {
+      const { data, error } = await anonClient
+        .from('contacts')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error.code).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create contacts', async () => {
+      const { error } = await anonClient
+        .from('contacts')
+        .insert({
+          company_id: '00000000-0000-0000-0000-000000000001',
+          name: 'Unauthorized Contact',
+          email: 'hacker@example.com',
+        })
+
+      expect(error).toBeTruthy()
+      expect(error?.code).toBe('42501')
+    })
+  })
+})
+
+// ============================================================================
 // Authenticated User RLS Tests
 // ============================================================================
 

@@ -8,6 +8,7 @@ import { sendEmail } from '@/lib/email/email-service'
 import { generateRfiAssignedEmail, generateRfiAnsweredEmail } from '@/lib/email/templates'
 import type { WorkflowItem, WorkflowType } from '@/types/database'
 import type { QueryOptions } from '../types'
+import { logger } from '@/lib/utils/logger'
 
 // Helper to get user details for notifications
 async function getUserDetails(userId: string): Promise<{ email: string; full_name: string | null } | null> {
@@ -185,7 +186,7 @@ export const rfisApi = {
 
       // Send notification if assignee changed
       if (newAssignee && newAssignee !== wasAssigned) {
-        this._notifyRfiAssigned(result, options?.currentUserId).catch(console.error)
+        this._notifyRfiAssigned(result, options?.currentUserId).catch(err => logger.error('[RFI] Failed to notify:', err))
       }
 
       return result
@@ -236,7 +237,7 @@ export const rfisApi = {
         tags: ['rfi', 'assigned'],
       })
     } catch (error) {
-      console.error('[RFI] Failed to send assignment notification:', error)
+      logger.error('[RFI] Failed to send assignment notification:', error)
     }
   },
 
@@ -321,7 +322,7 @@ export const rfisApi = {
       const result = data as WorkflowItem
 
       // Send notification to RFI creator
-      this._notifyRfiAnswered(result, answer, options?.answeredById).catch(console.error)
+      this._notifyRfiAnswered(result, answer, options?.answeredById).catch(err => logger.error('[RFI] Failed to notify:', err))
 
       return result
     } catch (error) {
@@ -370,7 +371,7 @@ export const rfisApi = {
         tags: ['rfi', 'answered'],
       })
     } catch (error) {
-      console.error('[RFI] Failed to send answer notification:', error)
+      logger.error('[RFI] Failed to send answer notification:', error)
     }
   },
 }

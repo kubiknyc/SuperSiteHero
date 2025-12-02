@@ -1,0 +1,304 @@
+/**
+ * Inspections Page
+ *
+ * Dashboard view of all inspections with statistics,
+ * filtering, and inspection cards.
+ */
+
+import { useState, useMemo } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
+import { AppLayout } from '@/components/layout/AppLayout'
+import { Button } from '@/components/ui/button'
+import {
+  RadixSelect as Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  InspectionCard,
+  InspectionFilters,
+  InspectionStatusBadge,
+} from '@/features/inspections/components'
+import {
+  useInspections,
+  useInspectionStats,
+  useUpcomingInspections,
+} from '@/features/inspections/hooks'
+import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import type { InspectionFilters as InspectionFiltersType } from '@/features/inspections/types'
+import {
+  Plus,
+  ClipboardCheck,
+  Calendar,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Clock,
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+
+export function InspectionsPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { data: projects, isLoading: isLoadingProjects } = useMyProjects()
+
+  // Get project from URL or default to first project
+  const selectedProjectId = searchParams.get('project') || projects?.[0]?.id || ''
+
+  // Filters state
+  const [filters, setFilters] = useState<InspectionFiltersType>({})
+
+  // Fetch inspections for selected project
+  const {
+    data: inspections = [],
+    isLoading: isLoadingInspections,
+  } = useInspections(selectedProjectId, filters)
+
+  // Fetch statistics
+  const { data: stats } = useInspectionStats(selectedProjectId)
+
+  // Fetch upcoming inspections
+  const { data: upcomingInspections = [] } = useUpcomingInspections(selectedProjectId)
+
+  // Filter by search locally for instant feedback
+  const filteredInspections = useMemo(() => {
+    if (!filters.search) return inspections
+    const lowerSearch = filters.search.toLowerCase()
+    return inspections.filter(
+      (i) =>
+        i.inspection_name.toLowerCase().includes(lowerSearch) ||
+        i.description?.toLowerCase().includes(lowerSearch) ||
+        i.inspector_name?.toLowerCase().includes(lowerSearch) ||
+        i.inspector_company?.toLowerCase().includes(lowerSearch)
+    )
+  }, [inspections, filters.search])
+
+  const handleProjectChange = (projectId: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('project', projectId)
+    setSearchParams(newParams)
+  }
+
+  const isLoading = isLoadingProjects || isLoadingInspections
+
+  // Show project selector if no project selected
+  if (!isLoadingProjects && !selectedProjectId && projects?.length === 0) {
+    return (
+      <AppLayout>
+        <div className="p-6">
+          <div className="text-center py-12 bg-white rounded-lg border">
+            <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
+            <h3 className="text-lg font-medium text-gray-900 mt-4">
+              No Projects Found
+            </h3>
+            <p className="text-gray-500 mt-2">
+              You need to be assigned to a project to view inspections.
+            </p>
+          </div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  return (
+    <AppLayout>
+      <div className="p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Inspections</h1>
+            <p className="text-gray-500 mt-1">
+              Schedule and track inspections for your projects
+            </p>
+          </div>
+          <Link to={`/inspections/new?project=${selectedProjectId}`}>
+            <Button disabled={!selectedProjectId}>
+              <Plus className="h-4 w-4 mr-2" />
+              Schedule Inspection
+            </Button>
+          </Link>
+        </div>
+
+        {/* Project Selector */}
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Project
+          </label>
+          <Select
+            value={selectedProjectId}
+            onValueChange={handleProjectChange}
+          >
+            <SelectTrigger className="w-full max-w-sm">
+              <SelectValue placeholder="Select a project..." />
+            </SelectTrigger>
+            <SelectContent>
+              {projects?.map((project) => (
+                <SelectItem key={project.id} value={project.id}>
+                  {project.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {selectedProjectId && (
+          <>
+            {/* Statistics Cards */}
+            {stats && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white rounded-lg border p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-blue-100 rounded-lg p-2">
+                      <ClipboardCheck className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Total Inspections</p>
+                      <p className="text-2xl font-bold">{stats.total_inspections}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg border p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-yellow-100 rounded-lg p-2">
+                      <Calendar className="h-5 w-5 text-yellow-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Upcoming (7 days)</p>
+                      <p className="text-2xl font-bold text-yellow-600">
+                        {stats.upcoming_this_week}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg border p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green-100 rounded-lg p-2">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Passed</p>
+                      <p className="text-2xl font-bold text-green-600">
+                        {stats.passed_count}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-lg border p-4">
+                  <div className="flex items-center gap-3">
+                    <div className={cn(
+                      'rounded-lg p-2',
+                      stats.overdue_count > 0 ? 'bg-red-100' : 'bg-gray-100'
+                    )}>
+                      <AlertTriangle className={cn(
+                        'h-5 w-5',
+                        stats.overdue_count > 0 ? 'text-red-600' : 'text-gray-600'
+                      )} />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Overdue</p>
+                      <p className={cn(
+                        'text-2xl font-bold',
+                        stats.overdue_count > 0 ? 'text-red-600' : 'text-gray-900'
+                      )}>
+                        {stats.overdue_count}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Upcoming Inspections Section */}
+            {upcomingInspections.length > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Clock className="h-5 w-5 text-gray-500" />
+                  <h2 className="text-lg font-medium text-gray-900">
+                    Upcoming Inspections (Next 7 Days)
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {upcomingInspections.slice(0, 6).map((inspection) => (
+                    <InspectionCard
+                      key={inspection.id}
+                      inspection={inspection}
+                    />
+                  ))}
+                </div>
+                {upcomingInspections.length > 6 && (
+                  <p className="text-sm text-gray-500 mt-4 text-center">
+                    +{upcomingInspections.length - 6} more upcoming inspections
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Filters */}
+            <InspectionFilters
+              filters={filters}
+              onFiltersChange={setFilters}
+              className="mb-6"
+            />
+
+            {/* Inspections List */}
+            {isLoading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
+                <p className="text-gray-500 mt-4">Loading inspections...</p>
+              </div>
+            ) : filteredInspections.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-lg border">
+                <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
+                <h3 className="text-lg font-medium text-gray-900 mt-4">
+                  No inspections found
+                </h3>
+                <p className="text-gray-500 mt-2">
+                  {Object.keys(filters).length > 0
+                    ? 'Try adjusting your filters'
+                    : 'Schedule your first inspection to get started.'}
+                </p>
+                {Object.keys(filters).length === 0 && (
+                  <Link
+                    to={`/inspections/new?project=${selectedProjectId}`}
+                    className="mt-4 inline-block"
+                  >
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Schedule Inspection
+                    </Button>
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-medium text-gray-900">
+                    All Inspections
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    {filteredInspections.length} inspection
+                    {filteredInspections.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredInspections.map((inspection) => (
+                    <InspectionCard
+                      key={inspection.id}
+                      inspection={inspection}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </AppLayout>
+  )
+}
+
+export default InspectionsPage

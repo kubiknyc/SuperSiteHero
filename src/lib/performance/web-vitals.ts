@@ -3,6 +3,7 @@
 // Phase 2 Performance: Monitors LCP, INP, CLS, FCP, TTFB
 
 import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals'
+import { logger } from '@/lib/utils/logger'
 
 // Performance thresholds based on Google's recommendations
 const THRESHOLDS = {
@@ -35,7 +36,7 @@ function sendToAnalytics(metric: PerformanceMetric) {
   // Examples: Google Analytics, Datadog, New Relic, etc.
 
   if (import.meta.env.DEV) {
-    console.log('[Performance]', {
+    logger.tagged('Performance', {
       name: metric.name,
       value: Math.round(metric.value),
       rating: metric.rating,
@@ -60,7 +61,7 @@ function sendToAnalytics(metric: PerformanceMetric) {
       })
     } catch (error) {
       if (import.meta.env.DEV) {
-        console.error('[GA] Failed to send metric:', error)
+        logger.error('[GA] Failed to send metric:', error)
       }
     }
   }
@@ -184,11 +185,11 @@ export function measureComponentRender(componentName: string) {
     const renderTime = endTime - startTime
 
     if (import.meta.env.DEV) {
-      console.log(`[Render] ${componentName}: ${renderTime.toFixed(2)}ms`)
+      logger.tagged('Render', `${componentName}: ${renderTime.toFixed(2)}ms`)
 
       // Warn if render takes too long
       if (renderTime > 16) { // 60fps = 16ms per frame
-        console.warn(`[Performance Warning] ${componentName} render took ${renderTime.toFixed(2)}ms (> 16ms)`)
+        logger.warn(`[Performance Warning] ${componentName} render took ${renderTime.toFixed(2)}ms (> 16ms)`)
       }
     }
 

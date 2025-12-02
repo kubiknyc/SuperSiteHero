@@ -9,6 +9,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { logger } from '@/lib/utils/logger'
 import type {
   Conversation,
   Message,
@@ -606,7 +607,7 @@ export async function sendMessage(
         conversationName: conversation?.name || null,
         messagePreview: data.content,
       }).catch((error) => {
-        console.error('Failed to send mention notifications:', error)
+        logger.error('Failed to send mention notifications:', error)
       })
     }
 

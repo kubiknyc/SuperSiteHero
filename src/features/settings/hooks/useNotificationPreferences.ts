@@ -7,6 +7,7 @@ import { notificationPreferencesApi } from '@/lib/api/services/notification-pref
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
 import type { NotificationPreferences } from '@/types/notification-preferences'
+import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
 // Query Keys
@@ -56,7 +57,7 @@ export function useUpdateNotificationPreferences() {
       toast.success('Notification preferences saved')
     },
     onError: (error) => {
-      console.error('Failed to update preferences:', error)
+      logger.error('Failed to update preferences:', error)
       toast.error('Failed to save preferences')
     },
   })
@@ -79,7 +80,7 @@ export function useResetNotificationPreferences() {
       toast.success('Preferences reset to defaults')
     },
     onError: (error) => {
-      console.error('Failed to reset preferences:', error)
+      logger.error('Failed to reset preferences:', error)
       toast.error('Failed to reset preferences')
     },
   })
@@ -102,7 +103,7 @@ export function useEnableAllEmailNotifications() {
       toast.success('All email notifications enabled')
     },
     onError: (error) => {
-      console.error('Failed to enable all notifications:', error)
+      logger.error('Failed to enable all notifications:', error)
       toast.error('Failed to enable notifications')
     },
   })
@@ -125,7 +126,7 @@ export function useDisableAllEmailNotifications() {
       toast.success('All email notifications disabled')
     },
     onError: (error) => {
-      console.error('Failed to disable all notifications:', error)
+      logger.error('Failed to disable all notifications:', error)
       toast.error('Failed to disable notifications')
     },
   })
@@ -148,7 +149,7 @@ export function useUpdateQuietHours() {
       toast.success('Quiet hours updated')
     },
     onError: (error) => {
-      console.error('Failed to update quiet hours:', error)
+      logger.error('Failed to update quiet hours:', error)
       toast.error('Failed to update quiet hours')
     },
   })

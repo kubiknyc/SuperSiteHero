@@ -5,6 +5,7 @@ import { create } from 'zustand';
 import type { OfflineStore, StorageQuota } from '@/types/offline';
 import { StorageManager } from '@/lib/offline/storage-manager';
 import { countByIndex, STORES } from '@/lib/offline/indexeddb';
+import { logger } from '@/lib/utils/logger';
 
 /**
  * Offline state store
@@ -23,7 +24,7 @@ export const useOfflineStore = create<OfflineStore>((set, get) => ({
     set({ isOnline: online });
 
     // Log status change
-    console.log(`Network status changed: ${online ? 'ONLINE' : 'OFFLINE'}`);
+    logger.log(`Network status changed: ${online ? 'ONLINE' : 'OFFLINE'}`);
 
     // If coming online, update pending syncs count
     if (online) {
@@ -52,7 +53,7 @@ export const useOfflineStore = create<OfflineStore>((set, get) => ({
       const quota = await StorageManager.getQuota();
       set({ storageQuota: quota });
     } catch (error) {
-      console.error('Failed to update storage quota:', error);
+      logger.error('Failed to update storage quota:', error);
     }
   },
 
@@ -62,7 +63,7 @@ export const useOfflineStore = create<OfflineStore>((set, get) => ({
       const pendingCount = await countByIndex(STORES.SYNC_QUEUE, 'status', 'pending');
       set({ pendingSyncs: pendingCount });
     } catch (error) {
-      console.error('Failed to update pending syncs count:', error);
+      logger.error('Failed to update pending syncs count:', error);
     }
   },
 
@@ -72,7 +73,7 @@ export const useOfflineStore = create<OfflineStore>((set, get) => ({
       const conflictCount = await countByIndex(STORES.CONFLICTS, 'resolved', false);
       set({ conflictCount });
     } catch (error) {
-      console.error('Failed to update conflict count:', error);
+      logger.error('Failed to update conflict count:', error);
     }
   },
 }));

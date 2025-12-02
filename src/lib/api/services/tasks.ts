@@ -8,6 +8,7 @@ import { sendEmail } from '@/lib/email/email-service'
 import { generateTaskAssignedEmail } from '@/lib/email/templates'
 import type { Task } from '@/types/database'
 import type { QueryOptions } from '../types'
+import { logger } from '@/lib/utils/logger'
 
 // Helper to get user details for notifications
 async function getUserDetails(userId: string): Promise<{ email: string; full_name: string | null } | null> {
@@ -138,12 +139,12 @@ export const tasksApi = {
 
       // Send notification if task is assigned to a user
       if (data.assigned_to_user_id) {
-        this._notifyTaskAssigned(result, options?.createdById).catch(console.error)
+        this._notifyTaskAssigned(result, options?.createdById).catch(err => logger.error('[Task] Failed to notify task assigned:', err))
       }
 
       // Send notification if task is assigned to a subcontractor
       if (data.assigned_to_subcontractor_id) {
-        this._notifySubcontractorTaskAssigned(result, options?.createdById).catch(console.error)
+        this._notifySubcontractorTaskAssigned(result, options?.createdById).catch(err => logger.error('[Task] Failed to notify subcontractor task assigned:', err))
       }
 
       return result
@@ -184,12 +185,12 @@ export const tasksApi = {
 
       // Send notification if user assignee changed
       if (newUserAssignee && newUserAssignee !== wasAssignedToUser) {
-        this._notifyTaskAssigned(result, options?.updatedById).catch(console.error)
+        this._notifyTaskAssigned(result, options?.updatedById).catch(err => logger.error('[Task] Failed to notify task assigned:', err))
       }
 
       // Send notification if subcontractor assignee changed
       if (newSubcontractorAssignee && newSubcontractorAssignee !== wasAssignedToSub) {
-        this._notifySubcontractorTaskAssigned(result, options?.updatedById).catch(console.error)
+        this._notifySubcontractorTaskAssigned(result, options?.updatedById).catch(err => logger.error('[Task] Failed to notify subcontractor task assigned:', err))
       }
 
       return result
@@ -239,7 +240,7 @@ export const tasksApi = {
         tags: ['task', 'assigned'],
       })
     } catch (error) {
-      console.error('[Task] Failed to send assignment notification:', error)
+      logger.error('[Task] Failed to send assignment notification:', error)
     }
   },
 
@@ -278,7 +279,7 @@ export const tasksApi = {
         tags: ['task', 'assigned', 'subcontractor'],
       })
     } catch (error) {
-      console.error('[Task] Failed to send subcontractor assignment notification:', error)
+      logger.error('[Task] Failed to send subcontractor assignment notification:', error)
     }
   },
 

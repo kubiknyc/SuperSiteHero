@@ -12,6 +12,7 @@
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
 import { sendIncidentNotification, type NotificationRecipient } from '@/lib/notifications/notification-service'
+import { logger } from '@/lib/utils/logger'
 import type {
   SafetyIncident,
   SafetyIncidentWithDetails,
@@ -266,7 +267,7 @@ export const safetyIncidentsApi = {
       // Check if this is a serious incident that needs notifications
       if (this._isSeriousIncident(input.severity)) {
         // Trigger notifications asynchronously (don't block the response)
-        this.notifyForSeriousIncident(data.id).catch(console.error)
+        this.notifyForSeriousIncident(data.id).catch(err => logger.error('[SafetyIncidents] Failed to notify serious incident:', err))
       }
 
       return data as SafetyIncident
@@ -781,7 +782,7 @@ export const safetyIncidentsApi = {
       if (usersError) {throw usersError}
 
       if (!users || users.length === 0) {
-        console.log('No users to notify for incident:', incidentId)
+        logger.log('No users to notify for incident:', incidentId)
         return
       }
 
@@ -822,9 +823,9 @@ export const safetyIncidentsApi = {
         await db.from('incident_notifications').insert(notificationRecords)
       }
 
-      console.log(`Sent ${recipients.length} notifications for serious incident: ${incident.incident_number}`)
+      logger.log(`Sent ${recipients.length} notifications for serious incident: ${incident.incident_number}`)
     } catch (error) {
-      console.error('Failed to send incident notifications:', error)
+      logger.error('Failed to send incident notifications:', error)
       // Don't throw - notifications are best effort
     }
   },
@@ -870,7 +871,7 @@ export const safetyIncidentsApi = {
         .eq('id', id)
     } catch (error) {
       // Non-critical, don't throw
-      console.error('Failed to mark notification as read:', error)
+      logger.error('Failed to mark notification as read:', error)
     }
   },
 
@@ -1083,7 +1084,7 @@ export const safetyIncidentsApi = {
         await this.updateIncident(incidentId, { status: 'corrective_actions' })
       }
     } catch (error) {
-      console.error('Failed to update incident status:', error)
+      logger.error('Failed to update incident status:', error)
     }
   },
 }

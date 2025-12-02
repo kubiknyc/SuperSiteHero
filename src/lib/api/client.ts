@@ -2,27 +2,30 @@
 // Base API client with Supabase integration and error handling
 
 import { supabase } from '../supabase'
-import type { ApiError, QueryFilter, QueryOptions } from './types'
+import type { ApiError, QueryOptions } from './types'
+import type { PostgrestError } from '@supabase/supabase-js'
 
 class ApiClient {
   /**
    * Convert API error to standardized error object
    */
-  private handleError(error: any): ApiError {
-    // Handle Supabase errors
-    if (error.code) {
+  private handleError(error: PostgrestError | Error | unknown): ApiError {
+    // Type guard for PostgrestError (has 'code' property)
+    if (error && typeof error === 'object' && 'code' in error) {
+      const pgError = error as PostgrestError
       return {
-        code: error.code,
-        message: error.message || 'An unknown error occurred',
-        status: error.status,
-        details: error,
+        code: pgError.code || 'UNKNOWN_ERROR',
+        message: pgError.message || 'An unknown error occurred',
+        status: undefined,
+        details: pgError,
       }
     }
 
     // Handle generic errors
+    const genericError = error as Error
     return {
       code: 'UNKNOWN_ERROR',
-      message: error.message || 'An unexpected error occurred',
+      message: genericError?.message || 'An unexpected error occurred',
       details: error,
     }
   }
@@ -35,6 +38,7 @@ class ApiClient {
     options?: QueryOptions & { select?: string }
   ): Promise<T[]> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = supabase.from(table as any).select(options?.select || '*')
 
       // Apply filters
@@ -103,6 +107,7 @@ class ApiClient {
     options?: QueryOptions & { select?: string }
   ): Promise<{ data: T[]; count: number }> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let query = supabase.from(table as any).select(options?.select || '*', { count: 'exact' })
 
       // Apply filters
@@ -171,6 +176,7 @@ class ApiClient {
     options?: { select?: string }
   ): Promise<T> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from(table as any)
         .select(options?.select || '*')
@@ -187,11 +193,12 @@ class ApiClient {
   /**
    * Insert a single record
    */
-  async insert<T>(table: string, record: any): Promise<T> {
+  async insert<T>(table: string, record: Partial<T>): Promise<T> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from(table as any)
-        .insert(record)
+        .insert(record as any)
         .select()
         .single()
 
@@ -205,11 +212,12 @@ class ApiClient {
   /**
    * Insert multiple records
    */
-  async insertMany<T>(table: string, records: any[]): Promise<T[]> {
+  async insertMany<T>(table: string, records: Partial<T>[]): Promise<T[]> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from(table as any)
-        .insert(records)
+        .insert(records as any[])
         .select()
 
       if (error) {throw error}
@@ -225,12 +233,13 @@ class ApiClient {
   async update<T>(
     table: string,
     id: string,
-    updates: any
+    updates: Partial<T>
   ): Promise<T> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
         .from(table as any)
-        .update(updates)
+        .update(updates as any)
         .eq('id', id)
         .select()
         .single()
@@ -247,6 +256,7 @@ class ApiClient {
    */
   async delete(table: string, id: string): Promise<void> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await supabase
         .from(table as any)
         .delete()
@@ -260,12 +270,15 @@ class ApiClient {
 
   /**
    * Execute a custom query
+   * Note: The callback receives the Supabase query builder for the specified table
    */
   async query<T>(
     table: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callback: (query: any) => any
   ): Promise<T[]> {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const query = supabase.from(table as any)
       const result = callback(query)
       const { data, error } = await result

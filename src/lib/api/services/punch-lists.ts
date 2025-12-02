@@ -8,6 +8,7 @@ import { sendEmail } from '@/lib/email/email-service'
 import { generatePunchItemAssignedEmail } from '@/lib/email/templates'
 import type { PunchItem } from '@/types/database'
 import type { QueryOptions } from '../types'
+import { logger } from '@/lib/utils/logger'
 
 // Helper to get user details for notifications
 async function getUserDetails(userId: string): Promise<{ email: string; full_name: string | null } | null> {
@@ -139,12 +140,12 @@ export const punchListsApi = {
 
       // Send notification if punch item is assigned to a user
       if (data.assigned_to) {
-        this._notifyPunchItemAssigned(result, options?.createdById).catch(console.error)
+        this._notifyPunchItemAssigned(result, options?.createdById).catch(err => logger.error('[PunchItem] Failed to notify punch item assigned:', err))
       }
 
       // Send notification if punch item is assigned to a subcontractor
       if (data.subcontractor_id) {
-        this._notifySubcontractorPunchItemAssigned(result, options?.createdById).catch(console.error)
+        this._notifySubcontractorPunchItemAssigned(result, options?.createdById).catch(err => logger.error('[PunchItem] Failed to notify punch item assigned:', err))
       }
 
       return result
@@ -185,12 +186,12 @@ export const punchListsApi = {
 
       // Send notification if user assignee changed
       if (newUserAssignee && newUserAssignee !== wasAssignedToUser) {
-        this._notifyPunchItemAssigned(result, options?.updatedById).catch(console.error)
+        this._notifyPunchItemAssigned(result, options?.updatedById).catch(err => logger.error('[PunchItem] Failed to notify punch item assigned:', err))
       }
 
       // Send notification if subcontractor assignee changed
       if (newSubcontractorAssignee && newSubcontractorAssignee !== wasAssignedToSub) {
-        this._notifySubcontractorPunchItemAssigned(result, options?.updatedById).catch(console.error)
+        this._notifySubcontractorPunchItemAssigned(result, options?.updatedById).catch(err => logger.error('[PunchItem] Failed to notify punch item assigned:', err))
       }
 
       return result
@@ -242,7 +243,7 @@ export const punchListsApi = {
         tags: ['punch-item', 'assigned'],
       })
     } catch (error) {
-      console.error('[PunchItem] Failed to send assignment notification:', error)
+      logger.error('[PunchItem] Failed to send assignment notification:', error)
     }
   },
 
@@ -288,7 +289,7 @@ export const punchListsApi = {
         tags: ['punch-item', 'assigned', 'subcontractor'],
       })
     } catch (error) {
-      console.error('[PunchItem] Failed to send subcontractor assignment notification:', error)
+      logger.error('[PunchItem] Failed to send subcontractor assignment notification:', error)
     }
   },
 

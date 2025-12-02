@@ -44,9 +44,11 @@ const ChangeOrdersPage = lazy(() => import('./pages/change-orders/ChangeOrdersPa
 const ChangeOrderDetailPage = lazy(() => import('./pages/change-orders/ChangeOrderDetailPage').then(m => ({ default: m.ChangeOrderDetailPage })))
 
 // Documents feature
+const DocumentLibraryPage = lazy(() => import('./pages/documents/DocumentLibraryPage').then(m => ({ default: m.DocumentLibraryPage })))
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage').then(m => ({ default: m.DocumentDetailPage })))
 
 // RFIs feature
+const RFIsPage = lazy(() => import('./pages/rfis/RFIsPage').then(m => ({ default: m.RFIsPage })))
 const RFIDetailPage = lazy(() => import('./pages/rfis/RFIDetailPage').then(m => ({ default: m.RFIDetailPage })))
 
 // Submittals feature
@@ -87,6 +89,11 @@ const IncidentsListPage = lazy(() => import('./features/safety/pages/IncidentsLi
 const IncidentDetailPage = lazy(() => import('./features/safety/pages/IncidentDetailPage').then(m => ({ default: m.IncidentDetailPage })))
 const CreateIncidentPage = lazy(() => import('./features/safety/pages/CreateIncidentPage').then(m => ({ default: m.CreateIncidentPage })))
 
+// Inspections feature
+const InspectionsPage = lazy(() => import('./pages/inspections/InspectionsPage').then(m => ({ default: m.InspectionsPage })))
+const InspectionDetailPage = lazy(() => import('./pages/inspections/InspectionDetailPage').then(m => ({ default: m.InspectionDetailPage })))
+const CreateInspectionPage = lazy(() => import('./pages/inspections/CreateInspectionPage').then(m => ({ default: m.CreateInspectionPage })))
+
 // Messaging feature
 const MessagesPage = lazy(() => import('./features/messaging/pages/MessagesPage').then(m => ({ default: m.MessagesPage })))
 
@@ -121,6 +128,14 @@ const PhotoOrganizerPage = lazy(() => import('./features/photos/pages/PhotoOrgan
 // Material Receiving feature
 const MaterialReceivingPage = lazy(() => import('./features/material-receiving/pages/MaterialReceivingPage').then(m => ({ default: m.MaterialReceivingPage })))
 const MaterialReceivingDetailPage = lazy(() => import('./features/material-receiving/pages/MaterialReceivingDetailPage').then(m => ({ default: m.MaterialReceivingDetailPage })))
+
+// Contacts feature
+const ContactsPage = lazy(() => import('./pages/contacts/ContactsPage').then(m => ({ default: m.ContactsPage })))
+const ContactDetailPage = lazy(() => import('./pages/contacts/ContactDetailPage').then(m => ({ default: m.ContactDetailPage })))
+
+// Takeoffs feature
+const TakeoffPage = lazy(() => import('./pages/takeoffs/TakeoffPage'))
+const ContactFormPage = lazy(() => import('./pages/contacts/ContactFormPage').then(m => ({ default: m.ContactFormPage })))
 
 function App() {
   // Initialize IndexedDB for offline functionality
@@ -207,9 +222,14 @@ function App() {
                 <Route path="/tasks/:id/edit" element={<ProtectedRoute><TaskEditPage /></ProtectedRoute>} />
 
                 {/* Documents feature */}
+                <Route path="/documents" element={<ProtectedRoute><DocumentLibraryPage /></ProtectedRoute>} />
                 <Route path="/documents/:documentId" element={<ProtectedRoute><DocumentDetailPage /></ProtectedRoute>} />
 
+                {/* Takeoffs feature */}
+                <Route path="/projects/:projectId/documents/:documentId/takeoff" element={<ProtectedRoute><TakeoffPage /></ProtectedRoute>} />
+
                 {/* RFIs feature */}
+                <Route path="/rfis" element={<ProtectedRoute><RFIsPage /></ProtectedRoute>} />
                 <Route path="/rfis/:rfiId" element={<ProtectedRoute><RFIDetailPage /></ProtectedRoute>} />
 
                 {/* Submittals feature */}
@@ -247,6 +267,12 @@ function App() {
                 <Route path="/safety/new" element={<ProtectedRoute><CreateIncidentPage /></ProtectedRoute>} />
                 <Route path="/safety/:id" element={<ProtectedRoute><IncidentDetailPage /></ProtectedRoute>} />
 
+                {/* Inspections feature */}
+                <Route path="/inspections" element={<ProtectedRoute><InspectionsPage /></ProtectedRoute>} />
+                <Route path="/inspections/new" element={<ProtectedRoute><CreateInspectionPage /></ProtectedRoute>} />
+                <Route path="/inspections/:id" element={<ProtectedRoute><InspectionDetailPage /></ProtectedRoute>} />
+                <Route path="/inspections/:id/edit" element={<ProtectedRoute><CreateInspectionPage /></ProtectedRoute>} />
+
                 {/* Messaging feature */}
                 <Route path="/messages" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
                 <Route path="/messages/:conversationId" element={<ProtectedRoute><MessagesPage /></ProtectedRoute>} />
@@ -262,6 +288,12 @@ function App() {
                 <Route path="/projects/:projectId/material-receiving" element={<ProtectedRoute><MaterialReceivingPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/material-receiving/:materialId" element={<ProtectedRoute><MaterialReceivingDetailPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/photos" element={<ProtectedRoute><PhotoOrganizerPage /></ProtectedRoute>} />
+
+                {/* Contacts feature */}
+                <Route path="/contacts" element={<ProtectedRoute><ContactsPage /></ProtectedRoute>} />
+                <Route path="/contacts/new" element={<ProtectedRoute><ContactFormPage /></ProtectedRoute>} />
+                <Route path="/contacts/:contactId" element={<ProtectedRoute><ContactDetailPage /></ProtectedRoute>} />
+                <Route path="/contacts/:contactId/edit" element={<ProtectedRoute><ContactFormPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>

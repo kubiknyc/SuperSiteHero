@@ -51,4 +51,13 @@ playwright-report/
 test-results/
 playwright/.cache/
 auth.json
+tests/e2e/.auth/user.json
+tests/e2e/.auth/*.json
+!tests/e2e/.auth/.gitkeep
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Vercel
 .vercel

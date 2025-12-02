@@ -2,6 +2,7 @@
 // PDF export utilities
 
 import DOMPurify from 'dompurify'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Escape HTML special characters for safe title insertion
@@ -18,14 +19,14 @@ function escapeHtml(text: string): string {
 export function exportToPDF(elementId: string, filename: string) {
   const element = document.getElementById(elementId)
   if (!element) {
-    console.error(`Element with ID ${elementId} not found`)
+    logger.error(`Element with ID ${elementId} not found`)
     return
   }
 
   // Create a print window
   const printWindow = window.open('', '_blank')
   if (!printWindow) {
-    console.error('Failed to open print window')
+    logger.error('Failed to open print window')
     return
   }
 
@@ -137,7 +138,7 @@ export function exportToPDF(elementId: string, filename: string) {
  */
 export function exportToCSV(data: Array<Record<string, any>>, filename: string) {
   if (data.length === 0) {
-    console.warn('No data to export')
+    logger.warn('No data to export')
     return
   }
 

@@ -30,7 +30,21 @@
       "Bash(.gitignore)",
       "Bash(git push:*)",
       "Bash(\"c:\\Users\\kubik\\OneDrive\\Documents\\App Builds\\SUPER SITE HERO\\SuperSiteHero\\migrations\\COMBINED_ALL_MIGRATIONS.sql\")",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(done)",
+      "Bash(xargs:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm test:*)",
+      "Bash(vercel --version:*)",
+      "Bash(vercel --prod:*)",
+      "Bash(vercel login)",
+      "Bash(Select-String -Pattern \"(error|Shape)\")",
+      "Bash(Select-Object -First 20)",
+      "Bash(if exist .env type .env)",
+      "Bash(findstr:*)",
+      "Bash(vercel whoami:*)",
+      "Bash(git log:*)"
     ],
     "deny": [],
     "ask": []

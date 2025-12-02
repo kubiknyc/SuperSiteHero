@@ -13,6 +13,7 @@ import {
   getAllFromStore,
   getFromStore,
 } from './indexeddb'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Add a photo to the upload queue
@@ -38,7 +39,7 @@ export async function queuePhoto(
   }
 
   await addToStore(STORES.PHOTO_QUEUE, queuedPhoto)
-  console.log(`Queued photo ${queuedPhoto.id} for upload`, metadata ? 'with metadata' : '')
+  logger.log(`Queued photo ${queuedPhoto.id} for upload`, metadata ? 'with metadata' : '')
 
   return queuedPhoto
 }
@@ -97,7 +98,7 @@ export async function updatePhotoStatus(
   }
 
   await putInStore(STORES.PHOTO_QUEUE, updates as QueuedPhoto)
-  console.log(`Updated photo ${id} status to ${status}`)
+  logger.log(`Updated photo ${id} status to ${status}`)
 }
 
 /**
@@ -119,7 +120,7 @@ export async function markPhotoFailed(id: string, error: string): Promise<void> 
  */
 export async function removeQueuedPhoto(id: string): Promise<void> {
   await deleteFromStore(STORES.PHOTO_QUEUE, id)
-  console.log(`Removed photo ${id} from queue`)
+  logger.log(`Removed photo ${id} from queue`)
 }
 
 /**
@@ -147,7 +148,7 @@ export async function clearUploadedPhotos(): Promise<number> {
     await removeQueuedPhoto(photo.id)
   }
 
-  console.log(`Cleared ${uploaded.length} uploaded photos from queue`)
+  logger.log(`Cleared ${uploaded.length} uploaded photos from queue`)
   return uploaded.length
 }
 
@@ -164,7 +165,7 @@ export async function retryFailedPhotos(): Promise<QueuedPhoto[]> {
     }
   }
 
-  console.log(`Reset ${failed.length} failed photos to pending`)
+  logger.log(`Reset ${failed.length} failed photos to pending`)
   return failed
 }
 

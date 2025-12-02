@@ -18,6 +18,7 @@ import { RESPONSE_STATUSES } from '../types'
 import { NoticeDocumentUpload } from './NoticeDocumentUpload'
 import { CheckCircle } from 'lucide-react'
 import type { Notice } from '../types'
+import { logger } from '@/lib/utils/logger'
 
 interface RecordResponseDialogProps {
   notice: Notice
@@ -64,7 +65,7 @@ export function RecordResponseDialog({
       setOpen(false)
       onSuccess?.()
     } catch (error) {
-      console.error('Failed to record response:', error)
+      logger.error('Failed to record response:', error)
     }
   }
 

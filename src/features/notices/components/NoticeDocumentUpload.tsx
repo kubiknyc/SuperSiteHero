@@ -5,6 +5,7 @@ import { useState, useRef, DragEvent, ChangeEvent } from 'react'
 import { Upload, X, FileIcon, ExternalLink, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { logger } from '@/lib/utils/logger'
 import { useUploadNoticeDocumentWithNotification } from '../hooks'
 
 interface NoticeDocumentUploadProps {
@@ -103,7 +104,7 @@ export function NoticeDocumentUpload({
         fileInputRef.current.value = ''
       }
     } catch (error) {
-      console.error('Upload error:', error)
+      logger.error('Upload error:', error)
     }
   }
 

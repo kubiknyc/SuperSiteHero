@@ -5,6 +5,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
 // Types
@@ -84,7 +85,7 @@ export const notificationsApi = {
     const { data, error } = await query
 
     if (error) {
-      console.error('[NotificationsApi] Failed to fetch notifications:', error)
+      logger.error('[NotificationsApi] Failed to fetch notifications:', error)
       throw error
     }
 
@@ -125,7 +126,7 @@ export const notificationsApi = {
       .single()
 
     if (error) {
-      console.error('[NotificationsApi] Failed to create notification:', error)
+      logger.error('[NotificationsApi] Failed to create notification:', error)
       throw error
     }
 
@@ -145,7 +146,7 @@ export const notificationsApi = {
       .eq('id', id)
 
     if (error) {
-      console.error('[NotificationsApi] Failed to mark as read:', error)
+      logger.error('[NotificationsApi] Failed to mark as read:', error)
       throw error
     }
   },
@@ -164,7 +165,7 @@ export const notificationsApi = {
       .eq('is_read', false)
 
     if (error) {
-      console.error('[NotificationsApi] Failed to mark all as read:', error)
+      logger.error('[NotificationsApi] Failed to mark all as read:', error)
       throw error
     }
   },
@@ -179,7 +180,7 @@ export const notificationsApi = {
       .eq('id', id)
 
     if (error) {
-      console.error('[NotificationsApi] Failed to delete notification:', error)
+      logger.error('[NotificationsApi] Failed to delete notification:', error)
       throw error
     }
   },
@@ -195,7 +196,7 @@ export const notificationsApi = {
       .is('deleted_at', null)
 
     if (error) {
-      console.error('[NotificationsApi] Failed to delete all notifications:', error)
+      logger.error('[NotificationsApi] Failed to delete all notifications:', error)
       throw error
     }
   },
@@ -212,7 +213,7 @@ export const notificationsApi = {
       .is('deleted_at', null)
 
     if (error) {
-      console.error('[NotificationsApi] Failed to get unread count:', error)
+      logger.error('[NotificationsApi] Failed to get unread count:', error)
       throw error
     }
 

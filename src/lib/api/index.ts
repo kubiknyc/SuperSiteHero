@@ -9,6 +9,7 @@ export { changeOrdersApi } from './services/change-orders'
 export { tasksApi } from './services/tasks'
 export { punchListsApi } from './services/punch-lists'
 export { workflowsApi } from './services/workflows'
+export { inspectionsApi } from './services/inspections'
 
 export type { ApiError, ApiResponse, ApiErrorResponse, ApiResult, QueryOptions, QueryFilter } from './types'
 export type { ChangeOrderWithRelations, ChangeOrderDetailWithRelations } from './services/change-orders'

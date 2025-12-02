@@ -18,6 +18,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { useCreateNoticeWithNotification } from '../hooks'
 import { NOTICE_TYPES, NOTICE_DIRECTIONS } from '../types'
 import { Plus, CalendarPlus } from 'lucide-react'
+import { logger } from '@/lib/utils/logger'
 
 interface CreateNoticeDialogProps {
   projectId: string
@@ -97,7 +98,7 @@ export function CreateNoticeDialog({
       setOpen(false)
       onSuccess?.()
     } catch (error) {
-      console.error('Failed to create notice:', error)
+      logger.error('Failed to create notice:', error)
     }
   }
 

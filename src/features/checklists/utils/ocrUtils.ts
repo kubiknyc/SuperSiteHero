@@ -11,6 +11,7 @@ import type {
 
 // Import worker as module (Vite syntax)
 import OcrWorker from '@/workers/ocr.worker?worker'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Singleton OCR worker instance
@@ -62,7 +63,7 @@ function getWorker(): Worker {
 
     // Handle worker errors
     ocrWorker.addEventListener('error', (error) => {
-      console.error('OCR worker error:', error)
+      logger.error('OCR worker error:', error)
       // Reject all pending requests
       pendingRequests.forEach((request) => {
         request.reject(new Error('OCR worker crashed'))
@@ -137,7 +138,7 @@ export async function extractTextBatch(
       completed++
       onBatchProgress?.(completed, files.length)
     } catch (error) {
-      console.error('Failed to extract text from image:', error)
+      logger.error('Failed to extract text from image:', error)
       // Continue with other images
       completed++
       onBatchProgress?.(completed, files.length)

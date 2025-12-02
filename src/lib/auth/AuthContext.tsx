@@ -5,6 +5,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { Session, User } from '@supabase/supabase-js'
 import { supabase } from '../supabase'
 import type { UserProfile } from '@/types/database'
+import { logger } from '@/lib/utils/logger'
 
 interface AuthContextType {
   session: Session | null
@@ -33,13 +34,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .single()
 
       if (error) {
-        console.error('Error fetching user profile:', error)
+        logger.error('Error fetching user profile:', error)
         return
       }
 
       setUserProfile(data)
     } catch (error) {
-      console.error('Unexpected error fetching user profile:', error)
+      logger.error('Unexpected error fetching user profile:', error)
     }
   }
 
@@ -58,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false)
       })
       .catch((error) => {
-        console.error('Error getting session:', error)
+        logger.error('Error getting session:', error)
         setSession(null)
         setUser(null)
         setUserProfile(null)

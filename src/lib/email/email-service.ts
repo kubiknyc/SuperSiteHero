@@ -13,6 +13,7 @@
  */
 
 import { supabase } from '../supabase'
+import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
 // Types
@@ -133,7 +134,7 @@ class ResendEdgeFunctionProvider implements EmailProvider {
       })
 
       if (error) {
-        console.error('[Resend Edge Function] Error:', error)
+        logger.error('[Resend Edge Function] Error:', error)
         return {
           success: false,
           error: error.message || 'Edge function error',
@@ -152,7 +153,7 @@ class ResendEdgeFunctionProvider implements EmailProvider {
         messageId: data.message_id,
       }
     } catch (error) {
-      console.error('[Resend Edge Function] Exception:', error)
+      logger.error('[Resend Edge Function] Exception:', error)
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error',
@@ -162,7 +163,7 @@ class ResendEdgeFunctionProvider implements EmailProvider {
 
   // Resend doesn't use external templates - we generate HTML locally
   async sendTemplated(options: SendTemplatedEmailOptions): Promise<EmailResult> {
-    console.warn('[Resend] Template emails should use local HTML generation, not external templates')
+    logger.warn('[Resend] Template emails should use local HTML generation, not external templates')
     return {
       success: false,
       error: 'Use local HTML templates with Resend instead of external template IDs',
@@ -184,12 +185,12 @@ class EmailService {
     switch (providerType) {
       case 'resend':
         this.provider = new ResendEdgeFunctionProvider()
-        console.log('[EmailService] Using Resend provider (via Edge Function)')
+        logger.log('[EmailService] Using Resend provider (via Edge Function)')
         break
       case 'console':
       default:
         this.provider = new ConsoleEmailProvider()
-        console.log('[EmailService] Using Console provider (development mode)')
+        logger.log('[EmailService] Using Console provider (development mode)')
     }
   }
 
@@ -216,7 +217,7 @@ class EmailService {
     }
 
     // Fallback: just log for providers without template support
-    console.warn('[EmailService] Template emails not supported by current provider')
+    logger.warn('[EmailService] Template emails not supported by current provider')
     return {
       success: false,
       error: 'Template emails not supported',

@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { Project, CreateInput } from '@/types/database'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { logger } from '@/lib/utils/logger'
 
 // Fetch all projects for the current user's company
 export function useProjects() {
@@ -83,7 +84,7 @@ export function useCreateProject() {
               user_id: userProfile.id,
             })
         } catch (err) {
-          console.error('Failed to assign user to project:', err)
+          logger.error('Failed to assign user to project:', err)
           // Don't throw - project was created successfully
         }
       }

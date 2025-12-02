@@ -235,12 +235,13 @@ export const dailyReportsApi = {
 
   /**
    * Reject a daily report
+   * Note: Rejection reason is stored in the comments field as schema doesn't have a dedicated rejection_reason field
    */
   async rejectReport(reportId: string, reason: string): Promise<DailyReport> {
     try {
       return await apiClient.update<DailyReport>('daily_reports', reportId, {
         status: 'rejected',
-        rejection_reason: reason,
+        comments: `Rejected: ${reason}`,
       })
     } catch (error) {
       throw error instanceof ApiErrorClass

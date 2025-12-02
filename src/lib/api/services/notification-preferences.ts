@@ -11,6 +11,7 @@ import {
   DEFAULT_NOTIFICATION_PREFERENCES,
   mergeWithDefaults,
 } from '@/types/notification-preferences'
+import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
 // API Functions
@@ -28,7 +29,7 @@ export const notificationPreferencesApi = {
       .single()
 
     if (error) {
-      console.error('[NotificationPreferencesApi] Failed to fetch preferences:', error)
+      logger.error('[NotificationPreferencesApi] Failed to fetch preferences:', error)
       // Return defaults if fetch fails
       return DEFAULT_NOTIFICATION_PREFERENCES
     }
@@ -69,7 +70,7 @@ export const notificationPreferencesApi = {
       .eq('id', userId)
 
     if (error) {
-      console.error('[NotificationPreferencesApi] Failed to update preferences:', error)
+      logger.error('[NotificationPreferencesApi] Failed to update preferences:', error)
       throw error
     }
 
@@ -86,7 +87,7 @@ export const notificationPreferencesApi = {
       .eq('id', userId)
 
     if (error) {
-      console.error('[NotificationPreferencesApi] Failed to reset preferences:', error)
+      logger.error('[NotificationPreferencesApi] Failed to reset preferences:', error)
       throw error
     }
 

@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { dailyReportsApi } from '@/lib/api'
 import { getErrorMessage } from '@/lib/api/errors'
 import type { DailyReport } from '@/types/database'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Fetch daily reports for a project
@@ -71,7 +72,7 @@ export function useCreateDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports', data.project_id] })
     },
     onError: (error) => {
-      console.error('Error creating daily report:', getErrorMessage(error))
+      logger.error('Error creating daily report:', getErrorMessage(error))
     },
   })
 }
@@ -94,7 +95,7 @@ export function useUpdateDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports', data.id] })
     },
     onError: (error) => {
-      console.error('Error updating daily report:', getErrorMessage(error))
+      logger.error('Error updating daily report:', getErrorMessage(error))
     },
   })
 }
@@ -113,7 +114,7 @@ export function useDeleteDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports'] })
     },
     onError: (error) => {
-      console.error('Error deleting daily report:', getErrorMessage(error))
+      logger.error('Error deleting daily report:', getErrorMessage(error))
     },
   })
 }
@@ -133,7 +134,7 @@ export function useSubmitDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports'] })
     },
     onError: (error) => {
-      console.error('Error submitting daily report:', getErrorMessage(error))
+      logger.error('Error submitting daily report:', getErrorMessage(error))
     },
   })
 }
@@ -153,7 +154,7 @@ export function useApproveDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports'] })
     },
     onError: (error) => {
-      console.error('Error approving daily report:', getErrorMessage(error))
+      logger.error('Error approving daily report:', getErrorMessage(error))
     },
   })
 }
@@ -173,7 +174,7 @@ export function useRejectDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports'] })
     },
     onError: (error) => {
-      console.error('Error rejecting daily report:', getErrorMessage(error))
+      logger.error('Error rejecting daily report:', getErrorMessage(error))
     },
   })
 }

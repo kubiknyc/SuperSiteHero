@@ -3,6 +3,7 @@
 
 import { supabase } from '@/lib/supabase'
 import type { AuthMFAEnrollResponse, AuthMFAUnenrollResponse, AuthMFAVerifyResponse } from '@supabase/supabase-js'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * MFA Factor type
@@ -56,7 +57,7 @@ export async function checkMFAStatus(): Promise<{
       factors
     }
   } catch (error) {
-    console.error('Error checking MFA status:', error)
+    logger.error('Error checking MFA status:', error)
     return { enrolled: false, factors: [] }
   }
 }
@@ -81,7 +82,7 @@ export async function enrollMFA(factorFriendlyName?: string): Promise<MFAEnrollm
       factorId: data.id
     }
   } catch (error) {
-    console.error('Error enrolling MFA:', error)
+    logger.error('Error enrolling MFA:', error)
     throw new Error('Failed to enroll in MFA')
   }
 }
@@ -102,7 +103,7 @@ export async function verifyMFAEnrollment(
     if (error) {throw error}
     return !!data
   } catch (error) {
-    console.error('Error verifying MFA enrollment:', error)
+    logger.error('Error verifying MFA enrollment:', error)
     return false
   }
 }
@@ -123,7 +124,7 @@ export async function verifyMFACode(
     if (response.error) {throw response.error}
     return response
   } catch (error) {
-    console.error('Error verifying MFA code:', error)
+    logger.error('Error verifying MFA code:', error)
     throw new Error('Invalid MFA code')
   }
 }
@@ -140,7 +141,7 @@ export async function unenrollMFA(factorId: string): Promise<boolean> {
     if (error) {throw error}
     return true
   } catch (error) {
-    console.error('Error unenrolling from MFA:', error)
+    logger.error('Error unenrolling from MFA:', error)
     return false
   }
 }
@@ -180,7 +181,7 @@ export async function getMFAChallenge(): Promise<{
 
     return null
   } catch (error) {
-    console.error('Error getting MFA challenge:', error)
+    logger.error('Error getting MFA challenge:', error)
     return null
   }
 }
@@ -282,7 +283,7 @@ export async function updateUserMFAPreferences(
   //   return false
   // }
 
-  console.log('MFA preferences update skipped - user_preferences table not implemented', { userId, preferences })
+  logger.log('MFA preferences update skipped - user_preferences table not implemented', { userId, preferences })
   return true
 }
 

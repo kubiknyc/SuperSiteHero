@@ -26,6 +26,7 @@ import { useTemplateItems } from '../hooks/useTemplateItems'
 import type { ChecklistResponse } from '@/types/checklists'
 import { formatDistanceToNow } from 'date-fns'
 import toast from 'react-hot-toast'
+import { logger } from '@/lib/utils/logger'
 
 export function ActiveExecutionPage() {
   const { executionId } = useParams<{ executionId: string }>()
@@ -135,7 +136,7 @@ export function ActiveExecutionPage() {
       })
       setLastSaved(new Date())
     } catch (error) {
-      console.error('Failed to save response:', error)
+      logger.error('Failed to save response:', error)
     } finally {
       setSavingResponseId(null)
     }
@@ -155,7 +156,7 @@ export function ActiveExecutionPage() {
       setIsEditingMetadata(false)
       toast.success('Metadata updated successfully')
     } catch (error) {
-      console.error('Failed to update metadata:', error)
+      logger.error('Failed to update metadata:', error)
     }
   }
 
@@ -208,7 +209,7 @@ export function ActiveExecutionPage() {
       toast.success('Checklist submitted successfully!')
       navigate(`/checklists/executions/${executionId}`)
     } catch (error) {
-      console.error('Failed to submit checklist:', error)
+      logger.error('Failed to submit checklist:', error)
     }
   }
 

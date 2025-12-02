@@ -284,3 +284,6 @@ export type SubmittalProcurement = Database['public']['Tables']['submittal_procu
 // Generic CreateInput type for insert operations
 export type CreateInput<T extends keyof Database['public']['Tables']> =
   Database['public']['Tables'][T]['Insert']
+
+// Takeoff types
+export type TakeoffItem = Database['public']['Tables']['takeoff_items']['Row']

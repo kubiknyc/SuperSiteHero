@@ -3,6 +3,7 @@
 // Phase: 3.2 - Photo & Signature Capture
 
 import imageCompression from 'browser-image-compression'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Configuration for image compression
@@ -62,7 +63,7 @@ export async function compressImage(
       lastModified: Date.now(),
     })
 
-    console.log('Image compression complete:', {
+    logger.log('Image compression complete:', {
       originalSize: `${(file.size / 1024 / 1024).toFixed(2)}MB`,
       compressedSize: `${(finalFile.size / 1024 / 1024).toFixed(2)}MB`,
       reduction: `${(((file.size - finalFile.size) / file.size) * 100).toFixed(1)}%`,
@@ -70,7 +71,7 @@ export async function compressImage(
 
     return finalFile
   } catch (error) {
-    console.error('Image compression failed:', error)
+    logger.error('Image compression failed:', error)
     throw new Error('Failed to compress image. Please try a different image.')
   }
 }
@@ -121,7 +122,7 @@ export async function generateThumbnail(file: File, maxSize: number = 200): Prom
 
     return await imageCompression.getDataUrlFromFile(thumbnailFile)
   } catch (error) {
-    console.error('Thumbnail generation failed:', error)
+    logger.error('Thumbnail generation failed:', error)
     // Fallback to original file data URL
     return await imageCompression.getDataUrlFromFile(file)
   }

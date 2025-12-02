@@ -21,10 +21,24 @@ export default defineConfig({
         'dist/',
       ],
       thresholds: {
-        lines: 60,
-        branches: 60,
-        functions: 60,
-        statements: 60,
+        // Global thresholds increased from 60% to 70%
+        lines: 70,
+        branches: 70,
+        functions: 70,
+        statements: 70,
+        // Critical security/auth files should have higher coverage
+        'src/lib/auth/**/*.ts': {
+          lines: 80,
+          branches: 80,
+          functions: 80,
+          statements: 80,
+        },
+        'src/lib/api/**/*.ts': {
+          lines: 80,
+          branches: 80,
+          functions: 80,
+          statements: 80,
+        },
       },
     },
     include: ['**/*.{test,spec}.{ts,tsx}'],

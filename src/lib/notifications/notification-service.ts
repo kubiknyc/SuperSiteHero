@@ -21,6 +21,7 @@ import {
   type NoticeResponseReminderEmailData,
   type NoticeOverdueEmailData,
 } from '@/lib/email/templates'
+import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
 // Types
@@ -76,7 +77,7 @@ export const notificationService = {
             tags: ['approval', 'request', data.entityType],
           })
         } catch (error) {
-          console.error('[NotificationService] Email failed:', error)
+          logger.error('[NotificationService] Email failed:', error)
         }
       }
 
@@ -96,7 +97,7 @@ export const notificationService = {
             },
           })
         } catch (error) {
-          console.error('[NotificationService] In-app notification failed:', error)
+          logger.error('[NotificationService] In-app notification failed:', error)
         }
       }
     }
@@ -133,7 +134,7 @@ export const notificationService = {
           tags: ['approval', 'completed', data.status, data.entityType],
         })
       } catch (error) {
-        console.error('[NotificationService] Email failed:', error)
+        logger.error('[NotificationService] Email failed:', error)
       }
     }
 
@@ -154,7 +155,7 @@ export const notificationService = {
           },
         })
       } catch (error) {
-        console.error('[NotificationService] In-app notification failed:', error)
+        logger.error('[NotificationService] In-app notification failed:', error)
       }
     }
   },
@@ -187,7 +188,7 @@ export const notificationService = {
             tags: ['safety', 'incident', data.severity],
           })
         } catch (error) {
-          console.error('[NotificationService] Incident email failed:', error)
+          logger.error('[NotificationService] Incident email failed:', error)
         }
       }
 
@@ -208,7 +209,7 @@ export const notificationService = {
             },
           })
         } catch (error) {
-          console.error('[NotificationService] In-app notification failed:', error)
+          logger.error('[NotificationService] In-app notification failed:', error)
         }
       }
 
@@ -225,7 +226,7 @@ export const notificationService = {
         })
       } catch (error) {
         // Non-critical, log and continue - table may not exist
-        console.error('[NotificationService] Failed to track notification:', error)
+        logger.error('[NotificationService] Failed to track notification:', error)
       }
     }
   },
@@ -260,7 +261,7 @@ export const notificationService = {
             tags: ['notice', 'reminder', `${data.daysUntilDue}-day`],
           })
         } catch (error) {
-          console.error('[NotificationService] Notice reminder email failed:', error)
+          logger.error('[NotificationService] Notice reminder email failed:', error)
         }
       }
 
@@ -283,7 +284,7 @@ export const notificationService = {
             },
           })
         } catch (error) {
-          console.error('[NotificationService] In-app notification failed:', error)
+          logger.error('[NotificationService] In-app notification failed:', error)
         }
       }
     }
@@ -319,7 +320,7 @@ export const notificationService = {
             tags: ['notice', 'overdue', data.isCritical ? 'critical' : 'standard'],
           })
         } catch (error) {
-          console.error('[NotificationService] Notice overdue email failed:', error)
+          logger.error('[NotificationService] Notice overdue email failed:', error)
         }
       }
 
@@ -342,7 +343,7 @@ export const notificationService = {
             },
           })
         } catch (error) {
-          console.error('[NotificationService] In-app notification failed:', error)
+          logger.error('[NotificationService] In-app notification failed:', error)
         }
       }
     }
@@ -373,7 +374,7 @@ export const notificationService = {
       })
 
       if (error) {
-        console.error('[NotificationService] Failed to insert notification:', error)
+        logger.error('[NotificationService] Failed to insert notification:', error)
         // Fallback to localStorage for backwards compatibility
         this._createLocalNotification(data)
         return
@@ -382,7 +383,7 @@ export const notificationService = {
       // Dispatch event for real-time UI updates
       window.dispatchEvent(new CustomEvent('newNotification', { detail: data }))
     } catch (error) {
-      console.error('[NotificationService] Error creating notification:', error)
+      logger.error('[NotificationService] Error creating notification:', error)
       // Fallback to localStorage
       this._createLocalNotification(data)
     }
@@ -439,7 +440,7 @@ export const notificationService = {
       const { data, error } = await query
 
       if (error) {
-        console.error('[NotificationService] Database query failed:', error)
+        logger.error('[NotificationService] Database query failed:', error)
         // Fallback to localStorage
         return JSON.parse(localStorage.getItem('inAppNotifications') || '[]')
       }
@@ -476,7 +477,7 @@ export const notificationService = {
         .eq('id', notificationId)
 
       if (error) {
-        console.error('[NotificationService] Failed to mark as read:', error)
+        logger.error('[NotificationService] Failed to mark as read:', error)
         // Fallback to localStorage
         this._markLocalNotificationAsRead(notificationId)
       }
@@ -513,7 +514,7 @@ export const notificationService = {
           .eq('user_id', userId)
       }
     } catch (error) {
-      console.error('[NotificationService] Failed to clear notifications:', error)
+      logger.error('[NotificationService] Failed to clear notifications:', error)
     }
 
     // Also clear localStorage fallback
@@ -538,7 +539,7 @@ export const notificationService = {
       const { count, error } = await query
 
       if (error) {
-        console.error('[NotificationService] Failed to get unread count:', error)
+        logger.error('[NotificationService] Failed to get unread count:', error)
         // Fallback to localStorage
         const notifications = JSON.parse(localStorage.getItem('inAppNotifications') || '[]')
         return notifications.filter((n: any) => !n.read).length

@@ -7,6 +7,7 @@ import { getErrorMessage } from '@/lib/api/errors'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { ChangeOrderWithRelations, ChangeOrderDetailWithRelations } from '@/lib/api'
 import type { Database } from '@/types/database'
+import { logger } from '@/lib/utils/logger'
 
 type WorkflowItem = Database['public']['Tables']['workflow_items']['Row']
 type ChangeOrderBid = Database['public']['Tables']['change_order_bids']['Row']
@@ -84,7 +85,7 @@ export function useCreateChangeOrder() {
       queryClient.invalidateQueries({ queryKey: ['change-orders'] })
     },
     onError: (error) => {
-      console.error('Error creating change order:', getErrorMessage(error))
+      logger.error('Error creating change order:', getErrorMessage(error))
     },
   })
 }
@@ -105,7 +106,7 @@ export function useUpdateChangeOrder() {
       queryClient.invalidateQueries({ queryKey: ['change-orders', data.id] })
     },
     onError: (error) => {
-      console.error('Error updating change order:', getErrorMessage(error))
+      logger.error('Error updating change order:', getErrorMessage(error))
     },
   })
 }
@@ -125,7 +126,7 @@ export function useDeleteChangeOrder() {
       queryClient.invalidateQueries({ queryKey: ['change-orders'] })
     },
     onError: (error) => {
-      console.error('Error deleting change order:', getErrorMessage(error))
+      logger.error('Error deleting change order:', getErrorMessage(error))
     },
   })
 }
@@ -150,7 +151,7 @@ export function useAddChangeOrderComment() {
       })
     },
     onError: (error) => {
-      console.error('Error adding comment:', getErrorMessage(error))
+      logger.error('Error adding comment:', getErrorMessage(error))
     },
   })
 }
@@ -184,7 +185,7 @@ export function useRequestBids() {
       })
     },
     onError: (error) => {
-      console.error('Error requesting bids:', getErrorMessage(error))
+      logger.error('Error requesting bids:', getErrorMessage(error))
     },
   })
 }
@@ -207,7 +208,7 @@ export function useAwardBid() {
       queryClient.invalidateQueries({ queryKey: ['change-orders'] })
     },
     onError: (error) => {
-      console.error('Error awarding bid:', getErrorMessage(error))
+      logger.error('Error awarding bid:', getErrorMessage(error))
     },
   })
 }
@@ -228,7 +229,7 @@ export function useChangeOrderStatus() {
       queryClient.invalidateQueries({ queryKey: ['change-orders', data.id] })
     },
     onError: (error) => {
-      console.error('Error changing status:', getErrorMessage(error))
+      logger.error('Error changing status:', getErrorMessage(error))
     },
   })
 }

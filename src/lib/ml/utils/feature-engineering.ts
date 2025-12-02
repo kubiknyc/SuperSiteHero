@@ -2,6 +2,7 @@
 // Feature engineering utilities for ML models
 
 import type { ProjectSnapshot, NormalizationParams } from '@/types/analytics'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Feature definitions for budget overrun prediction model
@@ -321,7 +322,7 @@ export function generateFeatureImportance(
   weights: number[]
 ): Array<{ feature: string; importance: number; direction: 'positive' | 'negative' | 'neutral' }> {
   if (weights.length !== featureNames.length) {
-    console.warn('Weights length does not match features length')
+    logger.warn('Weights length does not match features length')
     return []
   }
 

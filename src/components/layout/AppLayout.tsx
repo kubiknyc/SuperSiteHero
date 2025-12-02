@@ -26,6 +26,9 @@ import {
   CheckSquare,
   MessageSquare,
   Mail,
+  Files,
+  ClipboardCheck,
+  Ruler,
 } from 'lucide-react'
 import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
@@ -49,6 +52,8 @@ const navigation: NavItemWithBadge[] = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Messages', href: '/messages', icon: MessageSquare, badge: UnreadMessagesBadge },
+  { name: 'Documents', href: '/documents', icon: Files },
+  { name: 'Takeoffs', href: '/takeoffs', icon: Ruler },
   { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
   { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
   { name: 'Workflows', href: '/workflows', icon: Workflow },
@@ -58,6 +63,7 @@ const navigation: NavItemWithBadge[] = [
   { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },
   { name: 'Checklists', href: '/checklists/templates', icon: CheckSquare },
   { name: 'RFIs', href: '/rfis', icon: AlertCircle },
+  { name: 'Inspections', href: '/inspections', icon: ClipboardCheck },
   { name: 'Safety', href: '/safety', icon: Shield },
   { name: 'Contacts', href: '/contacts', icon: Users },
 ]

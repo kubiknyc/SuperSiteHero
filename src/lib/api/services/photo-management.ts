@@ -11,6 +11,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { logger } from '@/lib/utils/logger'
 import type {
   Photo,
   PhotoCollection,
@@ -793,7 +794,7 @@ export async function logPhotoAccess(
       context,
     })
 
-  if (error) {console.error('Failed to log photo access:', error)}
+  if (error) {logger.error('Failed to log photo access:', error)}
 }
 
 /**

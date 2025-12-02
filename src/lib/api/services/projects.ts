@@ -5,6 +5,7 @@ import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
 import type { Project } from '@/types/database'
 import type { QueryOptions } from '../types'
+import { logger } from '@/lib/utils/logger'
 
 export const projectsApi = {
   /**
@@ -100,7 +101,7 @@ export const projectsApi = {
             user_id: userId,
           })
         } catch (error) {
-          console.error('Failed to assign user to project:', error)
+          logger.error('Failed to assign user to project:', error)
           // Don't throw - project was created successfully, just couldn't assign user
         }
       }

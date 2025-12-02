@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { notificationsApi, type Notification, type NotificationFilters, type CreateNotificationDTO } from '@/lib/api/services/notifications'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
+import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
 // Query Keys
@@ -88,7 +89,7 @@ export function useMarkNotificationAsRead() {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all })
     },
     onError: (error) => {
-      console.error('Failed to mark notification as read:', error)
+      logger.error('Failed to mark notification as read:', error)
     },
   })
 }
@@ -110,7 +111,7 @@ export function useMarkAllNotificationsAsRead() {
       toast.success('All notifications marked as read')
     },
     onError: (error) => {
-      console.error('Failed to mark all notifications as read:', error)
+      logger.error('Failed to mark all notifications as read:', error)
       toast.error('Failed to mark notifications as read')
     },
   })
@@ -128,7 +129,7 @@ export function useDeleteNotification() {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all })
     },
     onError: (error) => {
-      console.error('Failed to delete notification:', error)
+      logger.error('Failed to delete notification:', error)
       toast.error('Failed to delete notification')
     },
   })
@@ -151,7 +152,7 @@ export function useDeleteAllNotifications() {
       toast.success('All notifications cleared')
     },
     onError: (error) => {
-      console.error('Failed to delete all notifications:', error)
+      logger.error('Failed to delete all notifications:', error)
       toast.error('Failed to clear notifications')
     },
   })
@@ -169,7 +170,7 @@ export function useCreateNotification() {
       queryClient.invalidateQueries({ queryKey: notificationKeys.all })
     },
     onError: (error) => {
-      console.error('Failed to create notification:', error)
+      logger.error('Failed to create notification:', error)
     },
   })
 }

@@ -6,6 +6,7 @@
 
 import { sendNotification } from '@/lib/notifications/notification-service'
 import { supabase } from '@/lib/supabase'
+import { logger } from '@/lib/utils/logger'
 
 export interface MentionNotificationData {
   messageId: string
@@ -46,7 +47,7 @@ export async function sendMentionNotifications(data: MentionNotificationData): P
     .in('id', usersToNotify)
 
   if (error) {
-    console.error('Failed to fetch mentioned users:', error)
+    logger.error('Failed to fetch mentioned users:', error)
     return
   }
 
@@ -74,7 +75,7 @@ export async function sendMentionNotifications(data: MentionNotificationData): P
         },
       })
     } catch (error) {
-      console.error(`Failed to send mention notification to ${user.full_name}:`, error)
+      logger.error(`Failed to send mention notification to ${user.full_name}:`, error)
     }
   })
 
