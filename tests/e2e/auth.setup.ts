@@ -34,10 +34,8 @@ setup('authenticate', async ({ page }) => {
   // Wait for successful redirect (either dashboard or root)
   await page.waitForURL(/\/(dashboard|projects)?$/, { timeout: 20000 });
 
-  // Verify we're authenticated by checking for any dashboard element
-  await expect(
-    page.locator('main, [data-testid="dashboard"], h1, nav')
-  ).toBeVisible({ timeout: 10000 });
+  // Verify we're authenticated by checking for dashboard main element
+  await expect(page.locator('main')).toBeVisible({ timeout: 10000 });
 
   // Save the authenticated state
   await page.context().storageState({ path: authFile });

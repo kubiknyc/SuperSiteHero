@@ -24,9 +24,9 @@ export const test = base.extend<{ authenticatedPage: Page }>({
     // Click login button
     await page.click('button[type="submit"]')
 
-    // Wait for navigation to projects or dashboard
-    // Adjust the URL pattern based on your app's post-login redirect
-    await page.waitForURL(/\/(projects|dashboard)/, { timeout: 10000 })
+    // Wait for navigation away from login page
+    // The app redirects to "/" (root) which renders DashboardPage
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 })
 
     // Verify user is logged in by checking for user-specific element
     // This could be a profile menu, user name, or any authenticated-only element

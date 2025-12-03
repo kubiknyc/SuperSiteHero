@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { useToast } from '@/components/ui/toast'
+import { useToast } from '@/lib/notifications/ToastContext'
 import { HardHat } from 'lucide-react'
 
 export function LoginPage() {
@@ -18,7 +18,7 @@ export function LoginPage() {
 
   const { signIn } = useAuth()
   const navigate = useNavigate()
-  const { addToast } = useToast()
+  const { success, error } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -26,18 +26,10 @@ export function LoginPage() {
 
     try {
       await signIn(email, password)
-      addToast({
-        title: 'Success',
-        description: 'You have been signed in successfully.',
-        variant: 'success',
-      })
+      success('Success', 'You have been signed in successfully.')
       navigate('/')
     } catch (err) {
-      addToast({
-        title: 'Error',
-        description: err instanceof Error ? err.message : 'Failed to sign in',
-        variant: 'destructive',
-      })
+      error('Error', err instanceof Error ? err.message : 'Failed to sign in')
     } finally {
       setLoading(false)
     }
