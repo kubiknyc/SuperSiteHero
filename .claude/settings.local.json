@@ -44,7 +44,8 @@
       "Bash(if exist .env type .env)",
       "Bash(findstr:*)",
       "Bash(vercel whoami:*)",
-      "Bash(git log:*)"
+      "Bash(git log:*)",
+      "Bash(npm run test:e2e:takeoffs:ui:*)"
     ],
     "deny": [],
     "ask": []
