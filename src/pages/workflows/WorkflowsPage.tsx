@@ -2,32 +2,24 @@
 // Main workflows page with workflow types and items
 
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
-import { useWorkflowItems } from '@/features/workflows/hooks/useWorkflowItems'
 import { WorkflowsProjectView } from '@/features/workflows/components/WorkflowsProjectView'
+import { useWorkflowTypes, getWorkflowTypeIcon } from '@/features/workflows/hooks/useWorkflowTypes'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2 } from 'lucide-react'
-
-// Workflow type configurations
-const workflowTypes = [
-  { id: 'rfi', name: 'RFIs', singular: 'Request for Information', icon: '📋' },
-  { id: 'change-order', name: 'Change Orders', singular: 'Change Order', icon: '📝' },
-  { id: 'submittal', name: 'Submittals', singular: 'Submittal', icon: '📤' },
-]
+import { Loader2, AlertCircle } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function WorkflowsPage() {
   const { data: projects } = useMyProjects()
+  const { data: workflowTypes, isLoading: typesLoading, error: typesError } = useWorkflowTypes()
 
   // Selected project
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
 
-  // Fetch workflow items for all types
-  const { data: rfiItems, isLoading: rfiLoading } = useWorkflowItems(activeProjectId, 'rfi')
-  const { data: coItems, isLoading: coLoading } = useWorkflowItems(activeProjectId, 'change-order')
-  const { data: submittalItems, isLoading: submittalLoading } = useWorkflowItems(activeProjectId, 'submittal')
+  // Filter to only active workflow types
+  const activeWorkflowTypes = workflowTypes?.filter(wt => wt.is_active !== false) || []
 
   if (!activeProjectId) {
     return (
@@ -79,83 +71,70 @@ export function WorkflowsPage() {
 
         {/* Workflow Types Grid */}
         <div className="grid gap-6">
-          {/* RFIs Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span>{workflowTypes[0].icon}</span>
-                {workflowTypes[0].name}
-              </CardTitle>
-              <CardDescription>
-                Manage requests for information from contractors
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {rfiLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                </div>
-              ) : (
-                <WorkflowsProjectView
-                  projectId={activeProjectId}
-                  workflowTypeId="rfi"
-                  workflowTypeName={workflowTypes[0].name}
-                />
-              )}
-            </CardContent>
-          </Card>
+          {/* Loading State */}
+          {typesLoading && (
+            <>
+              {[1, 2, 3].map((i) => (
+                <Card key={i}>
+                  <CardHeader>
+                    <Skeleton className="h-6 w-32" />
+                    <Skeleton className="h-4 w-48 mt-2" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-24 w-full" />
+                  </CardContent>
+                </Card>
+              ))}
+            </>
+          )}
 
-          {/* Change Orders Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span>{workflowTypes[1].icon}</span>
-                {workflowTypes[1].name}
-              </CardTitle>
-              <CardDescription>
-                Track change orders and scope adjustments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {coLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+          {/* Error State */}
+          {typesError && (
+            <Card className="border-red-200 bg-red-50">
+              <CardContent className="pt-6">
+                <div className="flex items-center gap-2 text-red-800">
+                  <AlertCircle className="h-5 w-5" />
+                  <p>Failed to load workflow types. Please try again.</p>
                 </div>
-              ) : (
-                <WorkflowsProjectView
-                  projectId={activeProjectId}
-                  workflowTypeId="change-order"
-                  workflowTypeName={workflowTypes[1].name}
-                />
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
-          {/* Submittals Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <span>{workflowTypes[2].icon}</span>
-                {workflowTypes[2].name}
-              </CardTitle>
-              <CardDescription>
-                Manage material and equipment submittals
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {submittalLoading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-                </div>
-              ) : (
+          {/* Empty State */}
+          {!typesLoading && !typesError && activeWorkflowTypes.length === 0 && (
+            <Card className="border-yellow-200 bg-yellow-50">
+              <CardContent className="pt-6 text-center">
+                <p className="text-yellow-800">
+                  No workflow types configured for your company.
+                </p>
+                <p className="text-sm text-yellow-700 mt-1">
+                  Contact your administrator to set up workflow types.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Dynamic Workflow Type Sections */}
+          {!typesLoading && activeWorkflowTypes.map((workflowType) => (
+            <Card key={workflowType.id}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <span>{getWorkflowTypeIcon(workflowType)}</span>
+                  {workflowType.name_plural}
+                </CardTitle>
+                <CardDescription>
+                  Manage {workflowType.name_plural.toLowerCase()} for this project
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
                 <WorkflowsProjectView
                   projectId={activeProjectId}
-                  workflowTypeId="submittal"
-                  workflowTypeName={workflowTypes[2].name}
+                  workflowTypeId={workflowType.id}
+                  workflowTypeName={workflowType.name_plural}
                 />
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </AppLayout>

@@ -12,14 +12,34 @@ import type { Project } from '@/types/database'
  */
 export function useCreateProjectWithNotification() {
   const queryClient = useQueryClient()
-  const { userProfile } = useAuth()
+  const { userProfile, user } = useAuth()
 
   return useMutationWithNotification<Project, Error, Omit<Project, 'id' | 'created_at' | 'updated_at'>>({
     mutationFn: async (project) => {
-      if (!userProfile?.company_id) {
-        throw new Error('No company ID found')
+      // Validate that we have required auth data
+      if (!user) {
+        throw new Error('You must be logged in to create a project')
       }
-      return projectsApi.createProject(userProfile.company_id, project, userProfile?.id)
+
+      if (!userProfile) {
+        throw new Error('User profile not loaded. Please ensure you have a user record in the database.')
+      }
+
+      if (!userProfile.company_id) {
+        throw new Error('No company assigned to your user account. Please contact support.')
+      }
+
+      if (!userProfile.role) {
+        throw new Error('No role assigned to your user account. Please contact support.')
+      }
+
+      // Validate role has permission
+      const allowedRoles = ['superintendent', 'project_manager', 'owner', 'admin']
+      if (!allowedRoles.includes(userProfile.role)) {
+        throw new Error(`Your role (${userProfile.role}) does not have permission to create projects`)
+      }
+
+      return projectsApi.createProject(userProfile.company_id, project, userProfile.id)
     },
     successMessage: (data) => `Project "${data.name}" created successfully`,
     errorMessage: (error) => `Failed to create project: ${error.message}`,

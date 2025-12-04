@@ -28,9 +28,9 @@ import {
   Package,
   Link2,
 } from 'lucide-react'
+import { format } from 'date-fns'
 import { StatusBadge } from './StatusBadge'
 import { ConditionBadge } from './ConditionBadge'
-import { formatDate } from '@/lib/utils'
 import type { MaterialReceivedWithDetails } from '@/types/material-receiving'
 
 interface MaterialReceivingCardProps {
@@ -98,7 +98,7 @@ export function MaterialReceivingCard({
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <Calendar className="h-3.5 w-3.5" />
-            <span>{formatDate(material.delivery_date)}</span>
+            <span>{format(new Date(material.delivery_date), 'MMM d, yyyy')}</span>
           </div>
           {material.delivery_ticket_number && (
             <div className="flex items-center gap-1.5 text-muted-foreground">

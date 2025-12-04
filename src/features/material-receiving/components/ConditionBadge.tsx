@@ -23,12 +23,12 @@ const conditionConfig: Record<MaterialCondition, { color: string; icon: typeof C
     color: 'bg-red-100 text-red-800 border-red-200',
     icon: XCircle,
   },
-  partial: {
-    color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  defective: {
+    color: 'bg-red-100 text-red-800 border-red-200',
     icon: AlertTriangle,
   },
-  rejected: {
-    color: 'bg-red-100 text-red-800 border-red-200',
+  incorrect: {
+    color: 'bg-orange-100 text-orange-800 border-orange-200',
     icon: AlertCircle,
   },
 }

@@ -29,6 +29,7 @@ import {
   Files,
   ClipboardCheck,
   Ruler,
+  BarChart3,
 } from 'lucide-react'
 import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
@@ -66,6 +67,7 @@ const navigation: NavItemWithBadge[] = [
   { name: 'Inspections', href: '/inspections', icon: ClipboardCheck },
   { name: 'Safety', href: '/safety', icon: Shield },
   { name: 'Contacts', href: '/contacts', icon: Users },
+  { name: 'Reports', href: '/reports', icon: BarChart3 },
 ]
 
 export function AppLayout({ children }: AppLayoutProps) {

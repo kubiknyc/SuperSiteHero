@@ -4,6 +4,7 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
 import { useUpdateWorkflowItem } from '../hooks/useWorkflowItems'
+import { useProjectUsers } from '../hooks/useWorkflowItemAssignees'
 import type { WorkflowItem } from '@/types/database'
 import {
   Dialog,
@@ -16,6 +17,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Loader2 } from 'lucide-react'
 
 interface EditWorkflowItemDialogProps {
   workflowItem: WorkflowItem
@@ -29,6 +31,7 @@ export function EditWorkflowItemDialog({
   onOpenChange,
 }: EditWorkflowItemDialogProps) {
   const updateMutation = useUpdateWorkflowItem()
+  const { data: projectUsers, isLoading: usersLoading } = useProjectUsers(workflowItem.project_id)
 
   // Form state
   const [title, setTitle] = useState('')
@@ -41,6 +44,7 @@ export function EditWorkflowItemDialog({
   const [costImpact, setCostImpact] = useState('')
   const [scheduleImpact, setScheduleImpact] = useState('')
   const [resolution, setResolution] = useState('')
+  const [selectedAssignees, setSelectedAssignees] = useState<string[]>([])
 
   // Initialize form when dialog opens
   useEffect(() => {
@@ -55,8 +59,17 @@ export function EditWorkflowItemDialog({
       setCostImpact(workflowItem.cost_impact?.toString() || '')
       setScheduleImpact(workflowItem.schedule_impact?.toString() || '')
       setResolution(workflowItem.resolution || '')
+      setSelectedAssignees(workflowItem.assignees || [])
     }
   }, [open, workflowItem])
+
+  const toggleAssignee = (userId: string) => {
+    setSelectedAssignees((prev) =>
+      prev.includes(userId)
+        ? prev.filter((id) => id !== userId)
+        : [...prev, userId]
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,6 +91,7 @@ export function EditWorkflowItemDialog({
         cost_impact: costImpact ? parseFloat(costImpact) : null,
         schedule_impact: scheduleImpact ? parseInt(scheduleImpact) : null,
         resolution: resolution.trim() || null,
+        assignees: selectedAssignees.length > 0 ? selectedAssignees : null,
       },
       {
         onSuccess: () => {
@@ -221,6 +235,43 @@ export function EditWorkflowItemDialog({
               onChange={(e) => setResolution(e.target.value)}
               rows={2}
             />
+          </div>
+
+          {/* Assignees */}
+          <div className="space-y-2">
+            <Label>Assignees</Label>
+            {usersLoading ? (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading users...
+              </div>
+            ) : projectUsers && projectUsers.length > 0 ? (
+              <div className="border rounded-md p-2 max-h-32 overflow-y-auto space-y-1">
+                {projectUsers.map((pu) => (
+                  <label
+                    key={pu.user_id}
+                    className="flex items-center gap-2 p-1.5 rounded hover:bg-gray-50 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedAssignees.includes(pu.user_id)}
+                      onChange={() => toggleAssignee(pu.user_id)}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                    />
+                    <span className="text-sm">
+                      {pu.user?.full_name || pu.user?.email || 'Unknown User'}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No users available for this project</p>
+            )}
+            {selectedAssignees.length > 0 && (
+              <p className="text-xs text-gray-500">
+                {selectedAssignees.length} user(s) selected
+              </p>
+            )}
           </div>
 
           <DialogFooter>

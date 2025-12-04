@@ -8,12 +8,12 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import { enrollMFA, verifyMFAEnrollment, formatTOTPSecret, generateBackupCodes, updateUserMFAPreferences } from '@/lib/auth/mfa'
 import { Button, Card, Input, Alert, Badge } from '@/components/ui'
 import { Shield, Smartphone, Copy, Check, ChevronLeft, Download, AlertTriangle } from 'lucide-react'
-import { useToast } from '@/components/ui/toast'
+import { useToast } from '@/lib/notifications/ToastContext'
 
 export function MFASetupPage() {
   const navigate = useNavigate()
   const { userProfile } = useAuth()
-  const { addToast } = useToast()
+  const { success, error: showError, info } = useToast()
 
   const [step, setStep] = useState<'intro' | 'scan' | 'verify' | 'backup' | 'complete'>('intro')
   const [enrollmentData, setEnrollmentData] = useState<{
@@ -33,11 +33,7 @@ export function MFASetupPage() {
       setEnrollmentData(data)
       setStep('scan')
     } catch (error) {
-      addToast({
-        title: 'Enrollment Failed',
-        description: 'Failed to start MFA enrollment. Please try again.',
-        variant: 'destructive'
-      })
+      showError('Enrollment Failed', 'Failed to start MFA enrollment. Please try again.')
     }
   }
 
@@ -62,24 +58,12 @@ export function MFASetupPage() {
         }
 
         setStep('backup')
-        addToast({
-          title: 'MFA Enabled',
-          description: 'Two-factor authentication has been successfully enabled.',
-          variant: 'success'
-        })
+        success('MFA Enabled', 'Two-factor authentication has been successfully enabled.')
       } else {
-        addToast({
-          title: 'Invalid Code',
-          description: 'The verification code is incorrect. Please try again.',
-          variant: 'destructive'
-        })
+        showError('Invalid Code', 'The verification code is incorrect. Please try again.')
       }
     } catch (error) {
-      addToast({
-        title: 'Verification Failed',
-        description: 'Failed to verify the code. Please try again.',
-        variant: 'destructive'
-      })
+      showError('Verification Failed', 'Failed to verify the code. Please try again.')
     } finally {
       setIsVerifying(false)
     }
@@ -90,11 +74,7 @@ export function MFASetupPage() {
       navigator.clipboard.writeText(enrollmentData.secret)
       setSecretCopied(true)
       setTimeout(() => setSecretCopied(false), 2000)
-      addToast({
-        title: 'Copied',
-        description: 'Secret key copied to clipboard',
-        variant: 'default'
-      })
+      info('Copied', 'Secret key copied to clipboard')
     }
   }
 
@@ -120,11 +100,7 @@ Use these codes if you lose access to your authenticator app.
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    addToast({
-      title: 'Downloaded',
-      description: 'Backup codes have been downloaded',
-      variant: 'success'
-    })
+    success('Downloaded', 'Backup codes have been downloaded')
   }
 
   const handleComplete = () => {

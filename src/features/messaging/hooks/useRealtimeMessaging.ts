@@ -2,10 +2,13 @@
  * Supabase Realtime Hooks for Messaging
  *
  * Provides live updates for:
- * - New messages in conversations
+ * - New messages in channels (chat_channels)
  * - Typing indicators
  * - Presence status
- * - Conversation updates
+ * - Channel updates
+ *
+ * NOTE: Uses actual database table names (chat_channels, chat_messages, etc.)
+ * but the frontend types still use "Conversation" terminology for backwards compatibility.
  */
 
 import { useEffect, useRef, useCallback, useState } from 'react'
@@ -21,7 +24,8 @@ import type { Message, TypingIndicatorEvent } from '@/types/messaging'
 // =====================================================
 
 /**
- * Subscribe to real-time message updates for a conversation
+ * Subscribe to real-time message updates for a channel
+ * Uses chat_messages table with channel_id filter
  */
 export function useRealtimeMessages(conversationId: string | undefined) {
   const queryClient = useQueryClient()
@@ -31,7 +35,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
   useEffect(() => {
     if (!conversationId || !userProfile?.id) {return}
 
-    // Create a unique channel for this conversation
+    // Create a unique realtime channel for this chat channel
+    // Note: conversationId is actually a channel_id in the database
     const channel = supabase
       .channel(`messages:${conversationId}`)
       .on(
@@ -39,8 +44,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'messages',
-          filter: `conversation_id=eq.${conversationId}`,
+          table: 'chat_messages', // Changed from 'messages'
+          filter: `channel_id=eq.${conversationId}`, // Changed from conversation_id
         },
         (payload: RealtimePostgresChangesPayload<Message>) => {
           // Invalidate queries to refetch messages
@@ -61,8 +66,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'messages',
-          filter: `conversation_id=eq.${conversationId}`,
+          table: 'chat_messages', // Changed from 'messages'
+          filter: `channel_id=eq.${conversationId}`, // Changed from conversation_id
         },
         (payload: RealtimePostgresChangesPayload<Message>) => {
           queryClient.invalidateQueries({
@@ -78,8 +83,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
         {
           event: 'DELETE',
           schema: 'public',
-          table: 'messages',
-          filter: `conversation_id=eq.${conversationId}`,
+          table: 'chat_messages', // Changed from 'messages'
+          filter: `channel_id=eq.${conversationId}`, // Changed from conversation_id
         },
         () => {
           queryClient.invalidateQueries({
@@ -325,11 +330,12 @@ export function usePresence(conversationId: string | undefined) {
 }
 
 // =====================================================
-// CONVERSATION LIST REALTIME
+// CONVERSATION (CHANNEL) LIST REALTIME
 // =====================================================
 
 /**
- * Subscribe to real-time conversation list updates
+ * Subscribe to real-time channel list updates
+ * Uses chat_channels and chat_channel_members tables
  */
 export function useRealtimeConversations() {
   const queryClient = useQueryClient()
@@ -339,7 +345,7 @@ export function useRealtimeConversations() {
   useEffect(() => {
     if (!userProfile?.id) {return}
 
-    // Subscribe to conversation_participants changes for the current user
+    // Subscribe to chat_channel_members changes for the current user
     const channel = supabase
       .channel('conversations-list')
       .on(
@@ -347,7 +353,7 @@ export function useRealtimeConversations() {
         {
           event: '*',
           schema: 'public',
-          table: 'conversations',
+          table: 'chat_channels', // Changed from 'conversations'
         },
         () => {
           queryClient.invalidateQueries({
@@ -360,7 +366,7 @@ export function useRealtimeConversations() {
         {
           event: '*',
           schema: 'public',
-          table: 'conversation_participants',
+          table: 'chat_channel_members', // Changed from 'conversation_participants'
           filter: `user_id=eq.${userProfile.id}`,
         },
         () => {

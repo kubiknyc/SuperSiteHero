@@ -190,9 +190,14 @@ export type Database = {
           created_by: string | null
           deleted_at: string | null
           description: string | null
+          estimated_duration_minutes: number | null
           id: string
+          instructions: string | null
+          is_system_template: boolean | null
           items: Json
           name: string
+          scoring_enabled: boolean | null
+          tags: string[] | null
           template_level: string
           updated_at: string | null
         }
@@ -203,9 +208,14 @@ export type Database = {
           created_by?: string | null
           deleted_at?: string | null
           description?: string | null
+          estimated_duration_minutes?: number | null
           id?: string
+          instructions?: string | null
+          is_system_template?: boolean | null
           items?: Json
           name: string
+          scoring_enabled?: boolean | null
+          tags?: string[] | null
           template_level: string
           updated_at?: string | null
         }
@@ -216,9 +226,14 @@ export type Database = {
           created_by?: string | null
           deleted_at?: string | null
           description?: string | null
+          estimated_duration_minutes?: number | null
           id?: string
+          instructions?: string | null
+          is_system_template?: boolean | null
           items?: Json
           name?: string
+          scoring_enabled?: boolean | null
+          tags?: string[] | null
           template_level?: string
           updated_at?: string | null
         }
@@ -239,6 +254,74 @@ export type Database = {
           },
         ]
       }
+      checklist_template_items: {
+        Row: {
+          checklist_template_id: string
+          config: Json | null
+          created_at: string | null
+          deleted_at: string | null
+          description: string | null
+          id: string
+          is_required: boolean | null
+          item_type: string
+          label: string
+          max_photos: number | null
+          min_photos: number | null
+          pass_fail_na_scoring: boolean | null
+          requires_photo: boolean | null
+          scoring_enabled: boolean | null
+          section: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          checklist_template_id: string
+          config?: Json | null
+          created_at?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          is_required?: boolean | null
+          item_type: string
+          label: string
+          max_photos?: number | null
+          min_photos?: number | null
+          pass_fail_na_scoring?: boolean | null
+          requires_photo?: boolean | null
+          scoring_enabled?: boolean | null
+          section?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          checklist_template_id?: string
+          config?: Json | null
+          created_at?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          id?: string
+          is_required?: boolean | null
+          item_type?: string
+          label?: string
+          max_photos?: number | null
+          min_photos?: number | null
+          pass_fail_na_scoring?: boolean | null
+          requires_photo?: boolean | null
+          scoring_enabled?: boolean | null
+          section?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checklist_template_items_checklist_template_id_fkey"
+            columns: ["checklist_template_id"]
+            isOneToOne: false
+            referencedRelation: "checklist_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       checklists: {
         Row: {
           category: string | null
@@ -251,11 +334,25 @@ export type Database = {
           deleted_at: string | null
           description: string | null
           id: string
+          inspector_name: string | null
+          inspector_signature_url: string | null
+          inspector_user_id: string | null
           is_completed: boolean | null
           items: Json
+          location: string | null
           name: string
+          pdf_url: string | null
           project_id: string
+          score_fail: number | null
+          score_na: number | null
+          score_pass: number | null
+          score_percentage: number | null
+          score_total: number | null
+          status: string | null
+          submitted_at: string | null
+          temperature: number | null
           updated_at: string | null
+          weather_conditions: string | null
         }
         Insert: {
           category?: string | null
@@ -268,11 +365,25 @@ export type Database = {
           deleted_at?: string | null
           description?: string | null
           id?: string
+          inspector_name?: string | null
+          inspector_signature_url?: string | null
+          inspector_user_id?: string | null
           is_completed?: boolean | null
           items?: Json
+          location?: string | null
           name: string
+          pdf_url?: string | null
           project_id: string
+          score_fail?: number | null
+          score_na?: number | null
+          score_pass?: number | null
+          score_percentage?: number | null
+          score_total?: number | null
+          status?: string | null
+          submitted_at?: string | null
+          temperature?: number | null
           updated_at?: string | null
+          weather_conditions?: string | null
         }
         Update: {
           category?: string | null
@@ -285,11 +396,25 @@ export type Database = {
           deleted_at?: string | null
           description?: string | null
           id?: string
+          inspector_name?: string | null
+          inspector_signature_url?: string | null
+          inspector_user_id?: string | null
           is_completed?: boolean | null
           items?: Json
+          location?: string | null
           name?: string
+          pdf_url?: string | null
           project_id?: string
+          score_fail?: number | null
+          score_na?: number | null
+          score_pass?: number | null
+          score_percentage?: number | null
+          score_total?: number | null
+          status?: string | null
+          submitted_at?: string | null
+          temperature?: number | null
           updated_at?: string | null
+          weather_conditions?: string | null
         }
         Relationships: [
           {
@@ -321,10 +446,90 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "checklists_inspector_user_id_fkey"
+            columns: ["inspector_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "checklists_project_id_fkey"
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      checklist_responses: {
+        Row: {
+          checklist_id: string
+          checklist_template_item_id: string | null
+          created_at: string | null
+          id: string
+          item_label: string
+          item_type: string
+          notes: string | null
+          photo_urls: string[] | null
+          responded_by: string | null
+          response_data: Json | null
+          score_value: string | null
+          signature_url: string | null
+          sort_order: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          checklist_id: string
+          checklist_template_item_id?: string | null
+          created_at?: string | null
+          id?: string
+          item_label: string
+          item_type: string
+          notes?: string | null
+          photo_urls?: string[] | null
+          responded_by?: string | null
+          response_data?: Json | null
+          score_value?: string | null
+          signature_url?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          checklist_id?: string
+          checklist_template_item_id?: string | null
+          created_at?: string | null
+          id?: string
+          item_label?: string
+          item_type?: string
+          notes?: string | null
+          photo_urls?: string[] | null
+          responded_by?: string | null
+          response_data?: Json | null
+          score_value?: string | null
+          signature_url?: string | null
+          sort_order?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checklist_responses_checklist_id_fkey"
+            columns: ["checklist_id"]
+            isOneToOne: false
+            referencedRelation: "checklists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklist_responses_checklist_template_item_id_fkey"
+            columns: ["checklist_template_item_id"]
+            isOneToOne: false
+            referencedRelation: "checklist_template_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checklist_responses_responded_by_fkey"
+            columns: ["responded_by"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -1330,6 +1535,215 @@ export type Database = {
             columns: ["related_permit_id"]
             isOneToOne: false
             referencedRelation: "permits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_deliveries: {
+        Row: {
+          id: string
+          project_id: string
+          company_id: string
+          delivery_date: string
+          delivery_time: string | null
+          vendor_name: string
+          vendor_contact_name: string | null
+          vendor_contact_phone: string | null
+          vendor_contact_email: string | null
+          delivery_ticket_number: string | null
+          material_name: string
+          material_description: string | null
+          material_category: string
+          quantity_ordered: number | null
+          quantity_delivered: number
+          quantity_accepted: number | null
+          quantity_rejected: number | null
+          unit_of_measure: string
+          unit_cost: number | null
+          total_cost: number | null
+          delivery_status: string
+          condition_status: string
+          condition_notes: string | null
+          storage_location: string | null
+          storage_bin_number: string | null
+          storage_notes: string | null
+          received_by_user_id: string | null
+          received_by_name: string | null
+          submittal_id: string | null
+          submittal_number: string | null
+          purchase_order_number: string | null
+          manufacturer: string | null
+          model_number: string | null
+          serial_number: string | null
+          warranty_info: string | null
+          daily_report_id: string | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          company_id: string
+          delivery_date: string
+          delivery_time?: string | null
+          vendor_name: string
+          vendor_contact_name?: string | null
+          vendor_contact_phone?: string | null
+          vendor_contact_email?: string | null
+          delivery_ticket_number?: string | null
+          material_name: string
+          material_description?: string | null
+          material_category: string
+          quantity_ordered?: number | null
+          quantity_delivered: number
+          quantity_accepted?: number | null
+          quantity_rejected?: number | null
+          unit_of_measure: string
+          unit_cost?: number | null
+          total_cost?: number | null
+          delivery_status: string
+          condition_status: string
+          condition_notes?: string | null
+          storage_location?: string | null
+          storage_bin_number?: string | null
+          storage_notes?: string | null
+          received_by_user_id?: string | null
+          received_by_name?: string | null
+          submittal_id?: string | null
+          submittal_number?: string | null
+          purchase_order_number?: string | null
+          manufacturer?: string | null
+          model_number?: string | null
+          serial_number?: string | null
+          warranty_info?: string | null
+          daily_report_id?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          company_id?: string
+          delivery_date?: string
+          delivery_time?: string | null
+          vendor_name?: string
+          vendor_contact_name?: string | null
+          vendor_contact_phone?: string | null
+          vendor_contact_email?: string | null
+          delivery_ticket_number?: string | null
+          material_name?: string
+          material_description?: string | null
+          material_category?: string
+          quantity_ordered?: number | null
+          quantity_delivered?: number
+          quantity_accepted?: number | null
+          quantity_rejected?: number | null
+          unit_of_measure?: string
+          unit_cost?: number | null
+          total_cost?: number | null
+          delivery_status?: string
+          condition_status?: string
+          condition_notes?: string | null
+          storage_location?: string | null
+          storage_bin_number?: string | null
+          storage_notes?: string | null
+          received_by_user_id?: string | null
+          received_by_name?: string | null
+          submittal_id?: string | null
+          submittal_number?: string | null
+          purchase_order_number?: string | null
+          manufacturer?: string | null
+          model_number?: string | null
+          serial_number?: string | null
+          warranty_info?: string | null
+          daily_report_id?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_deliveries_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_deliveries_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_deliveries_received_by_user_id_fkey"
+            columns: ["received_by_user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_deliveries_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      material_delivery_photos: {
+        Row: {
+          id: string
+          delivery_id: string
+          photo_url: string
+          photo_type: string | null
+          caption: string | null
+          display_order: number
+          created_at: string
+          created_by: string | null
+        }
+        Insert: {
+          id?: string
+          delivery_id: string
+          photo_url: string
+          photo_type?: string | null
+          caption?: string | null
+          display_order?: number
+          created_at?: string
+          created_by?: string | null
+        }
+        Update: {
+          id?: string
+          delivery_id?: string
+          photo_url?: string
+          photo_type?: string | null
+          caption?: string | null
+          display_order?: number
+          created_at?: string
+          created_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "material_delivery_photos_delivery_id_fkey"
+            columns: ["delivery_id"]
+            isOneToOne: false
+            referencedRelation: "material_deliveries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "material_delivery_photos_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -4051,6 +4465,20 @@ export type Database = {
     Functions: {
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
+      get_delivery_stats_by_project: {
+        Args: { p_project_id: string }
+        Returns: {
+          total_deliveries: number
+          deliveries_this_week: number
+          unique_vendors: number
+          total_items_received: number
+          damaged_deliveries: number
+        }
+      }
+      search_material_deliveries: {
+        Args: { p_project_id: string; p_search_term: string }
+        Returns: string[]
+      }
     }
     Enums: {
       [_ in never]: never

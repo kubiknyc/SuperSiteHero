@@ -64,11 +64,14 @@ const WorkflowsPage = lazy(() => import('./pages/workflows/WorkflowsPage').then(
 const WorkflowItemDetailPage = lazy(() => import('./pages/workflows/WorkflowItemDetailPage').then(m => ({ default: m.WorkflowItemDetailPage })))
 
 // Checklists feature
+const ChecklistsDashboardPage = lazy(() => import('./features/checklists/pages/ChecklistsDashboardPage').then(m => ({ default: m.default })))
 const TemplatesPage = lazy(() => import('./features/checklists/pages/TemplatesPage').then(m => ({ default: m.default })))
+const TemplatePreviewPage = lazy(() => import('./features/checklists/pages/TemplatePreviewPage').then(m => ({ default: m.TemplatePreviewPage })))
 const TemplateItemsPage = lazy(() => import('./features/checklists/pages/TemplateItemsPage').then(m => ({ default: m.TemplateItemsPage })))
 const ExecutionsPage = lazy(() => import('./features/checklists/pages/ExecutionsPage').then(m => ({ default: m.ExecutionsPage })))
 const ActiveExecutionPage = lazy(() => import('./features/checklists/pages/ActiveExecutionPage').then(m => ({ default: m.ActiveExecutionPage })))
 const ExecutionDetailPage = lazy(() => import('./features/checklists/pages/ExecutionDetailPage').then(m => ({ default: m.ExecutionDetailPage })))
+const SchedulesPage = lazy(() => import('./features/checklists/pages/SchedulesPage').then(m => ({ default: m.default })))
 
 // Reports feature
 const ReportsPage = lazy(() => import('./pages/reports/ReportsPage').then(m => ({ default: m.ReportsPage })))
@@ -126,8 +129,8 @@ const ClientChangeOrders = lazy(() => import('./features/client-portal/pages/Cli
 const PhotoOrganizerPage = lazy(() => import('./features/photos/pages/PhotoOrganizerPage').then(m => ({ default: m.PhotoOrganizerPage })))
 
 // Material Receiving feature
-const MaterialReceivingPage = lazy(() => import('./features/material-receiving/pages/MaterialReceivingPage').then(m => ({ default: m.MaterialReceivingPage })))
-const MaterialReceivingDetailPage = lazy(() => import('./features/material-receiving/pages/MaterialReceivingDetailPage').then(m => ({ default: m.MaterialReceivingDetailPage })))
+const MaterialReceivingPage = lazy(() => import('./pages/material-receiving/MaterialReceivingPage').then(m => ({ default: m.MaterialReceivingPage })))
+const MaterialReceivingDetailPage = lazy(() => import('./pages/material-receiving/MaterialReceivingDetailPage').then(m => ({ default: m.MaterialReceivingDetailPage })))
 
 // Contacts feature
 const ContactsPage = lazy(() => import('./pages/contacts/ContactsPage').then(m => ({ default: m.ContactsPage })))
@@ -241,7 +244,10 @@ function App() {
                 <Route path="/punch-lists/:id" element={<ProtectedRoute><PunchItemDetailPage /></ProtectedRoute>} />
 
                 {/* Checklists feature */}
+                <Route path="/checklists/dashboard" element={<ProtectedRoute><ChecklistsDashboardPage /></ProtectedRoute>} />
+                <Route path="/checklists/schedules" element={<ProtectedRoute><SchedulesPage /></ProtectedRoute>} />
                 <Route path="/checklists/templates" element={<ProtectedRoute><TemplatesPage /></ProtectedRoute>} />
+                <Route path="/checklists/templates/:templateId/preview" element={<ProtectedRoute><TemplatePreviewPage /></ProtectedRoute>} />
                 <Route path="/checklists/templates/:templateId/items" element={<ProtectedRoute><TemplateItemsPage /></ProtectedRoute>} />
                 <Route path="/checklists/executions" element={<ProtectedRoute><ExecutionsPage /></ProtectedRoute>} />
                 <Route path="/checklists/executions/:executionId/fill" element={<ProtectedRoute><ActiveExecutionPage /></ProtectedRoute>} />

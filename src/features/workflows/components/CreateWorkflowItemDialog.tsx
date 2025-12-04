@@ -4,6 +4,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { useCreateWorkflowItem } from '../hooks/useWorkflowItems'
+import { useProjectUsers } from '../hooks/useWorkflowItemAssignees'
 import {
   Dialog,
   DialogContent,
@@ -15,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Loader2 } from 'lucide-react'
 
 interface CreateWorkflowItemDialogProps {
   projectId: string
@@ -30,6 +32,7 @@ export function CreateWorkflowItemDialog({
   onOpenChange,
 }: CreateWorkflowItemDialogProps) {
   const createMutation = useCreateWorkflowItem()
+  const { data: projectUsers, isLoading: usersLoading } = useProjectUsers(projectId)
 
   // Form state
   const [title, setTitle] = useState('')
@@ -41,6 +44,7 @@ export function CreateWorkflowItemDialog({
   const [dueDate, setDueDate] = useState('')
   const [costImpact, setCostImpact] = useState('')
   const [scheduleImpact, setScheduleImpact] = useState('')
+  const [selectedAssignees, setSelectedAssignees] = useState<string[]>([])
 
   // Reset form when dialog closes
   React.useEffect(() => {
@@ -54,8 +58,17 @@ export function CreateWorkflowItemDialog({
       setDueDate('')
       setCostImpact('')
       setScheduleImpact('')
+      setSelectedAssignees([])
     }
   }, [open])
+
+  const toggleAssignee = (userId: string) => {
+    setSelectedAssignees((prev) =>
+      prev.includes(userId)
+        ? prev.filter((id) => id !== userId)
+        : [...prev, userId]
+    )
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,7 +91,7 @@ export function CreateWorkflowItemDialog({
         cost_impact: costImpact ? parseFloat(costImpact) : null,
         schedule_impact: scheduleImpact ? parseInt(scheduleImpact) : null,
         number: null,
-        assignees: null,
+        assignees: selectedAssignees.length > 0 ? selectedAssignees : null,
         raised_by: null,
         created_by: null,
         opened_date: null,
@@ -217,6 +230,43 @@ export function CreateWorkflowItemDialog({
                 onChange={(e) => setScheduleImpact(e.target.value)}
               />
             </div>
+          </div>
+
+          {/* Assignees */}
+          <div className="space-y-2">
+            <Label>Assignees</Label>
+            {usersLoading ? (
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading users...
+              </div>
+            ) : projectUsers && projectUsers.length > 0 ? (
+              <div className="border rounded-md p-2 max-h-32 overflow-y-auto space-y-1">
+                {projectUsers.map((pu) => (
+                  <label
+                    key={pu.user_id}
+                    className="flex items-center gap-2 p-1.5 rounded hover:bg-gray-50 cursor-pointer"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedAssignees.includes(pu.user_id)}
+                      onChange={() => toggleAssignee(pu.user_id)}
+                      className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                    />
+                    <span className="text-sm">
+                      {pu.user?.full_name || pu.user?.email || 'Unknown User'}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-500">No users available for this project</p>
+            )}
+            {selectedAssignees.length > 0 && (
+              <p className="text-xs text-gray-500">
+                {selectedAssignees.length} user(s) selected
+              </p>
+            )}
           </div>
 
           <DialogFooter>

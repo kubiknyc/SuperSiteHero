@@ -15,6 +15,8 @@ import {
   Filter,
   X,
   CheckSquare,
+  BarChart3,
+  FileText,
 } from 'lucide-react'
 import { TemplateCard } from '../components/TemplateCard'
 import { TemplateBuilderDialog } from '../components/TemplateBuilderDialog'
@@ -177,10 +179,20 @@ export function TemplatesPage() {
                 Create and manage inspection checklist templates for your projects
               </p>
             </div>
-            <Button onClick={handleCreateTemplate} size="lg">
-              <Plus className="w-5 h-5 mr-2" />
-              New Template
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => navigate('/checklists/dashboard')}>
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Dashboard
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
+                <FileText className="w-4 h-4 mr-2" />
+                Executions
+              </Button>
+              <Button onClick={handleCreateTemplate} size="lg">
+                <Plus className="w-5 h-5 mr-2" />
+                New Template
+              </Button>
+            </div>
           </div>
         </div>
 

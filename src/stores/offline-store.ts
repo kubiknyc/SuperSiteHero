@@ -64,16 +64,21 @@ export const useOfflineStore = create<OfflineStore>((set, get) => ({
       set({ pendingSyncs: pendingCount });
     } catch (error) {
       logger.error('Failed to update pending syncs count:', error);
+      // Fallback: If the index query fails, just set to 0 rather than crashing
+      set({ pendingSyncs: 0 });
     }
   },
 
   // Helper method to update conflict count
   updateConflictCount: async () => {
     try {
-      const conflictCount = await countByIndex(STORES.CONFLICTS, 'resolved', false);
+      // Use IDBKeyRange to query for false values, as raw boolean may cause issues
+      const conflictCount = await countByIndex(STORES.CONFLICTS, 'resolved', IDBKeyRange.only(false));
       set({ conflictCount });
     } catch (error) {
       logger.error('Failed to update conflict count:', error);
+      // Fallback: If the index query fails, just set to 0 rather than crashing
+      set({ conflictCount: 0 });
     }
   },
 }));

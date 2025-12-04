@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { verifyMFACode, getMFAChallenge } from '@/lib/auth/mfa'
 import { Button, Card, Input, Alert } from '@/components/ui'
 import { Shield, ChevronLeft, AlertCircle, Loader2 } from 'lucide-react'
-import { useToast } from '@/components/ui/toast'
+import { useToast } from '@/lib/notifications/ToastContext'
 
 interface LocationState {
   from?: string
@@ -16,7 +16,7 @@ interface LocationState {
 export function MFAVerifyPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { addToast } = useToast()
+  const { success, error: showError, info } = useToast()
 
   const state = location.state as LocationState
   const [verificationCode, setVerificationCode] = useState('')
@@ -90,11 +90,7 @@ export function MFAVerifyPage() {
       const response = await verifyMFACode(challenge.factorId, verificationCode)
 
       if (response.data) {
-        addToast({
-          title: 'Verification Successful',
-          description: 'You have been successfully authenticated.',
-          variant: 'success'
-        })
+        success('Verification Successful', 'You have been successfully authenticated.')
 
         // Navigate to intended destination
         navigate(state?.from || '/dashboard', { replace: true })
@@ -103,18 +99,10 @@ export function MFAVerifyPage() {
       }
     } catch (error) {
       if (attempts >= maxAttempts - 1) {
-        addToast({
-          title: 'Too Many Attempts',
-          description: 'Maximum verification attempts exceeded. Please try logging in again.',
-          variant: 'destructive'
-        })
+        showError('Too Many Attempts', 'Maximum verification attempts exceeded. Please try logging in again.')
         navigate('/login', { replace: true })
       } else {
-        addToast({
-          title: 'Invalid Code',
-          description: `The verification code is incorrect. ${maxAttempts - attempts - 1} attempts remaining.`,
-          variant: 'destructive'
-        })
+        showError('Invalid Code', `The verification code is incorrect. ${maxAttempts - attempts - 1} attempts remaining.`)
         setVerificationCode('')
         inputRefs.current[0]?.focus()
       }
@@ -126,11 +114,7 @@ export function MFAVerifyPage() {
   const handleUseBackupCode = () => {
     setIsBackupCode(true)
     setVerificationCode('')
-    addToast({
-      title: 'Backup Code Mode',
-      description: 'Enter one of your backup codes to sign in.',
-      variant: 'default'
-    })
+    info('Backup Code Mode', 'Enter one of your backup codes to sign in.')
   }
 
   const handleCancel = () => {

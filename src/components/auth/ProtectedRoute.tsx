@@ -31,6 +31,13 @@ export function ProtectedRoute({ children, requiredRole, allowedRoles }: Protect
     return <Navigate to="/login" replace />
   }
 
+  // Defense-in-depth: If user has a valid session but no database profile,
+  // redirect to login. This should rarely happen due to auto-logout in AuthContext,
+  // but provides an extra safety layer.
+  if (!userProfile) {
+    return <Navigate to="/login" replace />
+  }
+
   // Check role-based access
   const userRole = userProfile?.role
 

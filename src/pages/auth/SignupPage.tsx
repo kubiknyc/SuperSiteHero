@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { useToast } from '@/components/ui/toast'
+import { useToast } from '@/lib/notifications/ToastContext'
 import { HardHat } from 'lucide-react'
 
 export function SignupPage() {
@@ -23,7 +23,7 @@ export function SignupPage() {
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
-  const { addToast } = useToast()
+  const { success, error: showError } = useToast()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
@@ -38,11 +38,7 @@ export function SignupPage() {
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      addToast({
-        title: 'Error',
-        description: 'Passwords do not match',
-        variant: 'destructive',
-      })
+      showError('Error', 'Passwords do not match')
       setLoading(false)
       return
     }
@@ -69,11 +65,7 @@ export function SignupPage() {
 
     const passwordValidation = validatePassword(formData.password)
     if (!passwordValidation.valid) {
-      addToast({
-        title: 'Error',
-        description: passwordValidation.error,
-        variant: 'destructive',
-      })
+      showError('Error', passwordValidation.error)
       setLoading(false)
       return
     }
@@ -94,20 +86,12 @@ export function SignupPage() {
 
       if (authError) {throw authError}
 
-      addToast({
-        title: 'Success',
-        description: 'Account created successfully. Please check your email to verify your account.',
-        variant: 'success',
-      })
+      success('Success', 'Account created successfully. Please check your email to verify your account.')
 
       // Redirect to login page
       navigate('/login')
     } catch (err) {
-      addToast({
-        title: 'Error',
-        description: err instanceof Error ? err.message : 'Failed to create account',
-        variant: 'destructive',
-      })
+      showError('Error', err instanceof Error ? err.message : 'Failed to create account')
     } finally {
       setLoading(false)
     }

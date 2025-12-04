@@ -25,22 +25,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   // Fetch user profile from database
-  const fetchUserProfile = async (userId: string) => {
+  const fetchUserProfile = async (userId: string): Promise<boolean> => {
     try {
       const { data, error } = await supabase
         .from('users')
         .select('*')
         .eq('id', userId)
-        .single()
+        .maybeSingle()
 
       if (error) {
         logger.error('Error fetching user profile:', error)
-        return
+        return false
+      }
+
+      if (!data) {
+        logger.warn('User profile not found in database. This indicates the user was deleted or never created.')
+        logger.warn('Auto-logout triggered to clear stale session.')
+        setUserProfile(null)
+
+        // Auto-logout: Clear the invalid session
+        // This handles the case where a user was deleted from the database
+        // but still has a valid JWT token in localStorage
+        await supabase.auth.signOut()
+
+        return false
       }
 
       setUserProfile(data)
+      return true
     } catch (error) {
       logger.error('Unexpected error fetching user profile:', error)
+      return false
     }
   }
 

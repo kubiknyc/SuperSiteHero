@@ -24,8 +24,11 @@ import {
 import { useExecutionWithResponses } from '../hooks/useExecutions'
 import { useExecutionScore } from '../hooks/useResponses'
 import { useTemplateItems } from '../hooks/useTemplateItems'
+import { FailedItemsNotification } from '../components/FailedItemsNotification'
 import type { ScoreValue } from '@/types/checklists'
 import { format } from 'date-fns'
+import { generateChecklistPDF } from '../utils/pdfExport'
+import toast from 'react-hot-toast'
 
 export function ExecutionDetailPage() {
   const { executionId } = useParams<{ executionId: string }>()
@@ -169,6 +172,18 @@ export function ExecutionDetailPage() {
 
   const canEdit = execution.status === 'draft' || execution.status === 'in_progress'
 
+  const handleExportPDF = async () => {
+    if (!execution) return
+
+    try {
+      await generateChecklistPDF(execution, templateItems, score || null)
+      toast.success('PDF exported successfully')
+    } catch (error) {
+      console.error('Failed to generate PDF:', error)
+      toast.error('Failed to generate PDF. Please try again.')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -218,13 +233,24 @@ export function ExecutionDetailPage() {
                   Continue Editing
                 </Button>
               )}
-              <Button variant="outline" size="sm" disabled>
+              <Button variant="outline" size="sm" onClick={handleExportPDF}>
                 <Download className="w-4 h-4 mr-2" />
                 Export PDF
               </Button>
             </div>
           </div>
         </div>
+
+        {/* Failed Items Notification */}
+        {execution.is_completed && execution.score_fail > 0 && (
+          <div className="mb-6">
+            <FailedItemsNotification
+              execution={execution}
+              responses={execution.responses}
+              autoShow={true}
+            />
+          </div>
+        )}
 
         {/* Score Summary (if scoring enabled) */}
         {score && score.total_count > 0 && (

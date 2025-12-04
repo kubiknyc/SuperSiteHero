@@ -7,6 +7,9 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { useWorkflowItem, useDeleteWorkflowItem, useUpdateWorkflowItemStatus } from '@/features/workflows/hooks/useWorkflowItems'
 import { EditWorkflowItemDialog } from '@/features/workflows/components/EditWorkflowItemDialog'
 import { WorkflowItemStatusBadge } from '@/features/workflows/components/WorkflowItemStatusBadge'
+import { WorkflowItemCommentsPanel } from '@/features/workflows/components/WorkflowItemCommentsPanel'
+import { WorkflowItemHistoryPanel } from '@/features/workflows/components/WorkflowItemHistoryPanel'
+import { WorkflowItemAssigneesPanel } from '@/features/workflows/components/WorkflowItemAssigneesPanel'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2, ArrowLeft, Trash2, Edit2 } from 'lucide-react'
@@ -121,8 +124,8 @@ export function WorkflowItemDetailPage() {
           </div>
         </div>
 
-        {/* Status and Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Status, Details, and Assignees Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Status Card */}
           <Card>
             <CardHeader>
@@ -182,6 +185,14 @@ export function WorkflowItemDetailPage() {
               )}
             </CardContent>
           </Card>
+
+          {/* Assignees Panel */}
+          {item.project_id && (
+            <WorkflowItemAssigneesPanel
+              workflowItemId={id}
+              projectId={item.project_id}
+            />
+          )}
         </div>
 
         {/* Description Card */}
@@ -259,6 +270,12 @@ export function WorkflowItemDetailPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Comments Panel */}
+        <WorkflowItemCommentsPanel workflowItemId={id} />
+
+        {/* Activity History Panel */}
+        <WorkflowItemHistoryPanel workflowItemId={id} />
 
         {/* Edit Dialog */}
         {editDialogOpen && (

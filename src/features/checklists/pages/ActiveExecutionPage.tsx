@@ -2,7 +2,7 @@
 // Interactive checklist execution page with auto-save
 // Phase: 3.1 - Checklist Execution UI
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -20,9 +20,11 @@ import {
   CheckCircle2,
 } from 'lucide-react'
 import { ResponseFormItem } from '../components/ResponseFormItem'
+import { KeyboardShortcutsHelp } from '../components/KeyboardShortcutsHelp'
 import { useExecutionWithResponses, useUpdateExecution } from '../hooks/useExecutions'
 import { useUpdateResponse } from '../hooks/useResponses'
 import { useTemplateItems } from '../hooks/useTemplateItems'
+import { useKeyboardShortcuts, getChecklistShortcuts } from '../hooks/useKeyboardShortcuts'
 import type { ChecklistResponse } from '@/types/checklists'
 import { formatDistanceToNow } from 'date-fns'
 import toast from 'react-hot-toast'
@@ -49,6 +51,10 @@ export function ActiveExecutionPage() {
   const [temperature, setTemperature] = useState('')
   const [inspectorName, setInspectorName] = useState('')
 
+  // Current focused item for keyboard shortcuts
+  const [focusedItemIndex, setFocusedItemIndex] = useState(0)
+  const itemRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+
   // Initialize metadata state
   useEffect(() => {
     if (execution) {
@@ -58,6 +64,11 @@ export function ActiveExecutionPage() {
       setInspectorName(execution.inspector_name || '')
     }
   }, [execution])
+
+  // Determine if user can edit
+  const canEdit = execution
+    ? execution.status === 'draft' || execution.status === 'in_progress'
+    : false
 
   // Calculate progress
   const progress = useMemo(() => {
@@ -125,6 +136,82 @@ export function ActiveExecutionPage() {
         .filter((pair) => pair.response !== undefined),
     }))
   }, [execution?.responses, templateItems])
+
+  // Flatten all responses for keyboard navigation
+  const allResponses = useMemo(() => {
+    return sections.flatMap((section) => section.items.map((item) => item.response!))
+  }, [sections])
+
+  // Get current focused response and template item
+  const currentResponse = allResponses[focusedItemIndex]
+  const currentTemplateItem = templateItems.find(
+    (item) => item.id === currentResponse?.checklist_template_item_id
+  )
+
+  // Keyboard shortcut handlers
+  const handlePassShortcut = () => {
+    if (!currentResponse || !currentTemplateItem) return
+    if (currentTemplateItem.item_type !== 'checkbox') return
+
+    handleResponseChange(currentResponse.id, {
+      response_data: { value: 'checked' },
+      score_value: 'pass',
+    })
+    toast.success('Marked as Pass (P)')
+  }
+
+  const handleFailShortcut = () => {
+    if (!currentResponse || !currentTemplateItem) return
+    if (currentTemplateItem.item_type !== 'checkbox') return
+
+    handleResponseChange(currentResponse.id, {
+      response_data: { value: 'checked' },
+      score_value: 'fail',
+    })
+    toast.success('Marked as Fail (F)')
+  }
+
+  const handleNAShortcut = () => {
+    if (!currentResponse || !currentTemplateItem) return
+    if (currentTemplateItem.item_type !== 'checkbox') return
+
+    handleResponseChange(currentResponse.id, {
+      response_data: { value: 'checked' },
+      score_value: 'na',
+    })
+    toast.success('Marked as N/A (N)')
+  }
+
+  const handleNextItem = () => {
+    if (focusedItemIndex < allResponses.length - 1) {
+      const newIndex = focusedItemIndex + 1
+      setFocusedItemIndex(newIndex)
+      // Scroll to item
+      const response = allResponses[newIndex]
+      const element = itemRefs.current.get(response.id)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+  }
+
+  const handlePreviousItem = () => {
+    if (focusedItemIndex > 0) {
+      const newIndex = focusedItemIndex - 1
+      setFocusedItemIndex(newIndex)
+      // Scroll to item
+      const response = allResponses[newIndex]
+      const element = itemRefs.current.get(response.id)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+    }
+  }
+
+  const handleSaveShortcut = () => {
+    setLastSaved(new Date())
+    toast.success('Progress saved (S)')
+  }
 
   const handleResponseChange = async (responseId: string, updates: Partial<ChecklistResponse>) => {
     setSavingResponseId(responseId)
@@ -213,6 +300,23 @@ export function ActiveExecutionPage() {
     }
   }
 
+  // Keyboard shortcuts configuration
+  const shortcuts = getChecklistShortcuts({
+    onPass: canEdit && currentTemplateItem?.item_type === 'checkbox' ? handlePassShortcut : undefined,
+    onFail: canEdit && currentTemplateItem?.item_type === 'checkbox' ? handleFailShortcut : undefined,
+    onNA: canEdit && currentTemplateItem?.item_type === 'checkbox' ? handleNAShortcut : undefined,
+    onNext: allResponses.length > 0 ? handleNextItem : undefined,
+    onPrevious: allResponses.length > 0 ? handlePreviousItem : undefined,
+    onSave: canEdit ? handleSaveShortcut : undefined,
+    onSubmit: canEdit && progress.percentage === 100 ? handleSubmit : undefined,
+  })
+
+  // Enable keyboard shortcuts
+  useKeyboardShortcuts({
+    shortcuts,
+    enabled: canEdit && !isEditingMetadata,
+  })
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -237,8 +341,6 @@ export function ActiveExecutionPage() {
       </div>
     )
   }
-
-  const canEdit = execution.status === 'draft' || execution.status === 'in_progress'
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -277,6 +379,7 @@ export function ActiveExecutionPage() {
                 </span>
               </div>
             </div>
+            {canEdit && <KeyboardShortcutsHelp shortcuts={shortcuts} />}
           </div>
         </div>
 
@@ -416,15 +519,39 @@ export function ActiveExecutionPage() {
             <div key={section.name}>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">{section.name}</h2>
               <div className="space-y-3">
-                {section.items.map(({ templateItem, response }) => (
-                  <ResponseFormItem
-                    key={response!.id}
-                    response={response!}
-                    templateItem={templateItem}
-                    onChange={(updates) => handleResponseChange(response!.id, updates)}
-                    disabled={!canEdit || savingResponseId === response!.id}
-                  />
-                ))}
+                {section.items.map(({ templateItem, response }) => {
+                  const isFocused = currentResponse?.id === response!.id
+                  return (
+                    <div
+                      key={response!.id}
+                      ref={(el) => {
+                        if (el) {
+                          itemRefs.current.set(response!.id, el)
+                        } else {
+                          itemRefs.current.delete(response!.id)
+                        }
+                      }}
+                      className={`transition-all ${
+                        isFocused
+                          ? 'ring-2 ring-blue-500 ring-offset-2 rounded-lg'
+                          : ''
+                      }`}
+                      onClick={() => {
+                        const index = allResponses.findIndex((r) => r.id === response!.id)
+                        if (index !== -1) {
+                          setFocusedItemIndex(index)
+                        }
+                      }}
+                    >
+                      <ResponseFormItem
+                        response={response!}
+                        templateItem={templateItem}
+                        onChange={(updates) => handleResponseChange(response!.id, updates)}
+                        disabled={!canEdit || savingResponseId === response!.id}
+                      />
+                    </div>
+                  )
+                })}
               </div>
             </div>
           ))}
