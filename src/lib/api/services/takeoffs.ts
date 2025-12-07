@@ -3,7 +3,7 @@
 
 import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
-import type { TakeoffItem } from '@/types/database'
+import type { TakeoffItem } from '@/types/database-extensions'
 import type { QueryOptions, QueryFilter } from '../types'
 
 export const takeoffsApi = {

@@ -46,10 +46,20 @@ class ApiClient {
         for (const filter of options.filters) {
           switch (filter.operator) {
             case 'eq':
-              query = query.eq(filter.column, filter.value)
+              // Use .is() for null values, .eq() for others
+              if (filter.value === null) {
+                query = query.is(filter.column, null)
+              } else {
+                query = query.eq(filter.column, filter.value)
+              }
               break
             case 'neq':
-              query = query.neq(filter.column, filter.value)
+              // Use .not.is() for null values, .neq() for others
+              if (filter.value === null) {
+                query = query.not(filter.column, 'is', null)
+              } else {
+                query = query.neq(filter.column, filter.value)
+              }
               break
             case 'gt':
               query = query.gt(filter.column, filter.value)
@@ -115,10 +125,20 @@ class ApiClient {
         for (const filter of options.filters) {
           switch (filter.operator) {
             case 'eq':
-              query = query.eq(filter.column, filter.value)
+              // Use .is() for null values, .eq() for others
+              if (filter.value === null) {
+                query = query.is(filter.column, null)
+              } else {
+                query = query.eq(filter.column, filter.value)
+              }
               break
             case 'neq':
-              query = query.neq(filter.column, filter.value)
+              // Use .not.is() for null values, .neq() for others
+              if (filter.value === null) {
+                query = query.not(filter.column, 'is', null)
+              } else {
+                query = query.neq(filter.column, filter.value)
+              }
               break
             case 'gt':
               query = query.gt(filter.column, filter.value)

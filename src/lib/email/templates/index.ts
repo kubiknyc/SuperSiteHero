@@ -44,3 +44,7 @@ export type { NoticeResponseReminderEmailData } from './notice-response-reminder
 
 export { generateNoticeOverdueEmail } from './notice-overdue'
 export type { NoticeOverdueEmailData } from './notice-overdue'
+
+// Change Order Templates
+export { generateChangeOrderStatusEmail } from './change-order-status'
+export type { ChangeOrderStatusEmailData } from './change-order-status'

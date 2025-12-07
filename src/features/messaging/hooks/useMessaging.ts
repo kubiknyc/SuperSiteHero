@@ -54,11 +54,13 @@ export function useConversations(filters?: ConversationFilters & { limit?: numbe
     queryFn: async () => {
       if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.getConversations(userProfile.id, filters)
-      if (error) {throw error}
+      // Return empty array on error (DB tables may not exist)
+      if (error) {return []}
       return data || []
     },
     enabled: !!userProfile?.id,
     staleTime: 30 * 1000, // 30 seconds - conversations change frequently
+    retry: false, // Don't retry if DB tables don't exist
   })
 }
 
@@ -249,7 +251,8 @@ export function useMessagesInfinite(conversationId: string | undefined) {
 }
 
 /**
- * Send a new message
+ * Send a new message with optimistic updates
+ * The message appears instantly in the UI while being sent in the background
  */
 export function useSendMessage() {
   const queryClient = useQueryClient()
@@ -262,21 +265,87 @@ export function useSendMessage() {
       if (error) {throw error}
       return message
     },
-    onSuccess: (message) => {
-      if (message) {
-        // Update messages list
-        queryClient.invalidateQueries({
-          queryKey: messagingKeys.messagesList(message.conversation_id),
-        })
-        queryClient.invalidateQueries({
-          queryKey: messagingKeys.messagesInfinite(message.conversation_id),
-        })
-        // Update conversations list (for last_message preview)
-        queryClient.invalidateQueries({ queryKey: messagingKeys.conversations() })
+    // Optimistic update: add message to cache immediately
+    onMutate: async (newMessage) => {
+      // Cancel any outgoing refetches to prevent overwriting optimistic update
+      await queryClient.cancelQueries({
+        queryKey: messagingKeys.messagesInfinite(newMessage.conversation_id),
+      })
+
+      // Snapshot the previous value for rollback
+      const previousMessages = queryClient.getQueryData<{ pages: Message[][]; pageParams: unknown[] }>(
+        messagingKeys.messagesInfinite(newMessage.conversation_id)
+      )
+
+      // Create optimistic message
+      const optimisticMessage: Message & { _isPending?: boolean } = {
+        id: `temp-${Date.now()}`, // Temporary ID
+        conversation_id: newMessage.conversation_id,
+        sender_id: userProfile?.id || '',
+        content: newMessage.content,
+        message_type: newMessage.message_type || 'text',
+        priority: newMessage.priority || 'normal',
+        attachments: newMessage.attachments || null,
+        mentioned_users: newMessage.mentioned_users || null,
+        parent_message_id: newMessage.parent_message_id || null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        deleted_at: null,
+        edited_at: null,
+        sender: userProfile ? {
+          id: userProfile.id,
+          full_name: userProfile.full_name || 'You',
+          email: userProfile.email || '',
+          avatar_url: userProfile.avatar_url || undefined,
+        } : undefined,
+        reactions: [],
+        // Mark as pending for UI styling
+        _isPending: true,
       }
+
+      // Optimistically add message to the first page (newest messages)
+      if (previousMessages?.pages) {
+        queryClient.setQueryData<{ pages: Message[][]; pageParams: unknown[] }>(
+          messagingKeys.messagesInfinite(newMessage.conversation_id),
+          (old) => {
+            if (!old) {return old}
+            const newPages = [...old.pages]
+            // Messages are displayed in reverse order, so add to the first page
+            newPages[0] = [optimisticMessage, ...(newPages[0] || [])]
+            return {
+              ...old,
+              pages: newPages,
+            }
+          }
+        )
+      }
+
+      // Return context with snapshot for rollback
+      return { previousMessages, conversationId: newMessage.conversation_id }
     },
-    onError: (error: Error) => {
+    // Rollback on error
+    onError: (error: Error, newMessage, context) => {
+      // Restore previous messages if we have the snapshot
+      if (context?.previousMessages) {
+        queryClient.setQueryData(
+          messagingKeys.messagesInfinite(context.conversationId),
+          context.previousMessages
+        )
+      }
       toast.error(`Failed to send message: ${error.message}`)
+    },
+    // Always refetch after mutation to ensure consistency
+    onSettled: (message, _error, variables) => {
+      const conversationId = message?.conversation_id || variables.conversation_id
+      // Invalidate to get the real message with correct ID
+      queryClient.invalidateQueries({
+        queryKey: messagingKeys.messagesList(conversationId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: messagingKeys.messagesInfinite(conversationId),
+      })
+      // Update conversations list (for last_message preview)
+      queryClient.invalidateQueries({ queryKey: messagingKeys.conversations() })
     },
   })
 }
@@ -553,11 +622,13 @@ export function useUnreadCount(conversationId: string | undefined) {
       if (!userProfile?.id) {throw new Error('User not authenticated')}
       if (!conversationId) {throw new Error('Conversation ID required')}
       const { data, error } = await messagingApi.getUnreadCount(conversationId, userProfile.id)
-      if (error) {throw error}
+      // Return 0 on error (DB tables may not exist)
+      if (error) {return 0}
       return data || 0
     },
     enabled: !!userProfile?.id && !!conversationId,
     staleTime: 30 * 1000,
+    retry: false, // Don't retry if DB tables don't exist
   })
 }
 
@@ -572,12 +643,14 @@ export function useTotalUnreadCount() {
     queryFn: async () => {
       if (!userProfile?.id) {throw new Error('User not authenticated')}
       const { data, error } = await messagingApi.getUnreadCount(userProfile.id)
-      if (error) {throw error}
+      // Return 0 on error instead of throwing - fallback handles DB function not existing
+      if (error) {return 0}
       return data || 0
     },
     enabled: !!userProfile?.id,
     staleTime: 30 * 1000,
     refetchInterval: 60 * 1000, // Refetch every minute for badge updates
+    retry: false, // Don't retry if DB function doesn't exist
   })
 }
 

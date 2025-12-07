@@ -1,17 +1,21 @@
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
-import { ChevronDown, ChevronUp, Cloud } from 'lucide-react'
+import { ChevronDown, ChevronUp, Cloud, MapPin, Loader2 } from 'lucide-react'
 import { DraftReport } from '@/features/daily-reports/store/offlineReportStore'
 import { weatherSchema } from '../validation/dailyReportSchema'
 import { getCharacterCount } from '../validation/validationUtils'
+import { getWeatherForDate } from '../services/weatherService'
+import toast from 'react-hot-toast'
 
 interface WeatherSectionProps {
   expanded: boolean
   onToggle: () => void
   draft: DraftReport | null
   onUpdate: (updates: Partial<DraftReport>) => void
+  reportDate?: string
 }
 
 interface FieldErrors {
@@ -21,10 +25,33 @@ interface FieldErrors {
   weather_notes?: string
 }
 
-export function WeatherSection({ expanded, onToggle, draft, onUpdate }: WeatherSectionProps) {
+export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate }: WeatherSectionProps) {
   const [errors, setErrors] = useState<FieldErrors>({})
+  const [isLoadingWeather, setIsLoadingWeather] = useState(false)
 
   if (!draft) {return null}
+
+  const handleAutoFillWeather = async () => {
+    const dateToUse = reportDate || draft.report_date || new Date().toISOString().split('T')[0]
+
+    setIsLoadingWeather(true)
+    try {
+      const weatherData = await getWeatherForDate(dateToUse)
+      onUpdate({
+        weather_condition: weatherData.weather_condition,
+        temperature_high: weatherData.temperature_high,
+        temperature_low: weatherData.temperature_low,
+        precipitation: weatherData.precipitation,
+        wind_speed: weatherData.wind_speed,
+      })
+      toast.success('Weather data filled from your location')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch weather'
+      toast.error(message)
+    } finally {
+      setIsLoadingWeather(false)
+    }
+  }
 
   const validateField = (field: keyof FieldErrors, value: any) => {
     const fieldSchema = weatherSchema.shape[field]
@@ -62,6 +89,25 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate }: WeatherS
 
       {expanded && (
         <CardContent className="space-y-4 border-t pt-6">
+          {/* Auto-fill from location button */}
+          <div className="flex justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleAutoFillWeather}
+              disabled={isLoadingWeather}
+              className="gap-2"
+            >
+              {isLoadingWeather ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <MapPin className="h-4 w-4" />
+              )}
+              {isLoadingWeather ? 'Fetching...' : 'Auto-fill from Location'}
+            </Button>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               label="Weather Condition"

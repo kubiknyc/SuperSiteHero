@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Material Deliveries API Service
  * Comprehensive CRUD operations for material receiving tracker

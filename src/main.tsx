@@ -9,6 +9,10 @@ import { SpeedInsights } from '@vercel/speed-insights/react'
 import App from './App.tsx'
 import './index.css'
 import { initWebVitals } from './lib/performance/web-vitals'
+import { initSentry } from './lib/sentry'
+
+// Initialize Sentry error tracking
+initSentry()
 
 // Create React Query client for data fetching and caching
 const queryClient = new QueryClient({

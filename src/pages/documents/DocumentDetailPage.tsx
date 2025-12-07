@@ -18,9 +18,11 @@ import {
   ExternalLink,
   Clock,
   User,
+  Ruler,
   Calendar,
   CheckCircle2,
   XCircle,
+  Pencil,
 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import {
@@ -411,31 +413,53 @@ export function DocumentDetailPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex flex-wrap gap-3">
-                  <UploadDocumentVersion
-                    documentId={document.id}
-                    documentName={document.name}
-                    projectId={document.project_id}
-                  />
-                  <DocumentVersionHistory documentId={document.id} />
-                  <Button onClick={handleEditOpen} variant="outline">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Metadata
-                  </Button>
+                  {/* Primary Action - Open Markup Mode */}
                   <Button
-                    onClick={handlePinToggle}
-                    variant="outline"
-                    disabled={updateDocument.isPending}
+                    onClick={() => navigate(`/documents/${document.id}/markup`)}
+                    size="lg"
+                    className="bg-blue-600 hover:bg-blue-700"
                   >
-                    <Pin className="w-4 h-4 mr-2" />
-                    {document.is_pinned ? 'Unpin' : 'Pin'}
+                    <Pencil className="w-5 h-5 mr-2" />
+                    Open Markup Mode
                   </Button>
-                  <Button
-                    onClick={() => setDeleteDialogOpen(true)}
-                    variant="destructive"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Delete
-                  </Button>
+
+                  {/* Secondary Actions */}
+                  <div className="flex flex-wrap gap-3">
+                    <UploadDocumentVersion
+                      documentId={document.id}
+                      documentName={document.name}
+                      projectId={document.project_id}
+                    />
+                    <DocumentVersionHistory documentId={document.id} />
+                    <Button onClick={handleEditOpen} variant="outline">
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Metadata
+                    </Button>
+                    {document.project_id && (
+                      <Button
+                        onClick={() => navigate(`/projects/${document.project_id}/documents/${document.id}/takeoff`)}
+                        variant="outline"
+                      >
+                        <Ruler className="w-4 h-4 mr-2" />
+                        Takeoffs
+                      </Button>
+                    )}
+                    <Button
+                      onClick={handlePinToggle}
+                      variant="outline"
+                      disabled={updateDocument.isPending}
+                    >
+                      <Pin className="w-4 h-4 mr-2" />
+                      {document.is_pinned ? 'Unpin' : 'Pin'}
+                    </Button>
+                    <Button
+                      onClick={() => setDeleteDialogOpen(true)}
+                      variant="destructive"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>

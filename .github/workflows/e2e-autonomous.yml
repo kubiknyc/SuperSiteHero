@@ -1,0 +1,356 @@
+# Autonomous E2E Testing Workflow
+#
+# This workflow runs comprehensive E2E tests in phases:
+# 1. Critical Tests (Auth, Offline) - must pass first
+# 2. CRUD Tests - parallel execution
+# 3. Workflow Tests - parallel execution
+# 4. Feature Tests - sharded execution
+# 5. Quality Tests - multi-browser
+#
+# Triggers:
+# - Every 6 hours (scheduled)
+# - On push to main/develop
+# - On pull requests to main
+
+name: Autonomous E2E Tests
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      test_phase:
+        description: 'Test phase to run (all, critical, crud, workflow, feature, quality)'
+        required: false
+        default: 'all'
+
+env:
+  VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+  VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+  TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+  TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+
+jobs:
+  # ============================================
+  # Phase 1: Critical Path Tests
+  # ============================================
+  critical-tests:
+    name: Critical Path Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      status: ${{ steps.run-tests.outcome }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Critical Tests
+        id: run-tests
+        run: |
+          npx playwright test \
+            tests/e2e/auth/*.spec.ts \
+            tests/e2e/offline/*.spec.ts \
+            --project=chromium \
+            --reporter=html,json,junit
+        continue-on-error: false
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: critical-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  # ============================================
+  # Phase 2: CRUD Tests
+  # ============================================
+  crud-tests:
+    name: CRUD Tests
+    needs: critical-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run CRUD Tests
+        run: |
+          npx playwright test \
+            tests/e2e/*-crud.spec.ts \
+            tests/e2e/projects-crud.spec.ts \
+            tests/e2e/daily-reports-crud.spec.ts \
+            tests/e2e/tasks-crud.spec.ts \
+            tests/e2e/punch-lists-crud.spec.ts \
+            tests/e2e/checklists-crud.spec.ts \
+            --project=chromium \
+            --reporter=html,json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: crud-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  # ============================================
+  # Phase 3: Workflow Tests
+  # ============================================
+  workflow-tests:
+    name: Workflow Tests
+    needs: critical-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Workflow Tests
+        run: |
+          npx playwright test \
+            tests/e2e/*-workflow.spec.ts \
+            tests/e2e/rfis-workflow.spec.ts \
+            tests/e2e/submittals-workflow.spec.ts \
+            tests/e2e/change-orders-workflow.spec.ts \
+            tests/e2e/inspections-workflow.spec.ts \
+            tests/e2e/notices-workflow.spec.ts \
+            --project=chromium \
+            --reporter=html,json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workflow-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  # ============================================
+  # Phase 4: Feature Tests (Sharded)
+  # ============================================
+  feature-tests:
+    name: Feature Tests (Shard ${{ matrix.shard }})
+    needs: [crud-tests, workflow-tests]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Feature Tests (Shard ${{ matrix.shard }})
+        run: |
+          npx playwright test \
+            tests/e2e/documents*.spec.ts \
+            tests/e2e/photos*.spec.ts \
+            tests/e2e/safety*.spec.ts \
+            tests/e2e/materials*.spec.ts \
+            tests/e2e/meetings*.spec.ts \
+            tests/e2e/notifications*.spec.ts \
+            tests/e2e/permits*.spec.ts \
+            tests/e2e/site*.spec.ts \
+            --shard=${{ matrix.shard }}/4 \
+            --project=chromium \
+            --reporter=html,json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: feature-test-results-shard-${{ matrix.shard }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  # ============================================
+  # Phase 5: Quality Tests (Multi-browser)
+  # ============================================
+  quality-tests:
+    name: Quality Tests (${{ matrix.project }})
+    needs: feature-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Run Quality Tests (${{ matrix.project }})
+        run: |
+          npx playwright test \
+            tests/e2e/accessibility*.spec.ts \
+            tests/e2e/responsive*.spec.ts \
+            tests/e2e/performance*.spec.ts \
+            tests/e2e/browser-compatibility*.spec.ts \
+            --project=${{ matrix.project }} \
+            --reporter=html,json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-test-results-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  # ============================================
+  # Phase 6: Portal Tests
+  # ============================================
+  portal-tests:
+    name: Portal Tests
+    needs: critical-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Portal Tests
+        run: |
+          npx playwright test \
+            tests/e2e/portal*.spec.ts \
+            --project=chromium \
+            --reporter=html,json
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: portal-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 30
+
+  # ============================================
+  # Generate Report Summary
+  # ============================================
+  report:
+    name: Generate Report
+    needs: [critical-tests, crud-tests, workflow-tests, feature-tests, quality-tests, portal-tests]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-results
+
+      - name: Generate Summary
+        run: |
+          echo "## Autonomous E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Critical Tests | ${{ needs.critical-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CRUD Tests | ${{ needs.crud-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Workflow Tests | ${{ needs.workflow-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Feature Tests | ${{ needs.feature-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Quality Tests | ${{ needs.quality-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Portal Tests | ${{ needs.portal-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed reports in the workflow artifacts." >> $GITHUB_STEP_SUMMARY
+
+      - name: Notify on failure
+        if: ${{ needs.critical-tests.result == 'failure' || needs.crud-tests.result == 'failure' }}
+        run: |
+          echo "::error::Critical or CRUD tests failed! Check the test results."

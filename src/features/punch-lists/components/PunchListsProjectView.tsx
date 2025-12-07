@@ -66,6 +66,15 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
     return matchesSearch && matchesStatus
   }), [punchItems, searchTerm, statusFilter])
 
+  // Calculate statistics - memoized to prevent recalculation on every render
+  // IMPORTANT: This must be before any early returns to satisfy React's Rules of Hooks
+  const stats = useMemo(() => ({
+    total: punchItems?.length || 0,
+    open: punchItems?.filter((p) => p.status === 'open').length || 0,
+    inProgress: punchItems?.filter((p) => p.status === 'in_progress').length || 0,
+    verified: punchItems?.filter((p) => p.status === 'verified').length || 0,
+  }), [punchItems])
+
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }, [])
@@ -106,14 +115,6 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
       </Card>
     )
   }
-
-  // Calculate statistics - memoized to prevent recalculation on every render
-  const stats = useMemo(() => ({
-    total: punchItems?.length || 0,
-    open: punchItems?.filter((p) => p.status === 'open').length || 0,
-    inProgress: punchItems?.filter((p) => p.status === 'in_progress').length || 0,
-    verified: punchItems?.filter((p) => p.status === 'verified').length || 0,
-  }), [punchItems])
 
   return (
     <>

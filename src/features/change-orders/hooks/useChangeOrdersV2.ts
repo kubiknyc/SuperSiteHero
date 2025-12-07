@@ -1,0 +1,466 @@
+/**
+ * Change Orders React Query Hooks - V2
+ * For dedicated change_orders table with enhanced PCO/CO workflow
+ */
+
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  changeOrdersApiV2,
+  changeOrderItemsApiV2,
+  changeOrderAttachmentsApiV2,
+  changeOrderHistoryApiV2,
+} from '../../../lib/api/services/change-orders-v2';
+import type {
+  ChangeOrder,
+  ChangeOrderItem,
+  ChangeOrderAttachment,
+  ChangeOrderHistory,
+  CreateChangeOrderDTO,
+  UpdateChangeOrderDTO,
+  CreateChangeOrderItemDTO,
+  UpdateChangeOrderItemDTO,
+  CreateChangeOrderAttachmentDTO,
+  ChangeOrderFilters,
+  ChangeOrderStatistics,
+  SubmitEstimateDTO,
+  InternalApprovalDTO,
+  OwnerApprovalDTO,
+} from '../../../types/change-order';
+
+// =============================================================================
+// QUERY KEYS
+// =============================================================================
+
+export const changeOrderKeysV2 = {
+  all: ['change-orders-v2'] as const,
+  lists: () => [...changeOrderKeysV2.all, 'list'] as const,
+  list: (filters: ChangeOrderFilters) => [...changeOrderKeysV2.lists(), filters] as const,
+  details: () => [...changeOrderKeysV2.all, 'detail'] as const,
+  detail: (id: string) => [...changeOrderKeysV2.details(), id] as const,
+  items: (changeOrderId: string) => [...changeOrderKeysV2.all, 'items', changeOrderId] as const,
+  attachments: (changeOrderId: string) => [...changeOrderKeysV2.all, 'attachments', changeOrderId] as const,
+  history: (changeOrderId: string) => [...changeOrderKeysV2.all, 'history', changeOrderId] as const,
+  statistics: (projectId: string) => [...changeOrderKeysV2.all, 'statistics', projectId] as const,
+  byBallInCourt: (userId: string) => [...changeOrderKeysV2.all, 'ball-in-court', userId] as const,
+};
+
+// =============================================================================
+// CHANGE ORDER QUERIES
+// =============================================================================
+
+/**
+ * Hook to fetch change orders with filters
+ */
+export function useChangeOrdersV2(filters: ChangeOrderFilters = {}) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.list(filters),
+    queryFn: () => changeOrdersApiV2.getChangeOrders(filters),
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook to fetch a single change order by ID
+ */
+export function useChangeOrderV2(id: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.detail(id || ''),
+    queryFn: () => changeOrdersApiV2.getChangeOrderById(id!),
+    enabled: !!id,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook to fetch change orders by ball-in-court user
+ */
+export function useChangeOrdersByBallInCourt(userId: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.byBallInCourt(userId || ''),
+    queryFn: () => changeOrdersApiV2.getChangeOrders({ ball_in_court: userId }),
+    enabled: !!userId,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook to fetch change order statistics
+ */
+export function useChangeOrderStatisticsV2(projectId: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.statistics(projectId || ''),
+    queryFn: () => changeOrdersApiV2.getStatistics(projectId!),
+    enabled: !!projectId,
+    staleTime: 60000,
+  });
+}
+
+/**
+ * Hook to fetch PCOs only
+ */
+export function usePCOs(projectId: string | undefined) {
+  return useChangeOrdersV2({
+    project_id: projectId,
+    is_pco: true,
+  });
+}
+
+/**
+ * Hook to fetch approved COs only
+ */
+export function useApprovedCOs(projectId: string | undefined) {
+  return useChangeOrdersV2({
+    project_id: projectId,
+    is_pco: false,
+  });
+}
+
+// =============================================================================
+// CHANGE ORDER MUTATIONS
+// =============================================================================
+
+/**
+ * Hook to create a new change order (PCO)
+ */
+export function useCreateChangeOrderV2() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (dto: CreateChangeOrderDTO) => changeOrdersApiV2.createChangeOrder(dto),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+    },
+  });
+}
+
+/**
+ * Hook to update a change order
+ */
+export function useUpdateChangeOrderV2() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...dto }: { id: string } & UpdateChangeOrderDTO) =>
+      changeOrdersApiV2.updateChangeOrder(id, dto),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+    },
+  });
+}
+
+/**
+ * Hook to delete a change order
+ */
+export function useDeleteChangeOrderV2() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => changeOrdersApiV2.deleteChangeOrder(id),
+    onSuccess: (_, id) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.removeQueries({ queryKey: changeOrderKeysV2.detail(id) });
+    },
+  });
+}
+
+/**
+ * Hook to submit estimate
+ */
+export function useSubmitEstimate() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...dto }: { id: string } & SubmitEstimateDTO) =>
+      changeOrdersApiV2.submitEstimate(id, dto),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.items(data.id) });
+    },
+  });
+}
+
+/**
+ * Hook to process internal approval
+ */
+export function useProcessInternalApproval() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...dto }: { id: string } & InternalApprovalDTO) =>
+      changeOrdersApiV2.processInternalApproval(id, dto),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+    },
+  });
+}
+
+/**
+ * Hook to submit to owner
+ */
+export function useSubmitToOwner() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => changeOrdersApiV2.submitToOwner(id),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+    },
+  });
+}
+
+/**
+ * Hook to process owner approval
+ */
+export function useProcessOwnerApproval() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...dto }: { id: string } & OwnerApprovalDTO) =>
+      changeOrdersApiV2.processOwnerApproval(id, dto),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+    },
+  });
+}
+
+/**
+ * Hook to execute change order
+ */
+export function useExecuteChangeOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => changeOrdersApiV2.executeChangeOrder(id),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+    },
+  });
+}
+
+/**
+ * Hook to void a change order
+ */
+export function useVoidChangeOrder() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, reason }: { id: string; reason?: string }) =>
+      changeOrdersApiV2.voidChangeOrder(id, reason),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+    },
+  });
+}
+
+/**
+ * Hook to update ball-in-court
+ */
+export function useUpdateBallInCourt() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, userId, role }: { id: string; userId: string; role: string }) =>
+      changeOrdersApiV2.updateBallInCourt(id, userId, role),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+    },
+  });
+}
+
+// =============================================================================
+// CHANGE ORDER ITEMS
+// =============================================================================
+
+/**
+ * Hook to fetch items for a change order
+ */
+export function useChangeOrderItems(changeOrderId: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.items(changeOrderId || ''),
+    queryFn: () => changeOrderItemsApiV2.getItems(changeOrderId!),
+    enabled: !!changeOrderId,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook to add item to change order
+ */
+export function useAddChangeOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ changeOrderId, ...dto }: { changeOrderId: string } & CreateChangeOrderItemDTO) =>
+      changeOrderItemsApiV2.addItem(changeOrderId, dto),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.items(data.change_order_id) });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.detail(data.change_order_id) });
+    },
+  });
+}
+
+/**
+ * Hook to update item
+ */
+export function useUpdateChangeOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, ...dto }: { id: string } & UpdateChangeOrderItemDTO) =>
+      changeOrderItemsApiV2.updateItem(id, dto),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.items(data.change_order_id) });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.detail(data.change_order_id) });
+    },
+  });
+}
+
+/**
+ * Hook to delete item
+ */
+export function useDeleteChangeOrderItem() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, changeOrderId }: { id: string; changeOrderId: string }) =>
+      changeOrderItemsApiV2.deleteItem(id),
+    onSuccess: (_, { changeOrderId }) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.items(changeOrderId) });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.detail(changeOrderId) });
+    },
+  });
+}
+
+/**
+ * Hook to reorder items
+ */
+export function useReorderChangeOrderItems() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ changeOrderId, itemIds }: { changeOrderId: string; itemIds: string[] }) =>
+      changeOrderItemsApiV2.reorderItems(changeOrderId, itemIds),
+    onSuccess: (_, { changeOrderId }) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.items(changeOrderId) });
+    },
+  });
+}
+
+// =============================================================================
+// CHANGE ORDER ATTACHMENTS
+// =============================================================================
+
+/**
+ * Hook to fetch attachments for a change order
+ */
+export function useChangeOrderAttachments(changeOrderId: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.attachments(changeOrderId || ''),
+    queryFn: () => changeOrderAttachmentsApiV2.getAttachments(changeOrderId!),
+    enabled: !!changeOrderId,
+    staleTime: 30000,
+  });
+}
+
+/**
+ * Hook to add attachment
+ */
+export function useAddChangeOrderAttachment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ changeOrderId, ...dto }: { changeOrderId: string } & CreateChangeOrderAttachmentDTO) =>
+      changeOrderAttachmentsApiV2.addAttachment(changeOrderId, dto),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.attachments(data.change_order_id) });
+    },
+  });
+}
+
+/**
+ * Hook to delete attachment
+ */
+export function useDeleteChangeOrderAttachment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, changeOrderId }: { id: string; changeOrderId: string }) =>
+      changeOrderAttachmentsApiV2.deleteAttachment(id),
+    onSuccess: (_, { changeOrderId }) => {
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.attachments(changeOrderId) });
+    },
+  });
+}
+
+// =============================================================================
+// CHANGE ORDER HISTORY
+// =============================================================================
+
+/**
+ * Hook to fetch history for a change order
+ */
+export function useChangeOrderHistory(changeOrderId: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.history(changeOrderId || ''),
+    queryFn: () => changeOrderHistoryApiV2.getHistory(changeOrderId!),
+    enabled: !!changeOrderId,
+    staleTime: 60000,
+  });
+}
+
+// =============================================================================
+// EXPORT ALL
+// =============================================================================
+
+export default {
+  // Query keys
+  keys: changeOrderKeysV2,
+
+  // Queries
+  useChangeOrdersV2,
+  useChangeOrderV2,
+  useChangeOrdersByBallInCourt,
+  useChangeOrderStatisticsV2,
+  usePCOs,
+  useApprovedCOs,
+
+  // Mutations
+  useCreateChangeOrderV2,
+  useUpdateChangeOrderV2,
+  useDeleteChangeOrderV2,
+  useSubmitEstimate,
+  useProcessInternalApproval,
+  useSubmitToOwner,
+  useProcessOwnerApproval,
+  useExecuteChangeOrder,
+  useVoidChangeOrder,
+  useUpdateBallInCourt,
+
+  // Items
+  useChangeOrderItems,
+  useAddChangeOrderItem,
+  useUpdateChangeOrderItem,
+  useDeleteChangeOrderItem,
+  useReorderChangeOrderItems,
+
+  // Attachments
+  useChangeOrderAttachments,
+  useAddChangeOrderAttachment,
+  useDeleteChangeOrderAttachment,
+
+  // History
+  useChangeOrderHistory,
+};

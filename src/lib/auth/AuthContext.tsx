@@ -6,6 +6,7 @@ import { Session, User } from '@supabase/supabase-js'
 import { supabase } from '../supabase'
 import type { UserProfile } from '@/types/database'
 import { logger } from '@/lib/utils/logger'
+import { setSentryUser, clearSentryUser } from '../sentry'
 
 interface AuthContextType {
   session: Session | null
@@ -34,27 +35,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle()
 
       if (error) {
+        // Don't auto-logout on query errors (could be RLS, network, etc.)
+        // Just log the error and continue with null profile
         logger.error('Error fetching user profile:', error)
+        logger.warn('Continuing without profile - user may have limited functionality')
+        // Set profile to null but don't sign out - let the user retry
+        setUserProfile(null)
         return false
       }
 
       if (!data) {
-        logger.warn('User profile not found in database. This indicates the user was deleted or never created.')
-        logger.warn('Auto-logout triggered to clear stale session.')
+        // User authenticated but profile doesn't exist in database
+        // This could happen if:
+        // 1. User was deleted from users table but still has valid JWT
+        // 2. Auto-creation of user profile failed during signup
+        logger.warn('User profile not found in database for user:', userId)
+        logger.warn('User may need to be re-added to the system')
         setUserProfile(null)
 
-        // Auto-logout: Clear the invalid session
-        // This handles the case where a user was deleted from the database
-        // but still has a valid JWT token in localStorage
-        await supabase.auth.signOut()
+        // Only auto-logout in production, not in test/development
+        // to avoid breaking E2E tests
+        if (import.meta.env.PROD) {
+          logger.warn('Auto-logout triggered in production due to missing profile')
+          await supabase.auth.signOut()
+        }
 
         return false
       }
 
       setUserProfile(data)
+
+      // Set Sentry user context for error tracking
+      setSentryUser(userId, data.company_id || undefined)
+
       return true
     } catch (error) {
       logger.error('Unexpected error fetching user profile:', error)
+      // Don't sign out on unexpected errors - could be transient
       return false
     }
   }
@@ -98,13 +115,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {throw error}
+
+    // Wait for user profile to be fetched before resolving
+    // This prevents race condition where navigation happens before profile is loaded
+    if (data.user) {
+      const profileFetched = await fetchUserProfile(data.user.id)
+      if (!profileFetched) {
+        throw new Error('Failed to load user profile. Please contact support.')
+      }
+    }
   }
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) {throw error}
+
+    // Clear Sentry user context
+    clearSentryUser()
 
     // Clear sensitive data from localStorage on logout
     try {

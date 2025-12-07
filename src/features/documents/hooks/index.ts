@@ -1,7 +1,7 @@
 // File: /src/features/documents/hooks/index.ts
 // Central export for all document hooks
 
-export { useDocuments, useFolders } from './useDocuments'
+export { useDocuments, useFolders, useDocument, useDocumentVersions } from './useDocuments'
 export {
   useCreateDocumentWithNotification,
   useCreateFolderWithNotification,
@@ -28,3 +28,34 @@ export {
   type DocumentComment,
   type CommentThread,
 } from './useDocumentComments'
+
+// Layer hooks
+export {
+  useDocumentLayers,
+  useCreateLayer,
+  useUpdateLayer,
+  useDeleteLayer,
+  useToggleLayerVisibility,
+  useToggleLayerLock,
+  useReorderLayer,
+} from './useLayers'
+
+// Measurement hooks
+export {
+  useMeasurements,
+  useAllMeasurements,
+  useCreateMeasurement,
+  useUpdateMeasurement,
+  useDeleteMeasurement,
+  useClearMeasurements,
+} from './useMeasurements'
+
+// Document comparison hooks
+export {
+  useScaleCalibration,
+  useSaveScaleCalibration,
+  useDocumentVersionsForComparison,
+} from './useDocumentComparison'
+
+// Enhanced markup state hook
+export { useEnhancedMarkupState, type Tool } from './useEnhancedMarkupState'

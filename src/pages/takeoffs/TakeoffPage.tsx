@@ -3,7 +3,7 @@
 
 import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, FileText } from 'lucide-react'
+import { ArrowLeft, FileText, Save, FolderOpen } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { TakeoffCanvas, type TakeoffMeasurement } from '@/features/takeoffs/components/TakeoffCanvas'
 import { TakeoffToolbar } from '@/features/takeoffs/components/TakeoffToolbar'
@@ -12,6 +12,7 @@ import { TakeoffItemCard } from '@/features/takeoffs/components/TakeoffItemCard'
 import { CalibrationDialog } from '@/features/takeoffs/components/CalibrationDialog'
 import { AssemblyPicker } from '@/features/takeoffs/components/AssemblyPicker'
 import { TakeoffSummary } from '@/features/takeoffs/components/TakeoffSummary'
+import { TakeoffTemplateDialog } from '@/features/takeoffs/components/TakeoffTemplateDialog'
 import {
   Dialog,
   DialogContent,
@@ -24,9 +25,12 @@ import {
   useUpdateTakeoffItem,
   useDeleteTakeoffItem,
 } from '@/features/takeoffs/hooks/useTakeoffItems'
+import { useIncrementTemplateUsage } from '@/features/takeoffs/hooks/useTakeoffTemplates'
 import type { MeasurementType, ScaleFactor, Point } from '@/features/takeoffs/utils/measurements'
+import type { TakeoffTemplate } from '@/types/database-extensions'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { compressPoints } from '@/features/takeoffs/utils/coordinateCompression'
+import { useToast } from '@/components/ui/use-toast'
 
 /**
  * TakeoffPage Component
@@ -37,7 +41,8 @@ import { compressPoints } from '@/features/takeoffs/utils/coordinateCompression'
 export default function TakeoffPage() {
   const { documentId, projectId } = useParams<{ documentId: string; projectId: string }>()
   const navigate = useNavigate()
-  const { userProfile } = useAuth()
+  const { user, userProfile } = useAuth()
+  const { toast } = useToast()
 
   // State
   const [currentTool, setCurrentTool] = useState<MeasurementType>('linear')
@@ -50,6 +55,7 @@ export default function TakeoffPage() {
   const [showSummary, setShowSummary] = useState(false)
   const [calibrationPoints, setCalibrationPoints] = useState<Point[] | undefined>(undefined)
   const [pageNumber] = useState(1) // TODO: Get from document viewer
+  const [templateDialogMode, setTemplateDialogMode] = useState<'create' | 'browse' | null>(null)
 
   // Fetch measurements
   const { data: measurements = [], isLoading } = useTakeoffItemsByDocument(
@@ -61,6 +67,7 @@ export default function TakeoffPage() {
   const createMutation = useCreateTakeoffItem()
   const updateMutation = useUpdateTakeoffItem()
   const deleteMutation = useDeleteTakeoffItem()
+  const incrementTemplateUsageMutation = useIncrementTemplateUsage()
 
   // Convert database format to canvas format
   const canvasMeasurements: TakeoffMeasurement[] = measurements.map((m) => {
@@ -183,8 +190,55 @@ export default function TakeoffPage() {
     setShowSummary(true)
   }, [])
 
-  // Selected measurement for detail card
+  // Selected measurement for detail card (moved before callbacks that use it)
   const selectedMeasurement = canvasMeasurements.find((m) => m.id === selectedMeasurementId)
+
+  // Handle template application
+  const handleApplyTemplate = useCallback(
+    async (template: TakeoffTemplate) => {
+      // Apply template data to current tool settings
+      setCurrentTool(template.measurement_type)
+
+      // If template has specific settings, apply them
+      if (template.template_data) {
+        // Could apply color, default values, etc.
+        // For now, just switch to the template's measurement type
+      }
+
+      // Increment usage count
+      await incrementTemplateUsageMutation.mutateAsync(template.id)
+
+      toast({
+        title: 'Template Applied',
+        description: `Using "${template.name}" settings`,
+      })
+    },
+    [incrementTemplateUsageMutation, toast]
+  )
+
+  // Handle save selected measurement as template
+  const handleSaveAsTemplate = useCallback(() => {
+    if (!selectedMeasurement) {
+      toast({
+        title: 'No Measurement Selected',
+        description: 'Please select a measurement to save as a template',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    // Build template data from selected measurement
+    const templateData: Record<string, any> = {
+      color: selectedMeasurement.color,
+    }
+
+    if (selectedMeasurement.dropHeight) templateData.dropHeight = selectedMeasurement.dropHeight
+    if (selectedMeasurement.pitch) templateData.pitch = selectedMeasurement.pitch
+    if (selectedMeasurement.height) templateData.height = selectedMeasurement.height
+    if (selectedMeasurement.depth) templateData.depth = selectedMeasurement.depth
+
+    setTemplateDialogMode('create')
+  }, [selectedMeasurement, toast])
 
   if (!documentId || !projectId) {
     return (
@@ -214,6 +268,26 @@ export default function TakeoffPage() {
             <p className="text-sm text-muted-foreground">
               Document ID: {documentId} • Page {pageNumber}
             </p>
+          </div>
+          {/* Template Actions */}
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setTemplateDialogMode('browse')}
+            >
+              <FolderOpen className="w-4 h-4 mr-2" />
+              Load Template
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleSaveAsTemplate}
+              disabled={!selectedMeasurement}
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save as Template
+            </Button>
           </div>
         </div>
 
@@ -320,6 +394,32 @@ export default function TakeoffPage() {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Template Dialog */}
+      {templateDialogMode && userProfile && (
+        <TakeoffTemplateDialog
+          open={templateDialogMode !== null}
+          onOpenChange={(open) => !open && setTemplateDialogMode(null)}
+          mode={templateDialogMode}
+          projectId={projectId}
+          companyId={userProfile.company_id ?? ''}
+          currentUserId={user?.id ?? ''}
+          currentMeasurementType={selectedMeasurement?.type}
+          existingTemplate={undefined}
+          templateData={
+            templateDialogMode === 'create' && selectedMeasurement
+              ? {
+                  color: selectedMeasurement.color,
+                  dropHeight: selectedMeasurement.dropHeight,
+                  pitch: selectedMeasurement.pitch,
+                  height: selectedMeasurement.height,
+                  depth: selectedMeasurement.depth,
+                }
+              : undefined
+          }
+          onApplyTemplate={handleApplyTemplate}
+        />
+      )}
     </div>
   )
 }

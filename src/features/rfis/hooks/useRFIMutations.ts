@@ -5,6 +5,8 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useMutationWithNotification } from '@/lib/hooks/useMutationWithNotification'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { sendRfiAssignedNotification } from '@/lib/notifications/notification-service'
+import { logger } from '@/lib/utils/logger'
 import type { WorkflowItem, WorkflowItemComment } from '@/types/database'
 import type {
   RFICreateInput,
@@ -16,6 +18,79 @@ import type {
 // =============================================
 // Helper Functions
 // =============================================
+
+/**
+ * Get user details for notification
+ */
+async function getUserDetails(userId: string): Promise<{ email: string; name?: string } | null> {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('email, full_name')
+      .eq('id', userId)
+      .single()
+
+    if (error || !data) return null
+    return { email: data.email, name: data.full_name || undefined }
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Get project name
+ */
+async function getProjectName(projectId: string): Promise<string> {
+  try {
+    const { data } = await supabase
+      .from('projects')
+      .select('name')
+      .eq('id', projectId)
+      .single()
+    return data?.name || 'Unknown Project'
+  } catch {
+    return 'Unknown Project'
+  }
+}
+
+/**
+ * Send RFI notifications to assignees
+ */
+async function sendRfiNotificationsToAssignees(
+  rfi: WorkflowItem,
+  assignees: string[],
+  assignedBy: string,
+  projectName: string
+): Promise<void> {
+  const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+  for (const assigneeId of assignees) {
+    try {
+      const assigneeDetails = await getUserDetails(assigneeId)
+      if (assigneeDetails) {
+        await sendRfiAssignedNotification(
+          {
+            userId: assigneeId,
+            email: assigneeDetails.email,
+            name: assigneeDetails.name,
+          },
+          {
+            rfiNumber: `RFI-${rfi.number}`,
+            subject: rfi.title,
+            projectName,
+            assignedBy,
+            dueDate: rfi.due_date ? new Date(rfi.due_date).toLocaleDateString() : undefined,
+            priority: rfi.priority || undefined,
+            question: rfi.description || 'No description provided',
+            viewUrl: `${appUrl}/rfis/${rfi.id}`,
+          }
+        )
+      }
+    } catch (error) {
+      logger.error('[RFI] Failed to send RFI assignment notification:', error)
+    }
+  }
+}
 
 /**
  * Get user-friendly status message for RFI status changes
@@ -123,10 +198,32 @@ export function useCreateRFIWithNotification() {
     },
     successMessage: (data) => `RFI #${data.number} created successfully`,
     errorMessage: (error) => `Failed to create RFI: ${error.message}`,
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       // Invalidate all RFI-related queries
       queryClient.invalidateQueries({ queryKey: ['rfis'] })
       queryClient.invalidateQueries({ queryKey: ['rfis', data.project_id] })
+
+      // Send email notifications to assignees
+      if (variables.assignees && variables.assignees.length > 0) {
+        try {
+          const projectName = await getProjectName(data.project_id)
+          const assignedBy = userProfile?.full_name || userProfile?.email || 'Unknown'
+
+          // Filter out the creator from assignees for notifications
+          const assigneesToNotify = variables.assignees.filter(id => id !== userProfile?.id)
+
+          if (assigneesToNotify.length > 0) {
+            await sendRfiNotificationsToAssignees(
+              data,
+              assigneesToNotify,
+              assignedBy,
+              projectName
+            )
+          }
+        } catch (error) {
+          logger.error('[RFI] Failed to send RFI assignment notifications:', error)
+        }
+      }
     },
   })
 }

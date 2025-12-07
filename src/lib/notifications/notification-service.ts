@@ -15,12 +15,23 @@ import {
   generateIncidentNotificationEmail,
   generateNoticeResponseReminderEmail,
   generateNoticeOverdueEmail,
+  generateTaskAssignedEmail,
+  generateRfiAssignedEmail,
+  generateChangeOrderStatusEmail,
   type ApprovalRequestEmailData,
   type ApprovalCompletedEmailData,
   type IncidentNotificationEmailData,
   type NoticeResponseReminderEmailData,
   type NoticeOverdueEmailData,
+  type TaskAssignedEmailData,
+  type RfiAssignedEmailData,
+  type ChangeOrderStatusEmailData,
 } from '@/lib/email/templates'
+import {
+  type NotificationPreferences,
+  shouldSendEmail,
+  mergeWithDefaults,
+} from '@/types/notification-preferences'
 import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
@@ -350,6 +361,201 @@ export const notificationService = {
   },
 
   /**
+   * Get user's notification preferences
+   */
+  async _getUserPreferences(userId: string): Promise<NotificationPreferences> {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('notification_preferences')
+        .eq('id', userId)
+        .single()
+
+      if (error || !data) {
+        return mergeWithDefaults(null)
+      }
+
+      return mergeWithDefaults(data.notification_preferences as Partial<NotificationPreferences>)
+    } catch {
+      return mergeWithDefaults(null)
+    }
+  },
+
+  /**
+   * Send task assigned notification
+   */
+  async notifyTaskAssigned(
+    recipient: NotificationRecipient,
+    data: Omit<TaskAssignedEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    // Check user preferences
+    const preferences = await this._getUserPreferences(recipient.userId)
+    const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'taskAssigned')
+
+    const emailData: TaskAssignedEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewUrl: data.viewUrl || `${appUrl}/tasks`,
+    }
+
+    // Send email notification
+    if (shouldEmail) {
+      try {
+        const { html, text } = generateTaskAssignedEmail(emailData)
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: `Task Assigned: ${data.taskTitle}`,
+          html,
+          text,
+          tags: ['task', 'assigned'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] Task email failed:', error)
+      }
+    }
+
+    // Create in-app notification
+    if (options.sendInApp) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'task_assigned',
+          title: 'New Task Assignment',
+          message: `You have been assigned to task: ${data.taskTitle}`,
+          link: data.viewUrl,
+          metadata: {
+            taskTitle: data.taskTitle,
+            projectName: data.projectName,
+            assignedBy: data.assignedBy,
+            dueDate: data.dueDate,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send RFI assigned notification
+   */
+  async notifyRfiAssigned(
+    recipient: NotificationRecipient,
+    data: Omit<RfiAssignedEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    // Check user preferences
+    const preferences = await this._getUserPreferences(recipient.userId)
+    const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'rfiAssigned')
+
+    const emailData: RfiAssignedEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewUrl: data.viewUrl || `${appUrl}/rfis`,
+    }
+
+    // Send email notification
+    if (shouldEmail) {
+      try {
+        const { html, text } = generateRfiAssignedEmail(emailData)
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: `RFI Assigned: ${data.rfiNumber} - ${data.subject}`,
+          html,
+          text,
+          tags: ['rfi', 'assigned'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] RFI email failed:', error)
+      }
+    }
+
+    // Create in-app notification
+    if (options.sendInApp) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'rfi_assigned',
+          title: 'RFI Assignment',
+          message: `You have been assigned to RFI ${data.rfiNumber}: ${data.subject}`,
+          link: data.viewUrl,
+          metadata: {
+            rfiNumber: data.rfiNumber,
+            subject: data.subject,
+            projectName: data.projectName,
+            assignedBy: data.assignedBy,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send change order status notification
+   */
+  async notifyChangeOrderStatus(
+    recipients: NotificationRecipient[],
+    data: Omit<ChangeOrderStatusEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      // Check user preferences (we don't have a specific CO preference, so we'll always send for now)
+      const emailData: ChangeOrderStatusEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/change-orders`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateChangeOrderStatusEmail(emailData)
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `Change Order ${data.changeOrderNumber} - ${data.newStatus.replace(/_/g, ' ').toUpperCase()}`,
+            html,
+            text,
+            tags: ['change-order', 'status', data.newStatus],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Change order email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'change_order_status',
+            title: 'Change Order Updated',
+            message: `Change Order ${data.changeOrderNumber} status changed to ${data.newStatus.replace(/_/g, ' ')}`,
+            link: data.viewUrl,
+            metadata: {
+              changeOrderNumber: data.changeOrderNumber,
+              title: data.title,
+              projectName: data.projectName,
+              previousStatus: data.previousStatus,
+              newStatus: data.newStatus,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
    * Create an in-app notification (stored in database)
    */
   async _createInAppNotification(data: {
@@ -622,4 +828,37 @@ export async function sendNoticeOverdueNotification(
   options?: NotificationOptions
 ): Promise<void> {
   return notificationService.notifyNoticeOverdue(recipients, data, options)
+}
+
+/**
+ * Send task assigned notification
+ */
+export async function sendTaskAssignedNotification(
+  recipient: NotificationRecipient,
+  data: Omit<TaskAssignedEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyTaskAssigned(recipient, data, options)
+}
+
+/**
+ * Send RFI assigned notification
+ */
+export async function sendRfiAssignedNotification(
+  recipient: NotificationRecipient,
+  data: Omit<RfiAssignedEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyRfiAssigned(recipient, data, options)
+}
+
+/**
+ * Send change order status notification
+ */
+export async function sendChangeOrderStatusNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<ChangeOrderStatusEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyChangeOrderStatus(recipients, data, options)
 }

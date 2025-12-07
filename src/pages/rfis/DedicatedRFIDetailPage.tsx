@@ -1,0 +1,791 @@
+// @ts-nocheck
+// File: /src/pages/rfis/DedicatedRFIDetailPage.tsx
+// Dedicated RFI detail page with ball-in-court tracking, drawing references, and impact flags
+
+import { useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { format, differenceInDays } from 'date-fns'
+import { AppLayout } from '@/components/layout/AppLayout'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  ArrowLeft,
+  AlertCircle,
+  Trash2,
+  Loader2,
+  MessageSquare,
+  FileText,
+  Clock,
+  Calendar,
+  User,
+  Building2,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  History,
+  Paperclip,
+  Send,
+  DollarSign,
+  CalendarClock,
+  Link,
+  Image,
+} from 'lucide-react'
+import {
+  useRFI,
+  useUpdateRFI,
+  useDeleteRFI,
+  useRespondToRFI,
+  useCloseRFI,
+  useUpdateBallInCourt,
+  useRFIComments,
+  useRFIAttachments,
+  useRFIHistory,
+  useAddRFIComment,
+  RFI_STATUSES,
+  RFI_PRIORITIES,
+  BALL_IN_COURT_ROLES,
+  formatRFINumber,
+  getRFIStatusColor,
+  getRFIPriorityColor,
+} from '@/features/rfis/hooks/useDedicatedRFIs'
+import { useCreateConversation } from '@/features/messaging/hooks'
+import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
+
+// Status badge component
+function RFIStatusBadge({ status }: { status: string }) {
+  const statusInfo = RFI_STATUSES.find((s) => s.value === status)
+  return (
+    <Badge className={statusInfo?.color || 'bg-gray-100 text-gray-800'}>
+      {statusInfo?.label || status}
+    </Badge>
+  )
+}
+
+// Priority badge component
+function PriorityBadge({ priority }: { priority: string }) {
+  const priorityInfo = RFI_PRIORITIES.find((p) => p.value === priority)
+  return (
+    <Badge className={priorityInfo?.color || 'bg-gray-100 text-gray-800'}>
+      {priorityInfo?.label || priority}
+    </Badge>
+  )
+}
+
+export function DedicatedRFIDetailPage() {
+  const { rfiId } = useParams<{ rfiId: string }>()
+  const navigate = useNavigate()
+
+  const [responseText, setResponseText] = useState('')
+  const [showResponseForm, setShowResponseForm] = useState(false)
+  const [commentText, setCommentText] = useState('')
+
+  // Queries
+  const { data: rfi, isLoading, error } = useRFI(rfiId)
+  const { data: comments } = useRFIComments(rfiId)
+  const { data: attachments } = useRFIAttachments(rfiId)
+  const { data: history } = useRFIHistory(rfiId)
+
+  // Mutations
+  const updateRFI = useUpdateRFI()
+  const deleteRFI = useDeleteRFI()
+  const respondToRFI = useRespondToRFI()
+  const closeRFI = useCloseRFI()
+  const updateBallInCourt = useUpdateBallInCourt()
+  const addComment = useAddRFIComment()
+  const createConversation = useCreateConversation()
+
+  // Calculate days open
+  const daysOpen = rfi?.created_at
+    ? differenceInDays(new Date(), new Date(rfi.created_at))
+    : 0
+
+  // Calculate if overdue
+  const isOverdue =
+    rfi?.date_required &&
+    new Date(rfi.date_required) < new Date() &&
+    !['closed', 'void', 'responded'].includes(rfi.status)
+
+  // Start a messaging conversation about this RFI
+  const handleDiscuss = async () => {
+    if (!rfi) return
+
+    try {
+      const result = await createConversation.mutateAsync({
+        type: 'group',
+        participant_ids: rfi.submitted_by ? [rfi.submitted_by] : [],
+        name: `${formatRFINumber(rfi.rfi_number)}: ${rfi.subject}`,
+        project_id: rfi.project_id,
+      })
+
+      if (result?.id) {
+        navigate(`/messages/${result.id}`)
+      }
+    } catch (error) {
+      console.error('Failed to create conversation:', error)
+    }
+  }
+
+  // Update status
+  const handleStatusChange = async (newStatus: RFIStatus) => {
+    if (!rfi) return
+    await updateRFI.mutateAsync({
+      id: rfi.id,
+      status: newStatus,
+    })
+  }
+
+  // Update ball-in-court
+  const handleBallInCourtChange = async (role: BallInCourtRole) => {
+    if (!rfi) return
+    await updateBallInCourt.mutateAsync({
+      rfiId: rfi.id,
+      userId: null,
+      role,
+    })
+  }
+
+  // Submit response
+  const handleSubmitResponse = async () => {
+    if (!rfi || !responseText.trim()) return
+
+    await respondToRFI.mutateAsync({
+      rfiId: rfi.id,
+      response: responseText.trim(),
+    })
+
+    setResponseText('')
+    setShowResponseForm(false)
+  }
+
+  // Close RFI
+  const handleClose = async () => {
+    if (!rfi) return
+    await closeRFI.mutateAsync(rfi.id)
+  }
+
+  // Add comment
+  const handleAddComment = async () => {
+    if (!rfi || !commentText.trim()) return
+
+    await addComment.mutateAsync({
+      rfiId: rfi.id,
+      comment: commentText.trim(),
+    })
+
+    setCommentText('')
+  }
+
+  // Delete RFI
+  const handleDelete = async () => {
+    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) return
+    await deleteRFI.mutateAsync(rfi.id)
+    navigate(-1)
+  }
+
+  // Loading state
+  if (!rfiId) {
+    return (
+      <AppLayout>
+        <div className="p-6">
+          <div className="text-center">
+            <p className="text-red-600">RFI ID not found</p>
+          </div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <p className="ml-2 text-gray-500">Loading RFI...</p>
+          </div>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (error || !rfi) {
+    return (
+      <AppLayout>
+        <div className="p-6">
+          <div className="mb-6">
+            <Button variant="outline" onClick={() => navigate(-1)}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
+          </div>
+          <Card>
+            <CardContent className="p-12 text-center">
+              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading RFI</h3>
+              <p className="text-gray-600">{(error as Error)?.message || 'RFI not found'}</p>
+            </CardContent>
+          </Card>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  return (
+    <AppLayout>
+      <div className="p-6 space-y-6">
+        {/* Back button */}
+        <div>
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Header */}
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    {formatRFINumber(rfi.rfi_number)}
+                  </h1>
+                  {rfi.priority && <PriorityBadge priority={rfi.priority} />}
+                </div>
+                <p className="text-gray-600 mt-1">{rfi.subject}</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDiscuss}
+                disabled={createConversation.isPending}
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {createConversation.isPending ? 'Creating...' : 'Discuss'}
+              </Button>
+            </div>
+
+            {/* Overdue Warning */}
+            {isOverdue && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+                <div>
+                  <p className="font-medium text-red-800">RFI Overdue</p>
+                  <p className="text-sm text-red-600">
+                    Required by {format(new Date(rfi.date_required!), 'MMM d, yyyy')}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Question Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Question</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="whitespace-pre-wrap text-gray-900">
+                  {rfi.question || 'No question provided'}
+                </div>
+
+                {/* Drawing & Spec References */}
+                {(rfi.drawing_reference || rfi.spec_section) && (
+                  <div className="pt-4 border-t grid grid-cols-2 gap-4">
+                    {rfi.drawing_reference && (
+                      <div className="flex items-start gap-2">
+                        <Image className="h-4 w-4 text-gray-400 mt-0.5" />
+                        <div>
+                          <Label className="text-gray-600">Drawing Reference</Label>
+                          <p className="text-gray-900">{rfi.drawing_reference}</p>
+                        </div>
+                      </div>
+                    )}
+                    {rfi.spec_section && (
+                      <div className="flex items-start gap-2">
+                        <FileText className="h-4 w-4 text-gray-400 mt-0.5" />
+                        <div>
+                          <Label className="text-gray-600">Spec Section</Label>
+                          <p className="text-gray-900 font-mono">{rfi.spec_section}</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Response Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Response</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {rfi.response ? (
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="whitespace-pre-wrap text-gray-900">{rfi.response}</p>
+                    <div className="mt-3 pt-3 border-t border-green-200 text-sm text-gray-600">
+                      {rfi.responded_by_user && (
+                        <p>Responded by {rfi.responded_by_user.full_name || rfi.responded_by_user.email}</p>
+                      )}
+                      {rfi.date_responded && (
+                        <p>on {format(new Date(rfi.date_responded), 'MMM d, yyyy h:mm a')}</p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {!showResponseForm ? (
+                      <div className="text-center py-4">
+                        <p className="text-gray-500 mb-4">No response yet</p>
+                        {['draft', 'open', 'pending_response'].includes(rfi.status) && (
+                          <Button onClick={() => setShowResponseForm(true)}>
+                            <MessageSquare className="h-4 w-4 mr-2" />
+                            Provide Response
+                          </Button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        <Textarea
+                          placeholder="Enter your response..."
+                          value={responseText}
+                          onChange={(e) => setResponseText(e.target.value)}
+                          rows={4}
+                        />
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              setShowResponseForm(false)
+                              setResponseText('')
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={handleSubmitResponse}
+                            disabled={!responseText.trim() || respondToRFI.isPending}
+                          >
+                            {respondToRFI.isPending ? (
+                              <>
+                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                Submitting...
+                              </>
+                            ) : (
+                              <>
+                                <Send className="h-4 w-4 mr-2" />
+                                Submit Response
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Impact Assessment Card */}
+            {(rfi.cost_impact || rfi.schedule_impact_days) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Impact Assessment</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-4">
+                    {rfi.cost_impact !== undefined && (
+                      <div className="flex items-center gap-3 p-3 bg-amber-50 rounded-lg">
+                        <DollarSign className={`h-5 w-5 ${rfi.cost_impact ? 'text-amber-600' : 'text-green-600'}`} />
+                        <div>
+                          <Label className="text-gray-600">Cost Impact</Label>
+                          <p className="font-medium">
+                            {rfi.cost_impact ? 'Yes - Cost impact expected' : 'No cost impact'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                    {rfi.schedule_impact_days !== null && rfi.schedule_impact_days !== undefined && (
+                      <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
+                        <CalendarClock className={`h-5 w-5 ${rfi.schedule_impact_days > 0 ? 'text-orange-600' : 'text-green-600'}`} />
+                        <div>
+                          <Label className="text-gray-600">Schedule Impact</Label>
+                          <p className="font-medium">
+                            {rfi.schedule_impact_days > 0
+                              ? `${rfi.schedule_impact_days} days delay`
+                              : 'No schedule impact'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Related Items Card */}
+            {(rfi.related_submittal_id || rfi.related_change_order_id) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Link className="h-5 w-5" />
+                    Related Items
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {rfi.related_submittal_id && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/submittals-v2/${rfi.related_submittal_id}`)}
+                    >
+                      View Related Submittal
+                    </Button>
+                  )}
+                  {rfi.related_change_order_id && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigate(`/change-orders/${rfi.related_change_order_id}`)}
+                    >
+                      View Related Change Order
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Attachments */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Paperclip className="h-5 w-5" />
+                  Attachments
+                </CardTitle>
+                <CardDescription>{attachments?.length || 0} files</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {attachments && attachments.length > 0 ? (
+                  <div className="space-y-2">
+                    {attachments.map((attachment: any) => (
+                      <div
+                        key={attachment.id}
+                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      >
+                        <div className="flex items-center gap-3">
+                          <FileText className="h-5 w-5 text-gray-400" />
+                          <div>
+                            <p className="font-medium text-sm">
+                              {attachment.document?.name || 'Untitled'}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {attachment.document?.file_type}
+                            </p>
+                          </div>
+                        </div>
+                        <Button variant="ghost" size="sm">
+                          Download
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 text-center py-4">No attachments</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Comments */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Comments</CardTitle>
+                <CardDescription>{comments?.length || 0} comments</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {comments && comments.length > 0 ? (
+                  <div className="space-y-4">
+                    {comments.map((comment: any) => (
+                      <div key={comment.id} className="border-b pb-4 last:border-0">
+                        <div className="flex items-start justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                              <User className="h-4 w-4 text-gray-500" />
+                            </div>
+                            <div>
+                              <span className="font-medium text-sm text-gray-900">
+                                {comment.created_by_user?.full_name || 'User'}
+                              </span>
+                              {comment.comment_type && comment.comment_type !== 'comment' && (
+                                <Badge variant="outline" className="ml-2 text-xs">
+                                  {comment.comment_type.replace('_', ' ')}
+                                </Badge>
+                              )}
+                            </div>
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {comment.created_at
+                              ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a')
+                              : 'N/A'}
+                          </span>
+                        </div>
+                        <p className="text-sm whitespace-pre-wrap text-gray-700 ml-10">
+                          {comment.comment}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 text-center py-4">No comments yet</p>
+                )}
+
+                {/* Add Comment Form */}
+                <div className="pt-4 border-t space-y-3">
+                  <Textarea
+                    placeholder="Add a comment..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    rows={2}
+                  />
+                  <Button
+                    size="sm"
+                    onClick={handleAddComment}
+                    disabled={!commentText.trim() || addComment.isPending}
+                  >
+                    {addComment.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Adding...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-4 w-4 mr-2" />
+                        Add Comment
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Change History */}
+            {history && history.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <History className="h-5 w-5" />
+                    History
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {history.slice(0, 10).map((entry: any) => (
+                      <div key={entry.id} className="flex items-start gap-3 text-sm">
+                        <div className="w-2 h-2 rounded-full bg-gray-300 mt-2" />
+                        <div>
+                          <p className="text-gray-700">
+                            <span className="font-medium">{entry.field_name}</span> changed
+                            {entry.old_value && ` from "${entry.old_value}"`}
+                            {entry.new_value && ` to "${entry.new_value}"`}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {entry.changed_by_user?.full_name && `by ${entry.changed_by_user.full_name} • `}
+                            {entry.changed_at && format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Status Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Status</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="status" className="text-gray-600">Current Status</Label>
+                  <select
+                    id="status"
+                    className="w-full mt-2 border rounded-md px-3 py-2 text-sm"
+                    value={rfi.status}
+                    onChange={(e) => handleStatusChange(e.target.value as RFIStatus)}
+                    disabled={updateRFI.isPending}
+                  >
+                    {RFI_STATUSES.map((status) => (
+                      <option key={status.value} value={status.value}>
+                        {status.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex justify-center">
+                  <RFIStatusBadge status={rfi.status} />
+                </div>
+
+                <div className="pt-2 border-t">
+                  <Label htmlFor="ballInCourt" className="text-gray-600">Ball-in-Court</Label>
+                  <select
+                    id="ballInCourt"
+                    className="w-full mt-2 border rounded-md px-3 py-2 text-sm"
+                    value={rfi.ball_in_court_role || ''}
+                    onChange={(e) => handleBallInCourtChange(e.target.value as BallInCourtRole)}
+                    disabled={updateBallInCourt.isPending}
+                  >
+                    <option value="">Not assigned</option>
+                    {BALL_IN_COURT_ROLES.map((role) => (
+                      <option key={role.value} value={role.value}>
+                        {role.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {rfi.status === 'responded' && rfi.status !== 'closed' && (
+                  <Button
+                    onClick={handleClose}
+                    disabled={closeRFI.isPending}
+                    className="w-full"
+                  >
+                    {closeRFI.isPending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Closing...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="h-4 w-4 mr-2" />
+                        Close RFI
+                      </>
+                    )}
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Information Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm">
+                <div className="flex items-start gap-3">
+                  <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <div>
+                    <Label className="text-gray-600">Created</Label>
+                    <p className="text-gray-900">
+                      {rfi.created_at
+                        ? format(new Date(rfi.created_at), 'MMM d, yyyy')
+                        : 'N/A'}
+                    </p>
+                  </div>
+                </div>
+
+                {rfi.date_submitted && (
+                  <div className="flex items-start gap-3">
+                    <Send className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <Label className="text-gray-600">Submitted</Label>
+                      <p className="text-gray-900">
+                        {format(new Date(rfi.date_submitted), 'MMM d, yyyy')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {rfi.date_required && (
+                  <div className="flex items-start gap-3">
+                    <Clock className={`h-4 w-4 mt-0.5 ${isOverdue ? 'text-red-500' : 'text-gray-400'}`} />
+                    <div>
+                      <Label className="text-gray-600">Required Date</Label>
+                      <p className={isOverdue ? 'text-red-600 font-medium' : 'text-gray-900'}>
+                        {format(new Date(rfi.date_required), 'MMM d, yyyy')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {rfi.date_closed && (
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                    <div>
+                      <Label className="text-gray-600">Closed</Label>
+                      <p className="text-gray-900">
+                        {format(new Date(rfi.date_closed), 'MMM d, yyyy')}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-start gap-3">
+                  <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <div>
+                    <Label className="text-gray-600">Days Open</Label>
+                    <p className="text-gray-900">{daysOpen} days</p>
+                  </div>
+                </div>
+
+                {rfi.submitted_by_user && (
+                  <div className="flex items-start gap-3 pt-2 border-t">
+                    <User className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <Label className="text-gray-600">Submitted By</Label>
+                      <p className="text-gray-900">
+                        {rfi.submitted_by_user.full_name || rfi.submitted_by_user.email}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {rfi.assigned_to_user && (
+                  <div className="flex items-start gap-3">
+                    <User className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <Label className="text-gray-600">Assigned To</Label>
+                      <p className="text-gray-900">
+                        {rfi.assigned_to_user.full_name || rfi.assigned_to_user.email}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {rfi.project && (
+                  <div className="flex items-start gap-3">
+                    <Building2 className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <Label className="text-gray-600">Project</Label>
+                      <p className="text-gray-900">{rfi.project.name}</p>
+                    </div>
+                  </div>
+                )}
+
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleDelete}
+                  disabled={deleteRFI.isPending}
+                  className="w-full mt-4"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete RFI
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </AppLayout>
+  )
+}
+
+export default DedicatedRFIDetailPage

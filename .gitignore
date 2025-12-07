@@ -39,6 +39,7 @@ nul
 # MCP configuration (contains tokens)
 .mcp.json
 .mcp.json.backup
+set-mcp-keys.ps1
 
 # Claude Code Settings (may contain sensitive credentials)
 .claude/settings.local.json
@@ -61,3 +62,9 @@ coverage/
 
 # Vercel
 .vercel
+
+# Playwright
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

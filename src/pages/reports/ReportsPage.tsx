@@ -6,9 +6,9 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
 import { Select } from '@/components/ui/select'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Download, Printer, BarChart3 } from 'lucide-react'
+import { Download, Printer, BarChart3, FileText, TrendingUp, ClipboardList, Shield } from 'lucide-react'
 import { exportToPDF, exportToCSV } from '@/lib/utils/pdfExport'
+import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import {
   ProjectHealthReport,
   FinancialSummaryReport,
@@ -18,9 +18,21 @@ import {
 
 type ReportType = 'health' | 'financial' | 'punchlist' | 'safety'
 
+const reportIcons: Record<ReportType, typeof FileText> = {
+  health: TrendingUp,
+  financial: FileText,
+  punchlist: ClipboardList,
+  safety: Shield,
+}
+
 export function ReportsPage() {
+  const { data: projects, isLoading: projectsLoading } = useMyProjects()
   const [selectedReport, setSelectedReport] = useState<ReportType>('health')
-  const [projectId, setProjectId] = useState('')
+  const [selectedProjectId, setSelectedProjectId] = useState('')
+
+  // Use selected project or first active project
+  const projectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id || ''
+  const selectedProject = projects?.find((p) => p.id === projectId)
 
   const handleExportPDF = () => {
     const reportIds: Record<ReportType, string> = {
@@ -38,7 +50,8 @@ export function ReportsPage() {
     }
 
     const elementId = reportIds[selectedReport]
-    const filename = `${reportNames[selectedReport]}-${new Date().toISOString().split('T')[0]}`
+    const projectName = selectedProject?.name?.replace(/\s+/g, '-') || 'project'
+    const filename = `${projectName}-${reportNames[selectedReport]}-${new Date().toISOString().split('T')[0]}`
 
     exportToPDF(elementId, filename)
   }
@@ -71,11 +84,28 @@ export function ReportsPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">Report Type</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                <Select
+                  value={selectedProjectId}
+                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                  disabled={projectsLoading}
+                >
+                  <option value="">
+                    {projectsLoading ? 'Loading projects...' : 'Select a project'}
+                  </option>
+                  {projects?.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
                 <Select
                   value={selectedReport}
                   onChange={(e) => setSelectedReport(e.target.value as ReportType)}
-                  className="mt-1"
                 >
                   {reportOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -84,33 +114,41 @@ export function ReportsPage() {
                   ))}
                 </Select>
               </div>
+            </div>
 
-              <div>
-                <label className="text-sm font-medium text-gray-700">Project (Optional)</label>
-                <Input
-                  type="text"
-                  placeholder="Enter project ID"
-                  value={projectId}
-                  onChange={(e) => setProjectId(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
+            {/* Report Type Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              {reportOptions.map((option) => {
+                const Icon = reportIcons[option.value as ReportType]
+                const isSelected = selectedReport === option.value
+                return (
+                  <button
+                    key={option.value}
+                    onClick={() => setSelectedReport(option.value as ReportType)}
+                    className={`p-3 rounded-lg border-2 transition-all text-left ${
+                      isSelected
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 mb-1 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`} />
+                    <p className={`text-sm font-medium ${isSelected ? 'text-blue-900' : 'text-gray-700'}`}>
+                      {option.label.split(' ')[0]}
+                    </p>
+                  </button>
+                )
+              })}
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-2 pt-4 border-t">
-              <Button onClick={handlePrint} variant="outline">
+              <Button onClick={handlePrint} variant="outline" disabled={!projectId}>
                 <Printer className="h-4 w-4 mr-2" />
                 Print
               </Button>
-              <Button onClick={handleExportPDF} variant="outline">
+              <Button onClick={handleExportPDF} variant="outline" disabled={!projectId}>
                 <Download className="h-4 w-4 mr-2" />
                 Export PDF
-              </Button>
-              <div className="flex-1" />
-              <Button disabled={!projectId}>
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Generate Report
               </Button>
             </div>
           </CardContent>
@@ -126,11 +164,16 @@ export function ReportsPage() {
           </div>
         )}
 
-        {!projectId && (
+        {!projectId && !projectsLoading && (
           <Card>
             <CardContent className="p-12 text-center">
               <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-600">Select a project to generate reports</p>
+              <p className="text-sm text-gray-400 mt-2">
+                {projects?.length === 0
+                  ? 'No projects available. Create a project first.'
+                  : 'Choose from the project dropdown above'}
+              </p>
             </CardContent>
           </Card>
         )}

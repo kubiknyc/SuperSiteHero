@@ -21,6 +21,9 @@ export function useTakeoffItems(projectId: string | undefined) {
   })
 }
 
+// Alias for clarity when fetching all takeoff items for a project
+export const useTakeoffItemsByProject = useTakeoffItems
+
 // Fetch takeoff items for a specific document
 export function useTakeoffItemsByDocument(
   documentId: string | undefined,

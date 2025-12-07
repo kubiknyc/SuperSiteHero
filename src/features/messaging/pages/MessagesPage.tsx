@@ -7,7 +7,7 @@
  * - Responsive layout (mobile: single view, desktop: split view)
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { MessageSquare } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -19,15 +19,34 @@ import {
   NewConversationDialog,
 } from '../components'
 import { useTotalUnreadCount } from '../hooks'
+import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import {
+  RadixSelect,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 export function MessagesPage() {
   const { conversationId } = useParams<{ conversationId?: string }>()
   const navigate = useNavigate()
   const [showNewDialog, setShowNewDialog] = useState(false)
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
 
   // Get total unread for badge
   const { data: totalUnread = 0 } = useTotalUnreadCount()
+
+  // Get user's projects for the selector
+  const { data: projects = [], isLoading: isLoadingProjects } = useMyProjects()
+
+  // Auto-select first project if none selected
+  useEffect(() => {
+    if (projects.length > 0 && !selectedProjectId) {
+      setSelectedProjectId(projects[0].id)
+    }
+  }, [projects, selectedProjectId])
 
   // Handle conversation selection
   const handleSelectConversation = (id: string) => {
@@ -45,16 +64,35 @@ export function MessagesPage() {
         {/* Conversation list sidebar */}
         <div
           className={cn(
-            'w-full md:w-80 lg:w-96 flex-shrink-0 border-r',
+            'w-full md:w-80 lg:w-96 flex-shrink-0 border-r flex flex-col',
             // Hide on mobile when conversation is selected
             conversationId && 'hidden md:flex md:flex-col'
           )}
         >
+          {/* Project selector */}
+          <div className="p-3 border-b">
+            <RadixSelect
+              value={selectedProjectId}
+              onValueChange={setSelectedProjectId}
+              disabled={isLoadingProjects}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={isLoadingProjects ? 'Loading...' : 'Select project...'} />
+              </SelectTrigger>
+              <SelectContent>
+                {projects.map((project) => (
+                  <SelectItem key={project.id} value={project.id}>
+                    {project.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </RadixSelect>
+          </div>
           <ConversationList
             selectedId={conversationId}
             onSelect={handleSelectConversation}
             onNewConversation={() => setShowNewDialog(true)}
-            className="h-full border-0 rounded-none"
+            className="flex-1 border-0 rounded-none"
           />
         </div>
 
@@ -108,6 +146,7 @@ export function MessagesPage() {
       <NewConversationDialog
         open={showNewDialog}
         onOpenChange={setShowNewDialog}
+        projectId={selectedProjectId}
       />
     </AppLayout>
   )

@@ -4,252 +4,182 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an **offline-first construction field management platform** built for superintendents. It's a multi-tenant SaaS application that consolidates daily reports, RFIs, change orders, punch lists, safety tracking, and more into one unified Progressive Web App (PWA).
-
-**Key architectural principle**: This is NOT just a CRUD app. It's built for field use with spotty connectivity, requiring careful state management and offline-sync strategies.
+This is a JavaScript/TypeScript project optimized for modern web development. The project uses industry-standard tools and follows best practices for scalable application development.
 
 ## Development Commands
 
-```bash
-# Development
-npm run dev              # Start dev server at http://localhost:5173
-npm run build            # Production build (TypeScript + Vite)
-npm run preview          # Preview production build locally
+### Package Management
+- `npm install` or `yarn install` - Install dependencies
+- `npm ci` or `yarn install --frozen-lockfile` - Install dependencies for CI/CD
+- `npm update` or `yarn upgrade` - Update dependencies
 
-# Code Quality
-npm run type-check       # TypeScript type checking without emit
-npm run lint             # ESLint with React/TypeScript rules
+### Build Commands
+- `npm run build` - Build the project for production
+- `npm run dev` or `npm start` - Start development server
+- `npm run preview` - Preview production build locally
+
+### Testing Commands
+- `npm test` or `npm run test` - Run all tests
+- `npm run test:watch` - Run tests in watch mode
+- `npm run test:coverage` - Run tests with coverage report
+- `npm run test:unit` - Run unit tests only
+- `npm run test:integration` - Run integration tests only
+- `npm run test:e2e` - Run end-to-end tests
+
+### Code Quality Commands
+- `npm run lint` - Run ESLint for code linting
+- `npm run lint:fix` - Run ESLint with auto-fix
+- `npm run format` - Format code with Prettier
+- `npm run format:check` - Check code formatting
+- `npm run typecheck` - Run TypeScript type checking
+
+### Development Tools
+- `npm run storybook` - Start Storybook (if available)
+- `npm run analyze` - Analyze bundle size
+- `npm run clean` - Clean build artifacts
+
+## Technology Stack
+
+### Core Technologies
+- **JavaScript/TypeScript** - Primary programming languages
+- **Node.js** - Runtime environment
+- **npm/yarn** - Package management
+
+### Common Frameworks
+- **React** - UI library with hooks and functional components
+- **Vue.js** - Progressive framework for building user interfaces
+- **Angular** - Full-featured framework for web applications
+- **Express.js** - Web application framework for Node.js
+- **Next.js** - React framework with SSR/SSG capabilities
+
+### Build Tools
+- **Vite** - Fast build tool and development server
+- **Webpack** - Module bundler
+- **Rollup** - Module bundler for libraries
+- **esbuild** - Extremely fast JavaScript bundler
+
+### Testing Framework
+- **Jest** - JavaScript testing framework
+- **Vitest** - Fast unit test framework
+- **Testing Library** - Simple and complete testing utilities
+- **Cypress** - End-to-end testing framework
+- **Playwright** - Cross-browser testing
+
+### Code Quality Tools
+- **ESLint** - JavaScript/TypeScript linter
+- **Prettier** - Code formatter
+- **TypeScript** - Static type checking
+- **Husky** - Git hooks
+
+## Project Structure Guidelines
+
+### File Organization
+```
+src/
+├── components/     # Reusable UI components
+├── pages/         # Page components or routes
+├── hooks/         # Custom React hooks
+├── utils/         # Utility functions
+├── services/      # API calls and external services
+├── types/         # TypeScript type definitions
+├── constants/     # Application constants
+├── styles/        # Global styles and themes
+└── tests/         # Test files
 ```
 
-**Note**: This project is developed on Windows. File paths use backslashes in the system but forward slashes in code imports.
+### Naming Conventions
+- **Files**: Use kebab-case for file names (`user-profile.component.ts`)
+- **Components**: Use PascalCase for component names (`UserProfile`)
+- **Functions**: Use camelCase for function names (`getUserData`)
+- **Constants**: Use UPPER_SNAKE_CASE for constants (`API_BASE_URL`)
+- **Types/Interfaces**: Use PascalCase with descriptive names (`UserData`, `ApiResponse`)
 
-## Architecture & Code Organization
+## TypeScript Guidelines
 
-### Multi-Tenant Data Isolation
+### Type Safety
+- Enable strict mode in `tsconfig.json`
+- Use explicit types for function parameters and return values
+- Prefer interfaces over types for object shapes
+- Use union types for multiple possible values
+- Avoid `any` type - use `unknown` when type is truly unknown
 
-All database operations MUST respect multi-tenant isolation via Row-Level Security (RLS):
-- Every table has `company_id` for company-level isolation
-- User queries filter by `project_assignments` table to limit access to assigned projects only
-- **Critical**: Never write queries that bypass RLS policies or expose cross-company data
+### Best Practices
+- Use type guards for runtime type checking
+- Leverage utility types (`Partial`, `Pick`, `Omit`, etc.)
+- Create custom types for domain-specific data
+- Use enums for finite sets of values
+- Document complex types with JSDoc comments
 
-### Feature-Based Module Structure
+## Code Quality Standards
 
-Code is organized by **features**, not technical layers. Each feature is self-contained:
+### ESLint Configuration
+- Use recommended ESLint rules for JavaScript/TypeScript
+- Enable React-specific rules if using React
+- Configure import/export rules for consistent module usage
+- Set up accessibility rules for inclusive development
 
-```
-src/features/<feature-name>/
-├── hooks/           # React Query hooks (useX, useCreateX, useUpdateX, useDeleteX)
-├── components/      # Feature-specific UI components
-└── (optional) types, utils, etc.
-```
+### Prettier Configuration
+- Use consistent indentation (2 spaces recommended)
+- Set maximum line length (80-100 characters)
+- Use single quotes for strings
+- Add trailing commas for better git diffs
 
-**Pattern for hooks** (see `src/features/projects/hooks/useProjects.ts` as reference):
-- `useX(id)` - Fetch single entity with `useQuery`, enabled when id exists
-- `useXs(filters)` - Fetch collection with `useQuery`
-- `useCreateX()` - Returns mutation with `queryClient.invalidateQueries(['entity'])` on success
-- `useUpdateX()` - Returns mutation with `queryClient.invalidateQueries` for both list and single item
-- `useDeleteX()` - Returns mutation with cache cleanup via `invalidateQueries`
+### Testing Standards
+- Aim for 80%+ test coverage
+- Write unit tests for utilities and business logic
+- Use integration tests for component interactions
+- Implement e2e tests for critical user flows
+- Follow AAA pattern (Arrange, Act, Assert)
 
-**Important**: Always include `company_id` from `userProfile` when creating entities
+## Performance Optimization
 
-### Type System (Critical!)
+### Bundle Optimization
+- Use code splitting for large applications
+- Implement lazy loading for routes and components
+- Optimize images and assets
+- Use tree shaking to eliminate dead code
+- Analyze bundle size regularly
 
-All database types are centralized in `src/types/database.ts` (~712 lines):
-- **Do NOT manually write DB types** - they are the single source of truth
-- Use helper types defined at the bottom of this file:
-  - `CreateInput<T>` - Omits auto-generated fields (id, created_at, updated_at)
-  - `UpdateInput<T>` - Makes all fields optional except id
-  - `WithRelations<T, R>` - For queries with joined relations
-- When adding new tables, update this file comprehensively with all fields
-- Enum types (UserRole, ProjectStatus, etc.) must match database constraints
-- The `Database` interface at the top defines the Supabase schema with Row/Insert/Update types for each table
+### Runtime Performance
+- Implement proper memoization (React.memo, useMemo, useCallback)
+- Use virtualization for large lists
+- Optimize re-renders in React applications
+- Implement proper error boundaries
+- Use web workers for heavy computations
 
-### State Management Layers
+## Security Guidelines
 
-1. **Server State**: TanStack Query (`@tanstack/react-query`)
-   - 5-minute stale time by default
-   - Aggressive cache invalidation after mutations
-   - Configured in `src/main.tsx`
+### Dependencies
+- Regularly audit dependencies with `npm audit`
+- Keep dependencies updated
+- Use lock files (`package-lock.json`, `yarn.lock`)
+- Avoid dependencies with known vulnerabilities
 
-2. **Auth State**: React Context (`src/lib/auth/AuthContext.tsx`)
-   - Manages Supabase session
-   - Provides `userProfile` with company_id and role
-   - Auto-refreshes tokens
-   - **Note**: User profile fetching from database is stubbed (see TODOs in AuthContext)
+### Code Security
+- Sanitize user inputs
+- Use HTTPS for API calls
+- Implement proper authentication and authorization
+- Store sensitive data securely (environment variables)
+- Use Content Security Policy (CSP) headers
 
-3. **Local State**: Zustand (when needed for global UI state)
-   - Currently minimal usage
-   - Use React Query for server state, NOT Zustand
+## Development Workflow
 
-4. **Form State**: Controlled components (useState)
-   - Keep forms simple with controlled inputs
-   - Validate on submit, not on every keystroke
+### Before Starting
+1. Check Node.js version compatibility
+2. Install dependencies with `npm install`
+3. Copy environment variables from `.env.example`
+4. Run type checking with `npm run typecheck`
 
-### UI Component System
+### During Development
+1. Use TypeScript for type safety
+2. Run linter frequently to catch issues early
+3. Write tests for new features
+4. Use meaningful commit messages
+5. Review code changes before committing
 
-Built with **shadcn/ui** pattern (copy-paste, not npm package):
-- Components in `src/components/ui/` are customizable primitives
-- Use `cn()` helper from `src/lib/utils.ts` for className merging
-  - `cn()` combines `clsx` (conditional classes) and `tailwind-merge` (conflict resolution)
-  - Example: `cn('px-4 py-2', isActive && 'bg-blue-500', className)`
-- Styling: TailwindCSS with design tokens
-- Icons: `lucide-react`
-
-**Component import pattern**:
-```typescript
-import { Button, Card, Badge } from '@/components/ui'
-import { useToast } from '@/components/ui/toast'
-import { cn } from '@/lib/utils'
-```
-
-### Authentication & Authorization
-
-**Flow**:
-1. User signs in via Supabase Auth (`src/lib/supabase.ts`)
-2. Session stored, `AuthContext` provides `userProfile`
-3. `ProtectedRoute` wrapper checks auth before rendering
-4. All routes in `src/App.tsx` use either public or `<ProtectedRoute>` wrapper
-
-**Role-based access**:
-- Roles: superintendent, project_manager, office_admin, field_employee, subcontractor, architect
-- Role stored in `users.role` column
-- Frontend respects roles for UI, but **backend RLS enforces true security**
-
-### Routing & Navigation
-
-**Route organization** (`src/App.tsx`):
-- Public: `/login`, `/signup`, `/forgot-password`
-- Protected: All other routes wrapped in `<ProtectedRoute>`
-- Sidebar navigation in `src/components/layout/AppLayout.tsx`
-
-**Adding new feature routes**:
-1. Add route to `src/App.tsx`
-2. Update `navigation` array in `AppLayout.tsx` with icon
-3. Create page component in `src/pages/<feature>/`
-4. Create feature hooks in `src/features/<feature>/hooks/`
-
-### Database Integration (Supabase)
-
-**Client initialization**: `src/lib/supabase.ts`
-- Typed with `Database` interface from `types/database.ts`
-- Auth config: `persistSession: true`, `autoRefreshToken: true`
-
-**Query patterns**:
-```typescript
-// Fetch with RLS - automatically filters by company/project
-const { data, error } = await supabase
-  .from('daily_reports')
-  .select('*')
-  .eq('project_id', projectId)
-  .order('report_date', { ascending: false })
-
-// Insert with company_id from auth context
-const { data, error } = await supabase
-  .from('projects')
-  .insert({ ...project, company_id: userProfile.company_id })
-  .select()
-  .single()
-```
-
-**Storage buckets**:
-- `documents`, `photos`, `drawings`, `reports`
-- File upload requires signed URLs for security
-
-### Offline Strategy (Future Implementation)
-
-**Current state**: Infrastructure ready (Vite PWA plugin), not yet implemented
-**When implementing**:
-1. Service Worker caches app shell (configured in `vite.config.ts`)
-2. IndexedDB stores project data for offline access
-3. Sync queue for offline mutations
-4. Conflict resolution strategy TBD
-5. Online/offline indicator already in `AppLayout.tsx` sidebar
-
-## Database Migration Workflow
-
-1. Create migration file: `migrations/XXX_description.sql`
-2. Run SQL in Supabase SQL Editor
-3. Update TypeScript types in `src/types/database.ts`:
-   - Add interface for new table
-   - Add to `Database['public']['Tables']` type
-   - Include Insert/Update types
-4. Create React Query hooks in corresponding feature
-5. Test with `npm run type-check` before committing
-
-## Important Patterns & Conventions
-
-### Path Aliases
-
-Use `@/` prefix for all src imports:
-```typescript
-import { supabase } from '@/lib/supabase'
-import { Button } from '@/components/ui/button'
-import { useProjects } from '@/features/projects/hooks/useProjects'
-```
-
-### Error Handling
-
-- React Query handles loading/error states
-- Display errors via toast notifications (see `src/components/ui/toast.tsx`)
-- Server errors: show user-friendly message, log technical details
-- Form validation errors: inline near field
-
-### Toast Notifications
-
-Centralized notification system:
-```typescript
-import { useToast } from '@/components/ui/toast'
-
-const { addToast } = useToast()
-
-addToast({
-  title: 'Success',
-  description: 'Project created successfully',
-  variant: 'success' // or 'destructive' or 'default'
-})
-```
-
-### Date Handling
-
-- Use `date-fns` for formatting: `format(new Date(date), 'MMM d, yyyy')`
-- Store dates as ISO strings in database
-- Display in user-friendly formats
-
-### Loading & Empty States
-
-Every list page needs:
-1. Loading state: `isLoading &&  <Spinner />`
-2. Error state: `error && <ErrorMessage />`
-3. Empty state: `data.length === 0 && <EmptyState />`
-4. Success state: `data.length > 0 && <DataTable />`
-
-## Environment Variables
-
-Required in `.env`:
-```
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
-```
-
-**Never commit** `.env` file. Use `.env.example` for template.
-
-## Key Files Reference
-
-- `src/types/database.ts` - Complete database type definitions (712 lines, includes helper types)
-- `src/lib/auth/AuthContext.tsx` - Authentication state & methods
-- `src/lib/supabase.ts` - Supabase client configuration
-- `src/lib/utils.ts` - Utility functions (cn() for className merging)
-- `src/components/layout/AppLayout.tsx` - Main layout with sidebar
-- `src/App.tsx` - Route definitions
-- `src/main.tsx` - App entry point with providers (QueryClient configured here)
-- `migrations/` - Database migration SQL files (12 files, 42 tables)
-- `masterplan.md` - Complete feature specifications
-- `database-schema.md` - Detailed schema documentation
-
-## Performance Considerations
-
-- React Query caching reduces unnecessary fetches (5min stale time)
-- Use `enabled` flag in queries to prevent premature fetches
-- Implement pagination for large lists (not yet done)
-- Optimize images before upload (not yet enforced)
-- Lazy load heavy components (not yet implemented)
+### Before Committing
+1. Run full test suite: `npm test`
+2. Check linting: `npm run lint`
+3. Verify formatting: `npm run format:check`
+4. Run type checking: `npm run typecheck`
+5. Test production build: `npm run build`

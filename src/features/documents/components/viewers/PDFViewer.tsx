@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, ZoomIn, ZoomOut, Download, Pencil } from 'lu
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { UnifiedDrawingCanvas } from '../markup/UnifiedDrawingCanvas'
+import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
@@ -23,6 +24,7 @@ interface PDFViewerProps {
   onMarkupCreate?: (markup: any) => void
   height?: string
   enableMarkup?: boolean
+  markupState?: ReturnType<typeof useEnhancedMarkupState>
 }
 
 /**
@@ -58,6 +60,7 @@ export function PDFViewer({
   onMarkupCreate,
   height = 'h-screen',
   enableMarkup: initialEnableMarkup = false,
+  markupState,
 }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(1)
@@ -307,6 +310,7 @@ export function PDFViewer({
                   width={pageWidth}
                   height={pageHeight}
                   readOnly={false}
+                  markupState={markupState}
                 />
               </div>
             )}

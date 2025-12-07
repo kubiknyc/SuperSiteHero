@@ -16,7 +16,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { Plus, Edit, Loader2 } from 'lucide-react'
+import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks } from 'lucide-react'
 import { format } from 'date-fns'
 import type { PunchItem } from '@/types/database'
 
@@ -63,6 +63,18 @@ export function PunchListsPage() {
       return true
     })
   }, [punchItems, statusFilter, priorityFilter, tradeSearch])
+
+  // Calculate statistics
+  const stats = useMemo(() => {
+    if (!punchItems) return { total: 0, open: 0, inProgress: 0, completed: 0, highPriority: 0 }
+    return {
+      total: punchItems.length,
+      open: punchItems.filter((p) => p.status === 'open').length,
+      inProgress: punchItems.filter((p) => p.status === 'in_progress' || p.status === 'ready_for_review').length,
+      completed: punchItems.filter((p) => p.status === 'completed' || p.status === 'verified').length,
+      highPriority: punchItems.filter((p) => p.priority === 'high').length,
+    }
+  }, [punchItems])
 
   const handleRowClick = (punchItemId: string) => {
     navigate(`/punch-lists/${punchItemId}`)
@@ -154,6 +166,79 @@ export function PunchListsPage() {
             </Button>
           )}
         </div>
+
+        {/* Statistics Cards */}
+        {!isLoading && punchItems && punchItems.length > 0 && (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Card
+              className={`cursor-pointer transition-all ${statusFilter === 'all' ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
+              onClick={() => setStatusFilter('all')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <ListChecks className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{stats.total}</p>
+                    <p className="text-sm text-gray-500">Total Items</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className={`cursor-pointer transition-all ${statusFilter === 'open' ? 'ring-2 ring-orange-500' : 'hover:bg-gray-50'}`}
+              onClick={() => setStatusFilter('open')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-orange-100 rounded-lg">
+                    <AlertCircle className="h-5 w-5 text-orange-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{stats.open}</p>
+                    <p className="text-sm text-gray-500">Open</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className={`cursor-pointer transition-all ${statusFilter === 'in_progress' ? 'ring-2 ring-yellow-500' : 'hover:bg-gray-50'}`}
+              onClick={() => setStatusFilter('in_progress')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-yellow-100 rounded-lg">
+                    <Clock className="h-5 w-5 text-yellow-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{stats.inProgress}</p>
+                    <p className="text-sm text-gray-500">In Progress</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card
+              className={`cursor-pointer transition-all ${statusFilter === 'completed' ? 'ring-2 ring-green-500' : 'hover:bg-gray-50'}`}
+              onClick={() => setStatusFilter('completed')}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-green-100 rounded-lg">
+                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{stats.completed}</p>
+                    <p className="text-sm text-gray-500">Completed</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Filters */}
         <Card>

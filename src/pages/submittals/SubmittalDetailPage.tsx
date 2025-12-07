@@ -12,11 +12,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { ArrowLeft, AlertCircle, Trash2, Loader2 } from 'lucide-react'
+import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SubmittalStatusBadge } from '@/features/submittals/components'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
+import { useCreateConversation } from '@/features/messaging/hooks'
 
 export function SubmittalDetailPage() {
   const { submittalId } = useParams<{ submittalId: string }>()
@@ -29,6 +30,40 @@ export function SubmittalDetailPage() {
   const updateStatus = useUpdateSubmittalStatusWithNotification()
   const updateProcurementStatus = useUpdateSubmittalProcurementStatusWithNotification()
   const deleteSubmittal = useDeleteSubmittalWithNotification()
+  const createConversation = useCreateConversation()
+
+  // Start a messaging conversation about this submittal
+  const handleDiscussSubmittal = async () => {
+    if (!submittal) return
+
+    // Get participants - creator and any assignees
+    const participantIds: string[] = []
+    if (submittal.created_by) participantIds.push(submittal.created_by)
+    if (submittal.assignees?.length) {
+      submittal.assignees.forEach((assignee: any) => {
+        if (assignee.user_id && !participantIds.includes(assignee.user_id)) {
+          participantIds.push(assignee.user_id)
+        }
+      })
+    }
+
+    const submittalNumber = `S-${String(submittal.number).padStart(3, '0')}`
+
+    try {
+      const result = await createConversation.mutateAsync({
+        type: 'group',
+        participant_ids: participantIds,
+        name: `${submittalNumber}: ${submittal.title}`,
+        project_id: submittal.project_id,
+      })
+
+      if (result?.id) {
+        navigate(`/messages/${result.id}`)
+      }
+    } catch (error) {
+      console.error('Failed to create conversation:', error)
+    }
+  }
 
   const handleStatusChange = async (newStatus: string) => {
     if (!submittal) {return}
@@ -113,9 +148,20 @@ export function SubmittalDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header */}
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">S-{String(submittal.number).padStart(3, '0')}</h1>
-              <p className="text-gray-600 mt-1">{submittal.title}</p>
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">S-{String(submittal.number).padStart(3, '0')}</h1>
+                <p className="text-gray-600 mt-1">{submittal.title}</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDiscussSubmittal}
+                disabled={createConversation.isPending}
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {createConversation.isPending ? 'Creating...' : 'Discuss'}
+              </Button>
             </div>
 
             {/* Details Card */}

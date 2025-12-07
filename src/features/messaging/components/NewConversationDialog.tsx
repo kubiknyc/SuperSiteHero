@@ -7,7 +7,7 @@
  * - Project-linked conversation
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { MessageSquare, Users, Building, Search, X, Check } from 'lucide-react'
 import {
@@ -20,17 +20,16 @@ import {
   Input,
   Label,
 } from '@/components/ui'
-import { useCreateConversation, useGetOrCreateDirectConversation } from '../hooks'
+import { useCreateConversation, useGetOrCreateDirectConversation, useProjectUsers } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import { supabase } from '@/lib/supabase'
 import type { ConversationType, CreateConversationDTO } from '@/types/messaging'
 import { cn } from '@/lib/utils'
 
 interface NewConversationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  projectId: string  // REQUIRED - messaging is always project-scoped
   defaultType?: ConversationType
-  projectId?: string
 }
 
 interface User {
@@ -39,6 +38,10 @@ interface User {
   last_name: string | null
   email: string
   avatar_url: string | null
+  company?: {
+    id: string
+    name: string
+  } | null
 }
 
 // Compute full name from first and last name
@@ -52,8 +55,8 @@ function getFullName(user: User): string {
 export function NewConversationDialog({
   open,
   onOpenChange,
+  projectId,
   defaultType,
-  projectId: defaultProjectId,
 }: NewConversationDialogProps) {
   const navigate = useNavigate()
   const { userProfile } = useAuth()
@@ -63,10 +66,26 @@ export function NewConversationDialog({
   )
   const [selectedUsers, setSelectedUsers] = useState<User[]>([])
   const [groupName, setGroupName] = useState('')
-  const [projectId, setProjectId] = useState(defaultProjectId || '')
-  const [search, setSearch] = useState('')
-  const [users, setUsers] = useState<User[]>([])
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false)
+  const [filterText, setFilterText] = useState('')
+
+  // Fetch project users
+  const { data: projectUsers = [], isLoading: isLoadingUsers } = useProjectUsers(projectId)
+
+  // Filter out current user and apply search filter
+  const availableUsers = useMemo(() => {
+    return projectUsers.filter(pu => pu.user?.id !== userProfile?.id)
+  }, [projectUsers, userProfile?.id])
+
+  const filteredUsers = useMemo(() => {
+    if (!filterText.trim()) return availableUsers
+    const search = filterText.toLowerCase()
+    return availableUsers.filter((pu) => {
+      const user = pu.user
+      if (!user) return false
+      const name = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
+      return name.includes(search) || user.email.toLowerCase().includes(search)
+    })
+  }, [availableUsers, filterText])
 
   // Mutations
   const createConversation = useCreateConversation()
@@ -79,40 +98,9 @@ export function NewConversationDialog({
       setConversationType(defaultType || 'direct')
       setSelectedUsers([])
       setGroupName('')
-      setProjectId(defaultProjectId || '')
-      setSearch('')
+      setFilterText('')
     }
-  }, [open, defaultType, defaultProjectId])
-
-  // Fetch users for selection
-  useEffect(() => {
-    const fetchUsers = async () => {
-      if (!search || search.length < 2) {
-        setUsers([])
-        return
-      }
-
-      setIsLoadingUsers(true)
-      try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('id, first_name, last_name, email, avatar_url')
-          .or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`)
-          .neq('id', userProfile?.id || '')
-          .limit(10)
-
-        if (error) {throw error}
-        setUsers(data || [])
-      } catch (error) {
-        console.error('Failed to fetch users:', error)
-      } finally {
-        setIsLoadingUsers(false)
-      }
-    }
-
-    const debounce = setTimeout(fetchUsers, 300)
-    return () => clearTimeout(debounce)
-  }, [search, userProfile?.id])
+  }, [open, defaultType])
 
   // Toggle user selection
   const toggleUser = (user: User) => {
@@ -165,12 +153,12 @@ export function NewConversationDialog({
         const result = await getOrCreateDirect.mutateAsync(selectedUsers[0].id)
         conversationId = result?.id
       } else {
-        // Create group or project conversation
+        // Create group conversation
         const data: CreateConversationDTO = {
           type: conversationType,
           participant_ids: selectedUsers.map((u) => u.id),
           name: groupName || undefined,
-          project_id: conversationType === 'project' ? projectId : undefined,
+          project_id: projectId,
         }
 
         const result = await createConversation.mutateAsync(data)
@@ -186,14 +174,35 @@ export function NewConversationDialog({
     }
   }
 
+  // Create project chat with all members auto-included
+  const handleCreateProjectChat = async () => {
+    try {
+      const allMemberIds = availableUsers
+        .map(pu => pu.user?.id)
+        .filter((id): id is string => !!id)
+
+      const data: CreateConversationDTO = {
+        type: 'project',
+        participant_ids: allMemberIds,
+        name: 'Project Chat',
+        project_id: projectId,
+      }
+
+      const result = await createConversation.mutateAsync(data)
+      if (result?.id) {
+        onOpenChange(false)
+        navigate(`/messages/${result.id}`)
+      }
+    } catch (error) {
+      console.error('Failed to create project chat:', error)
+    }
+  }
+
   // Check if can proceed
   const canProceed = () => {
     if (step === 'type') {return true}
     if (step === 'users') {return selectedUsers.length > 0}
-    if (step === 'details') {
-      if (conversationType === 'project') {return !!projectId}
-      return true
-    }
+    if (step === 'details') {return true}
     return false
   }
 
@@ -256,11 +265,14 @@ export function NewConversationDialog({
             <button
               onClick={() => {
                 setConversationType('project')
-                setStep('users')
+                // Skip user selection - auto-include all project members
+                handleCreateProjectChat()
               }}
+              disabled={createConversation.isPending || availableUsers.length === 0}
               className={cn(
                 'flex items-center gap-3 p-4 rounded-lg border text-left hover:bg-muted transition-colors',
-                conversationType === 'project' && 'border-primary bg-primary/5'
+                conversationType === 'project' && 'border-primary bg-primary/5',
+                (createConversation.isPending || availableUsers.length === 0) && 'opacity-50 cursor-not-allowed'
               )}
             >
               <div className="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
@@ -269,7 +281,7 @@ export function NewConversationDialog({
               <div>
                 <p className="font-medium">Project Chat</p>
                 <p className="text-sm text-muted-foreground">
-                  Conversation linked to a project
+                  All project members ({availableUsers.length})
                 </p>
               </div>
             </button>
@@ -310,34 +322,32 @@ export function NewConversationDialog({
               </div>
             )}
 
-            {/* Search input */}
+            {/* Filter input */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search users by name or email..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Filter project members..."
+                value={filterText}
+                onChange={(e) => setFilterText(e.target.value)}
                 className="pl-9"
               />
             </div>
 
-            {/* User list */}
+            {/* User list - show all project members immediately */}
             <div className="mt-3 max-h-[250px] overflow-auto">
               {isLoadingUsers ? (
                 <div className="py-8 text-center text-muted-foreground">
-                  Searching...
+                  Loading project members...
                 </div>
-              ) : search.length < 2 ? (
+              ) : filteredUsers.length === 0 ? (
                 <div className="py-8 text-center text-muted-foreground">
-                  Type at least 2 characters to search
-                </div>
-              ) : users.length === 0 ? (
-                <div className="py-8 text-center text-muted-foreground">
-                  No users found
+                  {filterText ? 'No matching members found' : 'No members in this project'}
                 </div>
               ) : (
                 <div className="space-y-1">
-                  {users.map((user) => {
+                  {filteredUsers.map((projectUser) => {
+                    const user = projectUser.user
+                    if (!user) return null
                     const isSelected = selectedUsers.some((u) => u.id === user.id)
                     return (
                       <button
@@ -364,9 +374,15 @@ export function NewConversationDialog({
                             {getFullName(user) || 'Unknown User'}
                           </p>
                           <p className="text-xs text-muted-foreground truncate">
-                            {user.email}
+                            {user.company?.name || user.email}
                           </p>
                         </div>
+                        {/* Role badge */}
+                        {projectUser.project_role && (
+                          <span className="text-xs text-muted-foreground capitalize px-2 py-0.5 bg-muted rounded">
+                            {projectUser.project_role.replace('_', ' ')}
+                          </span>
+                        )}
                         {isSelected && (
                           <Check className="h-4 w-4 text-primary flex-shrink-0" />
                         )}
@@ -379,50 +395,19 @@ export function NewConversationDialog({
           </div>
         )}
 
-        {/* Step 3: Details (for groups/projects) */}
+        {/* Step 3: Details (for group chats) */}
         {step === 'details' && (
           <div className="py-4 space-y-4">
-            {conversationType === 'group' && (
-              <div>
-                <Label htmlFor="groupName">Group Name (optional)</Label>
-                <Input
-                  id="groupName"
-                  placeholder="e.g., Project Team, Design Review..."
-                  value={groupName}
-                  onChange={(e) => setGroupName(e.target.value)}
-                  className="mt-1.5"
-                />
-              </div>
-            )}
-
-            {conversationType === 'project' && (
-              <>
-                <div>
-                  <Label htmlFor="projectId">Project ID</Label>
-                  <Input
-                    id="projectId"
-                    placeholder="Enter project ID..."
-                    value={projectId}
-                    onChange={(e) => setProjectId(e.target.value)}
-                    className="mt-1.5"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    This conversation will be linked to the specified project
-                  </p>
-                </div>
-
-                <div>
-                  <Label htmlFor="projectGroupName">Group Name (optional)</Label>
-                  <Input
-                    id="projectGroupName"
-                    placeholder="e.g., Site Updates, RFI Discussion..."
-                    value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
-                    className="mt-1.5"
-                  />
-                </div>
-              </>
-            )}
+            <div>
+              <Label htmlFor="groupName">Group Name (optional)</Label>
+              <Input
+                id="groupName"
+                placeholder="e.g., Project Team, Design Review..."
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                className="mt-1.5"
+              />
+            </div>
 
             {/* Preview of selected users */}
             <div>
@@ -441,7 +426,10 @@ export function NewConversationDialog({
           </div>
         )}
 
-        <DialogFooter>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
           {step !== 'type' && !defaultType && (
             <Button variant="ghost" onClick={handleBack}>
               Back

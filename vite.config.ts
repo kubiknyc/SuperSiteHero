@@ -13,13 +13,15 @@ export default defineConfig({
     // PWA plugin for offline functionality
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'robots.txt', 'icon.svg'],
+      includeAssets: ['favicon.svg', 'robots.txt', 'icon.svg', 'offline.html'],
       manifest: {
-        name: 'Construction Management Platform',
-        short_name: 'ConstructionMgmt',
-        description: 'Field management platform for construction superintendents',
-        theme_color: '#2563eb',
+        name: 'SuperSiteHero',
+        short_name: 'SSH',
+        description: 'Construction Field Management Platform',
+        theme_color: '#3b82f6',
         background_color: '#ffffff',
+        start_url: '/',
+        display: 'standalone',
         icons: [
           {
             src: 'icon.svg',
@@ -30,6 +32,9 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // Offline fallback
+        navigateFallback: '/offline.html',
+        navigateFallbackAllowlist: [/^(?!\/__).*/],
         // Offline caching strategies
         runtimeCaching: [
           // Cache API responses with network-first strategy

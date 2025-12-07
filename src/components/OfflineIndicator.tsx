@@ -12,7 +12,7 @@ import {
   useOfflineStore,
 } from '@/stores/offline-store';
 import { OfflineClient } from '@/lib/api/offline-client';
-import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info } from 'lucide-react';
+import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -23,6 +23,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { SyncStatusPanel } from '@/components/SyncStatusPanel';
 
 /**
  * Format bytes to human-readable string
@@ -67,15 +68,24 @@ export function OfflineIndicator() {
   const storageQuota = useStorageQuota();
   const [isSyncingManually, setIsSyncingManually] = useState(false);
 
-  // Update pending syncs count periodically
+  // Update pending syncs count periodically (only when online)
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Initial update
+    if (isOnline) {
       useOfflineStore.getState().updatePendingSyncs();
       useOfflineStore.getState().updateConflictCount();
+    }
+
+    const interval = setInterval(() => {
+      // Only poll when online to reduce noise
+      if (isOnline) {
+        useOfflineStore.getState().updatePendingSyncs();
+        useOfflineStore.getState().updateConflictCount();
+      }
     }, 10000); // Every 10 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isOnline]);
 
   // Handle manual sync
   const handleManualSync = async () => {
@@ -141,119 +151,161 @@ export function OfflineIndicator() {
     ? (storageQuota.used / storageQuota.total) * 100
     : 0;
 
+  const [showFullPanel, setShowFullPanel] = useState(false);
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="relative h-9 px-2 gap-2"
-          title={`${status.label} - Click for details`}
-        >
-          <StatusIcon className={`h-4 w-4 ${status.color}`} />
-          {pendingSyncs > 0 && (
-            <Badge variant="secondary" className="h-5 px-1.5 text-xs">
-              {pendingSyncs}
-            </Badge>
-          )}
-          {isSyncing && (
-            <RefreshCw className="h-3 w-3 animate-spin text-amber-500" />
-          )}
-        </Button>
-      </DialogTrigger>
-
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <StatusIcon className={`h-5 w-5 ${status.color}`} />
-            {status.label}
-          </DialogTitle>
-          <DialogDescription>
-            {isOnline ? 'Connected to server' : 'Working offline'}
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="space-y-4 py-4">
-          {/* Sync Status */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Pending syncs</span>
-              <span className="font-medium">{pendingSyncs}</span>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Last sync</span>
-              <span className="font-medium">{formatRelativeTime(lastSyncTime)}</span>
-            </div>
-
+    <>
+      <Dialog open={showFullPanel} onOpenChange={setShowFullPanel}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="relative h-9 px-2 gap-2"
+            title={`${status.label} - Click for details`}
+          >
+            <StatusIcon className={`h-4 w-4 ${status.color}`} />
+            {pendingSyncs > 0 && (
+              <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                {pendingSyncs}
+              </Badge>
+            )}
             {conflictCount > 0 && (
+              <Badge variant="destructive" className="h-5 px-1.5 text-xs">
+                {conflictCount}
+              </Badge>
+            )}
+            {isSyncing && (
+              <RefreshCw className="h-3 w-3 animate-spin text-amber-500" />
+            )}
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <StatusIcon className={`h-5 w-5 ${status.color}`} />
+              {status.label}
+            </DialogTitle>
+            <DialogDescription>
+              {isOnline ? 'Connected to server' : 'Working offline'}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            {/* Sync Status */}
+            <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Conflicts</span>
-                <Badge variant="destructive">{conflictCount}</Badge>
+                <span className="text-muted-foreground">Pending syncs</span>
+                <span className="font-medium">{pendingSyncs}</span>
+              </div>
+
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">Last sync</span>
+                <span className="font-medium">{formatRelativeTime(lastSyncTime)}</span>
+              </div>
+
+              {conflictCount > 0 && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Conflicts</span>
+                  <Badge variant="destructive">{conflictCount}</Badge>
+                </div>
+              )}
+
+              {isSyncing && (
+                <div className="flex items-center gap-2 text-sm text-amber-600">
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                  <span>Syncing changes...</span>
+                </div>
+              )}
+            </div>
+
+            {/* Manual Sync Button */}
+            {isOnline && pendingSyncs > 0 && (
+              <Button
+                onClick={handleManualSync}
+                disabled={isSyncing || isSyncingManually}
+                size="sm"
+                className="w-full"
+              >
+                <RefreshCw
+                  className={`mr-2 h-4 w-4 ${
+                    isSyncing || isSyncingManually ? 'animate-spin' : ''
+                  }`}
+                />
+                {isSyncing || isSyncingManually ? 'Syncing...' : 'Sync Now'}
+              </Button>
+            )}
+
+            {/* Storage Quota */}
+            {storageQuota && (
+              <div className="space-y-2 rounded-md border p-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Storage used</span>
+                  <span className="font-medium">
+                    {formatBytes(storageQuota.used)} / {formatBytes(storageQuota.total)}
+                  </span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-gray-200">
+                  <div
+                    className={`h-full rounded-full ${
+                      storageQuota.critical
+                        ? 'bg-red-500'
+                        : storageQuota.warning
+                        ? 'bg-amber-500'
+                        : 'bg-green-500'
+                    }`}
+                    style={{ width: `${Math.min(100, storagePercentage)}%` }}
+                  />
+                </div>
+                {storageQuota.warning && (
+                  <p className="text-xs text-amber-600 flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3" />
+                    {storageQuota.critical
+                      ? 'Storage critically low (<5%)'
+                      : 'Storage running low (<10%)'}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Offline Mode Info */}
+            {!isOnline && (
+              <div className="rounded-md bg-amber-50 border border-amber-200 p-3">
+                <p className="text-sm text-amber-800 flex items-center gap-2">
+                  <Info className="h-4 w-4" />
+                  You're working offline. Changes will be synced when you reconnect.
+                </p>
               </div>
             )}
           </div>
+        </DialogContent>
+      </Dialog>
 
-          {/* Manual Sync Button */}
-          {isOnline && pendingSyncs > 0 && (
+      {/* Full Sync Status Panel Dialog */}
+      {(pendingSyncs > 0 || conflictCount > 0) && (
+        <Dialog>
+          <DialogTrigger asChild>
             <Button
-              onClick={handleManualSync}
-              disabled={isSyncing || isSyncingManually}
+              variant="ghost"
               size="sm"
-              className="w-full"
+              className="fixed bottom-4 right-4 shadow-lg"
+              title="View detailed sync status"
             >
-              <RefreshCw
-                className={`mr-2 h-4 w-4 ${
-                  isSyncing || isSyncingManually ? 'animate-spin' : ''
-                }`}
-              />
-              {isSyncing || isSyncingManually ? 'Syncing...' : 'Sync Now'}
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Sync Details
             </Button>
-          )}
-
-          {/* Storage Quota */}
-          {storageQuota && (
-            <div className="space-y-2 rounded-md border p-3">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Storage used</span>
-                <span className="font-medium">
-                  {formatBytes(storageQuota.used)} / {formatBytes(storageQuota.total)}
-                </span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-gray-200">
-                <div
-                  className={`h-full rounded-full ${
-                    storageQuota.critical
-                      ? 'bg-red-500'
-                      : storageQuota.warning
-                      ? 'bg-amber-500'
-                      : 'bg-green-500'
-                  }`}
-                  style={{ width: `${Math.min(100, storagePercentage)}%` }}
-                />
-              </div>
-              {storageQuota.warning && (
-                <p className="text-xs text-amber-600 flex items-center gap-1">
-                  <AlertTriangle className="h-3 w-3" />
-                  {storageQuota.critical
-                    ? 'Storage critically low (<5%)'
-                    : 'Storage running low (<10%)'}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Offline Mode Info */}
-          {!isOnline && (
-            <div className="rounded-md bg-amber-50 border border-amber-200 p-3">
-              <p className="text-sm text-amber-800 flex items-center gap-2">
-                <Info className="h-4 w-4" />
-                You're working offline. Changes will be synced when you reconnect.
-              </p>
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle>Sync Queue Details</DialogTitle>
+              <DialogDescription>
+                View and manage pending syncs and conflicts
+              </DialogDescription>
+            </DialogHeader>
+            <SyncStatusPanel />
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
 }

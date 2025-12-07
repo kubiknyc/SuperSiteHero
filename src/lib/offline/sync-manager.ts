@@ -2,8 +2,9 @@
 // Background sync manager for automatic offline data synchronization
 
 import { OfflineClient } from '../api/offline-client';
-import { useOfflineStore } from '@/stores/offline-store';
+import { useOfflineStore, type SyncConflict } from '@/stores/offline-store';
 import { logger } from '@/lib/utils/logger';
+import { supabase } from '@/lib/supabase';
 
 /**
  * Background sync manager
@@ -72,7 +73,63 @@ export class SyncManager {
   }
 
   /**
-   * Trigger sync manually or automatically
+   * Detect conflicts for a pending sync operation
+   * Compares local data with current server data
+   */
+  private static async detectConflict(
+    entityType: string,
+    entityId: string,
+    localData: any,
+    localTimestamp: number
+  ): Promise<SyncConflict | null> {
+    try {
+      // Fetch current server version
+      // Use type assertion for dynamic table name since entityType comes from sync queue
+      const { data: serverData, error } = await supabase
+        .from(entityType as 'projects')
+        .select('*')
+        .eq('id', entityId)
+        .single();
+
+      if (error || !serverData) {
+        // No server data = no conflict (item may have been deleted)
+        return null;
+      }
+
+      // Compare timestamps to detect if server was modified after local change
+      const serverRecord = serverData as { updated_at?: string; created_at?: string };
+      const serverTimestamp = new Date(serverRecord.updated_at || serverRecord.created_at || Date.now()).getTime();
+
+      // If server timestamp is newer than local timestamp, we have a conflict
+      if (serverTimestamp > localTimestamp) {
+        logger.warn(
+          `[SyncManager] Conflict detected for ${entityType} ${entityId}:`,
+          `Local: ${new Date(localTimestamp).toISOString()}, Server: ${new Date(serverTimestamp).toISOString()}`
+        );
+
+        return {
+          id: `conflict-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`, // Generate unique conflict ID
+          entityType,
+          entityId,
+          localData,
+          serverData: serverData as Record<string, unknown>,
+          localTimestamp,
+          serverTimestamp,
+          resolved: false,
+          createdAt: Date.now(),
+          detectedAt: Date.now(),
+        };
+      }
+
+      return null; // No conflict
+    } catch (error) {
+      logger.error('[SyncManager] Error detecting conflict:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Trigger sync manually or automatically with conflict detection
    */
   static async triggerSync(): Promise<void> {
     // Prevent concurrent syncs
@@ -89,13 +146,13 @@ export class SyncManager {
     }
 
     // Check if online
-    const { isOnline, pendingSyncs } = useOfflineStore.getState();
+    const { isOnline, pendingSyncs: pendingSyncsCount, syncQueue } = useOfflineStore.getState();
     if (!isOnline) {
       logger.log('[SyncManager] Cannot sync while offline');
       return;
     }
 
-    if (pendingSyncs === 0) {
+    if (pendingSyncsCount === 0) {
       logger.log('[SyncManager] No pending syncs');
       return;
     }
@@ -104,7 +161,38 @@ export class SyncManager {
     this.lastSyncAttempt = now;
 
     try {
-      logger.log(`[SyncManager] Starting sync for ${pendingSyncs} pending mutations`);
+      logger.log(`[SyncManager] Starting sync for ${pendingSyncsCount} pending mutations`);
+
+      // Detect conflicts before processing sync queue
+      const detectedConflicts: SyncConflict[] = [];
+      for (const syncItem of syncQueue) {
+        // Only check for conflicts on updates (not creates or deletes)
+        if (syncItem.operation === 'update' && syncItem.entityId) {
+          const conflict = await this.detectConflict(
+            syncItem.entityType,
+            syncItem.entityId,
+            syncItem.data,
+            syncItem.timestamp
+          );
+
+          if (conflict) {
+            detectedConflicts.push(conflict);
+            // Add conflict to store
+            useOfflineStore.getState().addConflict(conflict);
+          }
+        }
+      }
+
+      if (detectedConflicts.length > 0) {
+        logger.warn(`[SyncManager] Found ${detectedConflicts.length} conflict(s)`);
+        this.showSyncNotification(
+          `Sync paused: ${detectedConflicts.length} conflict${detectedConflicts.length > 1 ? 's' : ''} need resolution`,
+          'warning'
+        );
+        return; // Stop sync until conflicts are resolved
+      }
+
+      // Process sync queue
       const result = await OfflineClient.processSyncQueue();
 
       logger.log(`[SyncManager] Sync completed:`, result);

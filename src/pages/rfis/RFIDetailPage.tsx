@@ -17,6 +17,7 @@ import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare, Send } from 'lu
 import { cn } from '@/lib/utils'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
+import { useCreateConversation } from '@/features/messaging/hooks'
 
 export function RFIDetailPage() {
   const { rfiId } = useParams<{ rfiId: string }>()
@@ -32,6 +33,40 @@ export function RFIDetailPage() {
   const updateStatus = useChangeRFIStatusWithNotification()
   const updateRFI = useUpdateRFIWithNotification()
   const deleteRFI = useDeleteRFIWithNotification()
+  const createConversation = useCreateConversation()
+
+  // Start a messaging conversation about this RFI
+  const handleDiscussRFI = async () => {
+    if (!rfi) return
+
+    // Get participants - creator and any assignees
+    const participantIds: string[] = []
+    if (rfi.created_by) participantIds.push(rfi.created_by)
+    if (rfi.assignees?.length) {
+      rfi.assignees.forEach((assignee: any) => {
+        if (assignee.user_id && !participantIds.includes(assignee.user_id)) {
+          participantIds.push(assignee.user_id)
+        }
+      })
+    }
+
+    const rfiNumber = `${workflowType?.prefix || 'RFI'}-${String(rfi.number).padStart(3, '0')}`
+
+    try {
+      const result = await createConversation.mutateAsync({
+        type: 'group',
+        participant_ids: participantIds,
+        name: `${rfiNumber}: ${rfi.title}`,
+        project_id: rfi.project_id,
+      })
+
+      if (result?.id) {
+        navigate(`/messages/${result.id}`)
+      }
+    } catch (error) {
+      console.error('Failed to create conversation:', error)
+    }
+  }
 
   const handleStatusChange = async (newStatus: string) => {
     if (!rfi) {return}
@@ -143,9 +178,20 @@ export function RFIDetailPage() {
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Header */}
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">{rfiNumber}</h1>
-              <p className="text-gray-600 mt-1">{rfi.title}</p>
+            <div className="flex items-start justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">{rfiNumber}</h1>
+                <p className="text-gray-600 mt-1">{rfi.title}</p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDiscussRFI}
+                disabled={createConversation.isPending}
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                {createConversation.isPending ? 'Creating...' : 'Discuss'}
+              </Button>
             </div>
 
             {/* Details Card */}

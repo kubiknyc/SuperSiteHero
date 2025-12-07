@@ -45,6 +45,13 @@ export interface DocumentMarkup {
   shared_with_roles: string[] | null
   related_to_id: string | null
   related_to_type: string | null
+  // Enhanced markup fields (migration 014)
+  layer_id: string | null
+  color: string | null
+  visible: boolean | null
+  author_name: string | null
+  permission_level: string | null
+  shared_with_users: string[] | null
   created_by: string | null
   created_at: string | null
   updated_at: string | null

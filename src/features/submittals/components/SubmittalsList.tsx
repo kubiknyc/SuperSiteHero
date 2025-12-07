@@ -65,6 +65,15 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
     return matchesSearch && matchesStatus
   }), [submittals, searchTerm, statusFilter])
 
+  // Calculate statistics - memoized to prevent recalculation on every render
+  // IMPORTANT: This must be before any early returns to satisfy React's Rules of Hooks
+  const stats = useMemo(() => ({
+    total: submittals?.length || 0,
+    draft: submittals?.filter((s) => s.status === 'draft').length || 0,
+    submitted: submittals?.filter((s) => s.status === 'submitted').length || 0,
+    approved: submittals?.filter((s) => s.status === 'approved').length || 0,
+  }), [submittals])
+
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
   }, [])
@@ -105,14 +114,6 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
       </Card>
     )
   }
-
-  // Calculate statistics - memoized to prevent recalculation on every render
-  const stats = useMemo(() => ({
-    total: submittals?.length || 0,
-    draft: submittals?.filter((s) => s.status === 'draft').length || 0,
-    submitted: submittals?.filter((s) => s.status === 'submitted').length || 0,
-    approved: submittals?.filter((s) => s.status === 'approved').length || 0,
-  }), [submittals])
 
   return (
     <>

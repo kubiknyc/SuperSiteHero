@@ -2,16 +2,13 @@
  * Supabase Realtime Hooks for Messaging
  *
  * Provides live updates for:
- * - New messages in channels (chat_channels)
+ * - New messages in conversations
  * - Typing indicators
  * - Presence status
- * - Channel updates
- *
- * NOTE: Uses actual database table names (chat_channels, chat_messages, etc.)
- * but the frontend types still use "Conversation" terminology for backwards compatibility.
+ * - Conversation updates
  */
 
-import { useEffect, useRef, useCallback, useState } from 'react'
+import { useEffect, useRef, useCallback, useState, useMemo } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -24,8 +21,7 @@ import type { Message, TypingIndicatorEvent } from '@/types/messaging'
 // =====================================================
 
 /**
- * Subscribe to real-time message updates for a channel
- * Uses chat_messages table with channel_id filter
+ * Subscribe to real-time message updates for a conversation
  */
 export function useRealtimeMessages(conversationId: string | undefined) {
   const queryClient = useQueryClient()
@@ -35,8 +31,7 @@ export function useRealtimeMessages(conversationId: string | undefined) {
   useEffect(() => {
     if (!conversationId || !userProfile?.id) {return}
 
-    // Create a unique realtime channel for this chat channel
-    // Note: conversationId is actually a channel_id in the database
+    // Create a unique realtime channel for this conversation
     const channel = supabase
       .channel(`messages:${conversationId}`)
       .on(
@@ -44,8 +39,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'chat_messages', // Changed from 'messages'
-          filter: `channel_id=eq.${conversationId}`, // Changed from conversation_id
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
         },
         (payload: RealtimePostgresChangesPayload<Message>) => {
           // Invalidate queries to refetch messages
@@ -66,8 +61,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'chat_messages', // Changed from 'messages'
-          filter: `channel_id=eq.${conversationId}`, // Changed from conversation_id
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
         },
         (payload: RealtimePostgresChangesPayload<Message>) => {
           queryClient.invalidateQueries({
@@ -83,8 +78,8 @@ export function useRealtimeMessages(conversationId: string | undefined) {
         {
           event: 'DELETE',
           schema: 'public',
-          table: 'chat_messages', // Changed from 'messages'
-          filter: `channel_id=eq.${conversationId}`, // Changed from conversation_id
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
         },
         () => {
           queryClient.invalidateQueries({
@@ -121,14 +116,22 @@ interface TypingState {
   }
 }
 
+// Debounce delay for typing indicator broadcasts (ms)
+const TYPING_DEBOUNCE_MS = 300
+// Auto-stop typing after this duration (ms)
+const TYPING_TIMEOUT_MS = 3000
+
 /**
  * Subscribe to and broadcast typing indicators
+ * Uses debouncing to prevent network spam from rapid keystrokes
  */
 export function useTypingIndicator(conversationId: string | undefined) {
   const { userProfile } = useAuth()
   const [typingUsers, setTypingUsers] = useState<TypingState>({})
   const channelRef = useRef<RealtimeChannel | null>(null)
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const lastBroadcastRef = useRef<number>(0)
 
   // Clean up stale typing indicators (older than 3 seconds)
   useEffect(() => {
@@ -193,15 +196,10 @@ export function useTypingIndicator(conversationId: string | undefined) {
     }
   }, [conversationId, userProfile?.id])
 
-  // Broadcast that user is typing
-  const sendTyping = useCallback(
+  // Actually broadcast the typing status
+  const broadcastTyping = useCallback(
     (isTyping: boolean) => {
       if (!channelRef.current || !userProfile?.id || !conversationId) {return}
-
-      // Clear any existing timeout
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current)
-      }
 
       channelRef.current.send({
         type: 'broadcast',
@@ -216,15 +214,66 @@ export function useTypingIndicator(conversationId: string | undefined) {
         } as TypingIndicatorEvent,
       })
 
-      // Auto-stop typing after 3 seconds
-      if (isTyping) {
-        typingTimeoutRef.current = setTimeout(() => {
-          sendTyping(false)
-        }, 3000)
-      }
+      lastBroadcastRef.current = Date.now()
     },
     [conversationId, userProfile]
   )
+
+  // Debounced broadcast that user is typing
+  // Prevents network spam from rapid keystrokes
+  const sendTyping = useCallback(
+    (isTyping: boolean) => {
+      if (!channelRef.current || !userProfile?.id || !conversationId) {return}
+
+      // Clear any existing debounce timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current)
+      }
+
+      // Clear auto-stop timeout
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current)
+      }
+
+      // For stop-typing events, broadcast immediately
+      if (!isTyping) {
+        broadcastTyping(false)
+        return
+      }
+
+      // For start-typing, check if we've broadcast recently
+      const now = Date.now()
+      const timeSinceLastBroadcast = now - lastBroadcastRef.current
+
+      if (timeSinceLastBroadcast >= TYPING_DEBOUNCE_MS) {
+        // Enough time has passed, broadcast immediately
+        broadcastTyping(true)
+      } else {
+        // Debounce: wait before broadcasting
+        debounceTimeoutRef.current = setTimeout(() => {
+          broadcastTyping(true)
+        }, TYPING_DEBOUNCE_MS - timeSinceLastBroadcast)
+      }
+
+      // Auto-stop typing after timeout
+      typingTimeoutRef.current = setTimeout(() => {
+        broadcastTyping(false)
+      }, TYPING_TIMEOUT_MS)
+    },
+    [conversationId, userProfile, broadcastTyping]
+  )
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current)
+      }
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current)
+      }
+    }
+  }, [])
 
   // Get array of typing user names (excluding current user)
   const typingUserNames = Object.entries(typingUsers)
@@ -330,12 +379,11 @@ export function usePresence(conversationId: string | undefined) {
 }
 
 // =====================================================
-// CONVERSATION (CHANNEL) LIST REALTIME
+// CONVERSATION LIST REALTIME
 // =====================================================
 
 /**
- * Subscribe to real-time channel list updates
- * Uses chat_channels and chat_channel_members tables
+ * Subscribe to real-time conversation list updates
  */
 export function useRealtimeConversations() {
   const queryClient = useQueryClient()
@@ -345,7 +393,7 @@ export function useRealtimeConversations() {
   useEffect(() => {
     if (!userProfile?.id) {return}
 
-    // Subscribe to chat_channel_members changes for the current user
+    // Subscribe to conversation changes for the current user
     const channel = supabase
       .channel('conversations-list')
       .on(
@@ -353,7 +401,7 @@ export function useRealtimeConversations() {
         {
           event: '*',
           schema: 'public',
-          table: 'chat_channels', // Changed from 'conversations'
+          table: 'conversations',
         },
         () => {
           queryClient.invalidateQueries({
@@ -366,7 +414,7 @@ export function useRealtimeConversations() {
         {
           event: '*',
           schema: 'public',
-          table: 'chat_channel_members', // Changed from 'conversation_participants'
+          table: 'conversation_participants',
           filter: `user_id=eq.${userProfile.id}`,
         },
         () => {

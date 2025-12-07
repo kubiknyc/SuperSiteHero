@@ -191,10 +191,15 @@ export function TakeoffCanvas({
 
       const point: Point = { x: pos.x, y: pos.y }
 
-      // Update current points (replace last point for line types)
+      // Update current points based on tool type
       if (currentTool === 'linear' || currentTool === 'linear_with_drop' || currentTool === 'pitched_linear') {
-        setCurrentPoints((prev) => [...prev.slice(0, -1), point])
+        // For line tools: maintain start point, update end point
+        setCurrentPoints((prev) => (prev.length > 0 ? [prev[0], point] : [point]))
+      } else if (currentTool === 'count') {
+        // For count: no dragging needed
+        return
       } else {
+        // For area/polygon tools: add points continuously for freehand drawing
         setCurrentPoints((prev) => [...prev, point])
       }
     },

@@ -8,16 +8,34 @@ export interface DraftReport extends Partial<DailyReport> {
   id: string
   project_id: string
   report_date: string
-  // Extended fields for form sections (stored locally, combined when saving)
-  work_performed?: string
-  work_planned?: string
+  // Fields from DailyReport that are explicitly used in forms
+  report_number?: string
+  status?: string
+  // Weather fields
   weather_condition?: string
+  temperature_high?: number
+  temperature_low?: number
+  precipitation?: number
+  wind_speed?: number
   wind_conditions?: string
-  weather_notes?: string
+  weather_delays?: boolean
+  weather_delay_notes?: string
+  weather_notes?: string // Alias for weather_delay_notes (used in WeatherSection)
+  // Work fields
+  work_performed?: string
+  work_completed?: string
+  work_planned?: string
+  // Issues and observations fields
+  issues?: string
+  observations?: string
+  comments?: string
   safety_incidents?: string
   quality_issues?: string
   schedule_delays?: string
   general_notes?: string
+  // Signature fields
+  submitted_by_signature?: string // Base64 data URL
+  approved_by_signature?: string // Base64 data URL
 }
 
 export interface WorkforceEntry {
@@ -67,9 +85,17 @@ export interface SyncQueueItem {
   timestamp: number
   retries: number
   lastError?: string
+  lastKnownUpdatedAt?: string // Server timestamp when data was last fetched
 }
 
-export type SyncStatus = 'idle' | 'syncing' | 'success' | 'error'
+export type SyncStatus = 'idle' | 'syncing' | 'success' | 'error' | 'conflict'
+
+export interface ConflictInfo {
+  reportId: string
+  localUpdatedAt: number
+  serverUpdatedAt: string
+  serverData: Partial<DraftReport>
+}
 
 interface OfflineReportStore {
   // Draft report
@@ -85,11 +111,25 @@ interface OfflineReportStore {
   syncError: string | null
   isOnline: boolean
 
+  // Conflict detection
+  conflict: ConflictInfo | null
+
   // Queue
   syncQueue: SyncQueueItem[]
 
   // Actions
   initializeDraft: (projectId: string, reportDate: string) => void
+  initializeFromPreviousReport: (
+    projectId: string,
+    reportDate: string,
+    previousReport: Partial<DraftReport>,
+    relatedData?: {
+      workforce?: WorkforceEntry[]
+      equipment?: EquipmentEntry[]
+      deliveries?: DeliveryEntry[]
+      visitors?: VisitorEntry[]
+    }
+  ) => void
   updateDraft: (updates: Partial<DraftReport>) => void
   addWorkforceEntry: (entry: WorkforceEntry) => void
   updateWorkforceEntry: (id: string, updates: Partial<WorkforceEntry>) => void
@@ -115,11 +155,39 @@ interface OfflineReportStore {
   removeFromSyncQueue: (id: string) => void
   updateSyncQueueItem: (id: string, updates: Partial<SyncQueueItem>) => void
 
+  // Conflict resolution
+  setConflict: (conflict: ConflictInfo | null) => void
+  resolveConflict: (strategy: 'keep_local' | 'keep_server' | 'merge') => void
+
+  // Initialize for editing existing report (tracks server timestamp)
+  initializeFromExistingReport: (
+    report: DraftReport,
+    relatedData?: {
+      workforce?: WorkforceEntry[]
+      equipment?: EquipmentEntry[]
+      deliveries?: DeliveryEntry[]
+      visitors?: VisitorEntry[]
+    },
+    serverUpdatedAt?: string
+  ) => void
+
   // Clear
   clearDraft: () => void
 }
 
 const generateId = () => crypto.randomUUID()
+
+// Helper to calculate total workers from workforce entries
+const calculateTotalWorkers = (workforce: WorkforceEntry[]): number => {
+  return workforce.reduce((total, entry) => {
+    if (entry.entry_type === 'team' && entry.worker_count) {
+      return total + entry.worker_count
+    } else if (entry.entry_type === 'individual') {
+      return total + 1
+    }
+    return total
+  }, 0)
+}
 
 export const useOfflineReportStore = create<OfflineReportStore>()(
   persist(
@@ -133,6 +201,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
       syncStatus: 'idle' as SyncStatus,
       syncError: null as string | null,
       isOnline: navigator.onLine,
+      conflict: null as ConflictInfo | null,
       syncQueue: [] as SyncQueueItem[],
 
       initializeDraft: (projectId: string, reportDate: string) => {
@@ -151,6 +220,43 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
         })
       },
 
+      initializeFromPreviousReport: (
+        projectId: string,
+        reportDate: string,
+        previousReport: Partial<DraftReport>,
+        relatedData?: {
+          workforce?: WorkforceEntry[]
+          equipment?: EquipmentEntry[]
+          deliveries?: DeliveryEntry[]
+          visitors?: VisitorEntry[]
+        }
+      ) => {
+        // Copy relevant fields from previous report, but create new ID and date
+        // Also copy related data (workforce, equipment, etc.) with new IDs
+        const copyWithNewIds = <T extends { id: string }>(items: T[] = []): T[] =>
+          items.map((item) => ({ ...item, id: generateId() }))
+
+        set({
+          draftReport: {
+            ...previousReport,
+            id: generateId(),
+            project_id: projectId,
+            report_date: reportDate,
+            status: 'draft',
+            // Clear submission/approval fields
+            submitted_at: undefined,
+            approved_at: undefined,
+            approved_by: undefined,
+          },
+          // Copy related data with new IDs if provided, otherwise start fresh
+          workforce: copyWithNewIds(relatedData?.workforce),
+          equipment: copyWithNewIds(relatedData?.equipment),
+          deliveries: copyWithNewIds(relatedData?.deliveries),
+          visitors: copyWithNewIds(relatedData?.visitors),
+          photos: [],
+        })
+      },
+
       updateDraft: (updates) => {
         set((state) => ({
           draftReport: state.draftReport ? { ...state.draftReport, ...updates } : null,
@@ -158,21 +264,44 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
       },
 
       addWorkforceEntry: (entry) => {
-        set((state) => ({
-          workforce: [...state.workforce, { ...entry, id: entry.id || generateId() }],
-        }))
+        set((state) => {
+          const newWorkforce = [...state.workforce, { ...entry, id: entry.id || generateId() }]
+          const totalWorkers = calculateTotalWorkers(newWorkforce)
+          return {
+            workforce: newWorkforce,
+            draftReport: state.draftReport
+              ? { ...state.draftReport, total_workers: totalWorkers }
+              : null,
+          }
+        })
       },
 
       updateWorkforceEntry: (id, updates) => {
-        set((state) => ({
-          workforce: state.workforce.map((e) => (e.id === id ? { ...e, ...updates } : e)),
-        }))
+        set((state) => {
+          const newWorkforce = state.workforce.map((e) =>
+            e.id === id ? { ...e, ...updates } : e
+          )
+          const totalWorkers = calculateTotalWorkers(newWorkforce)
+          return {
+            workforce: newWorkforce,
+            draftReport: state.draftReport
+              ? { ...state.draftReport, total_workers: totalWorkers }
+              : null,
+          }
+        })
       },
 
       removeWorkforceEntry: (id) => {
-        set((state) => ({
-          workforce: state.workforce.filter((e) => e.id !== id),
-        }))
+        set((state) => {
+          const newWorkforce = state.workforce.filter((e) => e.id !== id)
+          const totalWorkers = calculateTotalWorkers(newWorkforce)
+          return {
+            workforce: newWorkforce,
+            draftReport: state.draftReport
+              ? { ...state.draftReport, total_workers: totalWorkers }
+              : null,
+          }
+        })
       },
 
       addEquipmentEntry: (entry) => {
@@ -288,6 +417,84 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
         }))
       },
 
+      setConflict: (conflict) => {
+        set({ conflict, syncStatus: conflict ? 'conflict' : 'idle' })
+      },
+
+      resolveConflict: (strategy) => {
+        set((state) => {
+          if (!state.conflict) return state
+
+          switch (strategy) {
+            case 'keep_local':
+              // Keep local changes, force push to server
+              // The sync will proceed with local data
+              return {
+                conflict: null,
+                syncStatus: 'idle',
+              }
+            case 'keep_server':
+              // Discard local changes, use server data
+              return {
+                draftReport: state.conflict.serverData as DraftReport,
+                conflict: null,
+                syncStatus: 'idle',
+                syncQueue: state.syncQueue.filter(
+                  (item) => item.reportId !== state.conflict?.reportId
+                ),
+              }
+            case 'merge':
+              // Merge: local values take precedence for non-null fields
+              // Server values used for fields that are null/undefined locally
+              const merged = { ...state.conflict.serverData }
+              if (state.draftReport) {
+                Object.keys(state.draftReport).forEach((key) => {
+                  const localValue = state.draftReport?.[key as keyof DraftReport]
+                  if (localValue !== null && localValue !== undefined) {
+                    (merged as Record<string, unknown>)[key] = localValue
+                  }
+                })
+              }
+              return {
+                draftReport: merged as DraftReport,
+                conflict: null,
+                syncStatus: 'idle',
+              }
+            default:
+              return state
+          }
+        })
+      },
+
+      initializeFromExistingReport: (report, relatedData, serverUpdatedAt) => {
+        // For editing existing reports - tracks server timestamp for conflict detection
+        const copyWithNewIds = <T extends { id: string }>(items: T[] = []): T[] =>
+          items.map((item) => ({ ...item })) // Keep existing IDs for updates
+
+        set((state) => ({
+          draftReport: {
+            ...report,
+          },
+          workforce: copyWithNewIds(relatedData?.workforce),
+          equipment: copyWithNewIds(relatedData?.equipment),
+          deliveries: copyWithNewIds(relatedData?.deliveries),
+          visitors: copyWithNewIds(relatedData?.visitors),
+          photos: [],
+          // Add to sync queue with server timestamp for conflict detection
+          syncQueue: [
+            ...state.syncQueue.filter((item) => item.reportId !== report.id),
+            {
+              id: generateId(),
+              reportId: report.id,
+              action: 'update',
+              timestamp: Date.now(),
+              retries: 0,
+              lastKnownUpdatedAt: serverUpdatedAt,
+            },
+          ],
+        }))
+      },
+
       clearDraft: () => {
         set({
           draftReport: null,
@@ -299,6 +506,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
           syncQueue: [],
           syncStatus: 'idle',
           syncError: null,
+          conflict: null,
         })
       },
     }),

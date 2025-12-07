@@ -30,6 +30,12 @@ import {
   ClipboardCheck,
   Ruler,
   BarChart3,
+  CloudSun,
+  FileSignature,
+  CalendarCheck,
+  Truck,
+  DollarSign,
+  FileCheck,
 } from 'lucide-react'
 import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
@@ -54,18 +60,23 @@ const navigation: NavItemWithBadge[] = [
   { name: 'Projects', href: '/projects', icon: FolderOpen },
   { name: 'Messages', href: '/messages', icon: MessageSquare, badge: UnreadMessagesBadge },
   { name: 'Documents', href: '/documents', icon: Files },
-  { name: 'Takeoffs', href: '/takeoffs', icon: Ruler },
   { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
+  { name: 'Meetings', href: '/meetings', icon: CalendarCheck },
+  { name: 'Weather Logs', href: '/weather-logs', icon: CloudSun },
   { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
   { name: 'Workflows', href: '/workflows', icon: Workflow },
   { name: 'Notices', href: '/notices', icon: Mail },
+  { name: 'Site Instructions', href: '/site-instructions', icon: FileSignature },
   { name: 'Tasks', href: '/tasks', icon: ClipboardList },
   { name: 'Approvals', href: '/approvals', icon: CheckCircle2, badge: PendingApprovalsBadge },
   { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },
   { name: 'Checklists', href: '/checklists/templates', icon: CheckSquare },
   { name: 'RFIs', href: '/rfis', icon: AlertCircle },
   { name: 'Inspections', href: '/inspections', icon: ClipboardCheck },
+  { name: 'Permits', href: '/permits', icon: FileCheck },
   { name: 'Safety', href: '/safety', icon: Shield },
+  { name: 'Equipment', href: '/equipment', icon: Truck },
+  { name: 'Budget', href: '/budget', icon: DollarSign },
   { name: 'Contacts', href: '/contacts', icon: Users },
   { name: 'Reports', href: '/reports', icon: BarChart3 },
 ]
@@ -73,6 +84,13 @@ const navigation: NavItemWithBadge[] = [
 export function AppLayout({ children }: AppLayoutProps) {
   const { signOut, userProfile } = useAuth()
   const location = useLocation()
+
+  // Extract project ID from current route
+  const projectIdMatch = location.pathname.match(/\/projects\/([^/]+)/)
+  const currentProjectId = projectIdMatch ? projectIdMatch[1] : null
+
+  // Get user role
+  const userRole = userProfile?.role || 'user'
 
   // Initialize offline event listeners
   useEffect(() => {
@@ -121,6 +139,22 @@ export function AppLayout({ children }: AppLayoutProps) {
               </Link>
             )
           })}
+
+          {/* Conditional Takeoffs navigation - only show when viewing a project and user is internal */}
+          {currentProjectId && userRole !== 'client' && userRole !== 'subcontractor' && (
+            <Link
+              to={`/projects/${currentProjectId}/takeoffs`}
+              className={cn(
+                'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                location.pathname.includes('/takeoffs')
+                  ? 'bg-gray-800 text-white'
+                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+              )}
+            >
+              <Ruler className="h-5 w-5" />
+              <span className="flex-1">Takeoffs</span>
+            </Link>
+          )}
         </nav>
 
         {/* User profile and settings */}

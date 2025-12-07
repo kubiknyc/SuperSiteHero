@@ -348,3 +348,55 @@ export function downloadFile(content: string | Blob, filename: string) {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
+
+/**
+ * Helper function to convert database TakeoffItem to TakeoffMeasurement
+ */
+function dbItemToMeasurement(item: any): TakeoffMeasurement {
+  const measurementData = typeof item.measurement_data === 'object' && item.measurement_data !== null
+    ? item.measurement_data as Record<string, any>
+    : {}
+
+  return {
+    id: item.id,
+    type: item.measurement_type,
+    points: Array.isArray(measurementData.points) ? measurementData.points : [],
+    color: item.color || '#FF0000',
+    name: item.name,
+    dropHeight: measurementData.dropHeight,
+    pitch: measurementData.pitch,
+    height: measurementData.height,
+    depth: measurementData.depth,
+    crossSections: measurementData.crossSections,
+  }
+}
+
+/**
+ * Export takeoff items (from database) to CSV
+ */
+export function exportTakeoffsToCSV(
+  takeoffItems: any[],
+  projectName: string,
+  documentName: string
+): void {
+  const measurements = takeoffItems.map(dbItemToMeasurement)
+  // Use default scale for now - in production, should fetch from project settings
+  const csvContent = exportToCSV(measurements, undefined, projectName)
+  const filename = `${projectName}-${documentName}-takeoffs-${Date.now()}.csv`
+  downloadFile(csvContent, filename)
+}
+
+/**
+ * Export takeoff items (from database) to Excel
+ */
+export async function exportTakeoffsToExcel(
+  takeoffItems: any[],
+  projectName: string,
+  documentName: string
+): Promise<void> {
+  const measurements = takeoffItems.map(dbItemToMeasurement)
+  // Use default scale for now - in production, should fetch from project settings
+  const blob = await exportToExcel(measurements, undefined, projectName, documentName)
+  const filename = `${projectName}-${documentName}-takeoffs-${Date.now()}.xlsx`
+  downloadFile(blob, filename)
+}

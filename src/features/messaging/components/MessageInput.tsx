@@ -9,13 +9,22 @@
  */
 
 import { useState, useRef, useCallback, useEffect, KeyboardEvent } from 'react'
-import { Send, Paperclip, Smile, X, AtSign, Loader2 } from 'lucide-react'
-import { Button, Input } from '@/components/ui'
-import { useSendMessage, useTypingIndicator } from '../hooks'
+import { Send, Paperclip, Smile, X, AtSign, Loader2, Zap, AlertTriangle, AlertCircle } from 'lucide-react'
+import {
+  Button,
+  Input,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui'
+import { useSendMessage, useTypingIndicator, useMessageDraft } from '../hooks'
 import { useConversation } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { SendMessageDTO, MessageAttachment, ConversationParticipant } from '@/types/messaging'
-import { createMention, isValidMessageContent } from '@/types/messaging'
+import type { SendMessageDTO, MessageAttachment, ConversationParticipant, MessagePriority } from '@/types/messaging'
+import { createMention, isValidMessageContent, MESSAGE_PRIORITY_CONFIG } from '@/types/messaging'
 import { cn } from '@/lib/utils'
 import { uploadMessageAttachments } from '@/lib/storage/message-uploads'
 import { toast } from '@/lib/notifications/ToastContext'
@@ -26,16 +35,77 @@ interface MessageInputProps {
   onSent?: () => void
 }
 
+// Allowed MIME types for file attachments
+const ALLOWED_MIME_TYPES = new Set([
+  // Images
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  // Documents
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  // Text
+  'text/plain',
+  'text/csv',
+  // Archives (common in construction)
+  'application/zip',
+  'application/x-zip-compressed',
+])
+
+// Max file size: 50MB
+const MAX_FILE_SIZE = 50 * 1024 * 1024
+
+// Construction-specific quick message templates
+const CONSTRUCTION_TEMPLATES = [
+  { label: "When complete?", value: "When will this be complete?" },
+  { label: "Send photos", value: "Please send photos when this is complete." },
+  { label: "Materials on site?", value: "Do you have the required materials on site?" },
+  { label: "Crew size?", value: "What's your crew size for tomorrow?" },
+  { label: "Safety concern", value: "⚠️ Safety concern - please address immediately." },
+  { label: "Weather delay", value: "Weather delay today. Will update on schedule impact." },
+  { label: "Need shop drawing", value: "Can you send me the shop drawing for review?" },
+  { label: "Schedule conflict", value: "I see a potential schedule conflict. Can we discuss?" },
+]
+
+/**
+ * Validate a file's type and size
+ * Returns error message if invalid, null if valid
+ */
+function validateFile(file: File): string | null {
+  // Check MIME type
+  if (!ALLOWED_MIME_TYPES.has(file.type)) {
+    return `"${file.name}" has an unsupported file type (${file.type || 'unknown'})`
+  }
+
+  // Check file size
+  if (file.size > MAX_FILE_SIZE) {
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(1)
+    return `"${file.name}" is too large (${sizeMB}MB). Maximum size is 50MB`
+  }
+
+  return null
+}
+
 export function MessageInput({ conversationId, className, onSent }: MessageInputProps) {
   const { userProfile } = useAuth()
-  const [content, setContent] = useState('')
   const [attachments, setAttachments] = useState<MessageAttachment[]>([])
   const [isUploading, setIsUploading] = useState(false)
   const [showMentions, setShowMentions] = useState(false)
   const [mentionSearch, setMentionSearch] = useState('')
   const [mentionIndex, setMentionIndex] = useState(0)
+  const [priority, setPriority] = useState<MessagePriority>('normal')
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Message draft persistence - auto-saves to localStorage
+  const { draft: content, saveDraft: setContent, clearDraft } = useMessageDraft(conversationId)
 
   // Get conversation participants for @mentions
   const { data: conversation } = useConversation(conversationId)
@@ -146,14 +216,47 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
       return
     }
 
+    // Validate each file's type and size
+    const fileArray = Array.from(files)
+    const validationErrors: string[] = []
+    const validFiles: File[] = []
+
+    for (const file of fileArray) {
+      const error = validateFile(file)
+      if (error) {
+        validationErrors.push(error)
+      } else {
+        validFiles.push(file)
+      }
+    }
+
+    // Show validation errors
+    if (validationErrors.length > 0) {
+      // Show first 3 errors to avoid toast spam
+      const errorsToShow = validationErrors.slice(0, 3)
+      errorsToShow.forEach((error) => toast.error(error))
+      if (validationErrors.length > 3) {
+        toast.error(`...and ${validationErrors.length - 3} more file(s) rejected`)
+      }
+    }
+
+    // If no valid files, exit early
+    if (validFiles.length === 0) {
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+      return
+    }
+
     setIsUploading(true)
 
     try {
-      // Upload files to Supabase Storage
+      // Upload only valid files to Supabase Storage
       const uploadedAttachments = await uploadMessageAttachments(
         conversationId,
         userProfile!.id,
-        Array.from(files)
+        validFiles
       )
 
       setAttachments((prev) => [...prev, ...uploadedAttachments])
@@ -186,13 +289,15 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
       conversation_id: conversationId,
       content: trimmedContent,
       message_type: attachments.length > 0 ? 'file' : 'text',
+      priority: priority !== 'normal' ? priority : undefined,
       attachments: attachments.length > 0 ? attachments : undefined,
     }
 
     try {
       await sendMessage.mutateAsync(messageData)
-      setContent('')
+      clearDraft() // Clear the draft from localStorage
       setAttachments([])
+      setPriority('normal') // Reset priority after sending
       sendTyping(false)
       onSent?.()
     } catch (error) {
@@ -309,6 +414,89 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
             rows={1}
           />
         </div>
+
+        {/* Quick message templates */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-9 w-9 p-0 flex-shrink-0"
+              title="Quick messages"
+            >
+              <Zap className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Quick Messages</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {CONSTRUCTION_TEMPLATES.map((t) => (
+              <DropdownMenuItem
+                key={t.value}
+                onClick={() => setContent(t.value)}
+              >
+                {t.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Priority selector */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              variant={priority === 'normal' ? 'ghost' : 'outline'}
+              size="sm"
+              className={cn(
+                'h-9 w-9 p-0 flex-shrink-0',
+                priority === 'high' && 'text-amber-600 border-amber-300 bg-amber-50 hover:bg-amber-100',
+                priority === 'urgent' && 'text-red-600 border-red-300 bg-red-50 hover:bg-red-100'
+              )}
+              title={`Priority: ${MESSAGE_PRIORITY_CONFIG[priority].label}`}
+            >
+              {priority === 'normal' ? (
+                <AlertTriangle className="h-5 w-5 text-muted-foreground" />
+              ) : priority === 'high' ? (
+                <AlertTriangle className="h-5 w-5" />
+              ) : (
+                <AlertCircle className="h-5 w-5" />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Message Priority</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => setPriority('normal')}
+              className={cn(priority === 'normal' && 'bg-muted')}
+            >
+              <span className="flex items-center gap-2">
+                <span className="h-2 w-2 rounded-full bg-gray-400" />
+                Normal
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setPriority('high')}
+              className={cn(priority === 'high' && 'bg-muted')}
+            >
+              <span className="flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                High Priority
+              </span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => setPriority('urgent')}
+              className={cn(priority === 'urgent' && 'bg-muted')}
+            >
+              <span className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 text-red-500" />
+                Urgent - Safety
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Send button */}
         <Button

@@ -259,12 +259,18 @@ export const documentsApi = {
 
       return documents.length > 0 ? documents[0] : null
     } catch (error) {
-      throw error instanceof ApiErrorClass
-        ? error
-        : new ApiErrorClass({
-            code: 'FIND_DOCUMENT_ERROR',
-            message: 'Failed to find document',
-          })
+      // Re-throw ApiErrorClass instances to preserve the original error details
+      if (error instanceof ApiErrorClass) {
+        throw error
+      }
+
+      // For other errors, provide more context
+      const originalMessage = error instanceof Error ? error.message : 'Unknown error'
+      throw new ApiErrorClass({
+        code: 'FIND_DOCUMENT_ERROR',
+        message: `Failed to find document: ${originalMessage}`,
+        details: error,
+      })
     }
   },
 

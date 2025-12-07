@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useMutationWithNotification } from '@/lib/hooks/useMutationWithNotification'
 import { projectsApi } from '@/lib/api'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { logger } from '@/lib/utils/logger'
 import type { Project } from '@/types/database'
 
 /**
@@ -33,21 +34,19 @@ export function useCreateProjectWithNotification() {
         throw new Error('No role assigned to your user account. Please contact support.')
       }
 
-      // Validate role has permission
-      const allowedRoles = ['superintendent', 'project_manager', 'owner', 'admin']
-      if (!allowedRoles.includes(userProfile.role)) {
-        throw new Error(`Your role (${userProfile.role}) does not have permission to create projects`)
-      }
+      // Note: Role-based validation removed to match backend RLS policy (migration 018)
+      // The database RLS policy now allows any authenticated user to create projects
+      // Backend will enforce company_id isolation via RLS
 
       return projectsApi.createProject(userProfile.company_id, project, userProfile.id)
     },
     successMessage: (data) => `Project "${data.name}" created successfully`,
     errorMessage: (error) => `Failed to create project: ${error.message}`,
     onSuccess: () => {
-      console.log('🟢 CREATE PROJECT SUCCESS - Invalidating queries...')
+      logger.debug('CREATE PROJECT SUCCESS - Invalidating queries...')
       queryClient.invalidateQueries({ queryKey: ['projects'], exact: false })
       queryClient.invalidateQueries({ queryKey: ['my-projects'], exact: false })
-      console.log('🟢 CREATE PROJECT - Queries invalidated')
+      logger.debug('CREATE PROJECT - Queries invalidated')
     },
   })
 }

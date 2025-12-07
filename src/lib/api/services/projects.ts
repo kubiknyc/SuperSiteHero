@@ -55,13 +55,17 @@ export const projectsApi = {
    */
   async getUserProjects(userId: string): Promise<Project[]> {
     try {
-      const assignments = await apiClient.select('project_users', {
-        filters: [{ column: 'user_id', operator: 'eq', value: userId }],
-        select: 'project:projects(*)',
-      })
+      // Direct Supabase query to properly handle relation joins
+      const data = await apiClient.query<any>(
+        'project_users',
+        (query) =>
+          query
+            .select('project:projects(*)')
+            .eq('user_id', userId)
+      )
 
       // Extract projects from joined data
-      return assignments.map((a: any) => a.project).filter(Boolean) as Project[]
+      return data.map((a: any) => a.project).filter(Boolean) as Project[]
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error

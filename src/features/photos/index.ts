@@ -10,6 +10,7 @@ export { PhotoGrid } from './components/PhotoGrid'
 export { PhotoTimeline } from './components/PhotoTimeline'
 export { PhotoDetailDialog } from './components/PhotoDetailDialog'
 export { PhotoComparison, CreateComparisonDialog } from './components/PhotoComparison'
+export { LocationBrowser } from './components/LocationBrowser'
 
 // Pages
 export { PhotoOrganizerPage } from './pages/PhotoOrganizerPage'

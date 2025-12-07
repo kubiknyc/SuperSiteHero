@@ -16,7 +16,8 @@ export function useDailyReports(projectId: string | undefined) {
         .from('daily_reports')
         .select('*')
         .eq('project_id', projectId)
-        .order('report_date', { ascending: false }) as any
+        .order('report_date', { ascending: false })
+        .limit(100) as any
 
       if (error) {throw error}
       return data as DailyReport[]
@@ -25,21 +26,26 @@ export function useDailyReports(projectId: string | undefined) {
   })
 }
 
-// Fetch a single daily report by ID
+// Extended type for daily report with project relation
+export type DailyReportWithProject = DailyReport & {
+  project?: { id: string; name: string } | null
+}
+
+// Fetch a single daily report by ID (includes project name for PDF export)
 export function useDailyReport(reportId: string | undefined) {
-  return useQuery<DailyReport, Error, DailyReport>({
+  return useQuery<DailyReportWithProject, Error, DailyReportWithProject>({
     queryKey: ['daily-reports', reportId],
-    queryFn: async (): Promise<DailyReport> => {
+    queryFn: async (): Promise<DailyReportWithProject> => {
       if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase
         .from('daily_reports')
-        .select('*')
+        .select('*, project:projects(id, name)')
         .eq('id', reportId)
         .single() as any
 
       if (error) {throw error}
-      return data as DailyReport
+      return data as DailyReportWithProject
     },
     enabled: !!reportId,
   })
@@ -108,4 +114,57 @@ export function useDeleteDailyReport() {
       queryClient.invalidateQueries({ queryKey: ['daily-reports'] })
     },
   })
+}
+
+// Fetch the most recent daily report for a project (for "Copy from Previous" feature)
+export function usePreviousDayReport(projectId: string | undefined, excludeDate?: string) {
+  return useQuery({
+    queryKey: ['daily-reports', 'previous', projectId, excludeDate],
+    queryFn: async () => {
+      if (!projectId) {throw new Error('Project ID required')}
+
+      let query = supabase
+        .from('daily_reports')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('report_date', { ascending: false })
+        .limit(1)
+
+      // Exclude the current date if provided (so we don't copy from today)
+      if (excludeDate) {
+        query = query.lt('report_date', excludeDate)
+      }
+
+      const { data, error } = await query.single() as any
+
+      if (error) {
+        // No previous report found is not an error for this use case
+        if (error.code === 'PGRST116') {
+          return null
+        }
+        throw error
+      }
+      return data as DailyReport
+    },
+    enabled: !!projectId,
+  })
+}
+
+// Helper to extract copyable fields from a daily report
+export function extractCopyableFields(report: DailyReport): Partial<DailyReport> {
+  // Fields that should be copied from the previous report
+  // Excludes: id, report_date, status, created_at, updated_at, submitted_at, approved_at
+  const {
+    id: _id,
+    report_date: _date,
+    status: _status,
+    created_at: _created,
+    updated_at: _updated,
+    submitted_at: _submitted,
+    approved_at: _approved,
+    approved_by: _approvedBy,
+    ...copyableFields
+  } = report
+
+  return copyableFields
 }

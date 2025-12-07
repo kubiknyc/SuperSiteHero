@@ -60,7 +60,7 @@ import type { Document, Folder as FolderType, DocumentStatus, DocumentType } fro
  * This is a full page component used in App routing:
  * <Route path="/documents" element={<DocumentLibraryPage />} />
  */
-export function DocumentLibraryPage() {
+function DocumentLibraryPage() {
   const navigate = useNavigate()
 
   // State
@@ -599,3 +599,5 @@ export function DocumentLibraryPage() {
     </AppLayout>
   )
 }
+
+export default DocumentLibraryPage

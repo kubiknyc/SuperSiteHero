@@ -414,6 +414,12 @@ export function DrawingCanvas({
         shared_with_roles: null,
         related_to_id: null,
         related_to_type: null,
+        layer_id: null,
+        color: shape.stroke,
+        visible: true,
+        author_name: null,
+        permission_level: null,
+        shared_with_users: null,
       })
     } catch (error) {
       console.error('Failed to save markup:', error)

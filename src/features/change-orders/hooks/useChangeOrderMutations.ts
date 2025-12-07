@@ -5,12 +5,66 @@ import { useQueryClient } from '@tanstack/react-query'
 import { useMutationWithNotification } from '@/lib/hooks/useMutationWithNotification'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { supabase } from '@/lib/supabase'
+import { sendChangeOrderStatusNotification, type NotificationRecipient } from '@/lib/notifications/notification-service'
+import { logger } from '@/lib/utils/logger'
 import type { Database } from '@/types/database'
 
 // Type aliases
 type WorkflowItem = Database['public']['Tables']['workflow_items']['Row']
 type ChangeOrderBid = Database['public']['Tables']['change_order_bids']['Row']
 type WorkflowItemComment = Database['public']['Tables']['workflow_item_comments']['Row']
+
+/**
+ * Get project name
+ */
+async function getProjectName(projectId: string): Promise<string> {
+  try {
+    const { data } = await supabase
+      .from('projects')
+      .select('name')
+      .eq('id', projectId)
+      .single()
+    return data?.name || 'Unknown Project'
+  } catch {
+    return 'Unknown Project'
+  }
+}
+
+/**
+ * Get users involved in change order (assignees + creator)
+ */
+async function getChangeOrderRecipients(changeOrder: WorkflowItem): Promise<NotificationRecipient[]> {
+  const userIds = new Set<string>()
+
+  // Add creator
+  if (changeOrder.created_by) {
+    userIds.add(changeOrder.created_by)
+  }
+
+  // Add assignees
+  if (changeOrder.assignees && Array.isArray(changeOrder.assignees)) {
+    changeOrder.assignees.forEach((id: string) => userIds.add(id))
+  }
+
+  if (userIds.size === 0) return []
+
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, email, full_name')
+      .in('id', Array.from(userIds))
+
+    if (error || !data) return []
+
+    return data.map(user => ({
+      userId: user.id,
+      email: user.email,
+      name: user.full_name || undefined,
+    }))
+  } catch {
+    return []
+  }
+}
 
 /**
  * Create a new change order with automatic success/error notifications
@@ -141,11 +195,12 @@ export function useDeleteChangeOrderWithNotification() {
  */
 export function useUpdateChangeOrderStatusWithNotification() {
   const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
 
   return useMutationWithNotification<
     WorkflowItem,
     Error,
-    { changeOrderId: string; status: string }
+    { changeOrderId: string; status: string; previousStatus?: string }
   >({
     mutationFn: async ({ changeOrderId, status }) => {
       const { data, error } = await supabase
@@ -160,10 +215,42 @@ export function useUpdateChangeOrderStatusWithNotification() {
     },
     successMessage: (data) => `Status updated to "${data.status}"`,
     errorMessage: (error) => `Failed to update status: ${error.message}`,
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['change-orders'] })
       queryClient.invalidateQueries({ queryKey: ['change-orders', data.project_id] })
       queryClient.invalidateQueries({ queryKey: ['change-orders', data.id] })
+
+      // Send email notifications for important status changes
+      const notifiableStatuses = ['approved', 'rejected', 'pending_owner_review', 'pending_internal_approval']
+      if (notifiableStatuses.includes(data.status)) {
+        try {
+          const projectName = await getProjectName(data.project_id)
+          const recipients = await getChangeOrderRecipients(data)
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+          // Filter out the person who made the change
+          const recipientsToNotify = recipients.filter(r => r.userId !== userProfile?.id)
+
+          if (recipientsToNotify.length > 0) {
+            await sendChangeOrderStatusNotification(
+              recipientsToNotify,
+              {
+                changeOrderNumber: `CO-${data.number}`,
+                title: data.title,
+                projectName,
+                previousStatus: variables.previousStatus || 'unknown',
+                newStatus: data.status,
+                updatedBy: userProfile?.full_name || userProfile?.email || 'Unknown',
+                amount: data.cost_impact ? `$${data.cost_impact.toLocaleString()}` : undefined,
+                description: data.description || undefined,
+                viewUrl: `${appUrl}/change-orders/${data.id}`,
+              }
+            )
+          }
+        } catch (error) {
+          logger.error('[ChangeOrders] Failed to send status notification:', error)
+        }
+      }
     },
   })
 }

@@ -2,7 +2,7 @@
 // Unified Konva-based drawing canvas combining best features from both implementations
 
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
-import { Stage, Layer, Line, Arrow, Rect, Circle, Text as KonvaText, Transformer, Image as KonvaImage } from 'react-konva'
+import { Stage, Layer, Line, Arrow, Rect, Circle, Text as KonvaText, Transformer, Image as KonvaImage, Group } from 'react-konva'
 import type Konva from 'konva'
 import useImage from 'use-image'
 import { Button } from '@/components/ui/button'
@@ -11,10 +11,12 @@ import { cn } from '@/lib/utils'
 import { useDocumentMarkups, useCreateMarkup, useUpdateMarkup, useDeleteMarkup } from '../../hooks/useMarkups'
 import type { DocumentMarkup } from '@/lib/api/services/markups'
 import { MarkupToolbar } from './MarkupToolbar'
+import { EnhancedMarkupToolbar } from './EnhancedMarkupToolbar'
 import { MarkupFilterPanel, type MarkupFilter, type MarkupType } from '../MarkupFilterPanel'
 import { LinkMarkupDialog, type LinkableItemType } from '../LinkMarkupDialog'
 import type { AnnotationType } from '@/types/markup'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import toast from 'react-hot-toast'
 
 type Tool = AnnotationType | 'select' | 'pan' | 'eraser'
@@ -28,6 +30,12 @@ interface UnifiedDrawingCanvasProps {
   height?: number
   readOnly?: boolean
   onSave?: () => void
+  // Enhanced markup props
+  selectedLayerId?: string | null
+  visibleLayerIds?: string[]
+  selectedColor?: string
+  selectedLineWidth?: number
+  markupState?: ReturnType<typeof useEnhancedMarkupState>
 }
 
 interface Shape {
@@ -51,6 +59,8 @@ interface Shape {
   createdBy?: string  // User ID who created this markup
   relatedToId?: string | null  // ID of linked item (RFI, Task, Punch Item)
   relatedToType?: string | null  // Type of linked item
+  layerId?: string | null  // Layer this markup belongs to
+  visible?: boolean  // Controlled by layer visibility
 }
 
 /**
@@ -74,11 +84,25 @@ export function UnifiedDrawingCanvas({
   height = 600,
   readOnly = false,
   onSave,
+  selectedLayerId = null,
+  visibleLayerIds,
+  selectedColor: propColor,
+  selectedLineWidth: propLineWidth,
+  markupState,
 }: UnifiedDrawingCanvasProps) {
   // Tool state
   const [tool, setTool] = useState<Tool>('select')
-  const [color, setColor] = useState('#FF0000')
-  const [strokeWidth, setStrokeWidth] = useState(3)
+  const [color, setColor] = useState(propColor || '#FF0000')
+  const [strokeWidth, setStrokeWidth] = useState(propLineWidth || 3)
+
+  // Sync color/lineWidth from props when they change
+  useEffect(() => {
+    if (propColor) setColor(propColor)
+  }, [propColor])
+
+  useEffect(() => {
+    if (propLineWidth) setStrokeWidth(propLineWidth)
+  }, [propLineWidth])
 
   // Filter state for layer visibility
   const [filter, setFilter] = useState<MarkupFilter>({
@@ -152,16 +176,27 @@ export function UnifiedDrawingCanvas({
     return counts
   }, [shapes])
 
-  // Filter shapes based on active filters
+  // Filter shapes based on active filters and layer visibility
   const filteredShapes = useMemo(() => {
     return shapes.filter(shape => {
       // Filter by type
       if (!filter.types.includes(shape.type as MarkupType)) {return false}
       // Filter by hidden layers (by creator)
       if (shape.createdBy && filter.hiddenLayers.includes(shape.createdBy)) {return false}
+
+      // Filter by layer visibility (use markupState if available, otherwise fall back to props)
+      if (markupState) {
+        // Get visible layer IDs from markupState
+        const visibleLayers = markupState.layers.filter((l: any) => l.visible).map((l: any) => l.id)
+        if (shape.layerId && !visibleLayers.includes(shape.layerId)) {return false}
+      } else if (visibleLayerIds && shape.layerId && !visibleLayerIds.includes(shape.layerId)) {
+        // Fallback to prop-based filtering
+        return false
+      }
+
       return true
     })
-  }, [shapes, filter])
+  }, [shapes, filter, visibleLayerIds, markupState])
 
   // Load existing markups from database
   useEffect(() => {
@@ -175,12 +210,32 @@ export function UnifiedDrawingCanvas({
         createdBy: markup.created_by || undefined,
         relatedToId: markup.related_to_id || undefined,
         relatedToType: markup.related_to_type || undefined,
+        layerId: markup.layer_id || undefined,
+        visible: markup.visible ?? true,
       }))
       setShapes(loadedShapes)
       setHistory([loadedShapes])
       setHistoryStep(0)
     }
   }, [existingMarkups])
+
+  // Auto-create default layer when first markup is created (if using markupState)
+  useEffect(() => {
+    if (markupState && shapes.length > 0 && markupState.layers.length === 0 && !markupState.layersLoading && documentId) {
+      // Create default layer
+      markupState.onCreateLayer({
+        documentId,
+        name: 'Default Layer',
+        color: '#FF0000',
+        visible: true,
+        locked: false,
+        order: 0,
+        isDefault: true,
+        createdBy: markupState.currentUserId,
+        description: 'Automatically created default layer',
+      })
+    }
+  }, [shapes.length, markupState, documentId])
 
   // Update transformer when selection changes
   useEffect(() => {
@@ -337,6 +392,83 @@ export function UnifiedDrawingCanvas({
     })
   }, [debouncedUpdateShape])
 
+  // ============================================================
+  // MEASUREMENT & STAMP HANDLERS
+  // ============================================================
+
+  // Handle stamp placement
+  const handleStampPlacement = useCallback((pos: { x: number; y: number }) => {
+    if (!markupState?.selectedStamp) return
+
+    const stampType = markupState.selectedStamp
+    let stampText = ''
+
+    if (stampType === 'CUSTOM') {
+      stampText = markupState.customStampText || 'CUSTOM'
+    } else {
+      stampText = stampType.replace(/_/g, ' ')
+    }
+
+    // Get stamp color based on type
+    const getStampColor = (type: string) => {
+      switch (type) {
+        case 'APPROVED': return '#10B981'
+        case 'REJECTED': return '#EF4444'
+        case 'REVIEWED': return '#3B82F6'
+        case 'FOR_REVIEW': return '#F59E0B'
+        case 'REVISED': return '#8B5CF6'
+        default: return '#6B7280'
+      }
+    }
+
+    const stampColor = getStampColor(stampType)
+
+    const stampShape: Shape = {
+      id: `stamp-${Date.now()}`,
+      type: 'text' as AnnotationType, // Use text type for stamps
+      x: pos.x - 50,
+      y: pos.y - 20,
+      width: 100,
+      height: 40,
+      text: stampText,
+      stroke: stampColor,
+      fill: `${stampColor}22`,
+      strokeWidth: 2,
+      layerId: markupState.selectedLayerId || undefined,
+    }
+
+    setShapes(prev => [...prev, stampShape])
+    const newHistory = history.slice(0, historyStep + 1)
+    newHistory.push([...shapes, stampShape])
+    setHistory(newHistory)
+    setHistoryStep(newHistory.length - 1)
+
+    // Save stamp to database (will be called after definition)
+    setTimeout(() => saveShapeToDatabase(stampShape), 0)
+
+    // Auto-deselect stamp after placing
+    markupState.onStampSelect(null)
+    markupState.setSelectedTool('select')
+  }, [markupState, shapes, history, historyStep])
+
+  // Handle calibration start
+  const handleCalibrationStart = useCallback((pos: { x: number; y: number }) => {
+    // This would start drawing a calibration line
+    // For now, we'll create a simple line that users can adjust
+    toast('Click and drag to draw calibration line', { icon: 'ℹ️' })
+  }, [])
+
+  // Handle measurement start
+  const handleMeasurementStart = useCallback((type: 'distance' | 'area', pos: { x: number; y: number }) => {
+    if (!markupState?.scale) {
+      toast.error('Please calibrate the scale first using the calibration tool')
+      return
+    }
+
+    toast(`${type === 'distance' ? 'Distance' : 'Area'} measurement started. Click to add points.`, { icon: 'ℹ️' })
+    // Additional measurement logic would go here
+  }, [markupState])
+
   // Handle mouse down - start drawing or panning
   const handleMouseDown = (e: Konva.KonvaEventObject<MouseEvent>) => {
     if (readOnly) {return}
@@ -366,9 +498,33 @@ export function UnifiedDrawingCanvas({
     // Eraser mode - handled in handleShapeClick
     if (tool === 'eraser') {return}
 
+    const canvasPoint = getCanvasPoint(pos)
+
+    // Stamp mode - place stamp at click location
+    if (markupState?.selectedStamp && (tool as any) === 'stamp') {
+      handleStampPlacement(canvasPoint)
+      return
+    }
+
+    // Calibration mode - start drawing calibration line
+    if ((tool as any) === 'calibrate' && markupState?.isCalibrating) {
+      handleCalibrationStart(canvasPoint)
+      return
+    }
+
+    // Measurement modes
+    if ((tool as any) === 'measure-distance') {
+      handleMeasurementStart('distance', canvasPoint)
+      return
+    }
+
+    if ((tool as any) === 'measure-area') {
+      handleMeasurementStart('area', canvasPoint)
+      return
+    }
+
     // Drawing mode
     setIsDrawing(true)
-    const canvasPoint = getCanvasPoint(pos)
 
     const newShape: Shape = {
       id: `shape-${Date.now()}`,
@@ -377,6 +533,7 @@ export function UnifiedDrawingCanvas({
       y: canvasPoint.y,
       stroke: color,
       strokeWidth: strokeWidth,
+      layerId: selectedLayerId || undefined,
     }
 
     if (tool === 'freehand') {
@@ -545,6 +702,12 @@ export function UnifiedDrawingCanvas({
         shared_with_roles: null,
         related_to_id: null,
         related_to_type: null,
+        layer_id: shape.layerId || markupState?.selectedLayerId || null,
+        color: shape.stroke || markupState?.selectedColor || color,
+        visible: true,
+        author_name: null,
+        permission_level: null,
+        shared_with_users: null,
       })
 
       onSave?.()
@@ -728,18 +891,92 @@ export function UnifiedDrawingCanvas({
     <div className="relative w-full h-full flex flex-col">
       {/* Toolbar */}
       {!readOnly && (
-        <MarkupToolbar
-          selectedTool={tool}
-          selectedColor={color}
-          lineWidth={strokeWidth}
-          onToolChange={setTool}
-          onColorChange={setColor}
-          onLineWidthChange={setStrokeWidth}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onResetView={handleResetView}
-          disabled={false}
-        />
+        <>
+          {markupState ? (
+            <EnhancedMarkupToolbar
+              // Tool state
+              selectedTool={markupState.selectedTool}
+              onToolChange={markupState.setSelectedTool}
+
+              // Color state
+              selectedColor={markupState.selectedColor}
+              onColorChange={markupState.onColorChange}
+              recentColors={markupState.recentColors}
+              onRecentColorsChange={() => {}} // Handled internally by markupState
+
+              // Line width
+              lineWidth={markupState.lineWidth}
+              onLineWidthChange={markupState.setLineWidth}
+
+              // Layer state
+              layers={markupState.layers}
+              selectedLayerId={markupState.selectedLayerId}
+              onSelectLayer={markupState.onSelectLayer}
+              onCreateLayer={markupState.onCreateLayer}
+              onUpdateLayer={markupState.onUpdateLayer}
+              onDeleteLayer={markupState.onDeleteLayer}
+              onReorderLayer={markupState.onReorderLayer}
+              onToggleLayerVisibility={markupState.onToggleLayerVisibility}
+              onToggleLayerLock={markupState.onToggleLayerLock}
+
+              // Measurement state
+              activeMeasurementType={markupState.activeMeasurementType}
+              onMeasurementTypeChange={markupState.onMeasurementTypeChange}
+              currentMeasurementUnit={markupState.currentMeasurementUnit}
+              onMeasurementUnitChange={markupState.onMeasurementUnitChange}
+              scale={markupState.scale}
+              onCalibrateScale={markupState.onCalibrateScale}
+              measurements={markupState.measurements}
+              onDeleteMeasurement={markupState.onDeleteMeasurement}
+              onClearAllMeasurements={markupState.onClearAllMeasurements}
+              isCalibrating={markupState.isCalibrating}
+              onStartCalibration={markupState.onStartCalibration}
+              onCancelCalibration={markupState.onCancelCalibration}
+              calibrationPixelDistance={markupState.calibrationPixelDistance}
+
+              // Stamp state
+              selectedStamp={markupState.selectedStamp}
+              onStampSelect={markupState.onStampSelect}
+              customStampText={markupState.customStampText}
+              onCustomStampTextChange={markupState.onCustomStampTextChange}
+
+              // History state
+              markups={markupState.markups}
+              authors={markupState.authors}
+              currentUserId={markupState.currentUserId}
+              onSelectMarkup={markupState.onSelectMarkup}
+              onDeleteMarkup={markupState.onDeleteMarkup}
+              onEditMarkup={markupState.onEditMarkup}
+              onViewMarkup={markupState.onViewMarkup}
+              selectedMarkupId={markupState.selectedMarkupId}
+
+              // Zoom controls
+              onZoomIn={markupState.onZoomIn}
+              onZoomOut={markupState.onZoomOut}
+              onResetView={markupState.onResetView}
+              currentZoom={markupState.zoom}
+
+              // Sharing (optional)
+              onOpenShareDialog={() => {/* TODO: implement sharing */}}
+              canShare={false}
+
+              disabled={false}
+            />
+          ) : (
+            <MarkupToolbar
+              selectedTool={tool}
+              selectedColor={color}
+              lineWidth={strokeWidth}
+              onToolChange={setTool}
+              onColorChange={setColor}
+              onLineWidthChange={setStrokeWidth}
+              onZoomIn={handleZoomIn}
+              onZoomOut={handleZoomOut}
+              onResetView={handleResetView}
+              disabled={false}
+            />
+          )}
+        </>
       )}
 
       {/* Action Buttons (Undo/Redo/Clear) */}
@@ -907,22 +1144,76 @@ export function UnifiedDrawingCanvas({
                   />
                 )
               } else if (shape.type === 'text') {
-                return (
-                  <KonvaText
-                    key={shape.id}
-                    id={shape.id}
-                    x={shape.x}
-                    y={shape.y}
-                    text={shape.text || ''}
-                    fontSize={16}
-                    fill={shape.fill || color}
-                    draggable={tool === 'select'}
-                    onClick={() => handleShapeClick(shape.id)}
-                    onTap={() => handleShapeClick(shape.id)}
-                    onDragEnd={handleDragEnd}
-                    onTransformEnd={handleTransformEnd}
-                  />
-                )
+                // Check if this is a stamp (has width and height properties)
+                const isStamp = shape.width && shape.height
+
+                if (isStamp) {
+                  // Render as stamp with border and background
+                  const stampWidth = shape.width || 100
+                  const stampHeight = shape.height || 40
+
+                  return (
+                    <Group
+                      key={shape.id}
+                      draggable={tool === 'select'}
+                      onClick={() => handleShapeClick(shape.id)}
+                      onTap={() => handleShapeClick(shape.id)}
+                      onDragEnd={handleDragEnd}
+                    >
+                      {/* Outer border with dashed line */}
+                      <Rect
+                        x={shape.x}
+                        y={shape.y}
+                        width={stampWidth}
+                        height={stampHeight}
+                        stroke={shape.stroke}
+                        strokeWidth={shape.strokeWidth || 2}
+                        fill={shape.fill}
+                        cornerRadius={4}
+                        dash={[5, 5]}
+                      />
+                      {/* Inner border */}
+                      <Rect
+                        x={shape.x + 4}
+                        y={shape.y + 4}
+                        width={stampWidth - 8}
+                        height={stampHeight - 8}
+                        stroke={shape.stroke}
+                        strokeWidth={1}
+                        cornerRadius={2}
+                      />
+                      {/* Stamp text */}
+                      <KonvaText
+                        x={shape.x}
+                        y={shape.y + (stampHeight - 16) / 2}
+                        width={stampWidth}
+                        text={shape.text || ''}
+                        fontSize={14}
+                        fontStyle="bold"
+                        fill={shape.stroke}
+                        align="center"
+                      />
+                    </Group>
+                  )
+                } else {
+                  // Regular text
+                  return (
+                    <KonvaText
+                      key={shape.id}
+                      id={shape.id}
+                      x={shape.x}
+                      y={shape.y}
+                      text={shape.text || ''}
+                      fontSize={16}
+                      fill={shape.fill || color}
+                      draggable={tool === 'select'}
+                      onClick={() => handleShapeClick(shape.id)}
+                      onTap={() => handleShapeClick(shape.id)}
+                      onDragEnd={handleDragEnd}
+                      onTransformEnd={handleTransformEnd}
+                    />
+                  )
+                }
               }
               return null
             })}

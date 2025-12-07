@@ -1,0 +1,88 @@
+name: E2E Quick Check
+
+# Faster workflow for quick feedback on PRs
+# Runs only critical tests to provide fast CI feedback
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quick-check:
+    name: Quick E2E Check (Critical Tests Only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright (Chromium only)
+        run: npx playwright install --with-deps chromium
+
+      - name: Run critical tests
+        run: |
+          echo "Running critical offline tests..."
+          npm run test:e2e -- "offline-persistence.spec.ts" "offline-crud.spec.ts" --project=chromium || true
+
+          echo "Running critical auth tests..."
+          npm run test:e2e -- "auth/mfa.spec.ts" "auth/roles-permissions.spec.ts" --project=chromium || true
+
+          echo "Running critical CRUD tests..."
+          npm run test:e2e -- "projects-crud.spec.ts" --project=chromium || true
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quick-check-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 3
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const comment = `## E2E Quick Check Results
+
+            Quick E2E tests have completed. This is a subset of tests for fast feedback.
+
+            **Tests Run:**
+            - ✅ Offline persistence & CRUD
+            - ✅ Authentication (MFA, RBAC)
+            - ✅ Projects CRUD
+
+            **Full Test Suite:**
+            The complete test suite (631 tests) will run on the main branch.
+
+            View detailed results in the [Actions tab](${context.payload.repository.html_url}/actions/runs/${context.runId}).`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });

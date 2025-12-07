@@ -21,13 +21,13 @@ import { ArrowLeft, Edit, Loader2, Calendar } from 'lucide-react'
 import { format } from 'date-fns'
 
 export function ProjectDetailPage() {
+  // Call all hooks at the top level, before any conditional returns
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
-
-  // Call hooks before any conditional returns
   const { data: project, isLoading, error } = useProject(projectId || '')
 
+  // Early return after all hooks are called
   if (!projectId) {
     return (
       <AppLayout>

@@ -1,0 +1,532 @@
+// File: /src/pages/meetings/MeetingDetailPage.tsx
+// Meeting detail view with minutes, attendees, and action items
+
+import { useState } from 'react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { AppLayout } from '@/components/layout/AppLayout'
+import {
+  useMeeting,
+  useDeleteMeeting,
+  useUpdateActionItem,
+  MEETING_TYPES,
+  MEETING_STATUSES,
+  ACTION_ITEM_PRIORITIES,
+  ACTION_ITEM_CATEGORIES,
+  ATTENDEE_REPRESENTING,
+  type MeetingAttendee,
+  type MeetingActionItem,
+} from '@/features/meetings/hooks'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
+import {
+  ArrowLeft,
+  Edit,
+  Trash2,
+  Calendar,
+  Clock,
+  MapPin,
+  Users,
+  FileText,
+  ListChecks,
+  MessageSquare,
+  CheckCircle2,
+  Circle,
+  AlertCircle,
+  Download,
+  Send,
+} from 'lucide-react'
+import { format, parseISO } from 'date-fns'
+
+export function MeetingDetailPage() {
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const { data: meeting, isLoading, error } = useMeeting(id)
+  const deleteMeeting = useDeleteMeeting()
+  const updateActionItem = useUpdateActionItem()
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  // Get meeting type label
+  const getMeetingTypeLabel = (type: string) => {
+    return MEETING_TYPES.find((t) => t.value === type)?.label || type
+  }
+
+  // Handle delete
+  const handleDelete = async () => {
+    if (!id) return
+    try {
+      await deleteMeeting.mutateAsync(id)
+      navigate('/meetings')
+    } catch (err) {
+      console.error('Failed to delete meeting:', err)
+    }
+  }
+
+  // Toggle action item completion
+  const handleToggleActionItem = async (actionItem: MeetingActionItem) => {
+    if (!id) return
+    const newStatus = actionItem.status === 'completed' ? 'open' : 'completed'
+    await updateActionItem.mutateAsync({
+      meetingId: id,
+      actionItemId: actionItem.id,
+      updates: {
+        status: newStatus,
+        completedDate: newStatus === 'completed' ? new Date().toISOString() : undefined,
+      },
+    })
+  }
+
+  // Get action item status icon
+  const getActionItemIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle2 className="h-5 w-5 text-green-600" />
+      case 'in_progress':
+        return <AlertCircle className="h-5 w-5 text-yellow-600" />
+      default:
+        return <Circle className="h-5 w-5 text-gray-400" />
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6 text-center">
+          <p className="text-gray-500">Loading meeting details...</p>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  if (error || !meeting) {
+    return (
+      <AppLayout>
+        <div className="p-6 text-center">
+          <p className="text-red-600">Failed to load meeting</p>
+          <Button variant="outline" onClick={() => navigate('/meetings')} className="mt-4">
+            Back to Meetings
+          </Button>
+        </div>
+      </AppLayout>
+    )
+  }
+
+  const attendees = meeting.attendees as MeetingAttendee[] | null
+  const actionItems = meeting.action_items as MeetingActionItem[] | null
+
+  return (
+    <AppLayout>
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-start justify-between">
+          <div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/meetings')}
+              className="mb-2"
+            >
+              <ArrowLeft className="h-4 w-4 mr-1" />
+              Back to Meetings
+            </Button>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {meeting.meeting_name || getMeetingTypeLabel(meeting.meeting_type)}
+            </h1>
+            <div className="flex items-center gap-3 mt-2">
+              <Badge variant="outline">{getMeetingTypeLabel(meeting.meeting_type)}</Badge>
+              {meeting.projects && (
+                <Link
+                  to={`/projects/${meeting.projects.id}`}
+                  className="text-sm text-blue-600 hover:underline"
+                >
+                  {meeting.projects.name}
+                </Link>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <Download className="h-4 w-4 mr-1" />
+              Export PDF
+            </Button>
+            <Button variant="outline" size="sm">
+              <Send className="h-4 w-4 mr-1" />
+              Distribute
+            </Button>
+            <Link to={`/meetings/${id}/edit`}>
+              <Button variant="outline" size="sm">
+                <Edit className="h-4 w-4 mr-1" />
+                Edit
+              </Button>
+            </Link>
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={() => setShowDeleteConfirm(true)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Delete Confirmation */}
+        {showDeleteConfirm && (
+          <Card className="border-red-200 bg-red-50">
+            <CardContent className="p-4">
+              <p className="text-red-800 mb-4">
+                Are you sure you want to delete this meeting? This action cannot be undone.
+              </p>
+              <div className="flex gap-2">
+                <Button variant="destructive" size="sm" onClick={handleDelete}>
+                  Yes, Delete
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowDeleteConfirm(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Meeting Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Meeting Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Date</p>
+                    <p className="text-gray-900">
+                      {format(parseISO(meeting.meeting_date), 'EEEE, MMMM d, yyyy')}
+                    </p>
+                  </div>
+                  {meeting.meeting_time && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Time</p>
+                      <p className="text-gray-900">{meeting.meeting_time}</p>
+                    </div>
+                  )}
+                  {meeting.duration_minutes && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Duration</p>
+                      <p className="text-gray-900">{meeting.duration_minutes} minutes</p>
+                    </div>
+                  )}
+                  {meeting.location && (
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Location</p>
+                      <p className="text-gray-900 flex items-center gap-1">
+                        <MapPin className="h-4 w-4 text-gray-400" />
+                        {meeting.location}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Agenda */}
+            {meeting.agenda && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Agenda
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm max-w-none">
+                    <pre className="whitespace-pre-wrap font-sans text-gray-700">
+                      {meeting.agenda}
+                    </pre>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Discussion Notes / Minutes */}
+            {meeting.discussion_notes && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5" />
+                    Meeting Minutes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm max-w-none">
+                    <pre className="whitespace-pre-wrap font-sans text-gray-700">
+                      {meeting.discussion_notes}
+                    </pre>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Decisions */}
+            {meeting.decisions && (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Key Decisions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="prose prose-sm max-w-none">
+                    <pre className="whitespace-pre-wrap font-sans text-gray-700">
+                      {meeting.decisions}
+                    </pre>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Action Items */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ListChecks className="h-5 w-5" />
+                  Action Items
+                </CardTitle>
+                <CardDescription>
+                  {actionItems?.length || 0} action item{actionItems?.length !== 1 ? 's' : ''}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {actionItems && actionItems.length > 0 ? (
+                  <div className="space-y-3">
+                    {actionItems.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50"
+                      >
+                        <button
+                          onClick={() => handleToggleActionItem(item)}
+                          className="mt-0.5"
+                        >
+                          {getActionItemIcon(item.status)}
+                        </button>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p
+                              className={`text-gray-900 ${
+                                item.status === 'completed' ? 'line-through text-gray-500' : ''
+                              }`}
+                            >
+                              {item.description}
+                            </p>
+                            {item.priority && (
+                              <Badge
+                                variant={
+                                  item.priority === 'high'
+                                    ? 'destructive'
+                                    : item.priority === 'medium'
+                                    ? 'default'
+                                    : 'secondary'
+                                }
+                                className="text-xs"
+                              >
+                                {item.priority}
+                              </Badge>
+                            )}
+                            {item.category && (
+                              <Badge variant="outline" className="text-xs">
+                                {ACTION_ITEM_CATEGORIES.find((c) => c.value === item.category)?.label || item.category}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                            {item.assignee && (
+                              <span>
+                                Assigned to: {item.assignee}
+                                {item.assignee_company && ` (${item.assignee_company})`}
+                              </span>
+                            )}
+                            {item.dueDate && (
+                              <span>Due: {format(parseISO(item.dueDate), 'MMM d, yyyy')}</span>
+                            )}
+                            {item.completedDate && (
+                              <span className="text-green-600">
+                                Completed: {format(parseISO(item.completedDate), 'MMM d, yyyy')}
+                              </span>
+                            )}
+                          </div>
+                          {(item.cost_impact || item.schedule_impact) && (
+                            <div className="flex items-center gap-2 mt-1 text-xs">
+                              {item.cost_impact && (
+                                <span className="text-orange-600 bg-orange-50 px-2 py-0.5 rounded">
+                                  Cost Impact
+                                </span>
+                              )}
+                              {item.schedule_impact && (
+                                <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                                  Schedule Impact
+                                  {item.schedule_impact_days && ` (${item.schedule_impact_days} days)`}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <Badge
+                          variant={
+                            item.status === 'completed'
+                              ? 'success'
+                              : item.status === 'in_progress'
+                              ? 'default'
+                              : item.status === 'cancelled'
+                              ? 'destructive'
+                              : 'secondary'
+                          }
+                        >
+                          {item.status.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-4">
+                    No action items recorded for this meeting.
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Attendees */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Attendees
+                </CardTitle>
+                <CardDescription>
+                  {attendees?.length || 0} attendee{attendees?.length !== 1 ? 's' : ''}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {attendees && attendees.length > 0 ? (
+                  <div className="space-y-3">
+                    {attendees.map((attendee, index) => (
+                      <div key={index} className="p-3 border rounded-lg hover:bg-gray-50">
+                        <div className="flex items-start gap-3">
+                          <div
+                            className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                              attendee.present !== false ? 'bg-green-500' : 'bg-gray-300'
+                            }`}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-medium text-gray-900">{attendee.name}</p>
+                              {attendee.required && (
+                                <Badge variant="outline" className="text-xs">Required</Badge>
+                              )}
+                              {attendee.representing && (
+                                <Badge variant="secondary" className="text-xs">
+                                  {ATTENDEE_REPRESENTING.find(r => r.value === attendee.representing)?.label || attendee.representing}
+                                </Badge>
+                              )}
+                            </div>
+                            {attendee.title && (
+                              <p className="text-sm text-gray-700">{attendee.title}</p>
+                            )}
+                            {attendee.company && (
+                              <p className="text-sm text-gray-500">{attendee.company}</p>
+                            )}
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-gray-500">
+                              {attendee.role && <span>Role: {attendee.role}</span>}
+                              {attendee.trade && <span>Trade: {attendee.trade}</span>}
+                              {attendee.email && <span>{attendee.email}</span>}
+                              {attendee.phone && <span>{attendee.phone}</span>}
+                            </div>
+                            {attendee.signature && (
+                              <p className="text-xs text-green-600 mt-1">✓ Signed</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 text-center py-4">No attendees recorded.</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Distribution List */}
+            {meeting.distributed_to && meeting.distributed_to.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Send className="h-5 w-5" />
+                    Distributed To
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-1">
+                    {meeting.distributed_to.map((email, index) => (
+                      <p key={index} className="text-sm text-gray-600">
+                        {email}
+                      </p>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Metadata */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                {meeting.created_at && (
+                  <div>
+                    <p className="text-gray-500">Created</p>
+                    <p className="text-gray-900">
+                      {format(parseISO(meeting.created_at), 'MMM d, yyyy h:mm a')}
+                    </p>
+                  </div>
+                )}
+                {meeting.updated_at && (
+                  <div>
+                    <p className="text-gray-500">Last Updated</p>
+                    <p className="text-gray-900">
+                      {format(parseISO(meeting.updated_at), 'MMM d, yyyy h:mm a')}
+                    </p>
+                  </div>
+                )}
+                {meeting.minutes_pdf_url && (
+                  <div>
+                    <a
+                      href={meeting.minutes_pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline flex items-center gap-1"
+                    >
+                      <Download className="h-4 w-4" />
+                      Download Minutes PDF
+                    </a>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </AppLayout>
+  )
+}

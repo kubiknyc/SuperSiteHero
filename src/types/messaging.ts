@@ -14,6 +14,7 @@
 
 export type ConversationType = 'direct' | 'group' | 'project'
 export type MessageType = 'text' | 'file' | 'system'
+export type MessagePriority = 'normal' | 'high' | 'urgent'
 
 // =====================================================
 // CORE INTERFACES
@@ -63,6 +64,7 @@ export interface Message {
   sender_id: string
   content: string
   message_type: MessageType
+  priority: MessagePriority
   attachments: MessageAttachment[] | null
   mentioned_users: string[] | null
   parent_message_id: string | null
@@ -123,6 +125,7 @@ export interface SendMessageDTO {
   conversation_id: string
   content: string
   message_type?: MessageType
+  priority?: MessagePriority
   attachments?: MessageAttachment[]
   mentioned_users?: string[]
   parent_message_id?: string
@@ -295,6 +298,33 @@ export const MESSAGE_TYPE_CONFIG = {
   system: {
     label: 'System Message',
     icon: 'Info',
+  },
+} as const
+
+export const MESSAGE_PRIORITY_CONFIG = {
+  normal: {
+    label: 'Normal',
+    icon: 'MessageSquare',
+    color: 'gray',
+    bgClass: '',
+    textClass: '',
+    borderClass: '',
+  },
+  high: {
+    label: 'High Priority',
+    icon: 'AlertTriangle',
+    color: 'amber',
+    bgClass: 'bg-amber-50',
+    textClass: 'text-amber-700',
+    borderClass: 'border-l-4 border-l-amber-400',
+  },
+  urgent: {
+    label: 'Urgent - Safety',
+    icon: 'AlertCircle',
+    color: 'red',
+    bgClass: 'bg-red-50',
+    textClass: 'text-red-700',
+    borderClass: 'border-l-4 border-l-red-500',
   },
 } as const
 

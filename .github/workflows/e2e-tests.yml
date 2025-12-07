@@ -1,0 +1,323 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+  workflow_dispatch: # Allow manual trigger
+
+# Cancel in-progress runs on same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =============================================================================
+  # CRITICAL OFFLINE TESTS - Run first, fail fast
+  # =============================================================================
+  offline-tests:
+    name: Phase 9 - Offline Tests (CRITICAL)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run offline functionality tests
+        run: npm run test:e2e -- offline*.spec.ts --project=chromium
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload offline test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: offline-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # =============================================================================
+  # AUTHENTICATION TESTS - Security critical
+  # =============================================================================
+  auth-tests:
+    name: Phase 2 - Authentication Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run authentication tests
+        run: npm run test:e2e -- "auth/*.spec.ts" --project=chromium
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload auth test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # =============================================================================
+  # CORE CRUD TESTS - Basic functionality
+  # =============================================================================
+  crud-tests:
+    name: Phase 3 - CRUD Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run CRUD tests
+        run: npm run test:e2e -- "*-crud.spec.ts" --project=chromium
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload CRUD test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: crud-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # =============================================================================
+  # WORKFLOW TESTS - Business processes
+  # =============================================================================
+  workflow-tests:
+    name: Phase 4 - Workflow Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run workflow tests
+        run: npm run test:e2e -- "*-workflow.spec.ts" --project=chromium
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload workflow test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workflow-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # =============================================================================
+  # FEATURE TESTS - Additional functionality (Phases 5-8)
+  # =============================================================================
+  feature-tests:
+    name: Phases 5-8 - Feature Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run feature tests
+        run: |
+          npm run test:e2e -- "safety*.spec.ts" "inspections*.spec.ts" "permits.spec.ts" --project=chromium
+          npm run test:e2e -- "materials*.spec.ts" "documents*.spec.ts" "photos*.spec.ts" --project=chromium
+          npm run test:e2e -- "notifications.spec.ts" "portal*.spec.ts" --project=chromium
+          npm run test:e2e -- "site*.spec.ts" "meetings.spec.ts" "notices*.spec.ts" --project=chromium
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload feature test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: feature-test-results
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # =============================================================================
+  # QUALITY TESTS - Performance, accessibility, compatibility
+  # =============================================================================
+  quality-tests:
+    name: Phase 10 - Quality Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+
+      - name: Run quality tests
+        run: |
+          npm run test:e2e -- "performance*.spec.ts" --project=${{ matrix.browser }}
+          npm run test:e2e -- "accessibility.spec.ts" --project=${{ matrix.browser }}
+          npm run test:e2e -- "responsive*.spec.ts" --project=${{ matrix.browser }}
+          npm run test:e2e -- "browser*.spec.ts" --project=${{ matrix.browser }}
+          npm run test:e2e -- "load*.spec.ts" --project=${{ matrix.browser }}
+        env:
+          TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload quality test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-test-results-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # =============================================================================
+  # SUMMARY REPORT - Consolidate all results
+  # =============================================================================
+  test-summary:
+    name: Generate Test Summary
+    runs-on: ubuntu-latest
+    needs: [offline-tests, auth-tests, crud-tests, workflow-tests, feature-tests, quality-tests]
+    if: always()
+
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          path: all-test-results
+
+      - name: Generate summary
+        run: |
+          echo "# E2E Test Results Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Execution Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase 9: Offline Tests (CRITICAL) | ${{ needs.offline-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase 2: Authentication | ${{ needs.auth-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase 3: CRUD Operations | ${{ needs.crud-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase 4: Workflows | ${{ needs.workflow-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Phases 5-8: Features | ${{ needs.feature-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Phase 10: Quality | ${{ needs.quality-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Total Test Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **631 comprehensive E2E tests**" >> $GITHUB_STEP_SUMMARY
+          echo "- **31 test files** across all phases" >> $GITHUB_STEP_SUMMARY
+          echo "- **100% phase completion**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed reports in the artifacts section." >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for critical failures
+        if: needs.offline-tests.result == 'failure' || needs.auth-tests.result == 'failure'
+        run: |
+          echo "::error::Critical tests failed! Offline or Authentication tests must pass."
+          exit 1

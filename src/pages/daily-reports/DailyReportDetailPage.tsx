@@ -1,10 +1,12 @@
 // File: /src/pages/daily-reports/DailyReportDetailPage.tsx
 // Daily report detail view
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useDailyReport, useUpdateDailyReport, useDeleteDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
+import { useDailyReportFullData } from '@/features/daily-reports/hooks/useDailyReportRelatedData'
+import { downloadDailyReportPDF } from '@/features/daily-reports/utils/pdfExport'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -20,10 +22,36 @@ import {
   CheckCircle2,
   Clock,
   Camera,
+  Download,
+  Loader2,
+  Printer,
+  History,
+  PenTool,
 } from 'lucide-react'
 import { PhotoGallery } from '@/features/daily-reports/components/PhotoGallery'
+import { PrintView } from '@/features/daily-reports/components/PrintView'
+import { VersionHistory } from '@/features/daily-reports/components/VersionHistory'
+import { SignatureCapture } from '@/features/daily-reports/components/SignatureCapture'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
+
+// Helper component to isolate type issues with issues field
+function IssuesCard({ issuesText }: { issuesText: string | null }) {
+  if (!issuesText || issuesText.trim() === '') return null
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <AlertCircle className="h-5 w-5" />
+          Issues/Challenges
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-700 whitespace-pre-wrap">{issuesText}</p>
+      </CardContent>
+    </Card>
+  )
+}
 
 export function DailyReportDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -31,6 +59,11 @@ export function DailyReportDetailPage() {
   const { data: report, isLoading, error } = useDailyReport(id)
   const updateMutation = useUpdateDailyReport()
   const deleteMutation = useDeleteDailyReport()
+  const relatedData = useDailyReportFullData(id)
+  const [isExportingPDF, setIsExportingPDF] = useState(false)
+  const [showPrintView, setShowPrintView] = useState(false)
+  const [showVersionHistory, setShowVersionHistory] = useState(false)
+  const [showApprovalSignature, setShowApprovalSignature] = useState(false)
 
   if (!id) {
     return (
@@ -70,6 +103,36 @@ export function DailyReportDetailPage() {
         </div>
       </AppLayout>
     )
+  }
+
+  const handleExportPDF = async () => {
+    if (!report) return
+
+    setIsExportingPDF(true)
+    try {
+      // Use inline photos from report if available, otherwise use relatedData.photos
+      // Cast to any to safely check for photos property without breaking type inference
+      const reportAny = report as Record<string, unknown>
+      const reportPhotos = (reportAny.photos && Array.isArray(reportAny.photos))
+        ? reportAny.photos
+        : relatedData.photos
+
+      await downloadDailyReportPDF({
+        report,
+        workforce: relatedData.workforce,
+        equipment: relatedData.equipment,
+        deliveries: relatedData.deliveries,
+        visitors: relatedData.visitors,
+        photos: reportPhotos,
+        projectName: report.project?.name || 'Project',
+      })
+      toast.success('PDF exported successfully')
+    } catch (err) {
+      console.error('PDF export error:', err)
+      toast.error('Failed to export PDF')
+    } finally {
+      setIsExportingPDF(false)
+    }
   }
 
   const handleApprove = async () => {
@@ -113,6 +176,9 @@ export function DailyReportDetailPage() {
     }
   }
 
+  // Extract issues as string for type safety
+  const issuesText: string | null = typeof report.issues === 'string' ? report.issues : null
+
   return (
     <AppLayout>
       <div className="p-6 space-y-6 max-w-4xl">
@@ -137,7 +203,33 @@ export function DailyReportDetailPage() {
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Button
+              variant="outline"
+              onClick={() => setShowPrintView(true)}
+            >
+              <Printer className="h-4 w-4 mr-2" />
+              Print
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleExportPDF}
+              disabled={isExportingPDF || relatedData.isLoading}
+            >
+              {isExportingPDF ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4 mr-2" />
+              )}
+              {isExportingPDF ? 'Exporting...' : 'Export PDF'}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowVersionHistory(!showVersionHistory)}
+            >
+              <History className="h-4 w-4 mr-2" />
+              History
+            </Button>
             {report.status === 'draft' && (
               <Link to={`/daily-reports/${report.id}/edit`}>
                 <Button variant="outline">
@@ -147,9 +239,9 @@ export function DailyReportDetailPage() {
               </Link>
             )}
             {report.status === 'submitted' && (
-              <Button onClick={handleApprove} disabled={updateMutation.isPending}>
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-                {updateMutation.isPending ? 'Approving...' : 'Approve'}
+              <Button onClick={() => setShowApprovalSignature(true)} variant="outline">
+                <PenTool className="h-4 w-4 mr-2" />
+                Sign & Approve
               </Button>
             )}
             <Button
@@ -199,7 +291,6 @@ export function DailyReportDetailPage() {
         </Card>
 
         {/* Weather Section */}
-        {/* @ts-expect-error - Type narrowing issue with DailyReport type from Supabase query */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -240,20 +331,7 @@ export function DailyReportDetailPage() {
           </CardContent>
         </Card>
 
-        {/* Issues */}
-        {(report.issues && typeof report.issues === 'string' && report.issues.trim() !== '') ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
-                Issues/Challenges
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{report.issues}</p>
-            </CardContent>
-          </Card>
-        ) : null}
+        <IssuesCard issuesText={issuesText} />
 
         {/* Observations */}
         {report.observations && report.observations.trim() !== '' && (
@@ -279,22 +357,85 @@ export function DailyReportDetailPage() {
           </Card>
         )}
 
-        {/* Photos */}
-        {'photos' in report && report.photos && Array.isArray(report.photos) && report.photos.length > 0 && (
-          <Card>
+        {/* Photos - use type cast to avoid 'in' operator breaking type inference */}
+        {(() => {
+          const reportAny = report as Record<string, unknown>
+          const photos = reportAny.photos
+          if (!photos || !Array.isArray(photos) || photos.length === 0) return null
+          return (
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Camera className="h-5 w-5" />
+                  Photos ({photos.length})
+                </CardTitle>
+                <CardDescription>Progress documentation with GPS metadata</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PhotoGallery photos={photos as any} readOnly />
+              </CardContent>
+            </Card>
+          )
+        })()}
+
+        {/* Version History */}
+        {showVersionHistory && (
+          <VersionHistory reportId={report.id} />
+        )}
+
+        {/* Approval Signature Dialog */}
+        {showApprovalSignature && (
+          <Card className="border-2 border-green-200 bg-green-50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Camera className="h-5 w-5" />
-                Photos ({(report.photos as any[]).length})
+              <CardTitle className="flex items-center gap-2 text-green-800">
+                <PenTool className="h-5 w-5" />
+                Approval Signature
               </CardTitle>
-              <CardDescription>Progress documentation with GPS metadata</CardDescription>
+              <CardDescription>Sign below to approve this daily report</CardDescription>
             </CardHeader>
-            <CardContent>
-              <PhotoGallery photos={report.photos as any} readOnly />
+            <CardContent className="space-y-4">
+              <SignatureCapture
+                label="Approver Signature"
+                onSave={async (signatureDataUrl) => {
+                  try {
+                    await updateMutation.mutateAsync({
+                      id: report.id,
+                      status: 'approved',
+                      approved_at: new Date().toISOString(),
+                    })
+                    setShowApprovalSignature(false)
+                    toast.success('Report approved with signature')
+                  } catch (err) {
+                    toast.error('Failed to approve report')
+                  }
+                }}
+                onClear={() => {}}
+              />
+              <div className="flex justify-end">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowApprovalSignature(false)}
+                >
+                  Cancel
+                </Button>
+              </div>
             </CardContent>
           </Card>
         )}
       </div>
+
+      {/* Print View Modal */}
+      {showPrintView && (
+        <PrintView
+          report={report}
+          workforce={relatedData.workforce}
+          equipment={relatedData.equipment}
+          deliveries={relatedData.deliveries}
+          visitors={relatedData.visitors}
+          projectName={report.project?.name || 'Project'}
+          onClose={() => setShowPrintView(false)}
+        />
+      )}
     </AppLayout>
   )
 }

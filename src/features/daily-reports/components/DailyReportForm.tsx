@@ -25,6 +25,10 @@ import { EquipmentSection } from './EquipmentSection'
 import { DeliveriesSection } from './DeliveriesSection'
 import { VisitorsSection } from './VisitorsSection'
 import { PhotosSection } from './PhotosSection'
+import { ConflictResolutionDialog } from './ConflictResolutionDialog'
+import { TemplateSelector } from './TemplateSelector'
+import { SignatureCapture } from './SignatureCapture'
+import type { WorkforceEntry, EquipmentEntry } from '../store/offlineReportStore'
 import { dailyReportSchema, type DailyReportFormData as ValidatedFormData } from '../validation/dailyReportSchema'
 import toast from 'react-hot-toast'
 
@@ -60,9 +64,10 @@ export function DailyReportForm({
   initialData,
 }: DailyReportFormProps) {
   const store = useOfflineReportStore()
-  const { syncStatus, isOnline, hasPendingSync } = useOfflineSync()
+  const { syncStatus, isOnline, hasPendingSync, hasConflict, conflict, resolveConflict } = useOfflineSync()
 
   const [expanded, setExpanded] = useState({
+    templates: false,
     weather: true,
     work: true,
     issues: false,
@@ -71,6 +76,7 @@ export function DailyReportForm({
     deliveries: false,
     visitors: false,
     photos: false,
+    signatures: false,
   })
 
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -148,6 +154,7 @@ export function DailyReportForm({
     if (!isFormValid) {
       // Expand sections with errors for visibility
       setExpanded({
+        templates: false,
         weather: true,
         work: true,
         issues: true,
@@ -156,6 +163,7 @@ export function DailyReportForm({
         deliveries: true,
         visitors: true,
         photos: true,
+        signatures: false,
       })
       return
     }
@@ -287,11 +295,33 @@ export function DailyReportForm({
 
       {store.draftReport && (
         <>
+          {/* Template Selector */}
+          <TemplateSelector
+            projectId={projectId}
+            userId={store.draftReport.id}
+            currentDraft={store.draftReport}
+            currentWorkforce={store.workforce}
+            currentEquipment={store.equipment}
+            onApplyTemplate={(draftUpdates, workforce, equipment) => {
+              // Apply draft updates
+              store.updateDraft(draftUpdates)
+              // Replace workforce entries
+              store.workforce.forEach(w => store.removeWorkforceEntry(w.id))
+              workforce.forEach(w => store.addWorkforceEntry(w as WorkforceEntry))
+              // Replace equipment entries
+              store.equipment.forEach(e => store.removeEquipmentEntry(e.id))
+              equipment.forEach(e => store.addEquipmentEntry(e as EquipmentEntry))
+            }}
+            expanded={expanded.templates}
+            onToggle={() => setExpanded({ ...expanded, templates: !expanded.templates })}
+          />
+
           <WeatherSection
             expanded={expanded.weather}
             onToggle={() => setExpanded({ ...expanded, weather: !expanded.weather })}
             draft={store.draftReport}
             onUpdate={store.updateDraft}
+            reportDate={reportDate}
           />
 
           <WorkSection
@@ -330,6 +360,7 @@ export function DailyReportForm({
             onToggle={() => setExpanded({ ...expanded, deliveries: !expanded.deliveries })}
             entries={store.deliveries}
             onAdd={store.addDeliveryEntry}
+            onUpdate={store.updateDeliveryEntry}
             onRemove={store.removeDeliveryEntry}
           />
 
@@ -338,6 +369,7 @@ export function DailyReportForm({
             onToggle={() => setExpanded({ ...expanded, visitors: !expanded.visitors })}
             entries={store.visitors}
             onAdd={store.addVisitorEntry}
+            onUpdate={store.updateVisitorEntry}
             onRemove={store.removeVisitorEntry}
           />
 
@@ -349,6 +381,24 @@ export function DailyReportForm({
             onRemovePhoto={store.removePhoto}
             onUpdateCaption={store.updatePhotoCaption}
           />
+
+          {/* Signature Section - Only shown when submitting */}
+          {expanded.signatures && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Signatures</CardTitle>
+                <CardDescription>Sign to submit the report</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <SignatureCapture
+                  label="Submitted By Signature"
+                  existingSignature={store.draftReport.submitted_by_signature}
+                  onSave={(signature) => store.updateDraft({ submitted_by_signature: signature })}
+                  onClear={() => store.updateDraft({ submitted_by_signature: undefined })}
+                />
+              </CardContent>
+            </Card>
+          )}
         </>
       )}
 
@@ -366,6 +416,23 @@ export function DailyReportForm({
           Submit Report
         </Button>
       </div>
+
+      {/* Conflict Resolution Dialog */}
+      {hasConflict && conflict && (
+        <ConflictResolutionDialog
+          conflict={conflict}
+          onResolve={(strategy) => {
+            resolveConflict(strategy)
+            toast.success(
+              strategy === 'keep_local'
+                ? 'Keeping your local changes'
+                : strategy === 'keep_server'
+                  ? 'Using server version'
+                  : 'Changes merged successfully'
+            )
+          }}
+        />
+      )}
     </form>
   )
 }

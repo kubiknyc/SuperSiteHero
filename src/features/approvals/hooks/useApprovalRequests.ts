@@ -21,7 +21,18 @@ import type {
 export function useApprovalRequests(filters?: ApprovalRequestFilters) {
   return useQuery({
     queryKey: ['approval-requests', filters],
-    queryFn: () => approvalRequestsApi.getRequests(filters),
+    queryFn: async () => {
+      try {
+        return await approvalRequestsApi.getRequests(filters)
+      } catch (error) {
+        // Log the actual error for debugging
+        console.error('[useApprovalRequests] Query failed:', error)
+        // Return empty array on error (DB tables may not exist)
+        return []
+      }
+    },
+    retry: false, // Don't retry if DB tables don't exist
+    staleTime: 0, // Always refetch to avoid cached malformed queries
   })
 }
 
@@ -47,11 +58,17 @@ export function usePendingApprovals(userId: string | undefined) {
     queryKey: ['approval-requests', 'pending', userId],
     queryFn: async () => {
       if (!userId) {throw new Error('User ID required')}
-      return approvalRequestsApi.getPendingForUser(userId)
+      try {
+        return await approvalRequestsApi.getPendingForUser(userId)
+      } catch {
+        // Return empty summary on error (DB tables may not exist)
+        return { total: 0, by_type: { document: 0, submittal: 0, rfi: 0, change_order: 0 }, requests: [] }
+      }
     },
     enabled: !!userId,
     // Refresh frequently to keep badge counts up to date
     refetchInterval: 30000, // 30 seconds
+    retry: false, // Don't retry if DB tables don't exist
   })
 }
 

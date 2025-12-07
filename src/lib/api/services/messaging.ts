@@ -2,13 +2,10 @@
  * Messaging System API Service
  *
  * Manages real-time messaging operations:
- * - Channels (direct, group, project) - mapped to chat_channels table
- * - Messages with attachments and mentions - mapped to chat_messages table
- * - Members and read receipts - mapped to chat_channel_members table
- * - Reactions - mapped to chat_message_reactions table
- *
- * NOTE: The frontend uses "Conversation" terminology but the database uses "Channel".
- * This service maps between the two naming conventions.
+ * - Conversations (direct, group, project) - conversations table
+ * - Messages with attachments and mentions - messages table
+ * - Participants and read receipts - conversation_participants table
+ * - Reactions - message_reactions table
  */
 
 import { supabase } from '@/lib/supabase'
@@ -32,20 +29,16 @@ import { sendMentionNotifications } from '@/features/messaging/utils/mention-not
 const db = supabase as any
 
 // =====================================================
-// TABLE/COLUMN MAPPING NOTES:
-// Frontend Term     -> Database Column
+// TABLE/COLUMN MAPPING - Database matches frontend:
 // =====================================================
-// conversations     -> chat_channels
-// messages          -> chat_messages
-// conversation_participants -> chat_channel_members
-// message_reactions -> chat_message_reactions
-// conversation_id   -> channel_id
-// sender_id         -> user_id (in messages)
-// mentioned_users   -> mentions
-// type              -> channel_type
-// deleted_at        -> archived_at (for channels)
-// is_muted          -> notification_settings (JSON)
-// role              -> role (same)
+// conversations          -> conversations table
+// conversation_participants -> conversation_participants table
+// messages               -> messages table
+// message_reactions      -> message_reactions table
+// conversation_id        -> conversation_id
+// sender_id              -> sender_id
+// mentioned_users        -> mentioned_users
+// type                   -> type
 // =====================================================
 
 // =====================================================
@@ -54,7 +47,6 @@ const db = supabase as any
 
 /**
  * Fetch conversations with optional filters and pagination
- * Maps from chat_channels table to Conversation type
  */
 export async function getConversations(
   userId: string,
@@ -62,24 +54,24 @@ export async function getConversations(
 ): Promise<{ data: Conversation[] | null; error: Error | null }> {
   try {
     let query = db
-      .from('chat_channels')
+      .from('conversations')
       .select(`
         *,
-        participants:chat_channel_members(
+        participants:conversation_participants(
           id,
           user_id,
           joined_at,
           last_read_at,
-          notification_settings,
-          role,
+          is_muted,
+          left_at,
           user:users(id, full_name, email, avatar_url)
         )
       `)
-      .is('archived_at', null)
+      .is('deleted_at', null)
 
-    // Apply type filter (type -> channel_type)
+    // Apply type filter
     if (filters?.type) {
-      query = query.eq('channel_type', filters.type)
+      query = query.eq('type', filters.type)
     }
 
     // Apply project filter
@@ -97,42 +89,28 @@ export async function getConversations(
     const offset = filters?.offset || 0
     query = query.range(offset, offset + limit - 1)
 
-    // Order by last activity (updated_at since no last_message_at column)
-    query = query.order('updated_at', { ascending: false, nullsFirst: false })
+    // Order by last activity
+    query = query.order('last_message_at', { ascending: false, nullsFirst: false })
 
     const { data, error } = await query
 
     if (error) {throw error}
 
     // Filter to only conversations where user is a participant
-    // Note: chat_channel_members doesn't have left_at, so all members are active
     const userConversations = (data || []).filter((conv: any) =>
       conv.participants?.some(
-        (p: any) => p.user_id === userId
+        (p: any) => p.user_id === userId && p.left_at === null
       )
     )
 
-    // Map database fields to Conversation type
-    const mappedConversations = userConversations.map((conv: any) => ({
-      ...conv,
-      type: conv.channel_type, // Map channel_type -> type
-      deleted_at: conv.archived_at, // Map archived_at -> deleted_at
-      last_message_at: conv.updated_at, // Use updated_at as proxy for last_message_at
-      participants: conv.participants?.map((p: any) => ({
-        ...p,
-        left_at: null, // chat_channel_members doesn't have left_at
-        is_muted: p.notification_settings?.muted || false, // Extract from JSON
-      })),
-    }))
-
     // Apply unread filter client-side
-    let filteredConversations = mappedConversations
+    let filteredConversations = userConversations
     if (filters?.has_unread) {
-      // Check if last_read_at is before updated_at
-      filteredConversations = mappedConversations.filter((conv: any) => {
+      // Check if last_read_at is before last_message_at
+      filteredConversations = userConversations.filter((conv: any) => {
         const userParticipant = conv.participants?.find((p: any) => p.user_id === userId)
         if (!userParticipant?.last_read_at) return true // Never read = unread
-        return new Date(userParticipant.last_read_at) < new Date(conv.updated_at)
+        return new Date(userParticipant.last_read_at) < new Date(conv.last_message_at)
       })
     }
 
@@ -144,81 +122,66 @@ export async function getConversations(
 
 /**
  * Get a single conversation by ID
- * Maps from chat_channels table to Conversation type
  */
 export async function getConversation(
   conversationId: string,
   userId: string
 ): Promise<{ data: Conversation | null; error: Error | null }> {
   try {
-    // First, verify user is a participant (member)
+    // First, verify user is a participant
     const { data: participant } = await db
-      .from('chat_channel_members')
+      .from('conversation_participants')
       .select('id')
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
       .maybeSingle()
 
     if (!participant) {
       throw new Error('Not authorized to view this conversation')
     }
 
-    // Fetch channel with details
+    // Fetch conversation with details
     const { data, error } = await db
-      .from('chat_channels')
+      .from('conversations')
       .select(`
         *,
-        participants:chat_channel_members(
+        participants:conversation_participants(
           id,
           user_id,
           joined_at,
           last_read_at,
-          notification_settings,
-          role,
+          is_muted,
+          left_at,
           user:users(id, full_name, email, avatar_url)
         ),
         project:projects(id, name)
       `)
       .eq('id', conversationId)
-      .is('archived_at', null)
+      .is('deleted_at', null)
       .single()
 
     if (error) {throw error}
 
-    // Map database fields to Conversation type
-    const mappedConversation = {
-      ...data,
-      type: data.channel_type,
-      deleted_at: data.archived_at,
-      last_message_at: data.updated_at,
-      participants: data.participants?.map((p: any) => ({
-        ...p,
-        conversation_id: data.id, // Map channel_id -> conversation_id
-        left_at: null,
-        is_muted: p.notification_settings?.muted || false,
-      })),
-    }
-
-    return { data: mappedConversation, error: null }
+    return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
 }
 
 /**
- * Create a new conversation (channel)
- * Maps to chat_channels and chat_channel_members tables
+ * Create a new conversation
  */
 export async function createConversation(
   userId: string,
   data: CreateConversationDTO
 ): Promise<{ data: Conversation | null; error: Error | null }> {
   try {
-    // Create channel
-    const { data: channel, error: channelError } = await db
-      .from('chat_channels')
+    // Create conversation
+    const { data: conversation, error: conversationError } = await db
+      .from('conversations')
       .insert({
-        channel_type: data.type, // Map type -> channel_type
+        type: data.type,
         name: data.name || null,
         project_id: data.project_id || null,
         created_by: userId,
@@ -226,56 +189,46 @@ export async function createConversation(
       .select()
       .single()
 
-    if (channelError) {throw channelError}
+    if (conversationError) {throw conversationError}
 
-    // Add creator as admin member
+    // Add creator as participant
     const { error: creatorError } = await db
-      .from('chat_channel_members')
+      .from('conversation_participants')
       .insert({
-        channel_id: channel.id, // Map conversation_id -> channel_id
+        conversation_id: conversation.id,
         user_id: userId,
-        role: 'admin',
       })
 
     if (creatorError) {throw creatorError}
 
-    // Add other participants as members
+    // Add other participants
     if (data.participant_ids && data.participant_ids.length > 0) {
-      const memberRecords = data.participant_ids
+      const participantRecords = data.participant_ids
         .filter((id) => id !== userId) // Don't duplicate creator
         .map((participantId) => ({
-          channel_id: channel.id, // Map conversation_id -> channel_id
+          conversation_id: conversation.id,
           user_id: participantId,
-          role: 'member',
         }))
 
-      if (memberRecords.length > 0) {
-        const { error: membersError } = await db
-          .from('chat_channel_members')
-          .insert(memberRecords)
+      if (participantRecords.length > 0) {
+        const { error: participantsError } = await db
+          .from('conversation_participants')
+          .insert(participantRecords)
 
-        if (membersError) {throw membersError}
+        if (participantsError) {throw participantsError}
       }
     }
 
     // Send initial message if provided
     if (data.initial_message) {
       await sendMessage(userId, {
-        conversation_id: channel.id,
+        conversation_id: conversation.id,
         content: data.initial_message,
         message_type: 'text',
       })
     }
 
-    // Map to Conversation type
-    const mappedConversation = {
-      ...channel,
-      type: channel.channel_type,
-      deleted_at: channel.archived_at,
-      last_message_at: channel.updated_at,
-    }
-
-    return { data: mappedConversation, error: null }
+    return { data: conversation, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
@@ -283,57 +236,61 @@ export async function createConversation(
 
 /**
  * Get or create a direct conversation between two users
- * Manually implemented since RPC function doesn't exist
+ * Uses the database function get_or_create_direct_conversation
  */
 export async function getOrCreateDirectConversation(
   userId: string,
   otherUserId: string
 ): Promise<{ data: Conversation | null; error: Error | null }> {
   try {
-    // Find existing direct channel between these two users
-    // First, get all direct channels where user is a member
-    const { data: userChannels } = await db
-      .from('chat_channel_members')
-      .select('channel_id')
+    // Try to use the database function first
+    const { data: conversationId, error: rpcError } = await db.rpc(
+      'get_or_create_direct_conversation',
+      { p_user_id_1: userId, p_user_id_2: otherUserId }
+    )
+
+    if (!rpcError && conversationId) {
+      // Fetch the full conversation
+      return getConversation(conversationId, userId)
+    }
+
+    // Fallback: manual implementation
+    // Find existing direct conversation between these two users
+    const { data: userConversations } = await db
+      .from('conversation_participants')
+      .select('conversation_id')
       .eq('user_id', userId)
+      .is('left_at', null)
 
-    if (userChannels && userChannels.length > 0) {
-      const channelIds = userChannels.map((c: any) => c.channel_id)
+    if (userConversations && userConversations.length > 0) {
+      const conversationIds = userConversations.map((c: any) => c.conversation_id)
 
-      // Check if other user is also in any of these channels and it's a direct channel
-      const { data: directChannel } = await db
-        .from('chat_channels')
+      // Check if other user is also in any of these conversations and it's a direct conversation
+      const { data: directConversations } = await db
+        .from('conversations')
         .select(`
           *,
-          members:chat_channel_members(user_id)
+          participants:conversation_participants(user_id, left_at)
         `)
-        .in('id', channelIds)
-        .eq('channel_type', 'direct')
-        .is('archived_at', null)
+        .in('id', conversationIds)
+        .eq('type', 'direct')
+        .is('deleted_at', null)
 
-      // Find the channel that has exactly both users
-      const existingChannel = directChannel?.find((channel: any) => {
-        const memberIds = channel.members?.map((m: any) => m.user_id) || []
-        return memberIds.length === 2 &&
-               memberIds.includes(userId) &&
-               memberIds.includes(otherUserId)
+      // Find the conversation that has exactly both users
+      const existingConversation = directConversations?.find((conv: any) => {
+        const activeParticipants = conv.participants?.filter((p: any) => p.left_at === null) || []
+        const participantIds = activeParticipants.map((p: any) => p.user_id)
+        return participantIds.length === 2 &&
+               participantIds.includes(userId) &&
+               participantIds.includes(otherUserId)
       })
 
-      if (existingChannel) {
-        // Return existing channel mapped to Conversation type
-        return {
-          data: {
-            ...existingChannel,
-            type: existingChannel.channel_type,
-            deleted_at: existingChannel.archived_at,
-            last_message_at: existingChannel.updated_at,
-          },
-          error: null,
-        }
+      if (existingConversation) {
+        return { data: existingConversation, error: null }
       }
     }
 
-    // No existing channel found, create a new one
+    // No existing conversation found, create a new one
     return createConversation(userId, {
       type: 'direct',
       participant_ids: [userId, otherUserId],
@@ -345,7 +302,6 @@ export async function getOrCreateDirectConversation(
 
 /**
  * Update conversation details (name, description)
- * Maps to chat_channels table
  */
 export async function updateConversation(
   conversationId: string,
@@ -353,20 +309,21 @@ export async function updateConversation(
   updates: { name?: string; description?: string }
 ): Promise<{ data: Conversation | null; error: Error | null }> {
   try {
-    // Verify user is a member
-    const { data: member } = await db
-      .from('chat_channel_members')
+    // Verify user is a participant
+    const { data: participant } = await db
+      .from('conversation_participants')
       .select('id')
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
       .maybeSingle()
 
-    if (!member) {
+    if (!participant) {
       throw new Error('Not authorized to update this conversation')
     }
 
     const { data, error } = await db
-      .from('chat_channels')
+      .from('conversations')
       .update(updates)
       .eq('id', conversationId)
       .select()
@@ -374,90 +331,69 @@ export async function updateConversation(
 
     if (error) {throw error}
 
-    // Map to Conversation type
-    const mappedConversation = {
-      ...data,
-      type: data.channel_type,
-      deleted_at: data.archived_at,
-      last_message_at: data.updated_at,
-    }
-
-    return { data: mappedConversation, error: null }
+    return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
 }
 
 /**
- * Add participants (members) to a conversation (channel)
- * Maps to chat_channel_members table
+ * Add participants to a conversation
  */
 export async function addParticipants(
   conversationId: string,
   userId: string,
-  participantUserIds: string[],
-  role: 'admin' | 'member' = 'member'
+  participantUserIds: string[]
 ): Promise<{ data: ConversationParticipant[] | null; error: Error | null }> {
   try {
-    // Verify user is an admin member
-    const { data: currentMember } = await db
-      .from('chat_channel_members')
-      .select('role')
-      .eq('channel_id', conversationId)
-      .eq('user_id', userId)
+    // Verify user is a participant (conversation creator can add)
+    const { data: conversation } = await db
+      .from('conversations')
+      .select('created_by')
+      .eq('id', conversationId)
       .single()
 
-    if (!currentMember || currentMember.role !== 'admin') {
-      throw new Error('Only admins can add participants')
+    if (!conversation || conversation.created_by !== userId) {
+      throw new Error('Only conversation creator can add participants')
     }
 
-    // Get existing members to avoid duplicates
-    const { data: existingMembers } = await db
-      .from('chat_channel_members')
+    // Get existing participants to avoid duplicates
+    const { data: existingParticipants } = await db
+      .from('conversation_participants')
       .select('user_id')
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
+      .is('left_at', null)
 
-    const existingUserIds = new Set(existingMembers?.map((p: any) => p.user_id) || [])
+    const existingUserIds = new Set(existingParticipants?.map((p: any) => p.user_id) || [])
 
-    // Filter out users who are already members
-    const newMemberIds = participantUserIds.filter((id) => !existingUserIds.has(id))
+    // Filter out users who are already participants
+    const newParticipantIds = participantUserIds.filter((id) => !existingUserIds.has(id))
 
-    if (newMemberIds.length === 0) {
+    if (newParticipantIds.length === 0) {
       return { data: [], error: null }
     }
 
-    // Insert new members
-    const memberRecords = newMemberIds.map((memberId) => ({
-      channel_id: conversationId, // Map conversation_id -> channel_id
-      user_id: memberId,
-      role,
+    // Insert new participants
+    const participantRecords = newParticipantIds.map((participantId) => ({
+      conversation_id: conversationId,
+      user_id: participantId,
     }))
 
     const { data, error } = await db
-      .from('chat_channel_members')
-      .insert(memberRecords)
+      .from('conversation_participants')
+      .insert(participantRecords)
       .select()
 
     if (error) {throw error}
 
-    // Map to ConversationParticipant type
-    const mappedParticipants = (data || []).map((m: any) => ({
-      ...m,
-      conversation_id: m.channel_id,
-      left_at: null,
-      is_muted: m.notification_settings?.muted || false,
-    }))
-
-    return { data: mappedParticipants, error: null }
+    return { data: data || [], error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
 }
 
 /**
- * Remove a participant (member) from a conversation (admin only)
- * Maps to chat_channel_members table
- * Note: This does a hard delete since chat_channel_members has no left_at column
+ * Remove a participant from a conversation (creator only)
  */
 export async function removeParticipant(
   conversationId: string,
@@ -465,16 +401,15 @@ export async function removeParticipant(
   participantUserId: string
 ): Promise<{ data: boolean; error: Error | null }> {
   try {
-    // Verify user is an admin
-    const { data: currentMember } = await db
-      .from('chat_channel_members')
-      .select('role')
-      .eq('channel_id', conversationId)
-      .eq('user_id', userId)
+    // Verify user is the conversation creator
+    const { data: conversation } = await db
+      .from('conversations')
+      .select('created_by')
+      .eq('id', conversationId)
       .single()
 
-    if (!currentMember || currentMember.role !== 'admin') {
-      throw new Error('Only admins can remove participants')
+    if (!conversation || conversation.created_by !== userId) {
+      throw new Error('Only conversation creator can remove participants')
     }
 
     // Don't allow removing self this way (use leaveConversation instead)
@@ -482,12 +417,13 @@ export async function removeParticipant(
       throw new Error('Use leaveConversation to remove yourself')
     }
 
-    // Delete the member record (hard delete)
+    // Soft delete by setting left_at
     const { error } = await db
-      .from('chat_channel_members')
-      .delete()
-      .eq('channel_id', conversationId)
+      .from('conversation_participants')
+      .update({ left_at: new Date().toISOString() })
+      .eq('conversation_id', conversationId)
       .eq('user_id', participantUserId)
+      .is('left_at', null)
 
     if (error) {throw error}
 
@@ -499,20 +435,19 @@ export async function removeParticipant(
 
 /**
  * Leave a conversation (user removes themselves)
- * Maps to chat_channel_members table
- * Note: This does a hard delete since chat_channel_members has no left_at column
  */
 export async function leaveConversation(
   conversationId: string,
   userId: string
 ): Promise<{ data: boolean; error: Error | null }> {
   try {
-    // Delete the member record (hard delete)
+    // Soft delete by setting left_at
     const { error } = await db
-      .from('chat_channel_members')
-      .delete()
-      .eq('channel_id', conversationId)
+      .from('conversation_participants')
+      .update({ left_at: new Date().toISOString() })
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
 
     if (error) {throw error}
 
@@ -528,7 +463,6 @@ export async function leaveConversation(
 
 /**
  * Fetch messages for a conversation with pagination
- * Maps from chat_messages and chat_message_reactions tables
  */
 export async function getMessages(
   conversationId: string,
@@ -536,24 +470,25 @@ export async function getMessages(
   filters?: MessageFilters
 ): Promise<{ data: Message[] | null; error: Error | null }> {
   try {
-    // Verify user is a member
-    const { data: member } = await db
-      .from('chat_channel_members')
+    // Verify user is a participant
+    const { data: participant } = await db
+      .from('conversation_participants')
       .select('id')
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
       .maybeSingle()
 
-    if (!member) {
+    if (!participant) {
       throw new Error('Not authorized to view messages in this conversation')
     }
 
     let query = db
-      .from('chat_messages')
+      .from('messages')
       .select(`
         *,
-        sender:users!chat_messages_user_id_fkey(id, full_name, email, avatar_url),
-        reactions:chat_message_reactions(
+        sender:users!messages_sender_id_fkey(id, full_name, email, avatar_url),
+        reactions:message_reactions(
           id,
           emoji,
           user_id,
@@ -561,14 +496,14 @@ export async function getMessages(
           user:users(id, full_name)
         )
       `)
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
       .is('deleted_at', null)
 
     // Apply filters
     if (filters?.before_id) {
       // Get messages before a specific message (for loading older messages)
       const { data: beforeMsg } = await db
-        .from('chat_messages')
+        .from('messages')
         .select('created_at')
         .eq('id', filters.before_id)
         .single()
@@ -581,7 +516,7 @@ export async function getMessages(
     if (filters?.after_id) {
       // Get messages after a specific message (for loading newer messages)
       const { data: afterMsg } = await db
-        .from('chat_messages')
+        .from('messages')
         .select('created_at')
         .eq('id', filters.after_id)
         .single()
@@ -592,8 +527,7 @@ export async function getMessages(
     }
 
     if (filters?.sender_id) {
-      // Map sender_id -> user_id
-      query = query.eq('user_id', filters.sender_id)
+      query = query.eq('sender_id', filters.sender_id)
     }
 
     if (filters?.parent_message_id) {
@@ -612,15 +546,7 @@ export async function getMessages(
 
     if (error) {throw error}
 
-    // Map database fields to Message type
-    const mappedMessages = (data || []).map((msg: any) => ({
-      ...msg,
-      conversation_id: msg.channel_id, // Map channel_id -> conversation_id
-      sender_id: msg.user_id, // Map user_id -> sender_id
-      mentioned_users: msg.mentions, // Map mentions -> mentioned_users
-    }))
-
-    return { data: mappedMessages, error: null }
+    return { data: data || [], error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
@@ -628,7 +554,6 @@ export async function getMessages(
 
 /**
  * Get a single message by ID
- * Maps from chat_messages table
  */
 export async function getMessage(
   messageId: string,
@@ -636,11 +561,11 @@ export async function getMessage(
 ): Promise<{ data: Message | null; error: Error | null }> {
   try {
     const { data: message, error } = await db
-      .from('chat_messages')
+      .from('messages')
       .select(`
         *,
-        sender:users!chat_messages_user_id_fkey(id, full_name, email, avatar_url),
-        reactions:chat_message_reactions(
+        sender:users!messages_sender_id_fkey(id, full_name, email, avatar_url),
+        reactions:message_reactions(
           id,
           emoji,
           user_id,
@@ -654,27 +579,20 @@ export async function getMessage(
 
     if (error) {throw error}
 
-    // Verify user is a member of the channel
-    const { data: member } = await db
-      .from('chat_channel_members')
+    // Verify user is a participant of the conversation
+    const { data: participant } = await db
+      .from('conversation_participants')
       .select('id')
-      .eq('channel_id', message.channel_id)
+      .eq('conversation_id', message.conversation_id)
       .eq('user_id', userId)
+      .is('left_at', null)
       .maybeSingle()
 
-    if (!member) {
+    if (!participant) {
       throw new Error('Not authorized to view this message')
     }
 
-    // Map database fields to Message type
-    const mappedMessage = {
-      ...message,
-      conversation_id: message.channel_id,
-      sender_id: message.user_id,
-      mentioned_users: message.mentions,
-    }
-
-    return { data: mappedMessage, error: null }
+    return { data: message, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
@@ -682,61 +600,53 @@ export async function getMessage(
 
 /**
  * Send a new message
- * Maps to chat_messages table
  */
 export async function sendMessage(
   userId: string,
   data: SendMessageDTO
 ): Promise<{ data: Message | null; error: Error | null }> {
   try {
-    // Verify user is a member
-    const { data: member } = await db
-      .from('chat_channel_members')
+    // Verify user is a participant
+    const { data: participant } = await db
+      .from('conversation_participants')
       .select('id')
-      .eq('channel_id', data.conversation_id) // conversation_id is actually channel_id
+      .eq('conversation_id', data.conversation_id)
       .eq('user_id', userId)
+      .is('left_at', null)
       .maybeSingle()
 
-    if (!member) {
+    if (!participant) {
       throw new Error('Not authorized to send messages in this conversation')
     }
 
     // Extract mentioned user IDs from content
     const mentionedUserIds = data.mentioned_users || extractMentionedUserIds(data.content)
 
-    // Insert message with mapped column names
+    // Insert message
     const { data: message, error } = await db
-      .from('chat_messages')
+      .from('messages')
       .insert({
-        channel_id: data.conversation_id, // Map conversation_id -> channel_id
-        user_id: userId, // Map sender_id -> user_id
+        conversation_id: data.conversation_id,
+        sender_id: userId,
         content: data.content,
         message_type: data.message_type || 'text',
         attachments: data.attachments || null,
-        mentions: mentionedUserIds.length > 0 ? mentionedUserIds : null, // Map mentioned_users -> mentions
+        mentioned_users: mentionedUserIds.length > 0 ? mentionedUserIds : null,
         parent_message_id: data.parent_message_id || null,
       })
       .select(`
         *,
-        sender:users!chat_messages_user_id_fkey(id, full_name, email, avatar_url)
+        sender:users!messages_sender_id_fkey(id, full_name, email, avatar_url)
       `)
       .single()
 
     if (error) {throw error}
 
-    // Map database fields back to Message type
-    const mappedMessage = {
-      ...message,
-      conversation_id: message.channel_id,
-      sender_id: message.user_id,
-      mentioned_users: message.mentions,
-    }
-
     // Send mention notifications asynchronously (don't await)
     if (mentionedUserIds.length > 0) {
-      // Get channel details for notification
-      const { data: channel } = await db
-        .from('chat_channels')
+      // Get conversation details for notification
+      const { data: conversation } = await db
+        .from('conversations')
         .select('name')
         .eq('id', data.conversation_id)
         .single()
@@ -748,14 +658,14 @@ export async function sendMessage(
         mentionedUserIds,
         senderName: message.sender?.full_name || 'Someone',
         senderId: userId,
-        conversationName: channel?.name || null,
+        conversationName: conversation?.name || null,
         messagePreview: data.content,
       }).catch((error) => {
         logger.error('Failed to send mention notifications:', error)
       })
     }
 
-    return { data: mappedMessage, error: null }
+    return { data: message, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
@@ -763,7 +673,6 @@ export async function sendMessage(
 
 /**
  * Edit a message (own messages only)
- * Maps to chat_messages table
  */
 export async function editMessage(
   messageId: string,
@@ -776,32 +685,24 @@ export async function editMessage(
 
     // Update message (RLS will ensure user owns it)
     const { data, error } = await db
-      .from('chat_messages')
+      .from('messages')
       .update({
         content,
-        mentions: mentionedUserIds.length > 0 ? mentionedUserIds : null, // Map mentioned_users -> mentions
+        mentioned_users: mentionedUserIds.length > 0 ? mentionedUserIds : null,
         edited_at: new Date().toISOString(),
       })
       .eq('id', messageId)
-      .eq('user_id', userId) // Map sender_id -> user_id
+      .eq('sender_id', userId)
       .is('deleted_at', null)
       .select(`
         *,
-        sender:users!chat_messages_user_id_fkey(id, full_name, email, avatar_url)
+        sender:users!messages_sender_id_fkey(id, full_name, email, avatar_url)
       `)
       .single()
 
     if (error) {throw error}
 
-    // Map database fields back to Message type
-    const mappedMessage = {
-      ...data,
-      conversation_id: data.channel_id,
-      sender_id: data.user_id,
-      mentioned_users: data.mentions,
-    }
-
-    return { data: mappedMessage, error: null }
+    return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
@@ -809,7 +710,6 @@ export async function editMessage(
 
 /**
  * Delete a message (soft delete, own messages only)
- * Maps to chat_messages table
  */
 export async function deleteMessage(
   messageId: string,
@@ -817,10 +717,10 @@ export async function deleteMessage(
 ): Promise<{ data: boolean; error: Error | null }> {
   try {
     const { error } = await db
-      .from('chat_messages')
+      .from('messages')
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', messageId)
-      .eq('user_id', userId) // Map sender_id -> user_id
+      .eq('sender_id', userId)
       .is('deleted_at', null)
 
     if (error) {throw error}
@@ -833,8 +733,6 @@ export async function deleteMessage(
 
 /**
  * Mark messages as read
- * Maps to chat_channel_members table
- * Note: chat_channel_members doesn't have has_unread column, only last_read_at
  */
 export async function markAsRead(
   conversationId: string,
@@ -842,15 +740,15 @@ export async function markAsRead(
   _messageIds?: string[] // Not used, but kept for API compatibility
 ): Promise<{ data: boolean; error: Error | null }> {
   try {
-    // Update last_read_at for the member
+    // Update last_read_at for the participant
     const { error } = await db
-      .from('chat_channel_members')
+      .from('conversation_participants')
       .update({
         last_read_at: new Date().toISOString(),
-        // has_unread column doesn't exist in chat_channel_members
       })
-      .eq('channel_id', conversationId) // Map conversation_id -> channel_id
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
 
     if (error) {throw error}
 
@@ -862,7 +760,6 @@ export async function markAsRead(
 
 /**
  * Search messages across conversations
- * Maps to chat_messages and chat_channels tables
  */
 export async function searchMessages(
   userId: string,
@@ -871,29 +768,30 @@ export async function searchMessages(
 ): Promise<{ data: Message[] | null; error: Error | null }> {
   try {
     let messageQuery = db
-      .from('chat_messages')
+      .from('messages')
       .select(`
         *,
-        sender:users!chat_messages_user_id_fkey(id, full_name, email, avatar_url),
-        conversation:chat_channels(id, name, channel_type)
+        sender:users!messages_sender_id_fkey(id, full_name, email, avatar_url),
+        conversation:conversations(id, name, type)
       `)
       .textSearch('content', query)
       .is('deleted_at', null)
 
-    // Filter by specific channel if provided
+    // Filter by specific conversation if provided
     if (conversationId) {
-      messageQuery = messageQuery.eq('channel_id', conversationId)
+      messageQuery = messageQuery.eq('conversation_id', conversationId)
     } else {
-      // Get user's channels
-      const { data: userChannels } = await db
-        .from('chat_channel_members')
-        .select('channel_id')
+      // Get user's conversations
+      const { data: userConversations } = await db
+        .from('conversation_participants')
+        .select('conversation_id')
         .eq('user_id', userId)
+        .is('left_at', null)
 
-      const channelIds = userChannels?.map((p: any) => p.channel_id) || []
+      const conversationIds = userConversations?.map((p: any) => p.conversation_id) || []
 
-      if (channelIds.length > 0) {
-        messageQuery = messageQuery.in('channel_id', channelIds)
+      if (conversationIds.length > 0) {
+        messageQuery = messageQuery.in('conversation_id', conversationIds)
       } else {
         return { data: [], error: null }
       }
@@ -905,76 +803,56 @@ export async function searchMessages(
 
     if (error) {throw error}
 
-    // Map database fields to Message type
-    const mappedMessages = (data || []).map((msg: any) => ({
-      ...msg,
-      conversation_id: msg.channel_id,
-      sender_id: msg.user_id,
-      mentioned_users: msg.mentions,
-      conversation: msg.conversation ? {
-        ...msg.conversation,
-        type: msg.conversation.channel_type,
-      } : null,
-    }))
-
-    return { data: mappedMessages, error: null }
+    return { data: data || [], error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
 }
 
 // =====================================================
-// PARTICIPANT (MEMBER) METHODS
+// PARTICIPANT METHODS
 // =====================================================
 
 /**
- * Get all participants (members) in a conversation (channel)
- * Maps to chat_channel_members table
+ * Get all participants in a conversation
  */
 export async function getParticipants(
   conversationId: string,
   userId: string
 ): Promise<{ data: ConversationParticipant[] | null; error: Error | null }> {
   try {
-    // Verify user is a member
-    const { data: userMember } = await db
-      .from('chat_channel_members')
+    // Verify user is a participant
+    const { data: userParticipant } = await db
+      .from('conversation_participants')
       .select('id')
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
       .maybeSingle()
 
-    if (!userMember) {
+    if (!userParticipant) {
       throw new Error('Not authorized to view participants')
     }
 
     const { data, error } = await db
-      .from('chat_channel_members')
+      .from('conversation_participants')
       .select(`
         *,
         user:users(id, full_name, email, avatar_url)
       `)
-      .eq('channel_id', conversationId)
+      .eq('conversation_id', conversationId)
+      .is('left_at', null)
 
     if (error) {throw error}
 
-    // Map to ConversationParticipant type
-    const mappedParticipants = (data || []).map((m: any) => ({
-      ...m,
-      conversation_id: m.channel_id,
-      left_at: null,
-      is_muted: m.notification_settings?.muted || false,
-    }))
-
-    return { data: mappedParticipants, error: null }
+    return { data: data || [], error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
 }
 
 /**
- * Update participant (member) settings (notifications, last read, etc.)
- * Maps to chat_channel_members table
+ * Update participant settings (notifications, last read, etc.)
  */
 export async function updateParticipant(
   conversationId: string,
@@ -982,45 +860,18 @@ export async function updateParticipant(
   updates: { is_muted?: boolean; last_read_at?: string }
 ): Promise<{ data: ConversationParticipant | null; error: Error | null }> {
   try {
-    // Map is_muted to notification_settings JSON
-    const dbUpdates: Record<string, any> = {}
-    if (updates.last_read_at) {
-      dbUpdates.last_read_at = updates.last_read_at
-    }
-    if (typeof updates.is_muted === 'boolean') {
-      // Get current notification_settings and merge
-      const { data: current } = await db
-        .from('chat_channel_members')
-        .select('notification_settings')
-        .eq('channel_id', conversationId)
-        .eq('user_id', userId)
-        .single()
-
-      dbUpdates.notification_settings = {
-        ...(current?.notification_settings || {}),
-        muted: updates.is_muted,
-      }
-    }
-
     const { data, error } = await db
-      .from('chat_channel_members')
-      .update(dbUpdates)
-      .eq('channel_id', conversationId)
+      .from('conversation_participants')
+      .update(updates)
+      .eq('conversation_id', conversationId)
       .eq('user_id', userId)
+      .is('left_at', null)
       .select()
       .single()
 
     if (error) {throw error}
 
-    // Map to ConversationParticipant type
-    const mappedParticipant = {
-      ...data,
-      conversation_id: data.channel_id,
-      left_at: null,
-      is_muted: data.notification_settings?.muted || false,
-    }
-
-    return { data: mappedParticipant, error: null }
+    return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
   }
@@ -1028,8 +879,7 @@ export async function updateParticipant(
 
 /**
  * Get unread message count for user
- * Manually implemented since RPC functions don't exist
- * Counts messages created after last_read_at for each channel
+ * Uses database functions when available
  */
 export async function getUnreadCount(
   userId: string,
@@ -1037,13 +887,23 @@ export async function getUnreadCount(
 ): Promise<{ data: number; error: Error | null }> {
   try {
     if (conversationId) {
-      // Get count for specific channel
-      // First get the user's last_read_at for this channel
+      // Try to use database function first
+      const { data: count, error: rpcError } = await db.rpc(
+        'get_unread_message_count',
+        { p_user_id: userId, p_conversation_id: conversationId }
+      )
+
+      if (!rpcError && count !== null) {
+        return { data: count, error: null }
+      }
+
+      // Fallback: manual count
       const { data: membership } = await db
-        .from('chat_channel_members')
+        .from('conversation_participants')
         .select('last_read_at')
-        .eq('channel_id', conversationId)
+        .eq('conversation_id', conversationId)
         .eq('user_id', userId)
+        .is('left_at', null)
         .single()
 
       if (!membership) {
@@ -1052,40 +912,49 @@ export async function getUnreadCount(
 
       // Count messages after last_read_at (excluding own messages)
       let query = db
-        .from('chat_messages')
+        .from('messages')
         .select('id', { count: 'exact', head: true })
-        .eq('channel_id', conversationId)
-        .neq('user_id', userId) // Don't count own messages
+        .eq('conversation_id', conversationId)
+        .neq('sender_id', userId)
         .is('deleted_at', null)
 
       if (membership.last_read_at) {
         query = query.gt('created_at', membership.last_read_at)
       }
 
-      const { count, error } = await query
+      const { count: unreadCount, error } = await query
 
       if (error) {throw error}
-      return { data: count || 0, error: null }
+      return { data: unreadCount || 0, error: null }
     } else {
-      // Get total unread count across all channels
-      // Get all user's channel memberships with last_read_at
+      // Try to use database function for total count
+      const { data: count, error: rpcError } = await db.rpc(
+        'get_total_unread_count',
+        { p_user_id: userId }
+      )
+
+      if (!rpcError && count !== null) {
+        return { data: count, error: null }
+      }
+
+      // Fallback: manual count across all conversations
       const { data: memberships } = await db
-        .from('chat_channel_members')
-        .select('channel_id, last_read_at')
+        .from('conversation_participants')
+        .select('conversation_id, last_read_at')
         .eq('user_id', userId)
+        .is('left_at', null)
 
       if (!memberships || memberships.length === 0) {
         return { data: 0, error: null }
       }
 
-      // For each channel, count unread messages
       let totalUnread = 0
       for (const membership of memberships) {
         let query = db
-          .from('chat_messages')
+          .from('messages')
           .select('id', { count: 'exact', head: true })
-          .eq('channel_id', membership.channel_id)
-          .neq('user_id', userId) // Don't count own messages
+          .eq('conversation_id', membership.conversation_id)
+          .neq('sender_id', userId)
           .is('deleted_at', null)
 
         if (membership.last_read_at) {
@@ -1109,7 +978,6 @@ export async function getUnreadCount(
 
 /**
  * Add a reaction to a message
- * Maps to chat_message_reactions table
  */
 export async function addReaction(
   messageId: string,
@@ -1119,7 +987,7 @@ export async function addReaction(
   try {
     // Check if reaction already exists
     const { data: existingReaction } = await db
-      .from('chat_message_reactions')
+      .from('message_reactions')
       .select('*')
       .eq('message_id', messageId)
       .eq('user_id', userId)
@@ -1132,7 +1000,7 @@ export async function addReaction(
 
     // Insert new reaction
     const { data, error } = await db
-      .from('chat_message_reactions')
+      .from('message_reactions')
       .insert({
         message_id: messageId,
         user_id: userId,
@@ -1154,7 +1022,6 @@ export async function addReaction(
 
 /**
  * Remove a reaction from a message
- * Maps to chat_message_reactions table
  */
 export async function removeReaction(
   reactionId: string,
@@ -1162,7 +1029,7 @@ export async function removeReaction(
 ): Promise<{ data: boolean; error: Error | null }> {
   try {
     const { error } = await db
-      .from('chat_message_reactions')
+      .from('message_reactions')
       .delete()
       .eq('id', reactionId)
       .eq('user_id', userId)

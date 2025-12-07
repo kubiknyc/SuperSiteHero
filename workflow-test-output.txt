@@ -1,0 +1,583 @@
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+
+Running 697 tests using 2 workers
+
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+
+🔐 Setting up authentication for E2E tests...
+   Email: kubiknyc@gmail.com
+✅ Authentication successful
+
+🌱 Seeding database with test data...
+
+🌱 Seeding test database...
+   User ID: b7f15635-5d79-44af-954f-d12689d7e7b6
+   Company ID: 3c146527-62a9-4f4d-97db-c7546da9dfed
+
+📁 Seeding projects...
+  ✓ Project exists: Downtown Office Building
+    → User already assigned
+  ✓ Project exists: Residential Tower
+    → User already assigned
+  ✓ Project exists: Shopping Mall Renovation
+    → User already assigned
+
+👥 Seeding contacts...
+  ✗ Failed to create contact: Could not find the 'company_id' column of 'contacts' in the schema cache
+  ✗ Failed to create contact: Could not find the 'company_id' column of 'contacts' in the schema cache
+  ✗ Failed to create contact: Could not find the 'company_id' column of 'contacts' in the schema cache
+
+📋 Seeding checklist templates...
+  ✗ Failed to create template: Could not find the 'is_active' column of 'checklist_templates' in the schema cache
+
+✅ Database seeding completed
+
+Summary:
+  Projects created: 0
+  Projects existed: 3
+  Total projects: 3
+  Contacts created: 0
+  Contacts existed: 0
+  Total contacts: 0
+
+⚠️  Errors encountered: 3
+    - Failed to create contact: Could not find the 'company_id' column of 'contacts' in the schema cache
+    - Failed to create contact: Could not find the 'company_id' column of 'contacts' in the schema cache
+    - Failed to create contact: Could not find the 'company_id' column of 'contacts' in the schema cache
+
+🔍 Verifying test data...
+  ✓ Found 6 project(s)
+  ✓ User assigned to 6 project(s)
+✅ Test data verification passed
+
+
+✅ Test data seeding completed successfully
+
+Test Environment Ready:
+   User ID: b7f15635-5d79-44af-954f-d12689d7e7b6
+   Company ID: 3c146527-62a9-4f4d-97db-c7546da9dfed
+   Projects: 3
+   Contacts: 0
+
+✅ Setup complete, ready to run tests
+
+  ok   1 [setup] › tests\e2e\auth.setup.ts:21:1 › authenticate (9.3s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x    3 [chromium] › tests\e2e\approvals.spec.ts:20:3 › Approvals › should show page description (10.2s)
+  x    2 [chromium] › tests\e2e\approvals.spec.ts:15:3 › Approvals › should display approvals page with heading (21.6s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x    4 [chromium] › tests\e2e\approvals.spec.ts:40:3 › Approvals › should show type filter buttons (29.1s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  x    5 [chromium] › tests\e2e\approvals.spec.ts:32:3 › Approvals › should show tab navigation (32.0s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x    6 [chromium] › tests\e2e\approvals.spec.ts:45:3 › Approvals › should show pending count when there are pending approvals (37.7s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x    8 [chromium] › tests\e2e\approvals.spec.ts:66:3 › Approvals › should show empty state when no pending approvals (26.4s)
+  x    7 [chromium] › tests\e2e\approvals.spec.ts:56:3 › Approvals › should switch tabs (30.1s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x   10 [chromium] › tests\e2e\approvals.spec.ts:95:3 › Approvals › should show loading state while fetching (28.0s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  x    9 [chromium] › tests\e2e\approvals.spec.ts:79:3 › Approvals › should filter by type when type button clicked (34.5s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+Change Orders page loaded
+  x   11 [chromium] › tests\e2e\approvals.spec.ts:104:3 › Approvals › should show empty state message for My Requests tab (18.4s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+  x   12 [chromium] › tests\e2e\change-orders-workflow.spec.ts:75:3 › Change Orders Workflow - Create and Submit › should create change order with cost and schedule impacts (33.4s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x   13 [chromium] › tests\e2e\change-orders-workflow.spec.ts:110:3 › Change Orders Workflow - Create and Submit › should auto-generate change order number (CO-001 format) (29.8s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  x   14 [chromium] › tests\e2e\change-orders-workflow.spec.ts:131:3 › Change Orders Workflow - Create and Submit › should capture cost impact with breakdown (30.1s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x   15 [chromium] › tests\e2e\change-orders-workflow.spec.ts:148:3 › Change Orders Workflow - Create and Submit › should capture schedule impact in days (30.0s)
+Change Orders page loaded
+Test: Change order justification
+Justification categories:
+- Owner request
+- Design error/omission
+- Field condition
+- Code requirement
+- Value engineering
+- Unforeseen condition
+Justification field documented
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  ok  16 [chromium] › tests\e2e\change-orders-workflow.spec.ts:163:3 › Change Orders Workflow - Create and Submit › should require justification for change order (20.1s)
+Change Orders page loaded
+Test: Saving CO as draft
+Draft features:
+- Incomplete data saved
+- Draft status in list
+- Resume editing
+- Not visible to external parties
+Draft saving documented
+  ok  18 [chromium] › tests\e2e\change-orders-workflow.spec.ts:196:3 › Change Orders Workflow - Create and Submit › should save change order as draft (14.9s)
+Change Orders page loaded
+Test: CO form validation
+Required fields:
+- Description/Title
+- Estimated cost impact
+- Justification category
+Form validation documented
+Change Orders page loaded
+Test: Supporting document attachment
+Document types:
+- Scope change documentation
+- Contractor quotes/bids
+- Drawings/sketches
+- Photos of conditions
+- Email correspondence
+Document attachment documented
+  ok  19 [chromium] › tests\e2e\change-orders-workflow.spec.ts:211:3 › Change Orders Workflow - Create and Submit › should validate required fields before submission (16.1s)
+Test: Bid request workflow
+Bid request process:
+- Select contractors to bid
+- Set bid due date
+- Include scope documents
+- Send notification
+Bid request documented
+  ok  17 [chromium] › tests\e2e\change-orders-workflow.spec.ts:180:3 › Change Orders Workflow - Create and Submit › should attach supporting documents (36.1s)
+  ok  20 [chromium] › tests\e2e\change-orders-workflow.spec.ts:234:3 › Change Orders Workflow - Bid and Approval Flow › should request bid from contractor (9.6s)
+Test: Bid receipt workflow
+Bid recording:
+- Enter bid amount
+- Upload bid documents
+- Record schedule impact
+- Note inclusions/exclusions
+Bid receipt documented
+Test: Bid comparison
+Comparison features:
+- Side-by-side cost comparison
+- Schedule impact comparison
+- Scope coverage analysis
+- Recommendation notes
+Bid comparison documented
+  ok  22 [chromium] › tests\e2e\change-orders-workflow.spec.ts:264:3 › Change Orders Workflow - Bid and Approval Flow › should compare multiple bids (9.9s)
+  ok  21 [chromium] › tests\e2e\change-orders-workflow.spec.ts:249:3 › Change Orders Workflow - Bid and Approval Flow › should receive and record contractor bids (13.7s)
+Test: Approval submission
+Approval workflow:
+- Prepare approval package
+- Include cost summary
+- Include schedule impact
+- Route to approvers
+Approval submission documented
+Test: Approval chain tracking
+Approval levels:
+- Project Manager
+- Construction Manager
+- Owner Representative
+- Threshold-based routing
+Approval chain documented
+  ok  23 [chromium] › tests\e2e\change-orders-workflow.spec.ts:279:3 › Change Orders Workflow - Bid and Approval Flow › should submit for owner approval (13.5s)
+  ok  24 [chromium] › tests\e2e\change-orders-workflow.spec.ts:294:3 › Change Orders Workflow - Bid and Approval Flow › should track approval chain (15.3s)
+Test: CO approval
+Approval action:
+- Status changes to Approved
+- Approval signature captured
+- Date recorded
+- Contractor notified
+- Budget updated
+Approval workflow documented
+  ok  25 [chromium] › tests\e2e\change-orders-workflow.spec.ts:309:3 › Change Orders Workflow - Bid and Approval Flow › should approve change order (6.8s)
+  x   27 [chromium] › tests\e2e\change-orders-workflow.spec.ts:340:3 › Change Orders Workflow - Bid and Approval Flow › should handle revision after rejection (32.3s)
+  x   26 [chromium] › tests\e2e\change-orders-workflow.spec.ts:325:3 › Change Orders Workflow - Bid and Approval Flow › should reject change order with reason (37.1s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x   28 [chromium] › tests\e2e\change-orders-workflow.spec.ts:355:3 › Change Orders Workflow - Bid and Approval Flow › should execute approved change order (30.0s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+Test: Budget impact tracking
+- Total Cost card visible: false
+Budget tracking:
+- Original contract value
+- Approved changes to date
+- Pending changes
+- Revised contract value
+Budget impact documented
+  ok  30 [chromium] › tests\e2e\change-orders-workflow.spec.ts:401:3 › Change Orders Workflow - Advanced Features › should track budget impact cumulatively (12.8s)
+  x   29 [chromium] › tests\e2e\change-orders-workflow.spec.ts:380:3 › Change Orders Workflow - Advanced Features › should generate change order log (34.1s)
+Test: CO register export
+Export formats:
+- Excel (.xlsx) for analysis
+- PDF for documentation
+- AIA G701 format (optional)
+Register export documented
+  ok  31 [chromium] › tests\e2e\change-orders-workflow.spec.ts:422:3 › Change Orders Workflow - Advanced Features › should export change order register (4.4s)
+Test: Schedule impact analysis
+Schedule analysis:
+- Total days added
+- Critical path impact
+- Completion date variance
+- Concurrent change credits
+Schedule analysis documented
+  ok  32 [chromium] › tests\e2e\change-orders-workflow.spec.ts:451:3 › Change Orders Workflow - Advanced Features › should analyze schedule impact (6.5s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+Test: Status filter
+Status filter options:
+- Draft, Pending, Under Review
+- Approved, Rejected, Executed
+Status filter documented
+  ok  33 [chromium] › tests\e2e\change-orders-workflow.spec.ts:466:3 › Change Orders Workflow - Advanced Features › should filter change orders by status (9.4s)
+Test: Cost report generation
+Cost reports:
+- CO cost summary
+- Cost by category/reason
+- Trend analysis
+- Budget variance
+Cost reports documented
+  ok  34 [chromium] › tests\e2e\change-orders-workflow.spec.ts:436:3 › Change Orders Workflow - Advanced Features › should generate cost reports (9.7s)
+Test: Priority filter
+Priority levels:
+- Low, Medium, High, Critical
+Priority filter documented
+  ok  35 [chromium] › tests\e2e\change-orders-workflow.spec.ts:489:3 › Change Orders Workflow - Advanced Features › should filter change orders by priority (6.8s)
+Test: CO search
+Search criteria:
+- CO number
+- Description
+- Justification
+Search documented
+  ok  36 [chromium] › tests\e2e\change-orders-workflow.spec.ts:511:3 › Change Orders Workflow - Advanced Features › should search change orders (5.7s)
+Test: CO statistics
+- Total COs card: false
+- Total Cost card: false
+Statistics:
+- Total count
+- Total cost impact
+- By status breakdown
+- By priority breakdown
+Statistics documented
+  ok  37 [chromium] › tests\e2e\change-orders-workflow.spec.ts:535:3 › Change Orders Workflow - Advanced Features › should display change order statistics (6.1s)
+Test: Document linking
+Linked documents:
+- Source RFI (if applicable)
+- Affected drawings
+- Related submittals
+- Contract sections
+Document linking documented
+Notices page loaded
+Test: Verifying notices page
+  ok  38 [chromium] › tests\e2e\change-orders-workflow.spec.ts:560:3 › Change Orders Workflow - Advanced Features › should link change order to related documents (12.2s)
+Notices page loaded
+Test: Creating new notice
+Notice creation documented
+  ok  40 [chromium] › tests\e2e\notices-workflow.spec.ts:58:3 › Notices Workflow - Issue › should create new notice (10.4s)
+Notices page loaded
+Test: Adding recipients
+Recipient options:
+- Select from contacts
+- Add email addresses
+- Distribution groups
+- All subcontractors
+- All project team
+Recipient selection documented
+  ok  41 [chromium] › tests\e2e\notices-workflow.spec.ts:85:3 › Notices Workflow - Issue › should add recipients to notice (4.5s)
+Notices page loaded
+Test: Setting acknowledgment required
+Acknowledgment options:
+- Required/not required
+- Signature required
+- Response required
+- Deadline for acknowledgment
+Acknowledgment settings documented
+  ok  42 [chromium] › tests\e2e\notices-workflow.spec.ts:101:3 › Notices Workflow - Issue › should set acknowledgment requirement (5.3s)
+Notices page loaded
+Test: Setting deadline
+Deadline features:
+- Response deadline
+- Compliance deadline
+- Date/time picker
+- Reminder settings
+Deadline configuration documented
+  ok  43 [chromium] › tests\e2e\notices-workflow.spec.ts:116:3 › Notices Workflow - Issue › should set notice deadline (4.3s)
+  x   39 [chromium] › tests\e2e\notices-workflow.spec.ts:47:3 › Notices Workflow - Issue › should display notices page with heading (23.2s)
+Notices page loaded
+Test: Attaching documents
+- File upload available: false
+Attachment types:
+- Supporting documents
+- Reference drawings
+- Specifications
+- Forms
+Document attachment documented
+  ok  44 [chromium] › tests\e2e\notices-workflow.spec.ts:131:3 › Notices Workflow - Issue › should attach documents to notice (3.7s)
+Test: Overdue notices
+- Overdue indicators visible: false
+Overdue features:
+- Visual highlighting
+- Overdue count
+- Days overdue
+- Priority escalation
+Overdue tracking documented
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  ok  45 [chromium] › tests\e2e\notices-workflow.spec.ts:175:3 › Notices Workflow - Track › should display overdue notices (3.4s)
+Test: Reminder notifications
+Reminder features:
+- Automatic reminders
+- Manual resend
+- Reminder frequency
+- Escalation path
+Reminders documented
+  ok  46 [chromium] › tests\e2e\notices-workflow.spec.ts:195:3 › Notices Workflow - Track › should send reminder notifications (4.0s)
+Test: Tracking acknowledgments
+Acknowledgment tracking:
+- Acknowledged count
+- Pending count
+- View who acknowledged
+- Timestamp of acknowledgment
+Acknowledgment tracking documented
+  ok  47 [chromium] › tests\e2e\notices-workflow.spec.ts:160:3 › Notices Workflow - Track › should track acknowledgment status (4.3s)
+Test: Filtering by status
+- Status filter available: false
+Status options:
+- All notices
+- Pending acknowledgment
+- Acknowledged
+- Overdue
+Status filter documented
+  ok  48 [chromium] › tests\e2e\notices-workflow.spec.ts:210:3 › Notices Workflow - Track › should filter notices by status (5.0s)
+Test: Response history
+History includes:
+- Who responded
+- Response date/time
+- Response content
+- Attachments
+Response history documented
+  ok  49 [chromium] › tests\e2e\notices-workflow.spec.ts:230:3 › Notices Workflow - Track › should view notice response history (7.2s)
+Test: Resending notices
+Resend features:
+- Resend to all
+- Resend to pending only
+- Custom message
+- Track resend count
+Resend functionality documented
+  ok  50 [chromium] › tests\e2e\notices-workflow.spec.ts:245:3 › Notices Workflow - Track › should resend notice to non-respondents (3.9s)
+Test: Notice register
+Register includes:
+- All notices
+- Notice number
+- Type and status
+- Dates
+- Recipients
+Notice register documented
+  ok  51 [chromium] › tests\e2e\notices-workflow.spec.ts:269:3 › Notices Workflow - Manage › should display notice register (3.8s)
+Test: Searching notices
+Search features:
+- Search by title
+- Search by content
+- Search by type
+Search documented
+  ok  52 [chromium] › tests\e2e\notices-workflow.spec.ts:285:3 › Notices Workflow - Manage › should search notices (4.3s)
+Test: Filtering by type
+Notice types:
+- Delay notice
+- Claim notice
+- Change notice
+- Safety notice
+- General notice
+Type filter documented
+  ok  53 [chromium] › tests\e2e\notices-workflow.spec.ts:309:3 › Notices Workflow - Manage › should filter notices by type (4.3s)
+Test: Exporting notices
+- Export button visible: false
+Export formats:
+- PDF report
+- Excel register
+- CSV data
+Export functionality documented
+  ok  54 [chromium] › tests\e2e\notices-workflow.spec.ts:325:3 › Notices Workflow - Manage › should export notices report (4.7s)
+Test: Notice statistics
+- Statistics visible: false
+Statistics include:
+- Total notices
+- Pending acknowledgment
+- Overdue count
+- Response rate
+Statistics documented
+  ok  55 [chromium] › tests\e2e\notices-workflow.spec.ts:344:3 › Notices Workflow - Manage › should display notice statistics (4.9s)
+RFIs page loaded, checking for project selection...
+Test: Creating RFI with all required fields
+No projects available - skipping RFI creation test
+  ok  56 [chromium] › tests\e2e\rfis-workflow.spec.ts:57:3 › RFIs Workflow - Create and Submit › should create RFI with all required fields (5.2s)
+RFIs page loaded, checking for project selection...
+Test: Verifying RFI auto-numbering
+  ok  57 [chromium] › tests\e2e\rfis-workflow.spec.ts:98:3 › RFIs Workflow - Create and Submit › should auto-generate RFI number (RFI-001 format) (5.7s)
+RFIs page loaded, checking for project selection...
+Test: RFI reviewer assignment workflow
+  ok  58 [chromium] › tests\e2e\rfis-workflow.spec.ts:128:3 › RFIs Workflow - Create and Submit › should assign RFI to reviewer (5.7s)
+RFIs page loaded, checking for project selection...
+Test: RFI submission notification system
+- Notification triggered on RFI creation
+- Assigned user receives email/in-app notification
+- Notification includes RFI number and link
+Notification system documented (backend integration)
+  ok  59 [chromium] › tests\e2e\rfis-workflow.spec.ts:165:3 › RFIs Workflow - Create and Submit › should send notification to assigned user on submission (8.2s)
+RFIs page loaded, checking for project selection...
+Test: Saving RFI as draft
+  ok  60 [chromium] › tests\e2e\rfis-workflow.spec.ts:179:3 › RFIs Workflow - Create and Submit › should save RFI as draft without submitting (18.8s)
+RFIs page loaded, checking for project selection...
+Test: RFI form validation
+RFIs page loaded, checking for project selection...
+Test: RFI priority levels
+  ok  61 [chromium] › tests\e2e\rfis-workflow.spec.ts:213:3 › RFIs Workflow - Create and Submit › should validate required fields before submission (19.7s)
+  ok  62 [chromium] › tests\e2e\rfis-workflow.spec.ts:255:3 › RFIs Workflow - Create and Submit › should allow setting priority level (low, medium, high, urgent) (7.6s)
+RFIs page loaded, checking for project selection...
+Test: RFI due date setting
+Test: Adding response to RFI
+  ok  64 [chromium] › tests\e2e\rfis-workflow.spec.ts:333:3 › RFIs Workflow - Response and Approval Flow › should allow response from assigned user (7.8s)
+  ok  63 [chromium] › tests\e2e\rfis-workflow.spec.ts:290:3 › RFIs Workflow - Create and Submit › should set due date for RFI response (8.8s)
+Test: RFI status change tracking
+Status workflow:
+- draft: Initial creation state
+- submitted: Sent for review
+- under_review: Being reviewed by assignee
+- answered: Response provided
+- closed: RFI resolved and closed
+Status tracking documented
+Test: Response notification to requester
+- Requester receives notification when response added
+- Notification includes response preview
+- Link to view full RFI and response
+Requester notification documented
+  ok  65 [chromium] › tests\e2e\rfis-workflow.spec.ts:363:3 › RFIs Workflow - Response and Approval Flow › should track status changes through workflow (8.9s)
+  ok  66 [chromium] › tests\e2e\rfis-workflow.spec.ts:380:3 › RFIs Workflow - Response and Approval Flow › should notify requester when response is added (15.3s)
+Test: RFI comments and discussion
+  ok  67 [chromium] › tests\e2e\rfis-workflow.spec.ts:393:3 › RFIs Workflow - Response and Approval Flow › should allow review comments and discussion (11.5s)
+Test: RFI approval tracking
+Approval history includes:
+- Timestamp of each action
+- User who performed action
+- Action type (approve, reject, request clarification)
+- Notes/comments with action
+Approval tracking documented
+Test: Request clarification workflow
+Clarification flow:
+- Reviewer clicks "Request Clarification"
+- Status changes to needs_clarification
+- Requester notified
+- Requester provides additional info
+- Status returns to under_review
+Clarification workflow documented
+  ok  68 [chromium] › tests\e2e\rfis-workflow.spec.ts:418:3 › RFIs Workflow - Response and Approval Flow › should track approval/rejection history (16.8s)
+  ok  69 [chromium] › tests\e2e\rfis-workflow.spec.ts:433:3 › RFIs Workflow - Response and Approval Flow › should allow request for clarification (12.4s)
+Test: RFI closure workflow
+Test: Multiple response support
+- RFI can have multiple responses
+- Each response timestamped
+- Full conversation history preserved
+- Only closed when explicitly marked closed
+Multiple response workflow documented
+  ok  70 [chromium] › tests\e2e\rfis-workflow.spec.ts:449:3 › RFIs Workflow - Response and Approval Flow › should support multiple responses before closure (13.9s)
+  ok  71 [chromium] › tests\e2e\rfis-workflow.spec.ts:463:3 › RFIs Workflow - Response and Approval Flow › should allow closing RFI after resolution (19.3s)
+Test: RFI log generation
+- Export/Report button visible: false
+RFI log includes:
+- RFI number and subject
+- Dates (created, due, responded, closed)
+- Status and priority
+- Assigned users
+Log generation documented
+  ok  72 [chromium] › tests\e2e\rfis-workflow.spec.ts:496:3 › RFIs Workflow - Advanced Features › should generate RFI log report (22.2s)
+Test: RFI register export
+Export formats supported:
+- Excel (.xlsx) for data analysis
+- PDF for formal documentation
+- CSV for data import/export
+Register export documented
+  ok  73 [chromium] › tests\e2e\rfis-workflow.spec.ts:517:3 › RFIs Workflow - Advanced Features › should export RFI register to Excel/PDF (31.3s)
+Test: Overdue RFI tracking
+  ok  74 [chromium] › tests\e2e\rfis-workflow.spec.ts:531:3 › RFIs Workflow - Advanced Features › should track overdue RFIs (17.2s)
+  x   75 [chromium] › tests\e2e\rfis-workflow.spec.ts:559:3 › RFIs Workflow - Advanced Features › should support priority escalation (30.1s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+Test: RFI search functionality
+  ok  77 [chromium] › tests\e2e\rfis-workflow.spec.ts:612:3 › RFIs Workflow - Advanced Features › should search RFIs by various criteria (5.4s)
+  x   76 [chromium] › tests\e2e\rfis-workflow.spec.ts:574:3 › RFIs Workflow - Advanced Features › should handle file attachments (30.0s)
+Test: Status filter functionality
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ok  78 [chromium] › tests\e2e\rfis-workflow.spec.ts:646:3 › RFIs Workflow - Advanced Features › should filter RFIs by status (16.3s)
+Test: Priority filter functionality
+  ok  79 [chromium] › tests\e2e\rfis-workflow.spec.ts:678:3 › RFIs Workflow - Advanced Features › should filter RFIs by priority (5.8s)
+Test: RFI sorting functionality
+Sort options:
+- By date (created, due, updated)
+- By priority (urgent first)
+- By status (open first)
+- By RFI number
+Sorting functionality documented
+  ok  80 [chromium] › tests\e2e\rfis-workflow.spec.ts:706:3 › RFIs Workflow - Advanced Features › should sort RFIs by date, priority, and status (6.7s)
+Test: Document linking in RFIs
+Document linking features:
+- Link to project drawings
+- Reference specification sections
+- Attach related photos
+- Cross-reference other RFIs
+Document linking documented
+  ok  82 [chromium] › tests\e2e\rfis-workflow.spec.ts:757:3 › RFIs Workflow - Advanced Features › should link RFI to related documents (8.8s)
+Submittals page loaded
+Test: Creating submittal with all required fields
+Test: RFI statistics display
+  ok  81 [chromium] › tests\e2e\rfis-workflow.spec.ts:721:3 › RFIs Workflow - Advanced Features › should display RFI statistics dashboard (26.7s)
+  x   83 [chromium] › tests\e2e\submittals-workflow.spec.ts:63:3 › Submittals Workflow - Create and Submit › should create submittal with all required fields (15.5s)
+  x   84 [chromium] › tests\e2e\submittals-workflow.spec.ts:88:3 › Submittals Workflow - Create and Submit › should auto-generate submittal number (SUB-001 format) (30.0s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Submittals page loaded
+Test: Submittal document attachment
+Submittals page loaded
+Test: Submittal reviewer assignment
+  x   85 [chromium] › tests\e2e\submittals-workflow.spec.ts:109:3 › Submittals Workflow - Create and Submit › should assign submittal to reviewer (21.3s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   86 [chromium] › tests\e2e\submittals-workflow.spec.ts:135:3 › Submittals Workflow - Create and Submit › should attach documents to submittal (29.6s)
+Submittals page loaded
+Test: Specification section reference
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+Submittals page loaded
+Test: Saving submittal as draft
+  x   88 [chromium] › tests\e2e\submittals-workflow.spec.ts:187:3 › Submittals Workflow - Create and Submit › should save submittal as draft (35.8s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+Submittals page loaded
+Test: Submittal form validation
+  x   87 [chromium] › tests\e2e\submittals-workflow.spec.ts:162:3 › Submittals Workflow - Create and Submit › should specify specification section reference (23.2s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+Test: Adding review comments
+- No existing submittals for review
+Review comments documented
+  ok  90 [chromium] › tests\e2e\submittals-workflow.spec.ts:253:3 › Submittals Workflow - Review Flow › should add review comments to submittal (5.2s)
+  x   89 [chromium] › tests\e2e\submittals-workflow.spec.ts:212:3 › Submittals Workflow - Create and Submit › should validate required fields before submission (37.6s)
+Test: Submittal approval workflow
+Approval action:
+- Status changes to "Approved"
+- Approval stamp/signature recorded
+- Timestamp logged
+- Submitter notified
+Approval workflow documented
+  ok  91 [chromium] › tests\e2e\submittals-workflow.spec.ts:277:3 › Submittals Workflow - Review Flow › should approve submittal (6.4s)
+Test: Submittal rejection workflow
+Rejection action:
+- Status changes to "Rejected"
+- Rejection reason required
+- Submitter notified
+- Resubmission expected
+Rejection workflow documented
+  ok  92 [chromium] › tests\e2e\submittals-workflow.spec.ts:307:3 › Submittals Workflow - Review Flow › should reject submittal (4.7s)
+[dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+Test: Revision request workflow
+Revise and Resubmit:
+- Status: "Revise and Resubmit"
+- Specific revision requests noted
+- Submitter notified
+- New revision number assigned on resubmit
+Revision request documented
+  ok  93 [chromium] › tests\e2e\submittals-workflow.spec.ts:322:3 › Submittals Workflow - Review Flow › should request revisions on submittal (5.5s)
+Test: Conditional approval workflow
+Approved with Comments:
+- Status: "Approved as Noted"
+- Comments attached to approval
+- May require acknowledgment
+- Conditions must be met before use
+Conditional approval documented
+  ok  94 [chromium] › tests\e2e\submittals-workflow.spec.ts:292:3 › Submittals Workflow - Review Flow › should approve submittal with comments/conditions (5.9s)
+Test: Review status tracking
+Status flow:
+- draft -> submitted -> under_review
+- under_review -> approved | rejected | revise
+Status tracking documented

@@ -6,6 +6,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useDailyReports } from '@/features/daily-reports/hooks/useDailyReports'
+import { DailyReportsCalendar } from '@/features/daily-reports/components/DailyReportsCalendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -17,6 +18,8 @@ import {
   Plus,
   FileText,
   Calendar,
+  CalendarDays,
+  List,
   Cloud,
   Users,
   Eye,
@@ -26,7 +29,9 @@ import {
   Search,
   X,
   SlidersHorizontal,
+  Download,
 } from 'lucide-react'
+import { BatchExportDialog } from '@/features/daily-reports/components/BatchExportDialog'
 import { format } from 'date-fns'
 import type { DailyReport } from '@/types/database'
 
@@ -74,6 +79,10 @@ export function DailyReportsPage() {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(
     searchParams.has('advanced')
   )
+  const [viewMode, setViewMode] = useState<'list' | 'calendar'>(
+    (searchParams.get('view') as 'list' | 'calendar') || 'list'
+  )
+  const [showBatchExport, setShowBatchExport] = useState(false)
 
   // Sync filters to URL
   useEffect(() => {
@@ -89,6 +98,7 @@ export function DailyReportsPage() {
     if (workerRange.max) {params.set('workerMax', workerRange.max)}
     if (createdByFilter) {params.set('createdBy', createdByFilter)}
     if (showAdvancedFilters) {params.set('advanced', 'true')}
+    if (viewMode !== 'list') {params.set('view', viewMode)}
 
     const newSearch = params.toString()
     const currentSearch = location.search.replace('?', '')
@@ -105,6 +115,7 @@ export function DailyReportsPage() {
     workerRange,
     createdByFilter,
     showAdvancedFilters,
+    viewMode,
     navigate,
     location.search,
   ])
@@ -339,12 +350,41 @@ export function DailyReportsPage() {
               Track daily activities, weather, and workforce
             </p>
           </div>
-          <Link to="/daily-reports/new">
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              New Report
+          <div className="flex items-center gap-3">
+            {/* View Toggle */}
+            <div className="flex items-center border rounded-lg p-1">
+              <Button
+                variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                title="List view"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('calendar')}
+                title="Calendar view"
+              >
+                <CalendarDays className="h-4 w-4" />
+              </Button>
+            </div>
+            <Button
+              variant="outline"
+              onClick={() => setShowBatchExport(true)}
+              disabled={!activeProjectId}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export
             </Button>
-          </Link>
+            <Link to="/daily-reports/new">
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                New Report
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Filters */}
@@ -539,8 +579,17 @@ export function DailyReportsPage() {
           </Card>
         )}
 
-        {/* Reports Table */}
-        {filteredReports && filteredReports.length > 0 && (
+        {/* Calendar View */}
+        {viewMode === 'calendar' && !isLoading && !error && (
+          <DailyReportsCalendar
+            reports={filteredReports || []}
+            projectId={activeProjectId}
+            isLoading={isLoading}
+          />
+        )}
+
+        {/* List View - Reports Table */}
+        {viewMode === 'list' && filteredReports && filteredReports.length > 0 && (
           <Card>
             <CardHeader>
               <CardTitle>Reports</CardTitle>
@@ -559,8 +608,8 @@ export function DailyReportsPage() {
           </Card>
         )}
 
-        {/* Summary Cards */}
-        {filteredReports && filteredReports.length > 0 && (
+        {/* Summary Cards - Only show in list view */}
+        {viewMode === 'list' && filteredReports && filteredReports.length > 0 && (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Card>
               <CardContent className="p-6">
@@ -602,6 +651,15 @@ export function DailyReportsPage() {
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Batch Export Dialog */}
+        {showBatchExport && activeProjectId && (
+          <BatchExportDialog
+            projectId={activeProjectId}
+            projectName={projects?.find(p => p.id === activeProjectId)?.name || 'Project'}
+            onClose={() => setShowBatchExport(false)}
+          />
         )}
       </div>
     </AppLayout>

@@ -163,26 +163,18 @@ export function useDailyReportVisitors(reportId: string | undefined) {
 
 /**
  * Fetch photos for a daily report
+ * Note: daily_report_photos table may not exist in all deployments
+ * Photos are typically stored inline in the daily_reports.photos JSON field
  */
 export function useDailyReportPhotos(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-report-photos', reportId],
-    queryFn: async () => {
+    queryFn: async (): Promise<DailyReportPhoto[]> => {
       if (!reportId) throw new Error('Report ID required')
 
-      // Check if daily_report_photos table exists, otherwise return empty
-      const { data, error } = await supabase
-        .from('daily_report_photos')
-        .select('*')
-        .eq('daily_report_id', reportId)
-        .order('created_at', { ascending: true })
-
-      // If table doesn't exist or error, return empty array
-      if (error) {
-        console.warn('Could not fetch daily report photos:', error.message)
-        return [] as DailyReportPhoto[]
-      }
-      return data as DailyReportPhoto[]
+      // Photos are stored inline in daily_reports.photos JSON field
+      // Return empty array as photos are handled directly in the report
+      return [] as DailyReportPhoto[]
     },
     enabled: !!reportId,
   })
