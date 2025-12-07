@@ -254,7 +254,7 @@ function escapeCSV(value: string): string {
 
 /**
  * Export to Excel (XLSX format)
- * Uses the xlsx library which should be lazy loaded
+ * Uses ExcelJS library (secure alternative to xlsx)
  */
 export async function exportToExcel(
   measurements: TakeoffMeasurement[],
@@ -262,71 +262,71 @@ export async function exportToExcel(
   projectName?: string,
   documentName?: string
 ): Promise<Blob> {
-  // Lazy load xlsx library
-  const XLSX = await import('xlsx')
+  // Lazy load exceljs library
+  const ExcelJS = await import('exceljs')
 
   const rows = measurementsToRows(measurements, scale)
   const summary = calculateSummary(measurements, scale)
 
   // Create workbook
-  const wb = XLSX.utils.book_new()
+  const workbook = new ExcelJS.Workbook()
+  workbook.creator = 'SuperSiteHero'
+  workbook.created = new Date()
 
   // Measurements sheet
-  const measurementsData = [
-    ['Name', 'Type', 'Quantity', 'Unit', 'Color', 'Notes'],
-    ...rows.map((row) => [
-      row.name,
-      row.type,
-      row.quantity,
-      row.unit,
-      row.color,
-      row.notes,
-    ]),
+  const measurementsSheet = workbook.addWorksheet('Measurements')
+
+  measurementsSheet.columns = [
+    { header: 'Name', key: 'name', width: 20 },
+    { header: 'Type', key: 'type', width: 15 },
+    { header: 'Quantity', key: 'quantity', width: 12 },
+    { header: 'Unit', key: 'unit', width: 8 },
+    { header: 'Color', key: 'color', width: 10 },
+    { header: 'Notes', key: 'notes', width: 40 },
   ]
 
-  const ws = XLSX.utils.aoa_to_sheet(measurementsData)
+  // Style header row
+  measurementsSheet.getRow(1).font = { bold: true }
+  measurementsSheet.getRow(1).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFE0E0E0' },
+  }
 
-  // Set column widths
-  ws['!cols'] = [
-    { wch: 20 }, // Name
-    { wch: 15 }, // Type
-    { wch: 12 }, // Quantity
-    { wch: 8 }, // Unit
-    { wch: 10 }, // Color
-    { wch: 40 }, // Notes
-  ]
-
-  XLSX.utils.book_append_sheet(wb, ws, 'Measurements')
+  // Add data rows
+  rows.forEach((row) => {
+    measurementsSheet.addRow(row)
+  })
 
   // Summary sheet
-  const summaryData = [
-    ['Takeoff Summary'],
-    [],
-    ['Project:', projectName || 'Unknown'],
-    ['Document:', documentName || 'Unknown'],
-    ['Date:', new Date().toLocaleDateString()],
-    [],
-    ['Total Measurements:', summary.totalMeasurements],
-    [],
-    ['By Type:'],
-    ['Type', 'Quantity', 'Unit'],
-    ...Object.entries(summary.byType).map(([type, qty]) => [type, qty, getUnit(type)]),
+  const summarySheet = workbook.addWorksheet('Summary')
+
+  summarySheet.columns = [
+    { header: 'Field', key: 'field', width: 25 },
+    { header: 'Value', key: 'value', width: 15 },
+    { header: 'Unit', key: 'unit', width: 10 },
   ]
 
-  const wsSummary = XLSX.utils.aoa_to_sheet(summaryData)
+  // Add summary data
+  summarySheet.addRow({ field: 'Takeoff Summary', value: '', unit: '' })
+  summarySheet.addRow({ field: '', value: '', unit: '' })
+  summarySheet.addRow({ field: 'Project:', value: projectName || 'Unknown', unit: '' })
+  summarySheet.addRow({ field: 'Document:', value: documentName || 'Unknown', unit: '' })
+  summarySheet.addRow({ field: 'Date:', value: new Date().toLocaleDateString(), unit: '' })
+  summarySheet.addRow({ field: '', value: '', unit: '' })
+  summarySheet.addRow({ field: 'Total Measurements:', value: summary.totalMeasurements, unit: '' })
+  summarySheet.addRow({ field: '', value: '', unit: '' })
+  summarySheet.addRow({ field: 'By Type:', value: '', unit: '' })
+  Object.entries(summary.byType).forEach(([type, qty]) => {
+    summarySheet.addRow({ field: type, value: qty, unit: getUnit(type) })
+  })
 
-  // Set column widths for summary
-  wsSummary['!cols'] = [
-    { wch: 25 },
-    { wch: 15 },
-    { wch: 10 },
-  ]
-
-  XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary')
+  // Style summary title
+  summarySheet.getRow(1).font = { bold: true, size: 14 }
 
   // Generate Excel file
-  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-  const blob = new Blob([excelBuffer], {
+  const buffer = await workbook.xlsx.writeBuffer()
+  const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   })
 

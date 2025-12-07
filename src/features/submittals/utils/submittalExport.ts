@@ -219,115 +219,96 @@ export function exportSubmittalsToCSV(
 
 /**
  * Export to Excel (XLSX format)
- * Uses the xlsx library which is lazy loaded
+ * Uses ExcelJS library (secure alternative to xlsx)
  */
 export async function exportSubmittalsToExcel(
   submittals: SubmittalWithDetails[],
   projectName?: string
 ): Promise<Blob> {
-  // Lazy load xlsx library
-  const XLSX = await import('xlsx')
+  // Lazy load exceljs library
+  const ExcelJS = await import('exceljs')
 
   const rows = submittalsToRows(submittals)
   const summary = calculateSubmittalSummary(submittals)
 
   // Create workbook
-  const wb = XLSX.utils.book_new()
+  const workbook = new ExcelJS.Workbook()
+  workbook.creator = 'SuperSiteHero'
+  workbook.created = new Date()
 
   // Submittal Log sheet
-  const logData = [
-    [
-      'Submittal #',
-      'Rev',
-      'Spec Section',
-      'Spec Title',
-      'Title',
-      'Type',
-      'Status',
-      'Ball-in-Court',
-      'Subcontractor',
-      'Date Required',
-      'Date Submitted',
-      'Date Returned',
-      'Days in Review',
-      'Overdue',
-      'Description',
-    ],
-    ...rows.map((row) => [
-      row.submittal_number,
-      row.revision,
-      row.spec_section,
-      row.spec_section_title,
-      row.title,
-      row.type,
-      row.status,
-      row.ball_in_court,
-      row.subcontractor,
-      row.date_required,
-      row.date_submitted,
-      row.date_returned,
-      row.days_in_review ?? '',
-      row.is_overdue ? 'Yes' : 'No',
-      row.description,
-    ]),
+  const logSheet = workbook.addWorksheet('Submittal Log')
+
+  // Define columns with headers and widths
+  logSheet.columns = [
+    { header: 'Submittal #', key: 'submittal_number', width: 15 },
+    { header: 'Rev', key: 'revision', width: 5 },
+    { header: 'Spec Section', key: 'spec_section', width: 12 },
+    { header: 'Spec Title', key: 'spec_section_title', width: 25 },
+    { header: 'Title', key: 'title', width: 35 },
+    { header: 'Type', key: 'type', width: 18 },
+    { header: 'Status', key: 'status', width: 20 },
+    { header: 'Ball-in-Court', key: 'ball_in_court', width: 18 },
+    { header: 'Subcontractor', key: 'subcontractor', width: 25 },
+    { header: 'Date Required', key: 'date_required', width: 12 },
+    { header: 'Date Submitted', key: 'date_submitted', width: 12 },
+    { header: 'Date Returned', key: 'date_returned', width: 12 },
+    { header: 'Days in Review', key: 'days_in_review', width: 14 },
+    { header: 'Overdue', key: 'is_overdue', width: 8 },
+    { header: 'Description', key: 'description', width: 40 },
   ]
 
-  const wsLog = XLSX.utils.aoa_to_sheet(logData)
+  // Style header row
+  logSheet.getRow(1).font = { bold: true }
+  logSheet.getRow(1).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFE0E0E0' },
+  }
 
-  // Set column widths
-  wsLog['!cols'] = [
-    { wch: 15 }, // Submittal #
-    { wch: 5 },  // Rev
-    { wch: 12 }, // Spec Section
-    { wch: 25 }, // Spec Title
-    { wch: 35 }, // Title
-    { wch: 18 }, // Type
-    { wch: 20 }, // Status
-    { wch: 18 }, // Ball-in-Court
-    { wch: 25 }, // Subcontractor
-    { wch: 12 }, // Date Required
-    { wch: 12 }, // Date Submitted
-    { wch: 12 }, // Date Returned
-    { wch: 14 }, // Days in Review
-    { wch: 8 },  // Overdue
-    { wch: 40 }, // Description
-  ]
-
-  XLSX.utils.book_append_sheet(wb, wsLog, 'Submittal Log')
+  // Add data rows
+  rows.forEach((row) => {
+    logSheet.addRow({
+      ...row,
+      is_overdue: row.is_overdue ? 'Yes' : 'No',
+      days_in_review: row.days_in_review ?? '',
+    })
+  })
 
   // Summary sheet
-  const summaryData = [
-    ['Submittal Log Summary'],
-    [],
-    ['Project:', projectName || 'Unknown'],
-    ['Date Generated:', format(new Date(), 'MMMM d, yyyy')],
-    [],
-    ['Total Submittals:', summary.total],
-    ['Overdue:', summary.overdue],
-    ['Average Review Days:', summary.average_review_days],
-    [],
-    ['By Status:'],
-    ['Status', 'Count'],
-    ...Object.entries(summary.by_status).map(([status, count]) => [status, count]),
-    [],
-    ['By Type:'],
-    ['Type', 'Count'],
-    ...Object.entries(summary.by_type).map(([type, count]) => [type, count]),
+  const summarySheet = workbook.addWorksheet('Summary')
+
+  summarySheet.columns = [
+    { header: 'Field', key: 'field', width: 25 },
+    { header: 'Value', key: 'value', width: 15 },
   ]
 
-  const wsSummary = XLSX.utils.aoa_to_sheet(summaryData)
+  // Add summary data
+  summarySheet.addRow({ field: 'Submittal Log Summary', value: '' })
+  summarySheet.addRow({ field: '', value: '' })
+  summarySheet.addRow({ field: 'Project:', value: projectName || 'Unknown' })
+  summarySheet.addRow({ field: 'Date Generated:', value: format(new Date(), 'MMMM d, yyyy') })
+  summarySheet.addRow({ field: '', value: '' })
+  summarySheet.addRow({ field: 'Total Submittals:', value: summary.total })
+  summarySheet.addRow({ field: 'Overdue:', value: summary.overdue })
+  summarySheet.addRow({ field: 'Average Review Days:', value: summary.average_review_days })
+  summarySheet.addRow({ field: '', value: '' })
+  summarySheet.addRow({ field: 'By Status:', value: '' })
+  Object.entries(summary.by_status).forEach(([status, count]) => {
+    summarySheet.addRow({ field: status, value: count })
+  })
+  summarySheet.addRow({ field: '', value: '' })
+  summarySheet.addRow({ field: 'By Type:', value: '' })
+  Object.entries(summary.by_type).forEach(([type, count]) => {
+    summarySheet.addRow({ field: type, value: count })
+  })
 
-  // Set column widths for summary
-  wsSummary['!cols'] = [
-    { wch: 25 },
-    { wch: 15 },
-  ]
-
-  XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary')
+  // Style summary title
+  summarySheet.getRow(1).font = { bold: true, size: 14 }
 
   // Generate Excel file
-  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
-  const blob = new Blob([excelBuffer], {
+  const buffer = await workbook.xlsx.writeBuffer()
+  const blob = new Blob([buffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   })
 

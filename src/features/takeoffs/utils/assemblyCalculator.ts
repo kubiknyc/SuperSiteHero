@@ -89,12 +89,14 @@ export function parseFormula(formula: string): {
 
     // Extract variable names from the parsed expression
     const variables: string[] = []
-    node.traverse((node) => {
-      if (node.type === 'SymbolNode' && node.name) {
+    node.traverse((n) => {
+      // Type guard for SymbolNode which has a 'name' property
+      if (n.type === 'SymbolNode') {
+        const symbolNode = n as unknown as { type: string; name: string }
         // Exclude built-in math functions
         const builtInFunctions = ['sqrt', 'abs', 'ceil', 'floor', 'round', 'pow', 'min', 'max', 'sin', 'cos', 'tan', 'log', 'exp']
-        if (!builtInFunctions.includes(node.name) && !variables.includes(node.name)) {
-          variables.push(node.name)
+        if (!builtInFunctions.includes(symbolNode.name) && !variables.includes(symbolNode.name)) {
+          variables.push(symbolNode.name)
         }
       }
     })
