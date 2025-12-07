@@ -1,259 +1,151 @@
 /**
- * Activity Card Component
- * Draggable card for look-ahead activities
+ * ActivityCard Component
+ * Card representing a single activity in the look-ahead schedule
  */
 
-import { useMemo } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+import { cn } from '@/lib/utils'
+import { Card, CardContent } from '@/components/ui'
 import {
   Calendar,
-  Clock,
-  Users,
-  AlertTriangle,
+  Loader2,
   CheckCircle,
+  Clock,
+  AlertTriangle,
+  XCircle,
+  Users,
   MoreVertical,
-  Play,
-  Pause,
-  Trash2,
-  Edit,
-  Link2,
-  MapPin,
-  HardHat,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import {
-  type LookAheadActivityWithDetails,
-  type LookAheadActivityStatus,
-  getActivityStatusConfig,
-  isActivityOverdue,
-  getDaysUntilStart,
-} from '@/types/look-ahead'
+import { ConstraintCountBadge } from './ConstraintBadge'
+import type { LookAheadActivityWithDetails, LookAheadActivityStatus } from '@/types/look-ahead'
+import { ACTIVITY_STATUS_CONFIG } from '@/types/look-ahead'
 
 interface ActivityCardProps {
   activity: LookAheadActivityWithDetails
-  onEdit?: (activity: LookAheadActivityWithDetails) => void
-  onStatusChange?: (activityId: string, status: LookAheadActivityStatus) => void
-  onDelete?: (activityId: string) => void
-  onViewConstraints?: (activityId: string) => void
+  onClick?: () => void
+  onStatusChange?: (status: LookAheadActivityStatus) => void
+  isSelected?: boolean
   isDragging?: boolean
-  compact?: boolean
   className?: string
+}
+
+const statusIcons: Record<LookAheadActivityStatus, React.ComponentType<{ className?: string }>> = {
+  planned: Calendar,
+  in_progress: Loader2,
+  completed: CheckCircle,
+  delayed: Clock,
+  blocked: AlertTriangle,
+  cancelled: XCircle,
 }
 
 export function ActivityCard({
   activity,
-  onEdit,
-  onStatusChange,
-  onDelete,
-  onViewConstraints,
-  isDragging = false,
-  compact = false,
+  onClick,
+  isSelected,
+  isDragging,
   className,
 }: ActivityCardProps) {
-  const statusConfig = getActivityStatusConfig(activity.status)
-  const isOverdue = isActivityOverdue(activity)
-  const daysUntilStart = getDaysUntilStart(activity)
+  const statusConfig = ACTIVITY_STATUS_CONFIG[activity.status]
+  const StatusIcon = statusIcons[activity.status]
 
-  const dateLabel = useMemo(() => {
-    const start = new Date(activity.planned_start_date)
-    const end = new Date(activity.planned_end_date)
-    const startStr = start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-    const endStr = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-
-    if (startStr === endStr) {
-      return startStr
-    }
-    return `${startStr} - ${endStr}`
-  }, [activity.planned_start_date, activity.planned_end_date])
-
-  const handleStatusQuickChange = (newStatus: LookAheadActivityStatus) => {
-    if (onStatusChange) {
-      onStatusChange(activity.id, newStatus)
-    }
-  }
-
-  if (compact) {
-    return (
-      <Card
-        className={cn(
-          'cursor-pointer transition-all hover:shadow-md',
-          isDragging && 'opacity-50 rotate-2 scale-105',
-          isOverdue && 'border-red-300',
-          className
-        )}
-        onClick={() => onEdit?.(activity)}
-      >
-        <CardContent className="p-2">
-          <div className="flex items-center gap-2">
-            <div className={cn('w-2 h-2 rounded-full', statusConfig.bgColor)} />
-            <span className="text-sm font-medium truncate flex-1">{activity.activity_name}</span>
-            {activity.open_constraints > 0 && (
-              <Badge variant="destructive" className="text-xs px-1 py-0">
-                {activity.open_constraints}
-              </Badge>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-    )
+  const formatDate = (dateStr: string | null | undefined) => {
+    if (!dateStr) return '-'
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 
   return (
     <Card
       className={cn(
-        'transition-all hover:shadow-md',
-        isDragging && 'opacity-50 rotate-2 scale-105 shadow-lg',
-        isOverdue && 'border-red-300 bg-red-50/50',
-        activity.status === 'blocked' && 'border-orange-300 bg-orange-50/50',
+        'cursor-pointer transition-all hover:shadow-md',
+        statusConfig.borderColor,
+        'border-l-4',
+        isSelected && 'ring-2 ring-blue-500',
+        isDragging && 'opacity-50 rotate-2',
         className
       )}
+      onClick={onClick}
     >
       <CardContent className="p-3">
         {/* Header */}
-        <div className="flex items-start justify-between gap-2 mb-2">
+        <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-sm leading-tight truncate">{activity.activity_name}</h4>
+            <h4 className="font-medium text-sm text-gray-900 truncate">
+              {activity.activity_name}
+            </h4>
             {activity.location && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
-                <MapPin className="h-3 w-3" />
-                <span className="truncate">{activity.location}</span>
-              </div>
+              <p className="text-xs text-gray-500 truncate">{activity.location}</p>
             )}
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-6 w-6 -mr-1">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onEdit?.(activity)}>
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Activity
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onViewConstraints?.(activity.id)}>
-                <Link2 className="h-4 w-4 mr-2" />
-                View Constraints ({activity.total_constraints || 0})
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              {activity.status !== 'in_progress' && activity.status !== 'completed' && (
-                <DropdownMenuItem onClick={() => handleStatusQuickChange('in_progress')}>
-                  <Play className="h-4 w-4 mr-2" />
-                  Start Activity
-                </DropdownMenuItem>
-              )}
-              {activity.status === 'in_progress' && (
-                <DropdownMenuItem onClick={() => handleStatusQuickChange('completed')}>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  Mark Complete
-                </DropdownMenuItem>
-              )}
-              {activity.status !== 'delayed' && activity.status !== 'completed' && (
-                <DropdownMenuItem onClick={() => handleStatusQuickChange('delayed')}>
-                  <Clock className="h-4 w-4 mr-2" />
-                  Mark Delayed
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onDelete?.(activity.id)}
-                className="text-red-600"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <button
+            className="p-1 hover:bg-gray-100 rounded"
+            onClick={(e) => {
+              e.stopPropagation()
+              // Menu would go here
+            }}
+          >
+            <MoreVertical className="w-4 h-4 text-gray-400" />
+          </button>
         </div>
 
         {/* Status & Trade */}
-        <div className="flex items-center gap-2 mb-2 flex-wrap">
-          <Badge variant="outline" className={cn('text-xs', statusConfig.color, statusConfig.bgColor)}>
-            {statusConfig.label}
-          </Badge>
-          {activity.trade && (
-            <Badge variant="secondary" className="text-xs">
-              <HardHat className="h-3 w-3 mr-1" />
-              {activity.trade}
-            </Badge>
-          )}
-        </div>
-
-        {/* Date & Duration */}
-        <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2">
-          <div className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
-            <span>{dateLabel}</span>
-          </div>
-          {activity.duration_days > 1 && (
-            <div className="flex items-center gap-1">
-              <Clock className="h-3 w-3" />
-              <span>{activity.duration_days} days</span>
-            </div>
-          )}
-        </div>
-
-        {/* Subcontractor */}
-        {activity.subcontractor_name && (
-          <div className="flex items-center gap-1 text-xs text-muted-foreground mb-2">
-            <Users className="h-3 w-3" />
-            <span className="truncate">{activity.subcontractor_name}</span>
-          </div>
-        )}
-
-        {/* Progress */}
-        {(activity.status === 'in_progress' || activity.percent_complete > 0) && (
-          <div className="mb-2">
-            <div className="flex items-center justify-between text-xs mb-1">
-              <span className="text-muted-foreground">Progress</span>
-              <span className="font-medium">{activity.percent_complete}%</span>
-            </div>
-            <Progress value={activity.percent_complete} className="h-1.5" />
-          </div>
-        )}
-
-        {/* Constraints Warning */}
-        {activity.open_constraints > 0 && (
-          <div
-            className="flex items-center gap-1.5 text-xs text-orange-600 bg-orange-50 rounded px-2 py-1 cursor-pointer hover:bg-orange-100"
-            onClick={() => onViewConstraints?.(activity.id)}
+        <div className="flex items-center gap-2 mt-2">
+          <span
+            className={cn(
+              'inline-flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-full',
+              statusConfig.bgColor,
+              statusConfig.color
+            )}
           >
-            <AlertTriangle className="h-3 w-3" />
-            <span>
-              {activity.open_constraints} open constraint{activity.open_constraints > 1 ? 's' : ''}
-            </span>
-          </div>
-        )}
+            <StatusIcon className={cn('w-3 h-3', activity.status === 'in_progress' && 'animate-spin')} />
+            {statusConfig.label}
+          </span>
+          {activity.trade && (
+            <span className="text-xs text-gray-500 truncate">{activity.trade}</span>
+          )}
+        </div>
 
-        {/* Overdue Warning */}
-        {isOverdue && activity.status !== 'completed' && (
-          <div className="flex items-center gap-1.5 text-xs text-red-600 bg-red-50 rounded px-2 py-1 mt-1">
-            <AlertTriangle className="h-3 w-3" />
-            <span>Overdue</span>
-          </div>
-        )}
+        {/* Dates */}
+        <div className="flex items-center gap-3 mt-2 text-xs text-gray-600">
+          <span title="Planned dates">
+            {formatDate(activity.planned_start_date)} - {formatDate(activity.planned_end_date)}
+          </span>
+        </div>
 
-        {/* Starting Soon Indicator */}
-        {daysUntilStart === 0 && activity.status === 'planned' && (
-          <div className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 rounded px-2 py-1 mt-1">
-            <Calendar className="h-3 w-3" />
-            <span>Starts today</span>
-          </div>
-        )}
-        {daysUntilStart === 1 && activity.status === 'planned' && (
-          <div className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 rounded px-2 py-1 mt-1">
-            <Calendar className="h-3 w-3" />
-            <span>Starts tomorrow</span>
+        {/* Footer: Subcontractor & Constraints */}
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
+          {activity.subcontractor_name ? (
+            <div className="flex items-center gap-1 text-xs text-gray-600 truncate">
+              <Users className="w-3 h-3" />
+              <span className="truncate">{activity.subcontractor_name}</span>
+            </div>
+          ) : (
+            <span className="text-xs text-gray-400">No subcontractor</span>
+          )}
+          <ConstraintCountBadge
+            openCount={activity.open_constraints || 0}
+            totalCount={activity.total_constraints || 0}
+          />
+        </div>
+
+        {/* Progress bar (if applicable) */}
+        {activity.percent_complete !== undefined && activity.percent_complete > 0 && (
+          <div className="mt-2">
+            <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+              <span>Progress</span>
+              <span>{activity.percent_complete}%</span>
+            </div>
+            <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className={cn(
+                  'h-full rounded-full transition-all',
+                  activity.percent_complete >= 100
+                    ? 'bg-green-500'
+                    : activity.percent_complete >= 50
+                      ? 'bg-blue-500'
+                      : 'bg-yellow-500'
+                )}
+                style={{ width: `${Math.min(activity.percent_complete, 100)}%` }}
+              />
+            </div>
           </div>
         )}
       </CardContent>
@@ -261,4 +153,26 @@ export function ActivityCard({
   )
 }
 
-export default ActivityCard
+interface ActivityCardSkeletonProps {
+  className?: string
+}
+
+export function ActivityCardSkeleton({ className }: ActivityCardSkeletonProps) {
+  return (
+    <Card className={cn('border-l-4 border-gray-200', className)}>
+      <CardContent className="p-3 space-y-3">
+        <div className="flex items-start justify-between">
+          <div className="space-y-2 flex-1">
+            <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
+            <div className="h-3 bg-gray-100 rounded w-1/2 animate-pulse" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <div className="h-5 bg-gray-200 rounded-full w-20 animate-pulse" />
+          <div className="h-5 bg-gray-100 rounded w-16 animate-pulse" />
+        </div>
+        <div className="h-3 bg-gray-100 rounded w-2/3 animate-pulse" />
+      </CardContent>
+    </Card>
+  )
+}

@@ -3,6 +3,7 @@
 
 import { useCallback } from 'react'
 import { ApiErrorClass, getErrorMessage } from '@/lib/api/errors'
+import { useToast } from '@/lib/notifications/ToastContext'
 
 /**
  * Options for useApiCall hook
@@ -16,10 +17,11 @@ export interface UseApiCallOptions {
 }
 
 /**
- * Custom hook for handling API calls with error handling
- * Can be extended to include toast notifications
+ * Custom hook for handling API calls with error handling and toast notifications
  */
 export function useApiCall() {
+  const { success, error: showError } = useToast()
+
   const execute = useCallback(
     async <T,>(
       fn: () => Promise<T>,
@@ -29,9 +31,7 @@ export function useApiCall() {
         const result = await fn()
 
         if (options?.showSuccessMessage) {
-          // TODO: Add toast notification for success
-          // toast.success(options.successMessage || 'Operation successful')
-          console.log(options.successMessage || 'Operation successful')
+          success('Success', options.successMessage || 'Operation successful')
         }
 
         options?.onSuccess?.()
@@ -45,16 +45,14 @@ export function useApiCall() {
             })
 
         if (options?.showErrorMessage) {
-          // TODO: Add toast notification for error
-          // toast.error(apiError.getUserMessage())
-          console.error(apiError.getUserMessage())
+          showError('Error', apiError.getUserMessage())
         }
 
         options?.onError?.(apiError)
         return null
       }
     },
-    []
+    [success, showError]
   )
 
   return { execute }

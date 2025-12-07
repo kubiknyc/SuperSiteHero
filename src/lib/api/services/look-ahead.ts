@@ -23,6 +23,13 @@ import type {
 } from '@/types/look-ahead'
 import { calculateWeekRanges } from '@/types/look-ahead'
 
+// Type assertions for database tables not yet in generated types
+// These tables exist in migration 073 but types weren't regenerated
+type DbLookAheadActivity = any
+type DbLookAheadConstraint = any
+type DbLookAheadSnapshot = any
+type DbLookAheadTemplate = any
+
 // =============================================
 // Activities
 // =============================================

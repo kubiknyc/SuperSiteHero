@@ -186,6 +186,13 @@ const PaymentApplicationDetailPage = lazy(() => import('./pages/payment-applicat
 const LienWaiversPage = lazy(() => import('./pages/lien-waivers/LienWaiversPage').then(m => ({ default: m.LienWaiversPage })))
 const LienWaiverDetailPage = lazy(() => import('./pages/lien-waivers/LienWaiverDetailPage').then(m => ({ default: m.LienWaiverDetailPage })))
 
+// Look-Ahead Planning feature
+const LookAheadPage = lazy(() => import('./pages/look-ahead/LookAheadPage').then(m => ({ default: m.default })))
+const LookAheadSnapshotsPage = lazy(() => import('./pages/look-ahead/LookAheadSnapshotsPage').then(m => ({ default: m.default })))
+
+// Insurance Tracking feature
+const InsurancePage = lazy(() => import('./pages/insurance/InsurancePage').then(m => ({ default: m.InsurancePage })))
+
 function App() {
   // Initialize Web Vitals monitoring in production
   useEffect(() => {
@@ -399,6 +406,14 @@ function App() {
                 {/* Lien Waivers feature */}
                 <Route path="/lien-waivers" element={<ProtectedRoute><LienWaiversPage /></ProtectedRoute>} />
                 <Route path="/lien-waivers/:id" element={<ProtectedRoute><LienWaiverDetailPage /></ProtectedRoute>} />
+
+                {/* Look-Ahead Planning feature */}
+                <Route path="/projects/:projectId/look-ahead" element={<ProtectedRoute><LookAheadPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/look-ahead/snapshots" element={<ProtectedRoute><LookAheadSnapshotsPage /></ProtectedRoute>} />
+
+                {/* Insurance Tracking feature */}
+                <Route path="/insurance" element={<ProtectedRoute><InsurancePage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/insurance" element={<ProtectedRoute><InsurancePage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>

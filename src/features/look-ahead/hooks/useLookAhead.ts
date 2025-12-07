@@ -1,6 +1,6 @@
 /**
  * Look-Ahead Planning React Query Hooks
- * Hooks for 3-week rolling schedule management
+ * Hooks for 3-week rolling schedule and PPC tracking
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -30,41 +30,35 @@ import {
 import type {
   LookAheadActivity,
   LookAheadActivityWithDetails,
+  LookAheadActivityFilters,
   LookAheadConstraint,
-  LookAheadConstraintWithDetails,
   LookAheadSnapshot,
-  LookAheadTemplate,
   CreateLookAheadActivityDTO,
   UpdateLookAheadActivityDTO,
   CreateLookAheadConstraintDTO,
   UpdateLookAheadConstraintDTO,
   CreateLookAheadSnapshotDTO,
-  LookAheadActivityFilters,
-  LookAheadActivityStatus,
   PPCMetrics,
   WeekRange,
+  LookAheadActivityStatus,
 } from '@/types/look-ahead'
 
-// =============================================
 // Query Keys
-// =============================================
-
 export const lookAheadKeys = {
   all: ['look-ahead'] as const,
   activities: (projectId: string) => [...lookAheadKeys.all, 'activities', projectId] as const,
-  activitiesFiltered: (projectId: string, filters: LookAheadActivityFilters) =>
+  activitiesWithFilters: (projectId: string, filters?: LookAheadActivityFilters) =>
     [...lookAheadKeys.activities(projectId), filters] as const,
+  activitiesForWeek: (projectId: string, weekStartDate: string) =>
+    [...lookAheadKeys.activities(projectId), 'week', weekStartDate] as const,
+  activitiesByWeek: (projectId: string, baseDate?: Date) =>
+    [...lookAheadKeys.activities(projectId), 'by-week', baseDate?.toISOString()] as const,
   activity: (activityId: string) => [...lookAheadKeys.all, 'activity', activityId] as const,
-  weekActivities: (projectId: string, weekStart: string) =>
-    [...lookAheadKeys.all, 'week', projectId, weekStart] as const,
-  byWeek: (projectId: string, baseDate?: string) =>
-    [...lookAheadKeys.all, 'by-week', projectId, baseDate] as const,
-  constraints: (activityId: string) =>
-    [...lookAheadKeys.all, 'constraints', activityId] as const,
-  openConstraints: (projectId: string) =>
-    [...lookAheadKeys.all, 'open-constraints', projectId] as const,
+  constraints: (activityId: string) => [...lookAheadKeys.all, 'constraints', activityId] as const,
+  projectConstraints: (projectId: string) =>
+    [...lookAheadKeys.all, 'project-constraints', projectId] as const,
   snapshots: (projectId: string) => [...lookAheadKeys.all, 'snapshots', projectId] as const,
-  ppcMetrics: (projectId: string) => [...lookAheadKeys.all, 'ppc', projectId] as const,
+  ppc: (projectId: string) => [...lookAheadKeys.all, 'ppc', projectId] as const,
   templates: (companyId: string, trade?: string) =>
     [...lookAheadKeys.all, 'templates', companyId, trade] as const,
   dashboardStats: (projectId: string) =>
@@ -72,20 +66,18 @@ export const lookAheadKeys = {
 }
 
 // =============================================
-// Activity Hooks
+// Activity Queries
 // =============================================
 
 /**
- * Get all activities for a project
+ * Get all activities for a project with optional filters
  */
 export function useLookAheadActivities(
   projectId: string | undefined,
   filters?: LookAheadActivityFilters
 ) {
   return useQuery({
-    queryKey: filters
-      ? lookAheadKeys.activitiesFiltered(projectId!, filters)
-      : lookAheadKeys.activities(projectId!),
+    queryKey: lookAheadKeys.activitiesWithFilters(projectId!, filters),
     queryFn: () => getLookAheadActivities(projectId!, filters),
     enabled: !!projectId,
   })
@@ -94,28 +86,33 @@ export function useLookAheadActivities(
 /**
  * Get activities for a specific week
  */
-export function useWeekActivities(projectId: string | undefined, weekStartDate: string | undefined) {
+export function useActivitiesForWeek(
+  projectId: string | undefined,
+  weekStartDate: string | undefined
+) {
   return useQuery({
-    queryKey: lookAheadKeys.weekActivities(projectId!, weekStartDate!),
+    queryKey: lookAheadKeys.activitiesForWeek(projectId!, weekStartDate!),
     queryFn: () => getActivitiesForWeek(projectId!, weekStartDate!),
     enabled: !!projectId && !!weekStartDate,
   })
 }
 
 /**
- * Get activities grouped by week (3-week view)
+ * Get activities grouped by week for 3-week view
  */
-export function useLookAheadByWeek(projectId: string | undefined, baseDate?: Date) {
-  return useQuery({
-    queryKey: lookAheadKeys.byWeek(projectId!, baseDate?.toISOString()),
+export function useActivitiesByWeek(projectId: string | undefined, baseDate?: Date) {
+  return useQuery<{
+    weeks: WeekRange[]
+    activities: Record<number, LookAheadActivityWithDetails[]>
+  }>({
+    queryKey: lookAheadKeys.activitiesByWeek(projectId!, baseDate),
     queryFn: () => getActivitiesByWeek(projectId!, baseDate),
     enabled: !!projectId,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }
 
 /**
- * Get a single activity
+ * Get a single activity by ID
  */
 export function useLookAheadActivity(activityId: string | undefined) {
   return useQuery({
@@ -125,25 +122,23 @@ export function useLookAheadActivity(activityId: string | undefined) {
   })
 }
 
+// =============================================
+// Activity Mutations
+// =============================================
+
 /**
  * Create a new activity
  */
-export function useCreateLookAheadActivity() {
-  const { user } = useAuth()
+export function useCreateActivity() {
   const queryClient = useQueryClient()
+  const { user, companyId } = useAuth()
 
-  return useMutation({
-    mutationFn: (dto: CreateLookAheadActivityDTO) =>
-      createLookAheadActivity(dto, user!.company_id!, user!.id),
-    onSuccess: (_, variables) => {
+  return useMutation<LookAheadActivity, Error, CreateLookAheadActivityDTO>({
+    mutationFn: (dto) => createLookAheadActivity(dto, companyId!, user!.id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.project_id),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.project_id),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.dashboardStats(variables.project_id),
+        queryKey: lookAheadKeys.dashboardStats(data.project_id),
       })
     },
   })
@@ -152,27 +147,19 @@ export function useCreateLookAheadActivity() {
 /**
  * Update an activity
  */
-export function useUpdateLookAheadActivity() {
-  const { user } = useAuth()
+export function useUpdateActivity() {
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
-  return useMutation({
-    mutationFn: ({
-      activityId,
-      dto,
-    }: {
-      activityId: string
-      dto: UpdateLookAheadActivityDTO
-      projectId: string
-    }) => updateLookAheadActivity(activityId, dto, user!.id),
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(lookAheadKeys.activity(variables.activityId), data)
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
-      })
+  return useMutation<
+    LookAheadActivity,
+    Error,
+    { activityId: string; dto: UpdateLookAheadActivityDTO }
+  >({
+    mutationFn: ({ activityId, dto }) => updateLookAheadActivity(activityId, dto, user!.id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activity(data.id) })
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
     },
   })
 }
@@ -181,28 +168,19 @@ export function useUpdateLookAheadActivity() {
  * Move activity to a different week
  */
 export function useMoveActivityToWeek() {
-  const { user } = useAuth()
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
-  return useMutation({
-    mutationFn: ({
-      activityId,
-      weekNumber,
-      weekStartDate,
-    }: {
-      activityId: string
-      weekNumber: number
-      weekStartDate: string
-      projectId: string
-    }) => moveActivityToWeek(activityId, weekNumber, weekStartDate, user!.id),
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(lookAheadKeys.activity(variables.activityId), data)
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
-      })
+  return useMutation<
+    LookAheadActivity,
+    Error,
+    { activityId: string; weekNumber: number; weekStartDate: string }
+  >({
+    mutationFn: ({ activityId, weekNumber, weekStartDate }) =>
+      moveActivityToWeek(activityId, weekNumber, weekStartDate, user!.id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activity(data.id) })
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
     },
   })
 }
@@ -211,33 +189,21 @@ export function useMoveActivityToWeek() {
  * Update activity status
  */
 export function useUpdateActivityStatus() {
-  const { user } = useAuth()
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
-  return useMutation({
-    mutationFn: ({
-      activityId,
-      status,
-      percentComplete,
-    }: {
-      activityId: string
-      status: LookAheadActivityStatus
-      percentComplete?: number
-      projectId: string
-    }) => updateActivityStatus(activityId, status, percentComplete, user?.id),
-    onSuccess: (data, variables) => {
-      queryClient.setQueryData(lookAheadKeys.activity(variables.activityId), data)
+  return useMutation<
+    LookAheadActivity,
+    Error,
+    { activityId: string; status: LookAheadActivityStatus; percentComplete?: number }
+  >({
+    mutationFn: ({ activityId, status, percentComplete }) =>
+      updateActivityStatus(activityId, status, percentComplete, user?.id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activity(data.id) })
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.ppcMetrics(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.dashboardStats(variables.projectId),
+        queryKey: lookAheadKeys.dashboardStats(data.project_id),
       })
     },
   })
@@ -246,35 +212,21 @@ export function useUpdateActivityStatus() {
 /**
  * Delete an activity
  */
-export function useDeleteLookAheadActivity() {
+export function useDeleteActivity() {
   const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: ({
-      activityId,
-    }: {
-      activityId: string
-      projectId: string
-    }) => deleteLookAheadActivity(activityId),
-    onSuccess: (_, variables) => {
-      queryClient.removeQueries({
-        queryKey: lookAheadKeys.activity(variables.activityId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.dashboardStats(variables.projectId),
-      })
+  return useMutation<string, Error, { activityId: string; projectId: string }>({
+    mutationFn: ({ activityId, projectId }) =>
+      deleteLookAheadActivity(activityId).then(() => projectId),
+    onSuccess: (projectId) => {
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(projectId) })
+      queryClient.invalidateQueries({ queryKey: lookAheadKeys.dashboardStats(projectId) })
     },
   })
 }
 
 // =============================================
-// Constraint Hooks
+// Constraint Queries
 // =============================================
 
 /**
@@ -293,42 +245,40 @@ export function useActivityConstraints(activityId: string | undefined) {
  */
 export function useProjectOpenConstraints(projectId: string | undefined) {
   return useQuery({
-    queryKey: lookAheadKeys.openConstraints(projectId!),
+    queryKey: lookAheadKeys.projectConstraints(projectId!),
     queryFn: () => getProjectOpenConstraints(projectId!),
     enabled: !!projectId,
   })
 }
 
+// =============================================
+// Constraint Mutations
+// =============================================
+
 /**
  * Create a constraint
  */
-export function useCreateLookAheadConstraint() {
-  const { user } = useAuth()
+export function useCreateConstraint() {
   const queryClient = useQueryClient()
+  const { user, companyId } = useAuth()
 
-  return useMutation({
-    mutationFn: ({
-      dto,
-      projectId,
-    }: {
-      dto: CreateLookAheadConstraintDTO
-      projectId: string
-    }) => createLookAheadConstraint(dto, projectId, user!.company_id!, user!.id),
-    onSuccess: (_, variables) => {
+  return useMutation<
+    LookAheadConstraint,
+    Error,
+    { dto: CreateLookAheadConstraintDTO; projectId: string }
+  >({
+    mutationFn: ({ dto, projectId }) =>
+      createLookAheadConstraint(dto, projectId, companyId!, user!.id),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.constraints(variables.dto.activity_id),
+        queryKey: lookAheadKeys.constraints(data.activity_id),
       })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activity(variables.dto.activity_id),
+        queryKey: lookAheadKeys.activity(data.activity_id),
       })
+      // Also invalidate project activities since blocked status might change
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.openConstraints(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
+        queryKey: lookAheadKeys.all,
       })
     },
   })
@@ -337,35 +287,26 @@ export function useCreateLookAheadConstraint() {
 /**
  * Update a constraint
  */
-export function useUpdateLookAheadConstraint() {
-  const { user } = useAuth()
+export function useUpdateConstraint() {
   const queryClient = useQueryClient()
+  const { user } = useAuth()
 
-  return useMutation({
-    mutationFn: ({
-      constraintId,
-      dto,
-    }: {
-      constraintId: string
-      dto: UpdateLookAheadConstraintDTO
-      activityId: string
-      projectId: string
-    }) => updateLookAheadConstraint(constraintId, dto, user?.id),
-    onSuccess: (_, variables) => {
+  return useMutation<
+    LookAheadConstraint,
+    Error,
+    { constraintId: string; dto: UpdateLookAheadConstraintDTO; activityId: string }
+  >({
+    mutationFn: ({ constraintId, dto }) => updateLookAheadConstraint(constraintId, dto, user?.id),
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.constraints(variables.activityId),
       })
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.activity(variables.activityId),
       })
+      // Invalidate all because blocked status might change
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.openConstraints(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
+        queryKey: lookAheadKeys.all,
       })
     },
   })
@@ -374,39 +315,28 @@ export function useUpdateLookAheadConstraint() {
 /**
  * Delete a constraint
  */
-export function useDeleteLookAheadConstraint() {
+export function useDeleteConstraint() {
   const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: ({
-      constraintId,
-    }: {
-      constraintId: string
-      activityId: string
-      projectId: string
-    }) => deleteLookAheadConstraint(constraintId),
-    onSuccess: (_, variables) => {
+  return useMutation<string, Error, { constraintId: string; activityId: string }>({
+    mutationFn: ({ constraintId, activityId }) =>
+      deleteLookAheadConstraint(constraintId).then(() => activityId),
+    onSuccess: (activityId) => {
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.constraints(variables.activityId),
+        queryKey: lookAheadKeys.constraints(activityId),
       })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activity(variables.activityId),
+        queryKey: lookAheadKeys.activity(activityId),
       })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.openConstraints(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
+        queryKey: lookAheadKeys.all,
       })
     },
   })
 }
 
 // =============================================
-// Snapshot & PPC Hooks
+// Snapshot & PPC Queries
 // =============================================
 
 /**
@@ -414,8 +344,19 @@ export function useDeleteLookAheadConstraint() {
  */
 export function useLookAheadSnapshots(projectId: string | undefined, limit?: number) {
   return useQuery({
-    queryKey: lookAheadKeys.snapshots(projectId!),
+    queryKey: [...lookAheadKeys.snapshots(projectId!), limit],
     queryFn: () => getLookAheadSnapshots(projectId!, limit),
+    enabled: !!projectId,
+  })
+}
+
+/**
+ * Get PPC metrics for a project
+ */
+export function usePPCMetrics(projectId: string | undefined) {
+  return useQuery<PPCMetrics>({
+    queryKey: lookAheadKeys.ppc(projectId!),
+    queryFn: () => getPPCMetrics(projectId!),
     enabled: !!projectId,
   })
 }
@@ -423,49 +364,37 @@ export function useLookAheadSnapshots(projectId: string | undefined, limit?: num
 /**
  * Create a weekly snapshot
  */
-export function useCreateLookAheadSnapshot() {
-  const { user } = useAuth()
+export function useCreateSnapshot() {
   const queryClient = useQueryClient()
+  const { user, companyId } = useAuth()
 
-  return useMutation({
-    mutationFn: (dto: CreateLookAheadSnapshotDTO) =>
-      createLookAheadSnapshot(dto, user!.company_id!, user!.id),
-    onSuccess: (_, variables) => {
+  return useMutation<LookAheadSnapshot, Error, CreateLookAheadSnapshotDTO>({
+    mutationFn: (dto) => createLookAheadSnapshot(dto, companyId!, user!.id),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.snapshots(variables.project_id),
+        queryKey: lookAheadKeys.snapshots(data.project_id),
       })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.ppcMetrics(variables.project_id),
+        queryKey: lookAheadKeys.ppc(data.project_id),
       })
     },
   })
 }
 
-/**
- * Get PPC metrics
- */
-export function usePPCMetrics(projectId: string | undefined) {
-  return useQuery({
-    queryKey: lookAheadKeys.ppcMetrics(projectId!),
-    queryFn: () => getPPCMetrics(projectId!),
-    enabled: !!projectId,
-  })
-}
-
 // =============================================
-// Template Hooks
+// Template Queries
 // =============================================
 
 /**
  * Get templates for a company
  */
 export function useLookAheadTemplates(trade?: string) {
-  const { user } = useAuth()
+  const { companyId } = useAuth()
 
   return useQuery({
-    queryKey: lookAheadKeys.templates(user?.company_id!, trade),
-    queryFn: () => getLookAheadTemplates(user!.company_id!, trade),
-    enabled: !!user?.company_id,
+    queryKey: lookAheadKeys.templates(companyId!, trade),
+    queryFn: () => getLookAheadTemplates(companyId!, trade),
+    enabled: !!companyId,
   })
 }
 
@@ -473,39 +402,29 @@ export function useLookAheadTemplates(trade?: string) {
  * Create activity from template
  */
 export function useCreateActivityFromTemplate() {
-  const { user } = useAuth()
   const queryClient = useQueryClient()
+  const { user, companyId } = useAuth()
 
-  return useMutation({
-    mutationFn: ({
-      templateId,
-      projectId,
-      overrides,
-    }: {
-      templateId: string
-      projectId: string
-      overrides?: Partial<CreateLookAheadActivityDTO>
-    }) =>
-      createActivityFromTemplate(
-        templateId,
-        projectId,
-        user!.company_id!,
-        user!.id,
-        overrides
-      ),
-    onSuccess: (_, variables) => {
+  return useMutation<
+    LookAheadActivity,
+    Error,
+    { templateId: string; projectId: string; overrides?: Partial<CreateLookAheadActivityDTO> }
+  >({
+    mutationFn: ({ templateId, projectId, overrides }) =>
+      createActivityFromTemplate(templateId, projectId, companyId!, user!.id, overrides),
+    onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.activities(variables.projectId),
+        queryKey: lookAheadKeys.activities(data.project_id),
       })
       queryClient.invalidateQueries({
-        queryKey: lookAheadKeys.byWeek(variables.projectId),
+        queryKey: lookAheadKeys.dashboardStats(data.project_id),
       })
     },
   })
 }
 
 // =============================================
-// Dashboard Hook
+// Dashboard Query
 // =============================================
 
 /**
@@ -516,23 +435,5 @@ export function useLookAheadDashboardStats(projectId: string | undefined) {
     queryKey: lookAheadKeys.dashboardStats(projectId!),
     queryFn: () => getLookAheadDashboardStats(projectId!),
     enabled: !!projectId,
-    staleTime: 1000 * 60 * 2, // 2 minutes
   })
-}
-
-// =============================================
-// Export all hooks
-// =============================================
-
-export {
-  // Re-export types for convenience
-  type LookAheadActivity,
-  type LookAheadActivityWithDetails,
-  type LookAheadConstraint,
-  type LookAheadConstraintWithDetails,
-  type LookAheadSnapshot,
-  type LookAheadTemplate,
-  type LookAheadActivityFilters,
-  type PPCMetrics,
-  type WeekRange,
 }

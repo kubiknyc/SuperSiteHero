@@ -36,7 +36,11 @@ import { DocumentList } from '@/features/documents/components/DocumentList'
 import { DocumentTypeIcon } from '@/features/documents/components/DocumentTypeIcon'
 import { DocumentStatusBadge } from '@/features/documents/components/DocumentStatusBadge'
 import { useDocuments, useFolders } from '@/features/documents/hooks/useDocuments'
-import { useCreateFolderWithNotification } from '@/features/documents/hooks/useDocumentsMutations'
+import {
+  useCreateFolderWithNotification,
+  useDeleteDocumentWithNotification,
+  useUpdateDocumentWithNotification,
+} from '@/features/documents/hooks/useDocumentsMutations'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { cn } from '@/lib/utils'
 import type { Document, Folder as FolderType, DocumentStatus, DocumentType } from '@/types/database'
@@ -74,6 +78,11 @@ function DocumentLibraryPage() {
   const [expandedFolders, setExpandedFolders] = useState<Set<string>>(new Set())
   const [createFolderDialogOpen, setCreateFolderDialogOpen] = useState(false)
   const [newFolderName, setNewFolderName] = useState('')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [documentToDelete, setDocumentToDelete] = useState<Document | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [documentToEdit, setDocumentToEdit] = useState<Document | null>(null)
+  const [editFormData, setEditFormData] = useState({ name: '', description: '' })
 
   // Queries
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -85,6 +94,8 @@ function DocumentLibraryPage() {
 
   // Mutations
   const createFolder = useCreateFolderWithNotification()
+  const deleteDocument = useDeleteDocumentWithNotification()
+  const updateDocument = useUpdateDocumentWithNotification()
 
   // Build folder tree structure
   const folderTree = useMemo(() => {
@@ -194,13 +205,44 @@ function DocumentLibraryPage() {
   }
 
   const handleEditDocument = (doc: Document) => {
-    // TODO: Open edit dialog
-    console.log('Edit document:', doc)
+    setDocumentToEdit(doc)
+    setEditFormData({ name: doc.name, description: doc.description || '' })
+    setEditDialogOpen(true)
   }
 
   const handleDeleteDocument = (doc: Document) => {
-    // TODO: Open delete confirmation dialog
-    console.log('Delete document:', doc)
+    setDocumentToDelete(doc)
+    setDeleteDialogOpen(true)
+  }
+
+  const confirmDelete = () => {
+    if (!documentToDelete) return
+    deleteDocument.mutate(documentToDelete.id, {
+      onSuccess: () => {
+        setDeleteDialogOpen(false)
+        setDocumentToDelete(null)
+      },
+    })
+  }
+
+  const handleUpdateDocument = () => {
+    if (!documentToEdit) return
+    updateDocument.mutate(
+      {
+        id: documentToEdit.id,
+        updates: {
+          name: editFormData.name.trim(),
+          description: editFormData.description.trim() || null,
+        },
+      },
+      {
+        onSuccess: () => {
+          setEditDialogOpen(false)
+          setDocumentToEdit(null)
+          setEditFormData({ name: '', description: '' })
+        },
+      }
+    )
   }
 
   // Recursive folder tree renderer
@@ -592,6 +634,101 @@ function DocumentLibraryPage() {
               disabled={!newFolderName.trim() || createFolder.isPending}
             >
               {createFolder.isPending ? 'Creating...' : 'Create Folder'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Document Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Document</DialogTitle>
+          </DialogHeader>
+
+          <div className="py-4">
+            <p className="text-gray-600">
+              Are you sure you want to delete{' '}
+              <span className="font-semibold text-gray-900">
+                {documentToDelete?.name}
+              </span>
+              ?
+            </p>
+            <p className="text-sm text-gray-500 mt-2">
+              This action cannot be undone.
+            </p>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteDialogOpen(false)
+                setDocumentToDelete(null)
+              }}
+              disabled={deleteDocument.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteDocument.isPending}
+            >
+              {deleteDocument.isPending ? 'Deleting...' : 'Delete'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Document Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Document</DialogTitle>
+          </DialogHeader>
+
+          <div className="py-4 space-y-4">
+            <div>
+              <Label htmlFor="edit-doc-name">Document Name</Label>
+              <Input
+                id="edit-doc-name"
+                value={editFormData.name}
+                onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+                placeholder="Enter document name"
+                className="mt-1"
+                autoFocus
+              />
+            </div>
+            <div>
+              <Label htmlFor="edit-doc-description">Description (optional)</Label>
+              <Input
+                id="edit-doc-description"
+                value={editFormData.description}
+                onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                placeholder="Enter description"
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditDialogOpen(false)
+                setDocumentToEdit(null)
+                setEditFormData({ name: '', description: '' })
+              }}
+              disabled={updateDocument.isPending}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateDocument}
+              disabled={!editFormData.name.trim() || updateDocument.isPending}
+            >
+              {updateDocument.isPending ? 'Saving...' : 'Save Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>

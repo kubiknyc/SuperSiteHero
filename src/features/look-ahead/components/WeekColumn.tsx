@@ -1,211 +1,174 @@
 /**
- * Week Column Component
- * Column display for a single week in the 3-week look-ahead view
+ * WeekColumn Component
+ * Column representing a week in the 3-week look-ahead view
  */
 
-import { useMemo } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import {
-  Plus,
-  Calendar,
-  CheckCircle,
-  Clock,
-  AlertTriangle,
-  ChevronDown,
-  ChevronUp,
-} from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { ActivityCard } from './ActivityCard'
-import {
-  type LookAheadActivityWithDetails,
-  type LookAheadActivityStatus,
-  type WeekRange,
-  sortActivities,
+import { Plus, Calendar, CheckCircle, AlertTriangle, Clock } from 'lucide-react'
+import { Button } from '@/components/ui'
+import { ActivityCard, ActivityCardSkeleton } from './ActivityCard'
+import type {
+  LookAheadActivityWithDetails,
+  WeekRange,
+  LookAheadActivityStatus,
 } from '@/types/look-ahead'
 
 interface WeekColumnProps {
   week: WeekRange
   activities: LookAheadActivityWithDetails[]
-  onAddActivity?: (weekNumber: number, weekStartDate: string) => void
-  onEditActivity?: (activity: LookAheadActivityWithDetails) => void
-  onStatusChange?: (activityId: string, status: LookAheadActivityStatus) => void
-  onDeleteActivity?: (activityId: string) => void
-  onViewConstraints?: (activityId: string) => void
-  onDragStart?: (activityId: string) => void
-  onDragEnd?: () => void
-  onDrop?: (activityId: string, weekNumber: number, weekStartDate: string) => void
-  isDragTarget?: boolean
-  maxHeight?: string | number
-  showStats?: boolean
-  collapsible?: boolean
-  defaultCollapsed?: boolean
+  isLoading?: boolean
+  onAddActivity?: () => void
+  onActivityClick?: (activity: LookAheadActivityWithDetails) => void
+  onActivityStatusChange?: (activityId: string, status: LookAheadActivityStatus) => void
   className?: string
 }
 
 export function WeekColumn({
   week,
   activities,
+  isLoading,
   onAddActivity,
-  onEditActivity,
-  onStatusChange,
-  onDeleteActivity,
-  onViewConstraints,
-  onDragStart,
-  onDragEnd,
-  onDrop,
-  isDragTarget = false,
-  maxHeight = '600px',
-  showStats = true,
-  collapsible = false,
-  defaultCollapsed = false,
+  onActivityClick,
   className,
 }: WeekColumnProps) {
-  const sortedActivities = useMemo(() => sortActivities(activities), [activities])
+  const formatWeekHeader = (weekRange: WeekRange) => {
+    const startMonth = weekRange.weekStart.toLocaleDateString('en-US', { month: 'short' })
+    const startDay = weekRange.weekStart.getDate()
+    const endMonth = weekRange.weekEnd.toLocaleDateString('en-US', { month: 'short' })
+    const endDay = weekRange.weekEnd.getDate()
 
-  const stats = useMemo(() => {
-    const total = activities.length
-    const completed = activities.filter((a) => a.status === 'completed').length
-    const inProgress = activities.filter((a) => a.status === 'in_progress').length
-    const blocked = activities.filter((a) => a.status === 'blocked').length
-    const delayed = activities.filter((a) => a.status === 'delayed').length
-    const planned = activities.filter((a) => a.status === 'planned').length
-
-    return { total, completed, inProgress, blocked, delayed, planned }
-  }, [activities])
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = 'move'
+    if (startMonth === endMonth) {
+      return `${startMonth} ${startDay} - ${endDay}`
+    }
+    return `${startMonth} ${startDay} - ${endMonth} ${endDay}`
   }
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    const activityId = e.dataTransfer.getData('activityId')
-    if (activityId && onDrop) {
-      onDrop(activityId, week.weekNumber, week.weekStart.toISOString().split('T')[0])
+  const getWeekLabel = (weekNumber: number) => {
+    switch (weekNumber) {
+      case 1:
+        return 'This Week'
+      case 2:
+        return 'Next Week'
+      case 3:
+        return 'Week 3'
+      default:
+        return `Week ${weekNumber}`
     }
   }
 
-  const handleDragStart = (e: React.DragEvent, activityId: string) => {
-    e.dataTransfer.setData('activityId', activityId)
-    e.dataTransfer.effectAllowed = 'move'
-    onDragStart?.(activityId)
+  // Calculate metrics
+  const metrics = {
+    total: activities.length,
+    completed: activities.filter((a) => a.status === 'completed').length,
+    blocked: activities.filter((a) => a.status === 'blocked').length,
+    inProgress: activities.filter((a) => a.status === 'in_progress').length,
   }
 
-  const handleDragEnd = () => {
-    onDragEnd?.()
-  }
+  const ppc =
+    metrics.total > 0 ? Math.round((metrics.completed / metrics.total) * 100) : 0
 
   return (
-    <Card
+    <div
       className={cn(
-        'flex flex-col h-full',
-        isDragTarget && 'ring-2 ring-primary ring-offset-2',
-        week.isCurrentWeek && 'border-primary',
+        'flex flex-col bg-gray-50 rounded-lg border border-gray-200 min-h-[400px]',
+        week.weekNumber === 1 && 'border-blue-300 bg-blue-50/30',
         className
       )}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
     >
-      <CardHeader className="pb-2 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            <span>Week {week.weekNumber}</span>
-            {week.isCurrentWeek && (
-              <Badge variant="default" className="text-xs">
-                Current
-              </Badge>
-            )}
-          </CardTitle>
+      {/* Header */}
+      <div className={cn(
+        'px-4 py-3 border-b',
+        week.weekNumber === 1 ? 'bg-blue-100/50 border-blue-200' : 'bg-gray-100 border-gray-200'
+      )}>
+        <div className="flex items-center justify-between mb-1">
+          <h3 className="font-semibold text-gray-900">
+            {getWeekLabel(week.weekNumber)}
+          </h3>
           <Button
             variant="ghost"
-            size="icon"
-            className="h-7 w-7"
-            onClick={() =>
-              onAddActivity?.(week.weekNumber, week.weekStart.toISOString().split('T')[0])
-            }
+            size="sm"
+            onClick={onAddActivity}
+            className="h-7 px-2"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="w-4 h-4" />
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">{week.weekLabel}</p>
+        <div className="flex items-center gap-1 text-xs text-gray-600">
+          <Calendar className="w-3 h-3" />
+          <span>{formatWeekHeader(week)}</span>
+        </div>
+      </div>
 
-        {/* Stats Row */}
-        {showStats && stats.total > 0 && (
-          <div className="flex items-center gap-2 mt-2 flex-wrap">
-            <Badge variant="outline" className="text-xs gap-1">
-              <span className="font-medium">{stats.total}</span>
-              <span className="text-muted-foreground">total</span>
-            </Badge>
-            {stats.completed > 0 && (
-              <Badge variant="outline" className="text-xs gap-1 text-green-700 bg-green-50">
-                <CheckCircle className="h-3 w-3" />
-                {stats.completed}
-              </Badge>
+      {/* Metrics */}
+      <div className="px-4 py-2 border-b border-gray-200 bg-white">
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-3">
+            <span className="text-gray-600">{metrics.total} activities</span>
+            {metrics.completed > 0 && (
+              <span className="flex items-center gap-1 text-green-600">
+                <CheckCircle className="w-3 h-3" />
+                {metrics.completed}
+              </span>
             )}
-            {stats.inProgress > 0 && (
-              <Badge variant="outline" className="text-xs gap-1 text-yellow-700 bg-yellow-50">
-                <Clock className="h-3 w-3" />
-                {stats.inProgress}
-              </Badge>
+            {metrics.inProgress > 0 && (
+              <span className="flex items-center gap-1 text-yellow-600">
+                <Clock className="w-3 h-3" />
+                {metrics.inProgress}
+              </span>
             )}
-            {stats.blocked > 0 && (
-              <Badge variant="outline" className="text-xs gap-1 text-red-700 bg-red-50">
-                <AlertTriangle className="h-3 w-3" />
-                {stats.blocked}
-              </Badge>
+            {metrics.blocked > 0 && (
+              <span className="flex items-center gap-1 text-red-600">
+                <AlertTriangle className="w-3 h-3" />
+                {metrics.blocked}
+              </span>
             )}
           </div>
+          {metrics.total > 0 && (
+            <span
+              className={cn(
+                'font-medium',
+                ppc >= 80 ? 'text-green-600' : ppc >= 50 ? 'text-yellow-600' : 'text-red-600'
+              )}
+              title="Percent Plan Complete"
+            >
+              {ppc}% PPC
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Activities List */}
+      <div className="flex-1 p-3 space-y-2 overflow-y-auto">
+        {isLoading ? (
+          <>
+            <ActivityCardSkeleton />
+            <ActivityCardSkeleton />
+            <ActivityCardSkeleton />
+          </>
+        ) : activities.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+            <Calendar className="w-8 h-8 mb-2 text-gray-300" />
+            <p className="text-sm">No activities scheduled</p>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onAddActivity}
+              className="mt-2"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              Add Activity
+            </Button>
+          </div>
+        ) : (
+          activities.map((activity) => (
+            <ActivityCard
+              key={activity.id}
+              activity={activity}
+              onClick={() => onActivityClick?.(activity)}
+            />
+          ))
         )}
-      </CardHeader>
-
-      <CardContent className="flex-1 overflow-hidden p-2">
-        <ScrollArea className="h-full" style={{ maxHeight }}>
-          <div className="space-y-2 pr-2">
-            {sortedActivities.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No activities</p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2"
-                  onClick={() =>
-                    onAddActivity?.(week.weekNumber, week.weekStart.toISOString().split('T')[0])
-                  }
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Activity
-                </Button>
-              </div>
-            ) : (
-              sortedActivities.map((activity) => (
-                <div
-                  key={activity.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, activity.id)}
-                  onDragEnd={handleDragEnd}
-                  className="cursor-grab active:cursor-grabbing"
-                >
-                  <ActivityCard
-                    activity={activity}
-                    onEdit={onEditActivity}
-                    onStatusChange={onStatusChange}
-                    onDelete={onDeleteActivity}
-                    onViewConstraints={onViewConstraints}
-                  />
-                </div>
-              ))
-            )}
-          </div>
-        </ScrollArea>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   )
 }
-
-export default WeekColumn

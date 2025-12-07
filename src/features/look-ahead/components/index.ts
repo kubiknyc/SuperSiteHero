@@ -1,9 +1,9 @@
 /**
- * Look-Ahead Components Index
+ * Look-Ahead Planning Components
+ * Re-export all components for easier imports
  */
 
-export * from './ActivityCard'
-export * from './WeekColumn'
-export * from './ConstraintsList'
-export * from './LookAheadStats'
-export * from './ActivityDetailDialog'
+export { ConstraintBadge, ConstraintCountBadge } from './ConstraintBadge'
+export { ActivityCard, ActivityCardSkeleton } from './ActivityCard'
+export { WeekColumn } from './WeekColumn'
+export { LookAheadPlanner } from './LookAheadPlanner'
