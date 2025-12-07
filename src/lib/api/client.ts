@@ -2,193 +2,263 @@
 // Base API client with Supabase integration and error handling
 
 import { supabase } from '../supabase'
-import type { ApiError, QueryOptions } from './types'
+import type { ApiError, QueryOptions, QueryFilter } from './types'
 import type { PostgrestError } from '@supabase/supabase-js'
+import { captureException, addSentryBreadcrumb } from '../sentry'
+
+/**
+ * Supported filter operators
+ */
+const VALID_OPERATORS = ['eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'in'] as const
+type FilterOperator = typeof VALID_OPERATORS[number]
+
+/**
+ * Error codes that should not be reported to Sentry
+ * - PGRST116: Row not found (expected in many queries)
+ * - 42501: Insufficient privilege (RLS working as intended)
+ */
+const EXPECTED_ERROR_CODES = ['PGRST116', '42501'] as const
 
 class ApiClient {
   /**
    * Convert API error to standardized error object
+   * @param error - The error to handle
+   * @param context - Additional context for debugging (table name, operation, etc.)
    */
-  private handleError(error: PostgrestError | Error | unknown): ApiError {
+  private handleError(
+    error: PostgrestError | Error | unknown,
+    context?: { table?: string; operation?: string }
+  ): ApiError {
     // Type guard for PostgrestError (has 'code' property)
     if (error && typeof error === 'object' && 'code' in error) {
       const pgError = error as PostgrestError
-      return {
+      const apiError: ApiError = {
         code: pgError.code || 'UNKNOWN_ERROR',
         message: pgError.message || 'An unknown error occurred',
         status: undefined,
         details: pgError,
       }
+
+      // Capture database errors in Sentry (skip auth/expected errors)
+      if (pgError.code && !EXPECTED_ERROR_CODES.includes(pgError.code as any)) {
+        addSentryBreadcrumb(
+          `Database error: ${pgError.message}`,
+          'api',
+          'error',
+          { code: pgError.code, ...context }
+        )
+        captureException(new Error(`Database error: ${pgError.message}`), {
+          errorCode: pgError.code,
+          ...context,
+        })
+      }
+
+      return apiError
     }
 
     // Handle generic errors
     const genericError = error as Error
-    return {
+    const apiError: ApiError = {
       code: 'UNKNOWN_ERROR',
       message: genericError?.message || 'An unexpected error occurred',
       details: error,
     }
+
+    // Capture unexpected errors in Sentry
+    if (genericError instanceof Error) {
+      captureException(genericError, context)
+    }
+
+    return apiError
+  }
+
+  /**
+   * Apply filters to a Supabase query
+   * Handles null values correctly by using .is() instead of .eq()
+   * @private
+   */
+  private applyFilters(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    query: any,
+    filters: QueryFilter[]
+  ) {
+    let modifiedQuery = query
+
+    for (const filter of filters) {
+      // Validate operator
+      if (!VALID_OPERATORS.includes(filter.operator as FilterOperator)) {
+        throw new Error(`Invalid filter operator: ${filter.operator}`)
+      }
+
+      switch (filter.operator) {
+        case 'eq':
+          // Use .is() for null values, .eq() for others
+          modifiedQuery = filter.value === null
+            ? modifiedQuery.is(filter.column, null)
+            : modifiedQuery.eq(filter.column, filter.value)
+          break
+
+        case 'neq':
+          // Use .not.is() for null values, .neq() for others
+          modifiedQuery = filter.value === null
+            ? modifiedQuery.not(filter.column, 'is', null)
+            : modifiedQuery.neq(filter.column, filter.value)
+          break
+
+        case 'gt':
+          modifiedQuery = modifiedQuery.gt(filter.column, filter.value)
+          break
+
+        case 'gte':
+          modifiedQuery = modifiedQuery.gte(filter.column, filter.value)
+          break
+
+        case 'lt':
+          modifiedQuery = modifiedQuery.lt(filter.column, filter.value)
+          break
+
+        case 'lte':
+          modifiedQuery = modifiedQuery.lte(filter.column, filter.value)
+          break
+
+        case 'like':
+          modifiedQuery = modifiedQuery.like(filter.column, filter.value)
+          break
+
+        case 'ilike':
+          modifiedQuery = modifiedQuery.ilike(filter.column, filter.value)
+          break
+
+        case 'in':
+          modifiedQuery = modifiedQuery.in(filter.column, filter.value)
+          break
+
+        default:
+          // TypeScript should prevent this, but handle defensively
+          throw new Error(`Unhandled filter operator: ${filter.operator}`)
+      }
+    }
+
+    return modifiedQuery
+  }
+
+  /**
+   * Apply ordering to a Supabase query
+   * @private
+   */
+  private applyOrdering(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    query: any,
+    orderBy: { column: string; ascending?: boolean }
+  ) {
+    return query.order(orderBy.column, {
+      ascending: orderBy.ascending !== false,
+    })
+  }
+
+  /**
+   * Apply pagination to a Supabase query
+   * Supports both offset-based and page-based pagination
+   * @private
+   */
+  private applyPagination(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    query: any,
+    pagination: { page?: number; limit?: number; offset?: number }
+  ) {
+    if (!pagination.limit) {
+      return query
+    }
+    const offset = pagination.offset ?? (pagination.page ?? 0) * pagination.limit
+    const rangeEnd = offset + pagination.limit - 1
+    return query.range(offset, rangeEnd)
+  }
+
+  /**
+   * Build a Supabase query with all options applied
+   * @private
+   */
+  private buildQuery<T>(
+    table: string,
+    options?: QueryOptions & { select?: string; count?: boolean }
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const selectParam = options?.select || '*'
+    const countParam = options?.count ? { count: 'exact' as const } : undefined
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let query = supabase.from(table as any).select(selectParam, countParam)
+
+    // Apply filters
+    if (options?.filters && options.filters.length > 0) {
+      query = this.applyFilters(query, options.filters)
+    }
+
+    // Apply ordering
+    if (options?.orderBy) {
+      query = this.applyOrdering(query, options.orderBy)
+    }
+
+    // Apply pagination
+    if (options?.pagination?.limit) {
+      query = this.applyPagination(query, options.pagination)
+    }
+
+    return query
   }
 
   /**
    * Fetch records from a table
+   * @param table - The table name
+   * @param options - Query options (filters, ordering, pagination, select)
+   * @returns Array of records
    */
   async select<T>(
     table: string,
     options?: QueryOptions & { select?: string }
   ): Promise<T[]> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let query = supabase.from(table as any).select(options?.select || '*')
-
-      // Apply filters
-      if (options?.filters) {
-        for (const filter of options.filters) {
-          switch (filter.operator) {
-            case 'eq':
-              // Use .is() for null values, .eq() for others
-              if (filter.value === null) {
-                query = query.is(filter.column, null)
-              } else {
-                query = query.eq(filter.column, filter.value)
-              }
-              break
-            case 'neq':
-              // Use .not.is() for null values, .neq() for others
-              if (filter.value === null) {
-                query = query.not(filter.column, 'is', null)
-              } else {
-                query = query.neq(filter.column, filter.value)
-              }
-              break
-            case 'gt':
-              query = query.gt(filter.column, filter.value)
-              break
-            case 'gte':
-              query = query.gte(filter.column, filter.value)
-              break
-            case 'lt':
-              query = query.lt(filter.column, filter.value)
-              break
-            case 'lte':
-              query = query.lte(filter.column, filter.value)
-              break
-            case 'like':
-              query = query.like(filter.column, filter.value)
-              break
-            case 'ilike':
-              query = query.ilike(filter.column, filter.value)
-              break
-            case 'in':
-              query = query.in(filter.column, filter.value)
-              break
-          }
-        }
-      }
-
-      // Apply ordering
-      if (options?.orderBy) {
-        query = query.order(options.orderBy.column, {
-          ascending: options.orderBy.ascending !== false,
-        })
-      }
-
-      // Apply pagination
-      if (options?.pagination?.limit) {
-        const offset = options.pagination.offset || (options.pagination.page || 0) * options.pagination.limit
-        query = query.range(offset, offset + options.pagination.limit - 1)
-      }
-
+      const query = this.buildQuery<T>(table, options)
       const { data, error } = await query
 
-      if (error) {throw error}
-      return data as T[]
+      if (error) throw error
+      return (data as T[]) || []
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'select' })
     }
   }
 
   /**
    * Fetch records with total count for pagination
-   * Phase 3: Server-side pagination support
+   * @param table - The table name
+   * @param options - Query options (filters, ordering, pagination, select)
+   * @returns Object with data array and total count
    */
   async selectWithCount<T>(
     table: string,
     options?: QueryOptions & { select?: string }
   ): Promise<{ data: T[]; count: number }> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let query = supabase.from(table as any).select(options?.select || '*', { count: 'exact' })
-
-      // Apply filters
-      if (options?.filters) {
-        for (const filter of options.filters) {
-          switch (filter.operator) {
-            case 'eq':
-              // Use .is() for null values, .eq() for others
-              if (filter.value === null) {
-                query = query.is(filter.column, null)
-              } else {
-                query = query.eq(filter.column, filter.value)
-              }
-              break
-            case 'neq':
-              // Use .not.is() for null values, .neq() for others
-              if (filter.value === null) {
-                query = query.not(filter.column, 'is', null)
-              } else {
-                query = query.neq(filter.column, filter.value)
-              }
-              break
-            case 'gt':
-              query = query.gt(filter.column, filter.value)
-              break
-            case 'gte':
-              query = query.gte(filter.column, filter.value)
-              break
-            case 'lt':
-              query = query.lt(filter.column, filter.value)
-              break
-            case 'lte':
-              query = query.lte(filter.column, filter.value)
-              break
-            case 'like':
-              query = query.like(filter.column, filter.value)
-              break
-            case 'ilike':
-              query = query.ilike(filter.column, filter.value)
-              break
-            case 'in':
-              query = query.in(filter.column, filter.value)
-              break
-          }
-        }
-      }
-
-      // Apply ordering
-      if (options?.orderBy) {
-        query = query.order(options.orderBy.column, {
-          ascending: options.orderBy.ascending !== false,
-        })
-      }
-
-      // Apply pagination
-      if (options?.pagination?.limit) {
-        const offset = options.pagination.offset || (options.pagination.page || 0) * options.pagination.limit
-        query = query.range(offset, offset + options.pagination.limit - 1)
-      }
-
+      const query = this.buildQuery<T>(table, { ...options, count: true })
       const { data, error, count } = await query
 
-      if (error) {throw error}
-      return { data: data as T[], count: count || 0 }
+      if (error) throw error
+      return {
+        data: (data as T[]) || [],
+        count: count ?? 0,
+      }
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'selectWithCount' })
     }
   }
 
   /**
    * Fetch a single record by ID
+   * @param table - The table name
+   * @param id - The record ID
+   * @param options - Query options (select)
+   * @returns Single record
+   * @throws Error if record not found or multiple records found
    */
   async selectOne<T>(
     table: string,
@@ -196,59 +266,75 @@ class ApiClient {
     options?: { select?: string }
   ): Promise<T> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
         .select(options?.select || '*')
         .eq('id', id)
         .single()
 
-      if (error) {throw error}
+      if (error) throw error
       return data as T
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'selectOne' })
     }
   }
 
   /**
    * Insert a single record
+   * @param table - The table name
+   * @param record - The record to insert
+   * @returns The inserted record
    */
   async insert<T>(table: string, record: Partial<T>): Promise<T> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .insert(record as any)
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) throw error
       return data as T
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'insert' })
     }
   }
 
   /**
    * Insert multiple records
+   * @param table - The table name
+   * @param records - The records to insert
+   * @returns The inserted records
    */
   async insertMany<T>(table: string, records: Partial<T>[]): Promise<T[]> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (records.length === 0) {
+        return []
+      }
+
       const { data, error } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .insert(records as any[])
         .select()
 
-      if (error) {throw error}
-      return data as T[]
+      if (error) throw error
+      return (data as T[]) || []
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'insertMany' })
     }
   }
 
   /**
    * Update a record by ID
+   * @param table - The table name
+   * @param id - The record ID
+   * @param updates - The fields to update
+   * @returns The updated record
    */
   async update<T>(
     table: string,
@@ -256,41 +342,67 @@ class ApiClient {
     updates: Partial<T>
   ): Promise<T> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { data, error } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .update(updates as any)
         .eq('id', id)
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) throw error
       return data as T
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'update' })
     }
   }
 
   /**
    * Delete a record by ID
+   * @param table - The table name
+   * @param id - The record ID
    */
   async delete(table: string, id: string): Promise<void> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
         .delete()
         .eq('id', id)
 
-      if (error) {throw error}
+      if (error) throw error
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'delete' })
     }
   }
 
   /**
    * Execute a custom query
-   * Note: The callback receives the Supabase query builder for the specified table
+   *
+   * ⚠️ WARNING: This method bypasses all helper validations. Use with caution.
+   * Only use when helper methods are insufficient for your query needs.
+   *
+   * The callback receives the Supabase query builder for the specified table.
+   * Always ensure you're using Supabase's query builder methods (not raw SQL).
+   *
+   * @example
+   * // ✅ Safe usage - using query builder
+   * await apiClient.query('project_users', (query) =>
+   *   query
+   *     .select('project:projects(*)')
+   *     .eq('user_id', userId)
+   * )
+   *
+   * @example
+   * // ❌ NEVER do this - string interpolation
+   * await apiClient.query('projects', (q) =>
+   *   q.select(`* where id='${userInput}'`)  // SQL injection risk!
+   * )
+   *
+   * @param table - The table name
+   * @param callback - Function that receives the query builder
+   * @returns Array of records
    */
   async query<T>(
     table: string,
@@ -303,10 +415,10 @@ class ApiClient {
       const result = callback(query)
       const { data, error } = await result
 
-      if (error) {throw error}
-      return data as T[]
+      if (error) throw error
+      return (data as T[]) || []
     } catch (error) {
-      throw this.handleError(error)
+      throw this.handleError(error, { table, operation: 'customQuery' })
     }
   }
 }
