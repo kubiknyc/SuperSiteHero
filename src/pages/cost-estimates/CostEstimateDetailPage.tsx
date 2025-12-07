@@ -77,14 +77,9 @@ export function CostEstimateDetailPage() {
     // Only CostEstimateItemInsert is valid for creation
     const insertData = data as CostEstimateItemInsert
 
-    // For now, create a placeholder takeoff item ID
-    // In production, this should come from selecting actual takeoff items
-    const itemWithTakeoffId = {
-      ...insertData,
-      takeoff_item_id: crypto.randomUUID(), // Temporary - should be from actual takeoff
-    }
-
-    addItemMutation.mutate(itemWithTakeoffId, {
+    // SECURITY FIX: takeoff_item_id is now nullable - don't generate fake UUIDs
+    // Leave it null for manually created items
+    addItemMutation.mutate(insertData, {
       onSuccess: () => {
         setIsAddItemDialogOpen(false)
       }

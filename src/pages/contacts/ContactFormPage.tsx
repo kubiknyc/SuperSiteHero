@@ -48,7 +48,7 @@ export function ContactFormPage() {
   useEffect(() => {
     if (contact) {
       setFormData({
-        project_id: contact.project_id,
+        project_id: contact.project_id || '',
         contact_type: contact.contact_type,
         first_name: contact.first_name || '',
         last_name: contact.last_name || '',

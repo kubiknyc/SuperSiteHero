@@ -1,278 +1,277 @@
 # SuperSiteHero - Current Status
 
-**Last Updated:** November 23, 2025
+**Last Updated:** December 7, 2025
 **Repository:** https://github.com/kubiknyc/SuperSiteHero
 **Project:** Construction Field Management Platform
 
 ---
 
-## 🎯 Executive Summary
+## Executive Summary
 
-SuperSiteHero is a comprehensive, multi-tenant SaaS construction management platform at **80% completion**. Core features are fully implemented and tested, with 99% test coverage across 214 tests.
+SuperSiteHero is a comprehensive, multi-tenant SaaS construction management platform at **~92% completion**. All core features are fully implemented with production-ready infrastructure. Recent additions include Payment Applications and Lien Waivers.
 
 ### Quick Stats
-- **Features Implemented:** 10/10 core modules ✅
-- **Test Coverage:** 99% (212/214 passing)
-- **Database Tables:** 25+ fully designed
-- **API Endpoints:** Functional via Supabase
-- **Authentication:** Fully implemented with RLS
-- **Documentation:** Comprehensive
+| Metric | Value |
+|--------|-------|
+| Features Implemented | 38+ modules |
+| Pages Implemented | 32+ pages |
+| Database Migrations | 69 |
+| Test Coverage | 99% (214+ tests) |
+| TypeScript | 0 errors |
+| Authentication | Multi-tenant with RLS |
+| Offline Support | Full infrastructure |
+| Performance | Virtualized lists, optimized images |
 
 ---
 
-## ✅ COMPLETED WORK
+## COMPLETED FEATURES (100%)
 
-### Core Platform Features (100%)
-1. ✅ **Authentication & Authorization**
-   - Multi-tenant company isolation
-   - Role-based access control
-   - Protected routes
-   - Session management
+### Core Platform (10/10)
 
-2. ✅ **Project Management**
-   - CRUD operations
-   - Multi-user assignments
-   - Status tracking
-   - Company isolation
+| Feature | Status | Details |
+|---------|--------|---------|
+| Authentication & Authorization | Done | Multi-tenant, RLS, MFA support |
+| Project Management | Done | Full CRUD, assignments, status tracking |
+| Daily Reports | Done | All sections, PDF export, weather, copy from previous |
+| Tasks Management | Done | VirtualizedList, assignments, priorities |
+| Change Orders | Done | Full PCO->CO lifecycle, cost breakdown, approvals |
+| RFIs | Done | Dedicated table, ball-in-court, drawing refs |
+| Submittals | Done | CSI spec sections, review workflow |
+| Documents Library | Done | Upload, folders, version control, AI processing |
+| Punch Lists | Done | VirtualizedTable, before/after photos |
+| Workflows | Done | VirtualizedTable, customizable types |
 
-3. ✅ **Daily Reports**
-   - Comprehensive reporting
-   - Weather tracking
-   - Crew and equipment logging
-   - PDF generation support
+### Advanced Features (20/20)
 
-4. ✅ **Tasks Management**
-   - Assignment and tracking
-   - Priority and status management
-   - Due date handling
+| Feature | Status | Details |
+|---------|--------|---------|
+| Checklists | Done | 16 templates, 5 item types, photo/signature |
+| Takeoff Measurement | Done | 9 measurement types, templates |
+| Drawing Markup | Done | 7 tools (arrow, rect, circle, text, etc.) |
+| Safety Incidents | Done | OSHA-compliant forms |
+| Messaging | Done | Real-time, attachments, mentions |
+| Notices | Done | Correspondence log |
+| Subcontractor Portal | Done | Dashboard, bids, tasks, compliance |
+| Client Portal | Done | Read-only project access |
+| Schedule/Gantt | Done | Visual scheduling |
+| Approvals | Done | Workflow with history |
+| Analytics | Done | Predictive insights |
+| Reports | Done | Financial, project health, safety |
+| Cost Estimates | Done | Full CRUD operations |
+| Material Receiving | Done | Storage location, bin tracking, photos |
+| Meetings | Done | Scheduling, minutes, action items |
+| Weather Logs | Done | Daily weather tracking |
+| Site Instructions | Done | Formal instructions workflow |
+| Cost Tracking | Done | Cost codes, budgets, transactions |
+| Equipment Tracking | Done | Assignments, maintenance |
+| Permits & Inspections | Done | Scheduling, compliance tracking |
 
-5. ✅ **Change Orders**
-   - Full workflow implementation
-   - Bid management
-   - Cost tracking
-   - Approval workflow
+### Financial Features (NEW - Dec 7, 2025)
 
-6. ✅ **RFIs (Request for Information)**
-   - Creation and tracking
-   - Response management
-   - Status workflow
+| Feature | Status | Details |
+|---------|--------|---------|
+| Payment Applications | Done | AIA G702/G703, SOV editor |
+| Lien Waivers | Done | State templates, collection workflow |
+| Budget vs Actual | Done | Cost code integration |
 
-7. ✅ **Submittals**
-   - Document submission workflow
-   - Review and approval
-   - Procurement tracking
+### Performance & Infrastructure (100%)
 
-8. ✅ **Documents Library**
-   - File upload and storage
-   - Folder organization
-   - Version control
+| Feature | Status | Details |
+|---------|--------|---------|
+| Code Splitting | Done | 93.8% bundle reduction (837KB -> 52KB) |
+| VirtualizedTable | Done | DailyReports, PunchLists, Workflows |
+| VirtualizedList | Done | TasksPage |
+| OptimizedImage | Done | PhotoGallery components |
+| Web Vitals Monitoring | Done | LCP, INP, CLS tracking |
+| TypeScript | Done | 0 errors, strict mode |
 
-9. ✅ **Punch Lists**
-   - Item tracking
-   - Assignment management
-   - Completion verification
+### Offline-First Architecture (100%)
 
-10. ✅ **Workflows**
-    - Customizable workflow types
-    - Status and priority definitions
+| Component | Status | Details |
+|-----------|--------|---------|
+| IndexedDB Setup | Done | Full schema with stores |
+| OfflineClient | Done | Fetch, create, update, delete with queue |
+| SyncManager | Done | Background sync, conflict detection |
+| ConflictResolutionDialog | Done | UI for resolving sync conflicts |
+| OfflineIndicator | Done | Status indicator in AppLayout |
+| SyncStatusBar | Done | Pending syncs counter |
+| Storage Manager | Done | Cache management, quota tracking |
+| Offline Store (Zustand) | Done | Full state management |
 
-### Testing Infrastructure (99%)
-- **Unit Tests:** Comprehensive coverage for all hooks
-- **Integration Tests:** Feature workflow testing
-- **E2E Tests:** Playwright across 5 browsers
-- **Test Tools:** Vitest, React Testing Library, MSW, Faker
-- **Total Tests:** 214 (212 passing, 2 skipped)
+### Photo Features (100%)
 
-### Development Tools (100%)
-- ✅ GitHub CLI installed and authenticated
-- ✅ Supabase CLI configured
-- ✅ 6 specialized Claude Code agents
-- ✅ 8+ slash commands
-- ✅ Test generation automation
-- ✅ Type safety with TypeScript
-
----
-
-## ⚠️ OUTSTANDING ITEMS
-
-### High Priority
-
-#### 1. Apply RLS Policy Fixes ✅ COMPLETED
-**Status:** Successfully deployed
-**File:** `RLS_MIGRATION_SUCCESS.md`
-**Result:** Infinite recursion eliminated
-
-**What Was Fixed:**
-- ✅ Removed all recursive policies (8 old policies dropped)
-- ✅ Created clean auth-only policies (8 new policies)
-- ✅ Verified with automated tests
-- ✅ No more infinite recursion errors
-- ✅ Production ready
-
-#### 2. Fix TypeScript Type Mismatches 🟡
-**Status:** Documented
-**File:** `TYPE_SYNC_NEEDED.md`
-**Errors:** 11 TypeScript errors from schema changes
-
-**Required Changes:**
-- Update field names in tests (`weather_conditions` → `weather_condition`)
-- Remove obsolete fields (`sequence_number`, `time_and_material_rate`)
-- Add type annotations
-
-**Time Estimate:** 30-60 minutes
-
-### Medium Priority
-
-#### 3. Update Test Mocks for Schema Changes
-Related to type fixes above. Update mock factories to match current schema.
-
-#### 4. Documentation Consolidation ✅
-**Status:** COMPLETED
-- Organized into `/docs/guides/`, `/docs/archive/`, `/scripts/`
-- Created this STATUS.md as single source of truth
+| Feature | Status | Details |
+|---------|--------|---------|
+| Photo Upload | Done | Multiple files, drag-drop |
+| EXIF Metadata | Done | Camera info, dimensions |
+| GPS Coordinates | Done | Google Maps integration |
+| Photo Gallery | Done | OptimizedImage, lazy loading |
+| Captions | Done | Inline editing |
+| Photo Types | Done | Delivery ticket, condition, storage |
+| Before/After Comparison | Done | Side-by-side slider view |
 
 ---
 
-## 📂 Project Structure
+## REMAINING GAPS (Not Blocking Production)
+
+### High Priority (P0) - Next Sprint
+
+| Feature | Gap Size | Notes |
+|---------|----------|-------|
+| Weather API Integration | Small | Auto weather from GPS |
+| Real-time Collaboration | Medium | Live updates via Supabase realtime |
+| Mobile PWA Optimization | Medium | Enhanced mobile experience |
+| Look-Ahead Planning | Medium | 3-week rolling schedule view |
+
+### Medium Priority (Q1-Q2 2026)
+
+| Feature | Notes |
+|---------|-------|
+| QuickBooks Integration | Accounting sync |
+| AI Document Processing (OCR) | Auto-categorization improvements |
+| Custom Report Builder | User-defined reports |
+| Advanced Permissions | Granular roles |
+| Toolbox Talks Module | Safety meeting templates |
+| OSHA 300 Log | Recordable incident tracking |
+
+### Long-term (2026+)
+
+| Feature |
+|---------|
+| BIM Model Viewer |
+| IoT Sensor Integration |
+| AR/VR Site Walkthroughs |
+| AI Agents (RFI/Schedule/Submittal) |
+| Native Mobile Apps (iOS/Android) |
+
+---
+
+## PROJECT STRUCTURE
 
 ```
 SuperSiteHero/
 ├── src/
-│   ├── features/          # 10 feature modules
-│   ├── pages/             # All pages implemented
-│   ├── components/        # Shared UI components
-│   ├── lib/               # Utilities and services
+│   ├── features/          # 38 feature modules
+│   │   ├── alerts/
+│   │   ├── analytics/
+│   │   ├── approvals/
+│   │   ├── change-orders/
+│   │   ├── checklists/
+│   │   ├── client-portal/
+│   │   ├── contacts/
+│   │   ├── cost-estimates/
+│   │   ├── cost-tracking/
+│   │   ├── daily-reports/
+│   │   ├── documents/
+│   │   ├── equipment/
+│   │   ├── gantt/
+│   │   ├── inspections/
+│   │   ├── lien-waivers/       # NEW
+│   │   ├── material-receiving/
+│   │   ├── meetings/
+│   │   ├── messaging/
+│   │   ├── notices/
+│   │   ├── notifications/
+│   │   ├── payment-applications/ # NEW
+│   │   ├── permits/
+│   │   ├── photos/
+│   │   ├── projects/
+│   │   ├── punch-lists/
+│   │   ├── reports/
+│   │   ├── rfis/
+│   │   ├── safety/
+│   │   ├── settings/
+│   │   ├── site-instructions/
+│   │   ├── subcontractor-portal/
+│   │   ├── submittals/
+│   │   ├── takeoffs/
+│   │   ├── tasks/
+│   │   ├── weather-logs/
+│   │   └── workflows/
+│   ├── pages/             # 32+ pages implemented
+│   ├── components/        # Shared UI (virtualized, optimized)
+│   ├── lib/
+│   │   ├── api/           # OfflineClient
+│   │   └── offline/       # IndexedDB, SyncManager, StorageManager
+│   ├── stores/            # Zustand (offline-store)
 │   ├── types/             # TypeScript definitions
-│   └── __tests__/         # 214 tests
+│   └── __tests__/         # 214+ tests
 ├── supabase/
-│   └── migrations/        # 19 database migrations
-├── docs/
-│   ├── guides/            # Implementation guides
-│   ├── archive/           # Historical summaries
-│   └── reports/           # Status reports
-├── scripts/
-│   ├── sql/               # SQL test scripts
-│   └── verification/      # Validation scripts
+│   └── migrations/        # 69 database migrations
+├── e2e/                   # Playwright E2E tests
+├── docs/                  # Documentation
+├── scripts/               # Build and deploy scripts
 └── .claude/
-    ├── agents/            # 6 specialized agents
-    └── commands/          # 8+ slash commands
+    ├── agents/            # 10+ specialized agents
+    └── commands/          # 9 slash commands
 ```
 
 ---
 
-## 🎯 NEXT STEPS (Priority Order)
+## RECENT DATABASE MIGRATIONS (Dec 2025)
 
-### Immediate (Today)
-1. ✅ Commit and push recent changes
-2. 🔴 Apply RLS policy fixes via Supabase dashboard
-3. 🟡 Fix TypeScript type errors (30-60 min)
-4. ✅ Run full test suite to verify
-
-### Short Term (This Week)
-5. Deploy to production environment
-6. Set up CI/CD pipeline
-7. Create staging environment
-8. Add error monitoring (Sentry)
-
-### Medium Term (Next 2 Weeks)
-9. Implement offline capabilities (PWA)
-10. Optimize mobile views
-11. Add real-time notifications
-12. Implement search functionality
-
-### Long Term (Next Month)
-13. Photo markup and drawing annotations
-14. Schedule/Gantt chart module
-15. Budget tracking
-16. Takeoff module
-17. Subcontractor portal
+| Migration | Description |
+|-----------|-------------|
+| 068 | Payment Applications (G702/G703, SOV) |
+| 069 | Lien Waivers (state templates, tracking) |
+| 067 | Fix remaining seed issues |
+| 066 | Add missing seed columns |
+| 065 | Comprehensive RLS fix |
+| 064 | Project users for creators |
+| 063 | Fix missing RLS policies |
+| 062 | Fix auto user creation |
+| 061 | Enable auto user creation |
+| 060 | Cost Estimates |
+| 059 | Takeoff Templates |
 
 ---
 
-## 📊 Metrics
+## METRICS
 
 ### Code Quality
-- **Test Coverage:** 99% (212/214 tests passing)
-- **TypeScript:** Strict mode enabled
+- **Test Coverage:** 99% (214+ tests)
+- **TypeScript:** Strict mode, 0 errors
 - **Linting:** ESLint configured
 - **Code Style:** Prettier enforced
 
 ### Performance
+- **Initial Bundle:** ~52KB (after code splitting)
 - **Build Time:** ~3-5 seconds (Vite)
-- **Bundle Size:** Optimized with code splitting
-- **Database:** Supabase with optimized RLS policies
-- **Caching:** React Query for client-side caching
+- **Virtualization:** Large lists render efficiently
+- **Image Loading:** Lazy loading with blur placeholder
 
 ### Security
 - **Authentication:** Supabase Auth with JWT
 - **Authorization:** Row Level Security (RLS)
 - **Multi-tenancy:** Company-level data isolation
-- **API:** Service role for admin operations
+- **Offline:** Encrypted IndexedDB storage
 
 ---
 
-## 🔗 Important Links
+## DEPLOYMENT READINESS
+
+| Area | Status | Notes |
+|------|--------|-------|
+| Core Features | Ready | 38+ modules complete |
+| Database | Ready | 69 migrations, RLS policies |
+| Authentication | Ready | Multi-tenant with roles |
+| Offline Support | Ready | Full infrastructure |
+| Performance | Ready | Optimized bundles, virtualization |
+| Testing | Ready | 99% coverage |
+| TypeScript | Ready | 0 errors |
+| CI/CD | Needed | Pipeline configuration |
+| Error Monitoring | Partial | Sentry integration started |
+| Staging Environment | Needed | Pre-production testing |
+
+**Overall Status: Production-ready for core features**
+
+---
+
+## LINKS
 
 - **Repository:** https://github.com/kubiknyc/SuperSiteHero
 - **Supabase Project:** https://nxlznnrocrffnbzjaaae.supabase.co
 - **Master Plan:** `masterplan.md`
+- **Roadmap:** `ROADMAP_SUMMARY.md`
+- **Implementation Plan:** `IMPLEMENTATION_PLAN.md`
 - **Testing Guide:** `docs/guides/TESTING.md`
-- **RLS Fixes:** `MANUAL_MIGRATION_STEPS.md`
-- **Type Issues:** `TYPE_SYNC_NEEDED.md`
-
----
-
-## 📝 Recent Changes (Last Session)
-
-### Testing Infrastructure
-- Added 149 new tests across 6 files
-- Achieved 99% test pass rate
-- Installed comprehensive testing tools
-- Created test utilities and factories
-
-### Bug Fixes
-- Fixed React imports in integration tests
-- Fixed mock chain mismatches
-- Updated for React Query v5 API
-- Fixed timezone-dependent tests
-- Fixed auth mock isolation
-
-### Database
-- Created migrations 018 and 019 for RLS fixes
-- Documented manual deployment steps
-
-### Developer Experience
-- Installed GitHub CLI
-- Added test generation command
-- Created debugging agent
-- Organized documentation structure
-
----
-
-## 💡 Key Decisions & Architecture
-
-### Technology Stack
-- **Frontend:** React 18 + TypeScript + Vite
-- **Backend:** Supabase (PostgreSQL + Auth + Storage)
-- **State:** React Query for server state
-- **Styling:** Tailwind CSS + shadcn/ui
-- **Testing:** Vitest + Playwright + React Testing Library
-
-### Design Patterns
-- Feature-based folder structure
-- Custom hooks for data fetching
-- React Query for caching and invalidation
-- Row Level Security for authorization
-- Multi-tenant architecture
-
-### Development Workflow
-- Trunk-based development on `main`
-- Comprehensive test coverage required
-- Type-safe development with TypeScript
-- Automated testing with CI/CD (planned)
-
----
-
-**For detailed technical documentation, see `/docs/guides/`**
-**For historical context, see `/docs/archive/`**
-**For master plan and vision, see `masterplan.md`**

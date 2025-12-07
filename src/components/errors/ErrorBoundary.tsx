@@ -4,6 +4,7 @@
 import { Component, ReactNode, ErrorInfo } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { captureException, addSentryBreadcrumb } from '@/lib/sentry'
 
 interface Props {
   children: ReactNode
@@ -37,8 +38,22 @@ export class ErrorBoundary extends Component<Props, State> {
       console.error('Error caught by boundary:', error, errorInfo)
     }
 
-    // You could also log to an error reporting service here
-    // e.g., Sentry, LogRocket, etc.
+    // Add breadcrumb for component stack trace
+    addSentryBreadcrumb(
+      'React Error Boundary triggered',
+      'error',
+      'error',
+      {
+        componentStack: errorInfo.componentStack,
+        errorName: error.name,
+      }
+    )
+
+    // Capture exception in Sentry
+    captureException(error, {
+      componentStack: errorInfo.componentStack,
+      errorBoundary: true,
+    })
   }
 
   handleReset = () => {

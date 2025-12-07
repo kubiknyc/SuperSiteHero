@@ -3,6 +3,7 @@
 
 export { RFIsList } from './RFIsList'
 export { CreateRFIDialog } from './CreateRFIDialog'
+export { CreateDedicatedRFIDialog } from './CreateDedicatedRFIDialog'
 export { RFIStatusBadge } from './RFIStatusBadge'
 export type { RFIStatus, RFIStatusBadgeProps } from './RFIStatusBadge'
 export { RFIPriorityBadge } from './RFIPriorityBadge'

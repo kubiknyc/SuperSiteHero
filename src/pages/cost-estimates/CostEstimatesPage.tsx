@@ -14,6 +14,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
   Table,
   TableBody,
   TableCell,
@@ -29,6 +31,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  Input,
+  Label,
 } from '@/components/ui'
 import { Plus, FileText, Copy, Trash2, Eye } from 'lucide-react'
 import {
@@ -46,6 +50,8 @@ export function CostEstimatesPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [isDuplicateDialogOpen, setIsDuplicateDialogOpen] = useState(false)
+  const [duplicateEstimateId, setDuplicateEstimateId] = useState<string | null>(null)
   const [duplicateName, setDuplicateName] = useState('')
 
   // Queries and mutations
@@ -75,11 +81,25 @@ export function CostEstimatesPage() {
     navigate(`/projects/${projectId}/cost-estimates/${estimateId}`)
   }
 
-  const handleDuplicateEstimate = async (estimateId: string, currentName: string) => {
-    const newName = prompt('Enter name for duplicated estimate:', `${currentName} (Copy)`)
-    if (!newName) return
+  const handleDuplicateClick = (estimateId: string, currentName: string) => {
+    setDuplicateEstimateId(estimateId)
+    setDuplicateName(`${currentName} (Copy)`)
+    setIsDuplicateDialogOpen(true)
+  }
 
-    await duplicateMutation.mutateAsync({ estimateId, newName })
+  const handleConfirmDuplicate = () => {
+    if (!duplicateEstimateId || !duplicateName.trim()) return
+
+    duplicateMutation.mutate(
+      { estimateId: duplicateEstimateId, newName: duplicateName },
+      {
+        onSuccess: () => {
+          setIsDuplicateDialogOpen(false)
+          setDuplicateEstimateId(null)
+          setDuplicateName('')
+        },
+      }
+    )
   }
 
   const handleDeleteEstimate = async (estimateId: string) => {
@@ -214,7 +234,7 @@ export function CostEstimatesPage() {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDuplicateEstimate(estimate.id, estimate.name)}
+                            onClick={() => handleDuplicateClick(estimate.id, estimate.name)}
                           >
                             <Copy className="h-4 w-4" />
                           </Button>
@@ -265,6 +285,43 @@ export function CostEstimatesPage() {
             onCancel={() => setIsCreateDialogOpen(false)}
             isSubmitting={createMutation.isPending}
           />
+        </DialogContent>
+      </Dialog>
+
+      {/* Duplicate Estimate Dialog */}
+      <Dialog open={isDuplicateDialogOpen} onOpenChange={setIsDuplicateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Duplicate Estimate</DialogTitle>
+            <DialogDescription>
+              Enter a name for the duplicated estimate
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="duplicate-name">Estimate Name</Label>
+              <Input
+                id="duplicate-name"
+                value={duplicateName}
+                onChange={(e) => setDuplicateName(e.target.value)}
+                placeholder="Enter estimate name"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDuplicateDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmDuplicate}
+              disabled={!duplicateName.trim() || duplicateMutation.isPending}
+            >
+              {duplicateMutation.isPending ? 'Duplicating...' : 'Duplicate'}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

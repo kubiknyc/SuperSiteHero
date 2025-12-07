@@ -57,8 +57,8 @@ export function EditPunchItemDialog({
       setRoom(punchItem.room || '')
       setArea(punchItem.area || '')
       setLocationNotes(punchItem.location_notes || '')
-      setPriority(punchItem.priority)
-      setStatus(punchItem.status)
+      setPriority(punchItem.priority || 'medium')
+      setStatus(punchItem.status || 'open')
       setDueDate(punchItem.due_date || '')
       // Initialize assignee from existing data
       if (punchItem.subcontractor_id) {

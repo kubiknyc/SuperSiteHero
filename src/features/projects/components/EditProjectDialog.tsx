@@ -23,7 +23,7 @@ interface EditProjectDialogProps {
     zip?: string | null
     start_date?: string | null
     end_date?: string | null
-    status: ProjectStatus
+    status?: ProjectStatus | string | null
   }
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -60,7 +60,7 @@ export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDi
         zip: project.zip || '',
         start_date: project.start_date || '',
         end_date: project.end_date || '',
-        status: project.status,
+        status: (project.status as ProjectStatus) || 'planning',
       })
       clearErrors()
     }

@@ -1606,6 +1606,7 @@ export type Database = {
           estimated_duration_minutes: number | null
           id: string
           instructions: string | null
+          is_active: boolean | null
           is_system_template: boolean | null
           items: Json
           name: string
@@ -1624,12 +1625,13 @@ export type Database = {
           estimated_duration_minutes?: number | null
           id?: string
           instructions?: string | null
+          is_active?: boolean | null
           is_system_template?: boolean | null
           items?: Json
           name: string
           scoring_enabled?: boolean | null
           tags?: string[] | null
-          template_level: string
+          template_level?: string
           updated_at?: string | null
         }
         Update: {
@@ -1642,6 +1644,7 @@ export type Database = {
           estimated_duration_minutes?: number | null
           id?: string
           instructions?: string | null
+          is_active?: boolean | null
           is_system_template?: boolean | null
           items?: Json
           name?: string
@@ -2092,6 +2095,7 @@ export type Database = {
         Row: {
           address: string | null
           city: string | null
+          company_id: string | null
           company_name: string | null
           contact_type: string
           created_at: string | null
@@ -2104,10 +2108,12 @@ export type Database = {
           is_primary: boolean | null
           last_name: string | null
           notes: string | null
+          phone: string | null
           phone_fax: string | null
           phone_mobile: string | null
           phone_office: string | null
-          project_id: string
+          project_id: string | null
+          role: string | null
           state: string | null
           title: string | null
           trade: string | null
@@ -2117,6 +2123,7 @@ export type Database = {
         Insert: {
           address?: string | null
           city?: string | null
+          company_id?: string | null
           company_name?: string | null
           contact_type: string
           created_at?: string | null
@@ -2129,10 +2136,12 @@ export type Database = {
           is_primary?: boolean | null
           last_name?: string | null
           notes?: string | null
+          phone?: string | null
           phone_fax?: string | null
           phone_mobile?: string | null
           phone_office?: string | null
-          project_id: string
+          project_id?: string | null
+          role?: string | null
           state?: string | null
           title?: string | null
           trade?: string | null
@@ -2142,6 +2151,7 @@ export type Database = {
         Update: {
           address?: string | null
           city?: string | null
+          company_id?: string | null
           company_name?: string | null
           contact_type?: string
           created_at?: string | null
@@ -2154,10 +2164,12 @@ export type Database = {
           is_primary?: boolean | null
           last_name?: string | null
           notes?: string | null
+          phone?: string | null
           phone_fax?: string | null
           phone_mobile?: string | null
           phone_office?: string | null
-          project_id?: string
+          project_id?: string | null
+          role?: string | null
           state?: string | null
           title?: string | null
           trade?: string | null
@@ -2165,6 +2177,13 @@ export type Database = {
           zip?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "contacts_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "contacts_created_by_fkey"
             columns: ["created_by"]
@@ -6202,6 +6221,255 @@ export type Database = {
           },
         ]
       }
+      payment_application_history: {
+        Row: {
+          action: string
+          changed_at: string | null
+          changed_by: string | null
+          field_changed: string | null
+          id: string
+          new_value: string | null
+          notes: string | null
+          old_value: string | null
+          payment_application_id: string
+        }
+        Insert: {
+          action: string
+          changed_at?: string | null
+          changed_by?: string | null
+          field_changed?: string | null
+          id?: string
+          new_value?: string | null
+          notes?: string | null
+          old_value?: string | null
+          payment_application_id: string
+        }
+        Update: {
+          action?: string
+          changed_at?: string | null
+          changed_by?: string | null
+          field_changed?: string | null
+          id?: string
+          new_value?: string | null
+          notes?: string | null
+          old_value?: string | null
+          payment_application_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_application_history_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_application_history_payment_application_id_fkey"
+            columns: ["payment_application_id"]
+            isOneToOne: false
+            referencedRelation: "payment_application_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_application_history_payment_application_id_fkey"
+            columns: ["payment_application_id"]
+            isOneToOne: false
+            referencedRelation: "payment_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_applications: {
+        Row: {
+          application_number: number
+          approved_at: string | null
+          approved_by: string | null
+          architect_signature_date: string | null
+          architect_signature_url: string | null
+          balance_to_finish: number | null
+          company_id: string
+          contract_sum_to_date: number | null
+          contractor_signature_date: string | null
+          contractor_signature_url: string | null
+          created_at: string | null
+          created_by: string | null
+          current_payment_due: number | null
+          deleted_at: string | null
+          id: string
+          less_previous_certificates: number
+          net_change_orders: number
+          notes: string | null
+          original_contract_sum: number
+          owner_signature_date: string | null
+          owner_signature_url: string | null
+          paid_at: string | null
+          payment_received_amount: number | null
+          payment_reference: string | null
+          percent_complete: number | null
+          period_to: string
+          project_id: string
+          rejection_reason: string | null
+          retainage_from_completed: number
+          retainage_from_stored: number
+          retainage_percent: number
+          retainage_release: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          submitted_at: string | null
+          submitted_by: string | null
+          total_completed_and_stored: number | null
+          total_completed_previous: number
+          total_completed_this_period: number
+          total_earned_less_retainage: number | null
+          total_materials_stored: number
+          total_retainage: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          application_number: number
+          approved_at?: string | null
+          approved_by?: string | null
+          architect_signature_date?: string | null
+          architect_signature_url?: string | null
+          balance_to_finish?: number | null
+          company_id: string
+          contract_sum_to_date?: number | null
+          contractor_signature_date?: string | null
+          contractor_signature_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_payment_due?: number | null
+          deleted_at?: string | null
+          id?: string
+          less_previous_certificates?: number
+          net_change_orders?: number
+          notes?: string | null
+          original_contract_sum?: number
+          owner_signature_date?: string | null
+          owner_signature_url?: string | null
+          paid_at?: string | null
+          payment_received_amount?: number | null
+          payment_reference?: string | null
+          percent_complete?: number | null
+          period_to: string
+          project_id: string
+          rejection_reason?: string | null
+          retainage_from_completed?: number
+          retainage_from_stored?: number
+          retainage_percent?: number
+          retainage_release?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+          total_completed_and_stored?: number | null
+          total_completed_previous?: number
+          total_completed_this_period?: number
+          total_earned_less_retainage?: number | null
+          total_materials_stored?: number
+          total_retainage?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          application_number?: number
+          approved_at?: string | null
+          approved_by?: string | null
+          architect_signature_date?: string | null
+          architect_signature_url?: string | null
+          balance_to_finish?: number | null
+          company_id?: string
+          contract_sum_to_date?: number | null
+          contractor_signature_date?: string | null
+          contractor_signature_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          current_payment_due?: number | null
+          deleted_at?: string | null
+          id?: string
+          less_previous_certificates?: number
+          net_change_orders?: number
+          notes?: string | null
+          original_contract_sum?: number
+          owner_signature_date?: string | null
+          owner_signature_url?: string | null
+          paid_at?: string | null
+          payment_received_amount?: number | null
+          payment_reference?: string | null
+          percent_complete?: number | null
+          period_to?: string
+          project_id?: string
+          rejection_reason?: string | null
+          retainage_from_completed?: number
+          retainage_from_stored?: number
+          retainage_percent?: number
+          retainage_release?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          submitted_at?: string | null
+          submitted_by?: string | null
+          total_completed_and_stored?: number | null
+          total_completed_previous?: number
+          total_completed_this_period?: number
+          total_earned_less_retainage?: number | null
+          total_materials_stored?: number
+          total_retainage?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_applications_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "client_project_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       permits: {
         Row: {
           agency_contact: string | null
@@ -8431,6 +8699,100 @@ export type Database = {
             columns: ["project_id"]
             isOneToOne: false
             referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_of_values: {
+        Row: {
+          balance_to_finish: number | null
+          change_order_adjustments: number
+          cost_code: string | null
+          cost_code_id: string | null
+          created_at: string | null
+          description: string
+          id: string
+          item_number: string
+          materials_stored: number
+          notes: string | null
+          payment_application_id: string
+          percent_complete: number | null
+          retainage_amount: number | null
+          retainage_percent: number | null
+          scheduled_value: number
+          sort_order: number
+          total_completed_stored: number | null
+          total_scheduled_value: number | null
+          updated_at: string | null
+          work_completed_previous: number
+          work_completed_this_period: number
+        }
+        Insert: {
+          balance_to_finish?: number | null
+          change_order_adjustments?: number
+          cost_code?: string | null
+          cost_code_id?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          item_number: string
+          materials_stored?: number
+          notes?: string | null
+          payment_application_id: string
+          percent_complete?: number | null
+          retainage_amount?: number | null
+          retainage_percent?: number | null
+          scheduled_value?: number
+          sort_order?: number
+          total_completed_stored?: number | null
+          total_scheduled_value?: number | null
+          updated_at?: string | null
+          work_completed_previous?: number
+          work_completed_this_period?: number
+        }
+        Update: {
+          balance_to_finish?: number | null
+          change_order_adjustments?: number
+          cost_code?: string | null
+          cost_code_id?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          item_number?: string
+          materials_stored?: number
+          notes?: string | null
+          payment_application_id?: string
+          percent_complete?: number | null
+          retainage_amount?: number | null
+          retainage_percent?: number | null
+          scheduled_value?: number
+          sort_order?: number
+          total_completed_stored?: number | null
+          total_scheduled_value?: number | null
+          updated_at?: string | null
+          work_completed_previous?: number
+          work_completed_this_period?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_of_values_cost_code_id_fkey"
+            columns: ["cost_code_id"]
+            isOneToOne: false
+            referencedRelation: "cost_codes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_of_values_payment_application_id_fkey"
+            columns: ["payment_application_id"]
+            isOneToOne: false
+            referencedRelation: "payment_application_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_of_values_payment_application_id_fkey"
+            columns: ["payment_application_id"]
+            isOneToOne: false
+            referencedRelation: "payment_applications"
             referencedColumns: ["id"]
           },
         ]
@@ -11731,6 +12093,109 @@ export type Database = {
           },
         ]
       }
+      payment_application_summary: {
+        Row: {
+          application_number: number | null
+          approved_at: string | null
+          approved_by: string | null
+          architect_signature_date: string | null
+          architect_signature_url: string | null
+          balance_to_finish: number | null
+          company_id: string | null
+          contract_sum_to_date: number | null
+          contractor_signature_date: string | null
+          contractor_signature_url: string | null
+          created_at: string | null
+          created_by: string | null
+          current_payment_due: number | null
+          deleted_at: string | null
+          display_number: string | null
+          id: string | null
+          less_previous_certificates: number | null
+          net_change_orders: number | null
+          notes: string | null
+          original_contract_sum: number | null
+          owner_signature_date: string | null
+          owner_signature_url: string | null
+          paid_at: string | null
+          payment_received_amount: number | null
+          payment_reference: string | null
+          percent_complete: number | null
+          period_to: string | null
+          project_id: string | null
+          project_name: string | null
+          project_number: string | null
+          rejection_reason: string | null
+          retainage_from_completed: number | null
+          retainage_from_stored: number | null
+          retainage_percent: number | null
+          retainage_release: number | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          sov_item_count: number | null
+          status: string | null
+          submitted_at: string | null
+          submitted_by: string | null
+          total_completed_and_stored: number | null
+          total_completed_previous: number | null
+          total_completed_this_period: number | null
+          total_earned_less_retainage: number | null
+          total_materials_stored: number | null
+          total_retainage: number | null
+          updated_at: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_applications_approved_by_fkey"
+            columns: ["approved_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "client_project_summary"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_applications_submitted_by_fkey"
+            columns: ["submitted_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       project_budget_summary: {
         Row: {
           actual_cost: number | null
@@ -12435,6 +12900,13 @@ export type Database = {
         Args: { p_project_id: string }
         Returns: string
       }
+      copy_sov_from_previous_application: {
+        Args: {
+          p_new_application_id: string
+          p_previous_application_id: string
+        }
+        Returns: undefined
+      }
       current_user_company_id: { Args: never; Returns: string }
       current_user_role: { Args: never; Returns: string }
       generate_submittal_number: {
@@ -12448,6 +12920,10 @@ export type Database = {
       get_material_receiving_stats: {
         Args: { p_project_id: string }
         Returns: Json
+      }
+      get_next_application_number: {
+        Args: { p_project_id: string }
+        Returns: number
       }
       get_next_co_number: { Args: { p_project_id: string }; Returns: number }
       get_next_pco_number: { Args: { p_project_id: string }; Returns: number }
@@ -12917,83 +13393,212 @@ export const Constants = {
   },
 } as const
 
-// =============================================
-// Convenience Type Re-exports
-// These allow imports from '@/types/database' to access commonly used types
-// =============================================
+// ============================================
+// Convenience Type Exports
+// ============================================
 
-// Table Row Types
-export type Document = Database['public']['Tables']['documents']['Row']
-export type Folder = Database['public']['Tables']['folders']['Row']
-export type Project = Database['public']['Tables']['projects']['Row']
-export type PunchItem = Database['public']['Tables']['punch_items']['Row']
-export type WorkflowItem = Database['public']['Tables']['workflow_items']['Row']
-export type WorkflowType = Database['public']['Tables']['workflow_types']['Row']
-export type DailyReport = Database['public']['Tables']['daily_reports']['Row']
-export type User = Database['public']['Tables']['users']['Row']
-export type Company = Database['public']['Tables']['companies']['Row']
-export type Task = Database['public']['Tables']['tasks']['Row']
-export type WorkflowItemComment = Database['public']['Tables']['workflow_item_comments']['Row']
-export type WorkflowItemHistory = Database['public']['Tables']['workflow_item_history']['Row']
+// Table Row Types (commonly used entities)
+export type Project = Tables<"projects">;
+export type DailyReport = Tables<"daily_reports">;
+export type Document = Tables<"documents">;
+export type Folder = Tables<"folders">;
+export type WorkflowItem = Tables<"workflow_items">;
+export type WorkflowType = Tables<"workflow_types">;
+export type WorkflowItemComment = Tables<"workflow_item_comments">;
+export type WorkflowItemHistory = Tables<"workflow_item_history">;
+export type Task = Tables<"tasks">;
+export type PunchItem = Tables<"punch_items">;
+export type PunchList = Tables<"punch_lists">;
+export type SiteInstruction = Tables<"site_instructions">;
+export type SubmittalProcurement = Tables<"submittal_procurement">;
+export type Submittal = Tables<"submittals">;
+export type SubmittalItem = Tables<"submittal_items">;
+export type RFI = Tables<"rfis">;
+export type ChangeOrder = Tables<"change_orders">;
+export type ChangeOrderItem = Tables<"change_order_items">;
+export type UserProfile = Tables<"users">;
+export type Checklist = Tables<"checklists">;
+export type ChecklistTemplate = Tables<"checklist_templates">;
+export type ChecklistTemplateItem = Tables<"checklist_template_items">;
+export type ChecklistResponse = Tables<"checklist_responses">;
+export type SafetyIncident = Tables<"safety_incidents">;
+export type Equipment = Tables<"equipment">;
+export type Contact = Tables<"contacts">;
+export type Company = Tables<"companies">;
+export type ApprovalWorkflow = Tables<"approval_workflows">;
+export type ApprovalRequest = Tables<"approval_requests">;
+export type ApprovalAction = Tables<"approval_actions">;
+export type Message = Tables<"messages">;
+export type Conversation = Tables<"conversations">;
+export type Notification = Tables<"notifications">;
+export type Photo = Tables<"photos">;
+export type Meeting = Tables<"meetings">;
+export type MeetingNote = Tables<"meeting_notes">;
+export type ScheduleItem = Tables<"schedule_items">;
+export type CostCode = Tables<"cost_codes">;
+export type ProjectBudget = Tables<"project_budgets">;
+export type MaterialReceived = Tables<"material_received">;
+export type DocumentMarkup = Tables<"document_markups">;
+export type Inspection = Tables<"inspections">;
+export type Permit = Tables<"permits">;
+export type Notice = Tables<"notices">;
+export type Subcontractor = Tables<"subcontractors">;
 
-// Alias types
-export type UserProfile = User
+// Insert Types
+export type ProjectInsert = TablesInsert<"projects">;
+export type DailyReportInsert = TablesInsert<"daily_reports">;
+export type DocumentInsert = TablesInsert<"documents">;
+export type FolderInsert = TablesInsert<"folders">;
+export type WorkflowItemInsert = TablesInsert<"workflow_items">;
+export type TaskInsert = TablesInsert<"tasks">;
+export type PunchItemInsert = TablesInsert<"punch_items">;
+export type SubmittalInsert = TablesInsert<"submittals">;
+export type RFIInsert = TablesInsert<"rfis">;
+export type ChangeOrderInsert = TablesInsert<"change_orders">;
+export type ChecklistInsert = TablesInsert<"checklists">;
+export type SafetyIncidentInsert = TablesInsert<"safety_incidents">;
+export type MessageInsert = TablesInsert<"messages">;
 
-// Field-level types
-export type DocumentType = Document['document_type']
-export type DocumentStatus = string // Documents don't have a status field in the standard schema
-export type PunchItemStatus = PunchItem['status']
-export type WorkflowItemStatus = WorkflowItem['status']
-export type Priority = Task['priority']
-export type TaskStatus = Task['status']
-export type ProjectStatus = Project['status']
+// Update Types
+export type ProjectUpdate = TablesUpdate<"projects">;
+export type DailyReportUpdate = TablesUpdate<"daily_reports">;
+export type DocumentUpdate = TablesUpdate<"documents">;
+export type FolderUpdate = TablesUpdate<"folders">;
+export type WorkflowItemUpdate = TablesUpdate<"workflow_items">;
+export type TaskUpdate = TablesUpdate<"tasks">;
+export type PunchItemUpdate = TablesUpdate<"punch_items">;
+export type SubmittalUpdate = TablesUpdate<"submittals">;
+export type RFIUpdate = TablesUpdate<"rfis">;
+export type ChangeOrderUpdate = TablesUpdate<"change_orders">;
+export type ChecklistUpdate = TablesUpdate<"checklists">;
+export type SafetyIncidentUpdate = TablesUpdate<"safety_incidents">;
+export type MessageUpdate = TablesUpdate<"messages">;
 
-// Generic CreateInput type for insert operations
-export type CreateInput<T extends keyof Database['public']['Tables']> =
-  Database['public']['Tables'][T]['Insert']
+// Generic Helper Types
+export type CreateInput<T extends keyof Database["public"]["Tables"]> = TablesInsert<T>;
+export type UpdateInput<T extends keyof Database["public"]["Tables"]> = TablesUpdate<T>;
 
-// Site Instructions types
-export type SiteInstruction = Database['public']['Tables']['site_instructions']['Row']
-export type SiteInstructionStatus = 'draft' | 'issued' | 'acknowledged' | 'in_progress' | 'completed' | 'verified' | 'void'
-export type SiteInstructionPriority = 'low' | 'normal' | 'high' | 'urgent'
+// Document Status/Type (string literals based on common usage)
+export type DocumentType =
+  | "drawing"
+  | "specification"
+  | "submittal"
+  | "rfi"
+  | "change_order"
+  | "contract"
+  | "report"
+  | "photo"
+  | "correspondence"
+  | "other"
+  | string;
 
-// Weather Logs types - defined in database-extensions.ts
-// export type WeatherLog = Database['public']['Tables']['weather_logs']['Row']
-// export type WeatherCondition = WeatherLog['conditions']
-// export type PrecipitationType = WeatherLog['precipitation_type']
-// export type WindDirection = WeatherLog['wind_direction']
-// export type WorkImpact = WeatherLog['work_impact']
+export type DocumentStatus =
+  | "draft"
+  | "pending_review"
+  | "approved"
+  | "rejected"
+  | "superseded"
+  | "archived"
+  | string;
 
-// Submittal types
-export type Submittal = Database['public']['Tables']['submittals']['Row']
-export type SubmittalInsert = Database['public']['Tables']['submittals']['Insert']
-export type SubmittalUpdate = Database['public']['Tables']['submittals']['Update']
-export type SubmittalItem = Database['public']['Tables']['submittal_items']['Row']
-export type SubmittalAttachment = Database['public']['Tables']['submittal_attachments']['Row']
-export type SubmittalReview = Database['public']['Tables']['submittal_reviews']['Row']
-export type SubmittalHistory = Database['public']['Tables']['submittal_history']['Row']
-export type SubmittalProcurement = Database['public']['Tables']['submittal_procurement']['Row']
-export type SubmittalReviewStatus =
-  | 'not_submitted'
-  | 'submitted'
-  | 'under_review'
-  | 'approved'
-  | 'approved_as_noted'
-  | 'revise_resubmit'
-  | 'rejected'
-  | 'void'
+// Punch Item Status (string literals based on common usage)
+export type PunchItemStatus =
+  | "open"
+  | "in_progress"
+  | "ready_for_review"
+  | "closed"
+  | "rejected"
+  | string;
+
+// Site Instruction Status and Priority
+export type SiteInstructionStatus =
+  | "draft"
+  | "issued"
+  | "acknowledged"
+  | "completed"
+  | "cancelled"
+  | string;
+
+export type SiteInstructionPriority =
+  | "low"
+  | "medium"
+  | "high"
+  | "urgent"
+  | string;
+
+// Additional Table Row Types
+export type SubmittalAttachment = Tables<"submittal_attachments">;
+export type SubmittalReview = Tables<"submittal_reviews">;
+export type SubmittalHistory = Tables<"submittal_history">;
+export type RFIAttachment = Tables<"rfi_attachments">;
+export type RFIComment = Tables<"rfi_comments">;
+export type RFIHistory = Tables<"rfi_history">;
+export type ChangeOrderAttachment = Tables<"change_order_attachments">;
+export type ChangeOrderHistory = Tables<"change_order_history">;
+export type ProjectUser = Tables<"project_users">;
+export type TaskDependency = Tables<"task_dependencies">;
+export type DocumentCategory = Tables<"document_categories">;
+export type TakeoffItem = Tables<"takeoff_items">;
+
+// Project Status (string literals based on common usage)
+export type ProjectStatus =
+  | "planning"
+  | "active"
+  | "on_hold"
+  | "completed"
+  | "cancelled"
+  | "archived"
+  | string;
+
+// Task Status
+export type TaskStatus =
+  | "not_started"
+  | "in_progress"
+  | "completed"
+  | "blocked"
+  | "cancelled"
+  | string;
+
+// Priority (generic priority for multiple features)
+export type Priority =
+  | "low"
+  | "medium"
+  | "high"
+  | "urgent"
+  | "critical"
+  | string;
+
+// Submittal Types
 export type SubmittalType =
-  | 'product_data'
-  | 'shop_drawing'
-  | 'sample'
-  | 'mix_design'
-  | 'mock_up'
-  | 'test_report'
-  | 'certificate'
-  | 'warranty'
-  | 'operation_manual'
-  | 'maintenance_manual'
-  | 'as_built'
-  | 'closeout'
-  | 'other'
-export type BallInCourtEntity = 'subcontractor' | 'gc' | 'architect' | 'owner' | 'engineer'
+  | "shop_drawings"
+  | "product_data"
+  | "samples"
+  | "closeout"
+  | "mock_up"
+  | "design_data"
+  | "test_reports"
+  | "certificates"
+  | "manufacturers_instructions"
+  | "operation_and_maintenance_data"
+  | "other"
+  | string;
+
+// Submittal Review Status
+export type SubmittalReviewStatus =
+  | "pending"
+  | "approved"
+  | "approved_as_noted"
+  | "revise_and_resubmit"
+  | "rejected"
+  | "for_information_only"
+  | string;
+
+// Ball in Court Entity (for submittals tracking)
+export type BallInCourtEntity =
+  | "contractor"
+  | "architect"
+  | "engineer"
+  | "owner"
+  | "subcontractor"
+  | "supplier"
+  | string;

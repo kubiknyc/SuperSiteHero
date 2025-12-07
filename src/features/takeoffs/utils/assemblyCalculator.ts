@@ -2,8 +2,7 @@
 // Assembly calculator for evaluating formulas and calculating quantities
 // Supports variables, formulas, and item grouping
 
-import * as exprEval from 'expr-eval'
-const Parser = exprEval.Parser
+import { evaluate, parse } from 'mathjs'
 import type { Database } from '@/types/database'
 
 type Assembly = Database['public']['Tables']['assemblies']['Row']
@@ -71,25 +70,14 @@ interface EvaluationContext {
 }
 
 /**
- * Parse and validate formula
+ * Parse and validate formula using mathjs
  *
- * IMPORTANT: Formula Limitations
- * The expr-eval parser has limitations with complex multi-operator formulas.
- *
- * ✅ Supported formulas:
+ * Supported formulas:
  * - Simple operations: 'qty * 2', 'qty / 10', 'qty + 5'
- * - Two variables: 'length + width', 'length * width'
- * - Parentheses with single operation: '(qty + 5) * 2'
- *
- * ❌ Problematic formulas:
- * - Multiple consecutive operators: '(a * b * c) / d'
- * - Complex nested expressions: '((a + b) * (c - d)) / e'
- *
- * Workaround: Break complex formulas into multiple assembly items:
- * Instead of: '(length * width * height) / 1728'
- * Use two items:
- *   - Item 1: 'length * width' (stores result as variable)
- *   - Item 2: 'result * height / 1728'
+ * - Multiple variables: 'length * width * height'
+ * - Complex expressions: '((a + b) * (c - d)) / e'
+ * - Parentheses: '(length * width * height) / 1728'
+ * - Math functions: 'sqrt(area)', 'ceil(qty)', 'floor(qty)'
  */
 export function parseFormula(formula: string): {
   valid: boolean
@@ -97,9 +85,19 @@ export function parseFormula(formula: string): {
   variables: string[]
 } {
   try {
-    const parser = new Parser()
-    const expr = parser.parse(formula)
-    const variables = expr.variables()
+    const node = parse(formula)
+
+    // Extract variable names from the parsed expression
+    const variables: string[] = []
+    node.traverse((node) => {
+      if (node.type === 'SymbolNode' && node.name) {
+        // Exclude built-in math functions
+        const builtInFunctions = ['sqrt', 'abs', 'ceil', 'floor', 'round', 'pow', 'min', 'max', 'sin', 'cos', 'tan', 'log', 'exp']
+        if (!builtInFunctions.includes(node.name) && !variables.includes(node.name)) {
+          variables.push(node.name)
+        }
+      }
+    })
 
     return {
       valid: true,
@@ -115,27 +113,24 @@ export function parseFormula(formula: string): {
 }
 
 /**
- * Evaluate formula with given variables
+ * Evaluate formula with given variables using mathjs
  */
 export function evaluateFormula(
   formula: string,
   variables: VariableValues
 ): { result: number; error?: string } {
   try {
-    const parser = new Parser()
-    const expr = parser.parse(formula)
-
     // Convert all values to numbers for calculation
-    const numericVars: { [key: string]: number } = {}
+    const scope: { [key: string]: number } = {}
     for (const [key, value] of Object.entries(variables)) {
       const numValue = typeof value === 'string' ? parseFloat(value) : value
       if (isNaN(numValue)) {
         throw new Error(`Variable "${key}" has invalid numeric value: ${value}`)
       }
-      numericVars[key] = numValue
+      scope[key] = numValue
     }
 
-    const result = expr.evaluate(numericVars)
+    const result = evaluate(formula, scope)
 
     if (typeof result !== 'number' || isNaN(result)) {
       throw new Error('Formula did not evaluate to a valid number')

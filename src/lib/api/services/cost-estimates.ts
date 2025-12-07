@@ -1,6 +1,7 @@
 // File: /src/lib/api/services/cost-estimates.ts
 // API service for cost estimates CRUD operations
 
+import { z } from 'zod'
 import { supabase } from '@/lib/supabase'
 import type {
   CostEstimate,
@@ -11,6 +12,63 @@ import type {
   CostEstimateItemUpdate,
 } from '@/types/database-extensions'
 import { ApiErrorClass } from '../errors'
+
+// ============================================================================
+// SECURITY: Server-side validation schemas
+// ============================================================================
+
+const UnitCostsSchema = z.record(
+  z.string().regex(/^[a-z_]+$/, 'Invalid measurement type format'),
+  z.number().min(0).max(999999)
+).nullable()
+
+const CostEstimateInsertSchema = z.object({
+  project_id: z.string().uuid(),
+  name: z.string().min(1).max(255),
+  description: z.string().max(2000).nullable().optional(),
+  status: z.enum(['draft', 'approved', 'invoiced', 'archived']).optional(),
+  unit_costs: UnitCostsSchema.optional(),
+  labor_rate: z.number().min(0).max(9999.99).optional(),
+  markup_percentage: z.number().min(0).max(100).optional(),
+  created_by: z.string().uuid().optional(), // Will be overridden by trigger
+})
+
+const CostEstimateUpdateSchema = z.object({
+  name: z.string().min(1).max(255).optional(),
+  description: z.string().max(2000).nullable().optional(),
+  status: z.enum(['draft', 'approved', 'invoiced', 'archived']).optional(),
+  unit_costs: UnitCostsSchema.optional(),
+  labor_rate: z.number().min(0).max(9999.99).optional(),
+  markup_percentage: z.number().min(0).max(100).optional(),
+})
+
+const CostEstimateItemInsertSchema = z.object({
+  estimate_id: z.string().uuid(),
+  takeoff_item_id: z.string().uuid().nullable().optional(),
+  name: z.string().min(1).max(255),
+  measurement_type: z.string().min(1).max(50),
+  quantity: z.number().min(0).max(999999999),
+  unit_cost: z.number().min(0).max(999999.99),
+  labor_hours: z.number().min(0).max(99999.99).optional(),
+  labor_rate: z.number().min(0).max(9999.99).optional(),
+  material_cost: z.number().min(0).max(999999999.99).optional(),
+  labor_cost: z.number().min(0).max(999999999.99).optional(),
+  total_cost: z.number().min(0).max(999999999.99).optional(),
+})
+
+const CostEstimateItemUpdateSchema = z.object({
+  name: z.string().min(1).max(255).optional(),
+  measurement_type: z.string().min(1).max(50).optional(),
+  quantity: z.number().min(0).max(999999999).optional(),
+  unit_cost: z.number().min(0).max(999999.99).optional(),
+  labor_hours: z.number().min(0).max(99999.99).optional(),
+  labor_rate: z.number().min(0).max(9999.99).optional(),
+  material_cost: z.number().min(0).max(999999999.99).optional(),
+  labor_cost: z.number().min(0).max(999999999.99).optional(),
+  total_cost: z.number().min(0).max(999999999.99).optional(),
+})
+
+const MAX_TAKEOFF_ITEMS = 1000 // Rate limiting constant
 
 export interface CostEstimateWithItems extends CostEstimate {
   items: CostEstimateItem[]
@@ -100,21 +158,33 @@ export const costEstimatesApi = {
    */
   async createEstimate(estimate: CostEstimateInsert): Promise<CostEstimate> {
     try {
+      // SECURITY: Validate input
+      const validatedData = CostEstimateInsertSchema.parse(estimate)
+
+      // Note: created_by will be set by database trigger from auth.uid()
       const { data, error } = await (supabase as any)
         .from('cost_estimates')
-        .insert(estimate)
+        .insert(validatedData)
         .select()
         .single()
 
       if (error) {
+        // SECURITY: Sanitize error messages
+        console.error('[cost-estimates] Create estimate error:', error)
         throw new ApiErrorClass({
           code: 'CREATE_ESTIMATE_ERROR',
-          message: error.message,
+          message: 'Unable to create cost estimate. Please check your input and try again.',
         })
       }
 
       return data
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new ApiErrorClass({
+          code: 'VALIDATION_ERROR',
+          message: `Invalid input: ${error.issues.map((e: z.ZodIssue) => e.message).join(', ')}`,
+        })
+      }
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
@@ -132,22 +202,32 @@ export const costEstimatesApi = {
     updates: CostEstimateUpdate
   ): Promise<CostEstimate> {
     try {
+      // SECURITY: Validate input
+      const validatedData = CostEstimateUpdateSchema.parse(updates)
+
       const { data, error } = await (supabase as any)
         .from('cost_estimates')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...validatedData, updated_at: new Date().toISOString() })
         .eq('id', estimateId)
         .select()
         .single()
 
       if (error) {
+        console.error('[cost-estimates] Update estimate error:', error)
         throw new ApiErrorClass({
           code: 'UPDATE_ESTIMATE_ERROR',
-          message: error.message,
+          message: 'Unable to update cost estimate. Please check your input and try again.',
         })
       }
 
       return data
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new ApiErrorClass({
+          code: 'VALIDATION_ERROR',
+          message: `Invalid input: ${error.issues.map((e: z.ZodIssue) => e.message).join(', ')}`,
+        })
+      }
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
@@ -217,21 +297,31 @@ export const costEstimatesApi = {
    */
   async addEstimateItem(item: CostEstimateItemInsert): Promise<CostEstimateItem> {
     try {
+      // SECURITY: Validate input
+      const validatedData = CostEstimateItemInsertSchema.parse(item)
+
       const { data, error } = await (supabase as any)
         .from('cost_estimate_items')
-        .insert(item)
+        .insert(validatedData)
         .select()
         .single()
 
       if (error) {
+        console.error('[cost-estimates] Add item error:', error)
         throw new ApiErrorClass({
           code: 'ADD_ESTIMATE_ITEM_ERROR',
-          message: error.message,
+          message: 'Unable to add line item. Please check your input and try again.',
         })
       }
 
       return data
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new ApiErrorClass({
+          code: 'VALIDATION_ERROR',
+          message: `Invalid input: ${error.issues.map((e: z.ZodIssue) => e.message).join(', ')}`,
+        })
+      }
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
@@ -249,22 +339,32 @@ export const costEstimatesApi = {
     updates: CostEstimateItemUpdate
   ): Promise<CostEstimateItem> {
     try {
+      // SECURITY: Validate input
+      const validatedData = CostEstimateItemUpdateSchema.parse(updates)
+
       const { data, error } = await (supabase as any)
         .from('cost_estimate_items')
-        .update({ ...updates, updated_at: new Date().toISOString() })
+        .update({ ...validatedData, updated_at: new Date().toISOString() })
         .eq('id', itemId)
         .select()
         .single()
 
       if (error) {
+        console.error('[cost-estimates] Update item error:', error)
         throw new ApiErrorClass({
           code: 'UPDATE_ESTIMATE_ITEM_ERROR',
-          message: error.message,
+          message: 'Unable to update line item. Please check your input and try again.',
         })
       }
 
       return data
     } catch (error) {
+      if (error instanceof z.ZodError) {
+        throw new ApiErrorClass({
+          code: 'VALIDATION_ERROR',
+          message: `Invalid input: ${error.issues.map((e: z.ZodIssue) => e.message).join(', ')}`,
+        })
+      }
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
@@ -314,13 +414,24 @@ export const costEstimatesApi = {
     createdBy: string
   }): Promise<CostEstimateWithItems> {
     try {
+      // SECURITY: Rate limiting - prevent resource exhaustion
+      if (params.takeoffItemIds.length > MAX_TAKEOFF_ITEMS) {
+        throw new ApiErrorClass({
+          code: 'RATE_LIMIT_ERROR',
+          message: `Cannot process more than ${MAX_TAKEOFF_ITEMS} items at once. Please reduce the number of items.`,
+        })
+      }
+
+      // SECURITY: Validate unit costs
+      const validatedUnitCosts = UnitCostsSchema.parse(params.unitCosts)
+
       // First, create the estimate
       const estimateData: CostEstimateInsert = {
         project_id: params.projectId,
         name: params.name,
         description: params.description,
-        created_by: params.createdBy,
-        unit_costs: params.unitCosts,
+        created_by: params.createdBy, // Will be overridden by trigger
+        unit_costs: (validatedUnitCosts ?? {}) as Record<string, number>,
         labor_rate: params.laborRate ?? 0,
         markup_percentage: params.markupPercentage ?? 0,
       }

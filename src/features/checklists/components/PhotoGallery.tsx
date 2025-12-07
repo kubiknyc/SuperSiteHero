@@ -4,6 +4,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { OptimizedImage } from '@/components/ui/optimized-image'
 import { X, ZoomIn, Camera } from 'lucide-react'
 import {
   Dialog,
@@ -88,12 +89,13 @@ export function PhotoGallery({
               }`}
             >
               {/* Photo image */}
-              <img
+              <OptimizedImage
                 src={url}
                 alt={`Photo ${index + 1}`}
-                className="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                aspectRatio="square"
+                objectFit="cover"
+                className="cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => setPreviewPhoto(url)}
-                loading="lazy"
               />
 
               {/* Overlay with actions */}

@@ -27,6 +27,12 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+.env.k6
+
+# Performance test results
+tests/load/results/*.json
+tests/load/results/*.html
+.lighthouseci/
 
 # Build output
 build/
@@ -68,3 +74,27 @@ coverage/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Test output files
+test-output.txt
+*-test-output.txt
+workflow-test-output.txt
+dashboard-test-output.json
+phase*-test-results.txt
+test-summary.md
+
+# Type check output
+typecheck-*.txt
+type-check-output.txt
+type-errors-*.txt
+
+# Backup files
+*.backup-*
+*.bak
+*.orig
+*.old
+
+# Empty/temp SQL files
+schema_dump.sql
+QUICK_FIX_SQL.sql
+.env*.local

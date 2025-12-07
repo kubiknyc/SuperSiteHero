@@ -12,7 +12,10 @@
       "Bash(npx playwright test:*)",
       "Bash(powershell -Command:*)",
       "Bash(cat:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(node scripts/delete-user-reports.mjs:*)",
+      "Bash(npm audit:*)",
+      "Bash(npm view:*)"
     ],
     "deny": [],
     "ask": [],

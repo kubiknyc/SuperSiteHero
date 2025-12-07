@@ -41,7 +41,7 @@ import {
   Building2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { CreateRFIDialog } from '@/features/rfis/components/CreateRFIDialog'
+import { CreateDedicatedRFIDialog } from '@/features/rfis/components/CreateDedicatedRFIDialog'
 import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
 import type { RFIWithDetails } from '@/features/rfis/hooks/useDedicatedRFIs'
 
@@ -594,9 +594,8 @@ export function DedicatedRFIsPage() {
       </div>
 
       {/* Create RFI Dialog */}
-      <CreateRFIDialog
+      <CreateDedicatedRFIDialog
         projectId={selectedProjectId || undefined}
-        workflowTypeId={undefined}
         open={createDialogOpen}
         onOpenChange={setCreateDialogOpen}
         onSuccess={() => setCreateDialogOpen(false)}

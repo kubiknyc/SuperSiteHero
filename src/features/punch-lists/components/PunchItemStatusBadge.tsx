@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils'
 import type { PunchItemStatus, Priority } from '@/types/database'
 
 interface PunchItemStatusBadgeProps {
-  status: PunchItemStatus
-  priority?: Priority
+  status: PunchItemStatus | string | null
+  priority?: Priority | string | null
   className?: string
 }
 

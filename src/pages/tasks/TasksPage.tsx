@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { VirtualizedList } from '@/components/ui/virtualized-table'
 import {
   CheckCircle2,
   Clock,
@@ -23,6 +24,7 @@ import {
   Flag,
 } from 'lucide-react'
 import { format, isPast } from 'date-fns'
+import type { Task } from '@/types/database'
 
 export function TasksPage() {
   const { data: projects } = useMyProjects()
@@ -308,9 +310,13 @@ export function TasksPage() {
 
         {/* Tasks List */}
         {filteredTasks && filteredTasks.length > 0 && (
-          <div className="space-y-4">
-            {filteredTasks.map((task) => (
-              <Card key={task.id} className="hover:shadow-md transition-shadow">
+          <VirtualizedList<Task>
+            data={filteredTasks}
+            estimatedItemHeight={140}
+            maxHeight="calc(100vh - 500px)"
+            emptyMessage="No tasks available"
+            renderItem={(task) => (
+              <Card className="hover:shadow-md transition-shadow mb-4">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
@@ -370,8 +376,8 @@ export function TasksPage() {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            )}
+          />
         )}
       </div>
     </AppLayout>

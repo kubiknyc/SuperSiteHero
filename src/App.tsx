@@ -13,6 +13,7 @@ import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
+import { initWebVitalsMonitoring } from '../tests/performance/web-vitals-baseline'
 
 // Auth pages - loaded eagerly as they are the first pages users see
 import { LoginPage } from './pages/auth/LoginPage'
@@ -177,7 +178,22 @@ const PermitDetailPage = lazy(() => import('./pages/permits/PermitDetailPage').t
 const CostEstimatesPage = lazy(() => import('./pages/cost-estimates').then(m => ({ default: m.CostEstimatesPage })))
 const CostEstimateDetailPage = lazy(() => import('./pages/cost-estimates').then(m => ({ default: m.CostEstimateDetailPage })))
 
+// Payment Applications feature (AIA G702/G703)
+const PaymentApplicationsPage = lazy(() => import('./pages/payment-applications/PaymentApplicationsPage').then(m => ({ default: m.PaymentApplicationsPage })))
+const PaymentApplicationDetailPage = lazy(() => import('./pages/payment-applications/PaymentApplicationDetailPage').then(m => ({ default: m.PaymentApplicationDetailPage })))
+
+// Lien Waivers feature
+const LienWaiversPage = lazy(() => import('./pages/lien-waivers/LienWaiversPage').then(m => ({ default: m.LienWaiversPage })))
+const LienWaiverDetailPage = lazy(() => import('./pages/lien-waivers/LienWaiverDetailPage').then(m => ({ default: m.LienWaiverDetailPage })))
+
 function App() {
+  // Initialize Web Vitals monitoring in production
+  useEffect(() => {
+    if (import.meta.env.PROD) {
+      initWebVitalsMonitoring();
+    }
+  }, []);
+
   // Initialize IndexedDB for offline functionality
   useEffect(() => {
     let cleanupSync: (() => void) | null = null;
@@ -375,6 +391,14 @@ function App() {
                 {/* Cost Estimates feature */}
                 <Route path="/projects/:projectId/cost-estimates" element={<ProtectedRoute><CostEstimatesPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/cost-estimates/:estimateId" element={<ProtectedRoute><CostEstimateDetailPage /></ProtectedRoute>} />
+
+                {/* Payment Applications feature (AIA G702/G703) */}
+                <Route path="/payment-applications" element={<ProtectedRoute><PaymentApplicationsPage /></ProtectedRoute>} />
+                <Route path="/payment-applications/:applicationId" element={<ProtectedRoute><PaymentApplicationDetailPage /></ProtectedRoute>} />
+
+                {/* Lien Waivers feature */}
+                <Route path="/lien-waivers" element={<ProtectedRoute><LienWaiversPage /></ProtectedRoute>} />
+                <Route path="/lien-waivers/:id" element={<ProtectedRoute><LienWaiverDetailPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>

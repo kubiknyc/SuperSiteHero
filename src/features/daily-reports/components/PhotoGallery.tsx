@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { OptimizedImage } from '@/components/ui/optimized-image'
 import {
   X,
   MapPin,
@@ -82,16 +83,20 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
               onClick={() => setSelectedPhoto(photo)}
             >
               {photo.url || photo.thumbnailUrl ? (
-                <img
-                  src={photo.thumbnailUrl || photo.url}
+                <OptimizedImage
+                  src={photo.thumbnailUrl || photo.url || ''}
                   alt={photo.caption || photo.metadata.filename}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  aspectRatio="square"
+                  objectFit="cover"
+                  className="group-hover:scale-105 transition-transform"
                 />
               ) : photo.localFile ? (
-                <img
+                <OptimizedImage
                   src={URL.createObjectURL(photo.localFile)}
                   alt={photo.metadata.filename}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                  aspectRatio="square"
+                  objectFit="cover"
+                  className="group-hover:scale-105 transition-transform"
                 />
               ) : (
                 <div className="flex items-center justify-center h-full">
