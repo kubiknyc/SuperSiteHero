@@ -45,7 +45,7 @@ import {
   FileText,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useToast } from '@/lib/notifications'
+import { useToast } from '@/lib/notifications/ToastContext'
 import {
   useLookAheadSnapshots,
   useCreateSnapshot,

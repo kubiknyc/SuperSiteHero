@@ -69,10 +69,14 @@ CREATE TABLE IF NOT EXISTS lien_waiver_templates (
   updated_at TIMESTAMPTZ DEFAULT now(),
   created_by UUID REFERENCES users(id),
 
-  -- Ensure one default per state/type combo
-  UNIQUE (company_id, state_code, waiver_type, is_default)
-    WHERE is_default = true AND company_id IS NOT NULL
+  -- Metadata
+  deleted_at TIMESTAMPTZ
 );
+
+-- Ensure one default per state/type combo (partial unique index)
+CREATE UNIQUE INDEX IF NOT EXISTS idx_lien_waiver_templates_default
+  ON lien_waiver_templates (company_id, state_code, waiver_type)
+  WHERE is_default = true AND company_id IS NOT NULL;
 
 -- =============================================
 -- LIEN WAIVERS TABLE
@@ -89,7 +93,7 @@ CREATE TABLE IF NOT EXISTS lien_waivers (
   status lien_waiver_status DEFAULT 'pending',
 
   -- Related entities
-  payment_application_id UUID REFERENCES payment_applications(id) ON DELETE SET NULL,
+  payment_application_id UUID, -- FK to payment_applications when that table exists
   subcontractor_id UUID REFERENCES subcontractors(id) ON DELETE SET NULL,
   vendor_name TEXT,  -- For vendors not in subcontractors table
 
@@ -326,44 +330,46 @@ $$ LANGUAGE plpgsql;
 -- =============================================
 -- MISSING WAIVERS VIEW
 -- =============================================
+-- NOTE: This view requires payment_applications table which is not yet implemented.
+-- Uncomment and update when payment_applications is available.
 
-CREATE OR REPLACE VIEW missing_lien_waivers AS
-SELECT
-  pa.id AS payment_application_id,
-  pa.project_id,
-  pa.display_number AS application_number,
-  pa.current_payment_due AS payment_amount,
-  pa.status AS application_status,
-  s.id AS subcontractor_id,
-  s.company_name AS subcontractor_name,
-  s.contact_email,
-  CASE
-    WHEN pa.status = 'paid' THEN 'unconditional_progress'::lien_waiver_type
-    ELSE 'conditional_progress'::lien_waiver_type
-  END AS required_waiver_type,
-  lwr.days_before_payment_due,
-  (pa.period_to::date - lwr.days_before_payment_due) AS waiver_due_date
-FROM payment_applications pa
-JOIN projects p ON pa.project_id = p.id
-JOIN lien_waiver_requirements lwr ON (lwr.project_id = pa.project_id OR lwr.project_id IS NULL)
-  AND lwr.company_id = p.company_id
-  AND lwr.is_active = true
-CROSS JOIN LATERAL (
-  SELECT DISTINCT s.*
-  FROM subcontractors s
-  JOIN project_users pu ON s.id = pu.user_id  -- Assuming subcontractors link through users
-  WHERE pu.project_id = pa.project_id
-) s
-WHERE pa.status IN ('submitted', 'under_review', 'approved')
-  AND pa.deleted_at IS NULL
-  AND lwr.requires_sub_waivers = true
-  AND NOT EXISTS (
-    SELECT 1 FROM lien_waivers lw
-    WHERE lw.payment_application_id = pa.id
-      AND lw.subcontractor_id = s.id
-      AND lw.status IN ('approved', 'received', 'under_review')
-      AND lw.deleted_at IS NULL
-  );
+-- CREATE OR REPLACE VIEW missing_lien_waivers AS
+-- SELECT
+--   pa.id AS payment_application_id,
+--   pa.project_id,
+--   pa.display_number AS application_number,
+--   pa.current_payment_due AS payment_amount,
+--   pa.status AS application_status,
+--   s.id AS subcontractor_id,
+--   s.company_name AS subcontractor_name,
+--   s.contact_email,
+--   CASE
+--     WHEN pa.status = 'paid' THEN 'unconditional_progress'::lien_waiver_type
+--     ELSE 'conditional_progress'::lien_waiver_type
+--   END AS required_waiver_type,
+--   lwr.days_before_payment_due,
+--   (pa.period_to::date - lwr.days_before_payment_due) AS waiver_due_date
+-- FROM payment_applications pa
+-- JOIN projects p ON pa.project_id = p.id
+-- JOIN lien_waiver_requirements lwr ON (lwr.project_id = pa.project_id OR lwr.project_id IS NULL)
+--   AND lwr.company_id = p.company_id
+--   AND lwr.is_active = true
+-- CROSS JOIN LATERAL (
+--   SELECT DISTINCT s.*
+--   FROM subcontractors s
+--   JOIN project_users pu ON s.id = pu.user_id  -- Assuming subcontractors link through users
+--   WHERE pu.project_id = pa.project_id
+-- ) s
+-- WHERE pa.status IN ('submitted', 'under_review', 'approved')
+--   AND pa.deleted_at IS NULL
+--   AND lwr.requires_sub_waivers = true
+--   AND NOT EXISTS (
+--     SELECT 1 FROM lien_waivers lw
+--     WHERE lw.payment_application_id = pa.id
+--       AND lw.subcontractor_id = s.id
+--       AND lw.status IN ('approved', 'received', 'under_review')
+--       AND lw.deleted_at IS NULL
+--   );
 
 -- =============================================
 -- RLS POLICIES

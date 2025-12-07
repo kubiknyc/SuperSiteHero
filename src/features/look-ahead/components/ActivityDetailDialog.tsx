@@ -246,7 +246,7 @@ export function ActivityDetailDialog({
                   <HardHat className="h-3 w-3 inline mr-1" />
                   Trade
                 </Label>
-                <Select value={formData.trade} onValueChange={(v) => handleChange('trade', v)}>
+                <Select value={formData.trade || ''} onValueChange={(v) => handleChange('trade', v)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select trade" />
                   </SelectTrigger>
@@ -269,7 +269,7 @@ export function ActivityDetailDialog({
                   Subcontractor
                 </Label>
                 <Select
-                  value={formData.subcontractor_id}
+                  value={formData.subcontractor_id || ''}
                   onValueChange={(v) => handleChange('subcontractor_id', v)}
                 >
                   <SelectTrigger>
@@ -326,7 +326,7 @@ export function ActivityDetailDialog({
                 <div className="space-y-2">
                   <Label>Status</Label>
                   <Select
-                    value={formData.status}
+                    value={formData.status || 'planned'}
                     onValueChange={(v) => handleChange('status', v)}
                   >
                     <SelectTrigger>

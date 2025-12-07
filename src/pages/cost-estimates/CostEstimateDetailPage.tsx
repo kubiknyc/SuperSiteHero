@@ -39,17 +39,23 @@ import type {
   CostEstimateItemInsert,
   CostEstimateItemUpdate
 } from '@/types/database-extensions'
+import { downloadCostEstimatePDF } from '@/features/cost-estimates/utils/pdfExport'
+import { useProject } from '@/features/projects/hooks/useProjects'
+import { useToast } from '@/lib/notifications/ToastContext'
 
 export function CostEstimateDetailPage() {
   const { projectId, estimateId } = useParams<{ projectId: string; estimateId: string }>()
   const navigate = useNavigate()
+  const { toast } = useToast()
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<CostEstimateItem | null>(null)
+  const [isExporting, setIsExporting] = useState(false)
 
   // Queries and mutations
   const { data: estimate, isLoading } = useEstimate(estimateId)
+  const { data: project } = useProject(projectId)
   const updateMutation = useUpdateEstimate()
   const addItemMutation = useAddEstimateItem()
   const updateItemMutation = useUpdateEstimateItem()
@@ -113,9 +119,36 @@ export function CostEstimateDetailPage() {
     setEditingItem(item)
   }
 
-  const handleExportPDF = () => {
-    // TODO: Implement PDF export
-    console.log('Export to PDF')
+  const handleExportPDF = async () => {
+    if (!estimate) return
+
+    setIsExporting(true)
+    try {
+      await downloadCostEstimatePDF({
+        estimate: {
+          ...estimate,
+          items: estimate.items || [],
+        },
+        projectInfo: project ? {
+          name: project.name,
+          number: project.number || undefined,
+          address: project.address || undefined,
+        } : undefined,
+      })
+      toast({
+        title: 'PDF exported',
+        description: 'Cost estimate PDF has been downloaded.',
+      })
+    } catch (error) {
+      console.error('Error exporting PDF:', error)
+      toast({
+        title: 'Export failed',
+        description: 'Failed to export PDF. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   const handlePrint = () => {
@@ -163,9 +196,9 @@ export function CostEstimateDetailPage() {
             <Printer className="h-4 w-4 mr-2" />
             Print
           </Button>
-          <Button variant="outline" onClick={handleExportPDF}>
+          <Button variant="outline" onClick={handleExportPDF} disabled={isExporting}>
             <FileDown className="h-4 w-4 mr-2" />
-            Export PDF
+            {isExporting ? 'Exporting...' : 'Export PDF'}
           </Button>
           <Button onClick={() => setIsEditDialogOpen(true)}>
             <Pencil className="h-4 w-4 mr-2" />

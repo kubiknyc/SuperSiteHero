@@ -272,7 +272,7 @@ export function ConstraintsList({
               <div className="space-y-2">
                 <Label>Constraint Type</Label>
                 <Select
-                  value={newConstraint.constraint_type}
+                  value={newConstraint.constraint_type || 'other'}
                   onValueChange={(value) =>
                     setNewConstraint({ ...newConstraint, constraint_type: value as ConstraintType })
                   }

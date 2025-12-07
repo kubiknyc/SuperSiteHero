@@ -193,6 +193,11 @@ const LookAheadSnapshotsPage = lazy(() => import('./pages/look-ahead/LookAheadSn
 // Insurance Tracking feature
 const InsurancePage = lazy(() => import('./pages/insurance/InsurancePage').then(m => ({ default: m.InsurancePage })))
 
+// Toolbox Talks feature
+const ToolboxTalksPage = lazy(() => import('./pages/toolbox-talks/ToolboxTalksPage').then(m => ({ default: m.ToolboxTalksPage })))
+const ToolboxTalkDetailPage = lazy(() => import('./pages/toolbox-talks/ToolboxTalkDetailPage').then(m => ({ default: m.ToolboxTalkDetailPage })))
+const ToolboxTalkFormPage = lazy(() => import('./pages/toolbox-talks/ToolboxTalkFormPage').then(m => ({ default: m.ToolboxTalkFormPage })))
+
 function App() {
   // Initialize Web Vitals monitoring in production
   useEffect(() => {
@@ -414,6 +419,12 @@ function App() {
                 {/* Insurance Tracking feature */}
                 <Route path="/insurance" element={<ProtectedRoute><InsurancePage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/insurance" element={<ProtectedRoute><InsurancePage /></ProtectedRoute>} />
+
+                {/* Toolbox Talks feature */}
+                <Route path="/toolbox-talks" element={<ProtectedRoute><ToolboxTalksPage /></ProtectedRoute>} />
+                <Route path="/toolbox-talks/new" element={<ProtectedRoute><ToolboxTalkFormPage /></ProtectedRoute>} />
+                <Route path="/toolbox-talks/:id" element={<ProtectedRoute><ToolboxTalkDetailPage /></ProtectedRoute>} />
+                <Route path="/toolbox-talks/:id/edit" element={<ProtectedRoute><ToolboxTalkFormPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>

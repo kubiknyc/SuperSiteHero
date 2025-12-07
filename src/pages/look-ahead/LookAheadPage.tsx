@@ -8,7 +8,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
-  Select,
+  RadixSelect as Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -40,7 +40,7 @@ import {
   HardHat,
   AlertTriangle,
 } from 'lucide-react'
-import { useToast } from '@/lib/notifications'
+import { useToast } from '@/lib/notifications/ToastContext'
 import {
   useActivitiesByWeek,
   useCreateActivity,
@@ -139,7 +139,6 @@ export function LookAheadPage() {
         await updateActivity.mutateAsync({
           activityId: selectedActivity.id,
           dto: dto as UpdateLookAheadActivityDTO,
-          projectId: projectId!,
         })
         toast({ title: 'Activity updated' })
       } else {
@@ -163,7 +162,6 @@ export function LookAheadPage() {
       await updateStatus.mutateAsync({
         activityId,
         status,
-        projectId: projectId!,
       })
       toast({ title: `Activity marked as ${status.replace('_', ' ')}` })
     } catch (error) {
@@ -199,7 +197,6 @@ export function LookAheadPage() {
         activityId,
         weekNumber,
         weekStartDate,
-        projectId: projectId!,
       })
       toast({ title: `Activity moved to Week ${weekNumber}` })
     } catch (error) {
@@ -234,7 +231,6 @@ export function LookAheadPage() {
         constraintId,
         dto: { status: 'resolved', resolution_notes: notes },
         activityId: selectedActivity!.id,
-        projectId: projectId!,
       })
       toast({ title: 'Constraint resolved' })
     } catch (error) {
@@ -251,7 +247,6 @@ export function LookAheadPage() {
       await deleteConstraint.mutateAsync({
         constraintId,
         activityId: selectedActivity!.id,
-        projectId: projectId!,
       })
       toast({ title: 'Constraint deleted' })
     } catch (error) {

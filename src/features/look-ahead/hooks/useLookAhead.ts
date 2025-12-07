@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth/AuthContext'
 import {
   getLookAheadActivities,
   getActivitiesForWeek,
@@ -131,10 +131,10 @@ export function useLookAheadActivity(activityId: string | undefined) {
  */
 export function useCreateActivity() {
   const queryClient = useQueryClient()
-  const { user, companyId } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return useMutation<LookAheadActivity, Error, CreateLookAheadActivityDTO>({
-    mutationFn: (dto) => createLookAheadActivity(dto, companyId!, user!.id),
+    mutationFn: (dto) => createLookAheadActivity(dto, userProfile!.company_id, user!.id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
       queryClient.invalidateQueries({
@@ -260,7 +260,7 @@ export function useProjectOpenConstraints(projectId: string | undefined) {
  */
 export function useCreateConstraint() {
   const queryClient = useQueryClient()
-  const { user, companyId } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return useMutation<
     LookAheadConstraint,
@@ -268,7 +268,7 @@ export function useCreateConstraint() {
     { dto: CreateLookAheadConstraintDTO; projectId: string }
   >({
     mutationFn: ({ dto, projectId }) =>
-      createLookAheadConstraint(dto, projectId, companyId!, user!.id),
+      createLookAheadConstraint(dto, projectId, userProfile!.company_id, user!.id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.constraints(data.activity_id),
@@ -366,10 +366,10 @@ export function usePPCMetrics(projectId: string | undefined) {
  */
 export function useCreateSnapshot() {
   const queryClient = useQueryClient()
-  const { user, companyId } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return useMutation<LookAheadSnapshot, Error, CreateLookAheadSnapshotDTO>({
-    mutationFn: (dto) => createLookAheadSnapshot(dto, companyId!, user!.id),
+    mutationFn: (dto) => createLookAheadSnapshot(dto, userProfile!.company_id, user!.id),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.snapshots(data.project_id),
@@ -389,12 +389,12 @@ export function useCreateSnapshot() {
  * Get templates for a company
  */
 export function useLookAheadTemplates(trade?: string) {
-  const { companyId } = useAuth()
+  const { userProfile } = useAuth()
 
   return useQuery({
-    queryKey: lookAheadKeys.templates(companyId!, trade),
-    queryFn: () => getLookAheadTemplates(companyId!, trade),
-    enabled: !!companyId,
+    queryKey: lookAheadKeys.templates(userProfile!.company_id, trade),
+    queryFn: () => getLookAheadTemplates(userProfile!.company_id, trade),
+    enabled: !!userProfile?.company_id,
   })
 }
 
@@ -403,7 +403,7 @@ export function useLookAheadTemplates(trade?: string) {
  */
 export function useCreateActivityFromTemplate() {
   const queryClient = useQueryClient()
-  const { user, companyId } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return useMutation<
     LookAheadActivity,
@@ -411,7 +411,7 @@ export function useCreateActivityFromTemplate() {
     { templateId: string; projectId: string; overrides?: Partial<CreateLookAheadActivityDTO> }
   >({
     mutationFn: ({ templateId, projectId, overrides }) =>
-      createActivityFromTemplate(templateId, projectId, companyId!, user!.id, overrides),
+      createActivityFromTemplate(templateId, projectId, userProfile!.company_id, user!.id, overrides),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.activities(data.project_id),
