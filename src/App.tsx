@@ -44,16 +44,23 @@ const ChangeOrdersPage = lazy(() => import('./pages/change-orders/ChangeOrdersPa
 const ChangeOrderDetailPage = lazy(() => import('./pages/change-orders/ChangeOrderDetailPage').then(m => ({ default: m.ChangeOrderDetailPage })))
 
 // Documents feature
-const DocumentLibraryPage = lazy(() => import('./pages/documents/DocumentLibraryPage').then(m => ({ default: m.DocumentLibraryPage })))
+const DocumentLibraryPage = lazy(() => import('./pages/documents/DocumentLibraryPage'))
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage').then(m => ({ default: m.DocumentDetailPage })))
+const DrawingMarkupPage = lazy(() => import('./pages/documents/DrawingMarkupPage').then(m => ({ default: m.DrawingMarkupPage })))
 
 // RFIs feature
 const RFIsPage = lazy(() => import('./pages/rfis/RFIsPage').then(m => ({ default: m.RFIsPage })))
 const RFIDetailPage = lazy(() => import('./pages/rfis/RFIDetailPage').then(m => ({ default: m.RFIDetailPage })))
+// NEW: Dedicated RFIs with ball-in-court tracking and drawing references
+const DedicatedRFIsPage = lazy(() => import('./pages/rfis/DedicatedRFIsPage').then(m => ({ default: m.DedicatedRFIsPage })))
+const DedicatedRFIDetailPage = lazy(() => import('./pages/rfis/DedicatedRFIDetailPage').then(m => ({ default: m.DedicatedRFIDetailPage })))
 
 // Submittals feature
 const SubmittalsPage = lazy(() => import('./pages/submittals/SubmittalsPage').then(m => ({ default: m.SubmittalsPage })))
 const SubmittalDetailPage = lazy(() => import('./pages/submittals/SubmittalDetailPage').then(m => ({ default: m.SubmittalDetailPage })))
+// NEW: Dedicated submittals with CSI spec section organization
+const DedicatedSubmittalsPage = lazy(() => import('./pages/submittals/DedicatedSubmittalsPage').then(m => ({ default: m.DedicatedSubmittalsPage })))
+const DedicatedSubmittalDetailPage = lazy(() => import('./pages/submittals/DedicatedSubmittalDetailPage').then(m => ({ default: m.DedicatedSubmittalDetailPage })))
 
 // Punch Lists feature
 const PunchListsPage = lazy(() => import('./pages/punch-lists/PunchListsPage').then(m => ({ default: m.PunchListsPage })))
@@ -80,6 +87,7 @@ const ReportsPage = lazy(() => import('./pages/reports/ReportsPage').then(m => (
 const MyApprovalsPage = lazy(() => import('./pages/approvals/MyApprovalsPage').then(m => ({ default: m.MyApprovalsPage })))
 const ApprovalRequestPage = lazy(() => import('./pages/approvals/ApprovalRequestPage').then(m => ({ default: m.ApprovalRequestPage })))
 const ApprovalWorkflowsPage = lazy(() => import('./pages/settings/ApprovalWorkflowsPage').then(m => ({ default: m.ApprovalWorkflowsPage })))
+const NotificationPreferencesPage = lazy(() => import('./pages/settings/NotificationPreferencesPage').then(m => ({ default: m.NotificationPreferencesPage })))
 
 // Schedule / Gantt Charts feature
 const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
@@ -138,7 +146,36 @@ const ContactDetailPage = lazy(() => import('./pages/contacts/ContactDetailPage'
 
 // Takeoffs feature
 const TakeoffPage = lazy(() => import('./pages/takeoffs/TakeoffPage'))
+const TakeoffsListPage = lazy(() => import('./pages/takeoffs/TakeoffsListPage'))
 const ContactFormPage = lazy(() => import('./pages/contacts/ContactFormPage').then(m => ({ default: m.ContactFormPage })))
+
+// Weather Logs feature
+const WeatherLogsPage = lazy(() => import('./pages/weather-logs/WeatherLogsPage').then(m => ({ default: m.WeatherLogsPage })))
+const WeatherLogDetailPage = lazy(() => import('./pages/weather-logs/WeatherLogDetailPage').then(m => ({ default: m.WeatherLogDetailPage })))
+
+// Site Instructions feature
+const SiteInstructionsPage = lazy(() => import('./pages/site-instructions/SiteInstructionsPage'))
+const SiteInstructionDetailPage = lazy(() => import('./pages/site-instructions/SiteInstructionDetailPage'))
+const CreateSiteInstructionPage = lazy(() => import('./pages/site-instructions/CreateSiteInstructionPage'))
+
+// Meetings feature
+const MeetingsPage = lazy(() => import('./pages/meetings/MeetingsPage').then(m => ({ default: m.MeetingsPage })))
+const MeetingDetailPage = lazy(() => import('./pages/meetings/MeetingDetailPage').then(m => ({ default: m.MeetingDetailPage })))
+const MeetingFormPage = lazy(() => import('./pages/meetings/MeetingFormPage').then(m => ({ default: m.MeetingFormPage })))
+
+// Equipment feature
+const EquipmentPage = lazy(() => import('./pages/equipment/EquipmentPage').then(m => ({ default: m.EquipmentPage })))
+
+// Budget feature
+const BudgetPage = lazy(() => import('./pages/budget/BudgetPage').then(m => ({ default: m.BudgetPage })))
+
+// Permits feature
+const PermitsPage = lazy(() => import('./pages/permits/PermitsPage').then(m => ({ default: m.PermitsPage })))
+const PermitDetailPage = lazy(() => import('./pages/permits/PermitDetailPage').then(m => ({ default: m.PermitDetailPage })))
+
+// Cost Estimates feature
+const CostEstimatesPage = lazy(() => import('./pages/cost-estimates').then(m => ({ default: m.CostEstimatesPage })))
+const CostEstimateDetailPage = lazy(() => import('./pages/cost-estimates').then(m => ({ default: m.CostEstimateDetailPage })))
 
 function App() {
   // Initialize IndexedDB for offline functionality
@@ -227,17 +264,25 @@ function App() {
                 {/* Documents feature */}
                 <Route path="/documents" element={<ProtectedRoute><DocumentLibraryPage /></ProtectedRoute>} />
                 <Route path="/documents/:documentId" element={<ProtectedRoute><DocumentDetailPage /></ProtectedRoute>} />
+                <Route path="/documents/:documentId/markup" element={<ProtectedRoute><DrawingMarkupPage /></ProtectedRoute>} />
 
                 {/* Takeoffs feature */}
+                <Route path="/projects/:projectId/takeoffs" element={<ProtectedRoute><TakeoffsListPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/documents/:documentId/takeoff" element={<ProtectedRoute><TakeoffPage /></ProtectedRoute>} />
 
                 {/* RFIs feature */}
                 <Route path="/rfis" element={<ProtectedRoute><RFIsPage /></ProtectedRoute>} />
                 <Route path="/rfis/:rfiId" element={<ProtectedRoute><RFIDetailPage /></ProtectedRoute>} />
+                {/* NEW: Dedicated RFIs with ball-in-court tracking */}
+                <Route path="/rfis-v2" element={<ProtectedRoute><DedicatedRFIsPage /></ProtectedRoute>} />
+                <Route path="/rfis-v2/:rfiId" element={<ProtectedRoute><DedicatedRFIDetailPage /></ProtectedRoute>} />
 
                 {/* Submittals feature */}
                 <Route path="/submittals" element={<ProtectedRoute><SubmittalsPage /></ProtectedRoute>} />
                 <Route path="/submittals/:submittalId" element={<ProtectedRoute><SubmittalDetailPage /></ProtectedRoute>} />
+                {/* NEW: Dedicated submittals with CSI spec section organization */}
+                <Route path="/submittals-v2" element={<ProtectedRoute><DedicatedSubmittalsPage /></ProtectedRoute>} />
+                <Route path="/submittals-v2/:submittalId" element={<ProtectedRoute><DedicatedSubmittalDetailPage /></ProtectedRoute>} />
 
                 {/* Punch Lists feature */}
                 <Route path="/punch-lists" element={<ProtectedRoute><PunchListsPage /></ProtectedRoute>} />
@@ -260,6 +305,7 @@ function App() {
                 <Route path="/approvals" element={<ProtectedRoute><MyApprovalsPage /></ProtectedRoute>} />
                 <Route path="/approvals/:id" element={<ProtectedRoute><ApprovalRequestPage /></ProtectedRoute>} />
                 <Route path="/settings/approval-workflows" element={<ProtectedRoute><ApprovalWorkflowsPage /></ProtectedRoute>} />
+                <Route path="/settings/notifications" element={<ProtectedRoute><NotificationPreferencesPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
                 <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
@@ -300,6 +346,35 @@ function App() {
                 <Route path="/contacts/new" element={<ProtectedRoute><ContactFormPage /></ProtectedRoute>} />
                 <Route path="/contacts/:contactId" element={<ProtectedRoute><ContactDetailPage /></ProtectedRoute>} />
                 <Route path="/contacts/:contactId/edit" element={<ProtectedRoute><ContactFormPage /></ProtectedRoute>} />
+
+                {/* Weather Logs feature */}
+                <Route path="/weather-logs" element={<ProtectedRoute><WeatherLogsPage /></ProtectedRoute>} />
+                <Route path="/weather-logs/:id" element={<ProtectedRoute><WeatherLogDetailPage /></ProtectedRoute>} />
+
+                {/* Site Instructions feature */}
+                <Route path="/site-instructions" element={<ProtectedRoute><SiteInstructionsPage /></ProtectedRoute>} />
+                <Route path="/site-instructions/new" element={<ProtectedRoute><CreateSiteInstructionPage /></ProtectedRoute>} />
+                <Route path="/site-instructions/:id" element={<ProtectedRoute><SiteInstructionDetailPage /></ProtectedRoute>} />
+
+                {/* Meetings feature */}
+                <Route path="/meetings" element={<ProtectedRoute><MeetingsPage /></ProtectedRoute>} />
+                <Route path="/meetings/new" element={<ProtectedRoute><MeetingFormPage /></ProtectedRoute>} />
+                <Route path="/meetings/:id" element={<ProtectedRoute><MeetingDetailPage /></ProtectedRoute>} />
+                <Route path="/meetings/:id/edit" element={<ProtectedRoute><MeetingFormPage /></ProtectedRoute>} />
+
+                {/* Equipment feature */}
+                <Route path="/equipment" element={<ProtectedRoute><EquipmentPage /></ProtectedRoute>} />
+
+                {/* Budget feature */}
+                <Route path="/budget" element={<ProtectedRoute><BudgetPage /></ProtectedRoute>} />
+
+                {/* Permits feature */}
+                <Route path="/permits" element={<ProtectedRoute><PermitsPage /></ProtectedRoute>} />
+                <Route path="/permits/:id" element={<ProtectedRoute><PermitDetailPage /></ProtectedRoute>} />
+
+                {/* Cost Estimates feature */}
+                <Route path="/projects/:projectId/cost-estimates" element={<ProtectedRoute><CostEstimatesPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/cost-estimates/:estimateId" element={<ProtectedRoute><CostEstimateDetailPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
