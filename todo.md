@@ -236,9 +236,11 @@
   - Data source, fields, filters, options
   - **File:** `src/pages/reports/ReportBuilderPage.tsx`
 
-- [ ] **Export Options** (Pending)
-  - PDF, Excel, CSV generation
-  - Scheduled email delivery
+- [x] **Export Options** ✅ (Dec 8)
+  - PDF, Excel, CSV generation with reportExportService.ts
+  - **File:** `src/features/reports/services/reportExportService.ts`
+  - **Hook:** `useExportReport` in `src/features/reports/hooks/useReportBuilder.ts`
+  - [ ] Scheduled email delivery (future)
 
 ### Toolbox Talks Module ✅ COMPLETE
 **Effort:** 1 week | **Completed:** Dec 7, 2025

@@ -529,3 +529,45 @@ export function useDefaultFields(dataSource: ReportDataSource | undefined) {
     enabled: !!dataSource,
   })
 }
+
+// ============================================================================
+// Report Export Hook
+// ============================================================================
+
+import { reportExportService, type ReportExportOptions } from '../services/reportExportService'
+import type { ReportOutputFormat } from '@/types/report-builder'
+
+/**
+ * Hook for exporting reports to different formats
+ */
+export function useExportReport() {
+  const { showToast } = useToast()
+
+  return useMutation({
+    mutationFn: async ({
+      format,
+      options,
+    }: {
+      format: ReportOutputFormat
+      options: ReportExportOptions
+    }) => {
+      const result = await reportExportService.generateReport(format, options)
+      reportExportService.downloadReport(result)
+      return result
+    },
+    onSuccess: (result) => {
+      showToast({
+        type: 'success',
+        title: 'Report Exported',
+        message: `Report exported successfully with ${result.rowCount} records.`,
+      })
+    },
+    onError: (error: Error) => {
+      showToast({
+        type: 'error',
+        title: 'Export Failed',
+        message: error.message || 'Failed to export report',
+      })
+    },
+  })
+}
