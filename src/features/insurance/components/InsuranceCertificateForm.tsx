@@ -29,7 +29,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
-  Select,
+  RadixSelect as Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -79,14 +79,14 @@ const certificateFormSchema = z.object({
   workers_comp_el_disease_policy: z.coerce.number().optional(),
   workers_comp_el_disease_employee: z.coerce.number().optional(),
 
-  // Endorsements
-  additional_insured_required: z.boolean().default(true),
-  additional_insured_verified: z.boolean().default(false),
+  // Endorsements - using optional() instead of default() for proper rhf typing
+  additional_insured_required: z.boolean().optional(),
+  additional_insured_verified: z.boolean().optional(),
   additional_insured_name: z.string().optional(),
-  waiver_of_subrogation_required: z.boolean().default(false),
-  waiver_of_subrogation_verified: z.boolean().default(false),
-  primary_noncontributory_required: z.boolean().default(false),
-  primary_noncontributory_verified: z.boolean().default(false),
+  waiver_of_subrogation_required: z.boolean().optional(),
+  waiver_of_subrogation_verified: z.boolean().optional(),
+  primary_noncontributory_required: z.boolean().optional(),
+  primary_noncontributory_verified: z.boolean().optional(),
 
   // Issued By
   issued_by_name: z.string().optional(),
@@ -97,9 +97,9 @@ const certificateFormSchema = z.object({
   notes: z.string().optional(),
   description_of_operations: z.string().optional(),
 
-  // Alerts
-  alert_days_before_expiry: z.coerce.number().default(30),
-  suppress_alerts: z.boolean().default(false),
+  // Alerts - using optional() instead of default()
+  alert_days_before_expiry: z.coerce.number().optional(),
+  suppress_alerts: z.boolean().optional(),
 })
 
 type CertificateFormValues = z.infer<typeof certificateFormSchema>
@@ -130,8 +130,8 @@ export function InsuranceCertificateForm({
   const updateMutation = useUpdateInsuranceCertificate()
   const uploadMutation = useUploadCertificateDocument()
 
-  const form = useForm<CertificateFormValues>({
-    resolver: zodResolver(certificateFormSchema),
+  const form = useForm<CertificateFormValues, unknown, CertificateFormValues>({
+    resolver: zodResolver(certificateFormSchema) as never,
     defaultValues: certificate
       ? {
           certificate_number: certificate.certificate_number,

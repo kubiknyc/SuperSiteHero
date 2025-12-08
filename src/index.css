@@ -114,11 +114,238 @@
 }
 
 @layer components {
-  /* TODO: Add custom component styles */
+  /* Touch-friendly button and interactive element styles */
+  .touch-target {
+    /* Minimum 44px touch target as per WCAG guidelines */
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile-safe areas for notched devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left, 0);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  .safe-area-all {
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  }
+
+  /* Mobile card with larger touch targets */
+  .mobile-card {
+    @apply p-4 rounded-xl bg-white shadow-sm border border-gray-100;
+  }
+
+  .mobile-card-interactive {
+    @apply mobile-card cursor-pointer active:bg-gray-50 transition-colors;
+  }
+
+  /* Mobile list item */
+  .mobile-list-item {
+    @apply flex items-center gap-4 px-4 py-4 border-b border-gray-100 last:border-b-0;
+  }
+
+  /* Bottom sheet styles */
+  .bottom-sheet {
+    @apply fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl shadow-2xl;
+    max-height: 90vh;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-sheet-handle {
+    @apply w-12 h-1.5 bg-gray-300 rounded-full mx-auto my-3;
+  }
+}
+
+/* =============================================
+ * GLOVE MODE - Enhanced touch targets for field workers
+ * Activates when .glove-mode class is on the html element
+ * ============================================= */
+
+:root {
+  /* Standard touch target sizes */
+  --touch-target-min: 44px;
+  --touch-padding: 12px;
+  --button-height: 40px;
+  --input-height: 40px;
+  --font-size-base: 14px;
+}
+
+/* Glove mode variables - 1.4x larger touch targets */
+.glove-mode {
+  --touch-target-min: 60px;
+  --touch-padding: 16px;
+  --button-height: 56px;
+  --input-height: 56px;
+  --font-size-base: 18px;
+}
+
+/* Glove mode button overrides */
+.glove-mode button,
+.glove-mode [role="button"],
+.glove-mode .btn {
+  min-height: var(--button-height);
+  min-width: var(--touch-target-min);
+  padding: var(--touch-padding) calc(var(--touch-padding) * 1.5);
+  font-size: var(--font-size-base);
+}
+
+/* Glove mode form inputs */
+.glove-mode input,
+.glove-mode textarea,
+.glove-mode select {
+  min-height: var(--input-height);
+  padding: var(--touch-padding);
+  font-size: var(--font-size-base);
+}
+
+/* Glove mode interactive elements */
+.glove-mode .touch-target,
+.glove-mode [data-touch-target],
+.glove-mode a {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Glove mode checkbox/radio */
+.glove-mode input[type="checkbox"],
+.glove-mode input[type="radio"] {
+  min-height: 24px;
+  min-width: 24px;
+}
+
+/* Glove mode list items */
+.glove-mode .mobile-list-item,
+.glove-mode li {
+  min-height: var(--touch-target-min);
+  padding: var(--touch-padding);
+}
+
+/* Glove mode icon buttons */
+.glove-mode [data-icon-button],
+.glove-mode button[class*="icon"] {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Glove mode cards */
+.glove-mode .mobile-card,
+.glove-mode .card {
+  padding: calc(var(--touch-padding) * 1.25);
+}
+
+/* Glove mode spacing */
+.glove-mode .gap-2 { gap: 0.75rem; }
+.glove-mode .gap-3 { gap: 1rem; }
+.glove-mode .gap-4 { gap: 1.25rem; }
+
+/* Glove mode larger text for readability */
+.glove-mode p,
+.glove-mode label,
+.glove-mode span {
+  font-size: var(--font-size-base);
+}
+
+/* Glove mode indicator (optional visual cue) */
+.glove-mode::after {
+  content: '';
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  z-index: 9999;
+  pointer-events: none;
 }
 
 @layer utilities {
-  /* TODO: Add custom utility classes */
+  /* Touch-friendly spacing utilities */
+  .touch-spacing {
+    @apply p-4 gap-4;
+  }
+
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Smooth scrolling for mobile */
+  .scroll-smooth-touch {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent pull-to-refresh on certain elements */
+  .no-overscroll {
+    overscroll-behavior: none;
+  }
+
+  /* Active state for touch devices */
+  .touch-active {
+    @apply active:scale-[0.98] active:opacity-80 transition-transform;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animation for mobile drawer slide-in */
+  .animate-slide-in-right {
+    animation: slideInRight 0.25s ease-out;
+  }
+
+  .animate-slide-in-bottom {
+    animation: slideInBottom 0.3s ease-out;
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInBottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile-first responsive padding for content areas */
+  .content-padding {
+    @apply px-4 py-4 md:px-6 md:py-6 lg:px-8;
+  }
+
+  /* Gradient for offline mode visual indicator */
+  .offline-gradient {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  }
 }
 
 

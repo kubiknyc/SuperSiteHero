@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS look_ahead_activities (
 
   -- Trade/Subcontractor
   trade VARCHAR(100),  -- e.g., 'Electrical', 'Plumbing', 'HVAC'
-  subcontractor_id UUID REFERENCES subcontractors(id) ON DELETE SET NULL,
+  subcontractor_id UUID, -- FK to subcontractors when that table exists
 
   -- Schedule
   planned_start_date DATE NOT NULL,
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS look_ahead_activities (
   estimated_crew_size INTEGER,
 
   -- Links to master schedule
-  schedule_item_id UUID REFERENCES schedule_items(id) ON DELETE SET NULL,
+  schedule_item_id UUID, -- FK to schedule_items when that table exists
 
   -- Priority and ordering
   priority INTEGER DEFAULT 50 CHECK (priority >= 1 AND priority <= 100),
@@ -521,7 +521,7 @@ BEGIN
     a.description,
     a.location,
     a.trade,
-    s.name as subcontractor_name,
+    NULL::VARCHAR(255) as subcontractor_name, -- subcontractors table not available
     a.planned_start_date,
     a.planned_end_date,
     a.duration_days,
@@ -531,12 +531,11 @@ BEGIN
     COUNT(c.id) as constraint_count,
     COUNT(c.id) FILTER (WHERE c.status = 'open') as open_constraint_count
   FROM look_ahead_activities a
-  LEFT JOIN subcontractors s ON a.subcontractor_id = s.id
   LEFT JOIN look_ahead_constraints c ON c.activity_id = a.id
   WHERE a.project_id = p_project_id
     AND a.week_start_date = p_week_start
     AND a.deleted_at IS NULL
-  GROUP BY a.id, s.name
+  GROUP BY a.id
   ORDER BY a.priority DESC, a.planned_start_date, a.sort_order;
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
@@ -578,7 +577,7 @@ SELECT
   a.description,
   a.location,
   a.trade,
-  s.name as subcontractor_name,
+  a.subcontractor_id, -- Store ID only, join to subcontractors in application
   a.planned_start_date,
   a.planned_end_date,
   a.actual_start_date,
@@ -596,11 +595,10 @@ SELECT
   a.updated_at
 FROM look_ahead_activities a
 JOIN projects p ON a.project_id = p.id
-LEFT JOIN subcontractors s ON a.subcontractor_id = s.id
 LEFT JOIN look_ahead_constraints c ON c.activity_id = a.id
 WHERE a.deleted_at IS NULL
   AND p.deleted_at IS NULL
-GROUP BY a.id, p.name, s.name;
+GROUP BY a.id, p.name;
 
 -- =============================================
 -- VIEW: project_ppc_trend

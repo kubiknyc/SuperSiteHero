@@ -89,6 +89,18 @@ export type NotificationDeliveryStatus =
  */
 export type NotificationType = 'email' | 'in_app' | 'sms'
 
+/**
+ * OSHA Injury/Illness Type for Form 300
+ * Aligned with migration 080_osha_300_log.sql
+ */
+export type OSHAInjuryIllnessType =
+  | 'injury'              // Injury
+  | 'skin_disorder'       // Skin disorder
+  | 'respiratory'         // Respiratory condition
+  | 'poisoning'           // Poisoning
+  | 'hearing_loss'        // Hearing loss
+  | 'other_illness'       // All other illnesses
+
 // ============================================================================
 // Core Domain Types
 // ============================================================================
@@ -134,6 +146,18 @@ export interface SafetyIncident {
   osha_report_number: string | null
   days_away_from_work: number
   days_restricted_duty: number
+
+  // OSHA 300 Log fields (migration 080)
+  case_number: string | null
+  employee_name: string | null
+  employee_job_title: string | null
+  injury_illness_type: OSHAInjuryIllnessType | null
+  body_part_affected: string | null
+  object_substance: string | null
+  death_date: string | null
+  days_away_count: number
+  days_transfer_restriction: number
+  is_privacy_case: boolean
 
   // Timestamps
   created_at: string
@@ -327,6 +351,16 @@ export interface UpdateIncidentDTO {
   osha_report_number?: string | null
   days_away_from_work?: number
   days_restricted_duty?: number
+  // OSHA 300 Log fields
+  case_number?: string | null
+  employee_name?: string | null
+  employee_job_title?: string | null
+  injury_illness_type?: OSHAInjuryIllnessType | null
+  body_part_affected?: string | null
+  object_substance?: string | null
+  death_date?: string | null
+  days_away_count?: number
+  days_transfer_restriction?: number
 }
 
 /**
@@ -570,4 +604,107 @@ export function isSeriousIncident(severity: IncidentSeverity): boolean {
  */
 export function isLikelyOshaRecordable(severity: IncidentSeverity): boolean {
   return ['medical_treatment', 'lost_time', 'fatality'].includes(severity)
+}
+
+// ============================================================================
+// OSHA 300 Log Types (migration 080)
+// ============================================================================
+
+/**
+ * OSHA injury/illness type configuration
+ */
+export const OSHA_INJURY_ILLNESS_TYPES: { value: OSHAInjuryIllnessType; label: string; column: string }[] = [
+  { value: 'injury', label: 'Injury', column: 'G' },
+  { value: 'skin_disorder', label: 'Skin Disorder', column: 'H' },
+  { value: 'respiratory', label: 'Respiratory Condition', column: 'I' },
+  { value: 'poisoning', label: 'Poisoning', column: 'J' },
+  { value: 'hearing_loss', label: 'Hearing Loss', column: 'K' },
+  { value: 'other_illness', label: 'Other Illness', column: 'L' },
+]
+
+/**
+ * OSHA 300 Log entry (for display in the log)
+ * Aligned with database view osha_300_log
+ */
+export interface OSHA300LogEntry {
+  id: string
+  project_id: string
+  project_name: string
+  case_number: string | null
+  employee_name: string | null
+  job_title: string | null
+  incident_date: string
+  location: string | null
+  description: string
+  injury_illness_type: OSHAInjuryIllnessType | null
+  body_part: string | null
+  object_substance: string | null
+  death: boolean
+  days_away_from_work: boolean
+  job_transfer_restriction: boolean
+  other_recordable: boolean
+  days_away_count: number
+  days_transfer_restriction: number
+  severity: IncidentSeverity
+}
+
+/**
+ * OSHA 300A Annual Summary entry
+ * Aligned with database view osha_300a_summary
+ */
+export interface OSHA300ASummary {
+  project_id: string
+  project_name: string
+  year: number
+  total_deaths: number
+  total_days_away_cases: number
+  total_job_transfer_cases: number
+  total_other_recordable_cases: number
+  total_injuries: number
+  total_skin_disorders: number
+  total_respiratory_conditions: number
+  total_poisonings: number
+  total_hearing_losses: number
+  total_other_illnesses: number
+  total_days_away: number
+  total_days_transfer: number
+  total_recordable_cases: number
+}
+
+/**
+ * OSHA 300 Log filters
+ */
+export interface OSHA300LogFilters {
+  projectId?: string
+  year?: number
+  injuryIllnessType?: OSHAInjuryIllnessType | OSHAInjuryIllnessType[]
+  severity?: IncidentSeverity | IncidentSeverity[]
+  dateFrom?: string
+  dateTo?: string
+}
+
+/**
+ * Get OSHA injury/illness type label
+ */
+export function getOSHAInjuryIllnessTypeLabel(type: OSHAInjuryIllnessType): string {
+  const config = OSHA_INJURY_ILLNESS_TYPES.find((t) => t.value === type)
+  return config?.label || type
+}
+
+/**
+ * Calculate OSHA incident rate (per 100 full-time employees)
+ * Rate = (Number of incidents × 200,000) / Total hours worked
+ */
+export function calculateOSHAIncidentRate(incidents: number, hoursWorked: number): number {
+  if (hoursWorked === 0) return 0
+  return Number(((incidents * 200000) / hoursWorked).toFixed(2))
+}
+
+/**
+ * Calculate DART rate (Days Away, Restricted, or Transferred)
+ * DART = (Cases with days away/restricted/transferred × 200,000) / Total hours worked
+ */
+export function calculateDARTRate(dartCases: number, hoursWorked: number): number {
+  if (hoursWorked === 0) return 0
+  return Number(((dartCases * 200000) / hoursWorked).toFixed(2))
 }

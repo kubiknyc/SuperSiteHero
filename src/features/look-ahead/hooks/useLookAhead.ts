@@ -134,7 +134,12 @@ export function useCreateActivity() {
   const { user, userProfile } = useAuth()
 
   return useMutation<LookAheadActivity, Error, CreateLookAheadActivityDTO>({
-    mutationFn: (dto) => createLookAheadActivity(dto, userProfile!.company_id, user!.id),
+    mutationFn: (dto) => {
+      if (!user?.id || !userProfile?.company_id) {
+        throw new Error('User or company information not available')
+      }
+      return createLookAheadActivity(dto, userProfile.company_id, user.id)
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
       queryClient.invalidateQueries({
@@ -156,7 +161,12 @@ export function useUpdateActivity() {
     Error,
     { activityId: string; dto: UpdateLookAheadActivityDTO }
   >({
-    mutationFn: ({ activityId, dto }) => updateLookAheadActivity(activityId, dto, user!.id),
+    mutationFn: ({ activityId, dto }) => {
+      if (!user?.id) {
+        throw new Error('User information not available')
+      }
+      return updateLookAheadActivity(activityId, dto, user.id)
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: lookAheadKeys.activity(data.id) })
       queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
@@ -176,8 +186,12 @@ export function useMoveActivityToWeek() {
     Error,
     { activityId: string; weekNumber: number; weekStartDate: string }
   >({
-    mutationFn: ({ activityId, weekNumber, weekStartDate }) =>
-      moveActivityToWeek(activityId, weekNumber, weekStartDate, user!.id),
+    mutationFn: ({ activityId, weekNumber, weekStartDate }) => {
+      if (!user?.id) {
+        throw new Error('User information not available')
+      }
+      return moveActivityToWeek(activityId, weekNumber, weekStartDate, user.id)
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: lookAheadKeys.activity(data.id) })
       queryClient.invalidateQueries({ queryKey: lookAheadKeys.activities(data.project_id) })
@@ -267,8 +281,12 @@ export function useCreateConstraint() {
     Error,
     { dto: CreateLookAheadConstraintDTO; projectId: string }
   >({
-    mutationFn: ({ dto, projectId }) =>
-      createLookAheadConstraint(dto, projectId, userProfile!.company_id, user!.id),
+    mutationFn: ({ dto, projectId }) => {
+      if (!user?.id || !userProfile?.company_id) {
+        throw new Error('User or company information not available')
+      }
+      return createLookAheadConstraint(dto, projectId, userProfile.company_id, user.id)
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.constraints(data.activity_id),
@@ -369,7 +387,12 @@ export function useCreateSnapshot() {
   const { user, userProfile } = useAuth()
 
   return useMutation<LookAheadSnapshot, Error, CreateLookAheadSnapshotDTO>({
-    mutationFn: (dto) => createLookAheadSnapshot(dto, userProfile!.company_id, user!.id),
+    mutationFn: (dto) => {
+      if (!user?.id || !userProfile?.company_id) {
+        throw new Error('User or company information not available')
+      }
+      return createLookAheadSnapshot(dto, userProfile.company_id, user.id)
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.snapshots(data.project_id),
@@ -390,11 +413,12 @@ export function useCreateSnapshot() {
  */
 export function useLookAheadTemplates(trade?: string) {
   const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
   return useQuery({
-    queryKey: lookAheadKeys.templates(userProfile!.company_id, trade),
-    queryFn: () => getLookAheadTemplates(userProfile!.company_id, trade),
-    enabled: !!userProfile?.company_id,
+    queryKey: lookAheadKeys.templates(companyId!, trade),
+    queryFn: () => getLookAheadTemplates(companyId!, trade),
+    enabled: !!companyId,
   })
 }
 
@@ -410,8 +434,12 @@ export function useCreateActivityFromTemplate() {
     Error,
     { templateId: string; projectId: string; overrides?: Partial<CreateLookAheadActivityDTO> }
   >({
-    mutationFn: ({ templateId, projectId, overrides }) =>
-      createActivityFromTemplate(templateId, projectId, userProfile!.company_id, user!.id, overrides),
+    mutationFn: ({ templateId, projectId, overrides }) => {
+      if (!user?.id || !userProfile?.company_id) {
+        throw new Error('User or company information not available')
+      }
+      return createActivityFromTemplate(templateId, projectId, userProfile.company_id, user.id, overrides)
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: lookAheadKeys.activities(data.project_id),

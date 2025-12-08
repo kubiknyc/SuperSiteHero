@@ -17,9 +17,17 @@ interface WeekColumnProps {
   week: WeekRange
   activities: LookAheadActivityWithDetails[]
   isLoading?: boolean
-  onAddActivity?: () => void
+  onAddActivity?: (weekNumber: number, weekStartDate: string) => void
   onActivityClick?: (activity: LookAheadActivityWithDetails) => void
+  onEditActivity?: (activity: LookAheadActivityWithDetails) => void
   onActivityStatusChange?: (activityId: string, status: LookAheadActivityStatus) => void
+  onStatusChange?: (activityId: string, status: LookAheadActivityStatus) => void
+  onDeleteActivity?: (activityId: string) => void
+  onDragStart?: (activityId: string) => void
+  onDragEnd?: () => void
+  onDrop?: (activityId: string, weekNumber: number, weekStartDate: string) => void
+  isDragTarget?: boolean
+  maxHeight?: string
   className?: string
 }
 
@@ -87,7 +95,7 @@ export function WeekColumn({
           <Button
             variant="ghost"
             size="sm"
-            onClick={onAddActivity}
+            onClick={() => onAddActivity?.(week.weekNumber, week.weekStart.toISOString().split('T')[0])}
             className="h-7 px-2"
           >
             <Plus className="w-4 h-4" />
@@ -152,7 +160,7 @@ export function WeekColumn({
             <Button
               variant="ghost"
               size="sm"
-              onClick={onAddActivity}
+              onClick={() => onAddActivity?.(week.weekNumber, week.weekStart.toISOString().split('T')[0])}
               className="mt-2"
             >
               <Plus className="w-4 h-4 mr-1" />

@@ -2,7 +2,7 @@
 // File: /src/pages/rfis/DedicatedRFIDetailPage.tsx
 // Dedicated RFI detail page with ball-in-court tracking, drawing references, and impact flags
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format, differenceInDays } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -32,7 +32,16 @@ import {
   CalendarClock,
   Link,
   Image,
+  Users,
+  Search,
+  X,
+  Check,
+  UserPlus,
+  Pencil,
 } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
+import { useAuth } from '@/lib/auth/AuthContext'
 import {
   useRFI,
   useUpdateRFI,
@@ -52,7 +61,29 @@ import {
   getRFIPriorityColor,
 } from '@/features/rfis/hooks/useDedicatedRFIs'
 import { useCreateConversation } from '@/features/messaging/hooks'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
+
+// Hook to fetch distribution list users
+function useDistributionListUsers(userIds: string[] | undefined) {
+  return useQuery({
+    queryKey: ['users', 'distribution-list', userIds],
+    queryFn: async () => {
+      if (!userIds?.length) return []
+
+      const { data, error } = await supabase
+        .from('users')
+        .select('id, first_name, last_name, email, avatar_url')
+        .in('id', userIds)
+
+      if (error) throw error
+      return data || []
+    },
+    enabled: !!userIds?.length,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  })
+}
 
 // Status badge component
 function RFIStatusBadge({ status }: { status: string }) {
@@ -78,15 +109,42 @@ export function DedicatedRFIDetailPage() {
   const { rfiId } = useParams<{ rfiId: string }>()
   const navigate = useNavigate()
 
+  const { userProfile } = useAuth()
+
   const [responseText, setResponseText] = useState('')
   const [showResponseForm, setShowResponseForm] = useState(false)
   const [commentText, setCommentText] = useState('')
+
+  // Distribution list editing state
+  const [isEditingDistribution, setIsEditingDistribution] = useState(false)
+  const [selectedDistributionIds, setSelectedDistributionIds] = useState<string[]>([])
+  const [distributionFilter, setDistributionFilter] = useState('')
 
   // Queries
   const { data: rfi, isLoading, error } = useRFI(rfiId)
   const { data: comments } = useRFIComments(rfiId)
   const { data: attachments } = useRFIAttachments(rfiId)
   const { data: history } = useRFIHistory(rfiId)
+  const { data: distributionUsers = [] } = useDistributionListUsers(rfi?.distribution_list)
+
+  // Fetch project users for editing distribution list
+  const { data: projectUsers = [] } = useProjectUsers(rfi?.project_id)
+
+  // Filter out current user and apply search filter for distribution list editing
+  const availableDistributionUsers = useMemo(() => {
+    return projectUsers.filter(pu => pu.user?.id !== userProfile?.id)
+  }, [projectUsers, userProfile?.id])
+
+  const filteredDistributionUsers = useMemo(() => {
+    if (!distributionFilter.trim()) return availableDistributionUsers
+    const search = distributionFilter.toLowerCase()
+    return availableDistributionUsers.filter((pu) => {
+      const user = pu.user
+      if (!user) return false
+      const name = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
+      return name.includes(search) || user.email.toLowerCase().includes(search)
+    })
+  }, [availableDistributionUsers, distributionFilter])
 
   // Mutations
   const updateRFI = useUpdateRFI()
@@ -183,6 +241,38 @@ export function DedicatedRFIDetailPage() {
     if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) return
     await deleteRFI.mutateAsync(rfi.id)
     navigate(-1)
+  }
+
+  // Distribution list editing handlers
+  const handleStartEditDistribution = () => {
+    setSelectedDistributionIds(rfi?.distribution_list || [])
+    setIsEditingDistribution(true)
+    setDistributionFilter('')
+  }
+
+  const handleCancelEditDistribution = () => {
+    setIsEditingDistribution(false)
+    setSelectedDistributionIds([])
+    setDistributionFilter('')
+  }
+
+  const toggleDistributionUser = (userId: string) => {
+    setSelectedDistributionIds((prev) => {
+      if (prev.includes(userId)) {
+        return prev.filter((id) => id !== userId)
+      }
+      return [...prev, userId]
+    })
+  }
+
+  const handleSaveDistribution = async () => {
+    if (!rfi) return
+    await updateRFI.mutateAsync({
+      id: rfi.id,
+      distribution_list: selectedDistributionIds,
+    })
+    setIsEditingDistribution(false)
+    setDistributionFilter('')
   }
 
   // Loading state
@@ -669,6 +759,172 @@ export function DedicatedRFIDetailPage() {
                       </>
                     )}
                   </Button>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Distribution List Card */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Distribution List
+                  </CardTitle>
+                  {!isEditingDistribution && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleStartEditDistribution}
+                      className="h-8 w-8 p-0"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {isEditingDistribution
+                    ? `${selectedDistributionIds.length} selected`
+                    : `${distributionUsers.length} recipient${distributionUsers.length !== 1 ? 's' : ''}`}
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {isEditingDistribution ? (
+                  <>
+                    {/* Edit mode */}
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search project members..."
+                        value={distributionFilter}
+                        onChange={(e) => setDistributionFilter(e.target.value)}
+                        className="pl-9"
+                      />
+                    </div>
+
+                    <div className="max-h-[250px] overflow-auto border rounded-lg">
+                      {filteredDistributionUsers.length === 0 ? (
+                        <div className="py-4 text-center text-muted-foreground text-sm">
+                          {distributionFilter ? 'No matching members found' : 'No members in this project'}
+                        </div>
+                      ) : (
+                        <div className="divide-y">
+                          {filteredDistributionUsers.map((projectUser) => {
+                            const user = projectUser.user
+                            if (!user) return null
+                            const isSelected = selectedDistributionIds.includes(user.id)
+                            return (
+                              <button
+                                key={user.id}
+                                type="button"
+                                onClick={() => toggleDistributionUser(user.id)}
+                                className={`w-full flex items-center gap-2 p-2 text-left hover:bg-muted/50 ${
+                                  isSelected ? 'bg-blue-50' : ''
+                                }`}
+                              >
+                                {user.avatar_url ? (
+                                  <img
+                                    src={user.avatar_url}
+                                    alt=""
+                                    className="h-6 w-6 rounded-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-xs">
+                                    {(user.first_name?.[0] || user.email?.[0] || '?').toUpperCase()}
+                                  </div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium truncate">
+                                    {user.first_name && user.last_name
+                                      ? `${user.first_name} ${user.last_name}`
+                                      : user.email}
+                                  </p>
+                                </div>
+                                {isSelected && (
+                                  <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                                )}
+                              </button>
+                            )
+                          })}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleCancelEditDistribution}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        size="sm"
+                        onClick={handleSaveDistribution}
+                        disabled={updateRFI.isPending}
+                        className="flex-1"
+                      >
+                        {updateRFI.isPending ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          'Save'
+                        )}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* View mode */}
+                    {distributionUsers.length > 0 ? (
+                      distributionUsers.map((user: any) => (
+                        <div
+                          key={user.id}
+                          className="flex items-center gap-2 p-2 bg-muted/50 rounded-lg"
+                        >
+                          {user.avatar_url ? (
+                            <img
+                              src={user.avatar_url}
+                              alt=""
+                              className="h-6 w-6 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-xs text-blue-600">
+                              {(user.first_name?.[0] || user.email?.[0] || '?').toUpperCase()}
+                            </div>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium truncate">
+                              {user.first_name && user.last_name
+                                ? `${user.first_name} ${user.last_name}`
+                                : user.email}
+                            </p>
+                            {user.first_name && (
+                              <p className="text-xs text-muted-foreground truncate">
+                                {user.email}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : rfi.distribution_list?.length > 0 ? (
+                      <p className="text-sm text-muted-foreground text-center py-2">
+                        Loading recipients...
+                      </p>
+                    ) : (
+                      <div className="text-center py-3">
+                        <p className="text-sm text-muted-foreground mb-2">No recipients</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={handleStartEditDistribution}
+                        >
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Add Recipients
+                        </Button>
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>

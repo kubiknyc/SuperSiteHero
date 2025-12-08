@@ -40,6 +40,19 @@ export type RFICommentType =
   | 'internal_note'
   | 'question_clarification';
 
+/**
+ * RFI Response Type (how the RFI was answered)
+ * Aligned with migration 078_rfi_response_types.sql
+ */
+export type RFIResponseType =
+  | 'answered'              // Direct answer provided
+  | 'see_drawings'          // Refer to drawings for answer
+  | 'see_specs'             // Refer to specifications for answer
+  | 'deferred'              // Decision deferred
+  | 'partial_response'      // Partial answer, more information needed
+  | 'request_clarification' // Need clarification from submitter
+  | 'no_change_required'    // No change to documents required
+
 export const RFI_STATUSES: { value: RFIStatus; label: string; color: string }[] = [
   { value: 'draft', label: 'Draft', color: 'gray' },
   { value: 'submitted', label: 'Submitted', color: 'blue' },
@@ -72,6 +85,16 @@ export const RFI_ATTACHMENT_TYPES: { value: RFIAttachmentType; label: string }[]
   { value: 'general', label: 'General' },
   { value: 'sketch', label: 'Sketch' },
   { value: 'photo', label: 'Photo' },
+];
+
+export const RFI_RESPONSE_TYPES: { value: RFIResponseType; label: string; description: string }[] = [
+  { value: 'answered', label: 'Answered', description: 'Direct answer provided' },
+  { value: 'see_drawings', label: 'See Drawings', description: 'Refer to drawings for answer' },
+  { value: 'see_specs', label: 'See Specifications', description: 'Refer to specifications for answer' },
+  { value: 'deferred', label: 'Deferred', description: 'Decision deferred to later date' },
+  { value: 'partial_response', label: 'Partial Response', description: 'Partial answer, more information needed' },
+  { value: 'request_clarification', label: 'Request Clarification', description: 'Need clarification from submitter' },
+  { value: 'no_change_required', label: 'No Change Required', description: 'No change to documents required' },
 ];
 
 // Common disciplines in construction
@@ -136,6 +159,11 @@ export interface RFI {
 
   // Discipline
   discipline: string | null;
+
+  // Response Type (how the RFI was answered)
+  response_type: RFIResponseType | null;
+  required_response_days: number;
+  is_internal: boolean;
 
   // Impact Assessment
   cost_impact: number | null;
@@ -231,6 +259,7 @@ export interface RFIWithComputedFields extends RFI {
   days_overdue: number;
   days_open: number | null;
   is_overdue: boolean;
+  response_due_date: string | null;
 }
 
 /**
@@ -242,6 +271,7 @@ export interface RFIWithDetails extends RFI {
   days_overdue: number;
   days_open: number | null;
   is_overdue: boolean;
+  response_due_date: string | null;
 
   // Relations
   project?: {
@@ -319,6 +349,8 @@ export interface CreateRFIDTO {
   ball_in_court_role?: BallInCourtRole;
   discipline?: string;
   distribution_list?: string[];
+  required_response_days?: number;
+  is_internal?: boolean;
   // Auto-submit on create
   auto_submit?: boolean;
 }
@@ -342,6 +374,9 @@ export interface UpdateRFIDTO {
   ball_in_court?: string;
   ball_in_court_role?: BallInCourtRole;
   discipline?: string;
+  response_type?: RFIResponseType;
+  required_response_days?: number;
+  is_internal?: boolean;
   cost_impact?: number;
   schedule_impact_days?: number;
   related_submittal_id?: string;
@@ -354,6 +389,7 @@ export interface UpdateRFIDTO {
  */
 export interface SubmitRFIResponseDTO {
   response: string;
+  response_type?: RFIResponseType;
   cost_impact?: number;
   schedule_impact_days?: number;
   attachments?: CreateRFIAttachmentDTO[];
@@ -399,10 +435,12 @@ export interface RFIFilters {
   projectId: string;
   status?: RFIStatus | RFIStatus[];
   priority?: RFIPriority | RFIPriority[];
+  responseType?: RFIResponseType | RFIResponseType[];
   assignedTo?: string;
   ballInCourt?: string;
   discipline?: string;
   isOverdue?: boolean;
+  isInternal?: boolean;
   dateFrom?: string;
   dateTo?: string;
   search?: string;
@@ -507,4 +545,31 @@ export function canRespondToRFI(status: RFIStatus): boolean {
  */
 export function canCloseRFI(status: RFIStatus): boolean {
   return ['responded', 'approved', 'rejected'].includes(status)
+}
+
+/**
+ * Get response type label
+ */
+export function getRFIResponseTypeLabel(responseType: RFIResponseType): string {
+  const config = RFI_RESPONSE_TYPES.find((t) => t.value === responseType)
+  return config?.label || responseType
+}
+
+/**
+ * Get response type description
+ */
+export function getRFIResponseTypeDescription(responseType: RFIResponseType): string {
+  const config = RFI_RESPONSE_TYPES.find((t) => t.value === responseType)
+  return config?.description || ''
+}
+
+/**
+ * Calculate response due date based on submitted date and required days
+ */
+export function calculateResponseDueDate(dateSubmitted: string | null, requiredDays: number): Date | null {
+  if (!dateSubmitted) return null
+  const submitted = new Date(dateSubmitted)
+  const dueDate = new Date(submitted)
+  dueDate.setDate(dueDate.getDate() + requiredDays)
+  return dueDate
 }

@@ -259,6 +259,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Drop existing triggers if they exist (for idempotency)
+DROP TRIGGER IF EXISTS trigger_generate_toolbox_talk_number ON toolbox_talks;
+DROP TRIGGER IF EXISTS trigger_update_toolbox_talk_timestamp ON toolbox_talks;
+DROP TRIGGER IF EXISTS trigger_update_toolbox_topic_timestamp ON toolbox_talk_topics;
+DROP TRIGGER IF EXISTS trigger_update_toolbox_attendee_timestamp ON toolbox_talk_attendees;
+
+-- Add missing columns to existing table if needed
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'talk_number') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN talk_number TEXT NOT NULL DEFAULT '';
+  END IF;
+END $$;
+
 -- Trigger for auto-generating talk number
 CREATE TRIGGER trigger_generate_toolbox_talk_number
   BEFORE INSERT ON toolbox_talks
@@ -379,6 +393,46 @@ CREATE TRIGGER trigger_create_certification_on_attendance
 -- ============================================================================
 -- INDEXES
 -- ============================================================================
+
+-- Ensure all columns exist on toolbox_talks (for idempotency when table already exists)
+DO $$
+BEGIN
+  -- Add company_id if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'company_id') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN company_id UUID REFERENCES companies(id) ON DELETE CASCADE;
+    -- Set company_id from project
+    UPDATE toolbox_talks tt SET company_id = p.company_id FROM projects p WHERE tt.project_id = p.id AND tt.company_id IS NULL;
+    ALTER TABLE toolbox_talks ALTER COLUMN company_id SET NOT NULL;
+  END IF;
+  -- Add talk_number if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'talk_number') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN talk_number TEXT NOT NULL DEFAULT '';
+  END IF;
+  -- Add category if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'category') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN category toolbox_topic_category NOT NULL DEFAULT 'other';
+  END IF;
+  -- Add topic_id if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'topic_id') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN topic_id UUID;
+  END IF;
+  -- Add scheduled_date if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'scheduled_date') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN scheduled_date DATE NOT NULL DEFAULT CURRENT_DATE;
+  END IF;
+  -- Add status if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'status') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN status toolbox_talk_status NOT NULL DEFAULT 'scheduled';
+  END IF;
+  -- Add presenter_id if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'presenter_id') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN presenter_id UUID;
+  END IF;
+  -- Add deleted_at if missing
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'toolbox_talks' AND column_name = 'deleted_at') THEN
+    ALTER TABLE toolbox_talks ADD COLUMN deleted_at TIMESTAMPTZ;
+  END IF;
+END $$;
 
 -- Topics indexes
 CREATE INDEX IF NOT EXISTS idx_toolbox_topics_company ON toolbox_talk_topics(company_id);

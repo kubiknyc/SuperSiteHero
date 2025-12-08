@@ -13,21 +13,112 @@ export default defineConfig({
     // PWA plugin for offline functionality
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'robots.txt', 'icon.svg', 'offline.html'],
+      includeAssets: ['favicon.svg', 'robots.txt', 'icon.svg', 'offline.html', 'icons/*.png', 'splash/*.png'],
       manifest: {
         name: 'SuperSiteHero',
         short_name: 'SSH',
         description: 'Construction Field Management Platform',
-        theme_color: '#3b82f6',
+        theme_color: '#2563eb',
         background_color: '#ffffff',
         start_url: '/',
         display: 'standalone',
+        orientation: 'portrait-primary',
+        scope: '/',
+        lang: 'en',
+        categories: ['business', 'productivity'],
+        dir: 'ltr',
         icons: [
           {
             src: 'icon.svg',
             sizes: 'any',
             type: 'image/svg+xml',
-            purpose: 'any maskable'
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-72x72.png',
+            sizes: '72x72',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-96x96.png',
+            sizes: '96x96',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-128x128.png',
+            sizes: '128x128',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-144x144.png',
+            sizes: '144x144',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-152x152.png',
+            sizes: '152x152',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-384x384.png',
+            sizes: '384x384',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'any'
+          },
+          {
+            src: 'icons/maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable'
+          }
+        ],
+        shortcuts: [
+          {
+            name: 'Daily Reports',
+            short_name: 'Reports',
+            description: 'View and create daily reports',
+            url: '/daily-reports',
+            icons: [{ src: 'icons/icon-96x96.png', sizes: '96x96' }]
+          },
+          {
+            name: 'Projects',
+            short_name: 'Projects',
+            description: 'View all projects',
+            url: '/projects',
+            icons: [{ src: 'icons/icon-96x96.png', sizes: '96x96' }]
+          }
+        ],
+        screenshots: [
+          {
+            src: 'screenshots/desktop-dashboard.png',
+            sizes: '1920x1080',
+            type: 'image/png',
+            form_factor: 'wide',
+            label: 'Dashboard overview on desktop'
+          },
+          {
+            src: 'screenshots/mobile-dashboard.png',
+            sizes: '390x844',
+            type: 'image/png',
+            form_factor: 'narrow',
+            label: 'Dashboard on mobile'
           }
         ]
       },

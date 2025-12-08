@@ -48,6 +48,15 @@ export type SubmittalAttachmentType =
   | 'calculation'
   | 'other';
 
+/**
+ * Industry-standard submittal approval codes
+ * A = Approved (No exceptions taken)
+ * B = Approved as Noted (Make corrections noted)
+ * C = Revise & Resubmit (Revise and resubmit)
+ * D = Rejected (Not approved)
+ */
+export type SubmittalApprovalCode = 'A' | 'B' | 'C' | 'D';
+
 export const SUBMITTAL_REVIEW_STATUSES: { value: SubmittalReviewStatus; label: string; color: string }[] = [
   { value: 'not_submitted', label: 'Not Submitted', color: 'gray' },
   { value: 'submitted', label: 'Submitted', color: 'blue' },
@@ -90,6 +99,16 @@ export const SUBMITTAL_ATTACHMENT_TYPES: { value: SubmittalAttachmentType; label
   { value: 'spec_sheet', label: 'Spec Sheet' },
   { value: 'calculation', label: 'Calculation' },
   { value: 'other', label: 'Other' },
+];
+
+/**
+ * Industry-standard approval codes with descriptions
+ */
+export const SUBMITTAL_APPROVAL_CODES: { value: SubmittalApprovalCode; label: string; description: string; color: string }[] = [
+  { value: 'A', label: 'Approved', description: 'No exceptions taken', color: 'green' },
+  { value: 'B', label: 'Approved as Noted', description: 'Make corrections noted', color: 'lime' },
+  { value: 'C', label: 'Revise & Resubmit', description: 'Revise and resubmit', color: 'orange' },
+  { value: 'D', label: 'Rejected', description: 'Not approved', color: 'red' },
 ];
 
 // Common disciplines in construction (same as RFIs)
@@ -193,6 +212,11 @@ export interface Submittal {
   // Discipline
   discipline: string | null;
 
+  // Approval Code (A/B/C/D)
+  approval_code: SubmittalApprovalCode | null;
+  approval_code_date: string | null;
+  approval_code_set_by: string | null;
+
   // Legacy reference
   legacy_workflow_item_id: string | null;
 
@@ -255,6 +279,9 @@ export interface SubmittalReview {
   // Review Info
   review_status: SubmittalReviewStatus;
   comments: string | null;
+
+  // Approval Code (A/B/C/D)
+  approval_code: SubmittalApprovalCode | null;
 
   // Reviewer
   reviewed_by: string | null;
@@ -441,6 +468,7 @@ export interface SubmitSubmittalDTO {
  */
 export interface ReviewSubmittalDTO {
   review_status: SubmittalReviewStatus;
+  approval_code?: SubmittalApprovalCode;
   comments?: string;
   reviewer_name?: string;
   reviewer_company?: string;
@@ -634,6 +662,40 @@ export function canReviewSubmittal(status: SubmittalReviewStatus): boolean {
  */
 export function isSubmittalClosed(status: SubmittalReviewStatus): boolean {
   return ['approved', 'approved_as_noted', 'rejected'].includes(status);
+}
+
+/**
+ * Get approval code label
+ */
+export function getApprovalCodeLabel(code: SubmittalApprovalCode): string {
+  const config = SUBMITTAL_APPROVAL_CODES.find((c) => c.value === code);
+  return config?.label || code;
+}
+
+/**
+ * Get approval code color
+ */
+export function getApprovalCodeColor(code: SubmittalApprovalCode): string {
+  const config = SUBMITTAL_APPROVAL_CODES.find((c) => c.value === code);
+  return config?.color || 'gray';
+}
+
+/**
+ * Get suggested approval code from review status
+ */
+export function getSuggestedApprovalCode(status: SubmittalReviewStatus): SubmittalApprovalCode | null {
+  switch (status) {
+    case 'approved':
+      return 'A';
+    case 'approved_as_noted':
+      return 'B';
+    case 'revise_resubmit':
+      return 'C';
+    case 'rejected':
+      return 'D';
+    default:
+      return null;
+  }
 }
 
 /**

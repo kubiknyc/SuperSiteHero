@@ -39,9 +39,11 @@ import {
   FileText,
   ArrowRight,
   Building2,
+  Download,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CreateDedicatedRFIDialog } from '@/features/rfis/components/CreateDedicatedRFIDialog'
+import { downloadRFIsAsExcel } from '@/features/rfis/utils/rfiExport'
 import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
 import type { RFIWithDetails } from '@/features/rfis/hooks/useDedicatedRFIs'
 
@@ -56,6 +58,7 @@ export function DedicatedRFIsPage() {
   const [ballInCourtFilter, setBallInCourtFilter] = useState<BallInCourtRole | 'all'>('all')
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [isExporting, setIsExporting] = useState(false)
 
   // Fetch data
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -117,6 +120,23 @@ export function DedicatedRFIsPage() {
 
     return grouped
   }, [filteredRFIs])
+
+  // Get selected project name for export filename
+  const selectedProject = projects?.find(p => p.id === selectedProjectId)
+
+  // Export handler
+  const handleExportRFIs = async () => {
+    if (!filteredRFIs.length) return
+
+    setIsExporting(true)
+    try {
+      await downloadRFIsAsExcel(filteredRFIs, selectedProject?.name)
+    } catch (error) {
+      console.error('Failed to export RFIs:', error)
+    } finally {
+      setIsExporting(false)
+    }
+  }
 
   // Helper functions
   const getDueDateInfo = (dueDate: string | null, status: string) => {
@@ -258,6 +278,18 @@ export function DedicatedRFIsPage() {
                 Ball-in-Court
               </Button>
             </div>
+            <Button
+                variant="outline"
+                disabled={!selectedProjectId || !filteredRFIs.length || isExporting}
+                onClick={handleExportRFIs}
+              >
+                {isExporting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4 mr-2" />
+                )}
+                Export
+              </Button>
             <Button disabled={!selectedProjectId} onClick={() => setCreateDialogOpen(true)}>
               <Plus className="h-4 w-4 mr-2" />
               New RFI

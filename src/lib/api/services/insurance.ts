@@ -3,7 +3,7 @@
 
 import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseUntyped } from '@/lib/supabase'
 import type { QueryOptions } from '../types'
 import type {
   InsuranceCertificate,
@@ -39,7 +39,7 @@ export const insuranceApi = {
     }
   ): Promise<InsuranceCertificateWithRelations[]> {
     try {
-      let query = supabase
+      let query = supabaseUntyped
         .from('insurance_certificates')
         .select(`
           *,
@@ -83,7 +83,7 @@ export const insuranceApi = {
    */
   async getCertificate(certificateId: string): Promise<InsuranceCertificateWithRelations> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificates')
         .select(`
           *,
@@ -113,7 +113,7 @@ export const insuranceApi = {
     certificate: CreateInsuranceCertificateDTO
   ): Promise<InsuranceCertificate> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificates')
         .insert(certificate)
         .select()
@@ -139,7 +139,7 @@ export const insuranceApi = {
     updates: UpdateInsuranceCertificateDTO
   ): Promise<InsuranceCertificate> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificates')
         .update(updates)
         .eq('id', certificateId)
@@ -163,7 +163,7 @@ export const insuranceApi = {
    */
   async deleteCertificate(certificateId: string): Promise<void> {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseUntyped
         .from('insurance_certificates')
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', certificateId)
@@ -184,7 +184,7 @@ export const insuranceApi = {
    */
   async voidCertificate(certificateId: string, reason?: string): Promise<InsuranceCertificate> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificates')
         .update({
           status: 'void',
@@ -221,7 +221,7 @@ export const insuranceApi = {
       const futureDate = new Date()
       futureDate.setDate(futureDate.getDate() + daysAhead)
 
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificates')
         .select(`
           id,
@@ -286,7 +286,7 @@ export const insuranceApi = {
     projectId?: string
   ): Promise<InsuranceRequirement[]> {
     try {
-      let query = supabase
+      let query = supabaseUntyped
         .from('insurance_requirements')
         .select('*')
         .eq('company_id', companyId)
@@ -317,7 +317,7 @@ export const insuranceApi = {
     requirement: CreateInsuranceRequirementDTO
   ): Promise<InsuranceRequirement> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_requirements')
         .insert(requirement)
         .select()
@@ -343,7 +343,7 @@ export const insuranceApi = {
     updates: UpdateInsuranceRequirementDTO
   ): Promise<InsuranceRequirement> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_requirements')
         .update(updates)
         .eq('id', requirementId)
@@ -367,7 +367,7 @@ export const insuranceApi = {
    */
   async deleteRequirement(requirementId: string): Promise<void> {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseUntyped
         .from('insurance_requirements')
         .delete()
         .eq('id', requirementId)
@@ -395,13 +395,13 @@ export const insuranceApi = {
     projectId?: string
   ): Promise<ComplianceCheckResult[]> {
     try {
-      const { data, error } = await supabase.rpc('check_insurance_compliance', {
+      const { data, error } = await supabaseUntyped.rpc('check_insurance_compliance', {
         p_subcontractor_id: subcontractorId,
         p_project_id: projectId || null,
       })
 
       if (error) throw error
-      return data as ComplianceCheckResult[]
+      return (data as unknown) as ComplianceCheckResult[]
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -417,13 +417,13 @@ export const insuranceApi = {
    */
   async getComplianceSummary(companyId: string): Promise<ComplianceSummary[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_compliance_summary')
         .select('*')
         .eq('company_id', companyId)
 
       if (error) throw error
-      return data as ComplianceSummary[]
+      return (data as unknown) as ComplianceSummary[]
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -443,14 +443,14 @@ export const insuranceApi = {
    */
   async getCertificateHistory(certificateId: string): Promise<InsuranceCertificateHistory[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificate_history')
         .select('*')
         .eq('certificate_id', certificateId)
         .order('changed_at', { ascending: false })
 
       if (error) throw error
-      return data as InsuranceCertificateHistory[]
+      return (data as unknown) as InsuranceCertificateHistory[]
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -470,14 +470,14 @@ export const insuranceApi = {
    */
   async getCertificateAlerts(certificateId: string): Promise<InsuranceExpirationAlert[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_expiration_alerts')
         .select('*')
         .eq('certificate_id', certificateId)
         .order('sent_at', { ascending: false })
 
       if (error) throw error
-      return data as InsuranceExpirationAlert[]
+      return (data as unknown) as InsuranceExpirationAlert[]
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -493,7 +493,7 @@ export const insuranceApi = {
    */
   async acknowledgeAlert(alertId: string): Promise<void> {
     try {
-      const { error } = await supabase
+      const { error } = await supabaseUntyped
         .from('insurance_expiration_alerts')
         .update({ acknowledged_at: new Date().toISOString() })
         .eq('id', alertId)
@@ -519,7 +519,7 @@ export const insuranceApi = {
   async getDashboardStats(companyId: string): Promise<InsuranceDashboardStats> {
     try {
       // Get certificate counts by status
-      const { data: certificates, error: certError } = await supabase
+      const { data: certificates, error: certError } = await supabaseUntyped
         .from('insurance_certificates')
         .select('status')
         .eq('company_id', companyId)
@@ -527,8 +527,8 @@ export const insuranceApi = {
 
       if (certError) throw certError
 
-      const stats = (certificates || []).reduce(
-        (acc, cert) => {
+      const stats = ((certificates || []) as Array<{ status: string }>).reduce(
+        (acc: InsuranceDashboardStats, cert: { status: string }) => {
           acc.totalCertificates++
           if (cert.status === 'active') acc.activeCertificates++
           if (cert.status === 'expiring_soon') acc.expiringWithin30Days++
@@ -555,7 +555,7 @@ export const insuranceApi = {
       }
 
       // Count subcontractors with gaps (expired or missing)
-      const { data: compliance, error: compError } = await supabase
+      const { data: compliance, error: compError } = await supabaseUntyped
         .from('insurance_compliance_summary')
         .select('subcontractor_id, expired_certificates')
         .eq('company_id', companyId)
@@ -586,7 +586,7 @@ export const insuranceApi = {
     subcontractorId: string
   ): Promise<InsuranceCertificate[]> {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseUntyped
         .from('insurance_certificates')
         .select('*')
         .eq('subcontractor_id', subcontractorId)
@@ -632,7 +632,7 @@ export const insuranceApi = {
         .getPublicUrl(fileName)
 
       // Update certificate with document URL
-      await supabase
+      await supabaseUntyped
         .from('insurance_certificates')
         .update({
           certificate_url: urlData.publicUrl,

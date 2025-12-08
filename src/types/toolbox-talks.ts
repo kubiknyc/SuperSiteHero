@@ -285,7 +285,7 @@ export interface ToolboxTalkCertification {
 /**
  * Toolbox talk with all related data
  */
-export interface ToolboxTalkWithDetails extends ToolboxTalk {
+export interface ToolboxTalkWithDetails extends Omit<ToolboxTalk, 'topic' | 'presenter' | 'project' | 'attendees' | 'attendance_count' | 'present_count'> {
   topic: ToolboxTalkTopic | null
   presenter: UserInfo | null
   project: { id: string; name: string }

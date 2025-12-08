@@ -1,5 +1,5 @@
 // File: /src/components/layout/AppLayout.tsx
-// Main application layout with sidebar navigation
+// Main application layout with sidebar navigation and mobile bottom nav
 
 import { type ReactNode, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
@@ -7,6 +7,8 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import { cn } from '@/lib/utils'
 import { SyncStatusBar } from '@/components/sync/SyncStatusBar'
 import { OfflineIndicator } from '@/components/OfflineIndicator'
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
+import { MobileOfflineBanner } from '@/components/mobile/MobileOfflineIndicator'
 import { initOfflineListeners } from '@/stores/offline-store'
 import {
   LayoutDashboard,
@@ -100,8 +102,11 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex flex-col">
+      {/* Mobile Offline Banner - shows at top on mobile when offline */}
+      <MobileOfflineBanner />
+
+      {/* Desktop Sidebar - Hidden on mobile */}
+      <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex-col">
         {/* Logo */}
         <div className="p-6 border-b border-gray-800">
           <div className="flex items-center gap-3">
@@ -196,10 +201,13 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </aside>
 
-      {/* Main content */}
-      <main className="ml-64 min-h-screen">
+      {/* Main content - responsive margins */}
+      <main className="md:ml-64 min-h-screen pb-20 md:pb-0">
         {children}
       </main>
+
+      {/* Mobile Bottom Navigation - Only visible on mobile */}
+      <MobileBottomNav />
     </div>
   )
 }

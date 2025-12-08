@@ -46,8 +46,14 @@ import {
   Edit,
   Banknote,
   AlertTriangle,
+  Download,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  buildG702Data,
+  buildG703Data,
+  downloadPaymentApplicationPDFs,
+} from '@/features/payment-applications/utils/pdfExport'
 import type { PaymentApplicationStatus, BulkUpdateSOVItemDTO } from '@/types/payment-application'
 
 export function PaymentApplicationDetailPage() {
@@ -62,6 +68,7 @@ export function PaymentApplicationDetailPage() {
   const [rejectionReason, setRejectionReason] = useState('')
   const [paymentAmount, setPaymentAmount] = useState('')
   const [paymentReference, setPaymentReference] = useState('')
+  const [isExporting, setIsExporting] = useState(false)
 
   // Fetch data
   const { data: application, isLoading, error } = usePaymentApplication(applicationId)
@@ -166,6 +173,20 @@ export function PaymentApplicationDetailPage() {
     }
   }
 
+  // Export PDF handler
+  const handleExportPDF = async () => {
+    if (!application || !sovItems) return
+
+    setIsExporting(true)
+    try {
+      await downloadPaymentApplicationPDFs(application, sovItems)
+    } catch (error) {
+      console.error('Failed to export PDFs:', error)
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
   // Calculate SOV totals
   const sovTotals = sovItems?.reduce(
     (acc, item) => ({
@@ -243,6 +264,21 @@ export function PaymentApplicationDetailPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Export PDF Button */}
+            <Button
+              variant="outline"
+              onClick={handleExportPDF}
+              disabled={isExporting || !sovItems || sovItems.length === 0}
+              className="gap-2"
+            >
+              {isExporting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Download className="h-4 w-4" />
+              )}
+              Export PDF
+            </Button>
+
             {canEdit && !isEditing && (
               <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2">
                 <Edit className="h-4 w-4" />

@@ -55,7 +55,8 @@
     "perf:load:documents": "k6 run tests/load/scenarios/documents.js",
     "perf:load:stress": "k6 run --env SCENARIO=stress tests/load/scenarios/api-stress.js",
     "perf:load:spike": "k6 run --env SCENARIO=spike tests/load/scenarios/api-stress.js",
-    "perf:all": "npm run build && npm run lighthouse && npm run perf:load"
+    "perf:all": "npm run build && npm run lighthouse && npm run perf:load",
+    "pwa:icons": "node scripts/generate-pwa-icons.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -119,6 +120,7 @@
     "uuid": "^13.0.0",
     "web-vitals": "^5.1.0",
     "workbox-window": "^7.4.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.13",
     "zustand": "^4.5.0"
   },
@@ -148,6 +150,7 @@
     "msw": "^2.12.2",
     "playwright": "^1.57.0",
     "postcss": "^8.4.33",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.21.0",
     "typescript": "^5.3.3",

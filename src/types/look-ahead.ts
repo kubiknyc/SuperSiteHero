@@ -36,6 +36,31 @@ export type ConstraintType =
 export type ConstraintStatus = 'open' | 'resolved' | 'waived' | 'escalated'
 
 /**
+ * Make-Ready Status for Last Planner System
+ * Aligned with migration 077_look_ahead_ppc_enhancements.sql
+ */
+export type MakeReadyStatus =
+  | 'will_do'   // Activity is committed for the week
+  | 'should_do' // Activity should be done but not yet committed
+  | 'can_do'    // Activity can be done (constraints removed)
+  | 'did_do'    // Activity was completed as committed
+
+/**
+ * Variance Category for standardized variance tracking
+ * Aligned with migration 077_look_ahead_ppc_enhancements.sql
+ */
+export type VarianceCategory =
+  | 'prereq_incomplete'     // Predecessor work not complete
+  | 'labor_shortage'        // Insufficient labor available
+  | 'material_delay'        // Materials not delivered on time
+  | 'equipment_unavailable' // Equipment not available
+  | 'weather'               // Weather-related delay
+  | 'design_change'         // Design change impacted schedule
+  | 'inspection_delay'      // Inspection not completed on time
+  | 'rework_required'       // Work had to be redone
+  | 'other'                 // Other variance reason
+
+/**
  * Common construction trades
  */
 export const CONSTRUCTION_TRADES = [
@@ -117,6 +142,92 @@ export const ACTIVITY_STATUS_CONFIG: Record<
     bgColor: 'bg-gray-100',
     borderColor: 'border-gray-300',
     icon: 'x-circle',
+  },
+}
+
+/**
+ * Make-ready status configuration for Last Planner System
+ */
+export const MAKE_READY_STATUS_CONFIG: Record<
+  MakeReadyStatus,
+  {
+    label: string
+    description: string
+    color: string
+    bgColor: string
+  }
+> = {
+  will_do: {
+    label: 'Will Do',
+    description: 'Committed for this week',
+    color: 'text-green-700',
+    bgColor: 'bg-green-100',
+  },
+  should_do: {
+    label: 'Should Do',
+    description: 'Should be done but not yet committed',
+    color: 'text-blue-700',
+    bgColor: 'bg-blue-100',
+  },
+  can_do: {
+    label: 'Can Do',
+    description: 'Ready to execute (constraints removed)',
+    color: 'text-yellow-700',
+    bgColor: 'bg-yellow-100',
+  },
+  did_do: {
+    label: 'Did Do',
+    description: 'Completed as committed',
+    color: 'text-purple-700',
+    bgColor: 'bg-purple-100',
+  },
+}
+
+/**
+ * Variance category configuration
+ */
+export const VARIANCE_CATEGORY_CONFIG: Record<
+  VarianceCategory,
+  {
+    label: string
+    description: string
+  }
+> = {
+  prereq_incomplete: {
+    label: 'Prerequisite Incomplete',
+    description: 'Predecessor work not complete',
+  },
+  labor_shortage: {
+    label: 'Labor Shortage',
+    description: 'Insufficient labor available',
+  },
+  material_delay: {
+    label: 'Material Delay',
+    description: 'Materials not delivered on time',
+  },
+  equipment_unavailable: {
+    label: 'Equipment Unavailable',
+    description: 'Equipment not available when needed',
+  },
+  weather: {
+    label: 'Weather',
+    description: 'Weather-related delay',
+  },
+  design_change: {
+    label: 'Design Change',
+    description: 'Design change impacted schedule',
+  },
+  inspection_delay: {
+    label: 'Inspection Delay',
+    description: 'Inspection not completed on time',
+  },
+  rework_required: {
+    label: 'Rework Required',
+    description: 'Work had to be redone',
+  },
+  other: {
+    label: 'Other',
+    description: 'Other variance reason',
   },
 }
 
@@ -219,6 +330,14 @@ export interface LookAheadActivity {
   priority: number
   sort_order: number
   notes: string | null
+
+  // Last Planner System fields (migration 077)
+  make_ready_status: MakeReadyStatus | null
+  committed_by: string | null
+  commitment_date: string | null
+  constraint_removal_plan: string | null
+  ready_to_execute: boolean
+
   created_by: string | null
   updated_by: string | null
   created_at: string
@@ -297,6 +416,12 @@ export interface LookAheadSnapshot {
   open_constraints: number
   variance_reasons: VarianceReason[]
   notes: string | null
+
+  // Last Planner System enhancements (migration 077)
+  reliability_index: number | null
+  planning_meeting_date: string | null
+  meeting_attendees: string[] | null
+
   created_by: string | null
   created_at: string
 }
@@ -305,7 +430,7 @@ export interface LookAheadSnapshot {
  * Variance reason for PPC analysis
  */
 export interface VarianceReason {
-  category: string
+  category: VarianceCategory
   description: string
   activities_affected: number
 }
@@ -371,6 +496,9 @@ export interface CreateLookAheadActivityDTO {
   priority?: number
   sort_order?: number
   notes?: string
+  // Last Planner System fields
+  make_ready_status?: MakeReadyStatus
+  constraint_removal_plan?: string
 }
 
 /**
@@ -396,6 +524,10 @@ export interface UpdateLookAheadActivityDTO {
   priority?: number
   sort_order?: number
   notes?: string
+  // Last Planner System fields
+  make_ready_status?: MakeReadyStatus
+  constraint_removal_plan?: string
+  ready_to_execute?: boolean
 }
 
 /**
@@ -442,6 +574,10 @@ export interface CreateLookAheadSnapshotDTO {
   week_start_date: string
   notes?: string
   variance_reasons?: VarianceReason[]
+  // Last Planner System fields
+  reliability_index?: number
+  planning_meeting_date?: string
+  meeting_attendees?: string[]
 }
 
 /**
@@ -714,4 +850,61 @@ export function filterActivities(
 
     return true
   })
+}
+
+/**
+ * Get make-ready status configuration
+ */
+export function getMakeReadyStatusConfig(status: MakeReadyStatus) {
+  return MAKE_READY_STATUS_CONFIG[status] || MAKE_READY_STATUS_CONFIG.should_do
+}
+
+/**
+ * Get variance category label
+ */
+export function getVarianceCategoryLabel(category: VarianceCategory): string {
+  return VARIANCE_CATEGORY_CONFIG[category]?.label || category
+}
+
+/**
+ * Check if activity is ready to execute (all constraints removed)
+ */
+export function isReadyToExecute(activity: LookAheadActivity): boolean {
+  return activity.ready_to_execute || (activity.make_ready_status === 'can_do' || activity.make_ready_status === 'will_do')
+}
+
+/**
+ * Calculate reliability index for a set of activities
+ * Reliability = (activities completed as committed) / (total committed activities)
+ */
+export function calculateReliabilityIndex(activities: LookAheadActivity[]): number {
+  const committedActivities = activities.filter(a => a.make_ready_status === 'will_do' || a.make_ready_status === 'did_do')
+  if (committedActivities.length === 0) return 0
+
+  const completedAsCommitted = committedActivities.filter(a => a.make_ready_status === 'did_do')
+  return Math.round((completedAsCommitted.length / committedActivities.length) * 100)
+}
+
+/**
+ * Group activities by make-ready status
+ */
+export function groupActivitiesByMakeReadyStatus(
+  activities: LookAheadActivityWithDetails[]
+): Record<MakeReadyStatus, LookAheadActivityWithDetails[]> {
+  const result: Record<MakeReadyStatus, LookAheadActivityWithDetails[]> = {
+    will_do: [],
+    should_do: [],
+    can_do: [],
+    did_do: [],
+  }
+
+  activities.forEach((activity) => {
+    if (activity.make_ready_status) {
+      result[activity.make_ready_status].push(activity)
+    } else {
+      result.should_do.push(activity) // Default to should_do
+    }
+  })
+
+  return result
 }

@@ -1,183 +1,462 @@
-// File: /src/pages/reports/ReportsPage.tsx
-// Main reports page with report selection and display
+/**
+ * Reports Page
+ *
+ * Main landing page for the Custom Report Builder feature.
+ * Shows saved templates and quick actions.
+ */
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
-import { Select } from '@/components/ui/select'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Download, Printer, BarChart3, FileText, TrendingUp, ClipboardList, Shield } from 'lucide-react'
-import { exportToPDF, exportToCSV } from '@/lib/utils/pdfExport'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  ProjectHealthReport,
-  FinancialSummaryReport,
-  PunchListReport,
-  SafetyIncidentReport,
-} from '@/features/reports/components'
-
-type ReportType = 'health' | 'financial' | 'punchlist' | 'safety'
-
-const reportIcons: Record<ReportType, typeof FileText> = {
-  health: TrendingUp,
-  financial: FileText,
-  punchlist: ClipboardList,
-  safety: Shield,
-}
+  RadixSelect as Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  Plus,
+  Search,
+  FileText,
+  Calendar,
+  History,
+  Loader2,
+  AlertCircle,
+  BarChart3,
+} from 'lucide-react'
+import { useAuth } from '@/lib/auth/AuthContext'
+import {
+  useReportTemplates,
+  useDeleteReportTemplate,
+  useDuplicateReportTemplate,
+  useScheduledReports,
+  useGeneratedReports,
+} from '@/features/reports/hooks/useReportBuilder'
+import {
+  ReportTemplateCard,
+  ReportTemplateCardSkeleton,
+} from '@/features/reports/components/ReportTemplateCard'
+import { DataSourceBadge } from '@/features/reports/components/DataSourceSelector'
+import { format } from 'date-fns'
+import type { ReportTemplate, ReportDataSource } from '@/types/report-builder'
+import { DATA_SOURCE_CONFIG, getOutputFormatLabel, formatFileSize } from '@/types/report-builder'
 
 export function ReportsPage() {
-  const { data: projects, isLoading: projectsLoading } = useMyProjects()
-  const [selectedReport, setSelectedReport] = useState<ReportType>('health')
-  const [selectedProjectId, setSelectedProjectId] = useState('')
+  const navigate = useNavigate()
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
-  // Use selected project or first active project
-  const projectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id || ''
-  const selectedProject = projects?.find((p) => p.id === projectId)
+  // State
+  const [searchTerm, setSearchTerm] = useState('')
+  const [dataSourceFilter, setDataSourceFilter] = useState<ReportDataSource | 'all'>('all')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null)
+  const [newTemplateName, setNewTemplateName] = useState('')
 
-  const handleExportPDF = () => {
-    const reportIds: Record<ReportType, string> = {
-      health: 'project-health-report',
-      financial: 'financial-summary-report',
-      punchlist: 'punch-list-report',
-      safety: 'safety-incident-report',
-    }
+  // Queries
+  const { data: templates, isLoading: templatesLoading, error: templatesError } = useReportTemplates({
+    company_id: companyId ?? undefined,
+    data_source: dataSourceFilter === 'all' ? undefined : dataSourceFilter,
+  })
+  const { data: scheduledReports } = useScheduledReports({ company_id: companyId ?? undefined })
+  const { data: generatedReports } = useGeneratedReports({ company_id: companyId ?? undefined })
 
-    const reportNames: Record<ReportType, string> = {
-      health: 'project-health',
-      financial: 'financial-summary',
-      punchlist: 'punch-list',
-      safety: 'safety-incident',
-    }
+  // Mutations
+  const deleteTemplate = useDeleteReportTemplate()
+  const duplicateTemplate = useDuplicateReportTemplate()
 
-    const elementId = reportIds[selectedReport]
-    const projectName = selectedProject?.name?.replace(/\s+/g, '-') || 'project'
-    const filename = `${projectName}-${reportNames[selectedReport]}-${new Date().toISOString().split('T')[0]}`
+  // Filter templates by search
+  const filteredTemplates = templates?.filter((t) => {
+    if (!searchTerm) return true
+    const term = searchTerm.toLowerCase()
+    return (
+      t.name.toLowerCase().includes(term) ||
+      t.description?.toLowerCase().includes(term)
+    )
+  })
 
-    exportToPDF(elementId, filename)
+  // Handlers
+  const handleCreateNew = () => {
+    navigate('/reports/builder')
   }
 
-  const handlePrint = () => {
-    window.print()
+  const handleEditTemplate = (template: ReportTemplate) => {
+    navigate(`/reports/builder/${template.id}`)
   }
 
-  const reportOptions = [
-    { value: 'health', label: 'Project Health Dashboard' },
-    { value: 'financial', label: 'Financial Summary' },
-    { value: 'punchlist', label: 'Punch List Status' },
-    { value: 'safety', label: 'Safety Incident Report' },
-  ]
+  const handleRunTemplate = (template: ReportTemplate) => {
+    navigate(`/reports/builder/${template.id}?run=true`)
+  }
+
+  const handleScheduleTemplate = (template: ReportTemplate) => {
+    navigate(`/reports/schedules/new?template=${template.id}`)
+  }
+
+  const handleDeleteClick = (template: ReportTemplate) => {
+    setSelectedTemplate(template)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedTemplate) return
+    await deleteTemplate.mutateAsync(selectedTemplate.id)
+    setDeleteDialogOpen(false)
+    setSelectedTemplate(null)
+  }
+
+  const handleDuplicateClick = (template: ReportTemplate) => {
+    setSelectedTemplate(template)
+    setNewTemplateName(`${template.name} (Copy)`)
+    setDuplicateDialogOpen(true)
+  }
+
+  const handleDuplicateConfirm = async () => {
+    if (!selectedTemplate || !newTemplateName.trim()) return
+    await duplicateTemplate.mutateAsync({
+      id: selectedTemplate.id,
+      newName: newTemplateName.trim(),
+    })
+    setDuplicateDialogOpen(false)
+    setSelectedTemplate(null)
+    setNewTemplateName('')
+  }
 
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-          <p className="text-gray-600 mt-1">Generate and view project reports</p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <BarChart3 className="h-7 w-7 text-blue-600" />
+              Custom Report Builder
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Create, manage, and schedule custom reports
+            </p>
+          </div>
+
+          <Button onClick={handleCreateNew}>
+            <Plus className="h-4 w-4 mr-2" />
+            New Report
+          </Button>
         </div>
 
-        {/* Report Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Select Report</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Project</label>
-                <Select
-                  value={selectedProjectId}
-                  onChange={(e) => setSelectedProjectId(e.target.value)}
-                  disabled={projectsLoading}
-                >
-                  <option value="">
-                    {projectsLoading ? 'Loading projects...' : 'Select a project'}
-                  </option>
-                  {projects?.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {project.name}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Report Type</label>
-                <Select
-                  value={selectedReport}
-                  onChange={(e) => setSelectedReport(e.target.value as ReportType)}
-                >
-                  {reportOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-            </div>
-
-            {/* Report Type Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
-              {reportOptions.map((option) => {
-                const Icon = reportIcons[option.value as ReportType]
-                const isSelected = selectedReport === option.value
-                return (
-                  <button
-                    key={option.value}
-                    onClick={() => setSelectedReport(option.value as ReportType)}
-                    className={`p-3 rounded-lg border-2 transition-all text-left ${
-                      isSelected
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
-                  >
-                    <Icon className={`h-5 w-5 mb-1 ${isSelected ? 'text-blue-600' : 'text-gray-500'}`} />
-                    <p className={`text-sm font-medium ${isSelected ? 'text-blue-900' : 'text-gray-700'}`}>
-                      {option.label.split(' ')[0]}
-                    </p>
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-2 pt-4 border-t">
-              <Button onClick={handlePrint} variant="outline" disabled={!projectId}>
-                <Printer className="h-4 w-4 mr-2" />
-                Print
-              </Button>
-              <Button onClick={handleExportPDF} variant="outline" disabled={!projectId}>
-                <Download className="h-4 w-4 mr-2" />
-                Export PDF
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Report Content */}
-        {projectId && (
-          <div className="no-print">
-            {selectedReport === 'health' && <ProjectHealthReport projectId={projectId} />}
-            {selectedReport === 'financial' && <FinancialSummaryReport projectId={projectId} />}
-            {selectedReport === 'punchlist' && <PunchListReport projectId={projectId} />}
-            {selectedReport === 'safety' && <SafetyIncidentReport projectId={projectId} />}
-          </div>
-        )}
-
-        {!projectId && !projectsLoading && (
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
-            <CardContent className="p-12 text-center">
-              <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Select a project to generate reports</p>
-              <p className="text-sm text-gray-400 mt-2">
-                {projects?.length === 0
-                  ? 'No projects available. Create a project first.'
-                  : 'Choose from the project dropdown above'}
+            <CardContent className="py-4 text-center">
+              <p className="text-3xl font-bold text-gray-900">
+                {templates?.length || 0}
               </p>
+              <p className="text-sm text-gray-500">Saved Templates</p>
             </CardContent>
           </Card>
-        )}
+          <Card>
+            <CardContent className="py-4 text-center">
+              <p className="text-3xl font-bold text-gray-900">
+                {scheduledReports?.filter((s) => s.is_active).length || 0}
+              </p>
+              <p className="text-sm text-gray-500">Active Schedules</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="py-4 text-center">
+              <p className="text-3xl font-bold text-gray-900">
+                {generatedReports?.filter(
+                  (r) =>
+                    new Date(r.created_at) >
+                    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+                ).length || 0}
+              </p>
+              <p className="text-sm text-gray-500">Reports This Week</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="py-4 text-center">
+              <p className="text-3xl font-bold text-gray-900">
+                {DATA_SOURCE_CONFIG.length}
+              </p>
+              <p className="text-sm text-gray-500">Data Sources</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tabs */}
+        <Tabs defaultValue="templates">
+          <TabsList>
+            <TabsTrigger value="templates" className="gap-2">
+              <FileText className="h-4 w-4" />
+              Templates
+            </TabsTrigger>
+            <TabsTrigger value="schedules" className="gap-2">
+              <Calendar className="h-4 w-4" />
+              Schedules
+            </TabsTrigger>
+            <TabsTrigger value="history" className="gap-2">
+              <History className="h-4 w-4" />
+              History
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Templates Tab */}
+          <TabsContent value="templates" className="space-y-4">
+            {/* Filters */}
+            <Card>
+              <CardContent className="py-4">
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      placeholder="Search templates..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-9"
+                    />
+                  </div>
+                  <Select
+                    value={dataSourceFilter}
+                    onValueChange={(v) => setDataSourceFilter(v as ReportDataSource | 'all')}
+                  >
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="All Data Sources" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Data Sources</SelectItem>
+                      {DATA_SOURCE_CONFIG.map((ds) => (
+                        <SelectItem key={ds.value} value={ds.value}>
+                          {ds.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Template List */}
+            {templatesLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map((i) => (
+                  <ReportTemplateCardSkeleton key={i} />
+                ))}
+              </div>
+            ) : templatesError ? (
+              <Card>
+                <CardContent className="py-8 text-center">
+                  <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
+                  <p className="text-gray-600">Failed to load templates</p>
+                </CardContent>
+              </Card>
+            ) : filteredTemplates?.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-12 text-center">
+                  <FileText className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No templates yet
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Create your first custom report template
+                  </p>
+                  <Button onClick={handleCreateNew}>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Template
+                  </Button>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {filteredTemplates?.map((template) => (
+                  <ReportTemplateCard
+                    key={template.id}
+                    template={template}
+                    onEdit={handleEditTemplate}
+                    onDuplicate={handleDuplicateClick}
+                    onDelete={handleDeleteClick}
+                    onRun={handleRunTemplate}
+                    onSchedule={handleScheduleTemplate}
+                  />
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Schedules Tab */}
+          <TabsContent value="schedules" className="space-y-4">
+            {scheduledReports?.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-12 text-center">
+                  <Calendar className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No scheduled reports
+                  </h3>
+                  <p className="text-gray-500">
+                    Schedule reports to be automatically generated and emailed
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="space-y-3">
+                {scheduledReports?.map((schedule) => (
+                  <Card key={schedule.id}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h3 className="font-medium">{schedule.name}</h3>
+                          <p className="text-sm text-gray-500">
+                            {schedule.frequency} &bull; {schedule.recipients.length} recipients
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span
+                            className={`text-sm ${
+                              schedule.is_active ? 'text-green-600' : 'text-gray-400'
+                            }`}
+                          >
+                            {schedule.is_active ? 'Active' : 'Paused'}
+                          </span>
+                          {schedule.next_run_at && (
+                            <p className="text-xs text-gray-500">
+                              Next: {format(new Date(schedule.next_run_at), 'MMM d, h:mm a')}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* History Tab */}
+          <TabsContent value="history" className="space-y-4">
+            {generatedReports?.length === 0 ? (
+              <Card className="border-dashed">
+                <CardContent className="py-12 text-center">
+                  <History className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No reports generated yet
+                  </h3>
+                  <p className="text-gray-500">
+                    Generated reports will appear here
+                  </p>
+                </CardContent>
+              </Card>
+            ) : (
+              <Card>
+                <CardContent className="p-0">
+                  <div className="divide-y">
+                    {generatedReports?.slice(0, 20).map((report) => (
+                      <div key={report.id} className="p-4 hover:bg-gray-50">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="font-medium">{report.report_name}</h3>
+                            <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                              <DataSourceBadge source={report.data_source} />
+                              <span>
+                                {format(new Date(report.created_at), 'MMM d, yyyy h:mm a')}
+                              </span>
+                              {report.row_count !== null && (
+                                <span>{report.row_count} rows</span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-sm font-medium">
+                              {getOutputFormatLabel(report.output_format)}
+                            </span>
+                            {report.file_size_bytes && (
+                              <p className="text-xs text-gray-500">
+                                {formatFileSize(report.file_size_bytes)}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Template</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete &quot;{selectedTemplate?.name}&quot;?
+              This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteConfirm}
+              disabled={deleteTemplate.isPending}
+            >
+              {deleteTemplate.isPending && (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              )}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Duplicate Dialog */}
+      <Dialog open={duplicateDialogOpen} onOpenChange={setDuplicateDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Duplicate Template</DialogTitle>
+            <DialogDescription>
+              Enter a name for the duplicate template.
+            </DialogDescription>
+          </DialogHeader>
+          <Input
+            value={newTemplateName}
+            onChange={(e) => setNewTemplateName(e.target.value)}
+            placeholder="Template name"
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDuplicateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDuplicateConfirm}
+              disabled={duplicateTemplate.isPending || !newTemplateName.trim()}
+            >
+              {duplicateTemplate.isPending && (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              )}
+              Duplicate
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   )
 }
+
+export default ReportsPage

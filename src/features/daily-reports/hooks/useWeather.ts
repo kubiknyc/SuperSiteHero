@@ -5,24 +5,31 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth/AuthContext'
 import {
   fetchWeatherData,
   getCurrentLocation,
 } from '../services/weatherService'
-import type {
-  WeatherData,
-  WeatherHistory,
-  SaveWeatherDataDTO,
-  transformOpenMeteoResponse,
-} from '@/types/weather'
-import {
-  celsiusToFahrenheit,
-  mmToInches,
-  kmhToMph,
-  getWeatherLabel,
-  getWeatherIcon,
-} from '@/types/weather'
+import type { WeatherHistory } from '@/types/weather'
+import { getWeatherIcon } from '@/types/weather'
+
+// Weather history record type for database operations
+interface WeatherHistoryRecord {
+  project_id: string
+  company_id?: string | null
+  weather_date: string
+  latitude?: number
+  longitude?: number
+  weather_code?: number | null
+  weather_condition?: string | null
+  temperature_high?: number | null
+  temperature_low?: number | null
+  temperature_avg?: number | null
+  precipitation?: number | null
+  wind_speed_max?: number | null
+  humidity_percent?: number | null
+  fetched_at?: string | null
+}
 
 // Query keys
 export const weatherKeys = {
@@ -62,35 +69,35 @@ export function useWeatherForDate(
   date: string | undefined,
   coordinates?: { latitude: number; longitude: number }
 ) {
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
   const queryClient = useQueryClient()
 
   return useQuery({
     queryKey: weatherKeys.date(projectId!, date!),
     queryFn: async (): Promise<ExtendedWeatherData> => {
-      // First check cache
-      const { data: cached, error: cacheError } = await supabase
+      // First check cache (using type assertion since weather_history may not be in generated types)
+      const { data: cached, error: cacheError } = await (supabase as any)
         .from('weather_history')
         .select('*')
         .eq('project_id', projectId)
         .eq('weather_date', date)
-        .single()
+        .single() as { data: WeatherHistoryRecord | null; error: any }
 
       if (cached && !cacheError) {
         // Return cached data
         return {
           date: cached.weather_date,
           condition: cached.weather_condition || 'Unknown',
-          conditionCode: cached.weather_code,
-          icon: getWeatherIcon(cached.weather_code),
-          temperatureHigh: cached.temperature_high,
-          temperatureLow: cached.temperature_low,
-          temperatureAvg: cached.temperature_avg,
-          precipitation: cached.precipitation,
-          windSpeed: cached.wind_speed_max,
-          humidity: cached.humidity_percent,
+          conditionCode: cached.weather_code ?? null,
+          icon: getWeatherIcon(cached.weather_code ?? null),
+          temperatureHigh: cached.temperature_high ?? null,
+          temperatureLow: cached.temperature_low ?? null,
+          temperatureAvg: cached.temperature_avg ?? null,
+          precipitation: cached.precipitation ?? null,
+          windSpeed: cached.wind_speed_max ?? null,
+          humidity: cached.humidity_percent ?? null,
           isCached: true,
-          fetchedAt: cached.fetched_at,
+          fetchedAt: cached.fetched_at ?? null,
         }
       }
 
@@ -100,7 +107,7 @@ export function useWeatherForDate(
         const { data: project } = await supabase
           .from('projects')
           .select('latitude, longitude')
-          .eq('id', projectId)
+          .eq('id', projectId!)
           .single()
 
         if (project?.latitude && project?.longitude) {
@@ -130,9 +137,9 @@ export function useWeatherForDate(
       )
 
       // Save to cache
-      await supabase.from('weather_history').upsert({
+      await (supabase as any).from('weather_history').upsert({
         project_id: projectId,
-        company_id: user?.company_id,
+        company_id: userProfile?.company_id,
         weather_date: date,
         latitude: coordinates.latitude,
         longitude: coordinates.longitude,
@@ -182,29 +189,29 @@ export function useWeatherForDateRange(
   return useQuery({
     queryKey: weatherKeys.range(projectId!, startDate!, endDate!),
     queryFn: async (): Promise<ExtendedWeatherData[]> => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('weather_history')
         .select('*')
         .eq('project_id', projectId)
         .gte('weather_date', startDate)
         .lte('weather_date', endDate)
-        .order('weather_date', { ascending: true })
+        .order('weather_date', { ascending: true }) as { data: WeatherHistoryRecord[] | null; error: any }
 
       if (error) throw error
 
-      return (data || []).map((record: WeatherHistory) => ({
+      return (data || []).map((record: WeatherHistoryRecord) => ({
         date: record.weather_date,
         condition: record.weather_condition || 'Unknown',
-        conditionCode: record.weather_code,
-        icon: getWeatherIcon(record.weather_code),
-        temperatureHigh: record.temperature_high,
-        temperatureLow: record.temperature_low,
-        temperatureAvg: record.temperature_avg,
-        precipitation: record.precipitation,
-        windSpeed: record.wind_speed_max,
-        humidity: record.humidity_percent,
+        conditionCode: record.weather_code ?? null,
+        icon: getWeatherIcon(record.weather_code ?? null),
+        temperatureHigh: record.temperature_high ?? null,
+        temperatureLow: record.temperature_low ?? null,
+        temperatureAvg: record.temperature_avg ?? null,
+        precipitation: record.precipitation ?? null,
+        windSpeed: record.wind_speed_max ?? null,
+        humidity: record.humidity_percent ?? null,
         isCached: true,
-        fetchedAt: record.fetched_at,
+        fetchedAt: record.fetched_at ?? null,
       }))
     },
     enabled: !!projectId && !!startDate && !!endDate && !!user,
@@ -217,7 +224,7 @@ export function useWeatherForDateRange(
  */
 export function usePrefetchWeather() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: async ({
@@ -233,27 +240,27 @@ export function usePrefetchWeather() {
 
       for (const date of dates) {
         // Check if already cached
-        const { data: cached } = await supabase
+        const { data: cached } = await (supabase as any)
           .from('weather_history')
           .select('*')
           .eq('project_id', projectId)
           .eq('weather_date', date)
-          .single()
+          .single() as { data: WeatherHistoryRecord | null; error: any }
 
         if (cached) {
           results.push({
             date: cached.weather_date,
             condition: cached.weather_condition || 'Unknown',
-            conditionCode: cached.weather_code,
-            icon: getWeatherIcon(cached.weather_code),
-            temperatureHigh: cached.temperature_high,
-            temperatureLow: cached.temperature_low,
-            temperatureAvg: cached.temperature_avg,
-            precipitation: cached.precipitation,
-            windSpeed: cached.wind_speed_max,
-            humidity: cached.humidity_percent,
+            conditionCode: cached.weather_code ?? null,
+            icon: getWeatherIcon(cached.weather_code ?? null),
+            temperatureHigh: cached.temperature_high ?? null,
+            temperatureLow: cached.temperature_low ?? null,
+            temperatureAvg: cached.temperature_avg ?? null,
+            precipitation: cached.precipitation ?? null,
+            windSpeed: cached.wind_speed_max ?? null,
+            humidity: cached.humidity_percent ?? null,
             isCached: true,
-            fetchedAt: cached.fetched_at,
+            fetchedAt: cached.fetched_at ?? null,
           })
           continue
         }
@@ -267,9 +274,9 @@ export function usePrefetchWeather() {
           )
 
           // Save to cache
-          await supabase.from('weather_history').upsert({
+          await (supabase as any).from('weather_history').upsert({
             project_id: projectId,
-            company_id: user?.company_id,
+            company_id: userProfile?.company_id,
             weather_date: date,
             latitude: coordinates.latitude,
             longitude: coordinates.longitude,
@@ -330,7 +337,7 @@ export function useProjectLocation(projectId: string | undefined) {
       const { data, error } = await supabase
         .from('projects')
         .select('id, name, latitude, longitude, timezone')
-        .eq('id', projectId)
+        .eq('id', projectId!)
         .single()
 
       if (error) throw error

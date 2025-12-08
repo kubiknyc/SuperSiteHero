@@ -1,8 +1,8 @@
 # SuperSiteHero - Consolidated TODO List
 
-**Last Updated:** December 7, 2025 (Evening Update)
-**Current Status:** P0 Complete + P1 Complete (Weather, Look-Ahead, Realtime)
-**Focus:** All P1 features delivered ✅
+**Last Updated:** December 8, 2025 (P2 Features Completed)
+**Current Status:** P0 Complete + P1 Complete + P2 Mostly Complete
+**Focus:** P2 complete! Only form dialogs and report exports remaining
 
 ---
 
@@ -11,8 +11,8 @@
 | Priority | Category | Items | Status |
 |----------|----------|-------|--------|
 | P0 | Production Blockers | 6 ✅ ALL COMPLETE | Done |
-| P1 | High Priority Features | 3 ✅ ALL COMPLETE | Done (Dec 7) |
-| P2 | Medium Priority | 5 (2 complete) | In Progress |
+| P1 | High Priority Features | 4 ✅ ALL COMPLETE | Done (Dec 7) |
+| P2 | Medium Priority | 7 items (6 complete) | Done (Dec 8) |
 | P3 | Long-term | 5 | 2026+ |
 
 ---
@@ -152,25 +152,42 @@
     - `src/components/realtime/TypingIndicator.tsx`
     - `src/contexts/PresenceContext.tsx`
 
-### Mobile PWA Optimization
-**Priority:** P1 | **Effort:** 1 week | **Status:** Pending Q1 2026
+### Mobile PWA Optimization ✅ COMPLETE
+**Priority:** P1 | **Effort:** 1 week | **Completed:** Dec 7, 2025
 
-- [ ] **PWA Manifest Review**
-  - App icons all sizes
-  - Splash screens
-  - Offline fallback page
+- [x] **PWA Manifest Review** ✅
+  - Complete icon set (72-512px PNG icons)
+  - iOS splash screens for all device sizes
+  - Offline fallback page (already existed)
+  - Apple-specific meta tags (apple-mobile-web-app-capable, etc.)
+  - **Files:**
+    - `index.html` - PWA meta tags, splash screen links
+    - `vite.config.ts` - Enhanced manifest with shortcuts, screenshots
+    - `scripts/generate-pwa-icons.cjs` - Icon generation script
+  - **Run:** `npm run pwa:icons` to regenerate icons
 
-- [ ] **Touch-Friendly UI**
-  - Larger tap targets (44px min)
-  - Swipe gestures
-  - Bottom navigation option
+- [x] **Touch-Friendly UI** ✅
+  - `.touch-target` class (44px min touch targets)
+  - Safe area utilities for notched devices
+  - Touch-active states and animations
+  - **File:** `src/index.css` - Touch-friendly CSS utilities
 
-- [ ] **Mobile-Specific Components**
-  - Simplified daily report entry
-  - Quick photo capture
-  - Offline indicator prominence
+- [x] **Mobile-Specific Components** ✅
+  - Mobile bottom navigation with 5-tab design
+  - Full-screen navigation drawer with sections
+  - Prominent offline indicator (banner + in-drawer)
+  - Auto-reconnection messaging
+  - **Files:**
+    - `src/components/layout/MobileBottomNav.tsx`
+    - `src/components/layout/MobileNavDrawer.tsx`
+    - `src/components/mobile/MobileOfflineIndicator.tsx`
+    - `src/components/layout/AppLayout.tsx` - Responsive layout
 
-**Note:** Core P1 features (Weather, Look-Ahead, Realtime) are complete. Mobile PWA deferred to Q1 2026.
+- [x] **Responsive Layout** ✅
+  - Sidebar hidden on mobile (md:hidden)
+  - Bottom navigation visible on mobile only
+  - Content padding for bottom nav (pb-20)
+  - Safe area support for notched devices
 
 ---
 
@@ -193,21 +210,34 @@
   - Settings page for connection
   - Sync status dashboard
 
-### Custom Report Builder
-**Effort:** 2-3 weeks
+### Custom Report Builder ✅ MOSTLY COMPLETE
+**Effort:** 2-3 weeks | **Started:** Dec 2025 | **Updated:** Dec 8, 2025
 
-- [ ] **Report Template Schema**
-  - Field selection
-  - Filtering options
-  - Grouping/sorting
+- [x] **Database Schema** ✅
+  - Report templates table with field definitions
+  - Filter, sort, grouping configuration
+  - Scheduled delivery settings
+  - **Migration:** `supabase/migrations/083_custom_report_builder.sql`
 
-- [ ] **Report Builder UI**
-  - Drag-drop field selection
-  - Preview mode
-  - Save templates
+- [x] **React Query Hooks** ✅
+  - Template management hooks
+  - Field definition hooks
+  - **File:** `src/features/reports/hooks/useReportBuilder.ts`
 
-- [ ] **Export Options**
-  - PDF, Excel, CSV
+- [x] **UI Components** ✅
+  - DataSourceSelector - Choose data source ✅
+  - FieldPicker - Select fields ✅
+  - FilterBuilder - Filter data with relative dates ✅ (Dec 8)
+  - ReportTemplateCard - Template cards ✅
+  - **Files:** `src/features/reports/components/`
+
+- [x] **Report Builder Page** ✅
+  - 4-step wizard interface (complete)
+  - Data source, fields, filters, options
+  - **File:** `src/pages/reports/ReportBuilderPage.tsx`
+
+- [ ] **Export Options** (Pending)
+  - PDF, Excel, CSV generation
   - Scheduled email delivery
 
 ### Toolbox Talks Module ✅ COMPLETE
@@ -254,18 +284,30 @@
   - `/toolbox-talks/:id`
   - `/toolbox-talks/:id/edit`
 
-### OSHA 300 Log
-**Effort:** 1-2 weeks
+### OSHA 300 Log ✅ COMPLETE
+**Effort:** 1-2 weeks | **Completed:** Dec 2025
 
-- [ ] **Database**
-  - Recordable vs first-aid tracking
-  - Days away/restricted/transferred
-  - DART rate calculation
+- [x] **Database Schema** ✅
+  - Extended `safety_incidents` with OSHA fields
+  - Case number, employee info, injury classification
+  - Days away/restricted/transferred tracking
+  - Privacy case flag for name withholding
+  - **Migration:** `supabase/migrations/080_osha_300_log.sql`
 
-- [ ] **Reports**
+- [x] **UI Components** ✅
+  - OSHA300Log - Full Form 300 table (530+ lines)
+  - OSHA300LogPage - Complete page with filters (470+ lines)
+  - **Files:** `src/features/safety/components/OSHA300Log.tsx`, `src/features/safety/pages/OSHA300LogPage.tsx`
+
+- [x] **Reports** ✅
   - OSHA 300 form generation
-  - OSHA 300A annual summary
-  - Incident rate calculations
+  - OSHA 300A annual summary card
+  - TRIR and DART rate calculations
+  - Excel, CSV, and printable HTML export
+  - **File:** `src/features/safety/utils/osha300Export.ts`
+
+- [x] **Routes** ✅
+  - `/safety/osha-300` - Full OSHA 300 log with filtering
 
 ### Advanced Permissions
 **Effort:** 2-3 weeks
@@ -289,6 +331,78 @@
 - [ ] **UI**
   - List management
   - Apply to RFIs/Submittals
+
+### Meeting Minutes ✅ COMPLETE
+**Effort:** 1 week | **Completed:** Dec 2025
+
+- [x] **Database Schema** ✅
+  - Meeting minutes tables with agenda items
+  - Action items and assignments
+  - Attendee tracking
+  - **Migration:** `supabase/migrations/081_meeting_minutes.sql`
+
+- [x] **TypeScript Types** ✅
+  - MeetingMinutes interfaces (529+ lines)
+  - **File:** `src/types/meeting-minutes.ts`
+
+- [x] **React Query Hooks** ✅
+  - useMeetings, useMeeting, useCreateMeeting
+  - useUpdateMeeting, useDeleteMeeting
+  - useAddActionItem, useUpdateActionItem
+  - **File:** `src/features/meetings/hooks/useMeetings.ts` (367 lines)
+
+- [x] **UI Components** ✅
+  - MeetingList - Full register with filters (487 lines)
+  - MeetingNotesEditor, ActionItemsList
+  - **Files:** `src/features/meetings/components/`
+
+- [x] **Pages** ✅
+  - MeetingsPage - List with project selector (479 lines)
+  - MeetingDetailPage - Full view with action items (533 lines)
+  - MeetingFormPage - Create/edit meetings
+  - **Files:** `src/pages/meetings/`
+
+- [x] **Routes** ✅
+  - `/meetings`, `/meetings/new`, `/meetings/:id`, `/meetings/:id/edit`
+
+### Closeout Documents ✅ MOSTLY COMPLETE
+**Effort:** 1 week | **Updated:** Dec 8, 2025
+
+- [x] **Database Schema** ✅
+  - Closeout document tracking tables
+  - Document categories and checklists
+  - Warranty tracking with expiration alerts
+  - **Migration:** `supabase/migrations/082_closeout_documents.sql`
+
+- [x] **TypeScript Types** ✅
+  - Closeout document interfaces (601 lines)
+  - **File:** `src/types/closeout.ts`
+
+- [x] **React Query Hooks** ✅ (Dec 8)
+  - useCloseoutDocuments, useCloseoutDocument
+  - useWarranties, useWarranty
+  - useCloseoutStatistics, useWarrantyStatistics
+  - useCreateCloseoutDocument, useUpdateCloseoutDocument
+  - useCreateWarranty, useUpdateWarranty
+  - useCloseoutChecklist, useToggleChecklistItem
+  - **File:** `src/features/closeout/hooks/useCloseout.ts`
+
+- [x] **UI Components** ✅
+  - CloseoutDocumentList - Full list with filters (489 lines)
+  - WarrantyList - Warranty tracking with expiration alerts
+  - **Files:** `src/features/closeout/components/`
+
+- [x] **Pages** ✅
+  - CloseoutPage - Document/warranty tabs, stats dashboard
+  - **File:** `src/pages/closeout/CloseoutPage.tsx`
+
+- [x] **Routes** ✅
+  - `/closeout`, `/projects/:projectId/closeout`
+
+- [ ] **Form Dialogs** (Pending)
+  - CloseoutDocumentFormDialog
+  - WarrantyFormDialog
+  - Export/packaging for handover
 
 ---
 
@@ -513,5 +627,5 @@ cat .vercel/project.json
 ---
 
 **Document Owner:** Development Team
-**Last Review:** December 7, 2025 (Verified incomplete features)
-**Next Review:** December 14, 2025
+**Last Review:** December 8, 2025 (Progress verification - updated P2 status)
+**Next Review:** December 15, 2025

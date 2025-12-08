@@ -17,7 +17,11 @@
       "Bash(npm audit:*)",
       "Bash(npm view:*)",
       "Bash(npm uninstall:*)",
-      "Bash(npm run type-check:*)"
+      "Bash(npm run type-check:*)",
+      "Bash(tee:*)",
+      "Bash(timeout 60 npx tsc:*)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": [],

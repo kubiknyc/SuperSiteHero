@@ -41,6 +41,9 @@ export const incidentKeys = {
   photos: (incidentId: string) => [...incidentKeys.all, 'photos', incidentId] as const,
   actions: (filters?: CorrectiveActionFilters) => [...incidentKeys.all, 'actions', filters] as const,
   actionStats: (incidentId?: string) => [...incidentKeys.all, 'actionStats', incidentId] as const,
+  // OSHA 300 Log keys
+  osha300Summary: (year: number, projectId?: string) => [...incidentKeys.all, 'osha300Summary', year, projectId] as const,
+  oshaRates: (year: number, hoursWorked: number, projectId?: string) => [...incidentKeys.all, 'oshaRates', year, hoursWorked, projectId] as const,
 }
 
 // ============================================================================
@@ -575,6 +578,50 @@ export function useLinkActionToTask() {
         type: 'error',
         title: 'Error',
         message: error.message || 'Failed to link action to task',
+      })
+    },
+  })
+}
+
+// ============================================================================
+// OSHA 300 Log Hooks
+// ============================================================================
+
+/**
+ * Fetch OSHA 300A Annual Summary
+ */
+export function useOSHA300ASummary(year: number, projectId?: string) {
+  return useQuery({
+    queryKey: incidentKeys.osha300Summary(year, projectId),
+    queryFn: () => safetyIncidentsApi.getOSHA300ASummary(year, projectId),
+  })
+}
+
+/**
+ * Fetch OSHA incidence rates
+ */
+export function useOSHAIncidenceRates(year: number, hoursWorked: number, projectId?: string) {
+  return useQuery({
+    queryKey: incidentKeys.oshaRates(year, hoursWorked, projectId),
+    queryFn: () => safetyIncidentsApi.getOSHAIncidenceRates(year, hoursWorked, projectId),
+    enabled: hoursWorked > 0,
+  })
+}
+
+/**
+ * Generate next OSHA case number
+ */
+export function useGenerateCaseNumber() {
+  const { showToast } = useToast()
+
+  return useMutation({
+    mutationFn: ({ projectId, year }: { projectId: string; year?: number }) =>
+      safetyIncidentsApi.getNextCaseNumber(projectId, year),
+    onError: (error: any) => {
+      showToast({
+        type: 'error',
+        title: 'Error',
+        message: error.message || 'Failed to generate case number',
       })
     },
   })

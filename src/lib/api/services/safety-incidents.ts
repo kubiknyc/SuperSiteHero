@@ -1062,6 +1062,141 @@ export const safetyIncidentsApi = {
   },
 
   // ============================================================================
+  // OSHA 300 LOG FUNCTIONS
+  // ============================================================================
+
+  /**
+   * Get OSHA 300A Annual Summary for a project or company-wide
+   */
+  async getOSHA300ASummary(year: number, projectId?: string): Promise<{
+    project_id: string | null
+    establishment_name: string
+    calendar_year: number
+    total_deaths: number
+    total_days_away_cases: number
+    total_restriction_cases: number
+    total_other_cases: number
+    total_days_away: number
+    total_days_restriction: number
+    total_injuries: number
+    total_illnesses: number
+    skin_disorders: number
+    respiratory_conditions: number
+    poisoning_cases: number
+    hearing_loss_cases: number
+    other_illnesses: number
+    total_recordable_cases: number
+  } | null> {
+    try {
+      let query = db
+        .from('osha_300a_summary')
+        .select('*')
+        .eq('calendar_year', year)
+
+      if (projectId) {
+        query = query.eq('project_id', projectId)
+      }
+
+      const { data, error } = await query.maybeSingle()
+
+      if (error) {throw error}
+      return data
+    } catch (error) {
+      // View might not exist yet - return null
+      logger.warn('OSHA 300A summary fetch failed:', error)
+      return null
+    }
+  },
+
+  /**
+   * Get next OSHA case number for a project/year
+   */
+  async getNextCaseNumber(projectId: string, year?: number): Promise<string> {
+    try {
+      const targetYear = year || new Date().getFullYear()
+
+      const { data, error } = await db.rpc('get_next_osha_case_number', {
+        p_project_id: projectId,
+        p_year: targetYear,
+      })
+
+      if (error) {
+        // If the function doesn't exist, generate manually
+        logger.warn('get_next_osha_case_number RPC failed, generating manually:', error)
+
+        // Fallback: count existing cases and increment
+        const { count } = await db
+          .from('safety_incidents')
+          .select('*', { count: 'exact', head: true })
+          .eq('project_id', projectId)
+          .gte('incident_date', `${targetYear}-01-01`)
+          .lte('incident_date', `${targetYear}-12-31`)
+          .not('case_number', 'is', null)
+
+        const nextNum = (count || 0) + 1
+        return `${targetYear}-${String(nextNum).padStart(3, '0')}`
+      }
+
+      return data || `${targetYear}-001`
+    } catch (error) {
+      throw new ApiErrorClass({
+        code: 'GENERATE_CASE_NUMBER_ERROR',
+        message: 'Failed to generate OSHA case number',
+        details: error,
+      })
+    }
+  },
+
+  /**
+   * Calculate OSHA incidence rates for a project/year
+   */
+  async getOSHAIncidenceRates(
+    year: number,
+    hoursWorked: number,
+    projectId?: string
+  ): Promise<{
+    totalRecordableIncidentRate: number
+    dartRate: number
+    totalRecordableCases: number
+    dartCases: number
+  }> {
+    try {
+      const summary = await this.getOSHA300ASummary(year, projectId)
+
+      if (!summary || hoursWorked === 0) {
+        return {
+          totalRecordableIncidentRate: 0,
+          dartRate: 0,
+          totalRecordableCases: 0,
+          dartCases: 0,
+        }
+      }
+
+      const totalRecordable = summary.total_recordable_cases
+      const dartCases = summary.total_days_away_cases + summary.total_restriction_cases
+
+      // OSHA formula: (N × 200,000) / EH
+      // Where N = number of cases, EH = total hours worked
+      // 200,000 = base for 100 FTE workers (40 hrs/week × 50 weeks)
+      const trir = Number(((totalRecordable * 200000) / hoursWorked).toFixed(2))
+      const dart = Number(((dartCases * 200000) / hoursWorked).toFixed(2))
+
+      return {
+        totalRecordableIncidentRate: trir,
+        dartRate: dart,
+        totalRecordableCases: totalRecordable,
+        dartCases,
+      }
+    } catch (error) {
+      throw new ApiErrorClass({
+        code: 'CALCULATE_RATES_ERROR',
+        message: 'Failed to calculate OSHA incidence rates',
+        details: error,
+      })
+    }
+  },
+
+  // ============================================================================
   // HELPER METHODS
   // ============================================================================
 

@@ -35,7 +35,7 @@ export function useRealtimePresence(
   options: UseRealtimePresenceOptions
 ): UseRealtimePresenceReturn {
   const { roomId, enabled = true, trackPage } = options
-  const { user, profile } = useAuth()
+  const { user, userProfile } = useAuth()
 
   const [users, setUsers] = useState<PresenceUser[]>([])
   const [typingUsers, setTypingUsers] = useState<TypingState[]>([])
@@ -55,8 +55,8 @@ export function useRealtimePresence(
           user: {
             id: user.id,
             email: user.email ?? '',
-            name: profile?.full_name ?? user.email ?? 'Anonymous',
-            avatarUrl: profile?.avatar_url ?? undefined,
+            name: userProfile?.full_name ?? user.email ?? 'Anonymous',
+            avatarUrl: userProfile?.avatar_url ?? undefined,
           },
           initialPage: trackPage,
           onSync: () => {
@@ -78,7 +78,7 @@ export function useRealtimePresence(
         setIsConnected(false)
       }
     }
-  }, [roomId, enabled, user, profile, trackPage])
+  }, [roomId, enabled, user, userProfile, trackPage])
 
   // Subscribe to presence changes
   useEffect(() => {

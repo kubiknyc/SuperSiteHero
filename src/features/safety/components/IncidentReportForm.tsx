@@ -27,14 +27,16 @@ import type {
   IncidentSeverity,
   IncidentType,
   RootCauseCategory,
+  OSHAInjuryIllnessType,
 } from '@/types/safety-incidents'
 import {
   SEVERITY_CONFIG,
   INCIDENT_TYPE_CONFIG,
   ROOT_CAUSE_LABELS,
+  OSHA_INJURY_ILLNESS_TYPES,
   isSeriousIncident,
 } from '@/types/safety-incidents'
-import { AlertTriangle, Info } from 'lucide-react'
+import { AlertTriangle, Info, Shield } from 'lucide-react'
 
 interface IncidentReportFormProps {
   projectId?: string
@@ -62,6 +64,17 @@ type FormData = {
   osha_report_number: string
   days_away_from_work: number
   days_restricted_duty: number
+  // OSHA 300 Log fields
+  case_number: string
+  employee_name: string
+  employee_job_title: string
+  injury_illness_type: OSHAInjuryIllnessType | ''
+  body_part_affected: string
+  object_substance: string
+  death_date: string
+  days_away_count: number
+  days_transfer_restriction: number
+  is_privacy_case: boolean
 }
 
 export function IncidentReportForm({
@@ -98,6 +111,17 @@ export function IncidentReportForm({
       osha_report_number: incident?.osha_report_number || '',
       days_away_from_work: incident?.days_away_from_work || 0,
       days_restricted_duty: incident?.days_restricted_duty || 0,
+      // OSHA 300 Log fields
+      case_number: incident?.case_number || '',
+      employee_name: incident?.employee_name || '',
+      employee_job_title: incident?.employee_job_title || '',
+      injury_illness_type: incident?.injury_illness_type || '',
+      body_part_affected: incident?.body_part_affected || '',
+      object_substance: incident?.object_substance || '',
+      death_date: incident?.death_date || '',
+      days_away_count: incident?.days_away_count || 0,
+      days_transfer_restriction: incident?.days_transfer_restriction || 0,
+      is_privacy_case: incident?.is_privacy_case || false,
     },
   })
 
@@ -123,6 +147,16 @@ export function IncidentReportForm({
         osha_report_number: data.osha_report_number || null,
         days_away_from_work: data.days_away_from_work,
         days_restricted_duty: data.days_restricted_duty,
+        // OSHA 300 Log fields
+        case_number: data.case_number || null,
+        employee_name: data.employee_name || null,
+        employee_job_title: data.employee_job_title || null,
+        injury_illness_type: data.injury_illness_type || null,
+        body_part_affected: data.body_part_affected || null,
+        object_substance: data.object_substance || null,
+        death_date: data.death_date || null,
+        days_away_count: data.days_away_count,
+        days_transfer_restriction: data.days_transfer_restriction,
       }
       onSubmit?.(updateData)
       if (onSuccess) {(onSuccess as () => void)()}
@@ -351,6 +385,7 @@ export function IncidentReportForm({
       {/* OSHA Information */}
       <div className="border-t pt-6">
         <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
+          <Shield className="h-5 w-5 text-blue-600" />
           OSHA Tracking
           <span className="text-sm font-normal text-gray-500">(if applicable)</span>
         </h3>
@@ -368,34 +403,164 @@ export function IncidentReportForm({
         </div>
 
         {oshaRecordable && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-lg">
-            <div>
-              <Label htmlFor="osha_report_number">OSHA Report Number</Label>
-              <Input
-                id="osha_report_number"
-                placeholder="e.g., 300-123"
-                {...register('osha_report_number')}
-              />
+          <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+            {/* Basic OSHA fields */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="case_number">OSHA 300 Case Number</Label>
+                <Input
+                  id="case_number"
+                  placeholder="e.g., 2024-001"
+                  {...register('case_number')}
+                />
+                <p className="text-xs text-gray-500 mt-1">Format: YYYY-###</p>
+              </div>
+
+              <div>
+                <Label htmlFor="osha_report_number">OSHA Report Number</Label>
+                <Input
+                  id="osha_report_number"
+                  placeholder="e.g., 300-123"
+                  {...register('osha_report_number')}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="injury_illness_type">Injury/Illness Type</Label>
+                <Select
+                  value={watch('injury_illness_type') || ''}
+                  onValueChange={(value) => setValue('injury_illness_type', value as OSHAInjuryIllnessType)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {OSHA_INJURY_ILLNESS_TYPES.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        ({type.column}) {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="days_away_from_work">Days Away from Work</Label>
-              <Input
-                id="days_away_from_work"
-                type="number"
-                min="0"
-                {...register('days_away_from_work', { valueAsNumber: true })}
-              />
+            {/* Employee Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="employee_name">Injured Employee Name</Label>
+                <Input
+                  id="employee_name"
+                  placeholder="Full name of injured employee"
+                  {...register('employee_name')}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="employee_job_title">Employee Job Title</Label>
+                <Input
+                  id="employee_job_title"
+                  placeholder="e.g., Electrician, Laborer"
+                  {...register('employee_job_title')}
+                />
+              </div>
             </div>
 
-            <div>
-              <Label htmlFor="days_restricted_duty">Days on Restricted Duty</Label>
-              <Input
-                id="days_restricted_duty"
-                type="number"
-                min="0"
-                {...register('days_restricted_duty', { valueAsNumber: true })}
-              />
+            {/* Injury Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="body_part_affected">Body Part Affected</Label>
+                <Input
+                  id="body_part_affected"
+                  placeholder="e.g., Left hand, Lower back"
+                  {...register('body_part_affected')}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="object_substance">Object/Substance Causing Injury</Label>
+                <Input
+                  id="object_substance"
+                  placeholder="e.g., Ladder, Chemical exposure"
+                  {...register('object_substance')}
+                />
+              </div>
+            </div>
+
+            {/* Days tracking */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div>
+                <Label htmlFor="days_away_from_work">Days Away from Work</Label>
+                <Input
+                  id="days_away_from_work"
+                  type="number"
+                  min="0"
+                  {...register('days_away_from_work', { valueAsNumber: true })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="days_restricted_duty">Days on Restricted Duty</Label>
+                <Input
+                  id="days_restricted_duty"
+                  type="number"
+                  min="0"
+                  {...register('days_restricted_duty', { valueAsNumber: true })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="days_away_count">Total Days Away (OSHA)</Label>
+                <Input
+                  id="days_away_count"
+                  type="number"
+                  min="0"
+                  {...register('days_away_count', { valueAsNumber: true })}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="days_transfer_restriction">Days Transfer/Restriction</Label>
+                <Input
+                  id="days_transfer_restriction"
+                  type="number"
+                  min="0"
+                  {...register('days_transfer_restriction', { valueAsNumber: true })}
+                />
+              </div>
+            </div>
+
+            {/* Death date and privacy */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="death_date">Date of Death (if fatality)</Label>
+                <Input
+                  id="death_date"
+                  type="date"
+                  {...register('death_date')}
+                />
+              </div>
+
+              <div className="flex items-center gap-2 mt-6">
+                <input
+                  type="checkbox"
+                  id="is_privacy_case"
+                  {...register('is_privacy_case')}
+                  className="h-4 w-4 rounded border-gray-300"
+                />
+                <Label htmlFor="is_privacy_case" className="font-normal">
+                  Privacy case (hide name on OSHA 300 Log)
+                </Label>
+              </div>
+            </div>
+
+            {/* Info box */}
+            <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+              <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+              <p className="text-blue-800">
+                Privacy cases include: sexual assault, HIV status, mental illness,
+                needle stick injuries involving blood, and other sensitive conditions.
+              </p>
             </div>
           </div>
         )}

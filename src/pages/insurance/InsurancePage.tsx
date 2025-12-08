@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
-  Select,
+  RadixSelect as Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -27,7 +27,7 @@ import {
   List,
   FileCheck,
 } from 'lucide-react'
-import { useToast } from '@/lib/notifications'
+import { toast } from 'sonner'
 import {
   InsuranceComplianceDashboard,
   InsuranceCertificateCard,
@@ -53,7 +53,6 @@ type FilterType = InsuranceType | 'all'
 export function InsurancePage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
-  const { toast } = useToast()
 
   // State
   const [viewMode, setViewMode] = useState<ViewMode>('dashboard')
@@ -122,14 +121,10 @@ export function InsurancePage() {
   const handleDeleteCertificate = async (cert: InsuranceCertificateWithRelations) => {
     try {
       await deleteCertificate.mutateAsync(cert.id)
-      toast({ title: 'Certificate deleted successfully' })
+      toast.success('Certificate deleted successfully')
       refetch()
     } catch {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete certificate',
-        variant: 'destructive',
-      })
+      toast.error('Failed to delete certificate')
     }
   }
 

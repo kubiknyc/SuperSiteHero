@@ -4,7 +4,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { insuranceApi } from '@/lib/api/services/insurance'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth/AuthContext'
 import type {
   InsuranceCertificate,
   InsuranceCertificateWithRelations,
@@ -64,12 +64,12 @@ export function useInsuranceCertificates(options?: {
   insuranceType?: InsuranceType
   enabled?: boolean
 }) {
-  const { user } = useAuth()
-  const companyId = user?.company_id
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
   return useQuery({
     queryKey: insuranceKeys.certificatesList({
-      companyId,
+      companyId: companyId ?? undefined,
       projectId: options?.projectId,
       subcontractorId: options?.subcontractorId,
       status: options?.status,
@@ -116,18 +116,24 @@ export function useCertificateHistory(certificateId: string | undefined) {
  */
 export function useCreateInsuranceCertificate() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: (data: Omit<CreateInsuranceCertificateDTO, 'company_id'>) =>
-      insuranceApi.createCertificate({
+    mutationFn: (data: Omit<CreateInsuranceCertificateDTO, 'company_id'>) => {
+      if (!userProfile?.company_id) {
+        throw new Error('Company information not available')
+      }
+      return insuranceApi.createCertificate({
         ...data,
-        company_id: user?.company_id!,
-      }),
+        company_id: userProfile.company_id,
+      })
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.certificates() })
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(user?.company_id!) })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.certificates() })
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
     },
   })
 }
@@ -137,7 +143,7 @@ export function useCreateInsuranceCertificate() {
  */
 export function useUpdateInsuranceCertificate() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: ({
@@ -153,7 +159,9 @@ export function useUpdateInsuranceCertificate() {
       })
       queryClient.invalidateQueries({ queryKey: insuranceKeys.certificates() })
       queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(user?.company_id!) })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
     },
   })
 }
@@ -163,14 +171,16 @@ export function useUpdateInsuranceCertificate() {
  */
 export function useDeleteInsuranceCertificate() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: (certificateId: string) => insuranceApi.deleteCertificate(certificateId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: insuranceKeys.certificates() })
       queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(user?.company_id!) })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
     },
   })
 }
@@ -180,7 +190,7 @@ export function useDeleteInsuranceCertificate() {
  */
 export function useVoidInsuranceCertificate() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: ({ certificateId, reason }: { certificateId: string; reason?: string }) =>
@@ -190,7 +200,9 @@ export function useVoidInsuranceCertificate() {
         queryKey: insuranceKeys.certificate(variables.certificateId),
       })
       queryClient.invalidateQueries({ queryKey: insuranceKeys.certificates() })
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(user?.company_id!) })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
     },
   })
 }
@@ -203,8 +215,8 @@ export function useVoidInsuranceCertificate() {
  * Fetch expiring certificates
  */
 export function useExpiringCertificates(daysAhead: number = 30) {
-  const { user } = useAuth()
-  const companyId = user?.company_id
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
   return useQuery({
     queryKey: insuranceKeys.expiring(companyId!, daysAhead),
@@ -222,8 +234,8 @@ export function useExpiringCertificates(daysAhead: number = 30) {
  * Fetch insurance requirements
  */
 export function useInsuranceRequirements(projectId?: string) {
-  const { user } = useAuth()
-  const companyId = user?.company_id
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
   return useQuery({
     queryKey: insuranceKeys.requirementsList(companyId!, projectId),
@@ -238,14 +250,18 @@ export function useInsuranceRequirements(projectId?: string) {
  */
 export function useCreateInsuranceRequirement() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: (data: Omit<CreateInsuranceRequirementDTO, 'company_id'>) =>
-      insuranceApi.createRequirement({
+    mutationFn: (data: Omit<CreateInsuranceRequirementDTO, 'company_id'>) => {
+      if (!userProfile?.company_id) {
+        throw new Error('Company information not available')
+      }
+      return insuranceApi.createRequirement({
         ...data,
-        company_id: user?.company_id!,
-      }),
+        company_id: userProfile.company_id,
+      })
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: insuranceKeys.requirements() })
       queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
@@ -309,8 +325,8 @@ export function useComplianceCheck(subcontractorId: string | undefined, projectI
  * Fetch compliance summary for all subcontractors
  */
 export function useComplianceSummary() {
-  const { user } = useAuth()
-  const companyId = user?.company_id
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
   return useQuery({
     queryKey: insuranceKeys.complianceSummary(companyId!),
@@ -328,8 +344,8 @@ export function useComplianceSummary() {
  * Fetch insurance dashboard statistics
  */
 export function useInsuranceDashboardStats() {
-  const { user } = useAuth()
-  const companyId = user?.company_id
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
 
   return useQuery({
     queryKey: insuranceKeys.stats(companyId!),
@@ -364,11 +380,15 @@ export function useSubcontractorCertificates(subcontractorId: string | undefined
  */
 export function useUploadCertificateDocument() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: ({ certificateId, file }: { certificateId: string; file: File }) =>
-      insuranceApi.uploadCertificateDocument(certificateId, file, user?.company_id!),
+    mutationFn: ({ certificateId, file }: { certificateId: string; file: File }) => {
+      if (!userProfile?.company_id) {
+        throw new Error('Company information not available')
+      }
+      return insuranceApi.uploadCertificateDocument(certificateId, file, userProfile.company_id)
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: insuranceKeys.certificate(variables.certificateId),
@@ -386,13 +406,15 @@ export function useUploadCertificateDocument() {
  */
 export function useAcknowledgeAlert() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: (alertId: string) => insuranceApi.acknowledgeAlert(alertId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: insuranceKeys.certificates() })
-      queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(user?.company_id!) })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
     },
   })
 }

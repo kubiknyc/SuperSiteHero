@@ -2,7 +2,7 @@
 // File: /src/features/rfis/components/CreateDedicatedRFIDialog.tsx
 // Dialog for creating a new RFI using the dedicated rfis table with ball-in-court tracking
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { addDays, format } from 'date-fns'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
@@ -18,6 +18,10 @@ import {
   Clock,
   FileText,
   Users,
+  Search,
+  X,
+  Check,
+  UserPlus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -25,7 +29,27 @@ import {
   RFI_PRIORITIES,
   BALL_IN_COURT_ROLES,
 } from '../hooks/useDedicatedRFIs'
+import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
+import { useAuth } from '@/lib/auth/AuthContext'
 import type { RFIPriority, BallInCourtRole } from '@/types/database-extensions'
+
+// User interface for distribution list
+interface DistributionUser {
+  id: string
+  first_name: string | null
+  last_name: string | null
+  email: string
+  avatar_url: string | null
+  company?: { name: string } | null
+}
+
+// Compute full name from first and last name
+function getFullName(user: DistributionUser): string {
+  if (user.first_name && user.last_name) {
+    return `${user.first_name} ${user.last_name}`
+  }
+  return user.first_name || user.last_name || ''
+}
 
 interface CreateDedicatedRFIDialogProps {
   projectId: string | undefined
@@ -55,6 +79,8 @@ export function CreateDedicatedRFIDialog({
   onOpenChange,
   onSuccess,
 }: CreateDedicatedRFIDialogProps) {
+  const { userProfile } = useAuth()
+
   // Form state
   const [subject, setSubject] = useState('')
   const [question, setQuestion] = useState('')
@@ -67,7 +93,31 @@ export function CreateDedicatedRFIDialog({
   const [costImpact, setCostImpact] = useState<string>('')
   const [scheduleImpactDays, setScheduleImpactDays] = useState<string>('')
 
+  // Distribution list state
+  const [distributionList, setDistributionList] = useState<DistributionUser[]>([])
+  const [showDistributionPicker, setShowDistributionPicker] = useState(false)
+  const [distributionFilter, setDistributionFilter] = useState('')
+
   const createRFI = useCreateRFI()
+
+  // Fetch project users for distribution list
+  const { data: projectUsers = [], isLoading: isLoadingUsers } = useProjectUsers(projectId)
+
+  // Filter out current user and apply search filter
+  const availableUsers = useMemo(() => {
+    return projectUsers.filter(pu => pu.user?.id !== userProfile?.id)
+  }, [projectUsers, userProfile?.id])
+
+  const filteredDistributionUsers = useMemo(() => {
+    if (!distributionFilter.trim()) return availableUsers
+    const search = distributionFilter.toLowerCase()
+    return availableUsers.filter((pu) => {
+      const user = pu.user
+      if (!user) return false
+      const name = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
+      return name.includes(search) || user.email.toLowerCase().includes(search)
+    })
+  }, [availableUsers, distributionFilter])
 
   // Reset form when dialog opens
   useEffect(() => {
@@ -91,6 +141,20 @@ export function CreateDedicatedRFIDialog({
     setBallInCourtRole('')
     setCostImpact('')
     setScheduleImpactDays('')
+    setDistributionList([])
+    setShowDistributionPicker(false)
+    setDistributionFilter('')
+  }
+
+  // Toggle user in distribution list
+  const toggleDistributionUser = (user: DistributionUser) => {
+    setDistributionList((prev) => {
+      const isSelected = prev.some((u) => u.id === user.id)
+      if (isSelected) {
+        return prev.filter((u) => u.id !== user.id)
+      }
+      return [...prev, user]
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,6 +178,7 @@ export function CreateDedicatedRFIDialog({
         cost_impact: costImpact ? parseFloat(costImpact) : null,
         schedule_impact_days: scheduleImpactDays ? parseInt(scheduleImpactDays, 10) : null,
         status: 'draft',
+        distribution_list: distributionList.map(u => u.id),
       })
 
       resetForm()
@@ -271,6 +336,138 @@ export function CreateDedicatedRFIDialog({
               </Select>
               <p className="text-xs text-gray-500">Who is responsible for responding?</p>
             </div>
+          </div>
+
+          {/* Distribution List */}
+          <div className="space-y-3 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-blue-800">
+                <UserPlus className="h-4 w-4" />
+                <span className="font-medium text-sm">Distribution List</span>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowDistributionPicker(!showDistributionPicker)}
+                disabled={createRFI.isPending}
+                className="text-xs"
+              >
+                {showDistributionPicker ? 'Hide' : 'Add Recipients'}
+              </Button>
+            </div>
+            <p className="text-xs text-blue-700">
+              Add team members who should receive copies of this RFI and its responses.
+            </p>
+
+            {/* Selected users display */}
+            {distributionList.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {distributionList.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center gap-1 bg-white border border-blue-200 rounded-full pl-1 pr-2 py-1"
+                  >
+                    {user.avatar_url ? (
+                      <img
+                        src={user.avatar_url}
+                        alt=""
+                        className="h-5 w-5 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-600">
+                        {getFullName(user).charAt(0) || '?'}
+                      </div>
+                    )}
+                    <span className="text-sm text-blue-900">{getFullName(user) || user.email}</span>
+                    <button
+                      type="button"
+                      onClick={() => toggleDistributionUser(user)}
+                      className="text-blue-400 hover:text-blue-600 ml-1"
+                      disabled={createRFI.isPending}
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* User picker */}
+            {showDistributionPicker && (
+              <div className="mt-2 space-y-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search project members..."
+                    value={distributionFilter}
+                    onChange={(e) => setDistributionFilter(e.target.value)}
+                    className="pl-9 bg-white"
+                    disabled={createRFI.isPending}
+                  />
+                </div>
+
+                <div className="max-h-[200px] overflow-auto bg-white border rounded-lg">
+                  {isLoadingUsers ? (
+                    <div className="py-4 text-center text-muted-foreground text-sm">
+                      Loading project members...
+                    </div>
+                  ) : filteredDistributionUsers.length === 0 ? (
+                    <div className="py-4 text-center text-muted-foreground text-sm">
+                      {distributionFilter ? 'No matching members found' : 'No members in this project'}
+                    </div>
+                  ) : (
+                    <div className="divide-y">
+                      {filteredDistributionUsers.map((projectUser) => {
+                        const user = projectUser.user
+                        if (!user) return null
+                        const isSelected = distributionList.some((u) => u.id === user.id)
+                        return (
+                          <button
+                            key={user.id}
+                            type="button"
+                            onClick={() => toggleDistributionUser(user as DistributionUser)}
+                            disabled={createRFI.isPending}
+                            className={cn(
+                              'w-full flex items-center gap-3 p-2 text-left hover:bg-muted/50',
+                              isSelected && 'bg-blue-50'
+                            )}
+                          >
+                            {user.avatar_url ? (
+                              <img
+                                src={user.avatar_url}
+                                alt=""
+                                className="h-7 w-7 rounded-full object-cover"
+                              />
+                            ) : (
+                              <div className="h-7 w-7 rounded-full bg-muted flex items-center justify-center text-xs">
+                                {getFullName(user as DistributionUser).charAt(0) || '?'}
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <p className="font-medium text-sm truncate">
+                                {getFullName(user as DistributionUser) || 'Unknown User'}
+                              </p>
+                              <p className="text-xs text-muted-foreground truncate">
+                                {user.company?.name || user.email}
+                              </p>
+                            </div>
+                            {projectUser.project_role && (
+                              <span className="text-xs text-muted-foreground capitalize px-2 py-0.5 bg-muted rounded">
+                                {projectUser.project_role.replace('_', ' ')}
+                              </span>
+                            )}
+                            {isSelected && (
+                              <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Question */}

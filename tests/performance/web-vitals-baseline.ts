@@ -14,7 +14,7 @@
  * - INP (Interaction to Next Paint): Responsiveness during page lifecycle
  */
 
-import { getCLS, getFCP, getFID, getLCP, getTTFB, onCLS, onFCP, onFID, onLCP, onTTFB } from 'web-vitals';
+import { onCLS, onFCP, onINP, onLCP, onTTFB, type Metric } from 'web-vitals';
 
 /**
  * Web Vitals Thresholds
@@ -286,9 +286,9 @@ export function initWebVitalsMonitoring(): void {
     sendToAnalytics({ ...metric, rating: result.rating, delta: result.delta });
   });
 
-  // First Input Delay
-  onFID((metric) => {
-    metrics.fid = metric.value;
+  // Interaction to Next Paint (replaces FID in web-vitals v5)
+  onINP((metric) => {
+    metrics.fid = metric.value; // Store as fid for backward compatibility
     const result = evaluateMetric('fid', metric.value);
     sendToAnalytics({ ...metric, rating: result.rating, delta: result.delta });
   });
@@ -334,6 +334,9 @@ export function initWebVitalsMonitoring(): void {
 
 /**
  * Get Web Vitals report
+ *
+ * In web-vitals v5, the getCLS/getFCP/getFID/getLCP/getTTFB functions were removed.
+ * This function now uses the on* observer pattern to collect metrics.
  */
 export async function getWebVitalsReport(): Promise<{
   current: Partial<WebVitalsMetrics>;
@@ -344,7 +347,7 @@ export async function getWebVitalsReport(): Promise<{
   const average = calculateAverageMetrics(stored);
   const current: Partial<WebVitalsMetrics> = {};
 
-  // Get current metrics
+  // Get current metrics using the observer pattern
   return new Promise((resolve) => {
     let completed = 0;
     const total = 5;
@@ -364,27 +367,29 @@ export async function getWebVitalsReport(): Promise<{
       }
     };
 
-    getCLS((metric) => {
+    // Use on* observers with reportAllChanges to get metrics
+    onCLS((metric) => {
       current.cls = metric.value;
       checkComplete();
-    });
+    }, { reportAllChanges: true });
 
-    getFCP((metric) => {
+    onFCP((metric) => {
       current.fcp = metric.value;
       checkComplete();
     });
 
-    getFID((metric) => {
+    // INP replaces FID in web-vitals v5
+    onINP((metric) => {
       current.fid = metric.value;
       checkComplete();
-    });
+    }, { reportAllChanges: true });
 
-    getLCP((metric) => {
+    onLCP((metric) => {
       current.lcp = metric.value;
       checkComplete();
-    });
+    }, { reportAllChanges: true });
 
-    getTTFB((metric) => {
+    onTTFB((metric) => {
       current.ttfb = metric.value;
       checkComplete();
     });
@@ -393,8 +398,14 @@ export async function getWebVitalsReport(): Promise<{
     setTimeout(() => {
       if (completed < total) {
         console.warn('Web Vitals timeout - some metrics not collected');
-        completed = total;
-        checkComplete();
+        // Resolve with whatever we have
+        const evaluation: MetricResult[] = [];
+        if (current.lcp) evaluation.push(evaluateMetric('lcp', current.lcp));
+        if (current.fid) evaluation.push(evaluateMetric('fid', current.fid));
+        if (current.cls) evaluation.push(evaluateMetric('cls', current.cls));
+        if (current.fcp) evaluation.push(evaluateMetric('fcp', current.fcp));
+        if (current.ttfb) evaluation.push(evaluateMetric('ttfb', current.ttfb));
+        resolve({ current, average, evaluation });
       }
     }, 5000);
   });

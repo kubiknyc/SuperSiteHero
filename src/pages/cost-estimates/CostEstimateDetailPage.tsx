@@ -46,7 +46,7 @@ import { useToast } from '@/lib/notifications/ToastContext'
 export function CostEstimateDetailPage() {
   const { projectId, estimateId } = useParams<{ projectId: string; estimateId: string }>()
   const navigate = useNavigate()
-  const { toast } = useToast()
+  const { success, error: showError } = useToast()
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false)
@@ -131,21 +131,14 @@ export function CostEstimateDetailPage() {
         },
         projectInfo: project ? {
           name: project.name,
-          number: project.number || undefined,
+          number: project.project_number || undefined,
           address: project.address || undefined,
         } : undefined,
       })
-      toast({
-        title: 'PDF exported',
-        description: 'Cost estimate PDF has been downloaded.',
-      })
+      success('PDF exported', 'Cost estimate PDF has been downloaded.')
     } catch (error) {
       console.error('Error exporting PDF:', error)
-      toast({
-        title: 'Export failed',
-        description: 'Failed to export PDF. Please try again.',
-        variant: 'destructive',
-      })
+      showError('Export failed', 'Failed to export PDF. Please try again.')
     } finally {
       setIsExporting(false)
     }

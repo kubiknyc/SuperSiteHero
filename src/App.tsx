@@ -100,6 +100,7 @@ const AnalyticsPage = lazy(() => import('./pages/analytics/AnalyticsPage').then(
 const IncidentsListPage = lazy(() => import('./features/safety/pages/IncidentsListPage').then(m => ({ default: m.IncidentsListPage })))
 const IncidentDetailPage = lazy(() => import('./features/safety/pages/IncidentDetailPage').then(m => ({ default: m.IncidentDetailPage })))
 const CreateIncidentPage = lazy(() => import('./features/safety/pages/CreateIncidentPage').then(m => ({ default: m.CreateIncidentPage })))
+const OSHA300LogPage = lazy(() => import('./features/safety/pages/OSHA300LogPage').then(m => ({ default: m.OSHA300LogPage })))
 
 // Inspections feature
 const InspectionsPage = lazy(() => import('./pages/inspections/InspectionsPage').then(m => ({ default: m.InspectionsPage })))
@@ -197,6 +198,16 @@ const InsurancePage = lazy(() => import('./pages/insurance/InsurancePage').then(
 const ToolboxTalksPage = lazy(() => import('./pages/toolbox-talks/ToolboxTalksPage').then(m => ({ default: m.ToolboxTalksPage })))
 const ToolboxTalkDetailPage = lazy(() => import('./pages/toolbox-talks/ToolboxTalkDetailPage').then(m => ({ default: m.ToolboxTalkDetailPage })))
 const ToolboxTalkFormPage = lazy(() => import('./pages/toolbox-talks/ToolboxTalkFormPage').then(m => ({ default: m.ToolboxTalkFormPage })))
+
+// Project Closeout feature
+const CloseoutPage = lazy(() => import('./pages/closeout/CloseoutPage').then(m => ({ default: m.CloseoutPage })))
+
+// Custom Report Builder feature
+const ReportBuilderPage = lazy(() => import('./pages/reports/ReportBuilderPage').then(m => ({ default: m.ReportBuilderPage })))
+
+// QuickBooks Integration feature
+const QuickBooksPage = lazy(() => import('./pages/settings/QuickBooksPage').then(m => ({ default: m.QuickBooksPage })))
+const QuickBooksCallbackPage = lazy(() => import('./pages/settings/QuickBooksCallbackPage').then(m => ({ default: m.QuickBooksCallbackPage })))
 
 function App() {
   // Initialize Web Vitals monitoring in production
@@ -334,6 +345,8 @@ function App() {
                 <Route path="/approvals/:id" element={<ProtectedRoute><ApprovalRequestPage /></ProtectedRoute>} />
                 <Route path="/settings/approval-workflows" element={<ProtectedRoute><ApprovalWorkflowsPage /></ProtectedRoute>} />
                 <Route path="/settings/notifications" element={<ProtectedRoute><NotificationPreferencesPage /></ProtectedRoute>} />
+                <Route path="/settings/quickbooks" element={<ProtectedRoute><QuickBooksPage /></ProtectedRoute>} />
+                <Route path="/settings/quickbooks/callback" element={<ProtectedRoute><QuickBooksCallbackPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
                 <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
@@ -346,6 +359,7 @@ function App() {
                 <Route path="/safety" element={<ProtectedRoute><IncidentsListPage /></ProtectedRoute>} />
                 <Route path="/safety/new" element={<ProtectedRoute><CreateIncidentPage /></ProtectedRoute>} />
                 <Route path="/safety/:id" element={<ProtectedRoute><IncidentDetailPage /></ProtectedRoute>} />
+                <Route path="/safety/osha-300" element={<ProtectedRoute><OSHA300LogPage /></ProtectedRoute>} />
 
                 {/* Inspections feature */}
                 <Route path="/inspections" element={<ProtectedRoute><InspectionsPage /></ProtectedRoute>} />
@@ -425,6 +439,14 @@ function App() {
                 <Route path="/toolbox-talks/new" element={<ProtectedRoute><ToolboxTalkFormPage /></ProtectedRoute>} />
                 <Route path="/toolbox-talks/:id" element={<ProtectedRoute><ToolboxTalkDetailPage /></ProtectedRoute>} />
                 <Route path="/toolbox-talks/:id/edit" element={<ProtectedRoute><ToolboxTalkFormPage /></ProtectedRoute>} />
+
+                {/* Project Closeout feature */}
+                <Route path="/closeout" element={<ProtectedRoute><CloseoutPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/closeout" element={<ProtectedRoute><CloseoutPage /></ProtectedRoute>} />
+
+                {/* Custom Report Builder feature */}
+                <Route path="/reports/builder" element={<ProtectedRoute><ReportBuilderPage /></ProtectedRoute>} />
+                <Route path="/reports/builder/:templateId" element={<ProtectedRoute><ReportBuilderPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>

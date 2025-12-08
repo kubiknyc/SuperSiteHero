@@ -36,7 +36,7 @@ interface PresenceProviderProps {
 }
 
 export function PresenceProvider({ children }: PresenceProviderProps) {
-  const { user, profile } = useAuth()
+  const { user, userProfile } = useAuth()
   const location = useLocation()
 
   const [connectionState, setConnectionState] = useState<ConnectionState>(
@@ -50,6 +50,11 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
     return realtimeManager.onConnectionChange(setConnectionState)
   }, [])
 
+  // Build full name from profile
+  const fullName = userProfile
+    ? `${userProfile.first_name || ''} ${userProfile.last_name || ''}`.trim()
+    : null
+
   // Join/leave project room when project changes
   useEffect(() => {
     if (!user || !currentProjectId) return
@@ -61,8 +66,8 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
       user: {
         id: user.id,
         email: user.email ?? '',
-        name: profile?.full_name ?? user.email ?? 'Anonymous',
-        avatarUrl: profile?.avatar_url ?? undefined,
+        name: fullName || user.email || 'Anonymous',
+        avatarUrl: userProfile?.avatar_url ?? undefined,
       },
       initialPage: location.pathname,
       onSync: () => {
@@ -78,7 +83,7 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
       unsubscribe()
       presenceManager.leaveRoom(roomId)
     }
-  }, [user, profile, currentProjectId, location.pathname])
+  }, [user, userProfile, fullName, currentProjectId, location.pathname])
 
   // Update page when location changes
   useEffect(() => {

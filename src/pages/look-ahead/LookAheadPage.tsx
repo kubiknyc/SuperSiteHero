@@ -40,7 +40,7 @@ import {
   HardHat,
   AlertTriangle,
 } from 'lucide-react'
-import { useToast } from '@/lib/notifications/ToastContext'
+import { toast } from 'sonner'
 import {
   useActivitiesByWeek,
   useCreateActivity,
@@ -75,7 +75,6 @@ import {
 export function LookAheadPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
-  const { toast } = useToast()
 
   // State
   const [baseDate, setBaseDate] = useState(new Date())
@@ -140,20 +139,16 @@ export function LookAheadPage() {
           activityId: selectedActivity.id,
           dto: dto as UpdateLookAheadActivityDTO,
         })
-        toast({ title: 'Activity updated' })
+        toast.success('Activity updated')
       } else {
         await createActivity.mutateAsync(dto as CreateLookAheadActivityDTO)
-        toast({ title: 'Activity created' })
+        toast.success('Activity created')
       }
       setShowActivityDialog(false)
       setSelectedActivity(null)
       setNewActivityWeek(null)
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to save activity',
-        variant: 'destructive',
-      })
+      toast.error('Failed to save activity')
     }
   }
 
@@ -163,13 +158,9 @@ export function LookAheadPage() {
         activityId,
         status,
       })
-      toast({ title: `Activity marked as ${status.replace('_', ' ')}` })
+      toast.success(`Activity marked as ${status.replace('_', ' ')}`)
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update status',
-        variant: 'destructive',
-      })
+      toast.error('Failed to update status')
     }
   }
 
@@ -181,13 +172,9 @@ export function LookAheadPage() {
         activityId,
         projectId: projectId!,
       })
-      toast({ title: 'Activity deleted' })
+      toast.success('Activity deleted')
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete activity',
-        variant: 'destructive',
-      })
+      toast.error('Failed to delete activity')
     }
   }
 
@@ -198,13 +185,9 @@ export function LookAheadPage() {
         weekNumber,
         weekStartDate,
       })
-      toast({ title: `Activity moved to Week ${weekNumber}` })
+      toast.success(`Activity moved to Week ${weekNumber}`)
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to move activity',
-        variant: 'destructive',
-      })
+      toast.error('Failed to move activity')
     }
     setDraggedActivityId(null)
   }
@@ -215,13 +198,9 @@ export function LookAheadPage() {
         dto,
         projectId: projectId!,
       })
-      toast({ title: 'Constraint added' })
+      toast.success('Constraint added')
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to add constraint',
-        variant: 'destructive',
-      })
+      toast.error('Failed to add constraint')
     }
   }
 
@@ -232,13 +211,9 @@ export function LookAheadPage() {
         dto: { status: 'resolved', resolution_notes: notes },
         activityId: selectedActivity!.id,
       })
-      toast({ title: 'Constraint resolved' })
+      toast.success('Constraint resolved')
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to resolve constraint',
-        variant: 'destructive',
-      })
+      toast.error('Failed to resolve constraint')
     }
   }
 
@@ -248,13 +223,9 @@ export function LookAheadPage() {
         constraintId,
         activityId: selectedActivity!.id,
       })
-      toast({ title: 'Constraint deleted' })
+      toast.success('Constraint deleted')
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete constraint',
-        variant: 'destructive',
-      })
+      toast.error('Failed to delete constraint')
     }
   }
 

@@ -45,7 +45,7 @@ import {
   FileText,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useToast } from '@/lib/notifications/ToastContext'
+import { toast } from 'sonner'
 import {
   useLookAheadSnapshots,
   useCreateSnapshot,
@@ -64,7 +64,6 @@ import {
 export function LookAheadSnapshotsPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
-  const { toast } = useToast()
 
   // State
   const [showCreateDialog, setShowCreateDialog] = useState(false)
@@ -90,16 +89,12 @@ export function LookAheadSnapshotsPage() {
         week_start_date: currentWeek.weekStart.toISOString().split('T')[0],
         notes: snapshotNotes || undefined,
       })
-      toast({ title: 'Snapshot created successfully' })
+      toast.success('Snapshot created successfully')
       setShowCreateDialog(false)
       setSnapshotNotes('')
       refetch()
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to create snapshot',
-        variant: 'destructive',
-      })
+      toast.error('Failed to create snapshot')
     }
   }
 

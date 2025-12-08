@@ -19,5 +19,16 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 })
 
+/**
+ * Untyped Supabase client for tables not yet in generated types.
+ * Use this for: insurance_certificates, insurance_requirements, lien_waivers,
+ * insurance_compliance_summary, insurance_certificate_history, insurance_expiration_alerts
+ *
+ * @example
+ * const { data } = await supabaseUntyped.from('insurance_certificates').select('*')
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const supabaseUntyped = supabase as any
+
 // TODO: Add offline sync configuration
 // TODO: Add service worker registration for PWA

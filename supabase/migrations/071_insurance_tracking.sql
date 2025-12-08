@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS insurance_certificates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   company_id UUID NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
   project_id UUID REFERENCES projects(id) ON DELETE SET NULL,
-  subcontractor_id UUID REFERENCES subcontractors(id) ON DELETE CASCADE,
+  subcontractor_id UUID, -- FK to subcontractors when that table exists
 
   -- Certificate Identification
   certificate_number VARCHAR(100) NOT NULL,
@@ -426,7 +426,6 @@ CREATE OR REPLACE FUNCTION get_expiring_certificates(
 RETURNS TABLE (
   certificate_id UUID,
   subcontractor_id UUID,
-  subcontractor_name TEXT,
   insurance_type insurance_type,
   carrier_name VARCHAR(255),
   expiration_date DATE,
@@ -439,7 +438,6 @@ BEGIN
   SELECT
     ic.id as certificate_id,
     ic.subcontractor_id,
-    s.company_name as subcontractor_name,
     ic.insurance_type,
     ic.carrier_name,
     ic.expiration_date,
@@ -447,7 +445,6 @@ BEGIN
     ic.project_id,
     p.name as project_name
   FROM insurance_certificates ic
-  LEFT JOIN subcontractors s ON ic.subcontractor_id = s.id
   LEFT JOIN projects p ON ic.project_id = p.id
   WHERE ic.company_id = p_company_id
     AND ic.deleted_at IS NULL
@@ -461,10 +458,12 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- =============================================
 -- FUNCTION: check_compliance
 -- Check if subcontractor meets insurance requirements
+-- NOTE: Requires p_company_id parameter since subcontractors table may not have company_id
 -- =============================================
 CREATE OR REPLACE FUNCTION check_insurance_compliance(
   p_subcontractor_id UUID,
-  p_project_id UUID DEFAULT NULL
+  p_project_id UUID DEFAULT NULL,
+  p_company_id UUID DEFAULT NULL
 )
 RETURNS TABLE (
   requirement_id UUID,
@@ -477,9 +476,11 @@ RETURNS TABLE (
 DECLARE
   v_company_id UUID;
 BEGIN
-  -- Get company from subcontractor
-  SELECT company_id INTO v_company_id
-  FROM subcontractors WHERE id = p_subcontractor_id;
+  -- Use provided company_id or try to get from project
+  v_company_id := p_company_id;
+  IF v_company_id IS NULL AND p_project_id IS NOT NULL THEN
+    SELECT company_id INTO v_company_id FROM projects WHERE id = p_project_id;
+  END IF;
 
   RETURN QUERY
   WITH requirements AS (
@@ -539,24 +540,25 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- =============================================
 -- VIEW: insurance_compliance_summary
 -- Summary view of insurance compliance by subcontractor
+-- NOTE: Commented out until subcontractors table is available with required columns
 -- =============================================
-CREATE OR REPLACE VIEW insurance_compliance_summary AS
-SELECT
-  s.id as subcontractor_id,
-  s.company_name as subcontractor_name,
-  s.company_id,
-  s.project_id,
-  p.name as project_name,
-  COUNT(DISTINCT ic.id) FILTER (WHERE ic.status = 'active') as active_certificates,
-  COUNT(DISTINCT ic.id) FILTER (WHERE ic.status = 'expiring_soon') as expiring_certificates,
-  COUNT(DISTINCT ic.id) FILTER (WHERE ic.status = 'expired') as expired_certificates,
-  MIN(ic.expiration_date) FILTER (WHERE ic.status IN ('active', 'expiring_soon')) as next_expiration,
-  BOOL_AND(COALESCE(ic.additional_insured_verified, false)) as all_additional_insured_verified
-FROM subcontractors s
-LEFT JOIN projects p ON s.project_id = p.id
-LEFT JOIN insurance_certificates ic ON ic.subcontractor_id = s.id AND ic.deleted_at IS NULL
-WHERE s.deleted_at IS NULL
-GROUP BY s.id, s.company_name, s.company_id, s.project_id, p.name;
+-- CREATE OR REPLACE VIEW insurance_compliance_summary AS
+-- SELECT
+--   s.id as subcontractor_id,
+--   s.company_name as subcontractor_name,
+--   s.company_id,
+--   s.project_id,
+--   p.name as project_name,
+--   COUNT(DISTINCT ic.id) FILTER (WHERE ic.status = 'active') as active_certificates,
+--   COUNT(DISTINCT ic.id) FILTER (WHERE ic.status = 'expiring_soon') as expiring_certificates,
+--   COUNT(DISTINCT ic.id) FILTER (WHERE ic.status = 'expired') as expired_certificates,
+--   MIN(ic.expiration_date) FILTER (WHERE ic.status IN ('active', 'expiring_soon')) as next_expiration,
+--   BOOL_AND(COALESCE(ic.additional_insured_verified, false)) as all_additional_insured_verified
+-- FROM subcontractors s
+-- LEFT JOIN projects p ON s.project_id = p.id
+-- LEFT JOIN insurance_certificates ic ON ic.subcontractor_id = s.id AND ic.deleted_at IS NULL
+-- WHERE s.deleted_at IS NULL
+-- GROUP BY s.id, s.company_name, s.company_id, s.project_id, p.name;
 
 -- =============================================
 -- VIEW: expiring_certificates_view
@@ -566,11 +568,9 @@ CREATE OR REPLACE VIEW expiring_certificates_view AS
 SELECT
   ic.*,
   (ic.expiration_date - CURRENT_DATE)::INTEGER as days_until_expiry,
-  s.company_name as subcontractor_name,
   p.name as project_name,
   c.name as company_name
 FROM insurance_certificates ic
-LEFT JOIN subcontractors s ON ic.subcontractor_id = s.id
 LEFT JOIN projects p ON ic.project_id = p.id
 LEFT JOIN companies c ON ic.company_id = c.id
 WHERE ic.deleted_at IS NULL

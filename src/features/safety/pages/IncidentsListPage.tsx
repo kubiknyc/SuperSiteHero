@@ -30,6 +30,7 @@ import {
   Calendar,
   Filter,
   X,
+  ClipboardList,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -93,12 +94,20 @@ export function IncidentsListPage() {
               Track and manage safety incidents across all projects
             </p>
           </div>
-          <Link to="/safety/new">
-            <Button>
-              <Plus className="h-4 w-4 mr-2" />
-              Report Incident
-            </Button>
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link to="/safety/osha-300">
+              <Button variant="outline">
+                <ClipboardList className="h-4 w-4 mr-2" />
+                OSHA 300 Log
+              </Button>
+            </Link>
+            <Link to="/safety/new">
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Report Incident
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Statistics Cards */}

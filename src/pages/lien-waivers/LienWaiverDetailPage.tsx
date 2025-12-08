@@ -54,6 +54,7 @@ import {
   Ban,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { downloadLienWaiverPDF } from '@/features/lien-waivers/utils/pdfExport';
 import type { LienWaiverHistory } from '@/types/lien-waiver';
 import { formatWaiverAmount, getStateName, isWaiverOverdue } from '@/types/lien-waiver';
 
@@ -81,6 +82,7 @@ export function LienWaiverDetailPage() {
   const [sendToEmail, setSendToEmail] = useState('');
   const [rejectionReason, setRejectionReason] = useState('');
   const [voidReason, setVoidReason] = useState('');
+  const [isExporting, setIsExporting] = useState(false);
 
   if (isLoading) {
     return (
@@ -164,9 +166,32 @@ export function LienWaiverDetailPage() {
     }
   };
 
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      await downloadLienWaiverPDF({ waiver });
+    } catch (error) {
+      console.error('Failed to export PDF:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   // Render workflow actions based on status
   const renderActions = () => {
     const actions: React.ReactNode[] = [];
+
+    // Export PDF button (always available)
+    actions.push(
+      <Button key="export" variant="outline" onClick={handleExportPDF} disabled={isExporting}>
+        {isExporting ? (
+          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+        ) : (
+          <Download className="h-4 w-4 mr-2" />
+        )}
+        Export PDF
+      </Button>
+    );
 
     switch (waiver.status) {
       case 'pending':
