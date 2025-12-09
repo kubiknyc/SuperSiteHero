@@ -9,13 +9,14 @@ import type {
   AISummary,
   AISummaryType,
   AIExtractedActionItem,
-  GenerateSummaryDTO,
   DailyReportSummaryResponse,
   MeetingActionItemsResponse,
   WeeklyStatusResponse,
-  SummaryMetrics,
-  TrendIndicator,
 } from '@/types/ai'
+
+// Type assertion helper for tables not yet in Supabase types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const supabaseAny = supabase as any
 
 // System prompts for different summary types
 const SYSTEM_PROMPTS = {
@@ -49,7 +50,7 @@ export const smartSummariesApi = {
   ): Promise<DailyReportSummaryResponse> {
     // Check for existing summary
     if (!forceRegenerate) {
-      const { data: existing } = await supabase
+      const { data: existing } = await supabaseAny
         .from('ai_summaries')
         .select('*')
         .eq('source_type', 'daily_report')
@@ -78,27 +79,24 @@ export const smartSummariesApi = {
       throw new Error('Daily report not found')
     }
 
-    // Build prompt
+    // Build prompt - use actual field names from daily_reports table
     const prompt = `Analyze this daily construction report and provide a summary:
 
-Project: ${report.project?.name || 'Unknown'}
+Project: ${(report.project as { name?: string } | null)?.name || 'Unknown'}
 Date: ${report.report_date}
-Weather: ${report.weather_conditions || 'Not recorded'}
+Weather: ${report.weather_condition || 'Not recorded'}
 
 Work Completed:
 ${report.work_completed || 'No work recorded'}
 
-Materials Used:
-${report.materials_used || 'None recorded'}
+Observations:
+${report.observations || 'None recorded'}
 
-Equipment Used:
-${report.equipment_used || 'None recorded'}
+Issues:
+${report.issues || 'None recorded'}
 
-Safety Observations:
-${report.safety_observations || 'None recorded'}
-
-Issues/Delays:
-${report.issues_delays || 'None recorded'}
+Comments:
+${report.comments || 'None recorded'}
 
 Provide a JSON response with:
 {
@@ -132,7 +130,7 @@ Provide a JSON response with:
     )
 
     // Save summary
-    const { data: summary, error } = await supabase
+    const { data: summary, error } = await supabaseAny
       .from('ai_summaries')
       .insert({
         project_id: report.project_id,
@@ -168,7 +166,7 @@ Provide a JSON response with:
   ): Promise<MeetingActionItemsResponse> {
     // Check for existing
     if (!forceRegenerate) {
-      const { data: existing } = await supabase
+      const { data: existing } = await supabaseAny
         .from('ai_summaries')
         .select('*, action_items:ai_extracted_action_items(*)')
         .eq('source_type', 'meeting')
@@ -200,7 +198,7 @@ Provide a JSON response with:
     const prompt = `Analyze these meeting notes and extract action items:
 
 Meeting: ${meeting.title}
-Project: ${meeting.project?.name || 'Unknown'}
+Project: ${(meeting.project as { name?: string } | null)?.name || 'Unknown'}
 Date: ${meeting.meeting_date}
 Attendees: ${meeting.attendees?.join(', ') || 'Not recorded'}
 
@@ -243,7 +241,7 @@ Provide a JSON response:
     )
 
     // Save summary
-    const { data: summary, error } = await supabase
+    const { data: summary, error } = await supabaseAny
       .from('ai_summaries')
       .insert({
         project_id: meeting.project_id,
@@ -278,7 +276,7 @@ Provide a JSON response:
       status: 'extracted' as const,
     }))
 
-    const { data: actionItems } = await supabase
+    const { data: actionItems } = await supabaseAny
       .from('ai_extracted_action_items')
       .insert(actionItemsToInsert)
       .select()
@@ -301,7 +299,7 @@ Provide a JSON response:
   ): Promise<WeeklyStatusResponse> {
     // Check for existing
     if (!forceRegenerate) {
-      const { data: existing } = await supabase
+      const { data: existing } = await supabaseAny
         .from('ai_summaries')
         .select('*')
         .eq('project_id', projectId)
@@ -327,10 +325,10 @@ Provide a JSON response:
     const weekEnd = new Date(weekStart)
     weekEnd.setDate(weekEnd.getDate() + 7)
 
-    // Get daily reports for the week
+    // Get daily reports for the week (using actual field names)
     const { data: dailyReports } = await supabase
       .from('daily_reports')
-      .select('report_date, work_completed, issues_delays, weather_conditions')
+      .select('report_date, work_completed, issues, weather_condition')
       .eq('project_id', projectId)
       .gte('report_date', weekOf)
       .lt('report_date', weekEnd.toISOString().split('T')[0])
@@ -361,10 +359,10 @@ Daily Reports Summary:
 ${dailyReports?.map(r => `${r.report_date}: ${r.work_completed || 'No work recorded'}`).join('\n') || 'No daily reports'}
 
 Weather Conditions:
-${dailyReports?.map(r => `${r.report_date}: ${r.weather_conditions || 'Not recorded'}`).join('\n') || 'Not recorded'}
+${dailyReports?.map(r => `${r.report_date}: ${r.weather_condition || 'Not recorded'}`).join('\n') || 'Not recorded'}
 
 Issues Reported:
-${dailyReports?.filter(r => r.issues_delays).map(r => `${r.report_date}: ${r.issues_delays}`).join('\n') || 'No issues reported'}
+${dailyReports?.filter(r => r.issues).map(r => `${r.report_date}: ${r.issues}`).join('\n') || 'No issues reported'}
 
 RFIs This Week: ${rfis?.length || 0} (${rfis?.filter(r => r.status === 'closed').length || 0} closed)
 Change Orders This Week: ${changeOrders?.length || 0}
@@ -401,7 +399,7 @@ Provide a JSON response:
     )
 
     // Save summary
-    const { data: summary, error } = await supabase
+    const { data: summary, error } = await supabaseAny
       .from('ai_summaries')
       .insert({
         project_id: projectId,
@@ -492,7 +490,7 @@ Provide a JSON response:
     )
 
     // Save summary
-    const { data: summary, error } = await supabase
+    const { data: summary, error } = await supabaseAny
       .from('ai_summaries')
       .insert({
         project_id: projectId,
@@ -521,7 +519,7 @@ Provide a JSON response:
    * Get existing summary by ID
    */
   async getSummary(summaryId: string): Promise<AISummary | null> {
-    const { data } = await supabase
+    const { data } = await supabaseAny
       .from('ai_summaries')
       .select('*')
       .eq('id', summaryId)
@@ -538,7 +536,7 @@ Provide a JSON response:
     status: 'extracted' | 'confirmed' | 'rejected' | 'completed',
     assigneeId?: string
   ): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAny
       .from('ai_extracted_action_items')
       .update({
         status,

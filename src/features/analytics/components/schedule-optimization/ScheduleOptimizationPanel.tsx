@@ -53,6 +53,8 @@ const RECOMMENDATION_TYPE_ICONS: Record<string, typeof AlertTriangle> = {
   add_float: Clock,
   resource_level: Users,
   constraint_priority: Target,
+  crew_optimization: Users,
+  weather_adjustment: Calendar,
 }
 
 const RECOMMENDATION_TYPE_LABELS: Record<string, string> = {
@@ -60,6 +62,8 @@ const RECOMMENDATION_TYPE_LABELS: Record<string, string> = {
   add_float: 'Add Float',
   resource_level: 'Level Resources',
   constraint_priority: 'Prioritize Constraint',
+  crew_optimization: 'Optimize Crew',
+  weather_adjustment: 'Weather Adjustment',
 }
 
 export function ScheduleOptimizationPanel({
@@ -232,9 +236,9 @@ export function ScheduleOptimizationPanel({
                 className="p-2 bg-red-50 border border-red-100 rounded text-sm"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-medium truncate">{activity.description}</span>
+                  <span className="font-medium truncate">{activity.name}</span>
                   <Badge variant="outline" className="text-xs">
-                    {activity.duration} days
+                    {activity.durationDays} days
                   </Badge>
                 </div>
                 {activity.trade && (
@@ -263,7 +267,7 @@ export function ScheduleOptimizationPanel({
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-2 space-y-1">
               {floatOpportunities.slice(0, 5).map((opp) => (
-                <FloatOpportunityCard key={opp.activity_id} opportunity={opp} />
+                <FloatOpportunityCard key={opp.activityId} opportunity={opp} />
               ))}
             </CollapsibleContent>
           </Collapsible>
@@ -299,7 +303,7 @@ export function ScheduleOptimizationPanel({
                   <div className="flex-1 min-w-0">
                     <p className="truncate">{constraint.constraintDescription}</p>
                     <p className="text-xs text-muted-foreground">
-                      {constraint.activityName} - {constraint.constraintType}
+                      {constraint.activityName} - {constraint.daysUntilCritical} days until critical
                     </p>
                   </div>
                   <Badge
@@ -327,7 +331,7 @@ function RecommendationCard({
   onImplement: () => void
   onDismiss: () => void
 }) {
-  const Icon = RECOMMENDATION_TYPE_ICONS[recommendation.type] || Brain
+  const Icon = RECOMMENDATION_TYPE_ICONS[recommendation.recommendation_type] || Brain
 
   return (
     <div className="p-3 border rounded-lg">
@@ -336,7 +340,7 @@ function RecommendationCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <Badge variant="outline" className="text-xs">
-              {RECOMMENDATION_TYPE_LABELS[recommendation.type] || recommendation.type}
+              {RECOMMENDATION_TYPE_LABELS[recommendation.recommendation_type] || recommendation.recommendation_type}
             </Badge>
             <Badge
               variant={recommendation.priority >= 80 ? 'destructive' : 'secondary'}
@@ -346,12 +350,12 @@ function RecommendationCard({
             </Badge>
           </div>
           <p className="text-sm">{recommendation.description}</p>
-          {(recommendation.potential_time_savings || recommendation.potential_cost_savings) && (
+          {(recommendation.potential_days_saved || recommendation.potential_cost_savings) && (
             <div className="flex gap-3 mt-1 text-xs text-green-600">
-              {recommendation.potential_time_savings && (
+              {recommendation.potential_days_saved && (
                 <span className="flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
-                  {recommendation.potential_time_savings} days saved
+                  {recommendation.potential_days_saved} days saved
                 </span>
               )}
               {recommendation.potential_cost_savings && (
@@ -405,7 +409,7 @@ function FloatOpportunityCard({ opportunity }: { opportunity: FloatOpportunity }
       <div className="flex items-center justify-between">
         <span className="truncate">{opportunity.activityName}</span>
         <Badge variant="outline" className="text-green-600 text-xs">
-          {opportunity.totalFloatDays} days float
+          {opportunity.potentialFloat} days float
         </Badge>
       </div>
       <p className="text-xs text-muted-foreground mt-1">{opportunity.recommendation}</p>

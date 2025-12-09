@@ -8,16 +8,17 @@ import { supabase } from '@/lib/supabase'
 import type {
   ScheduleAnalysisRequest,
   ScheduleAnalysisResponse,
-  CriticalPathAnalysis,
   CriticalPathResult,
   CriticalPathActivity,
   FloatOpportunity,
   ConstraintPriority,
   ScheduleOptimizationRecommendation,
-  ScheduleRecommendationType,
   ResourceConflict,
-  ConstraintScheduleImpact,
 } from '@/types/ai'
+
+// Type assertion helper for tables not yet in Supabase types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const supabaseAny = supabase as any
 
 interface ScheduleActivity {
   id: string
@@ -85,8 +86,8 @@ export const scheduleOptimizer = {
       }
     }
 
-    // Fetch dependencies
-    const { data: dependencies } = await supabase
+    // Fetch dependencies (table may not exist yet)
+    const { data: dependencies } = await supabaseAny
       .from('look_ahead_dependencies')
       .select('*')
       .eq('project_id', request.project_id)
@@ -606,8 +607,8 @@ export const scheduleOptimizer = {
     criticalPath: CriticalPathResult,
     constraintPriorities: ConstraintPriority[]
   ): Promise<void> {
-    // Save critical path analysis
-    await supabase
+    // Save critical path analysis (table may not exist yet)
+    await supabaseAny
       .from('critical_path_analysis')
       .upsert({
         project_id: projectId,
@@ -621,9 +622,9 @@ export const scheduleOptimizer = {
         onConflict: 'project_id,analysis_date',
       })
 
-    // Save constraint impacts
+    // Save constraint impacts (table may not exist yet)
     for (const priority of constraintPriorities) {
-      await supabase
+      await supabaseAny
         .from('constraint_schedule_impacts')
         .upsert({
           constraint_id: priority.constraintId,

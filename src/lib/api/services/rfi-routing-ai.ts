@@ -16,6 +16,10 @@ import type {
   BallInCourtRole,
 } from '@/types/ai'
 
+// Type assertion helper for tables not yet in Supabase types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const supabaseAny = supabase as any
+
 // CSI MasterFormat divisions for classification
 const CSI_DIVISIONS = [
   { code: '01', name: 'General Requirements', typicalRole: 'gc_pm' as const },
@@ -163,7 +167,7 @@ Respond with JSON in this format:
     const processingTime = Date.now() - startTime
 
     // Save suggestion to database
-    const { data: suggestion, error } = await supabase
+    const { data: suggestion, error } = await supabaseAny
       .from('rfi_routing_suggestions')
       .insert({
         rfi_id: dto.rfi_id,
@@ -197,7 +201,7 @@ Respond with JSON in this format:
    * Submit feedback on a routing suggestion
    */
   async submitFeedback(dto: SubmitRoutingFeedbackDTO): Promise<void> {
-    const { error } = await supabase
+    const { error } = await supabaseAny
       .from('rfi_routing_suggestions')
       .update({
         feedback_status: dto.feedback_status,
@@ -224,7 +228,7 @@ Respond with JSON in this format:
     const words = combinedText.split(/\s+/).filter(w => w.length > 3)
 
     // Look for patterns that match keywords
-    const { data: patterns } = await supabase
+    const { data: patterns } = await supabaseAny
       .from('rfi_routing_patterns')
       .select('*')
       .gte('match_count', 3) // Only use patterns with enough matches
@@ -260,7 +264,7 @@ Respond with JSON in this format:
   ): Promise<RFIRoutingSuggestion> {
     const processingTime = Date.now() - startTime
 
-    const { data: suggestion, error } = await supabase
+    const { data: suggestion, error } = await supabaseAny
       .from('rfi_routing_suggestions')
       .insert({
         rfi_id: rfiId,
@@ -281,7 +285,7 @@ Respond with JSON in this format:
     if (error) throw error
 
     // Update pattern usage
-    await supabase
+    await supabaseAny
       .from('rfi_routing_patterns')
       .update({
         match_count: pattern.match_count + 1,
@@ -297,7 +301,7 @@ Respond with JSON in this format:
    */
   async updatePatternsFromFeedback(dto: SubmitRoutingFeedbackDTO): Promise<void> {
     // Get the original suggestion
-    const { data: suggestion } = await supabase
+    const { data: suggestion } = await supabaseAny
       .from('rfi_routing_suggestions')
       .select('*, rfi:rfis!inner(subject, question)')
       .eq('id', dto.suggestion_id)
@@ -309,7 +313,7 @@ Respond with JSON in this format:
     const roleToUse = dto.actual_role_assigned || suggestion.suggested_role
 
     // Check if pattern already exists
-    const { data: existingPattern } = await supabase
+    const { data: existingPattern } = await supabaseAny
       .from('rfi_routing_patterns')
       .select('*')
       .eq('keyword_pattern', keywords)
@@ -324,7 +328,7 @@ Respond with JSON in this format:
         ? (existingPattern.success_rate * existingPattern.match_count + 1) / newMatchCount
         : (existingPattern.success_rate * existingPattern.match_count) / newMatchCount
 
-      await supabase
+      await supabaseAny
         .from('rfi_routing_patterns')
         .update({
           match_count: newMatchCount,
@@ -335,7 +339,7 @@ Respond with JSON in this format:
         .eq('id', existingPattern.id)
     } else if (keywords.length > 0) {
       // Create new pattern
-      await supabase
+      await supabaseAny
         .from('rfi_routing_patterns')
         .insert({
           keyword_pattern: keywords,
@@ -367,7 +371,7 @@ Respond with JSON in this format:
       .limit(5)
 
     // Find related Submittals
-    const { data: submittals } = await supabase
+    const { data: submittals } = await supabaseAny
       .from('dedicated_submittals')
       .select('id, submittal_number, title, status')
       .eq('project_id', projectId)
@@ -396,7 +400,7 @@ Respond with JSON in this format:
    * Get routing suggestions for an RFI
    */
   async getSuggestions(rfiId: string): Promise<RFIRoutingSuggestion[]> {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAny
       .from('rfi_routing_suggestions')
       .select('*')
       .eq('rfi_id', rfiId)

@@ -102,6 +102,7 @@ const AISettingsPage = lazy(() => import('./pages/settings/AISettingsPage'))
 
 // Schedule / Gantt Charts feature
 const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
+const MasterSchedulePage = lazy(() => import('./pages/schedule/MasterSchedulePage').then(m => ({ default: m.MasterSchedulePage })))
 
 // Predictive Analytics feature
 const AnalyticsPage = lazy(() => import('./pages/analytics/AnalyticsPage').then(m => ({ default: m.AnalyticsPage })))
@@ -385,7 +386,8 @@ function App() {
                 <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
-                <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><MasterSchedulePage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/gantt" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
 
                 {/* Predictive Analytics feature */}
                 <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />
