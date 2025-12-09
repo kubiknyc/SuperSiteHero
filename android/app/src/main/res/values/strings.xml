@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SuperSiteHero</string>
+    <string name="title_activity_main">SuperSiteHero</string>
+    <string name="package_name">com.supersitehero.app</string>
+    <string name="custom_url_scheme">com.supersitehero.app</string>
+</resources>

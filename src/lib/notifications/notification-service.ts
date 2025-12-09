@@ -18,6 +18,8 @@ import {
   generateTaskAssignedEmail,
   generateRfiAssignedEmail,
   generateChangeOrderStatusEmail,
+  generateBidSubmittedEmail,
+  generatePortalInvitationEmail,
   type ApprovalRequestEmailData,
   type ApprovalCompletedEmailData,
   type IncidentNotificationEmailData,
@@ -26,6 +28,8 @@ import {
   type TaskAssignedEmailData,
   type RfiAssignedEmailData,
   type ChangeOrderStatusEmailData,
+  type BidSubmittedEmailData,
+  type PortalInvitationEmailData,
 } from '@/lib/email/templates'
 import {
   type NotificationPreferences,
@@ -556,6 +560,93 @@ export const notificationService = {
   },
 
   /**
+   * Send bid submitted notification to GC/PM
+   */
+  async notifyBidSubmitted(
+    recipients: NotificationRecipient[],
+    data: Omit<BidSubmittedEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      const emailData: BidSubmittedEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/change-orders`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateBidSubmittedEmail(emailData)
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `Bid Submitted: ${data.changeOrderNumber} - ${data.subcontractorName}`,
+            html,
+            text,
+            tags: ['bid', 'submitted', 'change-order'],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Bid submitted email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'bid_submitted',
+            title: 'Bid Submitted',
+            message: `${data.subcontractorName} submitted a bid of ${data.bidAmount} for ${data.changeOrderNumber}`,
+            link: data.viewUrl,
+            metadata: {
+              changeOrderNumber: data.changeOrderNumber,
+              subcontractorName: data.subcontractorName,
+              bidAmount: data.bidAmount,
+              projectName: data.projectName,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send portal invitation email to subcontractor
+   */
+  async notifyPortalInvitation(
+    recipientEmail: string,
+    data: Omit<PortalInvitationEmailData, 'recipientName' | 'recipientEmail'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const emailData: PortalInvitationEmailData = {
+      ...data,
+      recipientName: data.companyName, // Use company name as recipient name
+      recipientEmail,
+    }
+
+    // Send email notification (always send for invitations)
+    try {
+      const { html, text } = generatePortalInvitationEmail(emailData)
+      await sendEmail({
+        to: { email: recipientEmail, name: data.companyName },
+        subject: `You're invited to ${data.projectName} on SuperSiteHero`,
+        html,
+        text,
+        tags: ['invitation', 'portal', 'subcontractor'],
+      })
+      logger.info(`[NotificationService] Portal invitation sent to ${recipientEmail}`)
+    } catch (error) {
+      logger.error('[NotificationService] Portal invitation email failed:', error)
+      throw error // Re-throw so caller knows invitation failed
+    }
+  },
+
+  /**
    * Create an in-app notification (stored in database)
    */
   async _createInAppNotification(data: {
@@ -861,4 +952,26 @@ export async function sendChangeOrderStatusNotification(
   options?: NotificationOptions
 ): Promise<void> {
   return notificationService.notifyChangeOrderStatus(recipients, data, options)
+}
+
+/**
+ * Send bid submitted notification
+ */
+export async function sendBidSubmittedNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<BidSubmittedEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyBidSubmitted(recipients, data, options)
+}
+
+/**
+ * Send portal invitation notification
+ */
+export async function sendPortalInvitationNotification(
+  recipientEmail: string,
+  data: Omit<PortalInvitationEmailData, 'recipientName' | 'recipientEmail'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyPortalInvitation(recipientEmail, data, options)
 }

@@ -32,6 +32,7 @@ import { PhotoGallery } from '@/features/daily-reports/components/PhotoGallery'
 import { PrintView } from '@/features/daily-reports/components/PrintView'
 import { VersionHistory } from '@/features/daily-reports/components/VersionHistory'
 import { SignatureCapture } from '@/features/daily-reports/components/SignatureCapture'
+import { DailyReportSummaryCard } from '@/features/summaries/components/DailyReportSummaryCard'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
 
@@ -289,6 +290,9 @@ export function DailyReportDetailPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* AI Summary */}
+        <DailyReportSummaryCard reportId={report.id} />
 
         {/* Weather Section */}
         <Card>

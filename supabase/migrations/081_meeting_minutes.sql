@@ -115,6 +115,41 @@ CREATE TABLE IF NOT EXISTS meetings (
   UNIQUE (project_id, meeting_number)
 );
 
+-- Add columns to meetings if table already exists but columns are missing
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'company_id') THEN
+    ALTER TABLE meetings ADD COLUMN company_id UUID REFERENCES companies(id) ON DELETE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'project_id') THEN
+    ALTER TABLE meetings ADD COLUMN project_id UUID REFERENCES projects(id) ON DELETE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'meeting_type') THEN
+    ALTER TABLE meetings ADD COLUMN meeting_type meeting_type;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'title') THEN
+    ALTER TABLE meetings ADD COLUMN title TEXT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'meeting_date') THEN
+    ALTER TABLE meetings ADD COLUMN meeting_date DATE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'start_time') THEN
+    ALTER TABLE meetings ADD COLUMN start_time TIME;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'location') THEN
+    ALTER TABLE meetings ADD COLUMN location TEXT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'status') THEN
+    ALTER TABLE meetings ADD COLUMN status meeting_status DEFAULT 'scheduled';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'organizer_id') THEN
+    ALTER TABLE meetings ADD COLUMN organizer_id UUID REFERENCES users(id);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'deleted_at') THEN
+    ALTER TABLE meetings ADD COLUMN deleted_at TIMESTAMPTZ;
+  END IF;
+END $$;
+
 -- =============================================
 -- MEETING ATTENDEES TABLE
 -- =============================================
@@ -140,11 +175,29 @@ CREATE TABLE IF NOT EXISTS meeting_attendees (
 
   -- Metadata
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-
-  -- Prevent duplicate attendees per meeting
-  UNIQUE (meeting_id, COALESCE(user_id, gen_random_uuid()), attendee_email)
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Add columns if table already exists but columns missing
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_attendees' AND column_name = 'attendee_email') THEN
+    ALTER TABLE meeting_attendees ADD COLUMN attendee_email TEXT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_attendees' AND column_name = 'user_id') THEN
+    ALTER TABLE meeting_attendees ADD COLUMN user_id UUID REFERENCES users(id);
+  END IF;
+END $$;
+
+-- Prevent duplicate user attendees per meeting
+CREATE UNIQUE INDEX IF NOT EXISTS idx_meeting_attendees_user_unique
+  ON meeting_attendees(meeting_id, user_id)
+  WHERE user_id IS NOT NULL;
+
+-- Prevent duplicate external (email) attendees per meeting
+CREATE UNIQUE INDEX IF NOT EXISTS idx_meeting_attendees_email_unique
+  ON meeting_attendees(meeting_id, attendee_email)
+  WHERE user_id IS NULL AND attendee_email IS NOT NULL;
 
 -- =============================================
 -- MEETING ACTION ITEMS TABLE
@@ -192,6 +245,44 @@ CREATE TABLE IF NOT EXISTS meeting_action_items (
   created_by UUID REFERENCES users(id),
   deleted_at TIMESTAMPTZ
 );
+
+-- Add columns to meeting_action_items if table already exists but columns are missing
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'company_id') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN company_id UUID REFERENCES companies(id) ON DELETE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'project_id') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN project_id UUID REFERENCES projects(id) ON DELETE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'meeting_id') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN meeting_id UUID REFERENCES meetings(id) ON DELETE CASCADE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'item_number') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN item_number INTEGER;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'description') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN description TEXT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'priority') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN priority VARCHAR(10) DEFAULT 'normal';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'assigned_to_user_id') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN assigned_to_user_id UUID REFERENCES users(id);
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'assigned_to_name') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN assigned_to_name TEXT;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'status') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN status action_item_status DEFAULT 'open';
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'due_date') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN due_date DATE;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'deleted_at') THEN
+    ALTER TABLE meeting_action_items ADD COLUMN deleted_at TIMESTAMPTZ;
+  END IF;
+END $$;
 
 -- =============================================
 -- MEETING ATTACHMENTS TABLE
@@ -273,21 +364,25 @@ CREATE INDEX IF NOT EXISTS idx_meeting_agenda_items_meeting ON meeting_agenda_it
 -- TRIGGERS
 -- =============================================
 
+DROP TRIGGER IF EXISTS update_meetings_updated_at ON meetings;
 CREATE TRIGGER update_meetings_updated_at
   BEFORE UPDATE ON meetings
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_meeting_attendees_updated_at ON meeting_attendees;
 CREATE TRIGGER update_meeting_attendees_updated_at
   BEFORE UPDATE ON meeting_attendees
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_meeting_action_items_updated_at ON meeting_action_items;
 CREATE TRIGGER update_meeting_action_items_updated_at
   BEFORE UPDATE ON meeting_action_items
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_meeting_agenda_items_updated_at ON meeting_agenda_items;
 CREATE TRIGGER update_meeting_agenda_items_updated_at
   BEFORE UPDATE ON meeting_agenda_items
   FOR EACH ROW
@@ -388,60 +483,94 @@ CREATE POLICY "Users can manage agenda in their meetings"
 -- VIEWS
 -- =============================================
 
--- Upcoming meetings view
-CREATE OR REPLACE VIEW upcoming_meetings AS
-SELECT
-  m.id,
-  m.project_id,
-  m.meeting_type,
-  m.title,
-  m.meeting_date,
-  m.start_time,
-  m.location,
-  m.status,
-  p.name as project_name,
-  org.full_name as organizer_name,
-  (SELECT COUNT(*) FROM meeting_attendees ma WHERE ma.meeting_id = m.id AND ma.attendance_status = 'confirmed') as confirmed_count,
-  (SELECT COUNT(*) FROM meeting_action_items mai WHERE mai.meeting_id = m.id AND mai.status = 'open') as open_action_items
-FROM meetings m
-JOIN projects p ON m.project_id = p.id
-LEFT JOIN users org ON m.organizer_id = org.id
-WHERE m.deleted_at IS NULL
-  AND m.meeting_date >= CURRENT_DATE
-  AND m.status NOT IN ('completed', 'minutes_distributed', 'cancelled')
-ORDER BY m.meeting_date, m.start_time;
+-- Drop existing views first to avoid column mismatch issues
+DROP VIEW IF EXISTS upcoming_meetings CASCADE;
+DROP VIEW IF EXISTS open_action_items CASCADE;
 
-COMMENT ON VIEW upcoming_meetings IS 'View of upcoming scheduled meetings';
+-- Upcoming meetings view (only created if required columns exist)
+DO $$
+BEGIN
+  -- Only create view if all required columns exist
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'title')
+     AND EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'meeting_date')
+     AND EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'meeting_type')
+  THEN
+    EXECUTE '
+      CREATE OR REPLACE VIEW upcoming_meetings AS
+      SELECT
+        m.id,
+        m.project_id,
+        m.meeting_type,
+        m.title,
+        m.meeting_date,
+        m.start_time,
+        m.location,
+        m.status,
+        p.name as project_name,
+        org.full_name as organizer_name,
+        (SELECT COUNT(*) FROM meeting_attendees ma WHERE ma.meeting_id = m.id AND ma.attendance_status = ''confirmed'') as confirmed_count,
+        (SELECT COUNT(*) FROM meeting_action_items mai WHERE mai.meeting_id = m.id AND mai.status = ''open'') as open_action_items
+      FROM meetings m
+      JOIN projects p ON m.project_id = p.id
+      LEFT JOIN users org ON m.organizer_id = org.id
+      WHERE m.deleted_at IS NULL
+        AND m.meeting_date >= CURRENT_DATE
+        AND m.status NOT IN (''completed'', ''minutes_distributed'', ''cancelled'')
+      ORDER BY m.meeting_date, m.start_time
+    ';
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'upcoming_meetings') THEN
+    EXECUTE 'COMMENT ON VIEW upcoming_meetings IS ''View of upcoming scheduled meetings''';
+  END IF;
+END $$;
 
 -- Open action items view
-CREATE OR REPLACE VIEW open_action_items AS
-SELECT
-  mai.id,
-  mai.meeting_id,
-  mai.project_id,
-  mai.item_number,
-  mai.description,
-  mai.priority,
-  mai.assigned_to_name,
-  mai.due_date,
-  mai.status,
-  m.title as meeting_title,
-  m.meeting_date,
-  p.name as project_name,
-  CASE
-    WHEN mai.due_date < CURRENT_DATE THEN 'overdue'
-    WHEN mai.due_date = CURRENT_DATE THEN 'due_today'
-    WHEN mai.due_date <= CURRENT_DATE + 7 THEN 'due_soon'
-    ELSE 'on_track'
-  END as urgency
-FROM meeting_action_items mai
-JOIN meetings m ON mai.meeting_id = m.id
-JOIN projects p ON mai.project_id = p.id
-WHERE mai.deleted_at IS NULL
-  AND mai.status IN ('open', 'in_progress')
-ORDER BY mai.due_date, mai.priority DESC;
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meeting_action_items' AND column_name = 'item_number')
+     AND EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'meetings' AND column_name = 'title')
+  THEN
+    EXECUTE '
+      CREATE OR REPLACE VIEW open_action_items AS
+      SELECT
+        mai.id,
+        mai.meeting_id,
+        mai.project_id,
+        mai.item_number,
+        mai.description,
+        mai.priority,
+        mai.assigned_to_name,
+        mai.due_date,
+        mai.status,
+        m.title as meeting_title,
+        m.meeting_date,
+        p.name as project_name,
+        CASE
+          WHEN mai.due_date < CURRENT_DATE THEN ''overdue''
+          WHEN mai.due_date = CURRENT_DATE THEN ''due_today''
+          WHEN mai.due_date <= CURRENT_DATE + 7 THEN ''due_soon''
+          ELSE ''on_track''
+        END as urgency
+      FROM meeting_action_items mai
+      JOIN meetings m ON mai.meeting_id = m.id
+      JOIN projects p ON mai.project_id = p.id
+      WHERE mai.deleted_at IS NULL
+        AND mai.status IN (''open'', ''in_progress'')
+      ORDER BY mai.due_date, mai.priority DESC
+    ';
+  END IF;
+END $$;
 
-COMMENT ON VIEW open_action_items IS 'View of all open action items across meetings';
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_views WHERE viewname = 'open_action_items') THEN
+    EXECUTE 'COMMENT ON VIEW open_action_items IS ''View of all open action items across meetings''';
+  END IF;
+END $$;
 
 -- Comments
 COMMENT ON TABLE meetings IS 'Construction project meetings (OAC, subcontractor, safety, etc.)';

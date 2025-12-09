@@ -6,7 +6,7 @@
 
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
 import { Button } from './button'
-import { Select } from './select'
+import { NativeSelect as Select } from './select'
 import { cn } from '@/lib/utils'
 
 export interface PaginationProps {
@@ -69,7 +69,7 @@ export function Pagination({
           <Select
             id="page-size"
             value={pageSize.toString()}
-            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onPageSizeChange(Number(e.target.value))}
             className="w-20"
           >
             {pageSizeOptions.map((size) => (

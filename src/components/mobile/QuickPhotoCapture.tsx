@@ -1,10 +1,17 @@
 // File: src/components/mobile/QuickPhotoCapture.tsx
 // Quick photo capture floating action button (FAB) for mobile field workers
+// Supports native camera on iOS/Android via Capacitor
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import type { CapturedPhoto } from '@/types/photo-management'
+import {
+  isNative,
+  useCamera,
+  useHaptics,
+  useGeolocation
+} from '@/lib/native'
 
 /**
  * Camera icon component
@@ -74,10 +81,13 @@ interface QuickPhotoCaptureProps {
  * Quick photo capture floating action button (FAB)
  *
  * Features:
+ * - Native camera on iOS/Android (via Capacitor)
+ * - Falls back to browser camera on web
  * - One-tap photo capture (opens camera directly)
  * - Auto-compress and prepare for upload
  * - Context-aware (knows current page)
  * - GPS location capture
+ * - Haptic feedback on capture (native only)
  * - Visual feedback on capture
  *
  * @example
@@ -107,30 +117,44 @@ export function QuickPhotoCapture({
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [pendingCount, setPendingCount] = React.useState(0)
 
-  // Get GPS location
-  const getLocation = React.useCallback((): Promise<{ latitude: number; longitude: number } | null> => {
-    return new Promise((resolve) => {
-      if (!captureLocation || !navigator.geolocation) {
-        resolve(null)
-        return
+  // Native hooks
+  const { capture: nativeCapture } = useCamera()
+  const { impact, notification } = useHaptics()
+  const { getCurrentPosition } = useGeolocation()
+
+  // Get GPS location (works on both native and web)
+  const getLocation = React.useCallback(async (): Promise<{ latitude: number; longitude: number } | null> => {
+    if (!captureLocation) return null
+
+    try {
+      const position = await getCurrentPosition()
+      if (position) {
+        return {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }
       }
+    } catch {
+      // Fall back to browser geolocation
+      if (navigator.geolocation) {
+        return new Promise((resolve) => {
+          navigator.geolocation.getCurrentPosition(
+            (pos) => {
+              resolve({
+                latitude: pos.coords.latitude,
+                longitude: pos.coords.longitude,
+              })
+            },
+            () => resolve(null),
+            { timeout: 5000, maximumAge: 60000 }
+          )
+        })
+      }
+    }
+    return null
+  }, [captureLocation, getCurrentPosition])
 
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          })
-        },
-        () => {
-          resolve(null)
-        },
-        { timeout: 5000, maximumAge: 60000 }
-      )
-    })
-  }, [captureLocation])
-
-  // Compress image
+  // Compress image (for browser-captured images)
   const compressImage = React.useCallback(
     async (file: File): Promise<Blob> => {
       return new Promise((resolve, reject) => {
@@ -189,7 +213,83 @@ export function QuickPhotoCapture({
     [maxDimension, quality]
   )
 
-  // Handle file selection
+  // Convert data URL to File
+  const dataUrlToFile = React.useCallback((dataUrl: string, fileName: string): File => {
+    const arr = dataUrl.split(',')
+    const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/jpeg'
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new File([u8arr], fileName, { type: mime })
+  }, [])
+
+  // Handle native camera capture
+  const handleNativeCapture = React.useCallback(async () => {
+    setIsCapturing(true)
+
+    try {
+      // Haptic feedback when starting capture
+      await impact('light')
+
+      const photo = await nativeCapture({
+        quality: Math.round(quality * 100),
+        source: 'camera',
+        saveToGallery: false,
+      })
+
+      if (!photo || !photo.dataUrl) {
+        setIsCapturing(false)
+        return
+      }
+
+      // Get location
+      const location = await getLocation()
+
+      // Convert to File
+      const fileName = `photo-${Date.now()}.${photo.format || 'jpeg'}`
+      const file = dataUrlToFile(photo.dataUrl, fileName)
+
+      const capturedPhoto: CapturedPhoto = {
+        id: `quick-photo-${Date.now()}`,
+        file,
+        previewUrl: photo.dataUrl,
+        metadata: {
+          fileName,
+          fileSize: file.size,
+          mimeType: `image/${photo.format || 'jpeg'}`,
+          capturedAt: new Date().toISOString(),
+          uploadedAt: new Date().toISOString(),
+          source: 'camera',
+          gps: location ? {
+            latitude: location.latitude,
+            longitude: location.longitude,
+          } : undefined,
+          deviceOs: isNative() ? 'native' : navigator.userAgent,
+        },
+        status: 'captured',
+      }
+
+      onPhotoCapture(capturedPhoto)
+
+      // Success haptic feedback
+      await notification('success')
+
+      // Show success UI
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 1500)
+    } catch (err) {
+      console.error('Error capturing photo:', err)
+      // Error haptic feedback
+      await notification('error')
+    } finally {
+      setIsCapturing(false)
+    }
+  }, [nativeCapture, quality, getLocation, dataUrlToFile, onPhotoCapture, impact, notification])
+
+  // Handle browser file selection (fallback)
   const handleFileChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files
@@ -251,13 +351,17 @@ export function QuickPhotoCapture({
         }
       }
     },
-    [onPhotoCapture, projectId, entityType, entityId, getLocation, compressImage]
+    [onPhotoCapture, getLocation, compressImage]
   )
 
-  // Trigger camera
+  // Trigger camera - use native on mobile, file input on web
   const triggerCamera = React.useCallback(() => {
-    fileInputRef.current?.click()
-  }, [])
+    if (isNative()) {
+      handleNativeCapture()
+    } else {
+      fileInputRef.current?.click()
+    }
+  }, [handleNativeCapture])
 
   if (!visible) return null
 
@@ -269,7 +373,7 @@ export function QuickPhotoCapture({
 
   return (
     <>
-      {/* Hidden file input */}
+      {/* Hidden file input (browser fallback) */}
       <input
         ref={fileInputRef}
         type="file"
@@ -307,7 +411,7 @@ export function QuickPhotoCapture({
           {showSuccess ? (
             <CheckIcon className="h-7 w-7" />
           ) : isCapturing ? (
-            <span className="text-sm font-bold">{pendingCount}</span>
+            <span className="text-sm font-bold">{pendingCount || '...'}</span>
           ) : (
             <CameraIcon className="h-7 w-7" />
           )}

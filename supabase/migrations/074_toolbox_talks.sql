@@ -450,6 +450,18 @@ CREATE INDEX IF NOT EXISTS idx_toolbox_talks_topic ON toolbox_talks(topic_id);
 CREATE INDEX IF NOT EXISTS idx_toolbox_talks_presenter ON toolbox_talks(presenter_id);
 CREATE INDEX IF NOT EXISTS idx_toolbox_talks_category ON toolbox_talks(category);
 CREATE INDEX IF NOT EXISTS idx_toolbox_talks_deleted ON toolbox_talks(deleted_at) WHERE deleted_at IS NULL;
+
+-- Add related_incident_id column if it doesn't exist (for existing tables)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'toolbox_talks' AND column_name = 'related_incident_id'
+  ) THEN
+    ALTER TABLE toolbox_talks ADD COLUMN related_incident_id UUID REFERENCES safety_incidents(id) ON DELETE SET NULL;
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_toolbox_talks_incident ON toolbox_talks(related_incident_id) WHERE related_incident_id IS NOT NULL;
 
 -- Attendees indexes

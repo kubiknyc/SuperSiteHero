@@ -274,7 +274,9 @@ CREATE INDEX IF NOT EXISTS idx_closeout_checklist_status ON closeout_checklist(c
 CREATE INDEX IF NOT EXISTS idx_warranties_project ON warranties(project_id);
 CREATE INDEX IF NOT EXISTS idx_warranties_status ON warranties(status);
 CREATE INDEX IF NOT EXISTS idx_warranties_end_date ON warranties(end_date);
-CREATE INDEX IF NOT EXISTS idx_warranties_expiring ON warranties(end_date) WHERE status = 'active' AND end_date <= CURRENT_DATE + 90;
+-- Note: Using a plain partial index on status since CURRENT_DATE is not immutable
+-- Query planner will filter end_date at runtime
+CREATE INDEX IF NOT EXISTS idx_warranties_expiring ON warranties(end_date) WHERE status = 'active';
 
 -- =============================================
 -- TRIGGERS

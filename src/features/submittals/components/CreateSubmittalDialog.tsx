@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useSubmittalWorkflowType } from '../hooks/useSubmittals'
 import { useCreateSubmittalWithNotification } from '../hooks/useSubmittalMutations'
+import { DistributionListPicker } from '@/components/distribution/DistributionListPicker'
+import type { DistributionSelection } from '@/types/distribution-list'
 
 interface CreateSubmittalDialogProps {
   projectId: string | undefined
@@ -28,6 +30,11 @@ export function CreateSubmittalDialog({
   const [costImpact, setCostImpact] = useState('')
   const [scheduleImpact, setScheduleImpact] = useState('')
   const [dueDate, setDueDate] = useState('')
+  const [distribution, setDistribution] = useState<DistributionSelection>({
+    listIds: [],
+    userIds: [],
+    externalContacts: [],
+  })
 
   const { data: workflowType } = useSubmittalWorkflowType()
   const createSubmittal = useCreateSubmittalWithNotification()
@@ -67,6 +74,7 @@ export function CreateSubmittalDialog({
       setCostImpact('')
       setScheduleImpact('')
       setDueDate('')
+      setDistribution({ listIds: [], userIds: [], externalContacts: [] })
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
@@ -140,6 +148,19 @@ export function CreateSubmittalDialog({
               disabled={createSubmittal.isPending}
             />
           </div>
+
+          {/* Distribution List */}
+          {projectId && (
+            <DistributionListPicker
+              projectId={projectId}
+              listType="submittal"
+              value={distribution}
+              onChange={setDistribution}
+              disabled={createSubmittal.isPending}
+              label="CC Recipients"
+              description="Select team members who should receive copies of this submittal."
+            />
+          )}
 
           <div className="flex justify-end gap-2 pt-4 border-t">
             <Button

@@ -192,7 +192,9 @@ export const approvalWorkflowsApi = {
         throw stepsError
       }
 
-      // TODO: Trigger email notification when Email Integration is implemented
+      // Note: Workflow templates don't trigger notifications when created.
+      // Notifications are sent when an approval instance is started for a specific item
+      // (e.g., submittal, change order) via the approval-actions service.
 
       return {
         ...workflow,

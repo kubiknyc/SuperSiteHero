@@ -64,6 +64,10 @@ COMMENT ON COLUMN safety_incidents.other_recordable_case IS 'OSHA 300 Log Column
 ALTER TABLE safety_incidents ADD COLUMN IF NOT EXISTS illness_classification VARCHAR(20);
 COMMENT ON COLUMN safety_incidents.illness_classification IS 'OSHA illness type: skin_disorder, respiratory, poisoning, hearing_loss, other';
 
+-- OSHA Recordable flag (computed field)
+ALTER TABLE safety_incidents ADD COLUMN IF NOT EXISTS osha_recordable BOOLEAN DEFAULT FALSE;
+COMMENT ON COLUMN safety_incidents.osha_recordable IS 'True if this case is OSHA recordable (auto-calculated)';
+
 -- =============================================
 -- INDEXES FOR OSHA REPORTING
 -- =============================================
@@ -101,13 +105,13 @@ BEGIN
   END IF;
 
   -- Auto-set days away flag
-  IF COALESCE(NEW.days_away_count, 0) > 0 OR COALESCE(NEW.days_away_from_work, 0) > 0 THEN
+  IF COALESCE(NEW.days_away_count, 0) > 0 THEN
     NEW.resulted_in_days_away = TRUE;
     NEW.osha_recordable = TRUE;
   END IF;
 
   -- Auto-set restriction flag
-  IF COALESCE(NEW.days_transfer_restriction, 0) > 0 OR COALESCE(NEW.days_restricted_duty, 0) > 0 THEN
+  IF COALESCE(NEW.days_transfer_restriction, 0) > 0 THEN
     NEW.resulted_in_restriction = TRUE;
     NEW.osha_recordable = TRUE;
   END IF;
@@ -157,9 +161,9 @@ SELECT
   -- Column J: Other recordable cases
   si.other_recordable_case as col_j_other,
   -- Column K: Days away from work (number)
-  COALESCE(si.days_away_count, si.days_away_from_work, 0) as col_k_days_away_count,
+  COALESCE(si.days_away_count, 0) as col_k_days_away_count,
   -- Column L: Days of job transfer or restriction (number)
-  COALESCE(si.days_transfer_restriction, si.days_restricted_duty, 0) as col_l_days_restriction_count,
+  COALESCE(si.days_transfer_restriction, 0) as col_l_days_restriction_count,
   -- Column M: Injury/Illness type
   CASE
     WHEN si.incident_type = 'injury' THEN
@@ -206,8 +210,8 @@ SELECT
   COUNT(*) FILTER (WHERE si.resulted_in_restriction = TRUE) as total_restriction_cases,
   COUNT(*) FILTER (WHERE si.other_recordable_case = TRUE) as total_other_cases,
   -- Total days
-  SUM(COALESCE(si.days_away_count, si.days_away_from_work, 0)) as total_days_away,
-  SUM(COALESCE(si.days_transfer_restriction, si.days_restricted_duty, 0)) as total_days_restriction,
+  SUM(COALESCE(si.days_away_count, 0)) as total_days_away,
+  SUM(COALESCE(si.days_transfer_restriction, 0)) as total_days_restriction,
   -- Injury vs Illness breakdown
   COUNT(*) FILTER (WHERE si.incident_type = 'injury') as total_injuries,
   COUNT(*) FILTER (WHERE si.incident_type = 'illness') as total_illnesses,

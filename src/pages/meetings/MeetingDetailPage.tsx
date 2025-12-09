@@ -38,6 +38,7 @@ import {
   Send,
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
+import { MeetingActionItemExtractor } from '@/features/summaries/components/MeetingActionItemExtractor'
 
 export function MeetingDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -406,6 +407,11 @@ export function MeetingDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
+            {/* AI Action Item Extractor */}
+            {meeting.discussion_notes && (
+              <MeetingActionItemExtractor meetingId={meeting.id} />
+            )}
+
             {/* Attendees */}
             <Card>
               <CardHeader>

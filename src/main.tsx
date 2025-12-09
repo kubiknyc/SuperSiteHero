@@ -11,6 +11,9 @@ import './index.css'
 import { initWebVitals } from './lib/performance/web-vitals'
 import { initSentry } from './lib/sentry'
 
+// Import email test utility for browser console access
+import './lib/email/test-email'
+
 // Initialize Sentry error tracking
 initSentry()
 

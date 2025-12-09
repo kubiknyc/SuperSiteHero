@@ -17,14 +17,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Edit, Loader2, Calendar } from 'lucide-react'
+import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate } from 'lucide-react'
 import { format } from 'date-fns'
+import { SaveAsTemplateDialog } from '@/features/project-templates/components'
+import { useAuth } from '@/hooks/useAuth'
 
 export function ProjectDetailPage() {
   // Call all hooks at the top level, before any conditional returns
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+  const [saveAsTemplateOpen, setSaveAsTemplateOpen] = useState(false)
   const { data: project, isLoading, error } = useProject(projectId || '')
 
   // Early return after all hooks are called
@@ -117,6 +121,10 @@ export function ProjectDetailPage() {
             <Button variant="outline" onClick={() => navigate(`/projects/${projectId}/schedule`)}>
               <Calendar className="h-4 w-4 mr-2" />
               Schedule
+            </Button>
+            <Button variant="outline" onClick={() => setSaveAsTemplateOpen(true)}>
+              <LayoutTemplate className="h-4 w-4 mr-2" />
+              Save as Template
             </Button>
             <Button onClick={() => setEditDialogOpen(true)}>
               <Edit className="h-4 w-4 mr-2" />
@@ -256,6 +264,17 @@ export function ProjectDetailPage() {
           open={editDialogOpen}
           onOpenChange={setEditDialogOpen}
         />
+
+        {/* Save as Template Dialog */}
+        {user && (
+          <SaveAsTemplateDialog
+            open={saveAsTemplateOpen}
+            onOpenChange={setSaveAsTemplateOpen}
+            projectId={project.id}
+            projectName={project.name}
+            userId={user.id}
+          />
+        )}
       </div>
     </AppLayout>
   )

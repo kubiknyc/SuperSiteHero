@@ -48,3 +48,10 @@ export type { NoticeOverdueEmailData } from './notice-overdue'
 // Change Order Templates
 export { generateChangeOrderStatusEmail } from './change-order-status'
 export type { ChangeOrderStatusEmailData } from './change-order-status'
+
+// Subcontractor Portal Templates
+export { generateBidSubmittedEmail } from './bid-submitted'
+export type { BidSubmittedEmailData } from './bid-submitted'
+
+export { generatePortalInvitationEmail } from './portal-invitation'
+export type { PortalInvitationEmailData } from './portal-invitation'

@@ -47,7 +47,10 @@ import {
   Package,
   Plus,
   Trash2,
+  Download,
 } from 'lucide-react'
+import { downloadChangeOrderPDF } from '@/features/change-orders/utils/pdfExport'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import type { ChangeOrder, ChangeOrderItem, ChangeOrderHistory as COHistory } from '@/types/change-order'
 import {
@@ -181,6 +184,24 @@ export function ChangeOrderDetailPage() {
     }
   }
 
+  const handleDownloadPDF = async () => {
+    if (!changeOrder) return
+    try {
+      await downloadChangeOrderPDF({
+        changeOrder,
+        items: items || [],
+        projectInfo: changeOrder.project ? {
+          name: changeOrder.project.name,
+          number: changeOrder.project.number || undefined,
+        } : undefined,
+      })
+      toast.success('Change order PDF downloaded')
+    } catch (e) {
+      console.error('Failed to download PDF:', e)
+      toast.error('Failed to download PDF')
+    }
+  }
+
   // Loading state
   if (isLoading) {
     return (
@@ -255,6 +276,10 @@ export function ChangeOrderDetailPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleDownloadPDF}>
+              <Download className="w-4 h-4 mr-2" />
+              Download PDF
+            </Button>
             {isEditable && (
               <Button variant="outline" size="sm" onClick={() => navigate(`/change-orders/${id}/edit`)}>
                 <FileEdit className="w-4 h-4 mr-2" />

@@ -66,6 +66,8 @@ import {
   useBulkDeletePhotos,
   useCreatePhoto,
 } from '../hooks/usePhotos'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 import type {
   Photo,
   PhotoFilters,
@@ -340,26 +342,77 @@ export function PhotoOrganizerPage() {
     async (capturedPhotos: CapturedPhoto[]) => {
       if (!projectId) {return}
 
+      const STORAGE_BUCKET = 'project-photos'
+      let successCount = 0
+      let failCount = 0
+
       for (const captured of capturedPhotos) {
         try {
-          // In a real implementation, you would:
+          // Generate unique file path
+          const timestamp = Date.now()
+          const sanitizedFilename = captured.metadata.fileName.replace(/[^a-zA-Z0-9.-]/g, '_')
+          const filePath = `${projectId}/${timestamp}_${sanitizedFilename}`
+
           // 1. Upload the file to Supabase Storage
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from(STORAGE_BUCKET)
+            .upload(filePath, captured.file, {
+              cacheControl: '3600',
+              upsert: false,
+            })
+
+          if (uploadError) {
+            throw uploadError
+          }
+
           // 2. Get the public URL
+          const { data: urlData } = supabase.storage
+            .from(STORAGE_BUCKET)
+            .getPublicUrl(uploadData.path)
+
           // 3. Create the photo record
+          await createPhoto.mutateAsync({
+            projectId,
+            fileUrl: urlData.publicUrl,
+            fileName: captured.metadata.fileName,
+            fileSize: captured.metadata.fileSize,
+            width: captured.metadata.width,
+            height: captured.metadata.height,
+            capturedAt: captured.metadata.capturedAt,
+            latitude: captured.metadata.gps?.latitude,
+            longitude: captured.metadata.gps?.longitude,
+            altitude: captured.metadata.gps?.altitude,
+            gpsAccuracy: captured.metadata.gps?.accuracy,
+            source: captured.metadata.source,
+            deviceType: captured.metadata.deviceType,
+            deviceOs: captured.metadata.deviceOs,
+            cameraMake: captured.metadata.camera?.make,
+            cameraModel: captured.metadata.camera?.model,
+            focalLength: captured.metadata.camera?.focalLength,
+            aperture: captured.metadata.camera?.aperture,
+            iso: captured.metadata.camera?.iso,
+            exposureTime: captured.metadata.camera?.exposureTime,
+            flashUsed: captured.metadata.camera?.flashUsed,
+            orientation: captured.metadata.camera?.orientation,
+            weatherCondition: captured.metadata.weather?.condition,
+            temperature: captured.metadata.weather?.temperature,
+            humidity: captured.metadata.weather?.humidity,
+          })
 
-          // For now, we'll just show what would be uploaded
-          console.log('Would upload photo:', captured)
-
-          // TODO: Implement actual upload
-          // const fileUrl = await uploadToStorage(captured.file)
-          // await createPhoto.mutateAsync({
-          //   projectId,
-          //   fileUrl,
-          //   ...captured.metadata
-          // })
+          successCount++
         } catch (error) {
           console.error('Failed to upload photo:', error)
+          failCount++
         }
+      }
+
+      // Show summary toast
+      if (successCount > 0 && failCount === 0) {
+        toast.success(`${successCount} photo${successCount > 1 ? 's' : ''} uploaded successfully`)
+      } else if (successCount > 0 && failCount > 0) {
+        toast.warning(`${successCount} uploaded, ${failCount} failed`)
+      } else if (failCount > 0) {
+        toast.error(`Failed to upload ${failCount} photo${failCount > 1 ? 's' : ''}`)
       }
     },
     [projectId, createPhoto]

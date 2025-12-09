@@ -175,9 +175,10 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
 export {
-  // Basic HTML Select (default, for backward compatibility)
+  // Basic HTML Select (default - for backward compatibility)
   Select,
-  // Radix UI Select components (for advanced usage)
+  Select as NativeSelect,
+  // Radix UI Select components (for advanced use cases)
   RadixSelect,
   SelectGroup,
   SelectValue,

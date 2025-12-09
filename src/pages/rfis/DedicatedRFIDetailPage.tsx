@@ -38,6 +38,7 @@ import {
   Check,
   UserPlus,
   Pencil,
+  FileDown,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
@@ -60,6 +61,7 @@ import {
   getRFIStatusColor,
   getRFIPriorityColor,
 } from '@/features/rfis/hooks/useDedicatedRFIs'
+import { downloadRFIPDF } from '@/features/rfis/utils/pdfExport'
 import { useCreateConversation } from '@/features/messaging/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
@@ -348,15 +350,25 @@ export function DedicatedRFIDetailPage() {
                 </div>
                 <p className="text-gray-600 mt-1">{rfi.subject}</p>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDiscuss}
-                disabled={createConversation.isPending}
-              >
-                <MessageSquare className="h-4 w-4 mr-2" />
-                {createConversation.isPending ? 'Creating...' : 'Discuss'}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => downloadRFIPDF({ rfi, includeComments: true, includeAttachments: true })}
+                >
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Export PDF
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDiscuss}
+                  disabled={createConversation.isPending}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  {createConversation.isPending ? 'Creating...' : 'Discuss'}
+                </Button>
+              </div>
             </div>
 
             {/* Overdue Warning */}

@@ -8,7 +8,11 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError, SelectWithError } from '@/components/form/ValidationError'
+import { TemplateSelector } from '@/features/project-templates/components'
+import { useApplyTemplateToProject } from '@/features/project-templates/hooks'
+import { useAuth } from '@/hooks/useAuth'
 import type { ProjectStatus } from '@/types/database'
+import type { ProjectTemplate } from '@/types/project-template'
 
 interface CreateProjectDialogProps {
   children: React.ReactNode
@@ -19,6 +23,8 @@ interface CreateProjectDialogProps {
 export function CreateProjectDialog({ children, open, onOpenChange }: CreateProjectDialogProps) {
   console.log('🟡 DIALOG RENDER - CreateProjectDialog rendered, open:', open)
 
+  const { userProfile } = useAuth()
+  const [selectedTemplate, setSelectedTemplate] = useState<ProjectTemplate | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     project_number: '',
@@ -34,6 +40,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
 
   // Use the hooks for full-stack integration
   const createProject = useCreateProjectWithNotification()
+  const applyTemplate = useApplyTemplateToProject()
   const { validate, getFieldError, clearErrors } = useFormValidation(projectCreateSchema)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -64,7 +71,22 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
       // Type guard: validation.data is guaranteed to exist when success is true
       if (!validation.data) {return}
 
-      await createProject.mutateAsync({
+      // Determine features from template or use defaults
+      const features = selectedTemplate?.enabled_features || {
+        daily_reports: true,
+        documents: true,
+        workflows: true,
+        tasks: true,
+        checklists: true,
+        punch_lists: true,
+        safety: true,
+        inspections: true,
+        material_tracking: true,
+        photos: true,
+        takeoff: true,
+      }
+
+      const newProject = await createProject.mutateAsync({
         name: validation.data.name,
         project_number: validation.data.project_number || null,
         description: validation.data.description || null,
@@ -76,22 +98,26 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
         end_date: validation.data.end_date || null,
         status: validation.data.status,
         weather_units: 'imperial',
-        features_enabled: {
-          daily_reports: true,
-          documents: true,
-          workflows: true,
-          tasks: true,
-          checklists: true,
-          punch_lists: true,
-          safety: true,
-          inspections: true,
-          material_tracking: true,
-          photos: true,
-          takeoff: true,
-        },
+        features_enabled: features,
+        template_id: selectedTemplate?.id || null,
       } as any)
 
       console.log('Project created successfully')
+
+      // Apply template if selected (creates folders, checklists, etc.)
+      if (selectedTemplate && newProject?.id && userProfile?.id) {
+        try {
+          await applyTemplate.mutateAsync({
+            templateId: selectedTemplate.id,
+            projectId: newProject.id,
+            userId: userProfile.id,
+          })
+          console.log('Template applied successfully')
+        } catch (templateError) {
+          console.error('Failed to apply template:', templateError)
+          // Project is created, but template application failed - don't block
+        }
+      }
       // Step 3: Success! Toast shown automatically by mutation hook
       // Reset form and close dialog
       setFormData({
@@ -106,6 +132,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
         end_date: '',
         status: 'planning',
       })
+      setSelectedTemplate(null)
       clearErrors()
       onOpenChange?.(false)
     } catch (error) {
@@ -130,6 +157,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
           end_date: '',
           status: 'planning',
         })
+        setSelectedTemplate(null)
         clearErrors()
       }
     }
@@ -151,6 +179,23 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
           </DialogHeader>
 
           <div className="space-y-4 py-4">
+            {/* Template Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="template">Start from Template</Label>
+              <TemplateSelector
+                companyId={userProfile?.company_id ?? undefined}
+                value={selectedTemplate?.id}
+                onSelect={setSelectedTemplate}
+                disabled={createProject.isPending || applyTemplate.isPending}
+                placeholder="Select a template (optional)"
+              />
+              {selectedTemplate && (
+                <p className="text-xs text-muted-foreground">
+                  This template will configure folders, workflows, and features for your project.
+                </p>
+              )}
+            </div>
+
             {/* Basic Information */}
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 sm:col-span-1 space-y-2">
@@ -305,18 +350,18 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
               type="button"
               variant="outline"
               onClick={() => handleOpenChange(false)}
-              disabled={createProject.isPending}
+              disabled={createProject.isPending || applyTemplate.isPending}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={createProject.isPending}
+              disabled={createProject.isPending || applyTemplate.isPending}
               onClick={(e) => {
                 console.log('🔵 BUTTON CLICKED - Submit button was clicked!')
               }}
             >
-              {createProject.isPending ? 'Creating...' : 'Create Project'}
+              {createProject.isPending || applyTemplate.isPending ? 'Creating...' : 'Create Project'}
             </Button>
           </DialogFooter>
         </form>

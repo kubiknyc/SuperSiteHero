@@ -6,6 +6,12 @@
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
 import { sendEmail } from '@/lib/email/email-service'
+import {
+  sendBidSubmittedNotification,
+  sendPortalInvitationNotification,
+  type NotificationRecipient,
+} from '@/lib/notifications/notification-service'
+import { logger } from '@/lib/utils/logger'
 import type {
   SubcontractorPortalAccess,
   SubcontractorPortalAccessWithRelations,
@@ -461,7 +467,62 @@ export const subcontractorPortalApi = {
 
       if (error) {throw error}
 
-      // TODO: Notify GC that bid was submitted
+      // Notify GC/Project Managers that bid was submitted
+      try {
+        // Fetch full bid details with relations for notification
+        const { data: fullBid } = await db
+          .from('change_order_bids')
+          .select(`
+            *,
+            subcontractor:subcontractors(id, company_name),
+            project:projects(id, name),
+            workflow_item:workflow_items(id, item_number, title)
+          `)
+          .eq('id', bidId)
+          .single()
+
+        if (fullBid && fullBid.project) {
+          // Get project managers to notify
+          const { data: projectUsers } = await supabase
+            .from('project_users')
+            .select('user_id, users(id, email, full_name)')
+            .eq('project_id', fullBid.project_id)
+            .in('role', ['project_manager', 'owner', 'admin'])
+
+          const recipients: NotificationRecipient[] = (projectUsers || [])
+            .filter((pu: any) => pu.users?.email)
+            .map((pu: any) => ({
+              userId: pu.user_id,
+              email: pu.users.email,
+              name: pu.users.full_name,
+            }))
+
+          if (recipients.length > 0) {
+            const formatCurrency = (val: number) =>
+              new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val)
+
+            await sendBidSubmittedNotification(recipients, {
+              subcontractorName: fullBid.subcontractor?.company_name || 'Unknown',
+              projectName: fullBid.project?.name || 'Unknown Project',
+              changeOrderNumber: fullBid.workflow_item?.item_number || 'N/A',
+              changeOrderTitle: fullBid.workflow_item?.title || 'Change Order',
+              bidAmount: formatCurrency(data.lump_sum_cost || 0),
+              durationDays: data.duration_days,
+              submittedAt: new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+              }),
+              viewUrl: `${import.meta.env.VITE_APP_URL || 'https://supersitehero.com'}/change-orders/${fullBid.workflow_item_id}`,
+            })
+          }
+        }
+      } catch (notifyError) {
+        // Don't fail the bid submission if notification fails
+        logger.error('[SubcontractorPortal] Failed to send bid notification:', notifyError)
+      }
 
       return bid
     } catch (error) {
@@ -820,7 +881,40 @@ export const subcontractorPortalApi = {
 
       if (error) {throw error}
 
-      // TODO: Send invitation email
+      // Send invitation email
+      try {
+        // Fetch related data for email
+        const [subcontractorResult, projectResult, inviterResult] = await Promise.all([
+          db.from('subcontractors').select('company_name').eq('id', data.subcontractor_id).single(),
+          db.from('projects').select('name').eq('id', data.project_id).single(),
+          db.from('profiles').select('full_name').eq('id', invitedBy).single(),
+        ])
+
+        const subcontractorName = subcontractorResult.data?.company_name || 'Subcontractor'
+        const projectName = projectResult.data?.name || 'Project'
+        const inviterName = inviterResult.data?.full_name || 'Team'
+
+        // Build invitation URL
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : process.env.VITE_APP_URL || ''
+        const invitationUrl = `${baseUrl}/portal/invite/${invitation.token}`
+
+        // Send the invitation email
+        await sendPortalInvitationNotification(data.email, {
+          companyName: subcontractorName,
+          projectName,
+          invitedBy: inviterName,
+          accessLevel: 'Subcontractor Portal',
+          expiresAt: new Date(invitation.expires_at).toLocaleDateString('en-US', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          }),
+          invitationUrl,
+        })
+      } catch (emailError) {
+        // Log but don't fail - invitation was created successfully
+        console.error('[SubcontractorPortal] Failed to send invitation email:', emailError)
+      }
 
       return invitation
     } catch (error) {

@@ -71,8 +71,10 @@ CREATE INDEX IF NOT EXISTS idx_rfis_is_internal ON rfis(is_internal)
 CREATE INDEX IF NOT EXISTS idx_rfis_response_due_date ON rfis(response_due_date)
   WHERE response_due_date IS NOT NULL;
 
-CREATE INDEX IF NOT EXISTS idx_rfis_response_overdue ON rfis(response_due_date)
-  WHERE response_due_date < CURRENT_DATE AND status NOT IN ('responded', 'closed');
+-- Note: Cannot use CURRENT_DATE in partial index (not immutable)
+-- Using a standard index instead - query planner will filter appropriately
+CREATE INDEX IF NOT EXISTS idx_rfis_response_overdue ON rfis(response_due_date, status)
+  WHERE status NOT IN ('responded', 'closed');
 
 -- =============================================
 -- FUNCTION TO CALCULATE RESPONSE DUE DATE

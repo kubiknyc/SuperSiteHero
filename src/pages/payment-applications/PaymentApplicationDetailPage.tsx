@@ -54,6 +54,7 @@ import {
   buildG703Data,
   downloadPaymentApplicationPDFs,
 } from '@/features/payment-applications/utils/pdfExport'
+import { WaiverChecklist } from '@/features/payment-applications/components'
 import type { PaymentApplicationStatus, BulkUpdateSOVItemDTO } from '@/types/payment-application'
 
 export function PaymentApplicationDetailPage() {
@@ -551,6 +552,17 @@ export function PaymentApplicationDetailPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Lien Waiver Checklist */}
+        {application.project_id && applicationId && (
+          <WaiverChecklist
+            paymentApplicationId={applicationId}
+            projectId={application.project_id}
+            applicationNumber={application.application_number}
+            currentPaymentDue={application.current_payment_due}
+            status={application.status}
+          />
+        )}
 
         {/* History Timeline */}
         {history && history.length > 0 && (

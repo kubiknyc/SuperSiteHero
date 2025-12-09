@@ -13,6 +13,8 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Loader2, Calendar, AlertTriangle, DollarSign, Clock } from 'lucide-react'
 import { useCreateRFIWithNotification } from '../hooks/useRFIMutations'
 import { cn } from '@/lib/utils'
+import { DistributionListPicker } from '@/components/distribution/DistributionListPicker'
+import type { DistributionSelection } from '@/types/distribution-list'
 
 interface CreateRFIDialogProps {
   projectId: string | undefined
@@ -55,6 +57,11 @@ export function CreateRFIDialog({
   const [dueDate, setDueDate] = useState('')
   const [hasCostImpact, setHasCostImpact] = useState(false)
   const [hasScheduleImpact, setHasScheduleImpact] = useState(false)
+  const [distribution, setDistribution] = useState<DistributionSelection>({
+    listIds: [],
+    userIds: [],
+    externalContacts: [],
+  })
 
   const createRFI = useCreateRFIWithNotification()
 
@@ -76,6 +83,7 @@ export function CreateRFIDialog({
     setDueDate('')
     setHasCostImpact(false)
     setHasScheduleImpact(false)
+    setDistribution({ listIds: [], userIds: [], externalContacts: [] })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -286,6 +294,19 @@ export function CreateRFIDialog({
               </label>
             </div>
           </div>
+
+          {/* Distribution List */}
+          {projectId && (
+            <DistributionListPicker
+              projectId={projectId}
+              listType="rfi"
+              value={distribution}
+              onChange={setDistribution}
+              disabled={createRFI.isPending}
+              label="CC Recipients"
+              description="Select team members who should receive copies of this RFI."
+            />
+          )}
 
           {/* Form Actions */}
           <div className="flex justify-end gap-3 pt-4 border-t">

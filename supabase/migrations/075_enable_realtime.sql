@@ -3,78 +3,54 @@
 -- Created: December 2025
 
 -- =============================================
--- Enable Realtime on High-Priority Tables
+-- Enable Realtime on tables (with existence checks)
 -- =============================================
 
--- Daily reports - collaborative reporting
-ALTER PUBLICATION supabase_realtime ADD TABLE daily_reports;
-
--- Workflow items (RFIs, Submittals) - status updates
-ALTER PUBLICATION supabase_realtime ADD TABLE workflow_items;
-
--- Documents - concurrent viewing, version updates
-ALTER PUBLICATION supabase_realtime ADD TABLE documents;
-
--- Approval requests - action notifications
-ALTER PUBLICATION supabase_realtime ADD TABLE approval_requests;
-
--- Approval actions - when someone approves/rejects
-ALTER PUBLICATION supabase_realtime ADD TABLE approval_actions;
-
--- =============================================
--- Enable Realtime on Medium-Priority Tables
--- =============================================
-
--- Projects - metadata updates
-ALTER PUBLICATION supabase_realtime ADD TABLE projects;
-
--- Tasks - status changes
-ALTER PUBLICATION supabase_realtime ADD TABLE tasks;
-
--- Messages - real-time chat
-ALTER PUBLICATION supabase_realtime ADD TABLE messages;
-
--- =============================================
--- Enable Realtime on Additional Collaborative Tables
--- =============================================
-
--- RFIs dedicated table
-ALTER PUBLICATION supabase_realtime ADD TABLE rfis;
-
--- Submittals dedicated table
-ALTER PUBLICATION supabase_realtime ADD TABLE submittals;
-
--- Change orders
-ALTER PUBLICATION supabase_realtime ADD TABLE change_orders;
-
--- Punch list items
-ALTER PUBLICATION supabase_realtime ADD TABLE punch_list_items;
-
--- Safety incidents
-ALTER PUBLICATION supabase_realtime ADD TABLE safety_incidents;
+DO $$
+DECLARE
+  tables_to_add TEXT[] := ARRAY[
+    'daily_reports',
+    'workflow_items',
+    'documents',
+    'approval_requests',
+    'approval_actions',
+    'projects',
+    'tasks',
+    'messages',
+    'rfis',
+    'submittals',
+    'change_orders',
+    'punch_list_items',
+    'punch_items',
+    'safety_incidents',
+    'notifications'
+  ];
+  tbl TEXT;
+BEGIN
+  FOREACH tbl IN ARRAY tables_to_add
+  LOOP
+    -- Check if table exists
+    IF EXISTS (
+      SELECT 1 FROM information_schema.tables
+      WHERE table_schema = 'public' AND table_name = tbl
+    ) THEN
+      -- Check if not already in publication
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_publication_tables
+        WHERE pubname = 'supabase_realtime' AND tablename = tbl
+      ) THEN
+        EXECUTE format('ALTER PUBLICATION supabase_realtime ADD TABLE %I', tbl);
+        RAISE NOTICE 'Added table % to realtime publication', tbl;
+      ELSE
+        RAISE NOTICE 'Table % already in realtime publication', tbl;
+      END IF;
+    ELSE
+      RAISE NOTICE 'Table % does not exist, skipping', tbl;
+    END IF;
+  END LOOP;
+END $$;
 
 -- =============================================
--- Notifications for real-time alerts
--- =============================================
-ALTER PUBLICATION supabase_realtime ADD TABLE notifications;
-
--- =============================================
--- Note: Realtime is now enabled on the following tables:
--- - daily_reports
--- - workflow_items
--- - documents
--- - approval_requests
--- - approval_actions
--- - projects
--- - tasks
--- - messages
--- - rfis
--- - submittals
--- - change_orders
--- - punch_list_items
--- - safety_incidents
--- - notifications
---
--- Clients can now subscribe to changes on these tables
--- using Supabase Realtime channels.
+-- Note: Realtime is now enabled on available tables
+-- Clients can subscribe to changes using Supabase Realtime channels.
 -- =============================================

@@ -1,8 +1,8 @@
 # SuperSiteHero - Consolidated TODO List
 
-**Last Updated:** December 8, 2025 (P2 Features Completed)
-**Current Status:** P0 Complete + P1 Complete + P2 Complete
-**Focus:** All P2 features complete! Custom Report Builder, Closeout Documents, OSHA 300 Log fully functional
+**Last Updated:** December 9, 2025 (AI Agents Integration Complete)
+**Current Status:** P0 ✅ + P1 ✅ + P2 ✅ (except QuickBooks) + Quick Wins ✅ + AI Agents ✅ + All Stubs Verified
+**Focus:** Production-ready! Remaining stubs are deferred P3 features.
 
 ---
 
@@ -12,7 +12,7 @@
 |----------|----------|-------|--------|
 | P0 | Production Blockers | 6 ✅ ALL COMPLETE | Done |
 | P1 | High Priority Features | 4 ✅ ALL COMPLETE | Done (Dec 7) |
-| P2 | Medium Priority | 7 items (6 complete) | Done (Dec 8) |
+| P2 | Medium Priority | 6/7 items ✅ | Done (Dec 8) - QuickBooks deferred |
 | P3 | Long-term | 5 | 2026+ |
 
 ---
@@ -191,10 +191,27 @@
 
 ---
 
+## Quick Wins ✅ ALL COMPLETE (Dec 9, 2025)
+
+### Export & PDF Features
+- [x] **RFI Excel Export** - Already implemented (`src/features/rfis/utils/rfiExport.ts`)
+- [x] **Submittal Excel Export** - Already implemented (`src/features/submittals/utils/submittalExport.ts`)
+- [x] **G702/G703 PDF Generation** - Already implemented (`src/features/payment-applications/utils/g702Template.ts`, `g703Template.ts`)
+- [x] **Lien Waiver PDF** - Already implemented (`src/features/lien-waivers/utils/pdfExport.ts`)
+- [x] **Change Order PDF** - Added download button to detail page
+
+### Document Management
+- [x] **Document Edit/Delete Dialogs** - Already implemented in DocumentLibraryPage
+
+### Photo Management
+- [x] **Photo Organizer Upload** - Implemented Supabase storage upload in PhotoOrganizerPage
+
+---
+
 ## P2 - MEDIUM PRIORITY (Q1-Q2 2026)
 
-### QuickBooks Integration
-**Effort:** 2-3 weeks
+### QuickBooks Integration ⏸️ DEFERRED
+**Effort:** 2-3 weeks | **Status:** Deferred to future
 
 - [ ] **OAuth2 Setup**
   - QuickBooks developer app
@@ -210,8 +227,10 @@
   - Settings page for connection
   - Sync status dashboard
 
-### Custom Report Builder ✅ MOSTLY COMPLETE
-**Effort:** 2-3 weeks | **Started:** Dec 2025 | **Updated:** Dec 8, 2025
+> **Note:** Deferred to future release. Will implement when accounting integration becomes a priority.
+
+### Custom Report Builder ✅ COMPLETE
+**Effort:** 2-3 weeks | **Completed:** Dec 8, 2025
 
 - [x] **Database Schema** ✅
   - Report templates table with field definitions
@@ -311,28 +330,81 @@
 - [x] **Routes** ✅
   - `/safety/osha-300` - Full OSHA 300 log with filtering
 
-### Advanced Permissions
-**Effort:** 2-3 weeks
+### Advanced Permissions ✅ COMPLETE
+**Effort:** 2-3 weeks | **Completed:** Dec 8, 2025
 
-- [ ] **Granular Role System**
-  - Custom role creation
-  - Permission matrix UI
-  - Field-level permissions
+- [x] **Database Schema** ✅
+  - `permissions` table with 50+ granular permissions
+  - `custom_roles` table for company-defined roles
+  - `role_permissions` mapping table
+  - `user_permission_overrides` for individual grants/revokes
+  - `feature_flags` and `company_feature_flags` tables
+  - Helper functions: `user_has_permission`, `get_user_permissions`, `company_has_feature`
+  - **Migration:** `supabase/migrations/090_advanced_permissions.sql`
 
-- [ ] **Feature Flags**
-  - Per-company feature toggles
-  - Role-based feature access
+- [x] **TypeScript Types** ✅
+  - Permission, CustomRole, FeatureFlag interfaces
+  - Permission code constants (PERMISSION_CODES)
+  - Utility functions for permission checking
+  - **File:** `src/types/permissions.ts`
 
-### Distribution Lists
-**Effort:** 3-5 days
+- [x] **React Query Hooks** ✅
+  - usePermissionDefinitions, useUserPermissions
+  - useCustomRoles, useCreateCustomRole, useUpdateCustomRole
+  - useFeatureFlagDefinitions, useCompanyFeatureFlags
+  - useHasPermission, usePermissionCheck, useFeatureFlag
+  - **File:** `src/features/permissions/hooks/usePermissions.ts`
 
-- [ ] **Database**
-  - `distribution_lists` table
-  - List members junction table
+- [x] **UI Components** ✅
+  - PermissionMatrix - checkbox grid by category
+  - CustomRoleCard - role display with actions
+  - CustomRoleFormDialog - create/edit roles with permission selection
+  - **Files:** `src/features/permissions/components/`
 
-- [ ] **UI**
-  - List management
-  - Apply to RFIs/Submittals
+- [x] **Feature Flags** ✅
+  - 10 predefined feature flags (BIM, AI, AR, IoT, etc.)
+  - Owner-only toggle in settings
+  - Per-company enable/disable with optional expiration
+
+- [x] **Management Page** ✅
+  - RolesPermissionsPage with 3 tabs (Custom Roles, Default Roles, Feature Flags)
+  - Route: `/settings/roles`
+  - **File:** `src/pages/settings/RolesPermissionsPage.tsx`
+
+### Distribution Lists ✅ COMPLETE
+**Effort:** 3-5 days | **Completed:** Dec 8, 2025
+
+- [x] **Database Schema** ✅
+  - `distribution_lists` table with RLS policies
+  - `distribution_list_members` junction table
+  - Helper functions for expanding recipients
+  - **Migration:** `supabase/migrations/085_distribution_lists.sql`
+
+- [x] **TypeScript Types** ✅
+  - DistributionList, Member, Selection interfaces
+  - Utility functions for recipients
+  - **File:** `src/types/distribution-list.ts`
+
+- [x] **React Query Hooks** ✅
+  - useDistributionLists, useProjectDistributionLists
+  - useCreateDistributionList, useUpdateDistributionList
+  - useAddDistributionListMember, useRemoveDistributionListMember
+  - **File:** `src/features/distribution-lists/hooks/useDistributionLists.ts`
+
+- [x] **UI Components** ✅
+  - DistributionListCard, DistributionListFormDialog
+  - DistributionListPicker (reusable for RFIs/Submittals)
+  - **Files:** `src/features/distribution-lists/components/`, `src/components/distribution/`
+
+- [x] **Pages** ✅
+  - DistributionListsPage - Full settings management
+  - **File:** `src/pages/settings/DistributionListsPage.tsx`
+
+- [x] **Integration** ✅
+  - Route: `/settings/distribution-lists`
+  - Settings navigation link added
+  - DistributionListPicker integrated into CreateRFIDialog
+  - DistributionListPicker integrated into CreateSubmittalDialog
 
 ### Meeting Minutes ✅ COMPLETE
 **Effort:** 1 week | **Completed:** Dec 2025
@@ -426,11 +498,61 @@
 - [ ] VR headset support
 - [ ] Markup in VR
 
-### AI Agents
-- [ ] RFI auto-routing
-- [ ] Schedule optimization
-- [ ] Risk prediction
-- [ ] Document auto-categorization (improve OCR)
+### AI Agents ✅ COMPLETE (Dec 9, 2025)
+**Effort:** 2-3 weeks | **Completed:** Dec 9, 2025
+
+- [x] **Phase 1: Foundation** ✅
+  - Database migration with 14 tables, 6 enums, RLS policies
+  - Provider-agnostic AI service (OpenAI, Anthropic, local/Ollama)
+  - Cost tracking and budget controls
+  - AI Settings page with feature toggles
+  - **Migration:** `supabase/migrations/094_ai_agents_foundation.sql`
+  - **Files:** `src/types/ai.ts`, `src/lib/api/services/ai-provider.ts`, `src/pages/settings/AISettingsPage.tsx`
+
+- [x] **Phase 2: RFI Auto-Routing** ✅
+  - Intelligent role suggestions based on content analysis
+  - CSI MasterFormat classification
+  - Pattern learning from user feedback
+  - Related RFIs/Submittals finder
+  - **Files:** `src/lib/api/services/rfi-routing-ai.ts`, `src/features/rfis/hooks/useRFIRouting.ts`, `src/features/rfis/components/RFIRoutingSuggestions.tsx`
+  - **Integration:** RFIRoutingSuggestions integrated into CreateDedicatedRFIDialog
+
+- [x] **Phase 3: Smart Summaries** ✅
+  - Daily report summaries (highlights, concerns, tomorrow focus)
+  - Meeting action item extraction with assignees
+  - Weekly status generation with metrics
+  - Change order impact analysis
+  - **Files:** `src/lib/api/services/smart-summaries.ts`, `src/features/summaries/hooks/useSmartSummaries.ts`, `src/features/summaries/components/`
+  - **Integrations:**
+    - DailyReportSummaryCard in DailyReportDetailPage
+    - MeetingActionItemExtractor in MeetingDetailPage sidebar
+
+- [x] **Phase 4: Risk Prediction** ✅
+  - Multi-factor activity risk scoring (20+ factors)
+  - Constraint, weather, trade performance, resource analysis
+  - Risk alerts with severity levels
+  - Critical path risk multiplier
+  - **Files:** `src/lib/ml/scoring/activity-risk-scorer.ts`, `src/features/analytics/hooks/useRiskPrediction.ts`, `src/features/analytics/components/risk-prediction/`
+  - **Integration:** AtRiskActivitiesPanel in LookAheadPage
+
+- [x] **Phase 5: Schedule Optimization** ✅
+  - Critical path calculation (forward/backward pass)
+  - Float opportunity identification
+  - Constraint prioritization by schedule impact
+  - Resource conflict detection
+  - Optimization recommendations
+  - **Files:** `src/lib/ml/scoring/schedule-optimizer.ts`, `src/features/analytics/hooks/useScheduleOptimization.ts`, `src/features/analytics/components/schedule-optimization/`
+  - **Integration:** ScheduleOptimizationPanel in LookAheadPage
+
+- [x] **Phase 6: Document AI Enhancement** ✅
+  - Hybrid classification (keyword + LLM fallback)
+  - Entity linking (RFIs, Submittals, Change Orders)
+  - Smart metadata extraction by document type
+  - Document summary generation
+  - **Files:** `src/lib/api/services/document-entity-linking.ts`, `src/features/documents/hooks/useDocumentAiEnhanced.ts`
+
+- [x] **Routes Added** ✅
+  - `/settings/ai` - AI configuration and usage dashboard
 
 ### Native Mobile Apps
 - [ ] iOS app (React Native)
@@ -503,9 +625,9 @@
 
 ### Pre-Launch
 
-- [ ] All P0 items complete
+- [x] All P0 items complete ✅
 - [ ] Database migrations applied to production
-- [ ] Environment variables set
+- [ ] Environment variables set (see `docs/runbooks/environment-variables.md`)
 - [ ] DNS configured
 - [ ] SSL certificates valid
 - [ ] Backup procedures tested
@@ -513,8 +635,8 @@
 
 ### Launch Day
 
-- [ ] Monitor error rates
-- [ ] Check performance metrics
+- [ ] Monitor error rates (Sentry configured)
+- [ ] Check performance metrics (Lighthouse CI configured)
 - [ ] Verify all features working
 - [ ] Support team briefed
 - [ ] Status page updated
@@ -528,32 +650,50 @@
 
 ---
 
-## CODE-LEVEL TODOs (Verified Dec 7, 2025)
+## CODE-LEVEL TODOs (Fully Verified Dec 9, 2025)
 
-### Stub Implementations Needing Completion
+### Stub Implementations Status Summary
+
+**✅ COMPLETE (8 items):** All quick win stubs have been implemented
+**⚠️ PARTIAL (1 item):** Takeoff calibration - has modal but needs line capture mode
+**⏸️ DEFERRED (6 items):** Complex features requiring database changes or significant work
 
 | Feature | File | Line | Status |
 |---------|------|------|--------|
-| Cost Estimate PDF Export | `src/pages/cost-estimates/CostEstimateDetailPage.tsx` | 117 | TODO stub |
-| Document Edit Dialog | `src/pages/documents/DocumentLibraryPage.tsx` | 197 | TODO stub |
-| Document Delete Dialog | `src/pages/documents/DocumentLibraryPage.tsx` | 202 | TODO stub |
-| Drawing Markup Sharing | `src/features/documents/components/markup/UnifiedDrawingCanvas.tsx` | 960 | Disabled |
-| Manual Merge (Conflicts) | `src/components/ConflictResolutionDialog.tsx` | 163 | "Coming soon" |
-| Photo Organizer Upload | `src/features/photos/pages/PhotoOrganizerPage.tsx` | 353 | TODO stub |
-| Takeoff Calibration Mode | `src/pages/takeoffs/TakeoffPage.tsx` | 179 | Partial |
-| Analytics Baseline | `src/lib/api/services/analytics.ts` | 702 | Returns null |
-| MFA User Preferences | `src/lib/auth/mfa.ts` | 207-229 | Table missing |
-| Email Notifications | `src/lib/api/services/approval-workflows.ts` | 195 | Placeholder |
-| Subcontractor GC Notify | `src/lib/api/services/subcontractor-portal.ts` | 464 | TODO |
-| Invitation Emails | `src/lib/api/services/subcontractor-portal.ts` | 823 | TODO |
-| Offline Sync Config | `src/lib/supabase.ts` | 22 | Not started |
-| PWA Service Worker | `src/lib/supabase.ts` | 23 | Not started |
-| useApiCall Toasts | `src/lib/hooks/useApiCall.ts` | 32, 48 | Uses console.log |
+| Cost Estimate PDF Export | `src/features/cost-estimates/utils/pdfExport.ts` | - | ✅ COMPLETE |
+| Document Edit Dialog | `src/pages/documents/DocumentLibraryPage.tsx` | 685-735 | ✅ COMPLETE |
+| Document Delete Dialog | `src/pages/documents/DocumentLibraryPage.tsx` | 643-682 | ✅ COMPLETE |
+| Drawing Markup Sharing | `src/features/documents/components/markup/UnifiedDrawingCanvas.tsx` | 960 | ⏸️ DEFERRED (canShare=false) |
+| Manual Merge (Conflicts) | `src/components/ConflictResolutionDialog.tsx` | 163 | ⏸️ DEFERRED (disabled button) |
+| Photo Organizer Upload | `src/features/photos/pages/PhotoOrganizerPage.tsx` | 345-420 | ✅ COMPLETE |
+| Takeoff Calibration Mode | `src/pages/takeoffs/TakeoffPage.tsx` | 179 | ⚠️ PARTIAL (modal exists, line capture TODO) |
+| Analytics Baseline | `src/lib/api/services/analytics.ts` | 702 | ⏸️ DEFERRED (needs baseline table) |
+| MFA User Preferences | `src/lib/auth/mfa.ts` | 207-229 | ⏸️ DEFERRED (needs user_preferences table) |
+| Email Notifications | `src/lib/notifications/notification-service.ts` | - | ✅ COMPLETE (978 lines) |
+| Subcontractor GC Notify | `src/lib/notifications/notification-service.ts` | 565 | ✅ COMPLETE (notifyBidSubmitted) |
+| Invitation Emails | `src/lib/notifications/notification-service.ts` | 621 | ✅ COMPLETE (notifyPortalInvitation) |
+| Offline Sync Config | `src/lib/supabase.ts` | 33 | ⏸️ DEFERRED (P3 - requires IndexedDB) |
+| PWA Service Worker | `src/lib/supabase.ts` | 34 | ⏸️ DEFERRED (P3 - requires SW setup) |
+| useApiCall Toasts | `src/lib/hooks/useApiCall.ts` | - | ✅ COMPLETE (uses useToast) |
 
 ### Notes
-- Toast system IS fully implemented (`src/lib/notifications/ToastContext.tsx`) - just needs integration in useApiCall
-- Safety Incidents module IS complete (`src/features/safety/`)
-- Weather API IS complete (`src/features/daily-reports/services/weatherService.ts`)
+- ✅ Toast system IS fully implemented (`src/lib/notifications/ToastContext.tsx`) AND integrated in useApiCall
+- ✅ Safety Incidents module IS complete (`src/features/safety/`)
+- ✅ Weather API IS complete (`src/features/daily-reports/services/weatherService.ts`)
+- ✅ Email templates complete: 14 templates in `src/lib/email/templates/`
+- ✅ Notification service complete: 978 lines with approval, incident, RFI, task, change order, bid, portal notifications
+
+### Deferred Items - Implementation Requirements
+
+| Feature | Requirements | Priority |
+|---------|-------------|----------|
+| Drawing Markup Sharing | Email/link sharing API, sharing permissions | P3 |
+| Manual Merge (Conflicts) | Field-by-field merge UI, conflict resolution logic | P3 |
+| Takeoff Calibration | Line capture mode in canvas, calibration point storage | P2 |
+| Analytics Baseline | New DB table for baselines, snapshot capture/comparison | P3 |
+| MFA User Preferences | `user_preferences` table migration, UI for settings | P3 |
+| Offline Sync Config | IndexedDB setup, sync queue, conflict handling | P3 |
+| PWA Service Worker | Service worker registration, cache strategies | P3 |
 
 ---
 
@@ -631,5 +771,5 @@ cat .vercel/project.json
 ---
 
 **Document Owner:** Development Team
-**Last Review:** December 8, 2025 (Progress verification - updated P2 status)
-**Next Review:** December 15, 2025
+**Last Review:** December 9, 2025 (Full stub verification - all items verified, 8 complete, 6 deferred)
+**Next Review:** December 16, 2025

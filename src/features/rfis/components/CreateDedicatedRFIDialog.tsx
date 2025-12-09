@@ -29,6 +29,7 @@ import {
   RFI_PRIORITIES,
   BALL_IN_COURT_ROLES,
 } from '../hooks/useDedicatedRFIs'
+import { RFIRoutingSuggestions } from './RFIRoutingSuggestions'
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { RFIPriority, BallInCourtRole } from '@/types/database-extensions'
@@ -485,6 +486,17 @@ export function CreateDedicatedRFIDialog({
               disabled={createRFI.isPending}
             />
           </div>
+
+          {/* AI Routing Suggestions */}
+          {(subject.trim() || question.trim()) && (
+            <RFIRoutingSuggestions
+              projectId={projectId}
+              subject={subject}
+              question={question}
+              specSection={specSection}
+              onRoleSelect={(role) => setBallInCourtRole(role)}
+            />
+          )}
 
           {/* Impact Assessment */}
           <div className="space-y-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">

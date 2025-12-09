@@ -49,6 +49,9 @@ const DocumentLibraryPage = lazy(() => import('./pages/documents/DocumentLibrary
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage').then(m => ({ default: m.DocumentDetailPage })))
 const DrawingMarkupPage = lazy(() => import('./pages/documents/DrawingMarkupPage').then(m => ({ default: m.DrawingMarkupPage })))
 
+// Drawing Register feature
+const DrawingRegisterPage = lazy(() => import('./pages/drawings/DrawingRegisterPage'))
+
 // RFIs feature
 const RFIsPage = lazy(() => import('./pages/rfis/RFIsPage').then(m => ({ default: m.RFIsPage })))
 const RFIDetailPage = lazy(() => import('./pages/rfis/RFIDetailPage').then(m => ({ default: m.RFIDetailPage })))
@@ -89,6 +92,13 @@ const MyApprovalsPage = lazy(() => import('./pages/approvals/MyApprovalsPage').t
 const ApprovalRequestPage = lazy(() => import('./pages/approvals/ApprovalRequestPage').then(m => ({ default: m.ApprovalRequestPage })))
 const ApprovalWorkflowsPage = lazy(() => import('./pages/settings/ApprovalWorkflowsPage').then(m => ({ default: m.ApprovalWorkflowsPage })))
 const NotificationPreferencesPage = lazy(() => import('./pages/settings/NotificationPreferencesPage').then(m => ({ default: m.NotificationPreferencesPage })))
+const SettingsPage = lazy(() => import('./pages/settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
+const CompanyProfilePage = lazy(() => import('./pages/settings/CompanyProfilePage').then(m => ({ default: m.CompanyProfilePage })))
+const UserManagementPage = lazy(() => import('./pages/settings/UserManagementPage').then(m => ({ default: m.UserManagementPage })))
+const ProjectTemplatesPage = lazy(() => import('./pages/settings/ProjectTemplatesPage').then(m => ({ default: m.ProjectTemplatesPage })))
+const DistributionListsPage = lazy(() => import('./pages/settings/DistributionListsPage').then(m => ({ default: m.DistributionListsPage })))
+const RolesPermissionsPage = lazy(() => import('./pages/settings/RolesPermissionsPage').then(m => ({ default: m.RolesPermissionsPage })))
+const AISettingsPage = lazy(() => import('./pages/settings/AISettingsPage'))
 
 // Schedule / Gantt Charts feature
 const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
@@ -137,6 +147,8 @@ const ClientChangeOrders = lazy(() => import('./features/client-portal/pages/Cli
 
 // Photo Management feature
 const PhotoOrganizerPage = lazy(() => import('./features/photos/pages/PhotoOrganizerPage').then(m => ({ default: m.PhotoOrganizerPage })))
+const PhotoTemplatesPage = lazy(() => import('./pages/photos/PhotoTemplatesPage'))
+const DailyPhotoChecklistPage = lazy(() => import('./pages/photos/DailyPhotoChecklistPage'))
 
 // Material Receiving feature
 const MaterialReceivingPage = lazy(() => import('./pages/material-receiving/MaterialReceivingPage').then(m => ({ default: m.MaterialReceivingPage })))
@@ -208,6 +220,19 @@ const ReportBuilderPage = lazy(() => import('./pages/reports/ReportBuilderPage')
 // QuickBooks Integration feature
 const QuickBooksPage = lazy(() => import('./pages/settings/QuickBooksPage').then(m => ({ default: m.QuickBooksPage })))
 const QuickBooksCallbackPage = lazy(() => import('./pages/settings/QuickBooksCallbackPage').then(m => ({ default: m.QuickBooksCallbackPage })))
+
+// Transmittals feature
+const TransmittalsPage = lazy(() => import('./pages/transmittals/TransmittalsPage').then(m => ({ default: m.TransmittalsPage })))
+const TransmittalDetailPage = lazy(() => import('./pages/transmittals/TransmittalDetailPage').then(m => ({ default: m.TransmittalDetailPage })))
+const TransmittalEditPage = lazy(() => import('./pages/transmittals/TransmittalEditPage').then(m => ({ default: m.TransmittalEditPage })))
+
+// Job Safety Analysis (JSA) feature
+const JSAListPage = lazy(() => import('./pages/jsa/JSAListPage').then(m => ({ default: m.JSAListPage })))
+const JSADetailPage = lazy(() => import('./pages/jsa/JSADetailPage').then(m => ({ default: m.JSADetailPage })))
+
+// Bidding Module feature
+const BidPackagesPage = lazy(() => import('./pages/bidding/BidPackagesPage'))
+const BidPackageDetailPage = lazy(() => import('./pages/bidding/BidPackageDetailPage'))
 
 function App() {
   // Initialize Web Vitals monitoring in production
@@ -305,6 +330,9 @@ function App() {
                 <Route path="/documents/:documentId" element={<ProtectedRoute><DocumentDetailPage /></ProtectedRoute>} />
                 <Route path="/documents/:documentId/markup" element={<ProtectedRoute><DrawingMarkupPage /></ProtectedRoute>} />
 
+                {/* Drawing Register feature */}
+                <Route path="/projects/:projectId/drawings" element={<ProtectedRoute><DrawingRegisterPage /></ProtectedRoute>} />
+
                 {/* Takeoffs feature */}
                 <Route path="/projects/:projectId/takeoffs" element={<ProtectedRoute><TakeoffsListPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/documents/:documentId/takeoff" element={<ProtectedRoute><TakeoffPage /></ProtectedRoute>} />
@@ -343,10 +371,18 @@ function App() {
                 {/* Approvals feature */}
                 <Route path="/approvals" element={<ProtectedRoute><MyApprovalsPage /></ProtectedRoute>} />
                 <Route path="/approvals/:id" element={<ProtectedRoute><ApprovalRequestPage /></ProtectedRoute>} />
+                {/* Settings feature */}
+                <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+                <Route path="/settings/company" element={<ProtectedRoute><CompanyProfilePage /></ProtectedRoute>} />
+                <Route path="/settings/users" element={<ProtectedRoute><UserManagementPage /></ProtectedRoute>} />
                 <Route path="/settings/approval-workflows" element={<ProtectedRoute><ApprovalWorkflowsPage /></ProtectedRoute>} />
+                <Route path="/settings/project-templates" element={<ProtectedRoute><ProjectTemplatesPage /></ProtectedRoute>} />
+                <Route path="/settings/distribution-lists" element={<ProtectedRoute><DistributionListsPage /></ProtectedRoute>} />
+                <Route path="/settings/roles" element={<ProtectedRoute><RolesPermissionsPage /></ProtectedRoute>} />
                 <Route path="/settings/notifications" element={<ProtectedRoute><NotificationPreferencesPage /></ProtectedRoute>} />
                 <Route path="/settings/quickbooks" element={<ProtectedRoute><QuickBooksPage /></ProtectedRoute>} />
                 <Route path="/settings/quickbooks/callback" element={<ProtectedRoute><QuickBooksCallbackPage /></ProtectedRoute>} />
+                <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
                 <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
@@ -382,6 +418,8 @@ function App() {
                 <Route path="/projects/:projectId/material-receiving" element={<ProtectedRoute><MaterialReceivingPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/material-receiving/:materialId" element={<ProtectedRoute><MaterialReceivingDetailPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/photos" element={<ProtectedRoute><PhotoOrganizerPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-templates" element={<ProtectedRoute><PhotoTemplatesPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-checklist" element={<ProtectedRoute><DailyPhotoChecklistPage /></ProtectedRoute>} />
 
                 {/* Contacts feature */}
                 <Route path="/contacts" element={<ProtectedRoute><ContactsPage /></ProtectedRoute>} />
@@ -426,6 +464,11 @@ function App() {
                 <Route path="/lien-waivers" element={<ProtectedRoute><LienWaiversPage /></ProtectedRoute>} />
                 <Route path="/lien-waivers/:id" element={<ProtectedRoute><LienWaiverDetailPage /></ProtectedRoute>} />
 
+                {/* Transmittals feature */}
+                <Route path="/transmittals" element={<ProtectedRoute><TransmittalsPage /></ProtectedRoute>} />
+                <Route path="/transmittals/:transmittalId" element={<ProtectedRoute><TransmittalDetailPage /></ProtectedRoute>} />
+                <Route path="/transmittals/:transmittalId/edit" element={<ProtectedRoute><TransmittalEditPage /></ProtectedRoute>} />
+
                 {/* Look-Ahead Planning feature */}
                 <Route path="/projects/:projectId/look-ahead" element={<ProtectedRoute><LookAheadPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/look-ahead/snapshots" element={<ProtectedRoute><LookAheadSnapshotsPage /></ProtectedRoute>} />
@@ -439,6 +482,15 @@ function App() {
                 <Route path="/toolbox-talks/new" element={<ProtectedRoute><ToolboxTalkFormPage /></ProtectedRoute>} />
                 <Route path="/toolbox-talks/:id" element={<ProtectedRoute><ToolboxTalkDetailPage /></ProtectedRoute>} />
                 <Route path="/toolbox-talks/:id/edit" element={<ProtectedRoute><ToolboxTalkFormPage /></ProtectedRoute>} />
+
+                {/* Job Safety Analysis (JSA) feature */}
+                <Route path="/projects/:projectId/jsa" element={<ProtectedRoute><JSAListPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/jsa/:jsaId" element={<ProtectedRoute><JSADetailPage /></ProtectedRoute>} />
+
+                {/* Bidding Module feature */}
+                <Route path="/bidding" element={<ProtectedRoute><BidPackagesPage /></ProtectedRoute>} />
+                <Route path="/bidding/:packageId" element={<ProtectedRoute><BidPackageDetailPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/bidding" element={<ProtectedRoute><BidPackagesPage /></ProtectedRoute>} />
 
                 {/* Project Closeout feature */}
                 <Route path="/closeout" element={<ProtectedRoute><CloseoutPage /></ProtectedRoute>} />

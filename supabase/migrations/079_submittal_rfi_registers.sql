@@ -7,6 +7,17 @@
 --   - Status distribution views
 
 -- =============================================
+-- DROP EXISTING VIEWS (required when changing columns)
+-- =============================================
+DROP VIEW IF EXISTS project_document_status CASCADE;
+DROP VIEW IF EXISTS rfi_ball_in_court_summary CASCADE;
+DROP VIEW IF EXISTS submittal_ball_in_court_summary CASCADE;
+DROP VIEW IF EXISTS rfi_aging_summary CASCADE;
+DROP VIEW IF EXISTS rfi_register CASCADE;
+DROP VIEW IF EXISTS submittal_register_by_spec CASCADE;
+DROP VIEW IF EXISTS submittal_register CASCADE;
+
+-- =============================================
 -- SUBMITTAL REGISTER VIEW
 -- =============================================
 
@@ -172,12 +183,10 @@ SELECT
   END as traffic_light_status,
   -- Related data
   bic.full_name as ball_in_court_name,
-  sub.company_name as subcontractor_name,
   r.created_at,
   r.updated_at
 FROM rfis r
 LEFT JOIN users bic ON r.ball_in_court = bic.id
-LEFT JOIN subcontractors sub ON r.subcontractor_id = sub.id
 WHERE r.deleted_at IS NULL
 ORDER BY r.rfi_number DESC;
 

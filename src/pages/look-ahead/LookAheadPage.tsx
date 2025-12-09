@@ -60,6 +60,8 @@ import {
   LookAheadStats,
   PPCBadge,
 } from '@/features/look-ahead/components'
+import { AtRiskActivitiesPanel } from '@/features/analytics/components/risk-prediction/AtRiskActivitiesPanel'
+import { ScheduleOptimizationPanel } from '@/features/analytics/components/schedule-optimization/ScheduleOptimizationPanel'
 import {
   type LookAheadActivityWithDetails,
   type LookAheadActivityStatus,
@@ -315,6 +317,16 @@ export function LookAheadPage() {
       {ppcMetrics && (
         <LookAheadStats metrics={ppcMetrics} />
       )}
+
+      {/* AI Analytics Panels */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {projectId && (
+          <>
+            <AtRiskActivitiesPanel projectId={projectId} />
+            <ScheduleOptimizationPanel projectId={projectId} />
+          </>
+        )}
+      </div>
 
       {/* Filters & Navigation */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

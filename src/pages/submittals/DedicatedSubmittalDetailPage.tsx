@@ -28,6 +28,7 @@ import {
   History,
   Paperclip,
   Send,
+  FileDown,
 } from 'lucide-react'
 import {
   useSubmittal,
@@ -42,6 +43,7 @@ import {
   SUBMITTAL_TYPES,
   BALL_IN_COURT_ENTITIES,
 } from '@/features/submittals/hooks/useDedicatedSubmittals'
+import { downloadSubmittalPDF } from '@/features/submittals/utils/pdfExport'
 import { useCreateConversation } from '@/features/messaging/hooks'
 import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database'
 
@@ -245,15 +247,25 @@ export function DedicatedSubmittalDetailPage() {
                   {submittal.spec_section_title && ` - ${submittal.spec_section_title}`}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDiscuss}
-                disabled={createConversation.isPending}
-              >
-                <MessageSquare className="h-4 w-4 mr-2" />
-                {createConversation.isPending ? 'Creating...' : 'Discuss'}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => downloadSubmittalPDF({ submittal, includeItems: true, includeReviews: true, includeAttachments: true })}
+                >
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Export PDF
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDiscuss}
+                  disabled={createConversation.isPending}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  {createConversation.isPending ? 'Creating...' : 'Discuss'}
+                </Button>
+              </div>
             </div>
 
             {/* Overdue Warning */}
