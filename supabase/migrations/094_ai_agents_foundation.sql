@@ -466,8 +466,13 @@ CREATE TABLE IF NOT EXISTS critical_path_analysis (
   -- Audit
   created_at TIMESTAMPTZ DEFAULT NOW(),
 
-  UNIQUE(project_id, analysis_date::DATE)
+  -- Stored date for unique constraint (UTC date portion)
+  analysis_date_day DATE GENERATED ALWAYS AS ((analysis_date AT TIME ZONE 'UTC')::DATE) STORED
 );
+
+-- Create unique index for one analysis per project per day
+CREATE UNIQUE INDEX IF NOT EXISTS idx_critical_path_unique_day
+  ON critical_path_analysis(project_id, analysis_date_day);
 
 -- Constraint resolution impact tracking
 CREATE TABLE IF NOT EXISTS constraint_schedule_impacts (
@@ -622,7 +627,8 @@ CREATE INDEX IF NOT EXISTS idx_ai_config_company ON ai_configuration(company_id)
 CREATE INDEX IF NOT EXISTS idx_usage_log_company ON ai_usage_log(company_id);
 CREATE INDEX IF NOT EXISTS idx_usage_log_created ON ai_usage_log(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_usage_log_feature ON ai_usage_log(feature);
-CREATE INDEX IF NOT EXISTS idx_usage_log_month ON ai_usage_log(company_id, date_trunc('month', created_at));
+-- Composite index for monthly queries (queries will filter on date range instead of date_trunc)
+CREATE INDEX IF NOT EXISTS idx_usage_log_company_date ON ai_usage_log(company_id, created_at);
 
 -- RFI Routing
 CREATE INDEX IF NOT EXISTS idx_rfi_suggestions_rfi_id ON rfi_routing_suggestions(rfi_id);

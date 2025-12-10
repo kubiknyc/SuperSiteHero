@@ -1,0 +1,310 @@
+/**
+ * Weather API Service - Auto-fetch weather data for daily reports
+ * Uses OpenWeatherMap API (or similar) for weather data
+ */
+
+interface WeatherData {
+  temperature: number; // Fahrenheit
+  conditions: string;
+  humidity: number;
+  windSpeed: number;
+  windDirection: string;
+  precipitation: number;
+  icon: string;
+  fetchedAt: string;
+}
+
+interface GeoLocation {
+  latitude: number;
+  longitude: number;
+}
+
+// Weather condition mapping
+const CONDITION_ICONS: Record<string, string> = {
+  clear: 'sun',
+  clouds: 'cloud',
+  rain: 'cloud-rain',
+  drizzle: 'cloud-drizzle',
+  thunderstorm: 'cloud-lightning',
+  snow: 'snowflake',
+  mist: 'cloud-fog',
+  fog: 'cloud-fog',
+  haze: 'cloud-fog',
+};
+
+/**
+ * Get weather icon based on condition
+ */
+function getWeatherIcon(condition: string): string {
+  const normalized = condition.toLowerCase();
+  for (const [key, icon] of Object.entries(CONDITION_ICONS)) {
+    if (normalized.includes(key)) {
+      return icon;
+    }
+  }
+  return 'cloud';
+}
+
+/**
+ * Convert Kelvin to Fahrenheit
+ */
+function kelvinToFahrenheit(kelvin: number): number {
+  return Math.round((kelvin - 273.15) * 9/5 + 32);
+}
+
+/**
+ * Convert meters/second to mph
+ */
+function mpsToMph(mps: number): number {
+  return Math.round(mps * 2.237);
+}
+
+/**
+ * Get wind direction from degrees
+ */
+function getWindDirection(degrees: number): string {
+  const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+  const index = Math.round(degrees / 22.5) % 16;
+  return directions[index];
+}
+
+/**
+ * Fetch weather from OpenWeatherMap API
+ */
+async function fetchFromOpenWeatherMap(
+  lat: number,
+  lon: number,
+  apiKey: string
+): Promise<WeatherData> {
+  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Weather API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    temperature: kelvinToFahrenheit(data.main.temp),
+    conditions: data.weather[0]?.description || 'Unknown',
+    humidity: data.main.humidity,
+    windSpeed: mpsToMph(data.wind.speed),
+    windDirection: getWindDirection(data.wind.deg),
+    precipitation: data.rain?.['1h'] || data.snow?.['1h'] || 0,
+    icon: getWeatherIcon(data.weather[0]?.main || ''),
+    fetchedAt: new Date().toISOString(),
+  };
+}
+
+/**
+ * Cache for weather data (to avoid excessive API calls)
+ */
+const weatherCache = new Map<string, { data: WeatherData; expiresAt: number }>();
+const CACHE_DURATION_MS = 15 * 60 * 1000; // 15 minutes
+
+/**
+ * Get cache key for location
+ */
+function getCacheKey(lat: number, lon: number): string {
+  // Round to 2 decimal places for cache key
+  return `${lat.toFixed(2)},${lon.toFixed(2)}`;
+}
+
+/**
+ * Get weather data for a location
+ */
+export async function getWeather(location: GeoLocation): Promise<WeatherData> {
+  const cacheKey = getCacheKey(location.latitude, location.longitude);
+
+  // Check cache
+  const cached = weatherCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data;
+  }
+
+  // Get API key from environment or settings
+  const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('Weather API key not configured. Please add VITE_OPENWEATHERMAP_API_KEY to your environment.');
+  }
+
+  const data = await fetchFromOpenWeatherMap(location.latitude, location.longitude, apiKey);
+
+  // Cache the result
+  weatherCache.set(cacheKey, {
+    data,
+    expiresAt: Date.now() + CACHE_DURATION_MS,
+  });
+
+  return data;
+}
+
+/**
+ * Get weather for a project (using project's location)
+ */
+export async function getWeatherForProject(projectId: string): Promise<WeatherData | null> {
+  try {
+    // Import supabase dynamically to avoid circular dependencies
+    const { supabase } = await import('@/lib/supabase');
+
+    // Get project location
+    const { data: project, error } = await supabase
+      .from('projects')
+      .select('latitude, longitude, address, city, state')
+      .eq('id', projectId)
+      .single();
+
+    if (error || !project) {
+      console.error('Failed to fetch project location:', error);
+      return null;
+    }
+
+    // If we have coordinates, use them
+    if (project.latitude && project.longitude) {
+      return getWeather({
+        latitude: project.latitude,
+        longitude: project.longitude,
+      });
+    }
+
+    // Otherwise, geocode the address
+    if (project.address || project.city) {
+      const location = await geocodeAddress(
+        [project.address, project.city, project.state].filter(Boolean).join(', ')
+      );
+
+      if (location) {
+        return getWeather(location);
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error fetching weather for project:', error);
+    return null;
+  }
+}
+
+/**
+ * Geocode an address to coordinates
+ */
+async function geocodeAddress(address: string): Promise<GeoLocation | null> {
+  const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
+
+  if (!apiKey) {
+    return null;
+  }
+
+  try {
+    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(address)}&limit=1&appid=${apiKey}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
+    if (data.length > 0) {
+      return {
+        latitude: data[0].lat,
+        longitude: data[0].lon,
+      };
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Geocoding error:', error);
+    return null;
+  }
+}
+
+/**
+ * Get current location from browser
+ */
+export function getCurrentLocation(): Promise<GeoLocation> {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation is not supported by this browser'));
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+      },
+      (error) => {
+        reject(new Error(`Geolocation error: ${error.message}`));
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 300000, // 5 minutes
+      }
+    );
+  });
+}
+
+/**
+ * Format weather data for display
+ */
+export function formatWeatherDisplay(weather: WeatherData): string {
+  return `${weather.temperature}°F, ${weather.conditions}, Wind: ${weather.windSpeed} mph ${weather.windDirection}`;
+}
+
+/**
+ * Check if weather conditions might cause work delays
+ */
+export function analyzeWeatherImpact(weather: WeatherData): {
+  hasImpact: boolean;
+  severity: 'none' | 'minor' | 'moderate' | 'severe';
+  warnings: string[];
+} {
+  const warnings: string[] = [];
+  let severity: 'none' | 'minor' | 'moderate' | 'severe' = 'none';
+
+  // Temperature extremes
+  if (weather.temperature < 32) {
+    warnings.push('Freezing conditions may affect concrete work and equipment');
+    severity = 'moderate';
+  } else if (weather.temperature > 95) {
+    warnings.push('Extreme heat may require additional worker breaks');
+    severity = 'minor';
+  }
+
+  // Wind
+  if (weather.windSpeed > 35) {
+    warnings.push('High winds may affect crane operations and elevated work');
+    severity = 'severe';
+  } else if (weather.windSpeed > 20) {
+    warnings.push('Moderate winds may affect certain operations');
+    severity = severity === 'none' ? 'minor' : severity;
+  }
+
+  // Precipitation
+  const conditions = weather.conditions.toLowerCase();
+  if (conditions.includes('thunderstorm')) {
+    warnings.push('Thunderstorm conditions - suspend all outdoor work');
+    severity = 'severe';
+  } else if (conditions.includes('heavy rain') || conditions.includes('heavy snow')) {
+    warnings.push('Heavy precipitation may suspend outdoor activities');
+    severity = 'moderate';
+  } else if (conditions.includes('rain') || conditions.includes('snow')) {
+    warnings.push('Precipitation may affect certain work activities');
+    severity = severity === 'none' ? 'minor' : severity;
+  }
+
+  return {
+    hasImpact: warnings.length > 0,
+    severity,
+    warnings,
+  };
+}
+
+export type { WeatherData, GeoLocation };
