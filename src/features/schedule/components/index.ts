@@ -10,8 +10,15 @@ export * from './CalendarSelector'
 export * from './ActivityFormDialog'
 export * from './ActivityDetailPanel'
 
-// Import/Export (to be created)
-// export * from './ScheduleImportDialog'
+// Import/Export
+export * from './ScheduleImportDialog'
 
-// Baseline Management (to be created)
-// export * from './BaselineSelector'
+// Baseline Management
+export * from './BaselineSelector'
+export * from './BaselineComparisonView'
+
+// Import History
+export * from './ImportHistoryList'
+
+// Look-Ahead Integration
+export * from './LookAheadSyncDialog'

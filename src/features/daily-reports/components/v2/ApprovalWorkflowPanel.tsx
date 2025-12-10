@@ -3,7 +3,7 @@
  * Handles status transitions, signatures, and approval history
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,7 +28,8 @@ import {
   PenTool,
 } from 'lucide-react';
 import { SignatureCapture } from '../SignatureCapture';
-import type { ReportStatus } from '@/types/daily-reports-v2';
+import { workflowEngine, type ApprovalRole } from '../../services/workflowEngine';
+import type { ReportStatus, DailyReportV2 } from '@/types/daily-reports-v2';
 
 interface ApprovalWorkflowPanelProps {
   reportId: string;
@@ -43,10 +44,14 @@ interface ApprovalWorkflowPanelProps {
   onApprove?: (signature: string, name: string, comments?: string) => Promise<void>;
   onRequestChanges?: (reason: string) => Promise<void>;
   onLock?: () => Promise<void>;
+  // Legacy permission props (can be omitted if using role-based)
   canSubmit?: boolean;
   canApprove?: boolean;
   canRequestChanges?: boolean;
   canLock?: boolean;
+  // Role-based permission (preferred)
+  userRole?: ApprovalRole;
+  isAuthor?: boolean;
   isLoading?: boolean;
 }
 
@@ -105,10 +110,12 @@ export function ApprovalWorkflowPanel({
   onApprove,
   onRequestChanges,
   onLock,
-  canSubmit = false,
-  canApprove = false,
-  canRequestChanges = false,
-  canLock = false,
+  canSubmit: canSubmitProp,
+  canApprove: canApproveProp,
+  canRequestChanges: canRequestChangesProp,
+  canLock: canLockProp,
+  userRole,
+  isAuthor = false,
   isLoading = false,
 }: ApprovalWorkflowPanelProps) {
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
@@ -122,6 +129,43 @@ export function ApprovalWorkflowPanel({
   const [processing, setProcessing] = useState(false);
 
   const statusConfig = STATUS_CONFIG[currentStatus];
+
+  // Calculate permissions using workflow engine if userRole is provided
+  const permissions = useMemo(() => {
+    // If userRole is provided, use workflow engine for role-based permissions
+    if (userRole) {
+      const effectiveRole = isAuthor ? 'author' : userRole;
+      const availableActions = workflowEngine.getAvailableActions(
+        { status: currentStatus } as DailyReportV2,
+        effectiveRole
+      );
+
+      const actionMap = availableActions.reduce(
+        (acc, action) => {
+          acc[action.action] = true;
+          return acc;
+        },
+        {} as Record<string, boolean>
+      );
+
+      return {
+        canSubmit: Boolean(actionMap['submit']),
+        canApprove: Boolean(actionMap['approve']),
+        canRequestChanges: Boolean(actionMap['request_changes']),
+        canLock: Boolean(actionMap['lock']),
+      };
+    }
+
+    // Fall back to explicit permission props
+    return {
+      canSubmit: canSubmitProp ?? false,
+      canApprove: canApproveProp ?? false,
+      canRequestChanges: canRequestChangesProp ?? false,
+      canLock: canLockProp ?? false,
+    };
+  }, [currentStatus, userRole, isAuthor, canSubmitProp, canApproveProp, canRequestChangesProp, canLockProp]);
+
+  const { canSubmit, canApprove, canRequestChanges, canLock } = permissions;
 
   const handleSubmit = useCallback(async () => {
     if (!signature || !signerName.trim() || !onSubmit) return;

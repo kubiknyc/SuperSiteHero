@@ -20,6 +20,9 @@ import {
   CheckCircle2,
   XCircle,
   Pause,
+  TrendingUp,
+  History,
+  ArrowRight,
 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
@@ -33,25 +36,40 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import { GanttChart } from '@/features/gantt/components/GanttChart'
-import { ImportScheduleDialog } from '@/features/gantt/components/ImportScheduleDialog'
+import {
+  ScheduleImportDialog,
+  ActivityDetailPanel,
+  ActivityFormDialog,
+  BaselineSelector,
+  BaselineComparisonView,
+  ImportHistoryList,
+  LookAheadSyncDialog,
+} from '@/features/schedule/components'
 import { useProject } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/hooks/useAuth'
 import {
   useMasterScheduleData,
   useUpdateScheduleActivity,
+  useUpdateScheduleActivityWithNotification,
   useCreateBaselineWithNotification,
   useSetActiveBaseline,
-  useImportScheduleActivities,
+  useClearBaseline,
 } from '@/features/schedule/hooks'
 import {
   mapActivitiesToScheduleItems,
   mapDependenciesToTaskDependencies,
   calculateActivityDateRange,
 } from '@/features/schedule/utils/activityAdapter'
+import { exportScheduleToPdf } from '@/features/schedule/utils/schedulePdfExport'
 import type { ScheduleItem } from '@/types/schedule'
 import type { ScheduleActivity, ScheduleBaseline } from '@/types/schedule-activities'
-import type { ParsedSchedule } from '@/features/gantt/utils/msProjectImport'
 
 export function MasterSchedulePage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -75,15 +93,22 @@ export function MasterSchedulePage() {
 
   // Mutations
   const updateActivity = useUpdateScheduleActivity()
+  const updateActivityWithNotification = useUpdateScheduleActivityWithNotification()
   const createBaseline = useCreateBaselineWithNotification()
   const setActiveBaseline = useSetActiveBaseline()
-  const importActivities = useImportScheduleActivities()
+  const clearBaseline = useClearBaseline()
 
   // State
   const [selectedActivity, setSelectedActivity] = useState<ScheduleActivity | null>(null)
   const [showImportDialog, setShowImportDialog] = useState(false)
   const [showActivityDialog, setShowActivityDialog] = useState(false)
+  const [showEditDialog, setShowEditDialog] = useState(false)
+  const [editingActivity, setEditingActivity] = useState<ScheduleActivity | null>(null)
   const [isSavingBaseline, setIsSavingBaseline] = useState(false)
+  const [selectedBaselineId, setSelectedBaselineId] = useState<string | null>(null)
+  const [showComparisonView, setShowComparisonView] = useState(false)
+  const [showImportHistory, setShowImportHistory] = useState(false)
+  const [showLookAheadSync, setShowLookAheadSync] = useState(false)
 
   // Map activities to GanttChart format
   const scheduleItems = useMemo(
@@ -176,41 +201,57 @@ export function MasterSchedulePage() {
     [projectId, setActiveBaseline]
   )
 
-  // Handle import
-  const handleImport = useCallback(
-    async (
-      tasks: ParsedSchedule['tasks'],
-      _importDeps: ParsedSchedule['dependencies'],
-      clearExisting: boolean
-    ) => {
-      if (!projectId || !userProfile?.company_id) return
-
-      // Map parsed tasks to CreateScheduleActivityDTO format
-      const activitiesToImport = tasks.map((task, index) => ({
-        activity_id: task.task_id || `IMP-${String(index + 1).padStart(4, '0')}`,
-        name: task.task_name,
-        wbs_code: task.wbs || null,
-        planned_start: task.start_date,
-        planned_finish: task.finish_date,
-        planned_duration: task.duration_days,
-        is_milestone: task.is_milestone || false,
-        notes: task.notes || null,
-      }))
-
-      await importActivities.mutateAsync({
-        projectId,
-        companyId: userProfile.company_id,
-        activities: activitiesToImport,
-        fileName: 'Imported Schedule',
-        fileType: 'xml',
-        sourceSystem: 'ms_project',
-        clearExisting,
-      })
-
-      setShowImportDialog(false)
+  // Handle import complete - refresh data
+  const handleImportComplete = useCallback(
+    (_count: number) => {
+      refetch()
     },
-    [projectId, userProfile?.company_id, importActivities]
+    [refetch]
   )
+
+  // Handle clear baseline
+  const handleClearBaseline = useCallback(async () => {
+    if (!projectId) return
+    await clearBaseline.mutateAsync(projectId)
+    setSelectedBaselineId(null)
+    await refetch()
+  }, [projectId, clearBaseline, refetch])
+
+  // Handle edit activity
+  const handleEditActivity = useCallback((activity: ScheduleActivity) => {
+    setEditingActivity(activity)
+    setShowEditDialog(true)
+    setSelectedActivity(null) // Close detail panel
+  }, [])
+
+  // Handle activity update submission
+  const handleActivityUpdate = useCallback(
+    async (data: Record<string, unknown>) => {
+      if (!editingActivity) return
+      await updateActivityWithNotification.mutateAsync({
+        activityId: editingActivity.id,
+        updates: data,
+      })
+      setShowEditDialog(false)
+      setEditingActivity(null)
+    },
+    [editingActivity, updateActivityWithNotification]
+  )
+
+  // Handle PDF export
+  const handleExportPdf = useCallback(async () => {
+    if (!project) return
+    await exportScheduleToPdf({
+      projectName: project.name,
+      projectNumber: project.project_number,
+      activities,
+      stats,
+      includeBaseline: hasBaseline,
+      includeMilestones: true,
+      includeAllActivities: true,
+      orientation: 'landscape',
+    })
+  }, [project, activities, stats, hasBaseline])
 
   // Loading state
   if (projectLoading) {
@@ -275,7 +316,7 @@ export function MasterSchedulePage() {
           <div className="flex items-center gap-2">
             {/* Stats badges */}
             {stats && (
-              <div className="hidden md:flex items-center gap-2 mr-4">
+              <div className="hidden lg:flex items-center gap-2 mr-4">
                 <Badge variant="outline" className="gap-1">
                   <Target className="h-3 w-3" />
                   {stats.total_activities} activities
@@ -295,36 +336,32 @@ export function MasterSchedulePage() {
               </div>
             )}
 
-            {/* Baseline selector */}
-            {baselines.length > 0 && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    <Clock className="h-4 w-4 mr-2" />
-                    {activeBaseline ? activeBaseline.name : 'No Baseline'}
-                    <ChevronDown className="h-4 w-4 ml-2" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {baselines.map((baseline) => (
-                    <DropdownMenuItem
-                      key={baseline.id}
-                      onClick={() => handleChangeBaseline(baseline)}
-                    >
-                      <div className="flex items-center gap-2">
-                        {baseline.is_active && (
-                          <CheckCircle2 className="h-4 w-4 text-green-500" />
-                        )}
-                        <span>{baseline.name}</span>
-                        <span className="text-xs text-gray-500">
-                          ({new Date(baseline.baseline_date).toLocaleDateString()})
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            {/* Baseline selector with comparison button */}
+            <div className="hidden md:flex items-center gap-2">
+              <BaselineSelector
+                projectId={projectId!}
+                value={selectedBaselineId}
+                onChange={(id) => {
+                  setSelectedBaselineId(id)
+                  if (id) {
+                    // Set as active baseline when selected
+                    setActiveBaseline.mutate({ baselineId: id, projectId: projectId! })
+                  }
+                }}
+                showCreateButton
+                onCreateClick={handleSaveBaseline}
+              />
+              {selectedBaselineId && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowComparisonView(true)}
+                  title="View variance analysis"
+                >
+                  <TrendingUp className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
 
             <Button
               variant="outline"
@@ -348,11 +385,29 @@ export function MasterSchedulePage() {
                   <Clock className="h-4 w-4 mr-2" />
                   Save Baseline
                 </DropdownMenuItem>
-                <DropdownMenuItem disabled>
+                {selectedBaselineId && (
+                  <DropdownMenuItem onClick={() => setShowComparisonView(true)}>
+                    <TrendingUp className="h-4 w-4 mr-2" />
+                    View Variance
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setShowImportHistory(true)}>
+                  <History className="h-4 w-4 mr-2" />
+                  Import History
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleExportPdf} disabled={activities.length === 0}>
                   <Download className="h-4 w-4 mr-2" />
                   Export to PDF
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => setShowLookAheadSync(true)}
+                  disabled={activities.length === 0}
+                >
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  Push to Look-Ahead
+                </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={() => navigate(`/projects/${projectId}/look-ahead`)}
                 >
@@ -429,7 +484,7 @@ export function MasterSchedulePage() {
               onTaskClick={handleTaskClick}
               onTaskUpdate={handleTaskUpdate}
               onSaveBaseline={handleSaveBaseline}
-              onClearBaseline={() => {}} // TODO: Implement clear baseline
+              onClearBaseline={handleClearBaseline}
               onImport={() => setShowImportDialog(true)}
               hasBaseline={hasBaseline}
             />
@@ -437,20 +492,77 @@ export function MasterSchedulePage() {
         </div>
 
         {/* Activity Detail Panel */}
-        {selectedActivity && (
-          <ActivityDetailSidePanel
-            activity={selectedActivity}
-            onClose={() => setSelectedActivity(null)}
+        <ActivityDetailPanel
+          open={!!selectedActivity}
+          onOpenChange={(open) => !open && setSelectedActivity(null)}
+          activity={selectedActivity}
+          onEdit={() => {
+            if (selectedActivity) {
+              handleEditActivity(selectedActivity)
+            }
+          }}
+        />
+
+        {/* Import Dialog */}
+        <ScheduleImportDialog
+          open={showImportDialog}
+          onOpenChange={setShowImportDialog}
+          projectId={projectId!}
+          companyId={userProfile?.company_id || ''}
+          onImportComplete={handleImportComplete}
+        />
+
+        {/* Baseline Comparison View */}
+        {selectedBaselineId && (
+          <BaselineComparisonView
+            open={showComparisonView}
+            onOpenChange={setShowComparisonView}
             projectId={projectId!}
+            baselineId={selectedBaselineId}
+            activities={activities}
           />
         )}
 
-        {/* Import Dialog */}
-        <ImportScheduleDialog
-          open={showImportDialog}
-          onOpenChange={setShowImportDialog}
-          onImport={handleImport}
-          isImporting={importActivities.isPending}
+        {/* Import History Sheet */}
+        <Sheet open={showImportHistory} onOpenChange={setShowImportHistory}>
+          <SheetContent className="sm:max-w-xl">
+            <SheetHeader>
+              <SheetTitle>Import History</SheetTitle>
+            </SheetHeader>
+            <div className="mt-4">
+              <ImportHistoryList
+                projectId={projectId!}
+                limit={20}
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        {/* Look-Ahead Sync Dialog */}
+        <LookAheadSyncDialog
+          open={showLookAheadSync}
+          onOpenChange={setShowLookAheadSync}
+          projectId={projectId!}
+          companyId={userProfile?.company_id || ''}
+          activities={activities}
+          onSyncComplete={(count: number) => {
+            setShowLookAheadSync(false)
+            // Optionally navigate to look-ahead page
+          }}
+        />
+
+        {/* Activity Edit Dialog */}
+        <ActivityFormDialog
+          open={showEditDialog}
+          onOpenChange={(open) => {
+            setShowEditDialog(open)
+            if (!open) setEditingActivity(null)
+          }}
+          activity={editingActivity}
+          projectId={projectId!}
+          companyId={userProfile?.company_id || ''}
+          onSubmit={handleActivityUpdate}
+          isLoading={updateActivityWithNotification.isPending}
         />
       </div>
     </AppLayout>
@@ -480,207 +592,6 @@ function StatBadge({
       {icon}
       <span className="font-medium">{value}</span>
       <span className="text-gray-500">{label}</span>
-    </div>
-  )
-}
-
-// Simple activity detail side panel
-function ActivityDetailSidePanel({
-  activity,
-  onClose,
-  projectId,
-}: {
-  activity: ScheduleActivity
-  onClose: () => void
-  projectId: string
-}) {
-  const updateActivity = useUpdateScheduleActivity()
-  const navigate = useNavigate()
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-700'
-      case 'in_progress':
-        return 'bg-blue-100 text-blue-700'
-      case 'on_hold':
-        return 'bg-amber-100 text-amber-700'
-      case 'cancelled':
-        return 'bg-red-100 text-red-700'
-      default:
-        return 'bg-gray-100 text-gray-700'
-    }
-  }
-
-  const handleStatusChange = async (newStatus: string) => {
-    await updateActivity.mutateAsync({
-      activityId: activity.id,
-      updates: {
-        status: newStatus as any,
-        percent_complete: newStatus === 'completed' ? 100 : activity.percent_complete,
-      },
-    })
-  }
-
-  return (
-    <div className="absolute bottom-0 right-0 w-96 m-4 z-50">
-      <Card>
-        <CardHeader className="pb-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-xs text-gray-500 font-mono">
-                {activity.activity_id}
-              </div>
-              <CardTitle className="text-lg">{activity.name}</CardTitle>
-            </div>
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              ✕
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Status */}
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">Status</span>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Badge
-                  className={`cursor-pointer ${getStatusColor(activity.status)}`}
-                >
-                  {activity.status.replace('_', ' ')}
-                  <ChevronDown className="h-3 w-3 ml-1" />
-                </Badge>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {['not_started', 'in_progress', 'completed', 'on_hold'].map(
-                  (status) => (
-                    <DropdownMenuItem
-                      key={status}
-                      onClick={() => handleStatusChange(status)}
-                    >
-                      {status.replace('_', ' ')}
-                    </DropdownMenuItem>
-                  )
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-
-          {/* Dates */}
-          <dl className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <dt className="text-gray-500">Planned Start</dt>
-              <dd className="font-medium">
-                {activity.planned_start
-                  ? new Date(activity.planned_start).toLocaleDateString()
-                  : '-'}
-              </dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-gray-500">Planned Finish</dt>
-              <dd className="font-medium">
-                {activity.planned_finish
-                  ? new Date(activity.planned_finish).toLocaleDateString()
-                  : '-'}
-              </dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-gray-500">Duration</dt>
-              <dd className="font-medium">
-                {activity.planned_duration || 0} days
-              </dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-gray-500">Progress</dt>
-              <dd className="font-medium">{activity.percent_complete}%</dd>
-            </div>
-          </dl>
-
-          {/* Progress bar */}
-          <div className="w-full bg-gray-200 rounded-full h-2">
-            <div
-              className="bg-blue-600 h-2 rounded-full transition-all"
-              style={{ width: `${activity.percent_complete}%` }}
-            />
-          </div>
-
-          {/* Additional info */}
-          {activity.responsible_party && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Responsible</span>
-              <span className="font-medium">{activity.responsible_party}</span>
-            </div>
-          )}
-
-          {activity.wbs_code && (
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">WBS</span>
-              <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">
-                {activity.wbs_code}
-              </span>
-            </div>
-          )}
-
-          {/* Indicators */}
-          <div className="flex gap-2 flex-wrap">
-            {activity.is_critical && (
-              <Badge variant="destructive" className="text-xs">
-                Critical Path
-              </Badge>
-            )}
-            {activity.is_milestone && (
-              <Badge className="bg-violet-100 text-violet-700 text-xs">
-                Milestone
-              </Badge>
-            )}
-            {activity.baseline_start && (
-              <Badge variant="outline" className="text-xs">
-                Has Baseline
-              </Badge>
-            )}
-          </div>
-
-          {/* Baseline comparison */}
-          {activity.baseline_start && activity.baseline_finish && (
-            <div className="border-t pt-3 mt-3">
-              <div className="text-xs text-gray-400 mb-2">Baseline</div>
-              <div className="flex justify-between text-sm text-gray-500">
-                <span>
-                  {new Date(activity.baseline_start).toLocaleDateString()}
-                </span>
-                <span>→</span>
-                <span>
-                  {new Date(activity.baseline_finish).toLocaleDateString()}
-                </span>
-              </div>
-            </div>
-          )}
-
-          {/* Notes */}
-          {activity.notes && (
-            <div className="border-t pt-3">
-              <div className="text-xs text-gray-500 mb-1">Notes</div>
-              <p className="text-sm text-gray-700">{activity.notes}</p>
-            </div>
-          )}
-
-          {/* Actions */}
-          <div className="flex gap-2 pt-2 border-t">
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              onClick={() =>
-                navigate(`/projects/${projectId}/look-ahead`, {
-                  state: { activityId: activity.id },
-                })
-              }
-            >
-              Push to Look-Ahead
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

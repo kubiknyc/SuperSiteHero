@@ -4,11 +4,13 @@
  */
 
 import { useState, useCallback, useRef, useMemo } from 'react';
+import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
 import {
   Dialog,
   DialogContent,
@@ -35,8 +37,12 @@ import {
   MapPin,
   Tag,
   X,
+  Loader2,
+  AlertCircle,
+  CheckCircle2,
 } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
+import { usePhotoUploadManager, type ProcessedPhoto } from '../../hooks/usePhotoUploadManager';
 import type { PhotoEntryV2, PhotoCategory } from '@/types/daily-reports-v2';
 
 const PHOTO_CATEGORIES: { value: PhotoCategory; label: string; color: string }[] = [
@@ -62,11 +68,18 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   const removePhoto = useDailyReportStoreV2((state) => state.removePhoto);
   const draftReport = useDailyReportStoreV2((state) => state.draftReport);
 
+  // Photo upload manager
+  const { uploadProgress, processPhoto, isUploading } = usePhotoUploadManager();
+
+  // Track pending processed photos (before actual upload)
+  const [pendingPhotos, setPendingPhotos] = useState<Map<string, ProcessedPhoto>>(new Map());
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingPhoto, setEditingPhoto] = useState<PhotoEntryV2 | null>(null);
   const [formData, setFormData] = useState<Partial<PhotoEntryV2>>({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const stats = useMemo(() => {
     const byCategory = PHOTO_CATEGORIES.map((cat) => ({
@@ -80,36 +93,57 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
     return PHOTO_CATEGORIES.find((c) => c.value === category) || PHOTO_CATEGORIES[7];
   };
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const dataUrl = event.target?.result as string;
+    setIsProcessing(true);
 
-        // Create new photo entry
-        const newPhoto: PhotoEntryV2 = {
-          id: crypto.randomUUID(),
-          daily_report_id: draftReport?.id || '',
-          file_url: dataUrl,
-          category: 'general',
-          upload_status: 'uploaded',
-          created_at: new Date().toISOString(),
-          taken_at: new Date().toISOString(),
-        };
+    try {
+      for (const file of Array.from(files)) {
+        const photoId = crypto.randomUUID();
 
-        addPhoto(newPhoto);
-      };
-      reader.readAsDataURL(file);
-    });
+        try {
+          // Process photo (compress, extract GPS/EXIF, generate thumbnail)
+          const processed = await processPhoto(file, photoId);
 
-    // Reset input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+          // Store the processed photo for later upload
+          setPendingPhotos((prev) => new Map(prev).set(photoId, processed));
+
+          // Create a temporary data URL for preview
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const dataUrl = event.target?.result as string;
+
+            // Create photo entry with pending status
+            const newPhoto: PhotoEntryV2 = {
+              id: photoId,
+              daily_report_id: draftReport?.id || '',
+              file_url: processed.thumbnailDataUrl || dataUrl,
+              thumbnail_url: processed.thumbnailDataUrl,
+              category: 'general',
+              upload_status: 'pending',
+              gps_latitude: processed.gpsLatitude,
+              gps_longitude: processed.gpsLongitude,
+              taken_at: processed.takenAt || new Date().toISOString(),
+              created_at: new Date().toISOString(),
+            };
+
+            addPhoto(newPhoto);
+          };
+          reader.readAsDataURL(processed.compressedFile || file);
+        } catch (error: any) {
+          toast.error(`Failed to process ${file.name}: ${error.message}`);
+        }
+      }
+    } finally {
+      setIsProcessing(false);
+      // Reset input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
-  }, [draftReport?.id, addPhoto]);
+  }, [draftReport?.id, addPhoto, processPhoto]);
 
   const handleEdit = useCallback((photo: PhotoEntryV2) => {
     setFormData({ ...photo });
@@ -183,20 +217,40 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
             {/* Upload Area */}
             <div className="p-4 bg-gray-50 border-b">
               <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 hover:bg-blue-50 cursor-pointer transition-colors"
-                onClick={() => fileInputRef.current?.click()}
+                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                  isProcessing || isUploading
+                    ? 'border-blue-300 bg-blue-50 cursor-wait'
+                    : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                }`}
+                onClick={() => !isProcessing && !isUploading && fileInputRef.current?.click()}
               >
-                <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                <p className="text-sm text-gray-600">Click to upload photos</p>
-                <p className="text-xs text-gray-400">or drag and drop</p>
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="h-8 w-8 mx-auto mb-2 text-blue-500 animate-spin" />
+                    <p className="text-sm text-blue-600">Processing photos...</p>
+                    <p className="text-xs text-blue-400">Compressing and extracting metadata</p>
+                  </>
+                ) : isUploading ? (
+                  <>
+                    <Loader2 className="h-8 w-8 mx-auto mb-2 text-blue-500 animate-spin" />
+                    <p className="text-sm text-blue-600">Uploading photos...</p>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                    <p className="text-sm text-gray-600">Click to upload photos</p>
+                    <p className="text-xs text-gray-400">or drag and drop</p>
+                  </>
+                )}
               </div>
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/gif,image/webp,image/heic,image/heif"
                 multiple
                 className="hidden"
                 onChange={handleFileSelect}
+                disabled={isProcessing || isUploading}
               />
             </div>
 
@@ -206,10 +260,17 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {photos.map((photo) => {
                     const catInfo = getCategoryInfo(photo.category);
+                    const progress = uploadProgress[photo.id];
+                    const isPending = photo.upload_status === 'pending';
+                    const isFailed = photo.upload_status === 'failed' || progress?.status === 'failed';
+                    const isCurrentlyUploading = progress?.status === 'uploading' || progress?.status === 'compressing';
+
                     return (
                       <div
                         key={photo.id}
-                        className="relative group rounded-lg overflow-hidden border"
+                        className={`relative group rounded-lg overflow-hidden border ${
+                          isFailed ? 'border-red-300' : isPending ? 'border-yellow-300' : ''
+                        }`}
                       >
                         <img
                           src={photo.thumbnail_url || photo.file_url}
@@ -217,7 +278,40 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                           className="w-full h-32 object-cover"
                         />
 
-                        {/* Overlay */}
+                        {/* Upload Status Overlay */}
+                        {(isPending || isCurrentlyUploading || isFailed) && (
+                          <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center">
+                            {isCurrentlyUploading && (
+                              <>
+                                <Loader2 className="h-6 w-6 text-white animate-spin mb-2" />
+                                <span className="text-xs text-white">
+                                  {progress?.progress || 0}%
+                                </span>
+                              </>
+                            )}
+                            {isPending && !isCurrentlyUploading && (
+                              <>
+                                <Upload className="h-5 w-5 text-yellow-400 mb-1" />
+                                <span className="text-xs text-yellow-400">Pending upload</span>
+                              </>
+                            )}
+                            {isFailed && (
+                              <>
+                                <AlertCircle className="h-5 w-5 text-red-400 mb-1" />
+                                <span className="text-xs text-red-400">Upload failed</span>
+                              </>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Success Indicator */}
+                        {photo.upload_status === 'uploaded' && progress?.status === 'uploaded' && (
+                          <div className="absolute top-2 right-2">
+                            <CheckCircle2 className="h-4 w-4 text-green-500 bg-white rounded-full" />
+                          </div>
+                        )}
+
+                        {/* Overlay for actions */}
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors">
                           <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                             <button

@@ -43,8 +43,8 @@ export const dailyReportsV2Api = {
     }
   ): Promise<DailyReportV2[]> {
     try {
-      let query = supabase
-        .from('daily_reports')
+      let query = (supabase
+        .from('daily_reports') as any)
         .select(`
           *,
           project:projects(id, name)
@@ -93,8 +93,8 @@ export const dailyReportsV2Api = {
   }> {
     try {
       // Fetch main report
-      const { data: report, error: reportError } = await supabase
-        .from('daily_reports')
+      const { data: report, error: reportError } = await (supabase
+        .from('daily_reports') as any)
         .select(`
           *,
           project:projects(id, name)
@@ -117,16 +117,16 @@ export const dailyReportsV2Api = {
         { data: visitors },
         { data: photos },
       ] = await Promise.all([
-        supabase.from('daily_report_workforce').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_equipment').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_delays').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_safety_incidents').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_inspections').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_tm_work').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_progress').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_deliveries').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_visitors').select('*').eq('daily_report_id', reportId),
-        supabase.from('daily_report_photos').select('*').eq('daily_report_id', reportId),
+        (supabase.from('daily_report_workforce') as any).select('*').eq('daily_report_id', reportId),
+        (supabase.from('daily_report_equipment') as any).select('*').eq('daily_report_id', reportId),
+        (supabase as any).from('daily_report_delays').select('*').eq('daily_report_id', reportId),
+        (supabase.from('daily_report_safety_incidents') as any).select('*').eq('daily_report_id', reportId),
+        (supabase as any).from('daily_report_inspections').select('*').eq('daily_report_id', reportId),
+        (supabase as any).from('daily_report_tm_work').select('*').eq('daily_report_id', reportId),
+        (supabase as any).from('daily_report_progress').select('*').eq('daily_report_id', reportId),
+        (supabase.from('daily_report_deliveries') as any).select('*').eq('daily_report_id', reportId),
+        (supabase.from('daily_report_visitors') as any).select('*').eq('daily_report_id', reportId),
+        (supabase as any).from('daily_report_photos').select('*').eq('daily_report_id', reportId),
       ]);
 
       return {
@@ -159,8 +159,8 @@ export const dailyReportsV2Api = {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) throw new Error('Not authenticated');
 
-      const { data, error } = await supabase
-        .from('daily_reports')
+      const { data, error } = await (supabase
+        .from('daily_reports') as any)
         .insert({
           project_id: request.project_id,
           report_date: request.report_date,
@@ -193,8 +193,8 @@ export const dailyReportsV2Api = {
     updates: Partial<DailyReportV2>
   ): Promise<DailyReportV2> {
     try {
-      const { data, error } = await supabase
-        .from('daily_reports')
+      const { data, error } = await (supabase
+        .from('daily_reports') as any)
         .update(updates)
         .eq('id', reportId)
         .select()
@@ -216,8 +216,8 @@ export const dailyReportsV2Api = {
    */
   async submitReport(request: SubmitReportRequest): Promise<DailyReportV2> {
     try {
-      const { data, error } = await supabase
-        .from('daily_reports')
+      const { data, error } = await (supabase
+        .from('daily_reports') as any)
         .update({
           status: 'submitted',
           submitted_at: new Date().toISOString(),
@@ -246,8 +246,8 @@ export const dailyReportsV2Api = {
     try {
       const { data: user } = await supabase.auth.getUser();
 
-      const { data, error } = await supabase
-        .from('daily_reports')
+      const { data, error } = await (supabase
+        .from('daily_reports') as any)
         .update({
           status: 'approved',
           approved_at: new Date().toISOString(),
@@ -276,8 +276,8 @@ export const dailyReportsV2Api = {
    */
   async requestChanges(request: RequestChangesRequest): Promise<DailyReportV2> {
     try {
-      const { data, error } = await supabase
-        .from('daily_reports')
+      const { data, error } = await (supabase
+        .from('daily_reports') as any)
         .update({
           status: 'changes_requested',
           rejection_reason: request.reason,
@@ -302,8 +302,8 @@ export const dailyReportsV2Api = {
    */
   async lockReport(reportId: string): Promise<DailyReportV2> {
     try {
-      const { data, error } = await supabase
-        .from('daily_reports')
+      const { data, error} = await (supabase
+        .from('daily_reports') as any)
         .update({
           status: 'locked',
           locked_at: new Date().toISOString(),
@@ -332,8 +332,8 @@ export const dailyReportsV2Api = {
   }> {
     try {
       // Find the source report
-      const { data: sourceReports, error: sourceError } = await supabase
-        .from('daily_reports')
+      const { data: sourceReports, error: sourceError } = await (supabase
+        .from('daily_reports') as any)
         .select('id')
         .eq('project_id', request.project_id)
         .eq('report_date', request.source_date)
@@ -353,8 +353,8 @@ export const dailyReportsV2Api = {
 
       // Copy workforce if requested
       if (request.copy_workforce !== false) {
-        const { data: workforce } = await supabase
-          .from('daily_report_workforce')
+        const { data: workforce } = await (supabase
+          .from('daily_report_workforce') as any)
           .select('*')
           .eq('daily_report_id', sourceReportId);
 
@@ -370,8 +370,8 @@ export const dailyReportsV2Api = {
 
       // Copy equipment if requested
       if (request.copy_equipment !== false) {
-        const { data: equipment } = await supabase
-          .from('daily_report_equipment')
+        const { data: equipment } = await (supabase
+          .from('daily_report_equipment') as any)
           .select('*')
           .eq('daily_report_id', sourceReportId);
 
@@ -400,8 +400,8 @@ export const dailyReportsV2Api = {
    */
   async deleteReport(reportId: string): Promise<void> {
     try {
-      const { error } = await supabase
-        .from('daily_reports')
+      const { error } = await (supabase
+        .from('daily_reports') as any)
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', reportId);
 
@@ -424,8 +424,8 @@ export const workforceApi = {
   async upsert(entries: WorkforceEntryV2[]): Promise<WorkforceEntryV2[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
-      .from('daily_report_workforce')
+    const { data, error } = await (supabase
+      .from('daily_report_workforce') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
@@ -434,8 +434,8 @@ export const workforceApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('daily_report_workforce')
+    const { error } = await (supabase
+      .from('daily_report_workforce') as any)
       .delete()
       .eq('id', id);
 
@@ -443,8 +443,8 @@ export const workforceApi = {
   },
 
   async deleteByReportId(reportId: string): Promise<void> {
-    const { error } = await supabase
-      .from('daily_report_workforce')
+    const { error } = await (supabase
+      .from('daily_report_workforce') as any)
       .delete()
       .eq('daily_report_id', reportId);
 
@@ -460,8 +460,8 @@ export const equipmentApi = {
   async upsert(entries: EquipmentEntryV2[]): Promise<EquipmentEntryV2[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
-      .from('daily_report_equipment')
+    const { data, error } = await (supabase
+      .from('daily_report_equipment') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
@@ -470,8 +470,8 @@ export const equipmentApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('daily_report_equipment')
+    const { error } = await (supabase
+      .from('daily_report_equipment') as any)
       .delete()
       .eq('id', id);
 
@@ -485,7 +485,7 @@ export const equipmentApi = {
 
 export const delaysApi = {
   async getByReportId(reportId: string): Promise<DelayEntry[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_delays')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -498,7 +498,7 @@ export const delaysApi = {
   async upsert(entries: DelayEntry[]): Promise<DelayEntry[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_delays')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -508,7 +508,7 @@ export const delaysApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_delays')
       .delete()
       .eq('id', id);
@@ -524,7 +524,7 @@ export const delaysApi = {
     startDate: string,
     endDate: string
   ): Promise<DelayEntry[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_delays')
       .select(`
         *,
@@ -546,8 +546,8 @@ export const delaysApi = {
 
 export const safetyIncidentsApi = {
   async getByReportId(reportId: string): Promise<SafetyIncident[]> {
-    const { data, error } = await supabase
-      .from('daily_report_safety_incidents')
+    const { data, error } = await (supabase
+      .from('daily_report_safety_incidents') as any)
       .select('*')
       .eq('daily_report_id', reportId)
       .order('incident_time', { ascending: true });
@@ -559,8 +559,8 @@ export const safetyIncidentsApi = {
   async upsert(entries: SafetyIncident[]): Promise<SafetyIncident[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
-      .from('daily_report_safety_incidents')
+    const { data, error } = await (supabase
+      .from('daily_report_safety_incidents') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
@@ -569,8 +569,8 @@ export const safetyIncidentsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('daily_report_safety_incidents')
+    const { error } = await (supabase
+      .from('daily_report_safety_incidents') as any)
       .delete()
       .eq('id', id);
 
@@ -581,8 +581,8 @@ export const safetyIncidentsApi = {
    * Get OSHA-reportable incidents for a project
    */
   async getOshaIncidents(projectId: string): Promise<SafetyIncident[]> {
-    const { data, error } = await supabase
-      .from('daily_report_safety_incidents')
+    const { data, error } = await (supabase
+      .from('daily_report_safety_incidents') as any)
       .select(`
         *,
         daily_report:daily_reports!inner(project_id, report_date)
@@ -602,7 +602,7 @@ export const safetyIncidentsApi = {
 
 export const inspectionsApi = {
   async getByReportId(reportId: string): Promise<InspectionEntry[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_inspections')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -615,7 +615,7 @@ export const inspectionsApi = {
   async upsert(entries: InspectionEntry[]): Promise<InspectionEntry[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_inspections')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -625,7 +625,7 @@ export const inspectionsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_inspections')
       .delete()
       .eq('id', id);
@@ -640,7 +640,7 @@ export const inspectionsApi = {
 
 export const tmWorkApi = {
   async getByReportId(reportId: string): Promise<TMWorkEntry[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_tm_work')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -653,7 +653,7 @@ export const tmWorkApi = {
   async upsert(entries: TMWorkEntry[]): Promise<TMWorkEntry[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_tm_work')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -663,7 +663,7 @@ export const tmWorkApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_tm_work')
       .delete()
       .eq('id', id);
@@ -678,7 +678,7 @@ export const tmWorkApi = {
 
 export const progressApi = {
   async getByReportId(reportId: string): Promise<ProgressEntry[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_progress')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -691,7 +691,7 @@ export const progressApi = {
   async upsert(entries: ProgressEntry[]): Promise<ProgressEntry[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_progress')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -701,7 +701,7 @@ export const progressApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_progress')
       .delete()
       .eq('id', id);
@@ -718,8 +718,8 @@ export const deliveriesApi = {
   async upsert(entries: DeliveryEntryV2[]): Promise<DeliveryEntryV2[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
-      .from('daily_report_deliveries')
+    const { data, error } = await (supabase
+      .from('daily_report_deliveries') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
@@ -728,8 +728,8 @@ export const deliveriesApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('daily_report_deliveries')
+    const { error } = await (supabase
+      .from('daily_report_deliveries') as any)
       .delete()
       .eq('id', id);
 
@@ -745,8 +745,8 @@ export const visitorsApi = {
   async upsert(entries: VisitorEntryV2[]): Promise<VisitorEntryV2[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
-      .from('daily_report_visitors')
+    const { data, error } = await (supabase
+      .from('daily_report_visitors') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
@@ -755,8 +755,8 @@ export const visitorsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('daily_report_visitors')
+    const { error } = await (supabase
+      .from('daily_report_visitors') as any)
       .delete()
       .eq('id', id);
 
@@ -770,7 +770,7 @@ export const visitorsApi = {
 
 export const photosApi = {
   async getByReportId(reportId: string): Promise<PhotoEntryV2[]> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_photos')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -783,7 +783,7 @@ export const photosApi = {
   async upsert(entries: PhotoEntryV2[]): Promise<PhotoEntryV2[]> {
     if (entries.length === 0) return [];
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_photos')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -793,7 +793,7 @@ export const photosApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_photos')
       .delete()
       .eq('id', id);
@@ -802,7 +802,7 @@ export const photosApi = {
   },
 
   async updateStatus(id: string, status: PhotoEntryV2['upload_status']): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_photos')
       .update({ upload_status: status })
       .eq('id', id);
@@ -819,7 +819,7 @@ export const templatesApi = {
   async getForProject(projectId: string): Promise<DailyReportTemplate[]> {
     const { data: user } = await supabase.auth.getUser();
 
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_templates')
       .select('*')
       .or(`project_id.eq.${projectId},user_id.eq.${user.user?.id}`)
@@ -830,7 +830,7 @@ export const templatesApi = {
   },
 
   async create(template: Omit<DailyReportTemplate, 'id' | 'created_at' | 'updated_at'>): Promise<DailyReportTemplate> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_templates')
       .insert(template)
       .select()
@@ -841,7 +841,7 @@ export const templatesApi = {
   },
 
   async update(id: string, updates: Partial<DailyReportTemplate>): Promise<DailyReportTemplate> {
-    const { data, error } = await supabase
+    const { data, error } = await (supabase as any)
       .from('daily_report_templates')
       .update(updates)
       .eq('id', id)
@@ -853,7 +853,7 @@ export const templatesApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
+    const { error } = await (supabase as any)
       .from('daily_report_templates')
       .delete()
       .eq('id', id);

@@ -43,7 +43,15 @@ import {
   Clock,
 } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
-import type { IncidentType, SafetyIncident, CompletionStatus } from '@/types/daily-reports-v2';
+import type { IncidentType, SafetyIncident, CompletionStatus, EmployeeStatus } from '@/types/daily-reports-v2';
+
+// Employee status options for OSHA 300 log scope
+const EMPLOYEE_STATUS_OPTIONS: { value: EmployeeStatus; label: string }[] = [
+  { value: 'direct_employee', label: 'Direct Employee' },
+  { value: 'contractor', label: 'Contractor/Subcontractor' },
+  { value: 'temp_worker', label: 'Temporary Worker' },
+  { value: 'visitor', label: 'Visitor' },
+];
 
 // Incident types with severity-based colors (OSHA classification)
 const INCIDENT_TYPES: {
@@ -386,14 +394,34 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label>Trade</Label>
-              <Input
-                type="text"
-                value={formData.injured_party_trade || ''}
-                onChange={(e) => handleFormChange({ injured_party_trade: e.target.value })}
-                placeholder="e.g., Electrician, Carpenter"
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Trade</Label>
+                <Input
+                  type="text"
+                  value={formData.injured_party_trade || ''}
+                  onChange={(e) => handleFormChange({ injured_party_trade: e.target.value })}
+                  placeholder="e.g., Electrician, Carpenter"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Employee Status (OSHA 300)</Label>
+                <Select
+                  value={formData.employee_status || ''}
+                  onValueChange={(value) => handleFormChange({ employee_status: value as EmployeeStatus })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {EMPLOYEE_STATUS_OPTIONS.map((status) => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Injury Details */}
@@ -472,6 +500,59 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                 </div>
               )}
             </div>
+
+            {/* OSHA DART Rate Fields - For recordable/lost time incidents */}
+            {['recordable', 'lost_time', 'fatality'].includes(formData.incident_type || '') && (
+              <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg space-y-4">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4 text-orange-600" />
+                  <span className="font-medium text-orange-700">OSHA DART Rate Tracking</span>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Days Away From Work</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={formData.days_away_from_work || ''}
+                      onChange={(e) => handleFormChange({ days_away_from_work: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                    />
+                    <p className="text-xs text-gray-500">Calendar days unable to work</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Days on Restricted Duty</Label>
+                    <Input
+                      type="number"
+                      min="0"
+                      value={formData.days_on_restricted_duty || ''}
+                      onChange={(e) => handleFormChange({ days_on_restricted_duty: parseInt(e.target.value) || 0 })}
+                      placeholder="0"
+                    />
+                    <p className="text-xs text-gray-500">Days with work restrictions</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Fatality Date of Death - Required for OSHA 301 */}
+            {formData.incident_type === 'fatality' && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg space-y-4">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4 text-red-600" />
+                  <span className="font-medium text-red-700">Fatality Information (OSHA 301)</span>
+                </div>
+                <div className="space-y-2">
+                  <Label>Date of Death *</Label>
+                  <Input
+                    type="date"
+                    value={formData.date_of_death || ''}
+                    onChange={(e) => handleFormChange({ date_of_death: e.target.value })}
+                  />
+                  <p className="text-xs text-red-600">Required for OSHA fatality reporting within 8 hours</p>
+                </div>
+              </div>
+            )}
           </div>
         );
 
@@ -590,6 +671,23 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                     onChange={(e) => handleFormChange({ osha_case_number: e.target.value })}
                     placeholder="e.g., 2024-001"
                   />
+                </div>
+                {/* Privacy Case - OSHA allows name redaction for certain injuries */}
+                <div className="flex items-start gap-3 pt-2 border-t border-red-200">
+                  <Checkbox
+                    id="privacy_case"
+                    checked={formData.privacy_case || false}
+                    onCheckedChange={(checked) =>
+                      handleFormChange({ privacy_case: checked as boolean })
+                    }
+                  />
+                  <div>
+                    <Label htmlFor="privacy_case" className="text-red-700">Privacy Case</Label>
+                    <p className="text-xs text-red-600 mt-1">
+                      Check if employee name should be withheld from OSHA 300 log
+                      (sexual assault, HIV, mental illness, or other sensitive conditions)
+                    </p>
+                  </div>
                 </div>
               </div>
             )}

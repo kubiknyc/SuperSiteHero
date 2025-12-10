@@ -14,7 +14,7 @@ import type {
  * Get all templates for a project
  */
 export async function getTemplatesForProject(projectId: string): Promise<DailyReportTemplate[]> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('daily_report_templates')
     .select('*')
     .or(`project_id.eq.${projectId},is_global.eq.true`)
@@ -32,7 +32,7 @@ export async function getTemplatesForProject(projectId: string): Promise<DailyRe
  * Get a single template by ID
  */
 export async function getTemplate(templateId: string): Promise<DailyReportTemplate | null> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('daily_report_templates')
     .select('*')
     .eq('id', templateId)
@@ -52,7 +52,7 @@ export async function getTemplate(templateId: string): Promise<DailyReportTempla
 export async function createTemplate(
   template: Omit<DailyReportTemplate, 'id' | 'created_at' | 'updated_at'>
 ): Promise<DailyReportTemplate> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('daily_report_templates')
     .insert(template)
     .select()
@@ -73,7 +73,7 @@ export async function updateTemplate(
   templateId: string,
   updates: Partial<Omit<DailyReportTemplate, 'id' | 'created_at' | 'created_by'>>
 ): Promise<DailyReportTemplate> {
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('daily_report_templates')
     .update({
       ...updates,
@@ -95,7 +95,7 @@ export async function updateTemplate(
  * Delete a template
  */
 export async function deleteTemplate(templateId: string): Promise<void> {
-  const { error } = await supabase
+  const { error } = await (supabase as any)
     .from('daily_report_templates')
     .delete()
     .eq('id', templateId);
@@ -144,7 +144,7 @@ export async function createTemplateFromReport(
     is_default: isGlobal,
     workforce_template: workforceData,
     equipment_template: equipmentData,
-  });
+  } as any);
 }
 
 /**
@@ -186,7 +186,7 @@ export async function getSuggestedTemplates(
   limit: number = 5
 ): Promise<DailyReportTemplate[]> {
   // Get templates ordered by last used date
-  const { data, error } = await supabase
+  const { data, error } = await (supabase as any)
     .from('daily_report_templates')
     .select('*')
     .or(`project_id.eq.${projectId},is_default.eq.true`)
@@ -214,8 +214,8 @@ export async function getWorkforceFromPreviousDay(
   const prevDateStr = prevDate.toISOString().split('T')[0];
 
   // Find the previous day's report
-  const { data: report, error: reportError } = await supabase
-    .from('daily_reports')
+  const { data: report, error: reportError } = await (supabase
+    .from('daily_reports') as any)
     .select('id')
     .eq('project_id', projectId)
     .eq('report_date', prevDateStr)
@@ -226,8 +226,8 @@ export async function getWorkforceFromPreviousDay(
   }
 
   // Get workforce entries from that report
-  const { data: workforce, error: workforceError } = await supabase
-    .from('daily_report_workforce')
+  const { data: workforce, error: workforceError } = await (supabase
+    .from('daily_report_workforce') as any)
     .select('*')
     .eq('daily_report_id', report.id);
 
@@ -263,8 +263,8 @@ export async function getEquipmentFromPreviousDay(
   const prevDateStr = prevDate.toISOString().split('T')[0];
 
   // Find the previous day's report
-  const { data: report, error: reportError } = await supabase
-    .from('daily_reports')
+  const { data: report, error: reportError } = await (supabase
+    .from('daily_reports') as any)
     .select('id')
     .eq('project_id', projectId)
     .eq('report_date', prevDateStr)
@@ -275,8 +275,8 @@ export async function getEquipmentFromPreviousDay(
   }
 
   // Get equipment entries from that report
-  const { data: equipment, error: equipmentError } = await supabase
-    .from('daily_report_equipment')
+  const { data: equipment, error: equipmentError } = await (supabase
+    .from('daily_report_equipment') as any)
     .select('*')
     .eq('daily_report_id', report.id);
 

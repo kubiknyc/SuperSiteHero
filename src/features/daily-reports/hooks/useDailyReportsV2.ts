@@ -201,6 +201,26 @@ export function useRequestChangesV2() {
 }
 
 /**
+ * Lock report (after approval)
+ */
+export function useLockReportV2() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (reportId: string) =>
+      dailyReportsV2Api.lockReport(reportId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: dailyReportV2Keys.detail(data.id) });
+      queryClient.invalidateQueries({ queryKey: dailyReportV2Keys.lists() });
+      toast.success('Daily report locked');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to lock daily report');
+    },
+  });
+}
+
+/**
  * Delete report
  */
 export function useDeleteDailyReportV2() {

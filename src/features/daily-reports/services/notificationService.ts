@@ -41,7 +41,7 @@ async function createInAppNotification(
   payload: NotificationPayload
 ): Promise<boolean> {
   try {
-    const { error } = await supabase.from('notifications').insert({
+    const { error } = await (supabase.from('notifications') as any).insert({
       user_id: userId,
       type: payload.type,
       title: getNotificationTitle(payload.type),
@@ -76,6 +76,7 @@ function getNotificationTitle(type: NotificationType): string {
     report_approved: 'Daily Report Approved',
     changes_requested: 'Changes Requested',
     report_locked: 'Daily Report Locked',
+    report_voided: 'Daily Report Voided',
     pending_review_reminder: 'Pending Review Reminder',
     overdue_draft_reminder: 'Overdue Draft Reminder',
   };
@@ -103,7 +104,52 @@ function getNotificationMessage(payload: NotificationPayload): string {
 }
 
 /**
+ * Send single notification via Edge Function (per user)
+ * Supports email and in-app channels (push deferred)
+ */
+async function sendNotification(
+  userId: string,
+  type: NotificationType,
+  title: string,
+  message: string,
+  options: {
+    channels?: ('email' | 'in_app')[];
+    related_to_type?: string;
+    related_to_id?: string;
+    action_url?: string;
+    metadata?: Record<string, unknown>;
+  } = {}
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { data, error } = await supabase.functions.invoke('send-notification', {
+      body: {
+        user_id: userId,
+        type,
+        title,
+        message,
+        channels: options.channels || ['in_app', 'email'],
+        related_to_type: options.related_to_type,
+        related_to_id: options.related_to_id,
+        action_url: options.action_url,
+        metadata: options.metadata,
+      },
+    });
+
+    if (error) {
+      console.error('Notification Edge Function error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: data?.success ?? true };
+  } catch (error: any) {
+    console.error('Failed to send notification:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
  * Send notification via Supabase Edge Function (email/push)
+ * This is the batch version for multiple recipients
  */
 async function sendExternalNotification(
   recipients: NotificationRecipient[],
@@ -116,33 +162,40 @@ async function sendExternalNotification(
     errors: [] as string[],
   };
 
-  // Call Supabase Edge Function for email/push
-  try {
-    const { data, error } = await supabase.functions.invoke('send-notification', {
-      body: {
-        recipients: recipients.map((r) => ({
-          id: r.id,
-          email: r.email,
-          name: r.name,
-        })),
-        notification: {
-          type: payload.type,
-          title: getNotificationTitle(payload.type),
-          message: getNotificationMessage(payload),
-          actionUrl: payload.actionUrl,
-        },
-        channels,
-      },
-    });
+  // Send individual notifications to each recipient via new Edge Function
+  const channelList: ('email' | 'in_app')[] = [];
+  if (channels.email) channelList.push('email');
+  // Always include in_app for external notifications
+  channelList.push('in_app');
 
-    if (error) {
-      result.errors.push(`Edge function error: ${error.message}`);
-    } else if (data) {
-      result.emailSent = data.emailSent || [];
-      result.pushSent = data.pushSent || [];
+  for (const recipient of recipients) {
+    const notificationResult = await sendNotification(
+      recipient.id,
+      payload.type,
+      getNotificationTitle(payload.type),
+      getNotificationMessage(payload),
+      {
+        channels: channelList,
+        related_to_type: 'daily_report',
+        related_to_id: payload.reportId,
+        action_url: payload.actionUrl,
+        metadata: {
+          report_id: payload.reportId,
+          project_id: payload.projectId,
+          ...payload.metadata,
+        },
+      }
+    );
+
+    if (notificationResult.success) {
+      if (channels.email) {
+        result.emailSent.push(recipient.email);
+      }
+    } else {
+      result.errors.push(
+        `Failed to notify ${recipient.name}: ${notificationResult.error}`
+      );
     }
-  } catch (error: any) {
-    result.errors.push(`Failed to send external notification: ${error.message}`);
   }
 
   return result;
@@ -160,7 +213,7 @@ async function getRecipients(
 
   try {
     // Get project team members with their roles
-    const { data: teamMembers, error } = await supabase
+    const { data: teamMembers, error } = await (supabase as any)
       .from('project_team_members')
       .select(`
         user_id,

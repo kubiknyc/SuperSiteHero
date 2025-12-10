@@ -14,12 +14,13 @@ import type {
 
 // Status transition rules - defines valid transitions
 const STATUS_TRANSITIONS: Record<ReportStatus, ReportStatus[]> = {
-  draft: ['submitted'],
-  submitted: ['in_review', 'changes_requested', 'approved'],
-  in_review: ['changes_requested', 'approved'],
-  changes_requested: ['submitted', 'draft'],
-  approved: ['locked'],
+  draft: ['submitted', 'voided'],
+  submitted: ['in_review', 'changes_requested', 'approved', 'voided'],
+  in_review: ['changes_requested', 'approved', 'voided'],
+  changes_requested: ['submitted', 'draft', 'voided'],
+  approved: ['locked', 'voided'],
   locked: [], // Terminal state, no transitions allowed
+  voided: [], // Terminal state - cancelled reports with audit trail
 };
 
 // Roles that can perform transitions
@@ -27,14 +28,19 @@ type ApprovalRole = 'author' | 'reviewer' | 'approver' | 'admin';
 
 const TRANSITION_PERMISSIONS: Record<string, ApprovalRole[]> = {
   'draft->submitted': ['author', 'admin'],
+  'draft->voided': ['author', 'admin'], // Author can void their own draft
   'submitted->in_review': ['reviewer', 'approver', 'admin'],
   'submitted->changes_requested': ['reviewer', 'approver', 'admin'],
   'submitted->approved': ['approver', 'admin'],
+  'submitted->voided': ['approver', 'admin'], // Only approvers can void submitted reports
   'in_review->changes_requested': ['reviewer', 'approver', 'admin'],
   'in_review->approved': ['approver', 'admin'],
+  'in_review->voided': ['approver', 'admin'],
   'changes_requested->submitted': ['author', 'admin'],
   'changes_requested->draft': ['author', 'admin'],
+  'changes_requested->voided': ['author', 'approver', 'admin'],
   'approved->locked': ['admin', 'approver'], // Auto-lock or manual lock
+  'approved->voided': ['admin'], // Only admin can void approved reports
 };
 
 // Notification triggers
@@ -43,6 +49,7 @@ export type NotificationType =
   | 'report_approved'
   | 'changes_requested'
   | 'report_locked'
+  | 'report_voided'
   | 'pending_review_reminder'
   | 'overdue_draft_reminder';
 
@@ -95,6 +102,42 @@ const NOTIFICATION_CONFIGS: Record<string, NotificationConfig> = {
     recipients: ['author', 'project_manager'],
     emailEnabled: false,
     pushEnabled: false,
+    inAppEnabled: true,
+  },
+  // Voided notifications - notify author and project manager
+  'draft->voided': {
+    type: 'report_voided',
+    recipients: ['project_manager'],
+    emailEnabled: false,
+    pushEnabled: false,
+    inAppEnabled: true,
+  },
+  'submitted->voided': {
+    type: 'report_voided',
+    recipients: ['author', 'project_manager'],
+    emailEnabled: true,
+    pushEnabled: true,
+    inAppEnabled: true,
+  },
+  'in_review->voided': {
+    type: 'report_voided',
+    recipients: ['author', 'reviewer', 'project_manager'],
+    emailEnabled: true,
+    pushEnabled: true,
+    inAppEnabled: true,
+  },
+  'changes_requested->voided': {
+    type: 'report_voided',
+    recipients: ['author', 'project_manager'],
+    emailEnabled: true,
+    pushEnabled: false,
+    inAppEnabled: true,
+  },
+  'approved->voided': {
+    type: 'report_voided',
+    recipients: ['author', 'approver', 'project_manager'],
+    emailEnabled: true,
+    pushEnabled: true,
     inAppEnabled: true,
   },
 };
@@ -316,6 +359,12 @@ export class DailyReportWorkflowEngine {
         icon: 'lock',
         description: 'Report is finalized and cannot be modified',
       },
+      voided: {
+        label: 'Voided',
+        color: 'red',
+        icon: 'x-circle',
+        description: 'Report has been cancelled with audit trail preserved',
+      },
     };
 
     return statusInfo[status];
@@ -392,6 +441,15 @@ export class DailyReportWorkflowEngine {
             variant: 'outline' as const,
             requiresSignature: false,
             requiresComment: false,
+          };
+        case 'voided':
+          return {
+            action: 'void',
+            toStatus,
+            label: 'Void Report',
+            variant: 'destructive' as const,
+            requiresSignature: false,
+            requiresComment: true, // Always require reason for voiding
           };
         default:
           return {

@@ -57,7 +57,8 @@ export type ReportStatus =
   | 'in_review'
   | 'changes_requested'
   | 'approved'
-  | 'locked';
+  | 'locked'
+  | 'voided'; // For cancelled reports with audit trail
 
 export type FormMode = 'quick' | 'detailed';
 
@@ -84,6 +85,9 @@ export type DeliveryInspectionStatus =
   | 'partial';
 
 export type CompletionStatus = 'pending' | 'in_progress' | 'completed';
+
+// Employee status for OSHA 300 log scope determination
+export type EmployeeStatus = 'direct_employee' | 'contractor' | 'temp_worker' | 'visitor';
 
 // =============================================
 // BASE INTERFACES
@@ -296,6 +300,10 @@ export interface DelayEntry {
   change_order_id?: string;
   supporting_photo_ids?: string[];
 
+  // P2 Enhancement: Concurrent delays for claims apportionment
+  concurrent_delays?: boolean; // Multiple parties causing delay simultaneously
+  owner_directive_reference?: string; // Reference to owner directive (email, letter)
+
   // Metadata
   created_at: string;
   updated_at: string;
@@ -314,6 +322,13 @@ export interface SafetyIncident {
   incident_category?: string;
   osha_reportable: boolean;
   osha_case_number?: string;
+
+  // OSHA Compliance Fields (P1 Enhancement)
+  privacy_case?: boolean; // OSHA allows name redaction for certain injuries
+  days_away_from_work?: number; // Required for DART rate calculation
+  days_on_restricted_duty?: number; // Required for DART rate calculation
+  date_of_death?: string; // Required for fatalities (OSHA 301)
+  employee_status?: EmployeeStatus; // Determines OSHA 300 log scope
 
   // Details
   incident_time?: string;

@@ -14,6 +14,18 @@ import { WorkforceGrid } from './WorkforceGrid';
 import { EquipmentGrid } from './EquipmentGrid';
 import { DelayEntrySection } from './DelayEntry';
 import { StickyFooter } from './StickyFooter';
+import { SignatureCapture } from '../SignatureCapture';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { PenTool } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
 import { useSaveDailyReportV2, useSubmitReportV2 } from '../../hooks/useDailyReportsV2';
 import { quickModeFormSchema } from '../../validation/dailyReportSchemaV2';
@@ -51,6 +63,9 @@ export function QuickModeForm({
 
   // Local state
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
+  const [signature, setSignature] = useState<string | null>(null);
+  const [signerName, setSignerName] = useState('');
 
   // Initialize draft on mount
   useEffect(() => {
@@ -125,7 +140,7 @@ export function QuickModeForm({
     }
   }, [draftReport, workforce, equipment, delays, saveMutation, setSyncStatus]);
 
-  // Handle submit
+  // Handle submit - opens signature dialog
   const handleSubmit = useCallback(() => {
     const errors = validateForm();
     if (errors.length > 0) {
@@ -134,13 +149,29 @@ export function QuickModeForm({
       return;
     }
 
-    // TODO: Open signature dialog
-    // For now, just submit
+    // Open signature dialog instead of immediate submit
+    setSignatureDialogOpen(true);
+  }, [validateForm]);
+
+  // Handle actual submission after signature captured
+  const handleConfirmSubmit = useCallback(() => {
+    if (!signature || !signerName.trim()) {
+      toast.error('Please provide your signature and name');
+      return;
+    }
+
     if (draftReport?.id) {
       submitMutation.mutate(
-        { report_id: draftReport.id, submitted_by_signature: 'pending', submitted_by_name: '' },
+        {
+          report_id: draftReport.id,
+          submitted_by_signature: signature,
+          submitted_by_name: signerName.trim(),
+        },
         {
           onSuccess: () => {
+            setSignatureDialogOpen(false);
+            setSignature(null);
+            setSignerName('');
             toast.success('Report submitted for approval');
             navigate(`/projects/${projectId}/daily-reports`);
           },
@@ -150,7 +181,14 @@ export function QuickModeForm({
         }
       );
     }
-  }, [draftReport, validateForm, submitMutation, navigate, projectId]);
+  }, [draftReport, signature, signerName, submitMutation, navigate, projectId]);
+
+  // Handle signature dialog close
+  const handleSignatureDialogClose = useCallback(() => {
+    setSignatureDialogOpen(false);
+    setSignature(null);
+    setSignerName('');
+  }, []);
 
   // Section toggle handlers
   const handleToggleWorkSummary = useCallback(
@@ -258,6 +296,53 @@ export function QuickModeForm({
         validationErrors={validationErrors}
         disabled={draftReport.status !== 'draft'}
       />
+
+      {/* Signature Dialog */}
+      <Dialog open={signatureDialogOpen} onOpenChange={setSignatureDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <PenTool className="h-5 w-5" />
+              Submit Report
+            </DialogTitle>
+            <DialogDescription>
+              Sign below to submit this daily report for approval.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label>Your Name *</Label>
+              <input
+                type="text"
+                value={signerName}
+                onChange={(e) => setSignerName(e.target.value)}
+                placeholder="Enter your full name"
+                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <SignatureCapture
+              label="Your Signature *"
+              onSave={(sig) => setSignature(sig)}
+              onClear={() => setSignature(null)}
+              existingSignature={signature || undefined}
+            />
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={handleSignatureDialogClose}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmSubmit}
+              disabled={!signature || !signerName.trim() || submitMutation.isPending}
+            >
+              {submitMutation.isPending ? 'Submitting...' : 'Submit Report'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

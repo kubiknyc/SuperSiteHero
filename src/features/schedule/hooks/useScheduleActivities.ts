@@ -599,6 +599,30 @@ export function useSetActiveBaseline() {
   })
 }
 
+/**
+ * Clear active baseline
+ */
+export function useClearBaseline() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (projectId: string) =>
+      scheduleActivitiesApi.clearActiveBaseline(projectId),
+    onSuccess: (_, projectId) => {
+      queryClient.invalidateQueries({
+        queryKey: scheduleKeys.baselines(projectId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: scheduleKeys.lists(),
+      })
+      toast.success('Baseline cleared')
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to clear baseline')
+    },
+  })
+}
+
 // ============================================================================
 // IMPORT MUTATION
 // ============================================================================
@@ -811,5 +835,55 @@ export function useScheduleCalendar(calendarId: string | undefined) {
     },
     enabled: !!calendarId,
     staleTime: 1000 * 60 * 30,
+  })
+}
+
+// ============================================================================
+// LOOK-AHEAD INTEGRATION
+// ============================================================================
+
+/**
+ * Sync schedule activities to look-ahead planning
+ */
+export function useSyncToLookAhead() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      companyId,
+      activityIds,
+      options,
+    }: {
+      projectId: string
+      companyId: string
+      activityIds: string[]
+      options?: { overwriteExisting?: boolean }
+    }) => scheduleActivitiesApi.syncToLookAhead(projectId, companyId, activityIds, options),
+    onSuccess: (result, { projectId }) => {
+      // Invalidate look-ahead queries
+      queryClient.invalidateQueries({
+        queryKey: ['lookAhead', projectId],
+      })
+      // Invalidate schedule activities to update link status
+      queryClient.invalidateQueries({
+        queryKey: scheduleKeys.lists(),
+      })
+
+      if (result.errors.length > 0) {
+        toast.warning(
+          `Pushed ${result.synced} activities to look-ahead with ${result.errors.length} errors`
+        )
+      } else if (result.skipped > 0) {
+        toast.success(
+          `Pushed ${result.synced} activities to look-ahead (${result.skipped} skipped)`
+        )
+      } else {
+        toast.success(`${result.synced} activities pushed to look-ahead`)
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to sync to look-ahead')
+    },
   })
 }

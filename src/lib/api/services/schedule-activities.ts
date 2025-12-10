@@ -658,6 +658,33 @@ export const scheduleActivitiesApi = {
     }
   },
 
+  /**
+   * Clear active baseline (remove baseline dates from activities)
+   */
+  async clearActiveBaseline(projectId: string): Promise<void> {
+    try {
+      // Deactivate all baselines for the project
+      await db
+        .from('schedule_baselines')
+        .update({ is_active: false })
+        .eq('project_id', projectId)
+
+      // Clear baseline dates from all activities
+      await db
+        .from('schedule_activities')
+        .update({
+          baseline_start: null,
+          baseline_finish: null,
+        })
+        .eq('project_id', projectId)
+    } catch (error) {
+      throw new ApiErrorClass({
+        code: 'CLEAR_BASELINE_ERROR',
+        message: 'Failed to clear baseline',
+      })
+    }
+  },
+
   // =============================================
   // CALENDARS
   // =============================================
@@ -1330,6 +1357,99 @@ export const scheduleActivitiesApi = {
       throw new ApiErrorClass({
         code: 'IMPORT_ERROR',
         message: 'Failed to import activities',
+      })
+    }
+  },
+
+  // =============================================
+  // LOOK-AHEAD INTEGRATION
+  // =============================================
+
+  /**
+   * Sync schedule activities to look-ahead
+   */
+  async syncToLookAhead(
+    projectId: string,
+    companyId: string,
+    activityIds: string[],
+    options: { overwriteExisting?: boolean } = {}
+  ): Promise<{ synced: number; skipped: number; errors: string[] }> {
+    const errors: string[] = []
+    let synced = 0
+    let skipped = 0
+
+    try {
+      // Get activities to sync
+      const activities = await this.getActivities({ project_id: projectId })
+      const toSync = activities.filter((a) => activityIds.includes(a.id))
+
+      for (const activity of toSync) {
+        try {
+          // Check if already linked to a look-ahead activity
+          const { data: existing } = await db
+            .from('look_ahead_activities')
+            .select('id')
+            .eq('schedule_item_id', activity.id)
+            .is('deleted_at', null)
+            .single()
+
+          if (existing && !options.overwriteExisting) {
+            skipped++
+            continue
+          }
+
+          // Calculate week info
+          const startDate = activity.planned_start
+            ? new Date(activity.planned_start)
+            : new Date()
+          const weekStart = new Date(startDate)
+          weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1) // Monday
+
+          // Get week number of the year
+          const startOfYear = new Date(weekStart.getFullYear(), 0, 1)
+          const weekNumber = Math.ceil(
+            ((weekStart.getTime() - startOfYear.getTime()) / 86400000 + startOfYear.getDay() + 1) / 7
+          )
+
+          const lookAheadActivity = {
+            project_id: projectId,
+            company_id: companyId,
+            activity_name: activity.name,
+            description: activity.description || null,
+            trade: null, // Could be derived from responsible_party
+            subcontractor_id: activity.subcontractor_id || null,
+            planned_start_date: activity.planned_start,
+            planned_end_date: activity.planned_finish,
+            duration_days: activity.planned_duration || 1,
+            status: 'planned' as const,
+            percent_complete: activity.percent_complete || 0,
+            week_number: weekNumber,
+            week_start_date: weekStart.toISOString().split('T')[0],
+            schedule_item_id: activity.id,
+          }
+
+          if (existing && options.overwriteExisting) {
+            // Update existing
+            await db
+              .from('look_ahead_activities')
+              .update(lookAheadActivity)
+              .eq('id', existing.id)
+          } else {
+            // Insert new
+            await db.from('look_ahead_activities').insert(lookAheadActivity)
+          }
+
+          synced++
+        } catch (err) {
+          errors.push(`Activity ${activity.name}: ${err instanceof Error ? err.message : 'Unknown error'}`)
+        }
+      }
+
+      return { synced, skipped, errors }
+    } catch (error) {
+      throw new ApiErrorClass({
+        code: 'SYNC_TO_LOOKAHEAD_ERROR',
+        message: 'Failed to sync to look-ahead',
       })
     }
   },

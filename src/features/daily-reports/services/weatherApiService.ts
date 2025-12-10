@@ -105,6 +105,13 @@ const weatherCache = new Map<string, { data: WeatherData; expiresAt: number }>()
 const CACHE_DURATION_MS = 15 * 60 * 1000; // 15 minutes
 
 /**
+ * Clear the weather cache (for testing purposes)
+ */
+export function clearWeatherCache(): void {
+  weatherCache.clear();
+}
+
+/**
  * Get cache key for location
  */
 function getCacheKey(lat: number, lon: number): string {
