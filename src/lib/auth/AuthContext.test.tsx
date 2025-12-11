@@ -19,6 +19,24 @@ vi.mock('../supabase', () => ({
   },
 }));
 
+// Mock logger
+vi.mock('@/lib/utils/logger', () => ({
+  logger: {
+    error: vi.fn(),
+    warn: vi.fn(),
+    info: vi.fn(),
+    debug: vi.fn(),
+  },
+}));
+
+// Mock Sentry
+vi.mock('../sentry', () => ({
+  setSentryUser: vi.fn(),
+  clearSentryUser: vi.fn(),
+}));
+
+import { logger } from '@/lib/utils/logger';
+
 // Factory functions
 const mockUser = (): User => ({
   id: faker.string.uuid(),
@@ -89,7 +107,7 @@ describe('AuthContext', () => {
       vi.mocked(supabase.from).mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({ data: profile, error: null }),
+            maybeSingle: vi.fn().mockResolvedValue({ data: profile, error: null }),
           }),
         }),
       } as any);
@@ -127,7 +145,6 @@ describe('AuthContext', () => {
     it('should handle error fetching user profile', async () => {
       const user = mockUser();
       const session = mockSession(user);
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       vi.mocked(supabase.auth.getSession).mockResolvedValue({
         data: { session },
@@ -137,7 +154,7 @@ describe('AuthContext', () => {
       vi.mocked(supabase.from).mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({
+            maybeSingle: vi.fn().mockResolvedValue({
               data: null,
               error: new Error('Profile not found'),
             }),
@@ -154,12 +171,10 @@ describe('AuthContext', () => {
       expect(result.current.session).toEqual(session);
       expect(result.current.user).toEqual(user);
       expect(result.current.userProfile).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(logger.error).toHaveBeenCalledWith(
         'Error fetching user profile:',
         expect.any(Error)
       );
-
-      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -169,6 +184,7 @@ describe('AuthContext', () => {
       const password = 'password123';
       const user = mockUser();
       const session = mockSession(user);
+      const profile = mockUserProfile({ id: user.id });
 
       vi.mocked(supabase.auth.getSession).mockResolvedValue({
         data: { session: null },
@@ -179,6 +195,15 @@ describe('AuthContext', () => {
         data: { user, session },
         error: null,
       });
+
+      // Mock the profile fetch that happens after sign in
+      vi.mocked(supabase.from).mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({ data: profile, error: null }),
+          }),
+        }),
+      } as any);
 
       const { result } = renderHook(() => useAuth(), {
         wrapper: AuthProvider,
@@ -302,7 +327,7 @@ describe('AuthContext', () => {
       vi.mocked(supabase.from).mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({ data: profile, error: null }),
+            maybeSingle: vi.fn().mockResolvedValue({ data: profile, error: null }),
           }),
         }),
       } as any);
@@ -349,7 +374,7 @@ describe('AuthContext', () => {
       vi.mocked(supabase.from).mockReturnValue({
         select: vi.fn().mockReturnValue({
           eq: vi.fn().mockReturnValue({
-            single: vi.fn().mockResolvedValue({ data: profile, error: null }),
+            maybeSingle: vi.fn().mockResolvedValue({ data: profile, error: null }),
           }),
         }),
       } as any);
@@ -396,7 +421,6 @@ describe('AuthContext', () => {
     it('should handle unexpected error fetching user profile', async () => {
       const user = mockUser();
       const session = mockSession(user);
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       vi.mocked(supabase.auth.getSession).mockResolvedValue({
         data: { session },
@@ -416,12 +440,10 @@ describe('AuthContext', () => {
       expect(result.current.session).toEqual(session);
       expect(result.current.user).toEqual(user);
       expect(result.current.userProfile).toBeNull();
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect(logger.error).toHaveBeenCalledWith(
         'Unexpected error fetching user profile:',
         expect.any(Error)
       );
-
-      consoleErrorSpy.mockRestore();
     });
   });
 
