@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
+import { ItemConditionEditor } from './ItemConditionEditor'
 import type {
   ChecklistTemplateItem,
   ChecklistItemType,
@@ -453,6 +454,15 @@ export function ChecklistItemBuilder({
                     </Label>
                     <div className="mt-2">{renderItemConfig(item)}</div>
                   </div>
+
+                  {/* Conditional Visibility */}
+                  <ItemConditionEditor
+                    item={item}
+                    allItems={items}
+                    onUpdateConditions={(conditions) =>
+                      onUpdateItem(item.id, { conditions })
+                    }
+                  />
                 </div>
               )}
             </div>
