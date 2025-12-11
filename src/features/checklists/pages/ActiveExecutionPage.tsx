@@ -25,6 +25,7 @@ import { useExecutionWithResponses, useUpdateExecution } from '../hooks/useExecu
 import { useUpdateResponse } from '../hooks/useResponses'
 import { useTemplateItems } from '../hooks/useTemplateItems'
 import { useKeyboardShortcuts, getChecklistShortcuts } from '../hooks/useKeyboardShortcuts'
+import { evaluateItemVisibility, buildResponsesMap } from '../utils/conditionEvaluator'
 import type { ChecklistResponse } from '@/types/checklists'
 import { formatDistanceToNow } from 'date-fns'
 import toast from 'react-hot-toast'
@@ -70,14 +71,30 @@ export function ActiveExecutionPage() {
     ? execution.status === 'draft' || execution.status === 'in_progress'
     : false
 
-  // Calculate progress
+  // Build responses map for progress calculation (needed before sections)
+  const responsesMapForProgress = useMemo(() => {
+    if (!execution?.responses) return new Map<string, ChecklistResponse>()
+    return buildResponsesMap(execution.responses)
+  }, [execution?.responses])
+
+  // Calculate progress (only count visible items)
   const progress = useMemo(() => {
-    if (!execution?.responses || execution.responses.length === 0) {
+    if (!execution?.responses || execution.responses.length === 0 || !templateItems.length) {
       return { completed: 0, total: 0, percentage: 0 }
     }
 
-    const total = execution.responses.length
-    const completed = execution.responses.filter((r) => {
+    // Create template item map for condition checking
+    const templateItemMap = new Map(templateItems.map((item) => [item.id, item]))
+
+    // Only count visible items
+    const visibleResponses = execution.responses.filter((r) => {
+      const templateItem = templateItemMap.get(r.checklist_template_item_id || '')
+      if (!templateItem) return true // Include if no template item found
+      return evaluateItemVisibility(templateItem.conditions, responsesMapForProgress)
+    })
+
+    const total = visibleResponses.length
+    const completed = visibleResponses.filter((r) => {
       // Consider a response completed if it has data
       const data = r.response_data as any
       if (!data) {return false}
@@ -101,11 +118,14 @@ export function ActiveExecutionPage() {
     return {
       completed,
       total,
-      percentage: Math.round((completed / total) * 100),
+      percentage: total > 0 ? Math.round((completed / total) * 100) : 0,
     }
-  }, [execution?.responses])
+  }, [execution?.responses, templateItems, responsesMapForProgress])
 
-  // Group responses by section
+  // Use the same responses map for sections (already computed above)
+  const responsesMap = responsesMapForProgress
+
+  // Group responses by section with conditional visibility
   const sections = useMemo(() => {
     if (!execution?.responses || !templateItems.length) {return []}
 
@@ -125,17 +145,19 @@ export function ActiveExecutionPage() {
       sectionMap.get(section)!.push(item)
     })
 
-    // Convert to array with responses
+    // Convert to array with responses, filtering by conditional visibility
     return Array.from(sectionMap.entries()).map(([name, items]) => ({
       name,
       items: items
         .map((item) => ({
           templateItem: item,
           response: responseMap.get(item.id),
+          // Evaluate visibility based on conditions
+          isVisible: evaluateItemVisibility(item.conditions, responsesMap),
         }))
-        .filter((pair) => pair.response !== undefined),
+        .filter((pair) => pair.response !== undefined && pair.isVisible),
     }))
-  }, [execution?.responses, templateItems])
+  }, [execution?.responses, templateItems, responsesMap])
 
   // Flatten all responses for keyboard navigation
   const allResponses = useMemo(() => {
@@ -250,8 +272,13 @@ export function ActiveExecutionPage() {
   const handleSubmit = async () => {
     if (!executionId || !execution) {return}
 
-    // Check if all required items are completed
-    const requiredItems = templateItems.filter((item) => item.is_required)
+    // Check if all required AND visible items are completed
+    // Hidden items (due to conditions) are not required to be filled
+    const requiredItems = templateItems.filter((item) => {
+      if (!item.is_required) return false
+      // Only require if the item is visible based on conditions
+      return evaluateItemVisibility(item.conditions, responsesMap)
+    })
     const responses = execution.responses || []
     const responseMap = new Map(responses.map((r) => [r.checklist_template_item_id, r]))
 

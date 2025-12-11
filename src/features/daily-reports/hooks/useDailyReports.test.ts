@@ -81,12 +81,14 @@ describe('useDailyReports', () => {
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
-    const mockOrder = vi.fn().mockResolvedValue({ data: mockReports, error: null });
+    const mockOrder = vi.fn().mockReturnThis();
+    const mockLimit = vi.fn().mockResolvedValue({ data: mockReports, error: null });
 
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
       eq: mockEq,
       order: mockOrder,
+      limit: mockLimit,
     } as any);
 
     const { result } = renderHook(() => useDailyReports(projectId), {
@@ -100,6 +102,7 @@ describe('useDailyReports', () => {
     expect(mockSelect).toHaveBeenCalledWith('*');
     expect(mockEq).toHaveBeenCalledWith('project_id', projectId);
     expect(mockOrder).toHaveBeenCalledWith('report_date', { ascending: false });
+    expect(mockLimit).toHaveBeenCalledWith(100);
   });
 
   it('should be disabled when projectId is undefined', () => {
@@ -116,12 +119,14 @@ describe('useDailyReports', () => {
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
-    const mockOrder = vi.fn().mockResolvedValue({ data: null, error: mockError });
+    const mockOrder = vi.fn().mockReturnThis();
+    const mockLimit = vi.fn().mockResolvedValue({ data: null, error: mockError });
 
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
       eq: mockEq,
       order: mockOrder,
+      limit: mockLimit,
     } as any);
 
     const { result } = renderHook(() => useDailyReports(projectId), {
@@ -138,12 +143,14 @@ describe('useDailyReports', () => {
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
-    const mockOrder = vi.fn().mockResolvedValue({ data: [], error: null });
+    const mockOrder = vi.fn().mockReturnThis();
+    const mockLimit = vi.fn().mockResolvedValue({ data: [], error: null });
 
     vi.mocked(supabase.from).mockReturnValue({
       select: mockSelect,
       eq: mockEq,
       order: mockOrder,
+      limit: mockLimit,
     } as any);
 
     const { result } = renderHook(() => useDailyReports(projectId), {

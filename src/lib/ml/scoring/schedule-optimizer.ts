@@ -8,16 +8,17 @@ import { supabase } from '@/lib/supabase'
 import type {
   ScheduleAnalysisRequest,
   ScheduleAnalysisResponse,
-  CriticalPathAnalysis,
   CriticalPathResult,
   CriticalPathActivity,
   FloatOpportunity,
   ConstraintPriority,
   ScheduleOptimizationRecommendation,
-  ScheduleRecommendationType,
   ResourceConflict,
-  ConstraintScheduleImpact,
 } from '@/types/ai'
+
+// Type assertion helper for tables not yet in Supabase types
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const supabaseAny = supabase as any
 
 interface ScheduleActivity {
   id: string
@@ -51,7 +52,7 @@ export const scheduleOptimizer = {
     const analysisDate = request.analysis_date || new Date().toISOString().split('T')[0]
 
     // Fetch schedule data
-    const { data: activities } = await supabase
+    const { data: activities } = await supabaseAny
       .from('look_ahead_activities')
       .select(`
         id,
@@ -85,21 +86,21 @@ export const scheduleOptimizer = {
       }
     }
 
-    // Fetch dependencies
-    const { data: dependencies } = await supabase
+    // Fetch dependencies (table may not exist yet)
+    const { data: dependencies } = await supabaseAny
       .from('look_ahead_dependencies')
       .select('*')
       .eq('project_id', request.project_id)
 
     // Fetch constraints
-    const { data: constraints } = await supabase
+    const { data: constraints } = await supabaseAny
       .from('look_ahead_constraints')
       .select('*')
       .eq('project_id', request.project_id)
       .eq('status', 'open')
 
     // Build activity map with predecessors/successors
-    const activityMap = this.buildActivityMap(activities, dependencies || [])
+    const activityMap = this.buildActivityMap(activities, (dependencies || []) as ScheduleConstraint[])
 
     // Calculate critical path
     const criticalPath = this.calculateCriticalPath(activityMap)
@@ -606,8 +607,8 @@ export const scheduleOptimizer = {
     criticalPath: CriticalPathResult,
     constraintPriorities: ConstraintPriority[]
   ): Promise<void> {
-    // Save critical path analysis
-    await supabase
+    // Save critical path analysis (table may not exist yet)
+    await supabaseAny
       .from('critical_path_analysis')
       .upsert({
         project_id: projectId,
@@ -621,9 +622,9 @@ export const scheduleOptimizer = {
         onConflict: 'project_id,analysis_date',
       })
 
-    // Save constraint impacts
+    // Save constraint impacts (table may not exist yet)
     for (const priority of constraintPriorities) {
-      await supabase
+      await supabaseAny
         .from('constraint_schedule_impacts')
         .upsert({
           constraint_id: priority.constraintId,

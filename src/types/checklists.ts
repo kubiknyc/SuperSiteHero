@@ -95,6 +95,30 @@ export type ItemConfig =
   | SignatureItemConfig
 
 /**
+ * Conditional visibility logic for checklist items
+ * Allows items to show/hide based on responses to other items
+ */
+export type ConditionOperator = 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'greater_than' | 'less_than' | 'is_empty' | 'is_not_empty'
+
+export interface ItemConditionRule {
+  // The item ID this condition depends on
+  target_item_id: string
+  // Comparison operator
+  operator: ConditionOperator
+  // Value to compare against (for checkbox: 'pass'|'fail'|'na', for number: numeric, etc)
+  value?: string | number | boolean | null
+}
+
+export interface ItemConditions {
+  // How to combine multiple rules: 'AND' requires all, 'OR' requires any
+  logic: 'AND' | 'OR'
+  // The rules that determine visibility
+  rules: ItemConditionRule[]
+  // Whether to show or hide when conditions are met
+  action: 'show' | 'hide'
+}
+
+/**
  * Checklist Template Item
  */
 export interface ChecklistTemplateItem {
@@ -113,6 +137,10 @@ export interface ChecklistTemplateItem {
   // Validation Rules
   is_required: boolean
   config: ItemConfig
+
+  // Conditional visibility (show/hide based on other item responses)
+  // Optional field - may not be present in database until migration is run
+  conditions?: ItemConditions | null
 
   // Scoring (for checkbox items)
   scoring_enabled: boolean
@@ -281,6 +309,7 @@ export interface CreateChecklistTemplateItemDTO {
   section?: string | null
   is_required?: boolean
   config?: ItemConfig
+  conditions?: ItemConditions | null
   scoring_enabled?: boolean
   pass_fail_na_scoring?: boolean
   requires_photo?: boolean

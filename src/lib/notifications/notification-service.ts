@@ -20,6 +20,7 @@ import {
   generateChangeOrderStatusEmail,
   generateBidSubmittedEmail,
   generatePortalInvitationEmail,
+  generateChecklistFailedItemsEmail,
   type ApprovalRequestEmailData,
   type ApprovalCompletedEmailData,
   type IncidentNotificationEmailData,
@@ -30,6 +31,7 @@ import {
   type ChangeOrderStatusEmailData,
   type BidSubmittedEmailData,
   type PortalInvitationEmailData,
+  type ChecklistFailedItemsEmailData,
 } from '@/lib/email/templates'
 import {
   type NotificationPreferences,
@@ -643,6 +645,68 @@ export const notificationService = {
     } catch (error) {
       logger.error('[NotificationService] Portal invitation email failed:', error)
       throw error // Re-throw so caller knows invitation failed
+    }
+  },
+
+  /**
+   * Send checklist failed items escalation notification
+   * Triggered automatically when a checklist is submitted with failed items
+   */
+  async notifyChecklistFailedItems(
+    recipients: NotificationRecipient[],
+    data: Omit<ChecklistFailedItemsEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const isCritical = data.severityLevel === 'high' || data.severityLevel === 'critical'
+
+    for (const recipient of recipients) {
+      const emailData: ChecklistFailedItemsEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/checklists/executions`,
+      }
+
+      // Send email notification (always for critical, check preferences for others)
+      if (options.sendEmail || isCritical) {
+        try {
+          const { html, text } = generateChecklistFailedItemsEmail(emailData)
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `Checklist Failed: ${data.failedCount} item${data.failedCount > 1 ? 's' : ''} need attention - ${data.checklistName}`,
+            html,
+            text,
+            tags: ['checklist', 'failed', 'escalation', data.severityLevel],
+          })
+          logger.info(`[NotificationService] Checklist escalation sent to ${recipient.email}`)
+        } catch (error) {
+          logger.error('[NotificationService] Checklist escalation email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'checklist_failed_items',
+            title: 'Checklist Inspection Failed',
+            message: `${data.checklistName} has ${data.failedCount} failed item${data.failedCount > 1 ? 's' : ''} requiring attention on ${data.projectName}`,
+            link: data.viewUrl,
+            priority: isCritical ? 'high' : 'normal',
+            metadata: {
+              checklistName: data.checklistName,
+              projectName: data.projectName,
+              failedCount: data.failedCount,
+              totalCount: data.totalCount,
+              severityLevel: data.severityLevel,
+              inspectorName: data.inspectorName,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
     }
   },
 

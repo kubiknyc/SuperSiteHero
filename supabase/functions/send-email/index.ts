@@ -132,7 +132,8 @@ serve(async (req) => {
     }
 
     if (tags && tags.length > 0) {
-      resendPayload.tags = tags.map(tag => ({ name: 'category', value: tag }))
+      // Each tag needs a unique name - use index to differentiate
+      resendPayload.tags = tags.map((tag, index) => ({ name: `tag_${index}`, value: tag }))
     }
 
     console.log(`Sending email to: ${toEmails.join(', ')} | Subject: ${subject}`)
@@ -150,8 +151,16 @@ serve(async (req) => {
     const resendData = await resendResponse.json()
 
     if (!resendResponse.ok) {
-      console.error('Resend API error:', resendData)
-      throw new Error(resendData.message || `Resend API error: ${resendResponse.status}`)
+      console.error('Resend API error:', JSON.stringify(resendData))
+      // Return error response instead of throwing (so client sees the message)
+      const result: EmailResult = {
+        success: false,
+        error: `Resend API error: ${resendData.message || resendData.name || JSON.stringify(resendData)}`,
+      }
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200, // Return 200 so client can read the error
+      })
     }
 
     const messageId = resendData.id
@@ -201,9 +210,10 @@ serve(async (req) => {
       error: errorMessage,
     }
 
+    // Return 200 so client can read the detailed error message
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: error instanceof Error && error.message.includes('Missing') ? 400 : 500,
+      status: 200,
     })
   }
 })

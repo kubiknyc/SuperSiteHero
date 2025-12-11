@@ -30,9 +30,9 @@ const ProjectDetailPage = lazy(() => import('./pages/projects/ProjectDetailPage'
 
 // Daily Reports feature
 const DailyReportsPage = lazy(() => import('./pages/daily-reports/DailyReportsPage').then(m => ({ default: m.DailyReportsPage })))
-const NewDailyReportPage = lazy(() => import('./pages/daily-reports/NewDailyReportPage').then(m => ({ default: m.NewDailyReportPage })))
+const NewDailyReportPage = lazy(() => import('./pages/daily-reports/NewDailyReportPageV2').then(m => ({ default: m.NewDailyReportPageV2 })))
 const DailyReportDetailPage = lazy(() => import('./pages/daily-reports/DailyReportDetailPage').then(m => ({ default: m.DailyReportDetailPage })))
-const DailyReportEditPage = lazy(() => import('./pages/daily-reports/DailyReportEditPage').then(m => ({ default: m.DailyReportEditPage })))
+const DailyReportEditPage = lazy(() => import('./pages/daily-reports/DailyReportEditPageV2').then(m => ({ default: m.DailyReportEditPageV2 })))
 
 // Tasks feature
 const TasksPage = lazy(() => import('./pages/tasks/TasksPage').then(m => ({ default: m.TasksPage })))
@@ -102,6 +102,7 @@ const AISettingsPage = lazy(() => import('./pages/settings/AISettingsPage'))
 
 // Schedule / Gantt Charts feature
 const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
+const MasterSchedulePage = lazy(() => import('./pages/schedule/MasterSchedulePage').then(m => ({ default: m.MasterSchedulePage })))
 
 // Predictive Analytics feature
 const AnalyticsPage = lazy(() => import('./pages/analytics/AnalyticsPage').then(m => ({ default: m.AnalyticsPage })))
@@ -385,7 +386,8 @@ function App() {
                 <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
-                <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><MasterSchedulePage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/gantt" element={<ProtectedRoute><GanttChartPage /></ProtectedRoute>} />
 
                 {/* Predictive Analytics feature */}
                 <Route path="/analytics" element={<ProtectedRoute><AnalyticsPage /></ProtectedRoute>} />

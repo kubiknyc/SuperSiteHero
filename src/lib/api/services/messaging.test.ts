@@ -288,8 +288,29 @@ describe('Conversation Methods', () => {
 
   describe('getOrCreateDirectConversation', () => {
     it('should call database function', async () => {
-      vi.mocked(supabase.rpc).mockReturnValueOnce({
-        ...mockSupabaseChain,
+      // Mock RPC to return a conversation ID
+      vi.mocked(supabase.rpc).mockResolvedValueOnce({
+        data: mockConversationId,
+        error: null,
+      } as any)
+
+      // Mock participant check in getConversation
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockReturnThis(),
+        then: vi.fn().mockImplementation((onFulfilled) =>
+          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
+        ),
+      } as any)
+
+      // Mock conversation fetch
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: mockConversation, error: null }).then(onFulfilled)
         ),
@@ -312,7 +333,10 @@ describe('Conversation Methods', () => {
     it('should update conversation name', async () => {
       // Mock participant check
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
         ),
@@ -320,8 +344,12 @@ describe('Conversation Methods', () => {
 
       // Mock update
       const updatedConv = { ...mockConversation, name: 'New Name' }
+      const updateMock = vi.fn().mockReturnThis()
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        update: updateMock,
+        eq: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: updatedConv, error: null }).then(onFulfilled)
         ),
@@ -334,35 +362,33 @@ describe('Conversation Methods', () => {
       )
 
       expect(result.data?.name).toBe('New Name')
-      expect(mockSupabaseChain.update).toHaveBeenCalledWith({ name: 'New Name' })
+      expect(updateMock).toHaveBeenCalledWith({ name: 'New Name' })
     })
   })
 
   describe('addParticipants', () => {
     it('should add new participants', async () => {
-      // Mock admin check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+      // Create a chainable mock that returns promises
+      const createChainMock = (data: any) => ({
+        select: vi.fn().mockReturnThis(),
+        insert: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        in: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: { role: 'admin' }, error: null }).then(onFulfilled)
+          Promise.resolve({ data, error: null }).then(onFulfilled)
         ),
-      } as any)
+      })
+
+      // Mock creator check - user is the creator
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock({ created_by: mockUserId }) as any)
 
       // Mock existing participants check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: [], error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock([]) as any)
 
       // Mock insert
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: [mockParticipant], error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock([mockParticipant]) as any)
 
       const result = await messagingService.addParticipants(
         mockConversationId,
@@ -373,12 +399,14 @@ describe('Conversation Methods', () => {
       expect(result.data).toEqual([mockParticipant])
     })
 
-    it('should require admin role', async () => {
-      // Mock non-admin check
+    it('should require creator to add participants', async () => {
+      // Mock non-creator check - different user is the creator
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: { role: 'member' }, error: null }).then(onFulfilled)
+          Promise.resolve({ data: { created_by: 'other-user-id' }, error: null }).then(onFulfilled)
         ),
       } as any)
 
@@ -388,23 +416,29 @@ describe('Conversation Methods', () => {
         [mockOtherUserId]
       )
 
-      expect(result.error?.message).toContain('Only admins')
+      expect(result.error?.message).toContain('Only conversation creator')
     })
   })
 
   describe('removeParticipant', () => {
-    it('should remove participant as admin', async () => {
-      // Mock admin check
+    it('should remove participant as creator', async () => {
+      const updateMock = vi.fn().mockReturnThis()
+
+      // Mock creator check - user is the creator
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: { role: 'admin' }, error: null }).then(onFulfilled)
+          Promise.resolve({ data: { created_by: mockUserId }, error: null }).then(onFulfilled)
         ),
       } as any)
 
-      // Mock update
+      // Mock update (soft delete)
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        update: updateMock,
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: null, error: null }).then(onFulfilled)
         ),
@@ -417,15 +451,17 @@ describe('Conversation Methods', () => {
       )
 
       expect(result.data).toBe(true)
-      expect(mockSupabaseChain.update).toHaveBeenCalled()
+      expect(updateMock).toHaveBeenCalled()
     })
 
     it('should prevent removing self', async () => {
-      // Mock admin check
+      // Mock creator check - user is the creator
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: { role: 'admin' }, error: null }).then(onFulfilled)
+          Promise.resolve({ data: { created_by: mockUserId }, error: null }).then(onFulfilled)
         ),
       } as any)
 
@@ -441,14 +477,21 @@ describe('Conversation Methods', () => {
 
   describe('leaveConversation', () => {
     it('should allow user to leave', async () => {
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: null, error: null }).then(onFulfilled)
-      )
+      const updateMock = vi.fn().mockReturnThis()
+
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        update: updateMock,
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        then: vi.fn().mockImplementation((onFulfilled) =>
+          Promise.resolve({ data: null, error: null }).then(onFulfilled)
+        ),
+      } as any)
 
       const result = await messagingService.leaveConversation(mockConversationId, mockUserId)
 
       expect(result.data).toBe(true)
-      expect(mockSupabaseChain.update).toHaveBeenCalled()
+      expect(updateMock).toHaveBeenCalled()
     })
   })
 })
@@ -458,23 +501,38 @@ describe('Conversation Methods', () => {
 // =====================================================
 
 describe('Message Methods', () => {
+  // Helper function to create a chainable mock
+  const createChainMock = (data: any, methods: Record<string, any> = {}) => {
+    const chain: any = {
+      select: vi.fn().mockReturnThis(),
+      insert: vi.fn().mockReturnThis(),
+      update: vi.fn().mockReturnThis(),
+      delete: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      neq: vi.fn().mockReturnThis(),
+      lt: vi.fn().mockReturnThis(),
+      gt: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
+      single: vi.fn().mockReturnThis(),
+      maybeSingle: vi.fn().mockReturnThis(),
+      textSearch: vi.fn().mockReturnThis(),
+      ...methods,
+      then: vi.fn().mockImplementation((onFulfilled) =>
+        Promise.resolve({ data, error: null }).then(onFulfilled)
+      ),
+    }
+    return chain
+  }
+
   describe('getMessages', () => {
     it('should fetch messages for conversation', async () => {
       // Mock participant check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockParticipant) as any)
 
       // Mock messages fetch
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: [mockMessage], error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock([mockMessage]) as any)
 
       const result = await messagingService.getMessages(mockConversationId, mockUserId)
 
@@ -483,81 +541,50 @@ describe('Message Methods', () => {
     })
 
     it('should apply before_id filter for pagination', async () => {
+      const ltMock = vi.fn().mockReturnThis()
+
       // Mock participant check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockParticipant) as any)
 
-      // Mock before message fetch
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: { created_at: '2024-01-01T00:00:00Z' }, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      // Mock messages query chain (created first, then lt is applied to it)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock([mockMessage], { lt: ltMock }) as any)
 
-      // Mock messages fetch
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: [mockMessage], error: null }).then(onFulfilled)
-        ),
-      } as any)
+      // Mock before message fetch (to get created_at of the reference message)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock({ created_at: '2024-01-01T00:00:00Z' }) as any)
 
       await messagingService.getMessages(mockConversationId, mockUserId, {
         conversation_id: mockConversationId,
         before_id: 'msg-before',
       })
 
-      expect(mockSupabaseChain.lt).toHaveBeenCalled()
+      expect(ltMock).toHaveBeenCalled()
     })
 
     it('should apply sender filter', async () => {
+      const eqMock = vi.fn().mockReturnThis()
+
       // Mock participant check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockParticipant) as any)
 
       // Mock messages fetch
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: [mockMessage], error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock([mockMessage], { eq: eqMock }) as any)
 
       await messagingService.getMessages(mockConversationId, mockUserId, {
         conversation_id: mockConversationId,
         sender_id: mockUserId,
       })
 
-      expect(mockSupabaseChain.eq).toHaveBeenCalledWith('sender_id', mockUserId)
+      expect(eqMock).toHaveBeenCalledWith('sender_id', mockUserId)
     })
   })
 
   describe('getMessage', () => {
     it('should fetch single message', async () => {
       // Mock message fetch
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockMessage, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockMessage) as any)
 
       // Mock participant check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockParticipant) as any)
 
       const result = await messagingService.getMessage(mockMessageId, mockUserId)
 
@@ -567,21 +594,13 @@ describe('Message Methods', () => {
 
   describe('sendMessage', () => {
     it('should send text message', async () => {
+      const insertMock = vi.fn().mockReturnThis()
+
       // Mock participant check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockParticipant) as any)
 
       // Mock message insert
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockMessage, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockMessage, { insert: insertMock }) as any)
 
       const result = await messagingService.sendMessage(mockUserId, {
         conversation_id: mockConversationId,
@@ -590,33 +609,20 @@ describe('Message Methods', () => {
       })
 
       expect(result.data).toEqual(mockMessage)
-      expect(mockSupabaseChain.insert).toHaveBeenCalled()
+      expect(insertMock).toHaveBeenCalled()
     })
 
     it('should extract @mentions from content', async () => {
+      const insertMock = vi.fn().mockReturnThis()
+
       // Mock participant check
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockParticipant) as any)
 
       // Mock message insert
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: mockMessage, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(mockMessage, { insert: insertMock }) as any)
 
       // Mock conversation query for mention notifications
-      vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
-        then: vi.fn().mockImplementation((onFulfilled) =>
-          Promise.resolve({ data: { name: 'Test Chat' }, error: null }).then(onFulfilled)
-        ),
-      } as any)
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock({ name: 'Test Chat' }) as any)
 
       await messagingService.sendMessage(mockUserId, {
         conversation_id: mockConversationId,
@@ -624,57 +630,66 @@ describe('Message Methods', () => {
         message_type: 'text',
       })
 
-      expect(mockSupabaseChain.insert).toHaveBeenCalled()
+      expect(insertMock).toHaveBeenCalled()
     })
   })
 
   describe('editMessage', () => {
     it('should edit message content', async () => {
       const editedMessage = { ...mockMessage, content: 'Edited', edited_at: '2024-01-02T00:00:00Z' }
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: editedMessage, error: null }).then(onFulfilled)
-      )
+      const updateMock = vi.fn().mockReturnThis()
+      const eqMock = vi.fn().mockReturnThis()
+
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(editedMessage, { update: updateMock, eq: eqMock }) as any)
 
       const result = await messagingService.editMessage(mockMessageId, mockUserId, 'Edited')
 
       expect(result.data?.content).toBe('Edited')
-      expect(mockSupabaseChain.update).toHaveBeenCalled()
-      expect(mockSupabaseChain.eq).toHaveBeenCalledWith('sender_id', mockUserId)
+      expect(updateMock).toHaveBeenCalled()
+      expect(eqMock).toHaveBeenCalledWith('sender_id', mockUserId)
     })
   })
 
   describe('deleteMessage', () => {
     it('should soft delete message', async () => {
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: null, error: null }).then(onFulfilled)
-      )
+      const updateMock = vi.fn().mockReturnThis()
+      const eqMock = vi.fn().mockReturnThis()
+
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(null, { update: updateMock, eq: eqMock }) as any)
 
       const result = await messagingService.deleteMessage(mockMessageId, mockUserId)
 
       expect(result.data).toBe(true)
-      expect(mockSupabaseChain.update).toHaveBeenCalled()
-      expect(mockSupabaseChain.eq).toHaveBeenCalledWith('sender_id', mockUserId)
+      expect(updateMock).toHaveBeenCalled()
+      expect(eqMock).toHaveBeenCalledWith('sender_id', mockUserId)
     })
   })
 
   describe('markAsRead', () => {
     it('should mark messages as read', async () => {
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: null, error: null }).then(onFulfilled)
-      )
+      const updateMock = vi.fn().mockReturnThis()
+
+      vi.mocked(supabase.from).mockReturnValueOnce(createChainMock(null, { update: updateMock }) as any)
 
       const result = await messagingService.markAsRead(mockConversationId, mockUserId)
 
       expect(result.data).toBe(true)
-      expect(mockSupabaseChain.update).toHaveBeenCalled()
+      expect(updateMock).toHaveBeenCalled()
     })
   })
 
   describe('searchMessages', () => {
     it('should search messages globally', async () => {
-      // Create a message query chain that will eventually return messages
+      // Create isolated message query chain
+      const textSearchMock = vi.fn().mockReturnThis()
       const messageQueryChain = {
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        in: vi.fn().mockReturnThis(),
+        order: vi.fn().mockReturnThis(),
+        limit: vi.fn().mockReturnThis(),
+        textSearch: textSearchMock,
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: [mockMessage], error: null }).then(onFulfilled)
         ),
@@ -685,7 +700,9 @@ describe('Message Methods', () => {
 
       // Mock second call: .from('conversation_participants') - this fetches user's conversations
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: [{ conversation_id: mockConversationId }], error: null }).then(onFulfilled)
         ),
@@ -694,17 +711,28 @@ describe('Message Methods', () => {
       const result = await messagingService.searchMessages(mockUserId, 'hello')
 
       expect(result.data).toEqual([mockMessage])
-      expect(messageQueryChain.textSearch).toHaveBeenCalledWith('content', 'hello')
+      expect(textSearchMock).toHaveBeenCalledWith('content', 'hello')
     })
 
     it('should search within specific conversation', async () => {
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: [mockMessage], error: null }).then(onFulfilled)
-      )
+      const eqMock = vi.fn().mockReturnThis()
+      const queryChain = {
+        select: vi.fn().mockReturnThis(),
+        eq: eqMock,
+        is: vi.fn().mockReturnThis(),
+        order: vi.fn().mockReturnThis(),
+        limit: vi.fn().mockReturnThis(),
+        textSearch: vi.fn().mockReturnThis(),
+        then: vi.fn().mockImplementation((onFulfilled) =>
+          Promise.resolve({ data: [mockMessage], error: null }).then(onFulfilled)
+        ),
+      }
+
+      vi.mocked(supabase.from).mockReturnValueOnce(queryChain as any)
 
       await messagingService.searchMessages(mockUserId, 'hello', mockConversationId)
 
-      expect(mockSupabaseChain.eq).toHaveBeenCalledWith('conversation_id', mockConversationId)
+      expect(eqMock).toHaveBeenCalledWith('conversation_id', mockConversationId)
     })
   })
 })
@@ -718,7 +746,10 @@ describe('Participant Methods', () => {
     it('should fetch all participants', async () => {
       // Mock user participant check
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: mockParticipant, error: null }).then(onFulfilled)
         ),
@@ -726,7 +757,9 @@ describe('Participant Methods', () => {
 
       // Mock participants fetch
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: [mockParticipant], error: null }).then(onFulfilled)
         ),
@@ -741,9 +774,16 @@ describe('Participant Methods', () => {
   describe('updateParticipant', () => {
     it('should update participant settings', async () => {
       const updated = { ...mockParticipant, is_muted: true }
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: updated, error: null }).then(onFulfilled)
-      )
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        update: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
+        then: vi.fn().mockImplementation((onFulfilled) =>
+          Promise.resolve({ data: updated, error: null }).then(onFulfilled)
+        ),
+      } as any)
 
       const result = await messagingService.updateParticipant(
         mockConversationId,
@@ -758,7 +798,6 @@ describe('Participant Methods', () => {
   describe('getUnreadCount', () => {
     it('should get total unread count', async () => {
       vi.mocked(supabase.rpc).mockReturnValueOnce({
-        ...mockSupabaseChain,
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: 5, error: null }).then(onFulfilled)
         ),
@@ -774,7 +813,6 @@ describe('Participant Methods', () => {
 
     it('should get conversation-specific unread count', async () => {
       vi.mocked(supabase.rpc).mockReturnValueOnce({
-        ...mockSupabaseChain,
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: 3, error: null }).then(onFulfilled)
         ),
@@ -800,7 +838,9 @@ describe('Reaction Methods', () => {
     it('should add new reaction', async () => {
       // Mock existing check (none found)
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: null, error: null }).then(onFulfilled)
         ),
@@ -808,7 +848,9 @@ describe('Reaction Methods', () => {
 
       // Mock insert
       vi.mocked(supabase.from).mockReturnValueOnce({
-        ...mockSupabaseChain,
+        insert: vi.fn().mockReturnThis(),
+        select: vi.fn().mockReturnThis(),
+        single: vi.fn().mockReturnThis(),
         then: vi.fn().mockImplementation((onFulfilled) =>
           Promise.resolve({ data: mockReaction, error: null }).then(onFulfilled)
         ),
@@ -820,9 +862,14 @@ describe('Reaction Methods', () => {
     })
 
     it('should return existing reaction if duplicate', async () => {
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: mockReaction, error: null }).then(onFulfilled)
-      )
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockReturnThis(),
+        then: vi.fn().mockImplementation((onFulfilled) =>
+          Promise.resolve({ data: mockReaction, error: null }).then(onFulfilled)
+        ),
+      } as any)
 
       const result = await messagingService.addReaction(mockMessageId, mockUserId, '👍')
 
@@ -832,15 +879,22 @@ describe('Reaction Methods', () => {
 
   describe('removeReaction', () => {
     it('should remove reaction', async () => {
-      mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-        Promise.resolve({ data: null, error: null }).then(onFulfilled)
-      )
+      const deleteMock = vi.fn().mockReturnThis()
+      const eqMock = vi.fn().mockReturnThis()
+
+      vi.mocked(supabase.from).mockReturnValueOnce({
+        delete: deleteMock,
+        eq: eqMock,
+        then: vi.fn().mockImplementation((onFulfilled) =>
+          Promise.resolve({ data: null, error: null }).then(onFulfilled)
+        ),
+      } as any)
 
       const result = await messagingService.removeReaction(mockReactionId, mockUserId)
 
       expect(result.data).toBe(true)
-      expect(mockSupabaseChain.delete).toHaveBeenCalled()
-      expect(mockSupabaseChain.eq).toHaveBeenCalledWith('user_id', mockUserId)
+      expect(deleteMock).toHaveBeenCalled()
+      expect(eqMock).toHaveBeenCalledWith('user_id', mockUserId)
     })
   })
 })
@@ -852,9 +906,17 @@ describe('Reaction Methods', () => {
 describe('Error Handling', () => {
   it('should handle database errors gracefully', async () => {
     const error = new Error('Connection failed')
-    mockSupabaseChain.then.mockImplementation((onFulfilled) =>
-      Promise.resolve({ data: null, error }).then(onFulfilled)
-    )
+    vi.mocked(supabase.from).mockReturnValueOnce({
+      select: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      ilike: vi.fn().mockReturnThis(),
+      range: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
+      then: vi.fn().mockImplementation((onFulfilled) =>
+        Promise.resolve({ data: null, error }).then(onFulfilled)
+      ),
+    } as any)
 
     const result = await messagingService.getConversations(mockUserId)
 
@@ -863,8 +925,12 @@ describe('Error Handling', () => {
   })
 
   it('should handle permission errors', async () => {
+    // Mock participant check returning null (not a participant)
     vi.mocked(supabase.from).mockReturnValueOnce({
-      ...mockSupabaseChain,
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
+      maybeSingle: vi.fn().mockReturnThis(),
       then: vi.fn().mockImplementation((onFulfilled) =>
         Promise.resolve({ data: null, error: null }).then(onFulfilled)
       ),
