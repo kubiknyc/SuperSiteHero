@@ -1,9 +1,10 @@
 // File: /src/features/punch-lists/components/QuickPunchMode.tsx
 // Quick Punch Mode - Streamlined punch item creation for field workers
 // Goal: tap → camera → voice → done in 30 seconds
+// Supports offline mode with automatic sync when back online
 
 import { useState, useRef, useCallback } from 'react'
-import { Camera, Mic, MicOff, X, Check, MapPin, ChevronDown, ChevronUp, Loader2 } from 'lucide-react'
+import { Camera, Mic, MicOff, X, Check, MapPin, ChevronDown, ChevronUp, Loader2, WifiOff } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,6 +21,8 @@ import { uploadPunchItemPhoto } from '@/lib/storage/punch-item-uploads'
 import { toast } from '@/lib/notifications/ToastContext'
 import { cn } from '@/lib/utils'
 import type { Priority } from '@/types/database'
+import { useIsOnline } from '@/stores/offline-store'
+import { useOfflinePunchStore } from '../store/offlinePunchStore'
 
 interface QuickPunchModeProps {
   projectId: string
@@ -51,6 +54,8 @@ export function QuickPunchMode({
   onSuccess,
 }: QuickPunchModeProps) {
   const createMutation = useCreatePunchItemWithNotification()
+  const isOnline = useIsOnline()
+  const { addDraft, getPendingCount } = useOfflinePunchStore()
 
   // Core fields - minimal for speed
   const [description, setDescription] = useState('')
@@ -105,18 +110,26 @@ export function QuickPunchMode({
     setIsUploading(true)
 
     try {
-      const uploadPromises = Array.from(files).map(async (file) => {
-        // Create a temporary ID for the punch item (will be replaced after creation)
-        const tempId = `temp-${Date.now()}`
-        const result = await uploadPunchItemPhoto(projectId, tempId, file)
-        return result.url
-      })
+      if (isOnline) {
+        // Online: Upload to server immediately
+        const uploadPromises = Array.from(files).map(async (file) => {
+          // Create a temporary ID for the punch item (will be replaced after creation)
+          const tempId = `temp-${Date.now()}`
+          const result = await uploadPunchItemPhoto(projectId, tempId, file)
+          return result.url
+        })
 
-      const urls = await Promise.all(uploadPromises)
-      setPhotoUrls((prev) => [...prev, ...urls])
-      toast.success(`${urls.length} photo(s) captured`)
+        const urls = await Promise.all(uploadPromises)
+        setPhotoUrls((prev) => [...prev, ...urls])
+        toast.success(`${urls.length} photo(s) captured`)
+      } else {
+        // Offline: Store as local blob URLs for later upload
+        const localUrls = Array.from(files).map((file) => URL.createObjectURL(file))
+        setPhotoUrls((prev) => [...prev, ...localUrls])
+        toast.success(`${localUrls.length} photo(s) saved locally`)
+      }
     } catch (error) {
-      console.error('Photo upload failed:', error)
+      console.error('Photo capture failed:', error)
       toast.error('Failed to capture photo')
     } finally {
       setIsUploading(false)
@@ -146,45 +159,68 @@ export function QuickPunchMode({
     // Generate title from first ~50 chars of description
     const title = description.trim().slice(0, 50) + (description.length > 50 ? '...' : '')
 
-    createMutation.mutate(
-      {
+    if (isOnline) {
+      // Online: Create directly via API
+      createMutation.mutate(
+        {
+          project_id: projectId,
+          title,
+          description: description.trim(),
+          trade,
+          priority,
+          status: 'open',
+          building: building.trim() || null,
+          floor: floor.trim() || null,
+          room: room.trim() || null,
+          area: null,
+          location_notes: null,
+          number: null,
+          location: null,
+          punch_list_id: null,
+          subcontractor_id: null,
+          assigned_to: null,
+          due_date: null,
+          completed_date: null,
+          verified_date: null,
+          marked_complete_by: null,
+          marked_complete_at: null,
+          verified_by: null,
+          verified_at: null,
+          rejection_notes: null,
+          created_by: null,
+          deleted_at: null,
+          // Note: Photos would be attached after creation via a separate API
+        },
+        {
+          onSuccess: () => {
+            toast.success('Punch item created!')
+            resetForm()
+            onOpenChange(false)
+            onSuccess?.()
+          },
+        }
+      )
+    } else {
+      // Offline: Save to local store for later sync
+      addDraft({
         project_id: projectId,
         title,
         description: description.trim(),
         trade,
         priority,
         status: 'open',
-        building: building.trim() || null,
-        floor: floor.trim() || null,
-        room: room.trim() || null,
-        area: null,
-        location_notes: null,
-        number: null,
-        location: null,
-        punch_list_id: null,
-        subcontractor_id: null,
-        assigned_to: null,
-        due_date: null,
-        completed_date: null,
-        verified_date: null,
-        marked_complete_by: null,
-        marked_complete_at: null,
-        verified_by: null,
-        verified_at: null,
-        rejection_notes: null,
-        created_by: null,
-        deleted_at: null,
-        // Note: Photos would be attached after creation via a separate API
-      },
-      {
-        onSuccess: () => {
-          toast.success('Punch item created!')
-          resetForm()
-          onOpenChange(false)
-          onSuccess?.()
-        },
-      }
-    )
+        building: building.trim() || undefined,
+        floor: floor.trim() || undefined,
+        room: room.trim() || undefined,
+        pending_photos: photoUrls.length > 0 ? photoUrls : undefined,
+      })
+
+      const pendingCount = getPendingCount()
+      toast.success(`Punch item saved offline! (${pendingCount} pending sync)`)
+      resetForm()
+      onOpenChange(false)
+      onSuccess?.()
+    }
   }
 
   // Display value (current + interim transcript)
@@ -195,10 +231,20 @@ export function QuickPunchMode({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg p-0 gap-0 overflow-hidden">
-        <DialogHeader className="p-4 pb-2 bg-blue-600 text-white">
+        <DialogHeader className={cn(
+          "p-4 pb-2 text-white",
+          isOnline ? "bg-blue-600" : "bg-amber-600"
+        )}>
           <DialogTitle className="flex items-center gap-2">
             <span className="text-lg font-semibold">Quick Punch</span>
-            <span className="text-sm font-normal opacity-80">Fast field capture</span>
+            {isOnline ? (
+              <span className="text-sm font-normal opacity-80">Fast field capture</span>
+            ) : (
+              <span className="text-sm font-normal flex items-center gap-1 bg-amber-700 px-2 py-0.5 rounded">
+                <WifiOff className="h-3 w-3" />
+                Offline Mode
+              </span>
+            )}
           </DialogTitle>
         </DialogHeader>
 

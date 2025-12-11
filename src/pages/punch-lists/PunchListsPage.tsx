@@ -13,19 +13,23 @@ import { PunchItemStatusBadge } from '@/features/punch-lists/components/PunchIte
 import { QuickPunchMode } from '@/features/punch-lists/components/QuickPunchMode'
 import { QRCodeScanner, FloatingScanButton } from '@/features/punch-lists/components/QRCodeScanner'
 import { BatchQRCodePrint } from '@/features/punch-lists/components/PunchItemQRCode'
+import { usePunchItemSync } from '@/features/punch-lists/hooks/usePunchItemSync'
 import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks, Zap } from 'lucide-react'
+import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks, Zap, WifiOff, RefreshCw } from 'lucide-react'
 import { format } from 'date-fns'
 import type { PunchItem } from '@/types/database'
 
 export function PunchListsPage() {
   const navigate = useNavigate()
   const { data: projects } = useMyProjects()
+
+  // Offline sync for punch items
+  const { pendingCount: offlinePendingCount, syncNow, isOnline } = usePunchItemSync()
 
   // Selected project
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
@@ -256,6 +260,42 @@ export function PunchListsPage() {
               </CardContent>
             </Card>
           </div>
+        )}
+
+        {/* Offline Pending Items Banner */}
+        {offlinePendingCount > 0 && (
+          <Card className={isOnline ? 'bg-blue-50 border-blue-200' : 'bg-amber-50 border-amber-200'}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${isOnline ? 'bg-blue-100' : 'bg-amber-100'}`}>
+                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-blue-600' : 'text-amber-600'}`} />
+                  </div>
+                  <div>
+                    <p className={`font-medium ${isOnline ? 'text-blue-900' : 'text-amber-900'}`}>
+                      {offlinePendingCount} punch item{offlinePendingCount > 1 ? 's' : ''} pending sync
+                    </p>
+                    <p className={`text-sm ${isOnline ? 'text-blue-700' : 'text-amber-700'}`}>
+                      {isOnline
+                        ? 'Syncing automatically...'
+                        : 'Will sync when back online'}
+                    </p>
+                  </div>
+                </div>
+                {isOnline && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={syncNow}
+                    className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Sync Now
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {/* Filters */}
