@@ -69,7 +69,7 @@ import {
 } from '@/features/schedule/utils/activityAdapter'
 import { exportScheduleToPdf } from '@/features/schedule/utils/schedulePdfExport'
 import type { ScheduleItem } from '@/types/schedule'
-import type { ScheduleActivity, ScheduleBaseline } from '@/types/schedule-activities'
+import type { ScheduleActivity, ScheduleBaseline, CreateScheduleActivityDTO, UpdateScheduleActivityDTO } from '@/types/schedule-activities'
 
 export function MasterSchedulePage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -226,11 +226,11 @@ export function MasterSchedulePage() {
 
   // Handle activity update submission
   const handleActivityUpdate = useCallback(
-    async (data: Record<string, unknown>) => {
+    async (data: CreateScheduleActivityDTO | UpdateScheduleActivityDTO) => {
       if (!editingActivity) return
       await updateActivityWithNotification.mutateAsync({
         activityId: editingActivity.id,
-        updates: data,
+        updates: data as UpdateScheduleActivityDTO,
       })
       setShowEditDialog(false)
       setEditingActivity(null)
@@ -243,7 +243,7 @@ export function MasterSchedulePage() {
     if (!project) return
     await exportScheduleToPdf({
       projectName: project.name,
-      projectNumber: project.project_number,
+      projectNumber: project.project_number ?? undefined,
       activities,
       stats,
       includeBaseline: hasBaseline,
@@ -518,7 +518,7 @@ export function MasterSchedulePage() {
             open={showComparisonView}
             onOpenChange={setShowComparisonView}
             projectId={projectId!}
-            baselineId={selectedBaselineId}
+            baseline={baselines.find(b => b.id === selectedBaselineId) || null}
             activities={activities}
           />
         )}

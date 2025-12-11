@@ -52,7 +52,7 @@ export const scheduleOptimizer = {
     const analysisDate = request.analysis_date || new Date().toISOString().split('T')[0]
 
     // Fetch schedule data
-    const { data: activities } = await supabase
+    const { data: activities } = await supabaseAny
       .from('look_ahead_activities')
       .select(`
         id,
@@ -93,14 +93,14 @@ export const scheduleOptimizer = {
       .eq('project_id', request.project_id)
 
     // Fetch constraints
-    const { data: constraints } = await supabase
+    const { data: constraints } = await supabaseAny
       .from('look_ahead_constraints')
       .select('*')
       .eq('project_id', request.project_id)
       .eq('status', 'open')
 
     // Build activity map with predecessors/successors
-    const activityMap = this.buildActivityMap(activities, dependencies || [])
+    const activityMap = this.buildActivityMap(activities, (dependencies || []) as ScheduleConstraint[])
 
     // Calculate critical path
     const criticalPath = this.calculateCriticalPath(activityMap)

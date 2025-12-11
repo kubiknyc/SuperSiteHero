@@ -240,16 +240,16 @@ Respond with JSON in this format:
 
     // Score patterns by keyword match
     const scoredPatterns = patterns
-      .map(pattern => {
+      .map((pattern: RFIRoutingPattern) => {
         const patternWords = pattern.keyword_pattern.toLowerCase().split(/\s+/)
-        const matchScore = patternWords.filter(pw =>
-          words.some(w => w.includes(pw) || pw.includes(w))
+        const matchScore = patternWords.filter((pw: string) =>
+          words.some((w: string) => w.includes(pw) || pw.includes(w))
         ).length / patternWords.length
 
         return { ...pattern, matchScore }
       })
-      .filter(p => p.matchScore > 0.3)
-      .sort((a, b) => b.matchScore * b.success_rate - a.matchScore * a.success_rate)
+      .filter((p: RFIRoutingPattern & { matchScore: number }) => p.matchScore > 0.3)
+      .sort((a: RFIRoutingPattern & { matchScore: number }, b: RFIRoutingPattern & { matchScore: number }) => b.matchScore * b.success_rate - a.matchScore * a.success_rate)
 
     return scoredPatterns.slice(0, 3)
   },
@@ -379,14 +379,14 @@ Respond with JSON in this format:
       .limit(5)
 
     return {
-      rfis: (rfis || []).map(rfi => ({
+      rfis: (rfis || []).map((rfi: { id: string; rfi_number: number; subject: string; status: string }) => ({
         id: rfi.id,
-        number: rfi.rfi_number,
+        number: String(rfi.rfi_number),
         subject: rfi.subject,
         similarity: 0.7, // Placeholder - would use actual similarity scoring
         status: rfi.status,
       })),
-      submittals: (submittals || []).map(sub => ({
+      submittals: (submittals || []).map((sub: { id: string; submittal_number: string; title: string; status: string }) => ({
         id: sub.id,
         number: sub.submittal_number,
         subject: sub.title,

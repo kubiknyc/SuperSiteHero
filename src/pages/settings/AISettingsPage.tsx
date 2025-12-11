@@ -124,7 +124,7 @@ export default function AISettingsPage() {
   const testConfig = useTestAIConfiguration()
 
   const form = useForm<ConfigFormValues>({
-    resolver: zodResolver(configSchema),
+    resolver: zodResolver(configSchema) as any,
     defaultValues: {
       provider: config?.provider || 'openai',
       api_key: '',

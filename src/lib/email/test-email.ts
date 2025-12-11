@@ -25,7 +25,7 @@ export async function testEmailSending(recipientEmail: string): Promise<void> {
       invitedBy: 'System Test',
       accessLevel: 'Full Access',
       expiresAt: '7 days',
-      portalUrl: 'http://localhost:5173/portal/test',
+      invitationUrl: 'http://localhost:5173/portal/test',
     })
 
     console.log('[Email Test] Generated email content')

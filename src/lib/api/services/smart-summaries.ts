@@ -195,15 +195,20 @@ Provide a JSON response with:
       throw new Error('Meeting not found')
     }
 
+    // Handle attendees which is a JSON field (could be array or object)
+    const attendeesList = Array.isArray(meeting.attendees)
+      ? (meeting.attendees as string[]).join(', ')
+      : 'Not recorded';
+
     const prompt = `Analyze these meeting notes and extract action items:
 
-Meeting: ${meeting.title}
+Meeting: ${meeting.title || meeting.meeting_name || 'Untitled Meeting'}
 Project: ${(meeting.project as { name?: string } | null)?.name || 'Unknown'}
 Date: ${meeting.meeting_date}
-Attendees: ${meeting.attendees?.join(', ') || 'Not recorded'}
+Attendees: ${attendeesList}
 
 Notes:
-${meeting.notes || 'No notes recorded'}
+${meeting.discussion_notes || meeting.minutes_text || 'No notes recorded'}
 
 Provide a JSON response:
 {
@@ -251,7 +256,7 @@ Provide a JSON response:
         summary_content: aiResult.summary,
         key_points: aiResult.decisions,
         metrics: {
-          attendeeCount: meeting.attendees?.length || 0,
+          attendeeCount: Array.isArray(meeting.attendees) ? meeting.attendees.length : 0,
           actionItemCount: aiResult.actionItems.length,
           decisionsCount: aiResult.decisions.length,
         },
@@ -456,7 +461,9 @@ Provide a JSON response:
       throw new Error('No change orders found')
     }
 
-    const totalCost = changeOrders.reduce((sum, co) => sum + (co.amount || 0), 0)
+    // Use proposed_amount (or approved_amount if approved)
+    const getAmount = (co: typeof changeOrders[0]) => co.approved_amount ?? co.proposed_amount ?? 0;
+    const totalCost = changeOrders.reduce((sum, co) => sum + getAmount(co), 0)
     const approvedCOs = changeOrders.filter(co => co.status === 'approved')
     const pendingCOs = changeOrders.filter(co => co.status === 'pending')
 
@@ -464,11 +471,11 @@ Provide a JSON response:
 
 Total Change Orders: ${changeOrders.length}
 Total Cost Impact: $${totalCost.toLocaleString()}
-Approved: ${approvedCOs.length} ($${approvedCOs.reduce((s, c) => s + (c.amount || 0), 0).toLocaleString()})
-Pending: ${pendingCOs.length} ($${pendingCOs.reduce((s, c) => s + (c.amount || 0), 0).toLocaleString()})
+Approved: ${approvedCOs.length} ($${approvedCOs.reduce((s, c) => s + getAmount(c), 0).toLocaleString()})
+Pending: ${pendingCOs.length} ($${pendingCOs.reduce((s, c) => s + getAmount(c), 0).toLocaleString()})
 
 Change Order Details:
-${changeOrders.map(co => `- ${co.title}: $${(co.amount || 0).toLocaleString()} (${co.status}) - ${co.reason || 'No reason'}`).join('\n')}
+${changeOrders.map(co => `- ${co.title}: $${getAmount(co).toLocaleString()} (${co.status}) - ${co.justification || co.description || 'No reason'}`).join('\n')}
 
 Provide a JSON response:
 {

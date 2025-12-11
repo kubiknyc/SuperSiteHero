@@ -5,6 +5,10 @@
  */
 
 import { supabase } from '@/lib/supabase'
+
+// Use untyped supabase for tables not yet in generated types
+const supabaseAny = supabase as any
+
 import type {
   ActivityRiskPrediction,
   RiskFactor,
@@ -53,7 +57,7 @@ export const activityRiskScorer = {
     const endDate = new Date(analysisDate)
     endDate.setDate(endDate.getDate() + lookAheadWeeks * 7)
 
-    const { data: activities } = await supabase
+    const { data: activities } = await supabaseAny
       .from('look_ahead_activities')
       .select(`
         *,
@@ -448,7 +452,7 @@ export const activityRiskScorer = {
    */
   async getTradePerformance(projectId: string): Promise<Map<string, number>> {
     // Query historical PPC by trade from look_ahead_snapshots
-    const { data } = await supabase
+    const { data } = await supabaseAny
       .from('look_ahead_snapshots')
       .select('metrics')
       .eq('project_id', projectId)
@@ -512,7 +516,7 @@ export const activityRiskScorer = {
    * Get critical path activities
    */
   async getCriticalPathActivities(projectId: string): Promise<Set<string>> {
-    const { data } = await supabase
+    const { data } = await supabaseAny
       .from('critical_path_analysis')
       .select('critical_path_activities')
       .eq('project_id', projectId)
@@ -520,7 +524,7 @@ export const activityRiskScorer = {
       .limit(1)
       .single()
 
-    return new Set(data?.critical_path_activities || [])
+    return new Set((data as any)?.critical_path_activities || [])
   },
 
   /**
@@ -631,7 +635,7 @@ export const activityRiskScorer = {
   async savePredictions(predictions: ActivityRiskPrediction[]): Promise<void> {
     if (!predictions.length) return
 
-    const { error } = await supabase
+    const { error } = await supabaseAny
       .from('activity_risk_predictions')
       .upsert(
         predictions.map(p => ({
@@ -653,7 +657,7 @@ export const activityRiskScorer = {
     if (!alerts.length) return
 
     // Only insert new alerts (check for duplicates)
-    const { error } = await supabase
+    const { error } = await supabaseAny
       .from('risk_alerts')
       .insert(alerts)
 
