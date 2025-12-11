@@ -19,6 +19,7 @@ import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 import { VoiceInputButton } from '@/components/ui/voice-input'
+import { FloorPlanPinDrop, type PinLocation } from './FloorPlanPinDrop'
 
 interface CreatePunchItemDialogProps {
   projectId: string
@@ -46,6 +47,7 @@ export function CreatePunchItemDialog({
   const [status, setStatus] = useState<PunchItemStatus>('open')
   const [dueDate, setDueDate] = useState('')
   const [assignee, setAssignee] = useState<Assignee | null>(null)
+  const [floorPlanLocation, setFloorPlanLocation] = useState<PinLocation | null>(null)
 
   // Reset form when dialog closes
   React.useEffect(() => {
@@ -62,6 +64,7 @@ export function CreatePunchItemDialog({
       setStatus('open')
       setDueDate('')
       setAssignee(null)
+      setFloorPlanLocation(null)
     }
   }, [open])
 
@@ -243,6 +246,13 @@ export function CreatePunchItemDialog({
               />
             </div>
           </div>
+
+          {/* Floor Plan Pin Drop */}
+          <FloorPlanPinDrop
+            projectId={projectId}
+            value={floorPlanLocation}
+            onChange={setFloorPlanLocation}
+          />
 
           {/* Description with Voice Input */}
           <div>
