@@ -18,3 +18,7 @@ export { useOfflineSync } from './useOfflineSync'
 
 // Related data hooks
 export { useDailyReportFullData } from './useDailyReportRelatedData'
+
+// V2 hooks
+export { useOfflineSyncV2 } from './useOfflineSyncV2'
+export { useGeolocation, formatCoordinates, calculateDistance } from './useGeolocation'

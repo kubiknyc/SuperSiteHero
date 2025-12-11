@@ -95,6 +95,12 @@ const STATUS_CONFIG: Record<
     bgColor: 'bg-purple-100',
     icon: <Lock className="h-4 w-4" />,
   },
+  voided: {
+    label: 'Voided',
+    color: 'text-red-600',
+    bgColor: 'bg-red-100',
+    icon: <XCircle className="h-4 w-4" />,
+  },
 };
 
 export function ApprovalWorkflowPanel({

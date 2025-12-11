@@ -3,7 +3,7 @@
  * Supports upload, GPS metadata, and linking to other entries
  */
 
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
+import { Switch } from '@/components/ui/switch';
 import {
   Dialog,
   DialogContent,
@@ -40,9 +41,12 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle2,
+  Navigation,
+  MapPinOff,
 } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
 import { usePhotoUploadManager, type ProcessedPhoto } from '../../hooks/usePhotoUploadManager';
+import { useGeolocation, formatCoordinates } from '../../hooks/useGeolocation';
 import type { PhotoEntryV2, PhotoCategory } from '@/types/daily-reports-v2';
 
 const PHOTO_CATEGORIES: { value: PhotoCategory; label: string; color: string }[] = [
@@ -68,8 +72,24 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   const removePhoto = useDailyReportStoreV2((state) => state.removePhoto);
   const draftReport = useDailyReportStoreV2((state) => state.draftReport);
 
+  // For photo linking
+  const delays = useDailyReportStoreV2((state) => state.delays);
+  const safetyIncidents = useDailyReportStoreV2((state) => state.safetyIncidents);
+  const inspections = useDailyReportStoreV2((state) => state.inspections);
+  const deliveries = useDailyReportStoreV2((state) => state.deliveries);
+
   // Photo upload manager
   const { uploadProgress, processPhoto, isUploading } = usePhotoUploadManager();
+
+  // GPS capture
+  const {
+    position: currentPosition,
+    error: gpsError,
+    isLoading: isGpsLoading,
+    isSupported: gpsSupported,
+    permissionStatus,
+    getCurrentPosition,
+  } = useGeolocation();
 
   // Track pending processed photos (before actual upload)
   const [pendingPhotos, setPendingPhotos] = useState<Map<string, ProcessedPhoto>>(new Map());
@@ -80,6 +100,14 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   const [formData, setFormData] = useState<Partial<PhotoEntryV2>>({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [autoGpsEnabled, setAutoGpsEnabled] = useState(true); // Auto-capture GPS for photos without EXIF GPS
+
+  // Pre-fetch GPS when section is expanded and auto-GPS is enabled
+  useEffect(() => {
+    if (expanded && autoGpsEnabled && gpsSupported && !currentPosition && permissionStatus !== 'denied') {
+      getCurrentPosition();
+    }
+  }, [expanded, autoGpsEnabled, gpsSupported, currentPosition, permissionStatus, getCurrentPosition]);
 
   const stats = useMemo(() => {
     const byCategory = PHOTO_CATEGORIES.map((cat) => ({
@@ -99,6 +127,20 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
     setIsProcessing(true);
 
+    // Get current GPS position if auto-GPS is enabled and we don't have one cached
+    let fallbackGps: { latitude: number; longitude: number } | null = null;
+    if (autoGpsEnabled && gpsSupported) {
+      if (currentPosition) {
+        fallbackGps = { latitude: currentPosition.latitude, longitude: currentPosition.longitude };
+      } else {
+        // Try to get position now
+        const pos = await getCurrentPosition();
+        if (pos) {
+          fallbackGps = { latitude: pos.latitude, longitude: pos.longitude };
+        }
+      }
+    }
+
     try {
       for (const file of Array.from(files)) {
         const photoId = crypto.randomUUID();
@@ -115,6 +157,11 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
           reader.onload = (event) => {
             const dataUrl = event.target?.result as string;
 
+            // Use EXIF GPS if available, otherwise fall back to real-time GPS
+            const hasExifGps = processed.gpsLatitude !== undefined && processed.gpsLongitude !== undefined;
+            const gpsLatitude = hasExifGps ? processed.gpsLatitude : fallbackGps?.latitude;
+            const gpsLongitude = hasExifGps ? processed.gpsLongitude : fallbackGps?.longitude;
+
             // Create photo entry with pending status
             const newPhoto: PhotoEntryV2 = {
               id: photoId,
@@ -123,13 +170,18 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
               thumbnail_url: processed.thumbnailDataUrl,
               category: 'general',
               upload_status: 'pending',
-              gps_latitude: processed.gpsLatitude,
-              gps_longitude: processed.gpsLongitude,
+              gps_latitude: gpsLatitude,
+              gps_longitude: gpsLongitude,
               taken_at: processed.takenAt || new Date().toISOString(),
               created_at: new Date().toISOString(),
             };
 
             addPhoto(newPhoto);
+
+            // Show toast if GPS was added from device location
+            if (!hasExifGps && gpsLatitude && gpsLongitude) {
+              toast.success('GPS location added from device');
+            }
           };
           reader.readAsDataURL(processed.compressedFile || file);
         } catch (error: any) {
@@ -143,7 +195,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
         fileInputRef.current.value = '';
       }
     }
-  }, [draftReport?.id, addPhoto, processPhoto]);
+  }, [draftReport?.id, addPhoto, processPhoto, autoGpsEnabled, gpsSupported, currentPosition, getCurrentPosition]);
 
   const handleEdit = useCallback((photo: PhotoEntryV2) => {
     setFormData({ ...photo });
@@ -216,6 +268,61 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
           <CardContent className="border-t p-0">
             {/* Upload Area */}
             <div className="p-4 bg-gray-50 border-b">
+              {/* GPS Status Bar */}
+              {gpsSupported && (
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <Switch
+                        id="auto-gps"
+                        checked={autoGpsEnabled}
+                        onCheckedChange={setAutoGpsEnabled}
+                        className="data-[state=checked]:bg-green-500"
+                      />
+                      <Label htmlFor="auto-gps" className="text-sm text-gray-600 cursor-pointer">
+                        Auto GPS
+                      </Label>
+                    </div>
+                    {autoGpsEnabled && (
+                      <div className="flex items-center gap-1 text-xs">
+                        {isGpsLoading ? (
+                          <span className="text-blue-500 flex items-center gap-1">
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            Getting location...
+                          </span>
+                        ) : currentPosition ? (
+                          <span className="text-green-600 flex items-center gap-1">
+                            <MapPin className="h-3 w-3" />
+                            {formatCoordinates(currentPosition.latitude, currentPosition.longitude, 4)}
+                          </span>
+                        ) : gpsError ? (
+                          <span className="text-red-500 flex items-center gap-1">
+                            <MapPinOff className="h-3 w-3" />
+                            Location unavailable
+                          </span>
+                        ) : permissionStatus === 'denied' ? (
+                          <span className="text-amber-500 flex items-center gap-1">
+                            <AlertCircle className="h-3 w-3" />
+                            Permission denied
+                          </span>
+                        ) : null}
+                      </div>
+                    )}
+                  </div>
+                  {autoGpsEnabled && !currentPosition && !isGpsLoading && permissionStatus !== 'denied' && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => getCurrentPosition()}
+                      className="h-7 text-xs"
+                    >
+                      <Navigation className="h-3 w-3 mr-1" />
+                      Get Location
+                    </Button>
+                  )}
+                </div>
+              )}
+
               <div
                 className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                   isProcessing || isUploading
@@ -240,6 +347,12 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                     <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
                     <p className="text-sm text-gray-600">Click to upload photos</p>
                     <p className="text-xs text-gray-400">or drag and drop</p>
+                    {autoGpsEnabled && currentPosition && (
+                      <p className="text-xs text-green-500 mt-1 flex items-center justify-center gap-1">
+                        <MapPin className="h-3 w-3" />
+                        Location will be added to photos
+                      </p>
+                    )}
                   </>
                 )}
               </div>
@@ -342,6 +455,13 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         {photo.gps_latitude && photo.gps_longitude && (
                           <div className="absolute top-2 left-2">
                             <MapPin className="h-4 w-4 text-white drop-shadow" />
+                          </div>
+                        )}
+
+                        {/* Linked Indicator */}
+                        {photo.linked_to_type && photo.linked_to_id && (
+                          <div className="absolute bottom-2 right-2">
+                            <Tag className="h-4 w-4 text-white drop-shadow" />
                           </div>
                         )}
                       </div>
@@ -458,6 +578,106 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                 </div>
               </div>
             )}
+
+            {/* Link to Entry */}
+            <div className="space-y-2">
+              <Label>Link to Entry (Optional)</Label>
+              <Select
+                value={formData.linked_to_type && formData.linked_to_id
+                  ? `${formData.linked_to_type}:${formData.linked_to_id}`
+                  : 'none'
+                }
+                onValueChange={(value) => {
+                  if (value === 'none') {
+                    handleFormChange({ linked_to_type: undefined, linked_to_id: undefined });
+                  } else {
+                    const [type, id] = value.split(':');
+                    handleFormChange({ linked_to_type: type, linked_to_id: id });
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Not linked" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Not linked</SelectItem>
+
+                  {/* Delays */}
+                  {delays.length > 0 && (
+                    <>
+                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                        Delays
+                      </div>
+                      {delays.map((delay) => (
+                        <SelectItem key={`delay:${delay.id}`} value={`delay:${delay.id}`}>
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-amber-500" />
+                            {delay.delay_type} - {delay.description?.substring(0, 30) || 'Delay'}
+                            {delay.description && delay.description.length > 30 && '...'}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Safety Incidents */}
+                  {safetyIncidents.length > 0 && (
+                    <>
+                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                        Safety Incidents
+                      </div>
+                      {safetyIncidents.map((incident) => (
+                        <SelectItem key={`safety_incident:${incident.id}`} value={`safety_incident:${incident.id}`}>
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-red-500" />
+                            {incident.incident_type} - {incident.description?.substring(0, 30) || 'Incident'}
+                            {incident.description && incident.description.length > 30 && '...'}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Inspections */}
+                  {inspections.length > 0 && (
+                    <>
+                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                        Inspections
+                      </div>
+                      {inspections.map((inspection) => (
+                        <SelectItem key={`inspection:${inspection.id}`} value={`inspection:${inspection.id}`}>
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-purple-500" />
+                            {inspection.inspection_type} - {inspection.result || 'Pending'}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </>
+                  )}
+
+                  {/* Deliveries */}
+                  {deliveries.length > 0 && (
+                    <>
+                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                        Deliveries
+                      </div>
+                      {deliveries.map((delivery) => (
+                        <SelectItem key={`delivery:${delivery.id}`} value={`delivery:${delivery.id}`}>
+                          <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-orange-500" />
+                            {delivery.material_description?.substring(0, 40) || 'Delivery'}
+                            {delivery.material_description && delivery.material_description.length > 40 && '...'}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </>
+                  )}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-gray-500">
+                Link this photo to a delay, safety incident, inspection, or delivery for documentation
+              </p>
+            </div>
           </div>
 
           <DialogFooter>

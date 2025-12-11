@@ -149,6 +149,11 @@ export interface DailyReportV2 {
   rejection_reason?: string;
   locked_at?: string;
 
+  // Void metadata (P0 audit trail)
+  void_reason?: string;
+  voided_at?: string;
+  voided_by?: string;
+
   // Status
   status: ReportStatus;
   mode: FormMode;
@@ -329,6 +334,14 @@ export interface SafetyIncident {
   days_on_restricted_duty?: number; // Required for DART rate calculation
   date_of_death?: string; // Required for fatalities (OSHA 301)
   employee_status?: EmployeeStatus; // Determines OSHA 300 log scope
+
+  // Fatality/Hospitalization Tracking (P0 OSHA Compliance)
+  hospitalized?: boolean; // Whether injury resulted in hospitalization
+  hospitalization_count?: number; // Number hospitalized (24-hour reporting if 3+)
+  amputation?: boolean; // Whether injury involved amputation (24-hour reporting)
+  osha_notification_timestamp?: string; // When OSHA was notified
+  osha_notified_by?: string; // Who notified OSHA
+  osha_notification_method?: 'phone' | 'online' | 'in_person'; // How OSHA was notified
 
   // Details
   incident_time?: string;

@@ -37,6 +37,7 @@ const STATUS_BADGES: Record<ReportStatus, { label: string; className: string }> 
   changes_requested: { label: 'Changes Requested', className: 'bg-orange-100 text-orange-700' },
   approved: { label: 'Approved', className: 'bg-green-100 text-green-700' },
   locked: { label: 'Locked', className: 'bg-purple-100 text-purple-700' },
+  voided: { label: 'Voided', className: 'bg-red-100 text-red-700' },
 };
 
 interface HeaderBarProps {

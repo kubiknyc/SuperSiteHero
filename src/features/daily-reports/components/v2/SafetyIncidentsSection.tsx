@@ -535,21 +535,156 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
               </div>
             )}
 
-            {/* Fatality Date of Death - Required for OSHA 301 */}
-            {formData.incident_type === 'fatality' && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg space-y-4">
+            {/* Hospitalization & Amputation Tracking - OSHA 24-hour reporting */}
+            {['recordable', 'lost_time', 'fatality'].includes(formData.incident_type || '') && (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg space-y-4">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-red-600" />
-                  <span className="font-medium text-red-700">Fatality Information (OSHA 301)</span>
+                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  <span className="font-medium text-amber-700">Severe Injury Tracking (OSHA 24-hour reporting)</span>
                 </div>
-                <div className="space-y-2">
-                  <Label>Date of Death *</Label>
-                  <Input
-                    type="date"
-                    value={formData.date_of_death || ''}
-                    onChange={(e) => handleFormChange({ date_of_death: e.target.value })}
-                  />
-                  <p className="text-xs text-red-600">Required for OSHA fatality reporting within 8 hours</p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="hospitalized"
+                        checked={formData.hospitalized || false}
+                        onCheckedChange={(checked) =>
+                          handleFormChange({ hospitalized: checked as boolean })
+                        }
+                      />
+                      <div>
+                        <Label htmlFor="hospitalized">In-Patient Hospitalization</Label>
+                        <p className="text-xs text-amber-600 mt-1">
+                          OSHA 24-hour reporting required
+                        </p>
+                      </div>
+                    </div>
+                    {formData.hospitalized && (
+                      <div className="ml-6 space-y-2">
+                        <Label>Number Hospitalized</Label>
+                        <Input
+                          type="number"
+                          min="1"
+                          value={formData.hospitalization_count || 1}
+                          onChange={(e) => handleFormChange({ hospitalization_count: parseInt(e.target.value) || 1 })}
+                        />
+                        {(formData.hospitalization_count || 0) >= 3 && (
+                          <p className="text-xs text-red-600 font-medium">
+                            3+ workers hospitalized - OSHA notification required within 24 hours
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="flex items-start gap-3">
+                      <Checkbox
+                        id="amputation"
+                        checked={formData.amputation || false}
+                        onCheckedChange={(checked) =>
+                          handleFormChange({ amputation: checked as boolean })
+                        }
+                      />
+                      <div>
+                        <Label htmlFor="amputation">Amputation Injury</Label>
+                        <p className="text-xs text-amber-600 mt-1">
+                          OSHA 24-hour reporting required
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Fatality Information - OSHA 8-hour reporting */}
+            {formData.incident_type === 'fatality' && (
+              <div className="p-4 bg-red-50 border-2 border-red-500 rounded-lg space-y-4">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <span className="font-bold text-red-700">FATALITY - OSHA 8-HOUR REPORTING REQUIRED</span>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Date/Time of Death *</Label>
+                    <Input
+                      type="datetime-local"
+                      value={formData.date_of_death || ''}
+                      onChange={(e) => handleFormChange({ date_of_death: e.target.value })}
+                    />
+                  </div>
+
+                  <div className="p-3 bg-white rounded border border-red-300 space-y-3">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        id="osha_notified"
+                        checked={!!formData.osha_notification_timestamp}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            handleFormChange({
+                              osha_notification_timestamp: new Date().toISOString(),
+                              osha_notification_method: 'phone'
+                            });
+                          } else {
+                            handleFormChange({
+                              osha_notification_timestamp: undefined,
+                              osha_notified_by: undefined,
+                              osha_notification_method: undefined
+                            });
+                          }
+                        }}
+                      />
+                      <div>
+                        <Label htmlFor="osha_notified" className="text-red-700 font-medium">OSHA Has Been Notified</Label>
+                        <p className="text-xs text-red-600">Call 1-800-321-OSHA within 8 hours of fatality</p>
+                      </div>
+                    </div>
+
+                    {formData.osha_notification_timestamp && (
+                      <div className="grid grid-cols-2 gap-4 pt-2 border-t border-red-200">
+                        <div className="space-y-2">
+                          <Label>Notified By</Label>
+                          <Input
+                            type="text"
+                            value={formData.osha_notified_by || ''}
+                            onChange={(e) => handleFormChange({ osha_notified_by: e.target.value })}
+                            placeholder="Name of person who called OSHA"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label>Method</Label>
+                          <Select
+                            value={formData.osha_notification_method || 'phone'}
+                            onValueChange={(value) => handleFormChange({ osha_notification_method: value as 'phone' | 'online' | 'in_person' })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="phone">Phone (1-800-321-OSHA)</SelectItem>
+                              <SelectItem value="online">Online Portal</SelectItem>
+                              <SelectItem value="in_person">In Person</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="col-span-2">
+                          <p className="text-xs text-green-600">
+                            OSHA notified at: {new Date(formData.osha_notification_timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {!formData.osha_notification_timestamp && (
+                      <p className="text-xs text-red-700 font-medium">
+                        You must report this fatality to OSHA by telephone (1-800-321-OSHA) within 8 hours.
+                        Also notify: Project Manager, Safety Director, Legal, Insurance carrier.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             )}

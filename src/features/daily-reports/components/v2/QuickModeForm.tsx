@@ -15,6 +15,7 @@ import { EquipmentGrid } from './EquipmentGrid';
 import { DelayEntrySection } from './DelayEntry';
 import { StickyFooter } from './StickyFooter';
 import { SignatureCapture } from '../SignatureCapture';
+import { TemplateSelectorModal } from './TemplateSelectorModal';
 import {
   Dialog,
   DialogContent,
@@ -27,9 +28,10 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { PenTool } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
-import { useSaveDailyReportV2, useSubmitReportV2 } from '../../hooks/useDailyReportsV2';
+import { useSaveDailyReportV2, useSubmitReportV2, useTemplates } from '../../hooks/useDailyReportsV2';
 import { quickModeFormSchema } from '../../validation/dailyReportSchemaV2';
-import type { DailyReportV2 } from '@/types/daily-reports-v2';
+import { copyFromPreviousDay, applyTemplate } from '../../services/templateService';
+import type { DailyReportV2, DailyReportTemplate } from '@/types/daily-reports-v2';
 
 interface QuickModeFormProps {
   projectId: string;
@@ -66,6 +68,12 @@ export function QuickModeForm({
   const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   const [signature, setSignature] = useState<string | null>(null);
   const [signerName, setSignerName] = useState('');
+  const [templateModalOpen, setTemplateModalOpen] = useState(false);
+  const [templateModalType, setTemplateModalType] = useState<'workforce' | 'equipment' | 'both'>('both');
+  const [isCopyingFromYesterday, setIsCopyingFromYesterday] = useState(false);
+
+  // Fetch templates for the project
+  const { data: templates = [] } = useTemplates(projectId);
 
   // Initialize draft on mount
   useEffect(() => {
@@ -208,27 +216,84 @@ export function QuickModeForm({
     [toggleSection]
   );
 
-  // Copy from yesterday handlers
-  const handleCopyWorkforceFromYesterday = useCallback(() => {
-    // TODO: Implement copy from yesterday
-    toast.info('Copy from yesterday - coming soon!');
-  }, []);
+  // Store actions for applying data
+  const applyPreviousDayData = useDailyReportStoreV2((state) => state.applyPreviousDayData);
+  const applyTemplateToStore = useDailyReportStoreV2((state) => state.applyTemplate);
 
-  const handleCopyEquipmentFromYesterday = useCallback(() => {
-    // TODO: Implement copy from yesterday
-    toast.info('Copy from yesterday - coming soon!');
-  }, []);
+  // Copy from yesterday handlers
+  const handleCopyWorkforceFromYesterday = useCallback(async () => {
+    if (!draftReport || isCopyingFromYesterday) return;
+
+    setIsCopyingFromYesterday(true);
+    try {
+      const data = await copyFromPreviousDay(projectId, reportDate);
+      if (data && data.workforce.length > 0) {
+        applyPreviousDayData({ workforce: data.workforce as any });
+        toast.success(`Copied ${data.workforce.length} workforce entries from yesterday`);
+      } else {
+        toast.info('No workforce entries found from yesterday');
+      }
+    } catch (error) {
+      console.error('Failed to copy from yesterday:', error);
+      toast.error('Failed to copy workforce from yesterday');
+    } finally {
+      setIsCopyingFromYesterday(false);
+    }
+  }, [draftReport, isCopyingFromYesterday, projectId, reportDate, applyPreviousDayData]);
+
+  const handleCopyEquipmentFromYesterday = useCallback(async () => {
+    if (!draftReport || isCopyingFromYesterday) return;
+
+    setIsCopyingFromYesterday(true);
+    try {
+      const data = await copyFromPreviousDay(projectId, reportDate);
+      if (data && data.equipment.length > 0) {
+        applyPreviousDayData({ equipment: data.equipment as any });
+        toast.success(`Copied ${data.equipment.length} equipment entries from yesterday`);
+      } else {
+        toast.info('No equipment entries found from yesterday');
+      }
+    } catch (error) {
+      console.error('Failed to copy from yesterday:', error);
+      toast.error('Failed to copy equipment from yesterday');
+    } finally {
+      setIsCopyingFromYesterday(false);
+    }
+  }, [draftReport, isCopyingFromYesterday, projectId, reportDate, applyPreviousDayData]);
 
   // Template handlers
   const handleApplyWorkforceTemplate = useCallback(() => {
-    // TODO: Implement template picker
-    toast.info('Templates - coming soon!');
+    setTemplateModalType('workforce');
+    setTemplateModalOpen(true);
   }, []);
 
   const handleApplyEquipmentTemplate = useCallback(() => {
-    // TODO: Implement template picker
-    toast.info('Templates - coming soon!');
+    setTemplateModalType('equipment');
+    setTemplateModalOpen(true);
   }, []);
+
+  // Handle template selection from modal
+  const handleTemplateSelect = useCallback((template: DailyReportTemplate) => {
+    const templateData = applyTemplate(template);
+
+    if (templateModalType === 'workforce' && templateData.workforce.length > 0) {
+      applyTemplateToStore({ workforce: templateData.workforce });
+      toast.success(`Applied ${templateData.workforce.length} workforce entries from template "${template.name}"`);
+    } else if (templateModalType === 'equipment' && templateData.equipment.length > 0) {
+      applyTemplateToStore({ equipment: templateData.equipment });
+      toast.success(`Applied ${templateData.equipment.length} equipment entries from template "${template.name}"`);
+    } else if (templateModalType === 'both') {
+      applyTemplateToStore(templateData);
+      const counts = [];
+      if (templateData.workforce.length > 0) counts.push(`${templateData.workforce.length} workforce`);
+      if (templateData.equipment.length > 0) counts.push(`${templateData.equipment.length} equipment`);
+      toast.success(`Applied ${counts.join(' and ')} entries from template "${template.name}"`);
+    } else {
+      toast.info('Template has no entries for the selected type');
+    }
+
+    setTemplateModalOpen(false);
+  }, [templateModalType, applyTemplateToStore]);
 
   if (!draftReport) {
     return (
@@ -343,6 +408,15 @@ export function QuickModeForm({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Template Selector Modal */}
+      <TemplateSelectorModal
+        open={templateModalOpen}
+        onOpenChange={setTemplateModalOpen}
+        templates={templates}
+        filterType={templateModalType}
+        onSelect={handleTemplateSelect}
+      />
     </div>
   );
 }

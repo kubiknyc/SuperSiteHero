@@ -10,6 +10,7 @@ import type {
   DailyReportV2,
   FormMode,
   ShiftType,
+  ReportStatus,
   WorkforceEntryV2,
   EquipmentEntryV2,
   DelayEntry,
@@ -80,7 +81,7 @@ export interface DraftReportV2 {
   schedule_status?: 'on_schedule' | 'ahead' | 'behind';
 
   // Status
-  status: 'draft' | 'submitted' | 'in_review' | 'changes_requested' | 'approved' | 'locked';
+  status: ReportStatus;
 
   // Signatures
   submitted_by_signature?: string;
