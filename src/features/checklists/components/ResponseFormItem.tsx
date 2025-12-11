@@ -11,6 +11,7 @@ import { Check, X, Minus, Camera, PenTool } from 'lucide-react'
 import { PhotoGallery } from './PhotoGallery'
 import { PhotoCaptureDialog } from './PhotoCaptureDialog'
 import { SignatureCaptureDialog } from './SignatureCaptureDialog'
+import { VoiceInputButton } from '@/components/ui/voice-input'
 import type {
   ChecklistResponse,
   ChecklistTemplateItem,
@@ -157,15 +158,25 @@ export function ResponseFormItem({
 
     if (isMultiline) {
       return (
-        <textarea
-          value={currentValue}
-          onChange={(e) => handleChange(e.target.value)}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          disabled={disabled}
-          rows={4}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-        />
+        <div className="relative">
+          <textarea
+            value={currentValue}
+            onChange={(e) => handleChange(e.target.value)}
+            placeholder={placeholder || 'Enter text (tap mic to dictate)'}
+            maxLength={maxLength}
+            disabled={disabled}
+            rows={4}
+            className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+          />
+          <div className="absolute right-2 top-2">
+            <VoiceInputButton
+              onTranscript={handleChange}
+              currentValue={currentValue}
+              mode="append"
+              disabled={disabled}
+            />
+          </div>
+        </div>
       )
     }
 
@@ -358,21 +369,35 @@ export function ResponseFormItem({
       {/* Item Input */}
       <div className="mb-3">{renderInput()}</div>
 
-      {/* Notes Section */}
+      {/* Notes Section with Voice Input */}
       <div>
         <Label htmlFor={`notes-${response.id}`} className="text-sm text-gray-700 mb-1">
           Notes (optional)
         </Label>
-        <textarea
-          id={`notes-${response.id}`}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          onBlur={handleNotesBlur}
-          placeholder="Add any additional notes..."
-          rows={2}
-          disabled={disabled}
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-        />
+        <div className="relative">
+          <textarea
+            id={`notes-${response.id}`}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            onBlur={handleNotesBlur}
+            placeholder="Add any additional notes (tap mic to dictate)..."
+            rows={2}
+            disabled={disabled}
+            className="w-full px-3 py-2 pr-12 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+          />
+          <div className="absolute right-2 top-2">
+            <VoiceInputButton
+              onTranscript={(text) => {
+                setNotes(text)
+                // Trigger blur to save
+                onChange({ notes: text.trim() || null })
+              }}
+              currentValue={notes}
+              mode="append"
+              disabled={disabled}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -10,13 +10,16 @@ import { CreatePunchItemDialog } from '@/features/punch-lists/components/CreateP
 import { EditPunchItemDialog } from '@/features/punch-lists/components/EditPunchItemDialog'
 import { DeletePunchItemConfirmation } from '@/features/punch-lists/components/DeletePunchItemConfirmation'
 import { PunchItemStatusBadge } from '@/features/punch-lists/components/PunchItemStatusBadge'
+import { QuickPunchMode } from '@/features/punch-lists/components/QuickPunchMode'
+import { QRCodeScanner, FloatingScanButton } from '@/features/punch-lists/components/QRCodeScanner'
+import { BatchQRCodePrint } from '@/features/punch-lists/components/PunchItemQRCode'
 import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks } from 'lucide-react'
+import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks, Zap } from 'lucide-react'
 import { format } from 'date-fns'
 import type { PunchItem } from '@/types/database'
 
@@ -30,6 +33,7 @@ export function PunchListsPage() {
 
   // Dialog states
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [quickPunchOpen, setQuickPunchOpen] = useState(false)
   const [editingPunchItem, setEditingPunchItem] = useState<PunchItem | null>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
 
@@ -160,10 +164,24 @@ export function PunchListsPage() {
             <p className="text-gray-600 mt-1">Track and manage punch list items</p>
           </div>
           {activeProjectId && (
-            <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              New Punch Item
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <QRCodeScanner buttonLabel="Scan QR" buttonVariant="outline" />
+              <Button
+                variant="default"
+                className="bg-green-600 hover:bg-green-700"
+                onClick={() => setQuickPunchOpen(true)}
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Quick Punch
+              </Button>
+              <Button variant="outline" onClick={() => setCreateDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                New Punch Item
+              </Button>
+              {filteredPunchItems && filteredPunchItems.length > 0 && (
+                <BatchQRCodePrint punchItems={filteredPunchItems} />
+              )}
+            </div>
           )}
         </div>
 
@@ -431,6 +449,15 @@ export function PunchListsPage() {
           />
         )}
 
+        {/* Quick Punch Mode */}
+        {activeProjectId && (
+          <QuickPunchMode
+            projectId={activeProjectId}
+            open={quickPunchOpen}
+            onOpenChange={setQuickPunchOpen}
+          />
+        )}
+
         {/* Edit Dialog */}
         {editingPunchItem && (
           <EditPunchItemDialog
@@ -444,6 +471,9 @@ export function PunchListsPage() {
             }}
           />
         )}
+
+        {/* Floating scan button for mobile */}
+        <FloatingScanButton />
       </div>
     </AppLayout>
   )

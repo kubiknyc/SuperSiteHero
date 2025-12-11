@@ -202,7 +202,7 @@ Provide a JSON response with:
 
     const prompt = `Analyze these meeting notes and extract action items:
 
-Meeting: ${meeting.title || meeting.meeting_name || 'Untitled Meeting'}
+Meeting: ${(meeting as any).title || meeting.meeting_name || 'Untitled Meeting'}
 Project: ${(meeting.project as { name?: string } | null)?.name || 'Unknown'}
 Date: ${meeting.meeting_date}
 Attendees: ${attendeesList}

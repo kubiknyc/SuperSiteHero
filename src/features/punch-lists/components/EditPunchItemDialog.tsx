@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { VoiceInputButton } from '@/components/ui/voice-input'
 
 interface EditPunchItemDialogProps {
   punchItem: PunchItem | null
@@ -249,28 +250,48 @@ export function EditPunchItemDialog({
             </div>
           </div>
 
-          {/* Description */}
+          {/* Description with Voice Input */}
           <div>
             <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Detailed description of the punch item"
-              rows={3}
-            />
+            <div className="relative">
+              <Textarea
+                id="description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Detailed description of the punch item (tap mic to dictate)"
+                rows={3}
+                className="pr-12"
+              />
+              <div className="absolute right-2 top-2">
+                <VoiceInputButton
+                  onTranscript={setDescription}
+                  currentValue={description}
+                  mode="append"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Location Notes */}
+          {/* Location Notes with Voice Input */}
           <div>
             <Label htmlFor="location_notes">Location Notes</Label>
-            <Textarea
-              id="location_notes"
-              value={locationNotes}
-              onChange={(e) => setLocationNotes(e.target.value)}
-              placeholder="Additional location details"
-              rows={2}
-            />
+            <div className="relative">
+              <Textarea
+                id="location_notes"
+                value={locationNotes}
+                onChange={(e) => setLocationNotes(e.target.value)}
+                placeholder="Additional location details (tap mic to dictate)"
+                rows={2}
+                className="pr-12"
+              />
+              <div className="absolute right-2 top-2">
+                <VoiceInputButton
+                  onTranscript={setLocationNotes}
+                  currentValue={locationNotes}
+                  mode="append"
+                />
+              </div>
+            </div>
           </div>
 
           <DialogFooter>

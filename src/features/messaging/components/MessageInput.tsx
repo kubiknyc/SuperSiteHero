@@ -9,7 +9,7 @@
  */
 
 import { useState, useRef, useCallback, useEffect, KeyboardEvent } from 'react'
-import { Send, Paperclip, Smile, X, AtSign, Loader2, Zap, AlertTriangle, AlertCircle } from 'lucide-react'
+import { Send, Paperclip, Smile, X, AtSign, Loader2, Zap, AlertTriangle, AlertCircle, Mic, MicOff } from 'lucide-react'
 import {
   Button,
   Input,
@@ -28,6 +28,7 @@ import { createMention, isValidMessageContent, MESSAGE_PRIORITY_CONFIG } from '@
 import { cn } from '@/lib/utils'
 import { uploadMessageAttachments } from '@/lib/storage/message-uploads'
 import { toast } from '@/lib/notifications/ToastContext'
+import { useVoiceToText } from '@/hooks/useVoiceToText'
 
 interface MessageInputProps {
   conversationId: string
@@ -116,6 +117,22 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
 
   // Send message mutation
   const sendMessage = useSendMessage()
+
+  // Voice-to-text for hands-free messaging
+  const {
+    isListening,
+    isSupported: voiceSupported,
+    startListening,
+    stopListening,
+  } = useVoiceToText({
+    onTranscript: (text, isFinal) => {
+      if (isFinal) {
+        // Append voice transcript to existing content
+        const newContent = content ? `${content} ${text}` : text
+        setContent(newContent)
+      }
+    },
+  })
 
   // Filter participants for mention autocomplete
   const filteredParticipants = participants.filter((p) => {
@@ -397,6 +414,27 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
           className="hidden"
           accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
         />
+
+        {/* Voice input button */}
+        {voiceSupported && (
+          <Button
+            type="button"
+            variant={isListening ? 'destructive' : 'ghost'}
+            size="sm"
+            className={cn(
+              'h-9 w-9 p-0 flex-shrink-0',
+              isListening && 'animate-pulse'
+            )}
+            onClick={isListening ? stopListening : startListening}
+            title={isListening ? 'Stop recording' : 'Voice input (tap to speak)'}
+          >
+            {isListening ? (
+              <MicOff className="h-5 w-5" />
+            ) : (
+              <Mic className="h-5 w-5" />
+            )}
+          </Button>
+        )}
 
         {/* Text input */}
         <div className="flex-1 relative">
