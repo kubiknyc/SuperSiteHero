@@ -55,3 +55,7 @@ export type { BidSubmittedEmailData } from './bid-submitted'
 
 export { generatePortalInvitationEmail } from './portal-invitation'
 export type { PortalInvitationEmailData } from './portal-invitation'
+
+// Checklist Templates
+export { generateChecklistFailedItemsEmail } from './checklist-failed-items'
+export type { ChecklistFailedItemsEmailData } from './checklist-failed-items'

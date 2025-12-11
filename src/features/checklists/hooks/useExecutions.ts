@@ -4,6 +4,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { checklistsApi } from '@/lib/api/services/checklists'
+import { useChecklistEscalation } from './useChecklistEscalation'
 import type {
   ChecklistExecution,
   ChecklistExecutionWithResponses,
@@ -11,6 +12,7 @@ import type {
   ChecklistFilters,
 } from '@/types/checklists'
 import toast from 'react-hot-toast'
+import { logger } from '@/lib/utils/logger'
 
 /**
  * Fetch all executions with optional filters
@@ -120,6 +122,66 @@ export function useDeleteExecution() {
     },
     onError: (error: any) => {
       toast.error(error?.message || 'Failed to delete checklist')
+    },
+  })
+}
+
+/**
+ * Submit an execution with automatic escalation for failed items
+ * This hook handles the full submission flow:
+ * 1. Submit the checklist
+ * 2. Check for failed items
+ * 3. Trigger escalation notifications if needed
+ */
+export function useSubmitExecutionWithEscalation() {
+  const queryClient = useQueryClient()
+  const { triggerEscalation, calculateSeverityLevel } = useChecklistEscalation()
+
+  return useMutation({
+    mutationFn: async (executionId: string) => {
+      // First, fetch the execution with responses to check for failures
+      const executionWithResponses = await checklistsApi.getExecutionWithResponses(executionId)
+
+      // Submit the execution
+      const submittedExecution = await checklistsApi.submitExecution(executionId)
+
+      // Return both for the onSuccess callback
+      return { execution: submittedExecution, responses: executionWithResponses.responses }
+    },
+    onSuccess: async ({ execution, responses }) => {
+      // Invalidate queries
+      queryClient.invalidateQueries({ queryKey: ['checklist-executions'], exact: false })
+      queryClient.invalidateQueries({ queryKey: ['checklist-execution', execution.id] })
+      queryClient.invalidateQueries({ queryKey: ['checklist-execution-with-responses', execution.id] })
+
+      // Check if there are failed items
+      if (execution.score_fail > 0) {
+        const failurePercentage = execution.score_total > 0
+          ? (execution.score_fail / execution.score_total) * 100
+          : 0
+        const severity = calculateSeverityLevel(failurePercentage)
+
+        // Trigger escalation
+        try {
+          const result = await triggerEscalation(execution, responses)
+
+          if (result.triggered) {
+            toast.success(
+              `Checklist submitted. ${result.recipientCount} supervisor${result.recipientCount > 1 ? 's' : ''} notified about ${execution.score_fail} failed item${execution.score_fail > 1 ? 's' : ''}.`
+            )
+          } else {
+            toast.success('Checklist submitted successfully')
+          }
+        } catch (error) {
+          logger.error('[SubmitWithEscalation] Escalation failed:', error)
+          toast.success('Checklist submitted. Note: Escalation notifications may have failed.')
+        }
+      } else {
+        toast.success('Checklist submitted successfully')
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to submit checklist')
     },
   })
 }
