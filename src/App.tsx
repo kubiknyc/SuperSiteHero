@@ -30,9 +30,9 @@ const ProjectDetailPage = lazy(() => import('./pages/projects/ProjectDetailPage'
 
 // Daily Reports feature
 const DailyReportsPage = lazy(() => import('./pages/daily-reports/DailyReportsPage').then(m => ({ default: m.DailyReportsPage })))
-const NewDailyReportPage = lazy(() => import('./pages/daily-reports/NewDailyReportPage').then(m => ({ default: m.NewDailyReportPage })))
+const NewDailyReportPage = lazy(() => import('./pages/daily-reports/NewDailyReportPageV2').then(m => ({ default: m.NewDailyReportPageV2 })))
 const DailyReportDetailPage = lazy(() => import('./pages/daily-reports/DailyReportDetailPage').then(m => ({ default: m.DailyReportDetailPage })))
-const DailyReportEditPage = lazy(() => import('./pages/daily-reports/DailyReportEditPage').then(m => ({ default: m.DailyReportEditPage })))
+const DailyReportEditPage = lazy(() => import('./pages/daily-reports/DailyReportEditPageV2').then(m => ({ default: m.DailyReportEditPageV2 })))
 
 // Tasks feature
 const TasksPage = lazy(() => import('./pages/tasks/TasksPage').then(m => ({ default: m.TasksPage })))

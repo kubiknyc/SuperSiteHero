@@ -96,6 +96,7 @@ function getNotificationMessage(payload: NotificationPayload): string {
     report_approved: `Your daily report${projectInfo}${dateInfo} has been approved.`,
     changes_requested: `Changes have been requested on your daily report${projectInfo}${dateInfo}. ${payload.message || ''}`,
     report_locked: `The daily report${projectInfo}${dateInfo} has been locked and is now finalized.`,
+    report_voided: `The daily report${projectInfo}${dateInfo} has been voided. ${payload.message ? `Reason: ${payload.message}` : ''}`,
     pending_review_reminder: `A daily report${projectInfo}${dateInfo} is awaiting your review.`,
     overdue_draft_reminder: `You have an incomplete daily report${projectInfo}${dateInfo}. Please complete and submit it.`,
   };
