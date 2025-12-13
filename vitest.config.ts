@@ -5,6 +5,16 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      '@testing-library/react',
+      '@testing-library/jest-dom',
+      'vitest',
+    ],
+  },
   test: {
     globals: true,
     environment: 'jsdom',

@@ -282,6 +282,22 @@ Set these in your deployment platform:
 - `VITE_SUPABASE_ANON_KEY`
 - `VITE_APP_ENV=production`
 
+## Security
+
+### Known Development Dependencies
+
+This project uses Vitest 2.1.8 for testing, which has known moderate-severity vulnerabilities in development dependencies (esbuild <=0.24.2):
+
+- **Vulnerability**: GHSA-67mh-4wv8-2f99 - esbuild dev server request vulnerability
+- **Severity**: Moderate
+- **Scope**: Development environment only (not production)
+- **Impact**: Malicious websites could send requests to local dev server
+- **Mitigation**: Avoid visiting untrusted websites while development server is running
+
+**Rationale**: We use Vitest 2.1.8 instead of the latest 4.x version because Vitest 4.0.15 has a critical bug ("failed to find the runner") that prevents all tests from running. The development-only moderate vulnerabilities are an acceptable trade-off for a functional test suite.
+
+**Production Impact**: None - these vulnerabilities only affect the development server and build tools, not the production application.
+
 ## Roadmap
 
 ### Phase 2 (Future)
