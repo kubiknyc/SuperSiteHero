@@ -5,7 +5,7 @@
  * Includes both the 300 log and 300A annual summary formats.
  */
 
-import * as XLSX from 'xlsx'
+import ExcelJS from 'exceljs'
 import type { OSHA300LogEntry, OSHA300ASummary } from '@/types/safety-incidents'
 import {
   getOSHAInjuryIllnessTypeLabel,
@@ -113,18 +113,16 @@ export async function exportOSHA300ToExcel(
   summary: OSHA300ASummary | null,
   options: ExportOptions
 ): Promise<Blob> {
-  const workbook = XLSX.utils.book_new()
+  const workbook = new ExcelJS.Workbook()
 
   // Create OSHA 300 Log sheet
-  const logSheet = createOSHA300LogSheet(entries, options)
-  XLSX.utils.book_append_sheet(workbook, logSheet, 'OSHA 300 Log')
+  createOSHA300LogSheet(workbook, entries, options)
 
   // Create OSHA 300A Summary sheet
-  const summarySheet = createOSHA300ASummarySheet(entries, summary, options)
-  XLSX.utils.book_append_sheet(workbook, summarySheet, 'OSHA 300A Summary')
+  createOSHA300ASummarySheet(workbook, entries, summary, options)
 
   // Generate Excel file
-  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+  const excelBuffer = await workbook.xlsx.writeBuffer()
   return new Blob([excelBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   })
@@ -133,19 +131,19 @@ export async function exportOSHA300ToExcel(
 /**
  * Create the OSHA 300 Log worksheet
  */
-function createOSHA300LogSheet(entries: OSHA300LogEntry[], options: ExportOptions): XLSX.WorkSheet {
-  const data: (string | number | null)[][] = []
+function createOSHA300LogSheet(workbook: ExcelJS.Workbook, entries: OSHA300LogEntry[], options: ExportOptions): void {
+  const worksheet = workbook.addWorksheet('OSHA 300 Log')
 
   // Header section
-  data.push(['OSHA Form 300'])
-  data.push(['Log of Work-Related Injuries and Illnesses'])
-  data.push([])
-  data.push(['Establishment Name:', options.establishmentName])
-  data.push(['Calendar Year:', options.year])
-  data.push([])
+  worksheet.addRow(['OSHA Form 300'])
+  worksheet.addRow(['Log of Work-Related Injuries and Illnesses'])
+  worksheet.addRow([])
+  worksheet.addRow(['Establishment Name:', options.establishmentName])
+  worksheet.addRow(['Calendar Year:', options.year])
+  worksheet.addRow([])
 
   // Column headers matching OSHA Form 300 layout
-  data.push([
+  worksheet.addRow([
     '(A) Case No.',
     '(B) Employee Name',
     '(C) Job Title',
@@ -169,7 +167,7 @@ function createOSHA300LogSheet(entries: OSHA300LogEntry[], options: ExportOption
   // Data rows
   entries.forEach((entry) => {
     const type = entry.injury_illness_type
-    data.push([
+    worksheet.addRow([
       entry.case_number || '',
       entry.employee_name || 'Privacy Case',
       entry.job_title || '',
@@ -192,8 +190,8 @@ function createOSHA300LogSheet(entries: OSHA300LogEntry[], options: ExportOption
   })
 
   // Totals row
-  data.push([])
-  data.push([
+  worksheet.addRow([])
+  worksheet.addRow([
     'PAGE TOTALS',
     '',
     '',
@@ -214,42 +212,40 @@ function createOSHA300LogSheet(entries: OSHA300LogEntry[], options: ExportOption
     entries.reduce((sum, e) => sum + e.days_transfer_restriction, 0),
   ])
 
-  // Create worksheet
-  const sheet = XLSX.utils.aoa_to_sheet(data)
-
   // Set column widths
-  sheet['!cols'] = [
-    { wch: 12 }, // Case No.
-    { wch: 20 }, // Employee Name
-    { wch: 15 }, // Job Title
-    { wch: 12 }, // Date
-    { wch: 20 }, // Location
-    { wch: 40 }, // Description
-    { wch: 8 },  // G
-    { wch: 8 },  // H
-    { wch: 8 },  // I
-    { wch: 8 },  // J
-    { wch: 8 },  // K
-    { wch: 8 },  // L
-    { wch: 8 },  // M
-    { wch: 8 },  // N
-    { wch: 8 },  // O
-    { wch: 8 },  // P
-    { wch: 12 }, // Days Away
-    { wch: 12 }, // Days Restricted
+  worksheet.columns = [
+    { width: 12 }, // Case No.
+    { width: 20 }, // Employee Name
+    { width: 15 }, // Job Title
+    { width: 12 }, // Date
+    { width: 20 }, // Location
+    { width: 40 }, // Description
+    { width: 8 },  // G
+    { width: 8 },  // H
+    { width: 8 },  // I
+    { width: 8 },  // J
+    { width: 8 },  // K
+    { width: 8 },  // L
+    { width: 8 },  // M
+    { width: 8 },  // N
+    { width: 8 },  // O
+    { width: 8 },  // P
+    { width: 12 }, // Days Away
+    { width: 12 }, // Days Restricted
   ]
-
-  return sheet
 }
 
 /**
  * Create the OSHA 300A Summary worksheet
  */
 function createOSHA300ASummarySheet(
+  workbook: ExcelJS.Workbook,
   entries: OSHA300LogEntry[],
   summary: OSHA300ASummary | null,
   options: ExportOptions
-): XLSX.WorkSheet {
+): void {
+  const worksheet = workbook.addWorksheet('OSHA 300A Summary')
+
   // Calculate totals from entries if no summary provided
   const deaths = summary?.total_deaths ?? entries.filter((e) => e.death).length
   const daysAwayCases = summary?.total_days_away_cases ?? entries.filter((e) => e.days_away_from_work).length
@@ -272,81 +268,74 @@ function createOSHA300ASummarySheet(
   const dartCases = daysAwayCases + jobTransferCases
   const dart = options.hoursWorked ? calculateDARTRate(dartCases, options.hoursWorked) : 'N/A'
 
-  const data: (string | number)[][] = []
-
   // Header
-  data.push(['OSHA Form 300A'])
-  data.push(['Summary of Work-Related Injuries and Illnesses'])
-  data.push([])
+  worksheet.addRow(['OSHA Form 300A'])
+  worksheet.addRow(['Summary of Work-Related Injuries and Illnesses'])
+  worksheet.addRow([])
 
   // Establishment information
-  data.push(['Establishment Information'])
-  data.push(['Establishment Name:', options.establishmentName])
-  data.push(['Street Address:', options.address || ''])
-  data.push(['City:', options.city || ''])
-  data.push(['State:', options.state || ''])
-  data.push(['ZIP:', options.zip || ''])
-  data.push(['Industry Description (NAICS):', options.naicsCode || ''])
-  data.push([])
+  worksheet.addRow(['Establishment Information'])
+  worksheet.addRow(['Establishment Name:', options.establishmentName])
+  worksheet.addRow(['Street Address:', options.address || ''])
+  worksheet.addRow(['City:', options.city || ''])
+  worksheet.addRow(['State:', options.state || ''])
+  worksheet.addRow(['ZIP:', options.zip || ''])
+  worksheet.addRow(['Industry Description (NAICS):', options.naicsCode || ''])
+  worksheet.addRow([])
 
   // Employment information
-  data.push(['Employment Information'])
-  data.push(['Annual Average Number of Employees:', options.averageEmployees || ''])
-  data.push(['Total Hours Worked by All Employees:', options.hoursWorked || ''])
-  data.push([])
+  worksheet.addRow(['Employment Information'])
+  worksheet.addRow(['Annual Average Number of Employees:', options.averageEmployees || ''])
+  worksheet.addRow(['Total Hours Worked by All Employees:', options.hoursWorked || ''])
+  worksheet.addRow([])
 
   // Injury and Illness Summary
-  data.push(['Injury and Illness Types'])
-  data.push([''])
-  data.push(['Number of Cases'])
-  data.push(['  (G) Total Deaths:', deaths])
-  data.push(['  (H) Total Cases with Days Away from Work:', daysAwayCases])
-  data.push(['  (I) Total Cases with Job Transfer or Restriction:', jobTransferCases])
-  data.push(['  (J) Total Other Recordable Cases:', otherCases])
-  data.push([])
+  worksheet.addRow(['Injury and Illness Types'])
+  worksheet.addRow([''])
+  worksheet.addRow(['Number of Cases'])
+  worksheet.addRow(['  (G) Total Deaths:', deaths])
+  worksheet.addRow(['  (H) Total Cases with Days Away from Work:', daysAwayCases])
+  worksheet.addRow(['  (I) Total Cases with Job Transfer or Restriction:', jobTransferCases])
+  worksheet.addRow(['  (J) Total Other Recordable Cases:', otherCases])
+  worksheet.addRow([])
 
-  data.push(['Number of Days'])
-  data.push(['  Total Days Away from Work:', totalDaysAway])
-  data.push(['  Total Days of Job Transfer or Restriction:', totalDaysRestricted])
-  data.push([])
+  worksheet.addRow(['Number of Days'])
+  worksheet.addRow(['  Total Days Away from Work:', totalDaysAway])
+  worksheet.addRow(['  Total Days of Job Transfer or Restriction:', totalDaysRestricted])
+  worksheet.addRow([])
 
-  data.push(['Injury and Illness Types'])
-  data.push(['  (1) Injuries:', injuries])
-  data.push(['  (2) Skin Disorders:', skinDisorders])
-  data.push(['  (3) Respiratory Conditions:', respiratoryConditions])
-  data.push(['  (4) Poisonings:', poisonings])
-  data.push(['  (5) Hearing Loss:', hearingLoss])
-  data.push(['  (6) All Other Illnesses:', otherIllnesses])
-  data.push([])
+  worksheet.addRow(['Injury and Illness Types'])
+  worksheet.addRow(['  (1) Injuries:', injuries])
+  worksheet.addRow(['  (2) Skin Disorders:', skinDisorders])
+  worksheet.addRow(['  (3) Respiratory Conditions:', respiratoryConditions])
+  worksheet.addRow(['  (4) Poisonings:', poisonings])
+  worksheet.addRow(['  (5) Hearing Loss:', hearingLoss])
+  worksheet.addRow(['  (6) All Other Illnesses:', otherIllnesses])
+  worksheet.addRow([])
 
   // Calculated Rates
-  data.push(['Calculated Rates (per 100 Full-Time Equivalent Workers)'])
-  data.push(['  Total Recordable Incident Rate (TRIR):', trir])
-  data.push(['  Days Away, Restricted, or Transferred (DART) Rate:', dart])
-  data.push(['  Total Recordable Cases:', totalRecordable])
-  data.push(['  DART Cases (Days Away + Job Transfer):', dartCases])
-  data.push([])
+  worksheet.addRow(['Calculated Rates (per 100 Full-Time Equivalent Workers)'])
+  worksheet.addRow(['  Total Recordable Incident Rate (TRIR):', trir])
+  worksheet.addRow(['  Days Away, Restricted, or Transferred (DART) Rate:', dart])
+  worksheet.addRow(['  Total Recordable Cases:', totalRecordable])
+  worksheet.addRow(['  DART Cases (Days Away + Job Transfer):', dartCases])
+  worksheet.addRow([])
 
   // Certification
-  data.push(['Certification'])
-  data.push(['Post this annual summary from February 1 to April 30 of the year following the calendar year covered.'])
-  data.push([])
-  data.push(['Calendar Year:', options.year])
-  data.push(['Company Executive:', options.companyExecutive || ''])
-  data.push(['Title:', ''])
-  data.push(['Phone:', options.phone || ''])
-  data.push(['Date:', new Date().toLocaleDateString()])
-
-  // Create worksheet
-  const sheet = XLSX.utils.aoa_to_sheet(data)
+  worksheet.addRow(['Certification'])
+  worksheet.addRow(['Post this annual summary from February 1 to April 30 of the year following the calendar year covered.'])
+  worksheet.addRow([])
+  worksheet.addRow(['Calendar Year:', options.year])
+  worksheet.addRow(['Company Executive:', options.companyExecutive || ''])
+  worksheet.addRow(['Title:', ''])
+  worksheet.addRow(['Phone:', options.phone || ''])
+  worksheet.addRow(['Date:', new Date().toLocaleDateString()])
 
   // Set column widths
-  sheet['!cols'] = [
-    { wch: 50 },
-    { wch: 20 },
+  worksheet.columns = [
+    { width: 50 },
+    { width: 20 },
   ]
-
-  return sheet
 }
 
 // ============================================================================

@@ -18,6 +18,8 @@ import type { AnnotationType } from '@/types/markup'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import toast from 'react-hot-toast'
+import { useLiveCursors } from '@/hooks/useLiveCursors'
+import { RelativeCursorsContainer, OnlineUsersIndicator } from '@/components/realtime/LiveCursor'
 
 type Tool = AnnotationType | 'select' | 'pan' | 'eraser'
 
@@ -146,6 +148,12 @@ export function UnifiedDrawingCanvas({
 
   // Auth hook
   const { user } = useAuth()
+
+  // Live cursors for real-time collaboration
+  const canvasContainerRef = useRef<HTMLDivElement>(null)
+  const { cursors, setContainer, isConnected, broadcastCursorPosition } = useLiveCursors(
+    `canvas-${documentId}-${pageNumber || 0}`
+  )
 
   // Link dialog state
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
@@ -559,10 +567,19 @@ export function UnifiedDrawingCanvas({
 
   // Handle mouse move - update current shape or pan
   const handleMouseMove = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (readOnly) {return}
-
     const pos = e.target.getStage()?.getPointerPosition()
     if (!pos) {return}
+
+    // Update live cursor position for collaboration (works even in readOnly mode)
+    if (canvasContainerRef.current) {
+      const rect = canvasContainerRef.current.getBoundingClientRect()
+      // Convert canvas position to relative percentage for cursor display
+      const relativeX = ((pos.x * scale + position.x) / rect.width) * 100
+      const relativeY = ((pos.y * scale + position.y) / rect.height) * 100
+      broadcastCursorPosition({ x: relativeX, y: relativeY })
+    }
+
+    if (readOnly) {return}
 
     // Pan mode
     if (tool === 'pan' && isPanning.current) {
@@ -888,7 +905,17 @@ export function UnifiedDrawingCanvas({
   }
 
   return (
-    <div className="relative w-full h-full flex flex-col">
+    <div ref={canvasContainerRef} className="relative w-full h-full flex flex-col">
+      {/* Online Users Indicator for Real-time Collaboration */}
+      {cursors.length > 0 && (
+        <div className="absolute top-2 right-2 z-20">
+          <OnlineUsersIndicator cursors={cursors} />
+        </div>
+      )}
+
+      {/* Live Cursors Overlay */}
+      <RelativeCursorsContainer cursors={cursors} />
+
       {/* Toolbar */}
       {!readOnly && (
         <>
