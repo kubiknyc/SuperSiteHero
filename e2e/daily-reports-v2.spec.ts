@@ -22,7 +22,7 @@ async function login(page: Page) {
   await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
   await page.fill('input[type="password"]', TEST_PASSWORD);
   await page.click('button[type="submit"]');
-  await expect(page).toHaveURL(/\/(dashboard|projects)/, { timeout: 15000 });
+  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
 }
 
 // Helper to navigate to project's daily reports

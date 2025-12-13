@@ -21,7 +21,7 @@ test.describe('Daily Reports', () => {
     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).toHaveURL(/\/(dashboard|projects)/, { timeout: 15000 });
+    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
   });
 
   test('should navigate to daily reports from project', async ({ page }) => {

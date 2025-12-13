@@ -47,6 +47,7 @@ import {
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
 import { usePhotoUploadManager, type ProcessedPhoto } from '../../hooks/usePhotoUploadManager';
 import { useGeolocation, formatCoordinates } from '../../hooks/useGeolocation';
+import { BatchUploadProgress } from './BatchUploadProgress';
 import type { PhotoEntryV2, PhotoCategory } from '@/types/daily-reports-v2';
 
 const PHOTO_CATEGORIES: { value: PhotoCategory; label: string; color: string }[] = [
@@ -79,7 +80,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   const deliveries = useDailyReportStoreV2((state) => state.deliveries);
 
   // Photo upload manager
-  const { uploadProgress, processPhoto, isUploading } = usePhotoUploadManager();
+  const { uploadProgress, processPhoto, isUploading, clearProgress } = usePhotoUploadManager();
 
   // GPS capture
   const {
@@ -365,6 +366,16 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                 onChange={handleFileSelect}
                 disabled={isProcessing || isUploading}
               />
+
+              {/* Batch Upload Progress Indicator */}
+              {Object.keys(uploadProgress).length > 0 && (
+                <BatchUploadProgress
+                  uploadProgress={uploadProgress}
+                  isUploading={isUploading}
+                  onDismiss={clearProgress}
+                  className="mt-3"
+                />
+              )}
             </div>
 
             {/* Photo Grid */}
