@@ -173,10 +173,10 @@ User-defined reporting system:
 
 | Done | Feature | Effort | Priority | Notes |
 |------|---------|--------|----------|-------|
-| [ ] | Safety Observation Cards | 3 days | High | Positive safety reporting |
-| [ ] | Near-Miss Trend Analysis | 2 days | High | Identify patterns |
+| [x] | Safety Observation Cards | 3 days | High | Positive safety reporting |
+| [x] | Near-Miss Trend Analysis | 2 days | High | Identify patterns |
 | [x] | Safety Training Tracking | 4 days | Medium | Track certifications |
-| [ ] | TRIR/DART Auto-Calculation | 2 days | High | OSHA recordable rates |
+| [x] | TRIR/DART Auto-Calculation | 2 days | High | OSHA recordable rates |
 | [ ] | Safety Gamification/Leaderboard | 1 week | Low | Incentivize safety |
 | [x] | Safety Meeting Minutes Integration | 2 days | Medium | Link to meetings module |
 | [x] | OSHA 300 Log | 1 week | High | Recordable incident log |

@@ -545,14 +545,14 @@ export function generateRecommendations(data: {
   category: string
   title: string
   description: string
-  suggestedActions: string[]
+  suggested_actions: string[]
 }> {
   const recommendations: Array<{
     priority: 'high' | 'medium' | 'low'
     category: string
     title: string
     description: string
-    suggestedActions: string[]
+    suggested_actions: string[]
   }> = []
 
   // Location-based recommendations
@@ -563,7 +563,7 @@ export function generateRecommendations(data: {
       category: 'Location Safety',
       title: `Focus Safety Attention on "${topLoc.location}"`,
       description: `This location has ${topLoc.incident_count} near-misses in the past 90 days, with ${topLoc.high_severity_count} having high severity potential.`,
-      suggestedActions: [
+      suggested_actions: [
         'Conduct a safety walkthrough of the area',
         'Review and update safety signage',
         'Consider additional PPE requirements',
@@ -608,7 +608,7 @@ export function generateRecommendations(data: {
       category: 'Root Cause Analysis',
       title: `Address "${topCause.category.replace('_', ' ')}" as Primary Root Cause`,
       description: `This root cause category accounts for ${topCause.count} near-misses.`,
-      suggestedActions: causeActions[topCause.category] || [
+      suggested_actions: causeActions[topCause.category] || [
         'Conduct detailed root cause analysis',
         'Develop corrective action plan',
         'Monitor for recurrence',
@@ -628,7 +628,7 @@ export function generateRecommendations(data: {
       category: 'Time-Based Patterns',
       title: `Increase Vigilance During Peak Hours (Around ${hourLabel})`,
       description: `${topHour.count} near-misses occurred during this hour.`,
-      suggestedActions: [
+      suggested_actions: [
         'Schedule additional safety walks during this time',
         'Consider fatigue management if late in shift',
         'Review work scheduling to reduce risk',
@@ -643,7 +643,7 @@ export function generateRecommendations(data: {
       category: 'Trend Alert',
       title: 'Near-Miss Frequency is Increasing',
       description: 'The trend shows an upward pattern in near-miss reports.',
-      suggestedActions: [
+      suggested_actions: [
         'Convene safety committee meeting',
         'Review recent changes in operations',
         'Increase safety observation frequency',

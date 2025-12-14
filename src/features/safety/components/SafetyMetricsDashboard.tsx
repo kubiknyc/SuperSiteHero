@@ -110,9 +110,9 @@ function MetricCard({
     )
   }
 
-  const status = getStatus(value, benchmark)
+  const status = getStatus(value, benchmark ?? null)
   const statusColors = getStatusColor(status)
-  const percentChange = calculatePercentChange(value, previousValue)
+  const percentChange = calculatePercentChange(value, previousValue ?? null)
   const benchmarkVariance = benchmark ? calculateBenchmarkVariance(value, benchmark) : null
 
   return (
@@ -148,7 +148,7 @@ function MetricCard({
             </div>
           )}
 
-          {benchmarkVariance?.percentVariance !== null && (
+          {benchmarkVariance?.percentVariance !== null && benchmarkVariance && (
             <div className={cn(
               'flex items-center gap-1',
               benchmarkVariance.isBetter ? 'text-green-600' : 'text-red-600'

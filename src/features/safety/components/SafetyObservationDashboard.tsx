@@ -229,7 +229,7 @@ export function SafetyObservationDashboard({
                     const count = stats?.by_type[type] || 0
                     const Icon = TYPE_ICONS[type]
                     const percentage =
-                      stats?.total_observations > 0
+                      stats?.total_observations && stats.total_observations > 0
                         ? ((count / stats.total_observations) * 100).toFixed(0)
                         : 0
 
@@ -377,7 +377,7 @@ export function SafetyObservationDashboard({
                 <div className="space-y-3">
                   {indicators?.category_breakdown.slice(0, 6).map((cat) => {
                     const percentage =
-                      stats?.total_observations > 0
+                      stats?.total_observations && stats.total_observations > 0
                         ? (cat.count / stats.total_observations) * 100
                         : 0
 

@@ -9,21 +9,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/lib/notifications/ToastContext'
 import { nearMissAnalyticsApi } from '@/lib/api/services/near-miss-analytics'
 import type {
-  NearMissAnalyticsSummary,
-  DailyTrendPoint,
-  LocationHeatMapData,
-  TimeMatrix,
-  RootCauseParetoData,
-  FrequencySpike,
-  LocationHotspot,
-  TrendCalculation,
-  NearMissPattern,
-  NearMissAlert,
-  NearMissZone,
-  NearMissCategory,
-  AlertThreshold,
-  MonthlyReport,
-  SafetyBenchmark,
   NearMissAnalyticsFilters,
   CreateZoneDTO,
   CreateCategoryDTO,
@@ -244,7 +229,7 @@ export function useUpdatePattern() {
         message: 'The pattern has been updated successfully.',
       })
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: 'error',
         title: 'Error',
@@ -312,7 +297,7 @@ export function useDismissAlert() {
         message: 'The alert has been dismissed.',
       })
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: 'error',
         title: 'Error',
@@ -356,7 +341,7 @@ export function useCreateZone() {
         message: `Zone "${zone.name}" has been created.`,
       })
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: 'error',
         title: 'Error',
@@ -397,7 +382,7 @@ export function useCreateCategory() {
         message: `Category "${category.name}" has been created.`,
       })
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: 'error',
         title: 'Error',
@@ -445,7 +430,7 @@ export function useCreateThreshold() {
         message: 'The alert threshold has been created.',
       })
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       showToast({
         type: 'error',
         title: 'Error',
