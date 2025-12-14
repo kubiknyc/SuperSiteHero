@@ -19,13 +19,13 @@ export interface PortalInvitationEmailData {
 
 export function generatePortalInvitationEmail(data: PortalInvitationEmailData): { html: string; text: string } {
   const content = `
-    <h1>You're Invited to SuperSiteHero</h1>
+    <h1>You're Invited to JobSight</h1>
 
     <p>Hi ${data.recipientName},</p>
 
     <p>
       <strong>${data.invitedBy}</strong> has invited you to access the
-      <strong>${data.projectName}</strong> project on SuperSiteHero.
+      <strong>${data.projectName}</strong> project on JobSight.
     </p>
 
     <div class="info-box">
@@ -81,7 +81,7 @@ export function generatePortalInvitationEmail(data: PortalInvitationEmailData): 
   `
 
   const html = wrapInBaseTemplate({
-    preheader: `You've been invited to access ${data.projectName} on SuperSiteHero`,
+    preheader: `You've been invited to access ${data.projectName} on JobSight`,
     content,
   })
 

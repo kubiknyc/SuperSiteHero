@@ -9,6 +9,7 @@
  */
 
 import { supabase } from '../../supabase';
+import { changeOrderBudgetIntegration } from './change-order-budget-integration';
 import type {
   ChangeOrder,
   ChangeOrderItem,
@@ -271,6 +272,7 @@ export const changeOrdersApiV2 = {
 
   /**
    * Process owner approval (convert PCO to CO)
+   * Automatically adjusts project budgets when approved.
    */
   async processOwnerApproval(id: string, dto: OwnerApprovalDTO): Promise<ChangeOrder> {
     if (!dto.approved) {
@@ -323,6 +325,28 @@ export const changeOrdersApiV2 = {
       .single();
 
     if (error) throw error;
+
+    // AUTO-ADJUST BUDGET: Apply budget adjustments after successful approval
+    try {
+      const hasProcessed = await changeOrderBudgetIntegration.hasBeenProcessed(id);
+      if (!hasProcessed && dto.approved_amount) {
+        const budgetResult = await changeOrderBudgetIntegration.applyBudgetAdjustments(
+          id,
+          dto.approved_amount
+        );
+        console.log(`Budget adjusted for CO-${data.co_number}:`, {
+          total: budgetResult.total_adjusted,
+          costCodes: budgetResult.adjustments.length,
+          created: budgetResult.created_budgets,
+          updated: budgetResult.updated_budgets,
+        });
+      }
+    } catch (budgetError) {
+      // Log but don't fail the approval if budget adjustment fails
+      console.error('Failed to apply budget adjustments:', budgetError);
+      // Could optionally notify admin or create an alert here
+    }
+
     return data;
   },
 
@@ -345,8 +369,18 @@ export const changeOrdersApiV2 = {
 
   /**
    * Void a change order
+   * Reverses budget adjustments if the CO was already approved.
    */
   async voidChangeOrder(id: string, reason?: string): Promise<ChangeOrder> {
+    // Check if this CO was approved (has budget adjustments to reverse)
+    const { data: existingCO } = await db
+      .from('change_orders')
+      .select('status, co_number')
+      .eq('id', id)
+      .single();
+
+    const wasApproved = existingCO?.status === 'approved';
+
     const { data, error } = await db
       .from('change_orders')
       .update({
@@ -358,6 +392,23 @@ export const changeOrdersApiV2 = {
       .single();
 
     if (error) throw error;
+
+    // REVERSE BUDGET: If CO was approved, reverse the budget adjustments
+    if (wasApproved) {
+      try {
+        const hasProcessed = await changeOrderBudgetIntegration.hasBeenProcessed(id);
+        if (hasProcessed) {
+          const reverseResult = await changeOrderBudgetIntegration.reverseBudgetAdjustments(id);
+          console.log(`Budget reversed for voided CO-${existingCO.co_number}:`, {
+            total: Math.abs(reverseResult.total_adjusted),
+            costCodes: reverseResult.adjustments.length,
+          });
+        }
+      } catch (budgetError) {
+        console.error('Failed to reverse budget adjustments:', budgetError);
+      }
+    }
+
     return data;
   },
 

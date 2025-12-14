@@ -16,6 +16,7 @@ import {
   useMarkPaymentApplicationPaid,
   useDeletePaymentApplication,
   useBulkUpdateSOVItems,
+  useUpdatePaymentApplicationSignature,
   formatCurrency,
   formatPercent,
   PAYMENT_APPLICATION_STATUSES,
@@ -47,7 +48,10 @@ import {
   Banknote,
   AlertTriangle,
   Download,
+  PenTool,
+  FileSignature,
 } from 'lucide-react'
+import { DocumentSignatureDialog, type SignatureData } from '@/components/shared'
 import { cn } from '@/lib/utils'
 import {
   buildG702Data,
@@ -71,6 +75,10 @@ export function PaymentApplicationDetailPage() {
   const [paymentReference, setPaymentReference] = useState('')
   const [isExporting, setIsExporting] = useState(false)
 
+  // Signature dialog state
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false)
+  const [signatureRole, setSignatureRole] = useState<'contractor' | 'architect' | 'owner'>('contractor')
+
   // Fetch data
   const { data: application, isLoading, error } = usePaymentApplication(applicationId)
   const { data: sovItems, isLoading: sovLoading } = useScheduleOfValues(applicationId)
@@ -83,6 +91,7 @@ export function PaymentApplicationDetailPage() {
   const markPaidMutation = useMarkPaymentApplicationPaid()
   const deleteMutation = useDeletePaymentApplication()
   const bulkUpdateMutation = useBulkUpdateSOVItems()
+  const signatureMutation = useUpdatePaymentApplicationSignature()
 
   const isLoading2 = submitMutation.isPending || approveMutation.isPending ||
     rejectMutation.isPending || markPaidMutation.isPending || bulkUpdateMutation.isPending
@@ -171,6 +180,48 @@ export function PaymentApplicationDetailPage() {
     if (confirm('Are you sure you want to delete this payment application?')) {
       await deleteMutation.mutateAsync(applicationId)
       navigate('/payment-applications')
+    }
+  }
+
+  // Signature handlers
+  const openSignatureDialog = (role: 'contractor' | 'architect' | 'owner') => {
+    setSignatureRole(role)
+    setSignatureDialogOpen(true)
+  }
+
+  const handleSignatureComplete = async (data: SignatureData) => {
+    if (!applicationId) return
+
+    await signatureMutation.mutateAsync({
+      id: applicationId,
+      role: signatureRole,
+      signatureUrl: data.signatureUrl,
+      signatureDate: data.signedAt,
+    })
+  }
+
+  const handleSignatureRemove = async () => {
+    if (!applicationId) return
+
+    await signatureMutation.mutateAsync({
+      id: applicationId,
+      role: signatureRole,
+      signatureUrl: null,
+      signatureDate: null,
+    })
+  }
+
+  const getExistingSignature = () => {
+    if (!application) return null
+    switch (signatureRole) {
+      case 'contractor':
+        return application.contractor_signature_url
+      case 'architect':
+        return application.architect_signature_url
+      case 'owner':
+        return application.owner_signature_url
+      default:
+        return null
     }
   }
 
@@ -553,6 +604,169 @@ export function PaymentApplicationDetailPage() {
           </CardContent>
         </Card>
 
+        {/* Signatures Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileSignature className="h-5 w-5 text-indigo-600" />
+              Signatures
+            </CardTitle>
+            <CardDescription>
+              Required signatures for certification and approval
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Contractor Signature */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-gray-700">Contractor</h4>
+                  {application.contractor_signature_url ? (
+                    <Badge className="bg-green-100 text-green-700">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Signed
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-gray-500">
+                      <Clock className="h-3 w-3 mr-1" />
+                      Pending
+                    </Badge>
+                  )}
+                </div>
+                {application.contractor_signature_url ? (
+                  <div className="space-y-2">
+                    <div className="border rounded-lg p-3 bg-gray-50">
+                      <img
+                        src={application.contractor_signature_url}
+                        alt="Contractor signature"
+                        className="max-h-16 mx-auto"
+                      />
+                    </div>
+                    {application.contractor_signature_date && (
+                      <p className="text-xs text-gray-500 text-center">
+                        Signed: {format(new Date(application.contractor_signature_date), 'MMM d, yyyy')}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
+                    <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-500">No signature</p>
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => openSignatureDialog('contractor')}
+                  disabled={!canEdit && !canSubmit}
+                >
+                  <PenTool className="h-4 w-4 mr-2" />
+                  {application.contractor_signature_url ? 'Update' : 'Sign'}
+                </Button>
+              </div>
+
+              {/* Architect Signature */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-gray-700">Architect</h4>
+                  {application.architect_signature_url ? (
+                    <Badge className="bg-green-100 text-green-700">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Signed
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-gray-500">
+                      <Clock className="h-3 w-3 mr-1" />
+                      Pending
+                    </Badge>
+                  )}
+                </div>
+                {application.architect_signature_url ? (
+                  <div className="space-y-2">
+                    <div className="border rounded-lg p-3 bg-gray-50">
+                      <img
+                        src={application.architect_signature_url}
+                        alt="Architect signature"
+                        className="max-h-16 mx-auto"
+                      />
+                    </div>
+                    {application.architect_signature_date && (
+                      <p className="text-xs text-gray-500 text-center">
+                        Signed: {format(new Date(application.architect_signature_date), 'MMM d, yyyy')}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
+                    <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-500">No signature</p>
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => openSignatureDialog('architect')}
+                  disabled={!canApprove}
+                >
+                  <PenTool className="h-4 w-4 mr-2" />
+                  {application.architect_signature_url ? 'Update' : 'Sign'}
+                </Button>
+              </div>
+
+              {/* Owner Signature */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-medium text-gray-700">Owner</h4>
+                  {application.owner_signature_url ? (
+                    <Badge className="bg-green-100 text-green-700">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      Signed
+                    </Badge>
+                  ) : (
+                    <Badge variant="outline" className="text-gray-500">
+                      <Clock className="h-3 w-3 mr-1" />
+                      Pending
+                    </Badge>
+                  )}
+                </div>
+                {application.owner_signature_url ? (
+                  <div className="space-y-2">
+                    <div className="border rounded-lg p-3 bg-gray-50">
+                      <img
+                        src={application.owner_signature_url}
+                        alt="Owner signature"
+                        className="max-h-16 mx-auto"
+                      />
+                    </div>
+                    {application.owner_signature_date && (
+                      <p className="text-xs text-gray-500 text-center">
+                        Signed: {format(new Date(application.owner_signature_date), 'MMM d, yyyy')}
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
+                    <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-500">No signature</p>
+                  </div>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => openSignatureDialog('owner')}
+                  disabled={!canApprove}
+                >
+                  <PenTool className="h-4 w-4 mr-2" />
+                  {application.owner_signature_url ? 'Update' : 'Sign'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Lien Waiver Checklist */}
         {application.project_id && applicationId && (
           <WaiverChecklist
@@ -685,6 +899,28 @@ export function PaymentApplicationDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Signature Capture Dialog */}
+      <DocumentSignatureDialog
+        open={signatureDialogOpen}
+        onOpenChange={setSignatureDialogOpen}
+        documentType="payment_application"
+        documentId={applicationId || ''}
+        documentName={application?.display_number || 'Payment Application'}
+        role={signatureRole}
+        roleLabel={
+          signatureRole === 'contractor'
+            ? 'Contractor'
+            : signatureRole === 'architect'
+            ? 'Architect'
+            : 'Owner'
+        }
+        existingSignature={getExistingSignature()}
+        onSignatureComplete={handleSignatureComplete}
+        onSignatureRemove={handleSignatureRemove}
+        requireSignerInfo={true}
+        allowDocuSign={true}
+      />
     </AppLayout>
   )
 }

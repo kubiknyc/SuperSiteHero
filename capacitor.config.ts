@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.supersitehero.app',
-  appName: 'SuperSiteHero',
+  appId: 'com.jobsightapp.app',
+  appName: 'JobSight',
   webDir: 'dist',
   server: {
     // Enable this for development with live reload

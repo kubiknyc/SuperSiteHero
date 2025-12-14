@@ -8,3 +8,6 @@ export { SubmittalStatusBadge } from './SubmittalStatusBadge'
 
 // NEW: Dedicated submittals table components
 export { CreateDedicatedSubmittalDialog } from './CreateDedicatedSubmittalDialog'
+
+// Lead Time Analytics
+export { LeadTimeAnalytics } from './LeadTimeAnalytics'

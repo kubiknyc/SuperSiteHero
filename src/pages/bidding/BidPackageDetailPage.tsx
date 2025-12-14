@@ -54,6 +54,9 @@ import {
   BidInvitationTable,
   BidSubmissionTable,
   SendInvitationDialog,
+  BidQuestionsSection,
+  BidAddendaSection,
+  BidComparisonView,
 } from '@/features/bidding/components'
 import {
   useBidPackage,
@@ -309,6 +312,8 @@ export default function BidPackageDetailPage() {
             Questions
             <Badge variant="secondary" className="ml-2">{questions?.length || 0}</Badge>
           </TabsTrigger>
+          <TabsTrigger value="addenda">Addenda</TabsTrigger>
+          <TabsTrigger value="comparison">Bid Comparison</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -543,55 +548,28 @@ export default function BidPackageDetailPage() {
 
         {/* Questions Tab */}
         <TabsContent value="questions">
-          <Card>
-            <CardHeader>
-              <CardTitle>Bidder Questions</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {isLoadingQuestions ? (
-                <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-                </div>
-              ) : !questions || questions.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                  <p>No questions have been submitted yet</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {questions.map((question) => (
-                    <div key={question.id} className="border rounded-lg p-4">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Badge variant="outline">Q{question.question_number}</Badge>
-                            <span className="text-sm text-muted-foreground">
-                              {question.submitted_by_company || question.submitted_by_name}
-                            </span>
-                            <span className="text-sm text-muted-foreground">
-                              {format(new Date(question.submitted_at), 'MMM d, yyyy')}
-                            </span>
-                          </div>
-                          <p className="font-medium">{question.question}</p>
-                          {question.answer && (
-                            <div className="mt-4 pl-4 border-l-2 border-green-500">
-                              <div className="text-sm text-muted-foreground mb-1">Answer:</div>
-                              <p>{question.answer}</p>
-                            </div>
-                          )}
-                        </div>
-                        <Badge
-                          variant={question.status === 'answered' ? 'default' : 'secondary'}
-                        >
-                          {question.status}
-                        </Badge>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <BidQuestionsSection packageId={packageId!} />
+        </TabsContent>
+
+        {/* Addenda Tab */}
+        <TabsContent value="addenda">
+          <BidAddendaSection
+            packageId={packageId!}
+            currentBidDueDate={bidPackage.bid_due_date}
+          />
+        </TabsContent>
+
+        {/* Bid Comparison Tab */}
+        <TabsContent value="comparison">
+          <BidComparisonView
+            packageId={packageId!}
+            estimatedValue={bidPackage.estimated_value}
+            canAward={bidPackage.status !== 'awarded'}
+            onAwardBid={(id) => {
+              setSelectedSubmissionId(id)
+              setAwardDialogOpen(true)
+            }}
+          />
         </TabsContent>
       </Tabs>
 

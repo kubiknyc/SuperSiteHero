@@ -233,7 +233,7 @@ export async function exportSubmittalsToExcel(
 
   // Create workbook
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'SuperSiteHero'
+  workbook.creator = 'JobSight'
   workbook.created = new Date()
 
   // Submittal Log sheet

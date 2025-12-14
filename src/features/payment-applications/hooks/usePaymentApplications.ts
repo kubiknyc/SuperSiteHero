@@ -442,6 +442,54 @@ export function useMarkPaymentApplicationPaid() {
 }
 
 /**
+ * Update payment application signature
+ */
+export function useUpdatePaymentApplicationSignature() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      role,
+      signatureUrl,
+      signatureDate,
+    }: {
+      id: string
+      role: 'contractor' | 'architect' | 'owner'
+      signatureUrl: string | null
+      signatureDate: string | null
+    }) => {
+      const updateFields: Record<string, string | null> = {}
+
+      if (role === 'contractor') {
+        updateFields.contractor_signature_url = signatureUrl
+        updateFields.contractor_signature_date = signatureDate
+      } else if (role === 'architect') {
+        updateFields.architect_signature_url = signatureUrl
+        updateFields.architect_signature_date = signatureDate
+      } else if (role === 'owner') {
+        updateFields.owner_signature_url = signatureUrl
+        updateFields.owner_signature_date = signatureDate
+      }
+
+      const { data, error } = await supabase
+        .from('payment_applications')
+        .update(updateFields)
+        .eq('id', id)
+        .select()
+        .single()
+
+      if (error) throw error
+      return data as PaymentApplication
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: paymentApplicationKeys.detail(data.id) })
+      queryClient.invalidateQueries({ queryKey: paymentApplicationKeys.list(data.project_id) })
+    },
+  })
+}
+
+/**
  * Delete (soft delete) payment application
  */
 export function useDeletePaymentApplication() {

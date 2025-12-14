@@ -134,6 +134,8 @@ const SubcontractorPunchItemsPage = lazy(() => import('./pages/subcontractor-por
 const SubcontractorTasksPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorTasksPage').then(m => ({ default: m.SubcontractorTasksPage })))
 const SubcontractorProjectsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorProjectsPage').then(m => ({ default: m.SubcontractorProjectsPage })))
 const SubcontractorCompliancePage = lazy(() => import('./pages/subcontractor-portal/SubcontractorCompliancePage').then(m => ({ default: m.SubcontractorCompliancePage })))
+const SubcontractorDailyReportsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorDailyReportsPage').then(m => ({ default: m.SubcontractorDailyReportsPage })))
+const SubcontractorDailyReportDetailPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorDailyReportDetailPage').then(m => ({ default: m.SubcontractorDailyReportDetailPage })))
 const AcceptInvitationPage = lazy(() => import('./pages/auth/AcceptInvitationPage').then(m => ({ default: m.AcceptInvitationPage })))
 
 // Client Portal feature
@@ -184,6 +186,9 @@ const EquipmentPage = lazy(() => import('./pages/equipment/EquipmentPage').then(
 // Budget feature
 const BudgetPage = lazy(() => import('./pages/budget/BudgetPage').then(m => ({ default: m.BudgetPage })))
 
+// Cost Tracking feature
+const CostTrackingPage = lazy(() => import('./pages/cost-tracking/CostTrackingPage').then(m => ({ default: m.CostTrackingPage })))
+
 // Permits feature
 const PermitsPage = lazy(() => import('./pages/permits/PermitsPage').then(m => ({ default: m.PermitsPage })))
 const PermitDetailPage = lazy(() => import('./pages/permits/PermitDetailPage').then(m => ({ default: m.PermitDetailPage })))
@@ -217,6 +222,7 @@ const CloseoutPage = lazy(() => import('./pages/closeout/CloseoutPage').then(m =
 
 // Custom Report Builder feature
 const ReportBuilderPage = lazy(() => import('./pages/reports/ReportBuilderPage').then(m => ({ default: m.ReportBuilderPage })))
+const ScheduledReportFormPage = lazy(() => import('./pages/reports/ScheduledReportFormPage').then(m => ({ default: m.ScheduledReportFormPage })))
 
 // QuickBooks Integration feature
 const QuickBooksPage = lazy(() => import('./pages/settings/QuickBooksPage').then(m => ({ default: m.QuickBooksPage })))
@@ -450,6 +456,9 @@ function App() {
                 {/* Budget feature */}
                 <Route path="/budget" element={<ProtectedRoute><BudgetPage /></ProtectedRoute>} />
 
+                {/* Cost Tracking feature */}
+                <Route path="/cost-tracking" element={<ProtectedRoute><CostTrackingPage /></ProtectedRoute>} />
+
                 {/* Permits feature */}
                 <Route path="/permits" element={<ProtectedRoute><PermitsPage /></ProtectedRoute>} />
                 <Route path="/permits/:id" element={<ProtectedRoute><PermitDetailPage /></ProtectedRoute>} />
@@ -501,6 +510,8 @@ function App() {
                 {/* Custom Report Builder feature */}
                 <Route path="/reports/builder" element={<ProtectedRoute><ReportBuilderPage /></ProtectedRoute>} />
                 <Route path="/reports/builder/:templateId" element={<ProtectedRoute><ReportBuilderPage /></ProtectedRoute>} />
+                <Route path="/reports/schedules/new" element={<ProtectedRoute><ScheduledReportFormPage /></ProtectedRoute>} />
+                <Route path="/reports/schedules/:id" element={<ProtectedRoute><ScheduledReportFormPage /></ProtectedRoute>} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
@@ -511,6 +522,8 @@ function App() {
                   <Route path="punch-items" element={<SubcontractorPunchItemsPage />} />
                   <Route path="tasks" element={<SubcontractorTasksPage />} />
                   <Route path="compliance" element={<SubcontractorCompliancePage />} />
+                  <Route path="daily-reports" element={<SubcontractorDailyReportsPage />} />
+                  <Route path="daily-reports/:reportId" element={<SubcontractorDailyReportDetailPage />} />
                 </Route>
 
                 {/* Client Portal feature - role-protected routes */}

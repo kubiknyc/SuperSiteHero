@@ -58,3 +58,15 @@ export {
   useValidateInvitation,
   useAcceptInvitation,
 } from './useInvitations'
+
+// Daily Reports (read-only access)
+export {
+  dailyReportKeys,
+  useCanViewDailyReports,
+  useSubcontractorDailyReports,
+  useSubcontractorDailyReportDetail,
+  useSubcontractorDailyReportWorkforce,
+  useSubcontractorDailyReportEquipment,
+  useSubcontractorDailyReportPhotos,
+  useSubcontractorDailyReportFull,
+} from './useSubcontractorDailyReports'

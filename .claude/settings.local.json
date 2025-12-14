@@ -26,7 +26,10 @@
       "Bash(git push:*)",
       "Bash(gh run list:*)",
       "Bash(winget install:*)",
-      "Bash(where gh:*)"
+      "Bash(where gh:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm test:*)"
+      "Bash(claude mcp:*)",
     ],
     "deny": [],
     "ask": [],

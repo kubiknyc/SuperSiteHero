@@ -1,10 +1,13 @@
 // File: /src/pages/DashboardPage.tsx
-// Main dashboard page showing project overview and quick actions
+// Main dashboard page with role-based views
+// Superintendents see field operations, PMs see project management, Executives see portfolio
 
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useAuth } from '@/lib/auth/AuthContext'
+import { DashboardSelector, useDashboardView } from '@/features/dashboards'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -27,12 +30,17 @@ import { format } from 'date-fns'
 
 export function DashboardPage() {
   const { data: projects } = useMyProjects()
+  const { userProfile } = useAuth()
+  const dashboardView = useDashboardView()
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
 
   // Get the selected project or the first active project
   const selectedProject = selectedProjectId
     ? projects?.find((p) => p.id === selectedProjectId)
     : projects?.find((p) => p.status === 'active') || projects?.[0]
+
+  // Check if user has a role-based dashboard
+  const hasRoleDashboard = dashboardView !== 'default'
 
   // Mock metrics - these would come from actual queries in production
   const metrics = [
@@ -141,33 +149,47 @@ export function DashboardPage() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
-        {/* Header with project selector */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600 mt-1">
-              {format(new Date(), 'EEEE, MMMM d, yyyy')}
-            </p>
-          </div>
-
-          {/* Project selector */}
-          {projects && projects.length > 0 && (
-            <div className="w-full sm:w-64">
-              <Select
-                value={selectedProject?.id || ''}
-                onChange={(e) => setSelectedProjectId(e.target.value)}
-              >
-                <option value="">All Projects</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </Select>
+        {/* Header with project selector - only show for non-executive dashboards */}
+        {dashboardView !== 'executive' && (
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
+              <p className="text-gray-600 mt-1">
+                {format(new Date(), 'EEEE, MMMM d, yyyy')}
+              </p>
             </div>
-          )}
-        </div>
 
+            {/* Project selector */}
+            {projects && projects.length > 0 && (
+              <div className="w-full sm:w-64">
+                <Select
+                  value={selectedProject?.id || ''}
+                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                >
+                  <option value="">All Projects</option>
+                  {projects.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </Select>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Role-based Dashboard */}
+        {hasRoleDashboard && (
+          <DashboardSelector
+            project={selectedProject}
+            projectId={selectedProject?.id}
+            allowViewSwitch={true}
+          />
+        )}
+
+        {/* Original Dashboard Content - only show if no role-based dashboard */}
+        {!hasRoleDashboard && (
+          <>
         {/* Active Project Info */}
         {selectedProject && (
           <Card>
@@ -346,6 +368,8 @@ export function DashboardPage() {
             )}
           </div>
         </div>
+          </>
+        )}
       </div>
     </AppLayout>
   )

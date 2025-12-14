@@ -643,3 +643,103 @@ export function useCreateEquipmentInspection() {
     },
   })
 }
+
+// ============================================================================
+// COST INTEGRATION HOOKS
+// ============================================================================
+
+/**
+ * Post equipment log cost to cost tracking
+ * Calls the database function to create a cost transaction
+ */
+export function usePostEquipmentCost() {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+
+  return useMutation({
+    mutationFn: async (logId: string) => {
+      // postCostToTransaction returns the transaction ID directly, throws on error
+      return await equipmentApiService.logs.postCostToTransaction(logId)
+    },
+    onSuccess: (_, logId) => {
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.logs() })
+      toast({
+        title: 'Cost posted',
+        description: 'Equipment cost has been posted to job costing.',
+      })
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to post equipment cost.',
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
+/**
+ * Get equipment logs with cost details
+ */
+export function useEquipmentLogsWithCosts(filters: EquipmentLogFilters) {
+  return useQuery({
+    queryKey: [...equipmentKeys.logsList(filters), 'with-costs'] as const,
+    queryFn: () => equipmentApiService.logs.getLogsWithCosts(filters),
+    enabled: !!filters.equipmentId || !!filters.projectId,
+  })
+}
+
+/**
+ * Get unposted equipment costs for a project
+ */
+export function useUnpostedEquipmentCosts(projectId: string | undefined) {
+  return useQuery({
+    queryKey: [...equipmentKeys.logs(), 'unposted', projectId] as const,
+    queryFn: async () => {
+      // getUnpostedCosts returns the array directly, throws on error
+      return await equipmentApiService.logs.getUnpostedCosts(projectId!)
+    },
+    enabled: !!projectId,
+  })
+}
+
+/**
+ * Batch post multiple equipment costs
+ */
+export function useBatchPostEquipmentCosts() {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+
+  return useMutation({
+    mutationFn: async (logIds: string[]) => {
+      const results = await Promise.allSettled(
+        logIds.map(id => equipmentApiService.logs.postCostToTransaction(id))
+      )
+      const succeeded = results.filter(r => r.status === 'fulfilled').length
+      const failed = results.filter(r => r.status === 'rejected').length
+      return { succeeded, failed }
+    },
+    onSuccess: ({ succeeded, failed }) => {
+      queryClient.invalidateQueries({ queryKey: equipmentKeys.logs() })
+      if (failed === 0) {
+        toast({
+          title: 'Costs posted',
+          description: `${succeeded} equipment cost(s) posted to job costing.`,
+        })
+      } else {
+        toast({
+          title: 'Partial success',
+          description: `${succeeded} posted, ${failed} failed.`,
+          variant: 'destructive',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to post equipment costs.',
+        variant: 'destructive',
+      })
+    },
+  })
+}

@@ -13,6 +13,7 @@ import {
   useApproveWaiver,
   useRejectWaiver,
   useVoidWaiver,
+  useSignWaiver,
 } from '@/features/lien-waivers/hooks/useLienWaivers';
 import {
   LienWaiverStatusBadge,
@@ -52,7 +53,10 @@ import {
   FileText,
   AlertTriangle,
   Ban,
+  PenTool,
+  FileSignature,
 } from 'lucide-react';
+import { DocumentSignatureDialog, type SignatureData } from '@/components/shared';
 import { cn } from '@/lib/utils';
 import { downloadLienWaiverPDF } from '@/features/lien-waivers/utils/pdfExport';
 import type { LienWaiverHistory } from '@/types/lien-waiver';
@@ -72,11 +76,13 @@ export function LienWaiverDetailPage() {
   const approveWaiver = useApproveWaiver();
   const rejectWaiver = useRejectWaiver();
   const voidWaiver = useVoidWaiver();
+  const signWaiver = useSignWaiver();
 
   // Dialog states
   const [sendDialogOpen, setSendDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [voidDialogOpen, setVoidDialogOpen] = useState(false);
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
 
   // Form states
   const [sendToEmail, setSendToEmail] = useState('');
@@ -176,6 +182,44 @@ export function LienWaiverDetailPage() {
       setIsExporting(false);
     }
   };
+
+  // Signature handlers
+  const handleSignatureComplete = async (data: SignatureData) => {
+    try {
+      await signWaiver.mutateAsync({
+        id: waiver.id,
+        signature_url: data.signatureUrl,
+        claimant_name: data.signedBy || '',
+        claimant_title: data.title || '',
+        claimant_company: data.company || '',
+        signature_date: data.signedAt || new Date().toISOString(),
+      });
+      setSignatureDialogOpen(false);
+    } catch (error) {
+      console.error('Failed to sign waiver:', error);
+    }
+  };
+
+  const handleSignatureRemove = async () => {
+    try {
+      // Note: Removing signature requires clearing the signature fields
+      // The useSignWaiver hook only updates, so we'll clear the signature by setting empty values
+      await signWaiver.mutateAsync({
+        id: waiver.id,
+        signature_url: '',
+        claimant_name: '',
+        claimant_title: '',
+        claimant_company: '',
+        signature_date: '',
+      });
+      setSignatureDialogOpen(false);
+    } catch (error) {
+      console.error('Failed to remove signature:', error);
+    }
+  };
+
+  // Can sign check (only when waiver is sent or received)
+  const canSign = ['sent', 'received'].includes(waiver.status);
 
   // Render workflow actions based on status
   const renderActions = () => {
@@ -519,11 +563,20 @@ export function LienWaiverDetailPage() {
 
               {/* Signature Info */}
               <Card>
-                <CardHeader>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <User className="h-4 w-4" />
+                    <FileSignature className="h-4 w-4" />
                     Signature
                   </CardTitle>
+                  {canSign && !waiver.signed_at && (
+                    <Button
+                      size="sm"
+                      onClick={() => setSignatureDialogOpen(true)}
+                    >
+                      <PenTool className="h-4 w-4 mr-2" />
+                      Sign Waiver
+                    </Button>
+                  )}
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {waiver.signed_at ? (
@@ -532,9 +585,24 @@ export function LienWaiverDetailPage() {
                         <CheckCircle className="h-4 w-4" />
                         <span className="font-medium">Signed</span>
                       </div>
+                      {waiver.signature_url && (
+                        <div className="border rounded-lg p-3 bg-gray-50">
+                          <img
+                            src={waiver.signature_url}
+                            alt="Signature"
+                            className="max-h-20 mx-auto"
+                          />
+                        </div>
+                      )}
                       <div>
                         <span className="text-sm text-gray-500">Signed By</span>
                         <p className="font-medium">{waiver.claimant_name}</p>
+                        {waiver.claimant_title && (
+                          <p className="text-sm text-gray-600">{waiver.claimant_title}</p>
+                        )}
+                        {waiver.claimant_company && (
+                          <p className="text-sm text-gray-600">{waiver.claimant_company}</p>
+                        )}
                       </div>
                       <div>
                         <span className="text-sm text-gray-500">Signed On</span>
@@ -542,11 +610,34 @@ export function LienWaiverDetailPage() {
                           {format(new Date(waiver.signed_at), 'MMM d, yyyy')}
                         </p>
                       </div>
+                      {canSign && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full"
+                          onClick={() => setSignatureDialogOpen(true)}
+                        >
+                          <PenTool className="h-4 w-4 mr-2" />
+                          Update Signature
+                        </Button>
+                      )}
                     </>
                   ) : (
-                    <div className="flex items-center gap-2 text-gray-500">
-                      <Clock className="h-4 w-4" />
-                      <span>Awaiting signature</span>
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-gray-500">
+                        <Clock className="h-4 w-4" />
+                        <span>Awaiting signature</span>
+                      </div>
+                      {canSign && (
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => setSignatureDialogOpen(true)}
+                        >
+                          <PenTool className="h-4 w-4 mr-2" />
+                          Sign Waiver
+                        </Button>
+                      )}
                     </div>
                   )}
                   {waiver.notarization_required && (
@@ -701,6 +792,24 @@ export function LienWaiverDetailPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Signature Dialog */}
+      <DocumentSignatureDialog
+        open={signatureDialogOpen}
+        onOpenChange={setSignatureDialogOpen}
+        documentType="lien_waiver"
+        documentId={waiver.id}
+        documentName={waiver.waiver_number}
+        role="claimant"
+        roleLabel="Claimant"
+        defaultSignerName={waiver.claimant_name || ''}
+        existingSignature={waiver.signature_url}
+        onSignatureComplete={handleSignatureComplete}
+        onSignatureRemove={handleSignatureRemove}
+        requireSignerInfo={true}
+        disabled={signWaiver.isPending}
+        allowDocuSign={true}
+      />
     </AppLayout>
   );
 }

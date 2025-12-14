@@ -34,3 +34,15 @@ export {
   // Dashboard Query
   useLookAheadDashboardStats,
 } from './useLookAhead'
+
+// Sync hooks for Daily Report integration
+export {
+  lookAheadSyncKeys,
+  useProgressSummaries,
+  useSyncStatus,
+  useSyncActivity,
+  useBatchSync,
+  useLinkProgress,
+  useUnlinkProgress,
+  useAutoLinkProgress,
+} from './useLookAheadSync'

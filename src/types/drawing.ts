@@ -487,3 +487,305 @@ export const MARKUP_TYPES: { value: MarkupType; label: string; icon: string }[] 
   { value: 'highlight', label: 'Highlight', icon: 'Highlighter' },
   { value: 'redline', label: 'Redline', icon: 'Pen' },
 ];
+
+// ============================================================================
+// DRAWING PACKAGE TYPES
+// ============================================================================
+
+export type DrawingPackageType = 'bid' | 'submittal' | 'construction' | 'as_built';
+
+export type DrawingPackageStatus =
+  | 'draft'
+  | 'pending_review'
+  | 'approved'
+  | 'distributed'
+  | 'superseded'
+  | 'archived';
+
+export interface DrawingPackage {
+  id: string;
+  companyId: string;
+  projectId: string;
+
+  // Package identification
+  packageNumber: string;
+  name: string;
+  description?: string;
+  packageType: DrawingPackageType;
+
+  // Version control
+  version: number;
+  supersedesPackageId?: string;
+
+  // Status tracking
+  status: DrawingPackageStatus;
+  approvedBy?: string;
+  approvedAt?: string;
+  approvalNotes?: string;
+
+  // Cover sheet information
+  coverSheetTitle?: string;
+  coverSheetSubtitle?: string;
+  coverSheetLogoUrl?: string;
+  coverSheetNotes?: string;
+  includeCoverSheet: boolean;
+  includeToc: boolean;
+  includeRevisionHistory: boolean;
+
+  // Distribution settings
+  requireAcknowledgment: boolean;
+  acknowledgmentDeadline?: string;
+  allowDownload: boolean;
+  downloadExpiresAt?: string;
+  accessPassword?: string;
+
+  // Generated files
+  mergedPdfUrl?: string;
+  mergedPdfGeneratedAt?: string;
+  coverSheetPdfUrl?: string;
+  tocPdfUrl?: string;
+
+  // Metadata
+  createdAt: string;
+  updatedAt: string;
+  createdBy?: string;
+  deletedAt?: string;
+
+  // Joined data
+  projectName?: string;
+  companyName?: string;
+  createdByName?: string;
+  approvedByName?: string;
+  itemCount?: number;
+  items?: DrawingPackageItem[];
+  recipients?: DrawingPackageRecipient[];
+  statistics?: DrawingPackageStatistics;
+}
+
+export interface DrawingPackageInsert {
+  companyId: string;
+  projectId: string;
+  packageNumber?: string;
+  name: string;
+  description?: string;
+  packageType: DrawingPackageType;
+  coverSheetTitle?: string;
+  coverSheetSubtitle?: string;
+  coverSheetLogoUrl?: string;
+  coverSheetNotes?: string;
+  includeCoverSheet?: boolean;
+  includeToc?: boolean;
+  includeRevisionHistory?: boolean;
+  requireAcknowledgment?: boolean;
+  acknowledgmentDeadline?: string;
+  allowDownload?: boolean;
+  downloadExpiresAt?: string;
+  accessPassword?: string;
+}
+
+export interface DrawingPackageUpdate {
+  name?: string;
+  description?: string | null;
+  packageType?: DrawingPackageType;
+  status?: DrawingPackageStatus;
+  coverSheetTitle?: string | null;
+  coverSheetSubtitle?: string | null;
+  coverSheetLogoUrl?: string | null;
+  coverSheetNotes?: string | null;
+  includeCoverSheet?: boolean;
+  includeToc?: boolean;
+  includeRevisionHistory?: boolean;
+  requireAcknowledgment?: boolean;
+  acknowledgmentDeadline?: string | null;
+  allowDownload?: boolean;
+  downloadExpiresAt?: string | null;
+  accessPassword?: string | null;
+  approvedBy?: string | null;
+  approvedAt?: string | null;
+  approvalNotes?: string | null;
+  mergedPdfUrl?: string | null;
+  mergedPdfGeneratedAt?: string | null;
+}
+
+export interface DrawingPackageItem {
+  id: string;
+  packageId: string;
+  drawingId: string;
+  revisionId?: string;
+
+  // Ordering and organization
+  sortOrder: number;
+  sectionName?: string;
+
+  // Override display info
+  displayNumber?: string;
+  displayTitle?: string;
+
+  // Inclusion status
+  isIncluded: boolean;
+  notes?: string;
+
+  // Metadata
+  addedAt: string;
+  addedBy?: string;
+
+  // Joined data
+  drawing?: Drawing;
+  revision?: DrawingRevision;
+  addedByName?: string;
+}
+
+export interface DrawingPackageItemInsert {
+  packageId: string;
+  drawingId: string;
+  revisionId?: string;
+  sortOrder?: number;
+  sectionName?: string;
+  displayNumber?: string;
+  displayTitle?: string;
+  isIncluded?: boolean;
+  notes?: string;
+}
+
+export interface DrawingPackageItemUpdate {
+  revisionId?: string | null;
+  sortOrder?: number;
+  sectionName?: string | null;
+  displayNumber?: string | null;
+  displayTitle?: string | null;
+  isIncluded?: boolean;
+  notes?: string | null;
+}
+
+export interface DrawingPackageRecipient {
+  id: string;
+  packageId: string;
+
+  // Recipient information
+  recipientEmail: string;
+  recipientName?: string;
+  recipientCompany?: string;
+  recipientRole?: string;
+
+  // Distribution tracking
+  distributionMethod: 'email' | 'link' | 'download';
+  sentAt?: string;
+  sentBy?: string;
+
+  // Access tracking
+  accessToken?: string;
+  accessTokenExpiresAt?: string;
+  firstAccessedAt?: string;
+  lastAccessedAt?: string;
+  accessCount: number;
+
+  // Download tracking
+  downloadedAt?: string;
+  downloadCount: number;
+
+  // Acknowledgment
+  acknowledgedAt?: string;
+  acknowledgmentNotes?: string;
+  acknowledgmentIp?: string;
+
+  // Notification preferences
+  sendReminder: boolean;
+  reminderSentAt?: string;
+
+  // Metadata
+  createdAt: string;
+
+  // Joined data
+  sentByName?: string;
+}
+
+export interface DrawingPackageRecipientInsert {
+  packageId: string;
+  recipientEmail: string;
+  recipientName?: string;
+  recipientCompany?: string;
+  recipientRole?: string;
+  distributionMethod?: 'email' | 'link' | 'download';
+  sendReminder?: boolean;
+}
+
+export interface DrawingPackageRecipientUpdate {
+  recipientName?: string | null;
+  recipientCompany?: string | null;
+  recipientRole?: string | null;
+  distributionMethod?: 'email' | 'link' | 'download';
+  sendReminder?: boolean;
+  sentAt?: string | null;
+  sentBy?: string | null;
+  accessToken?: string | null;
+  accessTokenExpiresAt?: string | null;
+  firstAccessedAt?: string | null;
+  lastAccessedAt?: string | null;
+  accessCount?: number;
+  downloadedAt?: string | null;
+  downloadCount?: number;
+  acknowledgedAt?: string | null;
+  acknowledgmentNotes?: string | null;
+}
+
+export interface DrawingPackageActivity {
+  id: string;
+  packageId: string;
+  recipientId?: string;
+
+  // Activity details
+  activityType: string;
+  activityDescription?: string;
+  activityMetadata?: Record<string, unknown>;
+
+  // Actor information
+  performedBy?: string;
+  performedByEmail?: string;
+  performedByIp?: string;
+
+  // Metadata
+  createdAt: string;
+
+  // Joined data
+  performedByName?: string;
+  recipientEmail?: string;
+}
+
+export interface DrawingPackageStatistics {
+  totalDrawings: number;
+  includedDrawings: number;
+  totalRecipients: number;
+  sentCount: number;
+  accessedCount: number;
+  downloadedCount: number;
+  acknowledgedCount: number;
+  pendingAcknowledgments: number;
+}
+
+export interface DrawingPackageFilters {
+  projectId: string;
+  packageType?: DrawingPackageType;
+  status?: DrawingPackageStatus;
+  search?: string;
+  includeArchived?: boolean;
+}
+
+// ============================================================================
+// DRAWING PACKAGE CONSTANTS
+// ============================================================================
+
+export const DRAWING_PACKAGE_TYPES: { value: DrawingPackageType; label: string; description: string; color: string }[] = [
+  { value: 'bid', label: 'Bid Package', description: 'For contractors bidding on work', color: 'blue' },
+  { value: 'submittal', label: 'Submittal Package', description: 'For review by engineers/architects', color: 'purple' },
+  { value: 'construction', label: 'Construction Package', description: 'For field teams during construction', color: 'green' },
+  { value: 'as_built', label: 'As-Built Package', description: 'For project closeout', color: 'orange' },
+];
+
+export const DRAWING_PACKAGE_STATUSES: { value: DrawingPackageStatus; label: string; color: string }[] = [
+  { value: 'draft', label: 'Draft', color: 'gray' },
+  { value: 'pending_review', label: 'Pending Review', color: 'yellow' },
+  { value: 'approved', label: 'Approved', color: 'blue' },
+  { value: 'distributed', label: 'Distributed', color: 'green' },
+  { value: 'superseded', label: 'Superseded', color: 'orange' },
+  { value: 'archived', label: 'Archived', color: 'red' },
+];

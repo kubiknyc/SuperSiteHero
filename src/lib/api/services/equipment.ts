@@ -554,6 +554,7 @@ export const equipmentLogsApi = {
       reported_issues: dto.reported_issues || null,
       idle_hours: dto.idle_hours || 0,
       daily_report_id: dto.daily_report_id || null,
+      cost_code_id: dto.cost_code_id || null,
       created_by: user?.user?.id,
     }
 
@@ -608,6 +609,98 @@ export const equipmentLogsApi = {
     if (error) throw error
 
     return data?.reduce((sum, log) => sum + (log.hours_used || 0), 0) || 0
+  },
+
+  // ============================================================================
+  // COST INTEGRATION METHODS
+  // ============================================================================
+
+  /**
+   * Get equipment logs with cost details from view
+   */
+  async getLogsWithCosts(filters: EquipmentLogFilters): Promise<EquipmentLogWithDetails[]> {
+    let query = supabase
+      .from('equipment_logs_with_costs')
+      .select('*')
+      .order('log_date', { ascending: false })
+
+    if (filters.equipmentId) {
+      query = query.eq('equipment_id', filters.equipmentId)
+    }
+
+    if (filters.projectId) {
+      query = query.eq('project_id', filters.projectId)
+    }
+
+    if (filters.dateFrom) {
+      query = query.gte('log_date', filters.dateFrom)
+    }
+
+    if (filters.dateTo) {
+      query = query.lte('log_date', filters.dateTo)
+    }
+
+    if (filters.operatorId) {
+      query = query.eq('operator_id', filters.operatorId)
+    }
+
+    const { data, error } = await query
+
+    if (error) throw error
+    return (data || []) as EquipmentLogWithDetails[]
+  },
+
+  /**
+   * Get unposted equipment costs for a project
+   */
+  async getUnpostedCosts(projectId: string): Promise<EquipmentLogWithDetails[]> {
+    const { data, error } = await supabase
+      .from('equipment_logs_with_costs')
+      .select('*')
+      .eq('project_id', projectId)
+      .eq('cost_posted', false)
+      .not('calculated_cost', 'is', null)
+      .gt('calculated_cost', 0)
+      .order('log_date', { ascending: false })
+
+    if (error) throw error
+    return (data || []) as EquipmentLogWithDetails[]
+  },
+
+  /**
+   * Post equipment log cost to cost tracking system
+   * Calls database function that creates cost transaction
+   */
+  async postCostToTransaction(logId: string): Promise<string> {
+    const { data, error } = await supabase
+      .rpc('post_equipment_cost_to_transaction', { p_equipment_log_id: logId })
+
+    if (error) throw error
+    return data as string  // Returns the new cost_transaction_id
+  },
+
+  /**
+   * Batch post multiple equipment costs
+   */
+  async batchPostCosts(logIds: string[]): Promise<{ success: string[]; failed: { id: string; error: string }[] }> {
+    const results = {
+      success: [] as string[],
+      failed: [] as { id: string; error: string }[],
+    }
+
+    for (const logId of logIds) {
+      try {
+        await this.postCostToTransaction(logId)
+        results.success.push(logId)
+      } catch (err) {
+        results.failed.push({
+          id: logId,
+          error: err instanceof Error ? err.message : 'Unknown error',
+        })
+      }
+    }
+
+    return results
   },
 }
 

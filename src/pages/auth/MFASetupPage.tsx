@@ -79,7 +79,7 @@ export function MFASetupPage() {
   }
 
   const handleDownloadBackupCodes = () => {
-    const content = `SuperSiteHero Backup Codes
+    const content = `JobSight Backup Codes
 Generated: ${new Date().toLocaleString()}
 User: ${userProfile?.email}
 

@@ -262,6 +262,9 @@ export interface UpdateChangeOrderDTO {
   related_submittal_id?: string;
   original_contract_amount?: number;
   previous_changes_amount?: number;
+  // Signature fields
+  owner_signature_url?: string | null;
+  owner_approver_name?: string;
 }
 
 export interface SubmitEstimateDTO {

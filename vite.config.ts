@@ -15,8 +15,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'robots.txt', 'icon.svg', 'offline.html', 'icons/*.png', 'splash/*.png'],
       manifest: {
-        name: 'SuperSiteHero',
-        short_name: 'SSH',
+        name: 'JobSight',
+        short_name: 'JobSight',
         description: 'Construction Field Management Platform',
         theme_color: '#2563eb',
         background_color: '#ffffff',

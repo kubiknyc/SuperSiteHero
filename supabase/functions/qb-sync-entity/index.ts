@@ -2,17 +2,74 @@
  * Supabase Edge Function: qb-sync-entity
  *
  * Sync a single entity to/from QuickBooks
+ *
+ * Features:
+ * - Automatic retry with exponential backoff for transient errors
+ * - Auto token refresh on authentication errors
+ * - Detailed error classification and logging
+ * - SyncToken conflict handling
  */
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0'
-import { corsHeaders, qbApiRequest, buildQBApiUrl } from '../_shared/quickbooks.ts'
+import {
+  corsHeaders,
+  qbApiRequest,
+  QBApiError,
+  refreshAccessToken,
+  calculateTokenExpiry,
+  calculateRefreshTokenExpiry,
+} from '../_shared/quickbooks.ts'
 
 interface SyncEntityRequest {
   connectionId: string
   entity_type: string  // 'subcontractors', 'payment_applications', 'change_orders', etc.
   entity_id: string
   direction?: 'to_quickbooks' | 'from_quickbooks'
+}
+
+/**
+ * Attempt to refresh the access token and update the connection
+ */
+async function tryRefreshToken(
+  supabase: ReturnType<typeof createClient>,
+  connection: any
+): Promise<string | null> {
+  try {
+    const clientId = Deno.env.get('QB_CLIENT_ID')
+    const clientSecret = Deno.env.get('QB_CLIENT_SECRET')
+
+    if (!clientId || !clientSecret) {
+      console.error('QuickBooks credentials not configured')
+      return null
+    }
+
+    console.log('Attempting to refresh QuickBooks access token...')
+
+    const tokens = await refreshAccessToken(
+      connection.refresh_token,
+      clientId,
+      clientSecret
+    )
+
+    // Update connection with new tokens
+    await supabase
+      .from('qb_connections')
+      .update({
+        access_token: tokens.access_token,
+        refresh_token: tokens.refresh_token,
+        token_expires_at: calculateTokenExpiry(tokens.expires_in).toISOString(),
+        refresh_token_expires_at: calculateRefreshTokenExpiry(tokens.x_refresh_token_expires_in).toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', connection.id)
+
+    console.log('Successfully refreshed QuickBooks access token')
+    return tokens.access_token
+  } catch (error) {
+    console.error('Failed to refresh token:', error)
+    return null
+  }
 }
 
 // Entity type to QB entity mapping
@@ -225,14 +282,112 @@ serve(async (req) => {
     } catch (syncError) {
       console.error('Sync error:', syncError)
 
-      // Update mapping with error
+      // Handle QBApiError with specific error types
+      const isQBError = syncError instanceof QBApiError
+      const errorType = isQBError ? (syncError as QBApiError).errorType : 'unknown'
+      const errorMessage = syncError instanceof Error ? syncError.message : 'Unknown error'
+      const isRetryable = isQBError ? (syncError as QBApiError).isRetryable : false
+
+      // If auth error, try to refresh token and retry once
+      if (errorType === 'auth' && connection.refresh_token) {
+        console.log('Authentication error detected, attempting token refresh...')
+        const newAccessToken = await tryRefreshToken(supabase, connection)
+
+        if (newAccessToken) {
+          // Retry the sync with new token
+          console.log('Retrying sync with refreshed token...')
+          try {
+            let retryResponse: any
+            if (isCreate) {
+              retryResponse = await qbApiRequest(
+                connection.realm_id,
+                entityMapping.endpoint,
+                newAccessToken,
+                connection.is_sandbox,
+                { method: 'POST', body: qbData }
+              )
+            } else {
+              retryResponse = await qbApiRequest(
+                connection.realm_id,
+                entityMapping.endpoint,
+                newAccessToken,
+                connection.is_sandbox,
+                { method: 'POST', body: { ...qbData, Id: qbEntityId } }
+              )
+            }
+
+            const retryQbEntity = retryResponse[capitalize(entityMapping.qbType)]
+
+            // Success after token refresh - update mapping
+            const retryMappingData = {
+              company_id: connection.company_id,
+              connection_id: connectionId,
+              local_entity_type: entity_type,
+              local_entity_id: entity_id,
+              qb_entity_type: entityMapping.qbType,
+              qb_entity_id: retryQbEntity.Id,
+              qb_sync_token: retryQbEntity.SyncToken,
+              sync_status: 'synced',
+              last_synced_at: new Date().toISOString(),
+              last_sync_error: null,
+            }
+
+            if (existingMapping) {
+              await supabase.from('qb_entity_mappings').update(retryMappingData).eq('id', existingMapping.id)
+            } else {
+              await supabase.from('qb_entity_mappings').insert(retryMappingData)
+            }
+
+            // Update sync log to success
+            if (syncLog) {
+              await supabase.from('qb_sync_logs').update({
+                status: 'synced',
+                records_created: isCreate ? 1 : 0,
+                records_updated: isCreate ? 0 : 1,
+                completed_at: new Date().toISOString(),
+                duration_ms: Date.now() - new Date(syncLog.started_at).getTime(),
+              }).eq('id', syncLog.id)
+            }
+
+            console.log(`Successfully synced after token refresh: ${entity_type}/${entity_id}`)
+
+            return new Response(
+              JSON.stringify({
+                mapping: {
+                  local_entity_type: entity_type,
+                  local_entity_id: entity_id,
+                  qb_entity_type: entityMapping.qbType,
+                  qb_entity_id: retryQbEntity.Id,
+                  sync_status: 'synced',
+                  last_synced_at: new Date().toISOString(),
+                },
+                token_refreshed: true,
+              }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
+            )
+          } catch (retryError) {
+            console.error('Retry after token refresh also failed:', retryError)
+            // Fall through to error handling below
+          }
+        }
+      }
+
+      // Determine appropriate sync status based on error type
+      const syncStatus = isRetryable ? 'pending_retry' : 'failed'
+
+      // Update mapping with detailed error info
+      const errorMappingData = {
+        sync_status: syncStatus,
+        last_sync_error: errorMessage,
+        retry_count: (existingMapping?.retry_count || 0) + 1,
+        last_error_type: errorType,
+        last_error_at: new Date().toISOString(),
+      }
+
       if (existingMapping) {
         await supabase
           .from('qb_entity_mappings')
-          .update({
-            sync_status: 'failed',
-            last_sync_error: syncError instanceof Error ? syncError.message : 'Unknown error',
-          })
+          .update(errorMappingData)
           .eq('id', existingMapping.id)
       } else {
         await supabase.from('qb_entity_mappings').insert({
@@ -242,12 +397,11 @@ serve(async (req) => {
           local_entity_id: entity_id,
           qb_entity_type: entityMapping.qbType,
           qb_entity_id: '',
-          sync_status: 'failed',
-          last_sync_error: syncError instanceof Error ? syncError.message : 'Unknown error',
+          ...errorMappingData,
         })
       }
 
-      // Update sync log
+      // Update sync log with detailed error info
       if (syncLog) {
         await supabase
           .from('qb_sync_logs')
@@ -256,7 +410,9 @@ serve(async (req) => {
             records_failed: 1,
             completed_at: new Date().toISOString(),
             duration_ms: Date.now() - new Date(syncLog.started_at).getTime(),
-            error_message: syncError instanceof Error ? syncError.message : 'Unknown error',
+            error_message: errorMessage,
+            error_type: errorType,
+            is_retryable: isRetryable,
           })
           .eq('id', syncLog.id)
       }
@@ -266,13 +422,31 @@ serve(async (req) => {
   } catch (error) {
     console.error('qb-sync-entity error:', error)
 
+    // Build detailed error response
+    const isQBError = error instanceof QBApiError
+    const errorResponse = {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      error_type: isQBError ? (error as QBApiError).errorType : 'unknown',
+      is_retryable: isQBError ? (error as QBApiError).isRetryable : false,
+      status_code: isQBError ? (error as QBApiError).statusCode : undefined,
+      qb_error_code: isQBError ? (error as QBApiError).qbErrorCode : undefined,
+    }
+
+    // Return appropriate HTTP status
+    let httpStatus = 500
+    if (isQBError) {
+      const qbError = error as QBApiError
+      if (qbError.errorType === 'validation') httpStatus = 400
+      else if (qbError.errorType === 'auth') httpStatus = 401
+      else if (qbError.errorType === 'not_found') httpStatus = 404
+      else if (qbError.errorType === 'rate_limit') httpStatus = 429
+    }
+
     return new Response(
-      JSON.stringify({
-        error: error instanceof Error ? error.message : 'Unknown error',
-      }),
+      JSON.stringify(errorResponse),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
+        status: httpStatus,
       }
     )
   }

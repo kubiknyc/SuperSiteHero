@@ -69,7 +69,7 @@ export async function enrollMFA(factorFriendlyName?: string): Promise<MFAEnrollm
   try {
     const { data, error } = await supabase.auth.mfa.enroll({
       factorType: 'totp',
-      friendlyName: factorFriendlyName || 'SuperSiteHero App'
+      friendlyName: factorFriendlyName || 'JobSight App'
     })
 
     if (error) {throw error}

@@ -60,7 +60,7 @@ interface OfflinePunchStore {
   // Actions
   addDraft: (draft: Omit<DraftPunchItem, 'id' | 'created_at' | 'synced'>) => string
   updateDraft: (id: string, updates: Partial<DraftPunchItem>) => void
-  removeDraft: (id: string) => void
+  removeDraft: (id: string, queueServerDelete?: boolean) => void
   markSynced: (id: string, serverId?: string) => void
   markSyncError: (id: string, error: string) => void
   // Sync queue actions
@@ -103,18 +103,63 @@ export const useOfflinePunchStore = create<OfflinePunchStore>()(
       },
 
       updateDraft: (id, updates) => {
-        set((state) => ({
+        const state = get()
+        const draft = state.drafts.find((d) => d.id === id)
+        if (!draft) return
+
+        const updatedDraft = { ...draft, ...updates, synced: false }
+
+        // Check if there's already a pending sync for this item
+        const existingEntry = state.syncQueue.find((s) => s.punchItem.id === id)
+
+        set({
           drafts: state.drafts.map((d) =>
-            d.id === id ? { ...d, ...updates, synced: false } : d
+            d.id === id ? updatedDraft : d
           ),
-        }))
+          // If item was already synced to server (has serverId), queue update operation
+          // If there's already a create pending, just update the punchItem in queue
+          syncQueue: existingEntry
+            ? state.syncQueue.map((s) =>
+                s.punchItem.id === id
+                  ? { ...s, punchItem: updatedDraft }
+                  : s
+              )
+            : draft.synced
+              ? state.syncQueue // Already synced and no queue entry = no change needed
+              : [...state.syncQueue, {
+                  id: uuidv4(),
+                  operation: 'update' as const,
+                  punchItem: updatedDraft,
+                  attempts: 0,
+                }],
+        })
       },
 
-      removeDraft: (id) => {
-        set((state) => ({
-          drafts: state.drafts.filter((d) => d.id !== id),
-          syncQueue: state.syncQueue.filter((s) => s.punchItem.id !== id),
-        }))
+      removeDraft: (id, queueServerDelete = false) => {
+        const state = get()
+        const draft = state.drafts.find((d) => d.id === id)
+
+        // If item was synced and we need to delete from server, queue the delete
+        if (queueServerDelete && draft && draft.synced) {
+          set({
+            drafts: state.drafts.filter((d) => d.id !== id),
+            syncQueue: [
+              ...state.syncQueue.filter((s) => s.punchItem.id !== id),
+              {
+                id: uuidv4(),
+                operation: 'delete' as const,
+                punchItem: draft,
+                attempts: 0,
+              },
+            ],
+          })
+        } else {
+          // Just remove from local state (unsynced draft or local-only removal)
+          set({
+            drafts: state.drafts.filter((d) => d.id !== id),
+            syncQueue: state.syncQueue.filter((s) => s.punchItem.id !== id),
+          })
+        }
       },
 
       markSynced: (id, serverId) => {

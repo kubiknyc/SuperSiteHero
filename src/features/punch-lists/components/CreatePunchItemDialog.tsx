@@ -103,7 +103,10 @@ export function CreatePunchItemDialog({
         rejection_notes: null,
         created_by: null,
         deleted_at: null,
-      },
+        // Floor plan location
+        floor_plan_location: floorPlanLocation || null,
+        floor_plan_document_id: floorPlanLocation?.documentId || null,
+      } as any,  // Type assertion needed until database types regenerated
       {
         onSuccess: () => {
           onOpenChange(false)

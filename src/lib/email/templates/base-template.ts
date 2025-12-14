@@ -16,7 +16,7 @@ export interface BaseTemplateData {
  */
 export function wrapInBaseTemplate(data: BaseTemplateData): string {
   const year = new Date().getFullYear()
-  const footerText = data.footerText || `&copy; ${year} SuperSiteHero. All rights reserved.`
+  const footerText = data.footerText || `&copy; ${year} JobSight. All rights reserved.`
 
   return `
 <!DOCTYPE html>
@@ -25,7 +25,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>SuperSiteHero</title>
+  <title>JobSight</title>
   <!--[if mso]>
   <noscript>
     <xml>
@@ -231,9 +231,9 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
           <!-- Header -->
           <tr>
             <td class="email-header">
-              <a href="${import.meta.env.VITE_APP_URL || 'https://supersitehero.com'}" class="logo">
+              <a href="${import.meta.env.VITE_APP_URL || 'https://jobsightapp.com'}" class="logo">
                 <span class="logo-icon">🏗️</span>
-                SuperSiteHero
+                JobSight
               </a>
             </td>
           </tr>

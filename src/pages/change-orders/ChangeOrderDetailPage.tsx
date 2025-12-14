@@ -16,6 +16,7 @@ import {
   useSubmitToOwner,
   useProcessOwnerApproval,
   useVoidChangeOrder,
+  useUpdateChangeOrderSignature,
 } from '@/features/change-orders/hooks/useChangeOrdersV2'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -48,7 +49,10 @@ import {
   Plus,
   Trash2,
   Download,
+  PenTool,
+  FileSignature,
 } from 'lucide-react'
+import { DocumentSignatureDialog, type SignatureData } from '@/components/shared'
 import { downloadChangeOrderPDF } from '@/features/change-orders/utils/pdfExport'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
@@ -83,6 +87,7 @@ export function ChangeOrderDetailPage() {
   const submitToOwner = useSubmitToOwner()
   const processOwnerApproval = useProcessOwnerApproval()
   const voidChangeOrder = useVoidChangeOrder()
+  const updateSignature = useUpdateChangeOrderSignature()
 
   // Local state
   const [activeTab, setActiveTab] = useState('details')
@@ -90,6 +95,9 @@ export function ChangeOrderDetailPage() {
   const [approvalComments, setApprovalComments] = useState('')
   const [ownerApprovalAmount, setOwnerApprovalAmount] = useState('')
   const [ownerApprovalDays, setOwnerApprovalDays] = useState('')
+
+  // Signature dialog state
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false)
 
   // Format currency
   const formatCurrency = (amount: number | null | undefined) => {
@@ -200,6 +208,31 @@ export function ChangeOrderDetailPage() {
       console.error('Failed to download PDF:', e)
       toast.error('Failed to download PDF')
     }
+  }
+
+  // Signature handlers
+  const handleSignatureComplete = async (data: SignatureData) => {
+    if (!changeOrder) return
+
+    await updateSignature.mutateAsync({
+      id: changeOrder.id,
+      signatureUrl: data.signatureUrl,
+      signerName: data.signedBy,
+      signatureDate: data.signedAt,
+    })
+    toast.success('Signature saved')
+  }
+
+  const handleSignatureRemove = async () => {
+    if (!changeOrder) return
+
+    await updateSignature.mutateAsync({
+      id: changeOrder.id,
+      signatureUrl: null,
+      signerName: undefined,
+      signatureDate: null,
+    })
+    toast.success('Signature removed')
   }
 
   // Loading state
@@ -716,6 +749,72 @@ export function ChangeOrderDetailPage() {
                     )}
                   </CardContent>
                 </Card>
+
+                {/* Owner Signature */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileSignature className="h-5 w-5 text-indigo-600" />
+                      Owner Signature
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-500">Status</span>
+                        {changeOrder.owner_signature_url ? (
+                          <Badge className="bg-green-100 text-green-700">
+                            <CheckCircle className="h-3 w-3 mr-1" />
+                            Signed
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="text-gray-500">
+                            <Clock className="h-3 w-3 mr-1" />
+                            Pending
+                          </Badge>
+                        )}
+                      </div>
+
+                      {changeOrder.owner_signature_url ? (
+                        <div className="space-y-2">
+                          <div className="border rounded-lg p-3 bg-gray-50">
+                            <img
+                              src={changeOrder.owner_signature_url}
+                              alt="Owner signature"
+                              className="max-h-16 mx-auto"
+                            />
+                          </div>
+                          {changeOrder.owner_approver_name && (
+                            <p className="text-xs text-gray-500 text-center">
+                              Signed by: {changeOrder.owner_approver_name}
+                            </p>
+                          )}
+                          {changeOrder.date_owner_approved && (
+                            <p className="text-xs text-gray-500 text-center">
+                              {format(new Date(changeOrder.date_owner_approved), 'MMM d, yyyy')}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
+                          <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
+                          <p className="text-sm text-gray-500">Awaiting owner signature</p>
+                        </div>
+                      )}
+
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => setSignatureDialogOpen(true)}
+                        disabled={changeOrder.status !== 'pending_owner_review' && changeOrder.status !== 'internally_approved'}
+                      >
+                        <PenTool className="h-4 w-4 mr-2" />
+                        {changeOrder.owner_signature_url ? 'Update Signature' : 'Add Owner Signature'}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </TabsContent>
@@ -881,6 +980,23 @@ export function ChangeOrderDetailPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Owner Signature Dialog */}
+      <DocumentSignatureDialog
+        open={signatureDialogOpen}
+        onOpenChange={setSignatureDialogOpen}
+        documentType="change_order"
+        documentId={id || ''}
+        documentName={displayNumber}
+        role="owner"
+        roleLabel="Owner"
+        defaultSignerName={changeOrder.owner_approver_name || ''}
+        existingSignature={changeOrder.owner_signature_url}
+        onSignatureComplete={handleSignatureComplete}
+        onSignatureRemove={handleSignatureRemove}
+        requireSignerInfo={true}
+        allowDocuSign={true}
+      />
     </AppLayout>
   )
 }

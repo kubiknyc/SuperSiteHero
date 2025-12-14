@@ -443,3 +443,372 @@ export interface CostTransactionFormData {
   po_number: string;
   notes: string;
 }
+
+// =============================================
+// Earned Value Management (EVM) Types
+// =============================================
+
+/**
+ * EVM Performance Status based on CPI/SPI thresholds
+ */
+export type EVMPerformanceStatus = 'excellent' | 'good' | 'fair' | 'poor' | 'critical';
+
+/**
+ * EVM Trend direction
+ */
+export type EVMTrend = 'improving' | 'stable' | 'declining';
+
+/**
+ * Core Earned Value Metrics
+ * Standard EVM calculations per PMI/PMBOK methodology
+ */
+export interface EarnedValueMetrics {
+  // Baseline Values
+  BAC: number;  // Budget at Completion - total project budget
+
+  // Point-in-Time Values (as of status date)
+  PV: number;   // Planned Value (BCWS) - budgeted cost of work scheduled
+  EV: number;   // Earned Value (BCWP) - budgeted cost of work performed
+  AC: number;   // Actual Cost (ACWP) - actual cost of work performed
+
+  // Variance Metrics
+  CV: number;   // Cost Variance = EV - AC (positive = under budget)
+  SV: number;   // Schedule Variance = EV - PV (positive = ahead of schedule)
+  CV_percent: number;  // CV% = CV / EV * 100
+  SV_percent: number;  // SV% = SV / PV * 100
+
+  // Performance Indices
+  CPI: number;  // Cost Performance Index = EV / AC (>1 = under budget)
+  SPI: number;  // Schedule Performance Index = EV / PV (>1 = ahead)
+  CSI: number;  // Cost-Schedule Index = CPI * SPI (critical metric)
+
+  // Forecasts (Estimates at Completion)
+  EAC: number;  // Estimate at Completion - projected final cost
+  ETC: number;  // Estimate to Complete = EAC - AC
+  VAC: number;  // Variance at Completion = BAC - EAC
+  VAC_percent: number;  // VAC% = VAC / BAC * 100
+
+  // To-Complete Performance Index
+  TCPI_BAC: number;  // TCPI to meet original budget = (BAC - EV) / (BAC - AC)
+  TCPI_EAC: number;  // TCPI to meet EAC = (BAC - EV) / (EAC - AC)
+
+  // Schedule Forecasts
+  planned_duration: number;    // Original planned duration in days
+  actual_duration: number;     // Days elapsed since start
+  estimated_duration: number;  // Projected total duration = planned_duration / SPI
+
+  // Percent Complete
+  percent_complete_planned: number;  // PV / BAC * 100
+  percent_complete_actual: number;   // EV / BAC * 100
+  percent_spent: number;             // AC / BAC * 100
+
+  // Status indicators
+  cost_status: EVMPerformanceStatus;
+  schedule_status: EVMPerformanceStatus;
+  overall_status: EVMPerformanceStatus;
+
+  // Metadata
+  status_date: string;  // Date of this EVM snapshot
+  data_currency: 'current' | 'stale';  // Based on how recent data is
+}
+
+/**
+ * EVM metrics aggregated by cost code division
+ */
+export interface EVMByDivision {
+  division: string;
+  division_name: string;
+  BAC: number;
+  PV: number;
+  EV: number;
+  AC: number;
+  CV: number;
+  SV: number;
+  CPI: number;
+  SPI: number;
+  EAC: number;
+  percent_complete: number;
+  cost_status: EVMPerformanceStatus;
+  schedule_status: EVMPerformanceStatus;
+}
+
+/**
+ * EVM historical data point for trend analysis
+ */
+export interface EVMTrendDataPoint {
+  date: string;
+  PV: number;
+  EV: number;
+  AC: number;
+  CPI: number;
+  SPI: number;
+  percent_complete: number;
+}
+
+/**
+ * EVM S-Curve data for visualization
+ */
+export interface EVMSCurveData {
+  date: string;
+  planned_cumulative: number;  // Cumulative PV
+  earned_cumulative: number;   // Cumulative EV
+  actual_cumulative: number;   // Cumulative AC
+  forecast_cumulative: number; // Projected based on current CPI
+}
+
+/**
+ * EVM Forecast Scenarios
+ */
+export interface EVMForecastScenarios {
+  // Original Plan
+  original: {
+    EAC: number;
+    completion_date: string;
+    method: 'Original Budget';
+  };
+
+  // Current CPI-based forecast
+  cpi_based: {
+    EAC: number;  // BAC / CPI
+    completion_date: string;
+    method: 'CPI Projection';
+  };
+
+  // SPI-adjusted forecast (most common)
+  spi_adjusted: {
+    EAC: number;  // AC + (BAC - EV) / (CPI * SPI)
+    completion_date: string;
+    method: 'CPI×SPI Projection';
+  };
+
+  // Manager's estimate (manual override)
+  management: {
+    EAC: number | null;
+    completion_date: string | null;
+    method: 'Management Estimate';
+    notes: string | null;
+  };
+}
+
+/**
+ * Project EVM Summary for dashboard
+ */
+export interface ProjectEVMSummary {
+  project_id: string;
+  project_name: string;
+  metrics: EarnedValueMetrics;
+  trend: EVMTrendDataPoint[];
+  forecasts: EVMForecastScenarios;
+  by_division: EVMByDivision[];
+  health_indicators: {
+    cost_trend: EVMTrend;
+    schedule_trend: EVMTrend;
+    risk_level: 'low' | 'medium' | 'high' | 'critical';
+    alerts: EVMAlert[];
+  };
+}
+
+/**
+ * EVM Alert for proactive warnings
+ */
+export interface EVMAlert {
+  id: string;
+  type: 'cost_overrun' | 'schedule_slip' | 'budget_exhaustion' | 'performance_decline' | 'milestone_risk';
+  severity: 'info' | 'warning' | 'critical';
+  title: string;
+  message: string;
+  metric: string;
+  threshold: number;
+  current_value: number;
+  created_at: string;
+}
+
+/**
+ * EVM Configuration thresholds
+ */
+export interface EVMThresholds {
+  // CPI thresholds
+  cpi_excellent: number;    // >= 1.05
+  cpi_good: number;         // >= 1.0
+  cpi_fair: number;         // >= 0.95
+  cpi_poor: number;         // >= 0.90
+  // Below cpi_poor = critical
+
+  // SPI thresholds
+  spi_excellent: number;    // >= 1.05
+  spi_good: number;         // >= 1.0
+  spi_fair: number;         // >= 0.95
+  spi_poor: number;         // >= 0.90
+
+  // Alert thresholds
+  alert_variance_percent: number;  // Trigger alert when CV% or SV% exceeds this
+  alert_index_threshold: number;   // Trigger alert when CPI or SPI falls below this
+}
+
+/**
+ * Default EVM threshold configuration
+ */
+export const DEFAULT_EVM_THRESHOLDS: EVMThresholds = {
+  cpi_excellent: 1.05,
+  cpi_good: 1.0,
+  cpi_fair: 0.95,
+  cpi_poor: 0.90,
+  spi_excellent: 1.05,
+  spi_good: 1.0,
+  spi_fair: 0.95,
+  spi_poor: 0.90,
+  alert_variance_percent: 10,
+  alert_index_threshold: 0.90,
+};
+
+/**
+ * Helper function to determine performance status from index value
+ */
+export function getPerformanceStatus(
+  index: number,
+  thresholds: EVMThresholds = DEFAULT_EVM_THRESHOLDS,
+  type: 'cpi' | 'spi' = 'cpi'
+): EVMPerformanceStatus {
+  const prefix = type;
+  if (index >= thresholds[`${prefix}_excellent`]) return 'excellent';
+  if (index >= thresholds[`${prefix}_good`]) return 'good';
+  if (index >= thresholds[`${prefix}_fair`]) return 'fair';
+  if (index >= thresholds[`${prefix}_poor`]) return 'poor';
+  return 'critical';
+}
+
+/**
+ * EVM display configuration for UI
+ */
+export const EVM_STATUS_CONFIG: Record<EVMPerformanceStatus, {
+  label: string;
+  color: string;
+  bgColor: string;
+  icon: string;
+}> = {
+  excellent: { label: 'Excellent', color: 'text-emerald-700', bgColor: 'bg-emerald-100', icon: 'TrendingUp' },
+  good: { label: 'Good', color: 'text-green-700', bgColor: 'bg-green-100', icon: 'CheckCircle' },
+  fair: { label: 'Fair', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: 'AlertTriangle' },
+  poor: { label: 'Poor', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: 'AlertCircle' },
+  critical: { label: 'Critical', color: 'text-red-700', bgColor: 'bg-red-100', icon: 'XCircle' },
+};
+
+// =============================================
+// Budget Variance Alerts
+// =============================================
+
+/**
+ * Budget variance alert type
+ */
+export type BudgetVarianceAlertType =
+  | 'line_over_budget'     // Individual budget line exceeded
+  | 'line_near_budget'     // Individual line approaching threshold
+  | 'project_over_budget'  // Total project variance exceeds threshold
+  | 'division_over_budget' // Division total exceeds threshold
+  | 'variance_trending'    // Variance getting worse over time
+
+/**
+ * Budget variance alert severity
+ */
+export type BudgetVarianceAlertSeverity = 'info' | 'warning' | 'critical';
+
+/**
+ * Budget variance threshold configuration
+ */
+export interface BudgetVarianceThresholds {
+  // Budget line thresholds (% over revised budget)
+  critical_overrun_percent: number;  // Default: 10%
+  warning_overrun_percent: number;   // Default: 5%
+  near_budget_percent: number;       // Default: 90% spent
+
+  // Project-level thresholds
+  project_critical_percent: number;  // Default: 5%
+  project_warning_percent: number;   // Default: 3%
+
+  // Minimum variance amount to trigger alert (avoid noise on small items)
+  minimum_variance_amount: number;   // Default: $1,000
+}
+
+/**
+ * Default budget variance thresholds
+ */
+export const DEFAULT_VARIANCE_THRESHOLDS: BudgetVarianceThresholds = {
+  critical_overrun_percent: 10,
+  warning_overrun_percent: 5,
+  near_budget_percent: 90,
+  project_critical_percent: 5,
+  project_warning_percent: 3,
+  minimum_variance_amount: 1000,
+};
+
+/**
+ * Budget variance alert
+ */
+export interface BudgetVarianceAlert {
+  id: string;
+  type: BudgetVarianceAlertType;
+  severity: BudgetVarianceAlertSeverity;
+  title: string;
+  message: string;
+
+  // Related entity
+  budget_id?: string;
+  cost_code?: string;
+  cost_code_name?: string;
+  division?: string;
+
+  // Variance details
+  budget_amount: number;
+  actual_amount: number;
+  variance_amount: number;
+  variance_percent: number;
+  threshold_percent: number;
+
+  created_at: string;
+}
+
+/**
+ * Budget variance alert summary
+ */
+export interface BudgetVarianceAlertSummary {
+  total_alerts: number;
+  critical_count: number;
+  warning_count: number;
+  info_count: number;
+  total_overrun_amount: number;
+  lines_over_budget: number;
+  alerts: BudgetVarianceAlert[];
+}
+
+/**
+ * UI configuration for variance alert severity
+ */
+export const VARIANCE_ALERT_CONFIG: Record<BudgetVarianceAlertSeverity, {
+  label: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  icon: string;
+}> = {
+  critical: {
+    label: 'Critical',
+    color: 'text-red-700',
+    bgColor: 'bg-red-50',
+    borderColor: 'border-red-200',
+    icon: 'AlertCircle',
+  },
+  warning: {
+    label: 'Warning',
+    color: 'text-amber-700',
+    bgColor: 'bg-amber-50',
+    borderColor: 'border-amber-200',
+    icon: 'AlertTriangle',
+  },
+  info: {
+    label: 'Info',
+    color: 'text-blue-700',
+    bgColor: 'bg-blue-50',
+    borderColor: 'border-blue-200',
+    icon: 'Info',
+  },
+};

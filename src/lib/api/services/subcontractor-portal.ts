@@ -1126,6 +1126,267 @@ export const subcontractorPortalApi = {
       return null
     }
   },
+
+  // =============================================
+  // DAILY REPORTS (READ-ONLY)
+  // =============================================
+
+  /**
+   * Get daily reports accessible to the subcontractor
+   */
+  async getDailyReports(
+    userId: string,
+    filter?: {
+      projectId?: string;
+      dateFrom?: string;
+      dateTo?: string;
+      limit?: number;
+      offset?: number;
+    }
+  ): Promise<SubcontractorDailyReport[]> {
+    try {
+      const subcontractor = await getSubcontractorForUser(userId)
+      if (!subcontractor) {
+        return []
+      }
+
+      const { data, error } = await db.rpc('get_subcontractor_daily_reports', {
+        p_subcontractor_id: subcontractor.id,
+        p_project_id: filter?.projectId || null,
+        p_date_from: filter?.dateFrom || null,
+        p_date_to: filter?.dateTo || null,
+        p_limit: filter?.limit || 50,
+        p_offset: filter?.offset || 0,
+      })
+
+      if (error) {
+        throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily reports', status: 500, details: error })
+      }
+
+      return data || []
+    } catch (error) {
+      if (error instanceof ApiErrorClass) throw error
+      throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily reports', status: 500, details: error })
+    }
+  },
+
+  /**
+   * Get single daily report detail
+   */
+  async getDailyReport(userId: string, reportId: string): Promise<SubcontractorDailyReportDetail | null> {
+    try {
+      const subcontractor = await getSubcontractorForUser(userId)
+      if (!subcontractor) {
+        return null
+      }
+
+      const { data, error } = await db.rpc('get_subcontractor_daily_report_detail', {
+        p_subcontractor_id: subcontractor.id,
+        p_report_id: reportId,
+      })
+
+      if (error) {
+        throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily report detail', status: 500, details: error })
+      }
+
+      if (!data || data.length === 0) {
+        return null
+      }
+
+      // Get related data in parallel
+      const [workforce, equipment, photos] = await Promise.all([
+        this.getDailyReportWorkforce(userId, reportId),
+        this.getDailyReportEquipment(userId, reportId),
+        this.getDailyReportPhotos(userId, reportId),
+      ])
+
+      return {
+        ...data[0],
+        workforce,
+        equipment,
+        photos,
+      }
+    } catch (error) {
+      if (error instanceof ApiErrorClass) throw error
+      throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily report detail', status: 500, details: error })
+    }
+  },
+
+  /**
+   * Get workforce entries for a daily report
+   */
+  async getDailyReportWorkforce(userId: string, reportId: string): Promise<SubcontractorDailyReportWorkforce[]> {
+    try {
+      const subcontractor = await getSubcontractorForUser(userId)
+      if (!subcontractor) {
+        return []
+      }
+
+      const { data, error } = await db.rpc('get_subcontractor_daily_report_workforce', {
+        p_subcontractor_id: subcontractor.id,
+        p_report_id: reportId,
+      })
+
+      if (error) {
+        throw new ApiErrorClass({ code: '500', message: 'Failed to fetch workforce data', status: 500, details: error })
+      }
+
+      return data || []
+    } catch (error) {
+      if (error instanceof ApiErrorClass) throw error
+      throw new ApiErrorClass({ code: '500', message: 'Failed to fetch workforce data', status: 500, details: error })
+    }
+  },
+
+  /**
+   * Get equipment entries for a daily report
+   */
+  async getDailyReportEquipment(userId: string, reportId: string): Promise<SubcontractorDailyReportEquipment[]> {
+    try {
+      const subcontractor = await getSubcontractorForUser(userId)
+      if (!subcontractor) {
+        return []
+      }
+
+      const { data, error } = await db.rpc('get_subcontractor_daily_report_equipment', {
+        p_subcontractor_id: subcontractor.id,
+        p_report_id: reportId,
+      })
+
+      if (error) {
+        throw new ApiErrorClass({ code: '500', message: 'Failed to fetch equipment data', status: 500, details: error })
+      }
+
+      return data || []
+    } catch (error) {
+      if (error instanceof ApiErrorClass) throw error
+      throw new ApiErrorClass({ code: '500', message: 'Failed to fetch equipment data', status: 500, details: error })
+    }
+  },
+
+  /**
+   * Get photos for a daily report
+   */
+  async getDailyReportPhotos(userId: string, reportId: string): Promise<SubcontractorDailyReportPhoto[]> {
+    try {
+      const subcontractor = await getSubcontractorForUser(userId)
+      if (!subcontractor) {
+        return []
+      }
+
+      const { data, error } = await db.rpc('get_subcontractor_daily_report_photos', {
+        p_subcontractor_id: subcontractor.id,
+        p_report_id: reportId,
+      })
+
+      if (error) {
+        throw new ApiErrorClass({ code: '500', message: 'Failed to fetch photos', status: 500, details: error })
+      }
+
+      return data || []
+    } catch (error) {
+      if (error instanceof ApiErrorClass) throw error
+      throw new ApiErrorClass({ code: '500', message: 'Failed to fetch photos', status: 500, details: error })
+    }
+  },
+
+  /**
+   * Check if subcontractor has access to view daily reports for any project
+   */
+  async canViewDailyReports(userId: string): Promise<boolean> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return false
+      }
+
+      const { data, error } = await supabase
+        .from('subcontractor_portal_access')
+        .select('id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('is_active', true)
+        .eq('can_view_daily_reports', true)
+        .limit(1)
+
+      return !error && data && data.length > 0
+    } catch (error) {
+      return false
+    }
+  },
+}
+
+// =============================================
+// DAILY REPORT TYPES FOR SUBCONTRACTOR PORTAL
+// =============================================
+
+export interface SubcontractorDailyReport {
+  id: string;
+  project_id: string;
+  project_name: string;
+  project_number: string;
+  report_date: string;
+  reporter_name: string;
+  shift_type: string;
+  total_hours: number | null;
+  weather_condition: string | null;
+  temperature_high: number | null;
+  temperature_low: number | null;
+  work_summary: string | null;
+  overall_progress_percentage: number | null;
+  schedule_status: string | null;
+  status: string;
+  submitted_at: string | null;
+  approved_at: string | null;
+  workforce_count: number;
+  equipment_count: number;
+  deliveries_count: number;
+  photos_count: number;
+  created_at: string;
+}
+
+export interface SubcontractorDailyReportDetail extends SubcontractorDailyReport {
+  shift_start_time: string | null;
+  shift_end_time: string | null;
+  wind_speed: number | null;
+  precipitation: number | null;
+  work_completed: string | null;
+  work_planned_tomorrow: string | null;
+  issues: string | null;
+  observations: string | null;
+  submitted_by_name: string | null;
+  approved_by_name: string | null;
+  workforce: SubcontractorDailyReportWorkforce[];
+  equipment: SubcontractorDailyReportEquipment[];
+  photos: SubcontractorDailyReportPhoto[];
+}
+
+export interface SubcontractorDailyReportWorkforce {
+  id: string;
+  crew_name: string | null;
+  trade: string | null;
+  headcount: number | null;
+  hours_worked: number | null;
+  work_description: string | null;
+  company_name: string | null;
+}
+
+export interface SubcontractorDailyReportEquipment {
+  id: string;
+  equipment_name: string | null;
+  equipment_type: string | null;
+  ownership_type: string | null;
+  hours_used: number | null;
+  operator_name: string | null;
+  notes: string | null;
+}
+
+export interface SubcontractorDailyReportPhoto {
+  id: string;
+  photo_url: string;
+  caption: string | null;
+  category: string | null;
+  taken_at: string | null;
+  location: string | null;
 }
 
 export default subcontractorPortalApi

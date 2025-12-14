@@ -1,0 +1,13 @@
+--- a/src/lib/auth/AuthContext.test.tsx
++++ b/src/lib/auth/AuthContext.test.tsx
+@@ -348,7 +348,9 @@ describe('AuthContext', () => {
+       await waitFor(() => expect(result.current.session).toEqual(session));
+
+       expect(result.current.user).toEqual(user);
+-      expect(result.current.userProfile).toEqual(profile);
++
++      // Wait for profile to be fetched asynchronously
++      await waitFor(() => expect(result.current.userProfile).toEqual(profile));
+     });
+
+     it('should handle auth state change to signed out', async () => {

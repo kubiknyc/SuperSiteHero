@@ -59,3 +59,34 @@ export {
 
 // Enhanced markup state hook
 export { useEnhancedMarkupState, type Tool } from './useEnhancedMarkupState'
+
+// Bulk markup export hook
+export { useBulkMarkupExport, type BulkMarkupExportHook, type BulkMarkupExportState } from './useBulkMarkupExport'
+
+// Drawing Packages hooks
+export {
+  useDrawingPackages,
+  useDrawingPackage,
+  usePackageActivity,
+  useCreateDrawingPackage,
+  useUpdateDrawingPackage,
+  useDeleteDrawingPackage,
+  useApproveDrawingPackage,
+  useCreatePackageVersion,
+  useAddPackageItem,
+  useAddMultiplePackageItems,
+  useUpdatePackageItem,
+  useRemovePackageItem,
+  useReorderPackageItems,
+  useAddPackageRecipient,
+  useAddMultiplePackageRecipients,
+  useUpdatePackageRecipient,
+  useRemovePackageRecipient,
+  useDistributePackage,
+  useGenerateShareableLink,
+  useRecordPackageAccess,
+  useRecordPackageDownload,
+  useAcknowledgePackage,
+  usePackageTypeInfo,
+  usePackageStatusInfo,
+} from './useDrawingPackages'

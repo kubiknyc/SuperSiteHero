@@ -119,6 +119,31 @@ export interface ItemConditions {
 }
 
 /**
+ * Auto-escalation action when a checklist item fails
+ */
+export type EscalateOnFail = 'none' | 'punch_item' | 'task' | null
+
+/**
+ * Configuration for auto-escalation behavior
+ */
+export interface EscalationItemConfig {
+  // Priority for the created punch item or task
+  priority?: 'normal' | 'high' | 'critical'
+  // Default trade for punch items
+  default_trade?: string
+  // Auto-assign to the inspector who submitted the checklist
+  auto_assign_to_inspector?: boolean
+  // Include photos from the checklist response
+  include_photos?: boolean
+  // Include notes from the checklist response
+  include_notes?: boolean
+  // Prefix for the title (default: "Checklist Failed: ")
+  title_prefix?: string
+  // Due date offset in days from creation
+  due_days?: number
+}
+
+/**
  * Checklist Template Item
  */
 export interface ChecklistTemplateItem {
@@ -141,6 +166,10 @@ export interface ChecklistTemplateItem {
   // Conditional visibility (show/hide based on other item responses)
   // Optional field - may not be present in database until migration is run
   conditions?: ItemConditions | null
+
+  // Auto-escalation on failure
+  escalate_on_fail?: EscalateOnFail
+  escalation_config?: EscalationItemConfig | null
 
   // Scoring (for checkbox items)
   scoring_enabled: boolean
@@ -310,6 +339,8 @@ export interface CreateChecklistTemplateItemDTO {
   is_required?: boolean
   config?: ItemConfig
   conditions?: ItemConditions | null
+  escalate_on_fail?: EscalateOnFail
+  escalation_config?: EscalationItemConfig | null
   scoring_enabled?: boolean
   pass_fail_na_scoring?: boolean
   requires_photo?: boolean

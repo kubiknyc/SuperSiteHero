@@ -77,6 +77,13 @@ export function EditPunchItemDialog({
       } else {
         setAssignee(null)
       }
+      // Load floor plan location if exists
+      const existingLocation = (punchItem as any).floor_plan_location
+      if (existingLocation) {
+        setFloorPlanLocation(existingLocation as PinLocation)
+      } else {
+        setFloorPlanLocation(null)
+      }
     }
   }, [punchItem, open])
 
@@ -104,7 +111,10 @@ export function EditPunchItemDialog({
           due_date: dueDate || null,
           subcontractor_id: assignee?.type === 'subcontractor' ? assignee.id : null,
           assigned_to: assignee?.type === 'user' ? assignee.id : null,
-        },
+          // Floor plan location
+          floor_plan_location: floorPlanLocation || null,
+          floor_plan_document_id: floorPlanLocation?.documentId || null,
+        } as any,  // Type assertion needed until database types regenerated
       },
       {
         onSuccess: () => {

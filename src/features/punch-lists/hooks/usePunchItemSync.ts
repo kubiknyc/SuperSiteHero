@@ -13,9 +13,9 @@ import { logger } from '@/lib/utils/logger'
 const MAX_SYNC_RETRIES = 3
 
 /**
- * Sync a single draft punch item to the server
+ * Sync a single draft punch item to the server (CREATE)
  */
-async function syncDraftToServer(draft: DraftPunchItem): Promise<{ success: boolean; serverId?: string; error?: string }> {
+async function syncCreateToServer(draft: DraftPunchItem): Promise<{ success: boolean; serverId?: string; error?: string }> {
   try {
     // Upload any pending photos first (convert blob URLs to server URLs)
     const uploadedPhotoUrls: string[] = []
@@ -86,6 +86,93 @@ async function syncDraftToServer(draft: DraftPunchItem): Promise<{ success: bool
 }
 
 /**
+ * Sync an updated punch item to the server (UPDATE)
+ */
+async function syncUpdateToServer(draft: DraftPunchItem): Promise<{ success: boolean; error?: string }> {
+  try {
+    // Upload any new pending photos first
+    const uploadedPhotoUrls: string[] = []
+
+    if (draft.pending_photos && draft.pending_photos.length > 0) {
+      for (const blobUrl of draft.pending_photos) {
+        if (!blobUrl.startsWith('blob:')) {
+          uploadedPhotoUrls.push(blobUrl)
+          continue
+        }
+
+        try {
+          const response = await fetch(blobUrl)
+          const blob = await response.blob()
+          const file = new File([blob], `photo-${Date.now()}.jpg`, { type: blob.type || 'image/jpeg' })
+          const result = await uploadPunchItemPhoto(draft.project_id, draft.id, file)
+          uploadedPhotoUrls.push(result.url)
+        } catch (photoError) {
+          logger.warn('[PunchSync] Failed to upload photo during update:', photoError)
+        }
+      }
+    }
+
+    // Update the punch item on the server
+    const { error } = await supabase
+      .from('punch_items')
+      .update({
+        title: draft.title,
+        description: draft.description,
+        trade: draft.trade,
+        priority: draft.priority,
+        status: draft.status,
+        building: draft.building || null,
+        floor: draft.floor || null,
+        room: draft.room || null,
+        area: draft.area || null,
+        location_notes: draft.location_notes || null,
+        due_date: draft.due_date || null,
+        assigned_to: draft.assigned_to || null,
+        subcontractor_id: draft.subcontractor_id || null,
+        floor_plan_location: draft.floor_plan_location ? JSON.stringify(draft.floor_plan_location) : null,
+      })
+      .eq('id', draft.id)
+
+    if (error) {
+      logger.error('[PunchSync] Failed to update punch item:', error)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true }
+  } catch (error) {
+    logger.error('[PunchSync] Unexpected update error:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+  }
+}
+
+/**
+ * Delete a punch item from the server (DELETE)
+ */
+async function syncDeleteToServer(draft: DraftPunchItem): Promise<{ success: boolean; error?: string }> {
+  try {
+    const { error } = await supabase
+      .from('punch_items')
+      .delete()
+      .eq('id', draft.id)
+
+    if (error) {
+      // If already deleted (not found), treat as success
+      if (error.code === 'PGRST116') {
+        logger.log('[PunchSync] Item already deleted, marking as synced')
+        return { success: true }
+      }
+      logger.error('[PunchSync] Failed to delete punch item:', error)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true }
+  } catch (error) {
+    logger.error('[PunchSync] Unexpected delete error:', error)
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
+  }
+}
+
+/**
  * Hook to automatically sync offline punch items when back online
  */
 export function usePunchItemSync() {
@@ -114,18 +201,45 @@ export function usePunchItemSync() {
         continue
       }
 
-      if (entry.operation === 'create') {
-        const result = await syncDraftToServer(entry.punchItem)
+      let result: { success: boolean; serverId?: string; error?: string }
 
-        if (result.success) {
-          markSynced(entry.punchItem.id, result.serverId)
-          successCount++
-        } else {
-          incrementAttempt(entry.id, result.error)
-          failCount++
-        }
+      switch (entry.operation) {
+        case 'create':
+          result = await syncCreateToServer(entry.punchItem)
+          if (result.success) {
+            markSynced(entry.punchItem.id, result.serverId)
+            successCount++
+          } else {
+            incrementAttempt(entry.id, result.error)
+            failCount++
+          }
+          break
+
+        case 'update':
+          result = await syncUpdateToServer(entry.punchItem)
+          if (result.success) {
+            markSynced(entry.punchItem.id)
+            successCount++
+          } else {
+            incrementAttempt(entry.id, result.error)
+            failCount++
+          }
+          break
+
+        case 'delete':
+          result = await syncDeleteToServer(entry.punchItem)
+          if (result.success) {
+            removeFromSyncQueue(entry.id)
+            successCount++
+          } else {
+            incrementAttempt(entry.id, result.error)
+            failCount++
+          }
+          break
+
+        default:
+          logger.warn(`[PunchSync] Unknown operation: ${entry.operation}`)
       }
-      // TODO: Handle 'update' and 'delete' operations
     }
 
     // Invalidate punch items queries to refresh the list
@@ -140,7 +254,7 @@ export function usePunchItemSync() {
     }
 
     logger.log(`[PunchSync] Sync complete: ${successCount} success, ${failCount} failed`)
-  }, [isOnline, syncQueue, markSynced, incrementAttempt, queryClient])
+  }, [isOnline, syncQueue, markSynced, incrementAttempt, removeFromSyncQueue, queryClient])
 
   // Auto-sync when coming back online
   useEffect(() => {

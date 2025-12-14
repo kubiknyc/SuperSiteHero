@@ -13,9 +13,14 @@ export {
   useSiteInstructionHistory,
   useSiteInstructionComments,
   useAddSiteInstructionComment,
+  // Attachments
+  useSiteInstructionAttachments,
+  useUploadSiteInstructionAttachment,
+  useDeleteSiteInstructionAttachment,
   siteInstructionKeys,
   type SiteInstructionFilters,
   type CreateSiteInstructionInput,
   type UpdateSiteInstructionInput,
   type SiteInstructionWithRelations,
+  type SiteInstructionAttachment,
 } from './useSiteInstructions'

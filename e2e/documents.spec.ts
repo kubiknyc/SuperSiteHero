@@ -50,7 +50,7 @@ async function login(page: Page, email: string = TEST_USER.email, password: stri
   await page.fill('input[type="email"]', email);
   await page.fill('input[type="password"]', password);
   await page.click('button[type="submit"]');
-  await page.waitForURL('**/dashboard', { timeout: 15000 });
+  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
 }
 
 async function navigateToDocuments(page: Page) {

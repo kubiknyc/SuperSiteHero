@@ -144,7 +144,7 @@ export async function exportRFIsToExcel(
 
   // Create workbook
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'SuperSiteHero'
+  workbook.creator = 'JobSight'
   workbook.created = new Date()
 
   // RFI Log sheet

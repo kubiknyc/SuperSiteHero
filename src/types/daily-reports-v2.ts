@@ -626,20 +626,128 @@ export interface PhotoEntryV2 {
 // TEMPLATES
 // =============================================
 
+export type TemplateScope = 'personal' | 'project' | 'company';
+
+export type TemplateCategory =
+  | 'general'
+  | 'residential'
+  | 'commercial'
+  | 'industrial'
+  | 'infrastructure'
+  | 'renovation'
+  | 'custom';
+
+export interface TemplateData {
+  // Weather defaults
+  weather_defaults?: {
+    weather_condition?: string;
+  };
+  // Default notes/narrative templates
+  default_notes?: {
+    work_summary?: string;
+    work_planned_tomorrow?: string;
+    observations?: string;
+  };
+  // Custom sections configuration
+  custom_sections?: {
+    name: string;
+    enabled: boolean;
+    order: number;
+  }[];
+  // Default values for various fields
+  default_values?: {
+    shift_type?: ShiftType;
+    shift_start_time?: string;
+    shift_end_time?: string;
+    mode?: FormMode;
+  };
+}
+
 export interface DailyReportTemplate {
   id: string;
   project_id?: string;
+  company_id?: string;
   user_id: string;
+  created_by?: string;
 
   name: string;
   description?: string;
   is_default: boolean;
 
+  // Template scope for sharing
+  scope: TemplateScope;
+  category: TemplateCategory;
+  tags: string[];
+
+  // Template content
   workforce_template: Partial<WorkforceEntryV2>[];
   equipment_template: Partial<EquipmentEntryV2>[];
+  template_data?: TemplateData;
+
+  // Usage tracking
+  usage_count: number;
+  last_used_at?: string;
+
+  // Version and copy tracking
+  version: number;
+  copied_from_id?: string;
 
   created_at: string;
   updated_at: string;
+}
+
+// Request/Response types for template operations
+export interface CreateTemplateRequest {
+  name: string;
+  description?: string;
+  project_id?: string;
+  company_id?: string;
+  scope: TemplateScope;
+  category?: TemplateCategory;
+  tags?: string[];
+  workforce_template?: Partial<WorkforceEntryV2>[];
+  equipment_template?: Partial<EquipmentEntryV2>[];
+  template_data?: TemplateData;
+  is_default?: boolean;
+}
+
+export interface UpdateTemplateRequest {
+  name?: string;
+  description?: string;
+  scope?: TemplateScope;
+  category?: TemplateCategory;
+  tags?: string[];
+  workforce_template?: Partial<WorkforceEntryV2>[];
+  equipment_template?: Partial<EquipmentEntryV2>[];
+  template_data?: TemplateData;
+  is_default?: boolean;
+}
+
+export interface CopyTemplateRequest {
+  source_template_id: string;
+  new_name: string;
+  new_scope: TemplateScope;
+  new_project_id?: string;
+  new_company_id?: string;
+}
+
+export interface TemplateFilters {
+  scope?: TemplateScope | 'all';
+  category?: TemplateCategory | 'all';
+  project_id?: string;
+  company_id?: string;
+  search?: string;
+  tags?: string[];
+  created_by?: string;
+}
+
+export interface TemplateWithStats extends DailyReportTemplate {
+  creator_name?: string;
+  creator_email?: string;
+  company_name?: string;
+  project_name?: string;
+  workforce_count: number;
+  equipment_count: number;
 }
 
 // =============================================

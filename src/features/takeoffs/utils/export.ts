@@ -270,7 +270,7 @@ export async function exportToExcel(
 
   // Create workbook
   const workbook = new ExcelJS.Workbook()
-  workbook.creator = 'SuperSiteHero'
+  workbook.creator = 'JobSight'
   workbook.created = new Date()
 
   // Measurements sheet

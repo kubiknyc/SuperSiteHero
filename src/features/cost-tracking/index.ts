@@ -1,6 +1,8 @@
 // Cost Tracking Feature
+
 // Hooks
 export * from './hooks/useCostTracking'
+export * from './hooks/useEVM'
 
-// Components will be added here
-// export * from './components'
+// Components
+export * from './components'

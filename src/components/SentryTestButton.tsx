@@ -34,7 +34,7 @@ export function SentryTestButton() {
     )
 
     try {
-      throw new Error('Test error from SuperSiteHero construction platform')
+      throw new Error('Test error from JobSight construction platform')
     } catch (error) {
       captureException(error as Error, {
         module: 'testing',
@@ -54,7 +54,7 @@ export function SentryTestButton() {
     )
 
     captureMessage(
-      'Test message from SuperSiteHero - This is a manual message capture',
+      'Test message from JobSight - This is a manual message capture',
       'info',
       {
         module: 'testing',

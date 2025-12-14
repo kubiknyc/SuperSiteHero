@@ -4,7 +4,7 @@
  */
 
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
-import { useSubcontractorStats } from '../hooks'
+import { useSubcontractorStats, useCanViewDailyReports } from '../hooks'
 import {
   LayoutDashboard,
   FileText,
@@ -14,6 +14,7 @@ import {
   AlertTriangle,
   Building2,
   LogOut,
+  CalendarDays,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -59,6 +60,7 @@ function NavItem({ to, icon, label, count, warning }: NavItemProps) {
 export function SubcontractorLayout() {
   const { userProfile, signOut } = useAuth()
   const { data: stats } = useSubcontractorStats()
+  const { data: canViewDailyReports } = useCanViewDailyReports()
   const location = useLocation()
 
   return (
@@ -108,6 +110,13 @@ export function SubcontractorLayout() {
             label="Tasks"
             count={stats?.open_tasks}
           />
+          {canViewDailyReports && (
+            <NavItem
+              to="/portal/daily-reports"
+              icon={<CalendarDays className="h-4 w-4" />}
+              label="Daily Reports"
+            />
+          )}
           <NavItem
             to="/portal/compliance"
             icon={<AlertTriangle className="h-4 w-4" />}

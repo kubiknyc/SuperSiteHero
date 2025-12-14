@@ -33,7 +33,7 @@ export async function testEmailSending(recipientEmail: string): Promise<void> {
 
     const result = await sendEmail({
       to: { email: recipientEmail, name: 'Test User' },
-      subject: '[TEST] SuperSiteHero Email Test',
+      subject: '[TEST] JobSight Email Test',
       html,
       text,
       tags: ['test', 'email-verification'],

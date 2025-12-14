@@ -1,9 +1,10 @@
 // File: /src/pages/documents/DrawingMarkupPage.tsx
 // Full-screen drawing markup page with enhanced tools
+// Mobile-optimized with touch gestures and bottom toolbar
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Maximize2, Minimize2, Loader2, AlertCircle, GitCompare, Layers, History } from 'lucide-react'
+import { ArrowLeft, Maximize2, Minimize2, Loader2, AlertCircle, GitCompare, Layers, History, X } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { PDFViewer } from '@/features/documents/components/viewers/PDFViewer'
 import { useDocument, useDocumentVersions } from '@/features/documents/hooks/useDocuments'
@@ -15,10 +16,34 @@ import { LayerManager } from '@/features/documents/components/markup/LayerManage
 import { MarkupHistoryPanel } from '@/features/documents/components/markup/MarkupHistoryPanel'
 import { EnhancedVersionComparison } from '@/features/documents/components/comparison'
 
+// Mobile-optimized components
+import { MobileMarkupToolbar } from '@/features/documents/components/markup/MobileMarkupToolbar'
+import { MobileLayerDrawer } from '@/features/documents/components/markup/MobileLayerDrawer'
+
 // Hooks
 import { useEnhancedMarkupState } from '@/features/documents/hooks/useEnhancedMarkupState'
+import { useMobileTouchGestures } from '@/features/documents/hooks/useMobileTouchGestures'
 import type { Document } from '@/types/database'
 import type { MarkupLayer } from '@/features/documents/types/markup'
+
+// Mobile detection hook
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const isSmallScreen = window.innerWidth < 768
+      setIsMobile(isTouchDevice && isSmallScreen)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  return isMobile
+}
 
 /**
  * DrawingMarkupPage Component
@@ -42,6 +67,7 @@ export function DrawingMarkupPage() {
   const { documentId } = useParams<{ documentId: string }>()
   const navigate = useNavigate()
   const { userProfile } = useAuth()
+  const isMobile = useIsMobile()
 
   // UI State
   const [showLayerPanel, setShowLayerPanel] = useState(true)
@@ -49,6 +75,13 @@ export function DrawingMarkupPage() {
   const [comparisonMode, setComparisonMode] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [comparisonVersion, setComparisonVersion] = useState<Document | null>(null)
+
+  // Mobile UI state
+  const [mobileLayerDrawerOpen, setMobileLayerDrawerOpen] = useState(false)
+  const [mobileTool, setMobileTool] = useState<string>('select')
+  const [mobileColor, setMobileColor] = useState('#EF4444')
+  const [mobileLineWidth, setMobileLineWidth] = useState(4)
+  const [mobileZoom, setMobileZoom] = useState(100)
 
   // Queries
   const { data: currentDocument, isLoading, error } = useDocument(documentId)
@@ -334,42 +367,80 @@ export function DrawingMarkupPage() {
         )}
       </div>
 
-      {/* Mobile Bottom Bar - Quick Access */}
-      <div className="md:hidden bg-gray-800 border-t border-gray-700 px-4 py-2 flex items-center justify-around">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowLayerPanel(!showLayerPanel)}
-          className="text-white"
-        >
-          <Layers className="w-4 h-4 mr-1" />
-          Layers
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowHistoryPanel(!showHistoryPanel)}
-          className="text-white"
-        >
-          <History className="w-4 h-4 mr-1" />
-          History
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            const otherVersion = versions.find(v => v.id !== currentDocument.id)
-            if (otherVersion) {
-              handleStartComparison(otherVersion)
-            }
-          }}
-          className="text-white"
-          disabled={versions.length < 2}
-        >
-          <GitCompare className="w-4 h-4 mr-1" />
-          Compare
-        </Button>
-      </div>
+      {/* Mobile Markup Toolbar - Touch-optimized bottom toolbar */}
+      {isMobile && !comparisonMode && (
+        <MobileMarkupToolbar
+          selectedTool={mobileTool as 'select' | 'pan' | 'freehand' | 'text' | 'rectangle' | 'circle' | 'arrow' | 'eraser'}
+          onToolChange={(tool) => setMobileTool(tool)}
+          selectedColor={mobileColor}
+          onColorChange={setMobileColor}
+          lineWidth={mobileLineWidth}
+          onLineWidthChange={setMobileLineWidth}
+          onZoomIn={() => setMobileZoom((z) => Math.min(z + 25, 400))}
+          onZoomOut={() => setMobileZoom((z) => Math.max(z - 25, 25))}
+          currentZoom={mobileZoom}
+          onOpenLayers={() => setMobileLayerDrawerOpen(true)}
+          disabled={false}
+        />
+      )}
+
+      {/* Legacy Mobile Bottom Bar - Shown on non-touch small screens */}
+      {!isMobile && (
+        <div className="md:hidden bg-gray-800 border-t border-gray-700 px-4 py-2 flex items-center justify-around">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowLayerPanel(!showLayerPanel)}
+            className="text-white"
+          >
+            <Layers className="w-4 h-4 mr-1" />
+            Layers
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowHistoryPanel(!showHistoryPanel)}
+            className="text-white"
+          >
+            <History className="w-4 h-4 mr-1" />
+            History
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              const otherVersion = versions.find(v => v.id !== currentDocument.id)
+              if (otherVersion) {
+                handleStartComparison(otherVersion)
+              }
+            }}
+            className="text-white"
+            disabled={versions.length < 2}
+          >
+            <GitCompare className="w-4 h-4 mr-1" />
+            Compare
+          </Button>
+        </div>
+      )}
+
+      {/* Mobile Layer Drawer */}
+      {isMobile && (
+        <MobileLayerDrawer
+          layers={layers}
+          selectedLayerId={selectedLayerId}
+          onSelectLayer={onSelectLayer}
+          onCreateLayer={onCreateLayer}
+          onUpdateLayer={onUpdateLayer}
+          onDeleteLayer={onDeleteLayer}
+          onReorderLayer={onReorderLayer}
+          onToggleVisibility={onToggleLayerVisibility}
+          onToggleLock={onToggleLayerLock}
+          currentUserId={currentUserId}
+          disabled={layersLoading}
+          open={mobileLayerDrawerOpen}
+          onOpenChange={setMobileLayerDrawerOpen}
+        />
+      )}
 
       {/* Keyboard Shortcuts Hint */}
       <div className="hidden xl:block absolute bottom-4 left-4 bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-lg px-4 py-2 text-xs text-gray-400">

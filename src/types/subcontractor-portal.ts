@@ -70,6 +70,7 @@ export interface SubcontractorPortalAccess {
   can_update_punch_items: boolean;
   can_update_tasks: boolean;
   can_upload_documents: boolean;
+  can_view_daily_reports: boolean;
 
   // Invitation tracking
   invited_by: string | null;
@@ -103,6 +104,7 @@ export interface CreatePortalAccessDTO {
   can_update_punch_items?: boolean;
   can_update_tasks?: boolean;
   can_upload_documents?: boolean;
+  can_view_daily_reports?: boolean;
   expires_at?: string;
 }
 
@@ -114,6 +116,7 @@ export interface UpdatePortalAccessDTO {
   can_update_punch_items?: boolean;
   can_update_tasks?: boolean;
   can_upload_documents?: boolean;
+  can_view_daily_reports?: boolean;
   is_active?: boolean;
   expires_at?: string | null;
 }

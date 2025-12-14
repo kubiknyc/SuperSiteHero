@@ -39,8 +39,17 @@ import {
   Settings,
   HardHat,
   AlertTriangle,
+  FileSpreadsheet,
+  FileText,
+  Loader2,
+  Printer,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  downloadLookAheadAsPDF,
+  downloadLookAheadAsExcel,
+  downloadLookAheadAsCSV,
+} from '@/features/look-ahead/utils/export'
 import {
   useActivitiesByWeek,
   useCreateActivity,
@@ -73,6 +82,7 @@ import {
   ACTIVITY_STATUS_CONFIG,
   filterActivities,
 } from '@/types/look-ahead'
+import { useProject } from '@/features/projects/hooks/useProjects'
 
 export function LookAheadPage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -86,6 +96,8 @@ export function LookAheadPage() {
   const [draggedActivityId, setDraggedActivityId] = useState<string | null>(null)
   const [filters, setFilters] = useState<LookAheadActivityFilters>({})
   const [searchQuery, setSearchQuery] = useState('')
+  const [isExporting, setIsExporting] = useState<'pdf' | 'excel' | 'csv' | null>(null)
+  const [isPrintMode, setIsPrintMode] = useState(false)
 
   // Queries
   const {
@@ -98,6 +110,9 @@ export function LookAheadPage() {
 
   const { data: activityConstraints } = useActivityConstraints(selectedActivity?.id)
 
+  // Get project info for export
+  const { data: project } = useProject(projectId)
+
   // Mutations
   const createActivity = useCreateActivity()
   const updateActivity = useUpdateActivity()
@@ -107,6 +122,16 @@ export function LookAheadPage() {
   const createConstraint = useCreateConstraint()
   const updateConstraint = useUpdateConstraint()
   const deleteConstraint = useDeleteConstraint()
+
+  // All activities combined for export
+  const allActivities = useMemo(() => {
+    if (!weekData?.activities) return []
+    return [
+      ...(weekData.activities[1] || []),
+      ...(weekData.activities[2] || []),
+      ...(weekData.activities[3] || []),
+    ]
+  }, [weekData?.activities])
 
   // Filtered activities
   const filteredActivities = useMemo(() => {
@@ -120,6 +145,83 @@ export function LookAheadPage() {
       3: filterActivities(weekData.activities[3] || [], withSearch),
     }
   }, [weekData?.activities, filters, searchQuery])
+
+  // Export handlers
+  const handleExportPDF = async () => {
+    if (allActivities.length === 0) {
+      toast.error('No activities to export')
+      return
+    }
+
+    setIsExporting('pdf')
+    try {
+      await downloadLookAheadAsPDF(
+        allActivities,
+        project?.name || 'Project',
+        ppcMetrics || undefined
+      )
+      toast.success('PDF exported successfully')
+    } catch (error) {
+      console.error('PDF export error:', error)
+      toast.error('Failed to export PDF')
+    } finally {
+      setIsExporting(null)
+    }
+  }
+
+  const handleExportExcel = async () => {
+    if (allActivities.length === 0) {
+      toast.error('No activities to export')
+      return
+    }
+
+    setIsExporting('excel')
+    try {
+      await downloadLookAheadAsExcel(
+        allActivities,
+        project?.name || 'Project',
+        ppcMetrics || undefined
+      )
+      toast.success('Excel file exported successfully')
+    } catch (error) {
+      console.error('Excel export error:', error)
+      toast.error('Failed to export Excel file')
+    } finally {
+      setIsExporting(null)
+    }
+  }
+
+  const handleExportCSV = () => {
+    if (allActivities.length === 0) {
+      toast.error('No activities to export')
+      return
+    }
+
+    setIsExporting('csv')
+    try {
+      downloadLookAheadAsCSV(
+        allActivities,
+        project?.name || 'Project',
+        ppcMetrics || undefined
+      )
+      toast.success('CSV exported successfully')
+    } catch (error) {
+      console.error('CSV export error:', error)
+      toast.error('Failed to export CSV')
+    } finally {
+      setIsExporting(null)
+    }
+  }
+
+  // Print view handler
+  const handlePrintView = () => {
+    setIsPrintMode(true)
+    // Wait for state update and then print
+    setTimeout(() => {
+      window.print()
+      setIsPrintMode(false)
+    }, 100)
+  }
 
   // Handlers
   const handleAddActivity = (weekNumber: number, weekStartDate: string) => {
@@ -398,6 +500,43 @@ export function LookAheadPage() {
             </SelectContent>
           </Select>
 
+          {/* Export Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" disabled={isExporting !== null}>
+                {isExporting ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Download className="h-4 w-4 mr-2" />
+                )}
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleExportPDF} disabled={isExporting !== null}>
+                <FileText className="h-4 w-4 mr-2" />
+                Export to PDF
+                {isExporting === 'pdf' && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportExcel} disabled={isExporting !== null}>
+                <FileSpreadsheet className="h-4 w-4 mr-2" />
+                Export to Excel
+                {isExporting === 'excel' && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleExportCSV} disabled={isExporting !== null}>
+                <FileText className="h-4 w-4 mr-2" />
+                Export to CSV
+                {isExporting === 'csv' && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handlePrintView}>
+                <Printer className="h-4 w-4 mr-2" />
+                Print 4-Week View
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Settings Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -405,10 +544,6 @@ export function LookAheadPage() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Download className="h-4 w-4 mr-2" />
-                Export to PDF
-              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Upload className="h-4 w-4 mr-2" />
                 Import from P6

@@ -636,7 +636,7 @@ export const notificationService = {
       const { html, text } = generatePortalInvitationEmail(emailData)
       await sendEmail({
         to: { email: recipientEmail, name: data.companyName },
-        subject: `You're invited to ${data.projectName} on SuperSiteHero`,
+        subject: `You're invited to ${data.projectName} on JobSight`,
         html,
         text,
         tags: ['invitation', 'portal', 'subcontractor'],

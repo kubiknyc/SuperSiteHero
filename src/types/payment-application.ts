@@ -459,3 +459,171 @@ export interface G703PDFData {
     retainage: number;
   };
 }
+
+// =============================================
+// Payment Aging Types
+// =============================================
+
+/**
+ * Aging bucket periods
+ */
+export type AgingBucket = 'current' | '1-30' | '31-60' | '61-90' | '90+';
+
+export const AGING_BUCKETS: Array<{
+  key: AgingBucket;
+  label: string;
+  minDays: number;
+  maxDays: number | null;
+  color: string;
+}> = [
+  { key: 'current', label: 'Current', minDays: 0, maxDays: 0, color: 'green' },
+  { key: '1-30', label: '1-30 Days', minDays: 1, maxDays: 30, color: 'blue' },
+  { key: '31-60', label: '31-60 Days', minDays: 31, maxDays: 60, color: 'yellow' },
+  { key: '61-90', label: '61-90 Days', minDays: 61, maxDays: 90, color: 'orange' },
+  { key: '90+', label: '90+ Days', minDays: 91, maxDays: null, color: 'red' },
+];
+
+/**
+ * Individual receivable item for aging
+ */
+export interface AgingReceivable {
+  id: string;
+  project_id: string;
+  project_name: string;
+  project_number: string | null;
+  application_number: number;
+  display_number: string;
+  period_to: string;
+  submitted_at: string | null;
+  approved_at: string | null;
+  status: PaymentApplicationStatus;
+  amount_due: number;
+  amount_received: number;
+  amount_outstanding: number;
+  retainage_held: number;
+  days_outstanding: number;
+  aging_bucket: AgingBucket;
+}
+
+/**
+ * Aging bucket totals
+ */
+export interface AgingBucketSummary {
+  bucket: AgingBucket;
+  label: string;
+  count: number;
+  amount: number;
+  percent: number;
+}
+
+/**
+ * Complete aging report
+ */
+export interface PaymentAgingReport {
+  as_of_date: string;
+  company_id: string;
+
+  // Summary totals
+  total_outstanding: number;
+  total_retainage: number;
+  total_receivables: number;
+
+  // Bucket breakdown
+  buckets: AgingBucketSummary[];
+
+  // Detailed items
+  receivables: AgingReceivable[];
+
+  // Metrics
+  average_days_outstanding: number;
+  weighted_average_days: number;
+  oldest_receivable_days: number;
+
+  // By project summary
+  by_project: ProjectAgingSummary[];
+}
+
+/**
+ * Project-level aging summary
+ */
+export interface ProjectAgingSummary {
+  project_id: string;
+  project_name: string;
+  project_number: string | null;
+  total_outstanding: number;
+  total_retainage: number;
+  application_count: number;
+  oldest_days: number;
+  average_days: number;
+  buckets: {
+    current: number;
+    '1-30': number;
+    '31-60': number;
+    '61-90': number;
+    '90+': number;
+  };
+}
+
+/**
+ * Aging alert thresholds
+ */
+export interface AgingAlertConfig {
+  warn_at_days: number;  // Show warning
+  critical_at_days: number;  // Show critical
+  auto_escalate_at_days: number;  // Auto-create escalation
+  escalate_to_role: string;  // Role to notify
+}
+
+export const DEFAULT_AGING_ALERT_CONFIG: AgingAlertConfig = {
+  warn_at_days: 30,
+  critical_at_days: 60,
+  auto_escalate_at_days: 90,
+  escalate_to_role: 'project_manager',
+};
+
+/**
+ * Aging alert
+ */
+export interface AgingAlert {
+  id: string;
+  receivable: AgingReceivable;
+  severity: 'info' | 'warning' | 'critical';
+  message: string;
+  created_at: string;
+  acknowledged_at: string | null;
+  acknowledged_by: string | null;
+}
+
+/**
+ * DSO (Days Sales Outstanding) metrics
+ */
+export interface DSOMetrics {
+  current_dso: number;  // Current DSO
+  target_dso: number;  // Target DSO
+  trend: 'improving' | 'stable' | 'worsening';
+  trend_change_days: number;  // Change from last period
+  historical: Array<{
+    period: string;
+    dso: number;
+  }>;
+}
+
+/**
+ * Cash flow forecast item
+ */
+export interface CashFlowForecastItem {
+  date: string;
+  expected_receipts: number;
+  confidence: 'high' | 'medium' | 'low';
+  source_applications: string[];  // Application IDs
+}
+
+/**
+ * Payment aging dashboard data
+ */
+export interface PaymentAgingDashboard {
+  report: PaymentAgingReport;
+  alerts: AgingAlert[];
+  dso_metrics: DSOMetrics;
+  forecast: CashFlowForecastItem[];
+}

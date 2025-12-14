@@ -10,6 +10,7 @@ import {
   changeOrderAttachmentsApiV2,
   changeOrderHistoryApiV2,
 } from '../../../lib/api/services/change-orders-v2';
+import { changeOrderBudgetIntegration } from '../../../lib/api/services/change-order-budget-integration';
 import type {
   ChangeOrder,
   ChangeOrderItem,
@@ -42,6 +43,7 @@ export const changeOrderKeysV2 = {
   history: (changeOrderId: string) => [...changeOrderKeysV2.all, 'history', changeOrderId] as const,
   statistics: (projectId: string) => [...changeOrderKeysV2.all, 'statistics', projectId] as const,
   byBallInCourt: (userId: string) => [...changeOrderKeysV2.all, 'ball-in-court', userId] as const,
+  budgetImpact: (changeOrderId: string) => [...changeOrderKeysV2.all, 'budget-impact', changeOrderId] as const,
 };
 
 // =============================================================================
@@ -217,6 +219,7 @@ export function useSubmitToOwner() {
 
 /**
  * Hook to process owner approval
+ * Also invalidates budget queries since approval triggers budget adjustment
  */
 export function useProcessOwnerApproval() {
   const queryClient = useQueryClient();
@@ -228,6 +231,10 @@ export function useProcessOwnerApproval() {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+      // Invalidate budget queries since approval triggers budget adjustment
+      queryClient.invalidateQueries({ queryKey: ['project-budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['cost-transactions'] });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.history(data.id) });
     },
   });
 }
@@ -249,6 +256,7 @@ export function useExecuteChangeOrder() {
 
 /**
  * Hook to void a change order
+ * Also invalidates budget queries since voiding a CO reverses budget adjustments
  */
 export function useVoidChangeOrder() {
   const queryClient = useQueryClient();
@@ -260,6 +268,10 @@ export function useVoidChangeOrder() {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+      // Invalidate budget queries since voiding can reverse budget adjustments
+      queryClient.invalidateQueries({ queryKey: ['project-budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['cost-transactions'] });
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.history(data.id) });
     },
   });
 }
@@ -273,6 +285,36 @@ export function useUpdateBallInCourt() {
   return useMutation({
     mutationFn: ({ id, userId, role }: { id: string; userId: string; role: string }) =>
       changeOrdersApiV2.updateBallInCourt(id, userId, role),
+    onSuccess: (data) => {
+      queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
+      queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+    },
+  });
+}
+
+/**
+ * Hook to update change order owner signature
+ */
+export function useUpdateChangeOrderSignature() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      id,
+      signatureUrl,
+      signerName,
+      signatureDate,
+    }: {
+      id: string;
+      signatureUrl: string | null;
+      signerName?: string;
+      signatureDate?: string | null;
+    }) => {
+      return changeOrdersApiV2.updateChangeOrder(id, {
+        owner_signature_url: signatureUrl,
+        owner_approver_name: signerName,
+      });
+    },
     onSuccess: (data) => {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
@@ -422,6 +464,23 @@ export function useChangeOrderHistory(changeOrderId: string | undefined) {
 }
 
 // =============================================================================
+// BUDGET INTEGRATION
+// =============================================================================
+
+/**
+ * Hook to preview budget impact before approving a change order
+ * Shows which cost codes will be affected and by how much
+ */
+export function useChangeOrderBudgetImpact(changeOrderId: string | undefined) {
+  return useQuery({
+    queryKey: changeOrderKeysV2.budgetImpact(changeOrderId || ''),
+    queryFn: () => changeOrderBudgetIntegration.previewBudgetImpact(changeOrderId!),
+    enabled: !!changeOrderId,
+    staleTime: 30000,
+  });
+}
+
+// =============================================================================
 // EXPORT ALL
 // =============================================================================
 
@@ -463,4 +522,7 @@ export default {
 
   // History
   useChangeOrderHistory,
+
+  // Budget Integration
+  useChangeOrderBudgetImpact,
 };

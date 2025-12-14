@@ -22,3 +22,30 @@ export { useDailyReportFullData } from './useDailyReportRelatedData'
 // V2 hooks
 export { useOfflineSyncV2 } from './useOfflineSyncV2'
 export { useGeolocation, formatCoordinates, calculateDistance } from './useGeolocation'
+
+// Template sharing hooks
+export {
+  // Query keys
+  templateKeys,
+  // Query hooks
+  useTemplates,
+  useProjectTemplates,
+  useCompanyTemplates,
+  useTemplate,
+  useTemplateWithStats,
+  usePopularTemplates,
+  useRecentTemplates,
+  useTemplateTags,
+  useTemplateSearch,
+  // Mutation hooks
+  useCreateTemplate,
+  useCreateTemplateFromReport,
+  useUpdateTemplate,
+  useDeleteTemplate,
+  useCopyTemplate,
+  useApplyTemplate,
+  useExportTemplate,
+  useImportTemplate,
+  // Utility hooks
+  useTemplateFilters,
+} from './useDailyReportTemplates'

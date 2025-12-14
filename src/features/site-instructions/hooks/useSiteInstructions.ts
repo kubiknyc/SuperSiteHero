@@ -623,3 +623,161 @@ export function useAddSiteInstructionComment() {
     },
   })
 }
+
+// =============================================
+// Attachments
+// =============================================
+
+export interface SiteInstructionAttachment {
+  id: string
+  site_instruction_id: string
+  file_name: string
+  file_type: string
+  file_size: number
+  file_url: string
+  storage_path: string
+  uploaded_by: string | null
+  uploaded_at: string
+  description: string | null
+  uploaded_by_user?: {
+    id: string
+    full_name: string
+  } | null
+}
+
+// Fetch attachments for a site instruction
+export function useSiteInstructionAttachments(id: string) {
+  return useQuery({
+    queryKey: [...siteInstructionKeys.all, 'attachments', id] as const,
+    queryFn: async () => {
+      const { data, error } = await (supabase as any)
+        .from('site_instruction_attachments')
+        .select('*')
+        .eq('site_instruction_id', id)
+        .order('uploaded_at', { ascending: false })
+
+      if (error) throw error
+
+      // Fetch user info for each attachment
+      const results = await Promise.all(
+        (data || []).map(async (attachment: SiteInstructionAttachment) => {
+          let uploaded_by_user = null
+          if (attachment.uploaded_by) {
+            const { data: user } = await supabase
+              .from('users')
+              .select('id, full_name')
+              .eq('id', attachment.uploaded_by)
+              .single()
+            uploaded_by_user = user
+          }
+          return {
+            ...attachment,
+            uploaded_by_user,
+          }
+        })
+      )
+
+      return results as SiteInstructionAttachment[]
+    },
+    enabled: !!id,
+  })
+}
+
+// Upload attachment
+export function useUploadSiteInstructionAttachment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      siteInstructionId,
+      file,
+      description,
+    }: {
+      siteInstructionId: string
+      file: File
+      description?: string
+    }) => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      // Upload file to storage
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${siteInstructionId}/${Date.now()}-${file.name}`
+      const storagePath = `site-instructions/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('attachments')
+        .upload(storagePath, file)
+
+      if (uploadError) throw uploadError
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('attachments')
+        .getPublicUrl(storagePath)
+
+      // Create attachment record
+      const { data, error } = await (supabase as any)
+        .from('site_instruction_attachments')
+        .insert({
+          site_instruction_id: siteInstructionId,
+          file_name: file.name,
+          file_type: file.type || `application/${fileExt}`,
+          file_size: file.size,
+          file_url: publicUrl,
+          storage_path: storagePath,
+          uploaded_by: user?.id,
+          description,
+        })
+        .select()
+        .single()
+
+      if (error) throw error
+      return data as SiteInstructionAttachment
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: [...siteInstructionKeys.all, 'attachments', variables.siteInstructionId],
+      })
+    },
+  })
+}
+
+// Delete attachment
+export function useDeleteSiteInstructionAttachment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      attachmentId,
+      siteInstructionId,
+      storagePath,
+    }: {
+      attachmentId: string
+      siteInstructionId: string
+      storagePath: string
+    }) => {
+      // Delete from storage
+      const { error: storageError } = await supabase.storage
+        .from('attachments')
+        .remove([storagePath])
+
+      if (storageError) {
+        console.warn('Failed to delete file from storage:', storageError)
+      }
+
+      // Delete record
+      const { error } = await (supabase as any)
+        .from('site_instruction_attachments')
+        .delete()
+        .eq('id', attachmentId)
+
+      if (error) throw error
+      return { attachmentId, siteInstructionId }
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({
+        queryKey: [...siteInstructionKeys.all, 'attachments', result.siteInstructionId],
+      })
+    },
+  })
+}

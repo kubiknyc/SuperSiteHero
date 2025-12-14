@@ -1530,10 +1530,13 @@ export type Database = {
       checklist_template_items: {
         Row: {
           checklist_template_id: string
+          conditions: Json | null
           config: Json | null
           created_at: string | null
           deleted_at: string | null
           description: string | null
+          escalate_on_fail: string | null
+          escalation_config: Json | null
           id: string
           is_required: boolean | null
           item_type: string
@@ -1549,10 +1552,13 @@ export type Database = {
         }
         Insert: {
           checklist_template_id: string
+          conditions?: Json | null
           config?: Json | null
           created_at?: string | null
           deleted_at?: string | null
           description?: string | null
+          escalate_on_fail?: string | null
+          escalation_config?: Json | null
           id?: string
           is_required?: boolean | null
           item_type: string
@@ -1568,10 +1574,13 @@ export type Database = {
         }
         Update: {
           checklist_template_id?: string
+          conditions?: Json | null
           config?: Json | null
           created_at?: string | null
           deleted_at?: string | null
           description?: string | null
+          escalate_on_fail?: string | null
+          escalation_config?: Json | null
           id?: string
           is_required?: boolean | null
           item_type?: string

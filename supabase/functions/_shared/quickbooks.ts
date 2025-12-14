@@ -2,6 +2,127 @@
  * Shared QuickBooks utilities for Edge Functions
  */
 
+// =============================================
+// RETRY CONFIGURATION & ERROR HANDLING
+// =============================================
+
+/**
+ * Error types for QuickBooks API
+ */
+export type QBErrorType =
+  | 'network'      // Network/connection errors - retryable
+  | 'rate_limit'   // Rate limiting (429) - retryable with backoff
+  | 'server'       // Server errors (5xx) - retryable
+  | 'auth'         // Authentication errors (401) - needs token refresh
+  | 'validation'   // Validation errors (400) - not retryable
+  | 'not_found'    // Resource not found (404) - not retryable
+  | 'conflict'     // Stale data conflict - needs fresh SyncToken
+  | 'unknown'      // Unknown errors
+
+/**
+ * QuickBooks API Error with additional context
+ */
+export class QBApiError extends Error {
+  constructor(
+    message: string,
+    public readonly errorType: QBErrorType,
+    public readonly statusCode?: number,
+    public readonly qbErrorCode?: string,
+    public readonly isRetryable: boolean = false,
+    public readonly retryAfterMs?: number
+  ) {
+    super(message)
+    this.name = 'QBApiError'
+  }
+}
+
+/**
+ * Retry configuration for API requests
+ */
+export interface RetryConfig {
+  maxRetries: number
+  baseDelayMs: number
+  maxDelayMs: number
+  retryableErrors: QBErrorType[]
+}
+
+/**
+ * Default retry configuration
+ */
+export const DEFAULT_RETRY_CONFIG: RetryConfig = {
+  maxRetries: 3,
+  baseDelayMs: 1000,
+  maxDelayMs: 30000,
+  retryableErrors: ['network', 'rate_limit', 'server'],
+}
+
+/**
+ * Calculate exponential backoff delay with jitter
+ */
+export function calculateBackoff(attempt: number, config: RetryConfig): number {
+  // Exponential backoff: baseDelay * 2^attempt
+  const exponentialDelay = config.baseDelayMs * Math.pow(2, attempt)
+  // Add jitter (random 0-25% of delay)
+  const jitter = exponentialDelay * Math.random() * 0.25
+  // Cap at maxDelay
+  return Math.min(exponentialDelay + jitter, config.maxDelayMs)
+}
+
+/**
+ * Sleep for specified milliseconds
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+/**
+ * Classify error based on HTTP status and response
+ */
+export function classifyQBError(
+  statusCode: number,
+  errorData?: { Fault?: { Error?: Array<{ code?: string; Message?: string }> } }
+): { errorType: QBErrorType; isRetryable: boolean; retryAfterMs?: number } {
+  const qbError = errorData?.Fault?.Error?.[0]
+  const qbErrorCode = qbError?.code
+
+  // Network/timeout errors (no status code)
+  if (!statusCode) {
+    return { errorType: 'network', isRetryable: true }
+  }
+
+  // Rate limiting
+  if (statusCode === 429) {
+    return { errorType: 'rate_limit', isRetryable: true, retryAfterMs: 60000 }
+  }
+
+  // Authentication errors
+  if (statusCode === 401) {
+    return { errorType: 'auth', isRetryable: false }
+  }
+
+  // Not found
+  if (statusCode === 404) {
+    return { errorType: 'not_found', isRetryable: false }
+  }
+
+  // Stale object (SyncToken conflict)
+  if (statusCode === 400 && qbErrorCode === '5010') {
+    return { errorType: 'conflict', isRetryable: false }
+  }
+
+  // Other validation errors
+  if (statusCode === 400 || statusCode === 422) {
+    return { errorType: 'validation', isRetryable: false }
+  }
+
+  // Server errors
+  if (statusCode >= 500) {
+    return { errorType: 'server', isRetryable: true }
+  }
+
+  return { errorType: 'unknown', isRetryable: false }
+}
+
 // QuickBooks API URLs
 export const QB_URLS = {
   oauth: {
@@ -177,7 +298,7 @@ export async function getCompanyInfo(
 }
 
 /**
- * Make an authenticated QuickBooks API request
+ * Make an authenticated QuickBooks API request with retry logic
  */
 export async function qbApiRequest<T>(
   realmId: string,
@@ -188,8 +309,14 @@ export async function qbApiRequest<T>(
     method?: string
     body?: unknown
     query?: Record<string, string>
+    retryConfig?: Partial<RetryConfig>
   } = {}
 ): Promise<T> {
+  const config: RetryConfig = {
+    ...DEFAULT_RETRY_CONFIG,
+    ...options.retryConfig,
+  }
+
   let url = buildQBApiUrl(realmId, endpoint, isSandbox)
 
   if (options.query) {
@@ -197,24 +324,98 @@ export async function qbApiRequest<T>(
     url += `?${params.toString()}`
   }
 
-  const response = await fetch(url, {
-    method: options.method || 'GET',
-    headers: {
-      'Accept': 'application/json',
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  })
+  let lastError: QBApiError | Error | null = null
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
-    throw new Error(
-      `QB API error: ${errorData.Fault?.Error?.[0]?.Message || response.statusText}`
-    )
+  for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, {
+        method: options.method || 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: options.body ? JSON.stringify(options.body) : undefined,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        const { errorType, isRetryable, retryAfterMs } = classifyQBError(response.status, errorData)
+        const errorMessage = errorData.Fault?.Error?.[0]?.Message || response.statusText
+        const qbErrorCode = errorData.Fault?.Error?.[0]?.code
+
+        lastError = new QBApiError(
+          `QB API error: ${errorMessage}`,
+          errorType,
+          response.status,
+          qbErrorCode,
+          isRetryable,
+          retryAfterMs
+        )
+
+        // If retryable and we have retries left, wait and retry
+        if (isRetryable && config.retryableErrors.includes(errorType) && attempt < config.maxRetries) {
+          const delayMs = retryAfterMs || calculateBackoff(attempt, config)
+          console.log(`QB API retry ${attempt + 1}/${config.maxRetries} after ${delayMs}ms - ${errorType}: ${errorMessage}`)
+          await sleep(delayMs)
+          continue
+        }
+
+        throw lastError
+      }
+
+      return await response.json()
+    } catch (error) {
+      // Handle network errors (fetch throws)
+      if (error instanceof TypeError || (error instanceof Error && error.message.includes('fetch'))) {
+        lastError = new QBApiError(
+          `Network error: ${error.message}`,
+          'network',
+          undefined,
+          undefined,
+          true
+        )
+
+        if (config.retryableErrors.includes('network') && attempt < config.maxRetries) {
+          const delayMs = calculateBackoff(attempt, config)
+          console.log(`QB API network retry ${attempt + 1}/${config.maxRetries} after ${delayMs}ms`)
+          await sleep(delayMs)
+          continue
+        }
+      }
+
+      // Re-throw QBApiError as-is
+      if (error instanceof QBApiError) {
+        throw error
+      }
+
+      // Wrap other errors
+      throw lastError || error
+    }
   }
 
-  return await response.json()
+  // Should not reach here, but just in case
+  throw lastError || new Error('QB API request failed after all retries')
+}
+
+/**
+ * Make a QB API request without retry (for operations that shouldn't retry)
+ */
+export async function qbApiRequestNoRetry<T>(
+  realmId: string,
+  endpoint: string,
+  accessToken: string,
+  isSandbox: boolean,
+  options: {
+    method?: string
+    body?: unknown
+    query?: Record<string, string>
+  } = {}
+): Promise<T> {
+  return qbApiRequest<T>(realmId, endpoint, accessToken, isSandbox, {
+    ...options,
+    retryConfig: { maxRetries: 0, baseDelayMs: 0, maxDelayMs: 0, retryableErrors: [] },
+  })
 }
 
 /**

@@ -123,3 +123,75 @@ export async function getSignedUrl(filePath: string, expiresIn = 3600): Promise<
 
   return data.signedUrl
 }
+
+/**
+ * Upload a voice message recording
+ * Returns attachment metadata with audio-specific fields
+ */
+export async function uploadVoiceMessage(
+  conversationId: string,
+  audioBlob: Blob,
+  durationSeconds: number
+): Promise<UploadedFile & { duration: number }> {
+  // Get current user
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    throw new Error('User not authenticated')
+  }
+
+  // Determine file extension based on MIME type
+  const mimeToExt: Record<string, string> = {
+    'audio/webm': 'webm',
+    'audio/webm;codecs=opus': 'webm',
+    'audio/ogg': 'ogg',
+    'audio/ogg;codecs=opus': 'ogg',
+    'audio/mp4': 'm4a',
+    'audio/mpeg': 'mp3',
+  }
+  const ext = mimeToExt[audioBlob.type] || 'webm'
+
+  // Generate unique file name
+  const timestamp = Date.now()
+  const random = Math.random().toString(36).substring(7)
+  const fileName = `voice-${timestamp}-${random}.${ext}`
+
+  // Construct file path: conversationId/userId/voice/fileName
+  const filePath = `${conversationId}/${user.id}/voice/${fileName}`
+
+  // Upload to Supabase Storage
+  const { data, error } = await supabase.storage
+    .from('message-attachments')
+    .upload(filePath, audioBlob, {
+      contentType: audioBlob.type,
+      cacheControl: '3600',
+      upsert: false,
+    })
+
+  if (error) {
+    logger.error('Voice message upload error:', error)
+    throw new Error(`Failed to upload voice message: ${error.message}`)
+  }
+
+  // Get public URL
+  const { data: urlData } = supabase.storage
+    .from('message-attachments')
+    .getPublicUrl(filePath)
+
+  return {
+    url: urlData.publicUrl,
+    path: filePath,
+    name: `Voice Message (${formatDuration(durationSeconds)})`,
+    type: audioBlob.type,
+    size: audioBlob.size,
+    duration: durationSeconds,
+  }
+}
+
+/**
+ * Format duration for display
+ */
+function formatDuration(seconds: number): string {
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds % 60
+  return `${mins}:${secs.toString().padStart(2, '0')}`
+}

@@ -18,7 +18,7 @@ interface MFAQRCodeProps {
 export function MFAQRCode({
   qrSvg,
   secret,
-  issuer = 'SuperSiteHero',
+  issuer = 'JobSight',
   accountName = '',
   onCopySecret,
   secretCopied = false

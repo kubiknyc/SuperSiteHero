@@ -295,6 +295,12 @@ export interface EquipmentLog {
   // Daily Report Reference
   daily_report_id: string | null;
 
+  // Cost Code Integration
+  cost_code_id: string | null;
+  calculated_cost: number | null;
+  cost_posted: boolean;
+  cost_transaction_id: string | null;
+
   // Metadata
   created_at: string;
   updated_at: string;
@@ -497,6 +503,37 @@ export interface EquipmentLogWithDetails extends EquipmentLog {
 }
 
 /**
+ * Equipment Log with cost details from equipment_logs_with_costs view
+ * Used for cost posting to job costing
+ */
+export interface EquipmentLogWithCostDetails extends EquipmentLog {
+  equipment?: {
+    id: string;
+    equipment_number: string;
+    name: string;
+    hourly_cost: number | null;
+  };
+  project?: {
+    id: string;
+    name: string;
+    number: string | null;
+  };
+  operator?: {
+    id: string;
+    full_name: string;
+    email: string;
+  };
+  cost_code?: {
+    id: string;
+    code: string;
+    name: string;
+  };
+  cost_transaction?: {
+    id: string;
+  };
+}
+
+/**
  * Equipment Maintenance with relations
  */
 export interface EquipmentMaintenanceWithDetails extends EquipmentMaintenance {
@@ -612,6 +649,7 @@ export interface CreateEquipmentLogDTO {
   reported_issues?: string;
   idle_hours?: number;
   daily_report_id?: string;
+  cost_code_id?: string;
 }
 
 /**
