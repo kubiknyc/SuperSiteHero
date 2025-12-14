@@ -16,7 +16,7 @@ import type {
   TimeMatrix,
   ZoneRiskLevel,
 } from '@/types/near-miss-analytics'
-import { DAY_OF_WEEK_SHORT, HOUR_LABELS } from '@/types/near-miss-analytics'
+import { DAY_OF_WEEK_SHORT, HOUR_LABELS } from '@/types/near-miss-analytics' // eslint-disable-line no-duplicate-imports
 import { ROOT_CAUSE_LABELS } from '@/types/safety-incidents'
 import { MapPin, Clock, AlertTriangle } from 'lucide-react'
 
@@ -307,7 +307,7 @@ export function TimeHeatMap({ data, isLoading, className }: TimeHeatMapProps) {
             <thead>
               <tr>
                 <th className="p-1 text-left font-medium text-muted-foreground">Hour</th>
-                {DAY_OF_WEEK_SHORT.map((day, index) => (
+                {DAY_OF_WEEK_SHORT.map((day) => (
                   <th key={day} className="p-1 text-center font-medium text-muted-foreground">
                     {day}
                   </th>

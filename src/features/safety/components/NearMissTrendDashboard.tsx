@@ -12,7 +12,6 @@
 
 import { useMemo, useState } from 'react'
 import {
-  LineChart,
   Line,
   AreaChart,
   Area,
@@ -29,12 +28,11 @@ import {
   Pie,
 } from 'recharts'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
-  Select,
+  RadixSelect as Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
@@ -42,7 +40,7 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { useNearMissAnalyticsDashboard, useUpdatePattern } from '../hooks/useNearMissAnalytics'
-import { LocationHeatMap, TimeHeatMap, RiskScoreBadge } from './NearMissHeatMap'
+import { LocationHeatMap, TimeHeatMap } from './NearMissHeatMap'
 import { PatternsList, AlertsList, RecommendationsList } from './PatternInsights'
 import {
   generatePatternInsights,
@@ -55,9 +53,8 @@ import type {
   RootCauseParetoData,
   TrendDirection,
   PatternStatus,
-  Recommendation,
 } from '@/types/near-miss-analytics'
-import { POTENTIAL_SEVERITY_CONFIG, DAY_OF_WEEK_SHORT } from '@/types/near-miss-analytics'
+import { POTENTIAL_SEVERITY_CONFIG, DAY_OF_WEEK_SHORT } from '@/types/near-miss-analytics' // eslint-disable-line no-duplicate-imports
 import { ROOT_CAUSE_LABELS, type RootCauseCategory } from '@/types/safety-incidents'
 import {
   AlertTriangle,
@@ -67,12 +64,10 @@ import {
   BarChart3,
   Calendar,
   Download,
-  Filter,
   RefreshCw,
-  TrendingDown,
   TrendingUp,
 } from 'lucide-react'
-import { format, subDays } from 'date-fns'
+import { format } from 'date-fns'
 
 // ============================================================================
 // Main Dashboard Component
@@ -100,7 +95,7 @@ export function NearMissTrendDashboard({
     paretoData,
     patterns,
     alerts,
-    benchmarks,
+    benchmarks: _benchmarks, // Available for future benchmark comparison
     isLoading,
     hasError,
     refetch,
@@ -108,8 +103,8 @@ export function NearMissTrendDashboard({
 
   const updatePatternMutation = useUpdatePattern()
 
-  // Generate insights from the data
-  const insights = useMemo(() => {
+  // Generate insights from the data (available for future use)
+  const _insights = useMemo(() => {
     if (!dailyTrends || !heatMap || !timePatterns || !paretoData) return null
 
     return generatePatternInsights({
@@ -246,7 +241,7 @@ export function NearMissTrendDashboard({
             <AlertsList
               alerts={alerts}
               isLoading={isLoading}
-              onDismiss={id => {
+              onDismiss={_id => {
                 // Would call dismiss mutation
               }}
             />
@@ -811,8 +806,5 @@ function RootCausePieChart({ data, isLoading }: RootCausePieChartProps) {
     </Card>
   )
 }
-
-// Need to import Line from recharts for Pareto chart
-import { Line } from 'recharts'
 
 export default NearMissTrendDashboard

@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Separator } from '@/components/ui/separator'
 import {
   Dialog,
   DialogContent,
@@ -22,16 +21,14 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
-import type {
-  NearMissPattern,
-  NearMissAlert,
-  PatternStatus,
-  AlertSeverity,
-  Recommendation,
-} from '@/types/near-miss-analytics'
 import {
   PATTERN_TYPE_CONFIG,
   ALERT_SEVERITY_CONFIG,
+  type NearMissPattern,
+  type NearMissAlert,
+  type PatternStatus,
+  type AlertSeverity,
+  type Recommendation,
 } from '@/types/near-miss-analytics'
 import {
   AlertTriangle,
@@ -275,8 +272,6 @@ interface AlertCardProps {
 }
 
 export function AlertCard({ alert, onMarkRead, onDismiss }: AlertCardProps) {
-  const severityConfig = ALERT_SEVERITY_CONFIG[alert.severity]
-
   const severityIcons: Record<AlertSeverity, typeof AlertTriangle> = {
     info: Bell,
     warning: AlertTriangle,
@@ -607,7 +602,7 @@ export function RecommendationsList({
                     Suggested Actions:
                   </span>
                   <ul className="text-sm space-y-1">
-                    {rec.suggestedActions.map((action, actionIndex) => (
+                    {rec.suggested_actions.map((action: string, actionIndex: number) => (
                       <li
                         key={actionIndex}
                         className={cn(
