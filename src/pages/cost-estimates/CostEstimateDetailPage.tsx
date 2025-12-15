@@ -120,7 +120,7 @@ export function CostEstimateDetailPage() {
   }
 
   const handleExportPDF = async () => {
-    if (!estimate) {return}
+    if (!estimate || !projectId) {return}
 
     setIsExporting(true)
     try {
@@ -134,6 +134,7 @@ export function CostEstimateDetailPage() {
           number: project.project_number || undefined,
           address: project.address || undefined,
         } : undefined,
+        projectId,
       })
       success('PDF exported', 'Cost estimate PDF has been downloaded.')
     } catch (error) {

@@ -156,8 +156,22 @@ export function PhotoGrid({
               </div>
             </div>
 
+            {/* Video badge */}
+            {isVideo && (
+              <div className="absolute top-2 right-2 z-10">
+                <div className="px-1.5 py-0.5 rounded bg-blue-500/90 flex items-center gap-1">
+                  <Video className="h-3 w-3 text-white" />
+                  {photoWithVideo.videoDuration && (
+                    <span className="text-[10px] font-semibold text-white">
+                      {formatVideoDuration(photoWithVideo.videoDuration)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* 360 badge */}
-            {photo.is360 && (
+            {photo.is360 && !isVideo && (
               <div className="absolute top-2 right-2 z-10">
                 <div className="px-1.5 py-0.5 rounded bg-purple-500/90 flex items-center gap-1">
                   <View className="h-3 w-3 text-white" />
@@ -167,7 +181,7 @@ export function PhotoGrid({
             )}
 
             {/* GPS indicator */}
-            {photo.latitude && photo.longitude && !photo.is360 && (
+            {photo.latitude && photo.longitude && !photo.is360 && !isVideo && (
               <div className="absolute top-2 right-2">
                 <div className="w-6 h-6 rounded-full bg-green-500/80 flex items-center justify-center">
                   <MapPin className="h-3 w-3 text-white" />
@@ -175,9 +189,9 @@ export function PhotoGrid({
               </div>
             )}
 
-            {/* GPS indicator when 360 badge is shown (shift position) */}
-            {photo.latitude && photo.longitude && photo.is360 && (
-              <div className="absolute top-2 right-14">
+            {/* GPS indicator when 360 badge or video badge is shown (shift position) */}
+            {photo.latitude && photo.longitude && (photo.is360 || isVideo) && (
+              <div className="absolute top-2 right-16">
                 <div className="w-6 h-6 rounded-full bg-green-500/80 flex items-center justify-center">
                   <MapPin className="h-3 w-3 text-white" />
                 </div>

@@ -1,7 +1,7 @@
 /**
  * Photos Components Index
  *
- * Export all photo management related components.
+ * Export all photo and video management related components.
  */
 
 export { CameraCapture } from './CameraCapture';
@@ -20,3 +20,9 @@ export { Photo360Viewer } from './Photo360Viewer';
 // Touch-friendly gallery with pinch-to-zoom and swipe
 export { TouchPhotoGallery } from './TouchPhotoGallery';
 export type { TouchPhotoGalleryProps, GalleryPhoto } from './TouchPhotoGallery';
+
+// Video capture and playback components
+export { VideoCapture } from './VideoCapture';
+export type { VideoCaptureProps } from './VideoCapture';
+export { VideoPlayer, SimpleVideoPlayer } from './VideoPlayer';
+export type { VideoPlayerProps } from './VideoPlayer';

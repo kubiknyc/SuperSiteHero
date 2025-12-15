@@ -6,6 +6,12 @@
 
 import jsPDF from 'jspdf'
 import { format } from 'date-fns'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 import type {
   LienWaiver,
   LienWaiverWithDetails,
@@ -36,6 +42,8 @@ const COLORS = {
  */
 export interface LienWaiverPDFData {
   waiver: LienWaiverWithDetails
+  projectId: string
+  gcCompany?: CompanyInfo
   projectAddress?: string
   ownerName?: string
   generalContractor?: string
@@ -62,42 +70,7 @@ function spellOutAmount(amount: number): string {
   return `${formatted} (${formatted})`
 }
 
-/**
- * Draw document header
- */
-function drawHeader(doc: jsPDF, waiverType: LienWaiverType, stateCode: string): number {
-  let y = MARGIN
-
-  // State indication
-  doc.setFontSize(10)
-  doc.setFont('helvetica', 'normal')
-  doc.setTextColor(...COLORS.mediumGray)
-  doc.text(`State of ${getStateName(stateCode)}`, PAGE_WIDTH / 2, y, { align: 'center' })
-  y += 8
-
-  // Main title
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.black)
-
-  const isConditional = isConditionalWaiver(waiverType)
-  const isFinal = isFinalWaiver(waiverType)
-
-  const title = isConditional
-    ? `CONDITIONAL WAIVER AND RELEASE ON ${isFinal ? 'FINAL' : 'PROGRESS'} PAYMENT`
-    : `UNCONDITIONAL WAIVER AND RELEASE ON ${isFinal ? 'FINAL' : 'PROGRESS'} PAYMENT`
-
-  doc.text(title, PAGE_WIDTH / 2, y, { align: 'center' })
-  y += 10
-
-  // Decorative line
-  doc.setDrawColor(...COLORS.lightGray)
-  doc.setLineWidth(0.5)
-  doc.line(MARGIN, y, PAGE_WIDTH - MARGIN, y)
-  y += 8
-
-  return y
-}
+// Header function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Draw project information section
@@ -400,38 +373,15 @@ function drawNotarizationSection(doc: jsPDF, data: LienWaiverPDFData, startY: nu
   return y + 10
 }
 
-/**
- * Draw footer
- */
-function drawFooter(doc: jsPDF, waiver: LienWaiverWithDetails): void {
-  const pageCount = doc.getNumberOfPages()
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    doc.setFontSize(8)
-    doc.setTextColor(...COLORS.mediumGray)
-
-    // Waiver number
-    doc.text(`Waiver #: ${waiver.waiver_number}`, MARGIN, PAGE_HEIGHT - 10)
-
-    // Generated date
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      PAGE_WIDTH / 2,
-      PAGE_HEIGHT - 10,
-      { align: 'center' }
-    )
-
-    // Page number
-    doc.text(`Page ${i} of ${pageCount}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 10, { align: 'right' })
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Generate lien waiver PDF
  */
 export async function generateLienWaiverPDF(data: LienWaiverPDFData): Promise<Blob> {
+  // Fetch company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -439,16 +389,37 @@ export async function generateLienWaiverPDF(data: LienWaiverPDFData): Promise<Bl
   })
 
   const stateCode = data.waiver.template?.state_code || 'CA' // Default to California
+  const waiver = data.waiver
+
+  // Build document title
+  const isConditional = isConditionalWaiver(waiver.waiver_type)
+  const isFinal = isFinalWaiver(waiver.waiver_type)
+  const waiverTypeText = isConditional
+    ? `Conditional ${isFinal ? 'Final' : 'Progress'} Payment`
+    : `Unconditional ${isFinal ? 'Final' : 'Progress'} Payment`
+
+  // Add JobSight branded header with GC logo and info
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `${waiver.waiver_number} - ${waiverTypeText}`,
+    documentType: 'LIEN WAIVER',
+  })
+
+  // State indication below header
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(...COLORS.mediumGray)
+  doc.text(`State of ${getStateName(stateCode)}`, PAGE_WIDTH / 2, y, { align: 'center' })
+  y += 8
 
   // Draw sections
-  let y = drawHeader(doc, data.waiver.waiver_type, stateCode)
   y = drawProjectInfo(doc, data, y)
   y = drawWaiverBody(doc, data, y)
   y = drawSignatureSection(doc, data, y)
   drawNotarizationSection(doc, data, y)
 
-  // Add footer
-  drawFooter(doc, data.waiver)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }
@@ -481,6 +452,7 @@ export async function downloadLienWaiverPDF(data: LienWaiverPDFData): Promise<vo
 export async function generateBlankWaiverPDF(
   waiverType: LienWaiverType,
   stateCode: string,
+  projectId: string,
   projectInfo?: {
     projectName?: string
     projectAddress?: string
@@ -492,7 +464,7 @@ export async function generateBlankWaiverPDF(
   const blankWaiver: LienWaiverWithDetails = {
     id: '',
     company_id: '',
-    project_id: '',
+    project_id: projectId,
     waiver_number: 'BLANK',
     waiver_type: waiverType,
     status: 'draft',
@@ -536,13 +508,14 @@ export async function generateBlankWaiverPDF(
     created_by: null,
     deleted_at: null,
     project: projectInfo?.projectName
-      ? { id: '', name: projectInfo.projectName, project_number: null }
+      ? { id: projectId, name: projectInfo.projectName, project_number: null }
       : undefined,
     template: { id: '', name: 'Default', state_code: stateCode },
   }
 
   return generateLienWaiverPDF({
     waiver: blankWaiver,
+    projectId,
     projectAddress: projectInfo?.projectAddress,
     ownerName: projectInfo?.ownerName,
     generalContractor: projectInfo?.generalContractor,
@@ -555,6 +528,7 @@ export async function generateBlankWaiverPDF(
 export async function downloadBlankWaiverPDF(
   waiverType: LienWaiverType,
   stateCode: string,
+  projectId: string,
   projectInfo?: {
     projectName?: string
     projectAddress?: string
@@ -562,7 +536,7 @@ export async function downloadBlankWaiverPDF(
     generalContractor?: string
   }
 ): Promise<void> {
-  const blob = await generateBlankWaiverPDF(waiverType, stateCode, projectInfo)
+  const blob = await generateBlankWaiverPDF(waiverType, stateCode, projectId, projectInfo)
 
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')

@@ -560,6 +560,9 @@ function drawAttachments(doc: jsPDF, data: SubmittalPDFData, startY: number): nu
  * Generate Submittal PDF
  */
 export async function generateSubmittalPDF(data: SubmittalPDFData): Promise<Blob> {
+  // Fetch company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -574,8 +577,18 @@ export async function generateSubmittalPDF(data: SubmittalPDFData): Promise<Blob
     ...data,
   }
 
+  // Add JobSight branded header with GC logo and info
+  const submittal = data.submittal
+  const submittalNumber = submittal.submittal_number || 'N/A'
+  const submittalDate = formatDate(submittal.date_submitted || submittal.created_at)
+
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `Submittal #${submittalNumber} - ${submittalDate}`,
+    documentType: 'SUBMITTAL',
+  })
+
   // Draw sections
-  let y = drawHeader(doc, options)
   y = drawProjectInfo(doc, options, y)
   y = drawDatesSection(doc, options, y)
   y = drawSubmittalDetails(doc, options, y)
@@ -584,8 +597,8 @@ export async function generateSubmittalPDF(data: SubmittalPDFData): Promise<Blob
   y = drawReviewHistory(doc, options, y)
   y = drawAttachments(doc, options, y)
 
-  // Add footer
-  drawFooter(doc, options)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }

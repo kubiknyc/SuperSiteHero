@@ -216,8 +216,8 @@ export function useMeeting(meetingId: string | undefined) {
   })
 }
 
-// Create a new meeting
-export function useCreateMeeting() {
+// Create a new meeting with optional Google Calendar sync
+export function useCreateMeeting(options?: { autoSyncToCalendar?: boolean }) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -231,15 +231,50 @@ export function useCreateMeeting() {
       if (error) {throw error}
       return data as MeetingWithDetails
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['meetings'] })
       queryClient.invalidateQueries({ queryKey: ['meetings', data.project_id] })
+
+      // Auto-sync to Google Calendar if enabled
+      if (options?.autoSyncToCalendar !== false) {
+        try {
+          // Get current user's connection
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            const connection = await googleCalendarApi.getConnection(user.id)
+            if (connection?.is_active && connection?.sync_enabled && connection?.auto_sync_meetings) {
+              // Queue sync in background (don't block the UI)
+              googleCalendarApi.createEventForMeeting(
+                connection.id,
+                data.id,
+                {
+                  title: data.title,
+                  description: data.description,
+                  location: data.location,
+                  virtual_meeting_link: data.virtual_meeting_link,
+                  meeting_date: data.meeting_date,
+                  start_time: data.start_time,
+                  end_time: data.end_time,
+                  duration_minutes: data.duration_minutes,
+                  attendees: data.attendees as Array<{ email?: string; name: string }> | null,
+                },
+                true
+              ).catch((err) => {
+                console.warn('Auto-sync to Google Calendar failed:', err)
+              })
+            }
+          }
+        } catch (syncErr) {
+          // Don't fail the create operation if calendar sync fails
+          console.warn('Google Calendar auto-sync check failed:', syncErr)
+        }
+      }
     },
   })
 }
 
-// Update an existing meeting
-export function useUpdateMeeting() {
+// Update an existing meeting with optional Google Calendar sync
+export function useUpdateMeeting(options?: { autoSyncToCalendar?: boolean }) {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -254,29 +289,95 @@ export function useUpdateMeeting() {
       if (error) {throw error}
       return data as MeetingWithDetails
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['meetings'] })
       queryClient.invalidateQueries({ queryKey: ['meetings', 'detail', data.id] })
       queryClient.invalidateQueries({ queryKey: ['meetings', data.project_id] })
+
+      // Auto-sync to Google Calendar if enabled and meeting has a Google event
+      if (options?.autoSyncToCalendar !== false && data.google_calendar_event_id) {
+        try {
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            const connection = await googleCalendarApi.getConnection(user.id)
+            if (connection?.is_active && connection?.sync_enabled && connection?.auto_sync_meetings) {
+              // Update the Google Calendar event in background
+              googleCalendarApi.updateEventForMeeting(
+                connection.id,
+                data.id,
+                data.google_calendar_event_id,
+                {
+                  title: data.title,
+                  description: data.description,
+                  location: data.location,
+                  virtual_meeting_link: data.virtual_meeting_link,
+                  meeting_date: data.meeting_date,
+                  start_time: data.start_time,
+                  end_time: data.end_time,
+                  duration_minutes: data.duration_minutes,
+                  attendees: data.attendees as Array<{ email?: string; name: string }> | null,
+                },
+                true
+              ).catch((err) => {
+                console.warn('Auto-sync to Google Calendar failed:', err)
+              })
+            }
+          }
+        } catch (syncErr) {
+          console.warn('Google Calendar auto-sync check failed:', syncErr)
+        }
+      }
     },
   })
 }
 
-// Soft delete a meeting
-export function useDeleteMeeting() {
+// Soft delete a meeting with optional Google Calendar event deletion
+export function useDeleteMeeting(options?: { deleteFromCalendar?: boolean }) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (meetingId: string) => {
+      // First get the meeting to check for Google Calendar event
+      const { data: meeting } = await supabase
+        .from('meetings')
+        .select('google_calendar_event_id')
+        .eq('id', meetingId)
+        .single()
+
       const { error } = await supabase
         .from('meetings')
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', meetingId)
 
       if (error) {throw error}
+
+      // Return the meeting data for onSuccess
+      return { meetingId, googleEventId: meeting?.google_calendar_event_id }
     },
-    onSuccess: () => {
+    onSuccess: async (result) => {
       queryClient.invalidateQueries({ queryKey: ['meetings'] })
+
+      // Delete from Google Calendar if enabled and meeting had a Google event
+      if (options?.deleteFromCalendar !== false && result.googleEventId) {
+        try {
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            const connection = await googleCalendarApi.getConnection(user.id)
+            if (connection?.is_active && connection?.sync_enabled) {
+              googleCalendarApi.deleteEventForMeeting(
+                connection.id,
+                result.meetingId,
+                result.googleEventId,
+                true
+              ).catch((err) => {
+                console.warn('Failed to delete Google Calendar event:', err)
+              })
+            }
+          }
+        } catch (syncErr) {
+          console.warn('Google Calendar delete check failed:', syncErr)
+        }
+      }
     },
   })
 }

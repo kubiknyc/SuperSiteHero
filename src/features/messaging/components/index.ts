@@ -14,3 +14,8 @@ export { OfflineQueueIndicator } from './OfflineQueueIndicator'
 export { EmojiPicker, QuickReactions, EmojiReactionPicker } from './EmojiPicker'
 export { VoiceMessageRecorder } from './VoiceMessageRecorder'
 export { VoiceMessagePlayer, isVoiceMessage } from './VoiceMessagePlayer'
+
+// Email Integration components
+export { EmailInbox } from './EmailInbox'
+export { EmailThreadView } from './EmailThread'
+export { ComposeEmail } from './ComposeEmail'

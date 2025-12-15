@@ -441,6 +441,8 @@ export interface G702PDFData {
   owner: {
     name: string | null;
   };
+  projectId: string;
+  gcCompany?: import('@/lib/utils/pdfBranding').CompanyInfo;
 }
 
 /**
@@ -458,6 +460,8 @@ export interface G703PDFData {
     balance_to_finish: number;
     retainage: number;
   };
+  projectId: string;
+  gcCompany?: import('@/lib/utils/pdfBranding').CompanyInfo;
 }
 
 // =============================================

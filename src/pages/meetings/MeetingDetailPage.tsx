@@ -54,7 +54,7 @@ import { useAuth } from '@/lib/auth'
 export function MeetingDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { userProfile } = useAuth()
   const { data: meeting, isLoading, error } = useMeeting(id)
   const { data: recordings, refetch: refetchRecordings } = useMeetingRecordings(id)
   const deleteMeeting = useDeleteMeeting()
@@ -433,11 +433,11 @@ export function MeetingDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Recording Controls */}
-                {meeting.project_id && user?.company_id && (
+                {meeting.project_id && userProfile?.company_id && (
                   <MeetingRecorder
                     meetingId={meeting.id}
                     projectId={meeting.project_id}
-                    companyId={user.company_id}
+                    companyId={userProfile.company_id}
                     onRecordingComplete={(recording) => {
                       refetchRecordings()
                       setSelectedRecording(recording)

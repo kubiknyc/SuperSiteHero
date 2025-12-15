@@ -115,6 +115,31 @@ export interface DetectedObject {
 }
 
 // =============================================
+// Video Metadata Types
+// =============================================
+
+export type VideoProcessingStatus = 'pending' | 'processing' | 'ready' | 'failed'
+
+export interface VideoMetadata {
+  /** Video bitrate in bits per second */
+  bitrate?: number
+  /** Frame rate (fps) */
+  frameRate?: number
+  /** Audio codec (e.g., 'aac', 'opus') */
+  audioCodec?: string
+  /** Audio bitrate in bits per second */
+  audioBitrate?: number
+  /** Audio channels (1 = mono, 2 = stereo) */
+  audioChannels?: number
+  /** Audio sample rate in Hz */
+  audioSampleRate?: number
+  /** Container format (e.g., 'mp4', 'webm') */
+  containerFormat?: string
+  /** Has audio track */
+  hasAudio?: boolean
+}
+
+// =============================================
 // 360 Photo / Equirectangular Metadata
 // =============================================
 
@@ -161,6 +186,13 @@ export interface Photo {
   height?: number
   is360?: boolean
   equirectangularMetadata?: EquirectangularMetadata
+
+  // Video-specific fields
+  isVideo?: boolean
+  videoDuration?: number
+  videoCodec?: string
+  videoMetadata?: VideoMetadata
+  videoProcessingStatus?: VideoProcessingStatus
 
   // Timestamps
   capturedAt?: string

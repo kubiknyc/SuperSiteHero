@@ -33,7 +33,7 @@ export function useEmailAccounts() {
     queryKey: emailAccountKeys.list(),
     queryFn: async () => {
       const { data, error } = await emailApi.getEmailAccounts()
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     staleTime: 60 * 1000, // 1 minute
@@ -47,9 +47,9 @@ export function useEmailAccount(accountId: string | undefined) {
   return useQuery({
     queryKey: emailAccountKeys.detail(accountId || ''),
     queryFn: async () => {
-      if (!accountId) throw new Error('Account ID required')
+      if (!accountId) {throw new Error('Account ID required')}
       const { data, error } = await emailApi.getEmailAccount(accountId)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!accountId,
@@ -64,9 +64,9 @@ export function useEmailSyncLogs(accountId: string | undefined, limit = 10) {
   return useQuery({
     queryKey: emailAccountKeys.syncLogs(accountId || ''),
     queryFn: async () => {
-      if (!accountId) throw new Error('Account ID required')
+      if (!accountId) {throw new Error('Account ID required')}
       const { data, error } = await emailApi.getEmailSyncLogs(accountId, limit)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!accountId,
@@ -83,7 +83,7 @@ export function useConnectEmailAccount() {
   return useMutation({
     mutationFn: async (data: ConnectEmailAccountDTO) => {
       const { data: account, error } = await emailApi.connectEmailAccount(data)
-      if (error) throw error
+      if (error) {throw error}
       return account
     },
     onSuccess: (account) => {
@@ -105,7 +105,7 @@ export function useDisconnectEmailAccount() {
   return useMutation({
     mutationFn: async (accountId: string) => {
       const { data, error } = await emailApi.disconnectEmailAccount(accountId)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {
@@ -127,7 +127,7 @@ export function useToggleEmailSync() {
   return useMutation({
     mutationFn: async ({ accountId, enabled }: { accountId: string; enabled: boolean }) => {
       const { data, error } = await emailApi.toggleEmailSync(accountId, enabled)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (account, { enabled }) => {
@@ -149,7 +149,7 @@ export function useTriggerEmailSync() {
   return useMutation({
     mutationFn: async (accountId: string) => {
       const { data, error } = await emailApi.triggerEmailSync(accountId)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (result, accountId) => {

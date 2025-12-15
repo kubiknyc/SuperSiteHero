@@ -52,7 +52,7 @@ export function useEmailThreads(filters?: EmailThreadFilters) {
     queryKey: emailKeys.threadsList(filters),
     queryFn: async () => {
       const { data, error } = await emailApi.getEmailThreads(filters)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     staleTime: 30 * 1000, // 30 seconds
@@ -73,12 +73,12 @@ export function useEmailThreadsInfinite(filters?: Omit<EmailThreadFilters, 'offs
         limit,
         offset: pageParam,
       })
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.length < limit) return undefined
+      if (lastPage.length < limit) {return undefined}
       return allPages.length * limit
     },
     staleTime: 30 * 1000,
@@ -92,9 +92,9 @@ export function useEmailThread(threadId: string | undefined) {
   return useQuery({
     queryKey: emailKeys.thread(threadId || ''),
     queryFn: async () => {
-      if (!threadId) throw new Error('Thread ID required')
+      if (!threadId) {throw new Error('Thread ID required')}
       const { data, error } = await emailApi.getEmailThread(threadId)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!threadId,
@@ -117,7 +117,7 @@ export function useUpdateEmailThread() {
       updates: Partial<Pick<EmailThread, 'is_starred' | 'is_archived' | 'folder' | 'labels'>>
     }) => {
       const { data, error } = await emailApi.updateEmailThread(threadId, updates)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (thread, { threadId }) => {
@@ -139,7 +139,7 @@ export function useMarkThreadAsRead() {
   return useMutation({
     mutationFn: async ({ threadId, isRead }: { threadId: string; isRead: boolean }) => {
       const { data, error } = await emailApi.markThreadAsRead(threadId, isRead)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, { threadId }) => {
@@ -162,7 +162,7 @@ export function useEmails(filters?: EmailFilters) {
     queryKey: emailKeys.messagesList(filters),
     queryFn: async () => {
       const { data, error } = await emailApi.getEmails(filters)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     staleTime: 30 * 1000,
@@ -176,9 +176,9 @@ export function useEmail(emailId: string | undefined) {
   return useQuery({
     queryKey: emailKeys.message(emailId || ''),
     queryFn: async () => {
-      if (!emailId) throw new Error('Email ID required')
+      if (!emailId) {throw new Error('Email ID required')}
       const { data, error } = await emailApi.getEmail(emailId)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!emailId,
@@ -195,7 +195,7 @@ export function useMarkEmailAsRead() {
   return useMutation({
     mutationFn: async ({ emailId, isRead }: { emailId: string; isRead: boolean }) => {
       const { data, error } = await emailApi.markEmailAsRead(emailId, isRead)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (email, { emailId }) => {
@@ -215,7 +215,7 @@ export function useStarEmail() {
   return useMutation({
     mutationFn: async ({ emailId, isStarred }: { emailId: string; isStarred: boolean }) => {
       const { data, error } = await emailApi.starEmail(emailId, isStarred)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (email, { emailId }) => {
@@ -234,7 +234,7 @@ export function useMoveEmailToFolder() {
   return useMutation({
     mutationFn: async ({ emailId, folder }: { emailId: string; folder: EmailFolder }) => {
       const { data, error } = await emailApi.moveEmailToFolder(emailId, folder)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (email, { emailId }) => {
@@ -260,7 +260,7 @@ export function useEmailSearch(params: EmailSearchParams, enabled = true) {
     queryKey: emailKeys.search(params),
     queryFn: async () => {
       const { data, error } = await emailApi.searchEmails(params)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: enabled && !!params.query && params.query.length >= 2,
@@ -281,7 +281,7 @@ export function useSendEmail() {
   return useMutation({
     mutationFn: async (data: ComposeEmailDTO) => {
       const { data: result, error } = await emailApi.sendEmail(data)
-      if (error) throw error
+      if (error) {throw error}
       return result
     },
     onSuccess: () => {
@@ -303,7 +303,7 @@ export function useSaveDraft() {
   return useMutation({
     mutationFn: async (data: ComposeEmailDTO) => {
       const { data: result, error } = await emailApi.saveDraft(data)
-      if (error) throw error
+      if (error) {throw error}
       return result
     },
     onSuccess: () => {
@@ -329,7 +329,7 @@ export function useCreateEntityLink() {
   return useMutation({
     mutationFn: async (data: CreateEntityLinkDTO) => {
       const { data: link, error } = await emailApi.createEntityLink(data)
-      if (error) throw error
+      if (error) {throw error}
       return link
     },
     onSuccess: (link, { email_id, thread_id, entity_type, entity_id }) => {
@@ -357,7 +357,7 @@ export function useRemoveEntityLink() {
   return useMutation({
     mutationFn: async (linkId: string) => {
       const { data, error } = await emailApi.removeEntityLink(linkId)
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {
@@ -381,9 +381,9 @@ export function useEntityEmails(
   return useQuery({
     queryKey: emailKeys.entityEmails(entityType || '', entityId || ''),
     queryFn: async () => {
-      if (!entityType || !entityId) throw new Error('Entity type and ID required')
+      if (!entityType || !entityId) {throw new Error('Entity type and ID required')}
       const { data, error } = await emailApi.getEntityEmails(entityType, entityId, limit)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!entityType && !!entityId,
@@ -398,9 +398,9 @@ export function useEmailEntityLinks(emailId: string | undefined) {
   return useQuery({
     queryKey: [...emailKeys.message(emailId || ''), 'links'],
     queryFn: async () => {
-      if (!emailId) throw new Error('Email ID required')
+      if (!emailId) {throw new Error('Email ID required')}
       const { data, error } = await emailApi.getEmailEntityLinks(emailId)
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!emailId,
@@ -420,7 +420,7 @@ export function useUnreadEmailCount() {
     queryKey: emailKeys.unreadCount(),
     queryFn: async () => {
       const { data, error } = await emailApi.getUnreadEmailCount()
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     staleTime: 30 * 1000,
@@ -436,7 +436,7 @@ export function useUnreadCountsByFolder() {
     queryKey: emailKeys.unreadByFolder(),
     queryFn: async () => {
       const { data, error } = await emailApi.getUnreadCountsByFolder()
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     staleTime: 30 * 1000,

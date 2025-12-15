@@ -53,6 +53,7 @@ export function buildG702Data(
     owner: {
       name: projectInfo?.owner || null,
     },
+    projectId: application.project_id,
   }
 }
 

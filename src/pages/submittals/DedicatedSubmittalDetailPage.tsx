@@ -251,7 +251,15 @@ export function DedicatedSubmittalDetailPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => downloadSubmittalPDF({ submittal, includeItems: true, includeReviews: true, includeAttachments: true })}
+                  onClick={async () => {
+                    await downloadSubmittalPDF({
+                      submittal,
+                      projectId: submittal.project_id,
+                      includeItems: true,
+                      includeReviews: true,
+                      includeAttachments: true
+                    })
+                  }}
                 >
                   <FileDown className="h-4 w-4 mr-2" />
                   Export PDF

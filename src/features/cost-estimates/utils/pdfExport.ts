@@ -6,6 +6,12 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 import type {
   CostEstimate,
   CostEstimateItem,
@@ -42,13 +48,8 @@ export interface CostEstimatePDFData {
     address?: string
     client?: string
   }
-  companyInfo?: {
-    name: string
-    address?: string
-    phone?: string
-    email?: string
-    logo?: string
-  }
+  projectId: string
+  gcCompany?: CompanyInfo
 }
 
 /**
@@ -101,71 +102,7 @@ function getStatusColor(status: CostEstimateStatus | string): [number, number, n
   return colors[status] || COLORS.mediumGray
 }
 
-/**
- * Draw document header
- */
-function drawHeader(doc: jsPDF, data: CostEstimatePDFData): number {
-  let y = MARGIN
-
-  // Title bar
-  doc.setFillColor(...COLORS.headerBlue)
-  doc.rect(MARGIN, y, CONTENT_WIDTH, 14, 'F')
-
-  doc.setFontSize(16)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.white)
-  doc.text('COST ESTIMATE', PAGE_WIDTH / 2, y + 10, { align: 'center' })
-
-  y += 16
-
-  // Company info (if provided)
-  if (data.companyInfo?.name) {
-    doc.setFontSize(10)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(...COLORS.black)
-    doc.text(data.companyInfo.name, MARGIN, y + 5)
-
-    if (data.companyInfo.address) {
-      doc.setFontSize(8)
-      doc.setFont('helvetica', 'normal')
-      doc.text(data.companyInfo.address, MARGIN, y + 10)
-      y += 5
-    }
-
-    if (data.companyInfo.phone || data.companyInfo.email) {
-      const contactInfo = [data.companyInfo.phone, data.companyInfo.email].filter(Boolean).join(' | ')
-      doc.setFontSize(8)
-      doc.text(contactInfo, MARGIN, y + 10)
-      y += 5
-    }
-
-    y += 8
-  }
-
-  // Estimate details on right side
-  doc.setFontSize(10)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.black)
-  doc.text(`Estimate: ${data.estimate.name}`, PAGE_WIDTH - MARGIN, y - 8, { align: 'right' })
-
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'normal')
-  doc.text(`Date: ${formatDate(data.estimate.created_at)}`, PAGE_WIDTH - MARGIN, y - 3, { align: 'right' })
-
-  // Status badge
-  const statusLabel = getStatusLabel(data.estimate.status)
-  const statusColor = getStatusColor(data.estimate.status)
-  doc.setFillColor(...statusColor)
-  const statusWidth = doc.getTextWidth(statusLabel) + 6
-  doc.roundedRect(PAGE_WIDTH - MARGIN - statusWidth, y + 1, statusWidth, 6, 1, 1, 'F')
-  doc.setFontSize(7)
-  doc.setTextColor(...COLORS.white)
-  doc.text(statusLabel.toUpperCase(), PAGE_WIDTH - MARGIN - statusWidth / 2, y + 5, { align: 'center' })
-
-  y += 10
-
-  return y
-}
+// Header function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Draw project information section
@@ -470,59 +407,40 @@ function drawSignatureSection(doc: jsPDF, startY: number): number {
   return y
 }
 
-/**
- * Draw footer
- */
-function drawFooter(doc: jsPDF, data: CostEstimatePDFData): void {
-  const pageCount = doc.getNumberOfPages()
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.lightGray)
-    doc.setLineWidth(0.3)
-    doc.line(MARGIN, PAGE_HEIGHT - 12, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 12)
-
-    doc.setFontSize(7)
-    doc.setTextColor(...COLORS.mediumGray)
-
-    // Estimate name
-    doc.text(data.estimate.name, MARGIN, PAGE_HEIGHT - 7)
-
-    // Generated date
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      PAGE_WIDTH / 2,
-      PAGE_HEIGHT - 7,
-      { align: 'center' }
-    )
-
-    // Page number
-    doc.text(`Page ${i} of ${pageCount}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 7, { align: 'right' })
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Generate cost estimate PDF
  */
 export async function generateCostEstimatePDF(data: CostEstimatePDFData): Promise<Blob> {
+  // Fetch company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
     format: 'letter',
   })
 
+  // Add JobSight branded header with GC logo and info
+  const estimateName = data.estimate.name
+  const estimateDate = formatDate(data.estimate.created_at)
+
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `${estimateName} - ${estimateDate}`,
+    documentType: 'COST ESTIMATE',
+  })
+
   // Draw sections
-  let y = drawHeader(doc, data)
   y = drawProjectInfo(doc, data, y)
   y = drawItemsTable(doc, data, y)
   y = drawCostSummary(doc, data, y)
   y = drawTermsSection(doc, y)
   drawSignatureSection(doc, y)
 
-  // Add footer
-  drawFooter(doc, data)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }

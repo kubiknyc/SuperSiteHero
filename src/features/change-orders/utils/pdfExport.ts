@@ -498,16 +498,30 @@ export async function generateChangeOrderPDF(data: ChangeOrderPDFData): Promise<
     format: 'letter',
   })
 
+  // Get company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
+  // Prepare header information
+  const changeOrder = data.changeOrder
+  const coNumber = changeOrder.co_number ? `CO #${changeOrder.co_number}` : `PCO #${changeOrder.pco_number}`
+  const coDate = formatDate(changeOrder.date_created || changeOrder.created_at)
+
+  // Add branded header
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `${coNumber} - ${coDate}`,
+    documentType: 'CHANGE ORDER',
+  })
+
   // Draw sections
-  let y = drawHeader(doc, data)
   y = drawProjectInfo(doc, data, y)
   y = drawChangeOrderDetails(doc, data, y)
   y = drawItemsTable(doc, data, y)
   y = drawCostSummary(doc, data, y)
   drawSignatureSection(doc, data, y)
 
-  // Add footer
-  drawFooter(doc, data)
+  // Add JobSight branded footers to all pages
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }

@@ -1,6 +1,6 @@
 /**
  * G703 PDF Template - AIA Document G703 (Continuation Sheet)
- * Generates professional AIA-style G703 continuation sheet as PDF
+ * Generates professional AIA-style G703 continuation sheet as PDF with JobSight branding
  * This is the Schedule of Values breakdown for payment applications
  */
 
@@ -19,33 +19,20 @@ import {
   formatPercent,
   formatDate,
 } from './pdfStyles'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 
 const CONTENT_WIDTH = PAGE_WIDTH_LANDSCAPE - 2 * MARGIN
 
 /**
- * Draw the G703 header section
+ * Draw the G703 info section (replaces old header)
  */
-function drawHeader(doc: jsPDF, data: G703PDFData): number {
-  let y = MARGIN
-
-  // AIA Document title
-  doc.setFillColor(...COLORS.aiaBlue)
-  doc.rect(MARGIN, y, CONTENT_WIDTH, 10, 'F')
-
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(FONT_SIZES.title)
-  doc.setTextColor(...COLORS.white)
-  doc.text('AIA DOCUMENT G703', PAGE_WIDTH_LANDSCAPE / 2, y + 7, { align: 'center' })
-
-  y += 12
-
-  // Document subtitle
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(FONT_SIZES.subtitle)
-  doc.setTextColor(...COLORS.black)
-  doc.text('CONTINUATION SHEET', PAGE_WIDTH_LANDSCAPE / 2, y + 4, { align: 'center' })
-
-  y += 7
+function drawApplicationInfo(doc: jsPDF, data: G703PDFData, startY: number): number {
+  let y = startY
 
   // Application info
   doc.setFont('helvetica', 'normal')
@@ -262,64 +249,38 @@ function drawInstructions(doc: jsPDF, startY: number): number {
   return y + instructions.length * 3.5 + 5
 }
 
-/**
- * Draw footer with page numbers
- */
-function drawFooter(doc: jsPDF): void {
-  const pageCount = doc.getNumberOfPages()
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.lightGray)
-    doc.setLineWidth(BORDER_WIDTH.thin)
-    doc.line(MARGIN, PAGE_HEIGHT_LANDSCAPE - 8, PAGE_WIDTH_LANDSCAPE - MARGIN, PAGE_HEIGHT_LANDSCAPE - 8)
-
-    // Page number
-    doc.setFontSize(FONT_SIZES.tiny)
-    doc.setTextColor(...COLORS.mediumGray)
-    doc.text(
-      `Page ${i} of ${pageCount}`,
-      PAGE_WIDTH_LANDSCAPE - MARGIN,
-      PAGE_HEIGHT_LANDSCAPE - 4,
-      { align: 'right' }
-    )
-
-    // Generated timestamp
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      MARGIN,
-      PAGE_HEIGHT_LANDSCAPE - 4
-    )
-
-    // AIA document notice
-    doc.text(
-      'AIA Document G703 - Continuation Sheet (Schedule of Values)',
-      PAGE_WIDTH_LANDSCAPE / 2,
-      PAGE_HEIGHT_LANDSCAPE - 4,
-      { align: 'center' }
-    )
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
- * Generate G703 PDF
+ * Generate G703 PDF with JobSight branding
  */
 export async function generateG703PDF(data: G703PDFData): Promise<Blob> {
+  // Fetch company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
   const doc = new jsPDF({
     orientation: 'landscape',
     unit: 'mm',
     format: 'letter',
   })
 
+  // Add JobSight branded header with GC logo and info
+  const appNumber = data.application.application_number
+  const periodTo = formatDate(data.application.period_to)
+
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `Schedule of Values - Application #${appNumber}`,
+    documentType: 'PAYMENT APPLICATION',
+  })
+
   // Draw sections
-  let y = drawHeader(doc, data)
+  y = drawApplicationInfo(doc, data, y)
   y = drawSOVTable(doc, data, y)
   drawInstructions(doc, y)
 
-  // Add footer
-  drawFooter(doc)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }

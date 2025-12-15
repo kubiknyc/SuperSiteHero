@@ -175,7 +175,10 @@ export function LienWaiverDetailPage() {
   const handleExportPDF = async () => {
     setIsExporting(true);
     try {
-      await downloadLienWaiverPDF({ waiver });
+      await downloadLienWaiverPDF({
+        waiver,
+        projectId: waiver.project_id
+      });
     } catch (error) {
       console.error('Failed to export PDF:', error);
     } finally {

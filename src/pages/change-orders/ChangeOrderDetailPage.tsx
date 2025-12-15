@@ -198,6 +198,7 @@ export function ChangeOrderDetailPage() {
       await downloadChangeOrderPDF({
         changeOrder,
         items: items || [],
+        projectId: changeOrder.project_id,
         projectInfo: changeOrder.project ? {
           name: changeOrder.project.name,
           number: changeOrder.project.number || undefined,

@@ -1,6 +1,6 @@
 /**
  * G702 PDF Template - AIA Document G702 (Application and Certificate for Payment)
- * Generates professional AIA-style G702 form as PDF
+ * Generates professional AIA-style G702 form as PDF with JobSight branding
  */
 
 import jsPDF from 'jspdf'
@@ -17,6 +17,12 @@ import {
   formatPercent,
   formatDate,
 } from './pdfStyles'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 
 const CONTENT_WIDTH = PAGE_WIDTH_PORTRAIT - 2 * MARGIN
 
@@ -94,29 +100,10 @@ function drawLabeledField(
 }
 
 /**
- * Draw the G702 header section
+ * Draw the G702 info section (replaces old header)
  */
-function drawHeader(doc: jsPDF, data: G702PDFData): number {
-  let y = MARGIN
-
-  // AIA Document title
-  doc.setFillColor(...COLORS.aiaBlue)
-  doc.rect(MARGIN, y, CONTENT_WIDTH, 12, 'F')
-
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(FONT_SIZES.title)
-  doc.setTextColor(...COLORS.white)
-  doc.text('AIA DOCUMENT G702', PAGE_WIDTH_PORTRAIT / 2, y + 8, { align: 'center' })
-
-  y += 14
-
-  // Document subtitle
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(FONT_SIZES.subtitle)
-  doc.setTextColor(...COLORS.black)
-  doc.text('APPLICATION AND CERTIFICATE FOR PAYMENT', PAGE_WIDTH_PORTRAIT / 2, y + 4, { align: 'center' })
-
-  y += 8
+function drawApplicationInfo(doc: jsPDF, data: G702PDFData, startY: number): number {
+  let y = startY
 
   // Application info line
   const appNumber = data.application.application_number
@@ -124,6 +111,7 @@ function drawHeader(doc: jsPDF, data: G702PDFData): number {
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(FONT_SIZES.body)
+  doc.setTextColor(...COLORS.black)
   doc.text(`Application No: ${appNumber}`, MARGIN, y + 4)
   doc.text(`Period To: ${periodTo}`, CONTENT_WIDTH / 2 + MARGIN, y + 4)
 
@@ -378,67 +366,41 @@ function drawArchitectCertificate(doc: jsPDF, data: G702PDFData, startY: number)
   return y
 }
 
-/**
- * Draw footer with page numbers
- */
-function drawFooter(doc: jsPDF): void {
-  const pageCount = doc.getNumberOfPages()
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.lightGray)
-    doc.setLineWidth(BORDER_WIDTH.thin)
-    doc.line(MARGIN, PAGE_HEIGHT_PORTRAIT - 10, PAGE_WIDTH_PORTRAIT - MARGIN, PAGE_HEIGHT_PORTRAIT - 10)
-
-    // Page number
-    doc.setFontSize(FONT_SIZES.tiny)
-    doc.setTextColor(...COLORS.mediumGray)
-    doc.text(
-      `Page ${i} of ${pageCount}`,
-      PAGE_WIDTH_PORTRAIT - MARGIN,
-      PAGE_HEIGHT_PORTRAIT - 6,
-      { align: 'right' }
-    )
-
-    // Generated timestamp
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      MARGIN,
-      PAGE_HEIGHT_PORTRAIT - 6
-    )
-
-    // AIA document notice
-    doc.text(
-      'AIA Document G702 - Application and Certificate for Payment',
-      PAGE_WIDTH_PORTRAIT / 2,
-      PAGE_HEIGHT_PORTRAIT - 6,
-      { align: 'center' }
-    )
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
- * Generate G702 PDF
+ * Generate G702 PDF with JobSight branding
  */
 export async function generateG702PDF(data: G702PDFData): Promise<Blob> {
+  // Fetch company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
     format: 'letter',
   })
 
+  // Add JobSight branded header with GC logo and info
+  const appNumber = data.application.application_number
+  const periodTo = formatDate(data.application.period_to)
+
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `Application #${appNumber} - ${periodTo}`,
+    documentType: 'PAYMENT APPLICATION',
+  })
+
   // Draw sections
-  let y = drawHeader(doc, data)
+  y = drawApplicationInfo(doc, data, y)
   y = drawProjectInfo(doc, data, y)
   y = drawContractSummary(doc, data, y)
   y = drawChangeOrderSummary(doc, data, y)
   y = drawContractorCertification(doc, data, y)
   drawArchitectCertificate(doc, data, y)
 
-  // Add footer
-  drawFooter(doc)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }

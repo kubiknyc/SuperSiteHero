@@ -9,6 +9,7 @@ const config: CapacitorConfig = {
     // url: 'http://localhost:5173',
     // cleartext: true,
     androidScheme: 'https',
+    iosScheme: 'https',
   },
   plugins: {
     SplashScreen: {
@@ -18,6 +19,9 @@ const config: CapacitorConfig = {
       androidScaleType: 'CENTER_CROP',
       showSpinner: true,
       spinnerColor: '#ffffff',
+      // iOS-specific splash screen settings
+      splashFullScreen: true,
+      splashImmersive: true,
     },
     StatusBar: {
       style: 'light',
@@ -30,11 +34,33 @@ const config: CapacitorConfig = {
     PushNotifications: {
       presentationOptions: ['badge', 'sound', 'alert'],
     },
+    Camera: {
+      // iOS Camera plugin settings
+      presentationStyle: 'fullscreen',
+    },
+    Geolocation: {
+      // High accuracy for construction site tracking
+    },
   },
   ios: {
+    // Content inset handling for safe areas (notch, home indicator)
     contentInset: 'automatic',
+    // Prefer mobile viewport over desktop
     preferredContentMode: 'mobile',
-    scheme: 'SuperSiteHero',
+    // URL scheme for deep linking
+    scheme: 'jobsight',
+    // Allow inline media playback
+    allowsLinkPreview: true,
+    // Scroll deceleration for native feel
+    scrollEnabled: true,
+    // Minimum iOS version (iOS 14+)
+    // minVersion: '14.0', // Set in Xcode project
+    // Path to load the web app
+    path: undefined, // Uses default public folder
+    // Configure WKWebView
+    webContentsDebuggingEnabled: process.env.NODE_ENV !== 'production',
+    // Limiter for memory usage
+    limitsNavigationsToAppBoundDomains: true,
   },
   android: {
     allowMixedContent: false,
