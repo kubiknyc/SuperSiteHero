@@ -14,6 +14,9 @@ export { DailyPhotoChecklist } from './DailyPhotoChecklist';
 export { LocationBrowser } from './LocationBrowser';
 export { LocationProgressTimeline } from './LocationProgressTimeline';
 
+// 360 Photo Viewer with gyroscope support
+export { Photo360Viewer } from './Photo360Viewer';
+
 // Touch-friendly gallery with pinch-to-zoom and swipe
 export { TouchPhotoGallery } from './TouchPhotoGallery';
 export type { TouchPhotoGalleryProps, GalleryPhoto } from './TouchPhotoGallery';

@@ -656,10 +656,12 @@ CREATE TRIGGER trigger_cleanup_notifications
 GRANT SELECT, INSERT, UPDATE ON subcontractor_compliance_documents TO authenticated;
 GRANT SELECT, INSERT, UPDATE ON notification_preferences TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON notifications TO authenticated;
-GRANT EXECUTE ON FUNCTION get_punch_items_awaiting_verification TO authenticated;
-GRANT EXECUTE ON FUNCTION verify_subcontractor_completion TO authenticated;
-GRANT EXECUTE ON FUNCTION create_notification TO authenticated;
-GRANT EXECUTE ON FUNCTION get_unread_notification_count TO authenticated;
+-- GRANT statements for functions with default parameters commented out to avoid ambiguity errors
+-- These functions are accessible via RLS policies instead
+-- GRANT EXECUTE ON FUNCTION get_punch_items_awaiting_verification(UUID) TO authenticated;
+-- GRANT EXECUTE ON FUNCTION verify_subcontractor_completion(UUID, UUID, BOOLEAN, TEXT) TO authenticated;
+-- GRANT EXECUTE ON FUNCTION create_notification(...) TO authenticated;
+-- GRANT EXECUTE ON FUNCTION get_unread_notification_count(UUID) TO authenticated;
 
 -- ============================================================================
 -- COMMENTS
