@@ -13,6 +13,12 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding';
 import type {
   DailyReportV2,
   WorkforceEntryV2,
@@ -227,18 +233,23 @@ function getDeliveryStatusLabel(status: DeliveryInspectionStatus): string {
 // SECTION RENDERERS
 // =====================================================
 
-function addHeader(
+async function addHeader(
   doc: jsPDF,
   report: DailyReportV2,
-  projectName: string
-): number {
-  let yPos = MARGIN;
+  projectName: string,
+  gcCompany: CompanyInfo
+): Promise<number> {
+  // Add JobSight branded header with GC logo and info
+  const reportDate = report.report_date
+    ? format(new Date(report.report_date), 'MMMM d, yyyy')
+    : 'N/A';
+  const documentTitle = `${projectName} - ${reportDate}`;
 
-  // Title
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(...COLORS.primary);
-  doc.text('DAILY REPORT', MARGIN, yPos + 8);
+  let yPos = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle,
+    documentType: 'DAILY REPORT',
+  });
 
   // Status badge
   const status = report.status || 'draft';
@@ -247,28 +258,17 @@ function addHeader(
   const statusWidth = doc.getTextWidth(statusText) + 8;
 
   doc.setFillColor(...statusColor);
-  doc.roundedRect(PAGE_WIDTH - MARGIN - statusWidth, yPos, statusWidth, 10, 2, 2, 'F');
+  doc.roundedRect(PAGE_WIDTH - MARGIN - statusWidth, yPos, statusWidth, 8, 2, 2, 'F');
   doc.setFontSize(8);
   doc.setTextColor(255, 255, 255);
-  doc.text(statusText, PAGE_WIDTH - MARGIN - statusWidth + 4, yPos + 6.5);
+  doc.text(statusText, PAGE_WIDTH - MARGIN - statusWidth + 4, yPos + 5.5);
 
-  yPos += 15;
-
-  // Project name
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(...COLORS.secondary);
-  doc.text(projectName, MARGIN, yPos);
-
-  yPos += 8;
+  yPos += 12;
 
   // Report details
   doc.setFontSize(10);
   doc.setTextColor(...COLORS.text);
 
-  const reportDate = report.report_date
-    ? format(new Date(report.report_date), 'MMMM d, yyyy')
-    : 'N/A';
   const reportNumber = report.report_number || 'N/A';
 
   doc.text(`Date: ${reportDate}`, MARGIN, yPos);
@@ -1220,26 +1220,7 @@ function addPhotosSection(doc: jsPDF, photos: PhotoEntryV2[], yPos: number): num
   return (doc as any).lastAutoTable.finalY + 8;
 }
 
-function addFooter(doc: jsPDF): void {
-  const pageCount = doc.getNumberOfPages();
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-
-    // Footer line
-    doc.setDrawColor(...COLORS.mediumGray);
-    doc.setLineWidth(0.3);
-    doc.line(MARGIN, PAGE_HEIGHT - 12, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 12);
-
-    // Page number
-    doc.setFontSize(8);
-    doc.setTextColor(...COLORS.secondary);
-    doc.text(`Page ${i} of ${pageCount}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 7, { align: 'right' });
-
-    // Generated timestamp
-    doc.text(`Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`, MARGIN, PAGE_HEIGHT - 7);
-  }
-}
+// Footer function removed - using centralized JobSight branding from pdfBranding.ts
 
 // =====================================================
 // MAIN EXPORT FUNCTIONS
@@ -1258,6 +1239,8 @@ export interface GeneratePDFOptionsV2 {
   visitors?: VisitorEntryV2[];
   photos?: PhotoEntryV2[];
   projectName: string;
+  projectId: string; // Required for fetching company branding info
+  gcCompany?: CompanyInfo; // Optional: provide company info directly to avoid fetching
 }
 
 /**
@@ -1277,7 +1260,12 @@ export async function generateDailyReportPDFV2(options: GeneratePDFOptionsV2): P
     visitors = report.visitors || [],
     photos = report.photos || [],
     projectName,
+    projectId,
+    gcCompany,
   } = options;
+
+  // Get company info for branding (fetch if not provided)
+  const companyInfo = gcCompany || (await getCompanyInfo(projectId));
 
   // Create PDF document
   const doc = new jsPDF({
@@ -1286,8 +1274,8 @@ export async function generateDailyReportPDFV2(options: GeneratePDFOptionsV2): P
     format: 'a4',
   });
 
-  // Add sections in logical order
-  let yPos = addHeader(doc, report, projectName);
+  // Add sections in logical order (note: addHeader is now async)
+  let yPos = await addHeader(doc, report, projectName, companyInfo);
   yPos = addWeatherSection(doc, report, yPos);
   yPos = addWorkSummarySection(doc, report, yPos);
   yPos = addWorkforceSection(doc, workforce, yPos);
@@ -1309,8 +1297,8 @@ export async function generateDailyReportPDFV2(options: GeneratePDFOptionsV2): P
   // Approval section at the end
   addApprovalSection(doc, report, yPos);
 
-  // Add footer to all pages
-  addFooter(doc);
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc);
 
   return doc.output('blob');
 }

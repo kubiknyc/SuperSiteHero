@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
 
 // Read version from package.json
-import pkg from './package.json' assert { type: 'json' }
+import pkg from './package.json' with { type: 'json' }
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,7 +26,7 @@ export default defineConfig({
         name: 'JobSight',
         short_name: 'JobSight',
         description: 'Construction Field Management Platform',
-        theme_color: '#2563eb',
+        theme_color: '#F97316',
         background_color: '#ffffff',
         start_url: '/',
         display: 'standalone',

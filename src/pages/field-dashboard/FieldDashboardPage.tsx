@@ -1,12 +1,12 @@
 /**
  * Field Dashboard Page
- * Main page for field personnel with morning briefing and quick actions
+ * Main page for field personnel with customizable dashboard
  */
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProjectContext } from '@/lib/contexts/ProjectContext'
-import { MorningBriefingCard } from '@/features/field-dashboard/components/MorningBriefingCard'
+import { CustomizableDashboard } from '@/features/field-dashboard/components/CustomizableDashboard'
 import { EnhancedOfflineIndicator } from '@/components/offline/EnhancedOfflineIndicator'
 import { Button, Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import {
@@ -16,8 +16,9 @@ import {
   Camera,
   FileText,
   AlertTriangle,
+  LayoutDashboard,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+// cn utility available if needed for conditional classes
 
 export default function FieldDashboardPage() {
   const { currentProject, isLoading } = useProjectContext()
@@ -30,7 +31,7 @@ export default function FieldDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="container max-w-4xl mx-auto p-4 space-y-4">
+      <div className="container max-w-6xl mx-auto p-4 space-y-4">
         <div className="animate-pulse">
           <div className="h-8 bg-muted rounded w-48 mb-4" />
           <div className="h-96 bg-muted rounded" />
@@ -90,7 +91,7 @@ export default function FieldDashboardPage() {
   ]
 
   return (
-    <div className="container max-w-4xl mx-auto p-4 pb-20 space-y-6">
+    <div className="container max-w-6xl mx-auto p-4 pb-20 space-y-6">
       {/* Enhanced Offline Indicator */}
       <EnhancedOfflineIndicator
         syncStatus={syncStatus}
@@ -99,52 +100,67 @@ export default function FieldDashboardPage() {
       />
 
       {/* Page Header */}
-      <div className="space-y-1">
-        <h1 className="text-2xl font-bold tracking-tight">Field Dashboard</h1>
-        <p className="text-muted-foreground">
-          {currentProject.name}
-          {currentProject.project_number && ` • ${currentProject.project_number}`}
-        </p>
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <LayoutDashboard className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold tracking-tight">Field Dashboard</h1>
+          </div>
+          <p className="text-muted-foreground">
+            {currentProject.name}
+            {currentProject.project_number && ` - ${currentProject.project_number}`}
+          </p>
+        </div>
       </div>
 
-      {/* Morning Briefing Card */}
-      <MorningBriefingCard projectId={currentProject.id} />
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Plus className="h-5 w-5" />
+      {/* Quick Actions - Compact for mobile */}
+      <Card className="lg:hidden">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Plus className="h-4 w-4" />
             Quick Actions
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             {quickActions.map((action) => {
               const Icon = action.icon
               return (
                 <Button
                   key={action.label}
                   variant={action.variant}
-                  className={cn(
-                    'h-auto py-4 px-4 flex flex-col items-start gap-2 text-left',
-                    'min-h-[88px] hover:scale-[1.02] transition-transform'
-                  )}
+                  className="h-auto py-3 px-3 flex flex-col items-center gap-1.5 text-center min-h-[72px]"
                   onClick={action.onClick}
                 >
-                  <div className="flex items-center gap-2 w-full">
-                    <Icon className="h-5 w-5 flex-shrink-0" />
-                    <span className="font-semibold">{action.label}</span>
-                  </div>
-                  <span className="text-xs opacity-80 font-normal">
-                    {action.description}
-                  </span>
+                  <Icon className="h-5 w-5" />
+                  <span className="text-xs font-medium leading-tight">{action.label}</span>
                 </Button>
               )
             })}
           </div>
         </CardContent>
       </Card>
+
+      {/* Desktop Quick Actions - Inline */}
+      <div className="hidden lg:flex gap-3">
+        {quickActions.map((action) => {
+          const Icon = action.icon
+          return (
+            <Button
+              key={action.label}
+              variant={action.variant}
+              className="gap-2"
+              onClick={action.onClick}
+            >
+              <Icon className="h-4 w-4" />
+              {action.label}
+            </Button>
+          )
+        })}
+      </div>
+
+      {/* Customizable Dashboard */}
+      <CustomizableDashboard projectId={currentProject.id} />
 
       {/* Additional Context Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

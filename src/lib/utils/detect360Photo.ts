@@ -62,8 +62,9 @@ const KNOWN_360_CAMERAS = [
 
 /**
  * XMP namespaces that indicate 360 content
+ * Used for documentation and potential future use
  */
-const XMP_360_MARKERS = [
+const _XMP_360_MARKERS = [
   'GPano',                    // Google Photo Sphere XMP
   'GSpherical',               // Google Spherical Video
   'ProjectionType',           // Common projection type field

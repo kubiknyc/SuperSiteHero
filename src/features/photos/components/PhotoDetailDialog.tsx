@@ -29,7 +29,6 @@ import {
   Camera,
   FileImage,
   Info,
-  Link2,
   ExternalLink,
   Copy,
   Check,
@@ -38,10 +37,8 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCw,
-  View,
 } from 'lucide-react'
 import { Photo360Viewer } from './Photo360Viewer'
-import { cn } from '@/lib/utils'
 import type { Photo } from '@/types/photo-management'
 import { useUpdatePhoto } from '../hooks/usePhotos'
 

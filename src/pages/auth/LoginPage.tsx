@@ -10,7 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/lib/notifications/ToastContext'
-import { HardHat, Fingerprint, Loader2 } from 'lucide-react'
+import { Fingerprint, Loader2 } from 'lucide-react'
+import { AuthLogo } from '@/components/brand'
 import {
   isWebAuthnSupported,
   isPlatformAuthenticatorAvailable,
@@ -116,15 +117,10 @@ export function LoginPage() {
   const isLoading = loading || biometricLoading
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
-          <div className="flex justify-center">
-            <div className="rounded-full bg-blue-100 p-3">
-              <HardHat className="h-8 w-8 text-blue-600" />
-            </div>
-          </div>
-          <CardTitle className="text-2xl text-center">Construction Management</CardTitle>
+          <AuthLogo />
           <CardDescription className="text-center">
             Sign in to access your projects and daily reports
           </CardDescription>
@@ -190,7 +186,7 @@ export function LoginPage() {
                 <Label htmlFor="password">Password</Label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                  className="text-sm text-orange-600 hover:text-orange-700 hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -210,7 +206,7 @@ export function LoginPage() {
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600" disabled={isLoading}>
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -225,7 +221,7 @@ export function LoginPage() {
               Don't have an account?{' '}
               <Link
                 to="/signup"
-                className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                className="text-orange-600 hover:text-orange-700 hover:underline font-medium"
               >
                 Sign up
               </Link>

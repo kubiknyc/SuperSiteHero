@@ -16,7 +16,6 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { Viewer } from '@photo-sphere-viewer/core';
 import { GyroscopePlugin } from '@photo-sphere-viewer/gyroscope-plugin';
 import '@photo-sphere-viewer/core/index.css';
-import '@photo-sphere-viewer/gyroscope-plugin/index.css';
 import {
   Maximize2,
   Minimize2,
@@ -114,18 +113,17 @@ export function Photo360Viewer({
         // Handle ready event
         viewer.addEventListener('ready', () => {
           setIsLoading(false);
-          setGyroscopeSupported(
-            viewer?.getPlugin<GyroscopePlugin>(GyroscopePlugin)?.isSupported() ?? false
-          );
+          const gyroPlugin = viewer?.getPlugin<GyroscopePlugin>(GyroscopePlugin);
+          setGyroscopeSupported(gyroPlugin?.isSupported() ?? false);
           onReady?.();
-        });
 
-        // Enable auto-rotate if specified
-        if (autoRotate) {
-          viewer.addEventListener('ready', () => {
-            viewer?.startAutoRotate({ speed: autoRotateSpeed });
-          });
-        }
+          // Enable auto-rotate if specified
+          if (autoRotate && viewer) {
+            // Use type assertion for the autoRotate method which may vary by version
+            (viewer as unknown as { startAutoRotate?: (opts: { speed: string }) => void })
+              .startAutoRotate?.({ speed: autoRotateSpeed });
+          }
+        });
 
         viewerRef.current = viewer;
       } catch (err) {

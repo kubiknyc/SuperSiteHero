@@ -7,7 +7,6 @@
 import { useState, useCallback } from 'react'
 import { MapPin, Check, MoreHorizontal, Eye, Download, Trash2, Tag, Image, View } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   DropdownMenu,
   DropdownMenuContent,

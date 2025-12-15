@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS field_report_templates (
   is_public BOOLEAN DEFAULT false, -- Shared within company
 
   -- Metadata
-  created_by UUID REFERENCES profiles(id),
+  created_by UUID REFERENCES users(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

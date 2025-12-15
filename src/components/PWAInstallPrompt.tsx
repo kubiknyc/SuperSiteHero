@@ -10,7 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { X, Download, Plus, Smartphone, Monitor, HardHat, CheckCircle2, Info } from 'lucide-react';
+import { X, Download, Plus, Smartphone, Monitor, CheckCircle2, Info } from 'lucide-react'
+import { LogoIcon } from '@/components/brand';
 
 /**
  * Safari share icon for iOS instructions
@@ -251,11 +252,11 @@ export function PWAInstallBanner({ className, position = 'bottom', onAnalyticsEv
         className
       )}
     >
-      <Card className="max-w-md mx-auto shadow-lg border-blue-200 bg-white dark:bg-gray-900 dark:border-gray-700">
+      <Card className="max-w-md mx-auto shadow-lg border-orange-200 bg-white dark:bg-gray-900 dark:border-gray-700">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg flex-shrink-0">
-              <HardHat className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg flex-shrink-0">
+              <LogoIcon className="h-6 w-6" />
             </div>
             <div className="flex-1 min-w-0">
               <CardTitle className="text-base mb-1">Install JobSight</CardTitle>
@@ -370,7 +371,7 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
 
   if (showIOSInstructions) {
     return (
-      <Card className={cn('border-blue-200 dark:border-blue-800', className)}>
+      <Card className={cn('border-orange-200 dark:border-orange-800', className)}>
         <CardContent className="p-4">
           <IOSInstallInstructions
             onClose={() => setShowIOSInstructions(false)}
@@ -412,14 +413,14 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
   }
 
   return (
-    <Card className={cn('border-blue-200 dark:border-blue-800', className)}>
+    <Card className={cn('border-orange-200 dark:border-orange-800', className)}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+          <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
             {isIOS ? (
-              <Smartphone className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <Smartphone className="h-5 w-5 text-orange-600 dark:text-orange-400" />
             ) : (
-              <Monitor className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <LogoIcon className="h-5 w-5" />
             )}
           </div>
           <div className="flex-1">
@@ -427,7 +428,7 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
             <CardDescription className="text-sm mb-3">
               Install our app for quick access from your home screen, offline support, and faster loading.
             </CardDescription>
-            <Button onClick={handleInstall} className="gap-2">
+            <Button onClick={handleInstall} className="gap-2 bg-orange-500 hover:bg-orange-600">
               <Download className="h-4 w-4" />
               {isIOS ? 'How to Install' : 'Install App'}
             </Button>

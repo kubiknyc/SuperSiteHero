@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Offline - SuperSiteHero</title>
+  <title>Offline - JobSight</title>
   <style>
     * {
       margin: 0;
@@ -13,7 +13,7 @@
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -31,11 +31,34 @@
       text-align: center;
     }
 
+    .logo-container {
+      margin-bottom: 24px;
+    }
+
+    .logo-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 16px;
+    }
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .logo-text .job {
+      color: #F97316;
+    }
+
+    .logo-text .sight {
+      color: #1F2937;
+    }
+
     .icon {
       width: 80px;
       height: 80px;
       margin: 0 auto 24px;
-      background: #f3f4f6;
+      background: #FFF7ED;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -45,7 +68,7 @@
     .icon svg {
       width: 40px;
       height: 40px;
-      color: #6b7280;
+      color: #F97316;
     }
 
     h1 {
@@ -63,7 +86,7 @@
     }
 
     .features {
-      background: #f9fafb;
+      background: #FFF7ED;
       border-radius: 12px;
       padding: 24px;
       margin-bottom: 32px;
@@ -95,7 +118,7 @@
       display: inline-block;
       width: 20px;
       height: 20px;
-      background: #10b981;
+      background: #F97316;
       color: white;
       border-radius: 50%;
       font-weight: bold;
@@ -108,7 +131,7 @@
 
     .retry-button {
       display: inline-block;
-      background: #3b82f6;
+      background: #F97316;
       color: white;
       padding: 12px 32px;
       border-radius: 8px;
@@ -119,7 +142,7 @@
     }
 
     .retry-button:hover {
-      background: #2563eb;
+      background: #EA580C;
     }
 
     .sync-notice {
@@ -127,18 +150,26 @@
       color: #9ca3af;
       margin-top: 24px;
     }
-
-    .logo {
-      font-size: 24px;
-      font-weight: 700;
-      color: #3b82f6;
-      margin-bottom: 16px;
-    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="logo">SuperSiteHero</div>
+    <div class="logo-container">
+      <!-- JobSight Logo Icon -->
+      <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Gear -->
+        <circle cx="50" cy="55" r="30" fill="#E5E7EB" stroke="#D1D5DB" stroke-width="2"/>
+        <circle cx="50" cy="55" r="15" fill="#F3F4F6" stroke="#D1D5DB" stroke-width="2"/>
+        <!-- Hard Hat -->
+        <ellipse cx="50" cy="42" rx="32" ry="20" fill="#F97316"/>
+        <ellipse cx="50" cy="38" rx="24" ry="12" fill="#FB923C" opacity="0.6"/>
+        <path d="M15,50 Q15,60 25,62 L75,62 Q85,60 85,50 L85,47 Q85,42 75,45 L75,52 Q75,56 68,58 L32,58 Q25,56 25,52 L25,45 Q15,42 15,47 Z" fill="#EA580C"/>
+        <ellipse cx="38" cy="36" rx="10" ry="6" fill="white" opacity="0.3"/>
+      </svg>
+      <div class="logo-text">
+        <span class="job">Job</span><span class="sight">Sight</span>
+      </div>
+    </div>
 
     <div class="icon">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

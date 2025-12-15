@@ -48,6 +48,7 @@ import {
 import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
 import { Button } from '@/components/ui/button'
+import { LogoIconLight } from '@/components/brand'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -182,17 +183,20 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={cn(
-                "rounded-lg bg-blue-600",
+                "rounded-lg bg-orange-500",
                 isTablet ? "p-1.5" : "p-2"
               )}>
-                <HardHat className={cn(isTablet ? "h-5 w-5" : "h-6 w-6")} />
+                <LogoIconLight className={cn(isTablet ? "h-5 w-5" : "h-6 w-6")} />
               </div>
               <div>
                 <h1 className={cn(
                   "font-bold",
                   isTablet ? "text-base" : "text-lg"
-                )}>Construction</h1>
-                <p className="text-xs text-gray-400">Management</p>
+                )}>
+                  <span className="text-orange-400">Job</span>
+                  <span>Sight</span>
+                </h1>
+                <p className="text-xs text-gray-400">Field Management</p>
               </div>
             </div>
             {/* Close button for tablet portrait drawer */}

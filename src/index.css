@@ -1,12 +1,12 @@
 /* File: /src/index.css */
 /* Global styles and Tailwind CSS directives */
 
+/* Import tablet-specific styles - must be before tailwind directives */
+@import './styles/tablet.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import tablet-specific styles */
-@import './styles/tablet.css';
 
 @layer base {
   /* Global theme transition for smooth theme switching */
