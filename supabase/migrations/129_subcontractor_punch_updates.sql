@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS subcontractor_compliance_documents (
   deleted_at TIMESTAMPTZ
 );
 
--- Ensure expires_at column exists (in case table already existed)
+-- Ensure expires_at and company_id columns exist (in case table already existed from migration 038)
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -65,6 +65,14 @@ BEGIN
     AND column_name = 'expires_at'
   ) THEN
     ALTER TABLE subcontractor_compliance_documents ADD COLUMN expires_at DATE;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'subcontractor_compliance_documents'
+    AND column_name = 'company_id'
+  ) THEN
+    ALTER TABLE subcontractor_compliance_documents ADD COLUMN company_id UUID REFERENCES companies(id) ON DELETE CASCADE;
   END IF;
 END $$;
 
@@ -363,7 +371,12 @@ CREATE POLICY "Users can update own notification preferences"
   ON notification_preferences FOR UPDATE
   USING (user_id = auth.uid());
 
--- Notifications policies
+-- Notifications policies (drop existing if from migration 096)
+DROP POLICY IF EXISTS "Users can view own notifications" ON notifications;
+DROP POLICY IF EXISTS "System can insert notifications" ON notifications;
+DROP POLICY IF EXISTS "Users can update own notifications" ON notifications;
+DROP POLICY IF EXISTS "Users can delete own notifications" ON notifications;
+
 CREATE POLICY "Users can view own notifications"
   ON notifications FOR SELECT
   USING (user_id = auth.uid());
@@ -383,6 +396,9 @@ CREATE POLICY "Users can delete own notifications"
 -- ============================================================================
 -- SUBCONTRACTOR PUNCH ITEM UPDATE POLICIES
 -- ============================================================================
+
+-- Drop existing policy if it exists
+DROP POLICY IF EXISTS "Subcontractors can update assigned punch items" ON punch_items;
 
 -- Subcontractors can only update their assigned punch items
 CREATE POLICY "Subcontractors can update assigned punch items"

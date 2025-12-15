@@ -38,7 +38,9 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCw,
+  View,
 } from 'lucide-react'
+import { Photo360Viewer } from './Photo360Viewer'
 import { cn } from '@/lib/utils'
 import type { Photo } from '@/types/photo-management'
 import { useUpdatePhoto } from '../hooks/usePhotos'
@@ -173,46 +175,60 @@ export function PhotoDetailDialog({
         <div className="flex flex-1 overflow-hidden">
           {/* Image Preview */}
           <div className="flex-1 bg-black/95 flex items-center justify-center relative">
-            <img
-              src={photo.fileUrl}
-              alt={photo.caption || photo.fileName}
-              className="max-w-full max-h-full object-contain transition-transform duration-200"
-              style={{
-                transform: `scale(${zoom}) rotate(${rotation}deg)`,
-              }}
-            />
+            {photo.is360 ? (
+              /* 360 Photo Viewer */
+              <Photo360Viewer
+                photoUrl={photo.fileUrl}
+                caption={photo.caption}
+                className="w-full h-full"
+                defaultHeading={photo.equirectangularMetadata?.initialViewHeading}
+                defaultPitch={photo.equirectangularMetadata?.initialViewPitch}
+              />
+            ) : (
+              /* Standard Image Viewer */
+              <>
+                <img
+                  src={photo.fileUrl}
+                  alt={photo.caption || photo.fileName}
+                  className="max-w-full max-h-full object-contain transition-transform duration-200"
+                  style={{
+                    transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                  }}
+                />
 
-            {/* Image Controls */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/60 rounded-lg p-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20"
-                onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
-              >
-                <ZoomOut className="h-4 w-4" />
-              </Button>
-              <span className="text-white text-sm min-w-[60px] text-center">
-                {Math.round(zoom * 100)}%
-              </span>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20"
-                onClick={() => setZoom((z) => Math.min(3, z + 0.25))}
-              >
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-              <Separator orientation="vertical" className="h-6 bg-white/30" />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-white hover:bg-white/20"
-                onClick={() => setRotation((r) => (r + 90) % 360)}
-              >
-                <RotateCw className="h-4 w-4" />
-              </Button>
-            </div>
+                {/* Image Controls */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/60 rounded-lg p-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
+                  >
+                    <ZoomOut className="h-4 w-4" />
+                  </Button>
+                  <span className="text-white text-sm min-w-[60px] text-center">
+                    {Math.round(zoom * 100)}%
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={() => setZoom((z) => Math.min(3, z + 0.25))}
+                  >
+                    <ZoomIn className="h-4 w-4" />
+                  </Button>
+                  <Separator orientation="vertical" className="h-6 bg-white/30" />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-white hover:bg-white/20"
+                    onClick={() => setRotation((r) => (r + 90) % 360)}
+                  >
+                    <RotateCw className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Details Panel */}

@@ -115,6 +115,35 @@ export interface DetectedObject {
 }
 
 // =============================================
+// 360 Photo / Equirectangular Metadata
+// =============================================
+
+export interface EquirectangularMetadata {
+  /** Type of projection (equirectangular, spherical, cylindrical) */
+  projectionType?: 'equirectangular' | 'spherical' | 'cylindrical'
+  /** How the 360 status was detected */
+  detectedBy?: 'auto' | 'manual' | 'xmp_metadata' | 'camera_model' | 'aspect_ratio'
+  /** When the detection occurred */
+  detectedAt?: string
+  /** Aspect ratio of the image */
+  aspectRatio?: number
+  /** Whether camera model matched known 360 cameras */
+  cameraMatch?: boolean
+  /** Full panorama width in pixels */
+  fullPanoWidth?: number
+  /** Full panorama height in pixels */
+  fullPanoHeight?: number
+  /** Initial view heading in degrees */
+  initialViewHeading?: number
+  /** Initial view pitch in degrees */
+  initialViewPitch?: number
+  /** Initial view roll in degrees */
+  initialViewRoll?: number
+  /** Detection confidence level */
+  confidence?: 'high' | 'medium' | 'low'
+}
+
+// =============================================
 // Photo Entity
 // =============================================
 
@@ -489,6 +518,7 @@ export interface CreatePhotoDTO {
   width?: number
   height?: number
   is360?: boolean
+  equirectangularMetadata?: EquirectangularMetadata
   capturedAt?: string
   latitude?: number
   longitude?: number

@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react'
-import { MapPin, Check, MoreHorizontal, Eye, Download, Trash2, Tag, Image } from 'lucide-react'
+import { MapPin, Check, MoreHorizontal, Eye, Download, Trash2, Tag, Image, View } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -138,9 +138,28 @@ export function PhotoGrid({
               </div>
             </div>
 
+            {/* 360 badge */}
+            {photo.is360 && (
+              <div className="absolute top-2 right-2 z-10">
+                <div className="px-1.5 py-0.5 rounded bg-purple-500/90 flex items-center gap-1">
+                  <View className="h-3 w-3 text-white" />
+                  <span className="text-[10px] font-semibold text-white">360</span>
+                </div>
+              </div>
+            )}
+
             {/* GPS indicator */}
-            {photo.latitude && photo.longitude && (
+            {photo.latitude && photo.longitude && !photo.is360 && (
               <div className="absolute top-2 right-2">
+                <div className="w-6 h-6 rounded-full bg-green-500/80 flex items-center justify-center">
+                  <MapPin className="h-3 w-3 text-white" />
+                </div>
+              </div>
+            )}
+
+            {/* GPS indicator when 360 badge is shown (shift position) */}
+            {photo.latitude && photo.longitude && photo.is360 && (
+              <div className="absolute top-2 right-14">
                 <div className="w-6 h-6 rounded-full bg-green-500/80 flex items-center justify-center">
                   <MapPin className="h-3 w-3 text-white" />
                 </div>
