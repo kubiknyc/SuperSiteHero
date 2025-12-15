@@ -270,7 +270,7 @@ export function hasPermission(
   permissions: Map<string, ResolvedPermission> | undefined,
   permissionCode: string
 ): boolean {
-  if (!permissions) return false;
+  if (!permissions) {return false;}
   const perm = permissions.get(permissionCode);
   return perm?.granted ?? false;
 }
@@ -282,7 +282,7 @@ export function hasAnyPermission(
   permissions: Map<string, ResolvedPermission> | undefined,
   permissionCodes: string[]
 ): boolean {
-  if (!permissions) return false;
+  if (!permissions) {return false;}
   return permissionCodes.some(code => hasPermission(permissions, code));
 }
 
@@ -293,7 +293,7 @@ export function hasAllPermissions(
   permissions: Map<string, ResolvedPermission> | undefined,
   permissionCodes: string[]
 ): boolean {
-  if (!permissions) return false;
+  if (!permissions) {return false;}
   return permissionCodes.every(code => hasPermission(permissions, code));
 }
 
@@ -344,7 +344,7 @@ export function getRoleInfo(role: DefaultRole): { label: string; description: st
  */
 export function formatRole(role: DefaultRole | string): string {
   const info = DEFAULT_ROLES.find(r => r.value === role);
-  if (info) return info.label;
+  if (info) {return info.label;}
   // Convert snake_case to Title Case for custom roles
   return role
     .split('_')

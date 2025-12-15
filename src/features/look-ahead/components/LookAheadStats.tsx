@@ -202,7 +202,7 @@ export function ActivityStatusSummary({ activitiesByStatus, className }: Activit
         <div className="space-y-2">
           {Object.entries(activitiesByStatus).map(([status, count]) => {
             const config = statusConfig[status]
-            if (!config || count === 0) return null
+            if (!config || count === 0) {return null}
 
             const percentage = total > 0 ? (count / total) * 100 : 0
 

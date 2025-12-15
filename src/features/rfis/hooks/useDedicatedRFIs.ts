@@ -74,7 +74,7 @@ export function useProjectRFIs(projectId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'project', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('rfis')
@@ -90,7 +90,7 @@ export function useProjectRFIs(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('rfi_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIWithDetails[]
     },
     enabled: !!projectId,
@@ -118,7 +118,7 @@ export function useAllRFIs() {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIWithDetails[]
     },
     enabled: !!user,
@@ -132,7 +132,7 @@ export function useRFI(rfiId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'detail', rfiId],
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfis')
@@ -149,7 +149,7 @@ export function useRFI(rfiId: string | undefined) {
         .is('deleted_at', null)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIWithDetails
     },
     enabled: !!rfiId,
@@ -163,7 +163,7 @@ export function useRFIsByBallInCourt(projectId: string | undefined, role: BallIn
   return useQuery({
     queryKey: ['dedicated-rfis', 'ball-in-court', projectId, role],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('rfis')
@@ -181,7 +181,7 @@ export function useRFIsByBallInCourt(projectId: string | undefined, role: BallIn
 
       const { data, error } = await query.order('date_required', { ascending: true, nullsFirst: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIWithDetails[]
     },
     enabled: !!projectId,
@@ -195,7 +195,7 @@ export function useRFIsByStatus(projectId: string | undefined, status: RFIStatus
   return useQuery({
     queryKey: ['dedicated-rfis', 'status', projectId, status],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('rfis')
@@ -213,7 +213,7 @@ export function useRFIsByStatus(projectId: string | undefined, status: RFIStatus
 
       const { data, error } = await query.order('rfi_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIWithDetails[]
     },
     enabled: !!projectId,
@@ -227,7 +227,7 @@ export function useOverdueRFIs(projectId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'overdue', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('rfis')
@@ -243,7 +243,7 @@ export function useOverdueRFIs(projectId: string | undefined) {
         .not('status', 'in', '("closed","void")')
         .order('date_required', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIWithDetails[]
     },
     enabled: !!projectId,
@@ -257,7 +257,7 @@ export function useRFIAttachments(rfiId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'attachments', rfiId],
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_attachments')
@@ -269,7 +269,7 @@ export function useRFIAttachments(rfiId: string | undefined) {
         .eq('rfi_id', rfiId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!rfiId,
@@ -283,7 +283,7 @@ export function useRFIComments(rfiId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'comments', rfiId],
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_comments')
@@ -295,7 +295,7 @@ export function useRFIComments(rfiId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!rfiId,
@@ -309,7 +309,7 @@ export function useRFIHistory(rfiId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'history', rfiId],
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_history')
@@ -320,7 +320,7 @@ export function useRFIHistory(rfiId: string | undefined) {
         .eq('rfi_id', rfiId)
         .order('changed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!rfiId,
@@ -349,7 +349,7 @@ export async function generateRFINumber(projectId: string): Promise<number> {
       .order('rfi_number', { ascending: false })
       .limit(1)
 
-    if (fetchError) throw fetchError
+    if (fetchError) {throw fetchError}
     return (existingRFIs?.[0]?.rfi_number || 0) + 1
   }
 
@@ -365,7 +365,7 @@ export function useCreateRFI() {
 
   return useMutation({
     mutationFn: async (input: Omit<RFIInsert, 'company_id' | 'created_by' | 'rfi_number'>) => {
-      if (!user?.company_id) throw new Error('User company not found')
+      if (!user?.company_id) {throw new Error('User company not found')}
 
       // Generate RFI number
       const rfiNumber = await generateRFINumber(input.project_id)
@@ -382,7 +382,7 @@ export function useCreateRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFI
     },
     onSuccess: (data) => {
@@ -406,7 +406,7 @@ export function useUpdateRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFI
     },
     onSuccess: (data) => {
@@ -435,7 +435,7 @@ export function useSubmitRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFI
     },
     onSuccess: () => {
@@ -465,7 +465,7 @@ export function useRespondToRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFI
     },
     onSuccess: () => {
@@ -500,7 +500,7 @@ export function useUpdateBallInCourt() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFI
     },
     onSuccess: () => {
@@ -527,7 +527,7 @@ export function useCloseRFI() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFI
     },
     onSuccess: () => {
@@ -549,7 +549,7 @@ export function useDeleteRFI() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', rfiId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
@@ -588,7 +588,7 @@ export function useAddRFIComment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -608,7 +608,7 @@ export function useRFIStats(projectId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-rfis', 'stats', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data: rfis, error } = await supabase
         .from('rfis')
@@ -616,7 +616,7 @@ export function useRFIStats(projectId: string | undefined) {
         .eq('project_id', projectId)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       const now = new Date()
       const stats = {

@@ -88,7 +88,7 @@ export function ChangeOrderItemsEditor({
 
   // Format currency
   const formatCurrency = (amount: number | null | undefined) => {
-    if (amount === null || amount === undefined) return '-'
+    if (amount === null || amount === undefined) {return '-'}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -165,7 +165,7 @@ export function ChangeOrderItemsEditor({
 
   // Save item (add or update)
   const handleSave = async () => {
-    if (!formData.description.trim()) return
+    if (!formData.description.trim()) {return}
 
     const itemData: CreateChangeOrderItemDTO = {
       description: formData.description,
@@ -198,7 +198,7 @@ export function ChangeOrderItemsEditor({
 
   // Delete item
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) return
+    if (!confirm('Are you sure you want to delete this item?')) {return}
     try {
       await deleteItem.mutateAsync({ id, changeOrderId })
     } catch (e) {

@@ -231,7 +231,7 @@ export function useOfflineSync() {
           .insert(workforceData)
           .select('id')
 
-        if (error) throw new Error(`Workforce sync failed: ${error.message}`)
+        if (error) {throw new Error(`Workforce sync failed: ${error.message}`)}
         insertedIds.workforce = (data as { id: string }[])?.map((d) => d.id) || []
       }
 
@@ -251,7 +251,7 @@ export function useOfflineSync() {
           .insert(equipmentData)
           .select('id')
 
-        if (error) throw new Error(`Equipment sync failed: ${error.message}`)
+        if (error) {throw new Error(`Equipment sync failed: ${error.message}`)}
         insertedIds.equipment = (data as { id: string }[])?.map((d) => d.id) || []
       }
 
@@ -271,7 +271,7 @@ export function useOfflineSync() {
           .insert(deliveryData)
           .select('id')
 
-        if (error) throw new Error(`Deliveries sync failed: ${error.message}`)
+        if (error) {throw new Error(`Deliveries sync failed: ${error.message}`)}
         insertedIds.deliveries = (data as { id: string }[])?.map((d) => d.id) || []
       }
 
@@ -290,7 +290,7 @@ export function useOfflineSync() {
           .insert(visitorData)
           .select('id')
 
-        if (error) throw new Error(`Visitors sync failed: ${error.message}`)
+        if (error) {throw new Error(`Visitors sync failed: ${error.message}`)}
         insertedIds.visitors = (data as { id: string }[])?.map((d) => d.id) || []
       }
 

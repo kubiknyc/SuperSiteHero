@@ -127,15 +127,15 @@ export function RFITimeline({
 
     // Sort by timestamp, newest first
     return events.sort((a, b) => {
-      if (!a.timestamp || !b.timestamp) return 0
+      if (!a.timestamp || !b.timestamp) {return 0}
       return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     })
   }, [comments, history])
 
   // Get display name for user
   const getDisplayName = (userId: string | null | undefined) => {
-    if (!userId) return 'System'
-    if (userId === currentUserId) return 'You'
+    if (!userId) {return 'System'}
+    if (userId === currentUserId) {return 'You'}
     // In production, fetch user profile and return full name
     return userId.substring(0, 8)
   }

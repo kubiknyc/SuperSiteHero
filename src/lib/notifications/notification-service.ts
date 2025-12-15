@@ -9,6 +9,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { sendEmail, type EmailRecipient } from '@/lib/email/email-service'
+import { showPushNotification, isPushSupported, type PushNotificationPayload } from './pushService'
 import {
   generateApprovalRequestEmail,
   generateApprovalCompletedEmail,
@@ -53,11 +54,13 @@ export interface NotificationRecipient {
 export interface NotificationOptions {
   sendEmail?: boolean
   sendInApp?: boolean
+  sendPush?: boolean
 }
 
 const DEFAULT_OPTIONS: NotificationOptions = {
   sendEmail: true,
   sendInApp: true,
+  sendPush: true, // Enable push by default
 }
 
 // ============================================================================
@@ -910,6 +913,48 @@ export const notificationService = {
     } catch {
       const notifications = JSON.parse(localStorage.getItem('inAppNotifications') || '[]')
       return notifications.filter((n: any) => !n.read).length
+    }
+  },
+
+  /**
+   * Send a push notification to the current user's device
+   * This is for local push notifications (when the app is in foreground)
+   * For server-sent push, use the send-push-notification edge function
+   */
+  async sendLocalPushNotification(data: {
+    type: string
+    title: string
+    body: string
+    url?: string
+    icon?: string
+    badge?: string
+    image?: string
+    requireInteraction?: boolean
+  }): Promise<boolean> {
+    try {
+      if (!isPushSupported()) {
+        logger.warn('[NotificationService] Push notifications not supported')
+        return false
+      }
+
+      const payload: PushNotificationPayload = {
+        title: data.title,
+        body: data.body,
+        icon: data.icon,
+        badge: data.badge,
+        image: data.image,
+        tag: `jobsight-${data.type}-${Date.now()}`,
+        data: {
+          type: data.type,
+          url: data.url,
+        },
+        requireInteraction: data.requireInteraction,
+      }
+
+      return await showPushNotification(payload)
+    } catch (error) {
+      logger.error('[NotificationService] Failed to send local push:', error)
+      return false
     }
   },
 }

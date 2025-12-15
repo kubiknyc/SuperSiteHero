@@ -1,7 +1,7 @@
 /**
  * Send Notification Edge Function
- * Handles multi-channel notifications: email and in-app
- * Push notifications are deferred for future implementation
+ * Handles multi-channel notifications: email, in-app, and push
+ * Supports notification type preferences and quiet hours
  */
 
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
@@ -25,6 +25,10 @@ interface NotificationPayload {
   action_url?: string;
   metadata?: Record<string, any>;
   email_template?: string;
+  is_critical?: boolean;
+  icon?: string;
+  badge?: string;
+  image?: string;
 }
 
 // Response interface
@@ -82,11 +86,7 @@ serve(async (req: Request) => {
           break;
 
         case 'push':
-          // Push notifications deferred for later implementation
-          result.channels.push = {
-            success: false,
-            error: 'Push notifications not yet implemented',
-          };
+          result.channels.push = await sendPushNotification(supabase, supabaseUrl, payload);
           break;
 
         default:
@@ -210,6 +210,61 @@ async function sendEmailNotification(
     return { success: true };
   } catch (error: any) {
     console.error('Email notification error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Send push notification by calling the send-push-notification Edge Function
+ */
+async function sendPushNotification(
+  supabase: any,
+  supabaseUrl: string,
+  payload: NotificationPayload
+): Promise<{ success: boolean; sent_count?: number; error?: string }> {
+  try {
+    // Build push notification payload
+    const pushPayload = {
+      user_id: payload.user_id,
+      type: payload.type,
+      title: payload.title,
+      body: payload.message,
+      url: payload.action_url,
+      related_to_type: payload.related_to_type,
+      related_to_id: payload.related_to_id,
+      data: payload.metadata,
+      is_critical: payload.is_critical,
+      icon: payload.icon,
+      badge: payload.badge,
+      image: payload.image,
+    };
+
+    // Call send-push-notification function
+    const response = await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+      },
+      body: JSON.stringify(pushPayload),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      return {
+        success: false,
+        error: result.error || `Push service error: ${response.status}`,
+      };
+    }
+
+    return {
+      success: result.success,
+      sent_count: result.sent_count,
+      error: result.errors?.length > 0 ? result.errors.join(', ') : undefined,
+    };
+  } catch (error: any) {
+    console.error('Push notification error:', error);
     return { success: false, error: error.message };
   }
 }

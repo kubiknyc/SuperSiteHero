@@ -182,7 +182,7 @@ class ApiClient {
     table: string,
     options?: QueryOptions & { select?: string; count?: boolean }
   ) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const selectParam = options?.select || '*'
     const countParam = options?.count ? { count: 'exact' as const } : undefined
 
@@ -221,7 +221,7 @@ class ApiClient {
       const query = this.buildQuery<T>(table, options)
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as T[]) || []
     } catch (error) {
       throw this.handleError(error, { table, operation: 'select' })
@@ -242,7 +242,7 @@ class ApiClient {
       const query = this.buildQuery<T>(table, { ...options, count: true })
       const { data, error, count } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return {
         data: (data as T[]) || [],
         count: count ?? 0,
@@ -273,7 +273,7 @@ class ApiClient {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T
     } catch (error) {
       throw this.handleError(error, { table, operation: 'selectOne' })
@@ -296,7 +296,7 @@ class ApiClient {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T
     } catch (error) {
       throw this.handleError(error, { table, operation: 'insert' })
@@ -322,7 +322,7 @@ class ApiClient {
         .insert(records as any[])
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as T[]) || []
     } catch (error) {
       throw this.handleError(error, { table, operation: 'insertMany' })
@@ -351,7 +351,7 @@ class ApiClient {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as T
     } catch (error) {
       throw this.handleError(error, { table, operation: 'update' })
@@ -371,7 +371,7 @@ class ApiClient {
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw this.handleError(error, { table, operation: 'delete' })
     }
@@ -415,7 +415,7 @@ class ApiClient {
       const result = callback(query)
       const { data, error } = await result
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as T[]) || []
     } catch (error) {
       throw this.handleError(error, { table, operation: 'customQuery' })

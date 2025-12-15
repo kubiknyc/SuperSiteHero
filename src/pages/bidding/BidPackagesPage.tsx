@@ -62,7 +62,7 @@ export default function BidPackagesPage() {
 
   // Filter packages by tab
   const filteredPackages = useMemo(() => {
-    if (!bidPackages) return []
+    if (!bidPackages) {return []}
 
     let filtered = [...bidPackages]
 
@@ -88,7 +88,7 @@ export default function BidPackagesPage() {
 
   // Stats for tabs
   const stats = useMemo(() => {
-    if (!bidPackages) return { all: 0, active: 0, draft: 0, awarded: 0, closed: 0 }
+    if (!bidPackages) {return { all: 0, active: 0, draft: 0, awarded: 0, closed: 0 }}
 
     return {
       all: bidPackages.length,

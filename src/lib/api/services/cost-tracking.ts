@@ -110,7 +110,7 @@ export const costCodesApi = {
       throw new ApiErrorClass(error.message, 'FETCH_ERROR')
     }
 
-    if (!data) return []
+    if (!data) {return []}
 
     // Build tree structure
     const codeMap = new Map<string, CostCodeWithChildren>()

@@ -370,7 +370,7 @@ serve(async (req) => {
       const shouldSend = !certificate.reminder_sent_at ||
         (new Date().getTime() - new Date(certificate.reminder_sent_at).getTime()) > (7 * 24 * 60 * 60 * 1000)
 
-      if (!shouldSend) continue
+      if (!shouldSend) {continue}
 
       if (diffDays < 0) {
         // Only send expired reminders weekly

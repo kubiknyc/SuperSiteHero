@@ -3,15 +3,22 @@
  * Tests local caching, sync queue, and conflict resolution
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+// Unmock the store so we can test the real implementation
+vi.unmock('@/features/daily-reports/store/offlineReportStore')
+
+// Must import after unmocking
 import { useOfflineReportStore } from './offlineReportStore'
 import type { DraftReport, WorkforceEntry, EquipmentEntry, DeliveryEntry, VisitorEntry } from './offlineReportStore'
+
+// Helper to get fresh state after an action
+const getState = () => useOfflineReportStore.getState()
 
 describe('Offline Report Store', () => {
   beforeEach(() => {
     // Reset store before each test
-    const store = useOfflineReportStore.getState()
-    store.clearDraft()
+    getState().clearDraft()
   })
 
   // =============================================
@@ -20,10 +27,9 @@ describe('Offline Report Store', () => {
 
   describe('initializeDraft', () => {
     it('should initialize a new draft report', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      const draft = store.draftReport
+      const draft = getState().draftReport
 
       expect(draft).toBeDefined()
       expect(draft?.project_id).toBe('project-123')
@@ -33,11 +39,9 @@ describe('Offline Report Store', () => {
     })
 
     it('should clear previous data when initializing new draft', () => {
-      const store = useOfflineReportStore.getState()
-
       // Set up some existing data
-      store.initializeDraft('project-1', '2024-01-01')
-      store.addWorkforceEntry({
+      getState().initializeDraft('project-1', '2024-01-01')
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'individual',
         worker_name: 'John',
@@ -45,10 +49,10 @@ describe('Offline Report Store', () => {
       })
 
       // Initialize new draft
-      store.initializeDraft('project-2', '2024-01-02')
+      getState().initializeDraft('project-2', '2024-01-02')
 
-      expect(store.workforce).toHaveLength(0)
-      expect(store.draftReport?.project_id).toBe('project-2')
+      expect(getState().workforce).toHaveLength(0)
+      expect(getState().draftReport?.project_id).toBe('project-2')
     })
   })
 
@@ -60,10 +64,9 @@ describe('Offline Report Store', () => {
         temperature_low: 55,
       }
 
-      const store = useOfflineReportStore.getState()
-      store.initializeFromPreviousReport('project-123', '2024-01-16', previousReport)
+      getState().initializeFromPreviousReport('project-123', '2024-01-16', previousReport)
 
-      const draft = store.draftReport
+      const draft = getState().draftReport
 
       expect(draft?.weather_condition).toBe('sunny')
       expect(draft?.temperature_high).toBe(75)
@@ -76,17 +79,16 @@ describe('Offline Report Store', () => {
         { id: 'old-1', entry_type: 'team', team_name: 'Team A', worker_count: 5, trade: 'Framing' },
       ]
 
-      const store = useOfflineReportStore.getState()
-      store.initializeFromPreviousReport(
+      getState().initializeFromPreviousReport(
         'project-123',
         '2024-01-16',
         {},
         { workforce: previousWorkforce }
       )
 
-      expect(store.workforce).toHaveLength(1)
-      expect(store.workforce[0].id).not.toBe('old-1') // New ID
-      expect(store.workforce[0].team_name).toBe('Team A')
+      expect(getState().workforce).toHaveLength(1)
+      expect(getState().workforce[0].id).not.toBe('old-1') // New ID
+      expect(getState().workforce[0].team_name).toBe('Team A')
     })
 
     it('should clear submission/approval fields', () => {
@@ -96,10 +98,9 @@ describe('Offline Report Store', () => {
         approved_by: 'user-123',
       }
 
-      const store = useOfflineReportStore.getState()
-      store.initializeFromPreviousReport('project-123', '2024-01-16', previousReport)
+      getState().initializeFromPreviousReport('project-123', '2024-01-16', previousReport)
 
-      const draft = store.draftReport
+      const draft = getState().draftReport
 
       expect(draft?.submitted_at).toBeUndefined()
       expect(draft?.approved_at).toBeUndefined()
@@ -117,11 +118,10 @@ describe('Offline Report Store', () => {
         status: 'submitted',
       }
 
-      const store = useOfflineReportStore.getState()
-      store.initializeFromExistingReport(existingReport, {}, '2024-01-15T12:00:00Z')
+      getState().initializeFromExistingReport(existingReport, {}, '2024-01-15T12:00:00Z')
 
-      expect(store.draftReport?.id).toBe('report-123')
-      expect(store.draftReport?.work_performed).toBe('Installed drywall')
+      expect(getState().draftReport?.id).toBe('report-123')
+      expect(getState().draftReport?.work_performed).toBe('Installed drywall')
     })
 
     it('should add to sync queue with server timestamp', () => {
@@ -131,13 +131,12 @@ describe('Offline Report Store', () => {
         report_date: '2024-01-15',
       }
 
-      const store = useOfflineReportStore.getState()
-      store.initializeFromExistingReport(existingReport, {}, '2024-01-15T12:00:00Z')
+      getState().initializeFromExistingReport(existingReport, {}, '2024-01-15T12:00:00Z')
 
-      expect(store.syncQueue).toHaveLength(1)
-      expect(store.syncQueue[0].reportId).toBe('report-123')
-      expect(store.syncQueue[0].action).toBe('update')
-      expect(store.syncQueue[0].lastKnownUpdatedAt).toBe('2024-01-15T12:00:00Z')
+      expect(getState().syncQueue).toHaveLength(1)
+      expect(getState().syncQueue[0].reportId).toBe('report-123')
+      expect(getState().syncQueue[0].action).toBe('update')
+      expect(getState().syncQueue[0].lastKnownUpdatedAt).toBe('2024-01-15T12:00:00Z')
     })
 
     it('should keep existing IDs for related data', () => {
@@ -151,10 +150,9 @@ describe('Offline Report Store', () => {
         { id: 'w-existing-1', entry_type: 'individual', worker_name: 'John', trade: 'Carpenter' },
       ]
 
-      const store = useOfflineReportStore.getState()
-      store.initializeFromExistingReport(existingReport, { workforce })
+      getState().initializeFromExistingReport(existingReport, { workforce })
 
-      expect(store.workforce[0].id).toBe('w-existing-1')
+      expect(getState().workforce[0].id).toBe('w-existing-1')
     })
   })
 
@@ -164,27 +162,25 @@ describe('Offline Report Store', () => {
 
   describe('updateDraft', () => {
     it('should update draft fields', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.updateDraft({
+      getState().updateDraft({
         weather_condition: 'cloudy',
         temperature_high: 68,
         work_performed: 'Framing work',
       })
 
-      expect(store.draftReport?.weather_condition).toBe('cloudy')
-      expect(store.draftReport?.temperature_high).toBe(68)
-      expect(store.draftReport?.work_performed).toBe('Framing work')
+      expect(getState().draftReport?.weather_condition).toBe('cloudy')
+      expect(getState().draftReport?.temperature_high).toBe(68)
+      expect(getState().draftReport?.work_performed).toBe('Framing work')
     })
 
     it('should handle null draft gracefully', () => {
-      const store = useOfflineReportStore.getState()
-      store.clearDraft()
+      getState().clearDraft()
 
-      store.updateDraft({ weather_condition: 'sunny' })
+      getState().updateDraft({ weather_condition: 'sunny' })
 
-      expect(store.draftReport).toBeNull()
+      expect(getState().draftReport).toBeNull()
     })
   })
 
@@ -194,10 +190,9 @@ describe('Offline Report Store', () => {
 
   describe('Workforce Entries', () => {
     it('should add workforce entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'team',
         team_name: 'Framing Crew',
@@ -205,15 +200,14 @@ describe('Offline Report Store', () => {
         trade: 'Framing',
       })
 
-      expect(store.workforce).toHaveLength(1)
-      expect(store.workforce[0].team_name).toBe('Framing Crew')
+      expect(getState().workforce).toHaveLength(1)
+      expect(getState().workforce[0].team_name).toBe('Framing Crew')
     })
 
     it('should update total workers when adding team entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'team',
         team_name: 'Team A',
@@ -221,28 +215,26 @@ describe('Offline Report Store', () => {
         trade: 'Framing',
       })
 
-      expect(store.draftReport?.total_workers).toBe(5)
+      expect(getState().draftReport?.total_workers).toBe(5)
     })
 
     it('should update total workers when adding individual entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'individual',
         worker_name: 'John Doe',
         trade: 'Electrician',
       })
 
-      expect(store.draftReport?.total_workers).toBe(1)
+      expect(getState().draftReport?.total_workers).toBe(1)
     })
 
     it('should update workforce entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'team',
         team_name: 'Team A',
@@ -250,17 +242,16 @@ describe('Offline Report Store', () => {
         trade: 'Framing',
       })
 
-      store.updateWorkforceEntry('w1', { worker_count: 8 })
+      getState().updateWorkforceEntry('w1', { worker_count: 8 })
 
-      expect(store.workforce[0].worker_count).toBe(8)
-      expect(store.draftReport?.total_workers).toBe(8)
+      expect(getState().workforce[0].worker_count).toBe(8)
+      expect(getState().draftReport?.total_workers).toBe(8)
     })
 
     it('should remove workforce entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'team',
         team_name: 'Team A',
@@ -268,17 +259,16 @@ describe('Offline Report Store', () => {
         trade: 'Framing',
       })
 
-      store.removeWorkforceEntry('w1')
+      getState().removeWorkforceEntry('w1')
 
-      expect(store.workforce).toHaveLength(0)
-      expect(store.draftReport?.total_workers).toBe(0)
+      expect(getState().workforce).toHaveLength(0)
+      expect(getState().draftReport?.total_workers).toBe(0)
     })
 
     it('should calculate total workers correctly with mixed entries', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'team',
         team_name: 'Team A',
@@ -286,14 +276,14 @@ describe('Offline Report Store', () => {
         trade: 'Framing',
       })
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w2',
         entry_type: 'individual',
         worker_name: 'John',
         trade: 'Electrician',
       })
 
-      store.addWorkforceEntry({
+      getState().addWorkforceEntry({
         id: 'w3',
         entry_type: 'team',
         team_name: 'Team B',
@@ -301,7 +291,7 @@ describe('Offline Report Store', () => {
         trade: 'Plumbing',
       })
 
-      expect(store.draftReport?.total_workers).toBe(9) // 5 + 1 + 3
+      expect(getState().draftReport?.total_workers).toBe(9) // 5 + 1 + 3
     })
   })
 
@@ -311,10 +301,9 @@ describe('Offline Report Store', () => {
 
   describe('Equipment Entries', () => {
     it('should add equipment entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addEquipmentEntry({
+      getState().addEquipmentEntry({
         id: 'e1',
         equipment_type: 'Excavator',
         quantity: 2,
@@ -322,33 +311,31 @@ describe('Offline Report Store', () => {
         hours_used: 8,
       })
 
-      expect(store.equipment).toHaveLength(1)
-      expect(store.equipment[0].equipment_type).toBe('Excavator')
+      expect(getState().equipment).toHaveLength(1)
+      expect(getState().equipment[0].equipment_type).toBe('Excavator')
     })
 
     it('should update equipment entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addEquipmentEntry({
+      getState().addEquipmentEntry({
         id: 'e1',
         equipment_type: 'Crane',
         quantity: 1,
       })
 
-      store.updateEquipmentEntry('e1', { hours_used: 10 })
+      getState().updateEquipmentEntry('e1', { hours_used: 10 })
 
-      expect(store.equipment[0].hours_used).toBe(10)
+      expect(getState().equipment[0].hours_used).toBe(10)
     })
 
     it('should remove equipment entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addEquipmentEntry({ id: 'e1', equipment_type: 'Crane', quantity: 1 })
-      store.removeEquipmentEntry('e1')
+      getState().addEquipmentEntry({ id: 'e1', equipment_type: 'Crane', quantity: 1 })
+      getState().removeEquipmentEntry('e1')
 
-      expect(store.equipment).toHaveLength(0)
+      expect(getState().equipment).toHaveLength(0)
     })
   })
 
@@ -358,43 +345,40 @@ describe('Offline Report Store', () => {
 
   describe('Delivery Entries', () => {
     it('should add delivery entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addDeliveryEntry({
+      getState().addDeliveryEntry({
         id: 'd1',
         material_description: 'Concrete',
         quantity: '20 yards',
         vendor: 'ABC Supply',
       })
 
-      expect(store.deliveries).toHaveLength(1)
-      expect(store.deliveries[0].material_description).toBe('Concrete')
+      expect(getState().deliveries).toHaveLength(1)
+      expect(getState().deliveries[0].material_description).toBe('Concrete')
     })
 
     it('should update delivery entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addDeliveryEntry({
+      getState().addDeliveryEntry({
         id: 'd1',
         material_description: 'Lumber',
         quantity: '100 boards',
       })
 
-      store.updateDeliveryEntry('d1', { delivery_ticket_number: 'TKT-12345' })
+      getState().updateDeliveryEntry('d1', { delivery_ticket_number: 'TKT-12345' })
 
-      expect(store.deliveries[0].delivery_ticket_number).toBe('TKT-12345')
+      expect(getState().deliveries[0].delivery_ticket_number).toBe('TKT-12345')
     })
 
     it('should remove delivery entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addDeliveryEntry({ id: 'd1', material_description: 'Steel', quantity: '10 tons' })
-      store.removeDeliveryEntry('d1')
+      getState().addDeliveryEntry({ id: 'd1', material_description: 'Steel', quantity: '10 tons' })
+      getState().removeDeliveryEntry('d1')
 
-      expect(store.deliveries).toHaveLength(0)
+      expect(getState().deliveries).toHaveLength(0)
     })
   })
 
@@ -404,43 +388,40 @@ describe('Offline Report Store', () => {
 
   describe('Visitor Entries', () => {
     it('should add visitor entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addVisitorEntry({
+      getState().addVisitorEntry({
         id: 'v1',
         visitor_name: 'John Smith',
         company: 'ABC Corp',
         purpose: 'Site inspection',
       })
 
-      expect(store.visitors).toHaveLength(1)
-      expect(store.visitors[0].visitor_name).toBe('John Smith')
+      expect(getState().visitors).toHaveLength(1)
+      expect(getState().visitors[0].visitor_name).toBe('John Smith')
     })
 
     it('should update visitor entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addVisitorEntry({
+      getState().addVisitorEntry({
         id: 'v1',
         visitor_name: 'Jane Doe',
         company: 'XYZ Inc',
       })
 
-      store.updateVisitorEntry('v1', { departure_time: '14:30' })
+      getState().updateVisitorEntry('v1', { departure_time: '14:30' })
 
-      expect(store.visitors[0].departure_time).toBe('14:30')
+      expect(getState().visitors[0].departure_time).toBe('14:30')
     })
 
     it('should remove visitor entry', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addVisitorEntry({ id: 'v1', visitor_name: 'Bob Johnson' })
-      store.removeVisitorEntry('v1')
+      getState().addVisitorEntry({ id: 'v1', visitor_name: 'Bob Johnson' })
+      getState().removeVisitorEntry('v1')
 
-      expect(store.visitors).toHaveLength(0)
+      expect(getState().visitors).toHaveLength(0)
     })
   })
 
@@ -450,47 +431,43 @@ describe('Offline Report Store', () => {
 
   describe('Photos', () => {
     it('should add photo', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addPhoto({
+      getState().addPhoto({
         id: 'photo-1',
         url: 'blob:http://localhost/photo1',
         caption: 'Foundation work',
       } as any)
 
-      expect(store.photos).toHaveLength(1)
-      expect(store.photos[0].caption).toBe('Foundation work')
+      expect(getState().photos).toHaveLength(1)
+      expect(getState().photos[0].caption).toBe('Foundation work')
     })
 
     it('should update photo', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addPhoto({ id: 'photo-1', url: 'blob:http://localhost/photo1' } as any)
-      store.updatePhoto('photo-1', { caption: 'Updated caption' })
+      getState().addPhoto({ id: 'photo-1', url: 'blob:http://localhost/photo1' } as any)
+      getState().updatePhoto('photo-1', { caption: 'Updated caption' })
 
-      expect(store.photos[0].caption).toBe('Updated caption')
+      expect(getState().photos[0].caption).toBe('Updated caption')
     })
 
     it('should update photo caption', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addPhoto({ id: 'photo-1', url: 'blob:http://localhost/photo1' } as any)
-      store.updatePhotoCaption('photo-1', 'New caption')
+      getState().addPhoto({ id: 'photo-1', url: 'blob:http://localhost/photo1' } as any)
+      getState().updatePhotoCaption('photo-1', 'New caption')
 
-      expect(store.photos[0].caption).toBe('New caption')
+      expect(getState().photos[0].caption).toBe('New caption')
     })
 
     it('should remove photo', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
+      getState().initializeDraft('project-123', '2024-01-15')
 
-      store.addPhoto({ id: 'photo-1', url: 'blob:http://localhost/photo1' } as any)
-      store.removePhoto('photo-1')
+      getState().addPhoto({ id: 'photo-1', url: 'blob:http://localhost/photo1' } as any)
+      getState().removePhoto('photo-1')
 
-      expect(store.photos).toHaveLength(0)
+      expect(getState().photos).toHaveLength(0)
     })
   })
 
@@ -500,26 +477,23 @@ describe('Offline Report Store', () => {
 
   describe('Sync Status', () => {
     it('should set sync status', () => {
-      const store = useOfflineReportStore.getState()
-      store.setSyncStatus('syncing')
+      getState().setSyncStatus('syncing')
 
-      expect(store.syncStatus).toBe('syncing')
-      expect(store.syncError).toBeNull()
+      expect(getState().syncStatus).toBe('syncing')
+      expect(getState().syncError).toBeNull()
     })
 
     it('should set sync status with error', () => {
-      const store = useOfflineReportStore.getState()
-      store.setSyncStatus('error', 'Network timeout')
+      getState().setSyncStatus('error', 'Network timeout')
 
-      expect(store.syncStatus).toBe('error')
-      expect(store.syncError).toBe('Network timeout')
+      expect(getState().syncStatus).toBe('error')
+      expect(getState().syncError).toBe('Network timeout')
     })
 
     it('should set online status', () => {
-      const store = useOfflineReportStore.getState()
-      store.setOnlineStatus(false)
+      getState().setOnlineStatus(false)
 
-      expect(store.isOnline).toBe(false)
+      expect(getState().isOnline).toBe(false)
     })
   })
 
@@ -529,43 +503,40 @@ describe('Offline Report Store', () => {
 
   describe('Sync Queue', () => {
     it('should add item to sync queue', () => {
-      const store = useOfflineReportStore.getState()
-      store.addToSyncQueue({
+      getState().addToSyncQueue({
         id: 'sync-1',
         reportId: 'report-123',
         action: 'create',
       })
 
-      expect(store.syncQueue).toHaveLength(1)
-      expect(store.syncQueue[0].reportId).toBe('report-123')
-      expect(store.syncQueue[0].retries).toBe(0)
+      expect(getState().syncQueue).toHaveLength(1)
+      expect(getState().syncQueue[0].reportId).toBe('report-123')
+      expect(getState().syncQueue[0].retries).toBe(0)
     })
 
     it('should remove item from sync queue', () => {
-      const store = useOfflineReportStore.getState()
-      store.addToSyncQueue({
+      getState().addToSyncQueue({
         id: 'sync-1',
         reportId: 'report-123',
         action: 'create',
       })
 
-      store.removeFromSyncQueue('sync-1')
+      getState().removeFromSyncQueue('sync-1')
 
-      expect(store.syncQueue).toHaveLength(0)
+      expect(getState().syncQueue).toHaveLength(0)
     })
 
     it('should update sync queue item', () => {
-      const store = useOfflineReportStore.getState()
-      store.addToSyncQueue({
+      getState().addToSyncQueue({
         id: 'sync-1',
         reportId: 'report-123',
         action: 'create',
       })
 
-      store.updateSyncQueueItem('sync-1', { retries: 3, lastError: 'Network error' })
+      getState().updateSyncQueueItem('sync-1', { retries: 3, lastError: 'Network error' })
 
-      expect(store.syncQueue[0].retries).toBe(3)
-      expect(store.syncQueue[0].lastError).toBe('Network error')
+      expect(getState().syncQueue[0].retries).toBe(3)
+      expect(getState().syncQueue[0].lastError).toBe('Network error')
     })
   })
 
@@ -575,7 +546,6 @@ describe('Offline Report Store', () => {
 
   describe('Conflict Resolution', () => {
     it('should set conflict', () => {
-      const store = useOfflineReportStore.getState()
       const conflict = {
         reportId: 'report-123',
         localUpdatedAt: Date.now(),
@@ -583,54 +553,51 @@ describe('Offline Report Store', () => {
         serverData: { work_performed: 'Server version' },
       }
 
-      store.setConflict(conflict)
+      getState().setConflict(conflict)
 
-      expect(store.conflict).toEqual(conflict)
-      expect(store.syncStatus).toBe('conflict')
+      expect(getState().conflict).toEqual(conflict)
+      expect(getState().syncStatus).toBe('conflict')
     })
 
     it('should clear conflict when set to null', () => {
-      const store = useOfflineReportStore.getState()
-      store.setConflict({
+      getState().setConflict({
         reportId: 'report-123',
         localUpdatedAt: Date.now(),
         serverUpdatedAt: '2024-01-15T14:00:00Z',
         serverData: {},
       })
 
-      store.setConflict(null)
+      getState().setConflict(null)
 
-      expect(store.conflict).toBeNull()
-      expect(store.syncStatus).toBe('idle')
+      expect(getState().conflict).toBeNull()
+      expect(getState().syncStatus).toBe('idle')
     })
 
     it('should resolve conflict with keep_local strategy', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
-      store.updateDraft({ work_performed: 'Local version' })
+      getState().initializeDraft('project-123', '2024-01-15')
+      getState().updateDraft({ work_performed: 'Local version' })
 
-      store.setConflict({
-        reportId: store.draftReport!.id,
+      getState().setConflict({
+        reportId: getState().draftReport!.id,
         localUpdatedAt: Date.now(),
         serverUpdatedAt: '2024-01-15T14:00:00Z',
         serverData: { work_performed: 'Server version' },
       })
 
-      store.resolveConflict('keep_local')
+      getState().resolveConflict('keep_local')
 
-      expect(store.conflict).toBeNull()
-      expect(store.draftReport?.work_performed).toBe('Local version')
-      expect(store.syncStatus).toBe('idle')
+      expect(getState().conflict).toBeNull()
+      expect(getState().draftReport?.work_performed).toBe('Local version')
+      expect(getState().syncStatus).toBe('idle')
     })
 
     it('should resolve conflict with keep_server strategy', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
-      store.updateDraft({ work_performed: 'Local version' })
+      getState().initializeDraft('project-123', '2024-01-15')
+      getState().updateDraft({ work_performed: 'Local version' })
 
-      const reportId = store.draftReport!.id
+      const reportId = getState().draftReport!.id
 
-      store.setConflict({
+      getState().setConflict({
         reportId,
         localUpdatedAt: Date.now(),
         serverUpdatedAt: '2024-01-15T14:00:00Z',
@@ -642,23 +609,22 @@ describe('Offline Report Store', () => {
         },
       })
 
-      store.resolveConflict('keep_server')
+      getState().resolveConflict('keep_server')
 
-      expect(store.conflict).toBeNull()
-      expect(store.draftReport?.work_performed).toBe('Server version')
-      expect(store.syncQueue.some(item => item.reportId === reportId)).toBe(false)
+      expect(getState().conflict).toBeNull()
+      expect(getState().draftReport?.work_performed).toBe('Server version')
+      expect(getState().syncQueue.some(item => item.reportId === reportId)).toBe(false)
     })
 
     it('should resolve conflict with merge strategy', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
-      store.updateDraft({
+      getState().initializeDraft('project-123', '2024-01-15')
+      getState().updateDraft({
         work_performed: 'Local work',
         weather_condition: 'sunny',
       })
 
-      store.setConflict({
-        reportId: store.draftReport!.id,
+      getState().setConflict({
+        reportId: getState().draftReport!.id,
         localUpdatedAt: Date.now(),
         serverUpdatedAt: '2024-01-15T14:00:00Z',
         serverData: {
@@ -668,14 +634,14 @@ describe('Offline Report Store', () => {
         },
       })
 
-      store.resolveConflict('merge')
+      getState().resolveConflict('merge')
 
-      expect(store.conflict).toBeNull()
+      expect(getState().conflict).toBeNull()
       // Local values take precedence for non-null fields
-      expect(store.draftReport?.work_performed).toBe('Local work')
-      expect(store.draftReport?.weather_condition).toBe('sunny')
+      expect(getState().draftReport?.work_performed).toBe('Local work')
+      expect(getState().draftReport?.weather_condition).toBe('sunny')
       // Server value used for field not in local
-      expect(store.draftReport?.temperature_high).toBe(75)
+      expect(getState().draftReport?.temperature_high).toBe(75)
     })
   })
 
@@ -685,29 +651,28 @@ describe('Offline Report Store', () => {
 
   describe('clearDraft', () => {
     it('should clear all data', () => {
-      const store = useOfflineReportStore.getState()
-      store.initializeDraft('project-123', '2024-01-15')
-      store.addWorkforceEntry({
+      getState().initializeDraft('project-123', '2024-01-15')
+      getState().addWorkforceEntry({
         id: 'w1',
         entry_type: 'individual',
         worker_name: 'John',
         trade: 'Carpenter',
       })
-      store.addEquipmentEntry({ id: 'e1', equipment_type: 'Crane', quantity: 1 })
-      store.setSyncStatus('syncing')
+      getState().addEquipmentEntry({ id: 'e1', equipment_type: 'Crane', quantity: 1 })
+      getState().setSyncStatus('syncing')
 
-      store.clearDraft()
+      getState().clearDraft()
 
-      expect(store.draftReport).toBeNull()
-      expect(store.workforce).toHaveLength(0)
-      expect(store.equipment).toHaveLength(0)
-      expect(store.deliveries).toHaveLength(0)
-      expect(store.visitors).toHaveLength(0)
-      expect(store.photos).toHaveLength(0)
-      expect(store.syncQueue).toHaveLength(0)
-      expect(store.syncStatus).toBe('idle')
-      expect(store.syncError).toBeNull()
-      expect(store.conflict).toBeNull()
+      expect(getState().draftReport).toBeNull()
+      expect(getState().workforce).toHaveLength(0)
+      expect(getState().equipment).toHaveLength(0)
+      expect(getState().deliveries).toHaveLength(0)
+      expect(getState().visitors).toHaveLength(0)
+      expect(getState().photos).toHaveLength(0)
+      expect(getState().syncQueue).toHaveLength(0)
+      expect(getState().syncStatus).toBe('idle')
+      expect(getState().syncError).toBeNull()
+      expect(getState().conflict).toBeNull()
     })
   })
 })

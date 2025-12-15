@@ -142,7 +142,7 @@ const PERMISSION_DEFINITIONS = {
  */
 function checkPermission(role: string, permission: string): boolean {
   const permDef = PERMISSION_DEFINITIONS[permission as keyof typeof PERMISSION_DEFINITIONS]
-  if (!permDef) return false
+  if (!permDef) {return false}
   return permDef.roles.includes(role)
 }
 

@@ -98,3 +98,6 @@ type-errors-*.txt
 schema_dump.sql
 QUICK_FIX_SQL.sql
 .env*.local
+
+# Local Netlify folder
+.netlify

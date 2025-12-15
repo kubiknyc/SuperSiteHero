@@ -80,7 +80,7 @@ export function useDailyReportWorkforce(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-report-workforce', reportId],
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase
         .from('daily_report_workforce')
@@ -88,7 +88,7 @@ export function useDailyReportWorkforce(reportId: string | undefined) {
         .eq('daily_report_id', reportId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReportWorkforce[]
     },
     enabled: !!reportId,
@@ -102,7 +102,7 @@ export function useDailyReportEquipment(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-report-equipment', reportId],
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase
         .from('daily_report_equipment')
@@ -110,7 +110,7 @@ export function useDailyReportEquipment(reportId: string | undefined) {
         .eq('daily_report_id', reportId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReportEquipment[]
     },
     enabled: !!reportId,
@@ -124,7 +124,7 @@ export function useDailyReportDeliveries(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-report-deliveries', reportId],
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase
         .from('daily_report_deliveries')
@@ -132,7 +132,7 @@ export function useDailyReportDeliveries(reportId: string | undefined) {
         .eq('daily_report_id', reportId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReportDelivery[]
     },
     enabled: !!reportId,
@@ -146,7 +146,7 @@ export function useDailyReportVisitors(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-report-visitors', reportId],
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
 
       const { data, error } = await supabase
         .from('daily_report_visitors')
@@ -154,7 +154,7 @@ export function useDailyReportVisitors(reportId: string | undefined) {
         .eq('daily_report_id', reportId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DailyReportVisitor[]
     },
     enabled: !!reportId,
@@ -170,7 +170,7 @@ export function useDailyReportPhotos(reportId: string | undefined) {
   return useQuery({
     queryKey: ['daily-report-photos', reportId],
     queryFn: async (): Promise<DailyReportPhoto[]> => {
-      if (!reportId) throw new Error('Report ID required')
+      if (!reportId) {throw new Error('Report ID required')}
 
       // Photos are stored inline in daily_reports.photos JSON field
       // Return empty array as photos are handled directly in the report

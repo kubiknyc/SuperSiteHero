@@ -67,9 +67,9 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
   }, [progress]);
 
   const getVarianceColor = (variance: number | undefined) => {
-    if (!variance) return { text: 'text-gray-500', bg: 'bg-gray-100' };
-    if (variance > 5) return { text: 'text-green-600', bg: 'bg-green-100' };
-    if (variance < -5) return { text: 'text-red-600', bg: 'bg-red-100' };
+    if (!variance) {return { text: 'text-gray-500', bg: 'bg-gray-100' };}
+    if (variance > 5) {return { text: 'text-green-600', bg: 'bg-green-100' };}
+    if (variance < -5) {return { text: 'text-red-600', bg: 'bg-red-100' };}
     return { text: 'text-yellow-600', bg: 'bg-yellow-100' };
   };
 
@@ -97,7 +97,7 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
   }, []);
 
   const handleSave = useCallback(() => {
-    if (!formData.activity_name?.trim()) return;
+    if (!formData.activity_name?.trim()) {return;}
 
     if (editingEntry) {
       updateProgressEntry(editingEntry.id, formData);

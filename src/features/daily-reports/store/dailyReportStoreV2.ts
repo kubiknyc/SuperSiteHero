@@ -853,7 +853,7 @@ export const useDailyReportStoreV2 = create<DailyReportStoreV2>()(
 
       resolveConflict: (strategy) => {
         set((state) => {
-          if (!state.conflict) return state;
+          if (!state.conflict) {return state;}
 
           switch (strategy) {
             case 'keep_local':
@@ -959,7 +959,7 @@ export const useDailyReportStoreV2 = create<DailyReportStoreV2>()(
 
       getFormData: () => {
         const state = get();
-        if (!state.draftReport) return null;
+        if (!state.draftReport) {return null;}
 
         return {
           ...state.draftReport,

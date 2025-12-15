@@ -53,7 +53,7 @@ import type {
 // =============================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {
@@ -62,7 +62,7 @@ function formatDate(dateString: string | null | undefined): string {
 }
 
 function formatCurrency(value: number | null | undefined): string {
-  if (value == null) return '—'
+  if (value == null) {return '—'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -75,7 +75,7 @@ function getVarianceDays(
   planned: string | null | undefined,
   actual: string | null | undefined
 ): number | null {
-  if (!planned || !actual) return null
+  if (!planned || !actual) {return null}
   try {
     return differenceInDays(parseISO(actual), parseISO(planned))
   } catch {
@@ -144,7 +144,7 @@ interface VarianceIndicatorProps {
 }
 
 function VarianceIndicator({ days, label }: VarianceIndicatorProps) {
-  if (days === null) return null
+  if (days === null) {return null}
 
   const isNegative = days < 0
   const isPositive = days > 0
@@ -191,7 +191,7 @@ export function ActivityDetailPanel({
   onDelete,
   onViewDependencies,
 }: ActivityDetailPanelProps) {
-  if (!activity) return null
+  if (!activity) {return null}
 
   const startVariance = getVarianceDays(activity.baseline_start, activity.actual_start)
   const finishVariance = getVarianceDays(activity.baseline_finish, activity.actual_finish)

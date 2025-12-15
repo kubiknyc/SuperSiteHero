@@ -38,7 +38,7 @@ import toast from 'react-hot-toast'
 
 // Helper component to isolate type issues with issues field
 function IssuesCard({ issuesText }: { issuesText: string | null }) {
-  if (!issuesText || issuesText.trim() === '') return null
+  if (!issuesText || issuesText.trim() === '') {return null}
   return (
     <Card>
       <CardHeader>
@@ -107,7 +107,7 @@ export function DailyReportDetailPage() {
   }
 
   const handleExportPDF = async () => {
-    if (!report) return
+    if (!report) {return}
 
     setIsExportingPDF(true)
     try {
@@ -365,7 +365,7 @@ export function DailyReportDetailPage() {
         {(() => {
           const reportAny = report as Record<string, unknown>
           const photos = reportAny.photos
-          if (!photos || !Array.isArray(photos) || photos.length === 0) return null
+          if (!photos || !Array.isArray(photos) || photos.length === 0) {return null}
           return (
             <Card>
               <CardHeader>

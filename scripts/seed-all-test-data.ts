@@ -147,14 +147,14 @@ async function getContext(): Promise<SeedContext> {
     .select('id')
     .eq('company_id', companyId)
 
-  if (pErr) console.log('Projects query error:', pErr.message)
+  if (pErr) {console.log('Projects query error:', pErr.message)}
 
   const { data: users, error: uErr } = await supabase
     .from('users')
     .select('id')
     .eq('company_id', companyId)
 
-  if (uErr) console.log('Users query error:', uErr.message)
+  if (uErr) {console.log('Users query error:', uErr.message)}
 
   // If no users found in company, get all users
   let userIds = users?.map((u) => u.id) || []
@@ -214,7 +214,7 @@ async function seedContacts(ctx: SeedContext) {
     const { error } = await supabase
       .from('contacts')
       .upsert({ company_id: ctx.companyId, ...contact }, { onConflict: 'company_id,email' })
-    if (!error) console.log(`  ✓ ${contact.first_name} ${contact.last_name}`)
+    if (!error) {console.log(`  ✓ ${contact.first_name} ${contact.last_name}`)}
   }
 }
 
@@ -236,7 +236,7 @@ async function seedSubcontractors(ctx: SeedContext) {
     const { error } = await supabase
       .from('subcontractors')
       .upsert({ company_id: ctx.companyId, ...sub }, { onConflict: 'company_id,name' })
-    if (!error) console.log(`  ✓ ${sub.name}`)
+    if (!error) {console.log(`  ✓ ${sub.name}`)}
   }
 
   // Refresh subcontractor IDs
@@ -351,7 +351,7 @@ async function seedWorkflowItems(ctx: SeedContext) {
         cost_impact: randomItem([null, randomNumber(0, 5000), null]),
         schedule_impact_days: randomItem([null, randomNumber(0, 5), null]),
       })
-      if (!error) console.log(`  ✓ RFI: ${subject.substring(0, 40)}...`)
+      if (!error) {console.log(`  ✓ RFI: ${subject.substring(0, 40)}...`)}
     }
 
     // Submittals
@@ -370,7 +370,7 @@ async function seedWorkflowItems(ctx: SeedContext) {
         created_by: randomItem(ctx.userIds),
         spec_section: submittal.spec_section,
       })
-      if (!error) console.log(`  ✓ Submittal: ${submittal.title}`)
+      if (!error) {console.log(`  ✓ Submittal: ${submittal.title}`)}
     }
 
     // Change Orders
@@ -391,7 +391,7 @@ async function seedWorkflowItems(ctx: SeedContext) {
         cost_impact: costImpact,
         schedule_impact_days: randomNumber(0, 14),
       })
-      if (!error) console.log(`  ✓ Change Order: ${co.title.substring(0, 40)}...`)
+      if (!error) {console.log(`  ✓ Change Order: ${co.title.substring(0, 40)}...`)}
     }
   }
 }
@@ -435,7 +435,7 @@ async function seedPunchLists(ctx: SeedContext) {
       .select()
       .single()
 
-    if (plError) continue
+    if (plError) {continue}
 
     // Create punch items
     for (let i = 0; i < 15; i++) {

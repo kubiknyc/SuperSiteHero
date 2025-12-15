@@ -74,7 +74,7 @@ export function PunchListsPage() {
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!punchItems) return { total: 0, open: 0, inProgress: 0, completed: 0, highPriority: 0 }
+    if (!punchItems) {return { total: 0, open: 0, inProgress: 0, completed: 0, highPriority: 0 }}
     return {
       total: punchItems.length,
       open: punchItems.filter((p) => p.status === 'open').length,

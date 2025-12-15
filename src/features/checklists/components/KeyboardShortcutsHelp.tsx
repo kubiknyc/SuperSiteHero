@@ -24,7 +24,7 @@ export function KeyboardShortcutsHelp({ shortcuts }: KeyboardShortcutsHelpProps)
 
   const enabledShortcuts = shortcuts.filter((s) => s.enabled !== false)
 
-  if (enabledShortcuts.length === 0) return null
+  if (enabledShortcuts.length === 0) {return null}
 
   return (
     <>

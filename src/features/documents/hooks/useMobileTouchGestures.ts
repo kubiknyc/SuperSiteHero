@@ -131,7 +131,7 @@ export function useMobileTouchGestures(options: UseMobileTouchGesturesOptions = 
 
   // Check if touch is likely a palm (large contact area)
   const isPalmTouch = useCallback((touch: Touch): boolean => {
-    if (!opts.enablePalmRejection) return false
+    if (!opts.enablePalmRejection) {return false}
 
     const radiusX = touch.radiusX || 0
     const radiusY = touch.radiusY || 0
@@ -160,7 +160,7 @@ export function useMobileTouchGestures(options: UseMobileTouchGesturesOptions = 
     const touches = Array.from(e.touches)
     const validTouches = touches.filter((t) => !isPalmTouch(t))
 
-    if (validTouches.length === 0) return
+    if (validTouches.length === 0) {return}
 
     // Store start touches
     validTouches.forEach((touch) => {
@@ -217,7 +217,7 @@ export function useMobileTouchGestures(options: UseMobileTouchGesturesOptions = 
     const touches = Array.from(e.touches)
     const validTouches = touches.filter((t) => !isPalmTouch(t))
 
-    if (validTouches.length === 0) return
+    if (validTouches.length === 0) {return}
 
     const touchCount = validTouches.length
 
@@ -351,7 +351,7 @@ export function useMobileTouchGestures(options: UseMobileTouchGesturesOptions = 
 
   // Bind touch handlers to an element
   const bindTouchHandlers = useCallback((element: HTMLElement | null) => {
-    if (!element) return () => {}
+    if (!element) {return () => {}}
 
     element.addEventListener('touchstart', handleTouchStart, { passive: false })
     element.addEventListener('touchmove', handleTouchMove, { passive: false })

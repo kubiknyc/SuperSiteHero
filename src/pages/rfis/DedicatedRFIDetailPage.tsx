@@ -72,14 +72,14 @@ function useDistributionListUsers(userIds: string[] | undefined) {
   return useQuery({
     queryKey: ['users', 'distribution-list', userIds],
     queryFn: async () => {
-      if (!userIds?.length) return []
+      if (!userIds?.length) {return []}
 
       const { data, error } = await supabase
         .from('users')
         .select('id, first_name, last_name, email, avatar_url')
         .in('id', userIds)
 
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!userIds?.length,
@@ -138,11 +138,11 @@ export function DedicatedRFIDetailPage() {
   }, [projectUsers, userProfile?.id])
 
   const filteredDistributionUsers = useMemo(() => {
-    if (!distributionFilter.trim()) return availableDistributionUsers
+    if (!distributionFilter.trim()) {return availableDistributionUsers}
     const search = distributionFilter.toLowerCase()
     return availableDistributionUsers.filter((pu) => {
       const user = pu.user
-      if (!user) return false
+      if (!user) {return false}
       const name = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
       return name.includes(search) || user.email.toLowerCase().includes(search)
     })
@@ -170,7 +170,7 @@ export function DedicatedRFIDetailPage() {
 
   // Start a messaging conversation about this RFI
   const handleDiscuss = async () => {
-    if (!rfi) return
+    if (!rfi) {return}
 
     try {
       const result = await createConversation.mutateAsync({
@@ -190,7 +190,7 @@ export function DedicatedRFIDetailPage() {
 
   // Update status
   const handleStatusChange = async (newStatus: RFIStatus) => {
-    if (!rfi) return
+    if (!rfi) {return}
     await updateRFI.mutateAsync({
       id: rfi.id,
       status: newStatus,
@@ -199,7 +199,7 @@ export function DedicatedRFIDetailPage() {
 
   // Update ball-in-court
   const handleBallInCourtChange = async (role: BallInCourtRole) => {
-    if (!rfi) return
+    if (!rfi) {return}
     await updateBallInCourt.mutateAsync({
       rfiId: rfi.id,
       userId: null,
@@ -209,7 +209,7 @@ export function DedicatedRFIDetailPage() {
 
   // Submit response
   const handleSubmitResponse = async () => {
-    if (!rfi || !responseText.trim()) return
+    if (!rfi || !responseText.trim()) {return}
 
     await respondToRFI.mutateAsync({
       rfiId: rfi.id,
@@ -222,13 +222,13 @@ export function DedicatedRFIDetailPage() {
 
   // Close RFI
   const handleClose = async () => {
-    if (!rfi) return
+    if (!rfi) {return}
     await closeRFI.mutateAsync(rfi.id)
   }
 
   // Add comment
   const handleAddComment = async () => {
-    if (!rfi || !commentText.trim()) return
+    if (!rfi || !commentText.trim()) {return}
 
     await addComment.mutateAsync({
       rfiId: rfi.id,
@@ -240,7 +240,7 @@ export function DedicatedRFIDetailPage() {
 
   // Delete RFI
   const handleDelete = async () => {
-    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) return
+    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) {return}
     await deleteRFI.mutateAsync(rfi.id)
     navigate(-1)
   }
@@ -268,7 +268,7 @@ export function DedicatedRFIDetailPage() {
   }
 
   const handleSaveDistribution = async () => {
-    if (!rfi) return
+    if (!rfi) {return}
     await updateRFI.mutateAsync({
       id: rfi.id,
       distribution_list: selectedDistributionIds,
@@ -823,7 +823,7 @@ export function DedicatedRFIDetailPage() {
                         <div className="divide-y">
                           {filteredDistributionUsers.map((projectUser) => {
                             const user = projectUser.user
-                            if (!user) return null
+                            if (!user) {return null}
                             const isSelected = selectedDistributionIds.includes(user.id)
                             return (
                               <button

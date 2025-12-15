@@ -55,7 +55,7 @@ export interface CostEstimatePDFData {
  * Format currency
  */
 function formatCurrency(value: number | null | undefined): string {
-  if (value === null || value === undefined) return '$0.00'
+  if (value === null || value === undefined) {return '$0.00'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -67,7 +67,7 @@ function formatCurrency(value: number | null | undefined): string {
  * Format date for documents
  */
 function formatDate(date: string | null | undefined): string {
-  if (!date) return ''
+  if (!date) {return ''}
   try {
     return format(new Date(date), 'MMMM d, yyyy')
   } catch {

@@ -22,9 +22,9 @@ function formatResponseValue(response: any, itemType: string): string {
 
   switch (itemType) {
     case 'checkbox':
-      if (response.score_value === 'pass') return 'Pass ✓'
-      if (response.score_value === 'fail') return 'Fail ✗'
-      if (response.score_value === 'na') return 'N/A'
+      if (response.score_value === 'pass') {return 'Pass ✓'}
+      if (response.score_value === 'fail') {return 'Fail ✗'}
+      if (response.score_value === 'na') {return 'N/A'}
       return data?.value === 'checked' ? 'Checked' : 'Unchecked'
 
     case 'text':
@@ -78,10 +78,10 @@ export async function generateChecklistPDF(
   doc.setFont('helvetica', 'normal')
 
   const metadata: string[] = []
-  if (execution.location) metadata.push(`Location: ${execution.location}`)
-  if (execution.inspector_name) metadata.push(`Inspector: ${execution.inspector_name}`)
-  if (execution.weather_conditions) metadata.push(`Weather: ${execution.weather_conditions}`)
-  if (execution.temperature) metadata.push(`Temperature: ${execution.temperature}°F`)
+  if (execution.location) {metadata.push(`Location: ${execution.location}`)}
+  if (execution.inspector_name) {metadata.push(`Inspector: ${execution.inspector_name}`)}
+  if (execution.weather_conditions) {metadata.push(`Weather: ${execution.weather_conditions}`)}
+  if (execution.temperature) {metadata.push(`Temperature: ${execution.temperature}°F`)}
   metadata.push(`Created: ${format(new Date(execution.created_at), 'PPP p')}`)
   if (execution.completed_at) {
     metadata.push(`Completed: ${format(new Date(execution.completed_at), 'PPP p')}`)
@@ -153,7 +153,7 @@ export async function generateChecklistPDF(
     const tableData = items
       .map((item) => {
         const response = responseMap.get(item.id)
-        if (!response) return null
+        if (!response) {return null}
 
         const value = formatResponseValue(response, item.item_type)
         const notes = response.notes || '-'

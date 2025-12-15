@@ -173,7 +173,7 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
   }, []);
 
   const handleSave = useCallback(() => {
-    if (!formData.inspection_type) return;
+    if (!formData.inspection_type) {return;}
 
     if (editingInspection) {
       updateInspection(editingInspection.id, formData);

@@ -68,7 +68,7 @@ export function ItemConditionEditor({
     index: number,
     updates: Partial<ItemConditionRule>
   ) => {
-    if (!conditions) return
+    if (!conditions) {return}
 
     const newRules = [...conditions.rules]
     newRules[index] = { ...newRules[index], ...updates }
@@ -76,7 +76,7 @@ export function ItemConditionEditor({
   }
 
   const handleDeleteRule = (index: number) => {
-    if (!conditions) return
+    if (!conditions) {return}
 
     const newRules = conditions.rules.filter((_, i) => i !== index)
     if (newRules.length === 0) {
@@ -115,7 +115,7 @@ export function ItemConditionEditor({
   // Render value input based on target item type
   const renderValueInput = (rule: ItemConditionRule, index: number) => {
     const targetItem = getTargetItem(rule.target_item_id)
-    if (!targetItem) return null
+    if (!targetItem) {return null}
 
     // For is_empty / is_not_empty, no value needed
     if (rule.operator === 'is_empty' || rule.operator === 'is_not_empty') {

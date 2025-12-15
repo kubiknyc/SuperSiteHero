@@ -26,14 +26,14 @@ function useProjectSubcontractors(projectId: string | undefined) {
   return useQuery({
     queryKey: ['subcontractors', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       const { data, error } = await supabase
         .from('subcontractors')
         .select('id, company_name, trade')
         .eq('project_id', projectId)
         .is('deleted_at', null)
         .order('company_name')
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!projectId,

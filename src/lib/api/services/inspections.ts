@@ -318,12 +318,12 @@ export const inspectionsApi = {
         passed_count: inspections.filter((i) => i.result === 'pass').length,
         failed_count: inspections.filter((i) => i.result === 'fail').length,
         upcoming_this_week: inspections.filter((i) => {
-          if (!i.scheduled_date || i.status !== 'scheduled') return false
+          if (!i.scheduled_date || i.status !== 'scheduled') {return false}
           const scheduledDate = new Date(i.scheduled_date)
           return scheduledDate >= now && scheduledDate <= oneWeekFromNow
         }).length,
         overdue_count: inspections.filter((i) => {
-          if (!i.scheduled_date || i.status !== 'scheduled') return false
+          if (!i.scheduled_date || i.status !== 'scheduled') {return false}
           const scheduledDate = new Date(i.scheduled_date)
           return scheduledDate < now
         }).length,

@@ -125,7 +125,7 @@ export function LookAheadPage() {
 
   // All activities combined for export
   const allActivities = useMemo(() => {
-    if (!weekData?.activities) return []
+    if (!weekData?.activities) {return []}
     return [
       ...(weekData.activities[1] || []),
       ...(weekData.activities[2] || []),
@@ -135,7 +135,7 @@ export function LookAheadPage() {
 
   // Filtered activities
   const filteredActivities = useMemo(() => {
-    if (!weekData?.activities) return { 1: [], 2: [], 3: [] }
+    if (!weekData?.activities) {return { 1: [], 2: [], 3: [] }}
 
     const withSearch = { ...filters, search: searchQuery }
 
@@ -269,7 +269,7 @@ export function LookAheadPage() {
   }
 
   const handleDeleteActivity = async (activityId: string) => {
-    if (!confirm('Are you sure you want to delete this activity?')) return
+    if (!confirm('Are you sure you want to delete this activity?')) {return}
 
     try {
       await deleteActivity.mutateAsync({
@@ -345,7 +345,7 @@ export function LookAheadPage() {
 
   // Count blocked activities
   const blockedCount = useMemo(() => {
-    if (!weekData?.activities) return 0
+    if (!weekData?.activities) {return 0}
     return Object.values(weekData.activities)
       .flat()
       .filter((a) => a.status === 'blocked').length

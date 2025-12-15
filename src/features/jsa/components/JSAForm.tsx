@@ -131,7 +131,7 @@ export function JSAForm({
   // Apply template
   const handleApplyTemplate = (templateId: string) => {
     const template = templates?.find((t) => t.id === templateId);
-    if (!template) return;
+    if (!template) {return;}
 
     setSelectedTemplateId(templateId);
 
@@ -169,7 +169,7 @@ export function JSAForm({
   // Submit handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValid) return;
+    if (!isValid) {return;}
 
     try {
       if (isEditing) {

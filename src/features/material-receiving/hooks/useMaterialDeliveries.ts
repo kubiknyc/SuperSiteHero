@@ -45,10 +45,10 @@ export function useDeliveries(
   return useQuery({
     queryKey: ['material-deliveries', projectId, filters],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
 
       const { data, error } = await api.getDeliveries(projectId, filters);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery[];
     },
     enabled: !!projectId,
@@ -63,10 +63,10 @@ export function useDelivery(deliveryId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', deliveryId],
     queryFn: async () => {
-      if (!deliveryId) throw new Error('Delivery ID required');
+      if (!deliveryId) {throw new Error('Delivery ID required');}
 
       const { data, error } = await api.getDelivery(deliveryId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery;
     },
     enabled: !!deliveryId,
@@ -80,10 +80,10 @@ export function useDeliveryWithPhotos(deliveryId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', deliveryId, 'with-photos'],
     queryFn: async () => {
-      if (!deliveryId) throw new Error('Delivery ID required');
+      if (!deliveryId) {throw new Error('Delivery ID required');}
 
       const { data, error } = await api.getDeliveryWithPhotos(deliveryId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDeliveryWithPhotos;
     },
     enabled: !!deliveryId,
@@ -97,10 +97,10 @@ export function useDeliveryWithRelations(deliveryId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', deliveryId, 'with-relations'],
     queryFn: async () => {
-      if (!deliveryId) throw new Error('Delivery ID required');
+      if (!deliveryId) {throw new Error('Delivery ID required');}
 
       const { data, error } = await api.getDeliveryWithRelations(deliveryId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDeliveryWithRelations;
     },
     enabled: !!deliveryId,
@@ -114,11 +114,11 @@ export function useSearchDeliveries(projectId: string | undefined, searchTerm: s
   return useQuery({
     queryKey: ['material-deliveries', projectId, 'search', searchTerm],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
-      if (!searchTerm) return [];
+      if (!projectId) {throw new Error('Project ID required');}
+      if (!searchTerm) {return [];}
 
       const { data, error } = await api.searchDeliveries(projectId, searchTerm);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery[];
     },
     enabled: !!projectId && !!searchTerm,
@@ -132,10 +132,10 @@ export function useDeliveriesByVendor(projectId: string | undefined, vendorName:
   return useQuery({
     queryKey: ['material-deliveries', projectId, 'vendor', vendorName],
     queryFn: async () => {
-      if (!projectId || !vendorName) throw new Error('Project ID and vendor name required');
+      if (!projectId || !vendorName) {throw new Error('Project ID and vendor name required');}
 
       const { data, error } = await api.getDeliveriesByVendor(projectId, vendorName);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery[];
     },
     enabled: !!projectId && !!vendorName,
@@ -149,10 +149,10 @@ export function useDeliveriesWithIssues(projectId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', projectId, 'issues'],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
 
       const { data, error } = await api.getDeliveriesWithIssues(projectId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery[];
     },
     enabled: !!projectId,
@@ -166,10 +166,10 @@ export function useDeliveryStatistics(projectId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', projectId, 'statistics'],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
 
       const { data, error } = await api.getDeliveryStatistics(projectId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DeliveryStatistics;
     },
     enabled: !!projectId,
@@ -184,10 +184,10 @@ export function useUniqueVendors(projectId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', projectId, 'vendors'],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
 
       const { data, error } = await api.getUniqueVendors(projectId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as string[];
     },
     enabled: !!projectId,
@@ -202,10 +202,10 @@ export function useUniqueStorageLocations(projectId: string | undefined) {
   return useQuery({
     queryKey: ['material-deliveries', projectId, 'storage-locations'],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
 
       const { data, error } = await api.getUniqueStorageLocations(projectId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as string[];
     },
     enabled: !!projectId,
@@ -220,10 +220,10 @@ export function useDeliveryPhotos(deliveryId: string | undefined) {
   return useQuery({
     queryKey: ['material-delivery-photos', deliveryId],
     queryFn: async () => {
-      if (!deliveryId) throw new Error('Delivery ID required');
+      if (!deliveryId) {throw new Error('Delivery ID required');}
 
       const { data, error } = await api.getDeliveryPhotos(deliveryId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDeliveryPhoto[];
     },
     enabled: !!deliveryId,
@@ -248,7 +248,7 @@ export function useCreateDelivery() {
       }
 
       const { data, error } = await api.createDelivery(delivery, userProfile.company_id);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery;
     },
     onSuccess: (data) => {
@@ -277,7 +277,7 @@ export function useUpdateDelivery() {
   return useMutation({
     mutationFn: async (delivery: UpdateMaterialDeliveryDTO) => {
       const { data, error } = await api.updateDelivery(delivery);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery;
     },
     onSuccess: (data) => {
@@ -311,7 +311,7 @@ export function useDeleteDelivery() {
   return useMutation({
     mutationFn: async (deliveryId: string) => {
       const { data, error } = await api.deleteDelivery(deliveryId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery;
     },
     onSuccess: (data) => {
@@ -343,7 +343,7 @@ export function useCreateDeliveryPhoto() {
   return useMutation({
     mutationFn: async (photo: CreateMaterialDeliveryPhotoDTO) => {
       const { data, error } = await api.createDeliveryPhoto(photo);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDeliveryPhoto;
     },
     onSuccess: (data) => {
@@ -373,7 +373,7 @@ export function useUpdateDeliveryPhoto() {
   return useMutation({
     mutationFn: async (photo: UpdateMaterialDeliveryPhotoDTO) => {
       const { data, error } = await api.updateDeliveryPhoto(photo);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDeliveryPhoto;
     },
     onSuccess: (data) => {
@@ -402,7 +402,7 @@ export function useDeleteDeliveryPhoto() {
   return useMutation({
     mutationFn: async (photoId: string) => {
       const { data, error } = await api.deleteDeliveryPhoto(photoId);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDeliveryPhoto;
     },
     onSuccess: (data) => {
@@ -441,8 +441,8 @@ export function useUploadDeliveryPhoto() {
         userProfile.company_id,
         deliveryId
       );
-      if (uploadError) throw uploadError;
-      if (!uploadData) throw new Error('Failed to upload file');
+      if (uploadError) {throw uploadError;}
+      if (!uploadData) {throw new Error('Failed to upload file');}
 
       // Create photo record
       const { data: photoData, error: photoError } = await api.createDeliveryPhoto({
@@ -452,7 +452,7 @@ export function useUploadDeliveryPhoto() {
         file_name: file.name,
         file_size: file.size,
       });
-      if (photoError) throw photoError;
+      if (photoError) {throw photoError;}
 
       return photoData as MaterialDeliveryPhoto;
     },
@@ -491,7 +491,7 @@ export function useCreateDeliverySilent() {
       }
 
       const { data, error } = await api.createDelivery(delivery, userProfile.company_id);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery;
     },
     onSuccess: (data) => {
@@ -510,7 +510,7 @@ export function useUpdateDeliverySilent() {
   return useMutation({
     mutationFn: async (delivery: UpdateMaterialDeliveryDTO) => {
       const { data, error } = await api.updateDelivery(delivery);
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MaterialDelivery;
     },
     onSuccess: (data) => {

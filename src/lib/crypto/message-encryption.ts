@@ -460,7 +460,7 @@ export async function exportConversationKeyForRecipient(
   recipientPublicKeyJson: string
 ): Promise<string | null> {
   const key = await getLatestConversationKey(conversationId)
-  if (!key) return null
+  if (!key) {return null}
 
   // Import recipient's public key
   const recipientPublicKey = await importPublicKey(recipientPublicKeyJson)

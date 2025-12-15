@@ -13,7 +13,7 @@ export function useCompanyTemplates(companyId: string | undefined) {
   return useQuery({
     queryKey: ['takeoff-templates', 'company', companyId],
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return await takeoffTemplatesApi.getCompanyTemplates(companyId)
     },
     enabled: !!companyId,
@@ -31,7 +31,7 @@ export function useProjectTemplates(
   return useQuery({
     queryKey: ['takeoff-templates', 'project', projectId, companyId],
     queryFn: async () => {
-      if (!projectId || !companyId) throw new Error('Project and Company ID required')
+      if (!projectId || !companyId) {throw new Error('Project and Company ID required')}
       return await takeoffTemplatesApi.getProjectTemplates(projectId, companyId)
     },
     enabled: !!projectId && !!companyId,
@@ -70,7 +70,7 @@ export function useTemplate(templateId: string | undefined) {
   return useQuery({
     queryKey: ['takeoff-templates', templateId],
     queryFn: async () => {
-      if (!templateId) throw new Error('Template ID required')
+      if (!templateId) {throw new Error('Template ID required')}
       return await takeoffTemplatesApi.getTemplate(templateId)
     },
     enabled: !!templateId,
@@ -169,7 +169,7 @@ export function useSearchTemplates(
   return useQuery({
     queryKey: ['takeoff-templates', 'search', query, companyId, projectId],
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return await takeoffTemplatesApi.searchTemplates(query, companyId, projectId)
     },
     enabled: !!companyId && query.length > 0,

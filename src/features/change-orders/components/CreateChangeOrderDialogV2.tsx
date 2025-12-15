@@ -73,7 +73,7 @@ export function CreateChangeOrderDialogV2({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!title.trim()) return
+    if (!title.trim()) {return}
 
     const dto: CreateChangeOrderDTO = {
       project_id: projectId,

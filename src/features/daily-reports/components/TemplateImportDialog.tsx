@@ -107,7 +107,7 @@ export function TemplateImportDialog({
   // Filter templates based on search
   const filteredTemplates = useMemo(() => {
     const templates = projectTemplates || [];
-    if (!searchQuery) return templates;
+    if (!searchQuery) {return templates;}
 
     const query = searchQuery.toLowerCase();
     return templates.filter(
@@ -130,7 +130,7 @@ export function TemplateImportDialog({
 
   // Handle apply template
   const handleApplyTemplate = useCallback(async () => {
-    if (!selectedTemplateId) return;
+    if (!selectedTemplateId) {return;}
 
     try {
       const result = await applyTemplate.mutateAsync(selectedTemplateId);

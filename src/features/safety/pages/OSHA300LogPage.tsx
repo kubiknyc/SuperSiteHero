@@ -68,7 +68,7 @@ function mapIncidentToOSHA300Entry(incident: SafetyIncident): OSHA300LogEntry {
  * Convert API summary format to component format
  */
 function mapSummaryToOSHA300A(summary: any, year: number): OSHA300ASummary | null {
-  if (!summary) return null
+  if (!summary) {return null}
   return {
     project_id: summary.project_id,
     project_name: summary.establishment_name || 'Company-wide',

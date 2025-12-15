@@ -57,7 +57,7 @@ export interface RFIPDFData {
  * Format date for documents
  */
 function formatDate(date: string | null | undefined): string {
-  if (!date) return 'N/A'
+  if (!date) {return 'N/A'}
   try {
     return format(new Date(date), 'MMMM d, yyyy')
   } catch {
@@ -69,7 +69,7 @@ function formatDate(date: string | null | undefined): string {
  * Format date short
  */
 function formatDateShort(date: string | null | undefined): string {
-  if (!date) return 'N/A'
+  if (!date) {return 'N/A'}
   try {
     return format(new Date(date), 'MMM d, yyyy')
   } catch {
@@ -268,7 +268,7 @@ function drawReferences(doc: jsPDF, data: RFIPDFData, startY: number): number {
 
   // Check if we have any references
   const hasRefs = rfi.spec_section || rfi.drawing_reference || rfi.location
-  if (!hasRefs) return y
+  if (!hasRefs) {return y}
 
   // Section header
   doc.setFillColor(...COLORS.headerBg)

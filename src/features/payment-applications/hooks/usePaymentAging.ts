@@ -51,10 +51,10 @@ export const paymentAgingKeys = {
  * Determine aging bucket based on days outstanding
  */
 function getAgingBucket(daysOutstanding: number): AgingBucket {
-  if (daysOutstanding <= 0) return 'current'
-  if (daysOutstanding <= 30) return '1-30'
-  if (daysOutstanding <= 60) return '31-60'
-  if (daysOutstanding <= 90) return '61-90'
+  if (daysOutstanding <= 0) {return 'current'}
+  if (daysOutstanding <= 30) {return '1-30'}
+  if (daysOutstanding <= 60) {return '31-60'}
+  if (daysOutstanding <= 90) {return '61-90'}
   return '90+'
 }
 
@@ -72,7 +72,7 @@ export function getBucketColor(bucket: AgingBucket): string {
 function calculateDaysOutstanding(app: PaymentApplication): number {
   // Use approved_at date if available, otherwise submitted_at
   const dateString = app.approved_at || app.submitted_at
-  if (!dateString) return 0
+  if (!dateString) {return 0}
 
   const referenceDate = parseISO(dateString)
   return differenceInDays(new Date(), referenceDate)
@@ -188,7 +188,7 @@ function generateAlerts(
   const alerts: AgingAlert[] = []
 
   receivables.forEach((receivable) => {
-    if (receivable.amount_outstanding <= 0) return
+    if (receivable.amount_outstanding <= 0) {return}
 
     let severity: 'info' | 'warning' | 'critical'
     let message: string
@@ -411,7 +411,7 @@ export function usePaymentAgingAlerts(config?: AgingAlertConfig) {
   return useQuery({
     queryKey: paymentAgingKeys.alerts(companyId || ''),
     queryFn: (): AgingAlert[] => {
-      if (!report) return []
+      if (!report) {return []}
       return generateAlerts(report.receivables, config)
     },
     enabled: !!companyId && !!report,
@@ -468,7 +468,7 @@ export function useCashFlowForecast() {
   return useQuery({
     queryKey: paymentAgingKeys.forecast(companyId || ''),
     queryFn: (): CashFlowForecastItem[] => {
-      if (!report) return []
+      if (!report) {return []}
       return generateCashFlowForecast(report.receivables)
     },
     enabled: !!companyId && !!report,
@@ -489,7 +489,7 @@ export function usePaymentAgingDashboard() {
   return useQuery({
     queryKey: paymentAgingKeys.dashboard(companyId || ''),
     queryFn: (): PaymentAgingDashboard | null => {
-      if (!report) return null
+      if (!report) {return null}
       return {
         report,
         alerts: alerts || [],

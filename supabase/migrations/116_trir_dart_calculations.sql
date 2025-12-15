@@ -68,7 +68,7 @@ CREATE POLICY "Users can manage hours for their projects"
       SELECT 1 FROM project_users pu
       WHERE pu.project_id = employee_hours_worked.project_id
       AND pu.user_id = auth.uid()
-      AND pu.role IN ('owner', 'admin', 'safety_manager')
+      AND pu.project_role IN ('owner', 'admin', 'safety_manager')
     )
   );
 
@@ -153,9 +153,9 @@ CREATE POLICY "Users can view metrics for their company"
   ON safety_metrics_snapshots FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM company_users cu
+      SELECT 1 FROM users cu
       WHERE cu.company_id = safety_metrics_snapshots.company_id
-      AND cu.user_id = auth.uid()
+      AND cu.id = auth.uid()
     )
   );
 
@@ -163,9 +163,9 @@ CREATE POLICY "Admins can manage safety metrics"
   ON safety_metrics_snapshots FOR ALL
   USING (
     EXISTS (
-      SELECT 1 FROM company_users cu
+      SELECT 1 FROM users cu
       WHERE cu.company_id = safety_metrics_snapshots.company_id
-      AND cu.user_id = auth.uid()
+      AND cu.id = auth.uid()
       AND cu.role IN ('owner', 'admin')
     )
   );
@@ -271,9 +271,9 @@ CREATE POLICY "Users can view EMR for their company"
   ON emr_records FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM company_users cu
+      SELECT 1 FROM users cu
       WHERE cu.company_id = emr_records.company_id
-      AND cu.user_id = auth.uid()
+      AND cu.id = auth.uid()
     )
   );
 
@@ -281,9 +281,9 @@ CREATE POLICY "Admins can manage EMR records"
   ON emr_records FOR ALL
   USING (
     EXISTS (
-      SELECT 1 FROM company_users cu
+      SELECT 1 FROM users cu
       WHERE cu.company_id = emr_records.company_id
-      AND cu.user_id = auth.uid()
+      AND cu.id = auth.uid()
       AND cu.role IN ('owner', 'admin')
     )
   );

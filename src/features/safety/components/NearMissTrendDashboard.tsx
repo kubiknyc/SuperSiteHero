@@ -105,7 +105,7 @@ export function NearMissTrendDashboard({
 
   // Generate insights from the data (available for future use)
   const _insights = useMemo(() => {
-    if (!dailyTrends || !heatMap || !timePatterns || !paretoData) return null
+    if (!dailyTrends || !heatMap || !timePatterns || !paretoData) {return null}
 
     return generatePatternInsights({
       trends: dailyTrends,
@@ -118,7 +118,7 @@ export function NearMissTrendDashboard({
 
   // Generate recommendations
   const recommendations = useMemo(() => {
-    if (!heatMap || !paretoData || !timePatterns || !summary) return []
+    if (!heatMap || !paretoData || !timePatterns || !summary) {return []}
 
     const topRootCauses = summary.top_root_causes.map(c => ({
       category: c.category,
@@ -449,7 +449,7 @@ function TrendChart({ data, isLoading, height = 250 }: TrendChartProps) {
             <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
             <Tooltip
               content={({ active, payload, label }) => {
-                if (!active || !payload?.length) return null
+                if (!active || !payload?.length) {return null}
                 const d = payload[0].payload as DailyTrendPoint
                 return (
                   <div className="bg-background border rounded-lg shadow-lg p-3 text-sm">
@@ -497,7 +497,7 @@ interface SeverityDistributionChartProps {
 
 function SeverityDistributionChart({ data, isLoading }: SeverityDistributionChartProps) {
   const chartData = useMemo(() => {
-    if (!data) return []
+    if (!data) {return []}
 
     const totals = {
       fatality: 0,
@@ -577,7 +577,7 @@ interface DayOfWeekChartProps {
 
 function DayOfWeekChart({ data, isLoading }: DayOfWeekChartProps) {
   const chartData = useMemo(() => {
-    if (!data) return []
+    if (!data) {return []}
 
     const dayCounts = Array(7).fill(0)
     for (let hour = 0; hour < 24; hour++) {
@@ -695,7 +695,7 @@ function ParetoChart({ data, isLoading }: ParetoChartProps) {
             />
             <Tooltip
               formatter={(value: number, name: string) => {
-                if (name === 'Cumulative %') return [`${value}%`, name]
+                if (name === 'Cumulative %') {return [`${value}%`, name]}
                 return [value, name]
               }}
             />

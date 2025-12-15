@@ -62,9 +62,9 @@ interface AutoEscalationResult {
  * Calculate severity level based on failure percentage
  */
 function calculateSeverityLevel(failurePercentage: number): SeverityLevel {
-  if (failurePercentage >= SEVERITY_THRESHOLDS.critical) return 'critical'
-  if (failurePercentage >= SEVERITY_THRESHOLDS.high) return 'high'
-  if (failurePercentage >= SEVERITY_THRESHOLDS.medium) return 'medium'
+  if (failurePercentage >= SEVERITY_THRESHOLDS.critical) {return 'critical'}
+  if (failurePercentage >= SEVERITY_THRESHOLDS.high) {return 'high'}
+  if (failurePercentage >= SEVERITY_THRESHOLDS.medium) {return 'medium'}
   return 'low'
 }
 
@@ -121,7 +121,7 @@ async function getProjectName(projectId: string): Promise<string> {
       .eq('id', projectId)
       .single()
 
-    if (error || !data) return 'Unknown Project'
+    if (error || !data) {return 'Unknown Project'}
     return data.name
   } catch {
     return 'Unknown Project'
@@ -358,11 +358,11 @@ async function autoCreateItemsForFailedResponses(
       ? templateItems.get(response.checklist_template_item_id)
       : undefined
 
-    if (!templateItem) continue
+    if (!templateItem) {continue}
 
     const escalateOnFail = templateItem.escalate_on_fail as EscalateOnFail
 
-    if (!escalateOnFail || escalateOnFail === 'none') continue
+    if (!escalateOnFail || escalateOnFail === 'none') {continue}
 
     if (escalateOnFail === 'punch_item') {
       const punchItemId = await createPunchItemFromFailed(
@@ -572,7 +572,7 @@ async function getCustomRecipients(userIds: string[]): Promise<NotificationRecip
       .select('id, email, first_name, last_name')
       .in('id', userIds)
 
-    if (error || !users) return []
+    if (error || !users) {return []}
 
     return users.map((user: { id: string; email: string; first_name?: string; last_name?: string }) => ({
       userId: user.id,

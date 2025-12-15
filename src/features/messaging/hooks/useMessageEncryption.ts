@@ -236,7 +236,7 @@ export function useEncryptionKeys(conversationId: string | undefined) {
 
   // Clear keys for conversation
   const clearKeys = useCallback(async () => {
-    if (!conversationId) return
+    if (!conversationId) {return}
 
     try {
       await deleteConversationKeys(conversationId)

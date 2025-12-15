@@ -90,7 +90,7 @@ export const equipmentApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentWithStats[]
   },
 
@@ -108,7 +108,7 @@ export const equipmentApi = {
       .eq('id', id)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Get active assignments
     const { data: assignments } = await supabase
@@ -165,7 +165,7 @@ export const equipmentApi = {
       .eq('id', user?.user?.id)
       .single()
 
-    if (!userData?.company_id) throw new Error('User company not found')
+    if (!userData?.company_id) {throw new Error('User company not found')}
 
     const equipmentData = {
       company_id: userData.company_id,
@@ -211,7 +211,7 @@ export const equipmentApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -226,7 +226,7 @@ export const equipmentApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -241,7 +241,7 @@ export const equipmentApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -254,7 +254,7 @@ export const equipmentApi = {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -266,7 +266,7 @@ export const equipmentApi = {
       .select('*')
       .eq('company_id', companyId)
 
-    if (error) throw error
+    if (error) {throw error}
 
     const stats: EquipmentStatistics = {
       total: equipment?.length || 0,
@@ -288,7 +288,7 @@ export const equipmentApi = {
       utilization_rate: 0,
     }
 
-    if (!equipment) return stats
+    if (!equipment) {return stats}
 
     for (const item of equipment) {
       // Count by status
@@ -344,7 +344,7 @@ export const equipmentApi = {
       .eq('status', 'available')
       .order('equipment_number', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentWithStats[]
   },
 }
@@ -368,7 +368,7 @@ export const equipmentAssignmentsApi = {
       .eq('equipment_id', equipmentId)
       .order('assigned_date', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentAssignmentWithProject[]
   },
 
@@ -387,7 +387,7 @@ export const equipmentAssignmentsApi = {
       .eq('status', 'active')
       .order('assigned_date', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentAssignmentWithProject[]
   },
 
@@ -416,7 +416,7 @@ export const equipmentAssignmentsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Update equipment status and current project
     await supabase
@@ -441,7 +441,7 @@ export const equipmentAssignmentsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -466,7 +466,7 @@ export const equipmentAssignmentsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Update equipment status
     if (assignment?.equipment_id) {
@@ -524,7 +524,7 @@ export const equipmentLogsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentLogWithDetails[]
   },
 
@@ -564,7 +564,7 @@ export const equipmentLogsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -579,7 +579,7 @@ export const equipmentLogsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -592,7 +592,7 @@ export const equipmentLogsApi = {
       .delete()
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -606,7 +606,7 @@ export const equipmentLogsApi = {
       .gte('log_date', dateFrom)
       .lte('log_date', dateTo)
 
-    if (error) throw error
+    if (error) {throw error}
 
     return data?.reduce((sum, log) => sum + (log.hours_used || 0), 0) || 0
   },
@@ -646,7 +646,7 @@ export const equipmentLogsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentLogWithDetails[]
   },
 
@@ -663,7 +663,7 @@ export const equipmentLogsApi = {
       .gt('calculated_cost', 0)
       .order('log_date', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentLogWithDetails[]
   },
 
@@ -675,7 +675,7 @@ export const equipmentLogsApi = {
     const { data, error } = await supabase
       .rpc('post_equipment_cost_to_transaction', { p_equipment_log_id: logId })
 
-    if (error) throw error
+    if (error) {throw error}
     return data as string  // Returns the new cost_transaction_id
   },
 
@@ -752,7 +752,7 @@ export const equipmentMaintenanceApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentMaintenanceWithDetails[]
   },
 
@@ -770,7 +770,7 @@ export const equipmentMaintenanceApi = {
       .eq('id', id)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as EquipmentMaintenanceWithDetails
   },
 
@@ -800,7 +800,7 @@ export const equipmentMaintenanceApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -815,7 +815,7 @@ export const equipmentMaintenanceApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -852,7 +852,7 @@ export const equipmentMaintenanceApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -867,7 +867,7 @@ export const equipmentMaintenanceApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -889,7 +889,7 @@ export const equipmentMaintenanceApi = {
       .lte('scheduled_date', thirtyDaysFromNow.toISOString().split('T')[0])
       .order('scheduled_date', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as EquipmentMaintenanceWithDetails[]
   },
 }
@@ -913,7 +913,7 @@ export const equipmentInspectionsApi = {
       .eq('equipment_id', equipmentId)
       .order('inspection_date', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return data || []
   },
 
@@ -948,7 +948,7 @@ export const equipmentInspectionsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data
   },
 
@@ -964,7 +964,7 @@ export const equipmentInspectionsApi = {
       .limit(1)
       .single()
 
-    if (error && error.code !== 'PGRST116') throw error  // PGRST116 = no rows
+    if (error && error.code !== 'PGRST116') {throw error}  // PGRST116 = no rows
     return data || null
   },
 }

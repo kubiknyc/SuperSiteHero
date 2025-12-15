@@ -48,7 +48,7 @@ function ReportsSkeleton() {
 }
 
 function WeatherBadge({ weather }: { weather: string | null }) {
-  if (!weather) return null
+  if (!weather) {return null}
 
   const weatherColors: Record<string, string> = {
     sunny: 'bg-yellow-100 text-yellow-700',
@@ -91,7 +91,7 @@ export function SubcontractorDailyReportsPage() {
 
   // Filter by search client-side
   const filteredReports = reports?.filter((report) => {
-    if (!search) return true
+    if (!search) {return true}
     const searchLower = search.toLowerCase()
     return (
       report.project_name.toLowerCase().includes(searchLower) ||

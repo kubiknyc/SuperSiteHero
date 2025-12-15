@@ -550,7 +550,7 @@ export const TEMPLATE_CATEGORIES: TemplateCategoryConfig[] = [
 export function getTemplateCategoryConfig(
   category: TemplateCategory | null
 ): TemplateCategoryConfig | undefined {
-  if (!category) return undefined
+  if (!category) {return undefined}
   return TEMPLATE_CATEGORIES.find((c) => c.value === category)
 }
 

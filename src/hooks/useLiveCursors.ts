@@ -60,7 +60,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
 
   // Cleanup stale cursors periodically
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {return}
 
     cleanupIntervalRef.current = setInterval(() => {
       const now = Date.now()
@@ -88,7 +88,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
 
   // Initialize presence channel and subscribe to cursor updates
   useEffect(() => {
-    if (!user || !roomId || !enabled) return
+    if (!user || !roomId || !enabled) {return}
 
     const channel = realtimeManager.createPresenceChannel(`cursors:${roomId}`)
     channelRef.current = channel
@@ -111,7 +111,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
         Object.values(state).forEach((presences) => {
           presences.forEach((presence) => {
             // Skip our own cursor
-            if (presence.user_id === user.id) return
+            if (presence.user_id === user.id) {return}
 
             if (presence.cursor) {
               const existing = updated.get(presence.user_id)
@@ -176,7 +176,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
   // Broadcast cursor position (throttled to 60fps)
   const broadcastCursorPosition = useCallback(
     (position: CursorPosition) => {
-      if (!channelRef.current || !user) return
+      if (!channelRef.current || !user) {return}
 
       const now = Date.now()
       if (now - lastBroadcastRef.current < CURSOR_THROTTLE_MS) {
@@ -198,7 +198,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
   // Handle mouse move within container
   const handleMouseMove = useCallback(
     (event: MouseEvent) => {
-      if (!containerRef.current) return
+      if (!containerRef.current) {return}
 
       const rect = containerRef.current.getBoundingClientRect()
       const position: CursorPosition = {
@@ -215,7 +215,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
 
   // Handle mouse leave - broadcast null cursor
   const handleMouseLeave = useCallback(() => {
-    if (!channelRef.current || !user) return
+    if (!channelRef.current || !user) {return}
 
     channelRef.current.track({
       user_id: user.id,

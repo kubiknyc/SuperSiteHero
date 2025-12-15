@@ -68,15 +68,15 @@ export function SyncStatusPanel() {
   }
 
   const formatTimestamp = (timestamp: number | null) => {
-    if (!timestamp) return 'Never'
+    if (!timestamp) {return 'Never'}
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
     const diffMins = Math.floor(diffMs / 60000)
 
-    if (diffMins < 1) return 'Just now'
-    if (diffMins < 60) return `${diffMins}m ago`
-    if (diffMins < 1440) return `${Math.floor(diffMins / 60)}h ago`
+    if (diffMins < 1) {return 'Just now'}
+    if (diffMins < 60) {return `${diffMins}m ago`}
+    if (diffMins < 1440) {return `${Math.floor(diffMins / 60)}h ago`}
     return date.toLocaleDateString()
   }
 

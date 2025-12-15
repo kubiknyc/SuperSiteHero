@@ -11,9 +11,9 @@ type ToastProps = React.HTMLAttributes<HTMLDivElement> & {
 const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
   ({ className, variant = 'default', ...props }, ref) => {
     const variantStyles = {
-      default: 'bg-white border-gray-200',
-      destructive: 'bg-red-50 border-red-200 text-red-900',
-      success: 'bg-green-50 border-green-200 text-green-900',
+      default: 'bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-100',
+      destructive: 'bg-red-50 border-red-200 text-red-900 dark:bg-red-950/50 dark:border-red-800 dark:text-red-200',
+      success: 'bg-green-50 border-green-200 text-green-900 dark:bg-green-950/50 dark:border-green-800 dark:text-green-200',
     }
 
     return (
@@ -102,7 +102,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="ml-4 text-gray-500 hover:text-gray-700"
+              className="ml-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             >
               ✕
             </button>

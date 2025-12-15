@@ -542,7 +542,7 @@ export function getAttendanceStatusLabel(status: AttendanceStatus | string): str
  * Check if action item is overdue
  */
 export function isActionItemOverdue(actionItem: MeetingActionItem): boolean {
-  if (!actionItem.due_date) return false;
+  if (!actionItem.due_date) {return false;}
   if (actionItem.status === ActionItemStatus.COMPLETED || actionItem.status === ActionItemStatus.CANCELLED) {
     return false;
   }
@@ -553,7 +553,7 @@ export function isActionItemOverdue(actionItem: MeetingActionItem): boolean {
  * Calculate days until action item due date
  */
 export function getDaysUntilDue(actionItem: MeetingActionItem): number | null {
-  if (!actionItem.due_date) return null;
+  if (!actionItem.due_date) {return null;}
   const dueDate = new Date(actionItem.due_date);
   const now = new Date();
   return Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));

@@ -92,7 +92,7 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
   }, []);
 
   const handleSave = useCallback(() => {
-    if (!formData.visitor_name?.trim()) return;
+    if (!formData.visitor_name?.trim()) {return;}
 
     if (editingEntry) {
       updateVisitorEntry(editingEntry.id, formData);

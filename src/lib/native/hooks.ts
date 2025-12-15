@@ -24,7 +24,7 @@ export function useNetwork() {
   });
 
   useEffect(() => {
-    if (!isPluginAvailable('Network')) return;
+    if (!isPluginAvailable('Network')) {return;}
 
     // Get initial status
     Network.getStatus().then(setStatus);
@@ -92,7 +92,7 @@ export function useHaptics() {
   const isAvailable = isNative() && isPluginAvailable('Haptics');
 
   const impact = useCallback(async (style: 'light' | 'medium' | 'heavy' = 'medium') => {
-    if (!isAvailable) return;
+    if (!isAvailable) {return;}
 
     const styleMap: Record<string, ImpactStyle> = {
       light: ImpactStyle.Light,
@@ -104,7 +104,7 @@ export function useHaptics() {
   }, [isAvailable]);
 
   const notification = useCallback(async (type: 'success' | 'warning' | 'error' = 'success') => {
-    if (!isAvailable) return;
+    if (!isAvailable) {return;}
 
     const typeMap: Record<string, NotificationType> = {
       success: NotificationType.Success,
@@ -116,7 +116,7 @@ export function useHaptics() {
   }, [isAvailable]);
 
   const vibrate = useCallback(async (duration = 300) => {
-    if (!isAvailable) return;
+    if (!isAvailable) {return;}
     await Haptics.vibrate({ duration });
   }, [isAvailable]);
 
@@ -224,7 +224,7 @@ export function useKeyboard() {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
-    if (!isNative() || !isPluginAvailable('Keyboard')) return;
+    if (!isNative() || !isPluginAvailable('Keyboard')) {return;}
 
     const showListener = Keyboard.addListener('keyboardWillShow', (info) => {
       setIsVisible(true);
@@ -258,7 +258,7 @@ export function useAppState() {
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
-    if (!isNative() || !isPluginAvailable('App')) return;
+    if (!isNative() || !isPluginAvailable('App')) {return;}
 
     const listener = App.addListener('appStateChange', (state) => {
       setIsActive(state.isActive);
@@ -279,7 +279,7 @@ export function useStatusBar() {
   const isAvailable = isNative() && isPluginAvailable('StatusBar');
 
   const setStyle = useCallback(async (style: 'light' | 'dark') => {
-    if (!isAvailable) return;
+    if (!isAvailable) {return;}
 
     await StatusBar.setStyle({
       style: style === 'light' ? Style.Light : Style.Dark,
@@ -287,18 +287,18 @@ export function useStatusBar() {
   }, [isAvailable]);
 
   const setBackgroundColor = useCallback(async (color: string) => {
-    if (!isAvailable || getPlatform() !== 'android') return;
+    if (!isAvailable || getPlatform() !== 'android') {return;}
 
     await StatusBar.setBackgroundColor({ color });
   }, [isAvailable]);
 
   const hide = useCallback(async () => {
-    if (!isAvailable) return;
+    if (!isAvailable) {return;}
     await StatusBar.hide();
   }, [isAvailable]);
 
   const show = useCallback(async () => {
-    if (!isAvailable) return;
+    if (!isAvailable) {return;}
     await StatusBar.show();
   }, [isAvailable]);
 

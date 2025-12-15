@@ -567,7 +567,7 @@ export function getRFIResponseTypeDescription(responseType: RFIResponseType): st
  * Calculate response due date based on submitted date and required days
  */
 export function calculateResponseDueDate(dateSubmitted: string | null, requiredDays: number): Date | null {
-  if (!dateSubmitted) return null
+  if (!dateSubmitted) {return null}
   const submitted = new Date(dateSubmitted)
   const dueDate = new Date(submitted)
   dueDate.setDate(dueDate.getDate() + requiredDays)

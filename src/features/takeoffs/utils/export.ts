@@ -33,7 +33,7 @@ export interface ExportSummary {
  * Calculate quantity for a measurement
  */
 function calculateQuantity(measurement: TakeoffMeasurement, scale?: ScaleFactor): number {
-  if (!scale) return 0
+  if (!scale) {return 0}
 
   try {
     switch (measurement.type) {

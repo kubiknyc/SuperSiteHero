@@ -251,7 +251,7 @@ export async function exportRFIsToExcel(
  * Escape CSV value
  */
 function escapeCSV(value: string): string {
-  if (!value) return ''
+  if (!value) {return ''}
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
     return `"${value.replace(/"/g, '""')}"`
   }

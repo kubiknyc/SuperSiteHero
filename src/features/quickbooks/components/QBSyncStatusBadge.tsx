@@ -12,7 +12,7 @@ interface QBSyncStatusBadgeProps {
 }
 
 export function QBSyncStatusBadge({ status, size = 'md' }: QBSyncStatusBadgeProps) {
-  if (!status) return null
+  if (!status) {return null}
 
   const config = getSyncStatusConfig(status)
 

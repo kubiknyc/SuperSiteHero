@@ -116,7 +116,7 @@ export function CommonResponseTypes({
     <div className={cn('flex flex-wrap gap-2', className)}>
       {commonTypes.map((type) => {
         const config = RFI_RESPONSE_TYPES.find((t) => t.value === type)
-        if (!config) return null
+        if (!config) {return null}
 
         const isSelected = value === type
 

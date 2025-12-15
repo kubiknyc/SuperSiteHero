@@ -313,7 +313,7 @@ export const workflowsApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as WorkflowItemComment[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -435,7 +435,7 @@ export const workflowsApi = {
         .eq('workflow_item_id', workflowItemId)
         .order('changed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as WorkflowItemHistoryWithUser[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -475,7 +475,7 @@ export const workflowsApi = {
         .eq('project_id', projectId)
         .order('user_id')
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ProjectUserWithDetails[]
     } catch (error) {
       throw error instanceof ApiErrorClass

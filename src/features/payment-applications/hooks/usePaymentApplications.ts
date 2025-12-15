@@ -51,7 +51,7 @@ export function useProjectPaymentApplications(projectId: string | undefined) {
   return useQuery({
     queryKey: paymentApplicationKeys.list(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('payment_applications')
@@ -77,7 +77,7 @@ export function useProjectPaymentApplications(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('application_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Add display_number and sov_item_count
       return (data || []).map(app => ({
@@ -97,7 +97,7 @@ export function usePaymentApplication(applicationId: string | undefined) {
   return useQuery({
     queryKey: paymentApplicationKeys.detail(applicationId || ''),
     queryFn: async () => {
-      if (!applicationId) throw new Error('Application ID required')
+      if (!applicationId) {throw new Error('Application ID required')}
 
       const { data, error } = await supabase
         .from('payment_applications')
@@ -127,7 +127,7 @@ export function usePaymentApplication(applicationId: string | undefined) {
         .eq('id', applicationId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return {
         ...data,
@@ -146,7 +146,7 @@ export function useScheduleOfValues(applicationId: string | undefined) {
   return useQuery({
     queryKey: paymentApplicationKeys.sov(applicationId || ''),
     queryFn: async () => {
-      if (!applicationId) throw new Error('Application ID required')
+      if (!applicationId) {throw new Error('Application ID required')}
 
       const { data, error } = await supabase
         .from('schedule_of_values')
@@ -162,7 +162,7 @@ export function useScheduleOfValues(applicationId: string | undefined) {
         .eq('payment_application_id', applicationId)
         .order('sort_order', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ScheduleOfValuesItem[]
     },
     enabled: !!applicationId,
@@ -176,7 +176,7 @@ export function usePaymentApplicationHistory(applicationId: string | undefined) 
   return useQuery({
     queryKey: paymentApplicationKeys.history(applicationId || ''),
     queryFn: async () => {
-      if (!applicationId) throw new Error('Application ID required')
+      if (!applicationId) {throw new Error('Application ID required')}
 
       const { data, error } = await supabase
         .from('payment_application_history')
@@ -191,7 +191,7 @@ export function usePaymentApplicationHistory(applicationId: string | undefined) 
         .eq('payment_application_id', applicationId)
         .order('changed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplicationHistory[]
     },
     enabled: !!applicationId,
@@ -264,13 +264,13 @@ export function useCreatePaymentApplication() {
 
   return useMutation({
     mutationFn: async (input: CreatePaymentApplicationDTO) => {
-      if (!userProfile?.company_id) throw new Error('Company ID required')
+      if (!userProfile?.company_id) {throw new Error('Company ID required')}
 
       // Get next application number
       const { data: nextNum, error: numError } = await supabase
         .rpc('get_next_application_number', { p_project_id: input.project_id })
 
-      if (numError) throw numError
+      if (numError) {throw numError}
 
       const { data, error } = await supabase
         .from('payment_applications')
@@ -284,7 +284,7 @@ export function useCreatePaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -308,7 +308,7 @@ export function useUpdatePaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -339,7 +339,7 @@ export function useSubmitPaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -370,7 +370,7 @@ export function useApprovePaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -401,7 +401,7 @@ export function useRejectPaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -431,7 +431,7 @@ export function useMarkPaymentApplicationPaid() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -479,7 +479,7 @@ export function useUpdatePaymentApplicationSignature() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PaymentApplication
     },
     onSuccess: (data) => {
@@ -509,7 +509,7 @@ export function useDeletePaymentApplication() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', applicationId)
 
-      if (error) throw error
+      if (error) {throw error}
       return app?.project_id
     },
     onSuccess: (projectId) => {
@@ -539,7 +539,7 @@ export function useCreateSOVItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ScheduleOfValuesItem
     },
     onSuccess: (data) => {
@@ -568,7 +568,7 @@ export function useUpdateSOVItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ScheduleOfValuesItem
     },
     onSuccess: (data) => {
@@ -641,7 +641,7 @@ export function useDeleteSOVItem() {
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return applicationId
     },
     onSuccess: (applicationId) => {
@@ -674,7 +674,7 @@ export function useCopySOVFromPrevious() {
         p_previous_application_id: previousApplicationId,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return newApplicationId
     },
     onSuccess: (applicationId) => {
@@ -696,7 +696,7 @@ export function useCopySOVFromPrevious() {
  * Format currency for display
  */
 export function formatCurrency(amount: number | null | undefined): string {
-  if (amount == null) return '$0.00'
+  if (amount == null) {return '$0.00'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -707,7 +707,7 @@ export function formatCurrency(amount: number | null | undefined): string {
  * Format percentage for display
  */
 export function formatPercent(value: number | null | undefined): string {
-  if (value == null) return '0%'
+  if (value == null) {return '0%'}
   return `${value.toFixed(1)}%`
 }
 

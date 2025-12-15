@@ -111,7 +111,7 @@ export const changeOrderBudgetIntegration = {
     }>()
 
     for (const item of changeOrder.items || []) {
-      if (!item.cost_code_id || !item.total_amount) continue
+      if (!item.cost_code_id || !item.total_amount) {continue}
 
       const existing = itemsByCostCode.get(item.cost_code_id)
       if (existing) {
@@ -307,7 +307,7 @@ export const changeOrderBudgetIntegration = {
     }>()
 
     for (const item of changeOrder.items || []) {
-      if (!item.cost_code_id || !item.total_amount) continue
+      if (!item.cost_code_id || !item.total_amount) {continue}
 
       const existing = itemsByCostCode.get(item.cost_code_id)
       if (existing) {
@@ -330,7 +330,7 @@ export const changeOrderBudgetIntegration = {
         .eq('cost_code_id', costCodeId)
         .single()
 
-      if (!existingBudget) continue
+      if (!existingBudget) {continue}
 
       // Decrement approved_changes
       const newApprovedChanges = Math.max(0, (existingBudget.approved_changes || 0) - data.total)
@@ -463,7 +463,7 @@ export const changeOrderBudgetIntegration = {
     }>()
 
     for (const item of changeOrder.items || []) {
-      if (!item.cost_code_id || !item.total_amount) continue
+      if (!item.cost_code_id || !item.total_amount) {continue}
 
       const existing = itemsByCostCode.get(item.cost_code_id)
       if (existing) {

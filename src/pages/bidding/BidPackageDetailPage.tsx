@@ -137,11 +137,11 @@ export default function BidPackageDetailPage() {
   }
 
   const handleAward = async () => {
-    if (!selectedSubmissionId) return
+    if (!selectedSubmissionId) {return}
 
     try {
       const submission = submissions?.find((s) => s.id === selectedSubmissionId)
-      if (!submission) return
+      if (!submission) {return}
 
       await awardBid.mutateAsync({
         packageId: packageId!,

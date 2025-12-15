@@ -23,7 +23,7 @@ export function useDocumentVersionsForComparison(documentId: string | undefined)
   return useQuery({
     queryKey: ['document-versions', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       // First get the current document
       const { data: currentDoc, error: docError } = await supabase
@@ -32,7 +32,7 @@ export function useDocumentVersionsForComparison(documentId: string | undefined)
         .eq('id', documentId)
         .single()
 
-      if (docError) throw docError
+      if (docError) {throw docError}
 
       // Then get all versions with the same base document name/number
       const { data: versions, error: versionsError } = await supabase
@@ -43,7 +43,7 @@ export function useDocumentVersionsForComparison(documentId: string | undefined)
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (versionsError) throw versionsError
+      if (versionsError) {throw versionsError}
 
       return (versions || []) as Document[]
     },
@@ -96,10 +96,10 @@ export function useCompareVersions(
         supabase.from('documents').select('*').eq('id', doc2Id).single(),
       ])
 
-      if (err1) throw new Error(`Failed to fetch document 1: ${err1.message}`)
-      if (err2) throw new Error(`Failed to fetch document 2: ${err2.message}`)
-      if (!doc1?.file_url) throw new Error('Document 1 has no file URL')
-      if (!doc2?.file_url) throw new Error('Document 2 has no file URL')
+      if (err1) {throw new Error(`Failed to fetch document 1: ${err1.message}`)}
+      if (err2) {throw new Error(`Failed to fetch document 2: ${err2.message}`)}
+      if (!doc1?.file_url) {throw new Error('Document 1 has no file URL')}
+      if (!doc2?.file_url) {throw new Error('Document 2 has no file URL')}
 
       const renderOptions: RenderPdfOptions = {
         dpi,
@@ -207,9 +207,9 @@ function generateComparisonSummary(diffResult: DiffResult, regions: ChangeRegion
   parts.push(`(${overallChangePercentage.toFixed(1)}% of page)`)
 
   const changeParts: string[] = []
-  if (addedCount > 0) changeParts.push(`${addedCount} addition${addedCount > 1 ? 's' : ''}`)
-  if (removedCount > 0) changeParts.push(`${removedCount} removal${removedCount > 1 ? 's' : ''}`)
-  if (modifiedCount > 0) changeParts.push(`${modifiedCount} modification${modifiedCount > 1 ? 's' : ''}`)
+  if (addedCount > 0) {changeParts.push(`${addedCount} addition${addedCount > 1 ? 's' : ''}`)}
+  if (removedCount > 0) {changeParts.push(`${removedCount} removal${removedCount > 1 ? 's' : ''}`)}
+  if (modifiedCount > 0) {changeParts.push(`${modifiedCount} modification${modifiedCount > 1 ? 's' : ''}`)}
 
   if (changeParts.length > 0) {
     parts.push(`- ${changeParts.join(', ')}`)
@@ -285,7 +285,7 @@ export function useTransferMarkups() {
       toDocumentId: string
       markupIds?: string[] // If not provided, transfer all
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       // Get the source document's markups
       let query = supabase
@@ -300,7 +300,7 @@ export function useTransferMarkups() {
 
       const { data: sourceMarkups, error: fetchError } = await query
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       if (!sourceMarkups || sourceMarkups.length === 0) {
         return { transferred: 0, toDocumentId }
@@ -313,7 +313,7 @@ export function useTransferMarkups() {
         .eq('id', toDocumentId)
         .single()
 
-      if (targetError) throw targetError
+      if (targetError) {throw targetError}
 
       // Create copies of the markups for the new document
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -339,7 +339,7 @@ export function useTransferMarkups() {
         .insert(newMarkups)
         .select()
 
-      if (insertError) throw insertError
+      if (insertError) {throw insertError}
 
       return {
         transferred: inserted?.length || 0,
@@ -361,7 +361,7 @@ export function useSaveScaleCalibration() {
 
   return useMutation({
     mutationFn: async (calibration: Omit<ScaleCalibration, 'id' | 'calibratedAt'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await db
         .from('document_scale_calibrations')
@@ -379,7 +379,7 @@ export function useSaveScaleCalibration() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -395,7 +395,7 @@ export function useScaleCalibration(documentId: string | undefined, pageNumber: 
   return useQuery({
     queryKey: ['scale-calibration', documentId, pageNumber],
     queryFn: async (): Promise<ScaleCalibration | null> => {
-      if (!documentId) return null
+      if (!documentId) {return null}
 
       const { data, error } = await db
         .from('document_scale_calibrations')
@@ -404,8 +404,8 @@ export function useScaleCalibration(documentId: string | undefined, pageNumber: 
         .eq('page_number', pageNumber)
         .maybeSingle()
 
-      if (error) throw error
-      if (!data) return null
+      if (error) {throw error}
+      if (!data) {return null}
 
       return {
         id: data.id,
@@ -429,7 +429,7 @@ export function useComparisonHistory(documentId: string | undefined) {
   return useQuery({
     queryKey: ['comparison-history', documentId],
     queryFn: async () => {
-      if (!documentId) return []
+      if (!documentId) {return []}
 
       // This would fetch from a comparison history table if one exists
       // For now, return empty array

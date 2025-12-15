@@ -81,7 +81,7 @@ interface ImportResults {
 // =============================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {
@@ -488,7 +488,7 @@ export function ScheduleImportDialog({
 
   // Handle import
   const handleImport = React.useCallback(async () => {
-    if (!parsedData || !file) return
+    if (!parsedData || !file) {return}
 
     setStep('importing')
     setImportProgress({ current: 0, total: parsedData.activities.length })

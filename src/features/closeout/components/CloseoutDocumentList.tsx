@@ -105,7 +105,7 @@ function CategoryBadge({ category }: { category: CloseoutCategory }) {
  * Due date indicator
  */
 function DueDateIndicator({ dueDate, status }: { dueDate: string | null; status: CloseoutStatus }) {
-  if (!dueDate) return <span className="text-gray-400">-</span>
+  if (!dueDate) {return <span className="text-gray-400">-</span>}
 
   if (['approved', 'waived', 'not_required', 'na'].includes(status)) {
     return <span className="text-xs text-gray-500">{new Date(dueDate).toLocaleDateString()}</span>
@@ -197,7 +197,7 @@ function GroupedDocuments({ documents, onDocumentClick }: GroupedDocumentsProps)
     <div className="space-y-6">
       {categories.map((category) => {
         const categoryDocs = grouped[category] || []
-        if (categoryDocs.length === 0) return null
+        if (categoryDocs.length === 0) {return null}
 
         const approved = categoryDocs.filter((d) => d.status === 'approved').length
         const total = categoryDocs.length

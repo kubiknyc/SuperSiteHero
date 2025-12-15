@@ -37,7 +37,7 @@ export function EVMTrendChart({
   title = 'Performance Trend',
 }: EVMTrendChartProps) {
   const chartData = useMemo(() => {
-    if (!data?.length) return []
+    if (!data?.length) {return []}
 
     return data.map(point => ({
       ...point,
@@ -104,7 +104,7 @@ export function EVMTrendChart({
             />
             <Tooltip
               content={({ active, payload, label }) => {
-                if (!active || !payload?.length) return null
+                if (!active || !payload?.length) {return null}
                 const data = payload[0].payload
                 return (
                   <div className="bg-background border rounded-lg shadow-lg p-3 text-sm">

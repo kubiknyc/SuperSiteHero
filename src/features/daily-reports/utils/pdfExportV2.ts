@@ -96,7 +96,7 @@ function addSubsectionHeader(doc: jsPDF, title: string, yPos: number): number {
 }
 
 function addTextBlock(doc: jsPDF, label: string, text: string | null | undefined, yPos: number): number {
-  if (!text) return yPos;
+  if (!text) {return yPos;}
 
   yPos = checkPageBreak(doc, yPos, 20);
 
@@ -115,7 +115,7 @@ function addTextBlock(doc: jsPDF, label: string, text: string | null | undefined
 }
 
 function formatTime(time: string | null | undefined): string {
-  if (!time) return '-';
+  if (!time) {return '-';}
   const parts = time.split(':');
   if (parts.length >= 2) {
     const hours = parseInt(parts[0], 10);
@@ -128,7 +128,7 @@ function formatTime(time: string | null | undefined): string {
 }
 
 function formatCurrency(amount: number | undefined): string {
-  if (amount === undefined || amount === null) return '-';
+  if (amount === undefined || amount === null) {return '-';}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -136,7 +136,7 @@ function formatCurrency(amount: number | undefined): string {
 }
 
 function formatDate(date: string | null | undefined): string {
-  if (!date) return '-';
+  if (!date) {return '-';}
   try {
     return format(new Date(date), 'MMM d, yyyy');
   } catch {
@@ -180,7 +180,7 @@ function getDelayTypeLabel(type: string): string {
 }
 
 function getDelayCategoryLabel(category: DelayCategory | undefined): string {
-  if (!category) return '-';
+  if (!category) {return '-';}
   const labels: Record<DelayCategory, string> = {
     excusable_compensable: 'Excusable/Compensable',
     excusable_non_compensable: 'Excusable/Non-Compensable',
@@ -201,7 +201,7 @@ function getIncidentTypeLabel(type: IncidentType): string {
 }
 
 function getInspectionResultLabel(result: InspectionResult | undefined): string {
-  if (!result) return '-';
+  if (!result) {return '-';}
   const labels: Record<InspectionResult, string> = {
     pass: 'PASS',
     fail: 'FAIL',
@@ -353,7 +353,7 @@ function addWeatherSection(doc: jsPDF, report: DailyReportV2, yPos: number): num
 }
 
 function addWorkSummarySection(doc: jsPDF, report: DailyReportV2, yPos: number): number {
-  if (!report.work_summary && !report.work_completed && !report.work_planned_tomorrow) return yPos;
+  if (!report.work_summary && !report.work_completed && !report.work_planned_tomorrow) {return yPos;}
 
   yPos = addSectionHeader(doc, 'WORK SUMMARY', yPos);
 
@@ -377,7 +377,7 @@ function addWorkforceSection(
   workforce: WorkforceEntryV2[],
   yPos: number
 ): number {
-  if (workforce.length === 0) return yPos;
+  if (workforce.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'WORKFORCE', yPos);
 
@@ -433,7 +433,7 @@ function addEquipmentSection(
   equipment: EquipmentEntryV2[],
   yPos: number
 ): number {
-  if (equipment.length === 0) return yPos;
+  if (equipment.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'EQUIPMENT ON SITE', yPos);
 
@@ -478,7 +478,7 @@ function addDelaysSection(
   delays: DelayEntry[],
   yPos: number
 ): number {
-  if (delays.length === 0) return yPos;
+  if (delays.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'DELAYS & DISRUPTIONS', yPos, COLORS.danger);
 
@@ -532,8 +532,8 @@ function addDelaysSection(
       doc.setFontSize(8);
       doc.setFont('helvetica', 'italic');
       let impact = `${getDelayTypeLabel(delay.delay_type)}: `;
-      if (delay.schedule_impact_days) impact += `Schedule impact: ${delay.schedule_impact_days} days. `;
-      if (delay.cost_impact_estimate) impact += `Cost impact: ${formatCurrency(delay.cost_impact_estimate)}`;
+      if (delay.schedule_impact_days) {impact += `Schedule impact: ${delay.schedule_impact_days} days. `;}
+      if (delay.cost_impact_estimate) {impact += `Cost impact: ${formatCurrency(delay.cost_impact_estimate)}`;}
       const lines = doc.splitTextToSize(impact, CONTENT_WIDTH);
       doc.text(lines, MARGIN, yPos);
       yPos += lines.length * 3.5;
@@ -548,7 +548,7 @@ function addSafetyIncidentsSection(
   incidents: SafetyIncident[],
   yPos: number
 ): number {
-  if (incidents.length === 0) return yPos;
+  if (incidents.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'SAFETY INCIDENTS', yPos, COLORS.orange);
 
@@ -640,7 +640,7 @@ function addInspectionsSection(
   inspections: InspectionEntry[],
   yPos: number
 ): number {
-  if (inspections.length === 0) return yPos;
+  if (inspections.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'INSPECTIONS', yPos, COLORS.purple);
 
@@ -655,7 +655,7 @@ function addInspectionsSection(
   yPos += 5;
 
   const tableData = inspections.map((i) => {
-    let resultText = getInspectionResultLabel(i.result);
+    const resultText = getInspectionResultLabel(i.result);
     return [
       i.inspection_type,
       i.inspector_name || '-',
@@ -737,7 +737,7 @@ function addTMWorkSection(
   tmWork: TMWorkEntry[],
   yPos: number
 ): number {
-  if (tmWork.length === 0) return yPos;
+  if (tmWork.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'TIME & MATERIALS WORK', yPos, COLORS.warning);
 
@@ -852,7 +852,7 @@ function addProgressSection(
   progress: ProgressEntry[],
   yPos: number
 ): number {
-  if (progress.length === 0) return yPos;
+  if (progress.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'PROGRESS TRACKING', yPos);
 
@@ -949,7 +949,7 @@ function addDeliveriesSection(
   deliveries: DeliveryEntryV2[],
   yPos: number
 ): number {
-  if (deliveries.length === 0) return yPos;
+  if (deliveries.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'MATERIAL DELIVERIES', yPos);
 
@@ -1031,7 +1031,7 @@ function addVisitorsSection(
   visitors: VisitorEntryV2[],
   yPos: number
 ): number {
-  if (visitors.length === 0) return yPos;
+  if (visitors.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'SITE VISITORS', yPos);
 
@@ -1072,7 +1072,7 @@ function addVisitorsSection(
 }
 
 function addIssuesSection(doc: jsPDF, report: DailyReportV2, yPos: number): number {
-  if (!report.issues && !report.observations && !report.comments) return yPos;
+  if (!report.issues && !report.observations && !report.comments) {return yPos;}
 
   yPos = addSectionHeader(doc, 'ISSUES & OBSERVATIONS', yPos);
 
@@ -1092,7 +1092,7 @@ function addIssuesSection(doc: jsPDF, report: DailyReportV2, yPos: number): numb
 }
 
 function addApprovalSection(doc: jsPDF, report: DailyReportV2, yPos: number): number {
-  if (!report.submitted_by_name && !report.approved_by_name) return yPos;
+  if (!report.submitted_by_name && !report.approved_by_name) {return yPos;}
 
   yPos = addSectionHeader(doc, 'APPROVAL & SIGNATURES', yPos);
 
@@ -1166,7 +1166,7 @@ function addApprovalSection(doc: jsPDF, report: DailyReportV2, yPos: number): nu
 }
 
 function addPhotosSection(doc: jsPDF, photos: PhotoEntryV2[], yPos: number): number {
-  if (photos.length === 0) return yPos;
+  if (photos.length === 0) {return yPos;}
 
   yPos = addSectionHeader(doc, 'PHOTO DOCUMENTATION', yPos);
 

@@ -71,7 +71,7 @@ export function QRCodeScanner({
   // Handle successful scan
   const handleScanSuccess = useCallback((decodedText: string) => {
     // Prevent duplicate scans
-    if (decodedText === lastScan) return
+    if (decodedText === lastScan) {return}
     setLastScan(decodedText)
 
     const punchItemId = extractPunchItemId(decodedText)
@@ -110,14 +110,14 @@ export function QRCodeScanner({
 
   // Start scanner when dialog opens
   useEffect(() => {
-    if (!dialogOpen || !containerRef.current) return
+    if (!dialogOpen || !containerRef.current) {return}
 
     setError(null)
     setLastScan(null)
 
     // Small delay to ensure DOM is ready
     const timeoutId = setTimeout(() => {
-      if (!containerRef.current) return
+      if (!containerRef.current) {return}
 
       try {
         const scanner = new Html5QrcodeScanner(

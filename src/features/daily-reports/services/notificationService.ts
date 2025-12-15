@@ -165,7 +165,7 @@ async function sendExternalNotification(
 
   // Send individual notifications to each recipient via new Edge Function
   const channelList: ('email' | 'in_app')[] = [];
-  if (channels.email) channelList.push('email');
+  if (channels.email) {channelList.push('email');}
   // Always include in_app for external notifications
   channelList.push('in_app');
 
@@ -244,7 +244,7 @@ async function getRecipients(
 
     for (const member of teamMembers || []) {
       const profile = member.profiles as any;
-      if (!profile) continue;
+      if (!profile) {continue;}
 
       const notificationRole = roleMapping[member.role] || 'reviewer';
 

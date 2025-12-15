@@ -187,7 +187,7 @@ export function usePunchItemSync() {
   } = useOfflinePunchStore()
 
   const syncPendingItems = useCallback(async () => {
-    if (!isOnline || syncQueue.length === 0) return
+    if (!isOnline || syncQueue.length === 0) {return}
 
     logger.log(`[PunchSync] Starting sync for ${syncQueue.length} pending items`)
 

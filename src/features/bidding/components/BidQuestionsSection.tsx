@@ -68,7 +68,7 @@ function QuestionItem({ question, onAnswer, isAnswering, readOnly }: QuestionIte
   const [publishAnswer, setPublishAnswer] = useState(question.is_published)
 
   const handleSubmitAnswer = async () => {
-    if (!answerText.trim()) return
+    if (!answerText.trim()) {return}
     await onAnswer(question.id, answerText, publishAnswer)
     setIsEditing(false)
   }
@@ -230,9 +230,9 @@ export function BidQuestionsSection({ packageId, readOnly = false }: BidQuestion
   const [filter, setFilter] = useState<'all' | 'pending' | 'answered'>('all')
 
   const filteredQuestions = questions?.filter((q) => {
-    if (filter === 'all') return true
-    if (filter === 'pending') return q.status === 'pending'
-    if (filter === 'answered') return q.status === 'answered'
+    if (filter === 'all') {return true}
+    if (filter === 'pending') {return q.status === 'pending'}
+    if (filter === 'answered') {return q.status === 'answered'}
     return true
   })
 

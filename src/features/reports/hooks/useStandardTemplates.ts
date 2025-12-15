@@ -106,7 +106,7 @@ export function useTemplateSelection(): UseTemplateSelectionResult {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null)
 
   const selectedTemplate = useMemo(() => {
-    if (!selectedTemplateId) return null
+    if (!selectedTemplateId) {return null}
     return getTemplateById(selectedTemplateId) ?? null
   }, [selectedTemplateId])
 
@@ -205,7 +205,7 @@ export function useTemplatePreview(): UseTemplatePreviewResult {
   const [previewTemplateId, setPreviewTemplateId] = useState<string | null>(null)
 
   const previewTemplate = useMemo(() => {
-    if (!previewTemplateId) return null
+    if (!previewTemplateId) {return null}
     return getTemplateById(previewTemplateId) ?? null
   }, [previewTemplateId])
 

@@ -40,7 +40,7 @@ export function useCompanyAssemblies(
   return useQuery({
     queryKey: ['assemblies', 'company', companyId, filters],
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return assembliesApi.getCompanyAssemblies(companyId, filters)
     },
     enabled: !!companyId,
@@ -54,7 +54,7 @@ export function useAssembliesByCategory(category: string | undefined, companyId?
   return useQuery({
     queryKey: ['assemblies', 'category', category, companyId],
     queryFn: async () => {
-      if (!category) throw new Error('Category required')
+      if (!category) {throw new Error('Category required')}
       return assembliesApi.getAssembliesByCategory(category, companyId)
     },
     enabled: !!category,
@@ -68,7 +68,7 @@ export function useAssembliesByTrade(trade: string | undefined, companyId?: stri
   return useQuery({
     queryKey: ['assemblies', 'trade', trade, companyId],
     queryFn: async () => {
-      if (!trade) throw new Error('Trade required')
+      if (!trade) {throw new Error('Trade required')}
       return assembliesApi.getAssembliesByTrade(trade, companyId)
     },
     enabled: !!trade,
@@ -82,7 +82,7 @@ export function useAssembly(assemblyId: string | undefined) {
   return useQuery({
     queryKey: ['assemblies', assemblyId],
     queryFn: async () => {
-      if (!assemblyId) throw new Error('Assembly ID required')
+      if (!assemblyId) {throw new Error('Assembly ID required')}
       return assembliesApi.getAssembly(assemblyId)
     },
     enabled: !!assemblyId,
@@ -178,7 +178,7 @@ export function useSearchAssemblies(query: string | undefined, companyId?: strin
   return useQuery({
     queryKey: ['assemblies', 'search', query, companyId],
     queryFn: async () => {
-      if (!query) throw new Error('Search query required')
+      if (!query) {throw new Error('Search query required')}
       return assembliesApi.searchAssemblies(query, companyId)
     },
     enabled: !!query && query.length > 0,

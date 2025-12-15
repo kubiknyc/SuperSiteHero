@@ -27,7 +27,7 @@ export function TypingIndicator({
 }: TypingIndicatorProps) {
   const activeTypers = typingUsers.filter((t) => t.isTyping)
 
-  if (activeTypers.length === 0) return null
+  if (activeTypers.length === 0) {return null}
 
   const names = activeTypers.slice(0, maxNames).map((t) => t.userName)
   const remainingCount = activeTypers.length - maxNames

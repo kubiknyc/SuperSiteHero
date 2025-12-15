@@ -41,8 +41,8 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
 
   // Filter by date if set
   const filteredLogs = useMemo((): EquipmentLogWithCostDetails[] => {
-    if (!unpostedLogs) return []
-    if (!dateFilter) return unpostedLogs as EquipmentLogWithCostDetails[]
+    if (!unpostedLogs) {return []}
+    if (!dateFilter) {return unpostedLogs as EquipmentLogWithCostDetails[]}
     return (unpostedLogs as EquipmentLogWithCostDetails[]).filter((log) => log.log_date >= dateFilter)
   }, [unpostedLogs, dateFilter])
 

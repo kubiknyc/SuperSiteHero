@@ -46,11 +46,13 @@ import {
 import { DataSourceSelector } from '@/features/reports/components/DataSourceSelector'
 import { FieldPicker } from '@/features/reports/components/FieldPicker'
 import { FilterBuilder } from '@/features/reports/components/FilterBuilder'
+import { ChartBuilder } from '@/features/reports/components/ChartBuilder'
 import type {
   ReportDataSource,
   ReportOutputFormat,
   ReportTemplateFieldInput,
   ReportTemplateFilterInput,
+  ChartConfiguration,
 } from '@/types/report-builder'
 import { OUTPUT_FORMAT_CONFIG, generateDefaultTemplateName } from '@/types/report-builder'
 
@@ -59,6 +61,7 @@ const STEPS = [
   { id: 'source', label: 'Data Source', icon: Settings },
   { id: 'fields', label: 'Select Fields', icon: Columns },
   { id: 'filters', label: 'Filters', icon: Filter },
+  { id: 'visualization', label: 'Visualization', icon: BarChart3 },
   { id: 'options', label: 'Options', icon: SortAsc },
 ]
 
@@ -81,6 +84,7 @@ export function ReportBuilderPage() {
   const [outputFormat, setOutputFormat] = useState<ReportOutputFormat>('pdf')
   const [selectedFields, setSelectedFields] = useState<ReportTemplateFieldInput[]>([])
   const [filters, setFilters] = useState<ReportTemplateFilterInput[]>([])
+  const [chartConfig, setChartConfig] = useState<ChartConfiguration | null>(null)
   const [includeCharts, setIncludeCharts] = useState(true)
   const [includeSummary, setIncludeSummary] = useState(true)
 
@@ -103,6 +107,11 @@ export function ReportBuilderPage() {
       setOutputFormat(existingTemplate.default_format)
       setIncludeCharts(existingTemplate.include_charts)
       setIncludeSummary(existingTemplate.include_summary)
+
+      // Load chart configuration
+      if (existingTemplate.configuration?.chartConfig) {
+        setChartConfig(existingTemplate.configuration.chartConfig)
+      }
 
       if (existingTemplate.fields) {
         setSelectedFields(existingTemplate.fields.map(f => ({
@@ -151,14 +160,15 @@ export function ReportBuilderPage() {
       case 0: return !!dataSource
       case 1: return selectedFields.length > 0
       case 2: return true // Filters are optional
-      case 3: return !!templateName.trim()
+      case 3: return true // Charts are optional
+      case 4: return !!templateName.trim()
       default: return false
     }
   }
 
   // Save template
   const handleSave = async () => {
-    if (!companyId || !dataSource) return
+    if (!companyId || !dataSource) {return}
 
     try {
       if (isEditMode && templateId) {
@@ -172,6 +182,9 @@ export function ReportBuilderPage() {
             default_format: outputFormat,
             include_charts: includeCharts,
             include_summary: includeSummary,
+            configuration: {
+              chartConfig: chartConfig || undefined,
+            },
           },
         })
 
@@ -192,6 +205,9 @@ export function ReportBuilderPage() {
           default_format: outputFormat,
           include_charts: includeCharts,
           include_summary: includeSummary,
+          configuration: {
+            chartConfig: chartConfig || undefined,
+          },
         })
 
         // Save configuration
@@ -365,8 +381,34 @@ export function ReportBuilderPage() {
             </div>
           )}
 
-          {/* Step 4: Options */}
+          {/* Step 4: Visualization */}
           {currentStep === 3 && (
+            <div className="space-y-4">
+              {fieldsLoading ? (
+                <Card>
+                  <CardContent className="py-8 text-center">
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-blue-600" />
+                    <p className="text-gray-500 mt-2">Loading available fields...</p>
+                  </CardContent>
+                </Card>
+              ) : fieldDefinitions ? (
+                <ChartBuilder
+                  availableFields={fieldDefinitions}
+                  chartConfig={chartConfig}
+                  onConfigChange={setChartConfig}
+                />
+              ) : (
+                <Card>
+                  <CardContent className="py-8 text-center">
+                    <p className="text-gray-500">Select a data source first to configure charts</p>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Step 5: Options */}
+          {currentStep === 4 && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <Card>
                 <CardHeader>

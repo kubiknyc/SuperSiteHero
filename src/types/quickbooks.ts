@@ -459,7 +459,7 @@ export function getSyncStatusConfig(status: QBSyncStatus) {
  * Check if connection needs refresh
  */
 export function connectionNeedsRefresh(connection: QBConnection): boolean {
-  if (!connection.token_expires_at) return true
+  if (!connection.token_expires_at) {return true}
   const expiresAt = new Date(connection.token_expires_at)
   const now = new Date()
   // Refresh if expires within 5 minutes
@@ -470,7 +470,7 @@ export function connectionNeedsRefresh(connection: QBConnection): boolean {
  * Check if connection needs re-auth (refresh token expired)
  */
 export function connectionNeedsReauth(connection: QBConnection): boolean {
-  if (!connection.refresh_token_expires_at) return true
+  if (!connection.refresh_token_expires_at) {return true}
   const expiresAt = new Date(connection.refresh_token_expires_at)
   const now = new Date()
   return expiresAt < now

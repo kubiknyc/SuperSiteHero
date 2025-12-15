@@ -580,7 +580,7 @@ export function getDivisionName(code: string): string {
 }
 
 export function formatBidAmount(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined) return '-';
+  if (amount === null || amount === undefined) {return '-';}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -590,7 +590,7 @@ export function formatBidAmount(amount: number | null | undefined): string {
 }
 
 export function calculateBidSpread(low: number, high: number): number {
-  if (low === 0) return 0;
+  if (low === 0) {return 0;}
   return ((high - low) / low) * 100;
 }
 
@@ -610,6 +610,6 @@ export function canEditBidPackage(status: BidPackageStatus): boolean {
 }
 
 export function canSubmitBid(packageStatus: BidPackageStatus, dueDate: string): boolean {
-  if (!['published', 'questions_period', 'bids_due'].includes(packageStatus)) return false;
+  if (!['published', 'questions_period', 'bids_due'].includes(packageStatus)) {return false;}
   return getDaysUntilDue(dueDate) >= 0;
 }

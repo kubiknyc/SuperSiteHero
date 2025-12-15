@@ -207,7 +207,7 @@ export function getStoredMetrics(): WebVitalsMetrics[] {
  * Calculate average metrics
  */
 export function calculateAverageMetrics(metrics: WebVitalsMetrics[]): Partial<WebVitalsMetrics> {
-  if (metrics.length === 0) return {};
+  if (metrics.length === 0) {return {};}
 
   const sum = metrics.reduce(
     (acc, m) => ({
@@ -357,11 +357,11 @@ export async function getWebVitalsReport(): Promise<{
       if (completed === total) {
         const evaluation: MetricResult[] = [];
 
-        if (current.lcp) evaluation.push(evaluateMetric('lcp', current.lcp));
-        if (current.fid) evaluation.push(evaluateMetric('fid', current.fid));
-        if (current.cls) evaluation.push(evaluateMetric('cls', current.cls));
-        if (current.fcp) evaluation.push(evaluateMetric('fcp', current.fcp));
-        if (current.ttfb) evaluation.push(evaluateMetric('ttfb', current.ttfb));
+        if (current.lcp) {evaluation.push(evaluateMetric('lcp', current.lcp));}
+        if (current.fid) {evaluation.push(evaluateMetric('fid', current.fid));}
+        if (current.cls) {evaluation.push(evaluateMetric('cls', current.cls));}
+        if (current.fcp) {evaluation.push(evaluateMetric('fcp', current.fcp));}
+        if (current.ttfb) {evaluation.push(evaluateMetric('ttfb', current.ttfb));}
 
         resolve({ current, average, evaluation });
       }
@@ -400,11 +400,11 @@ export async function getWebVitalsReport(): Promise<{
         console.warn('Web Vitals timeout - some metrics not collected');
         // Resolve with whatever we have
         const evaluation: MetricResult[] = [];
-        if (current.lcp) evaluation.push(evaluateMetric('lcp', current.lcp));
-        if (current.fid) evaluation.push(evaluateMetric('fid', current.fid));
-        if (current.cls) evaluation.push(evaluateMetric('cls', current.cls));
-        if (current.fcp) evaluation.push(evaluateMetric('fcp', current.fcp));
-        if (current.ttfb) evaluation.push(evaluateMetric('ttfb', current.ttfb));
+        if (current.lcp) {evaluation.push(evaluateMetric('lcp', current.lcp));}
+        if (current.fid) {evaluation.push(evaluateMetric('fid', current.fid));}
+        if (current.cls) {evaluation.push(evaluateMetric('cls', current.cls));}
+        if (current.fcp) {evaluation.push(evaluateMetric('fcp', current.fcp));}
+        if (current.ttfb) {evaluation.push(evaluateMetric('ttfb', current.ttfb));}
         resolve({ current, average, evaluation });
       }
     }, 5000);

@@ -45,6 +45,15 @@ export interface ChecklistTemplate {
   estimated_duration_minutes: number | null
   scoring_enabled: boolean
 
+  // Scoring Configuration (new fields)
+  scoring_type?: 'binary' | 'percentage' | 'points' | 'letter_grade'
+  pass_threshold?: number
+  point_values?: Record<string, number>
+  grade_thresholds?: unknown[] // Array of GradeThreshold objects
+  include_na_in_total?: boolean
+  fail_on_critical?: boolean
+  critical_item_ids?: string[]
+
   // Legacy items field (JSONB) - kept for backward compatibility
   items: unknown[]
 
@@ -221,12 +230,23 @@ export interface ChecklistExecution {
   completed_by: string | null
   submitted_at: string | null
 
+  // Time Tracking
+  started_at: string | null
+  actual_duration_minutes: number | null
+  pause_count: number
+  paused_duration_minutes: number
+
   // Scoring
   score_pass: number
   score_fail: number
   score_na: number
   score_total: number
   score_percentage: number | null
+
+  // Advanced Scoring (new fields for grading system)
+  score?: number | null // Final calculated score
+  grade?: string | null // Letter grade (A-F) if using letter grade scoring
+  passed?: boolean | null // Whether checklist passed based on threshold
 
   // Link to daily report
   daily_report_id: string | null
@@ -430,4 +450,126 @@ export interface TemplateFilters {
   is_system_template?: boolean
   tags?: string[]
   search?: string
+}
+
+/**
+ * Time Tracking Types
+ */
+
+/**
+ * Pause event for checklist execution
+ */
+export interface ChecklistExecutionPause {
+  id: string
+  checklist_id: string
+  paused_at: string
+  resumed_at: string | null
+  pause_duration_minutes: number | null
+  paused_by: string | null
+  pause_reason: string | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Accuracy rating for completion time
+ */
+export type AccuracyRating = 'excellent' | 'good' | 'fair' | 'poor'
+
+/**
+ * Time analytics for a single execution
+ */
+export interface ChecklistTimeAnalytics {
+  id: string
+  project_id: string
+  checklist_template_id: string | null
+  inspector_user_id: string | null
+  name: string
+  category: string | null
+  status: ChecklistStatus
+
+  // Time tracking
+  started_at: string | null
+  completed_at: string | null
+  actual_duration_minutes: number | null
+  pause_count: number
+  paused_duration_minutes: number
+
+  // Template info
+  estimated_duration_minutes: number | null
+
+  // Calculated fields
+  variance_minutes: number | null
+  variance_percentage: number | null
+  accuracy_rating: AccuracyRating | null
+  completed_on_time: boolean | null
+
+  // Metadata
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Aggregated completion time statistics for a template
+ */
+export interface TemplateCompletionTimeStats {
+  avg_duration_minutes: number
+  median_duration_minutes: number
+  min_duration_minutes: number
+  max_duration_minutes: number
+  std_dev_minutes: number
+  total_executions: number
+  on_time_count: number
+  on_time_percentage: number
+}
+
+/**
+ * User completion time performance statistics
+ */
+export interface UserCompletionTimeStats {
+  avg_duration_minutes: number
+  total_executions: number
+  on_time_count: number
+  on_time_percentage: number
+  avg_variance_percentage: number
+}
+
+/**
+ * Time trend data point
+ */
+export interface CompletionTimeTrend {
+  date: string
+  avg_duration_minutes: number
+  execution_count: number
+  on_time_percentage: number
+}
+
+/**
+ * Time variance summary
+ */
+export interface TimeVarianceSummary {
+  faster_count: number
+  on_time_count: number
+  slower_count: number
+  avg_variance_percentage: number
+  total_executions: number
+}
+
+/**
+ * Date range filter for time analytics
+ */
+export interface TimeAnalyticsDateRange {
+  start_date: string
+  end_date: string
+}
+
+/**
+ * Time analytics filters
+ */
+export interface TimeAnalyticsFilters extends TimeAnalyticsDateRange {
+  template_id?: string
+  inspector_user_id?: string
+  project_id?: string
+  accuracy_rating?: AccuracyRating
+  completed_on_time?: boolean
 }

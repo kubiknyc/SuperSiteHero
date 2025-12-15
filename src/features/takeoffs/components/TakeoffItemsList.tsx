@@ -82,7 +82,7 @@ export function TakeoffItemsList({
 
   // Calculate measurement value
   const calculateValue = (measurement: TakeoffMeasurement): number => {
-    if (!scale) return 0
+    if (!scale) {return 0}
 
     try {
       switch (measurement.type) {

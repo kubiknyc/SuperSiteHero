@@ -21,3 +21,10 @@ export { ComplianceUploadDialog } from './ComplianceUploadDialog'
 // GC-side management components
 export { InviteSubcontractorDialog } from './InviteSubcontractorDialog'
 export { SubcontractorPortalAccessList } from './SubcontractorPortalAccessList'
+
+// Mobile Portal UI (Milestone 4.1)
+export { MobilePortalNav } from './MobilePortalNav'
+export { MyAssignments } from './MyAssignments'
+
+// Punch Item Updates (Milestone 4.2)
+export { PunchItemUpdate } from './PunchItemUpdate'

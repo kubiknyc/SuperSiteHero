@@ -132,7 +132,7 @@ export function DistributionListFormDialog({
 
   // Filter users not already members
   const availableUsers = React.useMemo(() => {
-    if (!companyUsers) return []
+    if (!companyUsers) {return []}
 
     const existingUserIds = new Set([
       ...(existingMembers || []).filter(m => m.user_id).map(m => m.user_id),
@@ -155,7 +155,7 @@ export function DistributionListFormDialog({
   // Add internal user
   const handleAddUser = (userId: string) => {
     const user = companyUsers?.find(u => u.id === userId)
-    if (!user) return
+    if (!user) {return}
 
     setPendingMembers(prev => [
       ...prev,
@@ -171,7 +171,7 @@ export function DistributionListFormDialog({
 
   // Add external contact
   const handleAddExternal = () => {
-    if (!newExternalEmail.trim()) return
+    if (!newExternalEmail.trim()) {return}
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(newExternalEmail.trim())) {
@@ -212,7 +212,7 @@ export function DistributionListFormDialog({
 
   // Remove existing member
   const handleRemoveExistingMember = async (memberId: string) => {
-    if (!list) return
+    if (!list) {return}
 
     try {
       await removeMemberMutation.mutateAsync({ memberId, listId: list.id })

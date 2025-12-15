@@ -52,14 +52,14 @@ function createEmptyMetrics(statusDate: string): EarnedValueMetrics {
  * Calculate trend direction from a series of values
  */
 function calculateTrend(values: number[]): EVMTrend {
-  if (values.length < 2) return 'stable'
+  if (values.length < 2) {return 'stable'}
 
   const n = values.length
   const recent = values.slice(-Math.min(7, n))
   const slope = (recent[recent.length - 1] - recent[0]) / recent.length
 
-  if (slope > 0.01) return 'improving'
-  if (slope < -0.01) return 'declining'
+  if (slope > 0.01) {return 'improving'}
+  if (slope < -0.01) {return 'declining'}
   return 'stable'
 }
 
@@ -113,7 +113,7 @@ function calculateSV(EV: number, PV: number): number {
  * > 1.0 = under budget, < 1.0 = over budget
  */
 function calculateCPI(EV: number, AC: number): number {
-  if (AC === 0) return EV > 0 ? Infinity : 0
+  if (AC === 0) {return EV > 0 ? Infinity : 0}
   return EV / AC
 }
 
@@ -122,7 +122,7 @@ function calculateCPI(EV: number, AC: number): number {
  * > 1.0 = ahead of schedule, < 1.0 = behind schedule
  */
 function calculateSPI(EV: number, PV: number): number {
-  if (PV === 0) return EV > 0 ? Infinity : 0
+  if (PV === 0) {return EV > 0 ? Infinity : 0}
   return EV / PV
 }
 
@@ -139,7 +139,7 @@ function calculateCSI(CPI: number, SPI: number): number {
  * Forecasted total cost based on current CPI
  */
 function calculateEAC_CPI(BAC: number, CPI: number): number {
-  if (CPI === 0) return Infinity
+  if (CPI === 0) {return Infinity}
   return BAC / CPI
 }
 
@@ -149,7 +149,7 @@ function calculateEAC_CPI(BAC: number, CPI: number): number {
  */
 function calculateEAC_CPISPI(BAC: number, EV: number, AC: number, CPI: number, SPI: number): number {
   const csiProduct = CPI * SPI
-  if (csiProduct === 0) return Infinity
+  if (csiProduct === 0) {return Infinity}
   return AC + (BAC - EV) / csiProduct
 }
 
@@ -175,7 +175,7 @@ function calculateVAC(BAC: number, EAC: number): number {
  */
 function calculateTCPI_BAC(BAC: number, EV: number, AC: number): number {
   const denominator = BAC - AC
-  if (denominator === 0) return Infinity
+  if (denominator === 0) {return Infinity}
   return (BAC - EV) / denominator
 }
 
@@ -185,7 +185,7 @@ function calculateTCPI_BAC(BAC: number, EV: number, AC: number): number {
  */
 function calculateTCPI_EAC(BAC: number, EV: number, EAC: number, AC: number): number {
   const denominator = EAC - AC
-  if (denominator === 0) return Infinity
+  if (denominator === 0) {return Infinity}
   return (BAC - EV) / denominator
 }
 
@@ -193,7 +193,7 @@ function calculateTCPI_EAC(BAC: number, EV: number, EAC: number, AC: number): nu
  * Calculate percentage variance: ((actual - baseline) / baseline) * 100
  */
 function calculatePercentVariance(actual: number, baseline: number): number {
-  if (baseline === 0) return actual !== 0 ? 100 : 0
+  if (baseline === 0) {return actual !== 0 ? 100 : 0}
   return ((actual - baseline) / baseline) * 100
 }
 
@@ -201,7 +201,7 @@ function calculatePercentVariance(actual: number, baseline: number): number {
  * Calculate percent complete: (EV / BAC) * 100
  */
 function calculatePercentComplete(EV: number, BAC: number): number {
-  if (BAC === 0) return 0
+  if (BAC === 0) {return 0}
   return (EV / BAC) * 100
 }
 
@@ -209,7 +209,7 @@ function calculatePercentComplete(EV: number, BAC: number): number {
  * Calculate percent spent: (AC / BAC) * 100
  */
 function calculatePercentSpent(AC: number, BAC: number): number {
-  if (BAC === 0) return 0
+  if (BAC === 0) {return 0}
   return (AC / BAC) * 100
 }
 
@@ -217,9 +217,9 @@ function calculatePercentSpent(AC: number, BAC: number): number {
  * Get performance status based on index value
  */
 function getPerformanceStatus(index: number): EVMPerformanceStatus {
-  if (index >= 1.0) return 'good'
-  if (index >= 0.95) return 'warning'
-  if (index >= 0.9) return 'at_risk'
+  if (index >= 1.0) {return 'good'}
+  if (index >= 0.95) {return 'warning'}
+  if (index >= 0.9) {return 'at_risk'}
   return 'critical'
 }
 

@@ -148,10 +148,10 @@ export function ChecklistsDashboardPage() {
     }
     completedWithScores.forEach((e) => {
       const score = e.score_percentage || 0
-      if (score < 50) scoreRanges['Failed (<50%)']++
-      else if (score < 70) scoreRanges['Mixed (50-69%)']++
-      else if (score < 90) scoreRanges['Passed (70-89%)']++
-      else scoreRanges['Excellent (90-100%)']++
+      if (score < 50) {scoreRanges['Failed (<50%)']++}
+      else if (score < 70) {scoreRanges['Mixed (50-69%)']++}
+      else if (score < 90) {scoreRanges['Passed (70-89%)']++}
+      else {scoreRanges['Excellent (90-100%)']++}
     })
     const scoreDistribution = Object.entries(scoreRanges).map(([name, value]) => ({
       name,

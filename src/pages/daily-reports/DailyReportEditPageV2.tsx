@@ -41,7 +41,7 @@ export function DailyReportEditPageV2() {
   // Workflow callbacks for ApprovalWorkflowPanel
   const handleSubmitForApproval = useCallback(
     async (signature: string, name: string) => {
-      if (!report?.id) return;
+      if (!report?.id) {return;}
       await submitMutation.mutateAsync({
         report_id: report.id,
         submitted_by_signature: signature,
@@ -53,7 +53,7 @@ export function DailyReportEditPageV2() {
 
   const handleApprove = useCallback(
     async (signature: string, name: string, comments?: string) => {
-      if (!report?.id) return;
+      if (!report?.id) {return;}
       await approveMutation.mutateAsync({
         report_id: report.id,
         approved_by_signature: signature,
@@ -66,7 +66,7 @@ export function DailyReportEditPageV2() {
 
   const handleRequestChanges = useCallback(
     async (reason: string) => {
-      if (!report?.id) return;
+      if (!report?.id) {return;}
       await requestChangesMutation.mutateAsync({
         report_id: report.id,
         reason,
@@ -76,7 +76,7 @@ export function DailyReportEditPageV2() {
   );
 
   const handleLock = useCallback(async () => {
-    if (!report?.id) return;
+    if (!report?.id) {return;}
     await lockMutation.mutateAsync(report.id);
   }, [report?.id, lockMutation]);
 

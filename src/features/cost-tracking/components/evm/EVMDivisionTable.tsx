@@ -44,7 +44,7 @@ function formatCurrency(value: number): string {
 }
 
 function formatIndex(value: number | null | undefined): string {
-  if (value === null || value === undefined || isNaN(value)) return '—'
+  if (value === null || value === undefined || isNaN(value)) {return '—'}
   return value.toFixed(2)
 }
 
@@ -54,11 +54,11 @@ function IndexBadge({ value, type }: { value: number | null | undefined; type: '
   }
 
   let status: EVMPerformanceStatus
-  if (value >= 1.05) status = 'excellent'
-  else if (value >= 1.0) status = 'good'
-  else if (value >= 0.95) status = 'fair'
-  else if (value >= 0.90) status = 'poor'
-  else status = 'critical'
+  if (value >= 1.05) {status = 'excellent'}
+  else if (value >= 1.0) {status = 'good'}
+  else if (value >= 0.95) {status = 'fair'}
+  else if (value >= 0.90) {status = 'poor'}
+  else {status = 'critical'}
 
   return (
     <Badge variant="secondary" className={cn('font-mono', STATUS_COLORS[status])}>

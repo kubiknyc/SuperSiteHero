@@ -50,7 +50,7 @@ export function useUpdateCompanyProfile() {
 
   return useMutation({
     mutationFn: (updates: CompanyUpdate) => {
-      if (!companyId) throw new Error('Company not found')
+      if (!companyId) {throw new Error('Company not found')}
       return companyApi.updateCompany(companyId, updates)
     },
     onSuccess: (data) => {
@@ -74,7 +74,7 @@ export function useUploadCompanyLogo() {
 
   return useMutation({
     mutationFn: (file: File) => {
-      if (!companyId) throw new Error('Company not found')
+      if (!companyId) {throw new Error('Company not found')}
       return companyApi.uploadLogo(companyId, file)
     },
     onSuccess: () => {
@@ -98,7 +98,7 @@ export function useDeleteCompanyLogo() {
 
   return useMutation({
     mutationFn: () => {
-      if (!companyId) throw new Error('Company not found')
+      if (!companyId) {throw new Error('Company not found')}
       return companyApi.deleteLogo(companyId)
     },
     onSuccess: () => {

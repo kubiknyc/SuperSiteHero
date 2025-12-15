@@ -200,11 +200,11 @@ export function useDailyReportSummaryWorkflow(reportId: string | undefined) {
     isGenerating: generateSummary.isPending,
     error: summary.error,
     generate: (forceRegenerate = false) => {
-      if (!reportId) return
+      if (!reportId) {return}
       generateSummary.mutate({ reportId, forceRegenerate })
     },
     regenerate: () => {
-      if (!reportId) return
+      if (!reportId) {return}
       generateSummary.mutate({ reportId, forceRegenerate: true })
     },
   }
@@ -224,11 +224,11 @@ export function useMeetingActionItemsWorkflow(meetingId: string | undefined) {
     isExtracting: extractItems.isPending,
     error: actionItems.error,
     extract: (forceRegenerate = false) => {
-      if (!meetingId) return
+      if (!meetingId) {return}
       extractItems.mutate({ meetingId, forceRegenerate })
     },
     reextract: () => {
-      if (!meetingId) return
+      if (!meetingId) {return}
       extractItems.mutate({ meetingId, forceRegenerate: true })
     },
     confirmItem: (actionItemId: string, assigneeId?: string) => {

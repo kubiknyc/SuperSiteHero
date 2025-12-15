@@ -63,7 +63,7 @@ export function VoiceMessageRecorder({
 
   // Send the recorded voice message
   const sendVoiceMessage = useCallback(async () => {
-    if (!recordedBlob) return
+    if (!recordedBlob) {return}
 
     setIsUploading(true)
     try {

@@ -159,7 +159,7 @@ export function ToolboxTalkFormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!validate()) return
+    if (!validate()) {return}
     if (!currentProject) {
       setErrors({ project: 'No project selected' })
       return

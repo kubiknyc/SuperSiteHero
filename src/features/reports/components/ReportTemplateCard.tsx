@@ -25,6 +25,7 @@ import {
   Calendar,
   Users,
   Lock,
+  Share2,
 } from 'lucide-react'
 import { DataSourceBadge } from './DataSourceSelector'
 import type { ReportTemplate } from '@/types/report-builder'
@@ -36,6 +37,7 @@ interface ReportTemplateCardProps {
   onDelete: (template: ReportTemplate) => void
   onRun: (template: ReportTemplate) => void
   onSchedule: (template: ReportTemplate) => void
+  onShare?: (template: ReportTemplate) => void
   className?: string
 }
 
@@ -46,6 +48,7 @@ export function ReportTemplateCard({
   onDelete,
   onRun,
   onSchedule,
+  onShare,
   className,
 }: ReportTemplateCardProps) {
   const isSystemTemplate = template.is_system_template
@@ -121,6 +124,12 @@ export function ReportTemplateCard({
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule
                 </DropdownMenuItem>
+                {onShare && (
+                  <DropdownMenuItem onClick={() => onShare(template)}>
+                    <Share2 className="h-4 w-4 mr-2" />
+                    Share
+                  </DropdownMenuItem>
+                )}
                 {canEdit && (
                   <>
                     <DropdownMenuSeparator />

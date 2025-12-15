@@ -78,8 +78,8 @@ export function RolesPermissionsPage() {
 
   // Filter custom roles
   const filteredRoles = React.useMemo(() => {
-    if (!customRoles) return [];
-    if (!searchQuery.trim()) return customRoles;
+    if (!customRoles) {return [];}
+    if (!searchQuery.trim()) {return customRoles;}
 
     const query = searchQuery.toLowerCase();
     return customRoles.filter(
@@ -102,7 +102,7 @@ export function RolesPermissionsPage() {
   };
 
   const handleDeleteConfirm = async () => {
-    if (!roleToDelete) return;
+    if (!roleToDelete) {return;}
 
     try {
       await deleteMutation.mutateAsync(roleToDelete.id);

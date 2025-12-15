@@ -77,7 +77,7 @@ export function PermitsPage() {
   const createPermit = useCreatePermit()
 
   const handleCreatePermit = async () => {
-    if (!newPermit.permit_name || !newPermit.project_id) return
+    if (!newPermit.permit_name || !newPermit.project_id) {return}
 
     try {
       await createPermit.mutateAsync({

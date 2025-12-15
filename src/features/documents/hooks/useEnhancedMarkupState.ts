@@ -53,7 +53,7 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   const reorderLayerMutation = useReorderLayer()
 
   const handleCreateLayer = useCallback((layer: Omit<MarkupLayer, 'id' | 'createdAt' | 'updatedAt'>) => {
-    if (!documentId) return
+    if (!documentId) {return}
     createLayerMutation.mutate({
       ...layer,
       documentId,
@@ -61,17 +61,17 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   }, [documentId, createLayerMutation])
 
   const handleUpdateLayer = useCallback((layerId: string, updates: Partial<MarkupLayer>) => {
-    if (!documentId) return
+    if (!documentId) {return}
     updateLayerMutation.mutate({ id: layerId, documentId, ...updates })
   }, [documentId, updateLayerMutation])
 
   const handleDeleteLayer = useCallback((layerId: string) => {
-    if (!documentId) return
+    if (!documentId) {return}
     deleteLayerMutation.mutate({ id: layerId, documentId })
   }, [documentId, deleteLayerMutation])
 
   const handleToggleLayerVisibility = useCallback((layerId: string) => {
-    if (!documentId) return
+    if (!documentId) {return}
     const layer = layers.find((l: MarkupLayer) => l.id === layerId)
     if (layer) {
       toggleVisibilityMutation.mutate({ id: layerId, documentId, visible: layer.visible })
@@ -79,7 +79,7 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   }, [documentId, layers, toggleVisibilityMutation])
 
   const handleToggleLayerLock = useCallback((layerId: string) => {
-    if (!documentId) return
+    if (!documentId) {return}
     const layer = layers.find((l: MarkupLayer) => l.id === layerId)
     if (layer) {
       toggleLockMutation.mutate({ id: layerId, documentId, locked: layer.locked })
@@ -87,7 +87,7 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   }, [documentId, layers, toggleLockMutation])
 
   const handleReorderLayer = useCallback((layerId: string, action: LayerOrderAction) => {
-    if (!documentId) return
+    if (!documentId) {return}
     reorderLayerMutation.mutate({ id: layerId, documentId, action, layers })
   }, [documentId, layers, reorderLayerMutation])
 
@@ -125,7 +125,7 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   }, [])
 
   const handleCalibrateScale = useCallback((scale: ScaleCalibration) => {
-    if (!documentId) return
+    if (!documentId) {return}
     saveCalibrationMutation.mutate({
       documentId,
       pageNumber,
@@ -140,12 +140,12 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   }, [documentId, pageNumber, currentUserId, saveCalibrationMutation])
 
   const handleDeleteMeasurement = useCallback((id: string) => {
-    if (!documentId) return
+    if (!documentId) {return}
     deleteMeasurementMutation.mutate({ id, documentId, pageNumber })
   }, [documentId, pageNumber, deleteMeasurementMutation])
 
   const handleClearAllMeasurements = useCallback(() => {
-    if (!documentId) return
+    if (!documentId) {return}
     clearMeasurementsMutation.mutate({ documentId, pageNumber })
   }, [documentId, pageNumber, clearMeasurementsMutation])
 

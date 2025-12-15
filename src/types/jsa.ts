@@ -515,7 +515,7 @@ export function canCompleteJSA(jsa: JobSafetyAnalysis): boolean {
  * Calculate overall risk level from hazards
  */
 export function calculateOverallRisk(hazards: JSAHazard[]): RiskLevel {
-  if (hazards.length === 0) return 'low';
+  if (hazards.length === 0) {return 'low';}
 
   const riskOrder: RiskLevel[] = ['low', 'medium', 'high', 'critical'];
   let maxRisk: RiskLevel = 'low';

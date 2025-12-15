@@ -636,8 +636,8 @@ export function formatWaiverAmount(amount: number): string {
  * Check if waiver is overdue
  */
 export function isWaiverOverdue(waiver: LienWaiver): boolean {
-  if (!waiver.due_date) return false;
-  if (waiver.status === 'approved' || waiver.status === 'void') return false;
+  if (!waiver.due_date) {return false;}
+  if (waiver.status === 'approved' || waiver.status === 'void') {return false;}
   return new Date(waiver.due_date) < new Date();
 }
 

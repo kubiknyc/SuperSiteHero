@@ -67,7 +67,7 @@ function getStatusLabel(status: LookAheadActivityStatus): string {
  * Format constraint for display
  */
 function formatConstraints(constraints?: LookAheadConstraint[]): string {
-  if (!constraints || constraints.length === 0) return '-'
+  if (!constraints || constraints.length === 0) {return '-'}
 
   return constraints
     .filter((c) => c.status === 'open' || c.status === 'escalated')
@@ -667,7 +667,7 @@ export function exportLookAheadToCSV(data: LookAheadExportData): void {
  * Escape CSV value
  */
 function escapeCSV(value: string): string {
-  if (!value || value === '-') return ''
+  if (!value || value === '-') {return ''}
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
     return `"${value.replace(/"/g, '""')}"`
   }

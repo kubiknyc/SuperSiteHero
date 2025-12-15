@@ -45,7 +45,7 @@ export function LocationHeatMap({
   className,
 }: LocationHeatMapProps) {
   const sortedData = useMemo(() => {
-    if (!data) return []
+    if (!data) {return []}
     return [...data]
       .sort((a, b) => (b.risk_score || b.incident_count) - (a.risk_score || a.incident_count))
       .slice(0, maxItems)
@@ -230,9 +230,9 @@ function LocationHeatMapRow({ location, maxCount, onClick }: LocationHeatMapRowP
 
 function getRiskLevel(count: number, highSeverityCount: number): ZoneRiskLevel {
   const riskScore = count + highSeverityCount * 3
-  if (riskScore >= 15) return 'critical'
-  if (riskScore >= 8) return 'high'
-  if (riskScore >= 4) return 'medium'
+  if (riskScore >= 15) {return 'critical'}
+  if (riskScore >= 8) {return 'high'}
+  if (riskScore >= 4) {return 'medium'}
   return 'low'
 }
 
@@ -372,10 +372,10 @@ export function TimeHeatMap({ data, isLoading, className }: TimeHeatMapProps) {
 }
 
 function getHeatColor(intensity: number): string {
-  if (intensity === 0) return 'bg-gray-100 dark:bg-gray-800'
-  if (intensity < 0.25) return 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200'
-  if (intensity < 0.5) return 'bg-blue-200 dark:bg-blue-800/50 text-blue-800 dark:text-blue-200'
-  if (intensity < 0.75) return 'bg-blue-400 dark:bg-blue-700/60 text-white'
+  if (intensity === 0) {return 'bg-gray-100 dark:bg-gray-800'}
+  if (intensity < 0.25) {return 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200'}
+  if (intensity < 0.5) {return 'bg-blue-200 dark:bg-blue-800/50 text-blue-800 dark:text-blue-200'}
+  if (intensity < 0.75) {return 'bg-blue-400 dark:bg-blue-700/60 text-white'}
   return 'bg-blue-600 dark:bg-blue-600 text-white'
 }
 
@@ -420,9 +420,9 @@ export function RiskScoreBadge({ score, showLabel = true, size = 'md' }: RiskSco
 }
 
 function getRiskLevelFromScore(score: number): ZoneRiskLevel {
-  if (score >= 50) return 'critical'
-  if (score >= 25) return 'high'
-  if (score >= 10) return 'medium'
+  if (score >= 50) {return 'critical'}
+  if (score >= 25) {return 'high'}
+  if (score >= 10) {return 'medium'}
   return 'low'
 }
 

@@ -108,7 +108,7 @@ export async function createPunchItemFromInspection(
  * Handles various formats: numbered lists, bullet points, line breaks
  */
 export function parseCorrectiveActions(text: string): string[] {
-  if (!text) return []
+  if (!text) {return []}
 
   // Split by common list delimiters
   const lines = text

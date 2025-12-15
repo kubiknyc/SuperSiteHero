@@ -49,7 +49,7 @@ async function fetchProjectUsers(projectId: string): Promise<ProjectUserWithDeta
     .eq('project_id', projectId)
     .order('user_id')
 
-  if (error) throw error
+  if (error) {throw error}
   return (data || []) as ProjectUserWithDetails[]
 }
 
@@ -57,7 +57,7 @@ export function useProjectUsers(projectId: string | undefined) {
   return useQuery<ProjectUserWithDetails[]>({
     queryKey: ['messaging', 'project-users', projectId],
     queryFn: () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return fetchProjectUsers(projectId)
     },
     enabled: !!projectId,

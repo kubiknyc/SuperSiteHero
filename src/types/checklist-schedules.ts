@@ -196,7 +196,7 @@ export function getDayOfWeekLabel(day: DayOfWeek): string {
 export function calculateNextExecutionDate(schedule: ChecklistSchedule): Date {
   const now = new Date()
   const startDate = new Date(schedule.start_date)
-  let nextDate = new Date(schedule.last_execution_date || schedule.start_date)
+  const nextDate = new Date(schedule.last_execution_date || schedule.start_date)
 
   // If we haven't started yet, return start date
   if (now < startDate) {

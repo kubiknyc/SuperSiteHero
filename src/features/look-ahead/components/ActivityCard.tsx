@@ -48,7 +48,7 @@ export function ActivityCard({
   const StatusIcon = statusIcons[activity.status]
 
   const formatDate = (dateStr: string | null | undefined) => {
-    if (!dateStr) return '-'
+    if (!dateStr) {return '-'}
     return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
   }
 

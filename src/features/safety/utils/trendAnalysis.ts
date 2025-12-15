@@ -25,7 +25,7 @@ import type { RootCauseCategory } from '@/types/safety-incidents'
  * Calculate mean of an array of numbers
  */
 export function calculateMean(values: number[]): number {
-  if (values.length === 0) return 0
+  if (values.length === 0) {return 0}
   return values.reduce((sum, v) => sum + v, 0) / values.length
 }
 
@@ -33,7 +33,7 @@ export function calculateMean(values: number[]): number {
  * Calculate standard deviation
  */
 export function calculateStdDev(values: number[]): number {
-  if (values.length === 0) return 0
+  if (values.length === 0) {return 0}
   const mean = calculateMean(values)
   const variance = values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length
   return Math.sqrt(variance)
@@ -43,7 +43,7 @@ export function calculateStdDev(values: number[]): number {
  * Calculate z-score for a value
  */
 export function calculateZScore(value: number, mean: number, stdDev: number): number {
-  if (stdDev === 0) return 0
+  if (stdDev === 0) {return 0}
   return (value - mean) / stdDev
 }
 
@@ -51,7 +51,7 @@ export function calculateZScore(value: number, mean: number, stdDev: number): nu
  * Calculate moving average for a series
  */
 export function calculateMovingAverage(values: number[], window: number): number[] {
-  if (values.length < window) return []
+  if (values.length < window) {return []}
 
   const result: number[] = []
   for (let i = window - 1; i < values.length; i++) {
@@ -65,7 +65,7 @@ export function calculateMovingAverage(values: number[], window: number): number
  * Calculate exponential moving average
  */
 export function calculateEMA(values: number[], alpha = 0.3): number[] {
-  if (values.length === 0) return []
+  if (values.length === 0) {return []}
 
   const result: number[] = [values[0]]
   for (let i = 1; i < values.length; i++) {
@@ -83,7 +83,7 @@ export function calculateLinearRegression(values: number[]): {
   rSquared: number
 } {
   const n = values.length
-  if (n < 2) return { slope: 0, intercept: 0, rSquared: 0 }
+  if (n < 2) {return { slope: 0, intercept: 0, rSquared: 0 }}
 
   const xMean = (n - 1) / 2
   const yMean = calculateMean(values)
@@ -123,18 +123,18 @@ export function determineTrendDirection(
   values: number[],
   threshold = 0.1
 ): TrendDirection {
-  if (values.length < 3) return 'stable'
+  if (values.length < 3) {return 'stable'}
 
   const { slope, rSquared } = calculateLinearRegression(values)
 
   // Only consider trend significant if R-squared is decent
-  if (rSquared < 0.3) return 'stable'
+  if (rSquared < 0.3) {return 'stable'}
 
   const mean = calculateMean(values)
   const normalizedSlope = mean === 0 ? 0 : slope / mean
 
-  if (normalizedSlope > threshold) return 'increasing'
-  if (normalizedSlope < -threshold) return 'decreasing'
+  if (normalizedSlope > threshold) {return 'increasing'}
+  if (normalizedSlope < -threshold) {return 'decreasing'}
   return 'stable'
 }
 
@@ -145,12 +145,12 @@ export function detectAnomalies(
   values: number[],
   threshold = 2.0
 ): Array<{ index: number; value: number; zScore: number }> {
-  if (values.length < 3) return []
+  if (values.length < 3) {return []}
 
   const mean = calculateMean(values)
   const stdDev = calculateStdDev(values)
 
-  if (stdDev === 0) return []
+  if (stdDev === 0) {return []}
 
   const anomalies: Array<{ index: number; value: number; zScore: number }> = []
 
@@ -175,7 +175,7 @@ export function detectFrequencySpikesFromTrends(
   const mean = calculateMean(counts)
   const stdDev = calculateStdDev(counts)
 
-  if (stdDev === 0) return []
+  if (stdDev === 0) {return []}
 
   return trends
     .filter(t => {
@@ -303,7 +303,7 @@ export function calculateParetoThreshold(
   for (const item of paretoData) {
     causes.push(item)
     coverage = item.cumulative_percentage
-    if (coverage >= targetPercentage) break
+    if (coverage >= targetPercentage) {break}
   }
 
   return { causes, coveragePercentage: coverage }
@@ -462,12 +462,12 @@ export function calculateSeasonalityIndex(
 
   const monthCounts: Record<number, number[]> = {}
   monthlyData.forEach(({ month, count }) => {
-    if (!monthCounts[month]) monthCounts[month] = []
+    if (!monthCounts[month]) {monthCounts[month] = []}
     monthCounts[month].push(count)
   })
 
   const overallMean = calculateMean(monthlyData.map(m => m.count))
-  if (overallMean === 0) return {}
+  if (overallMean === 0) {return {}}
 
   const indices: Record<number, number> = {}
   for (let month = 1; month <= 12; month++) {
@@ -522,9 +522,9 @@ export function calculateLocationRiskScore(
 export function categorizeRiskLevel(
   score: number
 ): 'low' | 'medium' | 'high' | 'critical' {
-  if (score >= 50) return 'critical'
-  if (score >= 25) return 'high'
-  if (score >= 10) return 'medium'
+  if (score >= 50) {return 'critical'}
+  if (score >= 25) {return 'high'}
+  if (score >= 10) {return 'medium'}
   return 'low'
 }
 

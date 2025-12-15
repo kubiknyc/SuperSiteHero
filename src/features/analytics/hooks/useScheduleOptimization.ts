@@ -88,7 +88,7 @@ export function useScheduleRecommendations(projectId: string | undefined) {
         .order('priority', { ascending: false })
         .limit(20)
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ScheduleOptimizationRecommendation[]
     },
     enabled: isEnabled && !!projectId,
@@ -119,7 +119,7 @@ export function useImplementRecommendation() {
         })
         .eq('id', recommendationId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: scheduleQueryKeys.all })
@@ -144,7 +144,7 @@ export function useDismissRecommendation() {
         .delete()
         .eq('id', recommendationId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: scheduleQueryKeys.all })
@@ -196,7 +196,7 @@ export function useScheduleOptimization(projectId: string | undefined) {
 
     // Actions
     analyze: (options?: Partial<ScheduleAnalysisRequest>) => {
-      if (!projectId) return
+      if (!projectId) {return}
       runAnalysis.mutate({
         project_id: projectId,
         ...options,

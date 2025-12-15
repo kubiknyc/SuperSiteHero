@@ -53,14 +53,14 @@ export function GloveModeToggle({
         onClick={toggleGloveMode}
         className={cn(
           'flex items-center justify-center rounded-md p-2',
-          'hover:bg-gray-100 transition-colors',
-          isGloveModeEnabled && 'bg-green-100 text-green-700',
+          'hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors',
+          isGloveModeEnabled && 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-400',
           className
         )}
         title={isGloveModeEnabled ? 'Disable Glove Mode' : 'Enable Glove Mode (larger touch targets)'}
         aria-label={isGloveModeEnabled ? 'Disable Glove Mode' : 'Enable Glove Mode'}
       >
-        <GloveIcon className={cn('h-5 w-5', isGloveModeEnabled && 'text-green-600')} />
+        <GloveIcon className={cn('h-5 w-5', isGloveModeEnabled && 'text-green-600 dark:text-green-400')} />
       </button>
     )
   }
@@ -68,11 +68,11 @@ export function GloveModeToggle({
   return (
     <div className={cn('flex items-center justify-between gap-4', className)}>
       <div className="flex items-center gap-3">
-        <GloveIcon className={cn('h-5 w-5', isGloveModeEnabled && 'text-green-600')} />
+        <GloveIcon className={cn('h-5 w-5', isGloveModeEnabled && 'text-green-600 dark:text-green-400')} />
         {showLabel && (
           <div className="flex flex-col">
             <span className="text-sm font-medium">Glove Mode</span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted-foreground">
               {isGloveModeEnabled ? 'Enabled - Larger touch targets' : 'Larger buttons for work gloves'}
             </span>
           </div>
@@ -93,13 +93,13 @@ export function GloveModeToggle({
 export function GloveModeIndicator({ className }: { className?: string }) {
   const { isGloveModeEnabled } = useGloveMode()
 
-  if (!isGloveModeEnabled) return null
+  if (!isGloveModeEnabled) {return null}
 
   return (
     <span
       className={cn(
         'inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium',
-        'bg-green-100 text-green-700 rounded-full',
+        'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-400 rounded-full',
         className
       )}
     >

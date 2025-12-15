@@ -174,7 +174,7 @@ export function ApprovalWorkflowPanel({
   const { canSubmit, canApprove, canRequestChanges, canLock } = permissions;
 
   const handleSubmit = useCallback(async () => {
-    if (!signature || !signerName.trim() || !onSubmit) return;
+    if (!signature || !signerName.trim() || !onSubmit) {return;}
 
     setProcessing(true);
     try {
@@ -190,7 +190,7 @@ export function ApprovalWorkflowPanel({
   }, [signature, signerName, onSubmit]);
 
   const handleApprove = useCallback(async () => {
-    if (!signature || !signerName.trim() || !onApprove) return;
+    if (!signature || !signerName.trim() || !onApprove) {return;}
 
     setProcessing(true);
     try {
@@ -207,7 +207,7 @@ export function ApprovalWorkflowPanel({
   }, [signature, signerName, approvalComments, onApprove]);
 
   const handleRequestChanges = useCallback(async () => {
-    if (!rejectionReasonInput.trim() || !onRequestChanges) return;
+    if (!rejectionReasonInput.trim() || !onRequestChanges) {return;}
 
     setProcessing(true);
     try {
@@ -222,7 +222,7 @@ export function ApprovalWorkflowPanel({
   }, [rejectionReasonInput, onRequestChanges]);
 
   const handleLock = useCallback(async () => {
-    if (!onLock) return;
+    if (!onLock) {return;}
 
     if (!confirm('Are you sure you want to lock this report? This action cannot be undone.')) {
       return;

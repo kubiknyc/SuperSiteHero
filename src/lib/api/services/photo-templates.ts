@@ -98,7 +98,7 @@ export async function getPhotoTemplates(
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformTemplate);
 }
 
@@ -110,7 +110,7 @@ export async function getPhotoTemplate(id: string): Promise<PhotoLocationTemplat
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {return null;}
     throw error;
   }
   return transformTemplate(data as Record<string, unknown>);
@@ -131,7 +131,7 @@ export async function createPhotoTemplate(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformTemplate(data as Record<string, unknown>);
 }
 
@@ -145,7 +145,7 @@ export async function updatePhotoTemplate(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformTemplate(data as Record<string, unknown>);
 }
 
@@ -154,7 +154,7 @@ export async function deletePhotoTemplate(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 export async function reorderPhotoTemplates(
@@ -172,7 +172,7 @@ export async function reorderPhotoTemplates(
       .eq('id', update.id)
       .eq('project_id', projectId);
 
-    if (error) throw error;
+    if (error) {throw error;}
   }
 }
 
@@ -210,7 +210,7 @@ export async function getPhotoRequirements(
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformRequirement);
 }
 
@@ -221,7 +221,7 @@ export async function getPhotoRequirement(id: string): Promise<PhotoRequirementW
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {return null;}
     throw error;
   }
   return transformRequirement(data as Record<string, unknown>) as PhotoRequirementWithTemplate;
@@ -238,7 +238,7 @@ export async function generateDailyRequirements(
     p_date: targetDate,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
   return {
     generated: (data as number) || 0,
     date: targetDate,
@@ -257,11 +257,11 @@ export async function completePhotoRequirement(
     p_user_id: user?.user?.id,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Fetch updated requirement
   const requirement = await getPhotoRequirement(requirementId);
-  if (!requirement) throw new Error('Requirement not found after completion');
+  if (!requirement) {throw new Error('Requirement not found after completion');}
 
   return requirement;
 }
@@ -283,7 +283,7 @@ export async function skipPhotoRequirement(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRequirement(data as Record<string, unknown>);
 }
 
@@ -306,7 +306,7 @@ export async function reviewPhotoRequirement(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRequirement(data as Record<string, unknown>);
 }
 
@@ -325,7 +325,7 @@ export async function getPhotoCompletionStats(
     p_end_date: endDate,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   const rows = data as Array<{
     total_required: number;
@@ -398,7 +398,7 @@ export async function getProgressSeries(projectId: string): Promise<PhotoProgres
     .is('deleted_at', null)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map((row) => toCamelCase<PhotoProgressSeries>(row));
 }
 
@@ -417,7 +417,7 @@ export async function createProgressSeries(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<PhotoProgressSeries>(data as Record<string, unknown>);
 }
 
@@ -427,7 +427,7 @@ export async function addPhotoToSeries(seriesId: string, photoId: string): Promi
     .eq('id', seriesId)
     .single();
 
-  if (!series) throw new Error('Series not found');
+  if (!series) {throw new Error('Series not found');}
 
   const seriesData = series as { photo_ids?: string[] };
   const photoIds = [...(seriesData.photo_ids || []), photoId];
@@ -436,7 +436,7 @@ export async function addPhotoToSeries(seriesId: string, photoId: string): Promi
     .update({ photo_ids: photoIds })
     .eq('id', seriesId);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 export async function getLocationProgressTimeline(
@@ -445,7 +445,7 @@ export async function getLocationProgressTimeline(
 ): Promise<LocationProgressTimeline> {
   // Get template info
   const template = await getPhotoTemplate(templateId);
-  if (!template) throw new Error('Template not found');
+  if (!template) {throw new Error('Template not found');}
 
   // Get all completed requirements for this template
   const requirements = (await getPhotoRequirements({
@@ -506,7 +506,7 @@ export async function getLocationProgressTimeline(
 
 export async function markOverdueRequirements(): Promise<number> {
   const { data, error } = await callRpc('mark_overdue_photo_requirements');
-  if (error) throw error;
+  if (error) {throw error;}
   return (data as number) || 0;
 }
 
@@ -515,7 +515,7 @@ export async function duplicateTemplate(
   newName: string
 ): Promise<PhotoLocationTemplate> {
   const original = await getPhotoTemplate(templateId);
-  if (!original) throw new Error('Template not found');
+  if (!original) {throw new Error('Template not found');}
 
   const { id, createdAt, updatedAt, createdBy, deletedAt, ...rest } = original;
 
@@ -539,6 +539,6 @@ export async function bulkCreateTemplates(
     .insert(insertData)
     .select();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformTemplate);
 }

@@ -56,7 +56,7 @@ export function useDocumentLayers(documentId: string | undefined) {
   return useQuery({
     queryKey: ['layers', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await db
         .from('document_markup_layers')
@@ -65,7 +65,7 @@ export function useDocumentLayers(documentId: string | undefined) {
         .is('deleted_at', null)
         .order('order_index', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).map(dbToMarkupLayer)
     },
     enabled: !!documentId,
@@ -81,7 +81,7 @@ export function useCreateLayer() {
 
   return useMutation({
     mutationFn: async (layer: Omit<MarkupLayer, 'id' | 'createdAt' | 'updatedAt'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await db
         .from('document_markup_layers')
@@ -99,7 +99,7 @@ export function useCreateLayer() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return dbToMarkupLayer(data)
     },
     onSuccess: (data) => {
@@ -134,7 +134,7 @@ export function useUpdateLayer() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { ...dbToMarkupLayer(data), documentId }
     },
     onSuccess: (data) => {
@@ -156,7 +156,7 @@ export function useDeleteLayer() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return { id, documentId }
     },
     onSuccess: (data) => {
@@ -188,7 +188,7 @@ export function useToggleLayerVisibility() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { ...dbToMarkupLayer(data), documentId }
     },
     onSuccess: (data) => {
@@ -220,7 +220,7 @@ export function useToggleLayerLock() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { ...dbToMarkupLayer(data), documentId }
     },
     onSuccess: (data) => {
@@ -248,7 +248,7 @@ export function useReorderLayer() {
       layers: MarkupLayer[]
     }) => {
       const currentIndex = layers.findIndex(l => l.id === id)
-      if (currentIndex === -1) throw new Error('Layer not found')
+      if (currentIndex === -1) {throw new Error('Layer not found')}
 
       let newIndex: number
       switch (action) {
@@ -299,7 +299,7 @@ export function useCreateDefaultLayer() {
   const { userProfile } = useAuth()
 
   return async (documentId: string) => {
-    if (!userProfile?.id) throw new Error('User not authenticated')
+    if (!userProfile?.id) {throw new Error('User not authenticated')}
 
     return createLayer.mutateAsync({
       documentId,

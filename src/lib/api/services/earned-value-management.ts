@@ -560,15 +560,15 @@ function createEmptyMetrics(statusDate: string): EarnedValueMetrics {
 }
 
 function calculateTrend(values: number[]): EVMTrend {
-  if (values.length < 2) return 'stable'
+  if (values.length < 2) {return 'stable'}
 
   // Use linear regression to determine trend
   const n = values.length
   const recent = values.slice(-Math.min(7, n))
   const slope = (recent[recent.length - 1] - recent[0]) / recent.length
 
-  if (slope > 0.01) return 'improving'
-  if (slope < -0.01) return 'declining'
+  if (slope > 0.01) {return 'improving'}
+  if (slope < -0.01) {return 'declining'}
   return 'stable'
 }
 

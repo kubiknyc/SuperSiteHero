@@ -211,7 +211,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
 
   // Form submit
   const onSubmit = async (data: ScheduleFormData) => {
-    if (!companyId) return
+    if (!companyId) {return}
 
     try {
       if (scheduleId) {

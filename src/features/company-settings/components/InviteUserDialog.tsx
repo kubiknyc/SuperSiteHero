@@ -43,7 +43,7 @@ export function InviteUserDialog({ open, onOpenChange }: InviteUserDialogProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!email) return
+    if (!email) {return}
 
     await inviteMutation.mutateAsync({
       email,

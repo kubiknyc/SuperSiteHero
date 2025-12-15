@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS evm_snapshots (
 
   -- Metadata
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES user_profiles(id),
+  created_by UUID REFERENCES users(id),
 
   -- Unique constraint for one snapshot per project per date
   CONSTRAINT unique_project_snapshot_date UNIQUE (project_id, status_date)
@@ -599,13 +599,13 @@ ALTER TABLE evm_snapshots ENABLE ROW LEVEL SECURITY;
 CREATE POLICY evm_snapshots_select_policy ON evm_snapshots
   FOR SELECT USING (
     EXISTS (
-      SELECT 1 FROM project_members pm
+      SELECT 1 FROM project_users pm
       WHERE pm.project_id = evm_snapshots.project_id
         AND pm.user_id = auth.uid()
     )
     OR
     EXISTS (
-      SELECT 1 FROM user_profiles up
+      SELECT 1 FROM users up
       WHERE up.id = auth.uid()
         AND up.company_id = evm_snapshots.company_id
         AND up.role IN ('owner', 'admin', 'project_manager')
@@ -616,7 +616,7 @@ CREATE POLICY evm_snapshots_select_policy ON evm_snapshots
 CREATE POLICY evm_snapshots_insert_policy ON evm_snapshots
   FOR INSERT WITH CHECK (
     EXISTS (
-      SELECT 1 FROM user_profiles up
+      SELECT 1 FROM users up
       WHERE up.id = auth.uid()
         AND up.company_id = evm_snapshots.company_id
         AND up.role IN ('owner', 'admin', 'project_manager')
@@ -626,7 +626,7 @@ CREATE POLICY evm_snapshots_insert_policy ON evm_snapshots
 CREATE POLICY evm_snapshots_update_policy ON evm_snapshots
   FOR UPDATE USING (
     EXISTS (
-      SELECT 1 FROM user_profiles up
+      SELECT 1 FROM users up
       WHERE up.id = auth.uid()
         AND up.company_id = evm_snapshots.company_id
         AND up.role IN ('owner', 'admin', 'project_manager')

@@ -138,7 +138,7 @@ export function DistributionListsPage() {
   }
 
   const handleDeleteConfirm = async () => {
-    if (!listToDelete) return
+    if (!listToDelete) {return}
 
     try {
       await deleteMutation.mutateAsync(listToDelete.id)

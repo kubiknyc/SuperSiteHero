@@ -412,7 +412,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
         })
         .eq('id', linkId)
 
-      if (error) throw error
+      if (error) {throw error}
     } else {
       // Remove incorrect link
       const { error } = await (supabase as any)
@@ -420,7 +420,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
         .delete()
         .eq('id', linkId)
 
-      if (error) throw error
+      if (error) {throw error}
     }
   },
 
@@ -434,7 +434,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
       .eq('document_id', documentId)
       .order('confidence', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return data || []
   },
 
@@ -450,7 +450,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
       .limit(1)
       .single()
 
-    if (error && error.code !== 'PGRST116') throw error
+    if (error && error.code !== 'PGRST116') {throw error}
     return data
   },
 

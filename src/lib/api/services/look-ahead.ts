@@ -106,7 +106,7 @@ export async function getLookAheadActivities(
 
   const { data, error } = await query
 
-  if (error) throw error
+  if (error) {throw error}
 
   // Get constraint counts
   const activityIds = (data || []).map((a: { id: string }) => a.id)
@@ -159,7 +159,7 @@ export async function getActivitiesForWeek(
     .order('priority', { ascending: false })
     .order('planned_start_date', { ascending: true })
 
-  if (error) throw error
+  if (error) {throw error}
 
   // Get constraint counts
   const activityIds = (data || []).map((a: { id: string }) => a.id)
@@ -219,7 +219,7 @@ export async function getActivitiesByWeek(
     .order('priority', { ascending: false })
     .order('planned_start_date', { ascending: true })
 
-  if (error) throw error
+  if (error) {throw error}
 
   // Get constraint counts
   const activityIds = (data || []).map((a: { id: string }) => a.id)
@@ -288,7 +288,7 @@ export async function getLookAheadActivity(
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     throw error
   }
 
@@ -342,7 +342,7 @@ export async function createLookAheadActivity(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return data
 }
 
@@ -383,7 +383,7 @@ export async function updateLookAheadActivity(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return data
 }
 
@@ -408,7 +408,7 @@ export async function moveActivityToWeek(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return data
 }
 
@@ -449,7 +449,7 @@ export async function updateActivityStatus(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return data
 }
 
@@ -465,7 +465,7 @@ export async function deleteLookAheadActivity(activityId: string): Promise<void>
     })
     .eq('id', activityId)
 
-  if (error) throw error
+  if (error) {throw error}
 }
 
 // =============================================
@@ -504,7 +504,7 @@ export async function getActivityConstraints(
     .eq('activity_id', activityId)
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {throw error}
 
   return (data || []).map((constraint: DbLookAheadConstraint) => ({
     ...constraint,
@@ -548,7 +548,7 @@ export async function getProjectOpenConstraints(
     .eq('status', 'open')
     .order('expected_resolution_date', { ascending: true })
 
-  if (error) throw error
+  if (error) {throw error}
 
   return (data || []).map((constraint: DbLookAheadConstraint) => ({
     ...constraint,
@@ -579,7 +579,7 @@ export async function createLookAheadConstraint(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
 
   // Update activity status if it has open constraints
   await supabaseUntyped
@@ -621,7 +621,7 @@ export async function updateLookAheadConstraint(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
 
   // Check if activity should be unblocked
   if (dto.status === 'resolved' || dto.status === 'waived') {
@@ -667,7 +667,7 @@ export async function deleteLookAheadConstraint(constraintId: string): Promise<v
 
   const { error } = await supabaseUntyped.from('look_ahead_constraints').delete().eq('id', constraintId)
 
-  if (error) throw error
+  if (error) {throw error}
 
   // Check if activity should be unblocked
   if (constraint) {
@@ -713,7 +713,7 @@ export async function getLookAheadSnapshots(
 
   const { data, error } = await query
 
-  if (error) throw error
+  if (error) {throw error}
   return data || []
 }
 
@@ -748,10 +748,10 @@ export async function createLookAheadSnapshot(
     if (activity.status !== 'cancelled') {
       counts.planned++
     }
-    if (activity.status === 'completed') counts.completed++
-    if (activity.status === 'delayed') counts.delayed++
-    if (activity.status === 'blocked') counts.blocked++
-    if (activity.status === 'cancelled') counts.cancelled++
+    if (activity.status === 'completed') {counts.completed++}
+    if (activity.status === 'delayed') {counts.delayed++}
+    if (activity.status === 'blocked') {counts.blocked++}
+    if (activity.status === 'cancelled') {counts.cancelled++}
   }
 
   // Get constraint counts
@@ -805,7 +805,7 @@ export async function createLookAheadSnapshot(
     .select()
     .single()
 
-  if (error) throw error
+  if (error) {throw error}
   return data
 }
 
@@ -876,7 +876,7 @@ export async function getLookAheadTemplates(
 
   const { data, error } = await query
 
-  if (error) throw error
+  if (error) {throw error}
   return data || []
 }
 
@@ -896,7 +896,7 @@ export async function createActivityFromTemplate(
     .eq('id', templateId)
     .single()
 
-  if (templateError) throw templateError
+  if (templateError) {throw templateError}
 
   const today = new Date()
   const startDate = overrides?.planned_start_date || today.toISOString().split('T')[0]

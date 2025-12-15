@@ -749,7 +749,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
   const drawingsByDiscipline = selectedDrawings.reduce((acc, drawing) => {
     const discipline = DRAWING_DISCIPLINES.find((d) => d.value === drawing.discipline);
     const label = discipline?.label || 'Other';
-    if (!acc[label]) acc[label] = [];
+    if (!acc[label]) {acc[label] = [];}
     acc[label].push(drawing);
     return acc;
   }, {} as Record<string, Drawing[]>);

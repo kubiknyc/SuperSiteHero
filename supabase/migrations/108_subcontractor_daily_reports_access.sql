@@ -46,32 +46,31 @@ SELECT
   dr.created_at,
   dr.updated_at,
   p.name as project_name,
-  p.number as project_number,
-  up.full_name as reporter_name,
+  CONCAT(up.first_name, ' ', up.last_name) as reporter_name,
   -- Subcontractor-relevant data (filtered)
   (
     SELECT COUNT(*)
-    FROM daily_report_workforce_v2 drw
+    FROM daily_report_workforce drw
     WHERE drw.daily_report_id = dr.id
   ) as workforce_count,
   (
     SELECT COUNT(*)
-    FROM daily_report_equipment_v2 dre
+    FROM daily_report_equipment dre
     WHERE dre.daily_report_id = dr.id
   ) as equipment_count,
   (
     SELECT COUNT(*)
-    FROM daily_report_deliveries_v2 drd
+    FROM daily_report_deliveries drd
     WHERE drd.daily_report_id = dr.id
   ) as deliveries_count,
   (
     SELECT COUNT(*)
-    FROM daily_report_photos_v2 drp
+    FROM daily_report_photos drp
     WHERE drp.daily_report_id = dr.id
   ) as photos_count
-FROM daily_reports_v2 dr
+FROM daily_reports dr
 JOIN projects p ON dr.project_id = p.id
-LEFT JOIN user_profiles up ON dr.reporter_id = up.id
+LEFT JOIN users up ON dr.reporter_id = up.id
 WHERE dr.deleted_at IS NULL
   AND dr.status IN ('submitted', 'approved'); -- Only show submitted/approved reports
 
@@ -265,7 +264,7 @@ AS $$
 BEGIN
   -- Verify access first
   IF NOT EXISTS (
-    SELECT 1 FROM daily_reports_v2 dr
+    SELECT 1 FROM daily_reports dr
     JOIN subcontractor_portal_access spa ON spa.project_id = dr.project_id
     WHERE dr.id = p_report_id
       AND spa.subcontractor_id = p_subcontractor_id
@@ -284,7 +283,7 @@ BEGIN
     w.hours_worked,
     w.work_description,
     COALESCE(s.company_name, w.company_name) as company_name
-  FROM daily_report_workforce_v2 w
+  FROM daily_report_workforce w
   LEFT JOIN subcontractors s ON w.subcontractor_id = s.id
   WHERE w.daily_report_id = p_report_id
   ORDER BY w.crew_name;
@@ -314,7 +313,7 @@ AS $$
 BEGIN
   -- Verify access first
   IF NOT EXISTS (
-    SELECT 1 FROM daily_reports_v2 dr
+    SELECT 1 FROM daily_reports dr
     JOIN subcontractor_portal_access spa ON spa.project_id = dr.project_id
     WHERE dr.id = p_report_id
       AND spa.subcontractor_id = p_subcontractor_id
@@ -333,7 +332,7 @@ BEGIN
     e.hours_used,
     e.operator_name,
     e.notes
-  FROM daily_report_equipment_v2 e
+  FROM daily_report_equipment e
   WHERE e.daily_report_id = p_report_id
   ORDER BY e.equipment_name;
 END;
@@ -361,7 +360,7 @@ AS $$
 BEGIN
   -- Verify access first
   IF NOT EXISTS (
-    SELECT 1 FROM daily_reports_v2 dr
+    SELECT 1 FROM daily_reports dr
     JOIN subcontractor_portal_access spa ON spa.project_id = dr.project_id
     WHERE dr.id = p_report_id
       AND spa.subcontractor_id = p_subcontractor_id
@@ -379,7 +378,7 @@ BEGIN
     p.category,
     p.taken_at,
     p.location
-  FROM daily_report_photos_v2 p
+  FROM daily_report_photos p
   WHERE p.daily_report_id = p_report_id
   ORDER BY p.taken_at DESC NULLS LAST;
 END;

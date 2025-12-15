@@ -101,7 +101,7 @@ export async function getReportTemplate(id: string): Promise<ReportTemplate | nu
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     logger.error('[ReportBuilder] Error fetching template:', error)
     throw error
   }
@@ -148,14 +148,14 @@ export async function createReportTemplate(input: CreateReportTemplateDTO): Prom
 export async function updateReportTemplate(id: string, input: UpdateReportTemplateDTO): Promise<ReportTemplate> {
   const updates: Record<string, unknown> = {}
 
-  if (input.name !== undefined) updates.name = input.name.trim()
-  if (input.description !== undefined) updates.description = input.description?.trim() || null
-  if (input.is_shared !== undefined) updates.is_shared = input.is_shared
-  if (input.configuration !== undefined) updates.configuration = input.configuration
-  if (input.default_format !== undefined) updates.default_format = input.default_format
-  if (input.page_orientation !== undefined) updates.page_orientation = input.page_orientation
-  if (input.include_charts !== undefined) updates.include_charts = input.include_charts
-  if (input.include_summary !== undefined) updates.include_summary = input.include_summary
+  if (input.name !== undefined) {updates.name = input.name.trim()}
+  if (input.description !== undefined) {updates.description = input.description?.trim() || null}
+  if (input.is_shared !== undefined) {updates.is_shared = input.is_shared}
+  if (input.configuration !== undefined) {updates.configuration = input.configuration}
+  if (input.default_format !== undefined) {updates.default_format = input.default_format}
+  if (input.page_orientation !== undefined) {updates.page_orientation = input.page_orientation}
+  if (input.include_charts !== undefined) {updates.include_charts = input.include_charts}
+  if (input.include_summary !== undefined) {updates.include_summary = input.include_summary}
 
   const { data, error } = await supabaseUntyped
     .from('report_templates')
@@ -274,7 +274,7 @@ export async function setTemplateFields(templateId: string, fields: ReportTempla
     .delete()
     .eq('template_id', templateId)
 
-  if (fields.length === 0) return []
+  if (fields.length === 0) {return []}
 
   // Insert new fields
   const { data, error } = await supabaseUntyped
@@ -314,7 +314,7 @@ export async function setTemplateFilters(templateId: string, filters: ReportTemp
     .delete()
     .eq('template_id', templateId)
 
-  if (filters.length === 0) return []
+  if (filters.length === 0) {return []}
 
   // Insert new filters
   const { data, error } = await supabaseUntyped
@@ -354,7 +354,7 @@ export async function setTemplateSorting(templateId: string, sorting: ReportTemp
     .delete()
     .eq('template_id', templateId)
 
-  if (sorting.length === 0) return []
+  if (sorting.length === 0) {return []}
 
   // Insert new sorting
   const { data, error } = await supabaseUntyped
@@ -389,7 +389,7 @@ export async function setTemplateGrouping(templateId: string, grouping: ReportTe
     .delete()
     .eq('template_id', templateId)
 
-  if (grouping.length === 0) return []
+  if (grouping.length === 0) {return []}
 
   // Insert new grouping
   const { data, error } = await supabaseUntyped
@@ -474,7 +474,7 @@ export async function getScheduledReport(id: string): Promise<ScheduledReport | 
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     logger.error('[ReportBuilder] Error fetching scheduled report:', error)
     throw error
   }
@@ -526,19 +526,19 @@ export async function createScheduledReport(input: CreateScheduledReportDTO): Pr
 export async function updateScheduledReport(id: string, input: UpdateScheduledReportDTO): Promise<ScheduledReport> {
   const updates: Record<string, unknown> = {}
 
-  if (input.name !== undefined) updates.name = input.name.trim()
-  if (input.description !== undefined) updates.description = input.description?.trim() || null
-  if (input.frequency !== undefined) updates.frequency = input.frequency
-  if (input.day_of_week !== undefined) updates.day_of_week = input.day_of_week
-  if (input.day_of_month !== undefined) updates.day_of_month = input.day_of_month
-  if (input.time_of_day !== undefined) updates.time_of_day = input.time_of_day
-  if (input.timezone !== undefined) updates.timezone = input.timezone
-  if (input.output_format !== undefined) updates.output_format = input.output_format
-  if (input.recipients !== undefined) updates.recipients = input.recipients
-  if (input.email_subject !== undefined) updates.email_subject = input.email_subject
-  if (input.email_body !== undefined) updates.email_body = input.email_body
-  if (input.project_id !== undefined) updates.project_id = input.project_id
-  if (input.is_active !== undefined) updates.is_active = input.is_active
+  if (input.name !== undefined) {updates.name = input.name.trim()}
+  if (input.description !== undefined) {updates.description = input.description?.trim() || null}
+  if (input.frequency !== undefined) {updates.frequency = input.frequency}
+  if (input.day_of_week !== undefined) {updates.day_of_week = input.day_of_week}
+  if (input.day_of_month !== undefined) {updates.day_of_month = input.day_of_month}
+  if (input.time_of_day !== undefined) {updates.time_of_day = input.time_of_day}
+  if (input.timezone !== undefined) {updates.timezone = input.timezone}
+  if (input.output_format !== undefined) {updates.output_format = input.output_format}
+  if (input.recipients !== undefined) {updates.recipients = input.recipients}
+  if (input.email_subject !== undefined) {updates.email_subject = input.email_subject}
+  if (input.email_body !== undefined) {updates.email_body = input.email_body}
+  if (input.project_id !== undefined) {updates.project_id = input.project_id}
+  if (input.is_active !== undefined) {updates.is_active = input.is_active}
 
   const { data, error } = await supabaseUntyped
     .from('scheduled_reports')
@@ -657,7 +657,7 @@ export async function getGeneratedReport(id: string): Promise<GeneratedReport | 
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     logger.error('[ReportBuilder] Error fetching generated report:', error)
     throw error
   }

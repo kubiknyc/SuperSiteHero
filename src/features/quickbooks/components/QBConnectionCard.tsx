@@ -61,7 +61,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
   }
 
   const handleDisconnect = async () => {
-    if (!status?.connectionId) return
+    if (!status?.connectionId) {return}
     try {
       await disconnect.mutateAsync(status.connectionId)
       onConnectionChange?.()
@@ -71,7 +71,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
   }
 
   const handleAutoSyncToggle = async (enabled: boolean) => {
-    if (!status?.connectionId) return
+    if (!status?.connectionId) {return}
     try {
       await updateConnection.mutateAsync({
         connectionId: status.connectionId,
@@ -83,7 +83,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
   }
 
   const handleSyncFrequencyChange = async (hours: string) => {
-    if (!status?.connectionId) return
+    if (!status?.connectionId) {return}
     try {
       await updateConnection.mutateAsync({
         connectionId: status.connectionId,
@@ -95,7 +95,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
   }
 
   const handleRefreshToken = async () => {
-    if (!status?.connectionId) return
+    if (!status?.connectionId) {return}
     try {
       await refreshToken.mutateAsync(status.connectionId)
     } catch (error) {

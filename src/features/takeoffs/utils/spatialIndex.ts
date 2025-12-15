@@ -50,10 +50,10 @@ export class TakeoffSpatialIndex {
 
     for (let i = 1; i < points.length; i++) {
       const point = points[i]
-      if (point.x < minX) minX = point.x
-      if (point.y < minY) minY = point.y
-      if (point.x > maxX) maxX = point.x
-      if (point.y > maxY) maxY = point.y
+      if (point.x < minX) {minX = point.x}
+      if (point.y < minY) {minY = point.y}
+      if (point.x > maxX) {maxX = point.x}
+      if (point.y > maxY) {maxY = point.y}
     }
 
     return { minX, minY, maxX, maxY }
@@ -238,10 +238,10 @@ export function mergeBounds(boxes: BoundingBox[]): BoundingBox {
 
   for (let i = 1; i < boxes.length; i++) {
     const box = boxes[i]
-    if (box.minX < minX) minX = box.minX
-    if (box.minY < minY) minY = box.minY
-    if (box.maxX > maxX) maxX = box.maxX
-    if (box.maxY > maxY) maxY = box.maxY
+    if (box.minX < minX) {minX = box.minX}
+    if (box.minY < minY) {minY = box.minY}
+    if (box.maxX > maxX) {maxX = box.maxX}
+    if (box.maxY > maxY) {maxY = box.maxY}
   }
 
   return { minX, minY, maxX, maxY }

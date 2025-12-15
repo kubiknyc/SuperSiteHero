@@ -199,10 +199,10 @@ describe('Aging Calculation Logic', () => {
 
   describe('Bucket Assignment', () => {
     function getAgingBucket(daysOutstanding: number): AgingBucket {
-      if (daysOutstanding <= 0) return 'current'
-      if (daysOutstanding <= 30) return '1-30'
-      if (daysOutstanding <= 60) return '31-60'
-      if (daysOutstanding <= 90) return '61-90'
+      if (daysOutstanding <= 0) {return 'current'}
+      if (daysOutstanding <= 30) {return '1-30'}
+      if (daysOutstanding <= 60) {return '31-60'}
+      if (daysOutstanding <= 90) {return '61-90'}
       return '90+'
     }
 
@@ -312,9 +312,9 @@ describe('Aging Calculation Logic', () => {
       daysOutstanding: number,
       config: AlertConfig
     ): 'info' | 'warning' | 'critical' | null {
-      if (daysOutstanding >= config.critical_at_days) return 'critical'
-      if (daysOutstanding >= config.warn_at_days) return 'warning'
-      if (daysOutstanding > 0) return 'info'
+      if (daysOutstanding >= config.critical_at_days) {return 'critical'}
+      if (daysOutstanding >= config.warn_at_days) {return 'warning'}
+      if (daysOutstanding > 0) {return 'info'}
       return null
     }
 
@@ -379,8 +379,8 @@ describe('Aging Calculation Logic', () => {
         currentDSO: number,
         targetDSO: number
       ): 'improving' | 'stable' | 'worsening' {
-        if (currentDSO < targetDSO) return 'improving'
-        if (currentDSO === targetDSO) return 'stable'
+        if (currentDSO < targetDSO) {return 'improving'}
+        if (currentDSO === targetDSO) {return 'stable'}
         return 'worsening'
       }
 

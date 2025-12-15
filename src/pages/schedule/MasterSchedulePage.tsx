@@ -128,7 +128,7 @@ export function MasterSchedulePage() {
 
   // Map stats to format expected by GanttChart
   const ganttStats = useMemo(() => {
-    if (!stats) return undefined
+    if (!stats) {return undefined}
     return {
       total_tasks: stats.total_activities,
       completed_tasks: stats.completed_activities,
@@ -173,7 +173,7 @@ export function MasterSchedulePage() {
 
   // Handle save baseline
   const handleSaveBaseline = useCallback(async () => {
-    if (!projectId) return
+    if (!projectId) {return}
 
     setIsSavingBaseline(true)
     try {
@@ -192,7 +192,7 @@ export function MasterSchedulePage() {
   // Handle clear/change baseline
   const handleChangeBaseline = useCallback(
     async (baseline: ScheduleBaseline) => {
-      if (!projectId) return
+      if (!projectId) {return}
       await setActiveBaseline.mutateAsync({
         baselineId: baseline.id,
         projectId,
@@ -211,7 +211,7 @@ export function MasterSchedulePage() {
 
   // Handle clear baseline
   const handleClearBaseline = useCallback(async () => {
-    if (!projectId) return
+    if (!projectId) {return}
     await clearBaseline.mutateAsync(projectId)
     setSelectedBaselineId(null)
     await refetch()
@@ -227,7 +227,7 @@ export function MasterSchedulePage() {
   // Handle activity update submission
   const handleActivityUpdate = useCallback(
     async (data: CreateScheduleActivityDTO | UpdateScheduleActivityDTO) => {
-      if (!editingActivity) return
+      if (!editingActivity) {return}
       await updateActivityWithNotification.mutateAsync({
         activityId: editingActivity.id,
         updates: data as UpdateScheduleActivityDTO,
@@ -240,7 +240,7 @@ export function MasterSchedulePage() {
 
   // Handle PDF export
   const handleExportPdf = useCallback(async () => {
-    if (!project) return
+    if (!project) {return}
     await exportScheduleToPdf({
       projectName: project.name,
       projectNumber: project.project_number ?? undefined,
@@ -556,7 +556,7 @@ export function MasterSchedulePage() {
           open={showEditDialog}
           onOpenChange={(open) => {
             setShowEditDialog(open)
-            if (!open) setEditingActivity(null)
+            if (!open) {setEditingActivity(null)}
           }}
           activity={editingActivity}
           projectId={projectId!}

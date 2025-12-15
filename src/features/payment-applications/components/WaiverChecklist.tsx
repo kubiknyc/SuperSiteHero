@@ -139,10 +139,10 @@ export function WaiverChecklist({
 
   // Determine overall status
   const getOverallStatus = () => {
-    if (totalWaivers === 0) return { label: 'No Waivers', color: 'gray', icon: Circle }
-    if (approvedWaivers === totalWaivers) return { label: 'All Complete', color: 'green', icon: CheckCircle2 }
-    if (overdueWaivers > 0) return { label: `${overdueWaivers} Overdue`, color: 'red', icon: AlertTriangle }
-    if (pendingWaivers > 0) return { label: `${pendingWaivers} Pending`, color: 'yellow', icon: Clock }
+    if (totalWaivers === 0) {return { label: 'No Waivers', color: 'gray', icon: Circle }}
+    if (approvedWaivers === totalWaivers) {return { label: 'All Complete', color: 'green', icon: CheckCircle2 }}
+    if (overdueWaivers > 0) {return { label: `${overdueWaivers} Overdue`, color: 'red', icon: AlertTriangle }}
+    if (pendingWaivers > 0) {return { label: `${pendingWaivers} Pending`, color: 'yellow', icon: Clock }}
     return { label: 'In Progress', color: 'blue', icon: Clock }
   }
 

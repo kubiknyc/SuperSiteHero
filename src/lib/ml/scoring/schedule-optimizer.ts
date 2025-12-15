@@ -217,11 +217,11 @@ export const scheduleOptimizer = {
 
       for (const succId of current.successors) {
         const succ = activityMap.get(succId)
-        if (!succ) continue
+        if (!succ) {continue}
 
         // Check if all predecessors processed
         const allPredsProcessed = succ.predecessors.every(p => processed.has(p))
-        if (!allPredsProcessed) continue
+        if (!allPredsProcessed) {continue}
 
         // Calculate early start as max of all predecessor early finishes
         const es = Math.max(
@@ -246,7 +246,7 @@ export const scheduleOptimizer = {
 
     for (const act of endActivities) {
       const early = earlyTimes.get(act.id)
-      if (!early) continue
+      if (!early) {continue}
       lateTimes.set(act.id, {
         ls: projectDuration - act.duration_days,
         lf: projectDuration,
@@ -264,11 +264,11 @@ export const scheduleOptimizer = {
 
       for (const predId of current.predecessors) {
         const pred = activityMap.get(predId)
-        if (!pred) continue
+        if (!pred) {continue}
 
         // Check if all successors processed
         const allSuccsProcessed = pred.successors.every(s => reverseProcessed.has(s))
-        if (!allSuccsProcessed) continue
+        if (!allSuccsProcessed) {continue}
 
         // Calculate late finish as min of all successor late starts
         const lf = Math.min(
@@ -299,7 +299,7 @@ export const scheduleOptimizer = {
       const late = lateTimes.get(act.id)
       const early = earlyTimes.get(act.id)
 
-      if (!late || !early) continue
+      if (!late || !early) {continue}
 
       if (late.totalFloat <= 0) {
         const startDate = new Date()
@@ -356,7 +356,7 @@ export const scheduleOptimizer = {
     const criticalIds = new Set(criticalPath.activities.map(a => a.id))
 
     for (const [id, activity] of activityMap) {
-      if (criticalIds.has(id)) continue
+      if (criticalIds.has(id)) {continue}
 
       // Activities not on critical path have float
       // Estimate potential float from activity position
@@ -391,7 +391,7 @@ export const scheduleOptimizer = {
 
     for (const constraint of constraints) {
       const activity = activityMap.get(constraint.activity_id)
-      if (!activity) continue
+      if (!activity) {continue}
 
       const isOnCriticalPath = criticalIds.has(constraint.activity_id)
 
@@ -443,11 +443,11 @@ export const scheduleOptimizer = {
     activityMap: Map<string, ScheduleActivity>,
     visited: Set<string>
   ): number {
-    if (visited.has(activityId)) return 0
+    if (visited.has(activityId)) {return 0}
     visited.add(activityId)
 
     const activity = activityMap.get(activityId)
-    if (!activity) return 0
+    if (!activity) {return 0}
 
     let count = activity.successors.length
     for (const succId of activity.successors) {
@@ -465,7 +465,7 @@ export const scheduleOptimizer = {
     const resourceByDate = new Map<string, Map<string, { demand: number; activities: string[] }>>()
 
     for (const activity of activityMap.values()) {
-      if (!activity.trade) continue
+      if (!activity.trade) {continue}
 
       const start = new Date(activity.planned_start)
       const end = new Date(activity.planned_finish)

@@ -32,7 +32,7 @@ export function useCanViewDailyReports() {
   return useQuery<boolean>({
     queryKey: dailyReportKeys.canView(),
     queryFn: () => {
-      if (!userProfile?.id) return false
+      if (!userProfile?.id) {return false}
       return subcontractorPortalApi.canViewDailyReports(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -53,7 +53,7 @@ export function useSubcontractorDailyReports(filters?: {
   return useQuery<SubcontractorDailyReport[]>({
     queryKey: dailyReportKeys.list(filters),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.getDailyReports(userProfile.id, filters)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -70,8 +70,8 @@ export function useSubcontractorDailyReportDetail(reportId: string | undefined) 
   return useQuery<SubcontractorDailyReportDetail | null>({
     queryKey: dailyReportKeys.detail(reportId || ''),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!reportId) return null
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!reportId) {return null}
       return subcontractorPortalApi.getDailyReport(userProfile.id, reportId)
     },
     enabled: !!userProfile?.id && !!reportId && userProfile.role === 'subcontractor',
@@ -88,8 +88,8 @@ export function useSubcontractorDailyReportWorkforce(reportId: string | undefine
   return useQuery({
     queryKey: dailyReportKeys.workforce(reportId || ''),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!reportId) return []
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!reportId) {return []}
       return subcontractorPortalApi.getDailyReportWorkforce(userProfile.id, reportId)
     },
     enabled: !!userProfile?.id && !!reportId && userProfile.role === 'subcontractor',
@@ -106,8 +106,8 @@ export function useSubcontractorDailyReportEquipment(reportId: string | undefine
   return useQuery({
     queryKey: dailyReportKeys.equipment(reportId || ''),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!reportId) return []
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!reportId) {return []}
       return subcontractorPortalApi.getDailyReportEquipment(userProfile.id, reportId)
     },
     enabled: !!userProfile?.id && !!reportId && userProfile.role === 'subcontractor',
@@ -124,8 +124,8 @@ export function useSubcontractorDailyReportPhotos(reportId: string | undefined) 
   return useQuery({
     queryKey: dailyReportKeys.photos(reportId || ''),
     queryFn: () => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
-      if (!reportId) return []
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!reportId) {return []}
       return subcontractorPortalApi.getDailyReportPhotos(userProfile.id, reportId)
     },
     enabled: !!userProfile?.id && !!reportId && userProfile.role === 'subcontractor',

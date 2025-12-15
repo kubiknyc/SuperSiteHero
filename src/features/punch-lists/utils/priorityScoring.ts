@@ -490,7 +490,7 @@ export function getAveragePriorityScore(
   items: PunchItem[],
   config: PriorityScoringConfig = DEFAULT_PRIORITY_CONFIG
 ): number {
-  if (items.length === 0) return 0
+  if (items.length === 0) {return 0}
 
   const totalScore = items.reduce((sum, item) => {
     return sum + calculatePriorityScore(item, config).score

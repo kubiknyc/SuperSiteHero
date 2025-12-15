@@ -93,7 +93,7 @@ export function useCloseoutDocuments(projectId?: string) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Transform the data to match CloseoutDocumentWithDetails
       return (data || []).map((doc: DbCloseoutDocument) => ({
@@ -121,7 +121,7 @@ export function useCloseoutDocument(documentId?: string) {
   return useQuery({
     queryKey: closeoutKeys.document(documentId || ''),
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('closeout_documents')
@@ -133,7 +133,7 @@ export function useCloseoutDocument(documentId?: string) {
         .eq('id', documentId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutDocumentWithDetails
     },
     enabled: !!documentId,
@@ -172,7 +172,7 @@ export function useCreateCloseoutDocument() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutDocument
     },
     onSuccess: (data) => {
@@ -207,7 +207,7 @@ export function useUpdateCloseoutDocument() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutDocument
     },
     onSuccess: (data) => {
@@ -231,7 +231,7 @@ export function useDeleteCloseoutDocument() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: closeoutKeys.all })
@@ -266,7 +266,7 @@ export function useWarranties(projectId?: string) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Calculate expiration info for each warranty
       const today = new Date()
@@ -300,7 +300,7 @@ export function useWarranty(warrantyId?: string) {
   return useQuery({
     queryKey: closeoutKeys.warranty(warrantyId || ''),
     queryFn: async () => {
-      if (!warrantyId) throw new Error('Warranty ID required')
+      if (!warrantyId) {throw new Error('Warranty ID required')}
 
       const { data, error } = await supabase
         .from('warranties')
@@ -312,7 +312,7 @@ export function useWarranty(warrantyId?: string) {
         .eq('id', warrantyId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WarrantyWithDetails
     },
     enabled: !!warrantyId,
@@ -354,7 +354,7 @@ export function useCreateWarranty() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Warranty
     },
     onSuccess: (data) => {
@@ -379,7 +379,7 @@ export function useUpdateWarranty() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Warranty
     },
     onSuccess: (data) => {
@@ -403,7 +403,7 @@ export function useDeleteWarranty() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: closeoutKeys.all })
@@ -525,7 +525,7 @@ export function useCloseoutChecklist(projectId: string) {
         .is('deleted_at', null)
         .order('sort_order', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutChecklistItemWithDetails[]
     },
     enabled: !!projectId,
@@ -560,7 +560,7 @@ export function useCreateChecklistItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutChecklistItem
     },
     onSuccess: (data) => {
@@ -590,7 +590,7 @@ export function useToggleChecklistItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutChecklistItem
     },
     onSuccess: (data) => {

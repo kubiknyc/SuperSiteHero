@@ -142,7 +142,7 @@ export function DetailedModeForm({
 
   // Handle save
   const handleSave = useCallback(async () => {
-    if (!draftReport) return;
+    if (!draftReport) {return;}
 
     setSyncStatus('syncing');
     try {

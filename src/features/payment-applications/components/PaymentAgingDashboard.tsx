@@ -540,7 +540,7 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
 
   // Sort receivables
   const sortedReceivables = useMemo(() => {
-    if (!report?.receivables) return []
+    if (!report?.receivables) {return []}
 
     return [...report.receivables].sort((a, b) => {
       let comparison = 0

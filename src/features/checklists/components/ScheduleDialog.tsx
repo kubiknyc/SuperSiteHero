@@ -144,7 +144,7 @@ export function ScheduleDialog({
     'sunday',
   ]
 
-  if (!open) return null
+  if (!open) {return null}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">

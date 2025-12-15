@@ -44,7 +44,7 @@ export function ContactDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!contact) return
+    if (!contact) {return}
     const displayName =
       [contact.first_name, contact.last_name].filter(Boolean).join(' ') ||
       contact.company_name ||

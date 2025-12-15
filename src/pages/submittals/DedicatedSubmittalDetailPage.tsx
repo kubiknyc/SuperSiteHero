@@ -114,7 +114,7 @@ export function DedicatedSubmittalDetailPage() {
 
   // Start a messaging conversation about this submittal
   const handleDiscuss = async () => {
-    if (!submittal) return
+    if (!submittal) {return}
 
     try {
       const result = await createConversation.mutateAsync({
@@ -134,7 +134,7 @@ export function DedicatedSubmittalDetailPage() {
 
   // Update ball-in-court
   const handleBallInCourtChange = async (entity: BallInCourtEntity) => {
-    if (!submittal) return
+    if (!submittal) {return}
     await updateSubmittal.mutateAsync({
       id: submittal.id,
       ball_in_court_entity: entity,
@@ -143,13 +143,13 @@ export function DedicatedSubmittalDetailPage() {
 
   // Submit for review
   const handleSubmitForReview = async () => {
-    if (!submittal) return
+    if (!submittal) {return}
     await submitForReview.mutateAsync(submittal.id)
   }
 
   // Add a review
   const handleAddReview = async () => {
-    if (!submittal || !selectedReviewStatus) return
+    if (!submittal || !selectedReviewStatus) {return}
 
     await addReview.mutateAsync({
       submittalId: submittal.id,
@@ -163,7 +163,7 @@ export function DedicatedSubmittalDetailPage() {
 
   // Delete submittal
   const handleDelete = async () => {
-    if (!submittal || !window.confirm('Are you sure you want to delete this submittal?')) return
+    if (!submittal || !window.confirm('Are you sure you want to delete this submittal?')) {return}
     await deleteSubmittal.mutateAsync(submittal.id)
     navigate(-1)
   }

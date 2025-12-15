@@ -33,7 +33,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newComment.trim() || !user) return
+    if (!newComment.trim() || !user) {return}
 
     createComment.mutate(
       {
@@ -61,7 +61,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
   }
 
   const handleSaveEdit = (commentId: string) => {
-    if (!editingText.trim()) return
+    if (!editingText.trim()) {return}
 
     updateComment.mutate(
       {

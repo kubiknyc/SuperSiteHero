@@ -16,8 +16,15 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { History, Upload, RotateCcw, FileText, Clock, GitCompare, MessageSquare, Activity } from 'lucide-react'
-import { VersionComparisonView } from './VersionComparisonView'
+import { VersionComparisonView, MarkupVersionComparison } from './comparison'
 import { DocumentComments } from './DocumentComments'
 import { DocumentAccessLog } from './DocumentAccessLog'
 import toast from 'react-hot-toast'
@@ -33,6 +40,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
   const [showComparison, setShowComparison] = useState(false)
   const [showComments, setShowComments] = useState(false)
   const [showAccessLog, setShowAccessLog] = useState(false)
+  const [comparisonMode, setComparisonMode] = useState<'basic' | 'markup'>('basic')
 
   const { data: versions, isLoading } = useDocumentVersionHistory(documentId)
   const createVersion = useCreateDocumentVersion()
@@ -226,14 +234,25 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
                     Select 2 versions using checkboxes to compare ({selectedVersions.length}/2 selected)
                   </p>
                 </div>
-                <Button
-                  onClick={handleCompare}
-                  disabled={selectedVersions.length !== 2}
-                  size="sm"
-                >
-                  <GitCompare className="mr-2 h-4 w-4" />
-                  Compare Selected
-                </Button>
+                <div className="flex gap-2">
+                  <Select value={comparisonMode} onValueChange={(value: 'basic' | 'markup') => setComparisonMode(value)}>
+                    <SelectTrigger className="w-[140px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="basic">Basic Compare</SelectItem>
+                      <SelectItem value="markup">Markup Compare</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    onClick={handleCompare}
+                    disabled={selectedVersions.length !== 2}
+                    size="sm"
+                  >
+                    <GitCompare className="mr-2 h-4 w-4" />
+                    Compare Selected
+                  </Button>
+                </div>
               </div>
             </div>
           )}
@@ -242,14 +261,27 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
 
       {/* Version Comparison Modal */}
       {showComparison && version1 && version2 && (
-        <VersionComparisonView
-          version1={version1}
-          version2={version2}
-          onClose={() => {
-            setShowComparison(false)
-            setSelectedVersions([])
-          }}
-        />
+        comparisonMode === 'basic' ? (
+          <VersionComparisonView
+            version1={version1}
+            version2={version2}
+            onClose={() => {
+              setShowComparison(false)
+              setSelectedVersions([])
+            }}
+          />
+        ) : (
+          <MarkupVersionComparison
+            version1={version1}
+            version2={version2}
+            open={showComparison}
+            onClose={() => {
+              setShowComparison(false)
+              setSelectedVersions([])
+            }}
+            onExportReport={() => toast.success('Markup comparison report export coming soon')}
+          />
+        )
       )}
 
       {/* Comments Modal */}

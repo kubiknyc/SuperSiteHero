@@ -152,7 +152,7 @@ export function RFIRoutingSuggestions({
 
   if (!aiEnabled) {
     // Show quick keyword-based suggestion
-    if (!quickSuggestion || quickSuggestion.confidence < 30) return null
+    if (!quickSuggestion || quickSuggestion.confidence < 30) {return null}
 
     return (
       <Card className={cn('border-dashed', className)}>

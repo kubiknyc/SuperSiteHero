@@ -6,10 +6,12 @@ import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './lib/auth/AuthContext'
 import { ToastProvider } from './lib/notifications/ToastContext'
+import { ThemeProvider } from './lib/theme/darkMode'
 import { ErrorBoundary } from './components/errors/ErrorBoundary'
 import { ToastContainer } from './components/notifications/ToastContainer'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
+import { PWAInstallBanner } from './components/PWAInstallPrompt'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
@@ -147,6 +149,7 @@ const ClientPhotos = lazy(() => import('./features/client-portal/pages/ClientPho
 const ClientDocuments = lazy(() => import('./features/client-portal/pages/ClientDocuments').then(m => ({ default: m.ClientDocuments })))
 const ClientRFIs = lazy(() => import('./features/client-portal/pages/ClientRFIs').then(m => ({ default: m.ClientRFIs })))
 const ClientChangeOrders = lazy(() => import('./features/client-portal/pages/ClientChangeOrders').then(m => ({ default: m.ClientChangeOrders })))
+const ClientNotificationSettingsPage = lazy(() => import('./features/client-portal/pages/ClientNotificationSettingsPage').then(m => ({ default: m.ClientNotificationSettingsPage })))
 
 // Photo Management feature
 const PhotoOrganizerPage = lazy(() => import('./features/photos/pages/PhotoOrganizerPage').then(m => ({ default: m.PhotoOrganizerPage })))
@@ -174,6 +177,7 @@ const WeatherLogDetailPage = lazy(() => import('./pages/weather-logs/WeatherLogD
 const SiteInstructionsPage = lazy(() => import('./pages/site-instructions/SiteInstructionsPage'))
 const SiteInstructionDetailPage = lazy(() => import('./pages/site-instructions/SiteInstructionDetailPage'))
 const CreateSiteInstructionPage = lazy(() => import('./pages/site-instructions/CreateSiteInstructionPage'))
+const SiteInstructionAcknowledgePage = lazy(() => import('./pages/site-instructions/SiteInstructionAcknowledgePage').then(m => ({ default: m.SiteInstructionAcknowledgePage })))
 
 // Meetings feature
 const MeetingsPage = lazy(() => import('./pages/meetings/MeetingsPage').then(m => ({ default: m.MeetingsPage })))
@@ -223,6 +227,7 @@ const CloseoutPage = lazy(() => import('./pages/closeout/CloseoutPage').then(m =
 // Custom Report Builder feature
 const ReportBuilderPage = lazy(() => import('./pages/reports/ReportBuilderPage').then(m => ({ default: m.ReportBuilderPage })))
 const ScheduledReportFormPage = lazy(() => import('./pages/reports/ScheduledReportFormPage').then(m => ({ default: m.ScheduledReportFormPage })))
+const PublicReportPage = lazy(() => import('./pages/reports/PublicReportPage').then(m => ({ default: m.PublicReportPage })))
 
 // QuickBooks Integration feature
 const QuickBooksPage = lazy(() => import('./pages/settings/QuickBooksPage').then(m => ({ default: m.QuickBooksPage })))
@@ -240,6 +245,9 @@ const JSADetailPage = lazy(() => import('./pages/jsa/JSADetailPage').then(m => (
 // Bidding Module feature
 const BidPackagesPage = lazy(() => import('./pages/bidding/BidPackagesPage'))
 const BidPackageDetailPage = lazy(() => import('./pages/bidding/BidPackageDetailPage'))
+
+// Field Dashboard feature
+const FieldDashboardPage = lazy(() => import('./pages/field-dashboard/FieldDashboardPage'))
 
 function App() {
   // Initialize Web Vitals monitoring in production
@@ -289,15 +297,16 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
-        <ToastProvider>
-          <AuthProvider>
-            <Suspense fallback={<RouteLoadingFallback />}>
+      <ThemeProvider defaultTheme="system">
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+          }}
+        >
+          <ToastProvider>
+            <AuthProvider>
+              <Suspense fallback={<RouteLoadingFallback />}>
               <Routes>
                 {/* Public routes - loaded eagerly */}
                 <Route path="/login" element={<LoginPage />} />
@@ -307,6 +316,10 @@ function App() {
 
                 {/* Protected routes - lazy loaded for code splitting */}
                 <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+
+                {/* Field Dashboard */}
+                <Route path="/field-dashboard" element={<ProtectedRoute><FieldDashboardPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/field-dashboard" element={<ProtectedRoute><FieldDashboardPage /></ProtectedRoute>} />
 
                 {/* Projects feature */}
                 <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
@@ -443,6 +456,8 @@ function App() {
                 <Route path="/site-instructions" element={<ProtectedRoute><SiteInstructionsPage /></ProtectedRoute>} />
                 <Route path="/site-instructions/new" element={<ProtectedRoute><CreateSiteInstructionPage /></ProtectedRoute>} />
                 <Route path="/site-instructions/:id" element={<ProtectedRoute><SiteInstructionDetailPage /></ProtectedRoute>} />
+                {/* QR Code Acknowledgment - No auth required for QR access */}
+                <Route path="/site-instructions/acknowledge/:token" element={<SiteInstructionAcknowledgePage />} />
 
                 {/* Meetings feature */}
                 <Route path="/meetings" element={<ProtectedRoute><MeetingsPage /></ProtectedRoute>} />
@@ -512,6 +527,8 @@ function App() {
                 <Route path="/reports/builder/:templateId" element={<ProtectedRoute><ReportBuilderPage /></ProtectedRoute>} />
                 <Route path="/reports/schedules/new" element={<ProtectedRoute><ScheduledReportFormPage /></ProtectedRoute>} />
                 <Route path="/reports/schedules/:id" element={<ProtectedRoute><ScheduledReportFormPage /></ProtectedRoute>} />
+                {/* Public report viewer - No auth required */}
+                <Route path="/reports/public/:token" element={<PublicReportPage />} />
 
                 {/* Subcontractor Portal feature - role-protected routes */}
                 <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
@@ -530,11 +547,13 @@ function App() {
                 <Route path="/client" element={<ProtectedRoute requiredRole="client"><ClientPortalLayout /></ProtectedRoute>}>
                   <Route index element={<ClientDashboard />} />
                   <Route path="projects/:projectId" element={<ClientProjectDetail />} />
+                  <Route path="settings/notifications" element={<ClientNotificationSettingsPage />} />
                   <Route path="projects/:projectId/schedule" element={<ClientSchedule />} />
                   <Route path="projects/:projectId/photos" element={<ClientPhotos />} />
                   <Route path="projects/:projectId/documents" element={<ClientDocuments />} />
                   <Route path="projects/:projectId/rfis" element={<ClientRFIs />} />
                   <Route path="projects/:projectId/change-orders" element={<ClientChangeOrders />} />
+                  <Route path="projects/:projectId/settings/notifications" element={<ClientNotificationSettingsPage />} />
                 </Route>
 
                 {/* Redirect unknown routes to dashboard */}
@@ -544,9 +563,13 @@ function App() {
 
             {/* Toast notification container - displays all toasts throughout app */}
             <ToastContainer />
-          </AuthProvider>
-        </ToastProvider>
-      </BrowserRouter>
+
+              {/* PWA Install Banner - prompts users to install the app */}
+              <PWAInstallBanner />
+            </AuthProvider>
+          </ToastProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     </ErrorBoundary>
   )
 }

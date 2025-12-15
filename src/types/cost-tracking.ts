@@ -2,7 +2,10 @@
  * Cost Tracking Types
  * Types for cost codes, project budgets, and cost transactions
  * Aligned with migration 048_cost_codes.sql
+ * Enhanced with multi-currency support
  */
+
+import type { CurrencyCode, MultiCurrencyAmount } from './currency';
 
 // =============================================
 // Enums and Constants
@@ -160,6 +163,16 @@ export interface ProjectBudget {
   // Projections
   estimated_cost_at_completion: number | null;
 
+  // Multi-Currency Support
+  currency: CurrencyCode;
+  original_budget_base: number;  // Amount in base currency
+  approved_changes_base: number;
+  committed_cost_base: number;
+  actual_cost_base: number;
+  estimated_cost_at_completion_base: number | null;
+  exchange_rate: number;  // Rate used for conversion
+  conversion_date: string;
+
   // Notes
   notes: string | null;
 
@@ -188,6 +201,12 @@ export interface CostTransaction {
 
   // Amounts
   amount: number;
+
+  // Multi-Currency Support
+  currency: CurrencyCode;
+  amount_base_currency: number;  // Amount in project's base currency
+  exchange_rate: number;  // Rate at time of transaction
+  conversion_date: string;
 
   // Vendor/Subcontractor
   vendor_name: string | null;
@@ -293,6 +312,7 @@ export interface CreateProjectBudgetDTO {
   committed_cost?: number;
   actual_cost?: number;
   estimated_cost_at_completion?: number;
+  currency?: CurrencyCode;  // If not provided, uses project's base currency
   notes?: string;
 }
 
@@ -305,6 +325,7 @@ export interface UpdateProjectBudgetDTO {
   committed_cost?: number;
   actual_cost?: number;
   estimated_cost_at_completion?: number;
+  currency?: CurrencyCode;
   notes?: string;
 }
 
@@ -320,6 +341,7 @@ export interface CreateCostTransactionDTO {
   source_type?: SourceType;
   source_id?: string;
   amount: number;
+  currency?: CurrencyCode;  // If not provided, uses project's base currency
   vendor_name?: string;
   subcontractor_id?: string;
   invoice_number?: string;
@@ -337,6 +359,7 @@ export interface UpdateCostTransactionDTO {
   source_type?: SourceType;
   source_id?: string;
   amount?: number;
+  currency?: CurrencyCode;
   vendor_name?: string;
   subcontractor_id?: string;
   invoice_number?: string;
@@ -670,10 +693,10 @@ export function getPerformanceStatus(
   type: 'cpi' | 'spi' = 'cpi'
 ): EVMPerformanceStatus {
   const prefix = type;
-  if (index >= thresholds[`${prefix}_excellent`]) return 'excellent';
-  if (index >= thresholds[`${prefix}_good`]) return 'good';
-  if (index >= thresholds[`${prefix}_fair`]) return 'fair';
-  if (index >= thresholds[`${prefix}_poor`]) return 'poor';
+  if (index >= thresholds[`${prefix}_excellent`]) {return 'excellent';}
+  if (index >= thresholds[`${prefix}_good`]) {return 'good';}
+  if (index >= thresholds[`${prefix}_fair`]) {return 'fair';}
+  if (index >= thresholds[`${prefix}_poor`]) {return 'poor';}
   return 'critical';
 }
 

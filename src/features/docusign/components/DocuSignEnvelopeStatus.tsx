@@ -137,7 +137,7 @@ export function DocuSignEnvelopeStatus({
     )
   }
 
-  if (!envelope) return null
+  if (!envelope) {return null}
 
   const statusConfig = getEnvelopeStatusConfig(envelope.status)
   const recipients = envelope.recipients || []

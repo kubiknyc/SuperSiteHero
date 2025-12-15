@@ -87,7 +87,9 @@ export interface ReminderBatchResult {
  * Calculate days until due or days overdue
  */
 function calculateDaysFromDue(dueDate: string): number {
-  const due = new Date(dueDate)
+  // Parse date string as local date (add T00:00:00 to force local interpretation)
+  // This avoids timezone issues when parsing "YYYY-MM-DD" format
+  const due = new Date(dueDate + 'T00:00:00')
   const today = new Date()
   today.setHours(0, 0, 0, 0)
   due.setHours(0, 0, 0, 0)
@@ -527,7 +529,7 @@ export const lienWaiverReminderService = {
       .not('due_date', 'is', null)
       .is('deleted_at', null)
 
-    if (error) throw error
+    if (error) {throw error}
 
     const stats = {
       totalPending: waivers?.length || 0,

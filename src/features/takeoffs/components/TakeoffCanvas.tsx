@@ -134,13 +134,13 @@ export function TakeoffCanvas({
   // Handle mouse down - start drawing
   const handleMouseDown = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
-      if (readOnly) return
+      if (readOnly) {return}
 
       const stage = e.target.getStage()
-      if (!stage) return
+      if (!stage) {return}
 
       const pos = stage.getPointerPosition()
-      if (!pos) return
+      if (!pos) {return}
 
       const point: Point = { x: pos.x, y: pos.y }
 
@@ -181,13 +181,13 @@ export function TakeoffCanvas({
   // Handle mouse move - continue drawing
   const handleMouseMove = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
-      if (!isDrawing || readOnly) return
+      if (!isDrawing || readOnly) {return}
 
       const stage = e.target.getStage()
-      if (!stage) return
+      if (!stage) {return}
 
       const pos = stage.getPointerPosition()
-      if (!pos) return
+      if (!pos) {return}
 
       const point: Point = { x: pos.x, y: pos.y }
 
@@ -208,7 +208,7 @@ export function TakeoffCanvas({
 
   // Handle mouse up - finish drawing
   const handleMouseUp = useCallback(() => {
-    if (!isDrawing || readOnly) return
+    if (!isDrawing || readOnly) {return}
 
     if (currentPoints.length < 2) {
       setIsDrawing(false)
@@ -254,14 +254,14 @@ export function TakeoffCanvas({
 
   // Handle double-click to close polygon
   const handleDoubleClick = useCallback(() => {
-    if (!isDrawing || readOnly) return
+    if (!isDrawing || readOnly) {return}
     handleMouseUp()
   }, [isDrawing, readOnly, handleMouseUp])
 
   // Calculate measurement value
   const calculateValue = useCallback(
     (measurement: TakeoffMeasurement): string => {
-      if (!scale) return '-- (No scale)'
+      if (!scale) {return '-- (No scale)'}
 
       try {
         switch (measurement.type) {
@@ -459,7 +459,7 @@ export function TakeoffCanvas({
 
   // Render current drawing shape
   const renderCurrentDrawing = useCallback(() => {
-    if (!isDrawing || currentPoints.length === 0) return null
+    if (!isDrawing || currentPoints.length === 0) {return null}
 
     const tempProps = {
       id: 'temp-drawing',

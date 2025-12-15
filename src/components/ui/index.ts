@@ -4,7 +4,7 @@
 export { Button, buttonVariants } from './button'
 export type { ButtonProps } from './button'
 
-export { Input } from './input'
+export { Input, inputVariants } from './input'
 export type { InputProps } from './input'
 
 export { Label } from './label'
@@ -15,6 +15,7 @@ export type { TextareaProps } from './textarea'
 
 export {
   Select,
+  nativeSelectVariants,
   RadixSelect,
   SelectGroup,
   SelectValue,
@@ -101,7 +102,8 @@ export {
   PopoverContent,
 } from './popover'
 
-export { Checkbox } from './checkbox'
+export { Checkbox, checkboxVariants } from './checkbox'
+export type { CheckboxProps } from './checkbox'
 
 export { Slider } from './slider'
 
@@ -134,3 +136,68 @@ export {
 export { ScrollArea, ScrollBar } from './scroll-area'
 
 export { Separator } from './separator'
+
+// Touch-friendly components
+export {
+  SwipeableListItem,
+  createCompleteAction,
+  createEditAction,
+  createDeleteAction,
+  createCancelAction,
+} from './swipeable-list-item'
+export type { SwipeableListItemProps, SwipeAction } from './swipeable-list-item'
+
+export { PullToRefresh, RefreshableList } from './pull-to-refresh'
+export type { PullToRefreshProps, RefreshableListProps, PullToRefreshState } from './pull-to-refresh'
+
+// Theme components
+export {
+  ThemeToggle,
+  ThemeSwitch,
+  ThemeSelector,
+  SunIcon,
+  MoonIcon,
+  MonitorIcon,
+} from '../ThemeToggle'
+
+// Tablet-optimized components
+export {
+  TabletCard,
+  TabletCardGrid,
+} from './tablet-card'
+export type { TabletCardProps, TabletCardGridProps } from './tablet-card'
+
+export {
+  TabletForm,
+  TabletFormField,
+  TabletFormSection,
+  TabletFormRow,
+  TabletFormActions,
+  TabletInput,
+} from './tablet-form'
+export type {
+  TabletFormProps,
+  TabletFormFieldProps,
+  TabletFormSectionProps,
+  TabletFormRowProps,
+  TabletFormActionsProps,
+  TabletInputProps,
+} from './tablet-form'
+
+export {
+  TabletTable,
+  TabletTableHeader,
+  TabletTableBody,
+  TabletTableRow,
+  TabletTableHead,
+  TabletTableCell,
+  TabletTableEmpty,
+} from './tablet-table'
+export type {
+  TabletTableProps,
+  TabletTableHeaderProps,
+  TabletTableRowProps,
+  TabletTableHeadProps,
+  TabletTableCellProps,
+  TabletTableEmptyProps,
+} from './tablet-table'

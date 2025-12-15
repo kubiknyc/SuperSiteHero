@@ -46,7 +46,7 @@ async function getChangeOrderRecipients(changeOrder: WorkflowItem): Promise<Noti
     changeOrder.assignees.forEach((id: string) => userIds.add(id))
   }
 
-  if (userIds.size === 0) return []
+  if (userIds.size === 0) {return []}
 
   try {
     const { data, error } = await supabase
@@ -54,7 +54,7 @@ async function getChangeOrderRecipients(changeOrder: WorkflowItem): Promise<Noti
       .select('id, email, full_name')
       .in('id', Array.from(userIds))
 
-    if (error || !data) return []
+    if (error || !data) {return []}
 
     return data.map(user => ({
       userId: user.id,

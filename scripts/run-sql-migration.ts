@@ -27,7 +27,7 @@ const statements = sql
 
 async function runMigration() {
   for (const statement of statements) {
-    if (!statement || statement.startsWith('--')) continue
+    if (!statement || statement.startsWith('--')) {continue}
 
     console.log('Executing statement...')
 

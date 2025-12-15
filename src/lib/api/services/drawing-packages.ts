@@ -127,7 +127,7 @@ export async function getDrawingPackages(filters: DrawingPackageFilters): Promis
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => {
     const pkg = transformPackage(row);
@@ -162,7 +162,7 @@ export async function getDrawingPackage(id: string): Promise<DrawingPackage | nu
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {return null;}
     throw error;
   }
 
@@ -191,7 +191,7 @@ export async function createDrawingPackage(packageData: DrawingPackageInsert): P
       p_project_id: packageData.projectId,
       p_package_type: packageData.packageType,
     });
-    if (numError) throw numError;
+    if (numError) {throw numError;}
     packageNumber = numData;
   }
 
@@ -207,7 +207,7 @@ export async function createDrawingPackage(packageData: DrawingPackageInsert): P
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(data.id, 'created', 'Drawing package created', {}, user?.user?.id);
@@ -224,7 +224,7 @@ export async function updateDrawingPackage(id: string, updates: DrawingPackageUp
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(id, 'updated', 'Drawing package updated', { updates }, user?.user?.id);
@@ -239,7 +239,7 @@ export async function deleteDrawingPackage(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(id, 'deleted', 'Drawing package deleted', {}, user?.user?.id);
@@ -259,7 +259,7 @@ export async function approveDrawingPackage(id: string, notes?: string): Promise
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(id, 'approved', 'Drawing package approved', { notes }, user?.user?.id);
@@ -269,7 +269,7 @@ export async function approveDrawingPackage(id: string, notes?: string): Promise
 
 export async function createNewVersion(id: string): Promise<DrawingPackage> {
   const original = await getDrawingPackage(id);
-  if (!original) throw new Error('Package not found');
+  if (!original) {throw new Error('Package not found');}
 
   const { data: user } = await supabase.auth.getUser();
 
@@ -342,7 +342,7 @@ export async function getPackageItems(packageId: string): Promise<DrawingPackage
     .eq('package_id', packageId)
     .order('sort_order', { ascending: true });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => {
     const item = transformPackageItem(row);
@@ -380,7 +380,7 @@ export async function addItemToPackage(item: DrawingPackageItemInsert): Promise<
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(item.packageId, 'item_added', 'Drawing added to package', { drawingId: item.drawingId }, user?.user?.id);
@@ -420,7 +420,7 @@ export async function addMultipleItemsToPackage(
     .insert(insertData)
     .select();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(packageId, 'items_added', `${drawingIds.length} drawings added to package`, { drawingIds }, user?.user?.id);
@@ -435,7 +435,7 @@ export async function updatePackageItem(id: string, updates: DrawingPackageItemU
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformPackageItem(data as Record<string, unknown>);
 }
 
@@ -452,7 +452,7 @@ export async function removeItemFromPackage(id: string): Promise<void> {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   if (item) {
     await logPackageActivity(item.package_id, 'item_removed', 'Drawing removed from package', { drawingId: item.drawing_id }, user?.user?.id);
@@ -483,7 +483,7 @@ export async function getPackageRecipients(packageId: string): Promise<DrawingPa
     .eq('package_id', packageId)
     .order('created_at', { ascending: false });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => {
     const recipient = transformRecipient(row);
@@ -506,7 +506,7 @@ export async function addRecipientToPackage(recipient: DrawingPackageRecipientIn
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRecipient(data as Record<string, unknown>);
 }
 
@@ -524,7 +524,7 @@ export async function addMultipleRecipientsToPackage(
     .insert(insertData)
     .select();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformRecipient);
 }
 
@@ -535,7 +535,7 @@ export async function updatePackageRecipient(id: string, updates: DrawingPackage
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRecipient(data as Record<string, unknown>);
 }
 
@@ -544,7 +544,7 @@ export async function removeRecipientFromPackage(id: string): Promise<void> {
     .delete()
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 export async function markRecipientAsSent(id: string): Promise<DrawingPackageRecipient> {
@@ -559,7 +559,7 @@ export async function markRecipientAsSent(id: string): Promise<DrawingPackageRec
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRecipient(data as Record<string, unknown>);
 }
 
@@ -570,7 +570,7 @@ export async function recordRecipientAccess(accessToken: string): Promise<Drawin
     .single();
 
   if (findError) {
-    if (findError.code === 'PGRST116') return null;
+    if (findError.code === 'PGRST116') {return null;}
     throw findError;
   }
 
@@ -595,7 +595,7 @@ export async function recordRecipientAccess(accessToken: string): Promise<Drawin
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(
@@ -617,7 +617,7 @@ export async function recordRecipientDownload(accessToken: string): Promise<Draw
     .single();
 
   if (findError) {
-    if (findError.code === 'PGRST116') return null;
+    if (findError.code === 'PGRST116') {return null;}
     throw findError;
   }
 
@@ -633,7 +633,7 @@ export async function recordRecipientDownload(accessToken: string): Promise<Draw
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(
@@ -659,7 +659,7 @@ export async function recordRecipientAcknowledgment(
     .single();
 
   if (findError) {
-    if (findError.code === 'PGRST116') return null;
+    if (findError.code === 'PGRST116') {return null;}
     throw findError;
   }
 
@@ -673,7 +673,7 @@ export async function recordRecipientAcknowledgment(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   // Log activity
   await logPackageActivity(
@@ -706,7 +706,7 @@ export async function distributePackage(packageId: string, recipientIds?: string
   }
 
   const { data: recipients, error: fetchError } = await query;
-  if (fetchError) throw fetchError;
+  if (fetchError) {throw fetchError;}
 
   // Mark all as sent
   const now = new Date().toISOString();
@@ -769,7 +769,7 @@ export async function getPackageActivity(packageId: string, limit: number = 50):
     .order('created_at', { ascending: false })
     .limit(limit);
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => {
     const activity = transformActivity(row);
@@ -788,7 +788,7 @@ export async function getPackageStatistics(packageId: string): Promise<DrawingPa
     p_package_id: packageId,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   if (!data || data.length === 0) {
     return {

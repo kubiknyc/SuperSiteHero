@@ -50,7 +50,7 @@ export const BORDER_WIDTH = {
  * Format currency for PDF display
  */
 export function formatCurrency(value: number | null | undefined): string {
-  if (value === null || value === undefined) return '$0.00'
+  if (value === null || value === undefined) {return '$0.00'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -62,7 +62,7 @@ export function formatCurrency(value: number | null | undefined): string {
  * Format percentage for PDF display
  */
 export function formatPercent(value: number | null | undefined): string {
-  if (value === null || value === undefined) return '0%'
+  if (value === null || value === undefined) {return '0%'}
   return `${value.toFixed(1)}%`
 }
 
@@ -70,7 +70,7 @@ export function formatPercent(value: number | null | undefined): string {
  * Format date for PDF display
  */
 export function formatDate(date: string | null | undefined): string {
-  if (!date) return ''
+  if (!date) {return ''}
   try {
     return new Date(date).toLocaleDateString('en-US', {
       month: 'long',
@@ -86,7 +86,7 @@ export function formatDate(date: string | null | undefined): string {
  * Format short date for PDF display
  */
 export function formatShortDate(date: string | null | undefined): string {
-  if (!date) return ''
+  if (!date) {return ''}
   try {
     return new Date(date).toLocaleDateString('en-US', {
       month: '2-digit',

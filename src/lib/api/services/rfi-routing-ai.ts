@@ -185,7 +185,7 @@ Respond with JSON in this format:
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Find related items
     const relatedItems = await this.findRelatedItems(dto.project_id, dto.subject, dto.question)
@@ -212,7 +212,7 @@ Respond with JSON in this format:
       })
       .eq('id', dto.suggestion_id)
 
-    if (error) throw error
+    if (error) {throw error}
 
     // If feedback was accepted or modified, update patterns
     if (dto.feedback_status === 'accepted' || dto.feedback_status === 'modified') {
@@ -236,7 +236,7 @@ Respond with JSON in this format:
       .order('success_rate', { ascending: false })
       .limit(10)
 
-    if (!patterns) return []
+    if (!patterns) {return []}
 
     // Score patterns by keyword match
     const scoredPatterns = patterns
@@ -282,7 +282,7 @@ Respond with JSON in this format:
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Update pattern usage
     await supabaseAny
@@ -307,7 +307,7 @@ Respond with JSON in this format:
       .eq('id', dto.suggestion_id)
       .single()
 
-    if (!suggestion) return
+    if (!suggestion) {return}
 
     const keywords = suggestion.keywords?.join(' ') || ''
     const roleToUse = dto.actual_role_assigned || suggestion.suggested_role
@@ -406,7 +406,7 @@ Respond with JSON in this format:
       .eq('rfi_id', rfiId)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return data || []
   },
 

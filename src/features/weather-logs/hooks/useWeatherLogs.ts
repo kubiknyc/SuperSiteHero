@@ -27,7 +27,7 @@ export function useWeatherLogs(projectId: string | undefined, filters?: WeatherL
   return useQuery({
     queryKey: ['weather-logs', projectId, filters],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = (supabase as any)
         .from('weather_logs')
@@ -57,7 +57,7 @@ export function useWeatherLogs(projectId: string | undefined, filters?: WeatherL
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WeatherLogWithProject[]
     },
     enabled: !!projectId,
@@ -71,7 +71,7 @@ export function useAllWeatherLogs(filters?: WeatherLogFilters) {
   return useQuery({
     queryKey: ['weather-logs', 'all', userProfile?.company_id, filters],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('No company ID found')
+      if (!userProfile?.company_id) {throw new Error('No company ID found')}
 
       let query = (supabase as any)
         .from('weather_logs')
@@ -102,7 +102,7 @@ export function useAllWeatherLogs(filters?: WeatherLogFilters) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WeatherLogWithProject[]
     },
     enabled: !!userProfile?.company_id,
@@ -114,7 +114,7 @@ export function useWeatherLog(logId: string | undefined) {
   return useQuery({
     queryKey: ['weather-logs', logId],
     queryFn: async () => {
-      if (!logId) throw new Error('Weather log ID required')
+      if (!logId) {throw new Error('Weather log ID required')}
 
       const { data, error } = await (supabase as any)
         .from('weather_logs')
@@ -126,7 +126,7 @@ export function useWeatherLog(logId: string | undefined) {
         .eq('id', logId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WeatherLog & {
         project: Pick<Project, 'id' | 'name' | 'address'>
         recorded_by_user: { id: string; first_name: string; last_name: string; email: string }
@@ -141,7 +141,7 @@ export function useWeatherLogByDate(projectId: string | undefined, logDate: stri
   return useQuery({
     queryKey: ['weather-logs', 'by-date', projectId, logDate],
     queryFn: async () => {
-      if (!projectId || !logDate) throw new Error('Project ID and log date required')
+      if (!projectId || !logDate) {throw new Error('Project ID and log date required')}
 
       const { data, error } = await (supabase as any)
         .from('weather_logs')
@@ -150,7 +150,7 @@ export function useWeatherLogByDate(projectId: string | undefined, logDate: stri
         .eq('log_date', logDate)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WeatherLog | null
     },
     enabled: !!projectId && !!logDate,
@@ -184,7 +184,7 @@ export function useCreateWeatherLog() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WeatherLog
     },
     onSuccess: (data) => {
@@ -207,7 +207,7 @@ export function useUpdateWeatherLog() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WeatherLog
     },
     onSuccess: (data) => {
@@ -230,7 +230,7 @@ export function useDeleteWeatherLog() {
         .delete()
         .eq('id', logId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['weather-logs'] })
@@ -254,7 +254,7 @@ export function useWeatherStatistics(projectId: string | undefined, filters?: We
   return useQuery({
     queryKey: ['weather-logs', 'statistics', projectId, filters],
     queryFn: async (): Promise<WeatherStatistics> => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = (supabase as any)
         .from('weather_logs')
@@ -271,7 +271,7 @@ export function useWeatherStatistics(projectId: string | undefined, filters?: We
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       const logs = data as WeatherLog[]
 

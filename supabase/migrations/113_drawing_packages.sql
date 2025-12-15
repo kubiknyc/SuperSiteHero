@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS drawing_packages (
 
   -- Status tracking
   status drawing_package_status NOT NULL DEFAULT 'draft',
-  approved_by UUID REFERENCES user_profiles(id),
+  approved_by UUID REFERENCES users(id),
   approved_at TIMESTAMPTZ,
   approval_notes TEXT,
 
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS drawing_packages (
   -- Metadata
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  created_by UUID REFERENCES user_profiles(id),
+  created_by UUID REFERENCES users(id),
   deleted_at TIMESTAMPTZ,
 
   -- Unique package number per project
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS drawing_package_items (
 
   -- Metadata
   added_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  added_by UUID REFERENCES user_profiles(id),
+  added_by UUID REFERENCES users(id),
 
   -- Unique drawing per package
   CONSTRAINT unique_drawing_per_package UNIQUE (package_id, drawing_id)
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS drawing_package_recipients (
   -- Distribution tracking
   distribution_method VARCHAR(50) NOT NULL DEFAULT 'email', -- email, link, download
   sent_at TIMESTAMPTZ,
-  sent_by UUID REFERENCES user_profiles(id),
+  sent_by UUID REFERENCES users(id),
 
   -- Access tracking
   access_token VARCHAR(100) UNIQUE,
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS drawing_package_activity (
   activity_metadata JSONB DEFAULT '{}',
 
   -- Actor information
-  performed_by UUID REFERENCES user_profiles(id),
+  performed_by UUID REFERENCES users(id),
   performed_by_email VARCHAR(255),
   performed_by_ip VARCHAR(50),
 
@@ -375,28 +375,28 @@ ALTER TABLE drawing_package_activity ENABLE ROW LEVEL SECURITY;
 CREATE POLICY drawing_packages_select_policy ON drawing_packages
   FOR SELECT USING (
     company_id IN (
-      SELECT company_id FROM user_profiles WHERE id = auth.uid()
+      SELECT company_id FROM users WHERE id = auth.uid()
     )
   );
 
 CREATE POLICY drawing_packages_insert_policy ON drawing_packages
   FOR INSERT WITH CHECK (
     company_id IN (
-      SELECT company_id FROM user_profiles WHERE id = auth.uid()
+      SELECT company_id FROM users WHERE id = auth.uid()
     )
   );
 
 CREATE POLICY drawing_packages_update_policy ON drawing_packages
   FOR UPDATE USING (
     company_id IN (
-      SELECT company_id FROM user_profiles WHERE id = auth.uid()
+      SELECT company_id FROM users WHERE id = auth.uid()
     )
   );
 
 CREATE POLICY drawing_packages_delete_policy ON drawing_packages
   FOR DELETE USING (
     company_id IN (
-      SELECT company_id FROM user_profiles WHERE id = auth.uid()
+      SELECT company_id FROM users WHERE id = auth.uid()
     )
   );
 
@@ -406,7 +406,7 @@ CREATE POLICY package_items_select_policy ON drawing_package_items
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -416,7 +416,7 @@ CREATE POLICY package_items_insert_policy ON drawing_package_items
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -426,7 +426,7 @@ CREATE POLICY package_items_update_policy ON drawing_package_items
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -436,7 +436,7 @@ CREATE POLICY package_items_delete_policy ON drawing_package_items
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -447,7 +447,7 @@ CREATE POLICY package_recipients_select_policy ON drawing_package_recipients
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -457,7 +457,7 @@ CREATE POLICY package_recipients_insert_policy ON drawing_package_recipients
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -467,7 +467,7 @@ CREATE POLICY package_recipients_update_policy ON drawing_package_recipients
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -477,7 +477,7 @@ CREATE POLICY package_recipients_delete_policy ON drawing_package_recipients
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -488,7 +488,7 @@ CREATE POLICY package_activity_select_policy ON drawing_package_activity
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );
@@ -498,7 +498,7 @@ CREATE POLICY package_activity_insert_policy ON drawing_package_activity
     package_id IN (
       SELECT id FROM drawing_packages
       WHERE company_id IN (
-        SELECT company_id FROM user_profiles WHERE id = auth.uid()
+        SELECT company_id FROM users WHERE id = auth.uid()
       )
     )
   );

@@ -43,11 +43,11 @@ export function getWorkflowTypeIcon(workflowType: WorkflowType): string {
     default:
       // Fallback based on name
       const name = workflowType.name_singular?.toLowerCase() || ''
-      if (name.includes('rfi') || name.includes('request')) return '📋'
-      if (name.includes('change') || name.includes('order')) return '📝'
-      if (name.includes('submittal')) return '📤'
-      if (name.includes('punch')) return '✅'
-      if (name.includes('safety')) return '🦺'
+      if (name.includes('rfi') || name.includes('request')) {return '📋'}
+      if (name.includes('change') || name.includes('order')) {return '📝'}
+      if (name.includes('submittal')) {return '📤'}
+      if (name.includes('punch')) {return '✅'}
+      if (name.includes('safety')) {return '🦺'}
       return '📄'
   }
 }

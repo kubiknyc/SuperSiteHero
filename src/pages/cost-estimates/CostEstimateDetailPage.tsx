@@ -62,7 +62,7 @@ export function CostEstimateDetailPage() {
   const deleteItemMutation = useDeleteEstimateItem()
 
   const handleUpdateEstimate = (data: CostEstimateInsert | CostEstimateUpdate) => {
-    if (!estimateId) return
+    if (!estimateId) {return}
 
     // Only CostEstimateUpdate is valid for updating
     const updateData = data as CostEstimateUpdate
@@ -78,7 +78,7 @@ export function CostEstimateDetailPage() {
   }
 
   const handleAddItem = (data: CostEstimateItemInsert | CostEstimateItemUpdate) => {
-    if (!estimateId) return
+    if (!estimateId) {return}
 
     // Only CostEstimateItemInsert is valid for creation
     const insertData = data as CostEstimateItemInsert
@@ -93,7 +93,7 @@ export function CostEstimateDetailPage() {
   }
 
   const handleUpdateItem = (data: CostEstimateItemInsert | CostEstimateItemUpdate) => {
-    if (!editingItem || !estimateId) return
+    if (!editingItem || !estimateId) {return}
 
     // Only CostEstimateItemUpdate is valid for updating
     const updateData = data as CostEstimateItemUpdate
@@ -110,7 +110,7 @@ export function CostEstimateDetailPage() {
   }
 
   const handleDeleteItem = async (itemId: string) => {
-    if (!estimateId) return
+    if (!estimateId) {return}
 
     await deleteItemMutation.mutateAsync({ itemId, estimateId })
   }
@@ -120,7 +120,7 @@ export function CostEstimateDetailPage() {
   }
 
   const handleExportPDF = async () => {
-    if (!estimate) return
+    if (!estimate) {return}
 
     setIsExporting(true)
     try {

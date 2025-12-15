@@ -1,5 +1,6 @@
 // File: /src/features/punch-lists/components/PunchListsProjectView.tsx
 // Punch lists view for project detail page
+// Enhanced with tablet-optimized master-detail layout
 
 import { useState, useCallback, useMemo, memo } from 'react'
 import { format } from 'date-fns'
@@ -11,8 +12,9 @@ import { Select } from '@/components/ui/select'
 import { usePunchItems } from '../hooks/usePunchItems'
 import { CreatePunchItemDialog } from './CreatePunchItemDialog'
 import { PunchItemStatusBadge } from './PunchItemStatusBadge'
-import { Plus, AlertCircle, Loader2 } from 'lucide-react'
+import { Plus, AlertCircle, Loader2, ChevronRight, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useResponsiveLayout, useOrientation } from '@/hooks/useOrientation'
 import type { PunchItem } from '@/types/database'
 
 interface PunchListsProjectViewProps {
@@ -22,37 +24,189 @@ interface PunchListsProjectViewProps {
 // Memoized row component to prevent re-renders when other rows change
 interface PunchItemRowProps {
   item: PunchItem
+  isSelected?: boolean
+  onSelect?: (item: PunchItem) => void
+  isTouchDevice?: boolean
 }
 
-const PunchItemRow = memo(function PunchItemRow({ item }: PunchItemRowProps) {
+const PunchItemRow = memo(function PunchItemRow({
+  item,
+  isSelected,
+  onSelect,
+  isTouchDevice,
+}: PunchItemRowProps) {
   return (
-    <tr className="border-b hover:bg-gray-50">
-      <td className="py-3 px-4 font-medium text-gray-900">{item.number}</td>
-      <td className="py-3 px-4">
+    <tr
+      className={cn(
+        "border-b hover:bg-gray-50 cursor-pointer transition-colors",
+        isSelected && "bg-blue-50 hover:bg-blue-100",
+        // Larger row height on touch devices
+        isTouchDevice && "h-14"
+      )}
+      onClick={() => onSelect?.(item)}
+    >
+      <td className={cn("py-3 px-4 font-medium text-gray-900", isTouchDevice && "py-4")}>{item.number}</td>
+      <td className={cn("py-3 px-4", isTouchDevice && "py-4")}>
         <a href={`/punch-lists/${item.id}`} className="text-blue-600 hover:underline">
           {item.title}
         </a>
       </td>
-      <td className="py-3 px-4 text-gray-600 capitalize">{item.trade}</td>
-      <td className="py-3 px-4 text-gray-600 text-sm">
+      <td className={cn("py-3 px-4 text-gray-600 capitalize", isTouchDevice && "py-4")}>{item.trade}</td>
+      <td className={cn("py-3 px-4 text-gray-600 text-sm", isTouchDevice && "py-4")}>
         {[item.building, item.floor, item.room].filter(Boolean).join(' / ')}
       </td>
-      <td className="py-3 px-4">
+      <td className={cn("py-3 px-4", isTouchDevice && "py-4")}>
         <PunchItemStatusBadge status={item.status} priority={item.priority} />
       </td>
-      <td className="py-3 px-4 text-gray-600 text-sm">
+      <td className={cn("py-3 px-4 text-gray-600 text-sm", isTouchDevice && "py-4")}>
         {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
       </td>
     </tr>
   )
 })
 
+// List item component for tablet list view (compact)
+interface PunchItemListItemProps {
+  item: PunchItem
+  isSelected?: boolean
+  onSelect?: (item: PunchItem) => void
+  isTouchDevice?: boolean
+}
+
+const PunchItemListItem = memo(function PunchItemListItem({
+  item,
+  isSelected,
+  onSelect,
+  isTouchDevice,
+}: PunchItemListItemProps) {
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between p-4 border-b cursor-pointer transition-colors",
+        "hover:bg-gray-50",
+        isSelected && "bg-blue-50 hover:bg-blue-100 border-l-4 border-l-blue-500",
+        // Larger touch target on touch devices
+        isTouchDevice && "min-h-touch"
+      )}
+      onClick={() => onSelect?.(item)}
+    >
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-sm font-medium text-gray-500">#{item.number}</span>
+          <PunchItemStatusBadge status={item.status} priority={item.priority} />
+        </div>
+        <h4 className="font-medium text-gray-900 truncate">{item.title}</h4>
+        <p className="text-sm text-gray-500 truncate">
+          {[item.building, item.floor, item.room].filter(Boolean).join(' / ') || 'No location'}
+        </p>
+      </div>
+      <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0 ml-2" />
+    </div>
+  )
+})
+
+// Detail panel component for selected punch item
+interface PunchItemDetailPanelProps {
+  item: PunchItem | null
+  onClose?: () => void
+  isTouchDevice?: boolean
+}
+
+function PunchItemDetailPanel({ item, onClose, isTouchDevice }: PunchItemDetailPanelProps) {
+  if (!item) {
+    return (
+      <div className="flex items-center justify-center h-full text-gray-500">
+        <p>Select a punch item to view details</p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="h-full overflow-auto">
+      <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
+        <div>
+          <span className="text-sm text-gray-500">#{item.number}</span>
+          <h3 className="font-semibold text-lg">{item.title}</h3>
+        </div>
+        {onClose && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className={cn(isTouchDevice && "min-h-touch min-w-touch")}
+          >
+            <X className="h-5 w-5" />
+          </Button>
+        )}
+      </div>
+      <div className="p-4 space-y-4">
+        <div className="flex items-center gap-2">
+          <PunchItemStatusBadge status={item.status} priority={item.priority} />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm font-medium text-gray-500">Trade</label>
+            <p className="text-gray-900 capitalize">{item.trade || '-'}</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-500">Due Date</label>
+            <p className="text-gray-900">
+              {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
+            </p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-500">Location</label>
+            <p className="text-gray-900">
+              {[item.building, item.floor, item.room].filter(Boolean).join(' / ') || '-'}
+            </p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-500">Area</label>
+            <p className="text-gray-900">{item.area || '-'}</p>
+          </div>
+        </div>
+
+        <div>
+          <label className="text-sm font-medium text-gray-500">Description</label>
+          <p className="text-gray-900 mt-1">{item.description || 'No description provided'}</p>
+        </div>
+
+        <div className="pt-4 flex gap-2">
+          <Button asChild className={cn("flex-1", isTouchDevice && "min-h-touch")}>
+            <a href={`/punch-lists/${item.id}`}>View Full Details</a>
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps) {
   const [createOpen, setCreateOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
+  const [selectedItem, setSelectedItem] = useState<PunchItem | null>(null)
+
+  // Responsive layout hooks
+  const layout = useResponsiveLayout()
+  const { isTouchDevice, isTablet } = useOrientation()
+
+  // Determine if we should use master-detail layout (tablets in landscape)
+  const useMasterDetailLayout = layout === 'tablet-landscape' || layout === 'desktop'
+  const useCompactListLayout = layout === 'tablet-portrait'
 
   const { data: punchItems, isLoading, error } = usePunchItems(projectId)
+
+  // Handle item selection
+  const handleSelectItem = useCallback((item: PunchItem) => {
+    setSelectedItem(item)
+  }, [])
+
+  // Handle closing detail panel
+  const handleCloseDetail = useCallback(() => {
+    setSelectedItem(null)
+  }, [])
 
   // Filter punch items - memoized to prevent recalculation on every render
   const filtered = useMemo(() => (punchItems || []).filter((item) => {
@@ -116,6 +270,184 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
     )
   }
 
+  // Master-Detail layout for tablets in landscape
+  if (useMasterDetailLayout) {
+    return (
+      <>
+        <div className="flex h-[calc(100vh-200px)] min-h-[500px] border rounded-lg overflow-hidden bg-white">
+          {/* Master Panel - List */}
+          <div className={cn(
+            "flex flex-col border-r",
+            selectedItem ? "w-[360px] flex-shrink-0" : "flex-1"
+          )}>
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+              <div>
+                <h2 className="font-semibold">Punch List</h2>
+                <p className="text-sm text-gray-500">
+                  {filtered.length} item{filtered.length !== 1 ? 's' : ''}
+                </p>
+              </div>
+              <Button
+                onClick={() => setCreateOpen(true)}
+                size="sm"
+                className={cn(isTouchDevice && "min-h-touch")}
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                New
+              </Button>
+            </div>
+
+            {/* Filters */}
+            <div className="p-3 border-b space-y-2">
+              <Input
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className={cn("w-full", isTouchDevice && "min-h-touch")}
+              />
+              <Select
+                value={statusFilter}
+                onChange={handleStatusFilterChange}
+                className={cn(isTouchDevice && "min-h-touch")}
+              >
+                <option value="">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="ready_for_review">Ready for Review</option>
+                <option value="completed">Completed</option>
+                <option value="verified">Verified</option>
+                <option value="rejected">Rejected</option>
+              </Select>
+            </div>
+
+            {/* List */}
+            <div className="flex-1 overflow-auto">
+              {filtered.length === 0 ? (
+                <div className="text-center py-8">
+                  <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                  <p className="text-gray-500 text-sm">No items found</p>
+                </div>
+              ) : (
+                filtered.map((item: PunchItem) => (
+                  <PunchItemListItem
+                    key={item.id}
+                    item={item}
+                    isSelected={selectedItem?.id === item.id}
+                    onSelect={handleSelectItem}
+                    isTouchDevice={isTouchDevice}
+                  />
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Detail Panel */}
+          {selectedItem && (
+            <div className="flex-1 bg-gray-50">
+              <PunchItemDetailPanel
+                item={selectedItem}
+                onClose={handleCloseDetail}
+                isTouchDevice={isTouchDevice}
+              />
+            </div>
+          )}
+
+          {/* Empty state for detail panel */}
+          {!selectedItem && (
+            <div className="flex-1 flex items-center justify-center bg-gray-50 text-gray-500">
+              <div className="text-center">
+                <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                <p>Select a punch item to view details</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        <CreatePunchItemDialog
+          projectId={projectId}
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+        />
+      </>
+    )
+  }
+
+  // Compact list layout for tablet portrait
+  if (useCompactListLayout) {
+    return (
+      <>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
+            <div>
+              <CardTitle className="text-lg">Punch List</CardTitle>
+              <CardDescription className="text-sm">
+                {stats.open} open / {stats.total} total
+              </CardDescription>
+            </div>
+            <Button
+              onClick={() => setCreateOpen(true)}
+              size="sm"
+              className={cn(isTouchDevice && "min-h-touch")}
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              New
+            </Button>
+          </CardHeader>
+
+          <CardContent className="space-y-3 pt-0">
+            {/* Compact Filters */}
+            <div className="flex gap-2">
+              <Input
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className={cn("flex-1", isTouchDevice && "min-h-touch")}
+              />
+              <Select
+                value={statusFilter}
+                onChange={handleStatusFilterChange}
+                className={cn("w-36", isTouchDevice && "min-h-touch")}
+              >
+                <option value="">All</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="verified">Verified</option>
+              </Select>
+            </div>
+
+            {/* List View */}
+            {filtered.length === 0 ? (
+              <div className="text-center py-8">
+                <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+                <p className="text-gray-500">No punch items found</p>
+              </div>
+            ) : (
+              <div className="border rounded-lg overflow-hidden divide-y">
+                {filtered.map((item: PunchItem) => (
+                  <PunchItemListItem
+                    key={item.id}
+                    item={item}
+                    onSelect={handleSelectItem}
+                    isTouchDevice={isTouchDevice}
+                  />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <CreatePunchItemDialog
+          projectId={projectId}
+          open={createOpen}
+          onOpenChange={setCreateOpen}
+        />
+      </>
+    )
+  }
+
+  // Default table layout for mobile and desktop
   return (
     <>
       <Card>
@@ -123,11 +455,14 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
           <div>
             <CardTitle>Punch List</CardTitle>
             <CardDescription>
-              {filtered.length} item{filtered.length !== 1 ? 's' : ''} • {stats.open} open •{' '}
-              {stats.inProgress} in progress • {stats.verified} verified
+              {filtered.length} item{filtered.length !== 1 ? 's' : ''} - {stats.open} open -{' '}
+              {stats.inProgress} in progress - {stats.verified} verified
             </CardDescription>
           </div>
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button
+            onClick={() => setCreateOpen(true)}
+            className={cn(isTouchDevice && "min-h-touch")}
+          >
             <Plus className="h-4 w-4 mr-2" />
             New Item
           </Button>
@@ -140,9 +475,13 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
               placeholder="Search by title, trade, or area..."
               value={searchTerm}
               onChange={handleSearchChange}
-              className="flex-1"
+              className={cn("flex-1", isTouchDevice && "min-h-touch")}
             />
-            <Select value={statusFilter} onChange={handleStatusFilterChange}>
+            <Select
+              value={statusFilter}
+              onChange={handleStatusFilterChange}
+              className={cn(isTouchDevice && "min-h-touch")}
+            >
               <option value="">All Statuses</option>
               <option value="open">Open</option>
               <option value="in_progress">In Progress</option>
@@ -164,17 +503,23 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">#</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Title</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Trade</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Location</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Due Date</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>#</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Title</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Trade</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Location</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Status</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Due Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.map((item: PunchItem) => (
-                    <PunchItemRow key={item.id} item={item} />
+                    <PunchItemRow
+                      key={item.id}
+                      item={item}
+                      isSelected={selectedItem?.id === item.id}
+                      onSelect={handleSelectItem}
+                      isTouchDevice={isTouchDevice}
+                    />
                   ))}
                 </tbody>
               </table>

@@ -85,7 +85,7 @@ export function ProjectTemplatesPage() {
 
   const handleDuplicate = async (template: ProjectTemplate) => {
     const newName = prompt('Enter a name for the duplicated template:', `${template.name} (Copy)`)
-    if (!newName?.trim()) return
+    if (!newName?.trim()) {return}
 
     try {
       await duplicateMutation.mutateAsync({
@@ -106,7 +106,7 @@ export function ProjectTemplatesPage() {
   }
 
   const handleDeleteConfirm = async () => {
-    if (!templateToDelete) return
+    if (!templateToDelete) {return}
 
     try {
       await deleteMutation.mutateAsync(templateToDelete.id)

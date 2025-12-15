@@ -391,7 +391,7 @@ export function WeatherDelayAutoSuggest({
   // Handle selecting a suggestion
   const handleSelectSuggestion = useCallback(
     (suggestion: WeatherDelaySuggestion) => {
-      if (!onSelectDelay || disabled) return;
+      if (!onSelectDelay || disabled) {return;}
 
       const template = getDelayTemplate(suggestion.type);
 
@@ -421,8 +421,8 @@ export function WeatherDelayAutoSuggest({
 
   // Filter suggestions based on view state
   const visibleSuggestions = useMemo(() => {
-    if (!data?.suggestions) return [];
-    if (showAllSuggestions) return data.suggestions;
+    if (!data?.suggestions) {return [];}
+    if (showAllSuggestions) {return data.suggestions;}
     // Show only high and critical severity by default
     return data.suggestions.filter(
       (s) => s.severity === 'high' || s.severity === 'critical'

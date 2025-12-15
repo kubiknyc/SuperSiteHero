@@ -457,7 +457,7 @@ export const aiConfigurationApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AIConfiguration
     } else {
       // Create new configuration
@@ -480,7 +480,7 @@ export const aiConfigurationApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AIConfiguration
     }
   },
@@ -560,7 +560,7 @@ export const aiUsageApi = {
       .gte('created_at', start)
       .lte('created_at', end)
 
-    if (featureError) throw featureError
+    if (featureError) {throw featureError}
 
     // Aggregate by feature
     const byFeatureMap = new Map<string, FeatureUsage>()
@@ -719,7 +719,7 @@ export const aiService = {
     feature: keyof AIConfiguration['features_enabled']
   ): Promise<boolean> {
     const config = await aiConfigurationApi.getConfiguration()
-    if (!config || !config.is_enabled) return false
+    if (!config || !config.is_enabled) {return false}
     return config.features_enabled?.[feature] ?? false
   },
 
@@ -728,7 +728,7 @@ export const aiService = {
    */
   async getProvider(): Promise<AIProvider | null> {
     const config = await aiConfigurationApi.getConfiguration()
-    if (!config || !config.is_enabled) return null
+    if (!config || !config.is_enabled) {return null}
     return getAIProvider(config)
   },
 }

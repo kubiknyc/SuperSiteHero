@@ -62,7 +62,7 @@ const STATUS_COLORS: Record<string, [number, number, number]> = {
 // ============================================================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {
@@ -71,7 +71,7 @@ function formatDate(dateString: string | null | undefined): string {
 }
 
 function formatShortDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MM/dd/yy')
   } catch {
@@ -94,7 +94,7 @@ function calculateVariance(
   baseline: string | null | undefined,
   actual: string | null | undefined
 ): number | null {
-  if (!baseline || !actual) return null
+  if (!baseline || !actual) {return null}
   try {
     const baselineDate = parseISO(baseline)
     const actualDate = parseISO(actual)

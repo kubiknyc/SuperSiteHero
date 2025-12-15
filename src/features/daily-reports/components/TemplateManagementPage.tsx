@@ -269,7 +269,7 @@ function EditTemplateDialog({ template, open, onOpenChange }: EditTemplateDialog
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!template) return;
+    if (!template) {return;}
 
     await updateTemplate.mutateAsync({
       templateId: template.id,
@@ -413,7 +413,7 @@ function CopyTemplateDialog({ template, open, onOpenChange }: CopyTemplateDialog
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!template) return;
+    if (!template) {return;}
 
     await copyTemplate.mutateAsync({
       source_template_id: template.id,
@@ -622,9 +622,9 @@ export function TemplateManagementPage() {
   // Build filters object
   const filters: TemplateFilters = useMemo(() => {
     const f: TemplateFilters = {};
-    if (scopeFilter !== 'all') f.scope = scopeFilter;
-    if (categoryFilter !== 'all') f.category = categoryFilter;
-    if (searchQuery) f.search = searchQuery;
+    if (scopeFilter !== 'all') {f.scope = scopeFilter;}
+    if (categoryFilter !== 'all') {f.category = categoryFilter;}
+    if (searchQuery) {f.search = searchQuery;}
     return f;
   }, [scopeFilter, categoryFilter, searchQuery]);
 

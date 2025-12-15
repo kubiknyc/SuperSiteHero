@@ -76,10 +76,10 @@ interface ChartData {
 }
 
 function SimpleChart({ data, metric }: { data: ChartData[]; metric: 'lcp' | 'fid' | 'cls' }) {
-  if (data.length === 0) return null;
+  if (data.length === 0) {return null;}
 
   const values = data.map(d => d[metric]).filter(Boolean) as number[];
-  if (values.length === 0) return null;
+  if (values.length === 0) {return null;}
 
   const max = Math.max(...values);
   const min = Math.min(...values);
@@ -90,7 +90,7 @@ function SimpleChart({ data, metric }: { data: ChartData[]; metric: 'lcp' | 'fid
       <svg width="100%" height="60" style={{ border: '1px solid #e0e0e0', borderRadius: '4px' }}>
         {data.map((d, i) => {
           const value = d[metric];
-          if (!value) return null;
+          if (!value) {return null;}
 
           const x = (i / (data.length - 1)) * 100;
           const y = ((value - min) / range) * 50;
@@ -109,7 +109,7 @@ function SimpleChart({ data, metric }: { data: ChartData[]; metric: 'lcp' | 'fid
           points={data
             .map((d, i) => {
               const value = d[metric];
-              if (!value) return null;
+              if (!value) {return null;}
               const x = (i / (data.length - 1)) * 100;
               const y = ((value - min) / range) * 50;
               return `${x},${50 - y}`;

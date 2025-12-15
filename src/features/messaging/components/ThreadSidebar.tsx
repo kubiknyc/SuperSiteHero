@@ -168,7 +168,7 @@ export function ThreadSidebar({
   // Handle reply submission
   const handleSendReply = async () => {
     const trimmed = replyContent.trim()
-    if (!trimmed) return
+    if (!trimmed) {return}
 
     try {
       await sendReply.mutateAsync({
@@ -199,7 +199,7 @@ export function ThreadSidebar({
     }
   }
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   const isLoading = loadingParent || loadingReplies
 

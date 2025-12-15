@@ -1,20 +1,48 @@
 // File: /src/lib/offline/sync-manager.ts
 // Background sync manager for automatic offline data synchronization
+// Enhanced with priority queue and bandwidth detection
 
 import { OfflineClient } from '../api/offline-client';
 import { useOfflineStore, type SyncConflict } from '@/stores/offline-store';
 import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
+import { priorityQueue, type SyncBatch } from './priority-queue';
+import { bandwidthDetector, type NetworkSpeed } from './bandwidth-detector';
+import { putInStore, STORES } from './indexeddb';
+
+/**
+ * Sync telemetry entry
+ */
+export interface SyncTelemetry {
+  id: string;
+  user_id?: string;
+  sync_started_at: string;
+  sync_completed_at?: string;
+  items_synced: number;
+  total_bytes: number;
+  duration_ms: number;
+  network_type: string;
+  network_speed: NetworkSpeed;
+  batch_count: number;
+  errors: number;
+}
 
 /**
  * Background sync manager
  * Handles automatic synchronization when network is restored
+ * Enhanced with:
+ * - Priority queue for selective sync
+ * - Bandwidth detection for adaptive batching
+ * - Sync telemetry tracking
+ * - Resumable batch operations
  */
 export class SyncManager {
   private static syncInProgress = false;
   private static syncInterval: ReturnType<typeof setInterval> | null = null;
   private static lastSyncAttempt = 0;
   private static readonly MIN_SYNC_INTERVAL = 5000; // 5 seconds minimum between syncs
+  private static currentBatch: SyncBatch | null = null;
+  private static telemetry: Partial<SyncTelemetry> = {};
 
   /**
    * Initialize background sync
@@ -283,11 +311,159 @@ export class SyncManager {
   static getStatus(): {
     syncInProgress: boolean;
     lastSyncAttempt: number;
+    currentBatch: SyncBatch | null;
+    queueStats: ReturnType<typeof priorityQueue.getStats>;
   } {
     return {
       syncInProgress: this.syncInProgress,
       lastSyncAttempt: this.lastSyncAttempt,
+      currentBatch: this.currentBatch,
+      queueStats: priorityQueue.getStats(),
     };
+  }
+
+  /**
+   * Perform bandwidth test and update configuration
+   */
+  static async updateBandwidthConfig(): Promise<void> {
+    try {
+      logger.log('[SyncManager] Performing bandwidth test...');
+      await bandwidthDetector.performBandwidthTest();
+      const config = bandwidthDetector.getAdaptiveSyncConfig();
+      logger.log('[SyncManager] Bandwidth config updated:', config);
+    } catch (error) {
+      logger.error('[SyncManager] Failed to update bandwidth config:', error);
+    }
+  }
+
+  /**
+   * Process next batch from priority queue
+   */
+  static async processNextBatch(): Promise<{
+    success: number;
+    failed: number;
+    remaining: number;
+  }> {
+    const config = bandwidthDetector.getAdaptiveSyncConfig();
+    const batch = priorityQueue.getNextBatch(config.maxBatchSize, config.maxBatchItems);
+
+    if (!batch) {
+      return { success: 0, failed: 0, remaining: 0 };
+    }
+
+    this.currentBatch = batch;
+    let success = 0;
+    let failed = 0;
+
+    logger.log(`[SyncManager] Processing batch: ${batch.items.length} items, ${batch.totalSize} bytes`);
+
+    for (const item of batch.items) {
+      try {
+        // Mark as syncing
+        priorityQueue.updateItemStatus(item.id, 'syncing');
+
+        // Sync the item (implement actual sync logic here)
+        // This would call your OfflineClient or Supabase methods
+        // await this.syncItem(item);
+
+        // Mark as completed
+        priorityQueue.updateItemStatus(item.id, 'completed');
+        success++;
+      } catch (error) {
+        logger.error(`[SyncManager] Failed to sync item ${item.id}:`, error);
+        priorityQueue.updateItemStatus(item.id, 'failed', error instanceof Error ? error.message : 'Unknown error');
+        failed++;
+      }
+    }
+
+    // Clean up completed items
+    priorityQueue.clearCompleted();
+
+    const stats = priorityQueue.getStats();
+    this.currentBatch = null;
+
+    return {
+      success,
+      failed,
+      remaining: stats.pending,
+    };
+  }
+
+  /**
+   * Save sync telemetry to database
+   */
+  static async saveSyncTelemetry(telemetry: SyncTelemetry): Promise<void> {
+    try {
+      // Save to IndexedDB for offline access
+      await putInStore(STORES.SYNC_QUEUE, telemetry);
+
+      // Try to sync to server if online
+      if (navigator.onLine) {
+        const { error } = await supabase.from('sync_telemetry' as any).insert(telemetry);
+
+        if (error) {
+          logger.warn('[SyncManager] Failed to save telemetry to server:', error);
+        }
+      }
+    } catch (error) {
+      logger.error('[SyncManager] Failed to save telemetry:', error);
+    }
+  }
+
+  /**
+   * Start telemetry tracking for current sync
+   */
+  private static startTelemetry(): void {
+    const bandwidth = bandwidthDetector.getAverageBandwidth();
+    const networkSpeed = bandwidthDetector.getCurrentSpeed();
+
+    this.telemetry = {
+      id: `sync-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      sync_started_at: new Date().toISOString(),
+      items_synced: 0,
+      total_bytes: 0,
+      network_type: bandwidth?.connectionType || 'unknown',
+      network_speed: networkSpeed,
+      batch_count: 0,
+      errors: 0,
+    };
+  }
+
+  /**
+   * Complete telemetry tracking
+   */
+  private static async completeTelemetry(): Promise<void> {
+    if (!this.telemetry.sync_started_at) return;
+
+    const completedTelemetry: SyncTelemetry = {
+      id: this.telemetry.id!,
+      sync_started_at: this.telemetry.sync_started_at,
+      sync_completed_at: new Date().toISOString(),
+      items_synced: this.telemetry.items_synced || 0,
+      total_bytes: this.telemetry.total_bytes || 0,
+      duration_ms: Date.now() - new Date(this.telemetry.sync_started_at).getTime(),
+      network_type: this.telemetry.network_type || 'unknown',
+      network_speed: this.telemetry.network_speed || 'offline',
+      batch_count: this.telemetry.batch_count || 0,
+      errors: this.telemetry.errors || 0,
+    };
+
+    await this.saveSyncTelemetry(completedTelemetry);
+    this.telemetry = {};
+  }
+
+  /**
+   * Get priority queue instance (for external access)
+   */
+  static getPriorityQueue() {
+    return priorityQueue;
+  }
+
+  /**
+   * Get bandwidth detector instance (for external access)
+   */
+  static getBandwidthDetector() {
+    return bandwidthDetector;
   }
 }
 

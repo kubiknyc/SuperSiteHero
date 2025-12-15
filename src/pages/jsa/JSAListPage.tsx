@@ -37,7 +37,7 @@ export function JSAListPage() {
   }
 
   const handleCreate = async () => {
-    if (!taskDescription || !scheduledDate) return;
+    if (!taskDescription || !scheduledDate) {return;}
 
     try {
       const jsa = await createMutation.mutateAsync({

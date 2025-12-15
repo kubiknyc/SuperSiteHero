@@ -601,13 +601,27 @@ describe('lienWaiverReminderService', () => {
 
   describe('getReminderStats', () => {
     it('should calculate reminder statistics correctly', async () => {
+      // Use dates relative to a fixed "today" midnight to avoid timezone issues
       const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      // Helper to create date strings consistently (avoiding timezone issues with toISOString)
+      const daysFromToday = (days: number) => {
+        const date = new Date(today)
+        date.setDate(date.getDate() + days)
+        // Format as YYYY-MM-DD in local time (not UTC)
+        const year = date.getFullYear()
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const day = String(date.getDate()).padStart(2, '0')
+        return `${year}-${month}-${day}`
+      }
+
       const mockWaivers = [
-        { due_date: new Date(today.getTime() - 86400000 * 5).toISOString().split('T')[0], status: 'pending' }, // 5 days overdue
-        { due_date: new Date(today.getTime() + 86400000 * 1).toISOString().split('T')[0], status: 'pending' }, // Due in 1 day
-        { due_date: new Date(today.getTime() + 86400000 * 2).toISOString().split('T')[0], status: 'sent' }, // Due in 2 days
-        { due_date: new Date(today.getTime() + 86400000 * 5).toISOString().split('T')[0], status: 'pending' }, // Due in 5 days
-        { due_date: new Date(today.getTime() - 86400000 * 10).toISOString().split('T')[0], status: 'pending' }, // 10 days overdue
+        { due_date: daysFromToday(-5), status: 'pending' }, // 5 days overdue
+        { due_date: daysFromToday(1), status: 'pending' }, // Due in 1 day
+        { due_date: daysFromToday(2), status: 'sent' }, // Due in 2 days
+        { due_date: daysFromToday(5), status: 'pending' }, // Due in 5 days
+        { due_date: daysFromToday(-10), status: 'pending' }, // 10 days overdue
       ]
 
       const selectMock = vi.fn().mockReturnThis()

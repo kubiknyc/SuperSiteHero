@@ -1,0 +1,74 @@
+Initialising login role...
+Connecting to remote database...
+Skipping migration 027b_seed_system_checklist_templates.sql... (file name must match pattern "<timestamp>_name.sql")
+Skipping migration 048b_seed_csi_cost_codes.sql... (file name must match pattern "<timestamp>_name.sql")
+Skipping migration nul... (file name must match pattern "<timestamp>_name.sql")
+Skipping migration test_039_enhancements.sql... (file name must match pattern "<timestamp>_name.sql")
+Do you want to push these migrations to the remote database?
+ • 102_action_item_pipeline.sql
+ • 103_lien_waiver_all_states.sql
+ • 104_lien_waiver_all_states_part2.sql
+ • 105_lien_waiver_all_states_part3.sql
+ • 106_lien_waiver_texas_complete.sql
+ • 107_earned_value_management.sql
+ • 108_subcontractor_daily_reports_access.sql
+ • 109_checklist_conditional_logic.sql
+ • 110_checklist_auto_escalation.sql
+ • 111_checklist_time_tracking.sql
+ • 111_daily_report_templates_sharing.sql
+ • 112_weather_delay_suggestions.sql
+ • 113_drawing_packages.sql
+ • 114_safety_observations.sql
+ • 115_near_miss_analytics.sql
+ • 116_trir_dart_calculations.sql
+ • 117_enhanced_punch_list_mobile_ux.sql
+ • 118_push_notifications.sql
+ • 118_site_instruction_qr_workflow.sql
+ • 119_site_instruction_qr_workflow.sql
+ • 120_biometric_credentials.sql
+ • 121_subcontractor_punch_updates.sql
+ • 121_sync_telemetry.sql
+ • 121_unified_photo_evidence_hub.sql
+ • 121_workflow_automation.sql
+ • 122_equipment_daily_status.sql
+ • 122_equipment_maintenance_schedules.sql
+ • 123_automated_field_reports.sql
+ • 123_inspection_punch_auto_link.sql
+ • 124_report_sharing.sql
+ • 20241214_milestone_notification_preferences.sql
+
+ [Y/n] Y
+Applying migration 102_action_item_pipeline.sql...
+NOTICE (42701): column "task_id" of relation "meeting_action_items" already exists, skipping
+ERROR: column m.meeting_number does not exist (SQLSTATE 42703)                 
+At statement: 19                                                               
+-- ============================================================================
+-- Views for cross-meeting action item queries                                 
+-- ============================================================================
+                                                                               
+-- View: All action items with meeting context                                 
+CREATE OR REPLACE VIEW action_items_with_context AS                            
+SELECT                                                                         
+  ai.id,                                                                       
+  ai.meeting_id,                                                               
+  ai.project_id,                                                               
+  ai.description,                                                              
+  ai.assignee_id as assigned_to_user_id,                                       
+  ai.assignee_name as assigned_to_name,                                        
+  ai.assignee_company as assigned_to_company,                                  
+  ai.due_date,                                                                 
+  ai.status,                                                                   
+  ai.priority,                                                                 
+  ai.category,                                                                 
+  ai.escalation_level,                                                         
+  ai.carryover_count,                                                          
+  ai.resolution_type,                                                          
+  ai.resolved_at,                                                              
+  ai.created_at,                                                               
+  ai.updated_at,                                                               
+  -- Meeting context                                                           
+  m.meeting_type,                                                              
+  m.meeting_date,                                                              
+  m.meeting_number,                                                            
+  ^                                                                            
+Try rerunning the command with --debug to troubleshoot the error.

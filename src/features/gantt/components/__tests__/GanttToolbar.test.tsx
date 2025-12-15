@@ -48,7 +48,7 @@ describe('GanttToolbar', () => {
 
       const buttons = screen.getAllByRole('button');
       const scrollLeftBtn = buttons.find((btn) => btn.title === 'Scroll left');
-      if (scrollLeftBtn) fireEvent.click(scrollLeftBtn);
+      if (scrollLeftBtn) {fireEvent.click(scrollLeftBtn);}
 
       expect(props.onScrollLeft).toHaveBeenCalled();
     });
@@ -59,7 +59,7 @@ describe('GanttToolbar', () => {
 
       const buttons = screen.getAllByRole('button');
       const scrollRightBtn = buttons.find((btn) => btn.title === 'Scroll right');
-      if (scrollRightBtn) fireEvent.click(scrollRightBtn);
+      if (scrollRightBtn) {fireEvent.click(scrollRightBtn);}
 
       expect(props.onScrollRight).toHaveBeenCalled();
     });
@@ -103,7 +103,7 @@ describe('GanttToolbar', () => {
 
       const buttons = screen.getAllByRole('button');
       const zoomInBtn = buttons.find((btn) => btn.title === 'Zoom in');
-      if (zoomInBtn) fireEvent.click(zoomInBtn);
+      if (zoomInBtn) {fireEvent.click(zoomInBtn);}
 
       expect(props.onZoomChange).toHaveBeenCalledWith('day');
     });
@@ -114,7 +114,7 @@ describe('GanttToolbar', () => {
 
       const buttons = screen.getAllByRole('button');
       const zoomOutBtn = buttons.find((btn) => btn.title === 'Zoom out');
-      if (zoomOutBtn) fireEvent.click(zoomOutBtn);
+      if (zoomOutBtn) {fireEvent.click(zoomOutBtn);}
 
       expect(props.onZoomChange).toHaveBeenCalledWith('month');
     });
@@ -156,7 +156,7 @@ describe('GanttToolbar', () => {
 
       const buttons = screen.getAllByRole('button');
       const refreshBtn = buttons.find((btn) => btn.title === 'Refresh data');
-      if (refreshBtn) fireEvent.click(refreshBtn);
+      if (refreshBtn) {fireEvent.click(refreshBtn);}
 
       expect(props.onRefresh).toHaveBeenCalled();
     });

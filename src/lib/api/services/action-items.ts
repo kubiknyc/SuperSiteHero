@@ -636,9 +636,9 @@ export async function getItemsNeedingEscalation(
     const daysOverdue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24))
     const currentLevel = item.escalation_level || 0
 
-    if (daysOverdue >= config.level3Days && currentLevel < 3) return true
-    if (daysOverdue >= config.level2Days && currentLevel < 2) return true
-    if (daysOverdue >= config.level1Days && currentLevel < 1) return true
+    if (daysOverdue >= config.level3Days && currentLevel < 3) {return true}
+    if (daysOverdue >= config.level2Days && currentLevel < 2) {return true}
+    if (daysOverdue >= config.level1Days && currentLevel < 1) {return true}
 
     return false
   }) as unknown as ActionItemWithContext[]
@@ -651,9 +651,9 @@ export function calculateEscalationLevel(
   daysOverdue: number,
   config: EscalationConfig = DEFAULT_ESCALATION_CONFIG
 ): number {
-  if (daysOverdue >= config.level3Days) return 3
-  if (daysOverdue >= config.level2Days) return 2
-  if (daysOverdue >= config.level1Days) return 1
+  if (daysOverdue >= config.level3Days) {return 3}
+  if (daysOverdue >= config.level2Days) {return 2}
+  if (daysOverdue >= config.level1Days) {return 1}
   return 0
 }
 

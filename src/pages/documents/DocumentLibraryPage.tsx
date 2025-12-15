@@ -216,7 +216,7 @@ function DocumentLibraryPage() {
   }
 
   const confirmDelete = () => {
-    if (!documentToDelete) return
+    if (!documentToDelete) {return}
     deleteDocument.mutate(documentToDelete.id, {
       onSuccess: () => {
         setDeleteDialogOpen(false)
@@ -226,7 +226,7 @@ function DocumentLibraryPage() {
   }
 
   const handleUpdateDocument = () => {
-    if (!documentToEdit) return
+    if (!documentToEdit) {return}
     updateDocument.mutate(
       {
         id: documentToEdit.id,

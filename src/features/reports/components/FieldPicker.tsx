@@ -68,7 +68,7 @@ export function FieldPicker({
     const groups: Record<string, ReportFieldDefinition[]> = {}
     availableFields.forEach((field) => {
       const category = field.category || 'Other'
-      if (!groups[category]) groups[category] = []
+      if (!groups[category]) {groups[category] = []}
       groups[category].push(field)
     })
     return groups
@@ -76,7 +76,7 @@ export function FieldPicker({
 
   // Filter fields by search
   const filteredGroups = useMemo(() => {
-    if (!searchTerm) return groupedFields
+    if (!searchTerm) {return groupedFields}
     const term = searchTerm.toLowerCase()
     const filtered: Record<string, ReportFieldDefinition[]> = {}
     Object.entries(groupedFields).forEach(([category, fields]) => {
@@ -112,7 +112,7 @@ export function FieldPicker({
 
   // Add field to selection
   const addField = (field: ReportFieldDefinition) => {
-    if (selectedFieldNames.has(field.field_name)) return
+    if (selectedFieldNames.has(field.field_name)) {return}
 
     const newField: ReportTemplateFieldInput = {
       field_name: field.field_name,
@@ -148,7 +148,7 @@ export function FieldPicker({
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault()
-    if (draggedIndex === null || draggedIndex === index) return
+    if (draggedIndex === null || draggedIndex === index) {return}
 
     const updated = [...selectedFields]
     const [draggedItem] = updated.splice(draggedIndex, 1)

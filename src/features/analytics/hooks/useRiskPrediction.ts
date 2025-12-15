@@ -104,7 +104,7 @@ export function useRiskAlerts(projectId: string | undefined, options?: {
       }
 
       const { data, error } = await query.limit(100)
-      if (error) throw error
+      if (error) {throw error}
       return data as RiskAlert[]
     },
     enabled: isEnabled && !!projectId,
@@ -129,7 +129,7 @@ export function useAcknowledgeAlert() {
         })
         .eq('id', alertId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: riskQueryKeys.all })
@@ -164,7 +164,7 @@ export function useResolveAlert() {
         })
         .eq('id', alertId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: riskQueryKeys.all })
@@ -193,7 +193,7 @@ export function useActivityRiskPrediction(activityId: string | undefined) {
         .limit(1)
         .single()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error && error.code !== 'PGRST116') {throw error}
       return data as ActivityRiskPrediction | null
     },
     enabled: isEnabled && !!activityId,
@@ -233,7 +233,7 @@ export function useRiskManagement(projectId: string | undefined) {
 
     // Actions
     runAnalysis: (options?: Partial<RiskAnalysisRequest>) => {
-      if (!projectId) return
+      if (!projectId) {return}
       runAnalysis.mutate({
         project_id: projectId,
         ...options,

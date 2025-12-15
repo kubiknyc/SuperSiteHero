@@ -43,7 +43,7 @@ export function useMessageReadReceipts(messageId: string | undefined) {
   return useQuery({
     queryKey: [...messagingKeys.all, 'read-receipts', messageId],
     queryFn: async (): Promise<ReadReceipt[]> => {
-      if (!messageId) return []
+      if (!messageId) {return []}
 
       const { data, error } = await supabase
         .from('message_read_receipts')
@@ -62,7 +62,7 @@ export function useMessageReadReceipts(messageId: string | undefined) {
         .neq('user_id', userProfile?.id || '') // Exclude current user
         .order('read_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as unknown as ReadReceipt[]
     },
@@ -103,7 +103,7 @@ export function useConversationReadReceipts(
         .in('message_id', messageIds)
         .neq('user_id', userProfile?.id || '') // Exclude current user
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Group by message_id
       const receiptMap = new Map<string, ReadReceipt[]>()
@@ -158,7 +158,7 @@ export function useLatestReaders(
         .neq('user_id', userProfile?.id || '')
         .order('read_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Group by message_id and limit to maxReadersPerMessage
       const receiptMap = new Map<string, ReadReceipt[]>()

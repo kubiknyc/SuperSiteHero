@@ -101,7 +101,7 @@ export function ChangeOrderDetailPage() {
 
   // Format currency
   const formatCurrency = (amount: number | null | undefined) => {
-    if (amount === null || amount === undefined) return 'TBD'
+    if (amount === null || amount === undefined) {return 'TBD'}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -128,7 +128,7 @@ export function ChangeOrderDetailPage() {
 
   // Action handlers
   const handleSubmitForInternalApproval = async () => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
     try {
       await submitEstimate.mutateAsync({
         id: changeOrder.id,
@@ -141,7 +141,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const handleInternalApproval = async (approved: boolean) => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
     try {
       await processInternalApproval.mutateAsync({
         id: changeOrder.id,
@@ -156,7 +156,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const handleSubmitToOwner = async () => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
     try {
       await submitToOwner.mutateAsync(changeOrder.id)
     } catch (e) {
@@ -165,7 +165,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const handleOwnerApproval = async (approved: boolean) => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
     try {
       await processOwnerApproval.mutateAsync({
         id: changeOrder.id,
@@ -184,7 +184,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const handleVoid = async () => {
-    if (!changeOrder || !confirm('Are you sure you want to void this change order?')) return
+    if (!changeOrder || !confirm('Are you sure you want to void this change order?')) {return}
     try {
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: 'Voided by user' })
     } catch (e) {
@@ -193,7 +193,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const handleDownloadPDF = async () => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
     try {
       await downloadChangeOrderPDF({
         changeOrder,
@@ -212,7 +212,7 @@ export function ChangeOrderDetailPage() {
 
   // Signature handlers
   const handleSignatureComplete = async (data: SignatureData) => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
 
     await updateSignature.mutateAsync({
       id: changeOrder.id,
@@ -224,7 +224,7 @@ export function ChangeOrderDetailPage() {
   }
 
   const handleSignatureRemove = async () => {
-    if (!changeOrder) return
+    if (!changeOrder) {return}
 
     await updateSignature.mutateAsync({
       id: changeOrder.id,

@@ -167,7 +167,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
 
   // Handle void
   const handleVoid = async () => {
-    if (!confirm('Are you sure you want to void this change order? This cannot be undone.')) return
+    if (!confirm('Are you sure you want to void this change order? This cannot be undone.')) {return}
     try {
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: comments || 'Voided by user' })
       resetForm()
@@ -179,7 +179,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
 
   // Render approval form
   const renderApprovalForm = () => {
-    if (!showApprovalForm) return null
+    if (!showApprovalForm) {return null}
 
     const isOwnerApproval = approvalType === 'owner'
 

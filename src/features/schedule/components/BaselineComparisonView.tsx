@@ -87,7 +87,7 @@ const CRITICAL_PATH_MULTIPLIER = 0.5
 // =============================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {
@@ -96,7 +96,7 @@ function formatDate(dateString: string | null | undefined): string {
 }
 
 function formatShortDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d')
   } catch {
@@ -108,14 +108,14 @@ function getVarianceStatus(
   varianceDays: number | null,
   isCritical: boolean = false
 ): VarianceStatus {
-  if (varianceDays === null) return 'on_track'
+  if (varianceDays === null) {return 'on_track'}
 
   const absVariance = Math.abs(varianceDays)
   const multiplier = isCritical ? CRITICAL_PATH_MULTIPLIER : 1
 
-  if (absVariance <= VARIANCE_THRESHOLDS.ON_TRACK * multiplier) return 'on_track'
-  if (absVariance <= VARIANCE_THRESHOLDS.CAUTION * multiplier) return 'caution'
-  if (absVariance <= VARIANCE_THRESHOLDS.WARNING * multiplier) return 'warning'
+  if (absVariance <= VARIANCE_THRESHOLDS.ON_TRACK * multiplier) {return 'on_track'}
+  if (absVariance <= VARIANCE_THRESHOLDS.CAUTION * multiplier) {return 'caution'}
+  if (absVariance <= VARIANCE_THRESHOLDS.WARNING * multiplier) {return 'warning'}
   return 'critical'
 }
 
@@ -155,9 +155,9 @@ function getStatusIcon(status: VarianceStatus) {
 }
 
 function getVarianceIcon(days: number | null) {
-  if (days === null) return <Minus className="h-3.5 w-3.5" />
-  if (days < 0) return <TrendingDown className="h-3.5 w-3.5" />
-  if (days > 0) return <TrendingUp className="h-3.5 w-3.5" />
+  if (days === null) {return <Minus className="h-3.5 w-3.5" />}
+  if (days < 0) {return <TrendingDown className="h-3.5 w-3.5" />}
+  if (days > 0) {return <TrendingUp className="h-3.5 w-3.5" />}
   return <Minus className="h-3.5 w-3.5" />
 }
 
@@ -360,7 +360,7 @@ export function BaselineComparisonView({
     return filtered
   }, [variances, searchQuery, criticalOnly, milestonesOnly])
 
-  if (!baseline) return null
+  if (!baseline) {return null}
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>

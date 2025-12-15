@@ -167,7 +167,7 @@ function calculateNextRun(
   const [hours, minutes] = timeOfDay.split(':').map(Number)
   const now = new Date()
 
-  let nextRun = new Date()
+  const nextRun = new Date()
   nextRun.setHours(hours, minutes, 0, 0)
 
   switch (frequency) {
@@ -324,7 +324,7 @@ async function generateReportData(
       const r = row as Record<string, unknown>
       return headers.map(h => {
         const val = r[h]
-        if (val === null || val === undefined) return ''
+        if (val === null || val === undefined) {return ''}
         if (typeof val === 'string' && (val.includes(',') || val.includes('"'))) {
           return `"${val.replace(/"/g, '""')}"`
         }

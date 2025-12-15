@@ -108,7 +108,7 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
   }, []);
 
   const handleSave = useCallback(() => {
-    if (!formData.material_description?.trim()) return;
+    if (!formData.material_description?.trim()) {return;}
 
     if (editingEntry) {
       updateDeliveryEntry(editingEntry.id, formData);

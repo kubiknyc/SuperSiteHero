@@ -82,7 +82,7 @@ export function AcknowledgmentTracker({
   };
 
   const handleRemove = async (acknowledgmentId: string) => {
-    if (!confirm('Remove this worker acknowledgment?')) return;
+    if (!confirm('Remove this worker acknowledgment?')) {return;}
 
     try {
       await removeMutation.mutateAsync({
@@ -343,10 +343,10 @@ function AddAcknowledgmentDialog({
   // Initialize canvas
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -358,10 +358,10 @@ function AddAcknowledgmentDialog({
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -374,13 +374,13 @@ function AddAcknowledgmentDialog({
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
+    if (!isDrawing) {return;}
 
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -402,10 +402,10 @@ function AddAcknowledgmentDialog({
 
   const clearSignature = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -414,7 +414,7 @@ function AddAcknowledgmentDialog({
   };
 
   const handleSubmit = async () => {
-    if (!workerName.trim()) return;
+    if (!workerName.trim()) {return;}
 
     await onSubmit({
       worker_name: workerName.trim(),

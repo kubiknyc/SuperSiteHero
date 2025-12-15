@@ -156,7 +156,7 @@ export function useDocumentAiWorkflow(documentId: string | undefined) {
 
     // Actions
     enhance: (options?: Omit<EnhanceDocumentRequest, 'document_id'>) => {
-      if (!documentId) return
+      if (!documentId) {return}
       enhance.mutate({
         document_id: documentId,
         force_llm: true,
@@ -170,7 +170,7 @@ export function useDocumentAiWorkflow(documentId: string | undefined) {
       verifyLink.mutate({ linkId, userId, isCorrect })
     },
     refresh: () => {
-      if (!documentId) return
+      if (!documentId) {return}
       llmResult.refetch()
       entityLinks.refetch()
     },

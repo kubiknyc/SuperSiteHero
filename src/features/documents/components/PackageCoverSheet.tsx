@@ -40,7 +40,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
 
     // Group items by section/discipline
     const groupedItems = useMemo(() => {
-      if (!pkg.items) return {};
+      if (!pkg.items) {return {};}
 
       return pkg.items
         .filter((item) => item.isIncluded)
@@ -50,7 +50,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
             item.sectionName ||
             DRAWING_DISCIPLINES.find((d) => d.value === item.drawing?.discipline)?.label ||
             'Other';
-          if (!acc[section]) acc[section] = [];
+          if (!acc[section]) {acc[section] = [];}
           acc[section].push(item);
           return acc;
         }, {} as Record<string, DrawingPackageItem[]>);

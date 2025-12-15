@@ -65,7 +65,7 @@ interface RFIRegisterProps {
  * Aging indicator for RFIs
  */
 function AgingBadge({ daysOpen, isOverdue }: { daysOpen: number | null; isOverdue: boolean }) {
-  if (daysOpen === null) return <span className="text-gray-400">-</span>
+  if (daysOpen === null) {return <span className="text-gray-400">-</span>}
 
   let colorClass = 'bg-green-100 text-green-800'
   if (isOverdue) {
@@ -132,7 +132,7 @@ function ImpactIndicator({ cost, schedule }: { cost: number | null; schedule: nu
   const hasCost = cost !== null && cost > 0
   const hasSchedule = schedule !== null && schedule > 0
 
-  if (!hasCost && !hasSchedule) return <span className="text-gray-400">-</span>
+  if (!hasCost && !hasSchedule) {return <span className="text-gray-400">-</span>}
 
   return (
     <div className="flex items-center gap-1">

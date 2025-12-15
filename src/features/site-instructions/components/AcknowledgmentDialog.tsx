@@ -35,20 +35,20 @@ export function AcknowledgmentDialog({
   const handleCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDrawing(true)
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
     const rect = canvas.getBoundingClientRect()
     ctx.beginPath()
     ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top)
   }
 
   const handleCanvasMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return
+    if (!isDrawing) {return}
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
     const rect = canvas.getBoundingClientRect()
     ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top)
     ctx.strokeStyle = '#000'
@@ -59,21 +59,21 @@ export function AcknowledgmentDialog({
   const handleCanvasMouseUp = () => {
     setIsDrawing(false)
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
     setSignature(canvas.toDataURL())
   }
 
   const clearSignature = () => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setSignature(null)
   }
 
   const handleSubmit = async () => {
-    if (!acknowledgedBy.trim()) return
+    if (!acknowledgedBy.trim()) {return}
     await onAcknowledge({
       acknowledgedBy: acknowledgedBy.trim(),
       signature: signature || undefined,

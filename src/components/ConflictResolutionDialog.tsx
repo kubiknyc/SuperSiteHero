@@ -38,7 +38,7 @@ export function ConflictResolutionDialog({
   const [selectedResolution, setSelectedResolution] = useState<'local' | 'server' | 'merge'>('server')
   const { resolveConflict } = useOfflineStore()
 
-  if (!conflict) return null
+  if (!conflict) {return null}
 
   const handleResolve = async () => {
     setResolving(true)
@@ -91,7 +91,7 @@ export function ConflictResolutionDialog({
       const serverValue = conflict.serverData?.[key]
 
       // Skip internal fields
-      if (key === 'id' || key === 'created_at') return
+      if (key === 'id' || key === 'created_at') {return}
 
       // Check if values differ
       if (JSON.stringify(localValue) !== JSON.stringify(serverValue)) {
@@ -109,9 +109,9 @@ export function ConflictResolutionDialog({
   const differences = getFieldDifferences()
 
   const renderValue = (value: any): string => {
-    if (value === null || value === undefined) return 'Not set'
-    if (typeof value === 'object') return JSON.stringify(value, null, 2)
-    if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+    if (value === null || value === undefined) {return 'Not set'}
+    if (typeof value === 'object') {return JSON.stringify(value, null, 2)}
+    if (typeof value === 'boolean') {return value ? 'Yes' : 'No'}
     return String(value)
   }
 

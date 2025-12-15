@@ -120,7 +120,7 @@ export function useQueueProcessor() {
   } | null>(null)
 
   const processQueue = useCallback(async () => {
-    if (isProcessing || !navigator.onLine) return
+    if (isProcessing || !navigator.onLine) {return}
 
     setIsProcessing(true)
     try {

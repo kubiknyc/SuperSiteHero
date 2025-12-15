@@ -655,7 +655,7 @@ export interface CreateEquipmentLogDTO {
 /**
  * Update Equipment Log input
  */
-export interface UpdateEquipmentLogDTO extends Partial<CreateEquipmentLogDTO> {}
+export type UpdateEquipmentLogDTO = Partial<CreateEquipmentLogDTO>
 
 /**
  * Create Equipment Maintenance input
@@ -823,7 +823,7 @@ export function formatEquipmentName(equipment: { equipment_number: string; name:
  * Check if maintenance is overdue
  */
 export function isMaintenanceOverdue(maintenance: EquipmentMaintenance, equipment: Equipment): boolean {
-  if (maintenance.status !== 'scheduled') return false;
+  if (maintenance.status !== 'scheduled') {return false;}
 
   if (maintenance.scheduled_date && new Date(maintenance.scheduled_date) < new Date()) {
     return true;

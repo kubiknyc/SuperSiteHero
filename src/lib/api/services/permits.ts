@@ -78,7 +78,7 @@ export const permitsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -96,7 +96,7 @@ export const permitsApi = {
       .eq('id', id)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Permit
   },
 
@@ -114,7 +114,7 @@ export const permitsApi = {
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -155,7 +155,7 @@ export const permitsApi = {
       `)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Permit
   },
 
@@ -177,7 +177,7 @@ export const permitsApi = {
       `)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Permit
   },
 
@@ -197,7 +197,7 @@ export const permitsApi = {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -234,7 +234,7 @@ export const permitsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -262,7 +262,7 @@ export const permitsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -282,7 +282,7 @@ export const permitsApi = {
       .not('status', 'in', '("closed","issued","active")')
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -302,7 +302,7 @@ export const permitsApi = {
       .in('status', ['issued', 'active'])
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -316,7 +316,7 @@ export const permitsApi = {
       .eq('project_id', projectId)
       .is('deleted_at', null)
 
-    if (error) throw error
+    if (error) {throw error}
 
     const today = new Date()
     const thirtyDaysFromNow = new Date()
@@ -331,7 +331,7 @@ export const permitsApi = {
       critical_permits: 0,
     }
 
-    if (!permits) return stats
+    if (!permits) {return stats}
 
     for (const permit of permits) {
       // Count by status
@@ -386,11 +386,11 @@ export const permitsApi = {
       .gte('expiration_date', today.toISOString().split('T')[0])
       .in('status', ['issued', 'active'])
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Filter in JS since the date math is complex
     return (data || []).filter(permit => {
-      if (!permit.expiration_date) return false
+      if (!permit.expiration_date) {return false}
       const expDate = new Date(permit.expiration_date)
       const reminderDays = permit.renewal_reminder_days_before || 30
       const reminderDate = new Date(expDate)
@@ -414,7 +414,7 @@ export const permitsApi = {
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 
@@ -433,7 +433,7 @@ export const permitsApi = {
       .is('deleted_at', null)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Permit[]
   },
 }

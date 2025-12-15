@@ -77,7 +77,7 @@ export function CalibrationDialog({
   // Handle calibration
   const handleCalibrate = () => {
     const pixelsPerUnit = calculatePixelsPerUnit()
-    if (!pixelsPerUnit) return
+    if (!pixelsPerUnit) {return}
 
     const scale: ScaleFactor = {
       pixelsPerUnit,
@@ -94,10 +94,10 @@ export function CalibrationDialog({
 
   // Get accuracy indicator
   const getAccuracyBadge = () => {
-    if (pixelDistance === 0) return null
+    if (pixelDistance === 0) {return null}
 
     const pixelsPerUnit = calculatePixelsPerUnit()
-    if (!pixelsPerUnit) return null
+    if (!pixelsPerUnit) {return null}
 
     // Typical drawing scales:
     // 1/4" = 1' (1:48) → 0.25 in/ft → 3 px/in at 72 DPI → 144 px/ft

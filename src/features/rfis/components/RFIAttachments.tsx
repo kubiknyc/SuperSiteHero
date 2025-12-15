@@ -90,7 +90,7 @@ export function RFIAttachments({
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    if (canUpload) setIsDragging(true)
+    if (canUpload) {setIsDragging(true)}
   }
 
   const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
@@ -104,7 +104,7 @@ export function RFIAttachments({
     e.stopPropagation()
     setIsDragging(false)
 
-    if (!canUpload) return
+    if (!canUpload) {return}
 
     const files = e.dataTransfer.files
     if (files && files.length > 0) {
@@ -124,7 +124,7 @@ export function RFIAttachments({
 
   // Upload handler
   const handleUpload = async () => {
-    if (!selectedFile) return
+    if (!selectedFile) {return}
 
     try {
       await uploadAttachment.mutateAsync({
@@ -168,7 +168,7 @@ export function RFIAttachments({
 
   // Delete handler
   const handleDelete = async (attachment: RFIAttachment) => {
-    if (!window.confirm(`Delete "${attachment.file_name}"?`)) return
+    if (!window.confirm(`Delete "${attachment.file_name}"?`)) {return}
 
     try {
       await deleteAttachment.mutateAsync({

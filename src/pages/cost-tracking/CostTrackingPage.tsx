@@ -110,8 +110,8 @@ export function CostTrackingPage() {
 
   // Filter budgets
   const filteredBudgets = useMemo(() => {
-    if (!budgets) return []
-    if (!budgetSearch) return budgets
+    if (!budgets) {return []}
+    if (!budgetSearch) {return budgets}
 
     const searchLower = budgetSearch.toLowerCase()
     return budgets.filter(b =>
@@ -123,8 +123,8 @@ export function CostTrackingPage() {
 
   // Filter transactions
   const filteredTransactions = useMemo(() => {
-    if (!transactions) return []
-    if (!transactionSearch) return transactions
+    if (!transactions) {return []}
+    if (!transactionSearch) {return transactions}
 
     const searchLower = transactionSearch.toLowerCase()
     return transactions.filter(t =>

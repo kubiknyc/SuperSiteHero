@@ -100,13 +100,13 @@ export function WarrantyFormDialog({
 
   // Parse notification days from array to comma-separated string
   const notificationDaysToString = (days: number[] | undefined): string => {
-    if (!days || days.length === 0) return '30, 60, 90'
+    if (!days || days.length === 0) {return '30, 60, 90'}
     return days.join(', ')
   }
 
   // Parse comma-separated string to array of numbers
   const stringToNotificationDays = (str: string | undefined): number[] => {
-    if (!str) return [30, 60, 90]
+    if (!str) {return [30, 60, 90]}
     return str
       .split(',')
       .map((s) => parseInt(s.trim(), 10))
@@ -115,7 +115,7 @@ export function WarrantyFormDialog({
 
   // Calculate duration in years between dates
   const calculateDurationYears = (start: string, end: string): number | undefined => {
-    if (!start || !end) return undefined
+    if (!start || !end) {return undefined}
     const startDate = new Date(start)
     const endDate = new Date(end)
     const diffTime = endDate.getTime() - startDate.getTime()

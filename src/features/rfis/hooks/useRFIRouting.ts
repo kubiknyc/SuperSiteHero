@@ -104,7 +104,7 @@ export function useQuickRoleSuggestion(subject: string, question: string): {
   confidence: number
   matchedKeywords: string[]
 } | null {
-  if (!subject && !question) return null
+  if (!subject && !question) {return null}
   return rfiRoutingAiApi.quickSuggestRole(subject, question)
 }
 
@@ -129,7 +129,7 @@ export function useRFIRoutingWorkflow(rfiId: string | undefined, projectId: stri
 
     // Actions
     generateSuggestion: async (subject: string, question: string, specSection?: string) => {
-      if (!rfiId || !projectId) return null
+      if (!rfiId || !projectId) {return null}
       return generateSuggestion.mutateAsync({
         rfi_id: rfiId,
         project_id: projectId,
@@ -140,7 +140,7 @@ export function useRFIRoutingWorkflow(rfiId: string | undefined, projectId: stri
     },
 
     acceptSuggestion: async () => {
-      if (!latestSuggestion) return
+      if (!latestSuggestion) {return}
       await submitFeedback.mutateAsync({
         suggestion_id: latestSuggestion.id,
         feedback_status: 'accepted',
@@ -150,7 +150,7 @@ export function useRFIRoutingWorkflow(rfiId: string | undefined, projectId: stri
     },
 
     modifySuggestion: async (actualRole: BallInCourtRole, actualAssigneeId?: string) => {
-      if (!latestSuggestion) return
+      if (!latestSuggestion) {return}
       await submitFeedback.mutateAsync({
         suggestion_id: latestSuggestion.id,
         feedback_status: 'modified',
@@ -160,7 +160,7 @@ export function useRFIRoutingWorkflow(rfiId: string | undefined, projectId: stri
     },
 
     rejectSuggestion: async (notes?: string) => {
-      if (!latestSuggestion) return
+      if (!latestSuggestion) {return}
       await submitFeedback.mutateAsync({
         suggestion_id: latestSuggestion.id,
         feedback_status: 'rejected',

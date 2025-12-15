@@ -99,11 +99,11 @@ export function UnifiedDrawingCanvas({
 
   // Sync color/lineWidth from props when they change
   useEffect(() => {
-    if (propColor) setColor(propColor)
+    if (propColor) {setColor(propColor)}
   }, [propColor])
 
   useEffect(() => {
-    if (propLineWidth) setStrokeWidth(propLineWidth)
+    if (propLineWidth) {setStrokeWidth(propLineWidth)}
   }, [propLineWidth])
 
   // Filter state for layer visibility
@@ -406,7 +406,7 @@ export function UnifiedDrawingCanvas({
 
   // Handle stamp placement
   const handleStampPlacement = useCallback((pos: { x: number; y: number }) => {
-    if (!markupState?.selectedStamp) return
+    if (!markupState?.selectedStamp) {return}
 
     const stampType = markupState.selectedStamp
     let stampText = ''

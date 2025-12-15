@@ -217,7 +217,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Group by date
       const groupedByDate: Record<string, DailyTrendPoint> = {}
@@ -237,13 +237,13 @@ export const nearMissAnalyticsApi = {
       }
 
       // Aggregate data
-      ;(data || []).forEach((incident: {
+      (data || []).forEach((incident: {
         incident_date: string
         potential_severity?: string
         root_cause_category?: RootCauseCategory
       }) => {
         const point = groupedByDate[incident.incident_date]
-        if (!point) return
+        if (!point) {return}
 
         point.total_count++
 
@@ -336,7 +336,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Group by location
       const locationMap: Record<string, LocationHeatMapData> = {}
@@ -420,7 +420,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Initialize 24x7 matrix
       const matrix: number[][] = Array.from({ length: 24 }, () => Array(7).fill(0))
@@ -428,7 +428,7 @@ export const nearMissAnalyticsApi = {
       let totalIncidents = 0
 
       ;(data || []).forEach((incident: { incident_time?: string; incident_date: string }) => {
-        if (!incident.incident_time) return
+        if (!incident.incident_time) {return}
 
         const hour = parseInt(incident.incident_time.split(':')[0], 10)
         const dayOfWeek = new Date(incident.incident_date).getDay()
@@ -476,7 +476,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Count by root cause
       const counts: Record<string, number> = {}
@@ -571,7 +571,7 @@ export const nearMissAnalyticsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Count by date
     const dailyCounts: Record<string, number> = {}
@@ -580,13 +580,13 @@ export const nearMissAnalyticsApi = {
     })
 
     const counts = Object.values(dailyCounts)
-    if (counts.length === 0) return []
+    if (counts.length === 0) {return []}
 
     const average = counts.reduce((a, b) => a + b, 0) / counts.length
     const variance = counts.reduce((sum, c) => sum + Math.pow(c - average, 2), 0) / counts.length
     const stdDev = Math.sqrt(variance)
 
-    if (stdDev === 0) return []
+    if (stdDev === 0) {return []}
 
     const spikes: FrequencySpike[] = []
     Object.entries(dailyCounts).forEach(([date, count]) => {
@@ -792,7 +792,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as NearMissPattern[]
     } catch (error) {
@@ -819,7 +819,7 @@ export const nearMissAnalyticsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as NearMissPattern
     } catch (error) {
@@ -863,7 +863,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as NearMissAlert[]
     } catch (error) {
@@ -926,7 +926,7 @@ export const nearMissAnalyticsApi = {
         .eq('is_active', true)
         .order('name')
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as NearMissZone[]
     } catch (error) {
@@ -949,7 +949,7 @@ export const nearMissAnalyticsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as NearMissZone
     } catch (error) {
@@ -973,7 +973,7 @@ export const nearMissAnalyticsApi = {
         .eq('is_active', true)
         .order('name')
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as NearMissCategory[]
     } catch (error) {
@@ -996,7 +996,7 @@ export const nearMissAnalyticsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as NearMissCategory
     } catch (error) {
@@ -1029,7 +1029,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as AlertThreshold[]
     } catch (error) {
@@ -1052,7 +1052,7 @@ export const nearMissAnalyticsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as AlertThreshold
     } catch (error) {
@@ -1090,7 +1090,7 @@ export const nearMissAnalyticsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as MonthlyReport[]
     } catch (error) {
@@ -1113,7 +1113,7 @@ export const nearMissAnalyticsApi = {
         .eq('industry_type', industryType)
         .order('year', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as SafetyBenchmark[]
     } catch (error) {

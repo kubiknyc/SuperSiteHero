@@ -25,7 +25,9 @@ import { useExecutionWithResponses } from '../hooks/useExecutions'
 import { useExecutionScore } from '../hooks/useResponses'
 import { useTemplateItems } from '../hooks/useTemplateItems'
 import { FailedItemsNotification } from '../components/FailedItemsNotification'
+import { ChecklistGradeDisplay } from '../components/ChecklistGradeDisplay'
 import type { ScoreValue } from '@/types/checklists'
+import type { ChecklistScore } from '@/types/checklist-scoring'
 import { format } from 'date-fns'
 import { generateChecklistPDF } from '../utils/pdfExport'
 import toast from 'react-hot-toast'
@@ -173,7 +175,7 @@ export function ExecutionDetailPage() {
   const canEdit = execution.status === 'draft' || execution.status === 'in_progress'
 
   const handleExportPDF = async () => {
-    if (!execution) return
+    if (!execution) {return}
 
     try {
       await generateChecklistPDF(execution, templateItems, score || null)
@@ -252,35 +254,30 @@ export function ExecutionDetailPage() {
           </div>
         )}
 
-        {/* Score Summary (if scoring enabled) */}
+        {/* Score Summary (if scoring enabled) - Enhanced with Grade Display */}
         {score && score.total_count > 0 && (
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="text-lg">Score Summary</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-4 gap-4">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600">{score.pass_count}</div>
-                  <div className="text-sm text-gray-600">Pass</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-red-600">{score.fail_count}</div>
-                  <div className="text-sm text-gray-600">Fail</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-gray-600">{score.na_count}</div>
-                  <div className="text-sm text-gray-600">N/A</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600">
-                    {Math.round(score.pass_percentage)}%
-                  </div>
-                  <div className="text-sm text-gray-600">Pass Rate</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div className="mb-6">
+            <ChecklistGradeDisplay
+              score={{
+                execution_id: executionId!,
+                scoring_type: execution.grade ? 'letter_grade' : 'percentage',
+                score: score.pass_percentage,
+                grade: execution.grade || undefined,
+                passed: execution.passed !== null ? execution.passed : score.pass_percentage >= 70,
+                breakdown: {
+                  total_items: score.total_count,
+                  completed_items: score.total_count,
+                  scorable_items: score.pass_count + score.fail_count,
+                  pass_count: score.pass_count,
+                  fail_count: score.fail_count,
+                  na_count: score.na_count,
+                  item_scores: [],
+                },
+                calculated_at: execution.updated_at,
+              }}
+              size="md"
+            />
+          </div>
         )}
 
         {/* Metadata */}

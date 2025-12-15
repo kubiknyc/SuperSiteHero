@@ -77,11 +77,11 @@ export function NewConversationDialog({
   }, [projectUsers, userProfile?.id])
 
   const filteredUsers = useMemo(() => {
-    if (!filterText.trim()) return availableUsers
+    if (!filterText.trim()) {return availableUsers}
     const search = filterText.toLowerCase()
     return availableUsers.filter((pu) => {
       const user = pu.user
-      if (!user) return false
+      if (!user) {return false}
       const name = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
       return name.includes(search) || user.email.toLowerCase().includes(search)
     })
@@ -347,7 +347,7 @@ export function NewConversationDialog({
                 <div className="space-y-1">
                   {filteredUsers.map((projectUser) => {
                     const user = projectUser.user
-                    if (!user) return null
+                    if (!user) {return null}
                     const isSelected = selectedUsers.some((u) => u.id === user.id)
                     return (
                       <button

@@ -157,8 +157,8 @@ export function DocuSignRequestDialog({
 
   // Move signer up/down
   const moveSigner = (index: number, direction: 'up' | 'down') => {
-    if (direction === 'up' && index === 0) return
-    if (direction === 'down' && index === signers.length - 1) return
+    if (direction === 'up' && index === 0) {return}
+    if (direction === 'down' && index === signers.length - 1) {return}
 
     const newIndex = direction === 'up' ? index - 1 : index + 1
     const updated = [...signers]
@@ -185,7 +185,7 @@ export function DocuSignRequestDialog({
 
   // Handle send
   const handleSend = async () => {
-    if (!isValid()) return
+    if (!isValid()) {return}
 
     const validCCs = ccRecipients.filter(cc => cc.email.trim() && cc.name.trim())
 

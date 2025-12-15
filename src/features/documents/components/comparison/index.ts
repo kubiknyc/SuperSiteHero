@@ -3,3 +3,6 @@
 
 export { EnhancedVersionComparison } from './EnhancedVersionComparison'
 export { ChangeNavigator, ChangeNavigatorCompact } from './ChangeNavigator'
+export { MarkupVersionComparison } from './MarkupVersionComparison'
+export { MarkupChangesList } from './MarkupChangesList'
+export { MarkupDiffViewer } from './MarkupDiffViewer'

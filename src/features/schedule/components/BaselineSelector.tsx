@@ -26,7 +26,7 @@ import type { ScheduleBaseline } from '@/types/schedule-activities'
 // =============================================
 
 function formatBaselineDate(dateString: string | null | undefined): string {
-  if (!dateString) return ''
+  if (!dateString) {return ''}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {

@@ -238,7 +238,7 @@ interface RemindersBadgeProps {
 }
 
 export function RemindersBadge({ count, hasOverdue, onClick }: RemindersBadgeProps) {
-  if (count === 0) return null
+  if (count === 0) {return null}
 
   return (
     <button

@@ -100,6 +100,16 @@ export type ReportFilterOperator =
 export type ReportSortDirection = 'asc' | 'desc'
 
 /**
+ * Chart types for visualizations
+ */
+export type ChartType = 'bar' | 'line' | 'pie' | 'area'
+
+/**
+ * Color schemes for charts
+ */
+export type ChartColorScheme = 'default' | 'blue' | 'green' | 'purple' | 'orange' | 'red' | 'custom'
+
+/**
  * Generated report status
  */
 export type GeneratedReportStatus = 'pending' | 'generating' | 'completed' | 'failed'
@@ -148,6 +158,32 @@ export interface ReportTemplate {
 }
 
 /**
+ * Chart configuration for report visualizations
+ */
+export interface ChartConfiguration {
+  // Chart type
+  type: ChartType
+
+  // Data mapping
+  groupByField: string
+  valueField: string
+  aggregation: ReportAggregationType
+
+  // Display options
+  title?: string
+  xAxisLabel?: string
+  yAxisLabel?: string
+  showLegend?: boolean
+  showGrid?: boolean
+  showDataLabels?: boolean
+
+  // Styling
+  colorScheme?: ChartColorScheme
+  customColors?: string[]
+  height?: number
+}
+
+/**
  * Report configuration stored as JSONB
  */
 export interface ReportConfiguration {
@@ -155,12 +191,7 @@ export interface ReportConfiguration {
   selectedFieldIds?: string[]
 
   // Charting options
-  chartConfig?: {
-    type: 'bar' | 'pie' | 'line' | 'area'
-    groupByField?: string
-    valueField?: string
-    showLegend?: boolean
-  }
+  chartConfig?: ChartConfiguration
 
   // Summary row options
   summaryFields?: {
@@ -694,7 +725,7 @@ export function getApplicableAggregations(fieldType: ReportFieldType): typeof AG
  * Format file size for display
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes'
+  if (bytes === 0) {return '0 Bytes'}
   const k = 1024
   const sizes = ['Bytes', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
@@ -741,6 +772,156 @@ export function generateDefaultTemplateName(dataSource: ReportDataSource): strin
 }
 
 /**
+ * Chart color scheme configurations
+ */
+export const CHART_COLOR_SCHEMES: Record<ChartColorScheme, { name: string; colors: string[] }> = {
+  default: {
+    name: 'Default',
+    colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'],
+  },
+  blue: {
+    name: 'Blue',
+    colors: ['#DBEAFE', '#93C5FD', '#60A5FA', '#3B82F6', '#2563EB', '#1D4ED8', '#1E40AF', '#1E3A8A'],
+  },
+  green: {
+    name: 'Green',
+    colors: ['#D1FAE5', '#6EE7B7', '#34D399', '#10B981', '#059669', '#047857', '#065F46', '#064E3B'],
+  },
+  purple: {
+    name: 'Purple',
+    colors: ['#EDE9FE', '#C4B5FD', '#A78BFA', '#8B5CF6', '#7C3AED', '#6D28D9', '#5B21B6', '#4C1D95'],
+  },
+  orange: {
+    name: 'Orange',
+    colors: ['#FFEDD5', '#FED7AA', '#FDBA74', '#FB923C', '#F97316', '#EA580C', '#C2410C', '#9A3412'],
+  },
+  red: {
+    name: 'Red',
+    colors: ['#FEE2E2', '#FECACA', '#FCA5A5', '#F87171', '#EF4444', '#DC2626', '#B91C1C', '#991B1B'],
+  },
+  custom: {
+    name: 'Custom',
+    colors: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'],
+  },
+}
+
+/**
+ * Chart type configurations
+ */
+export const CHART_TYPE_CONFIG: { value: ChartType; label: string; description: string }[] = [
+  { value: 'bar', label: 'Bar Chart', description: 'Compare values across categories' },
+  { value: 'line', label: 'Line Chart', description: 'Show trends over time or categories' },
+  { value: 'pie', label: 'Pie Chart', description: 'Display proportions of a whole' },
+  { value: 'area', label: 'Area Chart', description: 'Show cumulative totals over time' },
+]
+
+/**
  * Alias for ReportFieldDefinition for backwards compatibility
  */
 export type FieldDefinition = ReportFieldDefinition
+
+// ============================================================================
+// Report Sharing Types
+// ============================================================================
+
+/**
+ * Shared report configuration
+ */
+export interface SharedReport {
+  id: string
+  report_template_id: string
+  public_token: string
+  is_public: boolean
+  allowed_users: string[] | null
+  expires_at: string | null
+  allow_export: boolean
+  show_branding: boolean
+  custom_message: string | null
+  company_id: string
+  created_by: string | null
+  created_at: string
+  updated_at: string
+  view_count: number
+  last_viewed_at: string | null
+
+  // Joined data (optional)
+  creator?: UserInfo
+  report_template?: {
+    id: string
+    name: string
+    data_source: ReportDataSource
+    configuration?: ReportConfiguration
+  }
+}
+
+/**
+ * Public shared report data (returned by token lookup)
+ */
+export interface PublicSharedReportData {
+  id: string
+  reportTemplateId: string
+  publicToken: string
+  isPublic: boolean
+  allowedUsers: string[] | null
+  expiresAt: string | null
+  allowExport: boolean
+  showBranding: boolean
+  customMessage: string | null
+  companyId: string
+  createdAt: string
+  viewCount: number
+  template: {
+    id: string
+    name: string
+    description: string | null
+    dataSource: string
+    configuration: ReportConfiguration | null
+    defaultFormat: string
+    pageOrientation: string
+    includeCharts: boolean
+    includeSummary: boolean
+  }
+  company: {
+    id: string
+    name: string
+    logoUrl: string | null
+  }
+}
+
+/**
+ * Input for creating a report share
+ */
+export interface CreateReportShareDTO {
+  reportTemplateId: string
+  companyId: string
+  isPublic?: boolean
+  allowedUsers?: string[] | null
+  expiresAt?: string | null
+  allowExport?: boolean
+  showBranding?: boolean
+  customMessage?: string | null
+}
+
+/**
+ * Input for updating a report share
+ */
+export interface UpdateReportShareDTO {
+  isPublic?: boolean
+  allowedUsers?: string[] | null
+  expiresAt?: string | null
+  allowExport?: boolean
+  showBranding?: boolean
+  customMessage?: string | null
+}
+
+/**
+ * Share link expiration presets
+ */
+export const SHARE_EXPIRATION_PRESETS = [
+  { value: null, label: 'Never expires' },
+  { value: 1, label: '1 day' },
+  { value: 7, label: '7 days' },
+  { value: 30, label: '30 days' },
+  { value: 90, label: '90 days' },
+  { value: 365, label: '1 year' },
+] as const

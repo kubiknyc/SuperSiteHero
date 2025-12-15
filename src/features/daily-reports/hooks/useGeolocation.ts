@@ -80,7 +80,7 @@ export function useGeolocation(options: UseGeolocationOptions = {}): UseGeolocat
 
   // Check permission status
   useEffect(() => {
-    if (!isSupported) return;
+    if (!isSupported) {return;}
 
     // Check permission if available
     if ('permissions' in navigator) {
@@ -102,7 +102,7 @@ export function useGeolocation(options: UseGeolocationOptions = {}): UseGeolocat
 
   // Watch position if enabled
   useEffect(() => {
-    if (!isSupported || !mergedOptions.watchPosition) return;
+    if (!isSupported || !mergedOptions.watchPosition) {return;}
 
     const handleSuccess = (pos: globalThis.GeolocationPosition) => {
       setPosition(convertPosition(pos));

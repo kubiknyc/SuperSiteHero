@@ -75,7 +75,7 @@ export function PresenceIndicator({
     </div>
   )
 
-  if (!userName) return indicator
+  if (!userName) {return indicator}
 
   return (
     <TooltipProvider>

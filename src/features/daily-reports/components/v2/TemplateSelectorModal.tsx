@@ -51,9 +51,9 @@ export function TemplateSelectorModal({
       const hasWorkforce = (template.workforce_template?.length ?? 0) > 0;
       const hasEquipment = (template.equipment_template?.length ?? 0) > 0;
 
-      if (filterType === 'workforce' && !hasWorkforce) return false;
-      if (filterType === 'equipment' && !hasEquipment) return false;
-      if (filterType === 'both' && !hasWorkforce && !hasEquipment) return false;
+      if (filterType === 'workforce' && !hasWorkforce) {return false;}
+      if (filterType === 'equipment' && !hasEquipment) {return false;}
+      if (filterType === 'both' && !hasWorkforce && !hasEquipment) {return false;}
 
       // Apply search filter
       if (searchQuery) {

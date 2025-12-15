@@ -65,7 +65,7 @@ export function TemplateSelector({
 
   const saveMutation = useMutation({
     mutationFn: async ({ name, description }: { name: string; description?: string }) => {
-      if (!currentDraft) throw new Error('No draft to save as template')
+      if (!currentDraft) {throw new Error('No draft to save as template')}
 
       const input = createTemplateFromReport(
         currentDraft,

@@ -36,7 +36,7 @@ export function DeliveriesSection({
   }
 
   const handleSaveEdit = () => {
-    if (!editingId) return
+    if (!editingId) {return}
 
     // Validate the entry
     const result = deliveryEntrySchema.safeParse(editForm)

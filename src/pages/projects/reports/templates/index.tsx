@@ -29,7 +29,7 @@ export default function ReportTemplatesPage() {
   }
 
   const handleUseTemplate = async () => {
-    if (!selectedTemplate || !companyId) return
+    if (!selectedTemplate || !companyId) {return}
 
     // Create a new report template from the standard template
     try {
@@ -64,7 +64,7 @@ export default function ReportTemplatesPage() {
   }
 
   const handleGenerateReport = () => {
-    if (!selectedTemplate) return
+    if (!selectedTemplate) {return}
 
     // Navigate to quick generate
     if (projectId) {

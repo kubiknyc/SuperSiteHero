@@ -280,7 +280,7 @@ export const activityRiskScorer = {
    * Calculate constraint score
    */
   calculateConstraintScore(constraints: any[]): number {
-    if (!constraints.length) return 0
+    if (!constraints.length) {return 0}
 
     let score = 0
     for (const constraint of constraints) {
@@ -299,10 +299,10 @@ export const activityRiskScorer = {
    * Calculate trade performance score
    */
   calculateTradeScore(ppc: number): number {
-    if (ppc >= 90) return 0
-    if (ppc >= 80) return 15
-    if (ppc >= 70) return 30
-    if (ppc >= 60) return 50
+    if (ppc >= 90) {return 0}
+    if (ppc >= 80) {return 15}
+    if (ppc >= 70) {return 30}
+    if (ppc >= 60) {return 50}
     return 70
   },
 
@@ -343,13 +343,13 @@ export const activityRiskScorer = {
     const requiredLabor = activity.labor_count || 0
     const assignedLabor = activity.assignments?.length || 0
 
-    if (requiredLabor === 0) return 0
-    if (assignedLabor === 0) return 50
+    if (requiredLabor === 0) {return 0}
+    if (assignedLabor === 0) {return 50}
 
     const coveragePercent = (assignedLabor / requiredLabor) * 100
-    if (coveragePercent >= 100) return 0
-    if (coveragePercent >= 80) return 15
-    if (coveragePercent >= 50) return 35
+    if (coveragePercent >= 100) {return 0}
+    if (coveragePercent >= 80) {return 15}
+    if (coveragePercent >= 50) {return 35}
     return 60
   },
 
@@ -417,7 +417,7 @@ export const activityRiskScorer = {
 
     // Constraint overdue alerts
     const overdueConstraints = activity.constraints?.filter((c: any) => {
-      if (c.status !== 'open' || !c.expected_resolution_date) return false
+      if (c.status !== 'open' || !c.expected_resolution_date) {return false}
       return new Date(c.expected_resolution_date) < new Date()
     }) || []
 
@@ -595,7 +595,7 @@ export const activityRiskScorer = {
     predictions: ActivityRiskPrediction[],
     criticalPathIds: Set<string>
   ): number {
-    if (!predictions.length) return 0
+    if (!predictions.length) {return 0}
 
     // Weight critical path activities higher
     let totalWeight = 0
@@ -623,9 +623,9 @@ export const activityRiskScorer = {
   },
 
   scoreToseverity(score: number): RiskAlertSeverity {
-    if (score >= 90) return 'critical'
-    if (score >= 70) return 'high'
-    if (score >= 50) return 'medium'
+    if (score >= 90) {return 'critical'}
+    if (score >= 70) {return 'high'}
+    if (score >= 50) {return 'medium'}
     return 'low'
   },
 
@@ -633,7 +633,7 @@ export const activityRiskScorer = {
    * Save predictions to database
    */
   async savePredictions(predictions: ActivityRiskPrediction[]): Promise<void> {
-    if (!predictions.length) return
+    if (!predictions.length) {return}
 
     const { error } = await supabaseAny
       .from('activity_risk_predictions')
@@ -654,7 +654,7 @@ export const activityRiskScorer = {
    * Save alerts to database
    */
   async saveAlerts(alerts: RiskAlert[]): Promise<void> {
-    if (!alerts.length) return
+    if (!alerts.length) {return}
 
     // Only insert new alerts (check for duplicates)
     const { error } = await supabaseAny

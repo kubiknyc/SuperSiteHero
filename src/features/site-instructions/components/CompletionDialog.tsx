@@ -30,7 +30,7 @@ export function CompletionDialog({
   const [notes, setNotes] = useState('')
 
   const handleSubmit = async () => {
-    if (!completedBy.trim()) return
+    if (!completedBy.trim()) {return}
     await onComplete({
       completedBy: completedBy.trim(),
       notes: notes.trim() || undefined,

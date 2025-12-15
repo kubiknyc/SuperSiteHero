@@ -43,7 +43,7 @@ export function WeatherLogDetailPage() {
   const deleteMutation = useDeleteWeatherLog()
 
   const handleDelete = async () => {
-    if (!id) return
+    if (!id) {return}
 
     try {
       await deleteMutation.mutateAsync(id)

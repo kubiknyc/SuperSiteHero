@@ -86,7 +86,7 @@ export function MaterialReceivingPage() {
 
   // Search filter (client-side)
   const filteredDeliveries = deliveries.filter((delivery) => {
-    if (!searchTerm) return true;
+    if (!searchTerm) {return true;}
     const search = searchTerm.toLowerCase();
     return (
       delivery.material_name.toLowerCase().includes(search) ||
@@ -102,13 +102,13 @@ export function MaterialReceivingPage() {
   };
 
   const handleUpdateDelivery = async (data: CreateMaterialDeliveryDTO) => {
-    if (!editingDeliveryId) return;
+    if (!editingDeliveryId) {return;}
     await updateDeliveryMutation.mutateAsync({ id: editingDeliveryId, ...data });
     setEditingDeliveryId(null);
   };
 
   const handleDeleteDelivery = async () => {
-    if (!deletingDeliveryId) return;
+    if (!deletingDeliveryId) {return;}
     await deleteDeliveryMutation.mutateAsync(deletingDeliveryId);
     setDeletingDeliveryId(null);
   };

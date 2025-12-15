@@ -51,7 +51,7 @@ export function MeetingsPage() {
 
   // Filter meetings
   const filteredMeetings = useMemo(() => {
-    if (!meetings) return []
+    if (!meetings) {return []}
 
     return meetings.filter((meeting) => {
       // Text search
@@ -68,7 +68,7 @@ export function MeetingsPage() {
           .join(' ')
           .toLowerCase()
 
-        if (!searchableText.includes(query)) return false
+        if (!searchableText.includes(query)) {return false}
       }
 
       // Type filter
@@ -79,14 +79,14 @@ export function MeetingsPage() {
       // Date filter (upcoming/past/today)
       if (dateFilter !== 'all') {
         const meetingDate = parseISO(meeting.meeting_date)
-        if (dateFilter === 'upcoming' && !isFuture(meetingDate)) return false
-        if (dateFilter === 'past' && !isPast(meetingDate)) return false
-        if (dateFilter === 'today' && !isToday(meetingDate)) return false
+        if (dateFilter === 'upcoming' && !isFuture(meetingDate)) {return false}
+        if (dateFilter === 'past' && !isPast(meetingDate)) {return false}
+        if (dateFilter === 'today' && !isToday(meetingDate)) {return false}
       }
 
       // Date range filter
-      if (dateRange.from && meeting.meeting_date < dateRange.from) return false
-      if (dateRange.to && meeting.meeting_date > dateRange.to) return false
+      if (dateRange.from && meeting.meeting_date < dateRange.from) {return false}
+      if (dateRange.to && meeting.meeting_date > dateRange.to) {return false}
 
       return true
     })
@@ -120,25 +120,25 @@ export function MeetingsPage() {
   // Get badge variant based on date
   const getDateBadgeVariant = (dateStr: string) => {
     const date = parseISO(dateStr)
-    if (isToday(date)) return 'default'
-    if (isFuture(date)) return 'secondary'
+    if (isToday(date)) {return 'default'}
+    if (isFuture(date)) {return 'secondary'}
     return 'outline'
   }
 
   const getDateLabel = (dateStr: string) => {
     const date = parseISO(dateStr)
-    if (isToday(date)) return 'Today'
-    if (isFuture(date)) return 'Upcoming'
+    if (isToday(date)) {return 'Today'}
+    if (isFuture(date)) {return 'Upcoming'}
     return 'Past'
   }
 
   // Count active filters
   const activeFilterCount = useMemo(() => {
     let count = 0
-    if (searchQuery) count++
-    if (typeFilter.length > 0) count += typeFilter.length
-    if (dateFilter !== 'all') count++
-    if (dateRange.from || dateRange.to) count++
+    if (searchQuery) {count++}
+    if (typeFilter.length > 0) {count += typeFilter.length}
+    if (dateFilter !== 'all') {count++}
+    if (dateRange.from || dateRange.to) {count++}
     return count
   }, [searchQuery, typeFilter, dateFilter, dateRange])
 
@@ -153,7 +153,7 @@ export function MeetingsPage() {
 
   // Stats
   const stats = useMemo(() => {
-    if (!filteredMeetings) return { total: 0, upcoming: 0, today: 0, withActionItems: 0 }
+    if (!filteredMeetings) {return { total: 0, upcoming: 0, today: 0, withActionItems: 0 }}
 
     return {
       total: filteredMeetings.length,

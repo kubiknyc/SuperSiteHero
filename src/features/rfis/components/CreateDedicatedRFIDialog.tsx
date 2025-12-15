@@ -110,11 +110,11 @@ export function CreateDedicatedRFIDialog({
   }, [projectUsers, userProfile?.id])
 
   const filteredDistributionUsers = useMemo(() => {
-    if (!distributionFilter.trim()) return availableUsers
+    if (!distributionFilter.trim()) {return availableUsers}
     const search = distributionFilter.toLowerCase()
     return availableUsers.filter((pu) => {
       const user = pu.user
-      if (!user) return false
+      if (!user) {return false}
       const name = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
       return name.includes(search) || user.email.toLowerCase().includes(search)
     })
@@ -421,7 +421,7 @@ export function CreateDedicatedRFIDialog({
                     <div className="divide-y">
                       {filteredDistributionUsers.map((projectUser) => {
                         const user = projectUser.user
-                        if (!user) return null
+                        if (!user) {return null}
                         const isSelected = distributionList.some((u) => u.id === user.id)
                         return (
                           <button

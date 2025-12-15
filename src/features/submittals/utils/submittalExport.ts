@@ -55,7 +55,7 @@ function getTypeLabel(type: string): string {
  * Get ball-in-court entity label
  */
 function getBallInCourtLabel(entity: string | null): string {
-  if (!entity) return ''
+  if (!entity) {return ''}
   const found = BALL_IN_COURT_ENTITIES.find((e) => e.value === entity)
   return found?.label || entity
 }
@@ -64,7 +64,7 @@ function getBallInCourtLabel(entity: string | null): string {
  * Format date for export
  */
 function formatDate(date: string | null): string {
-  if (!date) return ''
+  if (!date) {return ''}
   try {
     return format(new Date(date), 'MM/dd/yyyy')
   } catch {

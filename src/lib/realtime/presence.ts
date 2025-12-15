@@ -98,7 +98,7 @@ class PresenceManager {
   // Leave a presence room
   async leaveRoom(roomId: string): Promise<void> {
     const roomState = this.rooms.get(roomId)
-    if (!roomState) return
+    if (!roomState) {return}
 
     await roomState.channel.untrack()
     realtimeManager.removePresenceChannel(roomId)
@@ -111,7 +111,7 @@ class PresenceManager {
     updates: Partial<Pick<PresenceUser, 'currentPage'>>
   ): Promise<void> {
     const roomState = this.rooms.get(roomId)
-    if (!roomState || !roomState.currentUser) return
+    if (!roomState || !roomState.currentUser) {return}
 
     const updatedUser: PresenceUser = {
       ...roomState.currentUser,
@@ -148,7 +148,7 @@ class PresenceManager {
   // Send typing indicator
   async sendTyping(roomId: string, isTyping: boolean): Promise<void> {
     const roomState = this.rooms.get(roomId)
-    if (!roomState || !roomState.currentUser) return
+    if (!roomState || !roomState.currentUser) {return}
 
     const typingState: TypingState = {
       userId: roomState.currentUser.id,
@@ -181,7 +181,7 @@ class PresenceManager {
   // Get users currently typing
   getTypingUsers(roomId: string): TypingState[] {
     const roomState = this.rooms.get(roomId)
-    if (!roomState) return []
+    if (!roomState) {return []}
 
     return Array.from(roomState.typingUsers.values()).filter(
       (t) => t.isTyping && Date.now() - t.timestamp < this.typingTimeout
@@ -200,7 +200,7 @@ class PresenceManager {
 
   private handleTypingBroadcast(roomId: string, typingState: TypingState): void {
     const roomState = this.rooms.get(roomId)
-    if (!roomState) return
+    if (!roomState) {return}
 
     if (typingState.isTyping) {
       roomState.typingUsers.set(typingState.userId, typingState)
@@ -221,7 +221,7 @@ class PresenceManager {
 
   private notifyPresenceCallbacks(roomId: string, users: PresenceUser[]): void {
     const roomState = this.rooms.get(roomId)
-    if (!roomState) return
+    if (!roomState) {return}
 
     roomState.presenceCallbacks.forEach((callback) => {
       callback(users)
@@ -230,7 +230,7 @@ class PresenceManager {
 
   private notifyTypingCallbacks(roomId: string): void {
     const roomState = this.rooms.get(roomId)
-    if (!roomState) return
+    if (!roomState) {return}
 
     const typingUsers = this.getTypingUsers(roomId)
     roomState.typingCallbacks.forEach((callback) => {

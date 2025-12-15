@@ -131,6 +131,7 @@ export interface Photo {
   width?: number
   height?: number
   is360?: boolean
+  equirectangularMetadata?: EquirectangularMetadata
 
   // Timestamps
   capturedAt?: string

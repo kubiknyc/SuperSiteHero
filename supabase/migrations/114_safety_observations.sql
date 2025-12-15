@@ -576,9 +576,9 @@ CREATE POLICY "Users can view observations in their projects"
         AND pu.user_id = auth.uid()
     )
     OR EXISTS (
-      SELECT 1 FROM company_users cu
+      SELECT 1 FROM users cu
       WHERE cu.company_id = safety_observations.company_id
-        AND cu.user_id = auth.uid()
+        AND cu.id = auth.uid()
     )
   );
 
@@ -601,7 +601,7 @@ CREATE POLICY "Users can update their own observations or if assigned"
       SELECT 1 FROM project_users pu
       WHERE pu.project_id = safety_observations.project_id
         AND pu.user_id = auth.uid()
-        AND pu.role IN ('admin', 'project_manager', 'safety_manager')
+        AND pu.project_role IN ('admin', 'project_manager', 'safety_manager')
     )
   );
 
@@ -612,7 +612,7 @@ CREATE POLICY "Only admins can delete observations"
       SELECT 1 FROM project_users pu
       WHERE pu.project_id = safety_observations.project_id
         AND pu.user_id = auth.uid()
-        AND pu.role IN ('admin', 'project_manager')
+        AND pu.project_role IN ('admin', 'project_manager')
     )
   );
 
@@ -622,9 +622,9 @@ CREATE POLICY "Users can view leaderboards in their company"
   USING (
     user_id = auth.uid()
     OR EXISTS (
-      SELECT 1 FROM company_users cu
+      SELECT 1 FROM users cu
       WHERE cu.company_id = safety_observer_points.company_id
-        AND cu.user_id = auth.uid()
+        AND cu.id = auth.uid()
     )
   );
 

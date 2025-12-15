@@ -44,7 +44,7 @@ export function useThreadMessages(parentMessageId: string | undefined) {
   return useQuery({
     queryKey: threadKeys.thread(parentMessageId || ''),
     queryFn: async (): Promise<Message[]> => {
-      if (!parentMessageId) return []
+      if (!parentMessageId) {return []}
 
       const { data, error } = await db
         .from('messages')
@@ -69,7 +69,7 @@ export function useThreadMessages(parentMessageId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as unknown as Message[]
     },
@@ -90,7 +90,7 @@ export function useThreadMessagesInfinite(
   return useInfiniteQuery({
     queryKey: [...threadKeys.thread(parentMessageId || ''), 'infinite'],
     queryFn: async ({ pageParam }) => {
-      if (!parentMessageId) return []
+      if (!parentMessageId) {return []}
 
       let query = db
         .from('messages')
@@ -122,13 +122,13 @@ export function useThreadMessagesInfinite(
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as unknown as Message[]
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => {
-      if (lastPage.length < pageSize) return undefined
+      if (lastPage.length < pageSize) {return undefined}
       return lastPage[lastPage.length - 1]?.created_at
     },
     enabled: !!parentMessageId && !!userProfile?.id,
@@ -155,7 +155,7 @@ export function useReplyCounts(conversationId: string | undefined, messageIds: s
         .in('parent_message_id', messageIds)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Count replies per parent message
       const countMap = new Map<string, number>()
@@ -180,7 +180,7 @@ export function useReplyCount(messageId: string | undefined) {
   return useQuery({
     queryKey: [...threadKeys.all, 'reply-count', messageId],
     queryFn: async (): Promise<number> => {
-      if (!messageId) return 0
+      if (!messageId) {return 0}
 
       const { count, error } = await db
         .from('messages')
@@ -188,7 +188,7 @@ export function useReplyCount(messageId: string | undefined) {
         .eq('parent_message_id', messageId)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return count || 0
     },
@@ -206,7 +206,7 @@ export function useSendReply() {
 
   return useMutation({
     mutationFn: async (data: SendMessageDTO & { parent_message_id: string }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data: message, error } = await db
         .from('messages')
@@ -232,7 +232,7 @@ export function useSendReply() {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return message as unknown as Message
     },
@@ -315,7 +315,7 @@ export function useParentMessage(messageId: string | undefined) {
   return useQuery({
     queryKey: [...threadKeys.all, 'parent', messageId],
     queryFn: async (): Promise<Message | null> => {
-      if (!messageId) return null
+      if (!messageId) {return null}
 
       const { data, error } = await db
         .from('messages')
@@ -334,7 +334,7 @@ export function useParentMessage(messageId: string | undefined) {
         .single()
 
       if (error) {
-        if (error.code === 'PGRST116') return null // Not found
+        if (error.code === 'PGRST116') {return null} // Not found
         throw error
       }
 
@@ -352,7 +352,7 @@ export function useLatestReply(parentMessageId: string | undefined) {
   return useQuery({
     queryKey: [...threadKeys.all, 'latest-reply', parentMessageId],
     queryFn: async (): Promise<Message | null> => {
-      if (!parentMessageId) return null
+      if (!parentMessageId) {return null}
 
       const { data, error } = await db
         .from('messages')
@@ -374,7 +374,7 @@ export function useLatestReply(parentMessageId: string | undefined) {
         .single()
 
       if (error) {
-        if (error.code === 'PGRST116') return null // Not found
+        if (error.code === 'PGRST116') {return null} // Not found
         throw error
       }
 

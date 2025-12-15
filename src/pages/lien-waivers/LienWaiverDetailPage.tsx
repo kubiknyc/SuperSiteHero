@@ -124,7 +124,7 @@ export function LienWaiverDetailPage() {
 
   // Action handlers
   const handleSendRequest = async () => {
-    if (!sendToEmail.trim()) return;
+    if (!sendToEmail.trim()) {return;}
     try {
       await sendRequest.mutateAsync({ id: waiver.id, sent_to_email: sendToEmail });
       setSendDialogOpen(false);
@@ -151,7 +151,7 @@ export function LienWaiverDetailPage() {
   };
 
   const handleReject = async () => {
-    if (!rejectionReason.trim()) return;
+    if (!rejectionReason.trim()) {return;}
     try {
       await rejectWaiver.mutateAsync({ id: waiver.id, rejection_reason: rejectionReason });
       setRejectDialogOpen(false);
@@ -162,7 +162,7 @@ export function LienWaiverDetailPage() {
   };
 
   const handleVoid = async () => {
-    if (!voidReason.trim()) return;
+    if (!voidReason.trim()) {return;}
     try {
       await voidWaiver.mutateAsync({ id: waiver.id, reason: voidReason });
       setVoidDialogOpen(false);

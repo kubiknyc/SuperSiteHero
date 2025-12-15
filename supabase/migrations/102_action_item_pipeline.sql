@@ -71,7 +71,7 @@ CREATE INDEX IF NOT EXISTS idx_action_items_due_date
   ON meeting_action_items(due_date) WHERE due_date IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_action_items_assigned
-  ON meeting_action_items(assigned_to);
+  ON meeting_action_items(assignee_id);
 
 CREATE INDEX IF NOT EXISTS idx_action_items_category
   ON meeting_action_items(category) WHERE category IS NOT NULL;
@@ -92,10 +92,10 @@ SELECT
   ai.id,
   ai.meeting_id,
   ai.project_id,
-  ai.title,
   ai.description,
-  ai.assigned_to,
-  ai.assigned_company,
+  ai.assignee_id as assigned_to_user_id,
+  ai.assignee_name as assigned_to_name,
+  ai.assignee_company as assigned_to_company,
   ai.due_date,
   ai.status,
   ai.priority,
@@ -109,13 +109,10 @@ SELECT
   -- Meeting context
   m.meeting_type,
   m.meeting_date,
-  m.meeting_number,
   m.title as meeting_title,
-  -- Related entities
+  -- Related entities (only existing columns)
   ai.task_id,
-  ai.related_rfi_id,
   ai.constraint_id,
-  ai.related_change_order_id,
   -- Computed fields
   CASE
     WHEN ai.status = 'completed' THEN 'completed'
@@ -160,14 +157,14 @@ GRANT SELECT ON action_item_summary_by_project TO authenticated;
 CREATE OR REPLACE VIEW action_items_by_assignee AS
 SELECT
   project_id,
-  COALESCE(assigned_to, 'Unassigned') as assignee,
-  assigned_company,
+  COALESCE(assignee_name, 'Unassigned') as assignee,
+  assignee_company,
   COUNT(*) as total_items,
   COUNT(*) FILTER (WHERE status != 'completed') as open_items,
   COUNT(*) FILTER (WHERE due_date < CURRENT_DATE AND status != 'completed') as overdue_items,
   MIN(due_date) FILTER (WHERE status != 'completed') as nearest_due_date
 FROM meeting_action_items
-GROUP BY project_id, assigned_to, assigned_company;
+GROUP BY project_id, assignee_name, assignee_company;
 
 -- Grant access
 GRANT SELECT ON action_items_by_assignee TO authenticated;

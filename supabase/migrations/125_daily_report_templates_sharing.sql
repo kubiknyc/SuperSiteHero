@@ -108,12 +108,12 @@ CREATE POLICY "Users can update their templates" ON daily_report_templates
     -- Project admins can update project templates
     (scope = 'project' AND project_id IN (
       SELECT project_id FROM project_users
-      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
+      WHERE user_id = auth.uid() AND project_role IN ('owner', 'admin')
     )) OR
     -- Company admins can update company templates
     (scope = 'company' AND company_id IN (
-      SELECT company_id FROM company_users
-      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
+      SELECT company_id FROM users
+      WHERE id = auth.uid() AND role IN ('owner', 'admin')
     ))
   );
 
@@ -125,12 +125,12 @@ CREATE POLICY "Users can delete their templates" ON daily_report_templates
     -- Project admins can delete project templates
     (scope = 'project' AND project_id IN (
       SELECT project_id FROM project_users
-      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
+      WHERE user_id = auth.uid() AND project_role IN ('owner', 'admin')
     )) OR
     -- Company admins can delete company templates
     (scope = 'company' AND company_id IN (
-      SELECT company_id FROM company_users
-      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
+      SELECT company_id FROM users
+      WHERE id = auth.uid() AND role IN ('owner', 'admin')
     ))
   );
 
@@ -138,6 +138,7 @@ CREATE POLICY "Users can delete their templates" ON daily_report_templates
 -- PHASE 4: Create function to increment usage count
 -- =============================================
 
+DROP FUNCTION IF EXISTS increment_template_usage(UUID);
 CREATE OR REPLACE FUNCTION increment_template_usage(template_id UUID)
 RETURNS void AS $$
 BEGIN

@@ -283,7 +283,7 @@ function ActionItemCard({
           <Checkbox
             checked={item.status === 'completed'}
             onCheckedChange={(checked) => {
-              if (checked) onComplete()
+              if (checked) {onComplete()}
             }}
             className="mt-1"
           />

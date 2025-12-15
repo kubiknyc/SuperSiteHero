@@ -225,7 +225,7 @@ export interface SaveWeatherDataDTO {
  * Get weather condition label from code
  */
 export function getWeatherLabel(code: number | null | undefined): string {
-  if (code == null) return 'Unknown'
+  if (code == null) {return 'Unknown'}
   return WEATHER_CODE_LABELS[code] || 'Unknown'
 }
 
@@ -233,7 +233,7 @@ export function getWeatherLabel(code: number | null | undefined): string {
  * Get weather icon name from code
  */
 export function getWeatherIcon(code: number | null | undefined): string {
-  if (code == null) return 'cloud'
+  if (code == null) {return 'cloud'}
   return WEATHER_CODE_ICONS[code] || 'cloud'
 }
 
@@ -241,7 +241,7 @@ export function getWeatherIcon(code: number | null | undefined): string {
  * Format temperature with unit
  */
 export function formatTemperature(temp: number | null | undefined, unit: 'F' | 'C' = 'F'): string {
-  if (temp == null) return '--'
+  if (temp == null) {return '--'}
   return `${Math.round(temp)}°${unit}`
 }
 
@@ -249,9 +249,9 @@ export function formatTemperature(temp: number | null | undefined, unit: 'F' | '
  * Format precipitation with unit
  */
 export function formatPrecipitation(inches: number | null | undefined): string {
-  if (inches == null) return '--'
-  if (inches === 0) return '0"'
-  if (inches < 0.1) return '<0.1"'
+  if (inches == null) {return '--'}
+  if (inches === 0) {return '0"'}
+  if (inches < 0.1) {return '<0.1"'}
   return `${inches.toFixed(1)}"`
 }
 
@@ -259,7 +259,7 @@ export function formatPrecipitation(inches: number | null | undefined): string {
  * Format wind speed with unit
  */
 export function formatWindSpeed(mph: number | null | undefined): string {
-  if (mph == null) return '--'
+  if (mph == null) {return '--'}
   return `${Math.round(mph)} mph`
 }
 
@@ -267,7 +267,7 @@ export function formatWindSpeed(mph: number | null | undefined): string {
  * Format humidity percentage
  */
 export function formatHumidity(percent: number | null | undefined): string {
-  if (percent == null) return '--'
+  if (percent == null) {return '--'}
   return `${Math.round(percent)}%`
 }
 
@@ -354,7 +354,7 @@ export function transformOpenMeteoResponse(
  * Convert Celsius to Fahrenheit
  */
 export function celsiusToFahrenheit(celsius: number | null | undefined): number | null {
-  if (celsius == null) return null
+  if (celsius == null) {return null}
   return Math.round((celsius * 9) / 5 + 32)
 }
 
@@ -362,7 +362,7 @@ export function celsiusToFahrenheit(celsius: number | null | undefined): number 
  * Convert millimeters to inches
  */
 export function mmToInches(mm: number | null | undefined): number | null {
-  if (mm == null) return null
+  if (mm == null) {return null}
   return Math.round((mm / 25.4) * 100) / 100
 }
 
@@ -370,6 +370,6 @@ export function mmToInches(mm: number | null | undefined): number | null {
  * Convert km/h to mph
  */
 export function kmhToMph(kmh: number | null | undefined): number | null {
-  if (kmh == null) return null
+  if (kmh == null) {return null}
   return Math.round(kmh * 0.621371)
 }

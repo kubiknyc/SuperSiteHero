@@ -48,7 +48,7 @@ export function DrawingDetailDialog({
     drawing?.id
   );
 
-  if (!drawing) return null;
+  if (!drawing) {return null;}
 
   const disciplineInfo = DRAWING_DISCIPLINES.find((d) => d.value === drawing.discipline);
 

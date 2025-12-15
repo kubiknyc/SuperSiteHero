@@ -135,7 +135,7 @@ function HoursEntryDialog({
 
   // Auto-fill period dates based on period type
   React.useEffect(() => {
-    if (!periodStart || editRecord) return
+    if (!periodStart || editRecord) {return}
 
     const start = new Date(periodStart)
     let end: Date

@@ -48,10 +48,10 @@ async function checkTableExists(tableName: string): Promise<boolean> {
   try {
     const { error } = await supabase.from(tableName).select('id').limit(1)
     // If no error or error is about RLS (not missing table), table exists
-    if (!error) return true
-    if (error.code === '42501') return true // RLS error means table exists
-    if (error.code === '42P01') return false // Table doesn't exist
-    if (error.message?.includes('does not exist')) return false
+    if (!error) {return true}
+    if (error.code === '42501') {return true} // RLS error means table exists
+    if (error.code === '42P01') {return false} // Table doesn't exist
+    if (error.message?.includes('does not exist')) {return false}
     return true // Assume exists for other errors
   } catch {
     return false

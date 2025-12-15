@@ -147,7 +147,7 @@ function generateVarianceAlerts(
 
   return alerts.sort((a, b) => {
     const severityDiff = severityOrder[a.severity] - severityOrder[b.severity]
-    if (severityDiff !== 0) return severityDiff
+    if (severityDiff !== 0) {return severityDiff}
     // Then by variance amount (larger overruns first)
     return a.variance_amount - b.variance_amount
   })
@@ -178,7 +178,7 @@ export function useVarianceAlerts(
   } = useProjectBudgetTotals(projectId || '')
 
   const alerts = useMemo(() => {
-    if (!budgets || budgets.length === 0) return []
+    if (!budgets || budgets.length === 0) {return []}
     return generateVarianceAlerts(budgets, totals || null, thresholds)
   }, [budgets, totals, thresholds])
 
@@ -247,7 +247,7 @@ export function useBudgetLineAlert(
   const { alerts } = useVarianceAlerts(projectId)
 
   return useMemo(() => {
-    if (!budgetId) return null
+    if (!budgetId) {return null}
     return alerts.find((a) => a.budget_id === budgetId) || null
   }, [alerts, budgetId])
 }

@@ -16,7 +16,7 @@ interface WorkflowItemAssigneesPanelProps {
 
 // Get display name for a user
 function getUserDisplayName(user: ProjectUserWithDetails['user']): string {
-  if (!user) return 'Unknown User'
+  if (!user) {return 'Unknown User'}
   return user.full_name || user.email || 'Unknown User'
 }
 

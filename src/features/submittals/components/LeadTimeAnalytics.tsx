@@ -222,7 +222,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
 
   // Calculate date range filter
   const dateRangeFilter = useMemo(() => {
-    if (dateRange === 'all') return undefined
+    if (dateRange === 'all') {return undefined}
 
     const end = new Date()
     const start = new Date()
@@ -241,7 +241,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
 
   // Prepare chart data
   const monthlyChartData = useMemo(() => {
-    if (!stats?.byMonth) return []
+    if (!stats?.byMonth) {return []}
     return stats.byMonth.map(m => ({
       name: `${m.month}/${m.year.toString().slice(-2)}`,
       submitted: m.submitted,
@@ -252,7 +252,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
   }, [stats])
 
   const statusPieData = useMemo(() => {
-    if (!stats?.byStatus) return []
+    if (!stats?.byStatus) {return []}
     return Object.entries(stats.byStatus).map(([status, count]) => ({
       name: status.replace(/_/g, ' '),
       value: count,
@@ -261,7 +261,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
   }, [stats])
 
   const leadTimeDistribution = useMemo(() => {
-    if (!submittals) return []
+    if (!submittals) {return []}
 
     const ranges = [
       { name: '0-7 days', min: 0, max: 7, count: 0 },
@@ -276,7 +276,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
       .forEach(s => {
         const days = s.leadTimeMetrics.submittedToApproval!
         const range = ranges.find(r => days >= r.min && days <= r.max)
-        if (range) range.count++
+        if (range) {range.count++}
       })
 
     return ranges
@@ -309,8 +309,8 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
 
   // Determine status based on average lead time
   const getLeadTimeStatus = (days: number): 'success' | 'warning' | 'danger' => {
-    if (days <= EXPECTED_TIMES.total) return 'success'
-    if (days <= EXPECTED_TIMES.total * 1.5) return 'warning'
+    if (days <= EXPECTED_TIMES.total) {return 'success'}
+    if (days <= EXPECTED_TIMES.total * 1.5) {return 'warning'}
     return 'danger'
   }
 

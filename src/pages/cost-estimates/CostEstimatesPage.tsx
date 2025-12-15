@@ -61,7 +61,7 @@ export function CostEstimatesPage() {
   const duplicateMutation = useDuplicateEstimate()
 
   const handleCreateEstimate = (data: CostEstimateInsert | CostEstimateUpdate) => {
-    if (!user) return
+    if (!user) {return}
 
     // Only CostEstimateInsert is valid for creation
     const insertData = data as CostEstimateInsert
@@ -88,7 +88,7 @@ export function CostEstimatesPage() {
   }
 
   const handleConfirmDuplicate = () => {
-    if (!duplicateEstimateId || !duplicateName.trim()) return
+    if (!duplicateEstimateId || !duplicateName.trim()) {return}
 
     duplicateMutation.mutate(
       { estimateId: duplicateEstimateId, newName: duplicateName },
@@ -103,13 +103,13 @@ export function CostEstimatesPage() {
   }
 
   const handleDeleteEstimate = async (estimateId: string) => {
-    if (!projectId) return
+    if (!projectId) {return}
     await deleteMutation.mutateAsync({ estimateId, projectId })
   }
 
   const formatCurrency = (value: number | string | null | undefined) => {
     const numValue = typeof value === 'string' ? parseFloat(value) : value
-    if (numValue === null || numValue === undefined || isNaN(numValue)) return '$0.00'
+    if (numValue === null || numValue === undefined || isNaN(numValue)) {return '$0.00'}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -117,7 +117,7 @@ export function CostEstimatesPage() {
   }
 
   const formatDate = (dateString: string | null | undefined) => {
-    if (!dateString) return 'N/A'
+    if (!dateString) {return 'N/A'}
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',

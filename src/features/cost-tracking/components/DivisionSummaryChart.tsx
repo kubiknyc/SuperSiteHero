@@ -44,7 +44,7 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
 
   // Calculate max for scaling bars
   const maxBudget = useMemo(() => {
-    if (!divisions.length) return 0
+    if (!divisions.length) {return 0}
     return Math.max(...divisions.map(d => d.revised_budget))
   }, [divisions])
 

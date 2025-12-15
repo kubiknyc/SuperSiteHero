@@ -110,7 +110,7 @@ export async function getDrawings(filters: DrawingFilters): Promise<Drawing[]> {
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformDrawing);
 }
 
@@ -122,7 +122,7 @@ export async function getDrawing(id: string): Promise<Drawing | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {return null;}
     throw error;
   }
   return transformDrawing(data as Record<string, unknown>);
@@ -134,7 +134,7 @@ export async function getDrawingWithRevisions(id: string): Promise<Drawing & { r
     getDrawingRevisions(id),
   ]);
 
-  if (!drawing) throw new Error('Drawing not found');
+  if (!drawing) {throw new Error('Drawing not found');}
 
   return {
     ...drawing,
@@ -155,7 +155,7 @@ export async function createDrawing(drawing: DrawingInsert): Promise<Drawing> {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformDrawing(data as Record<string, unknown>);
 }
 
@@ -166,7 +166,7 @@ export async function updateDrawing(id: string, updates: DrawingUpdate): Promise
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformDrawing(data as Record<string, unknown>);
 }
 
@@ -175,7 +175,7 @@ export async function deleteDrawing(id: string): Promise<void> {
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 export async function markDrawingIFC(id: string, ifcDate?: string): Promise<Drawing> {
@@ -188,7 +188,7 @@ export async function markDrawingIFC(id: string, ifcDate?: string): Promise<Draw
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformDrawing(data as Record<string, unknown>);
 }
 
@@ -203,7 +203,7 @@ export async function getDrawingRevisions(drawingId: string): Promise<DrawingRev
     .order('revision_date', { ascending: false })
     .order('revision', { ascending: false });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => {
     const revision = transformRevision(row);
@@ -223,7 +223,7 @@ export async function getCurrentRevision(drawingId: string): Promise<DrawingRevi
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {return null;}
     throw error;
   }
   return transformRevision(data as Record<string, unknown>);
@@ -243,7 +243,7 @@ export async function createRevision(revision: DrawingRevisionInsert): Promise<D
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRevision(data as Record<string, unknown>);
 }
 
@@ -254,7 +254,7 @@ export async function updateRevision(id: string, updates: DrawingRevisionUpdate)
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRevision(data as Record<string, unknown>);
 }
 
@@ -265,7 +265,7 @@ export async function setCurrentRevision(revisionId: string): Promise<DrawingRev
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformRevision(data as Record<string, unknown>);
 }
 
@@ -279,7 +279,7 @@ export async function getDrawingSets(projectId: string): Promise<DrawingSet[]> {
     .eq('project_id', projectId)
     .order('set_date', { ascending: false });
 
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformSet);
 }
 
@@ -297,7 +297,7 @@ export async function getDrawingSet(id: string): Promise<DrawingSet | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {return null;}
     throw error;
   }
   return transformSet(data as Record<string, unknown>);
@@ -316,7 +316,7 @@ export async function createDrawingSet(set: DrawingSetInsert): Promise<DrawingSe
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return transformSet(data as Record<string, unknown>);
 }
 
@@ -333,7 +333,7 @@ export async function addDrawingToSet(item: DrawingSetItemInsert): Promise<Drawi
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<DrawingSetItem>(data as Record<string, unknown>);
 }
 
@@ -343,7 +343,7 @@ export async function removeDrawingFromSet(setId: string, drawingId: string): Pr
     .eq('drawing_set_id', setId)
     .eq('drawing_id', drawingId);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 export async function setCurrentDrawingSet(setId: string, projectId: string): Promise<void> {
@@ -357,7 +357,7 @@ export async function setCurrentDrawingSet(setId: string, projectId: string): Pr
     .update({ is_current: true })
     .eq('id', setId);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 // ============================================================================
@@ -370,7 +370,7 @@ export async function getDrawingTransmittals(drawingId: string): Promise<Drawing
     .eq('drawing_id', drawingId)
     .order('transmittal_date', { ascending: false });
 
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map((row) => toCamelCase<DrawingTransmittal>(row));
 }
 
@@ -387,7 +387,7 @@ export async function createDrawingTransmittal(transmittal: DrawingTransmittalIn
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<DrawingTransmittal>(data as Record<string, unknown>);
 }
 
@@ -402,7 +402,7 @@ export async function acknowledgeDrawingTransmittal(id: string, acknowledgedBy: 
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<DrawingTransmittal>(data as Record<string, unknown>);
 }
 
@@ -421,7 +421,7 @@ export async function getDrawingMarkups(revisionId: string, status?: string): Pr
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map((row) => toCamelCase<DrawingMarkup>(row));
 }
 
@@ -438,7 +438,7 @@ export async function createDrawingMarkup(markup: DrawingMarkupInsert): Promise<
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<DrawingMarkup>(data as Record<string, unknown>);
 }
 
@@ -449,7 +449,7 @@ export async function updateDrawingMarkup(id: string, updates: DrawingMarkupUpda
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<DrawingMarkup>(data as Record<string, unknown>);
 }
 
@@ -467,7 +467,7 @@ export async function resolveDrawingMarkup(id: string, notes?: string): Promise<
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return toCamelCase<DrawingMarkup>(data as Record<string, unknown>);
 }
 
@@ -480,7 +480,7 @@ export async function getDrawingRegister(projectId: string): Promise<DrawingRegi
     p_project_id: projectId,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => ({
     id: row.id as string,
@@ -501,7 +501,7 @@ export async function getDrawingsByDiscipline(projectId: string): Promise<Discip
     p_project_id: projectId,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => ({
     discipline: row.discipline as DisciplineSummary['discipline'],
@@ -516,7 +516,7 @@ export async function getRevisionHistory(drawingId: string): Promise<RevisionHis
     p_drawing_id: drawingId,
   });
 
-  if (error) throw error;
+  if (error) {throw error;}
 
   return ((data as Record<string, unknown>[]) || []).map((row) => ({
     revision: row.revision as string,
@@ -546,7 +546,7 @@ export async function bulkCreateDrawings(drawings: DrawingInsert[]): Promise<Dra
     .insert(insertData)
     .select();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return ((data as Record<string, unknown>[]) || []).map(transformDrawing);
 }
 
@@ -558,12 +558,12 @@ export async function bulkMarkIFC(drawingIds: string[], ifcDate?: string): Promi
     })
     .in('id', drawingIds);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }
 
 export async function duplicateDrawing(drawingId: string, newNumber: string): Promise<Drawing> {
   const original = await getDrawing(drawingId);
-  if (!original) throw new Error('Drawing not found');
+  if (!original) {throw new Error('Drawing not found');}
 
   const { id, createdAt, updatedAt, createdBy, deletedAt, currentRevision, currentRevisionId, currentRevisionDate, ...rest } = original;
 

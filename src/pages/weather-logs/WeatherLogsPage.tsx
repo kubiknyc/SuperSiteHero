@@ -49,12 +49,12 @@ export function WeatherLogsPage() {
   // Build filters object
   const filters: WeatherLogFilters = useMemo(() => {
     const f: WeatherLogFilters = {}
-    if (dateFrom) f.dateFrom = dateFrom
-    if (dateTo) f.dateTo = dateTo
-    if (selectedConditions.length > 0) f.conditions = selectedConditions
-    if (selectedImpacts.length > 0) f.workImpact = selectedImpacts
-    if (workStoppedFilter === 'yes') f.workStopped = true
-    if (workStoppedFilter === 'no') f.workStopped = false
+    if (dateFrom) {f.dateFrom = dateFrom}
+    if (dateTo) {f.dateTo = dateTo}
+    if (selectedConditions.length > 0) {f.conditions = selectedConditions}
+    if (selectedImpacts.length > 0) {f.workImpact = selectedImpacts}
+    if (workStoppedFilter === 'yes') {f.workStopped = true}
+    if (workStoppedFilter === 'no') {f.workStopped = false}
     return f
   }, [dateFrom, dateTo, selectedConditions, selectedImpacts, workStoppedFilter])
 
@@ -63,8 +63,8 @@ export function WeatherLogsPage() {
 
   // Apply search filter
   const filteredLogs = useMemo(() => {
-    if (!weatherLogs) return []
-    if (!searchQuery) return weatherLogs
+    if (!weatherLogs) {return []}
+    if (!searchQuery) {return weatherLogs}
 
     const query = searchQuery.toLowerCase()
     return weatherLogs.filter((log) => {

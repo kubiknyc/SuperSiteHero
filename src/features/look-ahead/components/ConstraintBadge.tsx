@@ -99,7 +99,7 @@ export function ConstraintCountBadge({
   totalCount,
   className,
 }: ConstraintCountBadgeProps) {
-  if (totalCount === 0) return null
+  if (totalCount === 0) {return null}
 
   const hasOpen = openCount > 0
 

@@ -253,7 +253,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
   // Filtered areas based on search
   const filteredAreas = useMemo(() => {
-    if (!summary) return []
+    if (!summary) {return []}
 
     let areas = summary.areas
 
@@ -274,7 +274,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
   // Group areas based on selection
   const groupedAreas = useMemo(() => {
-    if (!summary) return {}
+    if (!summary) {return {}}
 
     switch (groupBy) {
       case 'building':
@@ -307,7 +307,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
   // Export to Excel
   const handleExportExcel = async () => {
-    if (!summary) return
+    if (!summary) {return}
 
     setIsExporting('excel')
     try {
@@ -426,7 +426,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
   // Export to PDF (HTML for print)
   const handleExportPDF = async () => {
-    if (!summary) return
+    if (!summary) {return}
 
     setIsExporting('pdf')
     try {

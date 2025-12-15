@@ -99,10 +99,10 @@ export function LookAheadSnapshotsPage() {
   }
 
   const getTrendIcon = (current: number, previous: number | undefined) => {
-    if (previous === undefined) return <Minus className="h-4 w-4 text-gray-400" />
+    if (previous === undefined) {return <Minus className="h-4 w-4 text-gray-400" />}
     const diff = current - previous
-    if (diff > 0) return <TrendingUp className="h-4 w-4 text-green-500" />
-    if (diff < 0) return <TrendingDown className="h-4 w-4 text-red-500" />
+    if (diff > 0) {return <TrendingUp className="h-4 w-4 text-green-500" />}
+    if (diff < 0) {return <TrendingDown className="h-4 w-4 text-red-500" />}
     return <Minus className="h-4 w-4 text-gray-400" />
   }
 

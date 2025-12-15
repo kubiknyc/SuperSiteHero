@@ -194,7 +194,7 @@ interface TemplatePreviewDialogProps {
 }
 
 function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: TemplatePreviewDialogProps) {
-  if (!template) return null
+  if (!template) {return null}
 
   const Icon = getIcon(template.icon)
 

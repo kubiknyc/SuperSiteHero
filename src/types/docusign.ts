@@ -712,7 +712,7 @@ export function canVoidEnvelope(status: DSEnvelopeStatus): boolean {
  * Check if connection needs refresh
  */
 export function connectionNeedsRefresh(connection: DSConnection): boolean {
-  if (!connection.token_expires_at) return true
+  if (!connection.token_expires_at) {return true}
   const expiresAt = new Date(connection.token_expires_at)
   const now = new Date()
   // Refresh if expires within 5 minutes

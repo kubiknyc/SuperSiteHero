@@ -43,17 +43,17 @@ function calculateWeeklyHours(calendar: ScheduleCalendar): number {
  */
 function getWorkDaysSummary(calendar: ScheduleCalendar): string {
   const days: string[] = []
-  if (calendar.monday_hours > 0) days.push('M')
-  if (calendar.tuesday_hours > 0) days.push('T')
-  if (calendar.wednesday_hours > 0) days.push('W')
-  if (calendar.thursday_hours > 0) days.push('Th')
-  if (calendar.friday_hours > 0) days.push('F')
-  if (calendar.saturday_hours > 0) days.push('Sa')
-  if (calendar.sunday_hours > 0) days.push('Su')
+  if (calendar.monday_hours > 0) {days.push('M')}
+  if (calendar.tuesday_hours > 0) {days.push('T')}
+  if (calendar.wednesday_hours > 0) {days.push('W')}
+  if (calendar.thursday_hours > 0) {days.push('Th')}
+  if (calendar.friday_hours > 0) {days.push('F')}
+  if (calendar.saturday_hours > 0) {days.push('Sa')}
+  if (calendar.sunday_hours > 0) {days.push('Su')}
 
-  if (days.length === 7) return 'All days'
-  if (days.length === 5 && !days.includes('Sa') && !days.includes('Su')) return 'Mon-Fri'
-  if (days.length === 6 && !days.includes('Su')) return 'Mon-Sat'
+  if (days.length === 7) {return 'All days'}
+  if (days.length === 5 && !days.includes('Sa') && !days.includes('Su')) {return 'Mon-Fri'}
+  if (days.length === 6 && !days.includes('Su')) {return 'Mon-Sat'}
   return days.join(', ')
 }
 

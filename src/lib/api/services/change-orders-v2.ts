@@ -89,7 +89,7 @@ export const changeOrdersApiV2 = {
     }
 
     const { data, error } = await query;
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -115,7 +115,7 @@ export const changeOrdersApiV2 = {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {return null;}
       throw error;
     }
     return data;
@@ -139,7 +139,7 @@ export const changeOrdersApiV2 = {
       .eq('id', dto.project_id)
       .single();
 
-    if (!project) throw new Error('Project not found');
+    if (!project) {throw new Error('Project not found');}
 
     const { data, error } = await db
       .from('change_orders')
@@ -159,7 +159,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -174,7 +174,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -187,7 +187,7 @@ export const changeOrdersApiV2 = {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 
   /**
@@ -214,7 +214,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -247,7 +247,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -266,7 +266,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -289,7 +289,7 @@ export const changeOrdersApiV2 = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     }
 
@@ -300,7 +300,7 @@ export const changeOrdersApiV2 = {
       .eq('id', id)
       .single();
 
-    if (!co) throw new Error('Change order not found');
+    if (!co) {throw new Error('Change order not found');}
 
     // Get next CO number
     const { data: nextCoNumber } = await db
@@ -324,7 +324,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     // AUTO-ADJUST BUDGET: Apply budget adjustments after successful approval
     try {
@@ -363,7 +363,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -391,7 +391,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     // REVERSE BUDGET: If CO was approved, reverse the budget adjustments
     if (wasApproved) {
@@ -426,7 +426,7 @@ export const changeOrdersApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -440,7 +440,7 @@ export const changeOrdersApiV2 = {
       .eq('project_id', projectId)
       .is('deleted_at', null);
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     const stats: ChangeOrderStatistics = {
       total_count: changeOrders?.length || 0,
@@ -457,8 +457,8 @@ export const changeOrdersApiV2 = {
     };
 
     changeOrders?.forEach(co => {
-      if (co.is_pco) stats.pco_count++;
-      if (co.status === 'approved') stats.approved_co_count++;
+      if (co.is_pco) {stats.pco_count++;}
+      if (co.status === 'approved') {stats.approved_co_count++;}
 
       stats.by_status[co.status] = (stats.by_status[co.status] || 0) + 1;
       stats.by_type[co.change_type] = (stats.by_type[co.change_type] || 0) + 1;
@@ -468,8 +468,8 @@ export const changeOrdersApiV2 = {
       stats.total_proposed_days += co.proposed_days || 0;
       stats.total_approved_days += co.approved_days || 0;
 
-      if (co.status === 'pending_internal_approval') stats.pending_internal++;
-      if (co.status === 'pending_owner_review') stats.pending_owner++;
+      if (co.status === 'pending_internal_approval') {stats.pending_internal++;}
+      if (co.status === 'pending_owner_review') {stats.pending_owner++;}
     });
 
     return stats;
@@ -491,7 +491,7 @@ export const changeOrderItemsApiV2 = {
       .eq('change_order_id', changeOrderId)
       .order('item_number');
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -529,7 +529,7 @@ export const changeOrderItemsApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     // Recalculate change order total
     await recalculateChangeOrderTotal(changeOrderId);
@@ -556,7 +556,7 @@ export const changeOrderItemsApiV2 = {
       .select('*, change_order_id')
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     // Recalculate change order total
     await recalculateChangeOrderTotal(data.change_order_id);
@@ -580,7 +580,7 @@ export const changeOrderItemsApiV2 = {
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     // Recalculate change order total
     if (item) {
@@ -616,7 +616,7 @@ export const changeOrderAttachmentsApiV2 = {
       .eq('change_order_id', changeOrderId)
       .order('created_at');
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -636,7 +636,7 @@ export const changeOrderAttachmentsApiV2 = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -649,7 +649,7 @@ export const changeOrderAttachmentsApiV2 = {
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 };
 
@@ -668,7 +668,7 @@ export const changeOrderHistoryApiV2 = {
       .eq('change_order_id', changeOrderId)
       .order('changed_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 };

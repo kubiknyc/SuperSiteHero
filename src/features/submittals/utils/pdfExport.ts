@@ -66,7 +66,7 @@ export interface SubmittalPDFData {
  * Format date for documents
  */
 function formatDate(date: string | null | undefined): string {
-  if (!date) return 'N/A'
+  if (!date) {return 'N/A'}
   try {
     return format(new Date(date), 'MMMM d, yyyy')
   } catch {
@@ -78,7 +78,7 @@ function formatDate(date: string | null | undefined): string {
  * Format date short
  */
 function formatDateShort(date: string | null | undefined): string {
-  if (!date) return 'N/A'
+  if (!date) {return 'N/A'}
   try {
     return format(new Date(date), 'MMM d, yyyy')
   } catch {

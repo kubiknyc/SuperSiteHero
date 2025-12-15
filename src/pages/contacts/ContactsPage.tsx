@@ -50,7 +50,7 @@ export function ContactsPage() {
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (!contacts) return { total: 0, subcontractors: 0, primary: 0, emergency: 0 }
+    if (!contacts) {return { total: 0, subcontractors: 0, primary: 0, emergency: 0 }}
 
     return {
       total: contacts.length,

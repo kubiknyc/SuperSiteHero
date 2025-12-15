@@ -85,7 +85,7 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
   };
 
   const handleDelete = async () => {
-    if (!deleteDrawing) return;
+    if (!deleteDrawing) {return;}
     try {
       await deleteDrawingMutation.mutateAsync(deleteDrawing.id);
       success('Drawing deleted', `${deleteDrawing.drawingNumber} has been deleted`);
@@ -105,7 +105,7 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
   };
 
   const handleBulkMarkIFC = async () => {
-    if (selectedIds.size === 0) return;
+    if (selectedIds.size === 0) {return;}
     try {
       await bulkMarkIFCMutation.mutateAsync({ drawingIds: Array.from(selectedIds) });
       success('Drawings marked IFC', `${selectedIds.size} drawings are now Issued for Construction`);

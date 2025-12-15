@@ -494,7 +494,7 @@ describe('useLienWaivers hooks', () => {
       });
 
       mockFrom.mockImplementation((table: string) => {
-        if (table === 'lien_waiver_history') return historyMock();
+        if (table === 'lien_waiver_history') {return historyMock();}
         return { insert: insertMock };
       });
 
@@ -578,7 +578,7 @@ describe('useLienWaivers hooks', () => {
       };
 
       mockFrom.mockImplementation((table: string) => {
-        if (table === 'lien_waiver_history') return historyMock;
+        if (table === 'lien_waiver_history') {return historyMock;}
         return updateChain;
       });
 
@@ -616,7 +616,7 @@ describe('useLienWaivers hooks', () => {
       };
 
       mockFrom.mockImplementation((table: string) => {
-        if (table === 'lien_waiver_history') return historyMock;
+        if (table === 'lien_waiver_history') {return historyMock;}
         return updateChain;
       });
 
@@ -782,7 +782,7 @@ describe('useLienWaivers hooks', () => {
       };
 
       mockFrom.mockImplementation((table: string) => {
-        if (table === 'lien_waiver_history') return historyMock;
+        if (table === 'lien_waiver_history') {return historyMock;}
         return updateChain;
       });
 
@@ -1015,7 +1015,7 @@ describe('useLienWaivers hooks', () => {
       ];
 
       const overdueWaivers = waivers.filter(w => {
-        if (!w.due_date || w.status === 'approved' || w.status === 'void') return false;
+        if (!w.due_date || w.status === 'approved' || w.status === 'void') {return false;}
         return new Date(w.due_date) < new Date();
       });
 

@@ -81,7 +81,7 @@ export function DailyPhotoChecklist({
   };
 
   const confirmSkip = async () => {
-    if (!selectedRequirement) return;
+    if (!selectedRequirement) {return;}
     await skipMutation.mutateAsync({
       requirementId: selectedRequirement.id,
       reason: skipReason,

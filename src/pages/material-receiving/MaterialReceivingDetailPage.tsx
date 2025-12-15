@@ -61,13 +61,13 @@ export function MaterialReceivingDetailPage() {
   const deleteDeliveryMutation = useDeleteDelivery();
 
   const handleUpdateDelivery = async (data: CreateMaterialDeliveryDTO) => {
-    if (!materialId) return;
+    if (!materialId) {return;}
     await updateDeliveryMutation.mutateAsync({ id: materialId, ...data });
     setIsEditDialogOpen(false);
   };
 
   const handleDeleteDelivery = async () => {
-    if (!materialId || !projectId) return;
+    if (!materialId || !projectId) {return;}
     await deleteDeliveryMutation.mutateAsync(materialId);
     navigate(`/projects/${projectId}/material-receiving`);
   };

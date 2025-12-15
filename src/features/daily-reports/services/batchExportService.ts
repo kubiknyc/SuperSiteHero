@@ -68,7 +68,7 @@ export async function fetchReportsForDateRange(
     .lte('report_date', endDate)
     .order('report_date', { ascending: true })
 
-  if (error) throw error
+  if (error) {throw error}
   return (data || []) as ReportData[]
 }
 

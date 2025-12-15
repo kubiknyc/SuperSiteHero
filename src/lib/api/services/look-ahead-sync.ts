@@ -108,7 +108,7 @@ export async function getProgressByActivity(
   const grouped = new Map<string, ProgressEntry[]>()
 
   for (const entry of entries) {
-    if (!entry.activity_id) continue
+    if (!entry.activity_id) {continue}
 
     const existing = grouped.get(entry.activity_id) || []
     existing.push(entry)
@@ -212,7 +212,7 @@ export async function calculateProgressSummaries(
 
   return summaries.sort((a, b) => {
     // Sort by needs_sync first, then by name
-    if (a.needs_sync !== b.needs_sync) return a.needs_sync ? -1 : 1
+    if (a.needs_sync !== b.needs_sync) {return a.needs_sync ? -1 : 1}
     return a.activity_name.localeCompare(b.activity_name)
   })
 }
@@ -286,7 +286,7 @@ export async function syncActivityFromProgress(
       .update(updates)
       .eq('id', activityId)
 
-    if (error) throw error
+    if (error) {throw error}
 
     result.success = true
   } catch (error: any) {

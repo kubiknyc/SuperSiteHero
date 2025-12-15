@@ -46,7 +46,7 @@ export function useRealtimePresence(
 
   // Join the room when enabled
   useEffect(() => {
-    if (!enabled || !user || hasJoined.current) return
+    if (!enabled || !user || hasJoined.current) {return}
 
     const joinRoom = async () => {
       try {
@@ -82,7 +82,7 @@ export function useRealtimePresence(
 
   // Subscribe to presence changes
   useEffect(() => {
-    if (!enabled || !hasJoined.current) return
+    if (!enabled || !hasJoined.current) {return}
 
     const unsubscribePresence = presenceManager.onPresenceChange(roomId, setUsers)
     const unsubscribeTyping = presenceManager.onTypingChange(roomId, setTypingUsers)
@@ -96,7 +96,7 @@ export function useRealtimePresence(
   // Send typing indicator
   const sendTyping = useCallback(
     async (isTyping: boolean) => {
-      if (!hasJoined.current) return
+      if (!hasJoined.current) {return}
       await presenceManager.sendTyping(roomId, isTyping)
     },
     [roomId]
@@ -105,7 +105,7 @@ export function useRealtimePresence(
   // Update current page
   const updatePage = useCallback(
     async (page: string) => {
-      if (!hasJoined.current) return
+      if (!hasJoined.current) {return}
       await presenceManager.updatePresence(roomId, { currentPage: page })
     },
     [roomId]

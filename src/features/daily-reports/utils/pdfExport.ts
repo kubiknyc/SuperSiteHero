@@ -74,7 +74,7 @@ function addSectionHeader(doc: jsPDF, title: string, yPos: number): number {
  * Add a text block with word wrapping
  */
 function addTextBlock(doc: jsPDF, label: string, text: string | null | undefined, yPos: number): number {
-  if (!text) return yPos
+  if (!text) {return yPos}
 
   yPos = checkPageBreak(doc, yPos, 20)
 
@@ -96,7 +96,7 @@ function addTextBlock(doc: jsPDF, label: string, text: string | null | undefined
  * Format time string for display
  */
 function formatTime(time: string | null | undefined): string {
-  if (!time) return '-'
+  if (!time) {return '-'}
   // Handle HH:MM:SS format
   const parts = time.split(':')
   if (parts.length >= 2) {
@@ -257,7 +257,7 @@ function addWorkforceSection(
   workforce: DailyReportWorkforce[],
   yPos: number
 ): number {
-  if (workforce.length === 0) return yPos
+  if (workforce.length === 0) {return yPos}
 
   yPos = addSectionHeader(doc, 'WORKFORCE', yPos)
 
@@ -312,7 +312,7 @@ function addEquipmentSection(
   equipment: DailyReportEquipment[],
   yPos: number
 ): number {
-  if (equipment.length === 0) return yPos
+  if (equipment.length === 0) {return yPos}
 
   yPos = addSectionHeader(doc, 'EQUIPMENT ON SITE', yPos)
 
@@ -361,7 +361,7 @@ function addDeliveriesSection(
   deliveries: DailyReportDelivery[],
   yPos: number
 ): number {
-  if (deliveries.length === 0) return yPos
+  if (deliveries.length === 0) {return yPos}
 
   yPos = addSectionHeader(doc, 'MATERIAL DELIVERIES', yPos)
 
@@ -410,7 +410,7 @@ function addVisitorsSection(
   visitors: DailyReportVisitor[],
   yPos: number
 ): number {
-  if (visitors.length === 0) return yPos
+  if (visitors.length === 0) {return yPos}
 
   yPos = addSectionHeader(doc, 'SITE VISITORS', yPos)
 
@@ -455,7 +455,7 @@ function addVisitorsSection(
  * Add work performed section
  */
 function addWorkPerformedSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  if (!report.work_completed) return yPos
+  if (!report.work_completed) {return yPos}
 
   yPos = addSectionHeader(doc, 'WORK PERFORMED', yPos)
   yPos = addTextBlock(doc, '', report.work_completed, yPos)
@@ -467,7 +467,7 @@ function addWorkPerformedSection(doc: jsPDF, report: DailyReport, yPos: number):
  * Add issues section
  */
 function addIssuesSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  if (!report.issues && !report.observations) return yPos
+  if (!report.issues && !report.observations) {return yPos}
 
   yPos = addSectionHeader(doc, 'ISSUES & OBSERVATIONS', yPos)
 
@@ -486,7 +486,7 @@ function addIssuesSection(doc: jsPDF, report: DailyReport, yPos: number): number
  * Add comments section
  */
 function addCommentsSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  if (!report.comments) return yPos
+  if (!report.comments) {return yPos}
 
   yPos = addSectionHeader(doc, 'ADDITIONAL COMMENTS', yPos)
   yPos = addTextBlock(doc, '', report.comments, yPos)

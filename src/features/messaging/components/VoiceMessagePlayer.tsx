@@ -85,7 +85,7 @@ export function VoiceMessagePlayer({
 
   // Play/pause toggle
   const togglePlay = useCallback(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
 
     if (isPlaying) {
       audioRef.current.pause()
@@ -100,14 +100,14 @@ export function VoiceMessagePlayer({
 
   // Mute toggle
   const toggleMute = useCallback(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
     audioRef.current.muted = !isMuted
     setIsMuted(!isMuted)
   }, [isMuted])
 
   // Seek to position
   const handleSeek = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!audioRef.current || !duration) return
+    if (!audioRef.current || !duration) {return}
 
     const rect = e.currentTarget.getBoundingClientRect()
     const x = e.clientX - rect.left

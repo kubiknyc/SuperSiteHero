@@ -82,7 +82,7 @@ serve(async (req) => {
       })
       .eq('id', connectionId)
 
-    if (updateError) throw updateError
+    if (updateError) {throw updateError}
 
     // Clear any pending syncs for this connection
     await supabase

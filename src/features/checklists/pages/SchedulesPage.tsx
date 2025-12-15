@@ -84,8 +84,8 @@ export function SchedulesPage() {
 
     return result.sort((a, b) => {
       // Sort by next execution date
-      if (!a.next_execution_date) return 1
-      if (!b.next_execution_date) return -1
+      if (!a.next_execution_date) {return 1}
+      if (!b.next_execution_date) {return -1}
       return new Date(a.next_execution_date).getTime() - new Date(b.next_execution_date).getTime()
     })
   }, [allSchedules, searchQuery, statusFilter])

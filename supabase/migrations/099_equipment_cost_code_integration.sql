@@ -179,7 +179,7 @@ SELECT
   cc.code as cost_code,
   cc.name as cost_code_name,
   p.name as project_name,
-  p.number as project_number,
+  p.id as project_id_ref,
   ct.id as linked_transaction_id,
   ct.amount as transaction_amount
 FROM equipment_logs el

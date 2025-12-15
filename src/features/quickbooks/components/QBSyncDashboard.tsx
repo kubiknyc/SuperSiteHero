@@ -56,7 +56,7 @@ export function QBSyncDashboard() {
   const bulkSync = useBulkSync()
 
   const handleSyncAll = async () => {
-    if (!connectionStatus?.connectionId) return
+    if (!connectionStatus?.connectionId) {return}
     try {
       await bulkSync.mutateAsync({
         connectionId: connectionStatus.connectionId,

@@ -170,7 +170,7 @@ function getActionConfig(action: string) {
 
 // Format field name for display
 function formatFieldName(field: string | null): string {
-  if (!field) return ''
+  if (!field) {return ''}
   return field
     .replace(/_/g, ' ')
     .replace(/([a-z])([A-Z])/g, '$1 $2')
@@ -179,8 +179,8 @@ function formatFieldName(field: string | null): string {
 
 // Format value for display
 function formatValue(value: string | null, field: string | null): string {
-  if (value === null || value === undefined) return 'None'
-  if (value === '') return 'Empty'
+  if (value === null || value === undefined) {return 'None'}
+  if (value === '') {return 'Empty'}
 
   // Handle numeric fields
   if (field?.includes('amount') || field?.includes('cost')) {

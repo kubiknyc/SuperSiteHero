@@ -176,7 +176,7 @@ serve(async (req) => {
       .maybeSingle()
 
     let qbEntityId = existingMapping?.qb_entity_id
-    let isCreate = !qbEntityId
+    const isCreate = !qbEntityId
 
     try {
       // Fetch local entity data
@@ -436,10 +436,10 @@ serve(async (req) => {
     let httpStatus = 500
     if (isQBError) {
       const qbError = error as QBApiError
-      if (qbError.errorType === 'validation') httpStatus = 400
-      else if (qbError.errorType === 'auth') httpStatus = 401
-      else if (qbError.errorType === 'not_found') httpStatus = 404
-      else if (qbError.errorType === 'rate_limit') httpStatus = 429
+      if (qbError.errorType === 'validation') {httpStatus = 400}
+      else if (qbError.errorType === 'auth') {httpStatus = 401}
+      else if (qbError.errorType === 'not_found') {httpStatus = 404}
+      else if (qbError.errorType === 'rate_limit') {httpStatus = 429}
     }
 
     return new Response(

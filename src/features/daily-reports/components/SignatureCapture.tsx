@@ -26,10 +26,10 @@ export function SignatureCapture({
   // Initialize canvas
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     // Set canvas size based on container
     const rect = canvas.getBoundingClientRect()
@@ -56,7 +56,7 @@ export function SignatureCapture({
 
   const getCoordinates = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current
-    if (!canvas) return null
+    if (!canvas) {return null}
 
     const rect = canvas.getBoundingClientRect()
 
@@ -75,14 +75,14 @@ export function SignatureCapture({
   }, [])
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (disabled) return
+    if (disabled) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     setIsDrawing(true)
     ctx.beginPath()
@@ -90,14 +90,14 @@ export function SignatureCapture({
   }, [disabled, getCoordinates])
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || disabled) return
+    if (!isDrawing || disabled) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     ctx.lineTo(coords.x, coords.y)
     ctx.stroke()
@@ -111,7 +111,7 @@ export function SignatureCapture({
   const clearSignature = useCallback(() => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx || !canvas) return
+    if (!ctx || !canvas) {return}
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setHasSignature(false)
@@ -120,7 +120,7 @@ export function SignatureCapture({
 
   const saveSignature = useCallback(() => {
     const canvas = canvasRef.current
-    if (!canvas || !hasSignature) return
+    if (!canvas || !hasSignature) {return}
 
     const dataUrl = canvas.toDataURL('image/png')
     onSave(dataUrl)
@@ -129,7 +129,7 @@ export function SignatureCapture({
   // Prevent scrolling while drawing on touch devices
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const preventScroll = (e: TouchEvent) => {
       if (isDrawing) {

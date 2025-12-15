@@ -87,7 +87,7 @@ export function MobileLayerDrawer({
 
   // Handle create layer
   const handleCreateLayer = () => {
-    if (!newLayerName.trim()) return
+    if (!newLayerName.trim()) {return}
 
     onCreateLayer({
       name: newLayerName.trim(),
@@ -230,8 +230,8 @@ export function MobileLayerDrawer({
                               className="h-10"
                               autoFocus
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSaveEdit()
-                                if (e.key === 'Escape') handleCancelEdit()
+                                if (e.key === 'Enter') {handleSaveEdit()}
+                                if (e.key === 'Escape') {handleCancelEdit()}
                               }}
                             />
                           ) : (

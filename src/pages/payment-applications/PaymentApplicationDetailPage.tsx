@@ -129,7 +129,7 @@ export function PaymentApplicationDetailPage() {
   }
 
   const handleSaveEdits = async () => {
-    if (!applicationId || Object.keys(editedItems).length === 0) return
+    if (!applicationId || Object.keys(editedItems).length === 0) {return}
 
     const updates: BulkUpdateSOVItemDTO[] = Object.entries(editedItems).map(([id, values]) => ({
       id,
@@ -147,24 +147,24 @@ export function PaymentApplicationDetailPage() {
   }
 
   const handleSubmit = async () => {
-    if (!applicationId) return
+    if (!applicationId) {return}
     await submitMutation.mutateAsync({ id: applicationId })
   }
 
   const handleApprove = async () => {
-    if (!applicationId) return
+    if (!applicationId) {return}
     await approveMutation.mutateAsync({ id: applicationId })
   }
 
   const handleReject = async () => {
-    if (!applicationId || !rejectionReason) return
+    if (!applicationId || !rejectionReason) {return}
     await rejectMutation.mutateAsync({ id: applicationId, rejection_reason: rejectionReason })
     setRejectDialogOpen(false)
     setRejectionReason('')
   }
 
   const handleMarkPaid = async () => {
-    if (!applicationId || !paymentAmount) return
+    if (!applicationId || !paymentAmount) {return}
     await markPaidMutation.mutateAsync({
       id: applicationId,
       payment_received_amount: parseFloat(paymentAmount),
@@ -176,7 +176,7 @@ export function PaymentApplicationDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!applicationId) return
+    if (!applicationId) {return}
     if (confirm('Are you sure you want to delete this payment application?')) {
       await deleteMutation.mutateAsync(applicationId)
       navigate('/payment-applications')
@@ -190,7 +190,7 @@ export function PaymentApplicationDetailPage() {
   }
 
   const handleSignatureComplete = async (data: SignatureData) => {
-    if (!applicationId) return
+    if (!applicationId) {return}
 
     await signatureMutation.mutateAsync({
       id: applicationId,
@@ -201,7 +201,7 @@ export function PaymentApplicationDetailPage() {
   }
 
   const handleSignatureRemove = async () => {
-    if (!applicationId) return
+    if (!applicationId) {return}
 
     await signatureMutation.mutateAsync({
       id: applicationId,
@@ -212,7 +212,7 @@ export function PaymentApplicationDetailPage() {
   }
 
   const getExistingSignature = () => {
-    if (!application) return null
+    if (!application) {return null}
     switch (signatureRole) {
       case 'contractor':
         return application.contractor_signature_url
@@ -227,7 +227,7 @@ export function PaymentApplicationDetailPage() {
 
   // Export PDF handler
   const handleExportPDF = async () => {
-    if (!application || !sovItems) return
+    if (!application || !sovItems) {return}
 
     setIsExporting(true)
     try {

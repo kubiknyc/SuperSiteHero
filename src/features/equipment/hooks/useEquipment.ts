@@ -743,3 +743,13 @@ export function useBatchPostEquipmentCosts() {
     },
   })
 }
+
+// ============================================================================
+// EQUIPMENT AVAILABILITY HOOKS (Phase 5.2)
+// ============================================================================
+
+/**
+ * Check if equipment is available (not blocked by overdue maintenance)
+ * Re-exported from useMaintenanceAlerts for convenience
+ */
+export { useEquipmentAvailability, useIsEquipmentBlocked, useBlockedEquipment } from './useMaintenanceAlerts'

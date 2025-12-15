@@ -1,5 +1,6 @@
 // File: src/features/gantt/components/GanttChart.tsx
 // Main Gantt chart component with drag-and-drop and critical path support
+// Enhanced with tablet optimizations for better landscape/portrait viewing
 
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 import { format, differenceInDays, addDays } from 'date-fns'
@@ -23,6 +24,8 @@ import {
 } from '../utils/dateUtils'
 import { calculateCriticalPath, type CriticalPathResult } from '../utils/criticalPath'
 import { type DragMode, type DragResult } from '../utils/dragUtils'
+import { useOrientation, useResponsiveLayout } from '@/hooks/useOrientation'
+import { cn } from '@/lib/utils'
 
 interface GanttChartProps {
   items: ScheduleItem[]
@@ -67,10 +70,48 @@ export function GanttChart({
   const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
 
-  // Merge custom config with defaults
+  // Tablet/responsive layout hooks
+  const layout = useResponsiveLayout()
+  const { isTouchDevice, isTablet, isTabletLandscape, isTabletPortrait, orientation } = useOrientation()
+
+  // Sidebar collapse state for tablets
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+
+  // Auto-collapse sidebar on tablet portrait
+  useEffect(() => {
+    if (isTabletPortrait) {
+      setIsSidebarCollapsed(true)
+    } else if (isTabletLandscape) {
+      setIsSidebarCollapsed(false)
+    }
+  }, [isTabletPortrait, isTabletLandscape])
+
+  // Calculate responsive sidebar width based on device
+  const responsiveSidebarWidth = useMemo(() => {
+    if (isSidebarCollapsed) return 0
+    if (layout === 'mobile') return 200
+    if (layout === 'tablet-portrait') return 220
+    if (layout === 'tablet-landscape') return 280
+    return customConfig?.sidebar_width || DEFAULT_GANTT_CONFIG.sidebar_width
+  }, [layout, isSidebarCollapsed, customConfig?.sidebar_width])
+
+  // Merge custom config with defaults, applying tablet optimizations
   const config = useMemo(
-    () => ({ ...DEFAULT_GANTT_CONFIG, ...customConfig }),
-    [customConfig]
+    () => ({
+      ...DEFAULT_GANTT_CONFIG,
+      ...customConfig,
+      // Override sidebar width for tablets
+      sidebar_width: responsiveSidebarWidth,
+      // Larger row height on touch devices
+      row_height: isTouchDevice
+        ? Math.max((customConfig?.row_height || DEFAULT_GANTT_CONFIG.row_height), 48)
+        : (customConfig?.row_height || DEFAULT_GANTT_CONFIG.row_height),
+      // Larger bar height on touch devices
+      bar_height: isTouchDevice
+        ? Math.max((customConfig?.bar_height || DEFAULT_GANTT_CONFIG.bar_height), 28)
+        : (customConfig?.bar_height || DEFAULT_GANTT_CONFIG.bar_height),
+    }),
+    [customConfig, responsiveSidebarWidth, isTouchDevice]
   )
 
   // State
@@ -344,9 +385,18 @@ export function GanttChart({
     }
   }, [criticalPathResult])
 
+  // Toggle sidebar collapse (for tablets)
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev)
+  }, [])
+
   return (
-    <div className="flex flex-col h-full bg-white rounded-lg shadow overflow-hidden">
-      {/* Toolbar */}
+    <div className={cn(
+      "flex flex-col h-full bg-white rounded-lg shadow overflow-hidden",
+      // Better touch handling on tablets
+      isTouchDevice && "touch-manipulation"
+    )}>
+      {/* Toolbar - with tablet optimizations */}
       <GanttToolbar
         zoomLevel={zoomLevel}
         onZoomChange={setZoomLevel}
@@ -391,22 +441,79 @@ export function GanttChart({
         onScroll={handleScroll}
       >
         <div className="flex min-h-full">
-          {/* Sidebar with task names */}
+          {/* Sidebar toggle button for collapsed state on tablets */}
+          {isSidebarCollapsed && (isTablet || layout === 'mobile') && (
+            <button
+              onClick={toggleSidebar}
+              className={cn(
+                "flex-shrink-0 bg-gray-100 border-r flex items-center justify-center",
+                "hover:bg-gray-200 transition-colors",
+                isTouchDevice ? "w-12 min-w-touch" : "w-8"
+              )}
+              title="Show task list"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-gray-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
+
+          {/* Sidebar with task names - collapsible on tablets */}
           <div
-            className="flex-shrink-0 bg-gray-50 border-r sticky left-0 z-10"
-            style={{ width: config.sidebar_width }}
+            className={cn(
+              "flex-shrink-0 bg-gray-50 border-r sticky left-0 z-10 transition-all duration-300",
+              isSidebarCollapsed && "w-0 overflow-hidden"
+            )}
+            style={{ width: isSidebarCollapsed ? 0 : config.sidebar_width }}
           >
+            {/* Collapse button header row for non-collapsed state */}
+            {!isSidebarCollapsed && (isTablet || layout === 'mobile') && (
+              <div
+                className={cn(
+                  "flex items-center justify-between px-3 py-2 bg-gray-100 border-b",
+                  isTouchDevice && "min-h-touch"
+                )}
+              >
+                <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Tasks</span>
+                <button
+                  onClick={toggleSidebar}
+                  className={cn(
+                    "p-1 rounded hover:bg-gray-200 transition-colors",
+                    isTouchDevice && "min-w-touch min-h-touch flex items-center justify-center"
+                  )}
+                  title="Hide task list"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-gray-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              </div>
+            )}
             {visibleItems.map((task, index) => {
               const floatInfo = getFloatInfo(task.id)
               return (
                 <div
                   key={task.id}
-                  className={`
-                    flex items-center px-4 border-b cursor-pointer
-                    hover:bg-gray-100 transition-colors
-                    ${hoveredTask?.id === task.id ? 'bg-blue-50' : ''}
-                    ${draggedTaskId === task.id ? 'bg-yellow-50' : ''}
-                  `}
+                  className={cn(
+                    "flex items-center px-4 border-b cursor-pointer",
+                    "hover:bg-gray-100 transition-colors",
+                    hoveredTask?.id === task.id && "bg-blue-50",
+                    draggedTaskId === task.id && "bg-yellow-50",
+                    // Larger padding on touch devices
+                    isTouchDevice && "px-3"
+                  )}
                   style={{ height: config.row_height }}
                   onClick={() => onTaskClick?.(task)}
                   onMouseEnter={() => setHoveredTask(task)}

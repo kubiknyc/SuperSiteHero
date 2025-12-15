@@ -79,7 +79,7 @@ export const projectTemplatesApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as ProjectTemplate[]
     } catch (error) {
@@ -122,7 +122,7 @@ export const projectTemplatesApi = {
         .eq('id', templateId)
         .single()
 
-      if (templateError) throw templateError
+      if (templateError) {throw templateError}
       if (!template) {
         throw new ApiErrorClass({
           code: 'TEMPLATE_NOT_FOUND',
@@ -137,7 +137,7 @@ export const projectTemplatesApi = {
         .eq('template_id', templateId)
         .order('phase_order')
 
-      if (phasesError) throw phasesError
+      if (phasesError) {throw phasesError}
 
       // Fetch checklist associations
       const { data: checklists, error: checklistsError } = await db
@@ -150,7 +150,7 @@ export const projectTemplatesApi = {
         )
         .eq('template_id', templateId)
 
-      if (checklistsError) throw checklistsError
+      if (checklistsError) {throw checklistsError}
 
       // Fetch workflow associations
       const { data: workflows, error: workflowsError } = await db
@@ -163,7 +163,7 @@ export const projectTemplatesApi = {
         )
         .eq('template_id', templateId)
 
-      if (workflowsError) throw workflowsError
+      if (workflowsError) {throw workflowsError}
 
       // Fetch distribution lists
       const { data: distributionLists, error: listsError } = await db
@@ -171,7 +171,7 @@ export const projectTemplatesApi = {
         .select('*')
         .eq('template_id', templateId)
 
-      if (listsError) throw listsError
+      if (listsError) {throw listsError}
 
       return {
         ...template,
@@ -209,7 +209,7 @@ export const projectTemplatesApi = {
         .order('last_used_at', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as ProjectTemplate[]
     } catch (error) {
@@ -240,7 +240,7 @@ export const projectTemplatesApi = {
         .order('usage_count', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []) as ProjectTemplate[]
     } catch (error) {
@@ -305,7 +305,7 @@ export const projectTemplatesApi = {
         .select()
         .single()
 
-      if (templateError) throw templateError
+      if (templateError) {throw templateError}
 
       // Create phases if provided
       if (input.phases && input.phases.length > 0) {
@@ -342,7 +342,7 @@ export const projectTemplatesApi = {
           .from('project_template_checklists')
           .insert(checklistsToInsert)
 
-        if (checklistsError) throw checklistsError
+        if (checklistsError) {throw checklistsError}
       }
 
       // Associate workflows if provided
@@ -358,7 +358,7 @@ export const projectTemplatesApi = {
           .from('project_template_workflows')
           .insert(workflowsToInsert)
 
-        if (workflowsError) throw workflowsError
+        if (workflowsError) {throw workflowsError}
       }
 
       return template as ProjectTemplate
@@ -402,7 +402,7 @@ export const projectTemplatesApi = {
         .eq('id', input.project_id)
         .single()
 
-      if (projectError) throw projectError
+      if (projectError) {throw projectError}
       if (!project) {
         throw new ApiErrorClass({
           code: 'PROJECT_NOT_FOUND',
@@ -535,28 +535,28 @@ export const projectTemplatesApi = {
 
       // Build update object
       const updates: Record<string, unknown> = {}
-      if (input.name !== undefined) updates.name = input.name.trim()
-      if (input.description !== undefined) updates.description = input.description
-      if (input.category !== undefined) updates.category = input.category
-      if (input.tags !== undefined) updates.tags = input.tags
-      if (input.visibility !== undefined) updates.visibility = input.visibility
-      if (input.icon !== undefined) updates.icon = input.icon
-      if (input.color !== undefined) updates.color = input.color
-      if (input.is_active !== undefined) updates.is_active = input.is_active
+      if (input.name !== undefined) {updates.name = input.name.trim()}
+      if (input.description !== undefined) {updates.description = input.description}
+      if (input.category !== undefined) {updates.category = input.category}
+      if (input.tags !== undefined) {updates.tags = input.tags}
+      if (input.visibility !== undefined) {updates.visibility = input.visibility}
+      if (input.icon !== undefined) {updates.icon = input.icon}
+      if (input.color !== undefined) {updates.color = input.color}
+      if (input.is_active !== undefined) {updates.is_active = input.is_active}
       if (input.default_settings !== undefined)
-        updates.default_settings = input.default_settings
+        {updates.default_settings = input.default_settings}
       if (input.folder_structure !== undefined)
-        updates.folder_structure = input.folder_structure
+        {updates.folder_structure = input.folder_structure}
       if (input.default_roles !== undefined)
-        updates.default_roles = input.default_roles
+        {updates.default_roles = input.default_roles}
       if (input.numbering_config !== undefined)
-        updates.numbering_config = input.numbering_config
+        {updates.numbering_config = input.numbering_config}
       if (input.notification_rules !== undefined)
-        updates.notification_rules = input.notification_rules
+        {updates.notification_rules = input.notification_rules}
       if (input.enabled_features !== undefined)
-        updates.enabled_features = input.enabled_features
+        {updates.enabled_features = input.enabled_features}
       if (input.custom_fields !== undefined)
-        updates.custom_fields = input.custom_fields
+        {updates.custom_fields = input.custom_fields}
 
       if (Object.keys(updates).length === 0) {
         throw new ApiErrorClass({
@@ -572,7 +572,7 @@ export const projectTemplatesApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as ProjectTemplate
     } catch (error) {
@@ -595,7 +595,7 @@ export const projectTemplatesApi = {
         p_template_id: templateId,
       })
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       // Non-critical error - don't throw, just log
       console.error('Failed to increment template usage:', error)
@@ -623,7 +623,7 @@ export const projectTemplatesApi = {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', templateId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -652,7 +652,7 @@ export const projectTemplatesApi = {
         .delete()
         .eq('id', templateId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -750,7 +750,7 @@ export const projectTemplatesApi = {
       // 5. Create checklists from templates
       if (template.checklists && template.checklists.length > 0) {
         for (const assoc of template.checklists) {
-          if (!assoc.auto_create) continue
+          if (!assoc.auto_create) {continue}
 
           try {
             const { error: checklistError } = await db.from('checklists').insert({
@@ -833,7 +833,7 @@ export const projectTemplatesApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as ProjectTemplatePhase
     } catch (error) {
@@ -862,7 +862,7 @@ export const projectTemplatesApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as ProjectTemplatePhase
     } catch (error) {
@@ -886,7 +886,7 @@ export const projectTemplatesApi = {
         .delete()
         .eq('id', phaseId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error

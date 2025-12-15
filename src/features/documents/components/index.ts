@@ -11,6 +11,7 @@ export { DocumentSearchBar, DocumentFilters, type DocumentFiltersState } from '.
 export { DocumentVersionHistory } from './DocumentVersionHistory'
 export { UploadDocumentVersion } from './UploadDocumentVersion'
 export { BulkMarkupExportDialog } from './BulkMarkupExportDialog'
+export * from './comparison'
 
 // Drawing Packages components
 export { DrawingPackageWizard } from './DrawingPackageWizard'

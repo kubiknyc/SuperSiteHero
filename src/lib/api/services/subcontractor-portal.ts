@@ -1165,7 +1165,7 @@ export const subcontractorPortalApi = {
 
       return data || []
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily reports', status: 500, details: error })
     }
   },
@@ -1207,7 +1207,7 @@ export const subcontractorPortalApi = {
         photos,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily report detail', status: 500, details: error })
     }
   },
@@ -1233,7 +1233,7 @@ export const subcontractorPortalApi = {
 
       return data || []
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch workforce data', status: 500, details: error })
     }
   },
@@ -1259,7 +1259,7 @@ export const subcontractorPortalApi = {
 
       return data || []
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch equipment data', status: 500, details: error })
     }
   },
@@ -1285,7 +1285,7 @@ export const subcontractorPortalApi = {
 
       return data || []
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch photos', status: 500, details: error })
     }
   },

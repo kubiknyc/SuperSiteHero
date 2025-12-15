@@ -67,7 +67,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
   )
 
   const handleAddMapping = async () => {
-    if (!connectionId || !selectedAccount) return
+    if (!connectionId || !selectedAccount) {return}
 
     const mapping: CreateQBAccountMappingDTO = {
       cost_code: costCodeInput || undefined,
@@ -98,7 +98,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
   }
 
   const handleSetDefault = async (mappingId: string) => {
-    if (!connectionId) return
+    if (!connectionId) {return}
     try {
       await setDefault.mutateAsync({ mappingId, connectionId })
     } catch (error) {

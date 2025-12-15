@@ -19,7 +19,7 @@ const statusConfig: Record<
 }
 
 export function SiteInstructionStatusBadge({ status }: SiteInstructionStatusBadgeProps) {
-  if (!status) return null
+  if (!status) {return null}
 
   const config = statusConfig[status as SiteInstructionStatus] || {
     label: status,

@@ -47,8 +47,8 @@ CREATE POLICY "Company admins can view their connections"
   ON docusign_connections FOR SELECT
   USING (
     company_id IN (
-      SELECT company_id FROM user_company_access
-      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
+      SELECT company_id FROM users
+      WHERE id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
@@ -56,8 +56,8 @@ CREATE POLICY "Company admins can manage their connections"
   ON docusign_connections FOR ALL
   USING (
     company_id IN (
-      SELECT company_id FROM user_company_access
-      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
+      SELECT company_id FROM users
+      WHERE id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
@@ -83,8 +83,8 @@ CREATE POLICY "Users can manage OAuth states for their companies"
   ON docusign_oauth_states FOR ALL
   USING (
     company_id IN (
-      SELECT company_id FROM user_company_access
-      WHERE user_id = auth.uid()
+      SELECT company_id FROM users
+      WHERE id = auth.uid()
     )
   );
 
@@ -169,8 +169,8 @@ CREATE POLICY "Users can view envelopes for their companies"
   ON docusign_envelopes FOR SELECT
   USING (
     company_id IN (
-      SELECT company_id FROM user_company_access
-      WHERE user_id = auth.uid()
+      SELECT company_id FROM users
+      WHERE id = auth.uid()
     )
   );
 
@@ -178,8 +178,8 @@ CREATE POLICY "Users can manage envelopes for their companies"
   ON docusign_envelopes FOR ALL
   USING (
     company_id IN (
-      SELECT company_id FROM user_company_access
-      WHERE user_id = auth.uid()
+      SELECT company_id FROM users
+      WHERE id = auth.uid()
     )
   );
 
@@ -241,8 +241,8 @@ CREATE POLICY "Users can view recipients for their envelopes"
     envelope_db_id IN (
       SELECT id FROM docusign_envelopes
       WHERE company_id IN (
-        SELECT company_id FROM user_company_access
-        WHERE user_id = auth.uid()
+        SELECT company_id FROM users
+        WHERE id = auth.uid()
       )
     )
   );
@@ -253,8 +253,8 @@ CREATE POLICY "Users can manage recipients for their envelopes"
     envelope_db_id IN (
       SELECT id FROM docusign_envelopes
       WHERE company_id IN (
-        SELECT company_id FROM user_company_access
-        WHERE user_id = auth.uid()
+        SELECT company_id FROM users
+        WHERE id = auth.uid()
       )
     )
   );
@@ -293,8 +293,8 @@ CREATE POLICY "Users can view documents for their envelopes"
     envelope_db_id IN (
       SELECT id FROM docusign_envelopes
       WHERE company_id IN (
-        SELECT company_id FROM user_company_access
-        WHERE user_id = auth.uid()
+        SELECT company_id FROM users
+        WHERE id = auth.uid()
       )
     )
   );
@@ -343,8 +343,8 @@ CREATE POLICY "Users can view tabs for their envelopes"
     envelope_db_id IN (
       SELECT id FROM docusign_envelopes
       WHERE company_id IN (
-        SELECT company_id FROM user_company_access
-        WHERE user_id = auth.uid()
+        SELECT company_id FROM users
+        WHERE id = auth.uid()
       )
     )
   );
@@ -390,8 +390,8 @@ CREATE POLICY "Users can view events for their envelopes"
     envelope_db_id IN (
       SELECT id FROM docusign_envelopes
       WHERE company_id IN (
-        SELECT company_id FROM user_company_access
-        WHERE user_id = auth.uid()
+        SELECT company_id FROM users
+        WHERE id = auth.uid()
       )
     )
   );

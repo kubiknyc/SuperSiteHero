@@ -37,7 +37,7 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
   const plannedLength = workPlanned.length;
 
   const handleVoiceInput = useCallback((field: 'summary' | 'planned') => {
-    if (!speechSupported) return;
+    if (!speechSupported) {return;}
 
     const SpeechRecognition =
       (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
@@ -109,7 +109,7 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
     setActiveField(null);
   }, []);
 
-  if (!draftReport) return null;
+  if (!draftReport) {return null;}
 
   return (
     <Card>

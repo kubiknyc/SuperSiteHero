@@ -65,7 +65,7 @@ export function BidInvitationTable({
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredInvitations = invitations.filter((inv) => {
-    if (!searchTerm) return true
+    if (!searchTerm) {return true}
     const search = searchTerm.toLowerCase()
     return (
       inv.company_name?.toLowerCase().includes(search) ||

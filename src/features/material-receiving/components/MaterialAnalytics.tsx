@@ -98,8 +98,8 @@ function calculateAnalytics(deliveries: MaterialDelivery[]): AnalyticsData {
   }).length
 
   let recentTrend: 'up' | 'down' | 'stable' = 'stable'
-  if (lastWeek > previousWeek * 1.1) recentTrend = 'up'
-  if (lastWeek < previousWeek * 0.9) recentTrend = 'down'
+  if (lastWeek > previousWeek * 1.1) {recentTrend = 'up'}
+  if (lastWeek < previousWeek * 0.9) {recentTrend = 'down'}
 
   return {
     totalDeliveries: total,
@@ -318,8 +318,8 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
 
                       // Simple rating calculation
                       let rating: 'good' | 'fair' | 'poor' = 'good'
-                      if (onTimeRate < 80 || damageRate > 10) rating = 'fair'
-                      if (onTimeRate < 60 || damageRate > 20) rating = 'poor'
+                      if (onTimeRate < 80 || damageRate > 10) {rating = 'fair'}
+                      if (onTimeRate < 60 || damageRate > 20) {rating = 'poor'}
 
                       const ratingColors = {
                         good: 'bg-green-100 text-green-800',

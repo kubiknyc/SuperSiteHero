@@ -77,11 +77,11 @@ export function PunchItemQRCode({
   // Download QR code as image
   const handleDownload = () => {
     const svg = document.getElementById(`qr-${punchItem.id}`)
-    if (!svg) return
+    if (!svg) {return}
 
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     const svgData = new XMLSerializer().serializeToString(svg)
     const img = new Image()
@@ -112,7 +112,7 @@ export function PunchItemQRCode({
     }
 
     const svg = document.getElementById(`qr-${punchItem.id}`)
-    if (!svg) return
+    if (!svg) {return}
 
     printWindow.document.write(`
       <!DOCTYPE html>

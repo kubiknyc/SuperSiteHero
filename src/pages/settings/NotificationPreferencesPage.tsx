@@ -57,7 +57,7 @@ export function NotificationPreferencesPage() {
   }
 
   const handleToggleEmailPreference = async (key: keyof EmailNotificationPreferences) => {
-    if (!preferences) return
+    if (!preferences) {return}
 
     const newValue = !preferences.email[key]
     await updateMutation.mutateAsync({
@@ -69,7 +69,7 @@ export function NotificationPreferencesPage() {
   }
 
   const handleToggleInApp = async () => {
-    if (!preferences) return
+    if (!preferences) {return}
 
     await updateMutation.mutateAsync({
       inApp: {

@@ -33,6 +33,7 @@ import {
   Clock,
   MessageSquare,
   History,
+  QrCode,
 } from 'lucide-react'
 import {
   useSiteInstruction,
@@ -53,6 +54,8 @@ import {
   AcknowledgmentDialog,
   VerificationDialog,
   CompletionDialog,
+  QRCodeGenerator,
+  AcknowledgmentsList,
 } from '@/features/site-instructions/components'
 
 export default function SiteInstructionDetailPage() {
@@ -65,6 +68,7 @@ export default function SiteInstructionDetailPage() {
   const [showAcknowledge, setShowAcknowledge] = useState(false)
   const [showComplete, setShowComplete] = useState(false)
   const [showVerify, setShowVerify] = useState(false)
+  const [showQRCode, setShowQRCode] = useState(false)
   const [newComment, setNewComment] = useState('')
 
   // Queries
@@ -150,7 +154,7 @@ export default function SiteInstructionDetailPage() {
   }
 
   const handleAddComment = async () => {
-    if (!newComment.trim()) return
+    if (!newComment.trim()) {return}
     try {
       await addCommentMutation.mutateAsync({
         siteInstructionId: id!,
@@ -248,10 +252,16 @@ export default function SiteInstructionDetailPage() {
         )}
 
         {status === 'issued' && (
-          <Button onClick={() => setShowAcknowledge(true)}>
-            <CheckCircle className="h-4 w-4 mr-2" />
-            Acknowledge Receipt
-          </Button>
+          <>
+            <Button onClick={() => setShowAcknowledge(true)}>
+              <CheckCircle className="h-4 w-4 mr-2" />
+              Acknowledge Receipt
+            </Button>
+            <Button variant="outline" onClick={() => setShowQRCode(true)}>
+              <QrCode className="h-4 w-4 mr-2" />
+              QR Code
+            </Button>
+          </>
         )}
 
         {status === 'acknowledged' && (
@@ -552,6 +562,11 @@ export default function SiteInstructionDetailPage() {
               </CardContent>
             </Card>
           )}
+
+          {/* QR Code Acknowledgments List (Milestone 1.2) */}
+          {status !== 'draft' && (
+            <AcknowledgmentsList instructionId={id!} />
+          )}
         </div>
       </div>
 
@@ -575,6 +590,13 @@ export default function SiteInstructionDetailPage() {
         onOpenChange={setShowVerify}
         onVerify={handleVerify}
         isSubmitting={verifyMutation.isPending}
+      />
+
+      {/* QR Code Generator Dialog (Milestone 1.2) */}
+      <QRCodeGenerator
+        instruction={instruction as any}
+        open={showQRCode}
+        onOpenChange={setShowQRCode}
       />
     </div>
   )

@@ -28,7 +28,7 @@ export function ApprovalCodeBadge({
   size = 'md',
   className,
 }: ApprovalCodeBadgeProps) {
-  if (!code) return null
+  if (!code) {return null}
 
   const color = getApprovalCodeColor(code)
   const label = getApprovalCodeLabel(code)

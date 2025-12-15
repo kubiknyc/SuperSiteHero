@@ -232,7 +232,7 @@ SELECT
     COUNT(*) FILTER (WHERE potential_severity = 'medical_treatment') as medical_treatment_potential_count,
     COUNT(*) FILTER (WHERE potential_severity = 'first_aid') as first_aid_potential_count,
     jsonb_object_agg(
-        COALESCE(root_cause_category, 'unknown'),
+        COALESCE(root_cause_category::text, 'unknown'),
         root_cause_count
     ) FILTER (WHERE root_cause_category IS NOT NULL) as by_root_cause
 FROM (
@@ -297,7 +297,7 @@ WITH root_cause_counts AS (
     SELECT
         company_id,
         project_id,
-        COALESCE(root_cause_category, 'unknown') as root_cause_category,
+        COALESCE(root_cause_category::text, 'unknown') as root_cause_category,
         COUNT(*) as count,
         SUM(COUNT(*)) OVER (PARTITION BY company_id, project_id) as total_count
     FROM safety_incidents
@@ -447,11 +447,11 @@ BEGIN
         SELECT
             COUNT(*) as cnt,
             jsonb_object_agg(
-                COALESCE(incident_type, 'unknown'),
+                COALESCE(incident_type::text, 'unknown'),
                 type_count
             ) as by_type,
             jsonb_object_agg(
-                COALESCE(root_cause_category, 'unknown'),
+                COALESCE(root_cause_category::text, 'unknown'),
                 cause_count
             ) as by_cause
         FROM (
@@ -539,8 +539,8 @@ ALTER TABLE near_miss_monthly_reports ENABLE ROW LEVEL SECURITY;
 CREATE POLICY near_miss_categories_select ON near_miss_categories
     FOR SELECT USING (
         company_id IN (
-            SELECT company_id FROM user_company_access
-            WHERE user_id = auth.uid()
+            SELECT company_id FROM users
+            WHERE id = auth.uid()
         )
     );
 
@@ -557,8 +557,8 @@ CREATE POLICY near_miss_zones_select ON near_miss_zones
 CREATE POLICY near_miss_alert_thresholds_select ON near_miss_alert_thresholds
     FOR SELECT USING (
         company_id IN (
-            SELECT company_id FROM user_company_access
-            WHERE user_id = auth.uid() AND role IN ('admin', 'safety_manager')
+            SELECT company_id FROM users
+            WHERE id = auth.uid() AND role IN ('admin', 'safety_manager')
         )
     );
 
@@ -566,7 +566,7 @@ CREATE POLICY near_miss_alert_thresholds_select ON near_miss_alert_thresholds
 CREATE POLICY near_miss_patterns_select ON near_miss_patterns
     FOR SELECT USING (
         project_id IS NULL AND company_id IN (
-            SELECT company_id FROM user_company_access WHERE user_id = auth.uid()
+            SELECT company_id FROM users WHERE id = auth.uid()
         )
         OR project_id IN (
             SELECT project_id FROM project_users WHERE user_id = auth.uid()
@@ -577,7 +577,7 @@ CREATE POLICY near_miss_patterns_select ON near_miss_patterns
 CREATE POLICY near_miss_alerts_select ON near_miss_alerts
     FOR SELECT USING (
         project_id IS NULL AND company_id IN (
-            SELECT company_id FROM user_company_access WHERE user_id = auth.uid()
+            SELECT company_id FROM users WHERE id = auth.uid()
         )
         OR project_id IN (
             SELECT project_id FROM project_users WHERE user_id = auth.uid()
@@ -588,7 +588,7 @@ CREATE POLICY near_miss_alerts_select ON near_miss_alerts
 CREATE POLICY near_miss_monthly_reports_select ON near_miss_monthly_reports
     FOR SELECT USING (
         project_id IS NULL AND company_id IN (
-            SELECT company_id FROM user_company_access WHERE user_id = auth.uid()
+            SELECT company_id FROM users WHERE id = auth.uid()
         )
         OR project_id IN (
             SELECT project_id FROM project_users WHERE user_id = auth.uid()

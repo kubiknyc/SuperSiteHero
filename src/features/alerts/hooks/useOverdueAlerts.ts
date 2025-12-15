@@ -50,9 +50,9 @@ function calculateDaysOverdue(dueDate: string): number {
 
 // Determine priority based on days overdue
 function getPriorityFromDaysOverdue(days: number): 'critical' | 'high' | 'medium' | 'low' {
-  if (days > 14) return 'critical'
-  if (days > 7) return 'high'
-  if (days > 3) return 'medium'
+  if (days > 14) {return 'critical'}
+  if (days > 7) {return 'high'}
+  if (days > 3) {return 'medium'}
   return 'low'
 }
 
@@ -87,7 +87,7 @@ export function useOverdueRFIs(projectId?: string) {
 
       if (error) {
         // Table may not exist yet, return empty array
-        if (error.code === '42P01') return []
+        if (error.code === '42P01') {return []}
         throw error
       }
 
@@ -144,7 +144,7 @@ export function useOverdueSubmittals(projectId?: string) {
 
       if (error) {
         // Table may not exist yet, return empty array
-        if (error.code === '42P01') return []
+        if (error.code === '42P01') {return []}
         throw error
       }
 
@@ -200,7 +200,7 @@ export function useOverduePunchItems(projectId?: string) {
 
       if (error) {
         // Table may not exist yet, return empty array
-        if (error.code === '42P01') return []
+        if (error.code === '42P01') {return []}
         throw error
       }
 

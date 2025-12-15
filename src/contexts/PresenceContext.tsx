@@ -57,7 +57,7 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
 
   // Join/leave project room when project changes
   useEffect(() => {
-    if (!user || !currentProjectId) return
+    if (!user || !currentProjectId) {return}
 
     const roomId = `project:${currentProjectId}`
 
@@ -87,7 +87,7 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
 
   // Update page when location changes
   useEffect(() => {
-    if (!currentProjectId) return
+    if (!currentProjectId) {return}
     presenceManager.updatePresence(`project:${currentProjectId}`, {
       currentPage: location.pathname,
     })
@@ -102,7 +102,7 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
 
   const updateCurrentPage = useCallback(
     (page: string) => {
-      if (!currentProjectId) return
+      if (!currentProjectId) {return}
       presenceManager.updatePresence(`project:${currentProjectId}`, {
         currentPage: page,
       })

@@ -50,14 +50,14 @@ interface WeatherDisplayProps {
 function getWeatherIconComponent(condition: string) {
   const lowerCondition = condition.toLowerCase()
 
-  if (lowerCondition.includes('thunder')) return CloudLightning
-  if (lowerCondition.includes('snow') || lowerCondition.includes('sleet')) return CloudSnow
-  if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) return CloudRain
-  if (lowerCondition.includes('drizzle')) return CloudDrizzle
-  if (lowerCondition.includes('fog') || lowerCondition.includes('mist')) return CloudFog
-  if (lowerCondition.includes('cloudy') || lowerCondition.includes('overcast')) return Cloud
-  if (lowerCondition.includes('partly')) return CloudSun
-  if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) return Sun
+  if (lowerCondition.includes('thunder')) {return CloudLightning}
+  if (lowerCondition.includes('snow') || lowerCondition.includes('sleet')) {return CloudSnow}
+  if (lowerCondition.includes('rain') || lowerCondition.includes('shower')) {return CloudRain}
+  if (lowerCondition.includes('drizzle')) {return CloudDrizzle}
+  if (lowerCondition.includes('fog') || lowerCondition.includes('mist')) {return CloudFog}
+  if (lowerCondition.includes('cloudy') || lowerCondition.includes('overcast')) {return Cloud}
+  if (lowerCondition.includes('partly')) {return CloudSun}
+  if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) {return Sun}
 
   return Cloud
 }
@@ -65,12 +65,12 @@ function getWeatherIconComponent(condition: string) {
 function getWeatherIconColor(condition: string): string {
   const lowerCondition = condition.toLowerCase()
 
-  if (lowerCondition.includes('thunder')) return 'text-purple-500'
-  if (lowerCondition.includes('snow')) return 'text-blue-300'
-  if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle')) return 'text-blue-500'
-  if (lowerCondition.includes('fog')) return 'text-gray-400'
-  if (lowerCondition.includes('overcast') || lowerCondition.includes('cloudy')) return 'text-gray-500'
-  if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) return 'text-yellow-500'
+  if (lowerCondition.includes('thunder')) {return 'text-purple-500'}
+  if (lowerCondition.includes('snow')) {return 'text-blue-300'}
+  if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle')) {return 'text-blue-500'}
+  if (lowerCondition.includes('fog')) {return 'text-gray-400'}
+  if (lowerCondition.includes('overcast') || lowerCondition.includes('cloudy')) {return 'text-gray-500'}
+  if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) {return 'text-yellow-500'}
 
   return 'text-gray-500'
 }

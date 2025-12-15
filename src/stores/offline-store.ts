@@ -39,17 +39,54 @@ export interface PendingSyncItem {
 }
 
 /**
+ * Sync progress state
+ */
+export interface SyncProgress {
+  current: number;
+  total: number;
+  percentage: number;
+}
+
+/**
+ * Network quality metrics
+ */
+export interface NetworkQuality {
+  downloadSpeed: number; // Mbps
+  uploadSpeed: number; // Mbps
+  latency: number; // ms
+  connectionType: string;
+  lastMeasured: number;
+}
+
+/**
+ * User sync preferences
+ */
+export interface SyncPreferences {
+  autoSync: boolean;
+  syncOnCellular: boolean;
+  syncPhotosOnCellular: boolean;
+  maxBatchSize: number; // bytes
+  notifyOnSync: boolean;
+}
+
+/**
  * Offline state store
  */
 export const useOfflineStore = create<OfflineStore & {
   conflicts: SyncConflict[];
   syncQueue: PendingSyncItem[];
+  syncProgress: SyncProgress | null;
+  networkQuality: NetworkQuality | null;
+  syncPreferences: SyncPreferences;
   addConflict: (conflict: SyncConflict) => void;
   resolveConflict: (conflictId: string, resolution: 'local' | 'server' | 'merge', mergedData?: unknown) => Promise<void>;
   clearSyncQueue: () => Promise<void>;
   removePendingSync: (syncId: string) => Promise<void>;
   loadConflicts: () => Promise<void>;
   loadSyncQueue: () => Promise<void>;
+  setSyncProgress: (progress: SyncProgress | null) => void;
+  setNetworkQuality: (quality: NetworkQuality | null) => void;
+  updateSyncPreferences: (preferences: Partial<SyncPreferences>) => void;
 }>((set, get) => ({
   // State
   isOnline: typeof navigator !== 'undefined' ? navigator.onLine : true,
@@ -60,6 +97,15 @@ export const useOfflineStore = create<OfflineStore & {
   storageQuota: null,
   conflicts: [],
   syncQueue: [],
+  syncProgress: null,
+  networkQuality: null,
+  syncPreferences: {
+    autoSync: true,
+    syncOnCellular: true,
+    syncPhotosOnCellular: false,
+    maxBatchSize: 5 * 1024 * 1024, // 5MB default
+    notifyOnSync: true,
+  },
 
   // Actions
   setOnline: (online: boolean) => {
@@ -241,6 +287,23 @@ export const useOfflineStore = create<OfflineStore & {
       throw error;
     }
   },
+
+  // Sync progress actions
+  setSyncProgress: (progress) => {
+    set({ syncProgress: progress });
+  },
+
+  // Network quality actions
+  setNetworkQuality: (quality) => {
+    set({ networkQuality: quality });
+  },
+
+  // Sync preferences actions
+  updateSyncPreferences: (preferences) => {
+    set((state) => ({
+      syncPreferences: { ...state.syncPreferences, ...preferences },
+    }));
+  },
 }));
 
 /**
@@ -312,4 +375,25 @@ export function useConflictCount(): number {
  */
 export function useStorageQuota(): StorageQuota | null {
   return useOfflineStore((state) => state.storageQuota);
+}
+
+/**
+ * Hook to get sync progress
+ */
+export function useSyncProgress(): SyncProgress | null {
+  return useOfflineStore((state) => state.syncProgress);
+}
+
+/**
+ * Hook to get network quality
+ */
+export function useNetworkQuality(): NetworkQuality | null {
+  return useOfflineStore((state) => state.networkQuality);
+}
+
+/**
+ * Hook to get sync preferences
+ */
+export function useSyncPreferences(): SyncPreferences {
+  return useOfflineStore((state) => state.syncPreferences);
 }

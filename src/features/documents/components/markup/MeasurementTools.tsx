@@ -109,10 +109,10 @@ export function MeasurementTools({
   }, [currentUnit])
 
   const handleCalibrationComplete = () => {
-    if (!calibrationPixelDistance || !calibrationValue) return
+    if (!calibrationPixelDistance || !calibrationValue) {return}
 
     const realWorldDistance = parseFloat(calibrationValue)
-    if (isNaN(realWorldDistance) || realWorldDistance <= 0) return
+    if (isNaN(realWorldDistance) || realWorldDistance <= 0) {return}
 
     const newScale: ScaleCalibration = {
       id: `scale-${Date.now()}`,

@@ -160,16 +160,16 @@ function VersionEntryCard({ entry, isExpanded, onToggle }: VersionEntryCardProps
 }
 
 function getActionColor(action: string): string {
-  if (action.includes('Created')) return 'bg-green-100 text-green-600'
-  if (action.includes('Approved')) return 'bg-blue-100 text-blue-600'
-  if (action.includes('Rejected')) return 'bg-red-100 text-red-600'
-  if (action.includes('Submitted')) return 'bg-yellow-100 text-yellow-600'
+  if (action.includes('Created')) {return 'bg-green-100 text-green-600'}
+  if (action.includes('Approved')) {return 'bg-blue-100 text-blue-600'}
+  if (action.includes('Rejected')) {return 'bg-red-100 text-red-600'}
+  if (action.includes('Submitted')) {return 'bg-yellow-100 text-yellow-600'}
   return 'bg-gray-100 text-gray-600'
 }
 
 function formatValue(value: unknown): string {
-  if (value === null || value === undefined) return '(empty)'
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
-  if (typeof value === 'object') return JSON.stringify(value)
+  if (value === null || value === undefined) {return '(empty)'}
+  if (typeof value === 'boolean') {return value ? 'Yes' : 'No'}
+  if (typeof value === 'object') {return JSON.stringify(value)}
   return String(value).slice(0, 50) + (String(value).length > 50 ? '...' : '')
 }

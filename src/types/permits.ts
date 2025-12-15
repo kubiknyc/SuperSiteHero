@@ -229,7 +229,7 @@ export function getPermitTypeLabel(type: PermitType | string): string {
  * Check if permit is expiring soon (within specified days)
  */
 export function isPermitExpiringSoon(permit: Permit, withinDays: number = 30): boolean {
-  if (!permit.expiration_date) return false;
+  if (!permit.expiration_date) {return false;}
   const expDate = new Date(permit.expiration_date);
   const now = new Date();
   const diffDays = Math.ceil((expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
@@ -240,7 +240,7 @@ export function isPermitExpiringSoon(permit: Permit, withinDays: number = 30): b
  * Check if permit is expired
  */
 export function isPermitExpired(permit: Permit): boolean {
-  if (!permit.expiration_date) return false;
+  if (!permit.expiration_date) {return false;}
   return new Date(permit.expiration_date) < new Date();
 }
 
@@ -248,7 +248,7 @@ export function isPermitExpired(permit: Permit): boolean {
  * Calculate days until permit expiration
  */
 export function getDaysUntilExpiration(permit: Permit): number | null {
-  if (!permit.expiration_date) return null;
+  if (!permit.expiration_date) {return null;}
   const expDate = new Date(permit.expiration_date);
   const now = new Date();
   return Math.ceil((expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));

@@ -88,12 +88,12 @@ export function DistributionListPicker({
 
   // Filter users based on search
   const filteredUsers = useMemo(() => {
-    if (!projectUsers) return [];
-    if (!searchFilter) return projectUsers;
+    if (!projectUsers) {return [];}
+    if (!searchFilter) {return projectUsers;}
 
     const lowerFilter = searchFilter.toLowerCase();
     return projectUsers.filter((pu) => {
-      if (!pu.user) return false;
+      if (!pu.user) {return false;}
       const fullName = [pu.user.first_name, pu.user.last_name]
         .filter(Boolean)
         .join(' ')
@@ -108,8 +108,8 @@ export function DistributionListPicker({
 
   // Filter lists based on search
   const filteredLists = useMemo(() => {
-    if (!lists) return [];
-    if (!searchFilter) return lists;
+    if (!lists) {return [];}
+    if (!searchFilter) {return lists;}
 
     const lowerFilter = searchFilter.toLowerCase();
     return lists.filter(
@@ -173,17 +173,17 @@ export function DistributionListPicker({
 
   // Add external contact
   const addExternalContact = () => {
-    if (!newExternalEmail.trim()) return;
+    if (!newExternalEmail.trim()) {return;}
 
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(newExternalEmail.trim())) return;
+    if (!emailRegex.test(newExternalEmail.trim())) {return;}
 
     // Check for duplicates
     const exists = value.externalContacts.some(
       (c) => c.email.toLowerCase() === newExternalEmail.trim().toLowerCase()
     );
-    if (exists) return;
+    if (exists) {return;}
 
     const newContact: ExternalContact = {
       email: newExternalEmail.trim(),
@@ -265,7 +265,7 @@ export function DistributionListPicker({
           {/* Selected lists */}
           {value.listIds.map((listId) => {
             const list = lists?.find((l) => l.id === listId);
-            if (!list) return null;
+            if (!list) {return null;}
             return (
               <div
                 key={listId}
@@ -386,7 +386,7 @@ export function DistributionListPicker({
               ) : (
                 <div className="divide-y">
                   {filteredUsers.map((pu) => {
-                    if (!pu.user) return null;
+                    if (!pu.user) {return null;}
                     const isSelected = value.userIds.includes(pu.user_id);
                     const fullName = [pu.user.first_name, pu.user.last_name]
                       .filter(Boolean)

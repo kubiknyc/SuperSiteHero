@@ -74,8 +74,8 @@ function TrafficLight({ status }: { status: 'green' | 'yellow' | 'red' }) {
  * Get traffic light status based on dates and status
  */
 function getTrafficLightStatus(entry: SubmittalRegisterEntry): 'green' | 'yellow' | 'red' {
-  if (entry.is_overdue) return 'red'
-  if (entry.status === 'approved' || entry.status === 'approved_as_noted') return 'green'
+  if (entry.is_overdue) {return 'red'}
+  if (entry.status === 'approved' || entry.status === 'approved_as_noted') {return 'green'}
 
   // Check if approaching required date
   if (entry.required_date) {
@@ -83,8 +83,8 @@ function getTrafficLightStatus(entry: SubmittalRegisterEntry): 'green' | 'yellow
     const today = new Date()
     const daysUntilRequired = Math.ceil((required.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
-    if (daysUntilRequired < 0) return 'red'
-    if (daysUntilRequired <= 7) return 'yellow'
+    if (daysUntilRequired < 0) {return 'red'}
+    if (daysUntilRequired <= 7) {return 'yellow'}
   }
 
   return 'green'

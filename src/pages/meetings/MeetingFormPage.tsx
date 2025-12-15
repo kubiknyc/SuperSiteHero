@@ -227,7 +227,7 @@ export function MeetingFormPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!validateForm()) return
+    if (!validateForm()) {return}
 
     setIsSaving(true)
     try {

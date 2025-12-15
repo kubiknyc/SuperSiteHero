@@ -97,7 +97,7 @@ export function useJSAs(filters?: JSAFilters) {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Transform counts from arrays to numbers
       return (data || []).map((jsa: any) => ({
@@ -136,7 +136,7 @@ export function useJSA(jsaId: string) {
         .eq('id', jsaId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Sort hazards by step number
       if (data.hazards) {
@@ -162,7 +162,7 @@ export function useJSAHazards(jsaId: string) {
         .eq('jsa_id', jsaId)
         .order('step_number');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as JSAHazard[];
     },
     enabled: !!jsaId,
@@ -182,7 +182,7 @@ export function useJSAAcknowledgments(jsaId: string) {
         .eq('jsa_id', jsaId)
         .order('acknowledged_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as JSAAcknowledgment[];
     },
     enabled: !!jsaId,
@@ -198,7 +198,7 @@ export function useJSATemplates(filters?: JSATemplateFilters) {
   return useQuery({
     queryKey: jsaKeys.templates(filters),
     queryFn: async (): Promise<JSATemplateWithDetails[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       let query = db
         .from('jsa_templates')
@@ -220,7 +220,7 @@ export function useJSATemplates(filters?: JSATemplateFilters) {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as JSATemplateWithDetails[];
     },
     enabled: !!userProfile?.company_id,
@@ -236,14 +236,14 @@ export function useNextJSANumber(projectId: string) {
   return useQuery({
     queryKey: jsaKeys.nextNumber(projectId),
     queryFn: async (): Promise<string> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db.rpc('get_next_jsa_number', {
         p_company_id: userProfile.company_id,
         p_project_id: projectId,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as string;
     },
     enabled: !!projectId && !!userProfile?.company_id,
@@ -261,7 +261,7 @@ export function useJSAStatistics(projectId: string) {
         p_project_id: projectId,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data?.[0] || {
         total_jsas: 0,
         pending_review: 0,
@@ -285,7 +285,7 @@ export function useCreateJSA() {
 
   return useMutation({
     mutationFn: async (dto: CreateJSADTO): Promise<JobSafetyAnalysis> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Create the JSA
       const { data: jsa, error: jsaError } = await db
@@ -312,7 +312,7 @@ export function useCreateJSA() {
         .select()
         .single();
 
-      if (jsaError) throw jsaError;
+      if (jsaError) {throw jsaError;}
 
       // Add hazards if provided
       if (dto.hazards && dto.hazards.length > 0) {
@@ -339,7 +339,7 @@ export function useCreateJSA() {
           .from('jsa_hazards')
           .insert(hazardInserts);
 
-        if (hazardsError) throw hazardsError;
+        if (hazardsError) {throw hazardsError;}
       }
 
       return jsa as JobSafetyAnalysis;
@@ -369,7 +369,7 @@ export function useUpdateJSA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -395,7 +395,7 @@ export function useSubmitJSAForReview() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -433,7 +433,7 @@ export function useApproveJSA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -459,7 +459,7 @@ export function useStartJSAWork() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -495,7 +495,7 @@ export function useCompleteJSA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -520,7 +520,7 @@ export function useCancelJSA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -544,7 +544,7 @@ export function useDeleteJSA() {
         .eq('id', id)
         .eq('status', 'draft');
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: jsaKeys.all });
@@ -583,7 +583,7 @@ export function useAddJSAHazard() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAHazard;
     },
     onSuccess: (_, variables) => {
@@ -612,7 +612,7 @@ export function useUpdateJSAHazard() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAHazard;
     },
     onSuccess: (_, variables) => {
@@ -648,7 +648,7 @@ export function useVerifyHazardControls() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAHazard;
     },
     onSuccess: (_, variables) => {
@@ -677,7 +677,7 @@ export function useRemoveJSAHazard() {
         .delete()
         .eq('id', hazardId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { jsaId }) => {
       queryClient.invalidateQueries({ queryKey: jsaKeys.hazards(jsaId) });
@@ -711,7 +711,7 @@ export function useAddJSAAcknowledgment() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAAcknowledgment;
     },
     onSuccess: (_, variables) => {
@@ -740,7 +740,7 @@ export function useRemoveJSAAcknowledgment() {
         .delete()
         .eq('id', acknowledgmentId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { jsaId }) => {
       queryClient.invalidateQueries({ queryKey: jsaKeys.acknowledgments(jsaId) });
@@ -758,7 +758,7 @@ export function useCreateJSATemplate() {
 
   return useMutation({
     mutationFn: async (dto: CreateJSATemplateDTO): Promise<JSATemplate> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('jsa_templates')
@@ -777,7 +777,7 @@ export function useCreateJSATemplate() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSATemplate;
     },
     onSuccess: () => {
@@ -811,7 +811,7 @@ export function useUploadJSAAttachment() {
         .from('documents')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {throw uploadError;}
 
       // Create attachment record
       const { data, error } = await db
@@ -829,7 +829,7 @@ export function useUploadJSAAttachment() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAAttachment;
     },
     onSuccess: (_, { jsaId }) => {
@@ -864,7 +864,7 @@ export function useDeleteJSAAttachment() {
         .delete()
         .eq('id', attachmentId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { jsaId }) => {
       queryClient.invalidateQueries({ queryKey: jsaKeys.attachments(jsaId) });

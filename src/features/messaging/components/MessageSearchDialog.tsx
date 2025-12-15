@@ -45,7 +45,7 @@ interface SearchResult {
  * Highlight matching text in content
  */
 function highlightText(text: string, query: string): string {
-  if (!query.trim()) return text
+  if (!query.trim()) {return text}
 
   const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi')
   return text.replace(regex, '<mark class="bg-yellow-200 dark:bg-yellow-900">$1</mark>')
@@ -75,8 +75,8 @@ function extractSnippet(content: string, query: string, maxLength = 150): string
   const end = Math.min(content.length, start + maxLength)
 
   let snippet = content.slice(start, end)
-  if (start > 0) snippet = '...' + snippet
-  if (end < content.length) snippet = snippet + '...'
+  if (start > 0) {snippet = '...' + snippet}
+  if (end < content.length) {snippet = snippet + '...'}
 
   return snippet
 }
@@ -142,7 +142,7 @@ export function MessageSearchDialog({
         .order('created_at', { ascending: false })
         .limit(50)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map((message: any) => ({
         message: message as Message,

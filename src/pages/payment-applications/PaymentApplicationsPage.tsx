@@ -55,7 +55,7 @@ export function PaymentApplicationsPage() {
 
   // Filter applications
   const filteredApplications = useMemo(() => {
-    if (!applications) return []
+    if (!applications) {return []}
 
     return applications.filter((app) => {
       // Search filter
@@ -73,7 +73,7 @@ export function PaymentApplicationsPage() {
 
   // Group by status for quick stats
   const statusCounts = useMemo(() => {
-    if (!applications) return {}
+    if (!applications) {return {}}
     return applications.reduce((acc, app) => {
       acc[app.status] = (acc[app.status] || 0) + 1
       return acc

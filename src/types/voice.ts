@@ -207,7 +207,7 @@ export function isWebSpeechSupported(): boolean {
  * Get SpeechRecognition constructor (with webkit prefix fallback)
  */
 export function getSpeechRecognition(): typeof SpeechRecognition | null {
-  if (typeof window === 'undefined') return null
+  if (typeof window === 'undefined') {return null}
 
   return (
     (window as unknown as { SpeechRecognition?: typeof SpeechRecognition }).SpeechRecognition ||
@@ -241,7 +241,7 @@ export function mapSpeechError(error: string): VoiceRecognitionError {
  * Format transcript for display (capitalize first letter, add period if needed)
  */
 export function formatTranscript(text: string): string {
-  if (!text) return ''
+  if (!text) {return ''}
 
   // Capitalize first letter
   let formatted = text.charAt(0).toUpperCase() + text.slice(1)

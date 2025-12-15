@@ -86,14 +86,14 @@ export function ChangeOrdersPage() {
   // Build filters based on active tab
   const filters = useMemo(() => {
     const f: Record<string, any> = {}
-    if (activeProjectId) f.project_id = activeProjectId
-    if (statusFilter !== 'all') f.status = statusFilter
-    if (typeFilter !== 'all') f.change_type = typeFilter
-    if (searchQuery) f.search = searchQuery
+    if (activeProjectId) {f.project_id = activeProjectId}
+    if (statusFilter !== 'all') {f.status = statusFilter}
+    if (typeFilter !== 'all') {f.change_type = typeFilter}
+    if (searchQuery) {f.search = searchQuery}
 
     // PCO vs CO tab filtering
-    if (activeTab === 'pco') f.is_pco = true
-    if (activeTab === 'co') f.is_pco = false
+    if (activeTab === 'pco') {f.is_pco = true}
+    if (activeTab === 'co') {f.is_pco = false}
 
     return f
   }, [activeProjectId, statusFilter, typeFilter, searchQuery, activeTab])
@@ -104,7 +104,7 @@ export function ChangeOrdersPage() {
 
   // Format currency
   const formatCurrency = (amount: number | null) => {
-    if (amount === null || amount === undefined) return 'TBD'
+    if (amount === null || amount === undefined) {return 'TBD'}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -115,9 +115,9 @@ export function ChangeOrdersPage() {
 
   // Get status icon
   const getStatusIcon = (status: string) => {
-    if (status === 'approved') return <CheckCircle className="h-4 w-4 text-green-600" />
-    if (status === 'rejected') return <XCircle className="h-4 w-4 text-red-600" />
-    if (status.includes('pending')) return <Clock className="h-4 w-4 text-orange-500" />
+    if (status === 'approved') {return <CheckCircle className="h-4 w-4 text-green-600" />}
+    if (status === 'rejected') {return <XCircle className="h-4 w-4 text-red-600" />}
+    if (status.includes('pending')) {return <Clock className="h-4 w-4 text-orange-500" />}
     return null
   }
 

@@ -54,7 +54,7 @@ export function useKeyboardShortcuts({ shortcuts, enabled = true }: UseKeyboardS
   )
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {return}
 
     window.addEventListener('keydown', handleKeyDown)
 

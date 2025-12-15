@@ -527,7 +527,7 @@ export function getWarrantyStatusColor(status: WarrantyStatus): string {
  * Check if warranty is expiring soon (within 90 days)
  */
 export function isWarrantyExpiringSoon(warranty: Warranty, daysThreshold: number = 90): boolean {
-  if (warranty.status !== 'active') return false
+  if (warranty.status !== 'active') {return false}
 
   const endDate = new Date(warranty.end_date)
   const today = new Date()
@@ -554,10 +554,10 @@ export function getCloseoutTrafficLight(
   rejected: number,
   total: number
 ): 'green' | 'yellow' | 'red' | 'gray' {
-  if (total === 0) return 'gray'
-  if (rejected > 0) return 'red'
-  if (approved === total) return 'green'
-  if (approved > 0 || pending > 0) return 'yellow'
+  if (total === 0) {return 'gray'}
+  if (rejected > 0) {return 'red'}
+  if (approved === total) {return 'green'}
+  if (approved > 0 || pending > 0) {return 'yellow'}
   return 'gray'
 }
 

@@ -138,7 +138,7 @@ export function compareVersions(
   oldData: Record<string, unknown> | undefined,
   newData: Record<string, unknown> | undefined
 ): Array<{ field: string; old_value: unknown; new_value: unknown }> {
-  if (!oldData && !newData) return []
+  if (!oldData && !newData) {return []}
 
   const changes: Array<{ field: string; old_value: unknown; new_value: unknown }> = []
   const allKeys = new Set([
@@ -149,7 +149,7 @@ export function compareVersions(
   const ignoredFields = ['id', 'created_at', 'updated_at', 'version']
 
   allKeys.forEach((key) => {
-    if (ignoredFields.includes(key)) return
+    if (ignoredFields.includes(key)) {return}
 
     const oldValue = oldData?.[key]
     const newValue = newData?.[key]

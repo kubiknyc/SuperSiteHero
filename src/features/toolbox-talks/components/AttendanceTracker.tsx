@@ -71,7 +71,7 @@ export function AttendanceTracker({
   const excusedAttendees = attendees.filter((a) => a.attendance_status === 'excused')
 
   const handleAddAttendee = async () => {
-    if (!newAttendee.worker_name.trim()) return
+    if (!newAttendee.worker_name.trim()) {return}
 
     await addAttendee.mutateAsync({
       toolbox_talk_id: talkId,
@@ -109,7 +109,7 @@ export function AttendanceTracker({
   }
 
   const handleBulkSignIn = () => {
-    if (expectedAttendees.length === 0) return
+    if (expectedAttendees.length === 0) {return}
     if (confirm(`Sign in all ${expectedAttendees.length} expected attendees?`)) {
       bulkSignIn.mutate(talkId)
     }

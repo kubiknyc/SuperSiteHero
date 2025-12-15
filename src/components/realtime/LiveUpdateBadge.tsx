@@ -40,7 +40,7 @@ export function LiveUpdateBadge({
   className,
   variant = 'banner',
 }: LiveUpdateBadgeProps) {
-  if (count === 0) return null
+  if (count === 0) {return null}
 
   const message =
     count === 1

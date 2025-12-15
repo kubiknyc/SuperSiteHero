@@ -86,7 +86,7 @@ export const toolboxTopicsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ToolboxTalkTopic[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -110,7 +110,7 @@ export const toolboxTopicsApi = {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'TOPIC_NOT_FOUND',
@@ -155,7 +155,7 @@ export const toolboxTopicsApi = {
         created_by: user?.user?.id || null,
       }).select().single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ToolboxTalkTopic
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -181,7 +181,7 @@ export const toolboxTopicsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'TOPIC_NOT_FOUND',
@@ -212,7 +212,7 @@ export const toolboxTopicsApi = {
         .eq('id', id)
         .eq('is_system_template', false) // Can't delete system templates
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -321,7 +321,7 @@ export const toolboxTalksApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ToolboxTalk[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -355,7 +355,7 @@ export const toolboxTalksApi = {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'TALK_NOT_FOUND',
@@ -407,7 +407,7 @@ export const toolboxTalksApi = {
           .order('worker_name'),
       ])
 
-      if (talkResult.error) throw talkResult.error
+      if (talkResult.error) {throw talkResult.error}
       if (!talkResult.data) {
         throw new ApiErrorClass({
           code: 'TALK_NOT_FOUND',
@@ -464,7 +464,7 @@ export const toolboxTalksApi = {
         project:projects(id, name)
       `).single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ToolboxTalk
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -493,7 +493,7 @@ export const toolboxTalksApi = {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'TALK_NOT_FOUND',
@@ -531,7 +531,7 @@ export const toolboxTalksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'CANNOT_START_TALK',
@@ -576,7 +576,7 @@ export const toolboxTalksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'CANNOT_COMPLETE_TALK',
@@ -609,7 +609,7 @@ export const toolboxTalksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'CANNOT_CANCEL_TALK',
@@ -639,7 +639,7 @@ export const toolboxTalksApi = {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -675,7 +675,7 @@ export const toolboxTalksApi = {
         .is('deleted_at', null)
         .order('scheduled_date')
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ToolboxTalk[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -705,7 +705,7 @@ export const toolboxTalksApi = {
         .order('completed_at', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ToolboxTalk[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -738,7 +738,7 @@ export const toolboxAttendeesApi = {
         .eq('toolbox_talk_id', toolboxTalkId)
         .order('worker_name')
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ToolboxTalkAttendee[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -766,7 +766,7 @@ export const toolboxAttendeesApi = {
         attendance_status: dto.attendance_status || 'expected',
       }).select().single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ToolboxTalkAttendee
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -799,7 +799,7 @@ export const toolboxAttendeesApi = {
         .insert(records)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ToolboxTalkAttendee[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -833,7 +833,7 @@ export const toolboxAttendeesApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ToolboxTalkAttendee
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -868,7 +868,7 @@ export const toolboxAttendeesApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ToolboxTalkAttendee
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -911,7 +911,7 @@ export const toolboxAttendeesApi = {
         .delete()
         .eq('id', attendeeId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -939,7 +939,7 @@ export const toolboxAttendeesApi = {
         .eq('attendance_status', 'expected')
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).length
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -988,7 +988,7 @@ export const toolboxCertificationsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Calculate certification status
       const today = new Date()
@@ -1102,7 +1102,7 @@ export const toolboxStatsApi = {
         .eq('project_id', projectId)
         .single()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error && error.code !== 'PGRST116') {throw error}
 
       return (
         data || {
@@ -1157,7 +1157,7 @@ export const toolboxStatsApi = {
         .gte('completed_at', startOfMonth.toISOString())
         .is('deleted_at', null)
 
-      if (talksError) throw talksError
+      if (talksError) {throw talksError}
 
       const uniqueTopics = new Set((monthTalks || []).map((t: { topic_id: string }) => t.topic_id))
 
@@ -1205,8 +1205,8 @@ export const toolboxStatsApi = {
         .gte('completed_at', startDate.toISOString())
         .is('deleted_at', null)
 
-      if (talksError) throw talksError
-      if (!talks || talks.length === 0) return 100
+      if (talksError) {throw talksError}
+      if (!talks || talks.length === 0) {return 100}
 
       const talkIds = talks.map((t: { id: string }) => t.id)
 
@@ -1215,8 +1215,8 @@ export const toolboxStatsApi = {
         .select('attendance_status')
         .in('toolbox_talk_id', talkIds)
 
-      if (attendeesError) throw attendeesError
-      if (!attendees || attendees.length === 0) return 100
+      if (attendeesError) {throw attendeesError}
+      if (!attendees || attendees.length === 0) {return 100}
 
       const presentCount = attendees.filter(
         (a: { attendance_status: string }) => a.attendance_status === 'present'

@@ -188,7 +188,7 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
       return
     }
 
-    if (!recognitionRef.current) return
+    if (!recognitionRef.current) {return}
 
     // Clear previous transcript if starting fresh
     setTranscript('')
@@ -206,7 +206,7 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
 
   // Stop listening
   const stopListening = useCallback(() => {
-    if (!recognitionRef.current) return
+    if (!recognitionRef.current) {return}
 
     clearSilenceTimeout()
 

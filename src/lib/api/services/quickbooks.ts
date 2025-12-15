@@ -43,7 +43,7 @@ export const quickbooksApi = {
         .eq('is_active', true)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
 
       if (!data) {
         return {
@@ -99,7 +99,7 @@ export const quickbooksApi = {
         .eq('is_active', true)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBConnection | null
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -120,7 +120,7 @@ export const quickbooksApi = {
         body: { companyId, isSandbox },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data.authUrl
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -144,7 +144,7 @@ export const quickbooksApi = {
         body: { companyId, ...dto },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data.connection as QBConnection
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -165,7 +165,7 @@ export const quickbooksApi = {
         body: { connectionId },
       })
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -191,7 +191,7 @@ export const quickbooksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBConnection
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -212,7 +212,7 @@ export const quickbooksApi = {
         body: { connectionId },
       })
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -249,7 +249,7 @@ export const quickbooksApi = {
 
       const { data, error } = await query.order('cost_code', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBAccountMapping[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -280,7 +280,7 @@ export const quickbooksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBAccountMapping
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -307,7 +307,7 @@ export const quickbooksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBAccountMapping
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -329,7 +329,7 @@ export const quickbooksApi = {
         .delete()
         .eq('id', mappingId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -358,7 +358,7 @@ export const quickbooksApi = {
         .update({ is_default: true })
         .eq('id', mappingId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -390,7 +390,7 @@ export const quickbooksApi = {
         .eq('local_entity_id', localEntityId)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBEntityMapping | null
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -434,7 +434,7 @@ export const quickbooksApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBEntityMapping[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -459,7 +459,7 @@ export const quickbooksApi = {
         body: { connectionId },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data.accounts as QBAccount[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -480,7 +480,7 @@ export const quickbooksApi = {
         body: { connectionId, ...dto },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data.mapping as QBEntityMapping
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -504,7 +504,7 @@ export const quickbooksApi = {
         body: { connectionId, ...dto },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -541,7 +541,7 @@ export const quickbooksApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBPendingSync
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -566,7 +566,7 @@ export const quickbooksApi = {
         })
         .eq('id', pendingSyncId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -587,7 +587,7 @@ export const quickbooksApi = {
         .delete()
         .eq('id', pendingSyncId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -638,7 +638,7 @@ export const quickbooksApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBSyncLog[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -661,7 +661,7 @@ export const quickbooksApi = {
         .eq('id', logId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBSyncLog
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -710,7 +710,7 @@ export const quickbooksApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as QBPendingSync[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -737,7 +737,7 @@ export const quickbooksApi = {
         .select('*', { count: 'exact', head: true })
         .eq('company_id', companyId)
 
-      if (mappedError) throw mappedError
+      if (mappedError) {throw mappedError}
 
       // Get pending syncs count
       const { count: pendingCount, error: pendingError } = await supabaseUntyped
@@ -746,7 +746,7 @@ export const quickbooksApi = {
         .eq('company_id', companyId)
         .eq('status', 'pending')
 
-      if (pendingError) throw pendingError
+      if (pendingError) {throw pendingError}
 
       // Get failed syncs count
       const { count: failedCount, error: failedError } = await supabaseUntyped
@@ -755,7 +755,7 @@ export const quickbooksApi = {
         .eq('company_id', companyId)
         .eq('sync_status', 'failed')
 
-      if (failedError) throw failedError
+      if (failedError) {throw failedError}
 
       // Get last sync time
       const { data: lastLog, error: logError } = await supabaseUntyped
@@ -767,7 +767,7 @@ export const quickbooksApi = {
         .limit(1)
         .maybeSingle()
 
-      if (logError) throw logError
+      if (logError) {throw logError}
 
       // Get counts by entity type
       const { data: entityCounts, error: entityError } = await supabaseUntyped
@@ -775,7 +775,7 @@ export const quickbooksApi = {
         .select('qb_entity_type, sync_status')
         .eq('company_id', companyId)
 
-      if (entityError) throw entityError
+      if (entityError) {throw entityError}
 
       // Aggregate by entity type
       const syncsByEntityType: QBSyncStats['syncsByEntityType'] = {} as QBSyncStats['syncsByEntityType']

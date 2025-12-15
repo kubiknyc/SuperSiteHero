@@ -35,7 +35,7 @@ export function useMeasurements(documentId: string | undefined, pageNumber: numb
   return useQuery({
     queryKey: ['measurements', documentId, pageNumber],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('document_markup_measurements')
@@ -45,7 +45,7 @@ export function useMeasurements(documentId: string | undefined, pageNumber: numb
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).map(dbToMeasurement)
     },
     enabled: !!documentId,
@@ -59,7 +59,7 @@ export function useAllMeasurements(documentId: string | undefined) {
   return useQuery({
     queryKey: ['measurements', documentId, 'all'],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('document_markup_measurements')
@@ -68,7 +68,7 @@ export function useAllMeasurements(documentId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []).map(dbToMeasurement)
     },
     enabled: !!documentId,
@@ -92,7 +92,7 @@ export function useCreateMeasurement() {
       pageNumber?: number
       measurement: Omit<MeasurementAnnotation, 'id'>
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const insert: DbMeasurementInsert = {
         document_id: documentId,
@@ -117,7 +117,7 @@ export function useCreateMeasurement() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { measurement: dbToMeasurement(data), documentId, pageNumber }
     },
     onSuccess: ({ documentId, pageNumber }) => {
@@ -164,7 +164,7 @@ export function useUpdateMeasurement() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { measurement: dbToMeasurement(data), documentId, pageNumber }
     },
     onSuccess: ({ documentId, pageNumber }) => {
@@ -195,7 +195,7 @@ export function useDeleteMeasurement() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return { id, documentId, pageNumber }
     },
     onSuccess: ({ documentId, pageNumber }) => {
@@ -225,7 +225,7 @@ export function useClearMeasurements() {
         .eq('document_id', documentId)
         .eq('page_number', pageNumber)
 
-      if (error) throw error
+      if (error) {throw error}
       return { documentId, pageNumber }
     },
     onSuccess: ({ documentId, pageNumber }) => {

@@ -51,7 +51,7 @@ export function RFIsPage() {
 
   // Filter and search RFIs
   const filteredRFIs = useMemo(() => {
-    if (!rfis) return []
+    if (!rfis) {return []}
 
     return rfis.filter((rfi) => {
       // Search filter
@@ -79,7 +79,7 @@ export function RFIsPage() {
 
   // Calculate summary statistics
   const stats = useMemo(() => {
-    if (!rfis) return { total: 0, open: 0, overdue: 0, answered: 0 }
+    if (!rfis) {return { total: 0, open: 0, overdue: 0, answered: 0 }}
 
     const open = rfis.filter((r) => ['draft', 'submitted'].includes(r.status)).length
     const overdue = rfis.filter(
@@ -117,7 +117,7 @@ export function RFIsPage() {
   }
 
   const getDueDateInfo = (dueDate: string | null) => {
-    if (!dueDate) return { text: 'No due date', class: 'text-gray-500', isOverdue: false }
+    if (!dueDate) {return { text: 'No due date', class: 'text-gray-500', isOverdue: false }}
 
     const date = new Date(dueDate)
     const daysUntil = differenceInDays(date, new Date())

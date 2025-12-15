@@ -90,7 +90,7 @@ export function ConnectionStatus({
     </div>
   )
 
-  if (showLabel) return content
+  if (showLabel) {return content}
 
   return (
     <TooltipProvider>
@@ -110,7 +110,7 @@ export function ConnectionStatus({
 export function ConnectionBanner() {
   const connectionState = useRealtimeConnectionState()
 
-  if (connectionState === 'connected') return null
+  if (connectionState === 'connected') {return null}
 
   const config = statusConfig[connectionState]
 

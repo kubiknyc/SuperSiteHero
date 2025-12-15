@@ -50,7 +50,7 @@ import type { ScheduleImportLog } from '@/types/schedule-activities'
 // =============================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy h:mm a')
   } catch {
@@ -59,7 +59,7 @@ function formatDate(dateString: string | null | undefined): string {
 }
 
 function formatShortDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {
@@ -133,7 +133,7 @@ export function ImportLogDetailDialog({
   onOpenChange,
   log,
 }: ImportLogDetailDialogProps) {
-  if (!log) return null
+  if (!log) {return null}
 
   const hasErrors = log.errors && log.errors.length > 0
   const hasWarnings = log.warnings && log.warnings.length > 0
@@ -288,7 +288,7 @@ export function ImportHistoryList({
 
   // Limit logs if specified
   const displayLogs = React.useMemo(() => {
-    if (!logs) return []
+    if (!logs) {return []}
     return limit ? logs.slice(0, limit) : logs
   }, [logs, limit])
 

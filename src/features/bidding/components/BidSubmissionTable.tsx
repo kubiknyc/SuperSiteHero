@@ -86,7 +86,7 @@ export function BidSubmissionTable({
   // Sort and filter
   const filteredSubmissions = submissions
     .filter((s) => {
-      if (!searchTerm) return true
+      if (!searchTerm) {return true}
       const search = searchTerm.toLowerCase()
       return (
         s.bidder_company_name.toLowerCase().includes(search) ||
@@ -122,14 +122,14 @@ export function BidSubmissionTable({
   }
 
   const getVarianceFromEstimate = (amount: number) => {
-    if (!estimatedValue) return null
+    if (!estimatedValue) {return null}
     return ((amount - estimatedValue) / estimatedValue) * 100
   }
 
   const getVarianceColor = (variance: number) => {
-    if (variance <= -10) return 'text-green-600'
-    if (variance <= 0) return 'text-green-500'
-    if (variance <= 10) return 'text-yellow-600'
+    if (variance <= -10) {return 'text-green-600'}
+    if (variance <= 0) {return 'text-green-500'}
+    if (variance <= 10) {return 'text-yellow-600'}
     return 'text-red-600'
   }
 

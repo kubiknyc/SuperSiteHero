@@ -99,7 +99,7 @@ export function SendInvitationDialog({
   )
 
   const filteredSubs = availableSubs.filter((sub) => {
-    if (!searchTerm) return true
+    if (!searchTerm) {return true}
     const search = searchTerm.toLowerCase()
     return (
       sub.company_name.toLowerCase().includes(search) ||

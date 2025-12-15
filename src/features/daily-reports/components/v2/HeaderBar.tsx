@@ -50,7 +50,7 @@ export function HeaderBar({ onFetchWeather, isLoadingWeather }: HeaderBarProps) 
   const updateDraft = useDailyReportStoreV2((state) => state.updateDraft);
   const [showShiftDropdown, setShowShiftDropdown] = useState(false);
 
-  if (!draftReport) return null;
+  if (!draftReport) {return null;}
 
   const reportDate = draftReport.report_date
     ? format(parseISO(draftReport.report_date), 'EEEE, MMMM d, yyyy')

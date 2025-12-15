@@ -298,9 +298,9 @@ export function calculateScorecard(
     value: number | null,
     benchmark: number | null
   ): 'above' | 'at' | 'below' | 'unknown' => {
-    if (value === null || benchmark === null) return 'unknown'
-    if (value < benchmark * 0.9) return 'below' // Better than industry
-    if (value > benchmark * 1.1) return 'above' // Worse than industry
+    if (value === null || benchmark === null) {return 'unknown'}
+    if (value < benchmark * 0.9) {return 'below'} // Better than industry
+    if (value > benchmark * 1.1) {return 'above'} // Worse than industry
     return 'at'
   }
 

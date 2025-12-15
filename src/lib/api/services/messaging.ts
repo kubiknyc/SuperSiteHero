@@ -109,7 +109,7 @@ export async function getConversations(
       // Check if last_read_at is before last_message_at
       filteredConversations = userConversations.filter((conv: any) => {
         const userParticipant = conv.participants?.find((p: any) => p.user_id === userId)
-        if (!userParticipant?.last_read_at) return true // Never read = unread
+        if (!userParticipant?.last_read_at) {return true} // Never read = unread
         return new Date(userParticipant.last_read_at) < new Date(conv.last_message_at)
       })
     }

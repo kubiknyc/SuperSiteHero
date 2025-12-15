@@ -101,8 +101,8 @@ export function ExecutionsPage() {
           f.date_to = endOfDay(now).toISOString()
           break
         case 'custom':
-          if (customDateFrom) f.date_from = new Date(customDateFrom).toISOString()
-          if (customDateTo) f.date_to = new Date(customDateTo).toISOString()
+          if (customDateFrom) {f.date_from = new Date(customDateFrom).toISOString()}
+          if (customDateTo) {f.date_to = new Date(customDateTo).toISOString()}
           break
       }
     }
@@ -155,7 +155,7 @@ export function ExecutionsPage() {
     // Score filter
     if (scoreFilter !== 'all' && result.length > 0) {
       result = result.filter((e) => {
-        if (!e.score_percentage && e.score_percentage !== 0) return false
+        if (!e.score_percentage && e.score_percentage !== 0) {return false}
 
         switch (scoreFilter) {
           case 'passed':
@@ -173,7 +173,7 @@ export function ExecutionsPage() {
     // Custom score range filter
     if (minScore || maxScore) {
       result = result.filter((e) => {
-        if (!e.score_percentage && e.score_percentage !== 0) return false
+        if (!e.score_percentage && e.score_percentage !== 0) {return false}
         const score = e.score_percentage
         const min = minScore ? parseFloat(minScore) : 0
         const max = maxScore ? parseFloat(maxScore) : 100

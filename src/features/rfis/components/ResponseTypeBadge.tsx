@@ -116,7 +116,7 @@ export function ResponseTypeBadge({
   size = 'md',
   className,
 }: ResponseTypeBadgeProps) {
-  if (!responseType) return null
+  if (!responseType) {return null}
 
   const color = getResponseTypeColor(responseType)
   const label = getRFIResponseTypeLabel(responseType)

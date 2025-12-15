@@ -290,7 +290,7 @@ export function CSISpecPicker({
         // Also include the division if not already in matchingDivisions
         if (!matchingDivisions.some((d) => d.code === divCode)) {
           const div = CSI_DIVISIONS.find((d) => d.code === divCode)
-          if (div) matchingDivisions.push(div)
+          if (div) {matchingDivisions.push(div)}
         }
       }
     })
@@ -324,13 +324,13 @@ export function CSISpecPicker({
   }
 
   const displayValue = useMemo(() => {
-    if (!value) return ''
+    if (!value) {return ''}
     // Try to find the title for the current value
     const division = value.substring(0, 2)
     const sections = CSI_SPEC_SECTIONS[division]
     if (sections) {
       const section = sections.find((s) => s.code === value)
-      if (section) return `${section.code} - ${section.title}`
+      if (section) {return `${section.code} - ${section.title}`}
     }
     return value
   }, [value])
@@ -465,7 +465,7 @@ export function getSpecSectionTitle(code: string): string {
   const sections = CSI_SPEC_SECTIONS[division]
   if (sections) {
     const section = sections.find((s) => s.code === code)
-    if (section) return section.title
+    if (section) {return section.title}
   }
   // Try to get division title
   const div = CSI_DIVISIONS.find((d) => d.code === division)

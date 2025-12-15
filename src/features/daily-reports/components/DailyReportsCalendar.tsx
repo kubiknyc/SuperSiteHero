@@ -79,7 +79,7 @@ export function DailyReportsCalendar({
     const dateKey = format(date, 'yyyy-MM-dd')
     const reportsForDate = reportsByDate[dateKey]
 
-    if (!reportsForDate || reportsForDate.length === 0) return null
+    if (!reportsForDate || reportsForDate.length === 0) {return null}
 
     // Get the highest priority status (approved > in_review > submitted > draft)
     const statusPriority = ['approved', 'in_review', 'submitted', 'draft']

@@ -62,7 +62,7 @@ export function useDrawings(projectId: string | undefined, filters?: Partial<Dra
   return useQuery({
     queryKey: drawingKeys.list(projectId || '', filters),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
       return drawingsApi.getDrawings({ projectId, ...filters });
     },
     enabled: !!projectId,
@@ -93,7 +93,7 @@ export function useDrawing(drawingId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.detail(drawingId || ''),
     queryFn: async () => {
-      if (!drawingId) throw new Error('Drawing ID required');
+      if (!drawingId) {throw new Error('Drawing ID required');}
       return drawingsApi.getDrawing(drawingId);
     },
     enabled: !!drawingId,
@@ -107,7 +107,7 @@ export function useDrawingWithRevisions(drawingId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.withRevisions(drawingId || ''),
     queryFn: async () => {
-      if (!drawingId) throw new Error('Drawing ID required');
+      if (!drawingId) {throw new Error('Drawing ID required');}
       return drawingsApi.getDrawingWithRevisions(drawingId);
     },
     enabled: !!drawingId,
@@ -121,7 +121,7 @@ export function useDrawingRegister(projectId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.register(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
       return drawingsApi.getDrawingRegister(projectId);
     },
     enabled: !!projectId,
@@ -135,7 +135,7 @@ export function useDrawingsByDisciplineSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.byDiscipline(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
       return drawingsApi.getDrawingsByDiscipline(projectId);
     },
     enabled: !!projectId,
@@ -153,7 +153,7 @@ export function useDrawingRevisions(drawingId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.revisions(drawingId || ''),
     queryFn: async () => {
-      if (!drawingId) throw new Error('Drawing ID required');
+      if (!drawingId) {throw new Error('Drawing ID required');}
       return drawingsApi.getDrawingRevisions(drawingId);
     },
     enabled: !!drawingId,
@@ -167,7 +167,7 @@ export function useRevisionHistory(drawingId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.revisionHistory(drawingId || ''),
     queryFn: async () => {
-      if (!drawingId) throw new Error('Drawing ID required');
+      if (!drawingId) {throw new Error('Drawing ID required');}
       return drawingsApi.getRevisionHistory(drawingId);
     },
     enabled: !!drawingId,
@@ -181,7 +181,7 @@ export function useCurrentRevision(drawingId: string | undefined) {
   return useQuery({
     queryKey: [...drawingKeys.revisions(drawingId || ''), 'current'],
     queryFn: async () => {
-      if (!drawingId) throw new Error('Drawing ID required');
+      if (!drawingId) {throw new Error('Drawing ID required');}
       return drawingsApi.getCurrentRevision(drawingId);
     },
     enabled: !!drawingId,
@@ -199,7 +199,7 @@ export function useDrawingSets(projectId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.sets(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required');
+      if (!projectId) {throw new Error('Project ID required');}
       return drawingsApi.getDrawingSets(projectId);
     },
     enabled: !!projectId,
@@ -213,7 +213,7 @@ export function useDrawingSet(setId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.set(setId || ''),
     queryFn: async () => {
-      if (!setId) throw new Error('Set ID required');
+      if (!setId) {throw new Error('Set ID required');}
       return drawingsApi.getDrawingSet(setId);
     },
     enabled: !!setId,
@@ -231,7 +231,7 @@ export function useDrawingTransmittals(drawingId: string | undefined) {
   return useQuery({
     queryKey: drawingKeys.transmittals(drawingId || ''),
     queryFn: async () => {
-      if (!drawingId) throw new Error('Drawing ID required');
+      if (!drawingId) {throw new Error('Drawing ID required');}
       return drawingsApi.getDrawingTransmittals(drawingId);
     },
     enabled: !!drawingId,
@@ -249,7 +249,7 @@ export function useDrawingMarkups(revisionId: string | undefined, status?: strin
   return useQuery({
     queryKey: [...drawingKeys.markups(revisionId || ''), status],
     queryFn: async () => {
-      if (!revisionId) throw new Error('Revision ID required');
+      if (!revisionId) {throw new Error('Revision ID required');}
       return drawingsApi.getDrawingMarkups(revisionId, status);
     },
     enabled: !!revisionId,

@@ -126,7 +126,7 @@ export function QuickModeForm({
 
   // Handle save
   const handleSave = useCallback(async () => {
-    if (!draftReport) return;
+    if (!draftReport) {return;}
 
     setSyncStatus('syncing');
     try {
@@ -222,7 +222,7 @@ export function QuickModeForm({
 
   // Copy from yesterday handlers
   const handleCopyWorkforceFromYesterday = useCallback(async () => {
-    if (!draftReport || isCopyingFromYesterday) return;
+    if (!draftReport || isCopyingFromYesterday) {return;}
 
     setIsCopyingFromYesterday(true);
     try {
@@ -242,7 +242,7 @@ export function QuickModeForm({
   }, [draftReport, isCopyingFromYesterday, projectId, reportDate, applyPreviousDayData]);
 
   const handleCopyEquipmentFromYesterday = useCallback(async () => {
-    if (!draftReport || isCopyingFromYesterday) return;
+    if (!draftReport || isCopyingFromYesterday) {return;}
 
     setIsCopyingFromYesterday(true);
     try {
@@ -285,8 +285,8 @@ export function QuickModeForm({
     } else if (templateModalType === 'both') {
       applyTemplateToStore(templateData);
       const counts = [];
-      if (templateData.workforce.length > 0) counts.push(`${templateData.workforce.length} workforce`);
-      if (templateData.equipment.length > 0) counts.push(`${templateData.equipment.length} equipment`);
+      if (templateData.workforce.length > 0) {counts.push(`${templateData.workforce.length} workforce`);}
+      if (templateData.equipment.length > 0) {counts.push(`${templateData.equipment.length} equipment`);}
       toast.success(`Applied ${counts.join(' and ')} entries from template "${template.name}"`);
     } else {
       toast.info('Template has no entries for the selected type');

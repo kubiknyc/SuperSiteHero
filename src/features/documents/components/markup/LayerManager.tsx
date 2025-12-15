@@ -85,7 +85,7 @@ export function LayerManager({
   const sortedLayers = [...layers].sort((a, b) => b.order - a.order)
 
   const handleCreateLayer = () => {
-    if (!formData.name.trim()) return
+    if (!formData.name.trim()) {return}
 
     onCreateLayer({
       documentId: '', // Will be set by parent
@@ -103,7 +103,7 @@ export function LayerManager({
   }
 
   const handleEditLayer = () => {
-    if (!editingLayer || !formData.name.trim()) return
+    if (!editingLayer || !formData.name.trim()) {return}
 
     onUpdateLayer(editingLayer.id, {
       name: formData.name.trim(),
@@ -298,7 +298,7 @@ export function LayerManager({
               className="hover:text-blue-600"
               onClick={() => {
                 layers.forEach(l => {
-                  if (!l.visible) onToggleVisibility(l.id)
+                  if (!l.visible) {onToggleVisibility(l.id)}
                 })
               }}
               disabled={disabled}
@@ -309,7 +309,7 @@ export function LayerManager({
               className="hover:text-blue-600"
               onClick={() => {
                 layers.forEach(l => {
-                  if (l.visible) onToggleVisibility(l.id)
+                  if (l.visible) {onToggleVisibility(l.id)}
                 })
               }}
               disabled={disabled}

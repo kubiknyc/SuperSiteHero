@@ -195,13 +195,13 @@ export function QBSyncStatusIndicator({ entityType, entityId }: QBSyncStatusIndi
   const { data: connectionStatus } = useQBConnectionStatus()
   const { isSynced, syncStatus, isLoading } = useQuickSync(entityType, entityId)
 
-  if (!connectionStatus?.isConnected) return null
+  if (!connectionStatus?.isConnected) {return null}
 
   if (isLoading) {
     return <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
   }
 
-  if (!syncStatus) return null
+  if (!syncStatus) {return null}
 
   return (
     <TooltipProvider>

@@ -37,11 +37,11 @@ export function RFIDetailPage() {
 
   // Start a messaging conversation about this RFI
   const handleDiscussRFI = async () => {
-    if (!rfi) return
+    if (!rfi) {return}
 
     // Get participants - creator and any assignees
     const participantIds: string[] = []
-    if (rfi.created_by) participantIds.push(rfi.created_by)
+    if (rfi.created_by) {participantIds.push(rfi.created_by)}
     if (rfi.assignees?.length) {
       rfi.assignees.forEach((assignee: any) => {
         if (assignee.user_id && !participantIds.includes(assignee.user_id)) {

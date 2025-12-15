@@ -149,7 +149,7 @@ export function useVoiceRecorder(
 
   // Analyze audio level for visualization
   const analyzeAudioLevel = useCallback(() => {
-    if (!analyserRef.current) return
+    if (!analyserRef.current) {return}
 
     const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
     analyserRef.current.getByteFrequencyData(dataArray)
@@ -173,7 +173,7 @@ export function useVoiceRecorder(
       return
     }
 
-    if (isRecording) return
+    if (isRecording) {return}
 
     try {
       setError(null)

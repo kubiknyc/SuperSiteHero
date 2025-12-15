@@ -121,7 +121,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
   })
 
   const handleAddItem = () => {
-    if (!newItem.description.trim()) return
+    if (!newItem.description.trim()) {return}
 
     createItem.mutate({
       meeting_id: meetingId,
@@ -136,7 +136,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
   }
 
   const handleUpdateItem = () => {
-    if (!editingItem) return
+    if (!editingItem) {return}
 
     updateItem.mutate({
       id: editingItem.id,

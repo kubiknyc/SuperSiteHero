@@ -129,7 +129,7 @@ export function EnhancedVersionComparison({
     const numPages = version === 1 ? numPages1 : numPages2
     const setPage = version === 1 ? setCurrentPage1 : setCurrentPage2
 
-    if (!numPages) return
+    if (!numPages) {return}
 
     const newPage = direction === 'next'
       ? Math.min(currentPage + 1, numPages)
@@ -162,13 +162,13 @@ export function EnhancedVersionComparison({
 
   // Pan handling
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button !== 0) return // Only left click
+    if (e.button !== 0) {return} // Only left click
     setIsPanning(true)
     lastPanPosition.current = { x: e.clientX, y: e.clientY }
   }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isPanning) return
+    if (!isPanning) {return}
 
     const dx = e.clientX - lastPanPosition.current.x
     const dy = e.clientY - lastPanPosition.current.y
@@ -188,7 +188,7 @@ export function EnhancedVersionComparison({
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return
+      if (!open) {return}
 
       if (e.key === 'Escape') {
         onClose()

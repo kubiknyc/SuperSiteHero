@@ -53,7 +53,7 @@ interface OSHA300LogProps {
  * Checkbox indicator for OSHA 300 log columns
  */
 function CheckMark({ checked }: { checked: boolean }) {
-  if (!checked) return <span className="text-gray-300">-</span>
+  if (!checked) {return <span className="text-gray-300">-</span>}
   return <span className="text-green-600 font-bold">X</span>
 }
 
@@ -61,7 +61,7 @@ function CheckMark({ checked }: { checked: boolean }) {
  * Injury/Illness type indicator badge
  */
 function TypeBadge({ type }: { type: OSHAInjuryIllnessType | null }) {
-  if (!type) return <span className="text-gray-400">-</span>
+  if (!type) {return <span className="text-gray-400">-</span>}
 
   const config = OSHA_INJURY_ILLNESS_TYPES.find((t) => t.value === type)
 

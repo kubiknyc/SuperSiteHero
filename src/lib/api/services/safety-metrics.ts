@@ -69,7 +69,7 @@ export const safetyMetricsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as EmployeeHoursWorked[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -105,7 +105,7 @@ export const safetyMetricsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       const records = data || []
       const totalHours = records.reduce((sum: number, r: any) => sum + (r.total_hours || 0), 0)
@@ -139,7 +139,7 @@ export const safetyMetricsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as EmployeeHoursWorked
     } catch (error) {
       throw new ApiErrorClass({
@@ -165,7 +165,7 @@ export const safetyMetricsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as EmployeeHoursWorked
     } catch (error) {
       throw new ApiErrorClass({
@@ -186,7 +186,7 @@ export const safetyMetricsApi = {
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw new ApiErrorClass({
         code: 'DELETE_HOURS_ERROR',
@@ -292,7 +292,7 @@ export const safetyMetricsApi = {
 
     const { data: incidents, error: incidentsError } = await query
 
-    if (incidentsError) throw incidentsError
+    if (incidentsError) {throw incidentsError}
 
     const data = incidents || []
 
@@ -368,7 +368,7 @@ export const safetyMetricsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as SafetyMetricsSnapshot[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -404,7 +404,7 @@ export const safetyMetricsApi = {
         p_created_by: user?.id || null,
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch the created snapshot
       const { data: snapshot, error: fetchError } = await db
@@ -413,7 +413,7 @@ export const safetyMetricsApi = {
         .eq('id', data)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
       return snapshot as SafetyMetricsSnapshot
     } catch (error) {
       throw new ApiErrorClass({
@@ -526,7 +526,7 @@ export const safetyMetricsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as IndustrySafetyBenchmark[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -552,7 +552,7 @@ export const safetyMetricsApi = {
         .eq('year', year)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
 
       if (!data) {
         // Try previous year
@@ -610,7 +610,7 @@ export const safetyMetricsApi = {
         .eq('company_id', companyId)
         .order('effective_date', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as EMRRecord[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -633,7 +633,7 @@ export const safetyMetricsApi = {
         .eq('is_current', true)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as EMRRecord | null
     } catch (error) {
       throw new ApiErrorClass({
@@ -668,7 +668,7 @@ export const safetyMetricsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as EMRRecord
     } catch (error) {
       throw new ApiErrorClass({
@@ -700,7 +700,7 @@ export const safetyMetricsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as EMRRecord
     } catch (error) {
       throw new ApiErrorClass({
@@ -721,7 +721,7 @@ export const safetyMetricsApi = {
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw new ApiErrorClass({
         code: 'DELETE_EMR_ERROR',
@@ -838,7 +838,7 @@ export const safetyMetricsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       if (!data || data.length === 0) {
         return 999 // No incidents

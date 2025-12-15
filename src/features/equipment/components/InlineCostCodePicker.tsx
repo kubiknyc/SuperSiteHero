@@ -39,13 +39,13 @@ export function InlineCostCodePicker({
 
   // Find selected cost code
   const selectedCode = useMemo(() => {
-    if (!value || !costCodes) return null
+    if (!value || !costCodes) {return null}
     return costCodes.find(c => c.id === value)
   }, [value, costCodes])
 
   // Filter cost codes
   const filteredCodes = useMemo(() => {
-    if (!costCodes) return []
+    if (!costCodes) {return []}
 
     let codes = costCodes
 

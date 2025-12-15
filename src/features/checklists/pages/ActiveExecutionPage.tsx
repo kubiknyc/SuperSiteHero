@@ -73,7 +73,7 @@ export function ActiveExecutionPage() {
 
   // Build responses map for progress calculation (needed before sections)
   const responsesMapForProgress = useMemo(() => {
-    if (!execution?.responses) return new Map<string, ChecklistResponse>()
+    if (!execution?.responses) {return new Map<string, ChecklistResponse>()}
     return buildResponsesMap(execution.responses)
   }, [execution?.responses])
 
@@ -89,7 +89,7 @@ export function ActiveExecutionPage() {
     // Only count visible items
     const visibleResponses = execution.responses.filter((r) => {
       const templateItem = templateItemMap.get(r.checklist_template_item_id || '')
-      if (!templateItem) return true // Include if no template item found
+      if (!templateItem) {return true} // Include if no template item found
       return evaluateItemVisibility(templateItem.conditions, responsesMapForProgress)
     })
 
@@ -172,8 +172,8 @@ export function ActiveExecutionPage() {
 
   // Keyboard shortcut handlers
   const handlePassShortcut = () => {
-    if (!currentResponse || !currentTemplateItem) return
-    if (currentTemplateItem.item_type !== 'checkbox') return
+    if (!currentResponse || !currentTemplateItem) {return}
+    if (currentTemplateItem.item_type !== 'checkbox') {return}
 
     handleResponseChange(currentResponse.id, {
       response_data: { value: 'checked' },
@@ -183,8 +183,8 @@ export function ActiveExecutionPage() {
   }
 
   const handleFailShortcut = () => {
-    if (!currentResponse || !currentTemplateItem) return
-    if (currentTemplateItem.item_type !== 'checkbox') return
+    if (!currentResponse || !currentTemplateItem) {return}
+    if (currentTemplateItem.item_type !== 'checkbox') {return}
 
     handleResponseChange(currentResponse.id, {
       response_data: { value: 'checked' },
@@ -194,8 +194,8 @@ export function ActiveExecutionPage() {
   }
 
   const handleNAShortcut = () => {
-    if (!currentResponse || !currentTemplateItem) return
-    if (currentTemplateItem.item_type !== 'checkbox') return
+    if (!currentResponse || !currentTemplateItem) {return}
+    if (currentTemplateItem.item_type !== 'checkbox') {return}
 
     handleResponseChange(currentResponse.id, {
       response_data: { value: 'checked' },
@@ -275,7 +275,7 @@ export function ActiveExecutionPage() {
     // Check if all required AND visible items are completed
     // Hidden items (due to conditions) are not required to be filled
     const requiredItems = templateItems.filter((item) => {
-      if (!item.is_required) return false
+      if (!item.is_required) {return false}
       // Only require if the item is visible based on conditions
       return evaluateItemVisibility(item.conditions, responsesMap)
     })

@@ -386,7 +386,7 @@ export const CERTIFICATE_STATUS_COLORS: Record<CertificateStatus, string> = {
  * Format currency for display
  */
 export function formatInsuranceLimit(value: number | null | undefined): string {
-  if (value == null) return '-'
+  if (value == null) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -410,7 +410,7 @@ export function getDaysUntilExpiry(expirationDate: string): number {
  * Get status from days until expiry
  */
 export function getStatusFromExpiry(daysUntilExpiry: number): CertificateStatus {
-  if (daysUntilExpiry < 0) return 'expired'
-  if (daysUntilExpiry <= 30) return 'expiring_soon'
+  if (daysUntilExpiry < 0) {return 'expired'}
+  if (daysUntilExpiry <= 30) {return 'expiring_soon'}
   return 'active'
 }

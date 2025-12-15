@@ -146,7 +146,7 @@ export function MessageThread({ conversationId, className }: MessageThreadProps)
   // Estimate size for each item
   const estimateSize = useCallback((index: number) => {
     const item = virtualItems[index]
-    if (!item) return ITEM_HEIGHTS.message
+    if (!item) {return ITEM_HEIGHTS.message}
 
     if (item.type === 'message') {
       // Increase height for messages with attachments or long content
@@ -558,7 +558,7 @@ export function MessageThread({ conversationId, className }: MessageThreadProps)
       >
         {virtualizer.getVirtualItems().map((virtualRow) => {
           const item = virtualItems[virtualRow.index]
-          if (!item) return null
+          if (!item) {return null}
 
           return (
             <div

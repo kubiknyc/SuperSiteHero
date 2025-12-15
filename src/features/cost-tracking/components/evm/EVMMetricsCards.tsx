@@ -59,7 +59,7 @@ function formatCurrency(value: number): string {
 }
 
 function formatIndex(value: number | null | undefined): string {
-  if (value === null || value === undefined || isNaN(value)) return '—'
+  if (value === null || value === undefined || isNaN(value)) {return '—'}
   return value.toFixed(2)
 }
 

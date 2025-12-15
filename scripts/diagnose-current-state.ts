@@ -23,7 +23,7 @@ async function diagnose() {
       .select('id, email, role, company_id, is_active')
       .eq('email', testUserEmail);
 
-    if (userError) throw userError;
+    if (userError) {throw userError;}
 
     if (!users || users.length === 0) {
       console.log('❌ User not found in users table!');

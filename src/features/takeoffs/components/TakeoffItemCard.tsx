@@ -73,7 +73,7 @@ export function TakeoffItemCard({
 
   // Calculate and format measurement value
   const getCalculatedValue = (): string => {
-    if (!scale) return '-- (No scale)'
+    if (!scale) {return '-- (No scale)'}
 
     try {
       switch (measurement.type) {

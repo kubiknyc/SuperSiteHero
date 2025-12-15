@@ -70,3 +70,14 @@ export {
   useSubcontractorDailyReportPhotos,
   useSubcontractorDailyReportFull,
 } from './useSubcontractorDailyReports'
+
+// Punch Item Updates with Photo Proof (Milestone 4.2)
+export {
+  subPunchKeys,
+  useMyPunchItems,
+  useProofPhotos,
+  useRequestCompletion,
+  useUploadProofPhotos,
+  useAddSubcontractorNote,
+  useSubcontractorPunchUpdates,
+} from './useSubcontractorPunchUpdates'

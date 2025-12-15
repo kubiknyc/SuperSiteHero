@@ -14,7 +14,7 @@ export function useTakeoffItems(projectId: string | undefined) {
   return useQuery({
     queryKey: ['takeoff-items', 'project', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return await takeoffsApi.getTakeoffItemsByProject(projectId)
     },
     enabled: !!projectId,
@@ -32,7 +32,7 @@ export function useTakeoffItemsByDocument(
   return useQuery({
     queryKey: ['takeoff-items', 'document', documentId, pageNumber],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
       return await takeoffsApi.getTakeoffItemsByDocument(documentId, pageNumber)
     },
     enabled: !!documentId,
@@ -61,7 +61,7 @@ export function useTakeoffItem(takeoffItemId: string | undefined) {
   return useQuery({
     queryKey: ['takeoff-items', takeoffItemId],
     queryFn: async () => {
-      if (!takeoffItemId) throw new Error('Takeoff item ID required')
+      if (!takeoffItemId) {throw new Error('Takeoff item ID required')}
       return await takeoffsApi.getTakeoffItem(takeoffItemId)
     },
     enabled: !!takeoffItemId,

@@ -64,7 +64,7 @@ export function useScheduleActivities(
   return useQuery({
     queryKey: scheduleKeys.list(projectId || '', filters),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID is required')
+      if (!projectId) {throw new Error('Project ID is required')}
       return scheduleActivitiesApi.getActivities({ project_id: projectId, ...filters })
     },
     enabled: !!projectId,
@@ -79,7 +79,7 @@ export function useScheduleActivitiesWithDetails(projectId: string | undefined) 
   return useQuery({
     queryKey: [...scheduleKeys.list(projectId || ''), 'with-details'],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID is required')
+      if (!projectId) {throw new Error('Project ID is required')}
       return scheduleActivitiesApi.getActivitiesWithDetails(projectId)
     },
     enabled: !!projectId,
@@ -94,7 +94,7 @@ export function useScheduleActivity(activityId: string | undefined) {
   return useQuery({
     queryKey: scheduleKeys.detail(activityId || ''),
     queryFn: async () => {
-      if (!activityId) throw new Error('Activity ID is required')
+      if (!activityId) {throw new Error('Activity ID is required')}
       return scheduleActivitiesApi.getActivity(activityId)
     },
     enabled: !!activityId,
@@ -108,7 +108,7 @@ export function useScheduleDependencies(projectId: string | undefined) {
   return useQuery({
     queryKey: scheduleKeys.dependencies(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID is required')
+      if (!projectId) {throw new Error('Project ID is required')}
       return scheduleActivitiesApi.getDependencies(projectId)
     },
     enabled: !!projectId,
@@ -123,7 +123,7 @@ export function useScheduleBaselines(projectId: string | undefined) {
   return useQuery({
     queryKey: scheduleKeys.baselines(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID is required')
+      if (!projectId) {throw new Error('Project ID is required')}
       return scheduleActivitiesApi.getBaselines(projectId)
     },
     enabled: !!projectId,
@@ -141,7 +141,7 @@ export function useScheduleCalendars(
   return useQuery({
     queryKey: scheduleKeys.calendars(companyId || '', projectId),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID is required')
+      if (!companyId) {throw new Error('Company ID is required')}
       return scheduleActivitiesApi.getCalendars(companyId, projectId)
     },
     enabled: !!companyId,
@@ -159,7 +159,7 @@ export function useScheduleResources(
   return useQuery({
     queryKey: scheduleKeys.resources(companyId || '', projectId),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID is required')
+      if (!companyId) {throw new Error('Company ID is required')}
       return scheduleActivitiesApi.getResources(companyId, projectId)
     },
     enabled: !!companyId,
@@ -174,7 +174,7 @@ export function useScheduleStats(projectId: string | undefined) {
   return useQuery({
     queryKey: scheduleKeys.stats(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID is required')
+      if (!projectId) {throw new Error('Project ID is required')}
       return scheduleActivitiesApi.getScheduleStats(projectId)
     },
     enabled: !!projectId,
@@ -189,7 +189,7 @@ export function useScheduleImportLogs(projectId: string | undefined) {
   return useQuery({
     queryKey: scheduleKeys.importLogs(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID is required')
+      if (!projectId) {throw new Error('Project ID is required')}
       return scheduleActivitiesApi.getImportLogs(projectId)
     },
     enabled: !!projectId,
@@ -830,7 +830,7 @@ export function useScheduleCalendar(calendarId: string | undefined) {
   return useQuery({
     queryKey: [...scheduleKeys.all, 'calendar', calendarId],
     queryFn: async () => {
-      if (!calendarId) throw new Error('Calendar ID is required')
+      if (!calendarId) {throw new Error('Calendar ID is required')}
       return scheduleActivitiesApi.getCalendar(calendarId)
     },
     enabled: !!calendarId,

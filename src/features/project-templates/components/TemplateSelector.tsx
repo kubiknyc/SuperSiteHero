@@ -90,8 +90,8 @@ export function TemplateSelector({
 
   // Filter templates by search
   const filteredTemplates = React.useMemo(() => {
-    if (!templates) return []
-    if (!search.trim()) return templates.slice(0, 8)
+    if (!templates) {return []}
+    if (!search.trim()) {return templates.slice(0, 8)}
 
     const query = search.toLowerCase()
     return templates.filter(

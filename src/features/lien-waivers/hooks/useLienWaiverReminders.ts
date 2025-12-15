@@ -33,7 +33,7 @@ export function useLienWaiverReminderStats() {
   return useQuery({
     queryKey: reminderKeys.stats(),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required');
+      if (!companyId) {throw new Error('Company ID required');}
       return lienWaiverReminderService.getReminderStats(companyId);
     },
     enabled: !!companyId,
@@ -53,7 +53,7 @@ export function useWaiversNeedingReminders(config?: Partial<WaiverReminderConfig
   return useQuery({
     queryKey: [...reminderKeys.pending(), config],
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required');
+      if (!companyId) {throw new Error('Company ID required');}
       return lienWaiverReminderService.getWaiversNeedingReminders(companyId, mergedConfig);
     },
     enabled: !!companyId,
@@ -71,7 +71,7 @@ export function useOverdueWaivers() {
   return useQuery({
     queryKey: reminderKeys.overdue(),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required');
+      if (!companyId) {throw new Error('Company ID required');}
       return lienWaiverReminderService.getOverdueWaivers(companyId);
     },
     enabled: !!companyId,
@@ -90,7 +90,7 @@ export function useProcessWaiverReminders() {
 
   return useMutation({
     mutationFn: async (config?: Partial<WaiverReminderConfig>) => {
-      if (!companyId) throw new Error('Company ID required');
+      if (!companyId) {throw new Error('Company ID required');}
       const mergedConfig = { ...DEFAULT_REMINDER_CONFIG, ...config };
       return lienWaiverReminderService.processReminders(companyId, mergedConfig);
     },

@@ -151,10 +151,10 @@ function formatRFINumber(number: number | null): string {
 }
 
 function formatDaysLabel(days: number): string {
-  if (days === 0) return 'Due today'
-  if (days === 1) return 'Due tomorrow'
-  if (days === -1) return '1 day overdue'
-  if (days < 0) return `${Math.abs(days)} days overdue`
+  if (days === 0) {return 'Due today'}
+  if (days === 1) {return 'Due tomorrow'}
+  if (days === -1) {return '1 day overdue'}
+  if (days < 0) {return `${Math.abs(days)} days overdue`}
   return `${days} days left`
 }
 
@@ -273,7 +273,7 @@ export function RFIAgingAlerts({
         .is('deleted_at', null)
         .order('due_date', { ascending: true, nullsFirst: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!projectId && !!workflowTypeId,
@@ -332,8 +332,8 @@ export function RFIAgingAlerts({
     // Sort by aging severity (overdue first, then by days until due)
     const sorted = processed.sort((a, b) => {
       // Overdue items first
-      if (a.isOverdue && !b.isOverdue) return -1
-      if (!a.isOverdue && b.isOverdue) return 1
+      if (a.isOverdue && !b.isOverdue) {return -1}
+      if (!a.isOverdue && b.isOverdue) {return 1}
 
       // Then by days until due (most urgent first)
       return a.daysUntilDue - b.daysUntilDue

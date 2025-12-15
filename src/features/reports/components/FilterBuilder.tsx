@@ -296,7 +296,7 @@ function FilterRow({
                         const preset = RELATIVE_DATE_PRESETS.find(
                           p => `${p.value}-${p.unit}` === v
                         )
-                        if (preset) handleRelativeDateChange(preset)
+                        if (preset) {handleRelativeDateChange(preset)}
                       }}
                     >
                       <SelectTrigger>

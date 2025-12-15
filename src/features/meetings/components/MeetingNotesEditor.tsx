@@ -89,7 +89,7 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
   })
 
   const handleAddNote = () => {
-    if (!newNote.content.trim()) return
+    if (!newNote.content.trim()) {return}
 
     createNote.mutate({
       meeting_id: meetingId,
@@ -101,7 +101,7 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
   }
 
   const handleUpdateNote = () => {
-    if (!editingNote) return
+    if (!editingNote) {return}
 
     updateNote.mutate({
       id: editingNote.id,
@@ -113,7 +113,7 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
 
   const getNoteTypeIcon = (type: string) => {
     const option = NOTE_TYPE_OPTIONS.find(o => o.value === type)
-    if (!option) return FileText
+    if (!option) {return FileText}
     return option.icon
   }
 

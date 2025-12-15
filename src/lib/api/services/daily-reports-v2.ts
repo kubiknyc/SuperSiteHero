@@ -65,7 +65,7 @@ export const dailyReportsV2Api = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -102,7 +102,7 @@ export const dailyReportsV2Api = {
         .eq('id', reportId)
         .single();
 
-      if (reportError) throw reportError;
+      if (reportError) {throw reportError;}
 
       // Fetch all related data in parallel
       const [
@@ -157,7 +157,7 @@ export const dailyReportsV2Api = {
   async createReport(request: CreateDailyReportV2Request): Promise<DailyReportV2> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       const { data, error } = await (supabase
         .from('daily_reports') as any)
@@ -174,7 +174,7 @@ export const dailyReportsV2Api = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
@@ -200,7 +200,7 @@ export const dailyReportsV2Api = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
@@ -228,7 +228,7 @@ export const dailyReportsV2Api = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
@@ -260,7 +260,7 @@ export const dailyReportsV2Api = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
@@ -286,7 +286,7 @@ export const dailyReportsV2Api = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
@@ -312,7 +312,7 @@ export const dailyReportsV2Api = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
@@ -340,7 +340,7 @@ export const dailyReportsV2Api = {
         .is('deleted_at', null)
         .limit(1);
 
-      if (sourceError) throw sourceError;
+      if (sourceError) {throw sourceError;}
       if (!sourceReports || sourceReports.length === 0) {
         return { workforce: [], equipment: [] };
       }
@@ -405,7 +405,7 @@ export const dailyReportsV2Api = {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', reportId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     } catch (error) {
       throw new ApiErrorClass({
         code: 'DELETE_REPORT_ERROR',
@@ -422,14 +422,14 @@ export const dailyReportsV2Api = {
 
 export const workforceApi = {
   async upsert(entries: WorkforceEntryV2[]): Promise<WorkforceEntryV2[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase
       .from('daily_report_workforce') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'WORKFORCE_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'WORKFORCE_UPSERT_ERROR', message: error.message });}
     return data as WorkforceEntryV2[];
   },
 
@@ -439,7 +439,7 @@ export const workforceApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'WORKFORCE_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'WORKFORCE_DELETE_ERROR', message: error.message });}
   },
 
   async deleteByReportId(reportId: string): Promise<void> {
@@ -448,7 +448,7 @@ export const workforceApi = {
       .delete()
       .eq('daily_report_id', reportId);
 
-    if (error) throw new ApiErrorClass({ code: 'WORKFORCE_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'WORKFORCE_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -458,14 +458,14 @@ export const workforceApi = {
 
 export const equipmentApi = {
   async upsert(entries: EquipmentEntryV2[]): Promise<EquipmentEntryV2[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase
       .from('daily_report_equipment') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'EQUIPMENT_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'EQUIPMENT_UPSERT_ERROR', message: error.message });}
     return data as EquipmentEntryV2[];
   },
 
@@ -475,7 +475,7 @@ export const equipmentApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'EQUIPMENT_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'EQUIPMENT_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -491,19 +491,19 @@ export const delaysApi = {
       .eq('daily_report_id', reportId)
       .order('created_at', { ascending: false });
 
-    if (error) throw new ApiErrorClass({ code: 'DELAYS_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'DELAYS_FETCH_ERROR', message: error.message });}
     return data as DelayEntry[];
   },
 
   async upsert(entries: DelayEntry[]): Promise<DelayEntry[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase as any)
       .from('daily_report_delays')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'DELAYS_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'DELAYS_UPSERT_ERROR', message: error.message });}
     return data as DelayEntry[];
   },
 
@@ -513,7 +513,7 @@ export const delaysApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'DELAYS_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'DELAYS_DELETE_ERROR', message: error.message });}
   },
 
   /**
@@ -535,7 +535,7 @@ export const delaysApi = {
       .lte('daily_report.report_date', endDate)
       .order('created_at', { ascending: false });
 
-    if (error) throw new ApiErrorClass({ code: 'PROJECT_DELAYS_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PROJECT_DELAYS_ERROR', message: error.message });}
     return data as DelayEntry[];
   },
 };
@@ -552,19 +552,19 @@ export const safetyIncidentsApi = {
       .eq('daily_report_id', reportId)
       .order('incident_time', { ascending: true });
 
-    if (error) throw new ApiErrorClass({ code: 'SAFETY_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'SAFETY_FETCH_ERROR', message: error.message });}
     return data as SafetyIncident[];
   },
 
   async upsert(entries: SafetyIncident[]): Promise<SafetyIncident[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase
       .from('daily_report_safety_incidents') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'SAFETY_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'SAFETY_UPSERT_ERROR', message: error.message });}
     return data as SafetyIncident[];
   },
 
@@ -574,7 +574,7 @@ export const safetyIncidentsApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'SAFETY_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'SAFETY_DELETE_ERROR', message: error.message });}
   },
 
   /**
@@ -591,7 +591,7 @@ export const safetyIncidentsApi = {
       .eq('osha_reportable', true)
       .order('created_at', { ascending: false });
 
-    if (error) throw new ApiErrorClass({ code: 'OSHA_INCIDENTS_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'OSHA_INCIDENTS_ERROR', message: error.message });}
     return data as SafetyIncident[];
   },
 };
@@ -608,19 +608,19 @@ export const inspectionsApi = {
       .eq('daily_report_id', reportId)
       .order('inspection_time', { ascending: true });
 
-    if (error) throw new ApiErrorClass({ code: 'INSPECTIONS_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'INSPECTIONS_FETCH_ERROR', message: error.message });}
     return data as InspectionEntry[];
   },
 
   async upsert(entries: InspectionEntry[]): Promise<InspectionEntry[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase as any)
       .from('daily_report_inspections')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'INSPECTIONS_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'INSPECTIONS_UPSERT_ERROR', message: error.message });}
     return data as InspectionEntry[];
   },
 
@@ -630,7 +630,7 @@ export const inspectionsApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'INSPECTIONS_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'INSPECTIONS_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -646,19 +646,19 @@ export const tmWorkApi = {
       .eq('daily_report_id', reportId)
       .order('created_at', { ascending: false });
 
-    if (error) throw new ApiErrorClass({ code: 'TM_WORK_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TM_WORK_FETCH_ERROR', message: error.message });}
     return data as TMWorkEntry[];
   },
 
   async upsert(entries: TMWorkEntry[]): Promise<TMWorkEntry[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase as any)
       .from('daily_report_tm_work')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'TM_WORK_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TM_WORK_UPSERT_ERROR', message: error.message });}
     return data as TMWorkEntry[];
   },
 
@@ -668,7 +668,7 @@ export const tmWorkApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'TM_WORK_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TM_WORK_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -684,19 +684,19 @@ export const progressApi = {
       .eq('daily_report_id', reportId)
       .order('activity_name', { ascending: true });
 
-    if (error) throw new ApiErrorClass({ code: 'PROGRESS_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PROGRESS_FETCH_ERROR', message: error.message });}
     return data as ProgressEntry[];
   },
 
   async upsert(entries: ProgressEntry[]): Promise<ProgressEntry[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase as any)
       .from('daily_report_progress')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'PROGRESS_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PROGRESS_UPSERT_ERROR', message: error.message });}
     return data as ProgressEntry[];
   },
 
@@ -706,7 +706,7 @@ export const progressApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'PROGRESS_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PROGRESS_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -716,14 +716,14 @@ export const progressApi = {
 
 export const deliveriesApi = {
   async upsert(entries: DeliveryEntryV2[]): Promise<DeliveryEntryV2[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase
       .from('daily_report_deliveries') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'DELIVERIES_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'DELIVERIES_UPSERT_ERROR', message: error.message });}
     return data as DeliveryEntryV2[];
   },
 
@@ -733,7 +733,7 @@ export const deliveriesApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'DELIVERIES_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'DELIVERIES_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -743,14 +743,14 @@ export const deliveriesApi = {
 
 export const visitorsApi = {
   async upsert(entries: VisitorEntryV2[]): Promise<VisitorEntryV2[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase
       .from('daily_report_visitors') as any)
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'VISITORS_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'VISITORS_UPSERT_ERROR', message: error.message });}
     return data as VisitorEntryV2[];
   },
 
@@ -760,7 +760,7 @@ export const visitorsApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'VISITORS_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'VISITORS_DELETE_ERROR', message: error.message });}
   },
 };
 
@@ -776,19 +776,19 @@ export const photosApi = {
       .eq('daily_report_id', reportId)
       .order('taken_at', { ascending: false });
 
-    if (error) throw new ApiErrorClass({ code: 'PHOTOS_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PHOTOS_FETCH_ERROR', message: error.message });}
     return data as PhotoEntryV2[];
   },
 
   async upsert(entries: PhotoEntryV2[]): Promise<PhotoEntryV2[]> {
-    if (entries.length === 0) return [];
+    if (entries.length === 0) {return [];}
 
     const { data, error } = await (supabase as any)
       .from('daily_report_photos')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
-    if (error) throw new ApiErrorClass({ code: 'PHOTOS_UPSERT_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PHOTOS_UPSERT_ERROR', message: error.message });}
     return data as PhotoEntryV2[];
   },
 
@@ -798,7 +798,7 @@ export const photosApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'PHOTOS_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PHOTOS_DELETE_ERROR', message: error.message });}
   },
 
   async updateStatus(id: string, status: PhotoEntryV2['upload_status']): Promise<void> {
@@ -807,7 +807,7 @@ export const photosApi = {
       .update({ upload_status: status })
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'PHOTOS_STATUS_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'PHOTOS_STATUS_ERROR', message: error.message });}
   },
 };
 
@@ -825,7 +825,7 @@ export const templatesApi = {
       .or(`project_id.eq.${projectId},user_id.eq.${user.user?.id}`)
       .order('name', { ascending: true });
 
-    if (error) throw new ApiErrorClass({ code: 'TEMPLATES_FETCH_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TEMPLATES_FETCH_ERROR', message: error.message });}
     return data as DailyReportTemplate[];
   },
 
@@ -836,7 +836,7 @@ export const templatesApi = {
       .select()
       .single();
 
-    if (error) throw new ApiErrorClass({ code: 'TEMPLATE_CREATE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TEMPLATE_CREATE_ERROR', message: error.message });}
     return data as DailyReportTemplate;
   },
 
@@ -848,7 +848,7 @@ export const templatesApi = {
       .select()
       .single();
 
-    if (error) throw new ApiErrorClass({ code: 'TEMPLATE_UPDATE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TEMPLATE_UPDATE_ERROR', message: error.message });}
     return data as DailyReportTemplate;
   },
 
@@ -858,7 +858,7 @@ export const templatesApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw new ApiErrorClass({ code: 'TEMPLATE_DELETE_ERROR', message: error.message });
+    if (error) {throw new ApiErrorClass({ code: 'TEMPLATE_DELETE_ERROR', message: error.message });}
   },
 };
 

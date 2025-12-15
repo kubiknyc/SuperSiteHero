@@ -319,7 +319,7 @@ export function useGenerateSuggestions(weatherData: WeatherData | null | undefin
   return useQuery({
     queryKey: ['weather', 'generate-suggestions', weatherData?.date],
     queryFn: () => {
-      if (!weatherData) return [];
+      if (!weatherData) {return [];}
       return generateWeatherDelaySuggestions(weatherData);
     },
     enabled: !!weatherData,
@@ -411,7 +411,7 @@ export function shouldSuggestDelay(weather: WeatherData): boolean {
  */
 export function getWeatherSeverity(weather: WeatherData): 'none' | 'low' | 'medium' | 'high' | 'critical' {
   const suggestions = generateWeatherDelaySuggestions(weather);
-  if (suggestions.length === 0) return 'none';
+  if (suggestions.length === 0) {return 'none';}
 
   // Return the highest severity among suggestions
   const severityOrder = ['low', 'medium', 'high', 'critical'] as const;

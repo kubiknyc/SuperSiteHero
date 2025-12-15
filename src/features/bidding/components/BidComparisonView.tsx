@@ -58,16 +58,16 @@ type SortField = 'amount' | 'rank' | 'company' | 'variance'
 type SortDirection = 'asc' | 'desc'
 
 function getRankIcon(rank: number) {
-  if (rank === 1) return <Trophy className="w-4 h-4 text-yellow-500" />
-  if (rank === 2) return <Medal className="w-4 h-4 text-gray-400" />
-  if (rank === 3) return <Medal className="w-4 h-4 text-amber-600" />
+  if (rank === 1) {return <Trophy className="w-4 h-4 text-yellow-500" />}
+  if (rank === 2) {return <Medal className="w-4 h-4 text-gray-400" />}
+  if (rank === 3) {return <Medal className="w-4 h-4 text-amber-600" />}
   return <span className="text-sm font-medium">#{rank}</span>
 }
 
 function getVarianceColor(variance: number): string {
-  if (variance <= 0) return 'text-green-600'
-  if (variance <= 5) return 'text-yellow-600'
-  if (variance <= 10) return 'text-orange-600'
+  if (variance <= 0) {return 'text-green-600'}
+  if (variance <= 5) {return 'text-yellow-600'}
+  if (variance <= 10) {return 'text-orange-600'}
   return 'text-red-600'
 }
 
@@ -136,7 +136,7 @@ export function BidComparisonView({
 
   // Filter to only qualified bids
   const qualifiedBids = useMemo(() => {
-    if (!submissions) return []
+    if (!submissions) {return []}
     return submissions.filter((s) =>
       ['received', 'under_review', 'qualified', 'shortlisted'].includes(s.status)
     )
@@ -144,7 +144,7 @@ export function BidComparisonView({
 
   // Calculate statistics
   const stats = useMemo(() => {
-    if (qualifiedBids.length === 0) return null
+    if (qualifiedBids.length === 0) {return null}
 
     const amounts = qualifiedBids.map((b) => b.base_bid_amount)
     const low = Math.min(...amounts)
@@ -157,7 +157,7 @@ export function BidComparisonView({
 
   // Sort submissions
   const sortedBids = useMemo(() => {
-    if (qualifiedBids.length === 0) return []
+    if (qualifiedBids.length === 0) {return []}
 
     const sorted = [...qualifiedBids]
 
@@ -203,7 +203,7 @@ export function BidComparisonView({
   }
 
   const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) return <Minus className="w-3 h-3 opacity-30" />
+    if (sortField !== field) {return <Minus className="w-3 h-3 opacity-30" />}
     return sortDirection === 'asc' ? (
       <ArrowUp className="w-3 h-3" />
     ) : (

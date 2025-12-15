@@ -173,7 +173,7 @@ class RealtimeManager {
 
   private unsubscribeFromTable(channelKey: string): void {
     const state = this.channels.get(channelKey)
-    if (!state) return
+    if (!state) {return}
 
     state.subscriptionCount--
 
@@ -214,7 +214,7 @@ class RealtimeManager {
   removePresenceChannel(roomId: string): void {
     const channelKey = `presence:${roomId}`
     const state = this.channels.get(channelKey)
-    if (!state) return
+    if (!state) {return}
 
     state.subscriptionCount--
 

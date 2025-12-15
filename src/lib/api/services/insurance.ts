@@ -66,7 +66,7 @@ export const insuranceApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceCertificateWithRelations[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -94,7 +94,7 @@ export const insuranceApi = {
         .is('deleted_at', null)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceCertificateWithRelations
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -119,7 +119,7 @@ export const insuranceApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceCertificate
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -146,7 +146,7 @@ export const insuranceApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceCertificate
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -168,7 +168,7 @@ export const insuranceApi = {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', certificateId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -194,7 +194,7 @@ export const insuranceApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceCertificate
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -242,7 +242,7 @@ export const insuranceApi = {
         .lte('expiration_date', futureDate.toISOString().split('T')[0])
         .order('expiration_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Calculate days until expiry and flatten data
       const today = new Date()
@@ -298,7 +298,7 @@ export const insuranceApi = {
 
       const { data, error } = await query.order('insurance_type', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceRequirement[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -323,7 +323,7 @@ export const insuranceApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceRequirement
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -350,7 +350,7 @@ export const insuranceApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceRequirement
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -372,7 +372,7 @@ export const insuranceApi = {
         .delete()
         .eq('id', requirementId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -400,7 +400,7 @@ export const insuranceApi = {
         p_project_id: projectId || null,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as unknown) as ComplianceCheckResult[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -422,7 +422,7 @@ export const insuranceApi = {
         .select('*')
         .eq('company_id', companyId)
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as unknown) as ComplianceSummary[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -449,7 +449,7 @@ export const insuranceApi = {
         .eq('certificate_id', certificateId)
         .order('changed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as unknown) as InsuranceCertificateHistory[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -476,7 +476,7 @@ export const insuranceApi = {
         .eq('certificate_id', certificateId)
         .order('sent_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data as unknown) as InsuranceExpirationAlert[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -498,7 +498,7 @@ export const insuranceApi = {
         .update({ acknowledged_at: new Date().toISOString() })
         .eq('id', alertId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -525,15 +525,15 @@ export const insuranceApi = {
         .eq('company_id', companyId)
         .is('deleted_at', null)
 
-      if (certError) throw certError
+      if (certError) {throw certError}
 
       const stats = ((certificates || []) as Array<{ status: string }>).reduce(
         (acc: InsuranceDashboardStats, cert: { status: string }) => {
           acc.totalCertificates++
-          if (cert.status === 'active') acc.activeCertificates++
-          if (cert.status === 'expiring_soon') acc.expiringWithin30Days++
-          if (cert.status === 'expired') acc.expiredCertificates++
-          if (cert.status === 'pending_renewal') acc.pendingRenewal++
+          if (cert.status === 'active') {acc.activeCertificates++}
+          if (cert.status === 'expiring_soon') {acc.expiringWithin30Days++}
+          if (cert.status === 'expired') {acc.expiredCertificates++}
+          if (cert.status === 'pending_renewal') {acc.pendingRenewal++}
           return acc
         },
         {
@@ -561,7 +561,7 @@ export const insuranceApi = {
         .eq('company_id', companyId)
         .gt('expired_certificates', 0)
 
-      if (compError) throw compError
+      if (compError) {throw compError}
       stats.subcontractorsWithGaps = compliance?.length || 0
 
       return stats
@@ -593,7 +593,7 @@ export const insuranceApi = {
         .is('deleted_at', null)
         .order('insurance_type', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as InsuranceCertificate[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -625,7 +625,7 @@ export const insuranceApi = {
         .from('documents')
         .upload(fileName, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {throw uploadError}
 
       const { data: urlData } = supabase.storage
         .from('documents')

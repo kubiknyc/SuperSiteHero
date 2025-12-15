@@ -41,8 +41,8 @@ export function ActivityPicker({
 
   // Filter activities by search
   const filteredActivities = useMemo(() => {
-    if (!activities) return []
-    if (!search) return activities
+    if (!activities) {return []}
+    if (!search) {return activities}
 
     const lowerSearch = search.toLowerCase()
     return activities.filter(

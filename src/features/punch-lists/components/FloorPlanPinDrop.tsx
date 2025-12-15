@@ -112,7 +112,7 @@ function FloorPlanCanvas({
 
   // Calculate image dimensions to fit container
   useEffect(() => {
-    if (!containerRef.current || !image) return
+    if (!containerRef.current || !image) {return}
 
     const containerWidth = containerRef.current.offsetWidth
     const containerHeight = 400
@@ -134,11 +134,11 @@ function FloorPlanCanvas({
 
   // Handle canvas click to place pin
   const handleStageClick = useCallback((e: any) => {
-    if (readOnly || isPanning || isDragging) return
+    if (readOnly || isPanning || isDragging) {return}
 
     const stage = e.target.getStage()
     const pointer = stage.getPointerPosition()
-    if (!pointer) return
+    if (!pointer) {return}
 
     // Convert to normalized coordinates (0-1)
     const normalizedX = (pointer.x - position.x) / (dimensions.width * scale)
@@ -180,7 +180,7 @@ function FloorPlanCanvas({
 
   // Handle pan drag
   const handleDragStart = useCallback(() => {
-    if (isPanning) setIsDragging(true)
+    if (isPanning) {setIsDragging(true)}
   }, [isPanning])
 
   const handleDragEnd = useCallback((e: any) => {
@@ -336,7 +336,7 @@ export function FloorPlanPinDrop({
 
   // Fetch floor plans for the project
   useEffect(() => {
-    if (!dialogOpen || !projectId) return
+    if (!dialogOpen || !projectId) {return}
 
     const fetchFloorPlans = async () => {
       setLoading(true)
@@ -349,7 +349,7 @@ export function FloorPlanPinDrop({
           .is('deleted_at', null)
           .order('name')
 
-        if (error) throw error
+        if (error) {throw error}
         setFloorPlans(data || [])
 
         // Auto-select if there's only one, or select previously used
@@ -357,7 +357,7 @@ export function FloorPlanPinDrop({
           setSelectedFloorPlan(data[0])
         } else if (value?.documentId) {
           const prev = data?.find((d) => d.id === value.documentId)
-          if (prev) setSelectedFloorPlan(prev)
+          if (prev) {setSelectedFloorPlan(prev)}
         }
       } catch (err) {
         console.error('Failed to fetch floor plans:', err)

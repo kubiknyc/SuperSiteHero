@@ -41,3 +41,28 @@ export {
   // Types
   type RFIWithDetails,
 } from './useDedicatedRFIs'
+
+// RFI Response Time Analytics hooks
+export {
+  // Individual metric hooks
+  useAverageResponseTime,
+  useResponseTimeByPriority,
+  useResponseTimeByAssignee,
+  useResponseTimeByResponseType,
+  useResponseTimeDistribution,
+  useResponseTimeTrends,
+  useOnTimePerformance,
+  useResponseTimeByDayOfWeek,
+  useResponseTimeByMonth,
+  useResponseTimeRecords,
+  // Complete analytics hook
+  useRFIResponseAnalytics,
+  // Convenience hooks
+  useRFIResponseMetrics,
+  useAssigneePerformance,
+  useResponseTimeTrendAnalysis,
+  // Query keys for cache management
+  rfiResponseAnalyticsKeys,
+  // Utility
+  getDateRangeFromPreset,
+} from './useRFIResponseAnalytics'

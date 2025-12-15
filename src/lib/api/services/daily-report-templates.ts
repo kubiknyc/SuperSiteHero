@@ -73,7 +73,7 @@ export const dailyReportTemplatesApi = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DailyReportTemplate[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -90,7 +90,7 @@ export const dailyReportTemplatesApi = {
   async getProjectTemplates(projectId: string): Promise<DailyReportTemplate[]> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       // Get user's company
       const { data: userData } = await (supabase as any)
@@ -124,7 +124,7 @@ export const dailyReportTemplatesApi = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DailyReportTemplate[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -148,7 +148,7 @@ export const dailyReportTemplatesApi = {
         .order('usage_count', { ascending: false })
         .order('name', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DailyReportTemplate[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -170,7 +170,7 @@ export const dailyReportTemplatesApi = {
         .eq('id', templateId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportTemplate;
     } catch (error) {
       throw new ApiErrorClass({
@@ -192,7 +192,7 @@ export const dailyReportTemplatesApi = {
         .eq('id', templateId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TemplateWithStats;
     } catch (error) {
       throw new ApiErrorClass({
@@ -209,7 +209,7 @@ export const dailyReportTemplatesApi = {
   async createTemplate(request: CreateTemplateRequest): Promise<DailyReportTemplate> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       // Get user's company if needed for company scope
       let companyId = request.company_id;
@@ -244,7 +244,7 @@ export const dailyReportTemplatesApi = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportTemplate;
     } catch (error) {
       throw new ApiErrorClass({
@@ -274,7 +274,7 @@ export const dailyReportTemplatesApi = {
   ): Promise<DailyReportTemplate> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       // Fetch the report with related data
       const { data: report, error: reportError } = await (supabase as any)
@@ -283,7 +283,7 @@ export const dailyReportTemplatesApi = {
         .eq('id', reportId)
         .single();
 
-      if (reportError) throw reportError;
+      if (reportError) {throw reportError;}
 
       // Fetch workforce and equipment if needed
       let workforceData: Partial<WorkforceEntryV2>[] = [];
@@ -402,7 +402,7 @@ export const dailyReportTemplatesApi = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportTemplate;
     } catch (error) {
       throw new ApiErrorClass({
@@ -423,7 +423,7 @@ export const dailyReportTemplatesApi = {
         .delete()
         .eq('id', templateId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     } catch (error) {
       throw new ApiErrorClass({
         code: 'TEMPLATE_DELETE_ERROR',
@@ -439,7 +439,7 @@ export const dailyReportTemplatesApi = {
   async copyTemplate(request: CopyTemplateRequest): Promise<DailyReportTemplate> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       // Get source template
       const sourceTemplate = await this.getTemplate(request.source_template_id);
@@ -479,7 +479,7 @@ export const dailyReportTemplatesApi = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportTemplate;
     } catch (error) {
       throw new ApiErrorClass({
@@ -565,7 +565,7 @@ export const dailyReportTemplatesApi = {
   async getPopularTemplates(limit: number = 10): Promise<DailyReportTemplate[]> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       const { data: userData } = await (supabase as any)
         .from('users')
@@ -595,7 +595,7 @@ export const dailyReportTemplatesApi = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DailyReportTemplate[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -612,7 +612,7 @@ export const dailyReportTemplatesApi = {
   async getRecentTemplates(limit: number = 5): Promise<DailyReportTemplate[]> {
     try {
       const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('Not authenticated');
+      if (!user.user) {throw new Error('Not authenticated');}
 
       const { data, error } = await (supabase as any)
         .from('daily_report_templates')
@@ -622,7 +622,7 @@ export const dailyReportTemplatesApi = {
         .order('last_used_at', { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DailyReportTemplate[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -645,7 +645,7 @@ export const dailyReportTemplatesApi = {
         .order('usage_count', { ascending: false })
         .limit(20);
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DailyReportTemplate[];
     } catch (error) {
       throw new ApiErrorClass({
@@ -665,7 +665,7 @@ export const dailyReportTemplatesApi = {
         .from('daily_report_templates')
         .select('tags');
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Extract and deduplicate tags
       const allTags = new Set<string>();

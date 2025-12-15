@@ -51,7 +51,7 @@ interface LienWaiverListProps {
  * Due date indicator with urgency coloring
  */
 function DueDateIndicator({ dueDate, status }: { dueDate: string | null; status: LienWaiverStatus }) {
-  if (!dueDate) return <span className="text-gray-400">-</span>
+  if (!dueDate) {return <span className="text-gray-400">-</span>}
 
   // Don't show urgency for completed statuses
   if (['approved', 'void'].includes(status)) {

@@ -10,12 +10,19 @@ import App from './App.tsx'
 import './index.css'
 import { initWebVitals } from './lib/performance/web-vitals'
 import { initSentry } from './lib/sentry'
+import { initializeTheme } from './lib/theme/darkMode'
 
 // Import email test utility for browser console access
 import './lib/email/test-email'
 
 // Initialize Sentry error tracking
 initSentry()
+
+// Initialize theme system (dark mode support)
+// This runs before React renders to prevent flash of wrong theme
+if (typeof window !== 'undefined') {
+  initializeTheme()
+}
 
 // Create React Query client for data fetching and caching
 const queryClient = new QueryClient({

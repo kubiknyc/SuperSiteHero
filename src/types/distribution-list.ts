@@ -301,7 +301,7 @@ export function deduplicateRecipients(recipients: ResolvedRecipient[]): Resolved
   const seen = new Set<string>();
   return recipients.filter(r => {
     const key = r.email.toLowerCase();
-    if (seen.has(key)) return false;
+    if (seen.has(key)) {return false;}
     seen.add(key);
     return true;
   });

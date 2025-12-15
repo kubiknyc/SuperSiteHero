@@ -332,7 +332,7 @@ export function getAssemblyFormulas(assembly: Assembly): Array<{
   variables: string[]
 }> {
   const items = (assembly.items as any) as AssemblyItem[]
-  if (!Array.isArray(items)) return []
+  if (!Array.isArray(items)) {return []}
 
   return items
     .filter((item) => item.quantity_formula)

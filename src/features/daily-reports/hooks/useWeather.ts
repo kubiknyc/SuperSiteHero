@@ -197,7 +197,7 @@ export function useWeatherForDateRange(
         .lte('weather_date', endDate)
         .order('weather_date', { ascending: true }) as { data: WeatherHistoryRecord[] | null; error: any }
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map((record: WeatherHistoryRecord) => ({
         date: record.weather_date,
@@ -340,7 +340,7 @@ export function useProjectLocation(projectId: string | undefined) {
         .eq('id', projectId!)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!projectId,
@@ -377,7 +377,7 @@ export function useUpdateProjectLocation() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {

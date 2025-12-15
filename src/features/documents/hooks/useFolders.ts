@@ -13,7 +13,7 @@ export function useFolders(projectId: string | undefined) {
   return useQuery({
     queryKey: ['folders', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('folders')
@@ -23,7 +23,7 @@ export function useFolders(projectId: string | undefined) {
         .order('sort_order', { ascending: true })
         .order('name', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder[]
     },
     enabled: !!projectId,
@@ -36,7 +36,7 @@ export function useCreateFolder() {
 
   return useMutation({
     mutationFn: async (input: Omit<FolderInsert, 'created_by'>) => {
-      if (!userProfile?.id) throw new Error('User must be authenticated')
+      if (!userProfile?.id) {throw new Error('User must be authenticated')}
 
       const { data, error } = await supabase
         .from('folders')
@@ -44,7 +44,7 @@ export function useCreateFolder() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Folder
     },
     onSuccess: (data) => {

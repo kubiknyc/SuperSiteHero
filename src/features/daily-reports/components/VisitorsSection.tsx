@@ -36,7 +36,7 @@ export function VisitorsSection({
   }
 
   const handleSaveEdit = () => {
-    if (!editingId) return
+    if (!editingId) {return}
 
     // Validate the entry
     const result = visitorEntrySchema.safeParse(editForm)

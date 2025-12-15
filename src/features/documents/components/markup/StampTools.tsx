@@ -248,7 +248,7 @@ export function StampTools({
 function StampPreview({ type, customText }: { type: StampType; customText?: string }) {
   const preset = STAMP_PRESETS.find(p => p.type === type)
 
-  if (!preset && type !== 'CUSTOM') return null
+  if (!preset && type !== 'CUSTOM') {return null}
 
   const label = type === 'CUSTOM' ? (customText || 'CUSTOM') : preset?.label
   const color = preset?.color || 'text-gray-700'
@@ -280,7 +280,7 @@ function StampPreview({ type, customText }: { type: StampType; customText?: stri
 
 export function getStampColor(type: StampType): string {
   const preset = STAMP_PRESETS.find(p => p.type === type)
-  if (!preset) return '#666666'
+  if (!preset) {return '#666666'}
 
   // Extract hex color from the color class
   const colorMap: Record<string, string> = {

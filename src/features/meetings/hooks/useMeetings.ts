@@ -150,7 +150,7 @@ export function useMeetings(projectId: string | undefined) {
   return useQuery({
     queryKey: ['meetings', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('meetings')
@@ -159,7 +159,7 @@ export function useMeetings(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('meeting_date', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as MeetingWithDetails[]
     },
     enabled: !!projectId,
@@ -183,7 +183,7 @@ export function useAllMeetings() {
         .is('deleted_at', null)
         .order('meeting_date', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as (MeetingWithDetails & { projects: { id: string; name: string } | null })[]
     },
   })
@@ -194,7 +194,7 @@ export function useMeeting(meetingId: string | undefined) {
   return useQuery({
     queryKey: ['meetings', 'detail', meetingId],
     queryFn: async () => {
-      if (!meetingId) throw new Error('Meeting ID required')
+      if (!meetingId) {throw new Error('Meeting ID required')}
 
       const { data, error } = await supabase
         .from('meetings')
@@ -208,7 +208,7 @@ export function useMeeting(meetingId: string | undefined) {
         .eq('id', meetingId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as MeetingWithDetails & { projects: { id: string; name: string } | null }
     },
     enabled: !!meetingId,
@@ -227,7 +227,7 @@ export function useCreateMeeting() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as MeetingWithDetails
     },
     onSuccess: (data) => {
@@ -250,7 +250,7 @@ export function useUpdateMeeting() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as MeetingWithDetails
     },
     onSuccess: (data) => {
@@ -272,7 +272,7 @@ export function useDeleteMeeting() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', meetingId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['meetings'] })
@@ -299,7 +299,7 @@ export function useAddActionItem() {
         .eq('id', meetingId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const currentItems = (meeting.action_items as unknown as MeetingActionItem[]) || []
       const newItem: MeetingActionItem = {
@@ -314,7 +314,7 @@ export function useAddActionItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as MeetingWithDetails
     },
     onSuccess: (data) => {
@@ -343,7 +343,7 @@ export function useUpdateActionItem() {
         .eq('id', meetingId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const currentItems = (meeting.action_items as unknown as MeetingActionItem[]) || []
       const updatedItems = currentItems.map((item) =>
@@ -357,7 +357,7 @@ export function useUpdateActionItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as MeetingWithDetails
     },
     onSuccess: (data) => {

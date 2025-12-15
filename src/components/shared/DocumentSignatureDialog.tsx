@@ -150,13 +150,13 @@ export function DocumentSignatureDialog({
 
   // Initialize canvas
   useEffect(() => {
-    if (!open || activeTab !== 'draw') return
+    if (!open || activeTab !== 'draw') {return}
 
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     // Set canvas size based on container
     const rect = canvas.getBoundingClientRect()
@@ -174,7 +174,7 @@ export function DocumentSignatureDialog({
   // Get coordinates from mouse/touch event
   const getCoordinates = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current
-    if (!canvas) return null
+    if (!canvas) {return null}
 
     const rect = canvas.getBoundingClientRect()
 
@@ -193,14 +193,14 @@ export function DocumentSignatureDialog({
   }, [])
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (disabled) return
+    if (disabled) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     setIsDrawing(true)
     ctx.beginPath()
@@ -208,14 +208,14 @@ export function DocumentSignatureDialog({
   }, [disabled, getCoordinates])
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || disabled) return
+    if (!isDrawing || disabled) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     ctx.lineTo(coords.x, coords.y)
     ctx.stroke()
@@ -229,7 +229,7 @@ export function DocumentSignatureDialog({
   const clearSignature = useCallback(() => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx || !canvas) return
+    if (!ctx || !canvas) {return}
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setHasDrawn(false)
@@ -248,7 +248,7 @@ export function DocumentSignatureDialog({
         upsert: true,
       })
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Get public URL
     const { data: urlData } = supabase.storage
@@ -261,7 +261,7 @@ export function DocumentSignatureDialog({
   // Handle save signature (draw mode)
   const handleSaveDrawnSignature = async () => {
     const canvas = canvasRef.current
-    if (!canvas || !hasDrawn) return
+    if (!canvas || !hasDrawn) {return}
 
     // Validate signer info
     if (requireSignerInfo && !signerName.trim()) {
@@ -376,7 +376,7 @@ export function DocumentSignatureDialog({
 
   // Handle remove existing signature
   const handleRemoveSignature = async () => {
-    if (!existingSignature || !onSignatureRemove) return
+    if (!existingSignature || !onSignatureRemove) {return}
 
     if (!confirm('Are you sure you want to remove this signature?')) {
       return
@@ -399,7 +399,7 @@ export function DocumentSignatureDialog({
   // Prevent scrolling while drawing on touch devices
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const preventScroll = (e: TouchEvent) => {
       if (isDrawing) {

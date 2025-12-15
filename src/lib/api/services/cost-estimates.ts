@@ -124,7 +124,7 @@ export const costEstimatesApi = {
         })
       }
 
-      if (!estimate) return null
+      if (!estimate) {return null}
 
       const { data: items, error: itemsError } = await (supabase as any)
         .from('cost_estimate_items')

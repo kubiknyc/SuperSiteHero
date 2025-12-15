@@ -193,7 +193,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
   };
 
   const confirmDelete = async () => {
-    if (!templateToDelete) return;
+    if (!templateToDelete) {return;}
     await deleteMutation.mutateAsync(templateToDelete.id);
     setDeleteDialogOpen(false);
     setTemplateToDelete(null);
@@ -230,7 +230,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
   const templatesByCategory = (templates || []).reduce(
     (acc, template) => {
       const category = template.category || 'other';
-      if (!acc[category]) acc[category] = [];
+      if (!acc[category]) {acc[category] = [];}
       acc[category].push(template);
       return acc;
     },
@@ -283,7 +283,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
             <div className="space-y-4">
               {PHOTO_CATEGORIES.map((cat) => {
                 const categoryTemplates = templatesByCategory[cat.value] || [];
-                if (categoryTemplates.length === 0) return null;
+                if (categoryTemplates.length === 0) {return null;}
 
                 const isExpanded = expandedCategories.has(cat.value);
 

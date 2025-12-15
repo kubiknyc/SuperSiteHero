@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot } from 'lucide-react'
+import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
+import { ThemeSelector } from '@/components/ThemeToggle'
+import { PWAInstallButton } from '@/components/PWAInstallPrompt'
+import { GloveModeToggle } from '@/components/ui/glove-mode-toggle'
 
 interface SettingsSection {
   title: string
@@ -113,30 +116,67 @@ export function SettingsPage() {
           </p>
         </div>
 
-        <div className="grid gap-4">
-          {visibleSections.map((section) => {
-            const Icon = section.icon
-            return (
-              <Link key={section.href} to={section.href}>
-                <Card className="hover:shadow-md transition-shadow cursor-pointer">
-                  <CardContent className="p-6">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-lg ${section.iconBgColor}`}>
-                        <Icon className={`h-6 w-6 ${section.iconColor}`} />
+        {/* Appearance & App Settings */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Appearance & App</h2>
+
+          {/* Theme Selector */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-purple-100 dark:bg-purple-900">
+                  <Moon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-lg mb-1">Theme</CardTitle>
+                  <CardDescription className="mb-4">
+                    Choose your preferred color theme for the application
+                  </CardDescription>
+                  <ThemeSelector />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Glove Mode Toggle */}
+          <Card>
+            <CardContent className="p-6">
+              <GloveModeToggle />
+            </CardContent>
+          </Card>
+
+          {/* PWA Install */}
+          <PWAInstallButton />
+        </div>
+
+        {/* Settings Sections */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold">Configuration</h2>
+          <div className="grid gap-4">
+            {visibleSections.map((section) => {
+              const Icon = section.icon
+              return (
+                <Link key={section.href} to={section.href}>
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <div className={`p-3 rounded-lg ${section.iconBgColor}`}>
+                          <Icon className={`h-6 w-6 ${section.iconColor}`} />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-lg">{section.title}</CardTitle>
+                          <CardDescription className="mt-1">
+                            {section.description}
+                          </CardDescription>
+                        </div>
+                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-lg">{section.title}</CardTitle>
-                        <CardDescription className="mt-1">
-                          {section.description}
-                        </CardDescription>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            )
-          })}
+                    </CardContent>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
         </div>
       </div>
     </AppLayout>

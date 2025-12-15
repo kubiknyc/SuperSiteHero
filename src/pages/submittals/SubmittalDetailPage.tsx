@@ -34,11 +34,11 @@ export function SubmittalDetailPage() {
 
   // Start a messaging conversation about this submittal
   const handleDiscussSubmittal = async () => {
-    if (!submittal) return
+    if (!submittal) {return}
 
     // Get participants - creator and any assignees
     const participantIds: string[] = []
-    if (submittal.created_by) participantIds.push(submittal.created_by)
+    if (submittal.created_by) {participantIds.push(submittal.created_by)}
     if (submittal.assignees?.length) {
       submittal.assignees.forEach((assignee: any) => {
         if (assignee.user_id && !participantIds.includes(assignee.user_id)) {

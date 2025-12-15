@@ -135,7 +135,7 @@ function CreateAddendumDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!title.trim()) return
+    if (!title.trim()) {return}
 
     await createAddendum.mutateAsync({
       bid_package_id: packageId,

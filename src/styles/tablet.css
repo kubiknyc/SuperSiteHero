@@ -1,0 +1,525 @@
+/**
+ * Tablet-Specific CSS Styles
+ *
+ * Provides explicit tablet landscape/portrait mode optimizations
+ * for enhanced user experience on iPad, Android tablets, and similar devices.
+ *
+ * Breakpoints:
+ * - Tablet Portrait: 768px - 1024px (portrait orientation)
+ * - Tablet Landscape: 768px - 1024px (landscape orientation)
+ * - iPad Pro Portrait: 834px - 1194px (portrait)
+ * - iPad Pro Landscape: 1194px - 834px (landscape)
+ */
+
+/* =============================================================================
+ * TABLET COMMON STYLES (Portrait & Landscape)
+ * ============================================================================= */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Container optimizations */
+  .tablet-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    max-width: 100%;
+  }
+
+  /* 2-column grid for tablet */
+  .tablet-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* 3-column grid option */
+  .tablet-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  /* Tablet card with larger touch targets */
+  .tablet-card {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    min-height: 44px;
+  }
+
+  /* Touch-friendly buttons on tablets */
+  .tablet-btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1.25rem;
+    font-size: 1rem;
+  }
+
+  /* Larger form inputs on tablets */
+  .tablet-input {
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  /* Tablet typography adjustments */
+  .tablet-heading {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .tablet-subheading {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+
+  .tablet-body {
+    font-size: 1rem;
+    line-height: 1.625rem;
+  }
+
+  /* Tablet navigation */
+  .tablet-nav {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Tablet modal/dialog sizing */
+  .tablet-modal {
+    max-width: 90vw;
+    max-height: 85vh;
+  }
+
+  /* Tablet sidebar */
+  .tablet-sidebar {
+    width: 280px;
+    min-width: 280px;
+  }
+
+  /* Tablet drawer - wider for better touch targets */
+  .tablet-drawer {
+    width: 320px;
+  }
+
+  /* Better spacing for tablet list items */
+  .tablet-list-item {
+    min-height: 56px;
+    padding: 0.875rem 1rem;
+  }
+
+  /* Tablet-friendly spacing */
+  .tablet-spacing-sm {
+    gap: 0.75rem;
+  }
+
+  .tablet-spacing-md {
+    gap: 1rem;
+  }
+
+  .tablet-spacing-lg {
+    gap: 1.5rem;
+  }
+}
+
+/* =============================================================================
+ * TABLET LANDSCAPE SPECIFIC STYLES
+ * ============================================================================= */
+
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+  /* Landscape 3-column grid */
+  .tablet-landscape-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  /* Landscape 4-column grid for dashboard */
+  .tablet-landscape-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  /* Side-by-side content layout */
+  .tablet-landscape-sidebar {
+    display: grid;
+    grid-template-columns: minmax(280px, 320px) 1fr;
+    gap: 0;
+  }
+
+  /* Alternative: narrower sidebar */
+  .tablet-landscape-sidebar-narrow {
+    display: grid;
+    grid-template-columns: minmax(240px, 280px) 1fr;
+    gap: 0;
+  }
+
+  /* Horizontal navigation bar in landscape */
+  .tablet-landscape-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.5rem;
+  }
+
+  /* Landscape form: 2 columns */
+  .tablet-landscape-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  /* Landscape form: 3 columns for compact items */
+  .tablet-landscape-form-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: start;
+  }
+
+  /* Full-width form items */
+  .tablet-landscape-form-full {
+    grid-column: 1 / -1;
+  }
+
+  /* Master-detail layout for landscape */
+  .tablet-landscape-master-detail {
+    display: grid;
+    grid-template-columns: minmax(300px, 380px) 1fr;
+    height: calc(100vh - var(--header-height, 64px));
+    overflow: hidden;
+  }
+
+  .tablet-landscape-master {
+    border-right: 1px solid var(--border-color, #e5e7eb);
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .tablet-landscape-detail {
+    overflow-y: auto;
+    height: 100%;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Landscape content with preview pane */
+  .tablet-landscape-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: 100%;
+  }
+
+  /* Persistent sidebar in landscape (not drawer) */
+  .tablet-landscape-nav-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 260px;
+    z-index: 40;
+    background-color: var(--sidebar-bg, #1f2937);
+    overflow-y: auto;
+  }
+
+  /* Main content offset for persistent sidebar */
+  .tablet-landscape-main-with-sidebar {
+    margin-left: 260px;
+  }
+
+  /* Toolbar optimization - horizontal spread */
+  .tablet-landscape-toolbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+
+  /* Canvas/document viewer - toolbar on side */
+  .tablet-landscape-canvas-layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    height: 100%;
+  }
+
+  .tablet-landscape-canvas-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background-color: var(--toolbar-bg, white);
+    border-right: 1px solid var(--border-color, #e5e7eb);
+    overflow-y: auto;
+    max-height: 100%;
+  }
+
+  .tablet-landscape-canvas-content {
+    flex: 1;
+    overflow: auto;
+  }
+
+  /* Gantt chart optimizations for landscape */
+  .tablet-landscape-gantt {
+    /* More timeline visible, smaller task list */
+  }
+
+  .tablet-landscape-gantt-sidebar {
+    width: 240px;
+    min-width: 240px;
+    flex-shrink: 0;
+  }
+
+  .tablet-landscape-gantt-timeline {
+    flex: 1;
+    overflow-x: auto;
+  }
+}
+
+/* =============================================================================
+ * TABLET PORTRAIT SPECIFIC STYLES
+ * ============================================================================= */
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  /* Vertical stacking in portrait */
+  .tablet-portrait-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Full-width content in portrait */
+  .tablet-portrait-full {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* 2-column grid for portrait (when needed) */
+  .tablet-portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Navigation - collapsible drawer in portrait */
+  .tablet-portrait-nav-drawer {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    z-index: 50;
+    transition: left 0.3s ease-in-out;
+    background-color: var(--sidebar-bg, #1f2937);
+    overflow-y: auto;
+  }
+
+  .tablet-portrait-nav-drawer.open {
+    left: 0;
+  }
+
+  .tablet-portrait-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 45;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .tablet-portrait-nav-backdrop.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Portrait form layout - single column with larger fields */
+  .tablet-portrait-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .tablet-portrait-form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Portrait tabs - horizontal scrolling */
+  .tablet-portrait-tabs {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .tablet-portrait-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tablet-portrait-tab {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    padding: 0.75rem 1.25rem;
+    min-height: 44px;
+  }
+
+  /* Portrait header - simplified */
+  .tablet-portrait-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Portrait dashboard cards - 2 columns */
+  .tablet-portrait-dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  /* Canvas toolbar - top position in portrait */
+  .tablet-portrait-canvas-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .tablet-portrait-canvas-toolbar {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--toolbar-bg, white);
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    overflow-x: auto;
+  }
+
+  .tablet-portrait-canvas-content {
+    flex: 1;
+    overflow: auto;
+  }
+}
+
+/* =============================================================================
+ * IPAD PRO SPECIFIC STYLES (Larger tablets)
+ * ============================================================================= */
+
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  /* iPad Pro landscape - more generous layouts */
+  .tablet-pro-landscape-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+
+  .tablet-pro-landscape-sidebar {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 0;
+  }
+}
+
+@media (min-width: 834px) and (max-width: 1194px) and (orientation: portrait) {
+  /* iPad Pro portrait */
+  .tablet-pro-portrait-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* =============================================================================
+ * UTILITY CLASSES FOR TABLET
+ * ============================================================================= */
+
+/* Show/hide based on tablet orientation */
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+  .tablet-landscape-only {
+    display: block !important;
+  }
+
+  .tablet-portrait-only {
+    display: none !important;
+  }
+
+  .tablet-landscape-flex {
+    display: flex !important;
+  }
+
+  .tablet-landscape-grid-display {
+    display: grid !important;
+  }
+
+  .tablet-landscape-hidden {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .tablet-portrait-only {
+    display: block !important;
+  }
+
+  .tablet-landscape-only {
+    display: none !important;
+  }
+
+  .tablet-portrait-flex {
+    display: flex !important;
+  }
+
+  .tablet-portrait-grid-display {
+    display: grid !important;
+  }
+
+  .tablet-portrait-hidden {
+    display: none !important;
+  }
+}
+
+/* Touch-friendly minimum sizes */
+.tablet-touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.tablet-touch-target-lg {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Tablet-optimized scrolling */
+.tablet-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.tablet-scroll-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+
+.tablet-scroll-y {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Tablet pinch-zoom container */
+.tablet-pinch-zoom {
+  touch-action: pinch-zoom pan-x pan-y;
+}
+
+/* Disable double-tap zoom on specific elements */
+.tablet-no-double-tap {
+  touch-action: manipulation;
+}

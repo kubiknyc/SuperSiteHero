@@ -152,7 +152,7 @@ export function useSiteInstructions(projectId: string, filters?: SiteInstruction
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch subcontractor info separately for each instruction
       const results = await Promise.all(
@@ -193,7 +193,7 @@ export function useSiteInstruction(id: string) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch related data separately
       let subcontractor = null
@@ -267,7 +267,7 @@ export function useCreateSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: () => {
@@ -289,7 +289,7 @@ export function useUpdateSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -310,7 +310,7 @@ export function useDeleteSiteInstruction() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return id
     },
     onSuccess: () => {
@@ -338,7 +338,7 @@ export function useIssueSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -378,7 +378,7 @@ export function useAcknowledgeSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -403,7 +403,7 @@ export function useStartSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -440,7 +440,7 @@ export function useCompleteSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -475,7 +475,7 @@ export function useVerifySiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -500,7 +500,7 @@ export function useVoidSiteInstruction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionWithRelations
     },
     onSuccess: (data) => {
@@ -522,7 +522,7 @@ export function useSiteInstructionHistory(id: string) {
         .eq('site_instruction_id', id)
         .order('performed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch user info for each entry
       const results = await Promise.all(
@@ -561,7 +561,7 @@ export function useSiteInstructionComments(id: string) {
         .eq('site_instruction_id', id)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch user info for each comment
       const results = await Promise.all(
@@ -613,7 +613,7 @@ export function useAddSiteInstructionComment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -656,7 +656,7 @@ export function useSiteInstructionAttachments(id: string) {
         .eq('site_instruction_id', id)
         .order('uploaded_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch user info for each attachment
       const results = await Promise.all(
@@ -708,7 +708,7 @@ export function useUploadSiteInstructionAttachment() {
         .from('attachments')
         .upload(storagePath, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {throw uploadError}
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
@@ -731,7 +731,7 @@ export function useUploadSiteInstructionAttachment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionAttachment
     },
     onSuccess: (_, variables) => {
@@ -771,7 +771,7 @@ export function useDeleteSiteInstructionAttachment() {
         .delete()
         .eq('id', attachmentId)
 
-      if (error) throw error
+      if (error) {throw error}
       return { attachmentId, siteInstructionId }
     },
     onSuccess: (result) => {

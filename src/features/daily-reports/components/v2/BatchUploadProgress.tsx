@@ -41,7 +41,7 @@ export function BatchUploadProgress({
   // Calculate aggregate statistics
   const stats = useMemo(() => {
     const entries = Object.values(uploadProgress);
-    if (entries.length === 0) return null;
+    if (entries.length === 0) {return null;}
 
     const total = entries.length;
     const uploaded = entries.filter((p) => p.status === 'uploaded').length;
@@ -90,15 +90,15 @@ export function BatchUploadProgress({
 
   // Get status color
   const getStatusColor = () => {
-    if (stats.isComplete && stats.failed === 0) return 'bg-green-50 border-green-200';
-    if (stats.failed > 0) return 'bg-red-50 border-red-200';
+    if (stats.isComplete && stats.failed === 0) {return 'bg-green-50 border-green-200';}
+    if (stats.failed > 0) {return 'bg-red-50 border-red-200';}
     return 'bg-blue-50 border-blue-200';
   };
 
   // Get progress bar color
   const getProgressColor = () => {
-    if (stats.failed > 0) return 'bg-amber-500';
-    if (stats.isComplete) return 'bg-green-500';
+    if (stats.failed > 0) {return 'bg-amber-500';}
+    if (stats.isComplete) {return 'bg-green-500';}
     return 'bg-blue-500';
   };
 

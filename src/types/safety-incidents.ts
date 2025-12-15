@@ -696,7 +696,7 @@ export function getOSHAInjuryIllnessTypeLabel(type: OSHAInjuryIllnessType): stri
  * Rate = (Number of incidents × 200,000) / Total hours worked
  */
 export function calculateOSHAIncidentRate(incidents: number, hoursWorked: number): number {
-  if (hoursWorked === 0) return 0
+  if (hoursWorked === 0) {return 0}
   return Number(((incidents * 200000) / hoursWorked).toFixed(2))
 }
 
@@ -705,6 +705,6 @@ export function calculateOSHAIncidentRate(incidents: number, hoursWorked: number
  * DART = (Cases with days away/restricted/transferred × 200,000) / Total hours worked
  */
 export function calculateDARTRate(dartCases: number, hoursWorked: number): number {
-  if (hoursWorked === 0) return 0
+  if (hoursWorked === 0) {return 0}
   return Number(((dartCases * 200000) / hoursWorked).toFixed(2))
 }

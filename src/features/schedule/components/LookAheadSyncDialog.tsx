@@ -59,7 +59,7 @@ interface SyncResult {
 // =============================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d')
   } catch {
@@ -68,7 +68,7 @@ function formatDate(dateString: string | null | undefined): string {
 }
 
 function getWeekRange(period: FilterPeriod): { start: Date; end: Date } | null {
-  if (period === 'all') return null
+  if (period === 'all') {return null}
 
   const today = new Date()
   const weekStart = startOfWeek(today, { weekStartsOn: 1 }) // Monday
@@ -83,8 +83,8 @@ function isActivityInPeriod(
   activity: ScheduleActivity,
   range: { start: Date; end: Date } | null
 ): boolean {
-  if (!range) return true
-  if (!activity.planned_start) return false
+  if (!range) {return true}
+  if (!activity.planned_start) {return false}
 
   try {
     const activityStart = parseISO(activity.planned_start)
@@ -152,10 +152,10 @@ export function LookAheadSyncDialog({
 
     return activities.filter((activity) => {
       // Period filter
-      if (!isActivityInPeriod(activity, weekRange)) return false
+      if (!isActivityInPeriod(activity, weekRange)) {return false}
 
       // Critical only filter
-      if (criticalOnly && !activity.is_critical) return false
+      if (criticalOnly && !activity.is_critical) {return false}
 
       // Search filter
       if (searchQuery) {
@@ -201,7 +201,7 @@ export function LookAheadSyncDialog({
 
   // Handle sync
   const handleSync = async () => {
-    if (selectedIds.size === 0) return
+    if (selectedIds.size === 0) {return}
 
     try {
       if (onSync) {

@@ -1,7 +1,8 @@
 // File: /src/components/layout/AppLayout.tsx
 // Main application layout with sidebar navigation and mobile bottom nav
+// Enhanced with tablet landscape/portrait optimizations
 
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useState, useCallback } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { cn } from '@/lib/utils'
@@ -9,7 +10,9 @@ import { SyncStatusBar } from '@/components/sync/SyncStatusBar'
 import { OfflineIndicator } from '@/components/OfflineIndicator'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { MobileOfflineBanner } from '@/components/mobile/MobileOfflineIndicator'
+import { ThemeToggle } from '@/components/ThemeToggle'
 import { initOfflineListeners } from '@/stores/offline-store'
+import { useTabletMode, useTabletSidebar } from '@/hooks/useTabletMode'
 import {
   LayoutDashboard,
   FolderOpen,
@@ -38,6 +41,9 @@ import {
   Truck,
   DollarSign,
   FileCheck,
+  Menu,
+  X,
+  ChevronLeft,
 } from 'lucide-react'
 import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
@@ -87,6 +93,10 @@ export function AppLayout({ children }: AppLayoutProps) {
   const { signOut, userProfile } = useAuth()
   const location = useLocation()
 
+  // Tablet mode detection
+  const { isTablet, isLandscape, isPortrait, isTouchDevice } = useTabletMode()
+  const { isOpen: isSidebarOpen, toggle: toggleSidebar, close: closeSidebar } = useTabletSidebar()
+
   // Extract project ID from current route
   const projectIdMatch = location.pathname.match(/\/projects\/([^/]+)/)
   const currentProjectId = projectIdMatch ? projectIdMatch[1] : null
@@ -100,28 +110,113 @@ export function AppLayout({ children }: AppLayoutProps) {
     return cleanup
   }, [])
 
+  // Close sidebar on route change in tablet portrait mode
+  useEffect(() => {
+    if (isTablet && isPortrait) {
+      closeSidebar()
+    }
+  }, [location.pathname, isTablet, isPortrait, closeSidebar])
+
+  // Determine layout mode
+  const showPersistentSidebar = !isTablet || isLandscape
+  const showDrawerSidebar = isTablet && isPortrait
+  const showMobileNav = !isTablet && !showPersistentSidebar
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className={cn(
+      "min-h-screen bg-gray-50 dark:bg-gray-950",
+      // Tablet landscape: side-by-side layout
+      isTablet && isLandscape && "tablet-landscape-sidebar"
+    )}>
       {/* Mobile Offline Banner - shows at top on mobile when offline */}
       <MobileOfflineBanner />
 
-      {/* Desktop Sidebar - Hidden on mobile */}
-      <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 bg-gray-900 text-white flex-col">
+      {/* Tablet Portrait: Backdrop overlay when drawer is open */}
+      {showDrawerSidebar && isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Tablet Portrait: Menu toggle button */}
+      {showDrawerSidebar && !isSidebarOpen && (
+        <button
+          onClick={toggleSidebar}
+          className={cn(
+            "fixed top-4 left-4 z-50 p-2 rounded-lg",
+            "bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700",
+            "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
+            isTouchDevice && "min-h-[44px] min-w-[44px]"
+          )}
+          aria-label="Open navigation menu"
+        >
+          <Menu className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+        </button>
+      )}
+
+      {/* Sidebar Navigation */}
+      <aside
+        className={cn(
+          // Base styles
+          "fixed inset-y-0 left-0 bg-gray-900 text-white flex-col z-50",
+          // Desktop: always visible
+          !isTablet && "hidden md:flex w-64",
+          // Tablet landscape: persistent sidebar (slightly narrower)
+          isTablet && isLandscape && "flex w-60",
+          // Tablet portrait: drawer sidebar
+          showDrawerSidebar && [
+            "flex w-72 transform transition-transform duration-300 ease-in-out",
+            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          ],
+          // Touch-friendly scrolling
+          isTouchDevice && "overflow-y-auto overscroll-contain"
+        )}
+      >
         {/* Logo */}
-        <div className="p-6 border-b border-gray-800">
-          <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-blue-600 p-2">
-              <HardHat className="h-6 w-6" />
+        <div className={cn(
+          "border-b border-gray-800",
+          isTablet ? "p-4" : "p-6"
+        )}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={cn(
+                "rounded-lg bg-blue-600",
+                isTablet ? "p-1.5" : "p-2"
+              )}>
+                <HardHat className={cn(isTablet ? "h-5 w-5" : "h-6 w-6")} />
+              </div>
+              <div>
+                <h1 className={cn(
+                  "font-bold",
+                  isTablet ? "text-base" : "text-lg"
+                )}>Construction</h1>
+                <p className="text-xs text-gray-400">Management</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-lg font-bold">Construction</h1>
-              <p className="text-xs text-gray-400">Management</p>
-            </div>
+            {/* Close button for tablet portrait drawer */}
+            {showDrawerSidebar && (
+              <button
+                onClick={closeSidebar}
+                className={cn(
+                  "p-2 rounded-lg hover:bg-gray-800 transition-colors",
+                  isTouchDevice && "min-h-[44px] min-w-[44px] flex items-center justify-center"
+                )}
+                aria-label="Close navigation menu"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            )}
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className={cn(
+          "flex-1 overflow-y-auto",
+          isTablet ? "p-3 space-y-0.5" : "p-4 space-y-1",
+          isTouchDevice && "scroll-smooth-touch"
+        )}>
           {navigation.map((item) => {
             const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
             const Icon = item.icon
@@ -132,13 +227,18 @@ export function AppLayout({ children }: AppLayoutProps) {
                 key={item.name}
                 to={item.href}
                 className={cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  'flex items-center gap-3 rounded-md font-medium transition-colors',
+                  // Base styles
                   isActive
                     ? 'bg-gray-800 text-white'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                  // Tablet: larger touch targets
+                  isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
+                  // Touch feedback
+                  isTouchDevice && 'active:bg-gray-700'
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className={cn(isTablet ? "h-5 w-5" : "h-5 w-5")} />
                 <span className="flex-1">{item.name}</span>
                 {Badge && <Badge />}
               </Link>
@@ -150,13 +250,15 @@ export function AppLayout({ children }: AppLayoutProps) {
             <Link
               to={`/projects/${currentProjectId}/takeoffs`}
               className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                'flex items-center gap-3 rounded-md font-medium transition-colors',
                 location.pathname.includes('/takeoffs')
                   ? 'bg-gray-800 text-white'
-                  : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                  : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
+                isTouchDevice && 'active:bg-gray-700'
               )}
             >
-              <Ruler className="h-5 w-5" />
+              <Ruler className={cn(isTablet ? "h-5 w-5" : "h-5 w-5")} />
               <span className="flex-1">Takeoffs</span>
             </Link>
           )}
@@ -168,6 +270,12 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div className="pb-2 flex items-center justify-between gap-2">
             <SyncStatusBar />
             <OfflineIndicator />
+          </div>
+
+          {/* Theme toggle */}
+          <div className="pb-2 flex items-center justify-between gap-2">
+            <span className="text-sm text-gray-400">Theme</span>
+            <ThemeToggle compact />
           </div>
 
           {/* User info */}
@@ -202,12 +310,25 @@ export function AppLayout({ children }: AppLayoutProps) {
       </aside>
 
       {/* Main content - responsive margins */}
-      <main className="md:ml-64 min-h-screen pb-20 md:pb-0">
+      <main className={cn(
+        "min-h-screen",
+        // Desktop: offset for sidebar
+        !isTablet && "md:ml-64 pb-20 md:pb-0",
+        // Tablet landscape: offset for persistent sidebar
+        isTablet && isLandscape && "ml-60 pb-0",
+        // Tablet portrait: no offset (drawer overlays), but add top padding for menu button
+        isTablet && isPortrait && "ml-0 pb-20 pt-16",
+        // Tablet: slightly larger base padding
+        isTablet && "tablet:px-4"
+      )}>
         {children}
       </main>
 
-      {/* Mobile Bottom Navigation - Only visible on mobile */}
-      <MobileBottomNav />
+      {/* Mobile Bottom Navigation - Only visible on mobile (not tablet) */}
+      {!isTablet && <MobileBottomNav />}
+
+      {/* Tablet Portrait: Bottom navigation similar to mobile */}
+      {isTablet && isPortrait && <MobileBottomNav />}
     </div>
   )
 }

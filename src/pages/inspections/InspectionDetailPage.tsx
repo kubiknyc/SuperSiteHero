@@ -79,7 +79,7 @@ export function InspectionDetailPage() {
   }
 
   const handleCancel = () => {
-    if (!id) return
+    if (!id) {return}
     cancelMutation.mutate(id, {
       onSuccess: () => {
         addToast(
@@ -99,7 +99,7 @@ export function InspectionDetailPage() {
   }
 
   const handleDelete = () => {
-    if (!id || !inspection) return
+    if (!id || !inspection) {return}
     deleteMutation.mutate(
       { id, projectId: inspection.project_id },
       {

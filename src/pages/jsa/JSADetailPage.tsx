@@ -231,7 +231,7 @@ function AcknowledgmentForm({ jsaId, onClose }: { jsaId: string; onClose: () => 
   const addAcknowledgment = useAddJSAAcknowledgment();
 
   const handleSubmit = async () => {
-    if (!workerName.trim()) return;
+    if (!workerName.trim()) {return;}
 
     await addAcknowledgment.mutateAsync({
       jsa_id: jsaId,

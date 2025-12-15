@@ -87,7 +87,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
   }, [tmWork]);
 
   const formatCurrency = (value: number | undefined) => {
-    if (!value) return '$0.00';
+    if (!value) {return '$0.00';}
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -211,7 +211,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
   }, [formData.equipment_used, handleFormChange]);
 
   const handleSave = useCallback(() => {
-    if (!formData.description?.trim()) return;
+    if (!formData.description?.trim()) {return;}
 
     const finalData = recalculateTotals(formData);
 

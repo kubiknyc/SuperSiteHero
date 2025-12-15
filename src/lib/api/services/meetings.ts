@@ -72,7 +72,7 @@ export const meetingsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Meeting[]
   },
 
@@ -90,7 +90,7 @@ export const meetingsApi = {
       .eq('id', id)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Meeting
   },
 
@@ -151,7 +151,7 @@ export const meetingsApi = {
       `)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Meeting
   },
 
@@ -173,7 +173,7 @@ export const meetingsApi = {
       `)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as Meeting
   },
 
@@ -197,7 +197,7 @@ export const meetingsApi = {
       .update({ deleted_at: new Date().toISOString() })
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -224,7 +224,7 @@ export const meetingsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as Meeting[]
   },
 }
@@ -247,7 +247,7 @@ export const meetingNotesApi = {
       .eq('meeting_id', meetingId)
       .order('note_order', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as MeetingNote[]
   },
 
@@ -272,7 +272,7 @@ export const meetingNotesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingNote
   },
 
@@ -290,7 +290,7 @@ export const meetingNotesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingNote
   },
 
@@ -303,7 +303,7 @@ export const meetingNotesApi = {
       .delete()
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -343,7 +343,7 @@ export const meetingActionItemsApi = {
       .eq('meeting_id', meetingId)
       .order('item_order', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as MeetingActionItem[]
   },
 
@@ -389,7 +389,7 @@ export const meetingActionItemsApi = {
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as MeetingActionItem[]
   },
 
@@ -419,7 +419,7 @@ export const meetingActionItemsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingActionItem
   },
 
@@ -437,7 +437,7 @@ export const meetingActionItemsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingActionItem
   },
 
@@ -460,7 +460,7 @@ export const meetingActionItemsApi = {
       .delete()
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -476,7 +476,7 @@ export const meetingActionItemsApi = {
       .eq('id', id)
       .single()
 
-    if (fetchError) throw fetchError
+    if (fetchError) {throw fetchError}
 
     // Create the task
     const { data: task, error: taskError } = await supabase
@@ -494,7 +494,7 @@ export const meetingActionItemsApi = {
       .select()
       .single()
 
-    if (taskError) throw taskError
+    if (taskError) {throw taskError}
 
     // Link the task to the action item
     return this.updateActionItem(id, { task_id: task.id })
@@ -520,7 +520,7 @@ export const meetingAttendeesApi = {
       .order('is_required', { ascending: false })
       .order('name', { ascending: true })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as MeetingAttendee[]
   },
 
@@ -546,7 +546,7 @@ export const meetingAttendeesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingAttendee
   },
 
@@ -564,7 +564,7 @@ export const meetingAttendeesApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingAttendee
   },
 
@@ -594,7 +594,7 @@ export const meetingAttendeesApi = {
       .delete()
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -610,8 +610,8 @@ export const meetingAttendeesApi = {
       `)
       .eq('project_id', projectId)
 
-    if (fetchError) throw fetchError
-    if (!projectUsers || projectUsers.length === 0) return []
+    if (fetchError) {throw fetchError}
+    if (!projectUsers || projectUsers.length === 0) {return []}
 
     const attendeesToAdd = projectUsers.map(pu => ({
       meeting_id: meetingId,
@@ -628,7 +628,7 @@ export const meetingAttendeesApi = {
       .insert(attendeesToAdd)
       .select()
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as MeetingAttendee[]
   },
 }
@@ -651,7 +651,7 @@ export const meetingAttachmentsApi = {
       .eq('meeting_id', meetingId)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return (data || []) as MeetingAttachment[]
   },
 
@@ -678,7 +678,7 @@ export const meetingAttachmentsApi = {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as MeetingAttachment
   },
 
@@ -691,7 +691,7 @@ export const meetingAttachmentsApi = {
       .delete()
       .eq('id', id)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   /**
@@ -704,7 +704,7 @@ export const meetingAttachmentsApi = {
     description?: string
   ): Promise<MeetingAttachment> {
     const { data: user } = await supabase.auth.getUser()
-    if (!user?.user?.id) throw new Error('Not authenticated')
+    if (!user?.user?.id) {throw new Error('Not authenticated')}
 
     // Upload to storage
     const fileName = `${Date.now()}-${file.name}`
@@ -714,7 +714,7 @@ export const meetingAttachmentsApi = {
       .from('documents')
       .upload(filePath, file)
 
-    if (uploadError) throw uploadError
+    if (uploadError) {throw uploadError}
 
     // Get public URL
     const { data: urlData } = supabase.storage

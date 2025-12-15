@@ -67,7 +67,7 @@ export function DedicatedRFIsPage() {
 
   // Filter and search RFIs
   const filteredRFIs = useMemo(() => {
-    if (!rfis) return []
+    if (!rfis) {return []}
 
     return rfis.filter((rfi) => {
       // Search filter
@@ -126,7 +126,7 @@ export function DedicatedRFIsPage() {
 
   // Export handler
   const handleExportRFIs = async () => {
-    if (!filteredRFIs.length) return
+    if (!filteredRFIs.length) {return}
 
     setIsExporting(true)
     try {
@@ -140,8 +140,8 @@ export function DedicatedRFIsPage() {
 
   // Helper functions
   const getDueDateInfo = (dueDate: string | null, status: string) => {
-    if (!dueDate) return { text: 'No due date', class: 'text-gray-500', isOverdue: false }
-    if (['closed', 'void'].includes(status)) return { text: format(new Date(dueDate), 'MMM d, yyyy'), class: 'text-gray-500', isOverdue: false }
+    if (!dueDate) {return { text: 'No due date', class: 'text-gray-500', isOverdue: false }}
+    if (['closed', 'void'].includes(status)) {return { text: format(new Date(dueDate), 'MMM d, yyyy'), class: 'text-gray-500', isOverdue: false }}
 
     const date = new Date(dueDate)
     const daysUntil = differenceInDays(date, new Date())
@@ -502,7 +502,7 @@ export function DedicatedRFIsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {BALL_IN_COURT_ROLES.map((role) => {
               const roleRFIs = rfisByBallInCourt[role.value] || []
-              if (roleRFIs.length === 0 && ballInCourtFilter !== 'all') return null
+              if (roleRFIs.length === 0 && ballInCourtFilter !== 'all') {return null}
 
               return (
                 <Card key={role.value} className="overflow-hidden">

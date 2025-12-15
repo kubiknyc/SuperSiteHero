@@ -549,7 +549,7 @@ export const rfiAgingService = {
       .in('status', ['pending', 'submitted', 'under_review'])
       .is('deleted_at', null)
 
-    if (error) throw error
+    if (error) {throw error}
 
     const stats: RFIAgingStats = {
       totalOpen: rfis?.length || 0,
@@ -614,7 +614,7 @@ export const rfiAgingService = {
     recipientName: string,
     config: RFIAgingConfig = DEFAULT_RFI_AGING_CONFIG
   ): Promise<boolean> {
-    if (!config.sendDigest) return false
+    if (!config.sendDigest) {return false}
 
     try {
       const stats = await this.getAgingStats(projectId, workflowTypeId)

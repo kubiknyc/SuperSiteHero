@@ -66,7 +66,7 @@ function SubmittalReviewStatusBadge({ status }: { status: string }) {
 
 // Ball-in-court badge
 function BallInCourtBadge({ entity }: { entity: string | null }) {
-  if (!entity) return <span className="text-gray-400">-</span>
+  if (!entity) {return <span className="text-gray-400">-</span>}
 
   const entityConfig = BALL_IN_COURT_ENTITIES.find((e) => e.value === entity) || {
     label: entity,
@@ -115,7 +115,7 @@ export function DedicatedSubmittalsPage() {
 
   // Filter submittals
   const filteredSubmittals = useMemo(() => {
-    if (!submittals) return []
+    if (!submittals) {return []}
 
     return submittals.filter((item) => {
       const matchesSearch =

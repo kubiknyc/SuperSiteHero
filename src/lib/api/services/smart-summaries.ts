@@ -147,7 +147,7 @@ Provide a JSON response with:
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     return {
       summary,
@@ -267,7 +267,7 @@ Provide a JSON response:
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Save action items
     const actionItemsToInsert = aiResult.actionItems.map((item, index) => ({
@@ -426,7 +426,7 @@ Provide a JSON response:
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
 
     return {
       summary,
@@ -518,7 +518,7 @@ Provide a JSON response:
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return summary
   },
 
@@ -552,7 +552,7 @@ Provide a JSON response:
       })
       .eq('id', actionItemId)
 
-    if (error) throw error
+    if (error) {throw error}
   },
 
   // Helper functions

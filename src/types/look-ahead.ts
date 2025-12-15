@@ -705,7 +705,7 @@ export function getWeekNumberForDate(date: Date, baseDate: Date = new Date()): n
  * Format PPC percentage
  */
 export function formatPPC(ppc: number | null | undefined): string {
-  if (ppc == null) return '--'
+  if (ppc == null) {return '--'}
   return `${ppc.toFixed(0)}%`
 }
 
@@ -879,7 +879,7 @@ export function isReadyToExecute(activity: LookAheadActivity): boolean {
  */
 export function calculateReliabilityIndex(activities: LookAheadActivity[]): number {
   const committedActivities = activities.filter(a => a.make_ready_status === 'will_do' || a.make_ready_status === 'did_do')
-  if (committedActivities.length === 0) return 0
+  if (committedActivities.length === 0) {return 0}
 
   const completedAsCommitted = committedActivities.filter(a => a.make_ready_status === 'did_do')
   return Math.round((completedAsCommitted.length / committedActivities.length) * 100)

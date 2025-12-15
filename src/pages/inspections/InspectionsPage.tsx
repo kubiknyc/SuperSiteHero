@@ -63,7 +63,7 @@ export function InspectionsPage() {
 
   // Filter by search locally for instant feedback
   const filteredInspections = useMemo(() => {
-    if (!filters.search) return inspections
+    if (!filters.search) {return inspections}
     const lowerSearch = filters.search.toLowerCase()
     return inspections.filter(
       (i) =>

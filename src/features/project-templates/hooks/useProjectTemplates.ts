@@ -52,7 +52,7 @@ export function useProjectTemplates(
   return useQuery({
     queryKey: projectTemplateKeys.list(companyId || '', filters),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return projectTemplatesApi.getTemplates(companyId, filters)
     },
     enabled: !!companyId,
@@ -83,7 +83,7 @@ export function useProjectTemplate(templateId: string | undefined) {
   return useQuery({
     queryKey: projectTemplateKeys.detail(templateId || ''),
     queryFn: async () => {
-      if (!templateId) throw new Error('Template ID required')
+      if (!templateId) {throw new Error('Template ID required')}
       return projectTemplatesApi.getTemplate(templateId)
     },
     enabled: !!templateId,
@@ -100,7 +100,7 @@ export function useRecentProjectTemplates(
   return useQuery({
     queryKey: projectTemplateKeys.recent(companyId || ''),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return projectTemplatesApi.getRecentTemplates(companyId, limit)
     },
     enabled: !!companyId,
@@ -117,7 +117,7 @@ export function usePopularProjectTemplates(
   return useQuery({
     queryKey: projectTemplateKeys.popular(companyId || ''),
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
       return projectTemplatesApi.getPopularTemplates(companyId, limit)
     },
     enabled: !!companyId,

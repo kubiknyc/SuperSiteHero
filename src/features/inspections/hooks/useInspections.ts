@@ -37,7 +37,7 @@ export function useInspections(projectId: string | undefined, filters?: Inspecti
   return useQuery({
     queryKey: inspectionKeys.list(projectId || '', filters),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return inspectionsApi.getProjectInspections(projectId, filters)
     },
     enabled: !!projectId,
@@ -51,7 +51,7 @@ export function useInspection(id: string | undefined) {
   return useQuery({
     queryKey: inspectionKeys.detail(id || ''),
     queryFn: async () => {
-      if (!id) throw new Error('Inspection ID required')
+      if (!id) {throw new Error('Inspection ID required')}
       return inspectionsApi.getInspection(id)
     },
     enabled: !!id,
@@ -65,7 +65,7 @@ export function useInspectionStats(projectId: string | undefined) {
   return useQuery({
     queryKey: inspectionKeys.stats(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return inspectionsApi.getInspectionStats(projectId)
     },
     enabled: !!projectId,
@@ -79,7 +79,7 @@ export function useUpcomingInspections(projectId: string | undefined) {
   return useQuery({
     queryKey: inspectionKeys.upcoming(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return inspectionsApi.getUpcomingInspections(projectId)
     },
     enabled: !!projectId,

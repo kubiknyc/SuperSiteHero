@@ -58,7 +58,7 @@ export function useRealtimeSubscription<T = Record<string, unknown>>(
   }, [onInsert, onUpdate, onDelete, onError])
 
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {return}
 
     const subscriptionOptions: SubscriptionOptions<T> = {
       table,

@@ -70,7 +70,7 @@ export function ToolboxTalksPage() {
 
   // Filter talks locally by search
   const filteredTalks = useMemo(() => {
-    if (!search) return talks
+    if (!search) {return talks}
     const lowerSearch = search.toLowerCase()
     return talks.filter(
       (t) =>

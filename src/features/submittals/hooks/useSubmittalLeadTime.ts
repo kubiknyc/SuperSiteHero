@@ -235,7 +235,7 @@ function buildStatusHistory(
   let previousStatus = statusChanges.length > 0 ? statusChanges[0].old_value || 'draft' : submittal.status
 
   statusChanges.forEach((change) => {
-    if (!change.changed_at) return
+    if (!change.changed_at) {return}
     const changeDate = parseISO(change.changed_at)
     const daysInStatus = differenceInDays(changeDate, previousTimestamp)
 
@@ -422,7 +422,7 @@ export function useSubmittalLeadTime(
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem[]
     },
     enabled: !!projectId && !!workflowTypeId,
@@ -432,7 +432,7 @@ export function useSubmittalLeadTime(
   const { data: allHistory, isLoading: loadingHistory } = useQuery({
     queryKey: ['submittals-history', projectId, workflowTypeId, submittals?.map(s => s.id)],
     queryFn: async () => {
-      if (!submittals || submittals.length === 0) return []
+      if (!submittals || submittals.length === 0) {return []}
 
       const { data, error } = await supabase
         .from('workflow_item_history')
@@ -440,7 +440,7 @@ export function useSubmittalLeadTime(
         .in('workflow_item_id', submittals.map(s => s.id))
         .order('changed_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemHistory[]
     },
     enabled: !!submittals && submittals.length > 0,
@@ -493,7 +493,7 @@ export function useSingleSubmittalLeadTime(submittalId: string | undefined) {
   const { data: submittal, isLoading: loadingSubmittal } = useQuery({
     queryKey: ['submittal-detail', submittalId],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('workflow_items')
@@ -501,7 +501,7 @@ export function useSingleSubmittalLeadTime(submittalId: string | undefined) {
         .eq('id', submittalId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItem
     },
     enabled: !!submittalId,
@@ -511,7 +511,7 @@ export function useSingleSubmittalLeadTime(submittalId: string | undefined) {
   const { data: history, isLoading: loadingHistory } = useQuery({
     queryKey: ['submittal-history', submittalId],
     queryFn: async () => {
-      if (!submittalId) return []
+      if (!submittalId) {return []}
 
       const { data, error } = await supabase
         .from('workflow_item_history')
@@ -519,7 +519,7 @@ export function useSingleSubmittalLeadTime(submittalId: string | undefined) {
         .eq('workflow_item_id', submittalId)
         .order('changed_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WorkflowItemHistory[]
     },
     enabled: !!submittalId,
@@ -527,7 +527,7 @@ export function useSingleSubmittalLeadTime(submittalId: string | undefined) {
 
   // Process the submittal
   const result = useMemo(() => {
-    if (!submittal) return null
+    if (!submittal) {return null}
 
     const leadTimeMetrics = calculateLeadTimeMetrics(submittal, history || [])
     const statusHistory = buildStatusHistory(submittal, history || [])

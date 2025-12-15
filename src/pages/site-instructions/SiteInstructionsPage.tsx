@@ -39,10 +39,10 @@ export default function SiteInstructionsPage() {
   // Build filters object
   const filters: SiteInstructionFilters = useMemo(() => {
     const f: SiteInstructionFilters = {}
-    if (statusFilter !== 'all') f.status = statusFilter as SiteInstructionStatus
-    if (priorityFilter !== 'all') f.priority = priorityFilter as SiteInstructionPriority
-    if (subcontractorFilter !== 'all') f.subcontractorId = subcontractorFilter
-    if (search) f.search = search
+    if (statusFilter !== 'all') {f.status = statusFilter as SiteInstructionStatus}
+    if (priorityFilter !== 'all') {f.priority = priorityFilter as SiteInstructionPriority}
+    if (subcontractorFilter !== 'all') {f.subcontractorId = subcontractorFilter}
+    if (search) {f.search = search}
     return f
   }, [statusFilter, priorityFilter, subcontractorFilter, search])
 

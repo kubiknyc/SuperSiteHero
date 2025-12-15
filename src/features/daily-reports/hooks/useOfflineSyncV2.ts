@@ -266,7 +266,7 @@ export function useOfflineSyncV2(options: UseOfflineSyncV2Options = {}) {
 
   // Manual sync trigger
   const triggerSync = useCallback(() => {
-    if (!draftReport?.id) return;
+    if (!draftReport?.id) {return;}
 
     addToSyncQueue({
       id: crypto.randomUUID(),

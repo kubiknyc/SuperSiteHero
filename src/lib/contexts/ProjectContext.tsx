@@ -43,7 +43,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
   const { data: project, isLoading, error } = useQuery({
     queryKey: ['project', effectiveProjectId],
     queryFn: async () => {
-      if (!effectiveProjectId) return null
+      if (!effectiveProjectId) {return null}
 
       const { data, error } = await supabase
         .from('projects')
@@ -51,7 +51,7 @@ export function ProjectProvider({ children }: { children: ReactNode }) {
         .eq('id', effectiveProjectId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Project
     },
     enabled: !!effectiveProjectId && !!userProfile,

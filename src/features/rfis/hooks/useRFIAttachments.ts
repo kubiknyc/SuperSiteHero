@@ -74,7 +74,7 @@ export function useRFIAttachments(rfiId: string | undefined, projectId?: string)
   return useQuery({
     queryKey: ['rfis', rfiId, 'attachments'],
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID is required')
+      if (!rfiId) {throw new Error('RFI ID is required')}
 
       // Query documents linked to this RFI via naming convention
       // Documents are identified by document_type='rfi' and name pattern
@@ -86,7 +86,7 @@ export function useRFIAttachments(rfiId: string | undefined, projectId?: string)
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Transform to attachment format
       return (data || []).map((doc) => ({
@@ -203,7 +203,7 @@ export function useDeleteRFIAttachment() {
 
   return useMutation({
     mutationFn: async ({ attachmentId, rfiId }: { attachmentId: string; rfiId: string }) => {
-      if (!attachmentId) throw new Error('Attachment ID is required')
+      if (!attachmentId) {throw new Error('Attachment ID is required')}
 
       // Get document to find file URL
       const { data: document, error: fetchError } = await supabase
@@ -212,7 +212,7 @@ export function useDeleteRFIAttachment() {
         .eq('id', attachmentId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Soft delete document record
       const { error: deleteError } = await supabase
@@ -220,7 +220,7 @@ export function useDeleteRFIAttachment() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', attachmentId)
 
-      if (deleteError) throw deleteError
+      if (deleteError) {throw deleteError}
 
       // Delete file from storage
       // Extract storage path from file_url if needed
@@ -255,7 +255,7 @@ export function useDeleteRFIAttachment() {
 export function useGetRFIAttachmentUrl() {
   return useMutation({
     mutationFn: async (attachmentId: string) => {
-      if (!attachmentId) throw new Error('Attachment ID is required')
+      if (!attachmentId) {throw new Error('Attachment ID is required')}
 
       // Get document to find file URL
       const { data: document, error } = await supabase
@@ -264,8 +264,8 @@ export function useGetRFIAttachmentUrl() {
         .eq('id', attachmentId)
         .single()
 
-      if (error) throw error
-      if (!document?.file_url) throw new Error('Attachment not found')
+      if (error) {throw error}
+      if (!document?.file_url) {throw new Error('Attachment not found')}
 
       // Extract storage path from file_url
       const urlObj = new URL(document.file_url)

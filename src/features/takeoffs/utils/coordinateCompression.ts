@@ -26,7 +26,7 @@ export interface CompressionResult {
  * @returns Simplified array of points
  */
 export function simplifyPolyline(points: Point[], epsilon: number = 2.0): Point[] {
-  if (points.length <= 2) return points
+  if (points.length <= 2) {return points}
 
   // Find the point with maximum distance from line segment
   let maxDistance = 0
@@ -96,7 +96,7 @@ function perpendicularDistance(point: Point, lineStart: Point, lineEnd: Point): 
  * Ensures first and last points remain the same
  */
 export function simplifyPolygon(points: Point[], epsilon: number = 2.0): Point[] {
-  if (points.length <= 3) return points
+  if (points.length <= 3) {return points}
 
   // Close the polygon if not already closed
   const isClosed = points[0].x === points[points.length - 1].x &&
@@ -151,7 +151,7 @@ export function calculateAdaptiveEpsilon(
   points: Point[],
   targetReduction: number = 0.5 // Target 50% reduction
 ): number {
-  if (points.length < 10) return 1.0
+  if (points.length < 10) {return 1.0}
 
   // Calculate average point spacing
   let totalDistance = 0
@@ -210,7 +210,7 @@ export function calculateCompressionRatio(
   originalSize: number,
   compressedSize: number
 ): number {
-  if (originalSize === 0) return 0
+  if (originalSize === 0) {return 0}
   return (1 - compressedSize / originalSize) * 100
 }
 
@@ -292,11 +292,11 @@ export function validateCompressionQuality(
 
     for (let i = 0; i < compressed.length - 1; i++) {
       const dist = perpendicularDistance(point, compressed[i], compressed[i + 1])
-      if (dist < minDist) minDist = dist
+      if (dist < minDist) {minDist = dist}
     }
 
     totalError += minDist
-    if (minDist > maxPointError) maxPointError = minDist
+    if (minDist > maxPointError) {maxPointError = minDist}
   }
 
   const averageError = totalError / original.length

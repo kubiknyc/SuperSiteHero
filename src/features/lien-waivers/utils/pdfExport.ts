@@ -45,7 +45,7 @@ export interface LienWaiverPDFData {
  * Format date for legal documents
  */
 function formatLegalDate(date: string | null | undefined): string {
-  if (!date) return '________________'
+  if (!date) {return '________________'}
   try {
     return format(new Date(date), 'MMMM d, yyyy')
   } catch {

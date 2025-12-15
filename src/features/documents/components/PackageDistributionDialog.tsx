@@ -133,7 +133,7 @@ export function PackageDistributionDialog({
   }, []);
 
   const handleAddRecipient = useCallback(async () => {
-    if (!formData.recipientEmail.trim()) return;
+    if (!formData.recipientEmail.trim()) {return;}
 
     try {
       await addRecipient.mutateAsync({
@@ -157,7 +157,7 @@ export function PackageDistributionDialog({
       .map((e) => e.trim().toLowerCase())
       .filter((e) => e && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
 
-    if (emails.length === 0) return;
+    if (emails.length === 0) {return;}
 
     try {
       await addMultipleRecipients.mutateAsync({

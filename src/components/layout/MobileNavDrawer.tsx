@@ -119,7 +119,7 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
     }
   }, [isOpen])
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   return (
     <div className="md:hidden fixed inset-0 z-50">

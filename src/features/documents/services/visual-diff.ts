@@ -108,7 +108,7 @@ function getCanvasContext(
   // If dimensions match, return existing context
   if (sourceCanvas.width === targetWidth && sourceCanvas.height === targetHeight) {
     const ctx = sourceCanvas.getContext('2d')
-    if (!ctx) throw new Error('Failed to get canvas 2d context')
+    if (!ctx) {throw new Error('Failed to get canvas 2d context')}
     return ctx
   }
 
@@ -117,7 +117,7 @@ function getCanvasContext(
   canvas.width = targetWidth
   canvas.height = targetHeight
   const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('Failed to create canvas 2d context')
+  if (!ctx) {throw new Error('Failed to create canvas 2d context')}
 
   // Draw the source canvas onto the new canvas (will be positioned at 0,0)
   ctx.fillStyle = 'white' // Fill background with white
@@ -212,9 +212,9 @@ function floodFill(
     const [x, y] = stack.pop()!
     const idx = y * width + x
 
-    if (x < 0 || x >= width || y < 0 || y >= height) continue
-    if (visited[idx] === 1) continue
-    if (changedPixelMap[idx] !== 1) continue
+    if (x < 0 || x >= width || y < 0 || y >= height) {continue}
+    if (visited[idx] === 1) {continue}
+    if (changedPixelMap[idx] !== 1) {continue}
 
     visited[idx] = 1
     area++
@@ -239,7 +239,7 @@ function floodFill(
  * Merge bounding boxes that are within mergeDistance of each other
  */
 function mergeNearbyBoxes(boxes: BoundingBox[], mergeDistance: number): BoundingBox[] {
-  if (boxes.length === 0) return []
+  if (boxes.length === 0) {return []}
 
   // Sort by position for more efficient merging
   const sorted = [...boxes].sort((a, b) => a.minY - b.minY || a.minX - b.minX)
@@ -247,7 +247,7 @@ function mergeNearbyBoxes(boxes: BoundingBox[], mergeDistance: number): Bounding
   const used = new Set<number>()
 
   for (let i = 0; i < sorted.length; i++) {
-    if (used.has(i)) continue
+    if (used.has(i)) {continue}
 
     let current = { ...sorted[i] }
     used.add(i)
@@ -257,7 +257,7 @@ function mergeNearbyBoxes(boxes: BoundingBox[], mergeDistance: number): Bounding
     while (changed) {
       changed = false
       for (let j = 0; j < sorted.length; j++) {
-        if (used.has(j)) continue
+        if (used.has(j)) {continue}
 
         const other = sorted[j]
         if (boxesOverlapOrNear(current, other, mergeDistance)) {
@@ -307,7 +307,7 @@ export function generateDiffOverlayCanvas(diffImageData: ImageData): HTMLCanvasE
   canvas.width = diffImageData.width
   canvas.height = diffImageData.height
   const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('Failed to create canvas context')
+  if (!ctx) {throw new Error('Failed to create canvas context')}
 
   ctx.putImageData(diffImageData, 0, 0)
   return canvas
@@ -338,7 +338,7 @@ export function analyzeChangeTypes(
   // Sample pixels in the region
   for (let y = region.y; y < region.y + region.height; y++) {
     for (let x = region.x; x < region.x + region.width; x++) {
-      if (x >= width || y >= img1Data.height) continue
+      if (x >= width || y >= img1Data.height) {continue}
 
       const idx = (y * width + x) * 4
       totalPixels++
@@ -347,20 +347,20 @@ export function analyzeChangeTypes(
       const isWhite1 = img1Data.data[idx] > 250 && img1Data.data[idx + 1] > 250 && img1Data.data[idx + 2] > 250
       const isWhite2 = img2Data.data[idx] > 250 && img2Data.data[idx + 1] > 250 && img2Data.data[idx + 2] > 250
 
-      if (isWhite1) whitePixels1++
-      if (isWhite2) whitePixels2++
+      if (isWhite1) {whitePixels1++}
+      if (isWhite2) {whitePixels2++}
     }
   }
 
-  if (totalPixels === 0) return 'modified'
+  if (totalPixels === 0) {return 'modified'}
 
   const whiteRatio1 = whitePixels1 / totalPixels
   const whiteRatio2 = whitePixels2 / totalPixels
 
   // If region was mostly white in v1 but not in v2, content was added
-  if (whiteRatio1 > 0.7 && whiteRatio2 < 0.3) return 'added'
+  if (whiteRatio1 > 0.7 && whiteRatio2 < 0.3) {return 'added'}
   // If region is mostly white in v2 but wasn't in v1, content was removed
-  if (whiteRatio2 > 0.7 && whiteRatio1 < 0.3) return 'removed'
+  if (whiteRatio2 > 0.7 && whiteRatio1 < 0.3) {return 'removed'}
   // Otherwise it's a modification
   return 'modified'
 }

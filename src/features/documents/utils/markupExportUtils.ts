@@ -229,7 +229,7 @@ export function estimateExportSize(
  * Format file size for display
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) {return '0 B'}
 
   const units = ['B', 'KB', 'MB', 'GB']
   const k = 1024
@@ -275,7 +275,7 @@ export function sanitizeFilename(name: string): string {
  */
 export function hexToRgba(hex: string, alpha: number = 1): string {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  if (!result) return `rgba(0, 0, 0, ${alpha})`
+  if (!result) {return `rgba(0, 0, 0, ${alpha})`}
 
   const r = parseInt(result[1], 16)
   const g = parseInt(result[2], 16)
@@ -289,7 +289,7 @@ export function hexToRgba(hex: string, alpha: number = 1): string {
  */
 export function getContrastingColor(hexColor: string): string {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexColor)
-  if (!result) return '#000000'
+  if (!result) {return '#000000'}
 
   const r = parseInt(result[1], 16)
   const g = parseInt(result[2], 16)
@@ -428,7 +428,7 @@ export function estimateTimeRemaining(
   totalItems: number,
   elapsedMs: number
 ): string {
-  if (currentItem === 0) return 'Calculating...'
+  if (currentItem === 0) {return 'Calculating...'}
 
   const msPerItem = elapsedMs / currentItem
   const remainingItems = totalItems - currentItem

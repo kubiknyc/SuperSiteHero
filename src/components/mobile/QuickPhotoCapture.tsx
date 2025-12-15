@@ -124,7 +124,7 @@ export function QuickPhotoCapture({
 
   // Get GPS location (works on both native and web)
   const getLocation = React.useCallback(async (): Promise<{ latitude: number; longitude: number } | null> => {
-    if (!captureLocation) return null
+    if (!captureLocation) {return null}
 
     try {
       const position = await getCurrentPosition()
@@ -293,7 +293,7 @@ export function QuickPhotoCapture({
   const handleFileChange = React.useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files
-      if (!files || files.length === 0) return
+      if (!files || files.length === 0) {return}
 
       setIsCapturing(true)
       setPendingCount(files.length)
@@ -363,7 +363,7 @@ export function QuickPhotoCapture({
     }
   }, [handleNativeCapture])
 
-  if (!visible) return null
+  if (!visible) {return null}
 
   const positionClasses = {
     'bottom-right': 'bottom-6 right-6',

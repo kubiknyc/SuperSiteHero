@@ -103,12 +103,12 @@ export function LocationProgressTimeline({
   };
 
   const handleNext = () => {
-    if (!timeline) return;
+    if (!timeline) {return;}
     setCurrentIndex((prev) => Math.min(timeline.entries.length - 1, prev + 1));
   };
 
   const togglePlay = () => {
-    if (!timeline || timeline.entries.length <= 1) return;
+    if (!timeline || timeline.entries.length <= 1) {return;}
     if (currentIndex >= timeline.entries.length - 1) {
       setCurrentIndex(0);
     }

@@ -45,7 +45,7 @@ interface AttachmentsSectionProps {
 }
 
 function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes'
+  if (bytes === 0) {return '0 Bytes'}
   const k = 1024
   const sizes = ['Bytes', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
@@ -135,7 +135,7 @@ export function AttachmentsSection({ siteInstructionId, readOnly = false }: Atta
   const deleteMutation = useDeleteSiteInstructionAttachment()
 
   const handleUpload = useCallback(async (files: FileList | null) => {
-    if (!files || files.length === 0) return
+    if (!files || files.length === 0) {return}
 
     setUploading(true)
     let successCount = 0
@@ -170,7 +170,7 @@ export function AttachmentsSection({ siteInstructionId, readOnly = false }: Atta
   }, [siteInstructionId, uploadMutation])
 
   const handleDelete = async () => {
-    if (!attachmentToDelete) return
+    if (!attachmentToDelete) {return}
 
     try {
       await deleteMutation.mutateAsync({
@@ -202,7 +202,7 @@ export function AttachmentsSection({ siteInstructionId, readOnly = false }: Atta
     e.stopPropagation()
     setDragActive(false)
 
-    if (readOnly) return
+    if (readOnly) {return}
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleUpload(e.dataTransfer.files)

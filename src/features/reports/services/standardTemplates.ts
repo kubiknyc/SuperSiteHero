@@ -734,7 +734,7 @@ export function getAllTags(): string[] {
  * Filter templates by multiple tags (AND logic)
  */
 export function filterByTags(tags: string[]): StandardTemplate[] {
-  if (tags.length === 0) return STANDARD_TEMPLATES
+  if (tags.length === 0) {return STANDARD_TEMPLATES}
   return STANDARD_TEMPLATES.filter(t =>
     tags.every(tag => t.tags.includes(tag))
   )

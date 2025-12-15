@@ -30,7 +30,7 @@ async function getUserDetails(userId: string): Promise<{ email: string; name?: s
       .eq('id', userId)
       .single()
 
-    if (error || !data) return null
+    if (error || !data) {return null}
     return { email: data.email, name: data.full_name || undefined }
   } catch {
     return null

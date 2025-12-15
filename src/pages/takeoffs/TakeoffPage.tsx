@@ -92,7 +92,7 @@ export default function TakeoffPage() {
   // Handle measurement creation
   const handleMeasurementCreate = useCallback(
     async (measurement: Omit<TakeoffMeasurement, 'id'>) => {
-      if (!documentId || !projectId || !userProfile?.company_id) return
+      if (!documentId || !projectId || !userProfile?.company_id) {return}
 
       // Compress coordinates for storage
       const compressed = compressPoints(measurement.points)
@@ -132,7 +132,7 @@ export default function TakeoffPage() {
     async (id: string, updates: Partial<TakeoffMeasurement>) => {
       // Find the original measurement to merge with updates
       const original = measurements.find(m => m.id === id)
-      if (!original) return
+      if (!original) {return}
 
       const originalData = typeof original.measurement_data === 'object' && original.measurement_data !== null
         ? original.measurement_data as Record<string, any>
@@ -145,18 +145,18 @@ export default function TakeoffPage() {
         const compressed = compressPoints(updates.points)
         measurementData.points = compressed.compressed
       }
-      if (updates.dropHeight !== undefined) measurementData.dropHeight = updates.dropHeight
-      if (updates.pitch !== undefined) measurementData.pitch = updates.pitch
-      if (updates.height !== undefined) measurementData.height = updates.height
-      if (updates.depth !== undefined) measurementData.depth = updates.depth
-      if (updates.crossSections !== undefined) measurementData.crossSections = updates.crossSections
+      if (updates.dropHeight !== undefined) {measurementData.dropHeight = updates.dropHeight}
+      if (updates.pitch !== undefined) {measurementData.pitch = updates.pitch}
+      if (updates.height !== undefined) {measurementData.height = updates.height}
+      if (updates.depth !== undefined) {measurementData.depth = updates.depth}
+      if (updates.crossSections !== undefined) {measurementData.crossSections = updates.crossSections}
 
       const dbUpdates: Record<string, unknown> = {
         measurement_data: measurementData,
       }
 
-      if (updates.name !== undefined) dbUpdates.name = updates.name
-      if (updates.color !== undefined) dbUpdates.color = updates.color
+      if (updates.name !== undefined) {dbUpdates.name = updates.name}
+      if (updates.color !== undefined) {dbUpdates.color = updates.color}
 
       await updateMutation.mutateAsync({ id, ...dbUpdates })
     },
@@ -232,10 +232,10 @@ export default function TakeoffPage() {
       color: selectedMeasurement.color,
     }
 
-    if (selectedMeasurement.dropHeight) templateData.dropHeight = selectedMeasurement.dropHeight
-    if (selectedMeasurement.pitch) templateData.pitch = selectedMeasurement.pitch
-    if (selectedMeasurement.height) templateData.height = selectedMeasurement.height
-    if (selectedMeasurement.depth) templateData.depth = selectedMeasurement.depth
+    if (selectedMeasurement.dropHeight) {templateData.dropHeight = selectedMeasurement.dropHeight}
+    if (selectedMeasurement.pitch) {templateData.pitch = selectedMeasurement.pitch}
+    if (selectedMeasurement.height) {templateData.height = selectedMeasurement.height}
+    if (selectedMeasurement.depth) {templateData.depth = selectedMeasurement.depth}
 
     setTemplateDialogMode('create')
   }, [selectedMeasurement, toast])

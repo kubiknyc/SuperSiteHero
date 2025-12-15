@@ -35,7 +35,7 @@ class MockMediaRecorder {
       })
     }
     setTimeout(() => {
-      if (this.onstop) this.onstop()
+      if (this.onstop) {this.onstop()}
     }, 0)
   }
 

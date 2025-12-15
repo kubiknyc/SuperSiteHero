@@ -497,27 +497,27 @@ export function useMetricStatus() {
     benchmark: number | null,
     type: 'rate' | 'emr' = 'rate'
   ): 'good' | 'warning' | 'danger' | 'unknown' => {
-    if (value === null) return 'unknown'
+    if (value === null) {return 'unknown'}
 
     if (type === 'emr') {
       // For EMR, lower is better (1.0 is industry average)
-      if (value <= 0.85) return 'good'
-      if (value <= 1.0) return 'warning'
+      if (value <= 0.85) {return 'good'}
+      if (value <= 1.0) {return 'warning'}
       return 'danger'
     }
 
     // For rates, compare to benchmark
     if (benchmark === null) {
       // Default thresholds if no benchmark
-      if (value < 2) return 'good'
-      if (value < 4) return 'warning'
+      if (value < 2) {return 'good'}
+      if (value < 4) {return 'warning'}
       return 'danger'
     }
 
     // Lower than 80% of benchmark is good
-    if (value <= benchmark * 0.8) return 'good'
+    if (value <= benchmark * 0.8) {return 'good'}
     // Within 120% of benchmark is warning
-    if (value <= benchmark * 1.2) return 'warning'
+    if (value <= benchmark * 1.2) {return 'warning'}
     // Above is danger
     return 'danger'
   }

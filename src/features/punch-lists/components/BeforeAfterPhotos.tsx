@@ -52,7 +52,7 @@ export function BeforeAfterPhotos({
     files: FileList | null,
     type: 'before' | 'after'
   ) => {
-    if (!files) return
+    if (!files) {return}
 
     const newPhotos: PunchPhoto[] = Array.from(files).map((file) => ({
       id: crypto.randomUUID(),

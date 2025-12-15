@@ -73,7 +73,7 @@ async function nuclearDeleteUser() {
     console.log(`✅ Found ${dbUsers.length} user record(s) in database:`)
     dbUsers.forEach(u => {
       console.log(`   - ID: ${u.id}, Role: ${u.role}`)
-      if (!userId) userId = u.id
+      if (!userId) {userId = u.id}
     })
   } else {
     console.log('⚠️  No user records found in database')

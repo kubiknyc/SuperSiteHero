@@ -51,11 +51,11 @@ export function PresenceAvatars({
 }: PresenceAvatarsProps) {
   // Filter out current user if needed
   const filteredUsers = React.useMemo(() => {
-    if (showCurrentUser || !currentUserId) return users
+    if (showCurrentUser || !currentUserId) {return users}
     return users.filter((u) => u.id !== currentUserId)
   }, [users, showCurrentUser, currentUserId])
 
-  if (filteredUsers.length === 0) return null
+  if (filteredUsers.length === 0) {return null}
 
   const visibleUsers = filteredUsers.slice(0, maxVisible)
   const remainingCount = filteredUsers.length - maxVisible

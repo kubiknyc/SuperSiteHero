@@ -211,9 +211,9 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
     const areas = new Set<string>()
 
     photos.forEach(photo => {
-      if (photo.building) buildings.add(photo.building)
-      if (photo.floor) floors.add(photo.floor)
-      if (photo.area) areas.add(photo.area)
+      if (photo.building) {buildings.add(photo.building)}
+      if (photo.floor) {floors.add(photo.floor)}
+      if (photo.area) {areas.add(photo.area)}
     })
 
     return {
@@ -252,7 +252,7 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
 
   // Filter photos by search
   const filteredPhotos = useMemo(() => {
-    if (!searchTerm) return selectedPhotos
+    if (!searchTerm) {return selectedPhotos}
 
     const term = searchTerm.toLowerCase()
     return selectedPhotos.filter(photo =>

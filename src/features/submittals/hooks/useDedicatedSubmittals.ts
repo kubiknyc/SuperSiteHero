@@ -89,7 +89,7 @@ export function useProjectSubmittals(projectId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-submittals', 'project', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('submittals')
@@ -106,7 +106,7 @@ export function useProjectSubmittals(projectId: string | undefined) {
         .order('spec_section', { ascending: true })
         .order('submittal_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalWithDetails[]
     },
     enabled: !!projectId,
@@ -122,7 +122,7 @@ export function useAllSubmittals() {
   return useQuery({
     queryKey: ['dedicated-submittals', 'all', userProfile?.company_id],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('Company ID required')
+      if (!userProfile?.company_id) {throw new Error('Company ID required')}
 
       const { data, error } = await supabase
         .from('submittals')
@@ -142,7 +142,7 @@ export function useAllSubmittals() {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalWithDetails[]
     },
     enabled: !!userProfile?.company_id,
@@ -156,7 +156,7 @@ export function useSubmittal(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-submittals', 'detail', submittalId],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittals')
@@ -175,7 +175,7 @@ export function useSubmittal(submittalId: string | undefined) {
         .eq('id', submittalId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalWithDetails
     },
     enabled: !!submittalId,
@@ -192,7 +192,7 @@ export function useSubmittalsByBallInCourt(
   return useQuery({
     queryKey: ['dedicated-submittals', 'ball-in-court', projectId, entity],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('submittals')
@@ -206,7 +206,7 @@ export function useSubmittalsByBallInCourt(
 
       const { data, error } = await query.order('date_required', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Submittal[]
     },
     enabled: !!projectId,
@@ -223,7 +223,7 @@ export function useSubmittalsByStatus(
   return useQuery({
     queryKey: ['dedicated-submittals', 'status', projectId, status],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('submittals')
@@ -237,7 +237,7 @@ export function useSubmittalsByStatus(
 
       const { data, error } = await query.order('date_required', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Submittal[]
     },
     enabled: !!projectId,
@@ -276,7 +276,7 @@ export function useSubmittalItems(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-submittals', submittalId, 'items'],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittal_items')
@@ -284,7 +284,7 @@ export function useSubmittalItems(submittalId: string | undefined) {
         .eq('submittal_id', submittalId)
         .order('item_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalItem[]
     },
     enabled: !!submittalId,
@@ -298,7 +298,7 @@ export function useSubmittalAttachments(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-submittals', submittalId, 'attachments'],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittal_attachments')
@@ -306,7 +306,7 @@ export function useSubmittalAttachments(submittalId: string | undefined) {
         .eq('submittal_id', submittalId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalAttachment[]
     },
     enabled: !!submittalId,
@@ -320,7 +320,7 @@ export function useSubmittalReviews(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-submittals', submittalId, 'reviews'],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittal_reviews')
@@ -328,7 +328,7 @@ export function useSubmittalReviews(submittalId: string | undefined) {
         .eq('submittal_id', submittalId)
         .order('reviewed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalReview[]
     },
     enabled: !!submittalId,
@@ -342,7 +342,7 @@ export function useSubmittalHistory(submittalId: string | undefined) {
   return useQuery({
     queryKey: ['dedicated-submittals', submittalId, 'history'],
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittal_history')
@@ -350,7 +350,7 @@ export function useSubmittalHistory(submittalId: string | undefined) {
         .eq('submittal_id', submittalId)
         .order('changed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalHistory[]
     },
     enabled: !!submittalId,
@@ -370,7 +370,7 @@ export function useCreateSubmittal() {
 
   return useMutation({
     mutationFn: async (submittal: Omit<SubmittalInsert, 'company_id' | 'created_by'>) => {
-      if (!userProfile?.company_id) throw new Error('Company ID required')
+      if (!userProfile?.company_id) {throw new Error('Company ID required')}
 
       const { data, error } = await supabase
         .from('submittals')
@@ -382,7 +382,7 @@ export function useCreateSubmittal() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Submittal
     },
     onSuccess: (data) => {
@@ -407,7 +407,7 @@ export function useUpdateSubmittal() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Submittal
     },
     onSuccess: (data) => {
@@ -431,7 +431,7 @@ export function useDeleteSubmittal() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', submittalId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals'] })
@@ -467,7 +467,7 @@ export function useAddSubmittalReview() {
           reviewer_name: userProfile?.full_name || userProfile?.email,
         })
 
-      if (reviewError) throw reviewError
+      if (reviewError) {throw reviewError}
 
       // Update submittal status
       const updates: SubmittalUpdate = {
@@ -487,7 +487,7 @@ export function useAddSubmittalReview() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Submittal
     },
     onSuccess: (data) => {
@@ -519,7 +519,7 @@ export function useSubmitForReview() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Submittal
     },
     onSuccess: (data) => {
@@ -544,7 +544,7 @@ export async function generateSubmittalNumber(
     .eq('spec_section', specSection)
     .is('deleted_at', null)
 
-  if (error) throw error
+  if (error) {throw error}
 
   const nextNumber = (count || 0) + 1
   return `${specSection}-${nextNumber}`
@@ -570,7 +570,7 @@ export function useSubmittalStats(projectId: string | undefined) {
     reviseResubmit: submittals?.filter((s) => s.review_status === 'revise_resubmit').length || 0,
     rejected: submittals?.filter((s) => s.review_status === 'rejected').length || 0,
     overdue: submittals?.filter((s) => {
-      if (!s.date_required) return false
+      if (!s.date_required) {return false}
       const required = new Date(s.date_required)
       return required < new Date() && !['approved', 'approved_as_noted'].includes(s.review_status)
     }).length || 0,

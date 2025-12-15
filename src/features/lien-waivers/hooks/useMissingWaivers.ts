@@ -95,7 +95,7 @@ export function useMissingWaivers(projectId?: string) {
 
       const { data, error } = await query.order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Transform and calculate days overdue
       return (data || []).map((waiver: any) => {
@@ -154,7 +154,7 @@ export function useMissingWaiversSummary() {
         .is('deleted_at', null)
         .in('status', ['pending', 'requested', 'sent'])
 
-      if (error) throw error
+      if (error) {throw error}
 
       const waivers = data || []
 
@@ -202,7 +202,7 @@ export function useMissingWaiversSummary() {
         const project = projectMap.get(projectId)!
         project.missing_count++
         project.amount_at_risk += waiver.amount || 0
-        if (isOverdue) project.overdue_count++
+        if (isOverdue) {project.overdue_count++}
 
         // Aggregate by subcontractor
         const subId = waiver.subcontractor_id
@@ -219,7 +219,7 @@ export function useMissingWaiversSummary() {
         const sub = subcontractorMap.get(subId)!
         sub.missing_count++
         sub.amount_at_risk += waiver.amount || 0
-        if (isOverdue) sub.overdue_count++
+        if (isOverdue) {sub.overdue_count++}
       })
 
       return {

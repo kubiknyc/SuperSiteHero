@@ -70,7 +70,7 @@ function WarrantyStatusBadge({ status }: { status: WarrantyStatus }) {
  * Warranty type badge
  */
 function WarrantyTypeBadge({ type }: { type: WarrantyType | null }) {
-  if (!type) return null
+  if (!type) {return null}
 
   const config = WARRANTY_TYPES.find((t) => t.value === type)
 
@@ -217,8 +217,8 @@ export function WarrantyList({
   const sortedWarranties = React.useMemo(() => {
     return [...filteredWarranties].sort((a, b) => {
       // Active warranties first
-      if (a.status === 'active' && b.status !== 'active') return -1
-      if (a.status !== 'active' && b.status === 'active') return 1
+      if (a.status === 'active' && b.status !== 'active') {return -1}
+      if (a.status !== 'active' && b.status === 'active') {return 1}
 
       // Then by end date (earliest first for active)
       return new Date(a.end_date).getTime() - new Date(b.end_date).getTime()

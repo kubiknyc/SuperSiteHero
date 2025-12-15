@@ -159,7 +159,7 @@ interface FailedItemsBadgeProps {
 }
 
 export function FailedItemsBadge({ count, onClick }: FailedItemsBadgeProps) {
-  if (count === 0) return null
+  if (count === 0) {return null}
 
   return (
     <button
@@ -189,7 +189,7 @@ export function FailedItemsBanner({
 }: FailedItemsBannerProps) {
   const [isDismissed, setIsDismissed] = useState(false)
 
-  if (totalFailedCount === 0 || isDismissed) return null
+  if (totalFailedCount === 0 || isDismissed) {return null}
 
   const affectedExecutions = executions.length
 

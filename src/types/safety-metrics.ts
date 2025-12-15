@@ -404,8 +404,8 @@ export const RATE_CONFIG: Record<'trir' | 'dart' | 'ltir' | 'severity' | 'emr', 
     description: 'Number of OSHA-recordable injuries/illnesses per 200,000 hours worked',
     format: (v) => v !== null ? v.toFixed(2) : 'N/A',
     getStatus: (v, b) => {
-      if (v === null) return 'unknown'
-      if (b === null) return v < 3 ? 'good' : v < 5 ? 'warning' : 'danger'
+      if (v === null) {return 'unknown'}
+      if (b === null) {return v < 3 ? 'good' : v < 5 ? 'warning' : 'danger'}
       return v <= b * 0.8 ? 'good' : v <= b * 1.2 ? 'warning' : 'danger'
     },
   },
@@ -415,8 +415,8 @@ export const RATE_CONFIG: Record<'trir' | 'dart' | 'ltir' | 'severity' | 'emr', 
     description: 'Number of cases involving days away, restricted duty, or job transfer per 200,000 hours',
     format: (v) => v !== null ? v.toFixed(2) : 'N/A',
     getStatus: (v, b) => {
-      if (v === null) return 'unknown'
-      if (b === null) return v < 2 ? 'good' : v < 3 ? 'warning' : 'danger'
+      if (v === null) {return 'unknown'}
+      if (b === null) {return v < 2 ? 'good' : v < 3 ? 'warning' : 'danger'}
       return v <= b * 0.8 ? 'good' : v <= b * 1.2 ? 'warning' : 'danger'
     },
   },
@@ -426,8 +426,8 @@ export const RATE_CONFIG: Record<'trir' | 'dart' | 'ltir' | 'severity' | 'emr', 
     description: 'Number of lost-time injuries per 200,000 hours worked',
     format: (v) => v !== null ? v.toFixed(2) : 'N/A',
     getStatus: (v, b) => {
-      if (v === null) return 'unknown'
-      if (b === null) return v < 1 ? 'good' : v < 2 ? 'warning' : 'danger'
+      if (v === null) {return 'unknown'}
+      if (b === null) {return v < 1 ? 'good' : v < 2 ? 'warning' : 'danger'}
       return v <= b * 0.8 ? 'good' : v <= b * 1.2 ? 'warning' : 'danger'
     },
   },
@@ -437,7 +437,7 @@ export const RATE_CONFIG: Record<'trir' | 'dart' | 'ltir' | 'severity' | 'emr', 
     description: 'Total days away + restricted per 200,000 hours worked',
     format: (v) => v !== null ? v.toFixed(1) : 'N/A',
     getStatus: (v) => {
-      if (v === null) return 'unknown'
+      if (v === null) {return 'unknown'}
       return v < 20 ? 'good' : v < 50 ? 'warning' : 'danger'
     },
   },
@@ -447,7 +447,7 @@ export const RATE_CONFIG: Record<'trir' | 'dart' | 'ltir' | 'severity' | 'emr', 
     description: 'Insurance modifier based on company safety history (1.0 = industry average)',
     format: (v) => v !== null ? v.toFixed(3) : 'N/A',
     getStatus: (v) => {
-      if (v === null) return 'unknown'
+      if (v === null) {return 'unknown'}
       return v <= 0.85 ? 'good' : v <= 1.0 ? 'warning' : 'danger'
     },
   },

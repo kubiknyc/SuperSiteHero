@@ -423,7 +423,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
 
       resolveConflict: (strategy) => {
         set((state) => {
-          if (!state.conflict) return state
+          if (!state.conflict) {return state}
 
           switch (strategy) {
             case 'keep_local':

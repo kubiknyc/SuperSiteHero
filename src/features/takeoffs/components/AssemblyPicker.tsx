@@ -65,7 +65,7 @@ export function AssemblyPicker({
   const categories = useMemo(() => {
     const cats = new Set<string>()
     allAssemblies.forEach((a) => {
-      if (a.category) cats.add(a.category)
+      if (a.category) {cats.add(a.category)}
     })
     return Array.from(cats).sort()
   }, [allAssemblies])

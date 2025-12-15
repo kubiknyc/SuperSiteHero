@@ -582,7 +582,7 @@ export function useQuickSync(entityType: string, entityId: string | undefined) {
     !!entityId
 
   const sync = async () => {
-    if (!canSync || !connectionStatus?.connectionId) return
+    if (!canSync || !connectionStatus?.connectionId) {return}
 
     return syncEntityMutation.mutateAsync({
       connectionId: connectionStatus.connectionId,

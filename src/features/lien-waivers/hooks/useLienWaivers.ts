@@ -92,7 +92,7 @@ export function useLienWaivers(filters: LienWaiverFilters = {}) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverWithDetails[];
     },
     enabled: !!user,
@@ -122,7 +122,7 @@ export function useLienWaiver(id: string) {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverWithDetails;
     },
     enabled: !!id && !!user,
@@ -145,7 +145,7 @@ export function useLienWaiverHistory(waiverId: string) {
         .eq('lien_waiver_id', waiverId)
         .order('changed_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverHistory[];
     },
     enabled: !!waiverId,
@@ -176,7 +176,7 @@ export function useLienWaiverTemplates(filters: LienWaiverTemplateFilters = {}) 
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverTemplate[];
     },
   });
@@ -195,7 +195,7 @@ export function useLienWaiverTemplate(id: string) {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverTemplate;
     },
     enabled: !!id,
@@ -221,7 +221,7 @@ export function useLienWaiverRequirements(projectId?: string) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverRequirement[];
     },
     enabled: !!user,
@@ -241,8 +241,8 @@ export function useProjectWaiverSummary(projectId: string) {
     approved_count: waivers?.filter(w => w.status === 'approved').length || 0,
     missing_count: 0, // Would need separate query
     overdue_count: waivers?.filter(w => {
-      if (!w.due_date) return false;
-      if (w.status === 'approved' || w.status === 'void') return false;
+      if (!w.due_date) {return false;}
+      if (w.status === 'approved' || w.status === 'void') {return false;}
       return new Date(w.due_date) < new Date();
     }).length || 0,
     total_waived_amount: waivers?.filter(w => w.status === 'approved').reduce((sum, w) => sum + (w.payment_amount || 0), 0) || 0,
@@ -283,7 +283,7 @@ export function useCreateLienWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Log creation in history
       await supabase.from('lien_waiver_history' as any).insert({
@@ -320,7 +320,7 @@ export function useUpdateLienWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiver;
     },
     onSuccess: (data) => {
@@ -343,7 +343,7 @@ export function useDeleteLienWaiver() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: lienWaiverKeys.lists() });
@@ -371,7 +371,7 @@ export function useSendWaiverRequest() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Log in history
       await supabase.from('lien_waiver_history' as any).insert({
@@ -409,7 +409,7 @@ export function useMarkWaiverReceived() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       await supabase.from('lien_waiver_history' as any).insert({
         lien_waiver_id: id,
@@ -446,7 +446,7 @@ export function useSignWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiver;
     },
     onSuccess: (data) => {
@@ -475,7 +475,7 @@ export function useNotarizeWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiver;
     },
     onSuccess: (data) => {
@@ -508,7 +508,7 @@ export function useApproveWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiver;
     },
     onSuccess: (data) => {
@@ -539,7 +539,7 @@ export function useRejectWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiver;
     },
     onSuccess: (data) => {
@@ -568,7 +568,7 @@ export function useVoidWaiver() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       await supabase.from('lien_waiver_history' as any).insert({
         lien_waiver_id: id,
@@ -611,7 +611,7 @@ export function useCreateLienWaiverTemplate() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverTemplate;
     },
     onSuccess: () => {
@@ -635,7 +635,7 @@ export function useUpdateLienWaiverTemplate() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverTemplate;
     },
     onSuccess: (data) => {
@@ -670,7 +670,7 @@ export function useCreateLienWaiverRequirement() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as unknown as LienWaiverRequirement;
     },
     onSuccess: () => {
@@ -695,7 +695,7 @@ export function useRenderWaiverTemplate() {
         .eq('id', templateId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Replace placeholders
       let content = (template as any).template_content;

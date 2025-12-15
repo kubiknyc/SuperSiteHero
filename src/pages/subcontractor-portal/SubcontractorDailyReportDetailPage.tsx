@@ -54,7 +54,7 @@ function WeatherDisplay({
   conditions: string | null
   temperature: number | null
 }) {
-  if (!conditions && !temperature) return null
+  if (!conditions && !temperature) {return null}
 
   return (
     <div className="flex flex-wrap items-center gap-4 text-sm">

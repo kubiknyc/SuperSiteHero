@@ -107,7 +107,7 @@ export function useBidPackages(filters: BidPackageFilters = {}) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackageWithDetails[]
     },
     enabled: !!userProfile?.company_id,
@@ -130,7 +130,7 @@ export function useBidPackage(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackageWithDetails
     },
     enabled: !!id,
@@ -148,7 +148,7 @@ export function useBidPackageStats(packageId: string | undefined) {
         p_package_id: packageId,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data?.[0] as BidPackageStatistics
     },
     enabled: !!packageId,
@@ -168,7 +168,7 @@ export function useBidPackageItems(packageId: string | undefined) {
         .eq('bid_package_id', packageId)
         .order('sort_order', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackageItem[]
     },
     enabled: !!packageId,
@@ -195,7 +195,7 @@ export function useBidInvitations(packageId: string | undefined) {
         .eq('bid_package_id', packageId)
         .order('invited_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidInvitationWithDetails[]
     },
     enabled: !!packageId,
@@ -219,7 +219,7 @@ export function useBidQuestions(packageId: string | undefined) {
         .eq('bid_package_id', packageId)
         .order('question_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidQuestion[]
     },
     enabled: !!packageId,
@@ -243,7 +243,7 @@ export function useBidAddenda(packageId: string | undefined) {
         .eq('bid_package_id', packageId)
         .order('addendum_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidAddendum[]
     },
     enabled: !!packageId,
@@ -285,7 +285,7 @@ export function useBidSubmissions(packageId: string | undefined, filters: Partia
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidSubmissionWithDetails[]
     },
     enabled: !!packageId,
@@ -309,7 +309,7 @@ export function useBidSubmission(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidSubmissionWithDetails
     },
     enabled: !!id,
@@ -331,7 +331,7 @@ export function useBidSubmissionItems(submissionId: string | undefined) {
         `)
         .eq('submission_id', submissionId)
 
-      if (error) throw error
+      if (error) {throw error}
       return data as (BidSubmissionItem & { package_item: BidPackageItem })[]
     },
     enabled: !!submissionId,
@@ -361,7 +361,7 @@ export function useCreateBidPackage() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackage
     },
     onSuccess: () => {
@@ -389,7 +389,7 @@ export function useUpdateBidPackage() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackage
     },
     onSuccess: (data) => {
@@ -421,7 +421,7 @@ export function usePublishBidPackage() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackage
     },
     onSuccess: (data) => {
@@ -455,7 +455,7 @@ export function useAwardBid() {
         })
         .eq('id', packageId)
 
-      if (packageError) throw packageError
+      if (packageError) {throw packageError}
 
       // Update winning submission
       const { error: submissionError } = await db
@@ -468,7 +468,7 @@ export function useAwardBid() {
         })
         .eq('id', dto.submission_id)
 
-      if (submissionError) throw submissionError
+      if (submissionError) {throw submissionError}
 
       // Update other submissions to not_awarded
       const { error: othersError } = await db
@@ -478,7 +478,7 @@ export function useAwardBid() {
         .neq('id', dto.submission_id)
         .not('status', 'in', '("withdrawn","disqualified")')
 
-      if (othersError) throw othersError
+      if (othersError) {throw othersError}
 
       return { packageId, submissionId: dto.submission_id }
     },
@@ -507,7 +507,7 @@ export function useDeleteBidPackage() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: bidPackageKeys.lists() })
@@ -548,7 +548,7 @@ export function useSendBidInvitation() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidInvitation
     },
     onSuccess: (data) => {
@@ -590,7 +590,7 @@ export function useBulkSendInvitations() {
         .insert(records)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return { packageId, count: data.length }
     },
     onSuccess: ({ packageId, count }) => {
@@ -631,7 +631,7 @@ export function useAnswerBidQuestion() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidQuestion
     },
     onSuccess: (data) => {
@@ -662,7 +662,7 @@ export function useCreateBidSubmission() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidSubmission
     },
     onSuccess: (data) => {
@@ -696,7 +696,7 @@ export function useUpdateBidSubmissionStatus() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidSubmission
     },
     onSuccess: (data) => {
@@ -751,7 +751,7 @@ export function useCreateAddendum() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // If extends bid date, update the package
       if (dto.extends_bid_date && dto.new_bid_due_date) {
@@ -792,7 +792,7 @@ export function useAddBidPackageItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as BidPackageItem
     },
     onSuccess: (data) => {
@@ -820,7 +820,7 @@ export function useUpdateBidPackageItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { item: data as BidPackageItem, packageId }
     },
     onSuccess: ({ packageId }) => {
@@ -846,7 +846,7 @@ export function useDeleteBidPackageItem() {
         .delete()
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return { packageId }
     },
     onSuccess: ({ packageId }) => {
@@ -885,7 +885,7 @@ export function useBidComparison(packageId: string | undefined) {
         p_package_id: packageId,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!packageId,

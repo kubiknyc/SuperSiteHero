@@ -5,7 +5,7 @@
  * Shows saved templates and quick actions.
  */
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
@@ -49,6 +49,7 @@ import {
   ReportTemplateCard,
   ReportTemplateCardSkeleton,
 } from '@/features/reports/components/ReportTemplateCard'
+import { ReportShareDialog } from '@/features/reports/components/ReportShareDialog'
 import { DataSourceBadge } from '@/features/reports/components/DataSourceSelector'
 import { format } from 'date-fns'
 import type { ReportTemplate, ReportDataSource } from '@/types/report-builder'
@@ -64,6 +65,7 @@ export function ReportsPage() {
   const [dataSourceFilter, setDataSourceFilter] = useState<ReportDataSource | 'all'>('all')
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false)
+  const [shareDialogOpen, setShareDialogOpen] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState<ReportTemplate | null>(null)
   const [newTemplateName, setNewTemplateName] = useState('')
 
@@ -81,7 +83,7 @@ export function ReportsPage() {
 
   // Filter templates by search
   const filteredTemplates = templates?.filter((t) => {
-    if (!searchTerm) return true
+    if (!searchTerm) {return true}
     const term = searchTerm.toLowerCase()
     return (
       t.name.toLowerCase().includes(term) ||
@@ -112,7 +114,7 @@ export function ReportsPage() {
   }
 
   const handleDeleteConfirm = async () => {
-    if (!selectedTemplate) return
+    if (!selectedTemplate) {return}
     await deleteTemplate.mutateAsync(selectedTemplate.id)
     setDeleteDialogOpen(false)
     setSelectedTemplate(null)
@@ -124,8 +126,13 @@ export function ReportsPage() {
     setDuplicateDialogOpen(true)
   }
 
+  const handleShareClick = useCallback((template: ReportTemplate) => {
+    setSelectedTemplate(template)
+    setShareDialogOpen(true)
+  }, [])
+
   const handleDuplicateConfirm = async () => {
-    if (!selectedTemplate || !newTemplateName.trim()) return
+    if (!selectedTemplate || !newTemplateName.trim()) {return}
     await duplicateTemplate.mutateAsync({
       id: selectedTemplate.id,
       newName: newTemplateName.trim(),
@@ -289,6 +296,7 @@ export function ReportsPage() {
                     onDelete={handleDeleteClick}
                     onRun={handleRunTemplate}
                     onSchedule={handleScheduleTemplate}
+                    onShare={handleShareClick}
                   />
                 ))}
               </div>
@@ -455,6 +463,15 @@ export function ReportsPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Share Dialog */}
+      {selectedTemplate && (
+        <ReportShareDialog
+          open={shareDialogOpen}
+          onOpenChange={setShareDialogOpen}
+          template={selectedTemplate}
+        />
+      )}
     </AppLayout>
   )
 }

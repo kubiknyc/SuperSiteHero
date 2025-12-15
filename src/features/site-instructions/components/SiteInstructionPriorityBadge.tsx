@@ -16,7 +16,7 @@ const priorityConfig: Record<
 }
 
 export function SiteInstructionPriorityBadge({ priority }: SiteInstructionPriorityBadgeProps) {
-  if (!priority) return null
+  if (!priority) {return null}
 
   const config = priorityConfig[priority as SiteInstructionPriority] || {
     label: priority,

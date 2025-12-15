@@ -494,8 +494,8 @@ export function isUpcomingMeeting(meeting: Meeting): boolean {
  * Check if action item is overdue
  */
 export function isActionItemOverdue(item: MeetingActionItem): boolean {
-  if (!item.due_date) return false
-  if (['completed', 'cancelled', 'deferred'].includes(item.status)) return false
+  if (!item.due_date) {return false}
+  if (['completed', 'cancelled', 'deferred'].includes(item.status)) {return false}
 
   const dueDate = new Date(item.due_date)
   const today = new Date()
@@ -518,10 +518,10 @@ export function formatMeetingTitle(meeting: Meeting): string {
  * Format meeting time range
  */
 export function formatMeetingTimeRange(meeting: Meeting): string {
-  if (!meeting.start_time) return ''
+  if (!meeting.start_time) {return ''}
 
   const start = meeting.start_time.slice(0, 5) // HH:MM
-  if (!meeting.end_time) return start
+  if (!meeting.end_time) {return start}
 
   const end = meeting.end_time.slice(0, 5)
   return `${start} - ${end}`

@@ -142,7 +142,7 @@ export function distanceBetweenPoints(p1: Point, p2: Point): number {
  * Calculate total length of a polyline
  */
 export function calculatePolylineLength(points: Point[]): number {
-  if (points.length < 2) return 0
+  if (points.length < 2) {return 0}
 
   let totalLength = 0
   for (let i = 0; i < points.length - 1; i++) {
@@ -156,7 +156,7 @@ export function calculatePolylineLength(points: Point[]): number {
  * Points should be in order (clockwise or counterclockwise)
  */
 export function calculatePolygonArea(points: Point[]): number {
-  if (points.length < 3) return 0
+  if (points.length < 3) {return 0}
 
   let area = 0
   const n = points.length
@@ -174,7 +174,7 @@ export function calculatePolygonArea(points: Point[]): number {
  * Calculate perimeter of a polygon
  */
 export function calculatePolygonPerimeter(points: Point[]): number {
-  if (points.length < 2) return 0
+  if (points.length < 2) {return 0}
 
   let perimeter = 0
   const n = points.length
@@ -392,7 +392,7 @@ export function calculateVolume3D(
   scale: ScaleFactor,
   targetUnit: VolumeUnit = 'ft3'
 ): number {
-  if (crossSections.length < 2) return 0
+  if (crossSections.length < 2) {return 0}
 
   // Sort by elevation
   const sorted = [...crossSections].sort((a, b) => a.elevation - b.elevation)

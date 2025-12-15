@@ -80,7 +80,7 @@ export function useFailedItemsNotifications({
 
   // Monitor for new failures and show toast notifications
   useEffect(() => {
-    if (!enableToasts || !monitorNewFailures || isLoading) return
+    if (!enableToasts || !monitorNewFailures || isLoading) {return}
 
     // Show toast for recent failures (within last hour)
     const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000)
@@ -93,7 +93,7 @@ export function useFailedItemsNotifications({
 
         // Check if we've already shown this toast (using a simple cache key)
         const shownKey = `toast-shown-${execution.id}`
-        if (sessionStorage.getItem(shownKey)) return
+        if (sessionStorage.getItem(shownKey)) {return}
 
         toast.error(
           `⚠️ ${failedCount} failed item${failedCount > 1 ? 's' : ''} in "${execution.name}"`,
@@ -149,9 +149,9 @@ export function clearDismissedFailures(): void {
  * Get failure severity level based on failure rate
  */
 export function getFailureSeverity(failureRate: number): 'low' | 'medium' | 'high' | 'critical' {
-  if (failureRate >= 30) return 'critical'
-  if (failureRate >= 20) return 'high'
-  if (failureRate >= 10) return 'medium'
+  if (failureRate >= 30) {return 'critical'}
+  if (failureRate >= 20) {return 'high'}
+  if (failureRate >= 10) {return 'medium'}
   return 'low'
 }
 

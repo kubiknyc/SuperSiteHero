@@ -4,7 +4,15 @@
  * Export all report-related services.
  */
 
-export { reportExportService } from './reportExportService'
+export {
+  reportExportService,
+  exportToPdf,
+  exportToExcel,
+  exportToCsv,
+  exportToHtml,
+  generateReport,
+  downloadReport,
+} from './reportExportService'
 export type { ReportExportOptions, ReportExportResult } from './reportExportService'
 
 // Standard templates

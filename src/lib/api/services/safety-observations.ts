@@ -124,7 +124,7 @@ export const safetyObservationsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as SafetyObservation[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -161,7 +161,7 @@ export const safetyObservationsApi = {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'OBSERVATION_NOT_FOUND',
@@ -205,7 +205,7 @@ export const safetyObservationsApi = {
         .eq('id', id)
         .single()
 
-      if (observationError) throw observationError
+      if (observationError) {throw observationError}
       if (!observation) {
         throw new ApiErrorClass({
           code: 'OBSERVATION_NOT_FOUND',
@@ -294,7 +294,7 @@ export const safetyObservationsApi = {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Check if this is a critical observation that needs notifications
       if (this._isCriticalObservation(input.severity || 'low', input.observation_type)) {
@@ -351,7 +351,7 @@ export const safetyObservationsApi = {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data) {
         throw new ApiErrorClass({
           code: 'OBSERVATION_NOT_FOUND',
@@ -381,7 +381,7 @@ export const safetyObservationsApi = {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -445,7 +445,7 @@ export const safetyObservationsApi = {
       `)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return data as SafetyObservation
   },
 
@@ -478,7 +478,7 @@ export const safetyObservationsApi = {
         .eq('observation_id', observationId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ObservationPhoto[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -507,7 +507,7 @@ export const safetyObservationsApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Also update the observation's photo_urls array
       const { data: observation } = await db
@@ -560,7 +560,7 @@ export const safetyObservationsApi = {
         .from('observation-photos')
         .upload(fileName, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {throw uploadError}
 
       // Get public URL
       const { data: urlData } = supabase.storage.from('observation-photos').getPublicUrl(uploadData.path)
@@ -590,7 +590,7 @@ export const safetyObservationsApi = {
     try {
       const { error } = await db.from('safety_observation_photos').delete().eq('id', photoId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw new ApiErrorClass({
         code: 'REMOVE_PHOTO_ERROR',
@@ -622,7 +622,7 @@ export const safetyObservationsApi = {
         .eq('observation_id', observationId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as ObservationComment[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -665,7 +665,7 @@ export const safetyObservationsApi = {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ObservationComment
     } catch (error) {
       throw new ApiErrorClass({
@@ -688,7 +688,7 @@ export const safetyObservationsApi = {
       const {
         data: { user },
       } = await supabase.auth.getUser()
-      if (!user) return null
+      if (!user) {return null}
 
       let query = db.from('safety_observer_points').select('*').eq('user_id', user.id)
 
@@ -698,7 +698,7 @@ export const safetyObservationsApi = {
 
       const { data, error } = await query.maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ObserverPoints | null
     } catch (error) {
       throw new ApiErrorClass({
@@ -741,7 +741,7 @@ export const safetyObservationsApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as LeaderboardEntry[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -772,7 +772,7 @@ export const safetyObservationsApi = {
 
       const { data: observations, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       const data = observations || []
       const now = new Date()
@@ -904,7 +904,7 @@ export const safetyObservationsApi = {
       const uniqueObservers = new Set((observers || []).map((o: { observer_id: string }) => o.observer_id)).size
 
       // Get total project/company users (rough estimate)
-      let usersCount = 100 // Default estimate
+      const usersCount = 100 // Default estimate
 
       // Calculate positive observation ratio
       const positiveCount = stats.safe_behavior_count + stats.best_practice_count
@@ -964,7 +964,7 @@ export const safetyObservationsApi = {
         .order('observed_at', { ascending: false })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as SafetyObservation[]
     } catch (error) {
       throw new ApiErrorClass({
@@ -995,7 +995,7 @@ export const safetyObservationsApi = {
         p_project_id: observation.project_id,
       })
 
-      if (usersError) throw usersError
+      if (usersError) {throw usersError}
 
       if (!users || users.length === 0) {
         logger.log('No users to notify for observation:', observationId)

@@ -104,7 +104,7 @@ export function PermitDetailPage() {
   }
 
   const handleUpdate = async () => {
-    if (!id) return
+    if (!id) {return}
 
     try {
       await updatePermit.mutateAsync({
@@ -118,7 +118,7 @@ export function PermitDetailPage() {
   }
 
   const handleStatusChange = async (newStatus: PermitStatus) => {
-    if (!id) return
+    if (!id) {return}
 
     try {
       await updateStatus.mutateAsync({ id, status: newStatus })
@@ -129,7 +129,7 @@ export function PermitDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!id) return
+    if (!id) {return}
 
     try {
       await deletePermit.mutateAsync(id)

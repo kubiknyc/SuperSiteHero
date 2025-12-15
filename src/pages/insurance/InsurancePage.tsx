@@ -78,7 +78,7 @@ export function InsurancePage() {
 
   // Filter certificates by search
   const filteredCertificates = certificates?.filter((cert) => {
-    if (!searchQuery) return true
+    if (!searchQuery) {return true}
     const query = searchQuery.toLowerCase()
     return (
       cert.certificate_number.toLowerCase().includes(query) ||

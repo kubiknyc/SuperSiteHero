@@ -126,7 +126,7 @@ function AttendeeCount({ meeting }: { meeting: MeetingWithDetails }) {
   const total = meeting.attendee_count || meeting.attendees?.length || 0
   const confirmed = meeting.confirmed_count || 0
 
-  if (total === 0) return <span className="text-gray-400">-</span>
+  if (total === 0) {return <span className="text-gray-400">-</span>}
 
   return (
     <span className="text-xs">
@@ -149,7 +149,7 @@ function ActionItemsCount({ meeting }: { meeting: MeetingWithDetails }) {
   const total = meeting.action_items?.length || 0
   const open = meeting.open_action_items_count || 0
 
-  if (total === 0) return <span className="text-gray-400">-</span>
+  if (total === 0) {return <span className="text-gray-400">-</span>}
 
   return (
     <span className="text-xs">

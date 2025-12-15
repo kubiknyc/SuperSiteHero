@@ -89,7 +89,7 @@ export function useTransmittals(filters?: TransmittalFilters) {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Transform count from array to number
       return (data || []).map((t: any) => ({
@@ -124,7 +124,7 @@ export function useTransmittal(transmittalId: string) {
         .eq('id', transmittalId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TransmittalWithDetails;
     },
     enabled: !!transmittalId,
@@ -144,7 +144,7 @@ export function useTransmittalItems(transmittalId: string) {
         .eq('transmittal_id', transmittalId)
         .order('item_number');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as TransmittalItem[];
     },
     enabled: !!transmittalId,
@@ -167,7 +167,7 @@ export function useTransmittalAttachments(transmittalId: string) {
         .eq('transmittal_id', transmittalId)
         .order('uploaded_at');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as TransmittalAttachment[];
     },
     enabled: !!transmittalId,
@@ -183,14 +183,14 @@ export function useNextTransmittalNumber(projectId: string) {
   return useQuery({
     queryKey: transmittalKeys.nextNumber(projectId),
     queryFn: async (): Promise<string> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db.rpc('get_next_transmittal_number', {
         p_company_id: userProfile.company_id,
         p_project_id: projectId,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as string;
     },
     enabled: !!projectId && !!userProfile?.company_id,
@@ -206,7 +206,7 @@ export function useCreateTransmittal() {
 
   return useMutation({
     mutationFn: async (dto: CreateTransmittalDTO): Promise<Transmittal> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Create the transmittal
       const { data: transmittal, error: transmittalError } = await db
@@ -241,7 +241,7 @@ export function useCreateTransmittal() {
         .select()
         .single();
 
-      if (transmittalError) throw transmittalError;
+      if (transmittalError) {throw transmittalError;}
 
       // Add items if provided
       if (dto.items && dto.items.length > 0) {
@@ -264,7 +264,7 @@ export function useCreateTransmittal() {
           .from('transmittal_items')
           .insert(itemInserts);
 
-        if (itemsError) throw itemsError;
+        if (itemsError) {throw itemsError;}
       }
 
       return transmittal as Transmittal;
@@ -294,7 +294,7 @@ export function useUpdateTransmittal() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as Transmittal;
     },
     onSuccess: (data) => {
@@ -326,7 +326,7 @@ export function useSendTransmittal() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as Transmittal;
     },
     onSuccess: (data) => {
@@ -363,7 +363,7 @@ export function useReceiveTransmittal() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as Transmittal;
     },
     onSuccess: (data) => {
@@ -400,7 +400,7 @@ export function useAcknowledgeTransmittal() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as Transmittal;
     },
     onSuccess: (data) => {
@@ -425,7 +425,7 @@ export function useVoidTransmittal() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as Transmittal;
     },
     onSuccess: (data) => {
@@ -449,7 +449,7 @@ export function useDeleteTransmittal() {
         .eq('id', id)
         .eq('status', 'draft'); // Can only delete drafts
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: transmittalKeys.all });
@@ -483,7 +483,7 @@ export function useAddTransmittalItem() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TransmittalItem;
     },
     onSuccess: (_, variables) => {
@@ -513,7 +513,7 @@ export function useUpdateTransmittalItem() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TransmittalItem;
     },
     onSuccess: (_, variables) => {
@@ -536,7 +536,7 @@ export function useRemoveTransmittalItem() {
         .delete()
         .eq('id', itemId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { transmittalId }) => {
       queryClient.invalidateQueries({ queryKey: transmittalKeys.items(transmittalId) });
@@ -569,7 +569,7 @@ export function useUploadTransmittalAttachment() {
         .from('documents')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {throw uploadError;}
 
       // Create attachment record
       const { data, error } = await db
@@ -586,7 +586,7 @@ export function useUploadTransmittalAttachment() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TransmittalAttachment;
     },
     onSuccess: (_, { transmittalId }) => {
@@ -621,7 +621,7 @@ export function useDeleteTransmittalAttachment() {
         .delete()
         .eq('id', attachmentId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { transmittalId }) => {
       queryClient.invalidateQueries({ queryKey: transmittalKeys.attachments(transmittalId) });
@@ -642,7 +642,7 @@ export function useTransmittalStats(projectId: string) {
         .select('status')
         .eq('project_id', projectId);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       const stats = {
         total: data?.length || 0,

@@ -295,8 +295,8 @@ function fetchResourceById<T extends ResourceBase>(
   context: TenantContext
 ): T | null {
   const resource = resources.find((r) => r.id === id)
-  if (!resource) return null
-  if (resource.company_id !== context.companyId) return null // CRITICAL: Block cross-tenant access
+  if (!resource) {return null}
+  if (resource.company_id !== context.companyId) {return null} // CRITICAL: Block cross-tenant access
   return resource
 }
 
@@ -560,12 +560,12 @@ describe('Data Isolation - Nested Resource Access', () => {
     // Function to check if project belongs to user's accessible projects
     function canAccessProjectReports(projectId: string, ctx: TenantContext): boolean {
       // First check: project must be in user's accessible projects
-      if (!ctx.projectIds.includes(projectId)) return false
+      if (!ctx.projectIds.includes(projectId)) {return false}
 
       // Second check: project must belong to user's company
       const allProjects = [...projectsCompanyA, ...projectsCompanyB]
       const project = allProjects.find((p) => p.id === projectId)
-      if (!project || project.company_id !== ctx.companyId) return false
+      if (!project || project.company_id !== ctx.companyId) {return false}
 
       return true
     }
@@ -686,7 +686,7 @@ describe('Data Isolation - Search Operations', () => {
 
       return allProjects.filter((p) => {
         // CRITICAL: Always apply tenant filter first
-        if (p.company_id !== ctx.companyId) return false
+        if (p.company_id !== ctx.companyId) {return false}
 
         // Then apply search criteria
         return p.name.toLowerCase().includes(query.toLowerCase())
@@ -722,7 +722,7 @@ describe('Data Isolation - Search Operations', () => {
 
       return allProjects.filter((p) => {
         // Tenant filter is ALWAYS applied
-        if (p.company_id !== ctx.companyId) return false
+        if (p.company_id !== ctx.companyId) {return false}
 
         return p.name.toLowerCase().includes(sanitizedQuery.toLowerCase())
       })

@@ -51,7 +51,7 @@ export function useInviteUser() {
 
   return useMutation({
     mutationFn: (data: InviteUserData) => {
-      if (!companyId || !userProfile?.id) throw new Error('Company not found')
+      if (!companyId || !userProfile?.id) {throw new Error('Company not found')}
       return companyUsersApi.inviteUser(companyId, userProfile.id, data)
     },
     onSuccess: () => {

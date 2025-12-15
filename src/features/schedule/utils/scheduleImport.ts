@@ -78,11 +78,11 @@ function parseMSProjectDate(dateStr: string): string {
 }
 
 function parseMSProjectDuration(duration: string | undefined): number {
-  if (!duration) return 1
+  if (!duration) {return 1}
   const daysMatch = duration.match(/P(\d+)D/)
-  if (daysMatch) return parseInt(daysMatch[1], 10)
+  if (daysMatch) {return parseInt(daysMatch[1], 10)}
   const hoursMatch = duration.match(/PT(\d+)H/)
-  if (hoursMatch) return Math.ceil(parseInt(hoursMatch[1], 10) / 8)
+  if (hoursMatch) {return Math.ceil(parseInt(hoursMatch[1], 10) / 8)}
   return 1
 }
 
@@ -130,7 +130,7 @@ export function parseMSProjectXML(xmlContent: string): ParsedScheduleData {
       const name = getElementText(taskEl, 'Name')
 
       // Skip project summary (ID 0)
-      if (id === '0' || !name) return
+      if (id === '0' || !name) {return}
 
       // Skip summary tasks
       if (getElementBool(taskEl, 'Summary')) {
@@ -211,7 +211,7 @@ interface XERRecord {
 }
 
 function parseXERLine(line: string, fields: string[]): XERRecord | null {
-  if (!line.startsWith('%R')) return null
+  if (!line.startsWith('%R')) {return null}
   const values = line.substring(2).split('\t')
   const record: XERRecord = {}
   fields.forEach((field, index) => {
@@ -221,7 +221,7 @@ function parseXERLine(line: string, fields: string[]): XERRecord | null {
 }
 
 function parseXERDate(dateStr: string): string {
-  if (!dateStr) return ''
+  if (!dateStr) {return ''}
   try {
     // P6 date format: "2024-01-15 08:00" or "2024-01-15"
     const datePart = dateStr.split(' ')[0]
@@ -277,13 +277,13 @@ export function parsePrimaveraXER(xerContent: string): ParsedScheduleData {
         // Field definitions
         currentFields = line.substring(2).split('\t')
         const table = tables.get(currentTable)
-        if (table) table.fields = currentFields
+        if (table) {table.fields = currentFields}
       } else if (line.startsWith('%R') && currentTable) {
         // Record
         const table = tables.get(currentTable)
         if (table) {
           const record = parseXERLine(line, table.fields)
-          if (record) table.records.push(record)
+          if (record) {table.records.push(record)}
         }
       }
     }

@@ -53,7 +53,7 @@ export function useContacts(projectId: string | undefined, filters?: ContactFilt
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Client-side search filtering
       let results = data as Contact[]
@@ -94,7 +94,7 @@ export function useContact(contactId: string | undefined) {
         .is('deleted_at', null)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Contact
     },
     enabled: !!contactId,
@@ -120,7 +120,7 @@ export function useContactsByType(projectId: string | undefined, contactType: st
         .is('deleted_at', null)
         .order('company_name', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Contact[]
     },
     enabled: !!projectId && !!contactType,
@@ -146,7 +146,7 @@ export function useEmergencyContacts(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('last_name', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Contact[]
     },
     enabled: !!projectId,
@@ -187,7 +187,7 @@ export function useCreateContact() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Contact
     },
     onSuccess: (data) => {
@@ -217,7 +217,7 @@ export function useUpdateContact() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Contact
     },
     onSuccess: (data) => {
@@ -253,7 +253,7 @@ export function useDeleteContact() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', contactId)
 
-      if (error) throw error
+      if (error) {throw error}
       return contact?.project_id
     },
     onSuccess: (projectId) => {

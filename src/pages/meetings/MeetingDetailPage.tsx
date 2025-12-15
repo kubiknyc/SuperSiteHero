@@ -56,7 +56,7 @@ export function MeetingDetailPage() {
 
   // Handle delete
   const handleDelete = async () => {
-    if (!id) return
+    if (!id) {return}
     try {
       await deleteMeeting.mutateAsync(id)
       navigate('/meetings')
@@ -67,7 +67,7 @@ export function MeetingDetailPage() {
 
   // Toggle action item completion
   const handleToggleActionItem = async (actionItem: MeetingActionItem) => {
-    if (!id) return
+    if (!id) {return}
     const newStatus = actionItem.status === 'completed' ? 'open' : 'completed'
     await updateActionItem.mutateAsync({
       meetingId: id,

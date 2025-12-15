@@ -44,7 +44,7 @@ export function useDistributionLists(filters?: DistributionListFilters) {
   return useQuery({
     queryKey: distributionListKeys.lists(filters),
     queryFn: async (): Promise<DistributionListWithCount[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       let query = db
         .from('distribution_lists')
@@ -89,7 +89,7 @@ export function useDistributionLists(filters?: DistributionListFilters) {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Transform counts from arrays to numbers
       return (data || []).map((list: any) => ({
@@ -110,7 +110,7 @@ export function useProjectDistributionLists(projectId: string, listType?: string
   return useQuery({
     queryKey: distributionListKeys.forProject(projectId, listType),
     queryFn: async (): Promise<DistributionListWithCount[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       let query = db
         .from('distribution_lists')
@@ -130,7 +130,7 @@ export function useProjectDistributionLists(projectId: string, listType?: string
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       return (data || []).map((list: any) => ({
         ...list,
@@ -166,7 +166,7 @@ export function useDistributionList(listId: string) {
         .eq('id', listId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DistributionListWithMembers;
     },
     enabled: !!listId,
@@ -192,7 +192,7 @@ export function useDistributionListMembers(listId: string) {
         .order('member_role')
         .order('created_at');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as DistributionListMemberWithUser[];
     },
     enabled: !!listId,
@@ -211,7 +211,7 @@ export function useExpandDistribution(listIds: string[], userIds: string[]) {
         p_additional_user_ids: userIds,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       return (data || []).map((r: any) => ({
         user_id: r.user_id,
@@ -234,7 +234,7 @@ export function useCreateDistributionList() {
 
   return useMutation({
     mutationFn: async (dto: CreateDistributionListDTO): Promise<DistributionList> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Create the list
       const { data: list, error: listError } = await db
@@ -251,7 +251,7 @@ export function useCreateDistributionList() {
         .select()
         .single();
 
-      if (listError) throw listError;
+      if (listError) {throw listError;}
 
       // Add members if provided
       if (dto.members && dto.members.length > 0) {
@@ -271,7 +271,7 @@ export function useCreateDistributionList() {
           .from('distribution_list_members')
           .insert(memberInserts);
 
-        if (membersError) throw membersError;
+        if (membersError) {throw membersError;}
       }
 
       return list as DistributionList;
@@ -300,7 +300,7 @@ export function useUpdateDistributionList() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DistributionList;
     },
     onSuccess: (data) => {
@@ -323,7 +323,7 @@ export function useDeleteDistributionList() {
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: distributionListKeys.all });
@@ -358,7 +358,7 @@ export function useAddDistributionListMember() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DistributionListMember;
     },
     onSuccess: (_, variables) => {
@@ -388,7 +388,7 @@ export function useUpdateDistributionListMember() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DistributionListMember;
     },
     onSuccess: (_, variables) => {
@@ -417,7 +417,7 @@ export function useRemoveDistributionListMember() {
         .delete()
         .eq('id', memberId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { listId }) => {
       queryClient.invalidateQueries({ queryKey: distributionListKeys.members(listId) });
@@ -436,7 +436,7 @@ export function useDefaultDistributionList(projectId: string, listType: string) 
   return useQuery({
     queryKey: [...distributionListKeys.forProject(projectId, listType), 'default'],
     queryFn: async (): Promise<DistributionListWithMembers | null> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Try project-specific default first
       const { data: projectDefault } = await db
@@ -457,7 +457,7 @@ export function useDefaultDistributionList(projectId: string, listType: string) 
         .eq('is_active', true)
         .maybeSingle();
 
-      if (projectDefault) return projectDefault as DistributionListWithMembers;
+      if (projectDefault) {return projectDefault as DistributionListWithMembers;}
 
       // Fall back to company-wide default
       const { data: companyDefault } = await db

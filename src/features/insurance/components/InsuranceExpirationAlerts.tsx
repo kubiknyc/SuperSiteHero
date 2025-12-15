@@ -60,7 +60,7 @@ export function InsuranceExpirationAlerts({
   const hasMore = expiringCertificates.length > maxItems
 
   const getAlertVariant = () => {
-    if (expiredCount > 0) return 'destructive'
+    if (expiredCount > 0) {return 'destructive'}
     return 'default'
   }
 

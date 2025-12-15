@@ -276,9 +276,9 @@ export function useSaveTemplateConfiguration() {
       grouping?: ReportTemplateGroupingInput[]
     }) => {
       await reportBuilderApi.setTemplateFields(templateId, fields)
-      if (filters) await reportBuilderApi.setTemplateFilters(templateId, filters)
-      if (sorting) await reportBuilderApi.setTemplateSorting(templateId, sorting)
-      if (grouping) await reportBuilderApi.setTemplateGrouping(templateId, grouping)
+      if (filters) {await reportBuilderApi.setTemplateFilters(templateId, filters)}
+      if (sorting) {await reportBuilderApi.setTemplateSorting(templateId, sorting)}
+      if (grouping) {await reportBuilderApi.setTemplateGrouping(templateId, grouping)}
       return reportBuilderApi.getReportTemplate(templateId)
     },
     onSuccess: (template) => {

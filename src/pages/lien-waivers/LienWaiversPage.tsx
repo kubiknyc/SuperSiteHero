@@ -64,7 +64,7 @@ export function LienWaiversPage() {
 
   // Filter waivers
   const filteredWaivers = useMemo(() => {
-    if (!waivers) return [];
+    if (!waivers) {return [];}
 
     return waivers.filter((waiver) => {
       // Search filter
@@ -80,7 +80,7 @@ export function LienWaiversPage() {
 
   // Group by status for quick stats
   const statusCounts = useMemo(() => {
-    if (!waivers) return {};
+    if (!waivers) {return {};}
     return waivers.reduce((acc, waiver) => {
       acc[waiver.status] = (acc[waiver.status] || 0) + 1;
       return acc;

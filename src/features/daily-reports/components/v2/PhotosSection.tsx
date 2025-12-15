@@ -124,7 +124,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
   const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0) return;
+    if (!files || files.length === 0) {return;}
 
     setIsProcessing(true);
 

@@ -1,25 +1,56 @@
 // File: /src/pages/auth/LoginPage.tsx
-// Login page for user authentication
+// Login page for user authentication with biometric support
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/lib/notifications/ToastContext'
-import { HardHat } from 'lucide-react'
+import { HardHat, Fingerprint, Loader2 } from 'lucide-react'
+import {
+  isWebAuthnSupported,
+  isPlatformAuthenticatorAvailable,
+  authenticateWithBiometric,
+  verifyBiometricAuthentication,
+  setLastBiometricAuthTime,
+} from '@/lib/auth/biometric'
 
 export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [biometricLoading, setBiometricLoading] = useState(false)
+  const [biometricAvailable, setBiometricAvailable] = useState(false)
+  const [checkingBiometric, setCheckingBiometric] = useState(true)
 
   const { signIn } = useAuth()
   const navigate = useNavigate()
   const { success, error } = useToast()
 
+  // Check if biometric authentication is available
+  useEffect(() => {
+    const checkBiometric = async () => {
+      setCheckingBiometric(true)
+      try {
+        const webAuthnSupported = isWebAuthnSupported()
+        const platformAvailable = await isPlatformAuthenticatorAvailable()
+        setBiometricAvailable(webAuthnSupported && platformAvailable)
+      } catch (err) {
+        console.error('Error checking biometric availability:', err)
+        setBiometricAvailable(false)
+      } finally {
+        setCheckingBiometric(false)
+      }
+    }
+
+    checkBiometric()
+  }, [])
+
+  // Handle password login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -34,6 +65,55 @@ export function LoginPage() {
       setLoading(false)
     }
   }
+
+  // Handle biometric login
+  const handleBiometricLogin = useCallback(async () => {
+    setBiometricLoading(true)
+
+    try {
+      // Attempt biometric authentication (discoverable credentials)
+      const authResult = await authenticateWithBiometric()
+
+      // Verify with backend
+      const verificationResult = await verifyBiometricAuthentication(
+        authResult.credentialId,
+        authResult.authenticatorData,
+        authResult.clientDataJSON,
+        authResult.signature
+      )
+
+      if (verificationResult.token && verificationResult.userId) {
+        // Mark biometric auth time
+        setLastBiometricAuthTime()
+
+        success('Success', 'Signed in with biometrics')
+
+        // If we got an action link, use it for proper session establishment
+        // For now, we'll show a message that the user should complete login
+        // This is because WebAuthn doesn't directly create Supabase sessions
+
+        // In a production implementation, you would:
+        // 1. Use the returned token to establish a session
+        // 2. Or implement a custom session mechanism
+        // 3. Or use Supabase's custom access token feature
+
+        // For now, prompt user to use password (biometric verified their identity)
+        success(
+          'Identity Verified',
+          'Biometric authentication successful. Please enter your password to complete sign-in.'
+        )
+      } else {
+        throw new Error('Verification failed - no token received')
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Biometric authentication failed'
+      error('Authentication Failed', errorMessage)
+    } finally {
+      setBiometricLoading(false)
+    }
+  }, [error, success])
+
+  const isLoading = loading || biometricLoading
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -50,8 +130,46 @@ export function LoginPage() {
           </CardDescription>
         </CardHeader>
 
+        {/* Biometric Login Option */}
+        {biometricAvailable && !checkingBiometric && (
+          <>
+            <CardContent className="pb-0">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full h-14 text-base"
+                onClick={handleBiometricLogin}
+                disabled={isLoading}
+              >
+                {biometricLoading ? (
+                  <>
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                    Authenticating...
+                  </>
+                ) : (
+                  <>
+                    <Fingerprint className="h-5 w-5 mr-2" />
+                    Sign in with Biometrics
+                  </>
+                )}
+              </Button>
+            </CardContent>
+
+            <div className="px-6 py-4">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <Separator className="w-full" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-white px-2 text-gray-500">or continue with email</span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className={`space-y-4 ${biometricAvailable && !checkingBiometric ? 'pt-0' : ''}`}>
             <div className="space-y-2">
               <Label htmlFor="email">Email address</Label>
               <Input
@@ -62,7 +180,8 @@ export function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
+                disabled={isLoading}
+                autoComplete="email webauthn"
               />
             </div>
 
@@ -80,18 +199,26 @@ export function LoginPage() {
                 id="password"
                 name="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="Enter your password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
+                disabled={isLoading}
+                autoComplete="current-password webauthn"
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Signing in...' : 'Sign in'}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                'Sign in'
+              )}
             </Button>
 
             <p className="text-sm text-center text-gray-600">

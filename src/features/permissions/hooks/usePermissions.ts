@@ -69,7 +69,7 @@ export function usePermissionDefinitions() {
         .order('category')
         .order('display_order');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     staleTime: 1000 * 60 * 60, // Cache for 1 hour (definitions rarely change)
@@ -87,14 +87,14 @@ export function useUserPermissions(userId?: string, projectId?: string) {
   return useQuery({
     queryKey: permissionKeys.user(userId || '', projectId),
     queryFn: async (): Promise<Map<string, ResolvedPermission>> => {
-      if (!userId) return new Map();
+      if (!userId) {return new Map();}
 
       const { data, error } = await db.rpc('get_user_permissions', {
         p_user_id: userId,
         p_project_id: projectId || null,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       const permMap = new Map<string, ResolvedPermission>();
       (data || []).forEach((row: any) => {
@@ -120,7 +120,7 @@ export function useHasPermission(permissionCode: string, projectId?: string): bo
   const { userProfile } = useAuth();
   const { data: permissions } = useUserPermissions(userProfile?.id, projectId);
 
-  if (!permissions) return false;
+  if (!permissions) {return false;}
   const perm = permissions.get(permissionCode);
   return perm?.granted ?? false;
 }
@@ -136,19 +136,19 @@ export function usePermissionCheck(projectId?: string) {
     permissions,
     isLoading,
     hasPermission: (code: string) => {
-      if (!permissions) return false;
+      if (!permissions) {return false;}
       const perm = permissions.get(code);
       return perm?.granted ?? false;
     },
     hasAnyPermission: (codes: string[]) => {
-      if (!permissions) return false;
+      if (!permissions) {return false;}
       return codes.some(code => {
         const perm = permissions.get(code);
         return perm?.granted ?? false;
       });
     },
     hasAllPermissions: (codes: string[]) => {
-      if (!permissions) return false;
+      if (!permissions) {return false;}
       return codes.every(code => {
         const perm = permissions.get(code);
         return perm?.granted ?? false;
@@ -170,7 +170,7 @@ export function useCustomRoles() {
   return useQuery({
     queryKey: permissionKeys.roles.list(userProfile?.company_id || ''),
     queryFn: async (): Promise<CustomRole[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('custom_roles')
@@ -178,7 +178,7 @@ export function useCustomRoles() {
         .eq('company_id', userProfile.company_id)
         .order('name');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id,
@@ -204,7 +204,7 @@ export function useCustomRole(roleId: string) {
         .eq('id', roleId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as CustomRoleWithPermissions;
     },
     enabled: !!roleId,
@@ -220,7 +220,7 @@ export function useCreateCustomRole() {
 
   return useMutation({
     mutationFn: async (dto: CreateCustomRoleDTO): Promise<CustomRole> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Create the role
       const { data: role, error: roleError } = await db
@@ -237,7 +237,7 @@ export function useCreateCustomRole() {
         .select()
         .single();
 
-      if (roleError) throw roleError;
+      if (roleError) {throw roleError;}
 
       // Add permissions if specified
       if (dto.permissions && dto.permissions.length > 0) {
@@ -281,7 +281,7 @@ export function useUpdateCustomRole() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as CustomRole;
     },
     onSuccess: (data) => {
@@ -304,7 +304,7 @@ export function useDeleteCustomRole() {
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: permissionKeys.roles.all });
@@ -341,7 +341,7 @@ export function useUpdateRolePermissions() {
         }));
 
         const { error } = await db.from('role_permissions').insert(rolePerms);
-        if (error) throw error;
+        if (error) {throw error;}
       }
     },
     onSuccess: (_, { roleId }) => {
@@ -371,7 +371,7 @@ export function useUserPermissionOverrides(userId: string) {
         .eq('user_id', userId)
         .order('granted_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as UserPermissionOverride[];
     },
     enabled: !!userId,
@@ -394,7 +394,7 @@ export function useCreatePermissionOverride() {
         .eq('code', dto.permission_code)
         .single();
 
-      if (!perm) throw new Error('Permission not found');
+      if (!perm) {throw new Error('Permission not found');}
 
       const { data, error } = await db
         .from('user_permission_overrides')
@@ -410,7 +410,7 @@ export function useCreatePermissionOverride() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as UserPermissionOverride;
     },
     onSuccess: (data) => {
@@ -433,7 +433,7 @@ export function useDeletePermissionOverride() {
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { userId }) => {
       queryClient.invalidateQueries({ queryKey: permissionKeys.overrides.user(userId) });
@@ -466,7 +466,7 @@ export function useAssignCustomRole() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as UserCustomRole;
     },
     onSuccess: (data) => {
@@ -488,7 +488,7 @@ export function useRemoveCustomRole() {
         .delete()
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: (_, { userId }) => {
       queryClient.invalidateQueries({ queryKey: permissionKeys.user(userId, undefined) });
@@ -513,7 +513,7 @@ export function useFeatureFlagDefinitions() {
         .order('category')
         .order('name');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     staleTime: 1000 * 60 * 60, // Cache for 1 hour
@@ -529,7 +529,7 @@ export function useCompanyFeatureFlags() {
   return useQuery({
     queryKey: permissionKeys.features.company(userProfile?.company_id || ''),
     queryFn: async (): Promise<Map<string, boolean>> => {
-      if (!userProfile?.company_id) return new Map();
+      if (!userProfile?.company_id) {return new Map();}
 
       // Get all flags with company overrides
       const { data: flags } = await db
@@ -579,7 +579,7 @@ export function useUpdateCompanyFeatureFlag() {
 
   return useMutation({
     mutationFn: async (dto: UpdateCompanyFeatureFlagDTO): Promise<void> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Get flag ID
       const { data: flag } = await db
@@ -588,7 +588,7 @@ export function useUpdateCompanyFeatureFlag() {
         .eq('code', dto.feature_code)
         .single();
 
-      if (!flag) throw new Error('Feature flag not found');
+      if (!flag) {throw new Error('Feature flag not found');}
 
       // Upsert the company setting
       const { error } = await db
@@ -605,7 +605,7 @@ export function useUpdateCompanyFeatureFlag() {
           onConflict: 'company_id,feature_flag_id',
         });
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       if (userProfile?.company_id) {
@@ -636,7 +636,7 @@ export function useDefaultRolePermissions(role: DefaultRole) {
         .eq('default_role', role)
         .eq('granted', true);
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []).map((rp: any) => rp.permission).filter(Boolean);
     },
   });

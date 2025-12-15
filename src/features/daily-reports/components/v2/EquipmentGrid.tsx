@@ -101,7 +101,7 @@ export function EquipmentGrid({
 
   const getOwnerTypeBadge = (ownerType: string | undefined) => {
     const typeOption = OWNER_TYPE_OPTIONS.find((o) => o.value === ownerType);
-    if (!typeOption) return null;
+    if (!typeOption) {return null;}
     return (
       <span className={`px-2 py-1 rounded text-xs font-medium ${typeOption.color}`}>
         {typeOption.label}

@@ -12,3 +12,9 @@ export { SendInvitationDialog } from './SendInvitationDialog'
 export { BidQuestionsSection } from './BidQuestionsSection'
 export { BidAddendaSection } from './BidAddendaSection'
 export { BidComparisonView } from './BidComparisonView'
+
+// Historical Bid Analysis Components
+export { HistoricalBidAnalysis } from './HistoricalBidAnalysis'
+export { VendorPerformanceCard } from './VendorPerformanceCard'
+export { BidAccuracyChart } from './BidAccuracyChart'
+export { BidTrendChart } from './BidTrendChart'

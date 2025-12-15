@@ -290,8 +290,8 @@ export function getUrgencyStatusConfig(urgency: UrgencyStatus) {
  * Calculate urgency from due date
  */
 export function calculateUrgency(dueDate: string | null, status: ActionItemStatus): UrgencyStatus {
-  if (status === 'completed') return 'completed'
-  if (!dueDate) return 'no_date'
+  if (status === 'completed') {return 'completed'}
+  if (!dueDate) {return 'no_date'}
 
   const due = new Date(dueDate)
   const today = new Date()
@@ -300,9 +300,9 @@ export function calculateUrgency(dueDate: string | null, status: ActionItemStatu
 
   const diffDays = Math.floor((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
 
-  if (diffDays < 0) return 'overdue'
-  if (diffDays === 0) return 'due_today'
-  if (diffDays <= 3) return 'due_soon'
+  if (diffDays < 0) {return 'overdue'}
+  if (diffDays === 0) {return 'due_today'}
+  if (diffDays <= 3) {return 'due_soon'}
   return 'on_track'
 }
 
@@ -310,8 +310,8 @@ export function calculateUrgency(dueDate: string | null, status: ActionItemStatu
  * Check if action item is overdue
  */
 export function isActionItemOverdue(item: ActionItem): boolean {
-  if (item.status === 'completed') return false
-  if (!item.due_date) return false
+  if (item.status === 'completed') {return false}
+  if (!item.due_date) {return false}
   return new Date(item.due_date) < new Date()
 }
 

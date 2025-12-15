@@ -82,9 +82,9 @@ function getLocationKey(item: PunchItem): string {
  * Check if a punch item is overdue
  */
 function isOverdue(item: PunchItem): boolean {
-  if (!item.due_date) return false
+  if (!item.due_date) {return false}
   const status = item.status
-  if (status && ['completed', 'verified'].includes(status)) return false
+  if (status && ['completed', 'verified'].includes(status)) {return false}
   return new Date(item.due_date) < new Date()
 }
 
@@ -166,7 +166,7 @@ export function usePunchByArea(
   const { data: punchItems, isLoading, error, refetch } = useQuery({
     queryKey: ['punch-items-by-area', projectId, status, priorityLevel, includeCompleted],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('punch_items')
@@ -187,7 +187,7 @@ export function usePunchByArea(
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PunchItem[]
     },
     enabled: !!projectId,
@@ -195,7 +195,7 @@ export function usePunchByArea(
 
   // Process and group punch items by area
   const summary = useMemo<PunchByAreaSummary | null>(() => {
-    if (!punchItems) return null
+    if (!punchItems) {return null}
 
     // Apply priority level filter if specified
     let filteredItems = punchItems
@@ -290,7 +290,7 @@ export function usePunchItemsByArea(
   return useQuery({
     queryKey: ['punch-items', projectId, 'area', area],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('punch_items')
@@ -304,7 +304,7 @@ export function usePunchItemsByArea(
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PunchItem[]
     },
     enabled: !!projectId,

@@ -259,7 +259,7 @@ export function useOptimisticEstimateUpdate() {
     queryClient.setQueryData(
       costEstimateKeys.detail(estimateId),
       (old: CostEstimateWithItems | null | undefined) => {
-        if (!old) return old
+        if (!old) {return old}
         return {
           ...old,
           ...updates,
@@ -279,7 +279,7 @@ export function useOptimisticItemUpdate() {
     queryClient.setQueryData(
       costEstimateKeys.detail(estimateId),
       (old: CostEstimateWithItems | null | undefined) => {
-        if (!old) return old
+        if (!old) {return old}
         return {
           ...old,
           items: old.items.map((item) =>
