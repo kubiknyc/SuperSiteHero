@@ -6,6 +6,12 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 import type {
   RFI,
   RFIWithDetails,
@@ -49,6 +55,8 @@ export interface RFIPDFData {
     owner?: string
     contractor?: string
   }
+  projectId: string
+  gcCompany?: CompanyInfo
   includeComments?: boolean
   includeAttachments?: boolean
 }
@@ -106,39 +114,7 @@ function getPriorityLabel(priority: RFIPriority): string {
   return labels[priority] || priority
 }
 
-/**
- * Draw document header
- */
-function drawHeader(doc: jsPDF, data: RFIPDFData): number {
-  let y = MARGIN
-  const rfi = data.rfi
-
-  // Title bar
-  doc.setFillColor(...COLORS.headerBlue)
-  doc.rect(MARGIN, y, CONTENT_WIDTH, 12, 'F')
-
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.white)
-  doc.text('REQUEST FOR INFORMATION', PAGE_WIDTH / 2, y + 8, { align: 'center' })
-
-  y += 14
-
-  // RFI Number and Date
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.black)
-
-  const rfiNumber = formatRFINumber(rfi.rfi_number)
-  doc.text(rfiNumber, MARGIN, y + 5)
-
-  const dateText = formatDate(rfi.date_created || rfi.created_at)
-  doc.text(dateText, PAGE_WIDTH - MARGIN, y + 5, { align: 'right' })
-
-  y += 10
-
-  return y
-}
+// Header function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Draw project information section
@@ -608,50 +584,33 @@ function drawComments(doc: jsPDF, data: RFIPDFData, startY: number): number {
 /**
  * Draw footer
  */
-function drawFooter(doc: jsPDF, data: RFIPDFData): void {
-  const pageCount = doc.getNumberOfPages()
-  const rfi = data.rfi
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.lightGray)
-    doc.setLineWidth(0.3)
-    doc.line(MARGIN, PAGE_HEIGHT - 12, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 12)
-
-    doc.setFontSize(7)
-    doc.setTextColor(...COLORS.mediumGray)
-
-    // RFI number
-    const rfiNumber = formatRFINumber(rfi.rfi_number)
-    doc.text(rfiNumber, MARGIN, PAGE_HEIGHT - 7)
-
-    // Generated date
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      PAGE_WIDTH / 2,
-      PAGE_HEIGHT - 7,
-      { align: 'center' }
-    )
-
-    // Page number
-    doc.text(`Page ${i} of ${pageCount}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 7, { align: 'right' })
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Generate RFI PDF
  */
 export async function generateRFIPDF(data: RFIPDFData): Promise<Blob> {
+  // Fetch company info for branding
+  const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
+
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
     format: 'letter',
   })
 
+  // Add JobSight branded header with GC logo and info
+  const rfi = data.rfi
+  const rfiNumber = formatRFINumber(rfi.rfi_number)
+  const rfiDate = formatDate(rfi.date_created || rfi.created_at)
+
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `${rfiNumber} - ${rfiDate}`,
+    documentType: 'REQUEST FOR INFORMATION',
+  })
+
   // Draw sections
-  let y = drawHeader(doc, data)
   y = drawProjectInfo(doc, data, y)
   y = drawDatesSection(doc, data, y)
   y = drawReferences(doc, data, y)
@@ -661,8 +620,8 @@ export async function generateRFIPDF(data: RFIPDFData): Promise<Blob> {
   y = drawAttachments(doc, data, y)
   y = drawComments(doc, data, y)
 
-  // Add footer
-  drawFooter(doc, data)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   return doc.output('blob')
 }

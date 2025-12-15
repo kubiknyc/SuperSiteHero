@@ -1,5 +1,5 @@
 // File: /src/pages/meetings/MeetingDetailPage.tsx
-// Meeting detail view with minutes, attendees, and action items
+// Meeting detail view with minutes, attendees, action items, and recordings
 
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
@@ -8,6 +8,7 @@ import {
   useMeeting,
   useDeleteMeeting,
   useUpdateActionItem,
+  useMeetingRecordings,
   MEETING_TYPES,
   MEETING_STATUSES,
   ACTION_ITEM_PRIORITIES,
@@ -16,10 +17,16 @@ import {
   type MeetingAttendee,
   type MeetingActionItem,
 } from '@/features/meetings/hooks'
+import {
+  MeetingRecorder,
+  RecordingPlayback,
+  TranscriptionViewer,
+} from '@/features/meetings/components'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   ArrowLeft,
   Edit,
@@ -36,18 +43,27 @@ import {
   AlertCircle,
   Download,
   Send,
+  Video,
+  Mic,
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { MeetingActionItemExtractor } from '@/features/summaries/components/MeetingActionItemExtractor'
+import type { MeetingRecording } from '@/types/meeting-recordings'
+import { useAuth } from '@/lib/auth'
 
 export function MeetingDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const { data: meeting, isLoading, error } = useMeeting(id)
+  const { data: recordings, refetch: refetchRecordings } = useMeetingRecordings(id)
   const deleteMeeting = useDeleteMeeting()
   const updateActionItem = useUpdateActionItem()
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [selectedRecording, setSelectedRecording] = useState<MeetingRecording | null>(null)
+  const [currentPlaybackTime, setCurrentPlaybackTime] = useState<number>(0)
+  const [seekToTime, setSeekToTime] = useState<number | null>(null)
 
   // Get meeting type label
   const getMeetingTypeLabel = (type: string) => {
@@ -400,6 +416,123 @@ export function MeetingDetailPage() {
                   <p className="text-gray-500 text-center py-4">
                     No action items recorded for this meeting.
                   </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Meeting Recordings Section */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Video className="h-5 w-5" />
+                  Recordings & Transcriptions
+                </CardTitle>
+                <CardDescription>
+                  {recordings?.length || 0} recording{recordings?.length !== 1 ? 's' : ''} available
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Recording Controls */}
+                {meeting.project_id && user?.company_id && (
+                  <MeetingRecorder
+                    meetingId={meeting.id}
+                    projectId={meeting.project_id}
+                    companyId={user.company_id}
+                    onRecordingComplete={(recording) => {
+                      refetchRecordings()
+                      setSelectedRecording(recording)
+                    }}
+                  />
+                )}
+
+                {/* Existing Recordings */}
+                {recordings && recordings.length > 0 && (
+                  <div className="space-y-4 mt-4">
+                    <h4 className="text-sm font-medium text-gray-700">Saved Recordings</h4>
+
+                    {/* Recording Tabs */}
+                    <Tabs
+                      value={selectedRecording?.id || recordings[0]?.id}
+                      onValueChange={(value) => {
+                        const rec = recordings.find((r) => r.id === value)
+                        if (rec) setSelectedRecording(rec)
+                      }}
+                    >
+                      <TabsList className="w-full flex-wrap h-auto gap-1 bg-gray-100 p-1">
+                        {recordings.map((rec, index) => (
+                          <TabsTrigger
+                            key={rec.id}
+                            value={rec.id}
+                            className="flex items-center gap-1.5 text-xs"
+                          >
+                            {rec.recording_type === 'audio' ? (
+                              <Mic className="h-3 w-3" />
+                            ) : (
+                              <Video className="h-3 w-3" />
+                            )}
+                            Recording {index + 1}
+                            {rec.transcription_status === 'completed' && (
+                              <Badge variant="success" className="h-4 text-[10px] px-1">
+                                Transcribed
+                              </Badge>
+                            )}
+                          </TabsTrigger>
+                        ))}
+                      </TabsList>
+
+                      {recordings.map((rec) => (
+                        <TabsContent key={rec.id} value={rec.id} className="mt-4 space-y-4">
+                          {/* Playback */}
+                          <RecordingPlayback
+                            recording={rec}
+                            onTimeUpdate={setCurrentPlaybackTime}
+                            seekToTime={selectedRecording?.id === rec.id ? seekToTime : null}
+                          />
+
+                          {/* Transcription */}
+                          <TranscriptionViewer
+                            recording={rec}
+                            currentTimeMs={currentPlaybackTime}
+                            onSeekToTime={(timeMs) => {
+                              setSeekToTime(timeMs)
+                              // Reset after a brief delay to allow re-seeking to same time
+                              setTimeout(() => setSeekToTime(null), 100)
+                            }}
+                          />
+
+                          {/* Recording Info */}
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 pt-2 border-t">
+                            <span>
+                              Recorded: {format(parseISO(rec.recorded_at), 'MMM d, yyyy h:mm a')}
+                            </span>
+                            {rec.duration_seconds && (
+                              <span>
+                                Duration: {Math.floor(rec.duration_seconds / 60)}m{' '}
+                                {rec.duration_seconds % 60}s
+                              </span>
+                            )}
+                            <span>
+                              Size: {(rec.file_size_bytes / (1024 * 1024)).toFixed(1)} MB
+                            </span>
+                            <Badge variant="outline" className="text-xs">
+                              {rec.recording_type}
+                            </Badge>
+                          </div>
+                        </TabsContent>
+                      ))}
+                    </Tabs>
+                  </div>
+                )}
+
+                {/* Empty State */}
+                {(!recordings || recordings.length === 0) && !meeting.project_id && (
+                  <div className="text-center py-6 text-gray-500">
+                    <Video className="h-10 w-10 mx-auto mb-2 text-gray-400" />
+                    <p>No recordings yet</p>
+                    <p className="text-xs mt-1">
+                      Start a recording to capture audio, video, or screen share
+                    </p>
+                  </div>
                 )}
               </CardContent>
             </Card>

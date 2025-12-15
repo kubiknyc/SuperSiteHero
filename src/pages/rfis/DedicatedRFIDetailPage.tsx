@@ -354,7 +354,14 @@ export function DedicatedRFIDetailPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => downloadRFIPDF({ rfi, includeComments: true, includeAttachments: true })}
+                  onClick={async () => {
+                    await downloadRFIPDF({
+                      rfi,
+                      projectId: rfi.project_id,
+                      includeComments: true,
+                      includeAttachments: true
+                    })
+                  }}
                 >
                   <FileDown className="h-4 w-4 mr-2" />
                   Export PDF

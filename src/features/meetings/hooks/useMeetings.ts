@@ -3,6 +3,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { googleCalendarApi } from '@/lib/api/services/google-calendar'
 import type { Database } from '@/types/database'
 
 type Meeting = Database['public']['Tables']['meetings']['Row']

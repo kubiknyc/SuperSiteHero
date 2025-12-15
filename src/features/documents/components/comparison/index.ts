@@ -2,6 +2,8 @@
 // Export all comparison components
 
 export { EnhancedVersionComparison } from './EnhancedVersionComparison'
+// Alias for backwards compatibility
+export { EnhancedVersionComparison as VersionComparisonView } from './EnhancedVersionComparison'
 export { ChangeNavigator, ChangeNavigatorCompact } from './ChangeNavigator'
 export { MarkupVersionComparison } from './MarkupVersionComparison'
 export { MarkupChangesList } from './MarkupChangesList'

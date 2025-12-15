@@ -7,6 +7,7 @@
  */
 
 import type jsPDF from 'jspdf';
+import { supabase } from '@/lib/supabase';
 
 // =====================================================
 // CONSTANTS
@@ -281,17 +282,72 @@ export async function loadCompanyLogo(url: string): Promise<string> {
 
 /**
  * Helper to get company info from project/database
- * This should be implemented to fetch from your actual data source
+ * Fetches company information for PDF branding from Supabase
  */
 export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
-  // TODO: Implement actual data fetching from Supabase
-  // For now, return a placeholder
+  try {
+    // Get project to find company_id
+    const { data: project, error: projectError } = await supabase
+      .from('projects')
+      .select('company_id')
+      .eq('id', projectId)
+      .single();
+
+    if (projectError || !project) {
+      console.warn('Failed to fetch project:', projectError);
+      return getDefaultCompanyInfo();
+    }
+
+    // Get company data
+    const { data: company, error: companyError } = await supabase
+      .from('companies')
+      .select('name, email, phone, address, city, state, zip, logo_url')
+      .eq('id', project.company_id)
+      .single();
+
+    if (companyError || !company) {
+      console.warn('Failed to fetch company:', companyError);
+      return getDefaultCompanyInfo();
+    }
+
+    // Build address string from components
+    const addressParts = [
+      company.address,
+      company.city && company.state ? `${company.city}, ${company.state}` : company.city || company.state,
+      company.zip
+    ].filter(Boolean);
+    const address = addressParts.length > 0 ? addressParts.join(', ') : undefined;
+
+    // Load logo if available
+    let logoBase64: string | undefined;
+    if (company.logo_url) {
+      try {
+        logoBase64 = await loadCompanyLogo(company.logo_url);
+      } catch (error) {
+        console.warn('Failed to load company logo:', error);
+      }
+    }
+
+    return {
+      name: company.name,
+      address,
+      phone: company.phone || undefined,
+      email: company.email || undefined,
+      website: undefined, // Not in database schema
+      logoBase64,
+    };
+  } catch (error) {
+    console.error('Error fetching company info:', error);
+    return getDefaultCompanyInfo();
+  }
+}
+
+/**
+ * Returns default company info when database fetch fails
+ */
+function getDefaultCompanyInfo(): CompanyInfo {
   return {
-    name: 'Company Name',
-    address: '123 Main Street, City, ST 12345',
-    phone: '(555) 123-4567',
-    email: 'info@company.com',
-    website: 'www.company.com',
+    name: 'General Contractor',
   };
 }
 

@@ -12,6 +12,12 @@ import type {
   ChangeOrderStatus,
   ChangeType,
 } from '@/types/change-order'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 
 // Page dimensions (Letter size)
 const PAGE_WIDTH = 215.9 // 8.5"
@@ -37,6 +43,8 @@ const CONTENT_WIDTH = PAGE_WIDTH - 2 * MARGIN
 export interface ChangeOrderPDFData {
   changeOrder: ChangeOrder
   items: ChangeOrderItem[]
+  projectId: string
+  gcCompany?: CompanyInfo
   projectInfo?: {
     name: string
     number?: string
@@ -106,38 +114,9 @@ function getStatusLabel(status: ChangeOrderStatus | string): string {
 }
 
 /**
- * Draw document header
+ * Header drawing now handled by centralized branding utility
+ * See: @/lib/utils/pdfBranding.ts - addDocumentHeader()
  */
-function drawHeader(doc: jsPDF, data: ChangeOrderPDFData): number {
-  let y = MARGIN
-  const co = data.changeOrder
-
-  // Title bar
-  doc.setFillColor(...COLORS.headerBlue)
-  doc.rect(MARGIN, y, CONTENT_WIDTH, 12, 'F')
-
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.white)
-  doc.text('CHANGE ORDER', PAGE_WIDTH / 2, y + 8, { align: 'center' })
-
-  y += 14
-
-  // Change Order Number and Date
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.black)
-
-  const coNumber = co.co_number ? `CO #${co.co_number}` : `PCO #${co.pco_number}`
-  doc.text(coNumber, MARGIN, y + 5)
-
-  const dateText = formatDate(co.date_created || co.created_at)
-  doc.text(dateText, PAGE_WIDTH - MARGIN, y + 5, { align: 'right' })
-
-  y += 10
-
-  return y
-}
 
 /**
  * Draw project information section
@@ -505,39 +484,9 @@ function drawSignatureSection(doc: jsPDF, data: ChangeOrderPDFData, startY: numb
 }
 
 /**
- * Draw footer
+ * Footer drawing now handled by centralized branding utility
+ * See: @/lib/utils/pdfBranding.ts - addFootersToAllPages()
  */
-function drawFooter(doc: jsPDF, data: ChangeOrderPDFData): void {
-  const pageCount = doc.getNumberOfPages()
-  const co = data.changeOrder
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.lightGray)
-    doc.setLineWidth(0.3)
-    doc.line(MARGIN, PAGE_HEIGHT - 12, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 12)
-
-    doc.setFontSize(7)
-    doc.setTextColor(...COLORS.mediumGray)
-
-    // CO number
-    const coNumber = co.co_number ? `CO #${co.co_number}` : `PCO #${co.pco_number}`
-    doc.text(coNumber, MARGIN, PAGE_HEIGHT - 7)
-
-    // Generated date
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      PAGE_WIDTH / 2,
-      PAGE_HEIGHT - 7,
-      { align: 'center' }
-    )
-
-    // Page number
-    doc.text(`Page ${i} of ${pageCount}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 7, { align: 'right' })
-  }
-}
 
 /**
  * Generate change order PDF

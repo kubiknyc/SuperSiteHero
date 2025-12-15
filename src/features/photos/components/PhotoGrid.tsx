@@ -1,11 +1,11 @@
 /**
  * PhotoGrid Component
  *
- * Displays photos in a responsive grid layout with selection support.
+ * Displays photos and videos in a responsive grid layout with selection support.
  */
 
 import { useState, useCallback } from 'react'
-import { MapPin, Check, MoreHorizontal, Eye, Download, Trash2, Tag, Image, View } from 'lucide-react'
+import { MapPin, Check, MoreHorizontal, Eye, Download, Trash2, Tag, Image, View, Video, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -16,12 +16,20 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import type { Photo } from '@/types/photo-management'
+import { formatVideoDuration } from '@/hooks/useVideoRecorder'
+
+// Extended Photo type with video fields
+interface PhotoWithVideo extends Photo {
+  isVideo?: boolean
+  videoDuration?: number
+  videoCodec?: string
+}
 
 interface PhotoGridProps {
-  photos: Photo[]
+  photos: (Photo | PhotoWithVideo)[]
   selectedIds: Set<string>
   onSelect: (photoId: string, selected: boolean) => void
-  onView: (photo: Photo) => void
+  onView: (photo: Photo | PhotoWithVideo) => void
   columns?: number
   showCaptions?: boolean
 }
@@ -37,7 +45,7 @@ export function PhotoGrid({
   const [hoveredId, setHoveredId] = useState<string | null>(null)
 
   const handleClick = useCallback(
-    (photo: Photo, e: React.MouseEvent) => {
+    (photo: Photo | PhotoWithVideo, e: React.MouseEvent) => {
       if (e.shiftKey || e.ctrlKey || e.metaKey) {
         e.preventDefault()
         onSelect(photo.id, !selectedIds.has(photo.id))
@@ -79,6 +87,8 @@ export function PhotoGrid({
       {photos.map((photo) => {
         const isSelected = selectedIds.has(photo.id)
         const isHovered = hoveredId === photo.id
+        const photoWithVideo = photo as PhotoWithVideo
+        const isVideo = photoWithVideo.isVideo
 
         return (
           <div
@@ -94,13 +104,22 @@ export function PhotoGrid({
             onMouseLeave={() => setHoveredId(null)}
             onClick={(e) => handleClick(photo, e)}
           >
-            {/* Image */}
+            {/* Thumbnail Image (used for both photos and video thumbnails) */}
             <img
               src={photo.thumbnailUrl || photo.fileUrl}
               alt={photo.caption || photo.fileName}
               className="w-full h-full object-cover"
               loading="lazy"
             />
+
+            {/* Video play indicator overlay */}
+            {isVideo && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-14 h-14 rounded-full bg-black/60 flex items-center justify-center">
+                  <Play className="h-7 w-7 text-white ml-1" fill="white" />
+                </div>
+              </div>
+            )}
 
             {/* Overlay */}
             <div

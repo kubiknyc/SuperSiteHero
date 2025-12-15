@@ -1,10 +1,11 @@
 /**
- * Photo Upload Hook
+ * Photo & Video Upload Hook
  *
- * Provides comprehensive photo upload functionality with:
+ * Provides comprehensive photo and video upload functionality with:
  * - 360 photo auto-detection
  * - EXIF metadata extraction
  * - Image compression
+ * - Video thumbnail generation
  * - Progress tracking
  * - Supabase storage integration
  */
@@ -22,6 +23,8 @@ import type {
   DeviceType,
 } from '@/types/photo-management';
 import exifr from 'exifr';
+import { generateVideoThumbnail, thumbnailToFile } from '@/lib/utils/generateVideoThumbnail';
+import { getVideoMetadata, getVideoCodec } from '@/lib/utils/videoCompression';
 
 // =============================================
 // Types
@@ -34,8 +37,10 @@ export interface PhotoUploadOptions {
   entityType?: string;
   /** Entity ID to link */
   entityId?: string;
-  /** Maximum file size in bytes (default: 50MB) */
+  /** Maximum file size in bytes (default: 50MB for photos, 500MB for videos) */
   maxFileSize?: number;
+  /** Maximum video file size in bytes (default: 500MB) */
+  maxVideoFileSize?: number;
   /** Quality for image compression (0-100, default: 85) */
   compressionQuality?: number;
   /** Maximum dimension for resizing (default: 4096) */
@@ -48,6 +53,8 @@ export interface PhotoUploadOptions {
   generateThumbnail?: boolean;
   /** Folder path within storage bucket */
   folderPath?: string;
+  /** Allow video uploads (default: true) */
+  allowVideos?: boolean;
 }
 
 export interface PhotoUploadProgress {
@@ -56,11 +63,13 @@ export interface PhotoUploadProgress {
   /** Upload progress (0-100) */
   progress: number;
   /** Current status */
-  status: 'pending' | 'detecting' | 'compressing' | 'uploading' | 'saving' | 'complete' | 'error';
+  status: 'pending' | 'detecting' | 'compressing' | 'uploading' | 'saving' | 'complete' | 'error' | 'generating_thumbnail';
   /** Error message if status is 'error' */
   error?: string;
   /** Detected as 360 photo */
   is360?: boolean;
+  /** Is this a video file */
+  isVideo?: boolean;
 }
 
 export interface PhotoUploadResult {
@@ -84,6 +93,12 @@ export interface PhotoUploadResult {
   equirectangularMetadata?: EquirectangularMetadata;
   /** EXIF data */
   exifData?: ExifData;
+  /** Is this a video */
+  isVideo?: boolean;
+  /** Video duration in seconds */
+  videoDuration?: number;
+  /** Video codec */
+  videoCodec?: string;
 }
 
 export interface ExifData {
@@ -250,18 +265,54 @@ function generateFileName(originalName: string): string {
 // Main Hook
 // =============================================
 
+/**
+ * Check if a file is a video based on MIME type
+ */
+function isVideoFile(file: File): boolean {
+  return file.type.startsWith('video/');
+}
+
+/**
+ * Get video dimensions from a File
+ */
+async function getVideoDimensions(file: File): Promise<{ width: number; height: number; duration: number } | null> {
+  return new Promise((resolve) => {
+    const video = document.createElement('video');
+    video.preload = 'metadata';
+    const url = URL.createObjectURL(file);
+
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(url);
+      resolve({
+        width: video.videoWidth,
+        height: video.videoHeight,
+        duration: video.duration,
+      });
+    };
+
+    video.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(null);
+    };
+
+    video.src = url;
+  });
+}
+
 export function usePhotoUpload(options: PhotoUploadOptions) {
   const {
     projectId,
     entityType,
     entityId,
-    maxFileSize = 50 * 1024 * 1024, // 50MB
+    maxFileSize = 50 * 1024 * 1024, // 50MB for photos
+    maxVideoFileSize = 500 * 1024 * 1024, // 500MB for videos
     compressionQuality = 85,
     maxDimension = 4096,
     detect360: shouldDetect360 = true,
     extractExif = true,
     generateThumbnail: shouldGenerateThumbnail = true,
     folderPath,
+    allowVideos = true,
   } = options;
 
   const queryClient = useQueryClient();
@@ -270,40 +321,61 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
   const [uploadProgress, setUploadProgress] = useState<Map<string, PhotoUploadProgress>>(new Map());
 
   /**
-   * Upload a single photo
+   * Upload a single photo or video
    */
   const uploadPhoto = useCallback(
     async (file: File): Promise<PhotoUploadResult> => {
       const fileId = `${file.name}-${Date.now()}`;
+      const isVideo = isVideoFile(file);
 
       // Update progress: Starting
       setUploadProgress((prev) => {
         const next = new Map(prev);
-        next.set(fileId, { file, progress: 0, status: 'pending' });
+        next.set(fileId, { file, progress: 0, status: 'pending', isVideo });
         return next;
       });
 
       try {
-        // Validate file size
-        if (file.size > maxFileSize) {
+        // Validate file type
+        const isImage = file.type.startsWith('image/');
+        if (!isImage && !isVideo) {
+          throw new Error(`Invalid file type: ${file.type}. Only images and videos are allowed.`);
+        }
+
+        if (isVideo && !allowVideos) {
+          throw new Error('Video uploads are not allowed.');
+        }
+
+        // Validate file size (different limits for photos vs videos)
+        const fileSizeLimit = isVideo ? maxVideoFileSize : maxFileSize;
+        if (file.size > fileSizeLimit) {
           throw new Error(
-            `File size (${(file.size / 1024 / 1024).toFixed(1)}MB) exceeds limit (${(maxFileSize / 1024 / 1024).toFixed(0)}MB)`
+            `File size (${(file.size / 1024 / 1024).toFixed(1)}MB) exceeds limit (${(fileSizeLimit / 1024 / 1024).toFixed(0)}MB)`
           );
         }
 
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-          throw new Error(`Invalid file type: ${file.type}. Only images are allowed.`);
+        // Get dimensions (different methods for images vs videos)
+        let dimensions: { width: number; height: number } | null = null;
+        let videoDuration: number | undefined;
+        let videoCodec: string | undefined;
+
+        if (isVideo) {
+          const videoInfo = await getVideoDimensions(file);
+          if (videoInfo) {
+            dimensions = { width: videoInfo.width, height: videoInfo.height };
+            videoDuration = Math.round(videoInfo.duration);
+          }
+          // Get video codec
+          videoCodec = getVideoCodec(file.type);
+        } else {
+          dimensions = await getImageDimensions(file);
         }
 
-        // Get dimensions
-        const dimensions = await getImageDimensions(file);
-
-        // Detect 360 photo
+        // Detect 360 photo (only for images)
         let is360 = false;
         let detect360Result: Detect360Result | undefined;
 
-        if (shouldDetect360) {
+        if (shouldDetect360 && !isVideo) {
           setUploadProgress((prev) => {
             const next = new Map(prev);
             next.set(fileId, { ...prev.get(fileId)!, status: 'detecting', progress: 5 });
@@ -320,28 +392,43 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
           return next;
         });
 
-        // Extract EXIF data
+        // Extract EXIF data (only for images)
         let exifData: ExifData = {};
-        if (extractExif) {
+        if (extractExif && !isVideo) {
           exifData = await extractExifData(file);
         }
 
-        // Compress image (skip compression for 360 photos to preserve quality)
+        // Compress image (skip compression for 360 photos and videos)
         setUploadProgress((prev) => {
           const next = new Map(prev);
-          next.set(fileId, { ...prev.get(fileId)!, status: 'compressing', progress: 15 });
+          next.set(fileId, { ...prev.get(fileId)!, status: isVideo ? 'generating_thumbnail' : 'compressing', progress: 15 });
           return next;
         });
 
         let uploadFile: Blob = file;
-        if (!is360 && (dimensions?.width || 0) > maxDimension) {
+        if (!isVideo && !is360 && (dimensions?.width || 0) > maxDimension) {
           uploadFile = await compressImage(file, maxDimension, compressionQuality / 100);
         }
 
-        // Generate thumbnail
+        // Generate thumbnail (different methods for images vs videos)
         let thumbnailBlob: Blob | undefined;
-        if (shouldGenerateThumbnail && !is360) {
-          thumbnailBlob = await generateThumbnail(file, 400);
+        if (shouldGenerateThumbnail) {
+          if (isVideo) {
+            // Generate thumbnail from video
+            try {
+              const videoThumbnail = await generateVideoThumbnail(file, {
+                width: 400,
+                time: 1,
+                format: 'image/jpeg',
+                quality: 0.8,
+              });
+              thumbnailBlob = videoThumbnail.blob;
+            } catch (thumbError) {
+              console.warn('Failed to generate video thumbnail:', thumbError);
+            }
+          } else if (!is360) {
+            thumbnailBlob = await generateThumbnail(file, 400);
+          }
         }
 
         // Prepare file paths
@@ -429,7 +516,7 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
           return next;
         });
 
-        const photoDto: CreatePhotoDTO = {
+        const photoDto: CreatePhotoDTO & { isVideo?: boolean; videoDuration?: number; videoCodec?: string } = {
           projectId,
           fileUrl,
           thumbnailUrl,
@@ -456,6 +543,12 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
           ...(entityType === 'punch_item' && entityId ? { punchItemId: entityId } : {}),
           ...(entityType === 'safety_incident' && entityId ? { safetyIncidentId: entityId } : {}),
           ...(entityType === 'workflow_item' && entityId ? { workflowItemId: entityId } : {}),
+          // Video-specific fields
+          ...(isVideo ? {
+            isVideo: true,
+            videoDuration,
+            videoCodec,
+          } : {}),
         };
 
         await createPhoto.mutateAsync(photoDto);
@@ -478,6 +571,9 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
           is360,
           equirectangularMetadata,
           exifData,
+          isVideo,
+          videoDuration,
+          videoCodec,
         };
       } catch (error) {
         const errorMessage = error instanceof Error ? error.message : 'Upload failed';
@@ -494,18 +590,20 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
       entityType,
       entityId,
       maxFileSize,
+      maxVideoFileSize,
       compressionQuality,
       maxDimension,
       shouldDetect360,
       extractExif,
       shouldGenerateThumbnail,
       folderPath,
+      allowVideos,
       createPhoto,
     ]
   );
 
   /**
-   * Upload multiple photos
+   * Upload multiple photos and/or videos
    */
   const uploadPhotos = useCallback(
     async (files: File[]): Promise<PhotoUploadResult[]> => {
@@ -525,12 +623,19 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
       queryClient.invalidateQueries({ queryKey: photoKeys.lists() });
 
       if (errors.length > 0) {
-        toast.error(`${errors.length} photo(s) failed to upload`);
+        toast.error(`${errors.length} file(s) failed to upload`);
       }
 
       if (results.length > 0) {
         const count360 = results.filter((r) => r.is360).length;
-        if (count360 > 0) {
+        const countVideos = results.filter((r) => r.isVideo).length;
+        const countPhotos = results.length - countVideos;
+
+        if (countVideos > 0 && countPhotos > 0) {
+          toast.success(`Uploaded ${countPhotos} photo(s) and ${countVideos} video(s)`);
+        } else if (countVideos > 0) {
+          toast.success(`Uploaded ${countVideos} video(s)`);
+        } else if (count360 > 0) {
           toast.success(`Uploaded ${results.length} photo(s) (${count360} 360 photo${count360 > 1 ? 's' : ''} detected)`);
         } else {
           toast.success(`Uploaded ${results.length} photo(s)`);

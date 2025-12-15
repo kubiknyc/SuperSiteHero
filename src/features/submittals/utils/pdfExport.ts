@@ -6,6 +6,12 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 import type {
   Submittal,
   SubmittalWithDetails,
@@ -57,6 +63,8 @@ export interface SubmittalPDFData {
     contractor?: string
     architect?: string
   }
+  projectId: string
+  gcCompany?: CompanyInfo
   includeItems?: boolean
   includeReviews?: boolean
   includeAttachments?: boolean
@@ -121,62 +129,7 @@ function getApprovalCodeColor(code: SubmittalApprovalCode): [number, number, num
   }
 }
 
-/**
- * Draw document header
- */
-function drawHeader(doc: jsPDF, data: SubmittalPDFData): number {
-  let y = MARGIN
-  const submittal = data.submittal
-
-  // Title bar
-  doc.setFillColor(...COLORS.headerBlue)
-  doc.rect(MARGIN, y, CONTENT_WIDTH, 12, 'F')
-
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.white)
-  doc.text('SUBMITTAL', PAGE_WIDTH / 2, y + 8, { align: 'center' })
-
-  y += 14
-
-  // Submittal Number and Spec Section
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.black)
-
-  const submittalNumber = formatSubmittalNumber(submittal.submittal_number, submittal.revision_number)
-  doc.text(submittalNumber, MARGIN, y + 5)
-
-  const dateText = formatDate(submittal.date_submitted || submittal.created_at)
-  doc.text(dateText, PAGE_WIDTH - MARGIN, y + 5, { align: 'right' })
-
-  y += 10
-
-  // Approval Code Badge (prominent display)
-  if (submittal.approval_code) {
-    const code = submittal.approval_code
-    const codeLabel = getApprovalCodeLabel(code)
-    const codeColor = getApprovalCodeColor(code)
-
-    // Draw approval code box
-    const boxWidth = 60
-    const boxHeight = 15
-    const boxX = (PAGE_WIDTH - boxWidth) / 2
-
-    doc.setFillColor(...codeColor)
-    doc.roundedRect(boxX, y, boxWidth, boxHeight, 2, 2, 'F')
-
-    doc.setFontSize(12)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(...COLORS.white)
-    doc.text(`${code} - ${codeLabel}`, PAGE_WIDTH / 2, y + 10, { align: 'center' })
-
-    doc.setTextColor(...COLORS.black)
-    y += boxHeight + 5
-  }
-
-  return y
-}
+// Header function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Draw project information section
@@ -601,40 +554,7 @@ function drawAttachments(doc: jsPDF, data: SubmittalPDFData, startY: number): nu
   return (doc as any).lastAutoTable.finalY + 5
 }
 
-/**
- * Draw footer
- */
-function drawFooter(doc: jsPDF, data: SubmittalPDFData): void {
-  const pageCount = doc.getNumberOfPages()
-  const submittal = data.submittal
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.lightGray)
-    doc.setLineWidth(0.3)
-    doc.line(MARGIN, PAGE_HEIGHT - 12, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 12)
-
-    doc.setFontSize(7)
-    doc.setTextColor(...COLORS.mediumGray)
-
-    // Submittal number
-    const submittalNumber = formatSubmittalNumber(submittal.submittal_number, submittal.revision_number)
-    doc.text(submittalNumber, MARGIN, PAGE_HEIGHT - 7)
-
-    // Generated date
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      PAGE_WIDTH / 2,
-      PAGE_HEIGHT - 7,
-      { align: 'center' }
-    )
-
-    // Page number
-    doc.text(`Page ${i} of ${pageCount}`, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 7, { align: 'right' })
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Generate Submittal PDF
