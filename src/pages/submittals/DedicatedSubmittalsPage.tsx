@@ -13,7 +13,7 @@ import {
   BALL_IN_COURT_ENTITIES,
   type SubmittalWithDetails,
 } from '@/features/submittals/hooks/useDedicatedSubmittals'
-import { CreateDedicatedSubmittalDialog } from '@/features/submittals/components'
+import { CreateDedicatedSubmittalDialog, DedicatedSubmittalAnalytics } from '@/features/submittals/components'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -35,6 +35,7 @@ import {
   LayoutGrid,
   List,
   Download,
+  TrendingUp,
 } from 'lucide-react'
 import { downloadSubmittalLog } from '@/features/submittals/utils/submittalExport'
 import { format } from 'date-fns'
@@ -84,7 +85,7 @@ interface PageState {
   searchTerm: string
   statusFilter: SubmittalReviewStatus | ''
   ballInCourtFilter: BallInCourtEntity | ''
-  viewMode: 'list' | 'spec-grouped'
+  viewMode: 'list' | 'spec-grouped' | 'analytics'
   createOpen: boolean
   expandedSections: Set<string>
 }
@@ -394,6 +395,7 @@ export function DedicatedSubmittalsPage() {
                   size="sm"
                   onClick={() => setState({ ...state, viewMode: 'spec-grouped' })}
                   className="px-2"
+                  title="Group by Spec Section"
                 >
                   <LayoutGrid className="h-4 w-4" />
                 </Button>
@@ -402,8 +404,18 @@ export function DedicatedSubmittalsPage() {
                   size="sm"
                   onClick={() => setState({ ...state, viewMode: 'list' })}
                   className="px-2"
+                  title="List View"
                 >
                   <List className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={state.viewMode === 'analytics' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setState({ ...state, viewMode: 'analytics' })}
+                  className="px-2"
+                  title="Lead Time Analytics"
+                >
+                  <TrendingUp className="h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -416,9 +428,15 @@ export function DedicatedSubmittalsPage() {
             <div>
               <CardTitle>Submittal Log</CardTitle>
               <CardDescription>
-                {filteredSubmittals.length} submittal{filteredSubmittals.length !== 1 ? 's' : ''}{' '}
-                {state.viewMode === 'spec-grouped' &&
-                  `across ${groupedBySpecSection.length} spec section${groupedBySpecSection.length !== 1 ? 's' : ''}`}
+                {state.viewMode === 'analytics' ? (
+                  'Lead time analytics and performance metrics'
+                ) : (
+                  <>
+                    {filteredSubmittals.length} submittal{filteredSubmittals.length !== 1 ? 's' : ''}{' '}
+                    {state.viewMode === 'spec-grouped' &&
+                      `across ${groupedBySpecSection.length} spec section${groupedBySpecSection.length !== 1 ? 's' : ''}`}
+                  </>
+                )}
               </CardDescription>
             </div>
             {state.viewMode === 'spec-grouped' && groupedBySpecSection.length > 0 && (
@@ -457,6 +475,9 @@ export function DedicatedSubmittalsPage() {
                   Create First Submittal
                 </Button>
               </div>
+            ) : state.viewMode === 'analytics' ? (
+              /* Analytics View */
+              <DedicatedSubmittalAnalytics projectId={projectId} />
             ) : state.viewMode === 'spec-grouped' ? (
               /* Spec Section Grouped View */
               <div className="space-y-2">

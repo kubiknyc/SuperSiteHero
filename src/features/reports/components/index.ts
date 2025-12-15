@@ -30,3 +30,9 @@ export {
   WeatherSummary,
 } from "./WeatherDelayAutoSuggest"
 export type { WeatherDelayAutoSuggestProps } from "./WeatherDelayAutoSuggest"
+
+// Category management and bulk operations
+export { CategoryManager } from "./CategoryManager"
+export type { CategoryManagerProps, TemplateCategory as CategoryManagerCategory } from "./CategoryManager"
+export { BulkActionToolbar } from "./BulkActionToolbar"
+export type { BulkActionToolbarProps } from "./BulkActionToolbar"

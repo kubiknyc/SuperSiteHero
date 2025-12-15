@@ -11,3 +11,4 @@ export { CreateDedicatedSubmittalDialog } from './CreateDedicatedSubmittalDialog
 
 // Lead Time Analytics
 export { LeadTimeAnalytics } from './LeadTimeAnalytics'
+export { DedicatedSubmittalAnalytics } from './DedicatedSubmittalAnalytics'

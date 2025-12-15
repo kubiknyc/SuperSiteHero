@@ -5,6 +5,7 @@
 
 // Hooks
 export * from './hooks/useAIConfiguration'
+export * from './hooks/useSemanticSearch'
 
 // Re-export types
 export type {

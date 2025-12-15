@@ -12,6 +12,7 @@ export * from './ActivityDetailPanel'
 
 // Import/Export
 export * from './ScheduleImportDialog'
+export * from './ScheduleExportDialog'
 
 // Baseline Management
 export * from './BaselineSelector'

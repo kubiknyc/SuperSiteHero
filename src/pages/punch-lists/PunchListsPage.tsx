@@ -20,7 +20,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks, Zap, WifiOff, RefreshCw } from 'lucide-react'
+import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks, Zap, WifiOff, RefreshCw, BarChart3 } from 'lucide-react'
 import { format } from 'date-fns'
 import type { PunchItem } from '@/types/database'
 
@@ -169,6 +169,13 @@ export function PunchListsPage() {
           </div>
           {activeProjectId && (
             <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                onClick={() => navigate(`/projects/${activeProjectId}/punch-lists/by-area`)}
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                By Area Report
+              </Button>
               <QRCodeScanner buttonLabel="Scan QR" buttonVariant="outline" />
               <Button
                 variant="default"

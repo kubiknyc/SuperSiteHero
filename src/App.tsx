@@ -3,7 +3,9 @@
 // Phase 2 Performance: Implements route-based code splitting with React.lazy()
 
 import { lazy, Suspense, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { TwentyFirstToolbar } from '@21st-extension/toolbar-react'
+import { ReactPlugin } from '@21st-extension/react'
 import { AuthProvider } from './lib/auth/AuthContext'
 import { ToastProvider } from './lib/notifications/ToastContext'
 import { ThemeProvider } from './lib/theme/darkMode'
@@ -71,6 +73,7 @@ const DedicatedSubmittalDetailPage = lazy(() => import('./pages/submittals/Dedic
 // Punch Lists feature
 const PunchListsPage = lazy(() => import('./pages/punch-lists/PunchListsPage').then(m => ({ default: m.PunchListsPage })))
 const PunchItemDetailPage = lazy(() => import('./pages/punch-lists/PunchItemDetailPage').then(m => ({ default: m.PunchItemDetailPage })))
+const PunchByAreaReportPage = lazy(() => import('./pages/punch-lists/PunchByAreaReportPage').then(m => ({ default: m.PunchByAreaReportPage })))
 
 // Workflows feature
 const WorkflowsPage = lazy(() => import('./pages/workflows/WorkflowsPage').then(m => ({ default: m.WorkflowsPage })))
@@ -233,6 +236,9 @@ const PublicReportPage = lazy(() => import('./pages/reports/PublicReportPage').t
 const QuickBooksPage = lazy(() => import('./pages/settings/QuickBooksPage').then(m => ({ default: m.QuickBooksPage })))
 const QuickBooksCallbackPage = lazy(() => import('./pages/settings/QuickBooksCallbackPage').then(m => ({ default: m.QuickBooksCallbackPage })))
 
+// Calendar Integrations feature
+const CalendarIntegrationsPage = lazy(() => import('./pages/settings/CalendarIntegrationsPage').then(m => ({ default: m.CalendarIntegrationsPage })))
+
 // Transmittals feature
 const TransmittalsPage = lazy(() => import('./pages/transmittals/TransmittalsPage').then(m => ({ default: m.TransmittalsPage })))
 const TransmittalDetailPage = lazy(() => import('./pages/transmittals/TransmittalDetailPage').then(m => ({ default: m.TransmittalDetailPage })))
@@ -248,6 +254,12 @@ const BidPackageDetailPage = lazy(() => import('./pages/bidding/BidPackageDetail
 
 // Field Dashboard feature
 const FieldDashboardPage = lazy(() => import('./pages/field-dashboard/FieldDashboardPage'))
+
+// Public Pages (no authentication required)
+const PublicApprovalPage = lazy(() => import('./pages/public/PublicApprovalPage').then(m => ({ default: m.PublicApprovalPage })))
+
+// Error Pages - Branded 404 and 500 pages
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
 
 function App() {
   // Initialize Web Vitals monitoring in production
@@ -296,7 +308,9 @@ function App() {
   }, [])
 
   return (
-    <ErrorBoundary>
+    <>
+      <TwentyFirstToolbar config={{ plugins: [ReactPlugin] }} />
+      <ErrorBoundary>
       <ThemeProvider defaultTheme="system">
         <BrowserRouter
           future={{
@@ -313,6 +327,8 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                 <Route path="/invite/:token" element={<AcceptInvitationPage />} />
+                {/* Public approval page - No auth required */}
+                <Route path="/approve/:token" element={<PublicApprovalPage />} />
 
                 {/* Protected routes - lazy loaded for code splitting */}
                 <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
@@ -374,6 +390,7 @@ function App() {
                 {/* Punch Lists feature */}
                 <Route path="/punch-lists" element={<ProtectedRoute><PunchListsPage /></ProtectedRoute>} />
                 <Route path="/punch-lists/:id" element={<ProtectedRoute><PunchItemDetailPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/punch-lists/by-area" element={<ProtectedRoute><PunchByAreaReportPage /></ProtectedRoute>} />
 
                 {/* Checklists feature */}
                 <Route path="/checklists/dashboard" element={<ProtectedRoute><ChecklistsDashboardPage /></ProtectedRoute>} />
@@ -402,6 +419,7 @@ function App() {
                 <Route path="/settings/notifications" element={<ProtectedRoute><NotificationPreferencesPage /></ProtectedRoute>} />
                 <Route path="/settings/quickbooks" element={<ProtectedRoute><QuickBooksPage /></ProtectedRoute>} />
                 <Route path="/settings/quickbooks/callback" element={<ProtectedRoute><QuickBooksCallbackPage /></ProtectedRoute>} />
+                <Route path="/settings/calendar" element={<ProtectedRoute><CalendarIntegrationsPage /></ProtectedRoute>} />
                 <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
@@ -556,8 +574,8 @@ function App() {
                   <Route path="projects/:projectId/settings/notifications" element={<ClientNotificationSettingsPage />} />
                 </Route>
 
-                {/* Redirect unknown routes to dashboard */}
-                <Route path="*" element={<Navigate to="/" replace />} />
+                {/* 404 Not Found - Branded error page */}
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </Suspense>
 
@@ -571,6 +589,7 @@ function App() {
         </BrowserRouter>
       </ThemeProvider>
     </ErrorBoundary>
+    </>
   )
 }
 

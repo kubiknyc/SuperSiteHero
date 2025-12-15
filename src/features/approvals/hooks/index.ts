@@ -46,3 +46,18 @@ export {
   useRejectRequestWithNotification,
   useAddApprovalCommentWithNotification,
 } from './useApprovalActions'
+
+// Public approval link hooks
+export {
+  publicApprovalKeys,
+  usePublicApprovalLinks,
+  useCreatePublicApprovalLink,
+  useRevokePublicApprovalLink,
+  useSendApprovalLinkEmail,
+  useClientApprovalResponses,
+  useValidatePublicApprovalToken,
+  usePublicApprovalPageData,
+  useSubmitClientApprovalResponse,
+  usePublicApprovalLinkManager,
+  usePublicApprovalPage,
+} from './usePublicApprovalLinks'

@@ -45,6 +45,7 @@ import {
 import { GanttChart } from '@/features/gantt/components/GanttChart'
 import {
   ScheduleImportDialog,
+  ScheduleExportDialog,
   ActivityDetailPanel,
   ActivityFormDialog,
   BaselineSelector,
@@ -109,6 +110,7 @@ export function MasterSchedulePage() {
   const [showComparisonView, setShowComparisonView] = useState(false)
   const [showImportHistory, setShowImportHistory] = useState(false)
   const [showLookAheadSync, setShowLookAheadSync] = useState(false)
+  const [showExportDialog, setShowExportDialog] = useState(false)
 
   // Map activities to GanttChart format
   const scheduleItems = useMemo(
@@ -240,8 +242,9 @@ export function MasterSchedulePage() {
 
   // Handle PDF export
   const handleExportPdf = useCallback(async () => {
-    if (!project) {return}
+    if (!project || !projectId) {return}
     await exportScheduleToPdf({
+      projectId,
       projectName: project.name,
       projectNumber: project.project_number ?? undefined,
       activities,
@@ -251,7 +254,7 @@ export function MasterSchedulePage() {
       includeAllActivities: true,
       orientation: 'landscape',
     })
-  }, [project, activities, stats, hasBaseline])
+  }, [projectId, project, activities, stats, hasBaseline])
 
   // Loading state
   if (projectLoading) {
@@ -399,6 +402,10 @@ export function MasterSchedulePage() {
                 <DropdownMenuItem onClick={handleExportPdf} disabled={activities.length === 0}>
                   <Download className="h-4 w-4 mr-2" />
                   Export to PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShowExportDialog(true)} disabled={activities.length === 0}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export to MS Project
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -563,6 +570,18 @@ export function MasterSchedulePage() {
           companyId={userProfile?.company_id || ''}
           onSubmit={handleActivityUpdate}
           isLoading={updateActivityWithNotification.isPending}
+        />
+
+        {/* Export Dialog */}
+        <ScheduleExportDialog
+          open={showExportDialog}
+          onOpenChange={setShowExportDialog}
+          projectId={projectId!}
+          projectName={project.name}
+          projectNumber={project.project_number ?? undefined}
+          activityCount={activities.length}
+          milestonesCount={activities.filter(a => a.is_milestone).length}
+          criticalCount={activities.filter(a => a.is_critical || a.is_on_critical_path).length}
         />
       </div>
     </AppLayout>

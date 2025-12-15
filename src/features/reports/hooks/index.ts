@@ -104,3 +104,14 @@ export {
   useEmbedCode,
   useCopyToClipboard,
 } from './useReportSharing'
+
+// Template cloning hooks
+export {
+  useCloneTemplate,
+  useBulkCloneTemplates,
+} from './useCloneTemplate'
+export type {
+  CloneTemplateOptions,
+  ClonedTemplate,
+  UseCloneTemplateResult,
+} from './useCloneTemplate'
