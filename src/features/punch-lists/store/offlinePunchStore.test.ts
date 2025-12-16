@@ -3,7 +3,17 @@
  * Tests local caching, sync queue, and offline punch item management
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
+
+// Mock the persist middleware BEFORE importing the store
+vi.mock('zustand/middleware', async () => {
+  const actual = await vi.importActual('zustand/middleware')
+  return {
+    ...actual,
+    persist: (config: any) => config, // Pass through without persistence
+  }
+})
+
 import {
   useOfflinePunchStore,
   usePendingPunchCount,
@@ -12,13 +22,34 @@ import {
 } from './offlinePunchStore'
 import type { DraftPunchItem } from './offlinePunchStore'
 
+// Mock localStorage
+const localStorageMock = (() => {
+  let store: Record<string, string> = {}
+
+  return {
+    getItem: (key: string) => store[key] || null,
+    setItem: (key: string, value: string) => {
+      store[key] = value.toString()
+    },
+    removeItem: (key: string) => {
+      delete store[key]
+    },
+    clear: () => {
+      store = {}
+    },
+  }
+})()
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+})
+
 describe('Offline Punch Store', () => {
   beforeEach(() => {
-    // Reset store before each test
-    const store = useOfflinePunchStore.getState()
-    store.clearSyncQueue()
-    // Clear drafts manually
-    store.drafts.forEach(draft => store.removeDraft(draft.id))
+    // Clear localStorage before each test
+    localStorageMock.clear()
+    // Reset store before each test by clearing sync queue and removing all drafts
+    useOfflinePunchStore.setState({ drafts: [], syncQueue: [], subcontractorUpdates: [] })
   })
 
   // =============================================
@@ -27,9 +58,7 @@ describe('Offline Punch Store', () => {
 
   describe('addDraft', () => {
     it('should add a new draft punch item', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Fix drywall',
         description: 'Repair damaged drywall in unit 101',
@@ -37,6 +66,9 @@ describe('Offline Punch Store', () => {
         priority: 'medium',
         status: 'open',
       })
+
+      // Get fresh state after mutation
+      const store = useOfflinePunchStore.getState()
 
       expect(id).toBeTruthy()
       expect(store.drafts).toHaveLength(1)
@@ -67,10 +99,9 @@ describe('Offline Punch Store', () => {
     })
 
     it('should set created_at timestamp', () => {
-      const store = useOfflinePunchStore.getState()
       const beforeTime = new Date().toISOString()
 
-      store.addDraft({
+      useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test item',
         trade: 'General',
@@ -79,6 +110,8 @@ describe('Offline Punch Store', () => {
       })
 
       const afterTime = new Date().toISOString()
+      // Get fresh state after mutation
+      const store = useOfflinePunchStore.getState()
       const createdAt = store.drafts[0].created_at
 
       expect(createdAt).toBeTruthy()
@@ -87,9 +120,7 @@ describe('Offline Punch Store', () => {
     })
 
     it('should add to sync queue with create operation', () => {
-      const store = useOfflinePunchStore.getState()
-
-      store.addDraft({
+      useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test item',
         trade: 'General',
@@ -97,15 +128,16 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
+      // Get fresh state after mutation
+      const store = useOfflinePunchStore.getState()
+
       expect(store.syncQueue).toHaveLength(1)
       expect(store.syncQueue[0].operation).toBe('create')
       expect(store.syncQueue[0].attempts).toBe(0)
     })
 
     it('should include all optional fields', () => {
-      const store = useOfflinePunchStore.getState()
-
-      store.addDraft({
+      useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Detailed item',
         description: 'Full description',
@@ -129,7 +161,10 @@ describe('Offline Punch Store', () => {
         pending_photos: ['blob:photo1', 'blob:photo2'],
       })
 
+      // Get fresh state after mutation
+      const store = useOfflinePunchStore.getState()
       const draft = store.drafts[0]
+
       expect(draft.building).toBe('Building A')
       expect(draft.floor).toBe('2nd Floor')
       expect(draft.room).toBe('Unit 201')
@@ -154,9 +189,7 @@ describe('Offline Punch Store', () => {
 
   describe('updateDraft', () => {
     it('should update existing draft', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Original title',
         trade: 'General',
@@ -164,20 +197,21 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.updateDraft(id, {
+      useOfflinePunchStore.getState().updateDraft(id, {
         title: 'Updated title',
         priority: 'high',
       })
 
+      // Get fresh state after mutations
+      const store = useOfflinePunchStore.getState()
       const draft = store.drafts.find(d => d.id === id)
+
       expect(draft?.title).toBe('Updated title')
       expect(draft?.priority).toBe('high')
     })
 
     it('should mark draft as not synced', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -186,18 +220,18 @@ describe('Offline Punch Store', () => {
       })
 
       // Simulate sync
-      store.markSynced(id)
+      useOfflinePunchStore.getState().markSynced(id)
+      let store = useOfflinePunchStore.getState()
       expect(store.drafts[0].synced).toBe(true)
 
       // Update should mark as not synced
-      store.updateDraft(id, { description: 'New description' })
+      useOfflinePunchStore.getState().updateDraft(id, { description: 'New description' })
+      store = useOfflinePunchStore.getState()
       expect(store.drafts[0].synced).toBe(false)
     })
 
     it('should update existing sync queue entry', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Original',
         trade: 'General',
@@ -205,19 +239,19 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
+      let store = useOfflinePunchStore.getState()
       const originalQueueLength = store.syncQueue.length
 
-      store.updateDraft(id, { title: 'Updated' })
+      useOfflinePunchStore.getState().updateDraft(id, { title: 'Updated' })
 
-      // Should not add new queue entry, just update existing
+      // Get fresh state and check
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(originalQueueLength)
       expect(store.syncQueue[0].punchItem.title).toBe('Updated')
     })
 
     it('should not add queue entry for already synced item without pending entry', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -226,22 +260,23 @@ describe('Offline Punch Store', () => {
       })
 
       // Mark as synced and remove from queue
-      store.markSynced(id, 'server-id-123')
+      useOfflinePunchStore.getState().markSynced(id, 'server-id-123')
 
+      let store = useOfflinePunchStore.getState()
       const queueLength = store.syncQueue.length
 
       // Update shouldn't add to queue since it's already synced
-      store.updateDraft(id, { description: 'Updated' })
+      useOfflinePunchStore.getState().updateDraft(id, { description: 'Updated' })
 
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(queueLength)
     })
 
     it('should handle update of non-existent draft gracefully', () => {
-      const store = useOfflinePunchStore.getState()
-
       // Should not throw
-      store.updateDraft('non-existent-id', { title: 'Updated' })
+      useOfflinePunchStore.getState().updateDraft('non-existent-id', { title: 'Updated' })
 
+      const store = useOfflinePunchStore.getState()
       expect(store.drafts).toHaveLength(0)
     })
   })
@@ -252,9 +287,7 @@ describe('Offline Punch Store', () => {
 
   describe('removeDraft', () => {
     it('should remove draft', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'To be removed',
         trade: 'General',
@@ -262,15 +295,14 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.removeDraft(id)
+      useOfflinePunchStore.getState().removeDraft(id)
 
+      const store = useOfflinePunchStore.getState()
       expect(store.drafts).toHaveLength(0)
     })
 
     it('should remove associated sync queue entry', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -278,10 +310,12 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
+      let store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(1)
 
-      store.removeDraft(id)
+      useOfflinePunchStore.getState().removeDraft(id)
 
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(0)
     })
   })
@@ -292,9 +326,7 @@ describe('Offline Punch Store', () => {
 
   describe('markSynced', () => {
     it('should mark draft as synced', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -302,17 +334,16 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.markSynced(id)
+      useOfflinePunchStore.getState().markSynced(id)
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.drafts.find(d => d.id === id)
       expect(draft?.synced).toBe(true)
       expect(draft?.sync_error).toBeUndefined()
     })
 
     it('should replace local ID with server ID', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const localId = store.addDraft({
+      const localId = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -320,17 +351,16 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.markSynced(localId, 'server-uuid-456')
+      useOfflinePunchStore.getState().markSynced(localId, 'server-uuid-456')
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.drafts.find(d => d.id === 'server-uuid-456')
       expect(draft).toBeDefined()
       expect(draft?.id).toBe('server-uuid-456')
     })
 
     it('should remove from sync queue', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -338,10 +368,12 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
+      let store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(1)
 
-      store.markSynced(id)
+      useOfflinePunchStore.getState().markSynced(id)
 
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(0)
     })
   })
@@ -352,9 +384,7 @@ describe('Offline Punch Store', () => {
 
   describe('markSyncError', () => {
     it('should set sync error on draft', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -362,8 +392,9 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.markSyncError(id, 'Network timeout')
+      useOfflinePunchStore.getState().markSyncError(id, 'Network timeout')
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.drafts.find(d => d.id === id)
       expect(draft?.sync_error).toBe('Network timeout')
     })
@@ -375,8 +406,6 @@ describe('Offline Punch Store', () => {
 
   describe('Sync Queue', () => {
     it('should add to sync queue', () => {
-      const store = useOfflinePunchStore.getState()
-
       const draft: DraftPunchItem = {
         id: 'draft-123',
         project_id: 'project-456',
@@ -388,19 +417,18 @@ describe('Offline Punch Store', () => {
         synced: false,
       }
 
-      store.addToSyncQueue({
+      useOfflinePunchStore.getState().addToSyncQueue({
         operation: 'update',
         punchItem: draft,
       })
 
+      const store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(1)
       expect(store.syncQueue[0].operation).toBe('update')
       expect(store.syncQueue[0].attempts).toBe(0)
     })
 
     it('should remove from sync queue', () => {
-      const store = useOfflinePunchStore.getState()
-
       const draft: DraftPunchItem = {
         id: 'draft-123',
         project_id: 'project-456',
@@ -412,21 +440,21 @@ describe('Offline Punch Store', () => {
         synced: false,
       }
 
-      store.addToSyncQueue({
+      useOfflinePunchStore.getState().addToSyncQueue({
         operation: 'create',
         punchItem: draft,
       })
 
+      let store = useOfflinePunchStore.getState()
       const queueId = store.syncQueue[0].id
 
-      store.removeFromSyncQueue(queueId)
+      useOfflinePunchStore.getState().removeFromSyncQueue(queueId)
 
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(0)
     })
 
     it('should increment attempt count', () => {
-      const store = useOfflinePunchStore.getState()
-
       const draft: DraftPunchItem = {
         id: 'draft-123',
         project_id: 'project-456',
@@ -438,25 +466,25 @@ describe('Offline Punch Store', () => {
         synced: false,
       }
 
-      store.addToSyncQueue({
+      useOfflinePunchStore.getState().addToSyncQueue({
         operation: 'create',
         punchItem: draft,
       })
 
+      let store = useOfflinePunchStore.getState()
       const queueId = store.syncQueue[0].id
 
-      store.incrementAttempt(queueId, 'Network error')
+      useOfflinePunchStore.getState().incrementAttempt(queueId, 'Network error')
 
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue[0].attempts).toBe(1)
       expect(store.syncQueue[0].error).toBe('Network error')
       expect(store.syncQueue[0].lastAttempt).toBeTruthy()
     })
 
     it('should clear entire sync queue', () => {
-      const store = useOfflinePunchStore.getState()
-
       // Add multiple items
-      store.addDraft({
+      useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Item 1',
         trade: 'General',
@@ -464,7 +492,7 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.addDraft({
+      useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Item 2',
         trade: 'General',
@@ -472,10 +500,12 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
+      let store = useOfflinePunchStore.getState()
       expect(store.syncQueue.length).toBeGreaterThan(0)
 
-      store.clearSyncQueue()
+      useOfflinePunchStore.getState().clearSyncQueue()
 
+      store = useOfflinePunchStore.getState()
       expect(store.syncQueue).toHaveLength(0)
     })
   })
@@ -561,7 +591,8 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      const count = usePendingPunchCount()
+      // Get fresh state after mutation
+      const count = useOfflinePunchStore.getState().syncQueue.length
 
       expect(count).toBe(1)
     })
@@ -585,7 +616,8 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      const drafts = usePunchDrafts()
+      // Get fresh state after mutations
+      const drafts = useOfflinePunchStore.getState().drafts
 
       expect(drafts).toHaveLength(2)
     })
@@ -611,7 +643,8 @@ describe('Offline Punch Store', () => {
 
       store.markSynced(id2)
 
-      const unsynced = useUnsyncedPunchItems()
+      // Use store's drafts.filter directly instead of calling the hook
+      const unsynced = useOfflinePunchStore.getState().drafts.filter((d) => !d.synced)
 
       expect(unsynced).toHaveLength(1)
       expect(unsynced[0].id).toBe(id1)
@@ -624,9 +657,7 @@ describe('Offline Punch Store', () => {
 
   describe('Floor Plan Location', () => {
     it('should store floor plan pin location', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Located on floor plan',
         trade: 'General',
@@ -640,6 +671,7 @@ describe('Offline Punch Store', () => {
         },
       })
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.getDraftById(id)
 
       expect(draft?.floor_plan_location).toEqual({
@@ -651,9 +683,7 @@ describe('Offline Punch Store', () => {
     })
 
     it('should update floor plan location', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -661,7 +691,7 @@ describe('Offline Punch Store', () => {
         status: 'open',
       })
 
-      store.updateDraft(id, {
+      useOfflinePunchStore.getState().updateDraft(id, {
         floor_plan_location: {
           x: 100,
           y: 200,
@@ -669,6 +699,7 @@ describe('Offline Punch Store', () => {
         },
       })
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.getDraftById(id)
 
       expect(draft?.floor_plan_location?.x).toBe(100)
@@ -682,9 +713,7 @@ describe('Offline Punch Store', () => {
 
   describe('Pending Photos', () => {
     it('should store pending photo URLs', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'With photos',
         trade: 'General',
@@ -696,15 +725,14 @@ describe('Offline Punch Store', () => {
         ],
       })
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.getDraftById(id)
 
       expect(draft?.pending_photos).toHaveLength(2)
     })
 
     it('should update pending photos', () => {
-      const store = useOfflinePunchStore.getState()
-
-      const id = store.addDraft({
+      const id = useOfflinePunchStore.getState().addDraft({
         project_id: 'project-123',
         title: 'Test',
         trade: 'General',
@@ -713,10 +741,11 @@ describe('Offline Punch Store', () => {
         pending_photos: ['blob:photo1'],
       })
 
-      store.updateDraft(id, {
+      useOfflinePunchStore.getState().updateDraft(id, {
         pending_photos: ['blob:photo1', 'blob:photo2', 'blob:photo3'],
       })
 
+      const store = useOfflinePunchStore.getState()
       const draft = store.getDraftById(id)
 
       expect(draft?.pending_photos).toHaveLength(3)

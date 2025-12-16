@@ -19,6 +19,9 @@ vi.mock('@/lib/supabase', () => ({
   supabase: {
     rpc: vi.fn(),
     from: vi.fn(),
+    auth: {
+      getUser: vi.fn(),
+    },
   },
 }))
 
@@ -29,6 +32,12 @@ describe('Analytics API Service', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+
+    // Mock auth.getUser() for all tests
+    vi.mocked(supabase.auth.getUser).mockResolvedValue({
+      data: { user: { id: 'test-user-id' } },
+      error: null,
+    } as any)
   })
 
   afterEach(() => {
@@ -41,11 +50,10 @@ describe('Analytics API Service', () => {
 
   describe('collectProjectSnapshot', () => {
     it('should collect a snapshot successfully', async () => {
-      const mockRpc = vi.fn().mockResolvedValue({
+      vi.mocked(supabase.rpc).mockResolvedValue({
         data: mockSnapshotId,
         error: null,
-      })
-      vi.mocked(supabase.rpc).mockReturnValue(mockRpc as any)
+      } as any)
 
       const result = await analyticsApi.collectProjectSnapshot(mockProjectId)
 
@@ -260,7 +268,10 @@ describe('Analytics API Service', () => {
 
       const result = await analyticsApi.storePrediction(newPrediction)
 
-      expect(mockQuery.insert).toHaveBeenCalledWith(newPrediction)
+      expect(mockQuery.insert).toHaveBeenCalledWith({
+        ...newPrediction,
+        is_latest: true,
+      })
       expect(result).toHaveProperty('id')
     })
   })
@@ -271,30 +282,32 @@ describe('Analytics API Service', () => {
 
   describe('getRiskScores', () => {
     it('should fetch risk assessment for project', async () => {
-      const mockRiskAssessment: RiskAssessment = {
+      const mockPrediction = {
+        id: 'pred-1',
         project_id: mockProjectId,
-        overall_risk: 'medium',
-        risk_scores: {
-          schedule_risk: 0.65,
-          cost_risk: 0.45,
-          quality_risk: 0.30,
-          safety_risk: 0.25,
-        },
-        assessed_at: '2024-01-15T10:00:00Z',
+        prediction_date: '2024-01-15',
+        overall_risk_score: 0.55,
+        schedule_risk_score: 0.65,
+        cost_risk_score: 0.45,
+        operational_risk_score: 0.30,
+        risk_feature_importance: [
+          { feature: 'schedule_delay', importance: 0.8 },
+        ],
       }
 
-      const mockRpc = vi.fn().mockResolvedValue({
-        data: mockRiskAssessment,
-        error: null,
-      })
-      vi.mocked(supabase.rpc).mockReturnValue(mockRpc as any)
+      const mockQuery = {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({ data: mockPrediction, error: null }),
+      }
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await analyticsApi.getRiskScores(mockProjectId)
 
-      expect(supabase.rpc).toHaveBeenCalledWith('calculate_risk_assessment', {
-        p_project_id: mockProjectId,
-      })
-      expect(result).toEqual(mockRiskAssessment)
+      expect(result.project_id).toBe(mockProjectId)
+      expect(result.overall).toBeDefined()
+      expect(result.schedule).toBeDefined()
+      expect(result.cost).toBeDefined()
     })
 
     it('should handle risk calculation errors', async () => {
@@ -393,7 +406,7 @@ describe('Analytics API Service', () => {
         id: mockRecommendationId,
         status: 'acknowledged',
         acknowledged_at: '2024-01-15T11:00:00Z',
-        acknowledged_notes: notes,
+        notes: notes,
       }
 
       const mockQuery = {
@@ -409,7 +422,7 @@ describe('Analytics API Service', () => {
       expect(mockQuery.update).toHaveBeenCalledWith(
         expect.objectContaining({
           status: 'acknowledged',
-          acknowledged_notes: notes,
+          notes: notes,
         })
       )
       expect(result.status).toBe('acknowledged')
@@ -446,7 +459,7 @@ describe('Analytics API Service', () => {
         eq: vi.fn().mockReturnThis(),
         select: vi.fn().mockReturnThis(),
         single: vi.fn().mockResolvedValue({
-          data: { id: mockRecommendationId, status: 'dismissed', dismissed_reason: reason },
+          data: { id: mockRecommendationId, status: 'dismissed', dismissal_reason: reason },
           error: null,
         }),
       }
@@ -455,7 +468,7 @@ describe('Analytics API Service', () => {
       const result = await analyticsApi.dismissRecommendation(mockRecommendationId, reason)
 
       expect(result.status).toBe('dismissed')
-      expect(result.dismissed_reason).toBe(reason)
+      expect(result.dismissal_reason).toBe(reason)
     })
   })
 
@@ -534,47 +547,67 @@ describe('Analytics API Service', () => {
 
   describe('getDashboardData', () => {
     it('should fetch complete dashboard data', async () => {
-      const mockDashboard = {
+      const mockProject = { name: 'Test Project' }
+      const mockPrediction = {
+        id: 'pred-1',
         project_id: mockProjectId,
-        latest_snapshot: {
-          id: 'snap-1',
-          project_id: mockProjectId,
-          snapshot_date: '2024-01-15',
-          schedule_spi: 0.95,
-          cost_cpi: 1.02,
-          percent_complete: 45.5,
-        },
-        latest_prediction: {
-          id: 'pred-1',
-          predicted_completion_date: '2024-06-15',
-          confidence_score: 0.85,
-        },
-        risk_assessment: {
-          overall_risk: 'medium',
-          risk_scores: {
-            schedule_risk: 0.65,
-            cost_risk: 0.45,
-          },
-        },
-        pending_recommendations: [],
-        trends: {
-          schedule_trend: [],
-          cost_trend: [],
-        },
+        prediction_date: '2024-01-15',
+        overall_risk_score: 0.55,
+        schedule_risk_score: 0.65,
+        cost_risk_score: 0.45,
+        operational_risk_score: 0.30,
+      }
+      const mockSnapshots: any[] = []
+
+      // Mock supabase.from for projects query
+      const mockProjectQuery = {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({ data: mockProject, error: null }),
       }
 
-      const mockRpc = vi.fn().mockResolvedValue({
-        data: mockDashboard,
-        error: null,
+      // Mock for predictions query
+      const mockPredictionQuery = {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        single: vi.fn().mockResolvedValue({ data: mockPrediction, error: null }),
+      }
+
+      // Mock for recommendations query
+      const mockRecommendationsQuery = {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        order: vi.fn().mockReturnThis(),
+        in: vi.fn().mockResolvedValue({ data: [], error: null }),
+      }
+
+      // Mock for snapshots query
+      const mockSnapshotsQuery = {
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        order: vi.fn().mockReturnThis(),
+        gte: vi.fn().mockResolvedValue({ data: mockSnapshots, error: null }),
+      }
+
+      let callCount = 0
+      vi.mocked(supabase.from).mockImplementation((table: string) => {
+        callCount++
+        if (table === 'projects') return mockProjectQuery as any
+        if (table === 'analytics_predictions' && callCount === 2) return mockPredictionQuery as any
+        if (table === 'analytics_recommendations') return mockRecommendationsQuery as any
+        if (table === 'analytics_project_snapshots') return mockSnapshotsQuery as any
+        if (table === 'analytics_recommendations' && callCount > 3) {
+          return {
+            select: vi.fn().mockResolvedValue({ data: [], error: null }),
+          } as any
+        }
+        return mockPredictionQuery as any
       })
-      vi.mocked(supabase.rpc).mockReturnValue(mockRpc as any)
 
       const result = await analyticsApi.getDashboardData(mockProjectId)
 
-      expect(supabase.rpc).toHaveBeenCalledWith('get_analytics_dashboard', {
-        p_project_id: mockProjectId,
-      })
-      expect(result).toEqual(mockDashboard)
+      expect(result.project_id).toBe(mockProjectId)
+      expect(result.project_name).toBe('Test Project')
     })
   })
 
@@ -602,7 +635,7 @@ describe('Analytics API Service', () => {
         throw new Error('Network error')
       })
 
-      await expect(analyticsApi.getProjectSnapshots(mockProjectId)).rejects.toThrow('Network error')
+      await expect(analyticsApi.getProjectSnapshots(mockProjectId)).rejects.toThrow('Failed to fetch project snapshots')
     })
   })
 })

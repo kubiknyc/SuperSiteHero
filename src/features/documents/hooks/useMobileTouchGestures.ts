@@ -275,7 +275,7 @@ export function useMobileTouchGestures(options: UseMobileTouchGesturesOptions = 
 
     if (remainingTouches.length === 0) {
       // All touches ended
-      if (state.isDrawing && drawingPointsRef.current.length > 0) {
+      if (drawingPointsRef.current.length > 0) {
         // Check for tap vs draw
         const startPoint = drawingPointsRef.current[0]
         const endPoint = drawingPointsRef.current[drawingPointsRef.current.length - 1]
