@@ -23,9 +23,10 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
           className="absolute inset-0"
           style={{
             backgroundImage: `
-              linear-gradient(rgba(249, 115, 22, 0.3) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(249, 115, 22, 0.3) 1px, transparent 1px)
+              linear-gradient(rgba(30, 64, 175, 0.3) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(30, 64, 175, 0.3) 1px, transparent 1px)
             `,
+            // TODO: Update to primary color CSS variable when animations support it
             backgroundSize: '40px 40px',
             animation: 'gridSlide 20s linear infinite',
           }}
@@ -38,13 +39,13 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
         <div className="relative">
           {/* Outer glow rings */}
           <div
-            className="absolute inset-0 -m-12 bg-orange-500/20 blur-3xl rounded-full"
+            className="absolute inset-0 -m-12 bg-primary dark:bg-primary/20 blur-3xl rounded-full"
             style={{
               animation: 'pulseGlow 3s ease-in-out infinite',
             }}
           />
           <div
-            className="absolute inset-0 -m-8 bg-orange-500/30 blur-2xl rounded-full"
+            className="absolute inset-0 -m-8 bg-primary dark:bg-primary/30 blur-2xl rounded-full"
             style={{
               animation: 'pulseGlow 3s ease-in-out infinite 0.5s',
             }}
@@ -52,7 +53,7 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
 
           {/* Logo container with construction loader animation */}
           <div
-            className="relative rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 p-8 shadow-2xl shadow-orange-500/50"
+            className="relative rounded-2xl bg-gradient-to-br from-primary via-primary-700 to-primary-800 p-8 shadow-2xl shadow-primary/50 dark:from-primary dark:via-primary-700 dark:to-primary-800 dark:shadow-primary/50"
             style={{
               animation: 'construct 2s ease-in-out infinite',
             }}
@@ -65,7 +66,7 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
         {/* Progress bar */}
         <div className="mt-12 w-64 h-1 bg-gray-700 rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full"
+            className="h-full bg-gradient-to-r from-primary to-primary-500 rounded-full dark:from-primary dark:to-primary-500"
             style={{
               animation: 'progressSlide 1.5s ease-in-out infinite',
             }}
@@ -89,7 +90,7 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
           {[0, 1, 2].map((i) => (
             <div
               key={i}
-              className="w-2 h-2 bg-orange-500 rounded-full"
+              className="w-2 h-2 bg-primary dark:bg-primary rounded-full"
               style={{
                 animation: `bounce 1.4s ease-in-out infinite`,
                 animationDelay: `${i * 0.2}s`,
@@ -182,7 +183,7 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
 }
 
 /**
- * Inline loading spinner with orange branding
+ * Inline loading spinner with Professional Blueprint branding
  */
 export function LoadingSpinner({ size = 'md', className }: { size?: 'sm' | 'md' | 'lg'; className?: string }) {
   const sizeClasses = {
@@ -194,7 +195,7 @@ export function LoadingSpinner({ size = 'md', className }: { size?: 'sm' | 'md' 
   return (
     <div className={`${sizeClasses[size]} ${className || ''}`}>
       <svg
-        className="animate-spin text-orange-500"
+        className="animate-spin text-primary dark:text-primary-400"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
@@ -228,8 +229,8 @@ export function LoadingOverlay({ message, show }: { message?: string; show: bool
       <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl rounded-2xl p-10 shadow-2xl border border-white/20 dark:border-gray-700/50 flex flex-col items-center max-w-sm">
         {/* Mini logo with glow */}
         <div className="relative mb-6">
-          <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full" />
-          <div className="relative rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-3 shadow-lg shadow-orange-500/30">
+          <div className="absolute inset-0 bg-primary dark:bg-primary/20 blur-xl rounded-full" />
+          <div className="relative rounded-xl bg-gradient-to-br from-primary to-primary-700 p-3 shadow-lg shadow-primary/30 dark:from-primary dark:to-primary-700 dark:shadow-primary/30">
             <LogoIcon className="w-12 h-12" />
           </div>
         </div>

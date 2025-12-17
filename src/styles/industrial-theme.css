@@ -1,20 +1,20 @@
 /**
- * JobSight Industrial Modern Theme
- * Construction-inspired design system with bold orange identity
+ * JobSight Professional Blueprint Theme
+ * Construction-inspired design system with Professional Blueprint blue identity
  */
 
 :root {
-  /* === Brand Colors === */
-  --jobsight-orange-50: #fff7ed;
-  --jobsight-orange-100: #ffedd5;
-  --jobsight-orange-200: #fed7aa;
-  --jobsight-orange-300: #fdba74;
-  --jobsight-orange-400: #fb923c;
-  --jobsight-orange-500: #f97316; /* PRIMARY BRAND */
-  --jobsight-orange-600: #ea580c;
-  --jobsight-orange-700: #c2410c;
-  --jobsight-orange-800: #9a3412;
-  --jobsight-orange-900: #7c2d12;
+  /* === Professional Blueprint Brand Colors === */
+  --jobsight-blue-50: #eff6ff;
+  --jobsight-blue-100: #dbeafe;
+  --jobsight-blue-200: #bfdbfe;
+  --jobsight-blue-300: #93c5fd;
+  --jobsight-blue-400: #60a5fa;
+  --jobsight-blue-500: #3b82f6;
+  --jobsight-blue-600: #2563eb;
+  --jobsight-blue-700: #1d4ed8;
+  --jobsight-blue-800: #1e40af; /* PRIMARY BRAND - Professional Blueprint */
+  --jobsight-blue-900: #1e3a8a;
 
   /* === Industrial Grays === */
   --industrial-concrete-50: #fafafa;
@@ -32,15 +32,17 @@
   --safety-yellow: #fbbf24;
   --caution-red: #ef4444;
   --approved-green: #10b981;
-  --blueprint-blue: #3b82f6;
+  --blueprint-blue: #1e40af; /* Professional Blueprint primary */
 
   /* === Shadows === */
   --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-medium: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-large: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-orange-glow: 0 0 20px rgb(249 115 22 / 0.3);
-  --shadow-orange-glow-lg: 0 0 40px rgb(249 115 22 / 0.4);
+
+  /* Professional Blueprint blue glow effects */
+  --shadow-blue-glow: 0 0 20px rgb(30 64 175 / 0.3);
+  --shadow-blue-glow-lg: 0 0 40px rgb(30 64 175 / 0.4);
 
   /* === Typography === */
   --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -83,8 +85,8 @@
 .bg-construction-grid {
   background-color: var(--industrial-steel-900);
   background-image:
-    linear-gradient(rgba(249, 115, 22, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(249, 115, 22, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(30, 64, 175, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 64, 175, 0.1) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -96,8 +98,8 @@
 .bg-steel-mesh {
   background-color: var(--industrial-steel-800);
   background-image:
-    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(249, 115, 22, 0.05) 10px, rgba(249, 115, 22, 0.05) 20px),
-    repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(249, 115, 22, 0.05) 10px, rgba(249, 115, 22, 0.05) 20px);
+    repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(30, 64, 175, 0.05) 10px, rgba(30, 64, 175, 0.05) 20px),
+    repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(30, 64, 175, 0.05) 10px, rgba(30, 64, 175, 0.05) 20px);
 }
 
 /* === Glass Morphism (for cards on photos/blueprints) === */
@@ -233,14 +235,14 @@
   animation: construct 2s ease-in-out infinite;
 }
 
-/* === Orange Glow Effect === */
-.orange-glow {
-  box-shadow: var(--shadow-orange-glow);
+/* === Professional Blueprint Blue Glow Effect === */
+.blue-glow {
+  box-shadow: var(--shadow-blue-glow);
   transition: box-shadow var(--transition-base);
 }
 
-.orange-glow:hover {
-  box-shadow: var(--shadow-orange-glow-lg);
+.blue-glow:hover {
+  box-shadow: var(--shadow-blue-glow-lg);
 }
 
 /* === Data Grid (Spreadsheet-like) === */
@@ -269,7 +271,7 @@
 }
 
 .data-grid tbody tr:hover {
-  background: var(--jobsight-orange-50);
+  background: var(--jobsight-blue-50);
 }
 
 /* === Utility Classes === */
@@ -281,11 +283,11 @@
 }
 
 .border-construction {
-  border: 2px solid var(--jobsight-orange-500);
+  border: 2px solid var(--blueprint-blue);
   border-style: dashed;
 }
 
 .focus-construction:focus {
-  outline: 2px solid var(--jobsight-orange-500);
+  outline: 2px solid var(--blueprint-blue);
   outline-offset: 2px;
 }

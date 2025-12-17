@@ -222,14 +222,14 @@ export function DistributionListPicker({
     <Collapsible
       open={isExpanded}
       onOpenChange={setIsExpanded}
-      className={cn('space-y-3 p-4 bg-blue-50 border border-blue-200 rounded-lg', className)}
+      className={cn('space-y-3 p-4 bg-primary-50 border border-primary-200 dark:bg-primary-950/20 dark:border-primary-800 rounded-lg', className)}
     >
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-blue-800">
+        <div className="flex items-center gap-2 text-primary-800 dark:text-primary-200">
           <Users className="h-4 w-4" />
           <span className="font-medium text-sm">{label}</span>
           {totalCount > 0 && (
-            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+            <Badge variant="secondary" className="bg-primary-100 dark:bg-primary-950 text-primary-800 dark:text-primary-200">
               {totalCount}
             </Badge>
           )}
@@ -257,7 +257,7 @@ export function DistributionListPicker({
         </CollapsibleTrigger>
       </div>
 
-      <p className="text-xs text-blue-700">{description}</p>
+      <p className="text-xs text-primary-700 dark:text-primary-300">{description}</p>
 
       {/* Selected recipients display */}
       {(selectedRecipients.length > 0 || value.listIds.length > 0) && (
@@ -295,7 +295,7 @@ export function DistributionListPicker({
               className={cn(
                 'flex items-center gap-1 rounded-full pl-1 pr-2 py-1',
                 recipient.type === 'user'
-                  ? 'bg-white border border-blue-200'
+                  ? 'bg-white border border-primary-200 dark:border-primary-800'
                   : 'bg-green-50 border border-green-200'
               )}
             >
@@ -307,7 +307,7 @@ export function DistributionListPicker({
                     className="h-5 w-5 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-600">
+                  <div className="h-5 w-5 rounded-full bg-primary-100 dark:bg-primary-950 flex items-center justify-center text-[10px] text-primary dark:text-primary-400">
                     {recipient.name.charAt(0) || '?'}
                   </div>
                 )
@@ -317,7 +317,7 @@ export function DistributionListPicker({
               <span
                 className={cn(
                   'text-sm',
-                  recipient.type === 'user' ? 'text-blue-900' : 'text-green-900'
+                  recipient.type === 'user' ? 'text-primary-900 dark:text-primary-100' : 'text-green-900'
                 )}
               >
                 {recipient.name}
@@ -328,7 +328,7 @@ export function DistributionListPicker({
                 className={cn(
                   'ml-1',
                   recipient.type === 'user'
-                    ? 'text-blue-400 hover:text-blue-600'
+                    ? 'text-primary-400 dark:text-primary-400 hover:text-primary dark:text-primary-400'
                     : 'text-green-400 hover:text-green-600'
                 )}
                 disabled={disabled}
@@ -400,7 +400,7 @@ export function DistributionListPicker({
                         disabled={disabled}
                         className={cn(
                           'w-full flex items-center gap-3 p-2 text-left hover:bg-muted/50',
-                          isSelected && 'bg-blue-50'
+                          isSelected && 'bg-primary-50 dark:bg-primary-950/20'
                         )}
                       >
                         {pu.user.avatar_url ? (
@@ -428,7 +428,7 @@ export function DistributionListPicker({
                           </span>
                         )}
                         {isSelected && (
-                          <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                          <Check className="h-4 w-4 text-primary dark:text-primary-400 flex-shrink-0" />
                         )}
                       </button>
                     );
@@ -484,7 +484,7 @@ export function DistributionListPicker({
                           variant="outline"
                           className={cn(
                             'text-xs',
-                            list.project_id ? 'border-blue-200 text-blue-700' : 'border-gray-200'
+                            list.project_id ? 'border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300' : 'border-gray-200'
                           )}
                         >
                           {list.project_id ? 'Project' : 'Company'}

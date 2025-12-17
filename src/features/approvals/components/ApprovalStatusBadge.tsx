@@ -8,6 +8,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import type { ApprovalStatus } from '@/types/approval-workflow'
 import { APPROVAL_STATUS_CONFIG } from '@/types/approval-workflow'
+import { TouchWrapper } from '@/components/ui/touch-wrapper'
 
 interface ApprovalStatusBadgeProps {
   status: ApprovalStatus
@@ -35,7 +36,7 @@ export function ApprovalStatusBadge({
   const config = APPROVAL_STATUS_CONFIG[status]
   const colorClass = statusColorClasses[status]
 
-  return (
+  const badge = (
     <span
       className={cn(
         'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border',
@@ -61,6 +62,13 @@ export function ApprovalStatusBadge({
       )}
     </span>
   )
+
+  // Wrap with TouchWrapper when interactive (onClick present)
+  if (onClick) {
+    return <TouchWrapper>{badge}</TouchWrapper>
+  }
+
+  return badge
 }
 
 function StatusIcon({ status }: { status: ApprovalStatus }) {

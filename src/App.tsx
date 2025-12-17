@@ -296,16 +296,13 @@ const BlueprintDailyReports = lazy(() => import('./pages/blueprint-samples/Bluep
 const BlueprintDocuments = lazy(() => import('./pages/blueprint-samples/BlueprintDocuments').then(m => ({ default: m.default })))
 const AnimatedBlueprintDemo = lazy(() => import('./pages/blueprint-samples/AnimatedBlueprintDemo').then(m => ({ default: m.default })))
 
-// Blueprint Variants - 8 different visual treatments
+// Blueprint Variants - 4 polished, production-ready designs
 const BlueprintVariantsIndex = lazy(() => import('./pages/blueprint-samples/BlueprintVariantsIndex').then(m => ({ default: m.default })))
-const BlueprintVariant1Classic = lazy(() => import('./pages/blueprint-samples/BlueprintVariant1Classic').then(m => ({ default: m.default })))
-const BlueprintVariant2Light = lazy(() => import('./pages/blueprint-samples/BlueprintVariant2Light').then(m => ({ default: m.default })))
-const BlueprintVariant3Technical = lazy(() => import('./pages/blueprint-samples/BlueprintVariant3Technical').then(m => ({ default: m.default })))
-const BlueprintVariant4Glass = lazy(() => import('./pages/blueprint-samples/BlueprintVariant4Glass').then(m => ({ default: m.default })))
-const BlueprintVariant5Industrial = lazy(() => import('./pages/blueprint-samples/BlueprintVariant5Industrial').then(m => ({ default: m.default })))
-const BlueprintVariant6Minimal = lazy(() => import('./pages/blueprint-samples/BlueprintVariant6Minimal').then(m => ({ default: m.default })))
-const BlueprintVariant7Corporate = lazy(() => import('./pages/blueprint-samples/BlueprintVariant7Corporate').then(m => ({ default: m.default })))
-const BlueprintVariant8Architectural = lazy(() => import('./pages/blueprint-samples/BlueprintVariant8Architectural').then(m => ({ default: m.default })))
+const PolishedVariant1Professional = lazy(() => import('./pages/blueprint-samples/PolishedVariant1Professional').then(m => ({ default: m.default })))
+const PolishedVariant1ProfessionalImproved = lazy(() => import('./pages/blueprint-samples/PolishedVariant1ProfessionalImproved').then(m => ({ default: m.default })))
+const PolishedVariant2TechnicalDark = lazy(() => import('./pages/blueprint-samples/PolishedVariant2TechnicalDark').then(m => ({ default: m.default })))
+const PolishedVariant3MinimalPrecision = lazy(() => import('./pages/blueprint-samples/PolishedVariant3MinimalPrecision').then(m => ({ default: m.default })))
+const PolishedVariant4ModernIndustrial = lazy(() => import('./pages/blueprint-samples/PolishedVariant4ModernIndustrial').then(m => ({ default: m.default })))
 
 function App() {
   // Initialize Web Vitals monitoring in production
@@ -646,16 +643,13 @@ function App() {
                 <Route path="/blueprint-samples/documents" element={<BlueprintDocuments />} />
                 <Route path="/blueprint-samples/animated-demo" element={<AnimatedBlueprintDemo />} />
 
-                {/* Blueprint Variants - 8 Different Visual Treatments */}
+                {/* Blueprint Variants - 4 Polished, Production-Ready Designs */}
                 <Route path="/blueprint-samples/variants" element={<BlueprintVariantsIndex />} />
-                <Route path="/blueprint-samples/variants/1-classic" element={<BlueprintVariant1Classic />} />
-                <Route path="/blueprint-samples/variants/2-light" element={<BlueprintVariant2Light />} />
-                <Route path="/blueprint-samples/variants/3-technical" element={<BlueprintVariant3Technical />} />
-                <Route path="/blueprint-samples/variants/4-glass" element={<BlueprintVariant4Glass />} />
-                <Route path="/blueprint-samples/variants/5-industrial" element={<BlueprintVariant5Industrial />} />
-                <Route path="/blueprint-samples/variants/6-minimal" element={<BlueprintVariant6Minimal />} />
-                <Route path="/blueprint-samples/variants/7-corporate" element={<BlueprintVariant7Corporate />} />
-                <Route path="/blueprint-samples/variants/8-architectural" element={<BlueprintVariant8Architectural />} />
+                <Route path="/blueprint-samples/variants/1-professional" element={<PolishedVariant1Professional />} />
+                <Route path="/blueprint-samples/variants/1-professional-improved" element={<PolishedVariant1ProfessionalImproved />} />
+                <Route path="/blueprint-samples/variants/2-technical-dark" element={<PolishedVariant2TechnicalDark />} />
+                <Route path="/blueprint-samples/variants/3-minimal" element={<PolishedVariant3MinimalPrecision />} />
+                <Route path="/blueprint-samples/variants/4-industrial" element={<PolishedVariant4ModernIndustrial />} />
 
                 {/* 404 Not Found - Branded error page */}
                 <Route path="*" element={<NotFoundPage />} />

@@ -174,7 +174,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run visual regression tests
-        run: npx playwright test visual-regression.spec.ts --project=chromium
+        run: npx playwright test e2e/visual-regression/ --project=chromium
 
       - name: Upload visual snapshots
         uses: actions/upload-artifact@v4
@@ -182,7 +182,177 @@ jobs:
         with:
           name: visual-snapshots
           path: |
-            tests/e2e/visual-regression.spec.ts-snapshots/
+            e2e/visual-regression/*.spec.ts-snapshots/
+            test-results/
+          retention-days: 7
+
+  # ==================== ACCESSIBILITY TESTS ====================
+  accessibility-tests:
+    name: Accessibility Tests (WCAG 2.1 AA)
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run accessibility tests
+        run: npx playwright test --grep "a11y" --project=chromium
+
+      - name: Upload accessibility report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # ==================== CROSS-BROWSER TESTS ====================
+  cross-browser-tests:
+    name: Cross-Browser Responsive Tests
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run cross-browser responsive tests
+        run: npx playwright test e2e/blueprint-variants-responsive.spec.ts
+
+      - name: Upload cross-browser test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cross-browser-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # ==================== PERFORMANCE TESTS ====================
+  performance-tests:
+    name: Performance Tests (Core Web Vitals)
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run performance tests
+        run: npx playwright test e2e/performance/blueprint-variants-perf.spec.ts --project=chromium
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # ==================== INTERACTION TESTS ====================
+  interaction-tests:
+    name: Interaction Tests (User Flows)
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run interaction tests
+        run: npx playwright test e2e/blueprint-variants-interaction.spec.ts --project=chromium
+
+      - name: Upload interaction test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: interaction-test-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  # ==================== EDGE CASE TESTS ====================
+  edge-case-tests:
+    name: Edge Case Tests (Stress & Boundary)
+    runs-on: ubuntu-latest
+    needs: lint-and-typecheck
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run edge case tests
+        run: npx playwright test e2e/blueprint-variants-edge-cases.spec.ts --project=chromium
+
+      - name: Upload edge case test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: edge-case-test-report
+          path: |
+            playwright-report/
             test-results/
           retention-days: 7
 
@@ -190,7 +360,7 @@ jobs:
   build:
     name: Build Check
     runs-on: ubuntu-latest
-    needs: [unit-tests, e2e-tests]
+    needs: [unit-tests, e2e-tests, visual-regression, accessibility-tests, cross-browser-tests, performance-tests, interaction-tests, edge-case-tests]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

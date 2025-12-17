@@ -187,7 +187,7 @@ function SearchResultItem({
         'w-full text-left p-3 border-b border-gray-100 dark:border-gray-800',
         'hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors',
         'focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-800/50',
-        isSelected && 'bg-blue-50 dark:bg-blue-900/20'
+        isSelected && 'bg-primary-50 dark:bg-primary-950/20'
       )}
     >
       <div className="flex items-start gap-3">
@@ -460,7 +460,7 @@ export function GlobalSearchBar({
           <Search className="w-4 h-4" />
           <span className="hidden sm:inline">Search</span>
           <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-            <span className="text-xs">Ctrl</span>K
+            <span className="text-xs">Ctrl+K</span>
           </kbd>
         </Button>
         {renderDialog()}
@@ -520,14 +520,14 @@ export function GlobalSearchBar({
               className={cn(
                 'flex items-center gap-1 px-2 py-1 text-sm rounded border transition-colors',
                 showFilters
-                  ? 'bg-blue-100 border-blue-200 text-blue-700 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-400'
+                  ? 'bg-primary-100 border-primary-200 text-primary-700 dark:bg-primary-950/30 dark:border-primary-800 dark:text-primary-400'
                   : 'bg-white border-gray-200 text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
               )}
             >
               <Filter className="w-3 h-3" />
               Filters
               {entityFilters.length > 0 && (
-                <span className="ml-1 px-1.5 py-0.5 text-xs bg-blue-500 text-white rounded-full">
+                <span className="ml-1 px-1.5 py-0.5 text-xs bg-primary text-white rounded-full dark:bg-primary">
                   {entityFilters.length}
                 </span>
               )}
@@ -689,7 +689,7 @@ export function GlobalSearchBar({
           {placeholder}
         </span>
         <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-white dark:bg-gray-900 px-1.5 font-mono text-[10px] font-medium text-gray-500 dark:text-gray-400">
-          <span className="text-xs">Ctrl</span>K
+          <span className="text-xs">Ctrl+K</span>
         </kbd>
       </div>
       {renderDialog()}

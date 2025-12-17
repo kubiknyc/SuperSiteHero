@@ -365,8 +365,8 @@ export function ChangeOrderDetailPage() {
                       className={cn(
                         'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
                         currentStep >= s.step
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-200 text-gray-500'
+                          ? 'bg-primary text-white dark:bg-primary'
+                          : 'bg-gray-200 text-gray-500 dark:bg-gray-700'
                       )}
                     >
                       {currentStep > s.step ? (
@@ -378,7 +378,7 @@ export function ChangeOrderDetailPage() {
                     <span
                       className={cn(
                         'text-xs mt-1 text-center',
-                        currentStep >= s.step ? 'text-blue-600 font-medium' : 'text-gray-500'
+                        currentStep >= s.step ? 'text-primary font-medium dark:text-primary-400' : 'text-gray-500'
                       )}
                     >
                       {s.label}
@@ -388,7 +388,7 @@ export function ChangeOrderDetailPage() {
                     <div
                       className={cn(
                         'flex-1 h-1 mx-2',
-                        currentStep > s.step ? 'bg-blue-600' : 'bg-gray-200'
+                        currentStep > s.step ? 'bg-primary dark:bg-primary' : 'bg-gray-200 dark:bg-gray-700'
                       )}
                     />
                   )}
@@ -579,9 +579,9 @@ export function ChangeOrderDetailPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="p-4 bg-blue-50 rounded-lg">
-                        <p className="text-sm text-blue-600 font-medium">Proposed Amount</p>
-                        <p className="text-2xl font-bold text-blue-700">
+                      <div className="p-4 bg-primary-50 rounded-lg dark:bg-primary-950/20">
+                        <p className="text-sm text-primary font-medium dark:text-primary-400">Proposed Amount</p>
+                        <p className="text-2xl font-bold text-primary-700 dark:text-primary-300">
                           {formatCurrency(changeOrder.proposed_amount)}
                         </p>
                       </div>
@@ -639,7 +639,7 @@ export function ChangeOrderDetailPage() {
                   <CardContent className="space-y-3">
                     {changeOrder.related_rfi && (
                       <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-                        <FileText className="h-4 w-4 text-blue-600" />
+                        <FileText className="h-4 w-4 text-primary dark:text-primary-400" />
                         <div className="flex-1">
                           <p className="text-sm font-medium">RFI-{changeOrder.related_rfi.rfi_number}</p>
                           <p className="text-xs text-gray-500">{changeOrder.related_rfi.subject}</p>
@@ -723,7 +723,7 @@ export function ChangeOrderDetailPage() {
                     </div>
                     {changeOrder.date_estimated && (
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-blue-400" />
+                        <Calendar className="h-4 w-4 text-primary-400 dark:text-primary-400" />
                         <div>
                           <p className="text-xs text-gray-500">Estimated</p>
                           <p className="text-sm">{format(new Date(changeOrder.date_estimated), 'MMM d, yyyy')}</p>
@@ -942,8 +942,8 @@ export function ChangeOrderDetailPage() {
                     {history.map((entry: COHistory) => (
                       <div key={entry.id} className="flex gap-4 pb-4 border-b last:border-0">
                         <div className="flex-shrink-0">
-                          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                            <History className="h-4 w-4 text-blue-600" />
+                          <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center dark:bg-primary-950">
+                            <History className="h-4 w-4 text-primary dark:text-primary-400" />
                           </div>
                         </div>
                         <div className="flex-1">

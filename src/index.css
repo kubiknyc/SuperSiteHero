@@ -8,6 +8,71 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Typography Hierarchy Utilities */
+/* Based on DESIGN_SYSTEM.md specifications */
+@layer utilities {
+  /* Page-level headings */
+  .heading-page {
+    @apply text-3xl font-bold tracking-tight leading-tight text-gray-900 dark:text-gray-50;
+  }
+
+  /* Section headings */
+  .heading-section {
+    @apply text-2xl font-semibold tracking-tight leading-snug text-gray-900 dark:text-gray-50;
+  }
+
+  /* Card/component headings */
+  .heading-card {
+    @apply text-xl font-semibold leading-snug text-gray-900 dark:text-gray-50;
+  }
+
+  /* Subheadings */
+  .heading-sub {
+    @apply text-lg font-medium leading-normal text-gray-700 dark:text-gray-200;
+  }
+
+  /* Body text variants */
+  .body-large {
+    @apply text-lg leading-relaxed text-gray-700 dark:text-gray-300;
+  }
+
+  .body-base {
+    @apply text-base leading-normal text-gray-600 dark:text-gray-400;
+  }
+
+  .body-small {
+    @apply text-sm leading-normal text-gray-600 dark:text-gray-400;
+  }
+
+  /* Label and caption text */
+  .text-label {
+    @apply text-sm font-medium leading-normal text-gray-700 dark:text-gray-300;
+  }
+
+  .text-caption {
+    @apply text-xs leading-tight text-gray-500 dark:text-gray-400;
+  }
+
+  /* Emphasized/muted text */
+  .text-emphasized {
+    @apply font-semibold text-gray-900 dark:text-gray-50;
+  }
+
+  .text-muted {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+
+  /* Uppercase labels (for status, badges, etc.) */
+  .text-uppercase-label {
+    @apply text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400;
+  }
+
+  /* Error code display (for 404, 500, etc.) */
+  .heading-error-code {
+    @apply text-9xl font-bold leading-none tracking-tighter;
+  }
+}
+
 @layer base {
   /* Global theme transition for smooth theme switching */
   html {
@@ -31,7 +96,7 @@
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
-    --primary: 217 91% 60%;
+    --primary: 217 70% 40%; /* Professional Blueprint blue #1E40AF */
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
@@ -43,7 +108,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
-    --ring: 217 91% 60%;
+    --ring: 217 70% 40%; /* Professional Blueprint blue */
     /* Light mode chart colors - vibrant and accessible */
     --chart-1: 217 91% 60%;
     --chart-2: 142 71% 45%;
@@ -71,7 +136,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 217 91% 60%;
+    --primary: 217 70% 40%; /* Professional Blueprint blue #1E40AF */
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
@@ -83,7 +148,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 18%;
     --input: 0 0% 18%;
-    --ring: 217 91% 60%;
+    --ring: 217 70% 40%; /* Professional Blueprint blue */
     /* Dark mode chart colors - brighter for dark backgrounds */
     --chart-1: 217 91% 65%;
     --chart-2: 142 71% 55%;

@@ -181,7 +181,15 @@ npm run preview          # Preview production build
 
 # Type Checking & Linting
 npm run type-check       # Check TypeScript types
-npm run lint            # Run ESLint
+npm run lint             # Run ESLint
+
+# Testing
+npm run test             # Run unit tests (watch mode)
+npm run test:unit        # Run unit tests (single run)
+npm run test:coverage    # Run tests with coverage report
+npm run test:e2e         # Run E2E tests (Playwright)
+npm run test:e2e:ui      # Run E2E tests with Playwright UI
+npm run test:all         # Run all tests (unit + E2E)
 ```
 
 ## Development Workflow
@@ -201,6 +209,329 @@ npm run lint            # Run ESLint
 2. Run migration in Supabase SQL Editor
 3. Update TypeScript types in `src/types/database.ts`
 4. Create corresponding React Query hooks
+
+## Testing
+
+This project maintains comprehensive test coverage across unit, integration, E2E, visual regression, and accessibility tests.
+
+### Test Stack
+
+- **Unit Tests**: Vitest + React Testing Library
+- **E2E Tests**: Playwright (Chromium, Firefox, WebKit)
+- **Visual Regression**: Playwright screenshot comparison
+- **Accessibility**: axe-core for WCAG 2.1 AA compliance
+- **CI/CD**: GitHub Actions with automated test runs
+
+### Running Tests
+
+```bash
+# Unit Tests
+npm run test                 # Run in watch mode
+npm run test:unit            # Single run with verbose output
+npm run test:coverage        # Generate coverage report
+npm run test:ui              # Run with Vitest UI
+
+# E2E Tests
+npm run test:e2e             # Run all E2E tests
+npm run test:e2e:ui          # Run with Playwright UI
+npm run test:e2e:headed      # Run in headed mode (see browser)
+npm run test:e2e:debug       # Run in debug mode
+npm run test:e2e:chromium    # Run only in Chromium
+npm run test:e2e:firefox     # Run only in Firefox
+npm run test:e2e:webkit      # Run only in WebKit
+npm run test:e2e:mobile      # Run mobile tests
+
+# Visual Regression
+npm run test:visual          # Run visual regression tests
+npm run test:visual:update   # Update baseline screenshots
+
+# Accessibility
+npx playwright test --grep "a11y"  # Run accessibility tests
+
+# All Tests
+npm run test:all             # Run unit + E2E tests
+npm run ci:test              # Run full CI test suite
+```
+
+### Writing Tests
+
+#### Unit Tests
+
+Create test files next to the component:
+
+```typescript
+// src/components/MyComponent.test.tsx
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import MyComponent from './MyComponent';
+
+describe('MyComponent', () => {
+  it('renders without crashing', () => {
+    render(<MyComponent />);
+    expect(screen.getByText('Hello')).toBeInTheDocument();
+  });
+});
+```
+
+#### E2E Tests
+
+Create E2E tests in the `e2e/` directory:
+
+```typescript
+// e2e/my-feature.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('should complete user flow', async ({ page }) => {
+  await page.goto('/my-feature');
+  await expect(page.locator('h1')).toContainText('My Feature');
+});
+```
+
+#### Visual Regression Tests
+
+Create visual regression tests in `e2e/visual-regression/`:
+
+```typescript
+// e2e/visual-regression/my-component.spec.ts
+import { test, expect } from '@playwright/test';
+
+test('desktop - light mode', async ({ page }) => {
+  await page.goto('/my-component');
+  await expect(page).toHaveScreenshot('my-component-light.png');
+});
+```
+
+#### Accessibility Tests
+
+Create accessibility tests in component `__tests__` directories:
+
+```typescript
+// src/pages/my-page/__tests__/MyPage.a11y.test.ts
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+test('should not have accessibility violations', async ({ page }) => {
+  await page.goto('/my-page');
+
+  const results = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa'])
+    .analyze();
+
+  expect(results.violations).toEqual([]);
+});
+```
+
+### Test Coverage Goals
+
+- **Unit Tests**: 70% overall, 80% for critical paths (auth, API)
+- **E2E Tests**: All critical user workflows
+- **Visual Regression**: All major UI components
+- **Accessibility**: WCAG 2.1 AA compliance (zero violations)
+
+### CI/CD Testing
+
+All tests run automatically on:
+- **Pull Requests**: Full test suite including visual regression
+- **Push to main/develop**: Full test suite + build verification
+- **Scheduled**: Daily security scans and dependency audits
+
+View test results in GitHub Actions under the "Test Suite" workflow.
+
+### Example: Blueprint Variant Testing
+
+The PolishedVariant1Professional component demonstrates comprehensive testing:
+
+**Unit Tests** ([src/pages/blueprint-samples/\_\_tests\_\_/PolishedVariant1Professional.test.tsx](src/pages/blueprint-samples/__tests__/PolishedVariant1Professional.test.tsx)):
+- 36 tests covering rendering, data display, ARIA labels, semantic HTML
+- Tests heading hierarchy, stat cards, projects, activities
+- Validates accessibility attributes and interactive elements
+
+**Accessibility Tests** ([src/pages/blueprint-samples/\_\_tests\_\_/PolishedVariant1Professional.a11y.test.ts](src/pages/blueprint-samples/__tests__/PolishedVariant1Professional.a11y.test.ts)):
+- 13 tests for WCAG 2.1 AA compliance
+- Color contrast verification (light + dark modes)
+- Keyboard navigation and focus indicators
+- Touch target sizing (44px minimum)
+- Semantic HTML and ARIA validation
+
+**Visual Regression Tests** ([e2e/visual-regression/blueprint-variants-visual.spec.ts](e2e/visual-regression/blueprint-variants-visual.spec.ts)):
+- 10 tests across 4 breakpoints (mobile, tablet, desktop, wide)
+- Light and dark mode screenshots
+- Focus state and hover state verification
+- Baseline screenshots for preventing visual regressions
+
+**Cross-Browser Responsive Tests** ([e2e/blueprint-variants-responsive.spec.ts](e2e/blueprint-variants-responsive.spec.ts)):
+- Tests across Chromium, Firefox, and WebKit browsers
+- Mobile touch interaction testing
+- Touch target size validation (44px minimum)
+- Responsive layout verification at breakpoints
+- Orientation change handling
+- Browser-specific feature testing
+
+**Performance Tests** ([e2e/performance/blueprint-variants-perf.spec.ts](e2e/performance/blueprint-variants-perf.spec.ts)):
+- Core Web Vitals measurement (FCP, LCP, CLS, TBT)
+- Time to Interactive (TTI) testing
+- Resource loading efficiency
+- JavaScript execution performance
+- DOM size optimization
+- Memory usage monitoring
+- Performance budgets enforcement
+
+**Screen Reader Testing** ([docs/screen-reader-testing-guide.md](docs/screen-reader-testing-guide.md)):
+- Comprehensive manual testing guide for NVDA, JAWS, VoiceOver
+- Navigation and announcement verification
+- Interactive element testing procedures
+- Common issues and solutions
+- Documentation templates for test results
+
+### Advanced Testing Features
+
+#### Cross-Browser Compatibility
+
+```bash
+# Test all browsers
+npx playwright test e2e/blueprint-variants-responsive.spec.ts
+
+# Test specific browser
+npx playwright test e2e/blueprint-variants-responsive.spec.ts --project=firefox
+npx playwright test e2e/blueprint-variants-responsive.spec.ts --project=webkit
+```
+
+Tests verify:
+- Consistent rendering across Chrome, Firefox, Safari
+- Mobile browser compatibility (iOS Safari, Chrome Mobile)
+- Touch interactions on mobile devices
+- Responsive breakpoint behavior
+- Browser-specific CSS handling
+
+#### Performance Testing
+
+```bash
+# Run performance tests
+npx playwright test e2e/performance/
+
+# Run with detailed metrics
+npx playwright test e2e/performance/ --reporter=list
+```
+
+Measures and enforces:
+- **FCP** (First Contentful Paint) < 1.8s
+- **LCP** (Largest Contentful Paint) < 2.5s
+- **CLS** (Cumulative Layout Shift) < 0.1
+- **TBT** (Total Blocking Time) < 300ms
+- **TTI** (Time to Interactive) < 3.8s
+
+#### Screen Reader Testing
+
+Manual testing with actual screen readers is essential for true accessibility. See the [Screen Reader Testing Guide](docs/screen-reader-testing-guide.md) for:
+
+- Setup instructions for NVDA (Windows), VoiceOver (macOS/iOS), JAWS (Windows)
+- Keyboard shortcuts and commands for each screen reader
+- Step-by-step testing procedures
+- Expected announcements and behavior
+- Issue documentation templates
+
+**Quick Start for Screen Reader Testing:**
+
+1. **Windows (NVDA - Free)**:
+   - Download from https://www.nvaccess.org/
+   - Press `Ctrl + Alt + N` to start
+   - Press `H` to navigate headings, `B` for buttons
+
+2. **macOS (VoiceOver - Built-in)**:
+   - Press `Cmd + F5` to start
+   - Press `VO + →` to navigate (VO = Ctrl + Option)
+   - Press `VO + U` for rotor navigation
+
+3. **Test the Component**:
+   - Navigate to `/blueprint-samples/variants/1-professional`
+   - Verify heading hierarchy (H1, H2, H3)
+   - Check all interactive elements have labels
+   - Ensure logical tab order
+
+### Phase 3: Interaction, Edge Case & Snapshot Testing
+
+Phase 3 testing adds comprehensive coverage for user interactions, edge cases, and component structure stability.
+
+**Interaction Tests** ([e2e/blueprint-variants-interaction.spec.ts](e2e/blueprint-variants-interaction.spec.ts)):
+- 40+ tests covering all interactive behaviors
+- Stat card interactions (hover states, clicks, rapid interactions)
+- Link navigation and keyboard navigation flows
+- Focus management and tab order verification
+- Animation completion testing
+- State persistence across interactions
+- Multi-element interaction patterns
+- Error resilience and recovery
+
+```bash
+# Run interaction tests
+npx playwright test e2e/blueprint-variants-interaction.spec.ts
+
+# Run in headed mode to observe interactions
+npx playwright test e2e/blueprint-variants-interaction.spec.ts --headed
+```
+
+**Edge Case Tests** ([e2e/blueprint-variants-edge-cases.spec.ts](e2e/blueprint-variants-edge-cases.spec.ts)):
+- 40+ tests for boundary conditions and stress scenarios
+- Long text handling (extremely long names, descriptions)
+- Missing data scenarios (empty states, zero values)
+- Extreme values (999+ numbers, very large datasets)
+- Layout stability under rapid changes (theme switching, resizing)
+- Error resilience (missing CSS, JavaScript errors)
+- Overflow and truncation verification
+- Accessibility under edge conditions
+
+```bash
+# Run edge case tests
+npx playwright test e2e/blueprint-variants-edge-cases.spec.ts
+
+# Run with detailed console output
+npx playwright test e2e/blueprint-variants-edge-cases.spec.ts --reporter=list
+```
+
+**Snapshot Tests** ([src/pages/blueprint-samples/\_\_tests\_\_/PolishedVariant1Professional.snapshot.test.tsx](src/pages/blueprint-samples/__tests__/PolishedVariant1Professional.snapshot.test.tsx)):
+- 40+ snapshots for DOM structure verification
+- Light/dark mode snapshots at all breakpoints (375px, 768px, 1024px, 1536px)
+- Component structure snapshots (header, stat cards, projects, activities)
+- ARIA attributes structure verification
+- CSS class structure snapshots (grid, responsive, colors)
+- Interactive elements structure (focusable, hover, animations)
+- Data display structure validation
+- Typography and spacing snapshots
+
+```bash
+# Run snapshot tests
+npm run test -- PolishedVariant1Professional.snapshot.test.tsx
+
+# Update snapshots after intentional changes
+npm run test -- -u PolishedVariant1Professional.snapshot.test.tsx
+```
+
+**Test Coverage Summary (Phase 3)**:
+
+| Test Type | Count | Coverage |
+|-----------|-------|----------|
+| Interaction Tests | 40+ | All user flows, hover states, keyboard nav |
+| Edge Case Tests | 40+ | Boundary conditions, stress scenarios |
+| Snapshot Tests | 40+ | DOM structure, ARIA, CSS classes |
+| **Total Phase 3** | **120+ tests** | **Comprehensive interaction & stability coverage** |
+
+**Combined Test Suite (All Phases)**:
+
+| Phase | Test Files | Test Count | Coverage |
+|-------|-----------|------------|----------|
+| Phase 1 (Critical) | 3 files | 60+ tests | Visual regression, Accessibility, Unit tests |
+| Phase 2 (Important) | 3 files | 55+ tests | Cross-browser, Performance, Screen reader guide |
+| Phase 3 (Nice-to-have) | 3 files | 120+ tests | Interactions, Edge cases, Snapshots |
+| **Total Coverage** | **9 files** | **235+ tests** | **Comprehensive end-to-end coverage** |
+
+**CI/CD Integration**:
+
+All Phase 3 tests run automatically in the GitHub Actions pipeline:
+- **Interaction Tests**: Run on every PR and push to main/develop
+- **Edge Case Tests**: Run on every PR and push to main/develop
+- **Snapshot Tests**: Run as part of unit test suite with coverage reporting
+
+See [.github/workflows/test.yml](.github/workflows/test.yml) for complete CI/CD configuration.
 
 ## Database
 

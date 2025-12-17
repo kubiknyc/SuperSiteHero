@@ -1,6 +1,5 @@
 // File: /src/pages/DashboardPage.tsx
-// Main dashboard page with INDUSTRIAL MODERN redesign
-// Features: Hero section, glass morphism cards, orange accents, construction grid
+// Professional Blueprint Dashboard - Polished, production-ready design
 
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -8,33 +7,33 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { DashboardSelector, useDashboardView } from '@/features/dashboards'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Select } from '@/components/ui/select'
 import {
   ClipboardList,
   AlertCircle,
   ListChecks,
   Shield,
-  Plus,
   FileText,
   TrendingUp,
   Users,
   Calendar,
-  MapPin,
   Clock,
-  ArrowRight,
-  HardHat,
+  Building2,
+  CheckCircle2,
+  Activity,
+  TrendingDown,
+  BarChart3
 } from 'lucide-react'
 import { NoticesWidget } from '@/features/notices/components'
 import { format } from 'date-fns'
+import { colors as themeColors, chartColors, getStatusVariant } from '@/lib/theme/tokens'
 
 export function DashboardPage() {
   const { data: projects } = useMyProjects()
   const { userProfile } = useAuth()
   const dashboardView = useDashboardView()
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const [focusedCard, setFocusedCard] = useState<string | null>(null)
 
   // Get the selected project or the first active project
   const selectedProject = selectedProjectId
@@ -44,109 +43,90 @@ export function DashboardPage() {
   // Check if user has a role-based dashboard
   const hasRoleDashboard = dashboardView !== 'default'
 
-  // Mock metrics - enhanced with industrial styling
-  const metrics = [
+  // Professional Blueprint stats with sparklines - Using design tokens
+  const stats = [
     {
-      title: 'Tasks Pending',
+      label: 'Tasks Pending',
       value: '12',
-      change: '+3 today',
+      target: 15,
+      change: '+3',
+      trend: 'up' as const,
       icon: ClipboardList,
-      gradient: 'from-blue-500 to-blue-600',
-      glowColor: 'shadow-blue-500/20',
+      color: themeColors.primary.DEFAULT,
+      sparkline: [8, 10, 9, 11, 12],
+      ariaLabel: '12 tasks pending out of 15 target, up 3 from last period'
     },
     {
-      title: 'Open RFIs',
+      label: 'Open RFIs',
       value: '5',
-      change: '2 awaiting response',
+      target: 3,
+      change: '+2',
+      trend: 'up' as const,
       icon: AlertCircle,
-      gradient: 'from-orange-500 to-orange-600',
-      glowColor: 'shadow-orange-500/30',
+      color: chartColors.orange,
+      sparkline: [2, 3, 4, 4, 5],
+      ariaLabel: '5 open RFIs with target of 3, up 2 from last period'
     },
     {
-      title: 'Punch Items',
+      label: 'Punch Items',
       value: '23',
-      change: '8 completed this week',
+      target: 15,
+      change: '-8',
+      trend: 'down' as const,
       icon: ListChecks,
-      gradient: 'from-purple-500 to-purple-600',
-      glowColor: 'shadow-purple-500/20',
+      color: chartColors.purple,
+      sparkline: [35, 30, 28, 25, 23],
+      ariaLabel: '23 punch items with target of 15, down 8 from last period'
     },
     {
-      title: 'Days Since Incident',
+      label: 'Days Since Incident',
       value: '127',
-      change: 'Last: Minor cut',
+      target: 365,
+      change: '+1',
+      trend: 'up' as const,
       icon: Shield,
-      gradient: 'from-green-500 to-green-600',
-      glowColor: 'shadow-green-500/20',
-    },
+      color: themeColors.semantic.success,
+      sparkline: [123, 124, 125, 126, 127],
+      ariaLabel: '127 days since last incident with target of 365'
+    }
   ]
 
-  // Mock recent activity
-  const recentActivity = [
-    {
-      id: 1,
-      type: 'daily_report',
-      title: 'Daily Report submitted',
-      project: 'Office Building - Phase 2',
-      user: 'John Smith',
-      time: '2 hours ago',
-    },
-    {
-      id: 2,
-      type: 'rfi',
-      title: 'RFI #045 - HVAC routing clarification',
-      project: 'Office Building - Phase 2',
-      user: 'Sarah Johnson',
-      time: '4 hours ago',
-    },
-    {
-      id: 3,
-      type: 'task',
-      title: 'Task completed: Install drywall Level 3',
-      project: 'Retail Center',
-      user: 'Mike Davis',
-      time: '5 hours ago',
-    },
-    {
-      id: 4,
-      type: 'punch',
-      title: '3 punch items closed',
-      project: 'Office Building - Phase 2',
-      user: 'John Smith',
-      time: 'Yesterday',
-    },
-  ]
+  // Helper function to render sparkline
+  const renderSparkline = (data: number[], color: string) => {
+    const max = Math.max(...data)
+    const points = data.map((val, i) => {
+      const x = (i / (data.length - 1)) * 100
+      const y = 100 - (val / max) * 100
+      return `${x},${y}`
+    }).join(' ')
 
-  // Quick actions - enhanced with orange primary
-  const quickActions = [
-    {
-      title: 'New Daily Report',
-      description: 'Create today\'s daily report',
-      icon: FileText,
-      href: '/daily-reports/new',
-      gradient: 'from-orange-500 to-orange-600',
-    },
-    {
-      title: 'Submit RFI',
-      description: 'Request information from architect',
-      icon: AlertCircle,
-      href: '/rfis/new',
-      gradient: 'from-blue-500 to-blue-600',
-    },
-    {
-      title: 'Add Task',
-      description: 'Create a new task',
-      icon: ClipboardList,
-      href: '/tasks/new',
-      gradient: 'from-purple-500 to-purple-600',
-    },
-    {
-      title: 'Log Safety Incident',
-      description: 'Report a safety incident',
-      icon: Shield,
-      href: '/safety/new',
-      gradient: 'from-red-500 to-red-600',
-    },
-  ]
+    return (
+      <svg width="80" height="24" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+        <polyline
+          points={points}
+          fill="none"
+          stroke={color}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{
+            filter: `drop-shadow(0 0 2px ${color}40)`
+          }}
+        />
+      </svg>
+    )
+  }
+
+  // Helper function for health indicator - Using design tokens
+  const getHealthColor = (status?: string) => {
+    const statusColors = {
+      'active': themeColors.semantic.success,
+      'planning': themeColors.semantic.warning,
+      'on_hold': themeColors.semantic.destructive,
+      'completed': themeColors.primary.DEFAULT
+    }
+    return statusColors[status as keyof typeof statusColors] || statusColors.active
+  }
 
   return (
     <AppLayout>
@@ -160,321 +140,320 @@ export function DashboardPage() {
           />
         </div>
       ) : (
-        <div className="space-y-0">
-          {/* HERO SECTION - Industrial Modern */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-            {/* Animated construction grid background */}
-            <div className="absolute inset-0 opacity-10">
-              <div
-                className="absolute inset-0"
-                style={{
-                  backgroundImage: `
-                    linear-gradient(rgba(249, 115, 22, 0.3) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(249, 115, 22, 0.3) 1px, transparent 1px)
-                  `,
-                  backgroundSize: '40px 40px',
-                  animation: 'gridSlide 20s linear infinite',
-                }}
-              />
-            </div>
-
-            {/* Orange accent line */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500" />
-
-            <div className="relative max-w-7xl mx-auto px-6 py-12">
-              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                {/* Welcome section */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="rounded-lg bg-orange-500/20 p-2 border border-orange-500/30">
-                      <HardHat className="w-5 h-5 text-orange-400" />
-                    </div>
-                    <p className="text-orange-400 font-semibold uppercase tracking-wide text-sm">
-                      Field Command Center
-                    </p>
-                  </div>
-                  <h1 className="text-4xl font-bold mb-2">
-                    Welcome back, {userProfile?.first_name || 'User'}
-                  </h1>
-                  <p className="text-gray-300 text-lg">
-                    {format(new Date(), 'EEEE, MMMM d, yyyy')}
-                  </p>
-                </div>
-
-                {/* Project selector */}
-                {projects && projects.length > 0 && (
-                  <div className="w-full lg:w-80">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Active Project
-                    </label>
-                    <Select
-                      value={selectedProject?.id || ''}
-                      onChange={(e) => setSelectedProjectId(e.target.value)}
-                      className="w-full bg-gray-800 border-gray-700 text-white"
-                    >
-                      <option value="">All Projects</option>
-                      {projects.map((project) => (
-                        <option key={project.id} value={project.id}>
-                          {project.name}
-                        </option>
-                      ))}
-                    </Select>
-                  </div>
-                )}
+        <div style={{
+          minHeight: '100vh',
+          backgroundColor: '#F8FAFC',
+          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+        }}>
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto px-8 py-8">
+            {/* Page Title - Using typography utilities */}
+            <div className="mb-12">
+              <h1 className="heading-page mb-3">
+                Dashboard
+              </h1>
+              <div className="flex items-center gap-4">
+                <p className="body-base">
+                  Welcome back, {userProfile?.first_name || 'User'}
+                </p>
+                <span className="text-muted">•</span>
+                <p className="text-caption flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5" />
+                  {format(new Date(), 'EEEE, MMMM d, yyyy')}
+                </p>
               </div>
             </div>
 
-            <style>{`
-              @keyframes gridSlide {
-                0% { transform: translate(0, 0); }
-                100% { transform: translate(40px, 40px); }
-              }
-            `}</style>
-          </div>
+            {/* Stats Grid - Enhanced with sparklines, better interactions, accessibility */}
+            <div
+              role="region"
+              aria-label="Project statistics overview"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: '1.5rem',
+                marginBottom: '3rem'
+              }}
+            >
+              {stats.map((stat) => {
+                const Icon = stat.icon
+                const percentage = (parseInt(stat.value) / stat.target) * 100
+                const isFocused = focusedCard === stat.label
 
-          {/* MAIN CONTENT */}
-          <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-            {/* METRICS GRID - Glass Morphism Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {metrics.map((metric, index) => {
-                const Icon = metric.icon
                 return (
                   <div
-                    key={metric.title}
-                    className="group relative"
+                    key={stat.label}
+                    role="article"
+                    aria-label={stat.ariaLabel}
+                    tabIndex={0}
+                    onFocus={() => setFocusedCard(stat.label)}
+                    onBlur={() => setFocusedCard(null)}
                     style={{
-                      animation: `fadeInUp 0.5s ease-out ${index * 0.1}s both`,
+                      backgroundColor: '#FFFFFF',
+                      border: `1px solid ${isFocused ? stat.color : '#E2E8F0'}`,
+                      borderRadius: '12px',
+                      padding: '1.75rem',
+                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      cursor: 'pointer',
+                      position: 'relative',
+                      overflow: 'hidden',
+                      boxShadow: isFocused
+                        ? `0 8px 16px -4px ${stat.color}20, 0 4px 6px -2px ${stat.color}15`
+                        : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+                      transform: isFocused ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)'
                     }}
+                    onMouseEnter={() => setFocusedCard(stat.label)}
+                    onMouseLeave={() => setFocusedCard(null)}
                   >
-                    {/* Glow effect on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${metric.gradient} opacity-0 group-hover:opacity-10 blur-xl transition-opacity duration-500 rounded-2xl`} />
+                    {/* Top accent bar */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: '3px',
+                      background: `linear-gradient(90deg, ${stat.color} 0%, ${stat.color}80 100%)`,
+                      opacity: isFocused ? 1 : 0,
+                      transition: 'opacity 0.25s'
+                    }} />
 
-                    {/* Card */}
-                    <div className="relative bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">
-                            {metric.title}
-                          </p>
-                        </div>
-                        <div className={`rounded-xl bg-gradient-to-br ${metric.gradient} p-2.5 shadow-lg ${metric.glowColor}`}>
-                          <Icon className="w-5 h-5 text-white" />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.25rem' }}>
+                      <div style={{
+                        width: '56px',
+                        height: '56px',
+                        backgroundColor: `${stat.color}08`,
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: `1px solid ${stat.color}15`,
+                        transition: 'all 0.25s',
+                        transform: isFocused ? 'scale(1.05)' : 'scale(1)'
+                      }}>
+                        <Icon className="w-6 h-6" style={{ color: stat.color, strokeWidth: 2 }} />
+                      </div>
+
+                      <div style={{
+                        padding: '0.5rem 0.875rem',
+                        backgroundColor: stat.trend === 'up' ? '#ECFDF5' : '#FEF2F2',
+                        color: stat.trend === 'up' ? '#059669' : '#DC2626',
+                        borderRadius: '8px',
+                        fontSize: '0.8125rem',
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.375rem',
+                        border: `1px solid ${stat.trend === 'up' ? '#A7F3D0' : '#FECACA'}`
+                      }}>
+                        {stat.trend === 'up' ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
+                        {stat.change}
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: '1.25rem' }}>
+                      <p className="text-uppercase-label mb-2.5">
+                        {stat.label}
+                      </p>
+
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                        <p className="text-4xl font-bold text-gray-900 dark:text-gray-50 leading-none tracking-tight">
+                          {stat.value}
+                        </p>
+                        <p className="text-base text-muted font-medium">
+                          / {stat.target}
+                        </p>
+                      </div>
+
+                      {/* Sparkline */}
+                      <div style={{ marginBottom: '0.75rem' }}>
+                        {renderSparkline(stat.sparkline, stat.color)}
+                      </div>
+                    </div>
+
+                    {/* Enhanced Progress Bar */}
+                    <div>
+                      <div className="flex justify-between mb-2 text-xs text-muted font-medium">
+                        <span>Progress to Target</span>
+                        <span className="text-gray-900 dark:text-gray-50 font-semibold">{Math.round(percentage)}%</span>
+                      </div>
+                      <div style={{
+                        width: '100%',
+                        height: '8px',
+                        backgroundColor: '#F1F5F9',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        position: 'relative'
+                      }}>
+                        <div style={{
+                          width: `${percentage}%`,
+                          height: '100%',
+                          background: `linear-gradient(90deg, ${stat.color} 0%, ${stat.color}CC 100%)`,
+                          borderRadius: '4px',
+                          transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                          position: 'relative',
+                          boxShadow: `0 0 8px ${stat.color}40`
+                        }}>
+                          {/* Shimmer effect */}
+                          <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: '-100%',
+                            width: '100%',
+                            height: '100%',
+                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
+                            animation: 'shimmer 2s infinite'
+                          }} />
                         </div>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-4xl font-bold text-gray-900 dark:text-white">
-                          {metric.value}
-                        </p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {metric.change}
-                        </p>
-                      </div>
-
-                      {/* Orange accent line */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                   </div>
                 )
               })}
             </div>
 
-            {/* QUICK ACTIONS - Industrial Buttons */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                <div className="w-1 h-8 bg-orange-500 rounded-full" />
-                Quick Actions
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {quickActions.map((action, index) => {
-                  const Icon = action.icon
-                  return (
-                    <Link
-                      key={action.title}
-                      to={action.href}
-                      style={{
-                        animation: `fadeInUp 0.5s ease-out ${0.4 + index * 0.1}s both`,
-                      }}
-                    >
-                      <div className="group relative bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer h-full">
-                        {/* Gradient icon */}
-                        <div className={`inline-flex rounded-lg bg-gradient-to-br ${action.gradient} p-3 mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                          <Icon className="w-6 h-6 text-white" />
-                        </div>
-
-                        {/* Content */}
-                        <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-between">
-                          {action.title}
-                          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {action.description}
-                        </p>
-
-                        {/* Bottom accent */}
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-orange-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-b-xl" />
-                      </div>
-                    </Link>
-                  )
-                })}
-              </div>
-            </div>
-
-            {/* ACTIVE PROJECT INFO */}
-            {selectedProject && (
-              <div className="glass-card rounded-2xl p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                      {selectedProject.name}
-                    </h3>
-                    {selectedProject.address && (
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                        <MapPin className="h-4 w-4" />
-                        <span className="text-sm">{selectedProject.address}</span>
-                      </div>
-                    )}
+            {/* Two Column Layout */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '2fr 1fr',
+              gap: '2rem'
+            }}>
+              {/* Active Projects */}
+              <div style={{
+                backgroundColor: '#FFFFFF',
+                border: '1px solid #E2E8F0',
+                borderRadius: '12px',
+                padding: '2rem',
+                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
+              }}>
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <h2 className="heading-card mb-1">
+                      Active Projects
+                    </h2>
+                    <p className="body-small text-muted">
+                      {projects?.length || 0} projects in progress
+                    </p>
                   </div>
-                  <Badge variant={selectedProject.status === 'active' ? 'success' : 'secondary'}>
-                    {(selectedProject.status ?? 'unknown').replace('_', ' ').toUpperCase()}
-                  </Badge>
+                  <Link
+                    to="/projects"
+                    className="text-primary text-sm font-semibold bg-primary-50 border border-primary-200 hover:bg-primary-100 dark:bg-primary-950 dark:border-primary-800 dark:hover:bg-primary-900 cursor-pointer px-4 py-2 rounded-lg transition-all flex items-center gap-2 no-underline"
+                  >
+                    View All
+                    <BarChart3 className="w-4 h-4" />
+                  </Link>
                 </div>
 
-                <div className="flex items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
-                  {selectedProject.start_date && (
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-orange-500" />
-                      <span>Started {format(new Date(selectedProject.start_date), 'MMM d, yyyy')}</span>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                  {projects && projects.length > 0 ? (
+                    projects.slice(0, 3).map((project) => {
+                      const healthColor = getHealthColor(project.status)
+                      const progress = 75 // Mock progress
+
+                      return (
+                        <Link
+                          key={project.id}
+                          to={`/projects/${project.id}`}
+                          style={{
+                            padding: '1.5rem',
+                            backgroundColor: '#F8FAFC',
+                            borderRadius: '10px',
+                            border: '1px solid #F1F5F9',
+                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+                            cursor: 'pointer',
+                            textDecoration: 'none',
+                            display: 'block'
+                          }}
+                        >
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                                  {project.name}
+                                </h3>
+                                {/* Health indicator */}
+                                <div style={{
+                                  width: '8px',
+                                  height: '8px',
+                                  borderRadius: '50%',
+                                  backgroundColor: healthColor,
+                                  boxShadow: `0 0 0 3px ${healthColor}20`,
+                                  animation: 'pulse 2s infinite'
+                                }}
+                                title={`Project health: ${project.status}`}
+                                />
+                              </div>
+                              <div className="flex items-center gap-5 text-label text-muted flex-wrap">
+                                {project.start_date && (
+                                  <>
+                                    <span className="flex items-center gap-1.5">
+                                      <Calendar className="w-3.5 h-3.5" />
+                                      Started {format(new Date(project.start_date), 'MMM d, yyyy')}
+                                    </span>
+                                    <span>•</span>
+                                  </>
+                                )}
+                                <span className="text-caption">
+                                  Updated recently
+                                </span>
+                              </div>
+                            </div>
+
+                            <Badge variant={getStatusVariant(project.status || 'unknown')}>
+                              {(project.status ?? 'unknown').replace('_', ' ').toUpperCase()}
+                            </Badge>
+                          </div>
+
+                          {/* Progress Bar */}
+                          <div>
+                            <div className="flex justify-between mb-2 text-xs text-muted">
+                              <span>Progress</span>
+                              <span className="text-gray-900 dark:text-gray-50 font-semibold">{progress}%</span>
+                            </div>
+                            <div style={{
+                              width: '100%',
+                              height: '6px',
+                              backgroundColor: '#F1F5F9',
+                              borderRadius: '3px',
+                              overflow: 'hidden'
+                            }}>
+                              <div style={{
+                                width: `${progress}%`,
+                                height: '100%',
+                                background: 'linear-gradient(90deg, #1E40AF 0%, #1E40AFCC 100%)',
+                                borderRadius: '3px',
+                                transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
+                              }} />
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    })
+                  ) : (
+                    <div className="p-12 text-center">
+                      <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                      <p className="body-small text-muted">No active projects</p>
                     </div>
                   )}
-                  {selectedProject.end_date && (
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-orange-500" />
-                      <span>Est. completion {format(new Date(selectedProject.end_date), 'MMM d, yyyy')}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* ACTIVITY & UPCOMING EVENTS */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Recent Activity - Timeline Style */}
-              <div className="lg:col-span-2">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-                  <div className="w-1 h-8 bg-orange-500 rounded-full" />
-                  Recent Activity
-                </h2>
-
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-                  <div className="relative space-y-6">
-                    {/* Orange timeline connector */}
-                    <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-gradient-to-b from-orange-500 via-orange-400 to-transparent" />
-
-                    {recentActivity.map((activity, index) => (
-                      <div key={activity.id} className="relative flex items-start gap-4 group">
-                        {/* Timeline dot */}
-                        <div className="relative z-10 flex-shrink-0">
-                          <div className="rounded-full bg-gradient-to-br from-orange-500 to-orange-600 p-2.5 shadow-lg shadow-orange-500/30 group-hover:scale-110 transition-transform">
-                            {activity.type === 'daily_report' && <FileText className="h-4 w-4 text-white" />}
-                            {activity.type === 'rfi' && <AlertCircle className="h-4 w-4 text-white" />}
-                            {activity.type === 'task' && <ClipboardList className="h-4 w-4 text-white" />}
-                            {activity.type === 'punch' && <ListChecks className="h-4 w-4 text-white" />}
-                          </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 min-w-0 pt-1">
-                          <p className="font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
-                            {activity.title}
-                          </p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            {activity.project}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-                            <Users className="h-3 w-3" />
-                            <span>{activity.user}</span>
-                            <span>•</span>
-                            <span>{activity.time}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </div>
 
               {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Upcoming Events */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-                  <h3 className="font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-orange-500" />
-                    Upcoming This Week
-                  </h3>
-                  <div className="space-y-4 text-sm">
-                    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <div className="rounded-lg bg-orange-100 dark:bg-orange-900/30 p-2">
-                        <Calendar className="h-4 w-4 text-orange-600 dark:text-orange-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900 dark:text-white">Building Inspection</p>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">Tomorrow, 10:00 AM</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <div className="rounded-lg bg-blue-100 dark:bg-blue-900/30 p-2">
-                        <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900 dark:text-white">Safety Meeting</p>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">Friday, 8:00 AM</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                      <div className="rounded-lg bg-purple-100 dark:bg-purple-900/30 p-2">
-                        <TrendingUp className="h-4 w-4 text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900 dark:text-white">Project Review</p>
-                        <p className="text-gray-600 dark:text-gray-400 text-xs mt-1">Friday, 2:00 PM</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {/* Notices Widget */}
                 <NoticesWidget projectId={selectedProject?.id} />
-
-                {/* Empty state for projects */}
-                {(!projects || projects.length === 0) && (
-                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 text-center">
-                    <div className="inline-flex rounded-full bg-gray-100 dark:bg-gray-700 p-4 mb-4">
-                      <Plus className="w-8 h-8 text-gray-400" />
-                    </div>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">No projects yet</p>
-                    <Link to="/projects">
-                      <Button className="industrial-button bg-orange-500 hover:bg-orange-600 text-white">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Create Project
-                      </Button>
-                    </Link>
-                  </div>
-                )}
               </div>
             </div>
           </div>
 
-          {/* Fade-in animation */}
+          {/* Animations */}
           <style>{`
-            @keyframes fadeInUp {
-              from {
-                opacity: 0;
-                transform: translateY(20px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
+            @keyframes shimmer {
+              0% { left: -100%; }
+              100% { left: 100%; }
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.5; }
             }
           `}</style>
         </div>

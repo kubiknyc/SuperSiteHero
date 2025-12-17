@@ -75,7 +75,7 @@ export function IOSInstallInstructionsPage({
       title: 'Tap the Share Button',
       description: 'Look for the share button at the bottom of Safari (or top on iPad)',
       icon: SafariShareIcon,
-      iconColor: 'text-blue-500',
+      iconColor: 'text-primary dark:text-primary-400',
       details: 'The share button looks like a square with an arrow pointing up.',
     },
     {
@@ -99,7 +99,7 @@ export function IOSInstallInstructionsPage({
       title: 'Tap "Add"',
       description: 'Tap the Add button in the top right corner',
       icon: Plus,
-      iconColor: 'text-blue-500',
+      iconColor: 'text-primary dark:text-primary-400',
       details: `${appName} will be added to your home screen.`,
     },
   ];
@@ -109,8 +109,8 @@ export function IOSInstallInstructionsPage({
       {onClose && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-xl">
-              <Smartphone className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 bg-primary-100 dark:bg-primary-950 rounded-xl">
+              <Smartphone className="h-6 w-6 text-primary dark:text-primary-400" />
             </div>
             <div>
               <h2 className="text-lg font-semibold">Install {appName} on iOS</h2>
@@ -150,7 +150,7 @@ export function IOSInstallInstructionsPage({
               className="flex gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
             >
               <div className="flex-shrink-0">
-                <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-700 dark:text-blue-300 font-semibold text-sm">
+                <div className="w-8 h-8 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center text-primary-700 dark:text-primary-300 font-semibold text-sm">
                   {step.step}
                 </div>
               </div>
@@ -242,15 +242,15 @@ export function IOSInstallInstructionsCompact({
 
       <ol className="space-y-2 text-xs">
         <li className="flex items-center gap-2">
-          <span className="w-4 h-4 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-700 dark:text-blue-300 text-[10px] font-medium">
+          <span className="w-4 h-4 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center text-primary-700 dark:text-primary-300 text-[10px] font-medium">
             1
           </span>
           <span className="flex items-center gap-1">
-            Tap <SafariShareIcon className="h-3 w-3 text-blue-500" /> Share
+            Tap <SafariShareIcon className="h-3 w-3 text-primary dark:text-primary-400" /> Share
           </span>
         </li>
         <li className="flex items-center gap-2">
-          <span className="w-4 h-4 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-700 dark:text-blue-300 text-[10px] font-medium">
+          <span className="w-4 h-4 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center text-primary-700 dark:text-primary-300 text-[10px] font-medium">
             2
           </span>
           <span className="flex items-center gap-1">
@@ -258,7 +258,7 @@ export function IOSInstallInstructionsCompact({
           </span>
         </li>
         <li className="flex items-center gap-2">
-          <span className="w-4 h-4 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center text-blue-700 dark:text-blue-300 text-[10px] font-medium">
+          <span className="w-4 h-4 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center text-primary-700 dark:text-primary-300 text-[10px] font-medium">
             3
           </span>
           <span>Tap "Add"</span>

@@ -40,14 +40,15 @@ RadioGroup.displayName = "RadioGroup"
 
 interface RadioGroupItemProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   value: string
+  touchFriendly?: boolean
 }
 
 const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(
-  ({ className, value, id, ...props }, ref) => {
+  ({ className, value, id, touchFriendly = true, ...props }, ref) => {
     const context = React.useContext(RadioGroupContext)
     const isChecked = context.value === value
 
-    return (
+    const radioButton = (
       <button
         type="button"
         role="radio"
@@ -69,6 +70,17 @@ const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(
         )}
       </button>
     )
+
+    // Wrap in touch-friendly container on mobile
+    if (touchFriendly) {
+      return (
+        <span className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] md:min-h-0 md:min-w-0 -m-2 md:m-0 p-2 md:p-0">
+          {radioButton}
+        </span>
+      )
+    }
+
+    return radioButton
   }
 )
 RadioGroupItem.displayName = "RadioGroupItem"

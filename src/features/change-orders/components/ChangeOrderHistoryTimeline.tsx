@@ -44,8 +44,8 @@ const ACTION_CONFIG: Record<
   },
   updated: {
     icon: Edit,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary dark:text-primary-400',
+    bgColor: 'bg-primary-100 dark:bg-primary-950',
     label: 'Updated',
   },
   submitted: {
@@ -56,8 +56,8 @@ const ACTION_CONFIG: Record<
   },
   estimate_submitted: {
     icon: FileText,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary dark:text-primary-400',
+    bgColor: 'bg-primary-100 dark:bg-primary-950',
     label: 'Estimate Submitted',
   },
   internal_approved: {
@@ -128,14 +128,14 @@ const ACTION_CONFIG: Record<
   },
   item_added: {
     icon: Plus,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary dark:text-primary-400',
+    bgColor: 'bg-primary-100 dark:bg-primary-950',
     label: 'Item Added',
   },
   item_updated: {
     icon: Edit,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary dark:text-primary-400',
+    bgColor: 'bg-primary-100 dark:bg-primary-950',
     label: 'Item Updated',
   },
   item_deleted: {
@@ -146,8 +146,8 @@ const ACTION_CONFIG: Record<
   },
   attachment_added: {
     icon: FileText,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary dark:text-primary-400',
+    bgColor: 'bg-primary-100 dark:bg-primary-950',
     label: 'Attachment Added',
   },
   assignment_changed: {

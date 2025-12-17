@@ -103,7 +103,7 @@ export function Pagination({
           onClick={() => onPageChange(0)}
           disabled={!canPreviousPage}
           title="First page"
-          className="h-9 w-9 p-0"
+          className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-9 md:w-9 md:min-h-0 md:min-w-0 p-0"
         >
           <ChevronsLeft className="h-4 w-4" />
         </Button>
@@ -115,7 +115,7 @@ export function Pagination({
           onClick={() => onPageChange(page - 1)}
           disabled={!canPreviousPage}
           title="Previous page"
-          className="h-9 w-9 p-0"
+          className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-9 md:w-9 md:min-h-0 md:min-w-0 p-0"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -135,7 +135,7 @@ export function Pagination({
           onClick={() => onPageChange(page + 1)}
           disabled={!canNextPage}
           title="Next page"
-          className="h-9 w-9 p-0"
+          className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-9 md:w-9 md:min-h-0 md:min-w-0 p-0"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -147,7 +147,7 @@ export function Pagination({
           onClick={() => onPageChange(totalPages - 1)}
           disabled={!canNextPage}
           title="Last page"
-          className="h-9 w-9 p-0"
+          className="h-9 w-9 min-h-[44px] min-w-[44px] md:h-9 md:w-9 md:min-h-0 md:min-w-0 p-0"
         >
           <ChevronsRight className="h-4 w-4" />
         </Button>

@@ -176,8 +176,8 @@ function MeetingStatsCard({ stats }: { stats: MeetingStatistics }) {
         <div className="text-2xl font-bold text-gray-700">{stats.total_meetings}</div>
         <div className="text-xs text-gray-500">Total Meetings</div>
       </div>
-      <div className="text-center p-3 bg-blue-50 rounded-lg">
-        <div className="text-2xl font-bold text-blue-700">{stats.upcoming_count}</div>
+      <div className="text-center p-3 bg-primary-50 dark:bg-primary-950/20 rounded-lg">
+        <div className="text-2xl font-bold text-primary-700 dark:text-primary-300">{stats.upcoming_count}</div>
         <div className="text-xs text-gray-500">Upcoming</div>
       </div>
       <div className="text-center p-3 bg-green-50 rounded-lg">
@@ -349,12 +349,12 @@ export function MeetingList({
       {upcomingMeetings.length > 0 && (
         <div className="space-y-2">
           <h3 className="text-sm font-medium text-gray-600 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-blue-500 animate-pulse"></span>
+            <span className="h-2 w-2 rounded-full bg-primary dark:bg-primary-400 animate-pulse"></span>
             Upcoming Meetings
           </h3>
           <div className="border rounded-lg overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-blue-50 border-b">
+              <thead className="bg-primary-50 dark:bg-primary-950/20 border-b">
                 <tr>
                   <th className="px-3 py-2 text-left font-medium">Date</th>
                   <th className="px-3 py-2 text-left font-medium">Time</th>
@@ -370,8 +370,8 @@ export function MeetingList({
                   <tr
                     key={meeting.id}
                     className={cn(
-                      'hover:bg-blue-50/50 cursor-pointer',
-                      'bg-blue-50/30'
+                      'hover:bg-primary-50/50 dark:hover:bg-primary-950/30 cursor-pointer',
+                      'bg-primary-50/30 dark:bg-primary-950/20'
                     )}
                     onClick={() => onMeetingClick?.(meeting)}
                   >

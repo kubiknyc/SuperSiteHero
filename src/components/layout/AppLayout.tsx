@@ -184,7 +184,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={cn(
-                "rounded-lg bg-orange-500",
+                "rounded-lg",
                 isTablet ? "p-1.5" : "p-2"
               )}>
                 <LogoIconLight className={cn(isTablet ? "h-5 w-5" : "h-6 w-6")} />
@@ -194,8 +194,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   "font-bold",
                   isTablet ? "text-base" : "text-lg"
                 )}>
-                  <span className="text-orange-400">Job</span>
-                  <span>Sight</span>
+                  JobSight
                 </h1>
                 <p className="text-xs text-gray-400">Field Management</p>
               </div>

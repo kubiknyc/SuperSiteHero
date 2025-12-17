@@ -35,6 +35,7 @@ import {
 import { formatDistanceToNow } from 'date-fns';
 import { getSyncStatusColor, getSyncStatusLabel } from '@/types/google-calendar';
 import type { MeetingWithDetails } from '../hooks/useMeetings';
+import { TouchWrapper } from '@/components/ui/touch-wrapper';
 
 interface CalendarSyncBadgeProps {
   meeting: MeetingWithDetails;
@@ -133,15 +134,17 @@ export function CalendarSyncBadge({
   };
 
   const badgeContent = (
-    <Badge
-      variant="outline"
-      className={`${getSyncStatusColor(syncStatus || 'pending')} ${
-        size === 'sm' ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1'
-      } ${className} cursor-pointer hover:opacity-80`}
-    >
-      {getStatusIcon()}
-      {showLabel && <span className="ml-1">{getStatusText()}</span>}
-    </Badge>
+    <TouchWrapper>
+      <Badge
+        variant="outline"
+        className={`${getSyncStatusColor(syncStatus || 'pending')} ${
+          size === 'sm' ? 'text-xs px-1.5 py-0.5' : 'text-sm px-2 py-1'
+        } ${className} cursor-pointer hover:opacity-80`}
+      >
+        {getStatusIcon()}
+        {showLabel && <span className="ml-1">{getStatusText()}</span>}
+      </Badge>
+    </TouchWrapper>
   );
 
   return (

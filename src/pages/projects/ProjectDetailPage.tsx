@@ -109,12 +109,12 @@ export function ProjectDetailPage() {
           </Button>
         </div>
 
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
+        {/* Header - Enhanced typography */}
+        <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">{project.name}</h1>
+            <h1 className="heading-page text-gray-900 dark:text-white tracking-tight leading-tight">{project.name}</h1>
             {project.project_number && (
-              <p className="text-gray-600 mt-1">#{project.project_number}</p>
+              <p className="body-base text-gray-600 dark:text-gray-400 mt-2">#{project.project_number}</p>
             )}
           </div>
           <div className="flex gap-2">
@@ -145,18 +145,18 @@ export function ProjectDetailPage() {
           </Badge>
         </div>
 
-        {/* Project details grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Project details grid - Enhanced spacing */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-8">
             {/* Description */}
             {project.description && (
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg">Description</CardTitle>
+                  <CardTitle className="heading-card">Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 whitespace-pre-wrap">
+                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
                     {project.description}
                   </p>
                 </CardContent>
@@ -166,32 +166,32 @@ export function ProjectDetailPage() {
             {/* Location */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Location</CardTitle>
+                <CardTitle className="heading-card">Location</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {project.address && (
                   <div>
-                    <Label className="text-sm text-gray-600">Address</Label>
-                    <p className="text-gray-900">{project.address}</p>
+                    <Label className="text-label text-gray-600 dark:text-gray-400">Address</Label>
+                    <p className="text-gray-900 dark:text-white">{project.address}</p>
                   </div>
                 )}
                 <div className="grid grid-cols-3 gap-4">
                   {project.city && (
                     <div>
-                      <Label className="text-sm text-gray-600">City</Label>
-                      <p className="text-gray-900">{project.city}</p>
+                      <Label className="text-label text-gray-600 dark:text-gray-400">City</Label>
+                      <p className="text-gray-900 dark:text-white">{project.city}</p>
                     </div>
                   )}
                   {project.state && (
                     <div>
-                      <Label className="text-sm text-gray-600">State</Label>
-                      <p className="text-gray-900">{project.state}</p>
+                      <Label className="text-label text-gray-600 dark:text-gray-400">State</Label>
+                      <p className="text-gray-900 dark:text-white">{project.state}</p>
                     </div>
                   )}
                   {project.zip && (
                     <div>
-                      <Label className="text-sm text-gray-600">ZIP</Label>
-                      <p className="text-gray-900">{project.zip}</p>
+                      <Label className="text-label text-gray-600 dark:text-gray-400">ZIP</Label>
+                      <p className="text-gray-900 dark:text-white">{project.zip}</p>
                     </div>
                   )}
                 </div>
@@ -215,25 +215,25 @@ export function ProjectDetailPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Timeline */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Timeline</CardTitle>
+                <CardTitle className="heading-card">Timeline</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {project.start_date && (
                   <div>
-                    <Label className="text-sm text-gray-600">Start Date</Label>
-                    <p className="text-gray-900">
+                    <Label className="text-label text-gray-600 dark:text-gray-400">Start Date</Label>
+                    <p className="text-gray-900 dark:text-white">
                       {project.start_date ? format(new Date(project.start_date), 'MMM d, yyyy') : 'N/A'}
                     </p>
                   </div>
                 )}
                 {project.end_date && (
                   <div>
-                    <Label className="text-sm text-gray-600">Est. End Date</Label>
-                    <p className="text-gray-900">
+                    <Label className="text-label text-gray-600 dark:text-gray-400">Est. End Date</Label>
+                    <p className="text-gray-900 dark:text-white">
                       {project.end_date ? format(new Date(project.end_date), 'MMM d, yyyy') : 'N/A'}
                     </p>
                   </div>
@@ -244,11 +244,11 @@ export function ProjectDetailPage() {
             {/* Project Info */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Project Info</CardTitle>
+                <CardTitle className="heading-card">Project Info</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-xs text-gray-600">Status</Label>
+                  <Label className="text-caption text-gray-600 dark:text-gray-400">Status</Label>
                   <Badge variant={getStatusVariant(project.status ?? 'planning')} className="mt-1">
                     {formatStatus(project.status ?? 'planning')}
                   </Badge>

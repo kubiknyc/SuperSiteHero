@@ -68,7 +68,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
     }
 
     .email-header {
-      background-color: #F97316;
+      background-color: #1E40AF;
       padding: 24px;
       text-align: center;
     }
@@ -82,7 +82,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
 
     .logo-icon {
       display: inline-block;
-      background-color: #EA580C;
+      background-color: #1D4ED8;
       border-radius: 8px;
       padding: 8px 12px;
       margin-right: 8px;

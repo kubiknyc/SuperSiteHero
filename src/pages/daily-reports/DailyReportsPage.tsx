@@ -345,7 +345,7 @@ export function DailyReportsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Daily Reports</h1>
+            <h1 className="heading-page text-gray-900 dark:text-white">Daily Reports</h1>
             <p className="text-gray-600 mt-1">
               Track daily activities, weather, and workforce
             </p>
@@ -615,10 +615,10 @@ export function DailyReportsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Reports</p>
+                    <p className="text-uppercase-label text-gray-600 dark:text-gray-400">Total Reports</p>
                     <p className="text-2xl font-bold mt-1">{filteredReports.length}</p>
                   </div>
-                  <FileText className="h-8 w-8 text-blue-600" />
+                  <FileText className="h-8 w-8 text-primary dark:text-primary-400" />
                 </div>
               </CardContent>
             </Card>
@@ -627,7 +627,7 @@ export function DailyReportsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Pending Approval</p>
+                    <p className="text-uppercase-label text-gray-600 dark:text-gray-400">Pending Approval</p>
                     <p className="text-2xl font-bold mt-1">
                       {filteredReports.filter((r) => r.status === 'submitted').length}
                     </p>
@@ -641,7 +641,7 @@ export function DailyReportsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Weather Delays</p>
+                    <p className="text-uppercase-label text-gray-600 dark:text-gray-400">Weather Delays</p>
                     <p className="text-2xl font-bold mt-1">
                       {filteredReports.filter((r) => r.weather_delays).length}
                     </p>

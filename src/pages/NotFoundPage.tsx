@@ -20,17 +20,17 @@ export function NotFoundPage() {
         </div>
 
         {/* Error Code */}
-        <h1 className="text-9xl font-bold text-orange-500 mb-4">
+        <h1 className="heading-error-code text-orange-500 mb-4">
           404
         </h1>
 
         {/* Error Title */}
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="heading-page text-gray-900 dark:text-white mb-4">
           Page Not Found
         </h2>
 
         {/* Error Description */}
-        <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">
+        <p className="body-large text-gray-600 dark:text-gray-400 mb-8">
           The page you're looking for doesn't exist in JobSight.
           It may have been moved, deleted, or the URL might be incorrect.
         </p>
@@ -50,7 +50,7 @@ export function NotFoundPage() {
           <Button
             onClick={() => navigate('/')}
             size="lg"
-            className="gap-2 bg-orange-500 hover:bg-orange-600"
+            className="gap-2 bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80"
           >
             <Home className="w-4 h-4" />
             Return to Dashboard
@@ -58,14 +58,14 @@ export function NotFoundPage() {
         </div>
 
         {/* Search Suggestion */}
-        <div className="mt-12 p-4 bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg">
+        <div className="mt-12 p-4 bg-primary-50 dark:bg-primary-950/10 border border-primary-200 dark:border-primary-800 rounded-lg">
           <div className="flex items-start gap-3">
-            <Search className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
+            <Search className="w-5 h-5 text-primary dark:text-primary-400 mt-0.5 flex-shrink-0" />
             <div className="text-left">
-              <p className="text-sm font-medium text-orange-900 dark:text-orange-100 mb-1">
+              <p className="body-small font-medium text-primary-900 dark:text-primary-100 mb-1">
                 Looking for something specific?
               </p>
-              <p className="text-sm text-orange-700 dark:text-orange-300">
+              <p className="body-small text-primary-700 dark:text-primary-300">
                 Try using the search feature or navigation menu to find what you need.
               </p>
             </div>
@@ -73,30 +73,30 @@ export function NotFoundPage() {
         </div>
 
         {/* Helpful Links */}
-        <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-8 body-small text-gray-500 dark:text-gray-400">
           <p className="mb-2">Quick links:</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <button
               onClick={() => navigate('/projects')}
-              className="text-orange-600 dark:text-orange-400 hover:underline"
+              className="text-primary dark:text-primary-400 hover:underline"
             >
               Projects
             </button>
             <button
               onClick={() => navigate('/daily-reports')}
-              className="text-orange-600 dark:text-orange-400 hover:underline"
+              className="text-primary dark:text-primary-400 hover:underline"
             >
               Daily Reports
             </button>
             <button
               onClick={() => navigate('/settings')}
-              className="text-orange-600 dark:text-orange-400 hover:underline"
+              className="text-primary dark:text-primary-400 hover:underline"
             >
               Settings
             </button>
             <button
               onClick={() => navigate('/help')}
-              className="text-orange-600 dark:text-orange-400 hover:underline"
+              className="text-primary dark:text-primary-400 hover:underline"
             >
               Help Center
             </button>
@@ -105,8 +105,8 @@ export function NotFoundPage() {
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-xs text-gray-400 dark:text-gray-600">
-            <span className="font-semibold text-orange-500">JobSight</span> - Construction Field Management
+          <p className="text-caption text-gray-400 dark:text-gray-600">
+            <span className="font-semibold text-primary dark:text-primary-400">JobSight</span> - Construction Field Management
           </p>
         </div>
       </div>

@@ -98,12 +98,12 @@ export function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
-            <div className="rounded-full bg-blue-100 p-3">
-              <HardHat className="h-8 w-8 text-blue-600" />
+            <div className="rounded-full bg-primary-100 dark:bg-primary-950 p-3">
+              <HardHat className="h-8 w-8 text-primary dark:text-primary-400" />
             </div>
           </div>
           <CardTitle className="text-2xl text-center">Create your account</CardTitle>
@@ -184,7 +184,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 disabled={loading}
               />
-              <p className="text-xs text-gray-500">Must be at least 8 characters with uppercase, lowercase, number, and special character</p>
+              <p className="text-caption text-gray-500 dark:text-gray-400">Must be at least 8 characters with uppercase, lowercase, number, and special character</p>
             </div>
 
             <div className="space-y-2">
@@ -207,11 +207,11 @@ export function SignupPage() {
               {loading ? 'Creating account...' : 'Create account'}
             </Button>
 
-            <p className="text-sm text-center text-gray-600">
+            <p className="body-small text-center text-gray-600 dark:text-gray-400">
               Already have an account?{' '}
               <Link
                 to="/login"
-                className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                className="text-primary hover:text-primary/90 dark:text-primary-400 dark:hover:text-primary-300 hover:underline font-medium"
               >
                 Sign in
               </Link>

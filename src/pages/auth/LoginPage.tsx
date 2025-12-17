@@ -156,8 +156,8 @@ export function LoginPage() {
                 <div className="absolute inset-0 flex items-center">
                   <Separator className="w-full" />
                 </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-2 text-gray-500">or continue with email</span>
+                <div className="relative flex justify-center">
+                  <span className="bg-white dark:bg-gray-900 px-2 text-uppercase-label text-gray-500 dark:text-gray-400">or continue with email</span>
                 </div>
               </div>
             </div>
@@ -186,7 +186,7 @@ export function LoginPage() {
                 <Label htmlFor="password">Password</Label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-orange-600 hover:text-orange-700 hover:underline"
+                  className="body-small text-primary hover:text-primary/90 dark:text-primary-400 dark:hover:text-primary-300 hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -206,7 +206,7 @@ export function LoginPage() {
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full bg-orange-500 hover:bg-orange-600" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80" disabled={isLoading}>
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -217,11 +217,11 @@ export function LoginPage() {
               )}
             </Button>
 
-            <p className="text-sm text-center text-gray-600">
+            <p className="body-small text-center text-gray-600 dark:text-gray-400">
               Don't have an account?{' '}
               <Link
                 to="/signup"
-                className="text-orange-600 hover:text-orange-700 hover:underline font-medium"
+                className="text-primary hover:text-primary/80 dark:text-primary-400 dark:hover:text-primary-300 hover:underline font-medium"
               >
                 Sign up
               </Link>

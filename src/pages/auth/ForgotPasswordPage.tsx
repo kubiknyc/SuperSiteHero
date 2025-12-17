@@ -39,12 +39,12 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
-            <div className="rounded-full bg-blue-100 p-3">
-              <HardHat className="h-8 w-8 text-blue-600" />
+            <div className="rounded-full bg-primary-100 dark:bg-primary-950 p-3">
+              <HardHat className="h-8 w-8 text-primary dark:text-primary-400" />
             </div>
           </div>
           <CardTitle className="text-2xl text-center">Reset your password</CardTitle>
@@ -80,7 +80,7 @@ export function ForgotPasswordPage() {
 
               <Link
                 to="/login"
-                className="flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+                className="flex items-center justify-center gap-2 body-small text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to sign in
@@ -89,11 +89,11 @@ export function ForgotPasswordPage() {
           </form>
         ) : (
           <CardFooter className="flex flex-col space-y-4">
-            <p className="text-sm text-center text-gray-600">
+            <p className="body-small text-center text-gray-600 dark:text-gray-400">
               Didn't receive an email?{' '}
               <button
                 onClick={() => setSubmitted(false)}
-                className="text-blue-600 hover:text-blue-700 hover:underline font-medium"
+                className="text-primary hover:text-primary/90 dark:text-primary-400 dark:hover:text-primary-300 hover:underline font-medium"
               >
                 Try again
               </button>

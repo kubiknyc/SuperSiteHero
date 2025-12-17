@@ -81,7 +81,7 @@ export default {
   				'700': '#1d4ed8',
   				'800': '#1e40af',
   				'900': '#1e3a8a',
-  				DEFAULT: 'hsl(var(--primary))',
+  				DEFAULT: '#1e40af', // Professional Blueprint blue
   				foreground: 'hsl(var(--primary-foreground))'
   			},
   			background: 'hsl(var(--background))',

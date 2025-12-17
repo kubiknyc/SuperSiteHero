@@ -52,7 +52,7 @@ export function LiveUpdateBadge({
       <div
         className={cn(
           'fixed bottom-4 left-1/2 -translate-x-1/2 z-50',
-          'flex items-center gap-3 rounded-full bg-blue-600 px-4 py-2 text-white shadow-lg',
+          'flex items-center gap-3 rounded-full bg-primary px-4 py-2 text-white shadow-lg dark:bg-primary',
           'animate-in slide-in-from-bottom-4',
           className
         )}
@@ -61,7 +61,7 @@ export function LiveUpdateBadge({
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 px-2 text-white hover:bg-blue-500"
+          className="h-7 px-2 text-white hover:bg-primary/90 dark:hover:bg-primary/80"
           onClick={onRefresh}
         >
           <RefreshCw className="h-4 w-4 mr-1" />
@@ -70,7 +70,7 @@ export function LiveUpdateBadge({
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="text-blue-200 hover:text-white"
+            className="text-primary-200 hover:text-white dark:text-primary-300 dark:hover:text-white"
             aria-label="Dismiss"
           >
             <X className="h-4 w-4" />
@@ -85,8 +85,8 @@ export function LiveUpdateBadge({
       <button
         onClick={onRefresh}
         className={cn(
-          'flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700',
-          'dark:text-blue-400 dark:hover:text-blue-300',
+          'flex items-center gap-2 text-sm text-primary hover:text-primary-700',
+          'dark:text-primary-400 dark:hover:text-primary-300',
           className
         )}
       >
@@ -100,19 +100,19 @@ export function LiveUpdateBadge({
   return (
     <div
       className={cn(
-        'flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 px-4 py-2 border-b border-blue-100 dark:border-blue-800',
+        'flex items-center justify-between bg-primary-50 dark:bg-primary-950/20 px-4 py-2 border-b border-primary-100 dark:border-primary-800',
         className
       )}
     >
-      <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300">
-        <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+      <div className="flex items-center gap-2 text-sm text-primary-700 dark:text-primary-300">
+        <div className="h-2 w-2 rounded-full bg-primary dark:bg-primary-400 animate-pulse" />
         <span>{message}</span>
       </div>
       <div className="flex items-center gap-2">
         <Button
           size="sm"
           variant="ghost"
-          className="h-7 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/40"
+          className="h-7 text-primary-700 dark:text-primary-300 hover:bg-primary-100 dark:hover:bg-primary-950/40"
           onClick={onRefresh}
         >
           <RefreshCw className="h-3.5 w-3.5 mr-1" />
@@ -121,7 +121,7 @@ export function LiveUpdateBadge({
         {onDismiss && (
           <button
             onClick={onDismiss}
-            className="text-blue-400 hover:text-blue-600 dark:hover:text-blue-200"
+            className="text-primary-400 hover:text-primary-600 dark:hover:text-primary-200"
             aria-label="Dismiss"
           >
             <X className="h-4 w-4" />

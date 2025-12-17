@@ -107,8 +107,8 @@ export function ExecutionCard({
         <div className="flex items-center p-4 gap-4">
           {/* Icon */}
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-              <CheckSquare className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-950 flex items-center justify-center">
+              <CheckSquare className="w-6 h-6 text-primary dark:text-primary-400" />
             </div>
           </div>
 
@@ -117,7 +117,7 @@ export function ExecutionCard({
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <h3
-                  className="text-base font-semibold truncate cursor-pointer hover:text-blue-600"
+                  className="text-base font-semibold truncate cursor-pointer hover:text-primary dark:hover:text-primary-400"
                   onClick={handleView}
                 >
                   {execution.name}
@@ -164,7 +164,7 @@ export function ExecutionCard({
                     <div className="w-full bg-gray-200 rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          progressPercentage === 100 ? 'bg-green-600' : 'bg-blue-600'
+                          progressPercentage === 100 ? 'bg-green-600' : 'bg-primary dark:bg-primary'
                         }`}
                         style={{ width: `${progressPercentage}%` }}
                       />
@@ -228,11 +228,11 @@ export function ExecutionCard({
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-3">
-              <CheckSquare className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 rounded-lg bg-primary-100 dark:bg-primary-950 flex items-center justify-center mb-3">
+              <CheckSquare className="w-6 h-6 text-primary dark:text-primary-400" />
             </div>
             <CardTitle
-              className="text-lg truncate group-hover:text-blue-600"
+              className="text-lg truncate group-hover:text-primary dark:group-hover:text-primary-400"
               onClick={handleView}
             >
               {execution.name}
@@ -330,7 +330,7 @@ export function ExecutionCard({
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    progressPercentage === 100 ? 'bg-green-600' : 'bg-blue-600'
+                    progressPercentage === 100 ? 'bg-green-600' : 'bg-primary dark:bg-primary'
                   }`}
                   style={{ width: `${progressPercentage}%` }}
                 />

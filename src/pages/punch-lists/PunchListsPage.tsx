@@ -147,7 +147,7 @@ export function PunchListsPage() {
             variant="ghost"
             size="icon"
             onClick={(e: React.MouseEvent) => handleEdit(e, item)}
-            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            className="text-primary hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-950"
           >
             <Edit className="h-4 w-4" />
           </Button>
@@ -200,13 +200,13 @@ export function PunchListsPage() {
         {!isLoading && punchItems && punchItems.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Card
-              className={`cursor-pointer transition-all ${statusFilter === 'all' ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${statusFilter === 'all' ? 'ring-2 ring-primary dark:ring-primary-400' : 'hover:bg-gray-50'}`}
               onClick={() => setStatusFilter('all')}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <ListChecks className="h-5 w-5 text-blue-600" />
+                  <div className="p-2 bg-primary-100 dark:bg-primary-950 rounded-lg">
+                    <ListChecks className="h-5 w-5 text-primary dark:text-primary-400" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.total}</p>
@@ -271,18 +271,18 @@ export function PunchListsPage() {
 
         {/* Offline Pending Items Banner */}
         {offlinePendingCount > 0 && (
-          <Card className={isOnline ? 'bg-blue-50 border-blue-200' : 'bg-amber-50 border-amber-200'}>
+          <Card className={isOnline ? 'bg-primary-50 border-primary-200 dark:bg-primary-950/20 dark:border-primary-800' : 'bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800'}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${isOnline ? 'bg-blue-100' : 'bg-amber-100'}`}>
-                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-blue-600' : 'text-amber-600'}`} />
+                  <div className={`p-2 rounded-lg ${isOnline ? 'bg-primary-100 dark:bg-primary-950' : 'bg-amber-100 dark:bg-amber-950'}`}>
+                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-primary dark:text-primary-400' : 'text-amber-600 dark:text-amber-400'}`} />
                   </div>
                   <div>
-                    <p className={`font-medium ${isOnline ? 'text-blue-900' : 'text-amber-900'}`}>
+                    <p className={`font-medium ${isOnline ? 'text-primary-900 dark:text-primary-100' : 'text-amber-900 dark:text-amber-100'}`}>
                       {offlinePendingCount} punch item{offlinePendingCount > 1 ? 's' : ''} pending sync
                     </p>
-                    <p className={`text-sm ${isOnline ? 'text-blue-700' : 'text-amber-700'}`}>
+                    <p className={`text-sm ${isOnline ? 'text-primary-700 dark:text-primary-300' : 'text-amber-700 dark:text-amber-300'}`}>
                       {isOnline
                         ? 'Syncing automatically...'
                         : 'Will sync when back online'}
@@ -294,7 +294,7 @@ export function PunchListsPage() {
                     variant="outline"
                     size="sm"
                     onClick={syncNow}
-                    className="border-blue-300 text-blue-700 hover:bg-blue-100"
+                    className="border-primary-300 text-primary-700 hover:bg-primary-100 dark:border-primary-700 dark:text-primary-300 dark:hover:bg-primary-950"
                   >
                     <RefreshCw className="h-4 w-4 mr-1" />
                     Sync Now
@@ -451,7 +451,7 @@ export function PunchListsPage() {
                           variant="ghost"
                           size="icon"
                           onClick={(e) => handleEdit(e, item)}
-                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                          className="text-primary hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-950"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>

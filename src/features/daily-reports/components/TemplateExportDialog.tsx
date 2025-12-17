@@ -209,7 +209,7 @@ export function TemplateExportDialog({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-600" />
+            <FileText className="h-5 w-5 text-primary dark:text-primary-400" />
             Save as Template
           </DialogTitle>
           <DialogDescription>
@@ -261,13 +261,13 @@ export function TemplateExportDialog({
                     onClick={() => setScope(option.value)}
                     className={`flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-all ${
                       isSelected
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                        ? 'border-primary bg-primary-50 dark:border-primary-600 dark:bg-primary-950/20'
+                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-800'
                     }`}
                   >
                     <div
                       className={`p-1.5 rounded-md ${
-                        isSelected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
+                        isSelected ? 'bg-primary-100 text-primary dark:bg-primary-950 dark:text-primary-400' : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
                       }`}
                     >
                       <Icon className="h-4 w-4" />
@@ -277,7 +277,7 @@ export function TemplateExportDialog({
                       <div className="text-xs text-gray-500">{option.description}</div>
                     </div>
                     {isSelected && (
-                      <CheckCircle className="h-5 w-5 text-blue-500 flex-shrink-0" />
+                      <CheckCircle className="h-5 w-5 text-primary dark:text-primary-400 flex-shrink-0" />
                     )}
                   </button>
                 );
@@ -292,7 +292,7 @@ export function TemplateExportDialog({
               <label
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeWorkforce
-                    ? 'border-blue-200 bg-blue-50'
+                    ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
                     : 'border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -312,7 +312,7 @@ export function TemplateExportDialog({
               <label
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeEquipment
-                    ? 'border-blue-200 bg-blue-50'
+                    ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
                     : 'border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -332,7 +332,7 @@ export function TemplateExportDialog({
               <label
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeWeather
-                    ? 'border-blue-200 bg-blue-50'
+                    ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
                     : 'border-gray-200 hover:bg-gray-50'
                 }`}
               >
@@ -349,7 +349,7 @@ export function TemplateExportDialog({
               <label
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeNotes
-                    ? 'border-blue-200 bg-blue-50'
+                    ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
                     : 'border-gray-200 hover:bg-gray-50'
                 }`}
               >

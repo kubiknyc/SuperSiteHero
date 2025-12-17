@@ -124,15 +124,14 @@ export function Logo({
 }
 
 /**
- * Logo specifically for the sidebar (dark background) - REDESIGNED
+ * Logo specifically for the sidebar (dark background) - Professional Blueprint
  */
 export function SidebarLogo({ className, animated = true }: { className?: string; animated?: boolean }) {
   return (
     <div className={cn('flex items-center gap-3 group', className)}>
-      {/* Icon with orange glow effect */}
+      {/* Monochrome icon */}
       <div className="relative">
-        <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <div className="relative rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-2.5 shadow-lg shadow-orange-500/25">
+        <div className="relative rounded-xl p-2.5">
           <LogoIconLight
             className="h-7 w-7 drop-shadow-sm"
             animated={animated}
@@ -143,9 +142,9 @@ export function SidebarLogo({ className, animated = true }: { className?: string
       {/* Text with industrial styling */}
       <div className="relative">
         <img
-          src="/jobsight-logo.png"
+          src="/jobsight-logo-white.png"
           alt="JobSight"
-          className="h-8 object-contain brightness-0 invert"
+          className="h-8 object-contain"
         />
         <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium mt-0.5 letterspacing-tight">
           Field Management
@@ -156,7 +155,7 @@ export function SidebarLogo({ className, animated = true }: { className?: string
 }
 
 /**
- * Logo for login/auth pages - REDESIGNED with dramatic presentation
+ * Logo for login/auth pages - Professional Blueprint
  */
 export function AuthLogo({ className }: { className?: string }) {
   return (
@@ -164,11 +163,11 @@ export function AuthLogo({ className }: { className?: string }) {
       {/* Dramatic icon presentation */}
       <div className="relative">
         {/* Outer glow rings */}
-        <div className="absolute inset-0 -m-8 bg-orange-500/10 blur-3xl rounded-full animate-pulse" />
-        <div className="absolute inset-0 -m-4 border-2 border-orange-500/20 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute inset-0 -m-8 bg-blue-600/10 blur-3xl rounded-full animate-pulse" />
+        <div className="absolute inset-0 -m-4 border-2 border-blue-600/20 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
 
         {/* Icon container */}
-        <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 p-6 shadow-2xl shadow-orange-500/30">
+        <div className="relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 p-6 shadow-2xl shadow-blue-600/30">
           <div className="absolute inset-0 bg-grid-white/5 rounded-2xl" />
           <LogoIconLight className="relative h-20 w-20 drop-shadow-2xl" />
         </div>
@@ -179,7 +178,7 @@ export function AuthLogo({ className }: { className?: string }) {
         <img
           src="/jobsight-logo.png"
           alt="JobSight"
-          className="h-12 object-contain mx-auto"
+          className="h-12 object-contain mx-auto dark:brightness-0 dark:invert"
         />
         <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] font-medium">
           Construction Field Management
@@ -190,14 +189,12 @@ export function AuthLogo({ className }: { className?: string }) {
 }
 
 /**
- * Compact logo for headers/navbars - REDESIGNED
+ * Compact logo for headers/navbars - Professional Blueprint
  */
 export function CompactLogo({ className, animated = true }: { className?: string; animated?: boolean }) {
   return (
     <div className={cn('flex items-center gap-2.5 group', className)}>
       <div className="relative">
-        {/* Subtle glow on hover */}
-        <div className="absolute inset-0 bg-orange-500/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <LogoIcon
           className="relative h-8 w-8"
           animated={animated}
@@ -226,7 +223,7 @@ export function LogoIconWithBadge({
     <div className={cn('relative inline-flex', className)}>
       <LogoIcon className="h-10 w-10" />
       {badge && (
-        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-lg">
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white shadow-lg">
           {badge}
         </span>
       )}

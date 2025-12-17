@@ -38,6 +38,11 @@
     "test:e2e:takeoffs:headed": "playwright test takeoffs.spec.ts --headed",
     "test:visual": "playwright test visual-regression.spec.ts",
     "test:visual:update": "playwright test visual-regression.spec.ts --update-snapshots",
+    "test:visual:ui": "playwright test visual-regression.spec.ts --ui",
+    "test:visual:debug": "playwright test visual-regression.spec.ts --debug",
+    "test:visual:headed": "playwright test visual-regression.spec.ts --headed",
+    "test:visual:chromium": "playwright test visual-regression.spec.ts --project=chromium",
+    "test:visual:report": "playwright show-report",
     "test:all": "npm run test:unit && npm run test:e2e",
     "ci:test": "npm run lint && npm run type-check && npm run test:coverage && npm run test:e2e",
     "seed:test": "tsx scripts/seed-test-data.ts",
@@ -185,11 +190,12 @@
     "zustand": "^4.5.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
     "@faker-js/faker": "^10.1.0",
     "@playwright/test": "^1.57.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^16.3.0",
+    "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.10.1",
     "@types/pako": "^2.0.4",
@@ -218,6 +224,7 @@
     "vite": "^7.2.4",
     "vite-plugin-pwa": "^1.2.0",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.8",
+    "wcag-contrast": "^3.0.0"
   }
 }

@@ -159,7 +159,7 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
   return (
     <div
       className={`border rounded-lg p-4 transition-all ${
-        disabled ? 'opacity-50' : 'hover:border-blue-300 hover:bg-blue-50/50'
+        disabled ? 'opacity-50' : 'hover:border-primary-300 hover:bg-primary-50/50 dark:hover:border-primary-700 dark:hover:bg-primary-950/30'
       }`}
     >
       <div className="flex items-start justify-between">
@@ -225,7 +225,7 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
         <button
           onClick={onSelect}
           disabled={disabled}
-          className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:bg-primary dark:hover:bg-primary/80 dark:focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
           type="button"
         >
           <CheckCircle2 className="w-4 h-4 mr-1" />
@@ -526,7 +526,7 @@ export function WeatherDelayAutoSuggest({
           {data.suggestions.length > visibleSuggestions.length && !showAllSuggestions && (
             <button
               onClick={() => setShowAllSuggestions(true)}
-              className="w-full py-2 text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors"
+              className="w-full py-2 text-sm text-primary hover:text-primary-700 hover:bg-primary-50 dark:text-primary-400 dark:hover:text-primary-300 dark:hover:bg-primary-950 rounded-lg transition-colors"
               type="button"
             >
               Show {data.suggestions.length - visibleSuggestions.length} more suggestion(s)

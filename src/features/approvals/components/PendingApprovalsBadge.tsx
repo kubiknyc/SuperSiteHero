@@ -8,6 +8,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { usePendingApprovals } from '../hooks/useApprovalRequests'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { TouchWrapper } from '@/components/ui/touch-wrapper'
 
 interface PendingApprovalsBadgeProps {
   userId?: string
@@ -43,7 +44,7 @@ export function PendingApprovalsBadge({
     return null
   }
 
-  return (
+  const badge = (
     <span
       className={cn(
         'inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-medium rounded-full',
@@ -60,6 +61,13 @@ export function PendingApprovalsBadge({
       {count > 99 ? '99+' : count}
     </span>
   )
+
+  // Wrap with TouchWrapper when interactive (onClick present)
+  if (onClick) {
+    return <TouchWrapper>{badge}</TouchWrapper>
+  }
+
+  return badge
 }
 
 /**

@@ -1,4 +1,4 @@
-// Blueprint Variants Index - Shows 8 different visual treatments of the blueprint design
+// Blueprint Variants Index - 4 polished, production-ready design variants
 
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Palette } from 'lucide-react'
@@ -6,68 +6,44 @@ import { ArrowLeft, Palette } from 'lucide-react'
 export default function BlueprintVariantsIndex() {
   const variants = [
     {
-      id: '1-classic',
-      name: 'Classic Blueprint',
-      description: 'Traditional dark blueprint style with white lines on deep blue',
-      color: '#0A1628',
-      textColor: '#FFFFFF',
-      path: '/blueprint-samples/variants/1-classic'
+      id: '1-professional',
+      name: 'Professional Blueprint',
+      description: 'Clean, corporate-ready design with refined typography, smooth interactions, and polished components',
+      color: '#F8FAFC',
+      accentColor: '#1E40AF',
+      textColor: '#0F172A',
+      path: '/blueprint-samples/variants/1-professional',
+      tags: ['Light Theme', 'Corporate', 'Refined']
     },
     {
-      id: '2-light',
-      name: 'Light & Airy',
-      description: 'Minimal design with maximum white space and subtle accents',
+      id: '2-technical-dark',
+      name: 'Technical Dark',
+      description: 'Modern dark theme with refined blueprint accents, glassmorphism, and technical precision',
+      color: '#0A0F1E',
+      accentColor: '#60A5FA',
+      textColor: '#F8FAFC',
+      path: '/blueprint-samples/variants/2-technical-dark',
+      tags: ['Dark Theme', 'Modern', 'Technical']
+    },
+    {
+      id: '3-minimal',
+      name: 'Minimal Precision',
+      description: 'Ultra-minimal design with perfect execution, generous white space, and elegant typography',
       color: '#FFFFFF',
-      textColor: '#0F172A',
-      path: '/blueprint-samples/variants/2-light'
+      accentColor: '#000000',
+      textColor: '#000000',
+      path: '/blueprint-samples/variants/3-minimal',
+      tags: ['Minimal', 'Elegant', 'Clean']
     },
     {
-      id: '3-technical',
-      name: 'Technical',
-      description: 'Heavy on annotations, dimension lines, and measurements',
-      color: '#F8FAFC',
-      textColor: '#0F172A',
-      path: '/blueprint-samples/variants/3-technical'
-    },
-    {
-      id: '4-glass',
-      name: 'Modern Glass',
-      description: 'Glassmorphism with frosted glass cards and gradient backgrounds',
-      color: '#1E40AF',
-      textColor: '#FFFFFF',
-      path: '/blueprint-samples/variants/4-glass'
-    },
-    {
-      id: '5-industrial',
-      name: 'Industrial Grid',
-      description: 'Strong grid system, construction-focused, bold and rugged',
-      color: '#18181B',
-      textColor: '#FAFAFA',
-      path: '/blueprint-samples/variants/5-industrial'
-    },
-    {
-      id: '6-minimal',
-      name: 'Minimal Lines',
-      description: 'Ultra-clean with thin lines and maximum breathing room',
-      color: '#FAFAFA',
-      textColor: '#171717',
-      path: '/blueprint-samples/variants/6-minimal'
-    },
-    {
-      id: '7-corporate',
-      name: 'Corporate Professional',
-      description: 'Business-focused, polished, and trustworthy',
-      color: '#F1F5F9',
-      textColor: '#0F172A',
-      path: '/blueprint-samples/variants/7-corporate'
-    },
-    {
-      id: '8-architectural',
-      name: 'Architectural Elegant',
-      description: 'Sophisticated, refined, architect-style with ornamental details',
-      color: '#F8FAFC',
-      textColor: '#0F172A',
-      path: '/blueprint-samples/variants/8-architectural'
+      id: '4-industrial',
+      name: 'Modern Industrial',
+      description: 'Contemporary construction aesthetic with bold typography, strong colors, and professional polish',
+      color: '#FAFAF9',
+      accentColor: '#F59E0B',
+      textColor: '#0A0A0A',
+      path: '/blueprint-samples/variants/4-industrial',
+      tags: ['Industrial', 'Bold', 'Construction']
     }
   ]
 
@@ -126,10 +102,10 @@ export default function BlueprintVariantsIndex() {
                 lineHeight: '1',
                 marginBottom: '0.5rem'
               }}>
-                Blueprint Design Variants
+                Polished Design Variants
               </h1>
               <p style={{ fontSize: '1.125rem', color: '#DBEAFE', fontWeight: '400' }}>
-                8 Different Visual Approaches
+                4 Production-Ready Approaches
               </p>
             </div>
           </div>
@@ -141,8 +117,8 @@ export default function BlueprintVariantsIndex() {
             lineHeight: '1.8',
             fontWeight: '300'
           }}>
-            Each variant maintains the blueprint aesthetic while offering a distinct visual personality.
-            Compare different approaches to typography, spacing, color intensity, and overall mood.
+            Each variant is production-ready with refined typography, polished components, and attention to detail.
+            Choose the aesthetic that best fits your brand vision.
           </p>
         </div>
 
@@ -153,7 +129,7 @@ export default function BlueprintVariantsIndex() {
       <div className="max-w-7xl mx-auto px-8 py-16">
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
           gap: '2rem'
         }}>
           {variants.map((variant, index) => (
@@ -164,15 +140,16 @@ export default function BlueprintVariantsIndex() {
                 textDecoration: 'none',
                 backgroundColor: '#fff',
                 border: '1px solid #E2E8F0',
+                borderRadius: '12px',
                 overflow: 'hidden',
                 boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
                 transition: 'all 0.2s',
                 display: 'block'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 10px 25px rgba(30,64,175,0.15)'
+                e.currentTarget.style.boxShadow = `0 12px 24px ${variant.accentColor}20`
                 e.currentTarget.style.transform = 'translateY(-4px)'
-                e.currentTarget.style.borderColor = '#1E40AF'
+                e.currentTarget.style.borderColor = variant.accentColor
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)'
@@ -182,16 +159,17 @@ export default function BlueprintVariantsIndex() {
             >
               {/* Color preview */}
               <div style={{
-                height: '120px',
+                height: '180px',
                 backgroundColor: variant.color,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 position: 'relative',
-                overflow: 'hidden'
+                overflow: 'hidden',
+                borderBottom: `3px solid ${variant.accentColor}`
               }}>
-                {/* Pattern overlay based on variant */}
-                {variant.id === '1-classic' && (
+                {/* Pattern overlay */}
+                {variant.id === '2-technical-dark' && (
                   <div style={{
                     position: 'absolute',
                     inset: 0,
@@ -202,33 +180,45 @@ export default function BlueprintVariantsIndex() {
                     backgroundSize: '20px 20px'
                   }} />
                 )}
-                {variant.id === '5-industrial' && (
-                  <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    backgroundImage: `
-                      linear-gradient(#27272A 2px, transparent 2px),
-                      linear-gradient(90deg, #27272A 2px, transparent 2px)
-                    `,
-                    backgroundSize: '40px 40px'
-                  }} />
-                )}
 
                 <div style={{
-                  fontSize: '3rem',
-                  fontWeight: '300',
-                  color: variant.textColor,
-                  opacity: 0.5,
+                  fontSize: '4rem',
+                  fontWeight: '200',
+                  color: variant.accentColor,
+                  opacity: 0.4,
                   fontFamily: '"Helvetica Neue", Arial, sans-serif',
                   position: 'relative',
                   zIndex: 1
                 }}>
-                  {index + 1}
+                  0{index + 1}
                 </div>
               </div>
 
               {/* Content */}
               <div style={{ padding: '2rem' }}>
+                <div style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  marginBottom: '1rem',
+                  flexWrap: 'wrap'
+                }}>
+                  {variant.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        padding: '0.25rem 0.75rem',
+                        backgroundColor: `${variant.accentColor}10`,
+                        color: variant.accentColor,
+                        borderRadius: '6px',
+                        fontSize: '0.75rem',
+                        fontWeight: '600'
+                      }}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
                 <h3 style={{
                   fontSize: '1.5rem',
                   fontWeight: '600',
@@ -242,23 +232,23 @@ export default function BlueprintVariantsIndex() {
                 <p style={{
                   fontSize: '1rem',
                   color: '#64748B',
-                  lineHeight: '1.6'
+                  lineHeight: '1.6',
+                  marginBottom: '1.5rem'
                 }}>
                   {variant.description}
                 </p>
 
                 <div style={{
-                  marginTop: '1.5rem',
                   paddingTop: '1rem',
                   borderTop: '1px solid #F1F5F9',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  color: '#1E40AF',
+                  color: variant.accentColor,
                   fontSize: '0.875rem',
                   fontWeight: '600'
                 }}>
-                  View Variant →
+                  View Full Design →
                 </div>
               </div>
             </Link>
@@ -269,6 +259,7 @@ export default function BlueprintVariantsIndex() {
         <div style={{
           backgroundColor: '#EFF6FF',
           border: '1px solid #BFDBFE',
+          borderRadius: '12px',
           padding: '2rem',
           marginTop: '4rem'
         }}>
@@ -278,7 +269,7 @@ export default function BlueprintVariantsIndex() {
             color: '#1E40AF',
             marginBottom: '1rem'
           }}>
-            Compare & Choose
+            Production-Ready Designs
           </h3>
           <p style={{
             color: '#334155',
@@ -286,16 +277,16 @@ export default function BlueprintVariantsIndex() {
             lineHeight: '1.8',
             marginBottom: '1rem'
           }}>
-            Click any variant to see it in full detail. Each design demonstrates how the same content can be
-            presented with different visual treatments while maintaining the blueprint aesthetic.
+            Each variant has been carefully crafted with refined typography hierarchies, consistent spacing systems,
+            polished components, and attention to detail. These aren't mockups—they're production-ready implementations.
           </p>
           <p style={{
             color: '#334155',
             fontSize: '1rem',
             lineHeight: '1.8'
           }}>
-            Notice the differences in typography, spacing, color intensity, border styles, and overall mood.
-            Which approach resonates best with your vision for JobSight?
+            Click any variant to explore the full dashboard implementation and see how the same content can be
+            presented with completely different visual treatments while maintaining professional quality.
           </p>
         </div>
       </div>

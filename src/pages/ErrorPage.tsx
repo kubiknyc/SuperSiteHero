@@ -42,17 +42,17 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Error Code */}
-        <h1 className="text-9xl font-bold text-orange-500 mb-4">
+        <h1 className="heading-error-code text-orange-500 mb-4">
           500
         </h1>
 
         {/* Error Title */}
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 className="heading-page text-gray-900 dark:text-white mb-4">
           Something Went Wrong
         </h2>
 
         {/* Error Description */}
-        <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">
+        <p className="body-large text-gray-600 dark:text-gray-400 mb-8">
           We encountered an unexpected error. Our team has been notified and is working on a fix.
           Please try refreshing the page or returning to the dashboard.
         </p>
@@ -99,7 +99,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
           <Button
             onClick={handleGoHome}
             size="lg"
-            className="gap-2 bg-orange-500 hover:bg-orange-600"
+            className="gap-2 bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80"
           >
             <Home className="w-4 h-4" />
             Go to Dashboard
@@ -108,30 +108,30 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* Help Section */}
         <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h3 className="heading-sub text-gray-900 dark:text-white mb-3">
             Still having issues?
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+          <p className="body-small text-gray-600 dark:text-gray-400 mb-4">
             If the problem persists, please contact our support team. We're here to help!
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center text-sm">
             <a
               href="mailto:support@jobsightapp.com"
-              className="text-orange-600 dark:text-orange-400 hover:underline font-medium"
+              className="text-primary dark:text-primary-400 hover:underline font-medium"
             >
               support@jobsightapp.com
             </a>
             <span className="hidden sm:inline text-gray-300 dark:text-gray-600">•</span>
             <button
               onClick={() => navigate('/help')}
-              className="text-orange-600 dark:text-orange-400 hover:underline font-medium"
+              className="text-primary dark:text-primary-400 hover:underline font-medium"
             >
               Visit Help Center
             </button>
             <span className="hidden sm:inline text-gray-300 dark:text-gray-600">•</span>
             <button
               onClick={() => navigate('/settings/feedback')}
-              className="text-orange-600 dark:text-orange-400 hover:underline font-medium"
+              className="text-primary dark:text-primary-400 hover:underline font-medium"
             >
               Send Feedback
             </button>
@@ -140,24 +140,24 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* What to Try */}
         <div className="mt-8 text-left">
-          <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
+          <h4 className="text-label text-gray-700 dark:text-gray-300 mb-3">
             What you can try:
           </h4>
-          <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+          <ul className="space-y-2 body-small text-gray-600 dark:text-gray-400">
             <li className="flex items-start gap-2">
-              <span className="text-orange-500 mt-0.5">•</span>
+              <span className="text-primary dark:text-primary-400 mt-0.5">•</span>
               <span>Refresh the page and try again</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-orange-500 mt-0.5">•</span>
+              <span className="text-primary dark:text-primary-400 mt-0.5">•</span>
               <span>Clear your browser cache and cookies</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-orange-500 mt-0.5">•</span>
+              <span className="text-primary dark:text-primary-400 mt-0.5">•</span>
               <span>Check your internet connection</span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-orange-500 mt-0.5">•</span>
+              <span className="text-primary dark:text-primary-400 mt-0.5">•</span>
               <span>Try accessing JobSight from a different browser</span>
             </li>
           </ul>
@@ -165,10 +165,10 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* Footer */}
         <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-xs text-gray-400 dark:text-gray-600">
-            <span className="font-semibold text-orange-500">JobSight</span> - Construction Field Management
+          <p className="text-caption text-gray-400 dark:text-gray-600">
+            <span className="font-semibold text-primary dark:text-primary-400">JobSight</span> - Construction Field Management
           </p>
-          <p className="text-xs text-gray-400 dark:text-gray-600 mt-1">
+          <p className="text-caption text-gray-400 dark:text-gray-600 mt-1">
             Error ID: {Date.now().toString(36).toUpperCase()}
           </p>
         </div>

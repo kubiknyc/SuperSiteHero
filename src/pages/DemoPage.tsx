@@ -1,6 +1,6 @@
 /**
  * JobSight UI Component Demo Page
- * Showcases the Industrial Modern redesign with all new components
+ * Showcases the Professional Blueprint redesign with all new components
  */
 
 import { useState } from 'react';
@@ -93,7 +93,7 @@ export function DemoPage() {
         {/* Logo Variants Section */}
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-1 h-8 bg-orange-500" />
+            <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Logo Components
           </h2>
 
@@ -181,13 +181,13 @@ export function DemoPage() {
 
             {/* Logo Icon Only */}
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-sm font-semibold text-orange-100 uppercase tracking-wide mb-4">
+              <h3 className="text-sm font-semibold text-white dark:text-white uppercase tracking-wide mb-4">
                 Icon Only
               </h3>
               <div className="flex items-center justify-center min-h-[200px]">
                 <Logo variant="icon-only" size="xl" />
               </div>
-              <p className="text-sm text-orange-100 mt-4">
+              <p className="text-sm text-white dark:text-white mt-4">
                 Icon-only variant for compact spaces
               </p>
             </div>
@@ -197,7 +197,7 @@ export function DemoPage() {
         {/* Loading States Section */}
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-1 h-8 bg-orange-500" />
+            <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Loading Components
           </h2>
 
@@ -213,7 +213,7 @@ export function DemoPage() {
                 </p>
                 <button
                   onClick={() => setShowFullLoader(true)}
-                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                  className="w-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                 >
                   View Full Screen Loader
                 </button>
@@ -271,7 +271,7 @@ export function DemoPage() {
                 <button
                   onClick={handleButtonClick}
                   disabled={buttonLoading}
-                  className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-orange-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-primary hover:bg-primary/90 disabled:bg-primary/60 dark:bg-primary dark:hover:bg-primary/80 dark:disabled:bg-primary/40 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   {buttonLoading ? <ButtonLoader /> : 'Click to Load'}
                 </button>
@@ -283,7 +283,7 @@ export function DemoPage() {
         {/* Background Patterns Section */}
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-1 h-8 bg-orange-500" />
+            <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Background Patterns
           </h2>
 
@@ -325,7 +325,7 @@ export function DemoPage() {
         {/* Industrial UI Elements */}
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-1 h-8 bg-orange-500" />
+            <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Industrial UI Elements
           </h2>
 
@@ -339,7 +339,7 @@ export function DemoPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500" />
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="glass-card p-6 rounded-xl max-w-xs">
-                    <HardHat className="w-8 h-8 text-orange-500 mb-3" />
+                    <HardHat className="w-8 h-8 text-primary dark:text-primary-400 mb-3" />
                     <h4 className="font-bold text-gray-900 mb-2">Light Glass Card</h4>
                     <p className="text-sm text-gray-700">
                       Frosted glass effect with backdrop blur for modern depth
@@ -353,7 +353,7 @@ export function DemoPage() {
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-600 to-pink-600" />
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="glass-card-dark p-6 rounded-xl max-w-xs">
-                    <Shield className="w-8 h-8 text-orange-400 mb-3" />
+                    <Shield className="w-8 h-8 text-primary dark:text-primary-400 mb-3" />
                     <h4 className="font-bold text-white mb-2">Dark Glass Card</h4>
                     <p className="text-sm text-gray-300">
                       Dark variant with subtle transparency and border glow
@@ -369,13 +369,13 @@ export function DemoPage() {
 
               {/* Industrial Buttons */}
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 space-y-4">
-                <button className="industrial-button w-full bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg">
+                <button className="industrial-button w-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 text-white px-6 py-3 rounded-lg">
                   Primary Action
                 </button>
                 <button className="industrial-button w-full bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-lg">
                   Secondary Action
                 </button>
-                <button className="industrial-button w-full border-2 border-orange-500 text-orange-600 hover:bg-orange-50 px-6 py-3 rounded-lg">
+                <button className="industrial-button w-full border-2 border-primary text-primary hover:bg-primary-50 dark:border-primary-600 dark:text-primary-400 dark:hover:bg-primary-950 px-6 py-3 rounded-lg">
                   Outline Button
                 </button>
               </div>
@@ -419,7 +419,7 @@ export function DemoPage() {
         {/* Feature Cards with Icons */}
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-1 h-8 bg-orange-500" />
+            <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Feature Cards
           </h2>
 
@@ -449,27 +449,27 @@ export function DemoPage() {
         {/* Color Palette */}
         <section>
           <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
-            <div className="w-1 h-8 bg-orange-500" />
+            <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Color Palette
           </h2>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              {/* Orange Scale */}
+              {/* Primary (Blueprint Blue) Scale */}
               <div className="space-y-2">
-                <div className="h-20 bg-orange-400 rounded-lg shadow-md" />
-                <p className="text-xs font-mono text-gray-600">#FB923C</p>
-                <p className="text-xs text-gray-500">Orange 400</p>
+                <div className="h-20 bg-primary-400 dark:bg-primary-400 rounded-lg shadow-md" />
+                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">#60A5FA</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Primary 400</p>
               </div>
               <div className="space-y-2">
-                <div className="h-20 bg-orange-500 rounded-lg shadow-md orange-glow" />
-                <p className="text-xs font-mono text-gray-600">#F97316</p>
-                <p className="text-xs text-gray-500">Primary</p>
+                <div className="h-20 bg-primary dark:bg-primary rounded-lg shadow-md" />
+                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">#1E40AF</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Primary (Blueprint Blue)</p>
               </div>
               <div className="space-y-2">
-                <div className="h-20 bg-orange-600 rounded-lg shadow-md" />
-                <p className="text-xs font-mono text-gray-600">#EA580C</p>
-                <p className="text-xs text-gray-500">Orange 600</p>
+                <div className="h-20 bg-primary-700 dark:bg-primary-700 rounded-lg shadow-md" />
+                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">#1E3A8A</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Primary 700</p>
               </div>
 
               {/* Gray Scale */}

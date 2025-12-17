@@ -67,8 +67,8 @@ export function IOSInstallInstructions({
       {onClose && (
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-              <Smartphone className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <div className="p-2 bg-primary-100 dark:bg-primary-950 rounded-lg">
+              <Smartphone className="h-5 w-5 text-primary dark:text-primary-400" />
             </div>
             <CardTitle className="text-base">Install on iOS</CardTitle>
           </div>
@@ -87,18 +87,18 @@ export function IOSInstallInstructions({
       <ol className={cn('space-y-3', compact ? 'text-xs' : 'text-sm')}>
         <li className="flex items-center gap-3">
           <span className={cn(
-            'flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center font-medium text-blue-700 dark:text-blue-300',
+            'flex-shrink-0 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center font-medium text-primary-700 dark:text-primary-300',
             compact ? 'w-5 h-5 text-xs' : 'w-6 h-6 text-xs'
           )}>
             1
           </span>
           <span className="flex items-center gap-2">
-            Tap the <ShareIcon className={cn('text-blue-500', compact ? 'h-3 w-3' : 'h-4 w-4')} /> Share button in Safari
+            Tap the <ShareIcon className={cn('text-primary dark:text-primary-400', compact ? 'h-3 w-3' : 'h-4 w-4')} /> Share button in Safari
           </span>
         </li>
         <li className="flex items-center gap-3">
           <span className={cn(
-            'flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center font-medium text-blue-700 dark:text-blue-300',
+            'flex-shrink-0 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center font-medium text-primary-700 dark:text-primary-300',
             compact ? 'w-5 h-5 text-xs' : 'w-6 h-6 text-xs'
           )}>
             2
@@ -109,7 +109,7 @@ export function IOSInstallInstructions({
         </li>
         <li className="flex items-center gap-3">
           <span className={cn(
-            'flex-shrink-0 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center font-medium text-blue-700 dark:text-blue-300',
+            'flex-shrink-0 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center font-medium text-primary-700 dark:text-primary-300',
             compact ? 'w-5 h-5 text-xs' : 'w-6 h-6 text-xs'
           )}>
             3
@@ -118,9 +118,9 @@ export function IOSInstallInstructions({
         </li>
       </ol>
 
-      <div className="flex items-center gap-2 p-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg">
-        <Info className={cn('text-amber-600 dark:text-amber-400 flex-shrink-0', compact ? 'h-3 w-3' : 'h-4 w-4')} />
-        <p className={cn('text-amber-700 dark:text-amber-300', compact ? 'text-xs' : 'text-xs')}>
+      <div className="flex items-center gap-2 p-2 bg-primary-50 dark:bg-primary-950/20 rounded-lg">
+        <Info className={cn('text-primary dark:text-primary-400 flex-shrink-0', compact ? 'h-3 w-3' : 'h-4 w-4')} />
+        <p className={cn('text-primary-700 dark:text-primary-300', compact ? 'text-xs' : 'text-xs')}>
           You must use Safari on iOS to install web apps.
         </p>
       </div>
@@ -230,7 +230,7 @@ export function PWAInstallBanner({ className, position = 'bottom', onAnalyticsEv
           className
         )}
       >
-        <Card className="max-w-md mx-auto shadow-lg border-blue-200 bg-white dark:bg-gray-900 dark:border-gray-700">
+        <Card className="max-w-md mx-auto shadow-lg border-primary-200 dark:border-primary-800 bg-white dark:bg-gray-900 dark:border-gray-700">
           <CardContent className="p-4">
             <IOSInstallInstructions
               onClose={() => setShowIOSInstructions(false)}
@@ -252,10 +252,10 @@ export function PWAInstallBanner({ className, position = 'bottom', onAnalyticsEv
         className
       )}
     >
-      <Card className="max-w-md mx-auto shadow-lg border-orange-200 bg-white dark:bg-gray-900 dark:border-gray-700">
+      <Card className="max-w-md mx-auto shadow-lg border-primary-200 dark:border-primary-800 bg-white dark:bg-gray-900 dark:border-gray-700">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg flex-shrink-0">
+            <div className="p-2 bg-primary-100 dark:bg-primary-950 rounded-lg flex-shrink-0">
               <LogoIcon className="h-6 w-6" />
             </div>
             <div className="flex-1 min-w-0">
@@ -371,7 +371,7 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
 
   if (showIOSInstructions) {
     return (
-      <Card className={cn('border-orange-200 dark:border-orange-800', className)}>
+      <Card className={cn('border-primary-200 dark:border-primary-800', className)}>
         <CardContent className="p-4">
           <IOSInstallInstructions
             onClose={() => setShowIOSInstructions(false)}
@@ -413,12 +413,12 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
   }
 
   return (
-    <Card className={cn('border-orange-200 dark:border-orange-800', className)}>
+    <Card className={cn('border-primary-200 dark:border-primary-800', className)}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
-          <div className="p-2 bg-orange-100 dark:bg-orange-900 rounded-lg">
+          <div className="p-2 bg-primary-100 dark:bg-primary-950 rounded-lg">
             {isIOS ? (
-              <Smartphone className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+              <Smartphone className="h-5 w-5 text-primary dark:text-primary-400" />
             ) : (
               <LogoIcon className="h-5 w-5" />
             )}
@@ -428,7 +428,7 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
             <CardDescription className="text-sm mb-3">
               Install our app for quick access from your home screen, offline support, and faster loading.
             </CardDescription>
-            <Button onClick={handleInstall} className="gap-2 bg-orange-500 hover:bg-orange-600">
+            <Button onClick={handleInstall} className="gap-2 bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80">
               <Download className="h-4 w-4" />
               {isIOS ? 'How to Install' : 'Install App'}
             </Button>
@@ -474,7 +474,7 @@ export function PWAInstallIndicator({ className, onAnalyticsEvent }: PWAInstallI
         aria-label="Install app"
       >
         <Download className="h-5 w-5" />
-        <span className="absolute top-0 right-0 h-2 w-2 bg-blue-500 rounded-full animate-pulse" />
+        <span className="absolute top-0 right-0 h-2 w-2 bg-primary dark:bg-primary-400 rounded-full animate-pulse" />
       </Button>
 
       {showTooltip && isIOS && (

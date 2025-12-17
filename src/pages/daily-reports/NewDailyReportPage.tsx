@@ -167,7 +167,7 @@ export function NewDailyReportPage() {
                     setSelectedProjectId(e.target.value)
                     setErrors((prev) => ({ ...prev, project: '' }))
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary ${
                     errors.project ? 'border-red-500' : 'border-gray-300'
                   }`}
                 >
@@ -194,7 +194,7 @@ export function NewDailyReportPage() {
                     setSelectedDate(e.target.value)
                     setErrors((prev) => ({ ...prev, date: '' }))
                   }}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary ${
                     errors.date ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
@@ -234,39 +234,39 @@ export function NewDailyReportPage() {
 
               {/* Copy from Previous Report Button */}
               {selectedProjectId && previousReport && (
-                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="p-4 bg-primary-50 border border-primary-200 dark:bg-primary-950/20 dark:border-primary-800 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <Calendar className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <Calendar className="h-5 w-5 text-primary dark:text-primary-400 flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <p className="font-medium text-blue-900">Previous Report Available</p>
-                      <p className="text-sm text-blue-700 mb-2">
+                      <p className="font-medium text-primary-900 dark:text-primary-100">Previous Report Available</p>
+                      <p className="text-sm text-primary-700 dark:text-primary-300 mb-2">
                         Copy weather, notes, and other details from the report dated{' '}
                         <strong>{previousReport.report_date}</strong>
                       </p>
 
                       {/* Related data summary */}
                       {!previousReportRelatedData.isLoading && (
-                        <div className="flex flex-wrap gap-2 mb-3 text-xs text-blue-600">
+                        <div className="flex flex-wrap gap-2 mb-3 text-xs text-primary dark:text-primary-400">
                           {previousReportRelatedData.workforce.length > 0 && (
-                            <span className="inline-flex items-center gap-1 bg-blue-100 px-2 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-1 bg-primary-100 dark:bg-primary-950 px-2 py-0.5 rounded">
                               <Users className="h-3 w-3" />
                               {previousReportRelatedData.workforce.length} workforce
                             </span>
                           )}
                           {previousReportRelatedData.equipment.length > 0 && (
-                            <span className="inline-flex items-center gap-1 bg-blue-100 px-2 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-1 bg-primary-100 dark:bg-primary-950 px-2 py-0.5 rounded">
                               <Wrench className="h-3 w-3" />
                               {previousReportRelatedData.equipment.length} equipment
                             </span>
                           )}
                           {previousReportRelatedData.deliveries.length > 0 && (
-                            <span className="inline-flex items-center gap-1 bg-blue-100 px-2 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-1 bg-primary-100 dark:bg-primary-950 px-2 py-0.5 rounded">
                               <Package className="h-3 w-3" />
                               {previousReportRelatedData.deliveries.length} deliveries
                             </span>
                           )}
                           {previousReportRelatedData.visitors.length > 0 && (
-                            <span className="inline-flex items-center gap-1 bg-blue-100 px-2 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-1 bg-primary-100 dark:bg-primary-950 px-2 py-0.5 rounded">
                               <UserPlus className="h-3 w-3" />
                               {previousReportRelatedData.visitors.length} visitors
                             </span>
@@ -279,12 +279,12 @@ export function NewDailyReportPage() {
                         previousReportRelatedData.equipment.length > 0 ||
                         previousReportRelatedData.deliveries.length > 0 ||
                         previousReportRelatedData.visitors.length > 0) && (
-                        <label className="flex items-center gap-2 mb-3 text-sm text-blue-700">
+                        <label className="flex items-center gap-2 mb-3 text-sm text-primary-700 dark:text-primary-300">
                           <input
                             type="checkbox"
                             checked={includeRelatedData}
                             onChange={(e) => setIncludeRelatedData(e.target.checked)}
-                            className="rounded border-blue-300 text-blue-600 focus:ring-blue-500"
+                            className="rounded border-primary-300 dark:border-primary-700 text-primary dark:text-primary-400 focus:ring-primary dark:focus:ring-primary"
                           />
                           Include workforce, equipment, deliveries & visitors
                         </label>
@@ -297,7 +297,7 @@ export function NewDailyReportPage() {
                         className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md ${
                           copyFromPrevious
                             ? 'bg-green-100 text-green-800 cursor-default'
-                            : 'bg-blue-600 text-white hover:bg-blue-700'
+                            : 'bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80'
                         }`}
                       >
                         <Copy className="h-4 w-4" />
@@ -324,7 +324,7 @@ export function NewDailyReportPage() {
                     toast.success('Validation passed')
                   }
                 }}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium"
+                className="w-full px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary font-medium"
               >
                 Continue to Report
               </button>
