@@ -23,6 +23,6 @@ export type { TouchPhotoGalleryProps, GalleryPhoto } from './TouchPhotoGallery';
 
 // Video capture and playback components
 export { VideoCapture } from './VideoCapture';
-export type { VideoCaptureProps } from './VideoCapture';
+export type { VideoCaptureProps, VideoQuality, VideoQualitySettings } from './VideoCapture';
 export { VideoPlayer, SimpleVideoPlayer } from './VideoPlayer';
 export type { VideoPlayerProps } from './VideoPlayer';

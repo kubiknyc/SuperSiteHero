@@ -6,7 +6,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import RecordRTC, { RecordRTCPromisesHandler } from 'recordrtc';
 import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/lib/auth/AuthContext';
 import type {
   RecordingType,
   RecorderState,

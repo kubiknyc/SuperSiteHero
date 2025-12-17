@@ -90,6 +90,7 @@ export function buildG703Data(
     application,
     items,
     totals,
+    projectId: application.project_id,
   }
 }
 

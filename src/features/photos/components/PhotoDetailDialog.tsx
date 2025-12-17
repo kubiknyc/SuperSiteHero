@@ -1,7 +1,8 @@
 /**
  * PhotoDetailDialog Component
  *
- * Full-screen dialog for viewing photo details, metadata, and actions.
+ * Full-screen dialog for viewing photo and video details, metadata, and actions.
+ * Supports standard images, 360 photos, and video playback.
  */
 
 import { useState } from 'react'
@@ -37,13 +38,26 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCw,
+  Video,
+  Clock,
+  Film,
 } from 'lucide-react'
 import { Photo360Viewer } from './Photo360Viewer'
+import { VideoPlayer } from './VideoPlayer'
 import type { Photo } from '@/types/photo-management'
 import { useUpdatePhoto } from '../hooks/usePhotos'
+import { formatVideoDuration } from '@/hooks/useVideoRecorder'
+
+// Extended Photo type with video fields
+interface PhotoWithVideo extends Photo {
+  isVideo?: boolean
+  videoDuration?: number
+  videoCodec?: string
+  videoProcessingStatus?: 'pending' | 'processing' | 'ready' | 'failed'
+}
 
 interface PhotoDetailDialogProps {
-  photo: Photo
+  photo: Photo | PhotoWithVideo
   isOpen: boolean
   onClose: () => void
   onDelete?: () => void
@@ -148,8 +162,19 @@ export function PhotoDetailDialog({
         <DialogHeader className="p-4 border-b">
           <div className="flex items-center justify-between">
             <DialogTitle className="flex items-center gap-2">
-              <FileImage className="h-5 w-5" />
+              {(photo as PhotoWithVideo).isVideo ? (
+                <Video className="h-5 w-5 text-blue-500" />
+              ) : photo.is360 ? (
+                <FileImage className="h-5 w-5 text-purple-500" />
+              ) : (
+                <FileImage className="h-5 w-5" />
+              )}
               {photo.fileName}
+              {(photo as PhotoWithVideo).isVideo && (photo as PhotoWithVideo).videoDuration && (
+                <Badge variant="secondary" className="ml-2">
+                  {formatVideoDuration((photo as PhotoWithVideo).videoDuration!)}
+                </Badge>
+              )}
             </DialogTitle>
             <div className="flex items-center gap-2">
               {hasPrevious && (
@@ -170,9 +195,21 @@ export function PhotoDetailDialog({
         </DialogHeader>
 
         <div className="flex flex-1 overflow-hidden">
-          {/* Image Preview */}
+          {/* Media Preview (Image/Video/360) */}
           <div className="flex-1 bg-black/95 flex items-center justify-center relative">
-            {photo.is360 ? (
+            {/* Video Player */}
+            {(photo as PhotoWithVideo).isVideo ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <VideoPlayer
+                  src={photo.fileUrl}
+                  poster={photo.thumbnailUrl}
+                  title={photo.fileName}
+                  className="w-full h-full max-h-[calc(90vh-120px)]"
+                  enableDownload
+                  onError={(error) => console.error('Video playback error:', error)}
+                />
+              </div>
+            ) : photo.is360 ? (
               /* 360 Photo Viewer */
               <Photo360Viewer
                 photoUrl={photo.fileUrl}
@@ -459,6 +496,55 @@ export function PhotoDetailDialog({
 
                 <Separator />
 
+                {/* Video Info (if video) */}
+                {(photo as PhotoWithVideo).isVideo && (
+                  <>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Video Information</Label>
+                      <div className="grid grid-cols-2 gap-3 text-sm">
+                        {(photo as PhotoWithVideo).videoDuration && (
+                          <div className="flex items-start gap-2">
+                            <Clock className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                            <div>
+                              <span className="text-muted-foreground">Duration</span>
+                              <p className="font-medium">
+                                {formatVideoDuration((photo as PhotoWithVideo).videoDuration!)}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        {(photo as PhotoWithVideo).videoCodec && (
+                          <div className="flex items-start gap-2">
+                            <Film className="h-4 w-4 mt-0.5 text-muted-foreground" />
+                            <div>
+                              <span className="text-muted-foreground">Codec</span>
+                              <p className="font-medium uppercase">
+                                {(photo as PhotoWithVideo).videoCodec}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      {(photo as PhotoWithVideo).videoProcessingStatus && (
+                        <div className="mt-2">
+                          <Badge
+                            variant={
+                              (photo as PhotoWithVideo).videoProcessingStatus === 'ready'
+                                ? 'default'
+                                : (photo as PhotoWithVideo).videoProcessingStatus === 'failed'
+                                ? 'destructive'
+                                : 'secondary'
+                            }
+                          >
+                            {(photo as PhotoWithVideo).videoProcessingStatus}
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+                    <Separator />
+                  </>
+                )}
+
                 {/* Actions */}
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">Actions</Label>
@@ -469,7 +555,7 @@ export function PhotoDetailDialog({
                       onClick={handleDownload}
                     >
                       <Download className="h-4 w-4 mr-2" />
-                      Download Photo
+                      Download {(photo as PhotoWithVideo).isVideo ? 'Video' : 'Photo'}
                     </Button>
                     {onDelete && (
                       <Button
@@ -478,7 +564,7 @@ export function PhotoDetailDialog({
                         onClick={onDelete}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Delete Photo
+                        Delete {(photo as PhotoWithVideo).isVideo ? 'Video' : 'Photo'}
                       </Button>
                     )}
                   </div>
@@ -505,6 +591,36 @@ export function PhotoDetailDialog({
                           {photo.width} × {photo.height}
                         </p>
                       </div>
+                    )}
+                    {/* Video-specific metadata */}
+                    {(photo as PhotoWithVideo).isVideo && (
+                      <>
+                        {(photo as PhotoWithVideo).videoDuration && (
+                          <div>
+                            <span className="text-muted-foreground">Duration</span>
+                            <p className="font-medium">
+                              {formatVideoDuration((photo as PhotoWithVideo).videoDuration!)}
+                            </p>
+                          </div>
+                        )}
+                        {(photo as PhotoWithVideo).videoCodec && (
+                          <div>
+                            <span className="text-muted-foreground">Codec</span>
+                            <p className="font-medium uppercase">
+                              {(photo as PhotoWithVideo).videoCodec}
+                            </p>
+                          </div>
+                        )}
+                        {/* Calculate bitrate from file size and duration */}
+                        {photo.fileSize && (photo as PhotoWithVideo).videoDuration && (photo as PhotoWithVideo).videoDuration! > 0 && (
+                          <div>
+                            <span className="text-muted-foreground">Bitrate</span>
+                            <p className="font-medium">
+                              {((photo.fileSize * 8) / (photo as PhotoWithVideo).videoDuration! / 1000000).toFixed(2)} Mbps
+                            </p>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                 </div>

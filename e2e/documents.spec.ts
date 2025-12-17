@@ -49,8 +49,21 @@ async function login(page: Page, email: string = TEST_USER.email, password: stri
   await page.goto('/login');
   await page.fill('input[type="email"]', email);
   await page.fill('input[type="password"]', password);
+
+  // Wait for auth response
+  const responsePromise = page.waitForResponse(
+    resp => (resp.url().includes('auth') || resp.url().includes('session')) && resp.status() === 200,
+    { timeout: 15000 }
+  ).catch(() => null);
+
   await page.click('button[type="submit"]');
-  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+  await responsePromise;
+
+  // Wait for redirect away from login
+  await page.waitForURL(/\/(projects|dashboard|documents)/, { timeout: 15000 });
+
+  // Verify authenticated state
+  await page.waitForTimeout(500);
 }
 
 async function navigateToDocuments(page: Page) {

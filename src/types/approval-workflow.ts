@@ -298,3 +298,150 @@ export const WORKFLOW_ENTITY_CONFIG: Record<WorkflowEntityType, { label: string;
   rfi: { label: 'RFI', plural: 'RFIs' },
   change_order: { label: 'Change Order', plural: 'Change Orders' },
 }
+
+// ============================================================================
+// Public Approval Link Types
+// ============================================================================
+
+/**
+ * Client decision options
+ */
+export type ClientDecision = 'approved' | 'rejected' | 'changes_requested'
+
+/**
+ * Public link type
+ */
+export type PublicLinkType = 'single_use' | 'multi_use'
+
+/**
+ * Public approval link for client access
+ */
+export interface PublicApprovalLink {
+  id: string
+  approval_request_id: string
+  token: string
+  link_type: PublicLinkType
+  expires_at: string
+  max_uses: number
+  current_uses: number
+  client_email: string | null
+  client_name: string | null
+  ip_restrictions: string[] | null
+  require_email_verification: boolean
+  created_at: string
+  created_by: string | null
+  last_accessed_at: string | null
+  revoked_at: string | null
+  revoked_by: string | null
+  access_log: Array<{
+    timestamp: string
+    ip: string
+    user_agent: string
+  }>
+  // Joined data
+  approval_request?: ApprovalRequest
+}
+
+/**
+ * Client approval response
+ */
+export interface ClientApprovalResponse {
+  id: string
+  public_link_id: string
+  approval_request_id: string
+  decision: ClientDecision
+  comments: string | null
+  conditions: string | null
+  client_name: string
+  client_email: string
+  client_company: string | null
+  client_title: string | null
+  signature_data: string | null
+  signed_at: string | null
+  attachment_ids: string[] | null
+  submitted_from_ip: string | null
+  user_agent: string | null
+  submitted_at: string
+  email_verified: boolean
+  verification_code: string | null
+  verification_sent_at: string | null
+}
+
+/**
+ * Input for creating a public approval link
+ */
+export interface CreatePublicLinkInput {
+  approval_request_id: string
+  client_email?: string
+  client_name?: string
+  link_type?: PublicLinkType
+  expires_in_days?: number
+  max_uses?: number
+}
+
+/**
+ * Input for submitting a client approval response
+ */
+export interface SubmitClientApprovalInput {
+  public_link_id: string
+  decision: ClientDecision
+  client_name: string
+  client_email: string
+  comments?: string
+  conditions?: string
+  client_company?: string
+  client_title?: string
+  signature_data?: string
+}
+
+/**
+ * Result of validating a public link
+ */
+export interface PublicLinkValidation {
+  is_valid: boolean
+  link_id: string | null
+  approval_request_id: string | null
+  remaining_uses: number | null
+  error_message: string | null
+}
+
+/**
+ * Public approval page data (for unauthenticated view)
+ */
+export interface PublicApprovalPageData {
+  link: PublicApprovalLink
+  request: ApprovalRequest
+  workflow: ApprovalWorkflow
+  entity_details: {
+    type: WorkflowEntityType
+    name: string
+    description: string | null
+    reference_number: string | null
+    amount?: number
+    attachments?: Array<{
+      id: string
+      name: string
+      url: string
+      type: string
+    }>
+  }
+  project: {
+    id: string
+    name: string
+    company_name: string
+  }
+  existing_response?: ClientApprovalResponse
+}
+
+/**
+ * Client decision display configuration
+ */
+export const CLIENT_DECISION_CONFIG: Record<ClientDecision, {
+  label: string
+  color: 'green' | 'red' | 'yellow'
+  icon: string
+}> = {
+  approved: { label: 'Approve', color: 'green', icon: 'CheckCircle' },
+  rejected: { label: 'Reject', color: 'red', icon: 'XCircle' },
+  changes_requested: { label: 'Request Changes', color: 'yellow', icon: 'AlertCircle' },
+}

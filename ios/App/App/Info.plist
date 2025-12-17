@@ -80,6 +80,10 @@
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>JobSight uses local network to sync data with nearby devices when offline.</string>
 
+	<!-- Motion/Gyroscope Permission (for 360 photo viewing) -->
+	<key>NSMotionUsageDescription</key>
+	<string>JobSight uses motion sensors to enable immersive 360-degree photo viewing of construction sites with gyroscope-based navigation.</string>
+
 	<!-- Background Modes -->
 	<key>UIBackgroundModes</key>
 	<array>

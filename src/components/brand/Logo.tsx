@@ -1,197 +1,235 @@
 // File: src/components/brand/Logo.tsx
-// Reusable JobSight logo component with multiple variants
-// Supports light/dark mode and different sizes
+// JobSight Logo Component - Industrial Modern Design
+// Uses actual logo files from brand package
 
 import { cn } from '@/lib/utils';
 
 interface LogoProps {
   /** Size variant */
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
   /** Show text alongside icon */
   showText?: boolean;
   /** Variant for different backgrounds */
   variant?: 'default' | 'light' | 'dark' | 'icon-only';
   /** Additional className */
   className?: string;
+  /** Enable hover animation */
+  animated?: boolean;
 }
 
 const sizeClasses = {
   sm: {
-    icon: 'w-6 h-6',
+    container: 'h-6',
+    icon: 'h-6',
     text: 'text-sm',
-    gap: 'gap-1.5',
-  },
-  md: {
-    icon: 'w-8 h-8',
-    text: 'text-base',
     gap: 'gap-2',
   },
-  lg: {
-    icon: 'w-10 h-10',
-    text: 'text-lg',
+  md: {
+    container: 'h-8',
+    icon: 'h-8',
+    text: 'text-base',
     gap: 'gap-2.5',
   },
-  xl: {
-    icon: 'w-14 h-14',
-    text: 'text-2xl',
+  lg: {
+    container: 'h-12',
+    icon: 'h-12',
+    text: 'text-xl',
     gap: 'gap-3',
+  },
+  xl: {
+    container: 'h-16',
+    icon: 'h-16',
+    text: 'text-2xl',
+    gap: 'gap-4',
+  },
+  '2xl': {
+    container: 'h-24',
+    icon: 'h-24',
+    text: 'text-4xl',
+    gap: 'gap-5',
   },
 };
 
 /**
- * JobSight Logo Icon - Hard hat with gear
+ * JobSight Logo Icon - Actual brand icon from logo package
  */
-export function LogoIcon({ className }: { className?: string }) {
+export function LogoIcon({ className, animated = false }: { className?: string; animated?: boolean }) {
   return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-    >
-      {/* Gear/Cog - adapts to light/dark */}
-      <circle cx="50" cy="55" r="30" className="fill-gray-200 dark:fill-gray-600 stroke-gray-300 dark:stroke-gray-500" strokeWidth="2"/>
-      <circle cx="50" cy="55" r="15" className="fill-gray-100 dark:fill-gray-700 stroke-gray-300 dark:stroke-gray-500" strokeWidth="2"/>
-
-      {/* Hard Hat - orange stays consistent */}
-      <ellipse cx="50" cy="42" rx="32" ry="20" fill="#F97316"/>
-      <ellipse cx="50" cy="38" rx="24" ry="12" fill="#FB923C" opacity="0.6"/>
-      <path
-        d="M15,50 Q15,60 25,62 L75,62 Q85,60 85,50 L85,47 Q85,42 75,45 L75,52 Q75,56 68,58 L32,58 Q25,56 25,52 L25,45 Q15,42 15,47 Z"
-        fill="#EA580C"
-      />
-      {/* Highlight */}
-      <ellipse cx="38" cy="36" rx="10" ry="6" fill="white" opacity="0.3"/>
-    </svg>
+    <img
+      src="/jobsight-icon.png"
+      alt="JobSight"
+      className={cn(
+        'object-contain transition-transform duration-300',
+        animated && 'hover:scale-105 hover:rotate-3',
+        className
+      )}
+    />
   );
 }
 
 /**
- * JobSight Logo Icon for dark backgrounds (sidebar, etc.)
+ * JobSight Logo Icon for dark backgrounds (white version)
  */
-export function LogoIconLight({ className }: { className?: string }) {
+export function LogoIconLight({ className, animated = false }: { className?: string; animated?: boolean }) {
   return (
-    <svg
-      viewBox="0 0 100 100"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden="true"
-    >
-      {/* Gear/Cog - white/light for dark backgrounds */}
-      <circle cx="50" cy="55" r="30" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.3)" strokeWidth="2"/>
-      <circle cx="50" cy="55" r="15" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" strokeWidth="2"/>
-
-      {/* Hard Hat - white for dark backgrounds */}
-      <ellipse cx="50" cy="42" rx="32" ry="20" fill="white"/>
-      <ellipse cx="50" cy="38" rx="24" ry="12" fill="#F9FAFB" opacity="0.8"/>
-      <path
-        d="M15,50 Q15,60 25,62 L75,62 Q85,60 85,50 L85,47 Q85,42 75,45 L75,52 Q75,56 68,58 L32,58 Q25,56 25,52 L25,45 Q15,42 15,47 Z"
-        fill="#E5E7EB"
-      />
-      {/* Highlight */}
-      <ellipse cx="38" cy="36" rx="10" ry="6" fill="white" opacity="0.5"/>
-    </svg>
+    <img
+      src="/jobsight-icon-white.png"
+      alt="JobSight"
+      className={cn(
+        'object-contain transition-transform duration-300',
+        animated && 'hover:scale-105',
+        className
+      )}
+    />
   );
 }
 
 /**
- * Full JobSight logo with icon and text
+ * Full JobSight logo with horizontal layout (icon + text)
  */
 export function Logo({
   size = 'md',
   showText = true,
   variant = 'default',
-  className
+  className,
+  animated = false
 }: LogoProps) {
   const sizes = sizeClasses[size];
   const isIconOnly = variant === 'icon-only';
   const isDark = variant === 'dark';
-  const isLight = variant === 'light';
 
   if (isIconOnly) {
     return (
       <div className={cn('flex items-center', className)}>
-        <LogoIcon className={sizes.icon} />
+        <LogoIcon className={sizes.icon} animated={animated} />
       </div>
     );
   }
 
+  // Use the horizontal logo lockup for full logo display
   return (
-    <div className={cn('flex items-center', sizes.gap, className)}>
-      {isDark ? (
-        <LogoIconLight className={sizes.icon} />
-      ) : (
-        <LogoIcon className={sizes.icon} />
-      )}
-
-      {showText && (
-        <span className={cn('font-bold', sizes.text)}>
-          <span className={cn(
-            isDark ? 'text-white' : 'text-orange-500'
-          )}>
-            Job
-          </span>
-          <span className={cn(
-            isDark ? 'text-white' : isLight ? 'text-white' : 'text-gray-900 dark:text-white'
-          )}>
-            Sight
-          </span>
-        </span>
-      )}
+    <div className={cn('flex items-center justify-center', className)}>
+      <img
+        src="/jobsight-logo.png"
+        alt="JobSight - Construction Field Management"
+        className={cn(
+          sizes.container,
+          'object-contain transition-all duration-300',
+          animated && 'hover:scale-105',
+          isDark && 'brightness-0 invert'
+        )}
+      />
     </div>
   );
 }
 
 /**
- * Logo specifically for the sidebar (dark background)
+ * Logo specifically for the sidebar (dark background) - REDESIGNED
  */
-export function SidebarLogo({ className }: { className?: string }) {
+export function SidebarLogo({ className, animated = true }: { className?: string; animated?: boolean }) {
   return (
-    <div className={cn('flex items-center gap-3', className)}>
-      <div className="rounded-lg bg-orange-500 p-1.5">
-        <LogoIconLight className="w-6 h-6" />
+    <div className={cn('flex items-center gap-3 group', className)}>
+      {/* Icon with orange glow effect */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-orange-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="relative rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 p-2.5 shadow-lg shadow-orange-500/25">
+          <LogoIconLight
+            className="h-7 w-7 drop-shadow-sm"
+            animated={animated}
+          />
+        </div>
       </div>
-      <div>
-        <h1 className="font-bold text-lg text-white">
-          <span className="text-orange-400">Job</span>
-          <span>Sight</span>
-        </h1>
-        <p className="text-xs text-gray-400">Field Management</p>
+
+      {/* Text with industrial styling */}
+      <div className="relative">
+        <img
+          src="/jobsight-logo.png"
+          alt="JobSight"
+          className="h-8 object-contain brightness-0 invert"
+        />
+        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium mt-0.5 letterspacing-tight">
+          Field Management
+        </p>
       </div>
     </div>
   );
 }
 
 /**
- * Logo for login/auth pages
+ * Logo for login/auth pages - REDESIGNED with dramatic presentation
  */
 export function AuthLogo({ className }: { className?: string }) {
   return (
-    <div className={cn('flex flex-col items-center gap-4', className)}>
-      <div className="rounded-2xl bg-orange-100 dark:bg-orange-900/30 p-4">
-        <LogoIcon className="w-16 h-16" />
+    <div className={cn('flex flex-col items-center gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700', className)}>
+      {/* Dramatic icon presentation */}
+      <div className="relative">
+        {/* Outer glow rings */}
+        <div className="absolute inset-0 -m-8 bg-orange-500/10 blur-3xl rounded-full animate-pulse" />
+        <div className="absolute inset-0 -m-4 border-2 border-orange-500/20 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+
+        {/* Icon container */}
+        <div className="relative rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 p-6 shadow-2xl shadow-orange-500/30">
+          <div className="absolute inset-0 bg-grid-white/5 rounded-2xl" />
+          <LogoIconLight className="relative h-20 w-20 drop-shadow-2xl" />
+        </div>
       </div>
-      <h1 className="text-3xl font-bold">
-        <span className="text-orange-500">Job</span>
-        <span className="text-gray-900 dark:text-white">Sight</span>
-      </h1>
+
+      {/* Brand text */}
+      <div className="text-center space-y-2">
+        <img
+          src="/jobsight-logo.png"
+          alt="JobSight"
+          className="h-12 object-contain mx-auto"
+        />
+        <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] font-medium">
+          Construction Field Management
+        </p>
+      </div>
     </div>
   );
 }
 
 /**
- * Compact logo for headers/navbars
+ * Compact logo for headers/navbars - REDESIGNED
  */
-export function CompactLogo({ className }: { className?: string }) {
+export function CompactLogo({ className, animated = true }: { className?: string; animated?: boolean }) {
   return (
-    <div className={cn('flex items-center gap-2', className)}>
-      <LogoIcon className="w-7 h-7" />
-      <span className="font-bold text-base">
-        <span className="text-orange-500">Job</span>
-        <span className="text-gray-900 dark:text-white">Sight</span>
-      </span>
+    <div className={cn('flex items-center gap-2.5 group', className)}>
+      <div className="relative">
+        {/* Subtle glow on hover */}
+        <div className="absolute inset-0 bg-orange-500/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <LogoIcon
+          className="relative h-8 w-8"
+          animated={animated}
+        />
+      </div>
+      <img
+        src="/jobsight-logo.png"
+        alt="JobSight"
+        className="h-7 object-contain"
+      />
+    </div>
+  );
+}
+
+/**
+ * Minimal icon-only logo with optional badge
+ */
+export function LogoIconWithBadge({
+  badge,
+  className
+}: {
+  badge?: string;
+  className?: string;
+}) {
+  return (
+    <div className={cn('relative inline-flex', className)}>
+      <LogoIcon className="h-10 w-10" />
+      {badge && (
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-lg">
+          {badge}
+        </span>
+      )}
     </div>
   );
 }

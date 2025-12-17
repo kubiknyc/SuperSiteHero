@@ -23,6 +23,7 @@ import {
   TrendingUp,
   History,
   ArrowRight,
+  Printer,
 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
@@ -52,6 +53,7 @@ import {
   BaselineComparisonView,
   ImportHistoryList,
   LookAheadSyncDialog,
+  LookAheadPrintView,
 } from '@/features/schedule/components'
 import { useProject } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/hooks/useAuth'
@@ -111,6 +113,7 @@ export function MasterSchedulePage() {
   const [showImportHistory, setShowImportHistory] = useState(false)
   const [showLookAheadSync, setShowLookAheadSync] = useState(false)
   const [showExportDialog, setShowExportDialog] = useState(false)
+  const [showLookAheadPrint, setShowLookAheadPrint] = useState(false)
 
   // Map activities to GanttChart format
   const scheduleItems = useMemo(
@@ -407,6 +410,10 @@ export function MasterSchedulePage() {
                   <Download className="h-4 w-4 mr-2" />
                   Export to MS Project
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setShowLookAheadPrint(true)} disabled={activities.length === 0}>
+                  <Printer className="h-4 w-4 mr-2" />
+                  Print 4-Week Look-Ahead
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => setShowLookAheadSync(true)}
@@ -583,6 +590,25 @@ export function MasterSchedulePage() {
           milestonesCount={activities.filter(a => a.is_milestone).length}
           criticalCount={activities.filter(a => a.is_critical || a.is_on_critical_path).length}
         />
+
+        {/* Look-Ahead Print View */}
+        <Sheet open={showLookAheadPrint} onOpenChange={setShowLookAheadPrint}>
+          <SheetContent className="w-full sm:max-w-full overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>4-Week Look-Ahead Schedule</SheetTitle>
+            </SheetHeader>
+            <div className="mt-4">
+              {project && (
+                <LookAheadPrintView
+                  projectId={projectId!}
+                  projectName={project.name}
+                  activities={activities}
+                  onClose={() => setShowLookAheadPrint(false)}
+                />
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
     </AppLayout>
   )

@@ -18,11 +18,24 @@ const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123';
 
 // Helper to login
 async function login(page: Page) {
-  await page.goto('/');
+  await page.goto('/login');
   await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
   await page.fill('input[type="password"]', TEST_PASSWORD);
+
+  // Wait for auth response
+  const responsePromise = page.waitForResponse(
+    resp => (resp.url().includes('auth') || resp.url().includes('session')) && resp.status() === 200,
+    { timeout: 15000 }
+  ).catch(() => null);
+
   await page.click('button[type="submit"]');
-  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+  await responsePromise;
+
+  // Wait for redirect away from login
+  await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+
+  // Verify authenticated state
+  await page.waitForTimeout(500);
 }
 
 // Helper to navigate to project's daily reports
@@ -50,7 +63,7 @@ test.describe('Daily Reports V2 - Quick Mode', () => {
     await page.waitForTimeout(1000);
 
     // Should default to Quick Mode
-    const quickModeIndicator = page.locator('text=/Quick Mode/i, [data-mode="quick"]');
+    const quickModeIndicator = page.locator('text=/Quick Mode/i').or(page.locator('[data-mode="quick"]'));
     await expect(quickModeIndicator.first()).toBeVisible({ timeout: 5000 });
 
     // Fill Work Summary section
@@ -183,7 +196,7 @@ test.describe('Daily Reports V2 - Detailed Mode', () => {
     await page.waitForTimeout(1000);
 
     // Look for switch to detailed mode link
-    const switchLink = page.locator('text=/Detailed Mode/i, button:has-text("Detailed"), a:has-text("Detailed")');
+    const switchLink = page.locator('text=/Detailed Mode/i').or(page.locator('button:has-text("Detailed")')).or(page.locator('a:has-text("Detailed")'));
     if (await switchLink.first().isVisible()) {
       await switchLink.first().click();
       await page.waitForTimeout(500);
@@ -201,7 +214,7 @@ test.describe('Daily Reports V2 - Detailed Mode', () => {
     await page.waitForTimeout(1000);
 
     // Switch to detailed mode
-    const switchLink = page.locator('text=/Detailed Mode/i, button:has-text("Detailed")');
+    const switchLink = page.locator('text=/Detailed Mode/i').or(page.locator('button:has-text("Detailed")'));
     if (await switchLink.first().isVisible()) {
       await switchLink.first().click();
       await page.waitForTimeout(500);
@@ -242,7 +255,7 @@ test.describe('Daily Reports V2 - Safety Incidents (OSHA)', () => {
     await page.waitForTimeout(1000);
 
     // Switch to detailed mode for safety section
-    const switchLink = page.locator('text=/Detailed Mode/i, button:has-text("Detailed")');
+    const switchLink = page.locator('text=/Detailed Mode/i').or(page.locator('button:has-text("Detailed")'));
     if (await switchLink.first().isVisible()) {
       await switchLink.first().click();
       await page.waitForTimeout(500);
@@ -346,13 +359,13 @@ test.describe('Daily Reports V2 - Photo Upload', () => {
     await page.waitForTimeout(1000);
 
     // Look for photos section
-    const photosSection = page.locator('button:has-text("Photos"), [data-section="photos"], text=/Photos/i');
+    const photosSection = page.locator('button:has-text("Photos")').or(page.locator('[data-section="photos"]')).or(page.locator('text=/Photos/i'));
     if (await photosSection.first().isVisible()) {
       await photosSection.first().click();
       await page.waitForTimeout(300);
 
       // Should show upload area
-      const uploadArea = page.locator('text=/upload|drag and drop/i, input[type="file"]');
+      const uploadArea = page.locator('text=/upload|drag and drop/i').or(page.locator('input[type="file"]'));
       await expect(uploadArea.first()).toBeVisible({ timeout: 5000 });
     }
   });
@@ -370,7 +383,7 @@ test.describe('Daily Reports V2 - Photo Upload', () => {
       await page.waitForTimeout(300);
 
       // Should show GPS toggle
-      const gpsToggle = page.locator('text=/Auto GPS/i, [id="auto-gps"]');
+      const gpsToggle = page.locator('text=/Auto GPS/i').or(page.locator('[id="auto-gps"]'));
       await expect(gpsToggle.first()).toBeVisible({ timeout: 5000 });
     }
   });
@@ -424,7 +437,7 @@ test.describe('Daily Reports V2 - Offline Support', () => {
     await page.waitForTimeout(1000);
 
     // Look for sync status indicator
-    const syncIndicator = page.locator('text=/Saved|Synced|Offline|Online/i, [data-sync-status]');
+    const syncIndicator = page.locator('text=/Saved|Synced|Offline|Online/i').or(page.locator('[data-sync-status]'));
     // Sync indicator may or may not be visible depending on implementation
     if (await syncIndicator.first().isVisible()) {
       await expect(syncIndicator.first()).toBeVisible();

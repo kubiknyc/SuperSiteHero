@@ -7,6 +7,7 @@ export * from './useThread'
 export * from './useOfflineMessaging'
 export * from './useProjectUsers'
 export * from './useMessageEncryption'
+export * from './useMessageTemplates'
 
 // Email Integration hooks
 export * from './useEmailAccounts'

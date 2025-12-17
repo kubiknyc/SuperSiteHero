@@ -126,6 +126,7 @@ export function DailyReportDetailPage() {
         visitors: relatedData.visitors,
         photos: reportPhotos,
         projectName: report.project?.name || 'Project',
+        projectId: report.project_id,
       })
       toast.success('PDF exported successfully')
     } catch (err) {

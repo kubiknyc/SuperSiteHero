@@ -1,0 +1,117 @@
+/**
+ * 404 Not Found Error Page
+ * Displays when a user navigates to a non-existent route
+ */
+
+import { useNavigate } from 'react-router-dom';
+import { Logo } from '@/components/brand/Logo';
+import { Button } from '@/components/ui/button';
+import { Home, ArrowLeft, Search } from 'lucide-react';
+
+export function NotFoundPage() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center px-4">
+      <div className="max-w-md w-full text-center">
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <Logo size="xl" showText={false} variant="icon-only" />
+        </div>
+
+        {/* Error Code */}
+        <h1 className="text-9xl font-bold text-orange-500 mb-4">
+          404
+        </h1>
+
+        {/* Error Title */}
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+          Page Not Found
+        </h2>
+
+        {/* Error Description */}
+        <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">
+          The page you're looking for doesn't exist in JobSight.
+          It may have been moved, deleted, or the URL might be incorrect.
+        </p>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Button
+            onClick={() => navigate(-1)}
+            variant="outline"
+            size="lg"
+            className="gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Go Back
+          </Button>
+
+          <Button
+            onClick={() => navigate('/')}
+            size="lg"
+            className="gap-2 bg-orange-500 hover:bg-orange-600"
+          >
+            <Home className="w-4 h-4" />
+            Return to Dashboard
+          </Button>
+        </div>
+
+        {/* Search Suggestion */}
+        <div className="mt-12 p-4 bg-orange-50 dark:bg-orange-900/10 border border-orange-200 dark:border-orange-800 rounded-lg">
+          <div className="flex items-start gap-3">
+            <Search className="w-5 h-5 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
+            <div className="text-left">
+              <p className="text-sm font-medium text-orange-900 dark:text-orange-100 mb-1">
+                Looking for something specific?
+              </p>
+              <p className="text-sm text-orange-700 dark:text-orange-300">
+                Try using the search feature or navigation menu to find what you need.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Helpful Links */}
+        <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mb-2">Quick links:</p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <button
+              onClick={() => navigate('/projects')}
+              className="text-orange-600 dark:text-orange-400 hover:underline"
+            >
+              Projects
+            </button>
+            <button
+              onClick={() => navigate('/daily-reports')}
+              className="text-orange-600 dark:text-orange-400 hover:underline"
+            >
+              Daily Reports
+            </button>
+            <button
+              onClick={() => navigate('/settings')}
+              className="text-orange-600 dark:text-orange-400 hover:underline"
+            >
+              Settings
+            </button>
+            <button
+              onClick={() => navigate('/help')}
+              className="text-orange-600 dark:text-orange-400 hover:underline"
+            >
+              Help Center
+            </button>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+          <p className="text-xs text-gray-400 dark:text-gray-600">
+            <span className="font-semibold text-orange-500">JobSight</span> - Construction Field Management
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default NotFoundPage;

@@ -5,18 +5,27 @@
  * - Project header with summary statistics
  * - Milestone table (construction priority)
  * - Activity list with dates and status
+ *
+ * Uses JobSight branding with GC company logo and information
  */
 
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { format, parseISO } from 'date-fns'
 import type { ScheduleActivity, ScheduleStats } from '@/types/schedule-activities'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 
 // ============================================================================
 // TYPES
 // ============================================================================
 
 interface SchedulePdfOptions {
+  projectId: string
   projectName: string
   projectNumber?: string
   activities: ScheduleActivity[]
@@ -25,6 +34,7 @@ interface SchedulePdfOptions {
   includeMilestones?: boolean
   includeAllActivities?: boolean
   orientation?: 'portrait' | 'landscape'
+  gcCompany?: CompanyInfo
 }
 
 interface PdfColors {
@@ -108,8 +118,9 @@ function calculateVariance(
 // PDF GENERATION
 // ============================================================================
 
-export function generateSchedulePdf(options: SchedulePdfOptions): jsPDF {
+export async function generateSchedulePdf(options: SchedulePdfOptions): Promise<jsPDF> {
   const {
+    projectId,
     projectName,
     projectNumber,
     activities,
@@ -118,6 +129,7 @@ export function generateSchedulePdf(options: SchedulePdfOptions): jsPDF {
     includeMilestones = true,
     includeAllActivities = true,
     orientation = 'landscape',
+    gcCompany: providedGcCompany,
   } = options
 
   const doc = new jsPDF({
@@ -129,35 +141,25 @@ export function generateSchedulePdf(options: SchedulePdfOptions): jsPDF {
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
   const margin = 15
-  let yPos = margin
+
+  // Fetch company info for branding
+  const gcCompany = providedGcCompany || await getCompanyInfo(projectId)
 
   // ========================================
-  // HEADER
+  // HEADER - Using JobSight branding
   // ========================================
 
-  // Title
-  doc.setFontSize(18)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.primary)
-  doc.text('Master Schedule Report', margin, yPos)
-  yPos += 8
+  const documentTitle = projectNumber
+    ? `${projectName} (${projectNumber})`
+    : projectName
 
-  // Project info
-  doc.setFontSize(12)
-  doc.setFont('helvetica', 'normal')
-  doc.setTextColor(0, 0, 0)
-  doc.text(projectName, margin, yPos)
-  if (projectNumber) {
-    doc.setTextColor(...COLORS.secondary)
-    doc.text(` (${projectNumber})`, margin + doc.getTextWidth(projectName) + 2, yPos)
-  }
-  yPos += 6
+  let yPos = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle,
+    documentType: 'MASTER SCHEDULE',
+  })
 
-  // Generated date
-  doc.setFontSize(9)
-  doc.setTextColor(...COLORS.secondary)
-  doc.text(`Generated: ${format(new Date(), 'MMMM d, yyyy h:mm a')}`, margin, yPos)
-  yPos += 10
+  // Old header code removed - now using addDocumentHeader() from pdfBranding
 
   // ========================================
   // SUMMARY STATISTICS
@@ -341,32 +343,11 @@ export function generateSchedulePdf(options: SchedulePdfOptions): jsPDF {
   }
 
   // ========================================
-  // FOOTER
+  // FOOTER - Using JobSight branding
   // ========================================
 
-  const totalPages = doc.getNumberOfPages()
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i)
-    doc.setFontSize(8)
-    doc.setTextColor(...COLORS.secondary)
-    doc.text(
-      `Page ${i} of ${totalPages}`,
-      pageWidth / 2,
-      pageHeight - 8,
-      { align: 'center' }
-    )
-    doc.text(
-      projectName,
-      margin,
-      pageHeight - 8
-    )
-    doc.text(
-      format(new Date(), 'MM/dd/yyyy'),
-      pageWidth - margin,
-      pageHeight - 8,
-      { align: 'right' }
-    )
-  }
+  // Old footer code removed - now using addFootersToAllPages() from pdfBranding
+  addFootersToAllPages(doc)
 
   return doc
 }
@@ -375,7 +356,7 @@ export function generateSchedulePdf(options: SchedulePdfOptions): jsPDF {
  * Export schedule to PDF and trigger download
  */
 export async function exportScheduleToPdf(options: SchedulePdfOptions): Promise<void> {
-  const doc = generateSchedulePdf(options)
+  const doc = await generateSchedulePdf(options)
   const filename = `${options.projectName.replace(/[^a-zA-Z0-9]/g, '_')}_Schedule_${format(new Date(), 'yyyy-MM-dd')}.pdf`
   doc.save(filename)
 }

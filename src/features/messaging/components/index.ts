@@ -19,3 +19,7 @@ export { VoiceMessagePlayer, isVoiceMessage } from './VoiceMessagePlayer'
 export { EmailInbox } from './EmailInbox'
 export { EmailThreadView } from './EmailThread'
 export { ComposeEmail } from './ComposeEmail'
+
+// Message Templates components
+export { TemplateSelector } from './TemplateSelector'
+export { TemplateEditor } from './TemplateEditor'

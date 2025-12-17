@@ -40,6 +40,11 @@ CREATE INDEX IF NOT EXISTS idx_acknowledgments_synced
 -- Enable RLS
 ALTER TABLE site_instruction_acknowledgments ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist (for idempotency)
+DROP POLICY IF EXISTS "Users can view acknowledgments for their project instructions" ON site_instruction_acknowledgments;
+DROP POLICY IF EXISTS "Users can create acknowledgments for assigned instructions" ON site_instruction_acknowledgments;
+DROP POLICY IF EXISTS "Users can update their own acknowledgments" ON site_instruction_acknowledgments;
+
 -- RLS Policy: Users can view acknowledgments for instructions in their projects
 CREATE POLICY "Users can view acknowledgments for their project instructions"
   ON site_instruction_acknowledgments FOR SELECT
@@ -81,6 +86,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger for auto-updating updated_at
+DROP TRIGGER IF EXISTS site_instruction_acknowledgment_updated_at ON site_instruction_acknowledgments;
 CREATE TRIGGER site_instruction_acknowledgment_updated_at
   BEFORE UPDATE ON site_instruction_acknowledgments
   FOR EACH ROW

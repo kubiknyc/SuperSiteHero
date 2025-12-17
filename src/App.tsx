@@ -19,6 +19,9 @@ import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
 import { initWebVitalsMonitoring } from '../tests/performance/web-vitals-baseline'
 
+// Import industrial theme CSS
+import './styles/industrial-theme.css'
+
 // Auth pages - loaded eagerly as they are the first pages users see
 import { LoginPage } from './pages/auth/LoginPage'
 import { SignupPage } from './pages/auth/SignupPage'
@@ -260,6 +263,49 @@ const PublicApprovalPage = lazy(() => import('./pages/public/PublicApprovalPage'
 
 // Error Pages - Branded 404 and 500 pages
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
+
+// Demo Page - Industrial Modern Design System Showcase
+const DemoPage = lazy(() => import('./pages/DemoPage').then(m => ({ default: m.DemoPage })))
+
+// Color Palette Demo - Visual comparison of all color palette options
+const ColorPaletteDemo = lazy(() => import('./pages/ColorPaletteDemo').then(m => ({ default: m.ColorPaletteDemo })))
+
+// Refined Palette Demo - Side-by-side comparison of finalist palettes with logo
+const RefinedPaletteDemo = lazy(() => import('./pages/RefinedPaletteDemo').then(m => ({ default: m.RefinedPaletteDemo })))
+
+// Design Concepts Demo - Different UI design directions
+const DesignConceptsDemo = lazy(() => import('./pages/DesignConceptsDemo').then(m => ({ default: m.DesignConceptsDemo })))
+
+// Design Concepts - 8 distinct visual directions
+const ConceptsIndex = lazy(() => import('./pages/design-concepts/ConceptsIndex').then(m => ({ default: m.default })))
+const Concept1Industrial = lazy(() => import('./pages/design-concepts/Concept1Industrial').then(m => ({ default: m.default })))
+const Concept2Blueprint = lazy(() => import('./pages/design-concepts/Concept2Blueprint').then(m => ({ default: m.default })))
+const Concept3ModernDark = lazy(() => import('./pages/design-concepts/Concept3ModernDark').then(m => ({ default: m.default })))
+const Concept4Scandinavian = lazy(() => import('./pages/design-concepts/Concept4Scandinavian').then(m => ({ default: m.default })))
+const Concept5BoldContrast = lazy(() => import('./pages/design-concepts/Concept5BoldContrast').then(m => ({ default: m.default })))
+const Concept6EarthNatural = lazy(() => import('./pages/design-concepts/Concept6EarthNatural').then(m => ({ default: m.default })))
+const Concept7SafetyHighVis = lazy(() => import('./pages/design-concepts/Concept7SafetyHighVis').then(m => ({ default: m.default })))
+const Concept8NavyPremium = lazy(() => import('./pages/design-concepts/Concept8NavyPremium').then(m => ({ default: m.default })))
+
+// Blueprint Samples - Clean Blueprint applied to real pages
+const BlueprintSamplesIndex = lazy(() => import('./pages/blueprint-samples/BlueprintSamplesIndex').then(m => ({ default: m.default })))
+const BlueprintLayout = lazy(() => import('./pages/blueprint-samples/BlueprintLayout').then(m => ({ default: m.default })))
+const BlueprintDashboard = lazy(() => import('./pages/blueprint-samples/BlueprintDashboard').then(m => ({ default: m.default })))
+const BlueprintProjectDetail = lazy(() => import('./pages/blueprint-samples/BlueprintProjectDetail').then(m => ({ default: m.default })))
+const BlueprintDailyReports = lazy(() => import('./pages/blueprint-samples/BlueprintDailyReports').then(m => ({ default: m.default })))
+const BlueprintDocuments = lazy(() => import('./pages/blueprint-samples/BlueprintDocuments').then(m => ({ default: m.default })))
+const AnimatedBlueprintDemo = lazy(() => import('./pages/blueprint-samples/AnimatedBlueprintDemo').then(m => ({ default: m.default })))
+
+// Blueprint Variants - 8 different visual treatments
+const BlueprintVariantsIndex = lazy(() => import('./pages/blueprint-samples/BlueprintVariantsIndex').then(m => ({ default: m.default })))
+const BlueprintVariant1Classic = lazy(() => import('./pages/blueprint-samples/BlueprintVariant1Classic').then(m => ({ default: m.default })))
+const BlueprintVariant2Light = lazy(() => import('./pages/blueprint-samples/BlueprintVariant2Light').then(m => ({ default: m.default })))
+const BlueprintVariant3Technical = lazy(() => import('./pages/blueprint-samples/BlueprintVariant3Technical').then(m => ({ default: m.default })))
+const BlueprintVariant4Glass = lazy(() => import('./pages/blueprint-samples/BlueprintVariant4Glass').then(m => ({ default: m.default })))
+const BlueprintVariant5Industrial = lazy(() => import('./pages/blueprint-samples/BlueprintVariant5Industrial').then(m => ({ default: m.default })))
+const BlueprintVariant6Minimal = lazy(() => import('./pages/blueprint-samples/BlueprintVariant6Minimal').then(m => ({ default: m.default })))
+const BlueprintVariant7Corporate = lazy(() => import('./pages/blueprint-samples/BlueprintVariant7Corporate').then(m => ({ default: m.default })))
+const BlueprintVariant8Architectural = lazy(() => import('./pages/blueprint-samples/BlueprintVariant8Architectural').then(m => ({ default: m.default })))
 
 function App() {
   // Initialize Web Vitals monitoring in production
@@ -573,6 +619,43 @@ function App() {
                   <Route path="projects/:projectId/change-orders" element={<ClientChangeOrders />} />
                   <Route path="projects/:projectId/settings/notifications" element={<ClientNotificationSettingsPage />} />
                 </Route>
+
+                {/* Demo Page - Industrial Modern Design System Showcase */}
+                <Route path="/demo" element={<DemoPage />} />
+                <Route path="/demo/colors" element={<ColorPaletteDemo />} />
+                <Route path="/demo/refined" element={<RefinedPaletteDemo />} />
+                <Route path="/demo/concepts" element={<DesignConceptsDemo />} />
+
+                {/* Design Concepts - 8 Visual Directions */}
+                <Route path="/design-concepts" element={<ConceptsIndex />} />
+                <Route path="/design-concepts/1-industrial" element={<Concept1Industrial />} />
+                <Route path="/design-concepts/2-blueprint" element={<Concept2Blueprint />} />
+                <Route path="/design-concepts/3-modern-dark" element={<Concept3ModernDark />} />
+                <Route path="/design-concepts/4-scandinavian" element={<Concept4Scandinavian />} />
+                <Route path="/design-concepts/5-bold-contrast" element={<Concept5BoldContrast />} />
+                <Route path="/design-concepts/6-earth-natural" element={<Concept6EarthNatural />} />
+                <Route path="/design-concepts/7-safety-highvis" element={<Concept7SafetyHighVis />} />
+                <Route path="/design-concepts/8-navy-premium" element={<Concept8NavyPremium />} />
+
+                {/* Blueprint Samples - Concept 2 Applied to Real Pages */}
+                <Route path="/blueprint-samples" element={<BlueprintSamplesIndex />} />
+                <Route path="/blueprint-samples/layout" element={<BlueprintLayout />} />
+                <Route path="/blueprint-samples/dashboard" element={<BlueprintDashboard />} />
+                <Route path="/blueprint-samples/project-detail" element={<BlueprintProjectDetail />} />
+                <Route path="/blueprint-samples/daily-reports" element={<BlueprintDailyReports />} />
+                <Route path="/blueprint-samples/documents" element={<BlueprintDocuments />} />
+                <Route path="/blueprint-samples/animated-demo" element={<AnimatedBlueprintDemo />} />
+
+                {/* Blueprint Variants - 8 Different Visual Treatments */}
+                <Route path="/blueprint-samples/variants" element={<BlueprintVariantsIndex />} />
+                <Route path="/blueprint-samples/variants/1-classic" element={<BlueprintVariant1Classic />} />
+                <Route path="/blueprint-samples/variants/2-light" element={<BlueprintVariant2Light />} />
+                <Route path="/blueprint-samples/variants/3-technical" element={<BlueprintVariant3Technical />} />
+                <Route path="/blueprint-samples/variants/4-glass" element={<BlueprintVariant4Glass />} />
+                <Route path="/blueprint-samples/variants/5-industrial" element={<BlueprintVariant5Industrial />} />
+                <Route path="/blueprint-samples/variants/6-minimal" element={<BlueprintVariant6Minimal />} />
+                <Route path="/blueprint-samples/variants/7-corporate" element={<BlueprintVariant7Corporate />} />
+                <Route path="/blueprint-samples/variants/8-architectural" element={<BlueprintVariant8Architectural />} />
 
                 {/* 404 Not Found - Branded error page */}
                 <Route path="*" element={<NotFoundPage />} />

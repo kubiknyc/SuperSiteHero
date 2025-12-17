@@ -1,6 +1,6 @@
 /**
  * PDF Export Utility for Daily Reports
- * Generates professional PDF documents from daily report data
+ * Generates professional PDF documents from daily report data with JobSight branding
  */
 
 import jsPDF from 'jspdf'
@@ -14,6 +14,12 @@ import type {
   DailyReportVisitor,
   DailyReportPhoto,
 } from '../hooks/useDailyReportRelatedData'
+import {
+  addDocumentHeader,
+  addFootersToAllPages,
+  getCompanyInfo,
+  type CompanyInfo,
+} from '@/lib/utils/pdfBranding'
 
 // =====================================================
 // CONSTANTS
@@ -131,45 +137,27 @@ function getStatusColor(status: string | null | undefined): [number, number, num
 // =====================================================
 
 /**
- * Add report header
+ * Add report info section (replaces old header)
  */
-function addHeader(
+function addReportInfo(
   doc: jsPDF,
   report: DailyReport,
-  projectName: string
+  projectName: string,
+  startY: number
 ): number {
-  let yPos = MARGIN
-
-  // Title
-  doc.setFontSize(20)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.primary)
-  doc.text('DAILY REPORT', MARGIN, yPos + 8)
-
-  // Status badge
-  const status = report.status || 'draft'
-  const statusColor = getStatusColor(status)
-  const statusText = status.replace('_', ' ').toUpperCase()
-  const statusWidth = doc.getTextWidth(statusText) + 8
-
-  doc.setFillColor(...statusColor)
-  doc.roundedRect(PAGE_WIDTH - MARGIN - statusWidth, yPos, statusWidth, 10, 2, 2, 'F')
-  doc.setFontSize(8)
-  doc.setTextColor(255, 255, 255)
-  doc.text(statusText, PAGE_WIDTH - MARGIN - statusWidth + 4, yPos + 6.5)
-
-  yPos += 15
+  let yPos = startY
 
   // Project name
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
   doc.setTextColor(...COLORS.secondary)
   doc.text(projectName, MARGIN, yPos)
 
-  yPos += 8
+  yPos += 6
 
   // Report details line
   doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
   doc.setTextColor(...COLORS.text)
 
   const reportDate = report.report_date
@@ -180,6 +168,19 @@ function addHeader(
   doc.text(`Date: ${reportDate}`, MARGIN, yPos)
   doc.text(`Report #: ${reportNumber}`, MARGIN + 80, yPos)
 
+  // Status badge
+  const status = report.status || 'draft'
+  const statusColor = getStatusColor(status)
+  const statusText = status.replace('_', ' ').toUpperCase()
+  const statusWidth = doc.getTextWidth(statusText) + 8
+
+  doc.setFillColor(...statusColor)
+  doc.roundedRect(PAGE_WIDTH - MARGIN - statusWidth, yPos - 4, statusWidth, 8, 2, 2, 'F')
+  doc.setFontSize(8)
+  doc.setTextColor(255, 255, 255)
+  doc.text(statusText, PAGE_WIDTH - MARGIN - statusWidth + 4, yPos + 1)
+
+  doc.setTextColor(...COLORS.text)
   yPos += 5
 
   // Divider line
@@ -494,38 +495,7 @@ function addCommentsSection(doc: jsPDF, report: DailyReport, yPos: number): numb
   return yPos + 3
 }
 
-/**
- * Add footer to all pages
- */
-function addFooter(doc: jsPDF): void {
-  const pageCount = doc.getNumberOfPages()
-
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-
-    // Footer line
-    doc.setDrawColor(...COLORS.mediumGray)
-    doc.setLineWidth(0.3)
-    doc.line(MARGIN, PAGE_HEIGHT - 12, PAGE_WIDTH - MARGIN, PAGE_HEIGHT - 12)
-
-    // Page number
-    doc.setFontSize(8)
-    doc.setTextColor(...COLORS.secondary)
-    doc.text(
-      `Page ${i} of ${pageCount}`,
-      PAGE_WIDTH - MARGIN,
-      PAGE_HEIGHT - 7,
-      { align: 'right' }
-    )
-
-    // Generated timestamp
-    doc.text(
-      `Generated: ${format(new Date(), 'MMM d, yyyy h:mm a')}`,
-      MARGIN,
-      PAGE_HEIGHT - 7
-    )
-  }
-}
+// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 // =====================================================
 // MAIN EXPORT FUNCTION
@@ -539,14 +509,19 @@ export interface GeneratePDFOptions {
   visitors: DailyReportVisitor[]
   photos: DailyReportPhoto[]
   projectName: string
+  projectId: string
+  gcCompany?: CompanyInfo
 }
 
 /**
- * Generate a PDF for a daily report
+ * Generate a PDF for a daily report with JobSight branding
  * Returns a Blob that can be downloaded
  */
 export async function generateDailyReportPDF(options: GeneratePDFOptions): Promise<Blob> {
-  const { report, workforce, equipment, deliveries, visitors, projectName } = options
+  const { report, workforce, equipment, deliveries, visitors, projectName, projectId, gcCompany } = options
+
+  // Fetch company info for branding
+  const companyInfo = gcCompany || await getCompanyInfo(projectId)
 
   // Create PDF document
   const doc = new jsPDF({
@@ -555,8 +530,19 @@ export async function generateDailyReportPDF(options: GeneratePDFOptions): Promi
     format: 'a4',
   })
 
+  // Add JobSight branded header with GC logo and info
+  const reportDate = report.report_date
+    ? format(new Date(report.report_date), 'MMMM d, yyyy')
+    : 'N/A'
+
+  let yPos = await addDocumentHeader(doc, {
+    gcCompany: companyInfo,
+    documentTitle: `Daily Report - ${reportDate}`,
+    documentType: 'DAILY REPORT',
+  })
+
   // Add sections
-  let yPos = addHeader(doc, report, projectName)
+  yPos = addReportInfo(doc, report, projectName, yPos)
   yPos = addWeatherSection(doc, report, yPos)
   yPos = addWorkforceSection(doc, workforce, yPos)
   yPos = addEquipmentSection(doc, equipment, yPos)
@@ -566,8 +552,8 @@ export async function generateDailyReportPDF(options: GeneratePDFOptions): Promi
   yPos = addIssuesSection(doc, report, yPos)
   addCommentsSection(doc, report, yPos)
 
-  // Add footer to all pages
-  addFooter(doc)
+  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
+  addFootersToAllPages(doc)
 
   // Return as blob
   return doc.output('blob')

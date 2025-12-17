@@ -14,14 +14,31 @@ import { test, expect } from '@playwright/test';
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123';
 
+// Helper to login
+async function login(page) {
+  await page.goto('/login');
+  await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+  await page.fill('input[type="password"]', TEST_PASSWORD);
+
+  // Wait for auth response
+  const responsePromise = page.waitForResponse(
+    resp => (resp.url().includes('auth') || resp.url().includes('session')) && resp.status() === 200,
+    { timeout: 15000 }
+  ).catch(() => null);
+
+  await page.click('button[type="submit"]');
+  await responsePromise;
+
+  // Wait for redirect away from login
+  await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+
+  // Verify authenticated state
+  await page.waitForTimeout(500);
+}
+
 test.describe('Daily Reports', () => {
   test.beforeEach(async ({ page }) => {
-    // Login
-    await page.goto('/');
-    await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
-    await page.fill('input[type="password"]', TEST_PASSWORD);
-    await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await login(page);
   });
 
   test('should navigate to daily reports from project', async ({ page }) => {

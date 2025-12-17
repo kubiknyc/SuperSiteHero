@@ -44,23 +44,25 @@ const config: CapacitorConfig = {
   },
   ios: {
     // Content inset handling for safe areas (notch, home indicator)
-    contentInset: 'automatic',
+    contentInset: 'always',
     // Prefer mobile viewport over desktop
     preferredContentMode: 'mobile',
     // URL scheme for deep linking
     scheme: 'jobsight',
-    // Allow inline media playback
-    allowsLinkPreview: true,
+    // Disable link preview for cleaner UX
+    allowsLinkPreview: false,
     // Scroll deceleration for native feel
     scrollEnabled: true,
     // Minimum iOS version (iOS 14+)
     // minVersion: '14.0', // Set in Xcode project
     // Path to load the web app
     path: undefined, // Uses default public folder
-    // Configure WKWebView
+    // Configure WKWebView - enable for development debugging
     webContentsDebuggingEnabled: process.env.NODE_ENV !== 'production',
-    // Limiter for memory usage
+    // Limiter for memory usage - restrict navigation to app domains
     limitsNavigationsToAppBoundDomains: true,
+    // Background color while content loads
+    backgroundColor: '#2563eb',
   },
   android: {
     allowMixedContent: false,

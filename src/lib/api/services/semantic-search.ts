@@ -23,6 +23,7 @@ export type SearchEntityType =
   | 'meeting'
   | 'inspection'
   | 'photo'
+  | 'message'
 
 export interface DateRange {
   start?: string
@@ -169,6 +170,13 @@ const ENTITY_CONFIGS: Record<SearchEntityType, {
     descriptionField: 'description',
     searchFields: ['caption', 'description', 'tags', 'location'],
     urlTemplate: (id, projectId) => projectId ? `/projects/${projectId}/photos?photoId=${id}` : `/photos?photoId=${id}`,
+  },
+  message: {
+    table: 'messages',
+    titleField: 'content',
+    descriptionField: 'content',
+    searchFields: ['content'],
+    urlTemplate: (id, projectId) => projectId ? `/projects/${projectId}/messages?messageId=${id}` : `/messages?messageId=${id}`,
   },
 }
 
@@ -412,30 +420,58 @@ async function searchEntity(
     }
 
     // Build query based on entity type
-    let query = supabaseUntyped
-      .from(config.table)
-      .select(`
-        id,
-        ${config.titleField},
-        ${config.descriptionField || 'null as description'},
-        ${config.numberField ? config.numberField : 'null as number'},
-        ${config.statusField || 'null as status'},
-        project_id,
-        created_at,
-        updated_at,
-        projects!inner(name)
-      `)
+    let query
 
-    // For workflow_items, filter by type
-    if (entityType === 'rfi') {
-      query = query.ilike('workflow_types.name_singular', 'RFI')
-    } else if (entityType === 'submittal') {
-      query = query.ilike('workflow_types.name_singular', 'Submittal')
+    if (entityType === 'message') {
+      // Messages need special handling - join through conversations to projects
+      query = supabaseUntyped
+        .from(config.table)
+        .select(`
+          id,
+          ${config.titleField},
+          conversation_id,
+          sender_id,
+          created_at,
+          updated_at,
+          conversations!inner(
+            id,
+            name,
+            type,
+            project_id,
+            projects(name)
+          )
+        `)
+    } else {
+      // Standard query for entities with direct project_id
+      query = supabaseUntyped
+        .from(config.table)
+        .select(`
+          id,
+          ${config.titleField},
+          ${config.descriptionField || 'null as description'},
+          ${config.numberField ? config.numberField : 'null as number'},
+          ${config.statusField || 'null as status'},
+          project_id,
+          created_at,
+          updated_at,
+          projects!inner(name)
+        `)
+
+      // For workflow_items, filter by type
+      if (entityType === 'rfi') {
+        query = query.ilike('workflow_types.name_singular', 'RFI')
+      } else if (entityType === 'submittal') {
+        query = query.ilike('workflow_types.name_singular', 'Submittal')
+      }
     }
 
     // Apply project filter
     if (options.projectId) {
-      query = query.eq('project_id', options.projectId)
+      if (entityType === 'message') {
+        query = query.eq('conversations.project_id', options.projectId)
+      } else {
+        query = query.eq('project_id', options.projectId)
+      }
     }
 
     // Apply date range filter
@@ -488,6 +524,21 @@ async function searchEntity(
       // Calculate relevance score (simple: based on matched terms and position)
       const relevanceScore = calculateRelevanceScore(item, searchTerms, config)
 
+      // Extract project info based on entity type
+      let projectId = ''
+      let projectName = 'Unknown Project'
+
+      if (entityType === 'message') {
+        // Messages have conversations.project_id
+        const conversation = item.conversations as { project_id?: string; projects?: { name?: string } } | undefined
+        projectId = String(conversation?.project_id || '')
+        projectName = conversation?.projects?.name || 'Direct Message'
+      } else {
+        // Standard entities have direct project_id
+        projectId = String(item.project_id || '')
+        projectName = (item.projects as { name?: string })?.name || 'Unknown Project'
+      }
+
       return {
         id: String(item.id),
         entityType,
@@ -495,13 +546,13 @@ async function searchEntity(
         description: String(item[config.descriptionField] || '').slice(0, 200),
         number: config.numberField ? item[config.numberField] as string | number : undefined,
         status: config.statusField ? String(item[config.statusField] || '') : undefined,
-        projectId: String(item.project_id || ''),
-        projectName: (item.projects as { name?: string })?.name || 'Unknown Project',
+        projectId,
+        projectName,
         createdAt: String(item.created_at || ''),
         updatedAt: item.updated_at ? String(item.updated_at) : undefined,
         matchedTerms,
         relevanceScore,
-        url: config.urlTemplate(String(item.id), String(item.project_id || '')),
+        url: config.urlTemplate(String(item.id), projectId),
       }
     })
   } catch (error) {

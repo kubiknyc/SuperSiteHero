@@ -54,16 +54,21 @@ describe('Standard Templates Service', () => {
 
     it('should have valid data sources', () => {
       const validSources = [
-        'daily_reports',
-        'rfis',
-        'submittals',
         'change_orders',
-        'punch_lists',
-        'safety_incidents',
-        'inspections',
-        'equipment',
+        'daily_reports',
         'documents',
+        'equipment',
+        'inspections',
+        'insurance_certificates',
+        'lien_waivers',
+        'meetings',
         'meeting_minutes',
+        'payment_applications',
+        'punch_list',
+        'punch_lists',
+        'rfis',
+        'safety_incidents',
+        'submittals',
       ]
       STANDARD_TEMPLATES.forEach((template) => {
         expect(validSources).toContain(template.data_source)
@@ -271,7 +276,7 @@ describe('Standard Templates Service', () => {
     })
 
     it('should have valid field types', () => {
-      const validTypes = ['text', 'number', 'date', 'datetime', 'boolean', 'status', 'user', 'currency']
+      const validTypes = ['text', 'number', 'date', 'datetime', 'boolean', 'status', 'user', 'currency', 'company']
       STANDARD_TEMPLATES.forEach((template) => {
         template.fields.forEach((field) => {
           expect(validTypes).toContain(field.field_type)
@@ -280,7 +285,7 @@ describe('Standard Templates Service', () => {
     })
 
     it('should have valid aggregation functions for numeric fields', () => {
-      const validAggregations = ['sum', 'avg', 'min', 'max', 'count']
+      const validAggregations = ['sum', 'avg', 'average', 'min', 'max', 'count']
       STANDARD_TEMPLATES.forEach((template) => {
         template.fields.forEach((field) => {
           if (field.aggregation) {
@@ -304,6 +309,12 @@ describe('Standard Templates Service', () => {
         'less_than',
         'greater_than_or_equal',
         'less_than_or_equal',
+        'gt',
+        'lt',
+        'gte',
+        'lte',
+        'greater_or_equal',
+        'less_or_equal',
         'in',
         'not_in',
         'is_null',
@@ -494,7 +505,7 @@ describe('Standard Templates Service', () => {
       const tags = getAllTags()
 
       expect(tags).toContain('superintendent')
-      expect(tags).toContain('project-manager')
+      expect(tags).toContain('PM')
     })
 
     it('should have both PDF and Excel templates', () => {

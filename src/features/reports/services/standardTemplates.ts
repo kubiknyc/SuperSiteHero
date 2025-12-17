@@ -739,3 +739,28 @@ export function filterByTags(tags: string[]): StandardTemplate[] {
     tags.every(tag => t.tags.includes(tag))
   )
 }
+
+/**
+ * Get templates by a single tag
+ */
+export function getTemplatesByTag(tag: string): StandardTemplate[] {
+  return STANDARD_TEMPLATES.filter(t => t.tags.includes(tag))
+}
+
+/**
+ * Get all unique categories from templates
+ */
+export function getAllCategories(): TemplateCategory[] {
+  const categorySet = new Set<TemplateCategory>()
+  STANDARD_TEMPLATES.forEach(t => categorySet.add(t.category))
+  return Array.from(categorySet).sort()
+}
+
+/**
+ * Get all unique data sources from templates
+ */
+export function getAllDataSources(): ReportDataSource[] {
+  const sourceSet = new Set<ReportDataSource>()
+  STANDARD_TEMPLATES.forEach(t => sourceSet.add(t.data_source))
+  return Array.from(sourceSet).sort()
+}

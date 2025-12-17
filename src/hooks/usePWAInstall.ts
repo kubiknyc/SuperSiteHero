@@ -348,7 +348,7 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
         pageViews: pageViewCount,
       });
     }
-  }, [hasTrackedPromptShown, isIOS, isAndroid, pageViewCount]);
+  }, [hasTrackedPromptShown, isIOS, isAndroid]);
 
   // Determine if installable
   // On iOS, we show manual instructions instead

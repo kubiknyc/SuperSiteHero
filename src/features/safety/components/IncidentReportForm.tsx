@@ -5,7 +5,7 @@
  * root cause analysis, and photo documentation.
  */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/select'
 import { cn } from '@/lib/utils'
 import { logger } from '@/lib/utils/logger'
+import { supabase } from '@/lib/supabase'
 import type {
   CreateIncidentDTO,
   UpdateIncidentDTO,
@@ -128,6 +129,57 @@ export function IncidentReportForm({
   const selectedSeverity = watch('severity')
   const oshaRecordable = watch('osha_recordable')
   const isSerious = isSeriousIncident(selectedSeverity)
+  const incidentDate = watch('incident_date')
+  const currentCaseNumber = watch('case_number')
+
+  // State for next available case number
+  const [nextCaseNumber, setNextCaseNumber] = useState<string>('')
+  const [fetchingCaseNumber, setFetchingCaseNumber] = useState(false)
+
+  // Auto-fetch next case number when OSHA recordable is set to true
+  useEffect(() => {
+    const fetchNextCaseNumber = async () => {
+      // Only fetch if:
+      // 1. OSHA recordable is true
+      // 2. Not editing an existing incident (or editing one without a case number)
+      // 3. Current case number is empty
+      // 4. We have a project ID
+      if (!oshaRecordable || !projectId || (isEditing && currentCaseNumber)) {
+        return
+      }
+
+      if (currentCaseNumber) {
+        return // User has already entered a case number
+      }
+
+      setFetchingCaseNumber(true)
+      try {
+        const year = incidentDate ? new Date(incidentDate).getFullYear() : new Date().getFullYear()
+
+        const { data, error } = await supabase.rpc('get_next_osha_case_number', {
+          p_project_id: projectId,
+          p_year: year,
+        })
+
+        if (error) {
+          console.error('Error fetching next case number:', error)
+          return
+        }
+
+        if (data) {
+          setNextCaseNumber(data)
+          // Auto-fill the case number
+          setValue('case_number', data)
+        }
+      } catch (err) {
+        console.error('Error fetching next case number:', err)
+      } finally {
+        setFetchingCaseNumber(false)
+      }
+    }
+
+    fetchNextCaseNumber()
+  }, [oshaRecordable, projectId, incidentDate, currentCaseNumber, isEditing, setValue])
 
   const handleFormSubmit = (data: FormData) => {
     if (isEditing) {
@@ -407,13 +459,31 @@ export function IncidentReportForm({
             {/* Basic OSHA fields */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="case_number">OSHA 300 Case Number</Label>
+                <Label htmlFor="case_number">
+                  OSHA 300 Case Number
+                  {fetchingCaseNumber && <span className="ml-2 text-xs text-blue-600">(Fetching...)</span>}
+                </Label>
                 <Input
                   id="case_number"
                   placeholder="e.g., 2024-001"
                   {...register('case_number')}
+                  disabled={fetchingCaseNumber}
                 />
-                <p className="text-xs text-gray-500 mt-1">Format: YYYY-###</p>
+                {nextCaseNumber && !currentCaseNumber && (
+                  <p className="text-xs text-green-600 mt-1">
+                    ✓ Auto-assigned: {nextCaseNumber}
+                  </p>
+                )}
+                {!nextCaseNumber && !currentCaseNumber && !fetchingCaseNumber && (
+                  <p className="text-xs text-gray-500 mt-1">
+                    Format: YYYY-###. Will auto-assign next available number.
+                  </p>
+                )}
+                {currentCaseNumber && currentCaseNumber !== nextCaseNumber && (
+                  <p className="text-xs text-blue-600 mt-1">
+                    Manual override: {currentCaseNumber}
+                  </p>
+                )}
               </div>
 
               <div>

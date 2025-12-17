@@ -223,3 +223,54 @@ $$ LANGUAGE plpgsql STABLE;
 COMMENT ON TABLE meeting_recordings IS 'Stores meeting audio/video recordings with transcription support';
 COMMENT ON TABLE recording_transcription_segments IS 'Timestamped transcription segments for click-to-seek functionality';
 COMMENT ON COLUMN meeting_recordings.transcription_cost_cents IS 'OpenAI Whisper API cost tracking at $0.006/minute';
+
+-- Create storage bucket for recordings
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'meeting-recordings',
+  'meeting-recordings',
+  false,
+  524288000,
+  ARRAY['audio/webm', 'audio/mp4', 'audio/ogg', 'audio/wav', 'video/webm', 'video/mp4']
+)
+ON CONFLICT (id) DO UPDATE SET
+  file_size_limit = EXCLUDED.file_size_limit,
+  allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+-- Storage policies for meeting recordings bucket
+CREATE POLICY IF NOT EXISTS "Users can upload recordings to their company folder"
+  ON storage.objects FOR INSERT
+  WITH CHECK (
+    bucket_id = 'meeting-recordings' AND
+    (storage.foldername(name))[1] IN (
+      SELECT company_id::text FROM users WHERE id = auth.uid()
+    )
+  );
+
+CREATE POLICY IF NOT EXISTS "Users can view recordings from their company"
+  ON storage.objects FOR SELECT
+  USING (
+    bucket_id = 'meeting-recordings' AND
+    (storage.foldername(name))[1] IN (
+      SELECT company_id::text FROM users WHERE id = auth.uid()
+    )
+  );
+
+CREATE POLICY IF NOT EXISTS "Users can update recordings they uploaded"
+  ON storage.objects FOR UPDATE
+  USING (
+    bucket_id = 'meeting-recordings' AND
+    (storage.foldername(name))[1] IN (
+      SELECT company_id::text FROM users WHERE id = auth.uid()
+    )
+  );
+
+CREATE POLICY IF NOT EXISTS "Admins can delete recordings from their company"
+  ON storage.objects FOR DELETE
+  USING (
+    bucket_id = 'meeting-recordings' AND
+    (storage.foldername(name))[1] IN (
+      SELECT company_id::text FROM users
+      WHERE id = auth.uid() AND role IN ('admin', 'owner')
+    )
+  );

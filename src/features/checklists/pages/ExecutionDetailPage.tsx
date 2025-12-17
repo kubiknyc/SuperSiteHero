@@ -178,7 +178,7 @@ export function ExecutionDetailPage() {
     if (!execution) {return}
 
     try {
-      await generateChecklistPDF(execution, templateItems, score || null)
+      await generateChecklistPDF(execution, templateItems, score || null, execution.project_id)
       toast.success('PDF exported successfully')
     } catch (error) {
       console.error('Failed to generate PDF:', error)

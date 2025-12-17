@@ -23,6 +23,7 @@ import {
   Sparkles,
   ChevronDown,
   Filter,
+  MessageSquare,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
@@ -78,6 +79,7 @@ const ENTITY_FILTERS: EntityFilterOption[] = [
   { type: 'meeting', label: 'Meetings', icon: CalendarDays, color: 'text-pink-500' },
   { type: 'inspection', label: 'Inspections', icon: ClipboardCheck, color: 'text-orange-500' },
   { type: 'photo', label: 'Photos', icon: Camera, color: 'text-cyan-500' },
+  { type: 'message', label: 'Messages', icon: MessageSquare, color: 'text-teal-500' },
 ]
 
 const ENTITY_TYPE_ICONS: Record<SearchEntityType, React.ComponentType<{ className?: string }>> = {
@@ -91,6 +93,7 @@ const ENTITY_TYPE_ICONS: Record<SearchEntityType, React.ComponentType<{ classNam
   meeting: CalendarDays,
   inspection: ClipboardCheck,
   photo: Camera,
+  message: MessageSquare,
 }
 
 const ENTITY_TYPE_COLORS: Record<SearchEntityType, string> = {
@@ -104,6 +107,7 @@ const ENTITY_TYPE_COLORS: Record<SearchEntityType, string> = {
   meeting: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
   inspection: 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400',
   photo: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
+  message: 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
 }
 
 const ENTITY_TYPE_LABELS: Record<SearchEntityType, string> = {
@@ -117,6 +121,7 @@ const ENTITY_TYPE_LABELS: Record<SearchEntityType, string> = {
   meeting: 'Meeting',
   inspection: 'Inspection',
   photo: 'Photo',
+  message: 'Message',
 }
 
 // ============================================================================

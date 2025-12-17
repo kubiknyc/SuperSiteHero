@@ -68,7 +68,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
     }
 
     .email-header {
-      background-color: #1e293b;
+      background-color: #F97316;
       padding: 24px;
       text-align: center;
     }
@@ -82,7 +82,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
 
     .logo-icon {
       display: inline-block;
-      background-color: #2563eb;
+      background-color: #EA580C;
       border-radius: 8px;
       padding: 8px 12px;
       margin-right: 8px;
@@ -103,7 +103,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
 
     .button {
       display: inline-block;
-      background-color: #2563eb;
+      background-color: #F97316;
       color: #ffffff !important;
       text-decoration: none;
       padding: 12px 24px;
@@ -113,7 +113,7 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
     }
 
     .button:hover {
-      background-color: #1d4ed8;
+      background-color: #EA580C;
     }
 
     .button-secondary {
@@ -158,8 +158,8 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
     }
 
     .info-box {
-      background-color: #f1f5f9;
-      border-left: 4px solid #2563eb;
+      background-color: #fff7ed;
+      border-left: 4px solid #F97316;
       padding: 16px;
       margin: 16px 0;
     }
@@ -231,9 +231,15 @@ export function wrapInBaseTemplate(data: BaseTemplateData): string {
           <!-- Header -->
           <tr>
             <td class="email-header">
-              <a href="${import.meta.env.VITE_APP_URL || 'https://jobsightapp.com'}" class="logo">
-                <span class="logo-icon">🏗️</span>
-                JobSight
+              <a href="${import.meta.env.VITE_APP_URL || 'https://jobsightapp.com'}" class="logo" style="text-decoration: none;">
+                <div style="display: inline-block; margin-bottom: 8px;">
+                  <span style="color: #ffffff; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
+                    Job<span style="color: #FED7AA;">Sight</span>
+                  </span>
+                </div>
+                <div style="color: #FED7AA; font-size: 12px; font-weight: 400; letter-spacing: 0.5px; text-transform: uppercase;">
+                  Construction Field Management
+                </div>
               </a>
             </td>
           </tr>

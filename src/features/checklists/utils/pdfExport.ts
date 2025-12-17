@@ -5,6 +5,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
 import type { ChecklistExecutionWithResponses, ChecklistTemplateItem } from '@/types/checklists'
+import { addDocumentHeader, addFootersToAllPages, getCompanyInfo, type CompanyInfo } from '@/lib/utils/pdfBranding'
 
 interface ScoreSummary {
   pass_count: number
@@ -12,6 +13,14 @@ interface ScoreSummary {
   na_count: number
   total_count: number
   pass_percentage: number
+}
+
+interface ChecklistPDFData {
+  execution: ChecklistExecutionWithResponses
+  templateItems: ChecklistTemplateItem[]
+  score: ScoreSummary | null
+  projectId: string
+  gcCompany?: CompanyInfo
 }
 
 /**
@@ -51,26 +60,33 @@ function formatResponseValue(response: any, itemType: string): string {
 export async function generateChecklistPDF(
   execution: ChecklistExecutionWithResponses,
   templateItems: ChecklistTemplateItem[],
-  score: ScoreSummary | null
+  score: ScoreSummary | null,
+  projectId?: string,
+  gcCompany?: CompanyInfo
 ): Promise<void> {
   const doc = new jsPDF()
-  let yPosition = 20
 
-  // Header
-  doc.setFontSize(18)
-  doc.setFont('helvetica', 'bold')
-  doc.text(execution.name, 20, yPosition)
-  yPosition += 10
+  // Fetch company info for branding
+  const companyInfo = gcCompany || (projectId ? await getCompanyInfo(projectId) : await getCompanyInfo(execution.project_id))
+
+  // Add branded header
+  let yPosition = await addDocumentHeader(doc, {
+    gcCompany: companyInfo,
+    documentTitle: execution.name,
+    documentType: 'CHECKLIST',
+  })
 
   // Status badge
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
+  doc.setTextColor(44, 62, 80)
   doc.text(`Status: ${execution.status.replace('_', ' ').toUpperCase()}`, 20, yPosition)
   yPosition += 10
 
   // Metadata section
   doc.setFontSize(12)
   doc.setFont('helvetica', 'bold')
+  doc.setTextColor(44, 62, 80)
   doc.text('Inspection Details', 20, yPosition)
   yPosition += 7
 
@@ -97,6 +113,7 @@ export async function generateChecklistPDF(
   if (score && score.total_count > 0) {
     doc.setFontSize(12)
     doc.setFont('helvetica', 'bold')
+    doc.setTextColor(44, 62, 80)
     doc.text('Score Summary', 20, yPosition)
     yPosition += 7
 
@@ -113,7 +130,7 @@ export async function generateChecklistPDF(
         ],
       ],
       theme: 'grid',
-      headStyles: { fillColor: [59, 130, 246] },
+      headStyles: { fillColor: [41, 128, 185] },
       margin: { left: 20, right: 20 },
     })
 
@@ -146,6 +163,7 @@ export async function generateChecklistPDF(
     // Section header
     doc.setFontSize(14)
     doc.setFont('helvetica', 'bold')
+    doc.setTextColor(44, 62, 80)
     doc.text(sectionName, 20, yPosition)
     yPosition += 7
 
@@ -173,7 +191,7 @@ export async function generateChecklistPDF(
       head: [['Item', 'Type', 'Response', 'Score', 'Notes']],
       body: tableData,
       theme: 'striped',
-      headStyles: { fillColor: [59, 130, 246] },
+      headStyles: { fillColor: [41, 128, 185] },
       columnStyles: {
         0: { cellWidth: 50 },
         1: { cellWidth: 25 },
@@ -188,19 +206,8 @@ export async function generateChecklistPDF(
     yPosition = (doc as any).lastAutoTable.finalY + 10
   })
 
-  // Footer with generation timestamp
-  const pageCount = doc.getNumberOfPages()
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-    doc.setFontSize(8)
-    doc.setFont('helvetica', 'normal')
-    doc.setTextColor(128, 128, 128)
-    doc.text(
-      `Generated: ${format(new Date(), 'PPP p')} | Page ${i} of ${pageCount}`,
-      20,
-      doc.internal.pageSize.height - 10
-    )
-  }
+  // Add JobSight branding footers to all pages
+  addFootersToAllPages(doc)
 
   // Save the PDF
   const fileName = `checklist-${execution.name.replace(/\s+/g, '-').toLowerCase()}-${format(

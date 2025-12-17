@@ -49,7 +49,7 @@ import {
 import { format, parseISO } from 'date-fns'
 import { MeetingActionItemExtractor } from '@/features/summaries/components/MeetingActionItemExtractor'
 import type { MeetingRecording } from '@/types/meeting-recordings'
-import { useAuth } from '@/lib/auth'
+import { useAuth } from '@/lib/auth/AuthContext'
 
 export function MeetingDetailPage() {
   const { id } = useParams<{ id: string }>()

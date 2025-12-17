@@ -23,3 +23,14 @@ export type { default as ARViewerProps } from './ARViewer';
 // Virtual Reality Walkthrough
 export { VRWalkthrough } from './VRWalkthrough';
 export type { default as VRWalkthroughProps } from './VRWalkthrough';
+
+// Measurement Tools
+export {
+  MeasurementTools,
+  MeasurementScene,
+  calculateDistance,
+  calculatePolygonArea,
+  calculateAngle,
+  createMeasurement,
+} from './MeasurementTools';
+export type { MeasurementType } from './MeasurementTools';

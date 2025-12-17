@@ -47,6 +47,7 @@ import {
 } from 'lucide-react'
 import { PendingApprovalsBadge } from '@/features/approvals/components'
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
+import { GlobalSearchBar } from '@/features/search/components/GlobalSearchBar'
 import { Button } from '@/components/ui/button'
 import { LogoIconLight } from '@/components/brand'
 
@@ -212,6 +213,16 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <X className="h-5 w-5" />
               </button>
             )}
+          </div>
+
+          {/* Global Search Bar */}
+          <div className="mt-4">
+            <GlobalSearchBar
+              projectId={currentProjectId || undefined}
+              placeholder="Search... (Ctrl+K)"
+              compact
+              className="w-full bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-300"
+            />
           </div>
         </div>
 

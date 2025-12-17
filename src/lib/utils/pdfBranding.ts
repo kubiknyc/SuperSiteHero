@@ -281,6 +281,38 @@ export async function loadCompanyLogo(url: string): Promise<string> {
 }
 
 /**
+ * Load JobSight logo as fallback for PDFs when company logo is not available
+ * Returns a base64-encoded SVG of the JobSight logo
+ */
+export async function loadJobSightLogo(): Promise<string> {
+  // JobSight logo SVG (hard hat with gear icon in orange)
+  const logoSvg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+      <!-- Hard Hat Icon -->
+      <g transform="translate(20, 10)">
+        <ellipse cx="25" cy="21" rx="16" ry="10" fill="#F97316"/>
+        <ellipse cx="25" cy="19" rx="12" ry="6" fill="#FB923C" opacity="0.6"/>
+        <path d="M7.5,25 Q7.5,30 12.5,31 L37.5,31 Q42.5,30 42.5,25 L42.5,23.5 Q42.5,21 37.5,22.5 L37.5,26 Q37.5,28 34,29 L16,29 Q12.5,28 12.5,26 L12.5,22.5 Q7.5,21 7.5,23.5 Z" fill="#EA580C"/>
+        <ellipse cx="19" cy="18" rx="5" ry="3" fill="white" opacity="0.3"/>
+        <circle cx="25" cy="27.5" r="15" fill="rgba(229,231,235,0.3)" stroke="rgba(209,213,219,0.5)" stroke-width="1"/>
+        <circle cx="25" cy="27.5" r="7.5" fill="rgba(243,244,246,0.2)" stroke="rgba(209,213,219,0.4)" stroke-width="1"/>
+      </g>
+
+      <!-- JobSight Text -->
+      <text x="70" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#F97316">Job</text>
+      <text x="115" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#374151">Sight</text>
+
+      <!-- Tagline -->
+      <text x="70" y="50" font-family="Arial, sans-serif" font-size="8" fill="#6B7280" letter-spacing="0.5">CONSTRUCTION FIELD MANAGEMENT</text>
+    </svg>
+  `.trim();
+
+  // Convert SVG to base64
+  const base64 = btoa(unescape(encodeURIComponent(logoSvg)));
+  return `data:image/svg+xml;base64,${base64}`;
+}
+
+/**
  * Helper to get company info from project/database
  * Fetches company information for PDF branding from Supabase
  */
@@ -295,7 +327,7 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
 
     if (projectError || !project) {
       console.warn('Failed to fetch project:', projectError);
-      return getDefaultCompanyInfo();
+      return await getDefaultCompanyInfo();
     }
 
     // Get company data
@@ -307,7 +339,7 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
 
     if (companyError || !company) {
       console.warn('Failed to fetch company:', companyError);
-      return getDefaultCompanyInfo();
+      return await getDefaultCompanyInfo();
     }
 
     // Build address string from components
@@ -318,14 +350,18 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
     ].filter(Boolean);
     const address = addressParts.length > 0 ? addressParts.join(', ') : undefined;
 
-    // Load logo if available
+    // Load logo if available, fallback to JobSight logo
     let logoBase64: string | undefined;
     if (company.logo_url) {
       try {
         logoBase64 = await loadCompanyLogo(company.logo_url);
       } catch (error) {
-        console.warn('Failed to load company logo:', error);
+        console.warn('Failed to load company logo, using JobSight logo fallback:', error);
+        logoBase64 = await loadJobSightLogo();
       }
+    } else {
+      // No company logo uploaded, use JobSight logo
+      logoBase64 = await loadJobSightLogo();
     }
 
     return {
@@ -338,16 +374,18 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
     };
   } catch (error) {
     console.error('Error fetching company info:', error);
-    return getDefaultCompanyInfo();
+    return await getDefaultCompanyInfo();
   }
 }
 
 /**
  * Returns default company info when database fetch fails
+ * Uses JobSight branding as fallback
  */
-function getDefaultCompanyInfo(): CompanyInfo {
+async function getDefaultCompanyInfo(): Promise<CompanyInfo> {
   return {
-    name: 'General Contractor',
+    name: 'JobSight',
+    logoBase64: await loadJobSightLogo(),
   };
 }
 

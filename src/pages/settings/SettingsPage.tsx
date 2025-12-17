@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon } from 'lucide-react'
+import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { ThemeSelector } from '@/components/ThemeToggle'
 import { PWAInstallButton } from '@/components/PWAInstallPrompt'
@@ -43,6 +43,14 @@ const settingsSections: SettingsSection[] = [
     icon: Bell,
     iconBgColor: 'bg-blue-100',
     iconColor: 'text-blue-600',
+  },
+  {
+    title: 'Calendar Integrations',
+    description: 'Connect Google Calendar and Outlook to sync meetings',
+    href: '/settings/calendar',
+    icon: Calendar,
+    iconBgColor: 'bg-sky-100',
+    iconColor: 'text-sky-600',
   },
   {
     title: 'Approval Workflows',

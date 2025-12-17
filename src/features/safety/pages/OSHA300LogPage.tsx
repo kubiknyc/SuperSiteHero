@@ -7,12 +7,13 @@
 
 import { useState, useMemo } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { OSHA300Log } from '../components/OSHA300Log'
+import { OSHA300Log, OSHA300ACertificationDialog } from '../components'
 import { useIncidents, useOSHA300ASummary } from '../hooks/useIncidents'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   RadixSelect as Select,
   SelectContent,
@@ -28,7 +29,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { useProjects } from '@/features/projects/hooks/useProjects'
-import { ClipboardList, Building2, FileDown, AlertTriangle, Info, FileSpreadsheet, Settings2 } from 'lucide-react'
+import { ClipboardList, Building2, FileDown, AlertTriangle, Info, FileSpreadsheet, Settings2, FileCheck2, CalendarCheck } from 'lucide-react'
 import type { SafetyIncident, OSHA300LogEntry, OSHA300ASummary } from '@/types/safety-incidents'
 import {
   exportOSHA300ToExcel,
@@ -36,6 +37,7 @@ import {
   downloadFile,
 } from '../utils/osha300Export'
 import { useToast } from '@/lib/notifications/ToastContext'
+import { useAuth } from '@/hooks/useAuth'
 
 /**
  * Convert SafetyIncident to OSHA300LogEntry format
@@ -95,11 +97,13 @@ export function OSHA300LogPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [showExportDialog, setShowExportDialog] = useState(false)
   const [showSettingsDialog, setShowSettingsDialog] = useState(false)
+  const [showCertificationDialog, setShowCertificationDialog] = useState(false)
   const [hoursWorked, setHoursWorked] = useState<number>(0)
   const [averageEmployees, setAverageEmployees] = useState<number>(0)
   const [exporting, setExporting] = useState(false)
 
   const { showToast } = useToast()
+  const { user } = useAuth()
 
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -205,6 +209,14 @@ export function OSHA300LogPage() {
           </div>
 
           <div className="flex items-center gap-3">
+            <Button
+              variant="default"
+              onClick={() => setShowCertificationDialog(true)}
+              disabled={!summary}
+            >
+              <FileCheck2 className="h-4 w-4 mr-2" />
+              Certify 300A
+            </Button>
             <Button variant="outline" onClick={() => setShowSettingsDialog(true)}>
               <Settings2 className="h-4 w-4 mr-2" />
               Settings
@@ -231,6 +243,45 @@ export function OSHA300LogPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* 300A Posting Deadline Banner */}
+        {(() => {
+          const today = new Date()
+          const currentMonth = today.getMonth() + 1 // 1-12
+          const isPreviousYearData = selectedYear < currentYear
+          const isPostingPeriod = currentMonth >= 1 && currentMonth <= 4 // Jan-Apr
+          const isJanuaryBeforePosting = currentMonth === 1 // January - prepare for Feb 1 posting
+
+          // Show banner for previous year's data during posting period
+          if (isPreviousYearData && (isPostingPeriod || isJanuaryBeforePosting)) {
+            const isOverdue = currentMonth > 4 // After April 30
+            const isActive = currentMonth >= 2 && currentMonth <= 4 // Feb 1 - Apr 30
+            const isUpcoming = currentMonth === 1 // Before Feb 1
+
+            return (
+              <Alert className={isOverdue ? "border-red-500 bg-red-50" : isActive ? "border-orange-500 bg-orange-50" : "border-yellow-500 bg-yellow-50"}>
+                <CalendarCheck className={`h-5 w-5 ${isOverdue ? "text-red-600" : isActive ? "text-orange-600" : "text-yellow-600"}`} />
+                <AlertDescription className={isOverdue ? "text-red-800" : isActive ? "text-orange-800" : "text-yellow-800"}>
+                  {isOverdue ? (
+                    <span>
+                      <strong>OVERDUE:</strong> The {selectedYear} OSHA 300A summary should have been posted from February 1 through April 30, {currentYear}.
+                    </span>
+                  ) : isActive ? (
+                    <span>
+                      <strong>POSTING REQUIRED:</strong> The {selectedYear} OSHA 300A summary must be posted in a conspicuous location until April 30, {currentYear}.
+                      {!summary && ' Certify the 300A form to generate the required posting.'}
+                    </span>
+                  ) : (
+                    <span>
+                      <strong>UPCOMING DEADLINE:</strong> The {selectedYear} OSHA 300A summary must be certified and posted from February 1 through April 30, {currentYear}.
+                    </span>
+                  )}
+                </AlertDescription>
+              </Alert>
+            )
+          }
+          return null
+        })()}
 
         {/* Filters */}
         <Card>
@@ -463,6 +514,24 @@ export function OSHA300LogPage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* OSHA 300A Certification Dialog */}
+      {summary && user && (
+        <OSHA300ACertificationDialog
+          open={showCertificationDialog}
+          onOpenChange={setShowCertificationDialog}
+          summary={summary}
+          companyId={user.company_id || ''}
+          projectId={selectedProjectId || undefined}
+          onCertificationComplete={() => {
+            showToast({
+              type: 'success',
+              title: 'Form Certified',
+              message: `OSHA 300A form for ${selectedYear} has been certified successfully.`,
+            })
+          }}
+        />
+      )}
     </AppLayout>
   )
 }
