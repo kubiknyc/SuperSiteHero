@@ -163,8 +163,8 @@ export function AuthLogo({ className }: { className?: string }) {
       {/* Dramatic icon presentation */}
       <div className="relative">
         {/* Outer glow rings */}
-        <div className="absolute inset-0 -m-8 bg-blue-600/10 blur-3xl rounded-full animate-pulse" />
-        <div className="absolute inset-0 -m-4 border-2 border-blue-600/20 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute inset-0 -m-8 bg-blue-600/[0.18] blur-3xl rounded-full animate-pulse" />
+        <div className="absolute inset-0 -m-4 border-2 border-blue-600/30 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
 
         {/* Icon container */}
         <div className="relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 p-6 shadow-2xl shadow-blue-600/30">

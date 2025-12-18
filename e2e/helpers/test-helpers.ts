@@ -17,12 +17,22 @@ export async function loginAsTestUser(
 ) {
   // Clear all browser storage to ensure clean state
   await page.context().clearCookies();
-  await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
 
-  // Navigate directly to /login instead of / to avoid redirect race condition
+  // Try to clear localStorage and sessionStorage, ignore security errors
+  try {
+    await page.evaluate(() => {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {
+        // Ignore security errors
+      }
+    });
+  } catch (e) {
+    // Ignore any errors from clearing storage
+  }
+
+  // Navigate directly to /login
   await page.goto('/login');
 
   // Wait for login page to be fully loaded

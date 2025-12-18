@@ -54,7 +54,7 @@ export default function PolishedVariant1Professional() {
                          hover:text-blue-600 dark:hover:text-blue-400
                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
                          focus-visible:ring-offset-2 dark:ring-offset-gray-950
-                         rounded-md px-3 py-2 min-h-[44px] md:min-h-0
+                         rounded-md px-3 py-2.5 min-h-[44px] md:min-h-0
                          transition-colors"
               aria-label="Back to Blueprint Variants"
             >
@@ -75,7 +75,7 @@ export default function PolishedVariant1Professional() {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8">
+      <main className="max-w-7xl mx-auto px-4 py-6 md:px-6 md:py-8">
         {/* Page Title */}
         <div className="mb-6 md:mb-8">
           <div className="flex items-center gap-3 mb-3">
@@ -229,7 +229,7 @@ export default function PolishedVariant1Professional() {
                            hover:underline
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
                            focus-visible:ring-offset-2 dark:ring-offset-gray-950
-                           rounded-md px-3 py-2 min-h-[44px] md:min-h-0 transition-colors"
+                           rounded-md px-3 py-2.5 min-h-[44px] md:min-h-0 transition-colors"
                 aria-label="View all projects"
               >
                 View All
@@ -237,9 +237,9 @@ export default function PolishedVariant1Professional() {
             </div>
 
             {/* Projects List */}
-            <div className="flex flex-col gap-3 md:gap-4" role="list">
+            <ul className="flex flex-col gap-3 md:gap-4 list-none">
               {projects.map((project) => (
-                <article
+                <li
                   key={project.name}
                   className="group p-3 md:p-4 bg-gray-50 dark:bg-gray-800/50
                              border border-gray-100 dark:border-gray-700
@@ -249,7 +249,6 @@ export default function PolishedVariant1Professional() {
                              hover:shadow-md
                              focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2
                              dark:ring-offset-gray-950"
-                  role="listitem"
                 >
                   {/* Make entire card clickable */}
                   <a
@@ -319,9 +318,9 @@ export default function PolishedVariant1Professional() {
                       </div>
                     </div>
                   </a>
-                </article>
+                </li>
               ))}
-            </div>
+            </ul>
           </section>
 
           {/* Recent Activity */}
@@ -376,7 +375,7 @@ export default function PolishedVariant1Professional() {
             </div>
           </section>
         </div>
-      </div>
+      </main>
       </div>
     </div>
   )

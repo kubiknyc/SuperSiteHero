@@ -58,11 +58,11 @@ export function NotFoundPage() {
         </div>
 
         {/* Search Suggestion */}
-        <div className="mt-12 p-4 bg-primary-50 dark:bg-primary-950/10 border border-primary-200 dark:border-primary-800 rounded-lg">
+        <div className="mt-12 p-4 bg-primary-50 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-700 rounded-lg">
           <div className="flex items-start gap-3">
             <Search className="w-5 h-5 text-primary dark:text-primary-400 mt-0.5 flex-shrink-0" />
             <div className="text-left">
-              <p className="body-small font-medium text-primary-900 dark:text-primary-100 mb-1">
+              <p className="body-small font-medium text-primary-900 dark:text-primary-200 mb-1">
                 Looking for something specific?
               </p>
               <p className="body-small text-primary-700 dark:text-primary-300">

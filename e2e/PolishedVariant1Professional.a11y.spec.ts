@@ -34,7 +34,6 @@ test.describe('PolishedVariant1Professional - Accessibility', () => {
 
   test('should have proper color contrast in light mode', async ({ page }) => {
     const results = await new AxeBuilder({ page })
-      .include('main')
       .withTags(['cat.colour'])
       .analyze();
 
@@ -49,7 +48,6 @@ test.describe('PolishedVariant1Professional - Accessibility', () => {
     await page.waitForTimeout(300);
 
     const results = await new AxeBuilder({ page })
-      .include('main')
       .withTags(['cat.colour'])
       .analyze();
 

@@ -799,26 +799,72 @@ JobSight embodies **Professional Construction Technology** through a modern, ind
 
 **Purpose**
 - Enable construction workers to use the app while wearing work gloves
-- Dramatically increase touch target sizes
-- Improve usability in field conditions
+- Dramatically increase touch target sizes to 60px minimum
+- Improve usability in field conditions (outdoor, weather, safety equipment)
+- Comply with WCAG 2.5.5 Enhanced Target Size (AAA)
 
 **Activation**
 - Toggle in user settings
-- Visual indicator when active (green dot)
-- Persists across sessions
+- Visual indicator when active (green dot badge)
+- Persists across sessions via localStorage
 - Can be enabled/disabled quickly
+- App-wide setting affects all pages
+
+**Technical Implementation**
+
+```tsx
+// Wrap your app with GloveModeProvider
+import { GloveModeProvider } from '@/components/ui/touch-wrapper'
+
+function App() {
+  return (
+    <GloveModeProvider>
+      <Router>
+        <AppLayout />
+      </Router>
+    </GloveModeProvider>
+  )
+}
+
+// Access glove mode state in any component
+import { useGloveMode } from '@/components/ui/touch-wrapper'
+
+function MyComponent() {
+  const { isGloveModeEnabled, toggleGloveMode } = useGloveMode()
+
+  return (
+    <TouchWrapper size={isGloveModeEnabled ? 'large' : 'default'}>
+      <Button onClick={toggleGloveMode}>
+        {isGloveModeEnabled ? 'Disable' : 'Enable'} Glove Mode
+      </Button>
+    </TouchWrapper>
+  )
+}
+```
 
 **Touch Target Scaling**
-- Normal mode: 44-48px minimum
-- Glove mode: 60px minimum
+- **Normal mode**: 44-48px minimum (WCAG AA)
+- **Glove mode**: 60px minimum (WCAG AAA + field-tested)
 - All interactive elements scale proportionally
 - Spacing increases to prevent mis-taps
+- Applies to buttons, badges, checkboxes, radio buttons, and all clickable elements
 
 **Visual Changes**
-- Larger buttons and controls
-- Increased font sizes (14px → 18px minimum)
+- Larger buttons and controls (60px touch targets)
+- Increased font sizes for better readability
+  - Normal: 14px → Glove: 16-18px minimum
 - More generous padding and margins
+  - Normal: 8-12px → Glove: 16-20px
 - Simplified layouts to accommodate size increases
+- Visual indicator badge shows glove mode status
+
+**Use Cases**
+- ✅ Field superintendents wearing work gloves
+- ✅ Outdoor use in bright sunlight
+- ✅ Workers wearing safety equipment
+- ✅ Cold weather conditions requiring gloves
+- ✅ Users with motor skill challenges
+- ✅ Accessibility enhancement for all users
 
 ### Safe Area Handling
 
@@ -911,6 +957,195 @@ JobSight embodies **Professional Construction Technology** through a modern, ind
 - Throttle animations when battery low
 - Reduce polling frequency
 - Efficient data fetching
+
+### TouchWrapper Component
+
+The TouchWrapper component ensures all interactive elements meet WCAG 2.1 Level AA touch target requirements (44×44px minimum) on mobile devices while maintaining compact sizing on desktop.
+
+**Purpose**
+- Provides invisible touch target expansion for small interactive elements
+- Maintains visual design while improving mobile usability
+- Supports field workers wearing gloves with optional 60px "glove mode"
+- Zero visual footprint - transparent, no background or borders
+
+**Implementation**
+```tsx
+import { TouchWrapper } from '@/components/ui/touch-wrapper'
+
+// Default: 44px minimum on mobile, compact on desktop
+<TouchWrapper>
+  <Badge onClick={handleClick}>5 items</Badge>
+</TouchWrapper>
+
+// Comfortable: 48px for primary actions
+<TouchWrapper size="comfortable">
+  <IconButton icon="edit" onClick={handleEdit} />
+</TouchWrapper>
+
+// Glove Mode: 60px for field workers
+<TouchWrapper size="large">
+  <SmallButton />
+</TouchWrapper>
+
+// Conditional wrapping
+<TouchWrapper enabled={onClick !== undefined}>
+  <StatusBadge status="approved" onClick={onClick} />
+</TouchWrapper>
+```
+
+**Size Variants**
+
+| Variant | Size | Use Case | Visual Example |
+|---------|------|----------|----------------|
+| `default` | 44px | WCAG AA minimum, standard mobile use | Icon buttons, badges, small controls |
+| `comfortable` | 48px | Primary actions, frequently-used controls | Main navigation, action buttons |
+| `large` | 60px | Field workers with gloves, outdoor use | All interactive elements in glove mode |
+
+**Glove Mode Integration**
+
+Enable app-wide glove mode for field workers:
+
+```tsx
+// App root
+import { GloveModeProvider } from '@/components/ui/touch-wrapper'
+
+function App() {
+  return (
+    <GloveModeProvider>
+      <YourApp />
+    </GloveModeProvider>
+  )
+}
+
+// In components
+import { useGloveMode } from '@/components/ui/touch-wrapper'
+
+function ActionButton() {
+  const { isGloveModeEnabled } = useGloveMode()
+
+  return (
+    <TouchWrapper size={isGloveModeEnabled ? 'large' : 'default'}>
+      <IconButton icon="save" />
+    </TouchWrapper>
+  )
+}
+```
+
+**When to Use TouchWrapper**
+
+✅ **Use for**:
+- Icon-only buttons < 44px
+- Badges with onClick handlers
+- Small checkboxes/radio buttons
+- Chip/tag components that are clickable
+- Close buttons in dialogs/modals
+- Pagination controls
+- Small action buttons in tables
+
+❌ **Don't use for**:
+- Full-width buttons (already large enough)
+- Text links in paragraphs
+- Non-interactive elements
+- Elements already ≥ 44px
+- Desktop-only interfaces (use responsive sizing instead)
+
+**Responsive Behavior**
+
+TouchWrapper automatically adapts across breakpoints:
+
+- **Mobile (< 768px)**: Full touch target (44px, 48px, or 60px)
+- **Desktop (≥ 768px)**: Compact sizing (natural size)
+- **Negative margin technique**: Expands touch area without affecting visual layout
+
+**Accessibility Notes**
+
+- Maintains keyboard navigation (tab order unaffected)
+- Preserves focus indicators
+- Screen reader compatible
+- Supports ARIA labels via `aria-label` prop
+- WCAG 2.1 Level AA compliant (Success Criterion 2.5.5)
+
+**Testing Touch Targets**
+
+Verify compliance using browser DevTools:
+
+1. Enable device toolbar (mobile viewport)
+2. Set viewport to 375×667 (iPhone SE)
+3. Inspect element > Computed styles
+4. Verify min-height/min-width ≥ 44px
+5. Test tap accuracy with finger (not mouse)
+
+**Automated Testing**:
+```typescript
+// e2e/accessibility test
+test('touch targets meet 44px minimum', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 667 });
+
+  const interactiveElements = await page.getByRole('button').all();
+  for (const element of interactiveElements) {
+    const box = await element.boundingBox();
+    expect(box.height).toBeGreaterThanOrEqual(44);
+    expect(box.width).toBeGreaterThanOrEqual(44);
+  }
+});
+```
+
+**Common Patterns**
+
+Pattern 1: Interactive Badge
+```tsx
+// Before
+<Badge onClick={handleFilter}>Active</Badge>
+
+// After
+{onClick ? (
+  <TouchWrapper>
+    <Badge onClick={onClick}>Active</Badge>
+  </TouchWrapper>
+) : (
+  <Badge>Active</Badge>
+)}
+```
+
+Pattern 2: Table Action Buttons
+```tsx
+// Before
+<button className="h-8 w-8">
+  <Edit className="h-4 w-4" />
+</button>
+
+// After
+<TouchWrapper>
+  <button className="h-8 w-8">
+    <Edit className="h-4 w-4" />
+  </button>
+</TouchWrapper>
+```
+
+Pattern 3: Checkbox/Radio with Label
+```tsx
+// RadioGroupItem already has touchFriendly built-in
+<RadioGroupItem value="option1" touchFriendly={true} />
+
+// For custom checkboxes
+<TouchWrapper>
+  <Checkbox id="terms" />
+</TouchWrapper>
+```
+
+**Performance Considerations**
+
+- Zero runtime overhead (CSS-only solution)
+- No JavaScript required for touch expansion
+- Negative margins maintain document flow
+- No layout recalculation on resize
+
+**Dark Mode Compatibility**
+
+TouchWrapper is fully compatible with dark mode:
+- Transparent background works in both themes
+- Focus indicators maintain proper contrast
+- No theme-specific adjustments needed
 
 ---
 

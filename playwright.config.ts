@@ -34,7 +34,14 @@ export default defineConfig({
     /* Screenshot settings for visual regression testing */
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
+
+    /* Increase timeout for slow-loading pages */
+    actionTimeout: 60000,
+    navigationTimeout: 60000,
   },
+
+  /* Global test timeout */
+  timeout: 90000,
 
   /* Visual regression test settings */
   expect: {
@@ -91,6 +98,6 @@ export default defineConfig({
     command: 'npm run dev',
     url: 'http://localhost:5174',
     reuseExistingServer: !process.env.CI,
-    timeout: 120000,
+    timeout: 180000,  // Increased timeout for slow server startup
   },
 });

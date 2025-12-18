@@ -352,7 +352,14 @@ function App() {
 
   return (
     <>
-      <TwentyFirstToolbar config={{ plugins: [ReactPlugin] }} />
+      <TwentyFirstToolbar
+        config={{
+          plugins: [ReactPlugin],
+          style: {
+            colorScheme: 'auto' // Ensures proper contrast for theme
+          }
+        }}
+      />
       <ErrorBoundary>
       <ThemeProvider defaultTheme="system">
         <BrowserRouter
