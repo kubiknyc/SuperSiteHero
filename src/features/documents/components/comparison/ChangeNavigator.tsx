@@ -66,13 +66,13 @@ export function ChangeNavigator({
   const getChangeTypeColor = (type: ChangeRegion['changeType']) => {
     switch (type) {
       case 'added':
-        return 'bg-green-100 text-green-800 border-green-300'
+        return 'bg-success-light text-green-800 border-green-300'
       case 'removed':
-        return 'bg-red-100 text-red-800 border-red-300'
+        return 'bg-error-light text-red-800 border-red-300'
       case 'modified':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+        return 'bg-warning-light text-yellow-800 border-yellow-300'
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300'
+        return 'bg-muted text-foreground border-input'
     }
   }
 
@@ -92,7 +92,7 @@ export function ChangeNavigator({
   return (
     <div
       className={cn(
-        'bg-white border rounded-lg shadow-sm',
+        'bg-card border rounded-lg shadow-sm',
         className
       )}
     >
@@ -140,12 +140,12 @@ export function ChangeNavigator({
       {isExpanded && (
         <div className="max-h-64 overflow-y-auto">
           {/* Summary by type */}
-          <div className="p-2 border-b bg-gray-50 text-xs flex gap-3">
+          <div className="p-2 border-b bg-surface text-xs flex gap-3">
             {addedRegions.length > 0 && (
-              <span className="text-green-700">{addedRegions.length} added</span>
+              <span className="text-success-dark">{addedRegions.length} added</span>
             )}
             {removedRegions.length > 0 && (
-              <span className="text-red-700">{removedRegions.length} removed</span>
+              <span className="text-error-dark">{removedRegions.length} removed</span>
             )}
             {modifiedRegions.length > 0 && (
               <span className="text-yellow-700">{modifiedRegions.length} modified</span>
@@ -159,7 +159,7 @@ export function ChangeNavigator({
                 key={region.id}
                 onClick={() => handleSelectRegion(index)}
                 className={cn(
-                  'w-full p-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2',
+                  'w-full p-2 text-left hover:bg-surface transition-colors flex items-center gap-2',
                   index === currentIndex && 'bg-blue-50'
                 )}
               >
@@ -173,12 +173,12 @@ export function ChangeNavigator({
                   <p className="text-sm truncate">
                     {region.description || `Region ${index + 1}`}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted">
                     {region.width}x{region.height}px at ({region.x}, {region.y})
                   </p>
                 </div>
                 {index === currentIndex && (
-                  <ChevronRight className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-primary flex-shrink-0" />
                 )}
               </button>
             ))}

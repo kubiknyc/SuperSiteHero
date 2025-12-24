@@ -202,7 +202,7 @@ export default function SiteInstructionDetailPage() {
             <FileText className="h-4 w-4" />
             <span className="font-mono">{referenceNumber}</span>
           </div>
-          <h1 className="text-2xl font-bold">{instruction.title}</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">{instruction.title}</h1>
         </div>
         <div className="flex items-center gap-2">
           <SiteInstructionStatusBadge status={status} />
@@ -474,7 +474,7 @@ export default function SiteInstructionDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-success" />
                   Acknowledged
                 </CardTitle>
               </CardHeader>
@@ -501,7 +501,7 @@ export default function SiteInstructionDetailPage() {
                     <img
                       src={instruction.acknowledgment_signature}
                       alt="Signature"
-                      className="border rounded bg-white max-h-20"
+                      className="border rounded bg-card max-h-20"
                     />
                   </div>
                 )}
@@ -514,7 +514,7 @@ export default function SiteInstructionDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-blue-500" />
+                  <CheckCircle className="h-5 w-5 text-primary" />
                   Completed
                 </CardTitle>
               </CardHeader>
@@ -542,7 +542,7 @@ export default function SiteInstructionDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5 text-green-500" />
+                  <Shield className="h-5 w-5 text-success" />
                   Verified
                 </CardTitle>
               </CardHeader>

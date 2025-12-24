@@ -63,7 +63,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
   const getNetworkBadge = () => {
     if (isSyncing) {
       return (
-        <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-300 animate-pulse">
+        <Badge variant="secondary" className="bg-info-light text-primary-hover border-blue-300 animate-pulse">
           <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
           Syncing
         </Badge>
@@ -72,7 +72,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
 
     if (isOnline) {
       return (
-        <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-300">
+        <Badge variant="secondary" className="bg-success-light text-success-dark border-green-300">
           <Wifi className="h-3 w-3 mr-1" />
           Online
         </Badge>
@@ -80,7 +80,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
     }
 
     return (
-      <Badge variant="secondary" className="bg-red-100 text-red-700 border-red-300">
+      <Badge variant="secondary" className="bg-error-light text-error-dark border-red-300">
         <WifiOff className="h-3 w-3 mr-1" />
         Offline
       </Badge>
@@ -105,7 +105,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
   const getStatusColor = () => {
     if (isSyncing) return 'bg-blue-500';
     if (isOnline && pendingSyncs === 0) return 'bg-green-500';
-    if (isOnline && pendingSyncs > 0) return 'bg-amber-500';
+    if (isOnline && pendingSyncs > 0) return 'bg-warning';
     return 'bg-red-500';
   };
 
@@ -145,7 +145,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
                 {getNetworkBadge()}
 
                 {pendingSyncs > 0 && !isSyncing && (
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300">
+                  <Badge variant="outline" className="bg-warning-light text-amber-700 border-amber-300">
                     <Clock className="h-3 w-3 mr-1" />
                     {pendingSyncs} pending
                   </Badge>
@@ -189,7 +189,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
         <div className="space-y-3">
           {/* Header */}
           <div>
-            <h4 className="font-medium text-sm">Sync Status</h4>
+            <h4 className="font-medium text-sm" className="heading-card">Sync Status</h4>
             <p className="text-xs text-muted-foreground">
               Network and synchronization information
             </p>
@@ -206,11 +206,11 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
               <span className="text-muted-foreground">Pending items:</span>
               <span className="font-medium">
                 {pendingSyncs > 0 ? (
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-300">
+                  <Badge variant="outline" className="bg-warning-light text-amber-700 border-amber-300">
                     {pendingSyncs}
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                  <Badge variant="outline" className="bg-success-light text-success-dark border-green-300">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     0
                   </Badge>
@@ -256,8 +256,8 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
 
           {/* Info message */}
           {!isOnline && (
-            <div className="flex items-start gap-2 p-2 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded text-xs">
-              <AlertCircle className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 p-2 bg-warning-light dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded text-xs">
+              <AlertCircle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
               <p className="text-amber-700 dark:text-amber-400">
                 You're working offline. Changes will sync automatically when connection is restored.
               </p>

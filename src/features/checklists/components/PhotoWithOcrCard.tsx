@@ -90,7 +90,7 @@ export function PhotoWithOcrCard({
     <>
       <Card className="overflow-hidden hover:shadow-md transition-shadow">
         {/* Photo thumbnail */}
-        <div className="relative aspect-video bg-gray-100">
+        <div className="relative aspect-video bg-muted">
           <img
             src={photoUrl}
             alt="Checklist photo"
@@ -101,13 +101,13 @@ export function PhotoWithOcrCard({
           {status !== 'pending' && (
             <div className="absolute top-2 right-2">
               {status === 'processing' && (
-                <Badge className="bg-blue-600">
+                <Badge className="bg-primary">
                   <Loader2 className="w-3 h-3 mr-1 animate-spin" />
                   Processing...
                 </Badge>
               )}
               {status === 'completed' && result && (
-                <Badge className="bg-green-600">
+                <Badge className="bg-success">
                   <CheckCircle className="w-3 h-3 mr-1" />
                   {formatConfidence(result.confidence)}
                 </Badge>
@@ -139,14 +139,14 @@ export function PhotoWithOcrCard({
         <div className="p-3 space-y-2">
           {/* OCR text preview */}
           {result && result.text && (
-            <div className="bg-gray-50 p-2 rounded border border-gray-200">
+            <div className="bg-surface p-2 rounded border border-border">
               <div className="flex items-start justify-between gap-2 mb-1">
-                <span className="text-xs font-medium text-gray-700">Extracted Text:</span>
+                <span className="text-xs font-medium text-secondary">Extracted Text:</span>
                 <Badge variant="outline" className="text-xs">
                   {result.words.length} words
                 </Badge>
               </div>
-              <p className="text-xs text-gray-900 line-clamp-3">
+              <p className="text-xs text-foreground line-clamp-3">
                 {result.text}
               </p>
             </div>
@@ -154,8 +154,8 @@ export function PhotoWithOcrCard({
 
           {/* Error message */}
           {status === 'failed' && ocrData?.error && (
-            <div className="bg-red-50 p-2 rounded border border-red-200">
-              <p className="text-xs text-red-700">{ocrData.error}</p>
+            <div className="bg-error-light p-2 rounded border border-red-200">
+              <p className="text-xs text-error-dark">{ocrData.error}</p>
             </div>
           )}
 
@@ -205,14 +205,14 @@ export function PhotoWithOcrCard({
                 onClick={onDelete}
                 className="px-2"
               >
-                <Trash2 className="w-4 h-4 text-red-600" />
+                <Trash2 className="w-4 h-4 text-error" />
               </Button>
             )}
           </div>
 
           {/* Last processed timestamp */}
           {ocrData?.lastProcessedAt && (
-            <div className="flex items-center gap-1 text-xs text-gray-600">
+            <div className="flex items-center gap-1 text-xs text-secondary">
               <Clock className="w-3 h-3" />
               <span>
                 Processed {new Date(ocrData.lastProcessedAt).toLocaleString()}

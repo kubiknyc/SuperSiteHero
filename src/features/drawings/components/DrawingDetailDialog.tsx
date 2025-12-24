@@ -66,7 +66,7 @@ export function DrawingDetailDialog({
             </div>
             <div className="flex items-center gap-2">
               {drawing.isIssuedForConstruction ? (
-                <Badge variant="default" className="bg-green-600">
+                <Badge variant="default" className="bg-success">
                   <CheckCircle className="h-3 w-3 mr-1" />
                   IFC
                 </Badge>
@@ -130,7 +130,7 @@ export function DrawingDetailDialog({
 
           {drawing.ifcDate && (
             <div className="flex items-center gap-2 text-sm">
-              <Calendar className="h-4 w-4 text-green-600" />
+              <Calendar className="h-4 w-4 text-success" />
               <span className="text-muted-foreground">IFC Date:</span>
               <span>{format(new Date(drawing.ifcDate), 'MMM d, yyyy')}</span>
             </div>
@@ -256,7 +256,7 @@ export function DrawingDetailDialog({
                           </div>
                           <div className="text-right">
                             {transmittal.acknowledged ? (
-                              <Badge variant="default" className="bg-green-600">
+                              <Badge variant="default" className="bg-success">
                                 <CheckCircle className="h-3 w-3 mr-1" />
                                 Acknowledged
                               </Badge>

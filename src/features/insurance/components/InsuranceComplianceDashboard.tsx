@@ -57,9 +57,9 @@ function StatCard({
         {trend !== undefined && (
           <div className="flex items-center gap-1 mt-2 text-xs">
             <TrendingUp
-              className={cn('h-3 w-3', trend >= 0 ? 'text-green-600' : 'text-red-600')}
+              className={cn('h-3 w-3', trend >= 0 ? 'text-success' : 'text-error')}
             />
-            <span className={trend >= 0 ? 'text-green-600' : 'text-red-600'}>
+            <span className={trend >= 0 ? 'text-success' : 'text-error'}>
               {trend >= 0 ? '+' : ''}
               {trend}%
             </span>
@@ -100,10 +100,10 @@ function ComplianceRing({ percentage }: { percentage: number }) {
           strokeLinecap="round"
           className={cn(
             percentage >= 90
-              ? 'text-green-500'
+              ? 'text-success'
               : percentage >= 70
-                ? 'text-yellow-500'
-                : 'text-red-500'
+                ? 'text-warning'
+                : 'text-error'
           )}
         />
       </svg>
@@ -135,7 +135,7 @@ function SubcontractorComplianceList({
   if (withIssues.length === 0) {
     return (
       <div className="flex items-center justify-center py-8 text-muted-foreground">
-        <CheckCircle className="h-5 w-5 mr-2 text-green-500" />
+        <CheckCircle className="h-5 w-5 mr-2 text-success" />
         All subcontractors are in compliance
       </div>
     )
@@ -154,13 +154,13 @@ function SubcontractorComplianceList({
               <div
                 className={cn(
                   'p-2 rounded-lg',
-                  sub.expired_certificates > 0 ? 'bg-red-100' : 'bg-yellow-100'
+                  sub.expired_certificates > 0 ? 'bg-error-light' : 'bg-warning-light'
                 )}
               >
                 <Building2
                   className={cn(
                     'h-4 w-4',
-                    sub.expired_certificates > 0 ? 'text-red-600' : 'text-yellow-600'
+                    sub.expired_certificates > 0 ? 'text-error' : 'text-warning'
                   )}
                 />
               </div>
@@ -242,28 +242,28 @@ export function InsuranceComplianceDashboard({
           value={safeStats.totalCertificates}
           icon={FileCheck}
           description="Tracked in system"
-          color="bg-blue-100 text-blue-600"
+          color="bg-info-light text-primary"
         />
         <StatCard
           title="Active Certificates"
           value={safeStats.activeCertificates}
           icon={CheckCircle}
           description="Currently valid"
-          color="bg-green-100 text-green-600"
+          color="bg-success-light text-success"
         />
         <StatCard
           title="Expiring Soon"
           value={safeStats.expiringWithin30Days}
           icon={Clock}
           description="Within 30 days"
-          color="bg-yellow-100 text-yellow-600"
+          color="bg-warning-light text-warning"
         />
         <StatCard
           title="Expired"
           value={safeStats.expiredCertificates}
           icon={XCircle}
           description="Need renewal"
-          color="bg-red-100 text-red-600"
+          color="bg-error-light text-error"
         />
       </div>
 

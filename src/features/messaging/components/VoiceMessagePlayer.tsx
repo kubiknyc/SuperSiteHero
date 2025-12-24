@@ -130,7 +130,7 @@ export function VoiceMessagePlayer({
 
   if (error) {
     return (
-      <div className={cn('flex items-center gap-2 text-sm text-red-500', className)}>
+      <div className={cn('flex items-center gap-2 text-sm text-error', className)}>
         <VolumeX className="h-4 w-4" />
         <span>{error}</span>
       </div>
@@ -157,7 +157,7 @@ export function VoiceMessagePlayer({
 
         {/* Progress bar */}
         <div
-          className="flex-1 h-1.5 bg-gray-200 rounded-full cursor-pointer"
+          className="flex-1 h-1.5 bg-muted rounded-full cursor-pointer"
           onClick={handleSeek}
         >
           <div
@@ -167,7 +167,7 @@ export function VoiceMessagePlayer({
         </div>
 
         {/* Duration */}
-        <span className="text-xs text-gray-500 min-w-[40px]">
+        <span className="text-xs text-muted min-w-[40px]">
           {formatTime(currentTime)} / {formatTime(duration)}
         </span>
       </div>
@@ -177,7 +177,7 @@ export function VoiceMessagePlayer({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 bg-gray-50 rounded-lg p-3',
+        'flex items-center gap-3 bg-surface rounded-lg p-3',
         className
       )}
     >
@@ -201,7 +201,7 @@ export function VoiceMessagePlayer({
       <div className="flex-1 flex flex-col gap-1">
         {/* Progress bar with fake waveform */}
         <div
-          className="relative h-8 bg-gray-200 rounded cursor-pointer overflow-hidden"
+          className="relative h-8 bg-muted rounded cursor-pointer overflow-hidden"
           onClick={handleSeek}
         >
           {/* Fake waveform bars */}
@@ -228,7 +228,7 @@ export function VoiceMessagePlayer({
         </div>
 
         {/* Time display */}
-        <div className="flex justify-between text-xs text-gray-500">
+        <div className="flex justify-between text-xs text-muted">
           <span>{formatTime(currentTime)}</span>
           <span>{formatTime(duration)}</span>
         </div>
@@ -243,7 +243,7 @@ export function VoiceMessagePlayer({
         onClick={toggleMute}
       >
         {isMuted ? (
-          <VolumeX className="h-4 w-4 text-gray-400" />
+          <VolumeX className="h-4 w-4 text-disabled" />
         ) : (
           <Volume2 className="h-4 w-4" />
         )}

@@ -34,9 +34,9 @@ export function LookAheadStats({ metrics, isLoading, className }: LookAheadStats
   const ppcStatus = getPPCStatusColor(metrics.currentWeekPPC)
 
   const trendIcon = {
-    up: <TrendingUp className="h-4 w-4 text-green-500" />,
-    down: <TrendingDown className="h-4 w-4 text-red-500" />,
-    stable: <Minus className="h-4 w-4 text-gray-400" />,
+    up: <TrendingUp className="h-4 w-4 text-success" />,
+    down: <TrendingDown className="h-4 w-4 text-error" />,
+    stable: <Minus className="h-4 w-4 text-disabled" />,
   }
 
   const trendLabel = {
@@ -79,10 +79,10 @@ export function LookAheadStats({ metrics, isLoading, className }: LookAheadStats
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Completed</CardTitle>
-          <CheckCircle className="h-4 w-4 text-green-500" />
+          <CheckCircle className="h-4 w-4 text-success" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold text-green-600">{metrics.totalCompleted}</div>
+          <div className="text-3xl font-bold text-success">{metrics.totalCompleted}</div>
           <p className="text-xs text-muted-foreground mt-1">
             of {metrics.totalPlanned} planned activities
           </p>
@@ -93,7 +93,7 @@ export function LookAheadStats({ metrics, isLoading, className }: LookAheadStats
                   ? (metrics.totalCompleted / metrics.totalPlanned) * 100
                   : 0
               }
-              className="h-2 bg-green-100 [&>div]:bg-green-500"
+              className="h-2 bg-success-light [&>div]:bg-green-500"
             />
           </div>
         </CardContent>
@@ -103,12 +103,12 @@ export function LookAheadStats({ metrics, isLoading, className }: LookAheadStats
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">In Progress</CardTitle>
-          <Clock className="h-4 w-4 text-yellow-500" />
+          <Clock className="h-4 w-4 text-warning" />
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-4">
             <div>
-              <div className="text-3xl font-bold text-yellow-600">
+              <div className="text-3xl font-bold text-warning">
                 {metrics.totalPlanned - metrics.totalCompleted - metrics.totalBlocked - metrics.totalDelayed}
               </div>
               <p className="text-xs text-muted-foreground">active</p>
@@ -127,10 +127,10 @@ export function LookAheadStats({ metrics, isLoading, className }: LookAheadStats
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Blocked</CardTitle>
-          <AlertTriangle className="h-4 w-4 text-red-500" />
+          <AlertTriangle className="h-4 w-4 text-error" />
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold text-red-600">{metrics.totalBlocked}</div>
+          <div className="text-3xl font-bold text-error">{metrics.totalBlocked}</div>
           <p className="text-xs text-muted-foreground mt-1">activities with open constraints</p>
           {metrics.totalBlocked > 0 && (
             <Badge variant="destructive" className="mt-2">
@@ -183,11 +183,11 @@ export function ActivityStatusSummary({ activitiesByStatus, className }: Activit
   const total = Object.values(activitiesByStatus).reduce((a, b) => a + b, 0)
 
   const statusConfig: Record<string, { label: string; color: string; bgColor: string; Icon: typeof CheckCircle }> = {
-    completed: { label: 'Completed', color: 'text-green-700', bgColor: 'bg-green-100', Icon: CheckCircle },
-    in_progress: { label: 'In Progress', color: 'text-yellow-700', bgColor: 'bg-yellow-100', Icon: Clock },
-    planned: { label: 'Planned', color: 'text-blue-700', bgColor: 'bg-blue-100', Icon: Calendar },
+    completed: { label: 'Completed', color: 'text-success-dark', bgColor: 'bg-success-light', Icon: CheckCircle },
+    in_progress: { label: 'In Progress', color: 'text-yellow-700', bgColor: 'bg-warning-light', Icon: Clock },
+    planned: { label: 'Planned', color: 'text-primary-hover', bgColor: 'bg-info-light', Icon: Calendar },
     delayed: { label: 'Delayed', color: 'text-orange-700', bgColor: 'bg-orange-100', Icon: Clock },
-    blocked: { label: 'Blocked', color: 'text-red-700', bgColor: 'bg-red-100', Icon: AlertTriangle },
+    blocked: { label: 'Blocked', color: 'text-error-dark', bgColor: 'bg-error-light', Icon: AlertTriangle },
   }
 
   return (
@@ -247,7 +247,7 @@ export function TradeDistribution({ activitiesByTrade, className }: TradeDistrib
   const tradeColors = [
     'bg-blue-500',
     'bg-green-500',
-    'bg-yellow-500',
+    'bg-warning',
     'bg-purple-500',
     'bg-pink-500',
     'bg-indigo-500',
@@ -271,7 +271,7 @@ export function TradeDistribution({ activitiesByTrade, className }: TradeDistrib
                   <span className="truncate">{trade}</span>
                   <span className="text-muted-foreground">{count}</span>
                 </div>
-                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className={cn('h-full rounded-full', tradeColors[index % tradeColors.length])}
                     style={{ width: `${percentage}%` }}

@@ -61,20 +61,20 @@ const STATUS_CONFIG: Record<
 > = {
   draft: {
     label: 'Draft',
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     icon: <FileEdit className="h-4 w-4" />,
   },
   submitted: {
     label: 'Submitted',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary',
+    bgColor: 'bg-info-light',
     icon: <Send className="h-4 w-4" />,
   },
   in_review: {
     label: 'In Review',
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning-light',
     icon: <Clock className="h-4 w-4" />,
   },
   changes_requested: {
@@ -85,8 +85,8 @@ const STATUS_CONFIG: Record<
   },
   approved: {
     label: 'Approved',
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success-light',
     icon: <CheckCircle2 className="h-4 w-4" />,
   },
   locked: {
@@ -97,8 +97,8 @@ const STATUS_CONFIG: Record<
   },
   voided: {
     label: 'Voided',
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-error',
+    bgColor: 'bg-error-light',
     icon: <XCircle className="h-4 w-4" />,
   },
 };
@@ -250,7 +250,7 @@ export function ApprovalWorkflowPanel({
         <CardContent className="space-y-4">
           {/* Current Status */}
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600">Status:</span>
+            <span className="text-sm text-secondary">Status:</span>
             <Badge className={`${statusConfig.bgColor} ${statusConfig.color} gap-1`}>
               {statusConfig.icon}
               {statusConfig.label}
@@ -260,21 +260,21 @@ export function ApprovalWorkflowPanel({
           {/* Status History */}
           <div className="space-y-2 text-sm">
             {submittedByName && submittedAt && (
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-secondary">
                 <span>Submitted by {submittedByName}</span>
                 <span>{new Date(submittedAt).toLocaleDateString()}</span>
               </div>
             )}
 
             {approvedByName && approvedAt && (
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-secondary">
                 <span>Approved by {approvedByName}</span>
                 <span>{new Date(approvedAt).toLocaleDateString()}</span>
               </div>
             )}
 
             {lockedAt && (
-              <div className="flex justify-between text-gray-600">
+              <div className="flex justify-between text-secondary">
                 <span>Locked</span>
                 <span>{new Date(lockedAt).toLocaleDateString()}</span>
               </div>
@@ -322,7 +322,7 @@ export function ApprovalWorkflowPanel({
               <Button
                 size="sm"
                 variant="default"
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-success hover:bg-green-700"
                 onClick={() => setApproveDialogOpen(true)}
                 disabled={isLoading || processing}
               >
@@ -411,7 +411,7 @@ export function ApprovalWorkflowPanel({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <CheckCircle2 className="h-5 w-5 text-success" />
               Approve Report
             </DialogTitle>
             <DialogDescription>
@@ -454,7 +454,7 @@ export function ApprovalWorkflowPanel({
               Cancel
             </Button>
             <Button
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-success hover:bg-green-700"
               onClick={handleApprove}
               disabled={!signature || !signerName.trim() || processing}
             >

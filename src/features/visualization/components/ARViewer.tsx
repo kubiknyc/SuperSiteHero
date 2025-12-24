@@ -247,7 +247,7 @@ function PlacementControls({
       <div className="flex flex-col gap-4">
         {/* Scale control */}
         <div className="flex items-center gap-3">
-          <ZoomOut className="h-4 w-4 text-gray-400" />
+          <ZoomOut className="h-4 w-4 text-disabled" />
           <Slider
             value={[scale]}
             min={0.1}
@@ -256,13 +256,13 @@ function PlacementControls({
             onValueChange={([v]) => onScaleChange(v)}
             className="w-32"
           />
-          <ZoomIn className="h-4 w-4 text-gray-400" />
+          <ZoomIn className="h-4 w-4 text-disabled" />
           <span className="text-xs w-12 text-right">{scale.toFixed(1)}x</span>
         </div>
 
         {/* Rotation control */}
         <div className="flex items-center gap-3">
-          <RotateCcw className="h-4 w-4 text-gray-400" />
+          <RotateCcw className="h-4 w-4 text-disabled" />
           <Slider
             value={[rotation]}
             min={0}
@@ -271,7 +271,7 @@ function PlacementControls({
             onValueChange={([v]) => onRotationChange(v)}
             className="w-32"
           />
-          <RotateCw className="h-4 w-4 text-gray-400" />
+          <RotateCw className="h-4 w-4 text-disabled" />
           <span className="text-xs w-12 text-right">{rotation}deg</span>
         </div>
 
@@ -285,7 +285,7 @@ function PlacementControls({
             size="sm"
             onClick={onPlace}
             disabled={!canPlace}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-success hover:bg-green-700"
           >
             <Check className="h-4 w-4 mr-1" />
             Place
@@ -307,9 +307,9 @@ interface ARFallbackProps {
 function ARFallback({ onClose }: ARFallbackProps) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black text-white p-4">
-      <AlertCircle className="h-16 w-16 text-yellow-500 mb-4" />
-      <h2 className="text-xl font-bold mb-2">AR Not Supported</h2>
-      <p className="text-gray-400 text-center mb-4 max-w-md">
+      <AlertCircle className="h-16 w-16 text-warning mb-4" />
+      <h2 className="text-xl font-bold mb-2" className="heading-section">AR Not Supported</h2>
+      <p className="text-disabled text-center mb-4 max-w-md">
         Your device or browser does not support WebXR AR. Try using:
       </p>
       <ul className="text-gray-300 text-sm mb-6 space-y-1">
@@ -588,9 +588,9 @@ export function ARViewer({
       {/* Start AR button (when not active) */}
       {!isCameraActive && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-          <Smartphone className="h-16 w-16 mb-4 text-gray-400" />
-          <h2 className="text-xl font-bold mb-2">AR Viewer</h2>
-          <p className="text-gray-400 text-center mb-6 max-w-md px-4">
+          <Smartphone className="h-16 w-16 mb-4 text-disabled" />
+          <h2 className="text-xl font-bold mb-2" className="heading-section">AR Viewer</h2>
+          <p className="text-disabled text-center mb-6 max-w-md px-4">
             Place 3D models in the real world using your device camera
           </p>
           <Button onClick={handleStartAR} size="lg" className="gap-2">
@@ -598,7 +598,7 @@ export function ARViewer({
             Start AR
           </Button>
           {!supportsAR && (
-            <p className="text-yellow-500 text-xs mt-4">
+            <p className="text-warning text-xs mt-4">
               WebXR not available - using camera fallback
             </p>
           )}
@@ -622,7 +622,7 @@ export function ARViewer({
 
             <div className="flex gap-2">
               {isSessionActive && (
-                <Badge variant="secondary" className="bg-green-600/80">
+                <Badge variant="secondary" className="bg-success/80">
                   WebXR Active
                 </Badge>
               )}
@@ -672,9 +672,9 @@ export function ARViewer({
           {isPlacing && !previewPosition && (
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
               <div className="bg-black/70 rounded-xl p-6 backdrop-blur-sm text-white">
-                <Hand className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                <Hand className="h-12 w-12 mx-auto mb-3 text-disabled" />
                 <p className="font-medium">Tap to place model</p>
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-disabled text-sm mt-1">
                   Point your device at a flat surface
                 </p>
               </div>

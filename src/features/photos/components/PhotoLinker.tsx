@@ -178,9 +178,9 @@ export function PhotoLinker({
         </DialogHeader>
 
         {/* Selected Photos Preview */}
-        <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-          <Image className="h-5 w-5 text-gray-400" />
-          <span className="text-sm text-gray-700">
+        <div className="flex items-center gap-2 p-3 bg-surface rounded-lg">
+          <Image className="h-5 w-5 text-disabled" />
+          <span className="text-sm text-secondary">
             {photoIds.length} photo{photoIds.length !== 1 ? 's' : ''} selected
           </span>
         </div>
@@ -188,7 +188,7 @@ export function PhotoLinker({
         {/* Entity Links */}
         <div className="space-y-4 max-h-[400px] overflow-y-auto">
           {links.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               <Link2 className="h-8 w-8 mx-auto mb-2 text-gray-300" />
               <p>No links added yet</p>
               <p className="text-sm mt-1">
@@ -275,7 +275,7 @@ function EntityLinkRow({
         <div className="flex items-center gap-2">
           <Badge variant="outline">Link {index + 1}</Badge>
           {link.isPrimary && (
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
+            <Badge variant="secondary" className="bg-success-light text-green-800">
               Primary
             </Badge>
           )}
@@ -285,7 +285,7 @@ function EntityLinkRow({
           variant="ghost"
           size="icon"
           onClick={onRemove}
-          className="text-gray-400 hover:text-red-500"
+          className="text-disabled hover:text-error"
         >
           <Trash2 className="h-4 w-4" />
         </Button>

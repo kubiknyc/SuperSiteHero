@@ -168,14 +168,14 @@ export function TemplatesPage() {
   const hasActiveFilters = searchQuery || categoryFilter !== 'all' || !showSystemTemplates || !showCustomTemplates
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Inspection Checklists</h1>
-              <p className="text-gray-600">
+              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">Inspection Checklists</h1>
+              <p className="text-secondary">
                 Create and manage inspection checklist templates for your projects
               </p>
             </div>
@@ -198,30 +198,30 @@ export function TemplatesPage() {
 
         {/* Stats Dashboard */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">Total Templates</div>
-            <div className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">Total Templates</div>
+            <div className="text-3xl font-bold text-foreground mt-1">{stats.total}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">System Templates</div>
-            <div className="text-3xl font-bold text-blue-600 mt-1">{stats.system}</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">System Templates</div>
+            <div className="text-3xl font-bold text-primary mt-1">{stats.system}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">Custom Templates</div>
-            <div className="text-3xl font-bold text-green-600 mt-1">{stats.custom}</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">Custom Templates</div>
+            <div className="text-3xl font-bold text-success mt-1">{stats.custom}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">Categories</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">Categories</div>
             <div className="text-3xl font-bold text-purple-600 mt-1">{stats.categories}</div>
           </div>
         </div>
 
         {/* Filters and View Controls */}
-        <div className="bg-white rounded-lg shadow mb-6 p-4">
+        <div className="bg-card rounded-lg shadow mb-6 p-4">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 type="text"
                 placeholder="Search templates by name, description, or tags..."
@@ -235,7 +235,7 @@ export function TemplatesPage() {
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value as CategoryFilter)}
-              className="flex h-10 w-full lg:w-48 items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full lg:w-48 items-center justify-between rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="all">All Categories</option>
               {availableCategories.map((cat) => (
@@ -267,31 +267,31 @@ export function TemplatesPage() {
           </div>
 
           {/* Template Type Filters */}
-          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-200">
-            <span className="text-sm font-medium text-gray-700">Show:</span>
+          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-border">
+            <span className="text-sm font-medium text-secondary">Show:</span>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={showSystemTemplates}
                 onChange={(e) => setShowSystemTemplates(e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-input text-primary focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">System Templates</span>
+              <span className="text-sm text-secondary">System Templates</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
                 checked={showCustomTemplates}
                 onChange={(e) => setShowCustomTemplates(e.target.checked)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                className="rounded border-input text-primary focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">Custom Templates</span>
+              <span className="text-sm text-secondary">Custom Templates</span>
             </label>
           </div>
 
           {/* Active Filters Summary */}
           {hasActiveFilters && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
+            <div className="mt-4 flex items-center gap-2 text-sm text-secondary">
               <span className="font-medium">Active filters:</span>
               {searchQuery && (
                 <Badge variant="secondary">
@@ -315,7 +315,7 @@ export function TemplatesPage() {
               )}
               <button
                 onClick={clearFilters}
-                className="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1"
+                className="text-primary hover:text-blue-800 text-xs font-medium flex items-center gap-1"
               >
                 <X className="w-3 h-3" />
                 Clear all
@@ -326,19 +326,19 @@ export function TemplatesPage() {
 
         {/* Templates Grid/List */}
         {isLoading ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-            <p className="mt-4 text-gray-600">Loading templates...</p>
+          <div className="bg-card rounded-lg shadow p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            <p className="mt-4 text-secondary">Loading templates...</p>
           </div>
         ) : filteredTemplates.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="bg-card rounded-lg shadow p-12 text-center">
+            <div className="text-disabled mb-4">
               <CheckSquare className="mx-auto h-12 w-12" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-1">
+            <h3 className="text-lg font-medium text-foreground mb-1" className="heading-subsection">
               {allTemplates.length === 0 ? 'No templates yet' : 'No templates match your filters'}
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-secondary mb-4">
               {allTemplates.length === 0
                 ? 'Get started by creating your first checklist template or browse system templates.'
                 : 'Try adjusting your search and filter criteria.'}

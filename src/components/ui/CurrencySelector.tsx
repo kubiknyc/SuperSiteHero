@@ -104,12 +104,12 @@ export function CurrencySelector({
             {selectedCurrency && (
               <div className="flex items-center gap-2">
                 {showSymbol && (
-                  <span className="font-semibold text-gray-700">
+                  <span className="font-semibold text-secondary">
                     {selectedCurrency.symbol}
                   </span>
                 )}
                 <span className="font-medium">{selectedCurrency.code}</span>
-                <span className="text-gray-500 text-sm">
+                <span className="text-muted text-sm">
                   - {selectedCurrency.name}
                 </span>
               </div>
@@ -119,9 +119,9 @@ export function CurrencySelector({
 
         <SelectContent className="max-h-[400px]">
           {/* Search box */}
-          <div className="p-2 border-b sticky top-0 bg-white z-10">
+          <div className="p-2 border-b sticky top-0 bg-card z-10">
             <div className="relative">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 type="text"
                 placeholder="Search currencies..."
@@ -147,12 +147,12 @@ export function CurrencySelector({
                   <SelectItem key={code} value={code}>
                     <div className="flex items-center gap-2">
                       {showSymbol && (
-                        <span className="font-semibold text-gray-700 w-8">
+                        <span className="font-semibold text-secondary w-8">
                           {currency.symbol}
                         </span>
                       )}
                       <span className="font-medium w-12">{currency.code}</span>
-                      <span className="text-gray-500">{currency.name}</span>
+                      <span className="text-muted">{currency.name}</span>
                     </div>
                   </SelectItem>
                 );
@@ -168,12 +168,12 @@ export function CurrencySelector({
                 <SelectItem key={currency.code} value={currency.code}>
                   <div className="flex items-center gap-2">
                     {showSymbol && (
-                      <span className="font-semibold text-gray-700 w-8">
+                      <span className="font-semibold text-secondary w-8">
                         {currency.symbol}
                       </span>
                     )}
                     <span className="font-medium w-12">{currency.code}</span>
-                    <span className="text-gray-500">{currency.name}</span>
+                    <span className="text-muted">{currency.name}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -182,7 +182,7 @@ export function CurrencySelector({
 
           {/* No results */}
           {filteredCurrencies.length === 0 && (
-            <div className="p-4 text-center text-gray-500">
+            <div className="p-4 text-center text-muted">
               No currencies found
             </div>
           )}
@@ -190,7 +190,7 @@ export function CurrencySelector({
       </Select>
 
       {/* Error message */}
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+      {error && <p className="text-error text-sm mt-1">{error}</p>}
     </div>
   );
 }
@@ -228,7 +228,7 @@ export function SimpleCurrencySelector({
           return (
             <SelectItem key={code} value={code}>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-gray-700 w-6">
+                <span className="font-semibold text-secondary w-6">
                   {currency.symbol}
                 </span>
                 <span className="font-medium">{currency.code}</span>
@@ -310,8 +310,8 @@ export function CurrencyDisplay({
 
   const colorClass = colorize
     ? isNegative
-      ? 'text-red-600'
-      : 'text-green-600'
+      ? 'text-error'
+      : 'text-success'
     : '';
 
   return (
@@ -324,7 +324,7 @@ export function CurrencyDisplay({
       {showSymbol && currencyInfo.format === 'after' && (
         <span className="ml-0.5">{currencyInfo.symbol}</span>
       )}
-      {showCode && <span className="ml-1 text-xs text-gray-500">{currency}</span>}
+      {showCode && <span className="ml-1 text-xs text-muted">{currency}</span>}
     </span>
   );
 }

@@ -55,7 +55,7 @@ export function ResponseTypeSelect({
       {label && (
         <Label className="text-sm font-medium">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-error ml-1">*</span>}
         </Label>
       )}
       <Select
@@ -76,7 +76,7 @@ export function ResponseTypeSelect({
         </SelectTrigger>
         <SelectContent>
           {allowClear && value && (
-            <SelectItem value="clear" className="text-gray-500 italic">
+            <SelectItem value="clear" className="text-muted italic">
               Clear selection
             </SelectItem>
           )}
@@ -84,13 +84,13 @@ export function ResponseTypeSelect({
             <SelectItem key={type.value} value={type.value}>
               <div className="flex flex-col gap-0.5">
                 <span className="font-medium">{type.label}</span>
-                <span className="text-xs text-gray-500">{type.description}</span>
+                <span className="text-xs text-muted">{type.description}</span>
               </div>
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-error">{error}</p>}
     </div>
   )
 }
@@ -130,8 +130,8 @@ export function CommonResponseTypes({
               'px-3 py-1.5 rounded-md border transition-all text-sm',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               isSelected
-                ? 'bg-blue-100 border-blue-500 text-blue-700 ring-2 ring-blue-200'
-                : 'border-gray-300 hover:bg-gray-50'
+                ? 'bg-info-light border-blue-500 text-primary-hover ring-2 ring-blue-200'
+                : 'border-input hover:bg-surface'
             )}
           >
             {config.label}

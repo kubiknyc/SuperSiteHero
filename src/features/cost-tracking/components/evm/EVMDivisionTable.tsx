@@ -26,11 +26,11 @@ interface EVMDivisionTableProps {
 
 const STATUS_COLORS: Record<EVMPerformanceStatus | 'unknown', string> = {
   excellent: 'bg-emerald-100 text-emerald-700',
-  good: 'bg-green-100 text-green-700',
-  fair: 'bg-yellow-100 text-yellow-700',
+  good: 'bg-success-light text-success-dark',
+  fair: 'bg-warning-light text-yellow-700',
   poor: 'bg-orange-100 text-orange-700',
-  critical: 'bg-red-100 text-red-700',
-  unknown: 'bg-gray-100 text-gray-700',
+  critical: 'bg-error-light text-error-dark',
+  unknown: 'bg-muted text-secondary',
 }
 
 function formatCurrency(value: number): string {
@@ -191,7 +191,7 @@ export function EVMDivisionTable({ data, isLoading }: EVMDivisionTableProps) {
                   <TableCell
                     className={cn(
                       'text-right font-mono text-sm',
-                      division.CV >= 0 ? 'text-green-600' : 'text-red-600'
+                      division.CV >= 0 ? 'text-success' : 'text-error'
                     )}
                   >
                     {division.CV >= 0 ? '+' : ''}
@@ -229,7 +229,7 @@ export function EVMDivisionTable({ data, isLoading }: EVMDivisionTableProps) {
                 <TableCell
                   className={cn(
                     'text-right font-mono text-sm',
-                    totals.CV >= 0 ? 'text-green-600' : 'text-red-600'
+                    totals.CV >= 0 ? 'text-success' : 'text-error'
                   )}
                 >
                   {totals.CV >= 0 ? '+' : ''}

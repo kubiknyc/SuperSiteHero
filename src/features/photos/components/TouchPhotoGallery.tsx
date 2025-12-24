@@ -309,7 +309,7 @@ export function TouchPhotoGallery({
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="text-white hover:bg-white/20"
+          className="text-white hover:bg-card/20"
         >
           <X className="h-6 w-6" />
         </Button>
@@ -326,7 +326,7 @@ export function TouchPhotoGallery({
               variant="ghost"
               size="icon"
               onClick={handleDownload}
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-card/20"
             >
               <Download className="h-5 w-5" />
             </Button>
@@ -336,7 +336,7 @@ export function TouchPhotoGallery({
               variant="ghost"
               size="icon"
               onClick={handleShare}
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-card/20"
             >
               <Share2 className="h-5 w-5" />
             </Button>
@@ -407,7 +407,7 @@ export function TouchPhotoGallery({
           <button
             onClick={handleZoomOut}
             disabled={scale <= 1}
-            className="p-2 text-white hover:bg-white/20 rounded-full disabled:opacity-50 touch-manipulation"
+            className="p-2 text-white hover:bg-card/20 rounded-full disabled:opacity-50 touch-manipulation"
           >
             <ZoomOut className="h-5 w-5" />
           </button>
@@ -417,14 +417,14 @@ export function TouchPhotoGallery({
           <button
             onClick={handleZoomIn}
             disabled={scale >= 4}
-            className="p-2 text-white hover:bg-white/20 rounded-full disabled:opacity-50 touch-manipulation"
+            className="p-2 text-white hover:bg-card/20 rounded-full disabled:opacity-50 touch-manipulation"
           >
             <ZoomIn className="h-5 w-5" />
           </button>
           {isZoomed && (
             <button
               onClick={handleResetZoom}
-              className="p-2 text-white hover:bg-white/20 rounded-full touch-manipulation"
+              className="p-2 text-white hover:bg-card/20 rounded-full touch-manipulation"
             >
               <RotateCw className="h-5 w-5" />
             </button>

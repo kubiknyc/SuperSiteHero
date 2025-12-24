@@ -17,8 +17,8 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No project selected</p>
+          <AlertCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+          <p className="text-secondary">No project selected</p>
         </CardContent>
       </Card>
     )
@@ -28,8 +28,8 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading financial data...</p>
+          <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+          <p className="text-secondary">Loading financial data...</p>
         </CardContent>
       </Card>
     )
@@ -40,7 +40,7 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
       <Card>
         <CardContent className="p-12 text-center">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <p className="text-red-600">Failed to load financial summary</p>
+          <p className="text-error">Failed to load financial summary</p>
         </CardContent>
       </Card>
     )
@@ -68,8 +68,8 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
             <CardDescription>Contract Value</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{formatCurrency(report.contractValue)}</div>
-            <p className="text-xs text-gray-600 mt-2">Original contract amount</p>
+            <div className="text-2xl font-bold text-foreground">{formatCurrency(report.contractValue)}</div>
+            <p className="text-xs text-secondary mt-2">Original contract amount</p>
           </CardContent>
         </Card>
 
@@ -79,8 +79,8 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
             <CardDescription>Budget</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{formatCurrency(report.budget)}</div>
-            <p className="text-xs text-gray-600 mt-2">Approved budget</p>
+            <div className="text-2xl font-bold text-primary">{formatCurrency(report.budget)}</div>
+            <p className="text-xs text-secondary mt-2">Approved budget</p>
           </CardContent>
         </Card>
 
@@ -90,10 +90,10 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
             <CardDescription>Forecasted Total</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${isOverBudget ? 'text-red-600' : 'text-green-600'}`}>
+            <div className={`text-2xl font-bold ${isOverBudget ? 'text-error' : 'text-success'}`}>
               {formatCurrency(report.forecastedTotal)}
             </div>
-            <p className="text-xs text-gray-600 mt-2">Including change orders</p>
+            <p className="text-xs text-secondary mt-2">Including change orders</p>
           </CardContent>
         </Card>
 
@@ -103,10 +103,10 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
             <CardDescription>Budget Status</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-3xl font-bold ${isOverBudget ? 'text-red-600' : 'text-green-600'}`}>
+            <div className={`text-3xl font-bold ${isOverBudget ? 'text-error' : 'text-success'}`}>
               {formatPercentage(budgetUtilization)}
             </div>
-            <p className="text-xs text-gray-600 mt-2">Budget utilized</p>
+            <p className="text-xs text-secondary mt-2">Budget utilized</p>
           </CardContent>
         </Card>
       </div>
@@ -119,12 +119,12 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
         <CardContent className="space-y-4">
           <div>
             <div className="flex justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Contract Value vs Budget</span>
-              <span className="text-sm font-bold text-gray-900">{formatCurrency(report.contractValue)} / {formatCurrency(report.budget)}</span>
+              <span className="text-sm font-medium text-secondary">Contract Value vs Budget</span>
+              <span className="text-sm font-bold text-foreground">{formatCurrency(report.contractValue)} / {formatCurrency(report.budget)}</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-3">
+            <div className="w-full bg-muted rounded-full h-3">
               <div
-                className="bg-blue-600 h-3 rounded-full transition-all"
+                className="bg-primary h-3 rounded-full transition-all"
                 style={{
                   width: `${report.budget ? Math.min((report.contractValue || 0) / report.budget * 100, 100) : 0}%`,
                 }}
@@ -134,20 +134,20 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
 
           <div className="mt-6">
             <div className="flex justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Change Order Impact</span>
-              <span className="text-sm font-bold text-gray-900">{formatCurrency(report.changeOrdersImpact)}</span>
+              <span className="text-sm font-medium text-secondary">Change Order Impact</span>
+              <span className="text-sm font-bold text-foreground">{formatCurrency(report.changeOrdersImpact)}</span>
             </div>
-            <p className="text-xs text-gray-600">Total cost impact from approved change orders</p>
+            <p className="text-xs text-secondary">Total cost impact from approved change orders</p>
           </div>
 
           <div className="mt-6">
             <div className="flex justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">Remaining Budget</span>
-              <span className={`text-sm font-bold ${remainingBudget >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <span className="text-sm font-medium text-secondary">Remaining Budget</span>
+              <span className={`text-sm font-bold ${remainingBudget >= 0 ? 'text-success' : 'text-error'}`}>
                 {formatCurrency(remainingBudget)}
               </span>
             </div>
-            <p className="text-xs text-gray-600">Budget available for additional work</p>
+            <p className="text-xs text-secondary">Budget available for additional work</p>
           </div>
         </CardContent>
       </Card>
@@ -162,20 +162,20 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="border-l-4 border-blue-500 pl-4">
-                <p className="text-sm text-gray-600">Base Contract</p>
-                <p className="text-lg font-bold text-gray-900">{formatCurrency(report.contractValue)}</p>
+                <p className="text-sm text-secondary">Base Contract</p>
+                <p className="text-lg font-bold text-foreground">{formatCurrency(report.contractValue)}</p>
               </div>
               <div className="border-l-4 border-orange-500 pl-4">
-                <p className="text-sm text-gray-600">Change Orders</p>
+                <p className="text-sm text-secondary">Change Orders</p>
                 <p className="text-lg font-bold text-orange-600">{formatCurrency(report.changeOrdersImpact)}</p>
               </div>
               <div className="border-l-4 border-purple-500 pl-4">
-                <p className="text-sm text-gray-600">Subcontractor Costs</p>
+                <p className="text-sm text-secondary">Subcontractor Costs</p>
                 <p className="text-lg font-bold text-purple-600">{formatCurrency(report.subcontractorCosts)}</p>
               </div>
               <div className="border-l-4 border-green-500 pl-4">
-                <p className="text-sm text-gray-600">Retainage Held</p>
-                <p className="text-lg font-bold text-green-600">{formatCurrency(report.retainageHeld)}</p>
+                <p className="text-sm text-secondary">Retainage Held</p>
+                <p className="text-lg font-bold text-success">{formatCurrency(report.retainageHeld)}</p>
               </div>
             </div>
           </div>
@@ -184,9 +184,9 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
 
       {/* Budget Alerts */}
       {isOverBudget && (
-        <div className="alert alert-danger rounded-lg p-4 bg-red-50 border border-red-200">
+        <div className="alert alert-danger rounded-lg p-4 bg-error-light border border-red-200">
           <div className="flex items-start gap-3">
-            <TrendingDown className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+            <TrendingDown className="h-5 w-5 text-error mt-0.5 flex-shrink-0" />
             <div>
               <p className="font-semibold text-red-900">Budget Overrun Alert</p>
               <p className="text-sm text-red-800 mt-1">
@@ -199,9 +199,9 @@ export function FinancialSummaryReport({ projectId }: FinancialSummaryReportProp
       )}
 
       {budgetUtilization > 80 && budgetUtilization <= 100 && (
-        <div className="alert alert-warning rounded-lg p-4 bg-yellow-50 border border-yellow-200">
+        <div className="alert alert-warning rounded-lg p-4 bg-warning-light border border-yellow-200">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+            <AlertCircle className="h-5 w-5 text-warning mt-0.5 flex-shrink-0" />
             <div>
               <p className="font-semibold text-yellow-900">Budget Status</p>
               <p className="text-sm text-yellow-800 mt-1">

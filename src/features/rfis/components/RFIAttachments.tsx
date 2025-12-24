@@ -187,7 +187,7 @@ export function RFIAttachments({
           <Paperclip className="h-5 w-5" />
           Attachments
           {attachments && attachments.length > 0 && (
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-muted">
               ({attachments.length})
             </span>
           )}
@@ -201,7 +201,7 @@ export function RFIAttachments({
               'border-2 border-dashed rounded-lg p-4 transition-colors',
               isDragging
                 ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-300 hover:border-gray-400'
+                : 'border-input hover:border-gray-400'
             )}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -210,14 +210,14 @@ export function RFIAttachments({
             {showUploadForm && selectedFile ? (
               // Upload form
               <div className="space-y-4">
-                <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-md">
+                <div className="flex items-center gap-3 p-3 bg-surface rounded-md">
                   {(() => {
                     const Icon = getFileIcon(selectedFile.name)
-                    return <Icon className="h-8 w-8 text-gray-400" />
+                    return <Icon className="h-8 w-8 text-disabled" />
                   })()}
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{selectedFile.name}</p>
-                    <p className="text-sm text-gray-500">{formatFileSize(selectedFile.size)}</p>
+                    <p className="font-medium text-foreground truncate">{selectedFile.name}</p>
+                    <p className="text-sm text-muted">{formatFileSize(selectedFile.size)}</p>
                   </div>
                   <Button
                     variant="ghost"
@@ -262,18 +262,18 @@ export function RFIAttachments({
             ) : (
               // Drop zone
               <div className="text-center">
-                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 mb-2">
+                <Upload className="h-8 w-8 text-disabled mx-auto mb-2" />
+                <p className="text-sm text-secondary mb-2">
                   Drag and drop files here, or{' '}
                   <button
                     type="button"
-                    className="text-blue-600 hover:underline font-medium"
+                    className="text-primary hover:underline font-medium"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     browse
                   </button>
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   PDF, Word, Excel, Images (max 50MB)
                 </p>
                 <input
@@ -291,7 +291,7 @@ export function RFIAttachments({
         {/* Attachments List */}
         {isLoadingAttachments ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
+            <Loader2 className="h-6 w-6 text-disabled animate-spin" />
           </div>
         ) : attachments && attachments.length > 0 ? (
           <div className="divide-y">
@@ -305,15 +305,15 @@ export function RFIAttachments({
                   key={attachment.id}
                   className="py-3 flex items-center gap-3 group"
                 >
-                  <div className="flex-shrink-0 p-2 bg-gray-100 rounded-md">
-                    <Icon className="h-5 w-5 text-gray-600" />
+                  <div className="flex-shrink-0 p-2 bg-muted rounded-md">
+                    <Icon className="h-5 w-5 text-secondary" />
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">
+                    <p className="font-medium text-foreground truncate">
                       {attachment.file_name}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-muted">
                       <span>{formatFileSize(attachment.file_size)}</span>
                       <span>•</span>
                       <span>
@@ -323,7 +323,7 @@ export function RFIAttachments({
                       </span>
                     </div>
                     {attachment.description && (
-                      <p className="text-xs text-gray-600 mt-1 truncate">
+                      <p className="text-xs text-secondary mt-1 truncate">
                         {attachment.description}
                       </p>
                     )}
@@ -351,7 +351,7 @@ export function RFIAttachments({
                         onClick={() => handleDelete(attachment)}
                         disabled={isDeleting}
                         title="Delete"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-error hover:text-error-dark hover:bg-error-light"
                       >
                         {isDeleting ? (
                           <Loader2 className="h-4 w-4 animate-spin" />
@@ -368,7 +368,7 @@ export function RFIAttachments({
         ) : (
           <div className="text-center py-6">
             <AlertCircle className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-            <p className="text-sm text-gray-500">No attachments yet</p>
+            <p className="text-sm text-muted">No attachments yet</p>
           </div>
         )}
       </CardContent>

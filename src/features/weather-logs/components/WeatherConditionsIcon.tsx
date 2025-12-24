@@ -40,19 +40,19 @@ const weatherIconMap: Record<WeatherCondition, LucideIcon> = {
 }
 
 const weatherColorMap: Record<WeatherCondition, string> = {
-  sunny: 'text-yellow-500',
+  sunny: 'text-warning',
   partly_cloudy: 'text-yellow-400',
-  cloudy: 'text-gray-400',
-  overcast: 'text-gray-500',
-  rain: 'text-blue-500',
-  heavy_rain: 'text-blue-600',
+  cloudy: 'text-disabled',
+  overcast: 'text-muted',
+  rain: 'text-primary',
+  heavy_rain: 'text-primary',
   drizzle: 'text-blue-400',
   snow: 'text-blue-200',
   heavy_snow: 'text-blue-300',
   sleet: 'text-blue-300',
   hail: 'text-blue-400',
-  fog: 'text-gray-400',
-  wind: 'text-gray-500',
+  fog: 'text-disabled',
+  wind: 'text-muted',
   storm: 'text-purple-600',
   thunderstorm: 'text-purple-700',
 }

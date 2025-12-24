@@ -94,7 +94,7 @@ export function LienWaiverDetailPage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-disabled" />
         </div>
       </AppLayout>
     );
@@ -104,11 +104,11 @@ export function LienWaiverDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
-              <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2">Error Loading Waiver</h3>
-              <p className="text-red-600">{error?.message || 'Waiver not found'}</p>
+              <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Waiver</h3>
+              <p className="text-error">{error?.message || 'Waiver not found'}</p>
               <Button variant="outline" className="mt-4" onClick={() => navigate('/lien-waivers')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Waivers
@@ -302,7 +302,7 @@ export function LienWaiverDetailPage() {
         actions.push(
           <Dialog key="reject" open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+              <Button variant="outline" className="text-error border-red-200 hover:bg-error-light">
                 <XCircle className="h-4 w-4 mr-2" />
                 Reject
               </Button>
@@ -347,7 +347,7 @@ export function LienWaiverDetailPage() {
       actions.push(
         <Dialog key="void" open={voidDialogOpen} onOpenChange={setVoidDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" className="text-gray-500">
+            <Button variant="ghost" className="text-muted">
               <Ban className="h-4 w-4 mr-2" />
               Void
             </Button>
@@ -357,7 +357,7 @@ export function LienWaiverDetailPage() {
               <DialogTitle>Void Waiver</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-4">
-              <div className="p-3 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800">
+              <div className="p-3 bg-warning-light border border-amber-200 rounded text-sm text-amber-800">
                 <AlertTriangle className="h-4 w-4 inline mr-2" />
                 This action cannot be undone.
               </div>
@@ -409,19 +409,19 @@ export function LienWaiverDetailPage() {
               Back to Waivers
             </Button>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-foreground" className="heading-page">
                 {waiver.waiver_number}
               </h1>
               <LienWaiverStatusBadge status={waiver.status} />
               <LienWaiverTypeBadge type={waiver.waiver_type} />
               {isOverdue && (
-                <Badge className="bg-red-100 text-red-700">
+                <Badge className="bg-error-light text-error-dark">
                   <AlertTriangle className="h-3 w-3 mr-1" />
                   Overdue
                 </Badge>
               )}
             </div>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               {waiver.project?.name || 'Unknown Project'}
             </p>
           </div>
@@ -452,23 +452,23 @@ export function LienWaiverDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <span className="text-sm text-gray-500">Company</span>
+                    <span className="text-sm text-muted">Company</span>
                     <p className="font-medium">
                       {waiver.subcontractor?.company_name || waiver.vendor_name || 'N/A'}
                     </p>
                   </div>
                   {waiver.claimant_name && (
                     <div>
-                      <span className="text-sm text-gray-500">Claimant</span>
+                      <span className="text-sm text-muted">Claimant</span>
                       <p className="font-medium">{waiver.claimant_name}</p>
                       {waiver.claimant_title && (
-                        <p className="text-sm text-gray-600">{waiver.claimant_title}</p>
+                        <p className="text-sm text-secondary">{waiver.claimant_title}</p>
                       )}
                     </div>
                   )}
                   {waiver.sent_to_email && (
                     <div>
-                      <span className="text-sm text-gray-500">Email</span>
+                      <span className="text-sm text-muted">Email</span>
                       <p className="font-medium">{waiver.sent_to_email}</p>
                     </div>
                   )}
@@ -485,26 +485,26 @@ export function LienWaiverDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <span className="text-sm text-gray-500">Amount</span>
-                    <p className="font-medium text-lg text-green-700">
+                    <span className="text-sm text-muted">Amount</span>
+                    <p className="font-medium text-lg text-success-dark">
                       {formatWaiverAmount(waiver.payment_amount)}
                     </p>
                   </div>
                   <div>
-                    <span className="text-sm text-gray-500">Through Date</span>
+                    <span className="text-sm text-muted">Through Date</span>
                     <p className="font-medium">
                       {format(new Date(waiver.through_date), 'MMMM d, yyyy')}
                     </p>
                   </div>
                   {waiver.check_number && (
                     <div>
-                      <span className="text-sm text-gray-500">Check Number</span>
+                      <span className="text-sm text-muted">Check Number</span>
                       <p className="font-medium">{waiver.check_number}</p>
                     </div>
                   )}
                   {waiver.payment_application && (
                     <div>
-                      <span className="text-sm text-gray-500">Payment Application</span>
+                      <span className="text-sm text-muted">Payment Application</span>
                       <p className="font-medium">
                         App #{waiver.payment_application.application_number}
                       </p>
@@ -523,15 +523,15 @@ export function LienWaiverDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div>
-                    <span className="text-sm text-gray-500">Created</span>
+                    <span className="text-sm text-muted">Created</span>
                     <p className="font-medium">
                       {format(new Date(waiver.created_at), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
                   {waiver.due_date && (
                     <div>
-                      <span className="text-sm text-gray-500">Due Date</span>
-                      <p className={cn('font-medium', isOverdue && 'text-red-600')}>
+                      <span className="text-sm text-muted">Due Date</span>
+                      <p className={cn('font-medium', isOverdue && 'text-error')}>
                         {format(new Date(waiver.due_date), 'MMMM d, yyyy')}
                         {isOverdue && ' (Overdue)'}
                       </p>
@@ -539,7 +539,7 @@ export function LienWaiverDetailPage() {
                   )}
                   {waiver.sent_at && (
                     <div>
-                      <span className="text-sm text-gray-500">Sent</span>
+                      <span className="text-sm text-muted">Sent</span>
                       <p className="font-medium">
                         {format(new Date(waiver.sent_at), 'MMM d, yyyy h:mm a')}
                       </p>
@@ -547,7 +547,7 @@ export function LienWaiverDetailPage() {
                   )}
                   {waiver.received_at && (
                     <div>
-                      <span className="text-sm text-gray-500">Received</span>
+                      <span className="text-sm text-muted">Received</span>
                       <p className="font-medium">
                         {format(new Date(waiver.received_at), 'MMM d, yyyy h:mm a')}
                       </p>
@@ -555,8 +555,8 @@ export function LienWaiverDetailPage() {
                   )}
                   {waiver.approved_at && (
                     <div>
-                      <span className="text-sm text-gray-500">Approved</span>
-                      <p className="font-medium text-green-600">
+                      <span className="text-sm text-muted">Approved</span>
+                      <p className="font-medium text-success">
                         {format(new Date(waiver.approved_at), 'MMM d, yyyy h:mm a')}
                       </p>
                     </div>
@@ -584,12 +584,12 @@ export function LienWaiverDetailPage() {
                 <CardContent className="space-y-3">
                   {waiver.signed_at ? (
                     <>
-                      <div className="flex items-center gap-2 text-green-600">
+                      <div className="flex items-center gap-2 text-success">
                         <CheckCircle className="h-4 w-4" />
                         <span className="font-medium">Signed</span>
                       </div>
                       {waiver.signature_url && (
-                        <div className="border rounded-lg p-3 bg-gray-50">
+                        <div className="border rounded-lg p-3 bg-surface">
                           <img
                             src={waiver.signature_url}
                             alt="Signature"
@@ -598,17 +598,17 @@ export function LienWaiverDetailPage() {
                         </div>
                       )}
                       <div>
-                        <span className="text-sm text-gray-500">Signed By</span>
+                        <span className="text-sm text-muted">Signed By</span>
                         <p className="font-medium">{waiver.claimant_name}</p>
                         {waiver.claimant_title && (
-                          <p className="text-sm text-gray-600">{waiver.claimant_title}</p>
+                          <p className="text-sm text-secondary">{waiver.claimant_title}</p>
                         )}
                         {waiver.claimant_company && (
-                          <p className="text-sm text-gray-600">{waiver.claimant_company}</p>
+                          <p className="text-sm text-secondary">{waiver.claimant_company}</p>
                         )}
                       </div>
                       <div>
-                        <span className="text-sm text-gray-500">Signed On</span>
+                        <span className="text-sm text-muted">Signed On</span>
                         <p className="font-medium">
                           {format(new Date(waiver.signed_at), 'MMM d, yyyy')}
                         </p>
@@ -627,7 +627,7 @@ export function LienWaiverDetailPage() {
                     </>
                   ) : (
                     <div className="space-y-3">
-                      <div className="flex items-center gap-2 text-gray-500">
+                      <div className="flex items-center gap-2 text-muted">
                         <Clock className="h-4 w-4" />
                         <span>Awaiting signature</span>
                       </div>
@@ -649,12 +649,12 @@ export function LienWaiverDetailPage() {
                         Notarization Required
                       </Badge>
                       {waiver.notarized_at ? (
-                        <div className="text-sm text-green-600">
+                        <div className="text-sm text-success">
                           <CheckCircle className="h-3 w-3 inline mr-1" />
                           Notarized on {format(new Date(waiver.notarized_at), 'MMM d, yyyy')}
                         </div>
                       ) : (
-                        <div className="text-sm text-amber-600">
+                        <div className="text-sm text-warning">
                           <Clock className="h-3 w-3 inline mr-1" />
                           Pending notarization
                         </div>
@@ -674,20 +674,20 @@ export function LienWaiverDetailPage() {
                 <CardContent className="space-y-4">
                   {waiver.exceptions && (
                     <div>
-                      <span className="text-sm font-medium text-gray-700">Exceptions</span>
-                      <p className="text-gray-600 mt-1">{waiver.exceptions}</p>
+                      <span className="text-sm font-medium text-secondary">Exceptions</span>
+                      <p className="text-secondary mt-1">{waiver.exceptions}</p>
                     </div>
                   )}
                   {waiver.notes && (
                     <div>
-                      <span className="text-sm font-medium text-gray-700">Notes</span>
-                      <p className="text-gray-600 mt-1">{waiver.notes}</p>
+                      <span className="text-sm font-medium text-secondary">Notes</span>
+                      <p className="text-secondary mt-1">{waiver.notes}</p>
                     </div>
                   )}
                   {waiver.rejection_reason && (
-                    <div className="p-3 bg-red-50 border border-red-200 rounded">
-                      <span className="text-sm font-medium text-red-700">Rejection Reason</span>
-                      <p className="text-red-600 mt-1">{waiver.rejection_reason}</p>
+                    <div className="p-3 bg-error-light border border-red-200 rounded">
+                      <span className="text-sm font-medium text-error-dark">Rejection Reason</span>
+                      <p className="text-error mt-1">{waiver.rejection_reason}</p>
                     </div>
                   )}
                 </CardContent>
@@ -710,8 +710,8 @@ export function LienWaiverDetailPage() {
               <CardContent>
                 {waiver.document_url ? (
                   <div className="space-y-4">
-                    <div className="border rounded-lg p-4 bg-gray-50">
-                      <p className="text-sm text-gray-600 mb-4">
+                    <div className="border rounded-lg p-4 bg-surface">
+                      <p className="text-sm text-secondary mb-4">
                         Document has been uploaded and is ready for review.
                       </p>
                       <Button asChild>
@@ -724,11 +724,11 @@ export function LienWaiverDetailPage() {
                   </div>
                 ) : waiver.rendered_content ? (
                   <div
-                    className="prose max-w-none border rounded-lg p-6 bg-white"
+                    className="prose max-w-none border rounded-lg p-6 bg-card"
                     dangerouslySetInnerHTML={{ __html: waiver.rendered_content }}
                   />
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted">
                     <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No document generated yet</p>
                   </div>
@@ -754,29 +754,29 @@ export function LienWaiverDetailPage() {
                         key={entry.id}
                         className="flex items-start gap-3 pb-4 border-b last:border-b-0"
                       >
-                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-                          {entry.action === 'created' && <FileCheck className="h-4 w-4 text-blue-600" />}
-                          {entry.action === 'sent' && <Send className="h-4 w-4 text-blue-600" />}
-                          {entry.action === 'received' && <CheckCircle className="h-4 w-4 text-yellow-600" />}
-                          {entry.action === 'signed' && <User className="h-4 w-4 text-green-600" />}
-                          {entry.action === 'approved' && <CheckCircle className="h-4 w-4 text-green-600" />}
-                          {entry.action === 'rejected' && <XCircle className="h-4 w-4 text-red-600" />}
-                          {entry.action === 'status_changed' && <Clock className="h-4 w-4 text-gray-600" />}
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                          {entry.action === 'created' && <FileCheck className="h-4 w-4 text-primary" />}
+                          {entry.action === 'sent' && <Send className="h-4 w-4 text-primary" />}
+                          {entry.action === 'received' && <CheckCircle className="h-4 w-4 text-warning" />}
+                          {entry.action === 'signed' && <User className="h-4 w-4 text-success" />}
+                          {entry.action === 'approved' && <CheckCircle className="h-4 w-4 text-success" />}
+                          {entry.action === 'rejected' && <XCircle className="h-4 w-4 text-error" />}
+                          {entry.action === 'status_changed' && <Clock className="h-4 w-4 text-secondary" />}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <span className="font-medium capitalize">
                               {entry.action.replace('_', ' ')}
                             </span>
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-muted">
                               {format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
                             </span>
                           </div>
                           {entry.notes && (
-                            <p className="text-sm text-gray-600 mt-1">{entry.notes}</p>
+                            <p className="text-sm text-secondary mt-1">{entry.notes}</p>
                           )}
                           {entry.old_value && entry.new_value && (
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-muted mt-1">
                               {entry.field_changed}: {entry.old_value} → {entry.new_value}
                             </p>
                           )}
@@ -785,7 +785,7 @@ export function LienWaiverDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted">
                     <History className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No history available</p>
                   </div>

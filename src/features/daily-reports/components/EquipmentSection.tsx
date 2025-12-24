@@ -43,10 +43,10 @@ export function EquipmentSection({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <Truck className="h-5 w-5 text-gray-600" />
+          <Truck className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">
               Equipment
@@ -56,23 +56,23 @@ export function EquipmentSection({
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
       {expanded && (
         <CardContent className="space-y-4 border-t pt-4">
           {entries.length === 0 ? (
-            <p className="text-sm text-gray-500">No equipment entries yet</p>
+            <p className="text-sm text-muted">No equipment entries yet</p>
           ) : (
             <div className="space-y-2">
               {entries.map((entry) => (
-                <div key={entry.id} className="flex items-center justify-between p-3 bg-gray-50 rounded border">
+                <div key={entry.id} className="flex items-center justify-between p-3 bg-surface rounded border">
                   <div>
                     <p className="font-medium text-sm">{entry.equipment_type}</p>
-                    {entry.hours_used && <p className="text-xs text-gray-600">{entry.hours_used}h</p>}
+                    {entry.hours_used && <p className="text-xs text-secondary">{entry.hours_used}h</p>}
                   </div>
                   <button onClick={() => onRemove(entry.id)}>
                     <Trash2 className="h-4 w-4 text-red-400" />

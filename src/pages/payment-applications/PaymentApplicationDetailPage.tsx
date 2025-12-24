@@ -103,11 +103,11 @@ export function PaymentApplicationDetailPage() {
   const getStatusBadge = (status: PaymentApplicationStatus) => {
     const config = getStatusConfig(status)
     const colorMap: Record<string, string> = {
-      gray: 'bg-gray-100 text-gray-700',
-      blue: 'bg-blue-100 text-blue-700',
-      yellow: 'bg-yellow-100 text-yellow-700',
-      green: 'bg-green-100 text-green-700',
-      red: 'bg-red-100 text-red-700',
+      gray: 'bg-muted text-secondary',
+      blue: 'bg-info-light text-primary-hover',
+      yellow: 'bg-warning-light text-yellow-700',
+      green: 'bg-success-light text-success-dark',
+      red: 'bg-error-light text-error-dark',
       emerald: 'bg-emerald-100 text-emerald-700',
     }
     return (
@@ -263,7 +263,7 @@ export function PaymentApplicationDetailPage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-disabled" />
         </div>
       </AppLayout>
     )
@@ -273,11 +273,11 @@ export function PaymentApplicationDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
-              <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2">Error Loading Application</h3>
-              <p className="text-red-600">{error?.message || 'Application not found'}</p>
+              <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Application</h3>
+              <p className="text-error">{error?.message || 'Application not found'}</p>
               <Button variant="outline" onClick={() => navigate('/payment-applications')} className="mt-4">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Applications
@@ -306,10 +306,10 @@ export function PaymentApplicationDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900">{application.display_number}</h1>
+                <h1 className="text-2xl font-bold text-foreground" className="heading-page">{application.display_number}</h1>
                 {getStatusBadge(application.status)}
               </div>
-              <p className="text-gray-600">
+              <p className="text-secondary">
                 Period ending {format(new Date(application.period_to), 'MMMM d, yyyy')}
               </p>
             </div>
@@ -360,11 +360,11 @@ export function PaymentApplicationDetailPage() {
             )}
             {canApprove && (
               <>
-                <Button variant="outline" onClick={() => setRejectDialogOpen(true)} disabled={isLoading2} className="gap-2 text-red-600 border-red-200 hover:bg-red-50">
+                <Button variant="outline" onClick={() => setRejectDialogOpen(true)} disabled={isLoading2} className="gap-2 text-error border-red-200 hover:bg-error-light">
                   <XCircle className="h-4 w-4" />
                   Reject
                 </Button>
-                <Button onClick={handleApprove} disabled={isLoading2} className="gap-2 bg-green-600 hover:bg-green-700">
+                <Button onClick={handleApprove} disabled={isLoading2} className="gap-2 bg-success hover:bg-green-700">
                   <CheckCircle className="h-4 w-4" />
                   Approve
                 </Button>
@@ -377,7 +377,7 @@ export function PaymentApplicationDetailPage() {
               </Button>
             )}
             {canDelete && (
-              <Button variant="ghost" size="sm" onClick={handleDelete} disabled={isLoading2} className="text-red-600 hover:text-red-700 hover:bg-red-50">
+              <Button variant="ghost" size="sm" onClick={handleDelete} disabled={isLoading2} className="text-error hover:text-error-dark hover:bg-error-light">
                 <Trash2 className="h-4 w-4" />
               </Button>
             )}
@@ -386,13 +386,13 @@ export function PaymentApplicationDetailPage() {
 
         {/* Rejection Warning */}
         {application.status === 'rejected' && application.rejection_reason && (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-error mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-red-800">Application Rejected</h4>
-                  <p className="text-red-700 mt-1">{application.rejection_reason}</p>
+                  <h4 className="font-medium text-red-800" className="heading-card">Application Rejected</h4>
+                  <p className="text-error-dark mt-1">{application.rejection_reason}</p>
                 </div>
               </div>
             </CardContent>
@@ -403,7 +403,7 @@ export function PaymentApplicationDetailPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Receipt className="h-5 w-5 text-green-600" />
+              <Receipt className="h-5 w-5 text-success" />
               AIA G702 - Application and Certificate for Payment
             </CardTitle>
             <CardDescription>Contract summary and payment calculation</CardDescription>
@@ -412,14 +412,14 @@ export function PaymentApplicationDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Contract Sums */}
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-700 border-b pb-2">Contract Summary</h4>
+                <h4 className="font-medium text-secondary border-b pb-2" className="heading-card">Contract Summary</h4>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Original Contract Sum:</span>
+                  <span className="text-secondary">Original Contract Sum:</span>
                   <span className="font-medium">{formatCurrency(application.original_contract_sum)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Net Change Orders:</span>
-                  <span className={cn('font-medium', application.net_change_orders >= 0 ? 'text-green-600' : 'text-red-600')}>
+                  <span className="text-secondary">Net Change Orders:</span>
+                  <span className={cn('font-medium', application.net_change_orders >= 0 ? 'text-success' : 'text-error')}>
                     {application.net_change_orders >= 0 ? '+' : ''}{formatCurrency(application.net_change_orders)}
                   </span>
                 </div>
@@ -431,17 +431,17 @@ export function PaymentApplicationDetailPage() {
 
               {/* Work Completed */}
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-700 border-b pb-2">Work Completed</h4>
+                <h4 className="font-medium text-secondary border-b pb-2" className="heading-card">Work Completed</h4>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Previous Applications:</span>
+                  <span className="text-secondary">Previous Applications:</span>
                   <span className="font-medium">{formatCurrency(application.total_completed_previous)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">This Period:</span>
-                  <span className="font-medium text-blue-600">{formatCurrency(application.total_completed_this_period)}</span>
+                  <span className="text-secondary">This Period:</span>
+                  <span className="font-medium text-primary">{formatCurrency(application.total_completed_this_period)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Materials Stored:</span>
+                  <span className="text-secondary">Materials Stored:</span>
                   <span className="font-medium">{formatCurrency(application.total_materials_stored)}</span>
                 </div>
                 <div className="flex justify-between border-t pt-2">
@@ -452,22 +452,22 @@ export function PaymentApplicationDetailPage() {
 
               {/* Payment Calculation */}
               <div className="space-y-3">
-                <h4 className="font-medium text-gray-700 border-b pb-2">Payment Calculation</h4>
+                <h4 className="font-medium text-secondary border-b pb-2" className="heading-card">Payment Calculation</h4>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Retainage ({formatPercent(application.retainage_percent)}):</span>
-                  <span className="font-medium text-red-600">-{formatCurrency(application.total_retainage)}</span>
+                  <span className="text-secondary">Retainage ({formatPercent(application.retainage_percent)}):</span>
+                  <span className="font-medium text-error">-{formatCurrency(application.total_retainage)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Earned Less Retainage:</span>
+                  <span className="text-secondary">Earned Less Retainage:</span>
                   <span className="font-medium">{formatCurrency(application.total_earned_less_retainage)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Less Previous Payments:</span>
-                  <span className="font-medium text-red-600">-{formatCurrency(application.less_previous_certificates)}</span>
+                  <span className="text-secondary">Less Previous Payments:</span>
+                  <span className="font-medium text-error">-{formatCurrency(application.less_previous_certificates)}</span>
                 </div>
-                <div className="flex justify-between border-t pt-2 bg-green-50 -mx-3 px-3 py-2 rounded">
+                <div className="flex justify-between border-t pt-2 bg-success-light -mx-3 px-3 py-2 rounded">
                   <span className="font-bold text-green-800">Current Payment Due:</span>
-                  <span className="font-bold text-green-700 text-lg">{formatCurrency(application.current_payment_due)}</span>
+                  <span className="font-bold text-success-dark text-lg">{formatCurrency(application.current_payment_due)}</span>
                 </div>
               </div>
             </div>
@@ -475,16 +475,16 @@ export function PaymentApplicationDetailPage() {
             {/* Progress Bar */}
             <div className="mt-6 pt-6 border-t">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-600">Project Completion</span>
+                <span className="text-sm font-medium text-secondary">Project Completion</span>
                 <span className="text-sm font-bold">{formatPercent(application.percent_complete)}</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-muted rounded-full h-3">
                 <div
-                  className="bg-green-600 h-3 rounded-full transition-all"
+                  className="bg-success h-3 rounded-full transition-all"
                   style={{ width: `${Math.min(application.percent_complete || 0, 100)}%` }}
                 />
               </div>
-              <div className="flex justify-between mt-2 text-sm text-gray-500">
+              <div className="flex justify-between mt-2 text-sm text-muted">
                 <span>Balance to Finish: {formatCurrency(application.balance_to_finish)}</span>
               </div>
             </div>
@@ -495,7 +495,7 @@ export function PaymentApplicationDetailPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-blue-600" />
+              <FileText className="h-5 w-5 text-primary" />
               AIA G703 - Schedule of Values
             </CardTitle>
             <CardDescription>Line-by-line breakdown of contract work</CardDescription>
@@ -503,10 +503,10 @@ export function PaymentApplicationDetailPage() {
           <CardContent>
             {sovLoading ? (
               <div className="flex items-center justify-center py-8">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-disabled" />
               </div>
             ) : !sovItems || sovItems.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted">
                 <FileText className="h-12 w-12 mx-auto text-gray-300 mb-4" />
                 <p>No schedule of values items yet.</p>
                 {canEdit && (
@@ -519,7 +519,7 @@ export function PaymentApplicationDetailPage() {
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="border-b bg-gray-50">
+                    <tr className="border-b bg-surface">
                       <th className="text-left p-2 font-medium">#</th>
                       <th className="text-left p-2 font-medium">Description</th>
                       <th className="text-right p-2 font-medium">Scheduled Value</th>
@@ -541,16 +541,16 @@ export function PaymentApplicationDetailPage() {
                       const balance = item.total_scheduled_value - total
 
                       return (
-                        <tr key={item.id} className="border-b hover:bg-gray-50">
+                        <tr key={item.id} className="border-b hover:bg-surface">
                           <td className="p-2">{item.item_number}</td>
                           <td className="p-2">
                             <div>{item.description}</div>
                             {item.cost_code && (
-                              <div className="text-xs text-gray-500">{item.cost_code}</div>
+                              <div className="text-xs text-muted">{item.cost_code}</div>
                             )}
                           </td>
                           <td className="p-2 text-right">{formatCurrency(item.total_scheduled_value)}</td>
-                          <td className="p-2 text-right text-gray-600">{formatCurrency(item.work_completed_previous)}</td>
+                          <td className="p-2 text-right text-secondary">{formatCurrency(item.work_completed_previous)}</td>
                           <td className="p-2 text-right">
                             {isEditing ? (
                               <Input
@@ -560,7 +560,7 @@ export function PaymentApplicationDetailPage() {
                                 className="w-24 text-right"
                               />
                             ) : (
-                              <span className="text-blue-600 font-medium">{formatCurrency(thisPeriod)}</span>
+                              <span className="text-primary font-medium">{formatCurrency(thisPeriod)}</span>
                             )}
                           </td>
                           <td className="p-2 text-right">
@@ -577,17 +577,17 @@ export function PaymentApplicationDetailPage() {
                           </td>
                           <td className="p-2 text-right font-medium">{formatCurrency(total)}</td>
                           <td className="p-2 text-right">{pct.toFixed(1)}%</td>
-                          <td className="p-2 text-right text-gray-600">{formatCurrency(balance)}</td>
+                          <td className="p-2 text-right text-secondary">{formatCurrency(balance)}</td>
                         </tr>
                       )
                     })}
                   </tbody>
                   <tfoot>
-                    <tr className="border-t-2 bg-gray-100 font-bold">
+                    <tr className="border-t-2 bg-muted font-bold">
                       <td className="p-2" colSpan={2}>TOTALS</td>
                       <td className="p-2 text-right">{formatCurrency(sovTotals?.scheduled_value || 0)}</td>
                       <td className="p-2 text-right">{formatCurrency(sovTotals?.work_completed_previous || 0)}</td>
-                      <td className="p-2 text-right text-blue-600">{formatCurrency(sovTotals?.work_completed_this_period || 0)}</td>
+                      <td className="p-2 text-right text-primary">{formatCurrency(sovTotals?.work_completed_this_period || 0)}</td>
                       <td className="p-2 text-right">{formatCurrency(sovTotals?.materials_stored || 0)}</td>
                       <td className="p-2 text-right">{formatCurrency(sovTotals?.total_completed_stored || 0)}</td>
                       <td className="p-2 text-right">
@@ -620,14 +620,14 @@ export function PaymentApplicationDetailPage() {
               {/* Contractor Signature */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-700">Contractor</h4>
+                  <h4 className="font-medium text-secondary" className="heading-card">Contractor</h4>
                   {application.contractor_signature_url ? (
-                    <Badge className="bg-green-100 text-green-700">
+                    <Badge className="bg-success-light text-success-dark">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Signed
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="text-gray-500">
+                    <Badge variant="outline" className="text-muted">
                       <Clock className="h-3 w-3 mr-1" />
                       Pending
                     </Badge>
@@ -635,7 +635,7 @@ export function PaymentApplicationDetailPage() {
                 </div>
                 {application.contractor_signature_url ? (
                   <div className="space-y-2">
-                    <div className="border rounded-lg p-3 bg-gray-50">
+                    <div className="border rounded-lg p-3 bg-surface">
                       <img
                         src={application.contractor_signature_url}
                         alt="Contractor signature"
@@ -643,15 +643,15 @@ export function PaymentApplicationDetailPage() {
                       />
                     </div>
                     {application.contractor_signature_date && (
-                      <p className="text-xs text-gray-500 text-center">
+                      <p className="text-xs text-muted text-center">
                         Signed: {format(new Date(application.contractor_signature_date), 'MMM d, yyyy')}
                       </p>
                     )}
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
-                    <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-500">No signature</p>
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-surface">
+                    <PenTool className="h-8 w-8 mx-auto text-disabled mb-2" />
+                    <p className="text-sm text-muted">No signature</p>
                   </div>
                 )}
                 <Button
@@ -669,14 +669,14 @@ export function PaymentApplicationDetailPage() {
               {/* Architect Signature */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-700">Architect</h4>
+                  <h4 className="font-medium text-secondary" className="heading-card">Architect</h4>
                   {application.architect_signature_url ? (
-                    <Badge className="bg-green-100 text-green-700">
+                    <Badge className="bg-success-light text-success-dark">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Signed
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="text-gray-500">
+                    <Badge variant="outline" className="text-muted">
                       <Clock className="h-3 w-3 mr-1" />
                       Pending
                     </Badge>
@@ -684,7 +684,7 @@ export function PaymentApplicationDetailPage() {
                 </div>
                 {application.architect_signature_url ? (
                   <div className="space-y-2">
-                    <div className="border rounded-lg p-3 bg-gray-50">
+                    <div className="border rounded-lg p-3 bg-surface">
                       <img
                         src={application.architect_signature_url}
                         alt="Architect signature"
@@ -692,15 +692,15 @@ export function PaymentApplicationDetailPage() {
                       />
                     </div>
                     {application.architect_signature_date && (
-                      <p className="text-xs text-gray-500 text-center">
+                      <p className="text-xs text-muted text-center">
                         Signed: {format(new Date(application.architect_signature_date), 'MMM d, yyyy')}
                       </p>
                     )}
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
-                    <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-500">No signature</p>
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-surface">
+                    <PenTool className="h-8 w-8 mx-auto text-disabled mb-2" />
+                    <p className="text-sm text-muted">No signature</p>
                   </div>
                 )}
                 <Button
@@ -718,14 +718,14 @@ export function PaymentApplicationDetailPage() {
               {/* Owner Signature */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-gray-700">Owner</h4>
+                  <h4 className="font-medium text-secondary" className="heading-card">Owner</h4>
                   {application.owner_signature_url ? (
-                    <Badge className="bg-green-100 text-green-700">
+                    <Badge className="bg-success-light text-success-dark">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Signed
                     </Badge>
                   ) : (
-                    <Badge variant="outline" className="text-gray-500">
+                    <Badge variant="outline" className="text-muted">
                       <Clock className="h-3 w-3 mr-1" />
                       Pending
                     </Badge>
@@ -733,7 +733,7 @@ export function PaymentApplicationDetailPage() {
                 </div>
                 {application.owner_signature_url ? (
                   <div className="space-y-2">
-                    <div className="border rounded-lg p-3 bg-gray-50">
+                    <div className="border rounded-lg p-3 bg-surface">
                       <img
                         src={application.owner_signature_url}
                         alt="Owner signature"
@@ -741,15 +741,15 @@ export function PaymentApplicationDetailPage() {
                       />
                     </div>
                     {application.owner_signature_date && (
-                      <p className="text-xs text-gray-500 text-center">
+                      <p className="text-xs text-muted text-center">
                         Signed: {format(new Date(application.owner_signature_date), 'MMM d, yyyy')}
                       </p>
                     )}
                   </div>
                 ) : (
-                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
-                    <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                    <p className="text-sm text-gray-500">No signature</p>
+                  <div className="border-2 border-dashed rounded-lg p-4 text-center bg-surface">
+                    <PenTool className="h-8 w-8 mx-auto text-disabled mb-2" />
+                    <p className="text-sm text-muted">No signature</p>
                   </div>
                 )}
                 <Button
@@ -783,7 +783,7 @@ export function PaymentApplicationDetailPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5 text-gray-600" />
+                <History className="h-5 w-5 text-secondary" />
                 History
               </CardTitle>
             </CardHeader>
@@ -796,13 +796,13 @@ export function PaymentApplicationDetailPage() {
                       <p className="text-sm">
                         <span className="font-medium capitalize">{entry.action.replace(/_/g, ' ')}</span>
                         {entry.field_changed && (
-                          <span className="text-gray-500"> - {entry.field_changed}</span>
+                          <span className="text-muted"> - {entry.field_changed}</span>
                         )}
                         {entry.old_value && entry.new_value && (
-                          <span className="text-gray-500">: {entry.old_value} → {entry.new_value}</span>
+                          <span className="text-muted">: {entry.old_value} → {entry.new_value}</span>
                         )}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-muted">
                         {format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
                       </p>
                     </div>
@@ -841,7 +841,7 @@ export function PaymentApplicationDetailPage() {
               <Button
                 onClick={handleReject}
                 disabled={!rejectionReason || rejectMutation.isPending}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
               >
                 {rejectMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
                 Reject Application
@@ -870,7 +870,7 @@ export function PaymentApplicationDetailPage() {
                 onChange={(e) => setPaymentAmount(e.target.value)}
                 placeholder={application?.current_payment_due?.toString() || '0'}
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Expected: {formatCurrency(application?.current_payment_due)}
               </p>
             </div>

@@ -78,8 +78,8 @@ export function ContactsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Contacts Directory</h1>
-            <p className="text-gray-600 mt-1">Manage contacts for your projects</p>
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Contacts Directory</h1>
+            <p className="text-secondary mt-1">Manage contacts for your projects</p>
           </div>
           <Button
             onClick={() => navigate(`/contacts/new?projectId=${selectedProjectId}`)}
@@ -95,7 +95,7 @@ export function ContactsPage() {
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
               <div className="flex-1 w-full sm:w-auto">
-                <Label htmlFor="project-select" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="project-select" className="text-sm font-medium text-secondary">
                   Select Project
                 </Label>
                 <Select
@@ -114,7 +114,7 @@ export function ContactsPage() {
                 </Select>
               </div>
               {!selectedProjectId && (
-                <p className="text-sm text-amber-600 flex items-center gap-1">
+                <p className="text-sm text-warning flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   Select a project to view contacts
                 </p>
@@ -129,12 +129,12 @@ export function ContactsPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-100">
-                    <Users className="h-5 w-5 text-blue-600" />
+                  <div className="p-2 rounded-lg bg-info-light">
+                    <Users className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                    <p className="text-sm text-gray-600">Total Contacts</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.total}</p>
+                    <p className="text-sm text-secondary">Total Contacts</p>
                   </div>
                 </div>
               </CardContent>
@@ -147,8 +147,8 @@ export function ContactsPage() {
                     <Building2 className="h-5 w-5 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.subcontractors}</p>
-                    <p className="text-sm text-gray-600">Subcontractors</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.subcontractors}</p>
+                    <p className="text-sm text-secondary">Subcontractors</p>
                   </div>
                 </div>
               </CardContent>
@@ -157,12 +157,12 @@ export function ContactsPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-yellow-100">
-                    <Phone className="h-5 w-5 text-yellow-600" />
+                  <div className="p-2 rounded-lg bg-warning-light">
+                    <Phone className="h-5 w-5 text-warning" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.primary}</p>
-                    <p className="text-sm text-gray-600">Primary</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.primary}</p>
+                    <p className="text-sm text-secondary">Primary</p>
                   </div>
                 </div>
               </CardContent>
@@ -171,12 +171,12 @@ export function ContactsPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-red-100">
-                    <AlertCircle className="h-5 w-5 text-red-600" />
+                  <div className="p-2 rounded-lg bg-error-light">
+                    <AlertCircle className="h-5 w-5 text-error" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.emergency}</p>
-                    <p className="text-sm text-gray-600">Emergency</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.emergency}</p>
+                    <p className="text-sm text-secondary">Emergency</p>
                   </div>
                 </div>
               </CardContent>
@@ -192,7 +192,7 @@ export function ContactsPage() {
                 {/* Search */}
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       placeholder="Search by name, company, phone, or email..."
                       value={searchTerm}
@@ -227,7 +227,7 @@ export function ContactsPage() {
                     id="primary-only"
                     checked={showPrimaryOnly}
                     onChange={(e) => setShowPrimaryOnly(e.target.checked)}
-                    className="rounded border-gray-300"
+                    className="rounded border-input"
                   />
                   <Label htmlFor="primary-only" className="text-sm font-normal cursor-pointer">
                     Primary only
@@ -243,31 +243,31 @@ export function ContactsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Project Selected</h3>
-              <p className="text-gray-600">Select a project above to view and manage contacts</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Project Selected</h3>
+              <p className="text-secondary">Select a project above to view and manage contacts</p>
             </CardContent>
           </Card>
         ) : contactsLoading ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-              <p className="text-gray-600">Loading contacts...</p>
+              <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+              <p className="text-secondary">Loading contacts...</p>
             </CardContent>
           </Card>
         ) : contactsError ? (
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Contacts</h3>
-              <p className="text-gray-600">{contactsError.message}</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Contacts</h3>
+              <p className="text-secondary">{contactsError.message}</p>
             </CardContent>
           </Card>
         ) : contacts && contacts.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
               <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Contacts Yet</h3>
-              <p className="text-gray-600 mb-4">Add your first contact to get started</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Contacts Yet</h3>
+              <p className="text-secondary mb-4">Add your first contact to get started</p>
               <Button onClick={() => navigate(`/contacts/new?projectId=${selectedProjectId}`)}>
                 <Plus className="h-4 w-4 mr-2" />
                 Add Contact

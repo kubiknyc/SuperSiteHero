@@ -123,12 +123,12 @@ export function InspectionForm({
     <form onSubmit={handleSubmit} className={cn('space-y-6', className)}>
       {/* Basic Information */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
+        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Basic Information</h3>
 
         {/* Inspection Name */}
         <div className="space-y-2">
           <Label htmlFor="inspection_name">
-            Inspection Name <span className="text-red-500">*</span>
+            Inspection Name <span className="text-error">*</span>
           </Label>
           <Input
             id="inspection_name"
@@ -138,14 +138,14 @@ export function InspectionForm({
             className={cn(errors.inspection_name && 'border-red-500')}
           />
           {errors.inspection_name && (
-            <p className="text-sm text-red-500">{errors.inspection_name}</p>
+            <p className="text-sm text-error">{errors.inspection_name}</p>
           )}
         </div>
 
         {/* Inspection Type */}
         <div className="space-y-2">
           <Label htmlFor="inspection_type">
-            Inspection Type <span className="text-red-500">*</span>
+            Inspection Type <span className="text-error">*</span>
           </Label>
           <Select
             value={formData.inspection_type || ''}
@@ -163,7 +163,7 @@ export function InspectionForm({
             </SelectContent>
           </Select>
           {errors.inspection_type && (
-            <p className="text-sm text-red-500">{errors.inspection_type}</p>
+            <p className="text-sm text-error">{errors.inspection_type}</p>
           )}
         </div>
 
@@ -182,7 +182,7 @@ export function InspectionForm({
 
       {/* Schedule */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Schedule</h3>
+        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Schedule</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Scheduled Date */}
@@ -196,7 +196,7 @@ export function InspectionForm({
               className={cn(errors.scheduled_date && 'border-red-500')}
             />
             {errors.scheduled_date && (
-              <p className="text-sm text-red-500">{errors.scheduled_date}</p>
+              <p className="text-sm text-error">{errors.scheduled_date}</p>
             )}
           </div>
 
@@ -237,7 +237,7 @@ export function InspectionForm({
 
       {/* Inspector Information */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-gray-900">Inspector Information</h3>
+        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Inspector Information</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Inspector Name */}
@@ -278,8 +278,8 @@ export function InspectionForm({
 
       {/* General Error */}
       {errors.general && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <p className="text-sm text-red-600">{errors.general}</p>
+        <div className="bg-error-light border border-red-200 rounded-md p-4">
+          <p className="text-sm text-error">{errors.general}</p>
         </div>
       )}
 

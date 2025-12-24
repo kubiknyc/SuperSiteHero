@@ -107,8 +107,8 @@ export function NotificationChannelToggle({
               'flex items-center justify-center w-10 h-10 rounded-md border transition-all',
               'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
               isEnabled && isAvailable
-                ? 'bg-blue-50 border-blue-500 text-blue-700'
-                : 'bg-gray-50 border-gray-300 text-gray-400',
+                ? 'bg-blue-50 border-blue-500 text-primary-hover'
+                : 'bg-surface border-input text-disabled',
               isAvailable && !disabled
                 ? 'hover:border-blue-400 cursor-pointer'
                 : 'opacity-50 cursor-not-allowed',
@@ -186,8 +186,8 @@ export function NotificationChannelToggleWithLabels({
               'flex items-center gap-2 px-3 py-2 rounded-md border transition-all',
               'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
               isEnabled
-                ? 'bg-blue-50 border-blue-500 text-blue-700'
-                : 'bg-gray-50 border-gray-300 text-gray-600',
+                ? 'bg-blue-50 border-blue-500 text-primary-hover'
+                : 'bg-surface border-input text-secondary',
               !disabled ? 'hover:border-blue-400 cursor-pointer' : 'opacity-40 cursor-not-allowed'
             )}
             aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${config.label} notifications`}

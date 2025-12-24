@@ -166,7 +166,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
           </Button>
 
           {initiateConnection.isError && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-error">
               Failed to connect. Please try again.
             </p>
           )}
@@ -197,14 +197,14 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
             className={
               status.needsReauth || status.isTokenExpired
                 ? ''
-                : 'bg-green-100 text-green-800 border-green-300'
+                : 'bg-success-light text-green-800 border-green-300'
             }
           >
             {status.needsReauth ? 'Re-auth Required' : status.isTokenExpired ? 'Token Expired' : 'Connected'}
           </Badge>
         </div>
         <CardDescription>
-          {status.isSandbox && <span className="text-yellow-600 font-medium">Sandbox Mode - </span>}
+          {status.isSandbox && <span className="text-warning font-medium">Sandbox Mode - </span>}
           Realm ID: {status.realmId}
         </CardDescription>
       </CardHeader>
@@ -212,8 +212,8 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
       <CardContent className="space-y-4">
         {/* Connection Error */}
         {status.connectionError && (
-          <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
-            <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2 p-3 bg-error-light border border-red-200 rounded-md">
+            <AlertTriangle className="h-5 w-5 text-error flex-shrink-0 mt-0.5" />
             <div className="text-sm text-red-800">
               <strong>Connection Error:</strong> {status.connectionError}
             </div>
@@ -222,7 +222,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
 
         {/* Token Status */}
         {(status.needsReauth || status.isTokenExpired) && (
-          <div className="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+          <div className="flex items-center justify-between p-3 bg-warning-light border border-yellow-200 rounded-md">
             <div className="flex items-center gap-2 text-yellow-800">
               <AlertTriangle className="h-5 w-5" />
               <span className="text-sm">
@@ -254,7 +254,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
           <span className="flex items-center gap-1">
             {status.lastSyncAt ? (
               <>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 {formatDistanceToNow(new Date(status.lastSyncAt), { addSuffix: true })}
               </>
             ) : (
@@ -304,7 +304,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
         {/* Disconnect Button */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
+            <Button variant="outline" className="w-full text-error hover:text-error-dark">
               <Unlink className="mr-2 h-4 w-4" />
               Disconnect
             </Button>
@@ -322,7 +322,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDisconnect}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
               >
                 {disconnect.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

@@ -56,7 +56,7 @@ export function SubcontractorTasksPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
           <CheckSquare className="h-6 w-6" />
           Tasks
         </h1>
@@ -113,7 +113,7 @@ export function SubcontractorTasksPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium truncate">{task.title}</h3>
+                      <h3 className="font-medium truncate" className="heading-subsection">{task.title}</h3>
                       {task.priority === 'high' && (
                         <Badge variant="destructive" className="text-xs">
                           High Priority

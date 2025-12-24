@@ -35,7 +35,7 @@ interface ObserverLeaderboardProps {
 }
 
 const RANK_ICONS = [Crown, Medal, Award]
-const RANK_COLORS = ['text-yellow-500', 'text-gray-400', 'text-amber-600']
+const RANK_COLORS = ['text-warning', 'text-disabled', 'text-warning']
 
 export function ObserverLeaderboard({
   projectId,
@@ -80,7 +80,7 @@ export function ObserverLeaderboard({
       <Card className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-yellow-500" />
+            <Trophy className="h-5 w-5 text-warning" />
             Safety Observer Leaderboard
           </CardTitle>
         </CardHeader>
@@ -106,7 +106,7 @@ export function ObserverLeaderboard({
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Trophy className="h-5 w-5 text-yellow-500" />
+          <Trophy className="h-5 w-5 text-warning" />
           Safety Observer Leaderboard
         </CardTitle>
       </CardHeader>
@@ -126,25 +126,25 @@ export function ObserverLeaderboard({
             <CardContent className="py-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-full">
-                    <Star className="h-4 w-4 text-blue-600" />
+                  <div className="p-2 bg-info-light rounded-full">
+                    <Star className="h-4 w-4 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-blue-800">Your Stats</p>
-                    <p className="text-xs text-blue-600">
+                    <p className="text-xs text-primary">
                       {myPoints.total_observations} observations
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-bold text-blue-700">
+                  <p className="text-xl font-bold text-primary-hover">
                     {timePeriod === 'monthly'
                       ? myPoints.monthly_points
                       : timePeriod === 'yearly'
                         ? myPoints.yearly_points
                         : myPoints.total_points}
                   </p>
-                  <p className="text-xs text-blue-600">points</p>
+                  <p className="text-xs text-primary">points</p>
                 </div>
               </div>
               {myPoints.current_streak > 0 && (
@@ -160,7 +160,7 @@ export function ObserverLeaderboard({
         {/* Leaderboard List */}
         <div className="space-y-2">
           {leaderboard?.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               <Trophy className="h-12 w-12 mx-auto mb-2 opacity-50" />
               <p>No observations yet. Be the first!</p>
             </div>
@@ -169,17 +169,17 @@ export function ObserverLeaderboard({
               const rank = getRankForPeriod(entry)
               const points = getPointsForPeriod(entry)
               const RankIcon = RANK_ICONS[index] || null
-              const rankColor = RANK_COLORS[index] || 'text-gray-500'
+              const rankColor = RANK_COLORS[index] || 'text-muted'
 
               return (
                 <div
                   key={entry.id}
                   className={cn(
                     'flex items-center gap-3 p-3 rounded-lg transition-colors',
-                    index === 0 && 'bg-yellow-50',
-                    index === 1 && 'bg-gray-50',
-                    index === 2 && 'bg-amber-50',
-                    index > 2 && 'hover:bg-gray-50'
+                    index === 0 && 'bg-warning-light',
+                    index === 1 && 'bg-surface',
+                    index === 2 && 'bg-warning-light',
+                    index > 2 && 'hover:bg-surface'
                   )}
                 >
                   {/* Rank */}
@@ -187,7 +187,7 @@ export function ObserverLeaderboard({
                     {RankIcon ? (
                       <RankIcon className={cn('h-6 w-6', rankColor)} />
                     ) : (
-                      <span className="text-lg font-bold text-gray-400">#{rank}</span>
+                      <span className="text-lg font-bold text-disabled">#{rank}</span>
                     )}
                   </div>
 
@@ -202,10 +202,10 @@ export function ObserverLeaderboard({
 
                   {/* User Info */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-foreground truncate">
                       {entry.observer_name || entry.observer_email}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-muted">
                       <span>{entry.total_observations} observations</span>
                       {entry.current_streak > 0 && (
                         <span className="flex items-center gap-0.5 text-orange-500">
@@ -218,8 +218,8 @@ export function ObserverLeaderboard({
 
                   {/* Points */}
                   <div className="text-right">
-                    <p className="text-lg font-bold text-gray-900">{points}</p>
-                    <p className="text-xs text-gray-500">pts</p>
+                    <p className="text-lg font-bold text-foreground">{points}</p>
+                    <p className="text-xs text-muted">pts</p>
                   </div>
                 </div>
               )
@@ -230,33 +230,33 @@ export function ObserverLeaderboard({
         {/* Observation Type Breakdown (for top 3) */}
         {leaderboard && leaderboard.length > 0 && (
           <div className="pt-4 border-t">
-            <p className="text-sm font-medium text-gray-700 mb-3">Top Observer Breakdown</p>
+            <p className="text-sm font-medium text-secondary mb-3">Top Observer Breakdown</p>
             <div className="grid grid-cols-4 gap-2 text-center">
-              <div className="p-2 bg-green-50 rounded-lg">
-                <ThumbsUp className="h-4 w-4 mx-auto text-green-600" />
-                <p className="text-xs text-gray-600 mt-1">Safe</p>
-                <p className="text-sm font-semibold text-green-700">
+              <div className="p-2 bg-success-light rounded-lg">
+                <ThumbsUp className="h-4 w-4 mx-auto text-success" />
+                <p className="text-xs text-secondary mt-1">Safe</p>
+                <p className="text-sm font-semibold text-success-dark">
                   {leaderboard[0]?.safe_behavior_count || 0}
                 </p>
               </div>
               <div className="p-2 bg-orange-50 rounded-lg">
                 <AlertTriangle className="h-4 w-4 mx-auto text-orange-600" />
-                <p className="text-xs text-gray-600 mt-1">Unsafe</p>
+                <p className="text-xs text-secondary mt-1">Unsafe</p>
                 <p className="text-sm font-semibold text-orange-700">
                   {leaderboard[0]?.unsafe_condition_count || 0}
                 </p>
               </div>
-              <div className="p-2 bg-yellow-50 rounded-lg">
-                <AlertCircle className="h-4 w-4 mx-auto text-yellow-600" />
-                <p className="text-xs text-gray-600 mt-1">Near Miss</p>
+              <div className="p-2 bg-warning-light rounded-lg">
+                <AlertCircle className="h-4 w-4 mx-auto text-warning" />
+                <p className="text-xs text-secondary mt-1">Near Miss</p>
                 <p className="text-sm font-semibold text-yellow-700">
                   {leaderboard[0]?.near_miss_count || 0}
                 </p>
               </div>
               <div className="p-2 bg-blue-50 rounded-lg">
-                <Award className="h-4 w-4 mx-auto text-blue-600" />
-                <p className="text-xs text-gray-600 mt-1">Best</p>
-                <p className="text-sm font-semibold text-blue-700">
+                <Award className="h-4 w-4 mx-auto text-primary" />
+                <p className="text-xs text-secondary mt-1">Best</p>
+                <p className="text-sm font-semibold text-primary-hover">
                   {leaderboard[0]?.best_practice_count || 0}
                 </p>
               </div>

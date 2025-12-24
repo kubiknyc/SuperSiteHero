@@ -86,8 +86,8 @@ export function BiometricReauthDialog({
       <AlertDialogContent className="sm:max-w-md">
         <AlertDialogHeader>
           <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-blue-100 rounded-full">
-              <ShieldCheck className="h-6 w-6 text-blue-600" />
+            <div className="p-2 bg-info-light rounded-full">
+              <ShieldCheck className="h-6 w-6 text-primary" />
             </div>
             <AlertDialogTitle>{title}</AlertDialogTitle>
           </div>

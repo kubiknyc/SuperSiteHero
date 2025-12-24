@@ -181,7 +181,7 @@ export function ScheduleDialog({
 
           {/* Schedule Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Schedule Name *
             </label>
             <Input
@@ -190,7 +190,7 @@ export function ScheduleDialog({
               placeholder="e.g., Weekly Safety Inspection"
             />
             {errors.name && (
-              <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+              <p className="text-sm text-error mt-1 flex items-center gap-1">
                 <AlertCircle className="w-3 h-3" />
                 {errors.name}
               </p>
@@ -199,13 +199,13 @@ export function ScheduleDialog({
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary mb-1">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              className="w-full min-h-[80px] rounded-md border border-gray-300 px-3 py-2 text-sm"
+              className="w-full min-h-[80px] rounded-md border border-input px-3 py-2 text-sm"
               placeholder="Optional description..."
             />
           </div>
@@ -213,7 +213,7 @@ export function ScheduleDialog({
           {/* Frequency */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-1">
                 <Repeat className="w-4 h-4" />
                 Frequency *
               </label>
@@ -222,7 +222,7 @@ export function ScheduleDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, frequency: e.target.value as RecurrenceFrequency })
                 }
-                className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                className="w-full h-10 rounded-md border border-input bg-card px-3 py-2 text-sm"
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -238,7 +238,7 @@ export function ScheduleDialog({
               formData.frequency === 'monthly' ||
               formData.frequency === 'yearly') && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-secondary mb-1">
                   Interval
                 </label>
                 <Input
@@ -249,7 +249,7 @@ export function ScheduleDialog({
                     setFormData({ ...formData, interval: parseInt(e.target.value) || 1 })
                   }
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted mt-1">
                   {getFrequencyLabel(formData.frequency, formData.interval)}
                 </p>
               </div>
@@ -259,7 +259,7 @@ export function ScheduleDialog({
           {/* Days of Week (for weekly schedules) */}
           {formData.frequency === 'weekly' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-secondary mb-2">
                 Days of Week *
               </label>
               <div className="flex flex-wrap gap-2">
@@ -267,7 +267,7 @@ export function ScheduleDialog({
                   <Badge
                     key={day}
                     variant={formData.days_of_week?.includes(day) ? 'default' : 'outline'}
-                    className="cursor-pointer hover:bg-blue-100"
+                    className="cursor-pointer hover:bg-info-light"
                     onClick={() => toggleDayOfWeek(day)}
                   >
                     {getDayOfWeekLabel(day)}
@@ -275,7 +275,7 @@ export function ScheduleDialog({
                 ))}
               </div>
               {errors.days_of_week && (
-                <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                <p className="text-sm text-error mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" />
                   {errors.days_of_week}
                 </p>
@@ -286,7 +286,7 @@ export function ScheduleDialog({
           {/* Day of Month (for monthly schedules) */}
           {formData.frequency === 'monthly' && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-secondary mb-1">
                 Day of Month *
               </label>
               <Input
@@ -300,7 +300,7 @@ export function ScheduleDialog({
                 placeholder="1-31"
               />
               {errors.day_of_month && (
-                <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                <p className="text-sm text-error mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" />
                   {errors.day_of_month}
                 </p>
@@ -311,7 +311,7 @@ export function ScheduleDialog({
           {/* Date Range */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+              <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-1">
                 <Calendar className="w-4 h-4" />
                 Start Date *
               </label>
@@ -321,7 +321,7 @@ export function ScheduleDialog({
                 onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
               />
               {errors.start_date && (
-                <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                <p className="text-sm text-error mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" />
                   {errors.start_date}
                 </p>
@@ -329,7 +329,7 @@ export function ScheduleDialog({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-secondary mb-1">
                 End Date (Optional)
               </label>
               <Input
@@ -340,18 +340,18 @@ export function ScheduleDialog({
                 }
               />
               {errors.end_date && (
-                <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+                <p className="text-sm text-error mt-1 flex items-center gap-1">
                   <AlertCircle className="w-3 h-3" />
                   {errors.end_date}
                 </p>
               )}
-              <p className="text-xs text-gray-500 mt-1">Leave empty for indefinite</p>
+              <p className="text-xs text-muted mt-1">Leave empty for indefinite</p>
             </div>
           </div>
 
           {/* Time of Day */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+            <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-1">
               <Clock className="w-4 h-4" />
               Time of Day
             </label>
@@ -362,15 +362,15 @@ export function ScheduleDialog({
                 setFormData({ ...formData, time_of_day: e.target.value || null })
               }
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted mt-1">
               When to create the checklist each occurrence
             </p>
           </div>
 
           {/* Reminders */}
-          <div className="border border-gray-200 rounded-lg p-4 space-y-3">
+          <div className="border border-border rounded-lg p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+              <label className="flex items-center gap-2 text-sm font-medium text-secondary">
                 <Bell className="w-4 h-4" />
                 Enable Reminders
               </label>
@@ -380,13 +380,13 @@ export function ScheduleDialog({
                 onChange={(e) =>
                   setFormData({ ...formData, reminder_enabled: e.target.checked })
                 }
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded"
+                className="w-4 h-4 text-primary border-input rounded"
               />
             </div>
 
             {formData.reminder_enabled && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-secondary mb-1">
                   Remind Hours Before Due
                 </label>
                 <Input
@@ -401,7 +401,7 @@ export function ScheduleDialog({
                     })
                   }
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted mt-1">
                   Send reminder notification before the checklist is due
                 </p>
               </div>
@@ -409,7 +409,7 @@ export function ScheduleDialog({
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 justify-end pt-4 border-t border-gray-200">
+          <div className="flex gap-2 justify-end pt-4 border-t border-border">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>

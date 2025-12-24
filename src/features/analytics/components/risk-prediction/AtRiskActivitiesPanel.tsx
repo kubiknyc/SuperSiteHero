@@ -49,9 +49,9 @@ interface AtRiskActivitiesPanelProps {
 
 const SEVERITY_STYLES = {
   critical: {
-    bg: 'bg-red-50 border-red-200',
-    badge: 'bg-red-100 text-red-800',
-    icon: 'text-red-500',
+    bg: 'bg-error-light border-red-200',
+    badge: 'bg-error-light text-red-800',
+    icon: 'text-error',
   },
   high: {
     bg: 'bg-orange-50 border-orange-200',
@@ -59,14 +59,14 @@ const SEVERITY_STYLES = {
     icon: 'text-orange-500',
   },
   medium: {
-    bg: 'bg-amber-50 border-amber-200',
+    bg: 'bg-warning-light border-amber-200',
     badge: 'bg-amber-100 text-amber-800',
-    icon: 'text-amber-500',
+    icon: 'text-warning',
   },
   low: {
     bg: 'bg-blue-50 border-blue-200',
-    badge: 'bg-blue-100 text-blue-800',
-    icon: 'text-blue-500',
+    badge: 'bg-info-light text-blue-800',
+    icon: 'text-primary',
   },
 }
 
@@ -158,7 +158,7 @@ export function AtRiskActivitiesPanel({
               className={cn(
                 'h-3',
                 overallRiskScore > 70 && '[&>div]:bg-red-500',
-                overallRiskScore > 50 && overallRiskScore <= 70 && '[&>div]:bg-amber-500',
+                overallRiskScore > 50 && overallRiskScore <= 70 && '[&>div]:bg-warning',
                 overallRiskScore <= 50 && '[&>div]:bg-green-500'
               )}
             />
@@ -166,9 +166,9 @@ export function AtRiskActivitiesPanel({
           <div className="text-right">
             <p className={cn(
               'text-2xl font-bold',
-              overallRiskScore > 70 && 'text-red-600',
-              overallRiskScore > 50 && overallRiskScore <= 70 && 'text-amber-600',
-              overallRiskScore <= 50 && 'text-green-600'
+              overallRiskScore > 70 && 'text-error',
+              overallRiskScore > 50 && overallRiskScore <= 70 && 'text-warning',
+              overallRiskScore <= 50 && 'text-success'
             )}>
               {overallRiskScore}%
             </p>
@@ -179,7 +179,7 @@ export function AtRiskActivitiesPanel({
         {(criticalAlerts.length > 0 || highAlerts.length > 0) && (
           <div className="flex gap-2">
             {criticalAlerts.length > 0 && (
-              <Badge className="bg-red-100 text-red-800">
+              <Badge className="bg-error-light text-red-800">
                 {criticalAlerts.length} Critical
               </Badge>
             )}
@@ -195,7 +195,7 @@ export function AtRiskActivitiesPanel({
 
         {/* At Risk Activities */}
         <div>
-          <h4 className="text-sm font-medium mb-2">
+          <h4 className="text-sm font-medium mb-2" className="heading-card">
             At-Risk Activities ({atRiskActivities.length})
           </h4>
 
@@ -230,7 +230,7 @@ export function AtRiskActivitiesPanel({
           <>
             <Separator />
             <div>
-              <h4 className="text-sm font-medium mb-2">
+              <h4 className="text-sm font-medium mb-2" className="heading-card">
                 Active Alerts ({alerts.length})
               </h4>
               <ScrollArea className="h-[200px]">
@@ -315,7 +315,7 @@ function ActivityRiskCard({
             </div>
 
             {/* Delay Projection */}
-            <div className="p-2 bg-white/50 rounded">
+            <div className="p-2 bg-card/50 rounded">
               <p className="text-xs font-medium mb-1">Projected Delay</p>
               <div className="flex items-center gap-4 text-sm">
                 <span>
@@ -352,7 +352,7 @@ function RiskFactorRow({ factor }: { factor: RiskFactor }) {
         </div>
         <p className="text-xs text-muted-foreground">{factor.description}</p>
         {factor.mitigationSuggestion && (
-          <p className="text-xs text-blue-600 mt-1">
+          <p className="text-xs text-primary mt-1">
             → {factor.mitigationSuggestion}
           </p>
         )}
@@ -382,7 +382,7 @@ function AlertCard({
           {alert.recommended_actions.length > 0 && (
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger className="text-xs text-blue-600 mt-1 cursor-help">
+                <TooltipTrigger className="text-xs text-primary mt-1 cursor-help">
                   {alert.recommended_actions.length} recommended action(s)
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">

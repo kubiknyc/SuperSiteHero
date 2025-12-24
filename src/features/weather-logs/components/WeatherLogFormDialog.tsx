@@ -259,7 +259,7 @@ export function WeatherLogFormDialog({
               max={format(new Date(), 'yyyy-MM-dd')}
               required
             />
-            {errors.logDate && <p className="text-sm text-red-600 mt-1">{errors.logDate}</p>}
+            {errors.logDate && <p className="text-sm text-error mt-1">{errors.logDate}</p>}
           </div>
 
           {/* Weather Conditions */}
@@ -277,7 +277,7 @@ export function WeatherLogFormDialog({
                 </option>
               ))}
             </Select>
-            {errors.conditions && <p className="text-sm text-red-600 mt-1">{errors.conditions}</p>}
+            {errors.conditions && <p className="text-sm text-error mt-1">{errors.conditions}</p>}
           </div>
 
           {/* Temperature */}
@@ -293,7 +293,7 @@ export function WeatherLogFormDialog({
                 min="-50"
                 max="150"
               />
-              {errors.tempHigh && <p className="text-sm text-red-600 mt-1">{errors.tempHigh}</p>}
+              {errors.tempHigh && <p className="text-sm text-error mt-1">{errors.tempHigh}</p>}
             </div>
             <div>
               <Label htmlFor="tempLow">Low Temperature (°F)</Label>
@@ -306,7 +306,7 @@ export function WeatherLogFormDialog({
                 min="-50"
                 max="150"
               />
-              {errors.tempLow && <p className="text-sm text-red-600 mt-1">{errors.tempLow}</p>}
+              {errors.tempLow && <p className="text-sm text-error mt-1">{errors.tempLow}</p>}
             </div>
           </div>
 
@@ -323,7 +323,7 @@ export function WeatherLogFormDialog({
                 placeholder="0.00"
                 min="0"
               />
-              {errors.precipAmount && <p className="text-sm text-red-600 mt-1">{errors.precipAmount}</p>}
+              {errors.precipAmount && <p className="text-sm text-error mt-1">{errors.precipAmount}</p>}
             </div>
             <div>
               <Label htmlFor="precipType">Precipitation Type</Label>
@@ -354,7 +354,7 @@ export function WeatherLogFormDialog({
                 min="0"
                 max="200"
               />
-              {errors.windSpeed && <p className="text-sm text-red-600 mt-1">{errors.windSpeed}</p>}
+              {errors.windSpeed && <p className="text-sm text-error mt-1">{errors.windSpeed}</p>}
             </div>
             <div>
               <Label htmlFor="windDir">Wind Direction</Label>
@@ -385,7 +385,7 @@ export function WeatherLogFormDialog({
               min="0"
               max="100"
             />
-            {errors.humidity && <p className="text-sm text-red-600 mt-1">{errors.humidity}</p>}
+            {errors.humidity && <p className="text-sm text-error mt-1">{errors.humidity}</p>}
           </div>
 
           {/* Work Impact */}
@@ -442,7 +442,7 @@ export function WeatherLogFormDialog({
                 placeholder="0.0"
                 min="0"
               />
-              {errors.hoursLost && <p className="text-sm text-red-600 mt-1">{errors.hoursLost}</p>}
+              {errors.hoursLost && <p className="text-sm text-error mt-1">{errors.hoursLost}</p>}
             </div>
           )}
 

@@ -140,20 +140,20 @@ export function DedicatedRFIsPage() {
 
   // Helper functions
   const getDueDateInfo = (dueDate: string | null, status: string) => {
-    if (!dueDate) {return { text: 'No due date', class: 'text-gray-500', isOverdue: false }}
-    if (['closed', 'void'].includes(status)) {return { text: format(new Date(dueDate), 'MMM d, yyyy'), class: 'text-gray-500', isOverdue: false }}
+    if (!dueDate) {return { text: 'No due date', class: 'text-muted', isOverdue: false }}
+    if (['closed', 'void'].includes(status)) {return { text: format(new Date(dueDate), 'MMM d, yyyy'), class: 'text-muted', isOverdue: false }}
 
     const date = new Date(dueDate)
     const daysUntil = differenceInDays(date, new Date())
 
     if (daysUntil < 0) {
-      return { text: `${Math.abs(daysUntil)} days overdue`, class: 'text-red-600 font-medium', isOverdue: true }
+      return { text: `${Math.abs(daysUntil)} days overdue`, class: 'text-error font-medium', isOverdue: true }
     } else if (daysUntil === 0) {
       return { text: 'Due today', class: 'text-orange-600 font-medium', isOverdue: false }
     } else if (daysUntil <= 3) {
-      return { text: `Due in ${daysUntil} days`, class: 'text-amber-600', isOverdue: false }
+      return { text: `Due in ${daysUntil} days`, class: 'text-warning', isOverdue: false }
     }
-    return { text: format(date, 'MMM d, yyyy'), class: 'text-gray-600', isOverdue: false }
+    return { text: format(date, 'MMM d, yyyy'), class: 'text-secondary', isOverdue: false }
   }
 
   const renderRFICard = (rfi: RFIWithDetails) => {
@@ -163,8 +163,8 @@ export function DedicatedRFIsPage() {
       <div
         key={rfi.id}
         className={cn(
-          'py-4 px-3 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors border-b last:border-b-0',
-          dueDateInfo.isOverdue && 'bg-red-50/50 hover:bg-red-50'
+          'py-4 px-3 hover:bg-surface cursor-pointer rounded-lg transition-colors border-b last:border-b-0',
+          dueDateInfo.isOverdue && 'bg-error-light/50 hover:bg-error-light'
         )}
         onClick={() => navigate(`/rfis-v2/${rfi.id}`)}
       >
@@ -172,7 +172,7 @@ export function DedicatedRFIsPage() {
           <div className="flex-1 min-w-0">
             {/* Header row */}
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <span className="font-semibold text-blue-600">{formatRFINumber(rfi.rfi_number)}</span>
+              <span className="font-semibold text-primary">{formatRFINumber(rfi.rfi_number)}</span>
               <Badge className={cn('capitalize text-xs', getRFIStatusColor(rfi.status as RFIStatus))}>
                 {RFI_STATUSES.find(s => s.value === rfi.status)?.label || rfi.status}
               </Badge>
@@ -188,11 +188,11 @@ export function DedicatedRFIsPage() {
             </div>
 
             {/* Subject */}
-            <h3 className="font-medium text-gray-900 truncate">{rfi.subject}</h3>
+            <h3 className="font-medium text-foreground truncate" className="heading-subsection">{rfi.subject}</h3>
 
             {/* Question preview */}
             {rfi.question && (
-              <p className="text-sm text-gray-600 truncate mt-1">{rfi.question}</p>
+              <p className="text-sm text-secondary truncate mt-1">{rfi.question}</p>
             )}
 
             {/* Reference info */}
@@ -221,7 +221,7 @@ export function DedicatedRFIsPage() {
 
               {/* Days open */}
               {rfi.date_submitted && (
-                <span className="text-gray-500">
+                <span className="text-muted">
                   Open {differenceInDays(new Date(), new Date(rfi.date_submitted))} days
                 </span>
               )}
@@ -231,7 +231,7 @@ export function DedicatedRFIsPage() {
             {(rfi.cost_impact || rfi.schedule_impact_days) && (
               <div className="flex items-center gap-2 mt-2">
                 {rfi.cost_impact && (
-                  <Badge variant="outline" className="text-xs text-green-700 border-green-300">
+                  <Badge variant="outline" className="text-xs text-success-dark border-green-300">
                     Cost: ${Number(rfi.cost_impact).toLocaleString()}
                   </Badge>
                 )}
@@ -243,7 +243,7 @@ export function DedicatedRFIsPage() {
               </div>
             )}
           </div>
-          <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0" />
+          <ChevronRight className="h-5 w-5 text-disabled flex-shrink-0" />
         </div>
       </div>
     )
@@ -255,8 +255,8 @@ export function DedicatedRFIsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Requests for Information</h1>
-            <p className="text-gray-600 mt-1">Track RFIs with ball-in-court workflow and drawing references</p>
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Requests for Information</h1>
+            <p className="text-secondary mt-1">Track RFIs with ball-in-court workflow and drawing references</p>
           </div>
           <div className="flex gap-2">
             {/* View Mode Toggle */}
@@ -302,7 +302,7 @@ export function DedicatedRFIsPage() {
           <CardContent className="p-4">
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
               <div className="flex-1 w-full sm:w-auto">
-                <Label htmlFor="project-select" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="project-select" className="text-sm font-medium text-secondary">
                   Select Project
                 </Label>
                 <Select
@@ -321,7 +321,7 @@ export function DedicatedRFIsPage() {
                 </Select>
               </div>
               {!selectedProjectId && (
-                <p className="text-sm text-amber-600 flex items-center gap-1">
+                <p className="text-sm text-warning flex items-center gap-1">
                   <AlertCircle className="h-4 w-4" />
                   Select a project to view RFIs
                 </p>
@@ -336,12 +336,12 @@ export function DedicatedRFIsPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStatusFilter('all')}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-100">
-                    <FileQuestion className="h-5 w-5 text-blue-600" />
+                  <div className="p-2 rounded-lg bg-info-light">
+                    <FileQuestion className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-                    <p className="text-sm text-gray-600">Total</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.total}</p>
+                    <p className="text-sm text-secondary">Total</p>
                   </div>
                 </div>
               </CardContent>
@@ -351,11 +351,11 @@ export function DedicatedRFIsPage() {
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="p-2 rounded-lg bg-amber-100">
-                    <Clock className="h-5 w-5 text-amber-600" />
+                    <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.open}</p>
-                    <p className="text-sm text-gray-600">Open</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.open}</p>
+                    <p className="text-sm text-secondary">Open</p>
                   </div>
                 </div>
               </CardContent>
@@ -364,12 +364,12 @@ export function DedicatedRFIsPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStatusFilter('overdue')}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-red-100">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                  <div className="p-2 rounded-lg bg-error-light">
+                    <AlertTriangle className="h-5 w-5 text-error" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.overdue}</p>
-                    <p className="text-sm text-gray-600">Overdue</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.overdue}</p>
+                    <p className="text-sm text-secondary">Overdue</p>
                   </div>
                 </div>
               </CardContent>
@@ -378,12 +378,12 @@ export function DedicatedRFIsPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStatusFilter('responded')}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-green-100">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
+                  <div className="p-2 rounded-lg bg-success-light">
+                    <CheckCircle className="h-5 w-5 text-success" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.responded}</p>
-                    <p className="text-sm text-gray-600">Responded</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.responded}</p>
+                    <p className="text-sm text-secondary">Responded</p>
                   </div>
                 </div>
               </CardContent>
@@ -396,8 +396,8 @@ export function DedicatedRFIsPage() {
                     <CheckCircle className="h-5 w-5 text-slate-600" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stats.closed}</p>
-                    <p className="text-sm text-gray-600">Closed</p>
+                    <p className="text-2xl font-bold text-foreground">{stats.closed}</p>
+                    <p className="text-sm text-secondary">Closed</p>
                   </div>
                 </div>
               </CardContent>
@@ -413,7 +413,7 @@ export function DedicatedRFIsPage() {
                 {/* Search */}
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       placeholder="Search by subject, question, RFI #, drawing ref, or spec..."
                       value={searchTerm}
@@ -478,23 +478,23 @@ export function DedicatedRFIsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <FileQuestion className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No Project Selected</h3>
-              <p className="text-gray-600">Select a project above to view and manage RFIs</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Project Selected</h3>
+              <p className="text-secondary">Select a project above to view and manage RFIs</p>
             </CardContent>
           </Card>
         ) : rfisLoading ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-              <p className="text-gray-600">Loading RFIs...</p>
+              <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+              <p className="text-secondary">Loading RFIs...</p>
             </CardContent>
           </Card>
         ) : rfisError ? (
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading RFIs</h3>
-              <p className="text-gray-600">{rfisError.message}</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading RFIs</h3>
+              <p className="text-secondary">{rfisError.message}</p>
             </CardContent>
           </Card>
         ) : viewMode === 'ball-in-court' ? (
@@ -509,7 +509,7 @@ export function DedicatedRFIsPage() {
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-lg flex items-center gap-2">
-                        <Building2 className="h-5 w-5 text-gray-500" />
+                        <Building2 className="h-5 w-5 text-muted" />
                         {role.label}
                       </CardTitle>
                       <Badge variant="secondary">{roleRFIs.length}</Badge>
@@ -518,24 +518,24 @@ export function DedicatedRFIsPage() {
                   </CardHeader>
                   <CardContent className="pt-0 max-h-96 overflow-y-auto">
                     {roleRFIs.length === 0 ? (
-                      <p className="text-sm text-gray-500 py-4 text-center">No RFIs</p>
+                      <p className="text-sm text-muted py-4 text-center">No RFIs</p>
                     ) : (
                       <div className="divide-y">
                         {roleRFIs.map((rfi) => (
                           <div
                             key={rfi.id}
-                            className="py-3 cursor-pointer hover:bg-gray-50 rounded px-2 -mx-2"
+                            className="py-3 cursor-pointer hover:bg-surface rounded px-2 -mx-2"
                             onClick={() => navigate(`/rfis-v2/${rfi.id}`)}
                           >
                             <div className="flex items-center gap-2 mb-1">
-                              <span className="text-sm font-medium text-blue-600">
+                              <span className="text-sm font-medium text-primary">
                                 {formatRFINumber(rfi.rfi_number)}
                               </span>
                               <Badge className={cn('text-xs', getRFIPriorityColor((rfi.priority || 'normal') as RFIPriority))}>
                                 {rfi.priority || 'normal'}
                               </Badge>
                             </div>
-                            <p className="text-sm text-gray-900 truncate">{rfi.subject}</p>
+                            <p className="text-sm text-foreground truncate">{rfi.subject}</p>
                             {rfi.date_required && (
                               <p className={cn('text-xs mt-1', getDueDateInfo(rfi.date_required, rfi.status).class)}>
                                 {getDueDateInfo(rfi.date_required, rfi.status).text}
@@ -556,7 +556,7 @@ export function DedicatedRFIsPage() {
                 <CardHeader className="pb-2">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg flex items-center gap-2">
-                      <AlertCircle className="h-5 w-5 text-gray-400" />
+                      <AlertCircle className="h-5 w-5 text-disabled" />
                       Unassigned
                     </CardTitle>
                     <Badge variant="secondary">{rfisByBallInCourt.unassigned.length}</Badge>
@@ -568,18 +568,18 @@ export function DedicatedRFIsPage() {
                     {rfisByBallInCourt.unassigned.map((rfi) => (
                       <div
                         key={rfi.id}
-                        className="py-3 cursor-pointer hover:bg-gray-50 rounded px-2 -mx-2"
+                        className="py-3 cursor-pointer hover:bg-surface rounded px-2 -mx-2"
                         onClick={() => navigate(`/rfis-v2/${rfi.id}`)}
                       >
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="text-sm font-medium text-blue-600">
+                          <span className="text-sm font-medium text-primary">
                             {formatRFINumber(rfi.rfi_number)}
                           </span>
                           <Badge className={cn('text-xs', getRFIPriorityColor((rfi.priority || 'normal') as RFIPriority))}>
                             {rfi.priority || 'normal'}
                           </Badge>
                         </div>
-                        <p className="text-sm text-gray-900 truncate">{rfi.subject}</p>
+                        <p className="text-sm text-foreground truncate">{rfi.subject}</p>
                       </div>
                     ))}
                   </div>
@@ -591,10 +591,10 @@ export function DedicatedRFIsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <FileQuestion className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 {rfis?.length === 0 ? 'No RFIs Yet' : 'No Matching RFIs'}
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-secondary mb-4">
                 {rfis?.length === 0
                   ? 'Create your first RFI to get started'
                   : 'Try adjusting your filters or search term'}

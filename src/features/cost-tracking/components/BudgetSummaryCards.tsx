@@ -36,7 +36,7 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
           <Card key={i}>
             <CardContent className="p-4">
               <div className="flex items-center justify-center h-20">
-                <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                <Loader2 className="h-6 w-6 animate-spin text-disabled" />
               </div>
             </CardContent>
           </Card>
@@ -70,12 +70,12 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Original Budget</p>
+              <p className="text-sm font-medium text-muted">Original Budget</p>
               <p className="text-2xl font-bold mt-1">{formatCurrency(data.total_original_budget)}</p>
-              <p className="text-xs text-gray-400 mt-1">{data.budget_count} line items</p>
+              <p className="text-xs text-disabled mt-1">{data.budget_count} line items</p>
             </div>
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <DollarSign className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-info-light rounded-lg">
+              <DollarSign className="h-5 w-5 text-primary" />
             </div>
           </div>
         </CardContent>
@@ -86,11 +86,11 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Approved Changes</p>
-              <p className={`text-2xl font-bold mt-1 ${data.total_approved_changes >= 0 ? 'text-blue-600' : 'text-orange-600'}`}>
+              <p className="text-sm font-medium text-muted">Approved Changes</p>
+              <p className={`text-2xl font-bold mt-1 ${data.total_approved_changes >= 0 ? 'text-primary' : 'text-orange-600'}`}>
                 {data.total_approved_changes >= 0 ? '+' : ''}{formatCurrency(data.total_approved_changes)}
               </p>
-              <p className="text-xs text-gray-400 mt-1">Change orders</p>
+              <p className="text-xs text-disabled mt-1">Change orders</p>
             </div>
             <div className="p-2 bg-purple-100 rounded-lg">
               <TrendingUp className="h-5 w-5 text-purple-600" />
@@ -104,9 +104,9 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Revised Budget</p>
+              <p className="text-sm font-medium text-muted">Revised Budget</p>
               <p className="text-2xl font-bold mt-1">{formatCurrency(data.total_revised_budget)}</p>
-              <p className="text-xs text-gray-400 mt-1">Current contract value</p>
+              <p className="text-xs text-disabled mt-1">Current contract value</p>
             </div>
             <div className="p-2 bg-indigo-100 rounded-lg">
               <DollarSign className="h-5 w-5 text-indigo-600" />
@@ -120,9 +120,9 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Actual Costs</p>
+              <p className="text-sm font-medium text-muted">Actual Costs</p>
               <p className="text-2xl font-bold mt-1">{formatCurrency(data.total_actual_cost)}</p>
-              <p className="text-xs text-gray-400 mt-1">{spentPercent}% of budget</p>
+              <p className="text-xs text-disabled mt-1">{spentPercent}% of budget</p>
             </div>
             <div className="p-2 bg-orange-100 rounded-lg">
               <DollarSign className="h-5 w-5 text-orange-600" />
@@ -130,7 +130,7 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
           </div>
           {/* Progress bar */}
           <div className="mt-3">
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
                 className={`h-full transition-all ${
                   parseFloat(spentPercent) > 100 ? 'bg-red-500' :
@@ -145,23 +145,23 @@ export function BudgetSummaryCards({ totals, isLoading }: BudgetSummaryCardsProp
       </Card>
 
       {/* Variance */}
-      <Card className={isOverBudget ? 'border-red-200 bg-red-50' : 'border-green-200 bg-green-50'}>
+      <Card className={isOverBudget ? 'border-red-200 bg-error-light' : 'border-green-200 bg-success-light'}>
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-500">Variance</p>
-              <p className={`text-2xl font-bold mt-1 ${isOverBudget ? 'text-red-600' : 'text-green-600'}`}>
+              <p className="text-sm font-medium text-muted">Variance</p>
+              <p className={`text-2xl font-bold mt-1 ${isOverBudget ? 'text-error' : 'text-success'}`}>
                 {isOverBudget ? '-' : '+'}{formatCurrency(Math.abs(data.total_variance))}
               </p>
-              <p className={`text-xs mt-1 ${isOverBudget ? 'text-red-500' : 'text-green-500'}`}>
+              <p className={`text-xs mt-1 ${isOverBudget ? 'text-error' : 'text-success'}`}>
                 {isOverBudget ? 'Over budget' : 'Under budget'} ({Math.abs(parseFloat(variancePercent))}%)
               </p>
             </div>
-            <div className={`p-2 rounded-lg ${isOverBudget ? 'bg-red-100' : 'bg-green-100'}`}>
+            <div className={`p-2 rounded-lg ${isOverBudget ? 'bg-error-light' : 'bg-success-light'}`}>
               {isOverBudget ? (
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+                <AlertTriangle className="h-5 w-5 text-error" />
               ) : (
-                <CheckCircle className="h-5 w-5 text-green-600" />
+                <CheckCircle className="h-5 w-5 text-success" />
               )}
             </div>
           </div>

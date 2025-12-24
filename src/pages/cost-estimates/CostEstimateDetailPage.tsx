@@ -179,7 +179,7 @@ export function CostEstimateDetailPage() {
             Back to Estimates
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">{estimate.name}</h1>
+            <h1 className="text-3xl font-bold" className="heading-page">{estimate.name}</h1>
             {estimate.description && (
               <p className="text-muted-foreground">{estimate.description}</p>
             )}

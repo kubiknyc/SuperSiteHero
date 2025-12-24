@@ -165,13 +165,13 @@ export function ScheduleOptimizationPanel({
         {(constraintCount > 0 || conflictCount > 0 || bottlenecks.length > 0) && (
           <div className="flex gap-2 flex-wrap">
             {constraintCount > 0 && (
-              <Badge variant="outline" className="text-amber-600 border-amber-200">
+              <Badge variant="outline" className="text-warning border-amber-200">
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 {constraintCount} Constraints
               </Badge>
             )}
             {conflictCount > 0 && (
-              <Badge variant="outline" className="text-red-600 border-red-200">
+              <Badge variant="outline" className="text-error border-red-200">
                 <Users className="w-3 h-3 mr-1" />
                 {conflictCount} Conflicts
               </Badge>
@@ -189,7 +189,7 @@ export function ScheduleOptimizationPanel({
 
         {/* Recommendations */}
         <div>
-          <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+          <h4 className="text-sm font-medium mb-2 flex items-center gap-2" className="heading-card">
             <Brain className="w-4 h-4 text-primary" />
             Recommendations ({recommendations.length})
           </h4>
@@ -233,7 +233,7 @@ export function ScheduleOptimizationPanel({
             {criticalPath?.activities?.slice(0, 10).map((activity) => (
               <div
                 key={activity.id}
-                className="p-2 bg-red-50 border border-red-100 rounded text-sm"
+                className="p-2 bg-error-light border border-red-100 rounded text-sm"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium truncate">{activity.name}</span>
@@ -295,8 +295,8 @@ export function ScheduleOptimizationPanel({
                   key={constraint.constraintId || i}
                   className={cn(
                     'p-2 rounded text-sm flex items-center gap-2',
-                    constraint.priorityScore >= 80 && 'bg-red-50 border border-red-100',
-                    constraint.priorityScore >= 50 && constraint.priorityScore < 80 && 'bg-amber-50 border border-amber-100',
+                    constraint.priorityScore >= 80 && 'bg-error-light border border-red-100',
+                    constraint.priorityScore >= 50 && constraint.priorityScore < 80 && 'bg-warning-light border border-amber-100',
                     constraint.priorityScore < 50 && 'bg-blue-50 border border-blue-100'
                   )}
                 >
@@ -351,7 +351,7 @@ function RecommendationCard({
           </div>
           <p className="text-sm">{recommendation.description}</p>
           {(recommendation.potential_days_saved || recommendation.potential_cost_savings) && (
-            <div className="flex gap-3 mt-1 text-xs text-green-600">
+            <div className="flex gap-3 mt-1 text-xs text-success">
               {recommendation.potential_days_saved && (
                 <span className="flex items-center gap-1">
                   <TrendingUp className="w-3 h-3" />
@@ -373,7 +373,7 @@ function RecommendationCard({
                 <Button
                   size="sm"
                   variant="ghost"
-                  className="h-7 w-7 p-0 text-green-600"
+                  className="h-7 w-7 p-0 text-success"
                   onClick={onImplement}
                 >
                   <Check className="w-4 h-4" />
@@ -405,10 +405,10 @@ function RecommendationCard({
 
 function FloatOpportunityCard({ opportunity }: { opportunity: FloatOpportunity }) {
   return (
-    <div className="p-2 bg-green-50 border border-green-100 rounded text-sm">
+    <div className="p-2 bg-success-light border border-green-100 rounded text-sm">
       <div className="flex items-center justify-between">
         <span className="truncate">{opportunity.activityName}</span>
-        <Badge variant="outline" className="text-green-600 text-xs">
+        <Badge variant="outline" className="text-success text-xs">
           {opportunity.potentialFloat} days float
         </Badge>
       </div>

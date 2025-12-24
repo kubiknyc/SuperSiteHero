@@ -27,7 +27,7 @@ export function AnalyticsPage() {
   if (!projectId) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">
+        <h1 className="text-2xl font-bold text-foreground mb-6" className="heading-page">
           Predictive Analytics
         </h1>
 
@@ -35,8 +35,8 @@ export function AnalyticsPage() {
           <CardContent className="pt-6">
             <div className="text-center py-8">
               <span className="text-4xl">📊</span>
-              <h2 className="text-xl font-medium mt-4">Select a Project</h2>
-              <p className="text-gray-500 mt-2">
+              <h2 className="text-xl font-medium mt-4" className="heading-section">Select a Project</h2>
+              <p className="text-muted mt-2">
                 Choose a project to view its predictive analytics dashboard
               </p>
 
@@ -46,19 +46,19 @@ export function AnalyticsPage() {
                     <Link
                       key={project.id}
                       to={`/projects/${project.id}/analytics`}
-                      className="p-4 border rounded-lg hover:bg-gray-50 hover:border-blue-300 transition-colors text-left"
+                      className="p-4 border rounded-lg hover:bg-surface hover:border-blue-300 transition-colors text-left"
                     >
-                      <h3 className="font-medium text-gray-900">
+                      <h3 className="font-medium text-foreground" className="heading-subsection">
                         {project.name}
                       </h3>
-                      <p className="text-sm text-gray-500 truncate">
+                      <p className="text-sm text-muted truncate">
                         {project.project_number || 'No project number'}
                       </p>
                     </Link>
                   ))}
                 </div>
               ) : (
-                <p className="text-gray-400 mt-4">
+                <p className="text-disabled mt-4">
                   No projects available. Create a project first.
                 </p>
               )}
@@ -73,20 +73,20 @@ export function AnalyticsPage() {
     <div className="container mx-auto py-6 px-4">
       {/* Breadcrumb */}
       <nav className="mb-6 text-sm">
-        <ol className="flex items-center gap-2 text-gray-500">
+        <ol className="flex items-center gap-2 text-muted">
           <li>
-            <Link to="/projects" className="hover:text-blue-600">
+            <Link to="/projects" className="hover:text-primary">
               Projects
             </Link>
           </li>
           <li>/</li>
           <li>
-            <Link to={`/projects/${projectId}`} className="hover:text-blue-600">
+            <Link to={`/projects/${projectId}`} className="hover:text-primary">
               Project Details
             </Link>
           </li>
           <li>/</li>
-          <li className="text-gray-900 font-medium">Analytics</li>
+          <li className="text-foreground font-medium">Analytics</li>
         </ol>
       </nav>
 

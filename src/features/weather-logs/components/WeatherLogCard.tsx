@@ -35,7 +35,7 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
               <WeatherConditionsIcon condition={weatherLog.conditions} className="w-8 h-8" />
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-lg">
+                  <h3 className="font-semibold text-lg" className="heading-subsection">
                     {getWeatherConditionLabel(weatherLog.conditions)}
                   </h3>
                   {weatherLog.work_stopped && (
@@ -44,12 +44,12 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
                     </Badge>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
+                <div className="flex items-center gap-2 text-sm text-secondary mt-1">
                   <Calendar className="w-4 h-4" />
                   <span>{format(new Date(weatherLog.log_date), 'EEEE, MMMM d, yyyy')}</span>
                 </div>
                 {showProject && weatherLog.project && (
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-secondary mt-1">
                     Project: {weatherLog.project.name}
                   </div>
                 )}
@@ -63,8 +63,8 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
           {/* Temperature */}
           {(weatherLog.temperature_high !== null || weatherLog.temperature_low !== null) && (
             <div className="flex items-center gap-2">
-              <ThermometerSun className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-700">
+              <ThermometerSun className="w-4 h-4 text-muted" />
+              <span className="text-sm text-secondary">
                 {weatherLog.temperature_high !== null && weatherLog.temperature_low !== null ? (
                   <>
                     High: <span className="font-medium">{weatherLog.temperature_high}°F</span>
@@ -83,8 +83,8 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
           {/* Precipitation */}
           {weatherLog.precipitation_amount > 0 && (
             <div className="flex items-center gap-2">
-              <Droplets className="w-4 h-4 text-blue-500" />
-              <span className="text-sm text-gray-700">
+              <Droplets className="w-4 h-4 text-primary" />
+              <span className="text-sm text-secondary">
                 {weatherLog.precipitation_amount}" {weatherLog.precipitation_type}
               </span>
             </div>
@@ -93,8 +93,8 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
           {/* Wind */}
           {weatherLog.wind_speed !== null && (
             <div className="flex items-center gap-2">
-              <Wind className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-700">
+              <Wind className="w-4 h-4 text-muted" />
+              <span className="text-sm text-secondary">
                 {weatherLog.wind_speed} mph
                 {weatherLog.wind_direction && ` ${weatherLog.wind_direction}`}
               </span>
@@ -105,7 +105,7 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
           {weatherLog.hours_lost > 0 && (
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-orange-500" />
-              <span className="text-sm text-gray-700">
+              <span className="text-sm text-secondary">
                 <span className="font-medium">{weatherLog.hours_lost}</span> hours lost
               </span>
             </div>
@@ -132,14 +132,14 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
 
           {/* Impact Notes Preview */}
           {weatherLog.impact_notes && (
-            <div className="text-sm text-gray-600 line-clamp-2 pt-2 border-t">
+            <div className="text-sm text-secondary line-clamp-2 pt-2 border-t">
               {weatherLog.impact_notes}
             </div>
           )}
 
           {/* Photo Count */}
           {weatherLog.photo_urls.length > 0 && (
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            <div className="flex items-center gap-2 text-sm text-secondary">
               <Eye className="w-4 h-4" />
               <span>{weatherLog.photo_urls.length} photo{weatherLog.photo_urls.length !== 1 ? 's' : ''}</span>
             </div>

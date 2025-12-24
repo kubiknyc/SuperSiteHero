@@ -177,7 +177,7 @@ export function EquipmentReadyStateChecklist({
       <Card>
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
-            <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+            <RefreshCw className="h-6 w-6 animate-spin text-disabled" />
           </div>
         </CardContent>
       </Card>
@@ -192,8 +192,8 @@ export function EquipmentReadyStateChecklist({
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <ClipboardCheck className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-info-light rounded-lg">
+              <ClipboardCheck className="h-5 w-5 text-primary" />
             </div>
             <div>
               <CardTitle className="text-base flex items-center gap-2">
@@ -219,9 +219,9 @@ export function EquipmentReadyStateChecklist({
               </Badge>
             )}
             {expanded ? (
-              <ChevronUp className="h-5 w-5 text-gray-400" />
+              <ChevronUp className="h-5 w-5 text-disabled" />
             ) : (
-              <ChevronDown className="h-5 w-5 text-gray-400" />
+              <ChevronDown className="h-5 w-5 text-disabled" />
             )}
           </div>
         </div>
@@ -230,14 +230,14 @@ export function EquipmentReadyStateChecklist({
       {expanded && (
         <CardContent className="pt-0 space-y-4">
           {/* Equipment Info */}
-          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg text-sm">
-            <Truck className="h-5 w-5 text-gray-400" />
+          <div className="flex items-center gap-4 p-3 bg-surface rounded-lg text-sm">
+            <Truck className="h-5 w-5 text-disabled" />
             <div className="flex-1">
               <span className="font-medium">{equipment?.make}</span>{' '}
-              <span className="text-gray-600">{equipment?.model}</span>
+              <span className="text-secondary">{equipment?.model}</span>
             </div>
             {equipment?.current_hours !== undefined && (
-              <div className="text-gray-600">
+              <div className="text-secondary">
                 <span className="font-medium">{equipment.current_hours.toFixed(1)}</span> hrs
               </div>
             )}
@@ -252,7 +252,7 @@ export function EquipmentReadyStateChecklist({
                 size="sm"
                 onClick={handleMarkAllPass}
               >
-                <CheckCircle2 className="h-4 w-4 mr-1 text-green-500" />
+                <CheckCircle2 className="h-4 w-4 mr-1 text-success" />
                 Mark All Pass
               </Button>
             </div>
@@ -262,7 +262,7 @@ export function EquipmentReadyStateChecklist({
           <div className="space-y-4">
             {Array.from(groupedItems.entries()).map(([category, items]) => (
               <div key={category}>
-                <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                <h4 className="text-sm font-medium text-secondary mb-2 flex items-center gap-2" className="heading-card">
                   {category}
                   <Badge variant="outline" className="text-xs font-normal">
                     {items.filter((i) => responses.has(i.id)).length}/{items.length}
@@ -363,14 +363,14 @@ export function EquipmentReadyStateChecklist({
           {/* Completed Status */}
           {equipmentStatus.checklist_completed && (
             <div className="border-t pt-4">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+              <div className="flex items-center gap-2 text-sm text-secondary">
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 Completed{' '}
                 {equipmentStatus.checklist_completed_at &&
                   new Date(equipmentStatus.checklist_completed_at).toLocaleString()}
               </div>
               {equipmentStatus.issues_found && (
-                <div className="mt-2 p-3 bg-yellow-50 rounded-lg text-sm">
+                <div className="mt-2 p-3 bg-warning-light rounded-lg text-sm">
                   <div className="flex items-center gap-2 font-medium text-yellow-800">
                     <AlertTriangle className="h-4 w-4" />
                     Issues Found
@@ -402,7 +402,7 @@ export function EquipmentReadyStateChecklist({
                 )}
               </Button>
               {!canSubmit && (
-                <p className="text-xs text-gray-500 text-center mt-2">
+                <p className="text-xs text-muted text-center mt-2">
                   Complete all required items ({stats.requiredAnswered}/{stats.required})
                 </p>
               )}
@@ -436,12 +436,12 @@ function ChecklistItemRow({
   );
 
   return (
-    <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
+    <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-surface transition-colors">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-sm">{item.label}</span>
           {item.required && (
-            <span className="text-red-500 text-xs">*</span>
+            <span className="text-error text-xs">*</span>
           )}
         </div>
         {showNotes && (
@@ -465,8 +465,8 @@ function ChecklistItemRow({
           disabled={disabled}
           className={`p-2 rounded-full transition-colors ${
             response?.status === 'pass'
-              ? 'bg-green-100 text-green-600'
-              : 'text-gray-300 hover:text-green-500 hover:bg-green-50'
+              ? 'bg-success-light text-success'
+              : 'text-gray-300 hover:text-success hover:bg-success-light'
           }`}
         >
           <CheckCircle2 className="h-5 w-5" />
@@ -481,8 +481,8 @@ function ChecklistItemRow({
           disabled={disabled}
           className={`p-2 rounded-full transition-colors ${
             response?.status === 'fail'
-              ? 'bg-red-100 text-red-600'
-              : 'text-gray-300 hover:text-red-500 hover:bg-red-50'
+              ? 'bg-error-light text-error'
+              : 'text-gray-300 hover:text-error hover:bg-error-light'
           }`}
         >
           <XCircle className="h-5 w-5" />
@@ -497,8 +497,8 @@ function ChecklistItemRow({
           disabled={disabled}
           className={`p-2 rounded-full transition-colors ${
             response?.status === 'na'
-              ? 'bg-gray-200 text-gray-600'
-              : 'text-gray-300 hover:text-gray-500 hover:bg-gray-100'
+              ? 'bg-muted text-secondary'
+              : 'text-gray-300 hover:text-muted hover:bg-muted'
           }`}
         >
           <MinusCircle className="h-5 w-5" />

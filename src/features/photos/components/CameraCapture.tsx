@@ -511,13 +511,13 @@ export function CameraCapture({
                   disabled={state === 'capturing'}
                   className={cn(
                     'w-16 h-16 rounded-full border-4 border-white flex items-center justify-center transition-all',
-                    'bg-white/20 hover:bg-white/30 active:scale-95',
+                    'bg-card/20 hover:bg-card/30 active:scale-95',
                     state === 'capturing' && 'opacity-50'
                   )}
                 >
                   <div
                     className={cn(
-                      'w-12 h-12 rounded-full bg-white',
+                      'w-12 h-12 rounded-full bg-card',
                       state === 'capturing' && 'animate-pulse'
                     )}
                   />

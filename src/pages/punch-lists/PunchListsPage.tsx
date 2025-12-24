@@ -164,8 +164,8 @@ export function PunchListsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Punch Lists</h1>
-            <p className="text-gray-600 mt-1">Track and manage punch list items</p>
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Punch Lists</h1>
+            <p className="text-secondary mt-1">Track and manage punch list items</p>
           </div>
           {activeProjectId && (
             <div className="flex flex-wrap gap-2">
@@ -179,7 +179,7 @@ export function PunchListsPage() {
               <QRCodeScanner buttonLabel="Scan QR" buttonVariant="outline" />
               <Button
                 variant="default"
-                className="bg-green-600 hover:bg-green-700"
+                className="bg-success hover:bg-green-700"
                 onClick={() => setQuickPunchOpen(true)}
               >
                 <Zap className="h-4 w-4 mr-2" />
@@ -200,7 +200,7 @@ export function PunchListsPage() {
         {!isLoading && punchItems && punchItems.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Card
-              className={`cursor-pointer transition-all ${statusFilter === 'all' ? 'ring-2 ring-primary dark:ring-primary-400' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${statusFilter === 'all' ? 'ring-2 ring-primary dark:ring-primary-400' : 'hover:bg-surface'}`}
               onClick={() => setStatusFilter('all')}
             >
               <CardContent className="p-4">
@@ -210,14 +210,14 @@ export function PunchListsPage() {
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.total}</p>
-                    <p className="text-sm text-gray-500">Total Items</p>
+                    <p className="text-sm text-muted">Total Items</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${statusFilter === 'open' ? 'ring-2 ring-orange-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${statusFilter === 'open' ? 'ring-2 ring-orange-500' : 'hover:bg-surface'}`}
               onClick={() => setStatusFilter('open')}
             >
               <CardContent className="p-4">
@@ -227,41 +227,41 @@ export function PunchListsPage() {
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.open}</p>
-                    <p className="text-sm text-gray-500">Open</p>
+                    <p className="text-sm text-muted">Open</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${statusFilter === 'in_progress' ? 'ring-2 ring-yellow-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${statusFilter === 'in_progress' ? 'ring-2 ring-yellow-500' : 'hover:bg-surface'}`}
               onClick={() => setStatusFilter('in_progress')}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-yellow-100 rounded-lg">
-                    <Clock className="h-5 w-5 text-yellow-600" />
+                  <div className="p-2 bg-warning-light rounded-lg">
+                    <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.inProgress}</p>
-                    <p className="text-sm text-gray-500">In Progress</p>
+                    <p className="text-sm text-muted">In Progress</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${statusFilter === 'completed' ? 'ring-2 ring-green-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${statusFilter === 'completed' ? 'ring-2 ring-green-500' : 'hover:bg-surface'}`}
               onClick={() => setStatusFilter('completed')}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <div className="p-2 bg-success-light rounded-lg">
+                    <CheckCircle2 className="h-5 w-5 text-success" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.completed}</p>
-                    <p className="text-sm text-gray-500">Completed</p>
+                    <p className="text-sm text-muted">Completed</p>
                   </div>
                 </div>
               </CardContent>
@@ -271,12 +271,12 @@ export function PunchListsPage() {
 
         {/* Offline Pending Items Banner */}
         {offlinePendingCount > 0 && (
-          <Card className={isOnline ? 'bg-primary-50 border-primary-200 dark:bg-primary-950/20 dark:border-primary-800' : 'bg-amber-50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800'}>
+          <Card className={isOnline ? 'bg-primary-50 border-primary-200 dark:bg-primary-950/20 dark:border-primary-800' : 'bg-warning-light border-amber-200 dark:bg-amber-950/20 dark:border-amber-800'}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className={`p-2 rounded-lg ${isOnline ? 'bg-primary-100 dark:bg-primary-950' : 'bg-amber-100 dark:bg-amber-950'}`}>
-                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-primary dark:text-primary-400' : 'text-amber-600 dark:text-amber-400'}`} />
+                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-primary dark:text-primary-400' : 'text-warning dark:text-amber-400'}`} />
                   </div>
                   <div>
                     <p className={`font-medium ${isOnline ? 'text-primary-900 dark:text-primary-100' : 'text-amber-900 dark:text-amber-100'}`}>
@@ -379,8 +379,8 @@ export function PunchListsPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading punch items...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading punch items...</p>
           </div>
         )}
 
@@ -388,7 +388,7 @@ export function PunchListsPage() {
         {error && (
           <Card>
             <CardContent className="p-12 text-center">
-              <p className="text-red-600">Error loading punch items: {error.message}</p>
+              <p className="text-error">Error loading punch items: {error.message}</p>
             </CardContent>
           </Card>
         )}
@@ -397,10 +397,10 @@ export function PunchListsPage() {
         {!isLoading && !error && (!filteredPunchItems || filteredPunchItems.length === 0) && (
           <Card>
             <CardContent className="p-12 text-center">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 {punchItems && punchItems.length > 0 ? 'No matching punch items' : 'No punch items yet'}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 {punchItems && punchItems.length > 0
                   ? 'Try adjusting your filters to see more results.'
                   : 'Create your first punch item to get started.'}
@@ -445,7 +445,7 @@ export function PunchListsPage() {
                   <div className="space-y-3">
                     {/* Header */}
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-gray-900 flex-1">{item.title}</h3>
+                      <h3 className="font-semibold text-foreground flex-1" className="heading-subsection">{item.title}</h3>
                       <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                         <Button
                           variant="ghost"
@@ -463,7 +463,7 @@ export function PunchListsPage() {
                     <PunchItemStatusBadge status={item.status} priority={item.priority} />
 
                     {/* Details */}
-                    <div className="text-sm text-gray-600 space-y-1">
+                    <div className="text-sm text-secondary space-y-1">
                       <div>
                         <span className="font-medium">Trade:</span> {item.trade}
                       </div>

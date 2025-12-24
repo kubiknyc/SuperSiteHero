@@ -175,8 +175,8 @@ export function DistributionListsPage() {
       <AppLayout>
         <div className="container max-w-5xl py-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
-            <p className="text-red-600">Failed to load distribution lists</p>
+            <AlertCircle className="h-12 w-12 mx-auto text-error mb-4" />
+            <p className="text-error">Failed to load distribution lists</p>
             <p className="text-sm text-muted-foreground mt-2">{error.message}</p>
           </div>
         </div>
@@ -190,7 +190,7 @@ export function DistributionListsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Distribution Lists</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">Distribution Lists</h1>
             <p className="text-muted-foreground">
               Create reusable contact groups for RFIs, submittals, and other notifications
             </p>
@@ -206,7 +206,7 @@ export function DistributionListsPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <Users className="h-4 w-4 text-blue-600" />
+                <Users className="h-4 w-4 text-primary" />
                 <CardTitle className="text-sm font-medium">Total Lists</CardTitle>
               </div>
             </CardHeader>
@@ -218,7 +218,7 @@ export function DistributionListsPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-green-600" />
+                <Globe className="h-4 w-4 text-success" />
                 <CardTitle className="text-sm font-medium">Company-wide</CardTitle>
               </div>
             </CardHeader>
@@ -297,9 +297,9 @@ export function DistributionListsPage() {
                 ))}
               </div>
             ) : filteredLists.length === 0 ? (
-              <div className="text-center py-12 border rounded-lg bg-gray-50">
+              <div className="text-center py-12 border rounded-lg bg-surface">
                 <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-medium text-lg mb-1">No distribution lists found</h3>
+                <h3 className="font-medium text-lg mb-1" className="heading-subsection">No distribution lists found</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   {searchQuery
                     ? 'Try adjusting your search criteria'
@@ -354,7 +354,7 @@ export function DistributionListsPage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteConfirm}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
                 disabled={deleteMutation.isPending}
               >
                 {deleteMutation.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}

@@ -14,10 +14,10 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary active:bg-primary/80 dark:bg-primary dark:hover:bg-primary/90 dark:active:bg-primary/80',
-        destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600 active:bg-red-800 dark:bg-red-500 dark:hover:bg-red-600 dark:active:bg-red-700',
-        outline: 'border border-gray-300 bg-white hover:bg-gray-50 text-gray-900 focus-visible:ring-gray-400 active:bg-gray-100 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:hover:bg-gray-800 dark:active:bg-gray-700',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200 focus-visible:ring-gray-400 active:bg-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700 dark:active:bg-gray-600',
-        ghost: 'hover:bg-gray-100 text-gray-900 focus-visible:ring-gray-400 active:bg-gray-200 dark:text-gray-100 dark:hover:bg-gray-800 dark:active:bg-gray-700',
+        destructive: 'bg-error text-white hover:bg-red-700 focus-visible:ring-red-600 active:bg-red-800 dark:bg-red-500 dark:hover:bg-error dark:active:bg-red-700',
+        outline: 'border border-input bg-card hover:bg-surface text-foreground focus-visible:ring-gray-400 active:bg-muted dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:hover:bg-surface dark:active:bg-gray-700',
+        secondary: 'bg-muted text-foreground hover:bg-muted focus-visible:ring-gray-400 active:bg-gray-300 dark:bg-surface dark:text-gray-100 dark:hover:bg-gray-700 dark:active:bg-gray-600',
+        ghost: 'hover:bg-muted text-foreground focus-visible:ring-gray-400 active:bg-muted dark:text-gray-100 dark:hover:bg-surface dark:active:bg-gray-700',
         link: 'text-primary underline-offset-4 hover:underline focus-visible:ring-primary dark:text-primary-400',
       },
       size: {

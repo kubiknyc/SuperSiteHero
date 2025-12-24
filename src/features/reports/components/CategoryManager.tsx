@@ -111,7 +111,7 @@ const CATEGORY_COLORS = [
   { value: 'purple', label: 'Purple', class: 'bg-purple-500' },
   { value: 'orange', label: 'Orange', class: 'bg-orange-500' },
   { value: 'red', label: 'Red', class: 'bg-red-500' },
-  { value: 'yellow', label: 'Yellow', class: 'bg-yellow-500' },
+  { value: 'yellow', label: 'Yellow', class: 'bg-warning' },
   { value: 'pink', label: 'Pink', class: 'bg-pink-500' },
   { value: 'teal', label: 'Teal', class: 'bg-teal-500' },
   { value: 'indigo', label: 'Indigo', class: 'bg-indigo-500' },
@@ -182,13 +182,13 @@ function SortableCategoryItem({
       ref={setNodeRef}
       style={style}
       className={cn(
-        'flex items-center gap-3 p-3 bg-white border rounded-lg',
-        'hover:bg-gray-50 transition-colors',
+        'flex items-center gap-3 p-3 bg-card border rounded-lg',
+        'hover:bg-surface transition-colors',
         isDragging && 'opacity-50 shadow-lg'
       )}
     >
       <button
-        className="cursor-grab touch-none text-gray-400 hover:text-gray-600"
+        className="cursor-grab touch-none text-disabled hover:text-secondary"
         {...attributes}
         {...listeners}
       >
@@ -206,7 +206,7 @@ function SortableCategoryItem({
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="font-medium text-gray-900 truncate">
+          <span className="font-medium text-foreground truncate">
             {category.name}
           </span>
           <Badge variant="secondary" className="text-xs">
@@ -214,7 +214,7 @@ function SortableCategoryItem({
           </Badge>
         </div>
         {category.description && (
-          <p className="text-sm text-gray-500 truncate mt-0.5">
+          <p className="text-sm text-muted truncate mt-0.5">
             {category.description}
           </p>
         )}
@@ -234,7 +234,7 @@ function SortableCategoryItem({
           variant="ghost"
           size="sm"
           onClick={() => onDelete(category)}
-          className="h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="h-8 w-8 p-0 text-error hover:text-error-dark hover:bg-error-light"
           disabled={category.templateCount > 0}
           title={category.templateCount > 0 ? 'Cannot delete category with templates' : 'Delete category'}
         >
@@ -390,8 +390,8 @@ function CategoryFormDialog({
               </div>
             </div>
 
-            <div className="mt-2 p-4 border rounded-lg bg-gray-50">
-              <p className="text-sm text-gray-500 mb-2">Preview</p>
+            <div className="mt-2 p-4 border rounded-lg bg-surface">
+              <p className="text-sm text-muted mb-2">Preview</p>
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
@@ -404,7 +404,7 @@ function CategoryFormDialog({
                 <div>
                   <p className="font-medium">{name || 'Category Name'}</p>
                   {description && (
-                    <p className="text-sm text-gray-500">{description}</p>
+                    <p className="text-sm text-muted">{description}</p>
                   )}
                 </div>
               </div>
@@ -554,7 +554,7 @@ export function CategoryManager({
   if (isLoading) {
     return (
       <div className={cn('flex items-center justify-center h-48', className)}>
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-disabled" />
       </div>
     )
   }
@@ -563,8 +563,8 @@ export function CategoryManager({
     <div className={cn('space-y-4', className)}>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-medium">Categories</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="text-lg font-medium" className="heading-subsection">Categories</h3>
+          <p className="text-sm text-muted">
             Organize your report templates into categories
           </p>
         </div>
@@ -575,10 +575,10 @@ export function CategoryManager({
       </div>
 
       {localCategories.length === 0 ? (
-        <div className="text-center py-12 border rounded-lg bg-gray-50">
-          <FolderOpen className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-          <p className="text-gray-600 font-medium">No categories yet</p>
-          <p className="text-sm text-gray-500 mb-4">
+        <div className="text-center py-12 border rounded-lg bg-surface">
+          <FolderOpen className="h-12 w-12 mx-auto text-disabled mb-3" />
+          <p className="text-secondary font-medium">No categories yet</p>
+          <p className="text-sm text-muted mb-4">
             Create categories to organize your templates
           </p>
           <Button onClick={handleAdd} variant="outline" size="sm">
@@ -637,7 +637,7 @@ export function CategoryManager({
             <AlertDialogAction
               onClick={handleConfirmDelete}
               disabled={isSubmitting}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Delete

@@ -65,15 +65,15 @@ interface RFIRegisterProps {
  * Aging indicator for RFIs
  */
 function AgingBadge({ daysOpen, isOverdue }: { daysOpen: number | null; isOverdue: boolean }) {
-  if (daysOpen === null) {return <span className="text-gray-400">-</span>}
+  if (daysOpen === null) {return <span className="text-disabled">-</span>}
 
-  let colorClass = 'bg-green-100 text-green-800'
+  let colorClass = 'bg-success-light text-green-800'
   if (isOverdue) {
-    colorClass = 'bg-red-100 text-red-800'
+    colorClass = 'bg-error-light text-red-800'
   } else if (daysOpen > 14) {
     colorClass = 'bg-orange-100 text-orange-800'
   } else if (daysOpen > 7) {
-    colorClass = 'bg-yellow-100 text-yellow-800'
+    colorClass = 'bg-warning-light text-yellow-800'
   }
 
   return (
@@ -91,11 +91,11 @@ function StatusBadge({ status }: { status: RFIStatus }) {
   const config = RFI_STATUSES.find(s => s.value === status)
 
   const colorClasses: Record<string, string> = {
-    gray: 'bg-gray-100 text-gray-800',
-    blue: 'bg-blue-100 text-blue-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    green: 'bg-green-100 text-green-800',
-    red: 'bg-red-100 text-red-800',
+    gray: 'bg-muted text-foreground',
+    blue: 'bg-info-light text-blue-800',
+    yellow: 'bg-warning-light text-yellow-800',
+    green: 'bg-success-light text-green-800',
+    red: 'bg-error-light text-red-800',
     slate: 'bg-slate-100 text-slate-800',
   }
 
@@ -132,7 +132,7 @@ function ImpactIndicator({ cost, schedule }: { cost: number | null; schedule: nu
   const hasCost = cost !== null && cost > 0
   const hasSchedule = schedule !== null && schedule > 0
 
-  if (!hasCost && !hasSchedule) {return <span className="text-gray-400">-</span>}
+  if (!hasCost && !hasSchedule) {return <span className="text-disabled">-</span>}
 
   return (
     <div className="flex items-center gap-1">
@@ -142,7 +142,7 @@ function ImpactIndicator({ cost, schedule }: { cost: number | null; schedule: nu
         </span>
       )}
       {hasSchedule && (
-        <span className="text-xs text-red-600" title={`Schedule: ${schedule}d`}>
+        <span className="text-xs text-error" title={`Schedule: ${schedule}d`}>
           {schedule}d
         </span>
       )}
@@ -246,8 +246,8 @@ export function RFIRegister({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">RFI Register</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold" className="heading-section">RFI Register</h2>
+          <p className="text-sm text-muted">
             {stats.total} RFIs | {stats.open} open | {stats.overdue} overdue
             {stats.totalCost > 0 && ` | $${stats.totalCost.toLocaleString()} cost impact`}
             {stats.totalSchedule > 0 && ` | ${stats.totalSchedule}d schedule impact`}
@@ -314,19 +314,19 @@ export function RFIRegister({
       </div>
 
       {/* Aging Legend */}
-      <div className="flex items-center gap-4 text-xs text-gray-600">
+      <div className="flex items-center gap-4 text-xs text-secondary">
         <span>Aging:</span>
         <span className="flex items-center gap-1.5">
-          <span className="px-1.5 py-0.5 bg-green-100 text-green-800 rounded">0-7d</span> Good
+          <span className="px-1.5 py-0.5 bg-success-light text-green-800 rounded">0-7d</span> Good
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="px-1.5 py-0.5 bg-yellow-100 text-yellow-800 rounded">7-14d</span> Watch
+          <span className="px-1.5 py-0.5 bg-warning-light text-yellow-800 rounded">7-14d</span> Watch
         </span>
         <span className="flex items-center gap-1.5">
           <span className="px-1.5 py-0.5 bg-orange-100 text-orange-800 rounded">14d+</span> Aging
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="px-1.5 py-0.5 bg-red-100 text-red-800 rounded">Overdue</span> Past Due
+          <span className="px-1.5 py-0.5 bg-error-light text-red-800 rounded">Overdue</span> Past Due
         </span>
       </div>
 
@@ -334,7 +334,7 @@ export function RFIRegister({
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-surface border-b">
               <tr>
                 <th className="px-3 py-2 text-left font-medium w-8">P</th>
                 <th className="px-3 py-2 text-left font-medium">RFI No.</th>
@@ -353,8 +353,8 @@ export function RFIRegister({
                 <tr
                   key={rfi.id}
                   className={cn(
-                    'hover:bg-gray-50 cursor-pointer',
-                    rfi.is_overdue && 'bg-red-50'
+                    'hover:bg-surface cursor-pointer',
+                    rfi.is_overdue && 'bg-error-light'
                   )}
                   onClick={() => onRFIClick?.(rfi.id)}
                 >
@@ -364,13 +364,13 @@ export function RFIRegister({
                   <td className="px-3 py-2 font-mono text-xs">
                     {formatRFINumber(rfi.rfi_number)}
                     {rfi.is_internal && (
-                      <span className="ml-1 text-gray-400" title="Internal RFI">(I)</span>
+                      <span className="ml-1 text-disabled" title="Internal RFI">(I)</span>
                     )}
                   </td>
                   <td className="px-3 py-2">
                     <div className="line-clamp-2">{rfi.subject}</div>
                     {rfi.discipline && (
-                      <div className="text-xs text-gray-500">{rfi.discipline}</div>
+                      <div className="text-xs text-muted">{rfi.discipline}</div>
                     )}
                   </td>
                   <td className="px-3 py-2">
@@ -402,7 +402,7 @@ export function RFIRegister({
               ))}
               {filteredRFIs.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="px-3 py-8 text-center text-gray-500">
+                  <td colSpan={10} className="px-3 py-8 text-center text-muted">
                     No RFIs found
                   </td>
                 </tr>

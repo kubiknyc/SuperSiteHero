@@ -71,19 +71,19 @@ export function ScheduleRemindersNotification({
   }
 
   return (
-    <Card className={hasOverdue ? 'border-red-200 bg-red-50' : 'border-blue-200 bg-blue-50'}>
+    <Card className={hasOverdue ? 'border-red-200 bg-error-light' : 'border-blue-200 bg-blue-50'}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
             <div
               className={`rounded-full p-2 ${
-                hasOverdue ? 'bg-red-100' : 'bg-blue-100'
+                hasOverdue ? 'bg-error-light' : 'bg-info-light'
               }`}
             >
               {hasOverdue ? (
-                <AlertCircle className="w-5 h-5 text-red-600" />
+                <AlertCircle className="w-5 h-5 text-error" />
               ) : (
-                <Bell className="w-5 h-5 text-blue-600" />
+                <Bell className="w-5 h-5 text-primary" />
               )}
             </div>
             <div className="flex-1">
@@ -95,7 +95,7 @@ export function ScheduleRemindersNotification({
                   {totalCount} {totalCount === 1 ? 'Schedule' : 'Schedules'}
                 </Badge>
               </CardTitle>
-              <p className={`text-sm mt-1 ${hasOverdue ? 'text-red-700' : 'text-blue-700'}`}>
+              <p className={`text-sm mt-1 ${hasOverdue ? 'text-error-dark' : 'text-primary-hover'}`}>
                 {hasOverdue
                   ? `${overdue.length} overdue, ${upcoming.length} upcoming`
                   : `${upcoming.length} scheduled checklist${upcoming.length === 1 ? '' : 's'} coming up`}
@@ -106,7 +106,7 @@ export function ScheduleRemindersNotification({
             <Button
               variant="ghost"
               size="icon"
-              className={`h-8 w-8 ${hasOverdue ? 'text-red-600 hover:text-red-800' : 'text-blue-600 hover:text-blue-800'}`}
+              className={`h-8 w-8 ${hasOverdue ? 'text-error hover:text-red-800' : 'text-primary hover:text-blue-800'}`}
               onClick={() => setIsExpanded(!isExpanded)}
             >
               {isExpanded ? (
@@ -118,7 +118,7 @@ export function ScheduleRemindersNotification({
             <Button
               variant="ghost"
               size="icon"
-              className={`h-8 w-8 ${hasOverdue ? 'text-red-600 hover:text-red-800' : 'text-blue-600 hover:text-blue-800'}`}
+              className={`h-8 w-8 ${hasOverdue ? 'text-error hover:text-red-800' : 'text-primary hover:text-blue-800'}`}
               onClick={handleDismiss}
             >
               <X className="w-4 h-4" />
@@ -138,17 +138,17 @@ export function ScheduleRemindersNotification({
               return (
                 <div
                   key={schedule.id}
-                  className="flex items-start justify-between p-3 bg-white rounded-md border border-red-200"
+                  className="flex items-start justify-between p-3 bg-card rounded-md border border-red-200"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <AlertCircle className="w-4 h-4 text-red-600" />
-                      <span className="font-medium text-gray-900">{schedule.name}</span>
+                      <AlertCircle className="w-4 h-4 text-error" />
+                      <span className="font-medium text-foreground">{schedule.name}</span>
                       <Badge variant="destructive" className="text-xs">
                         OVERDUE
                       </Badge>
                     </div>
-                    <div className="flex flex-wrap gap-3 text-xs text-gray-600 ml-6">
+                    <div className="flex flex-wrap gap-3 text-xs text-secondary ml-6">
                       <span className="flex items-center gap-1">
                         <CalendarIcon className="w-3 h-3" />
                         {getFrequencyLabel(schedule.frequency, schedule.interval)}
@@ -178,17 +178,17 @@ export function ScheduleRemindersNotification({
               return (
                 <div
                   key={schedule.id}
-                  className="flex items-start justify-between p-3 bg-white rounded-md border border-blue-200"
+                  className="flex items-start justify-between p-3 bg-card rounded-md border border-blue-200"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <Bell className="w-4 h-4 text-blue-600" />
-                      <span className="font-medium text-gray-900">{schedule.name}</span>
-                      <Badge variant="outline" className="text-xs border-blue-600 text-blue-600">
+                      <Bell className="w-4 h-4 text-primary" />
+                      <span className="font-medium text-foreground">{schedule.name}</span>
+                      <Badge variant="outline" className="text-xs border-primary text-primary">
                         DUE SOON
                       </Badge>
                     </div>
-                    <div className="flex flex-wrap gap-3 text-xs text-gray-600 ml-6">
+                    <div className="flex flex-wrap gap-3 text-xs text-secondary ml-6">
                       <span className="flex items-center gap-1">
                         <CalendarIcon className="w-3 h-3" />
                         {getFrequencyLabel(schedule.frequency, schedule.interval)}
@@ -245,8 +245,8 @@ export function RemindersBadge({ count, hasOverdue, onClick }: RemindersBadgePro
       onClick={onClick}
       className={`relative inline-flex items-center gap-1 px-2 py-1 rounded-full ${
         hasOverdue
-          ? 'bg-red-100 text-red-700 hover:bg-red-200'
-          : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
+          ? 'bg-error-light text-error-dark hover:bg-red-200'
+          : 'bg-info-light text-primary-hover hover:bg-blue-200'
       } transition-colors`}
       aria-label={`${count} scheduled checklists`}
     >

@@ -175,20 +175,20 @@ export function MarkupSharingDialog({
                   'w-full flex items-center justify-between p-3 rounded-lg border-2 transition-all',
                   settings.isShared
                     ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
+                    : 'border-border hover:border-input'
                 )}
               >
                 <div className="flex items-center gap-3">
                   {settings.isShared ? (
-                    <Globe className="w-5 h-5 text-blue-600" />
+                    <Globe className="w-5 h-5 text-primary" />
                   ) : (
-                    <Lock className="w-5 h-5 text-gray-500" />
+                    <Lock className="w-5 h-5 text-muted" />
                   )}
                   <div className="text-left">
                     <p className="font-medium text-sm">
                       {settings.isShared ? 'Shared' : 'Private'}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted">
                       {settings.isShared
                         ? 'Others can see this markup based on permissions below'
                         : 'Only you can see this markup'}
@@ -203,7 +203,7 @@ export function MarkupSharingDialog({
                 >
                   <div
                     className={cn(
-                      'w-4 h-4 rounded-full bg-white absolute top-1 transition-transform',
+                      'w-4 h-4 rounded-full bg-card absolute top-1 transition-transform',
                       settings.isShared ? 'translate-x-5' : 'translate-x-1'
                     )}
                   />
@@ -223,17 +223,17 @@ export function MarkupSharingDialog({
                     className={cn(
                       'flex items-center gap-2 p-3 rounded-lg border-2 transition-all',
                       settings.sharedWithTeam
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-green-500 bg-success-light'
+                        : 'border-border hover:border-input'
                     )}
                   >
-                    <Users className={cn('w-5 h-5', settings.sharedWithTeam ? 'text-green-600' : 'text-gray-500')} />
+                    <Users className={cn('w-5 h-5', settings.sharedWithTeam ? 'text-success' : 'text-muted')} />
                     <div className="text-left">
                       <p className="font-medium text-sm">Team</p>
-                      <p className="text-xs text-gray-500">All team members</p>
+                      <p className="text-xs text-muted">All team members</p>
                     </div>
                     {settings.sharedWithTeam && (
-                      <Check className="w-4 h-4 text-green-600 ml-auto" />
+                      <Check className="w-4 h-4 text-success ml-auto" />
                     )}
                   </button>
 
@@ -243,13 +243,13 @@ export function MarkupSharingDialog({
                       'flex items-center gap-2 p-3 rounded-lg border-2 transition-all',
                       settings.sharedWithSubcontractors
                         ? 'border-orange-500 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-border hover:border-input'
                     )}
                   >
-                    <Building2 className={cn('w-5 h-5', settings.sharedWithSubcontractors ? 'text-orange-600' : 'text-gray-500')} />
+                    <Building2 className={cn('w-5 h-5', settings.sharedWithSubcontractors ? 'text-orange-600' : 'text-muted')} />
                     <div className="text-left">
                       <p className="font-medium text-sm">Subs</p>
-                      <p className="text-xs text-gray-500">Subcontractors</p>
+                      <p className="text-xs text-muted">Subcontractors</p>
                     </div>
                     {settings.sharedWithSubcontractors && (
                       <Check className="w-4 h-4 text-orange-600 ml-auto" />
@@ -270,7 +270,7 @@ export function MarkupSharingDialog({
                         'flex flex-col items-center gap-1 p-2 rounded-lg border-2 transition-all',
                         settings.permissionLevel === level.value
                           ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-border hover:border-input'
                       )}
                     >
                       {level.icon}
@@ -278,7 +278,7 @@ export function MarkupSharingDialog({
                     </button>
                   ))}
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   {PERMISSION_LEVELS.find(l => l.value === settings.permissionLevel)?.description}
                 </p>
               </div>
@@ -294,8 +294,8 @@ export function MarkupSharingDialog({
                       className={cn(
                         'px-3 py-1.5 rounded-full text-xs font-medium transition-all',
                         settings.sharedWithRoles.includes(role.id)
-                          ? 'bg-blue-100 text-blue-800 ring-2 ring-blue-500'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                          ? 'bg-info-light text-blue-800 ring-2 ring-blue-500'
+                          : 'bg-muted text-secondary hover:bg-muted'
                       )}
                     >
                       {role.name}
@@ -315,16 +315,16 @@ export function MarkupSharingDialog({
                     {availableUsers.map((user) => (
                       <div
                         key={user.id}
-                        className="flex items-center justify-between p-2 hover:bg-gray-50"
+                        className="flex items-center justify-between p-2 hover:bg-surface"
                       >
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium text-gray-600">
+                          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium text-secondary">
                             {user.name.charAt(0).toUpperCase()}
                           </div>
                           <div>
                             <p className="text-sm font-medium">{user.name}</p>
                             {user.role && (
-                              <p className="text-xs text-gray-500">{user.role}</p>
+                              <p className="text-xs text-muted">{user.role}</p>
                             )}
                           </div>
                         </div>
@@ -349,7 +349,7 @@ export function MarkupSharingDialog({
                 >
                   {copied ? (
                     <>
-                      <Check className="w-4 h-4 mr-2 text-green-600" />
+                      <Check className="w-4 h-4 mr-2 text-success" />
                       Copied!
                     </>
                   ) : (
@@ -364,17 +364,17 @@ export function MarkupSharingDialog({
           )}
 
           {/* Summary */}
-          <div className="p-3 bg-gray-50 rounded-lg">
-            <Label className="text-xs font-medium text-gray-600 mb-2 block">Summary</Label>
+          <div className="p-3 bg-surface rounded-lg">
+            <Label className="text-xs font-medium text-secondary mb-2 block">Summary</Label>
             <div className="flex flex-wrap gap-1">
               {!settings.isShared ? (
                 <Badge variant="secondary">Private - Only you</Badge>
               ) : (
                 <>
-                  {settings.sharedWithTeam && <Badge className="bg-green-100 text-green-800">Team</Badge>}
+                  {settings.sharedWithTeam && <Badge className="bg-success-light text-green-800">Team</Badge>}
                   {settings.sharedWithSubcontractors && <Badge className="bg-orange-100 text-orange-800">Subcontractors</Badge>}
                   {settings.sharedWithRoles.map(role => (
-                    <Badge key={role} className="bg-blue-100 text-blue-800">
+                    <Badge key={role} className="bg-info-light text-blue-800">
                       {availableRoles.find(r => r.id === role)?.name || role}
                     </Badge>
                   ))}

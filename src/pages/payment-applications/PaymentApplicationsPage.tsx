@@ -83,11 +83,11 @@ export function PaymentApplicationsPage() {
   const getStatusBadge = (status: PaymentApplicationStatus) => {
     const config = PAYMENT_APPLICATION_STATUSES.find((s) => s.value === status)
     const colorMap: Record<string, string> = {
-      gray: 'bg-gray-100 text-gray-700',
-      blue: 'bg-blue-100 text-blue-700',
-      yellow: 'bg-yellow-100 text-yellow-700',
-      green: 'bg-green-100 text-green-700',
-      red: 'bg-red-100 text-red-700',
+      gray: 'bg-muted text-secondary',
+      blue: 'bg-info-light text-primary-hover',
+      yellow: 'bg-warning-light text-yellow-700',
+      green: 'bg-success-light text-success-dark',
+      red: 'bg-error-light text-error-dark',
       emerald: 'bg-emerald-100 text-emerald-700',
     }
     return (
@@ -101,7 +101,7 @@ export function PaymentApplicationsPage() {
     return (
       <div
         key={app.id}
-        className="py-4 px-4 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors border-b last:border-b-0"
+        className="py-4 px-4 hover:bg-surface cursor-pointer rounded-lg transition-colors border-b last:border-b-0"
         onClick={() => navigate(`/payment-applications/${app.id}`)}
       >
         <div className="flex items-start justify-between">
@@ -114,25 +114,25 @@ export function PaymentApplicationsPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               {/* Period */}
               <div>
-                <span className="text-gray-500">Period To:</span>
+                <span className="text-muted">Period To:</span>
                 <p className="font-medium">{format(new Date(app.period_to), 'MMM d, yyyy')}</p>
               </div>
 
               {/* Current Payment Due */}
               <div>
-                <span className="text-gray-500">Payment Due:</span>
-                <p className="font-medium text-green-700">{formatCurrency(app.current_payment_due)}</p>
+                <span className="text-muted">Payment Due:</span>
+                <p className="font-medium text-success-dark">{formatCurrency(app.current_payment_due)}</p>
               </div>
 
               {/* Percent Complete */}
               <div>
-                <span className="text-gray-500">% Complete:</span>
+                <span className="text-muted">% Complete:</span>
                 <p className="font-medium">{formatPercent(app.percent_complete)}</p>
               </div>
 
               {/* Contract Sum */}
               <div>
-                <span className="text-gray-500">Contract Sum:</span>
+                <span className="text-muted">Contract Sum:</span>
                 <p className="font-medium">{formatCurrency(app.contract_sum_to_date)}</p>
               </div>
             </div>
@@ -146,13 +146,13 @@ export function PaymentApplicationsPage() {
             )}
 
             {app.status === 'rejected' && app.rejection_reason && (
-              <div className="mt-2 text-sm text-red-600">
+              <div className="mt-2 text-sm text-error">
                 Rejection reason: {app.rejection_reason}
               </div>
             )}
           </div>
 
-          <ChevronRight className="h-5 w-5 text-gray-400 mt-2" />
+          <ChevronRight className="h-5 w-5 text-disabled mt-2" />
         </div>
       </div>
     )
@@ -164,11 +164,11 @@ export function PaymentApplicationsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <Receipt className="h-7 w-7 text-green-600" />
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <Receipt className="h-7 w-7 text-success" />
               Payment Applications
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               AIA G702/G703 billing workflow
             </p>
           </div>
@@ -215,7 +215,7 @@ export function PaymentApplicationsPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <FileText className="h-4 w-4" />
                   <span className="text-sm">Total Applications</span>
                 </div>
@@ -225,31 +225,31 @@ export function PaymentApplicationsPage() {
 
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <DollarSign className="h-4 w-4" />
                   <span className="text-sm">Total Billed</span>
                 </div>
-                <p className="text-2xl font-bold text-blue-600">{formatCurrency(summary.total_billed)}</p>
+                <p className="text-2xl font-bold text-primary">{formatCurrency(summary.total_billed)}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <Banknote className="h-4 w-4" />
                   <span className="text-sm">Total Received</span>
                 </div>
-                <p className="text-2xl font-bold text-green-600">{formatCurrency(summary.total_received)}</p>
+                <p className="text-2xl font-bold text-success">{formatCurrency(summary.total_received)}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <Clock className="h-4 w-4" />
                   <span className="text-sm">Outstanding</span>
                 </div>
-                <p className="text-2xl font-bold text-amber-600">{formatCurrency(summary.total_outstanding)}</p>
+                <p className="text-2xl font-bold text-warning">{formatCurrency(summary.total_outstanding)}</p>
               </CardContent>
             </Card>
           </div>
@@ -257,18 +257,18 @@ export function PaymentApplicationsPage() {
 
         {/* Retainage Info */}
         {selectedProjectId && summary && summary.total_retainage_held > 0 && (
-          <Card className="border-amber-200 bg-amber-50">
+          <Card className="border-amber-200 bg-warning-light">
             <CardContent className="pt-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-amber-600" />
+                  <TrendingUp className="h-5 w-5 text-warning" />
                   <span className="font-medium text-amber-800">Retainage Held</span>
                 </div>
                 <span className="text-xl font-bold text-amber-700">
                   {formatCurrency(summary.total_retainage_held)}
                 </span>
               </div>
-              <p className="text-sm text-amber-600 mt-1">
+              <p className="text-sm text-warning mt-1">
                 {formatPercent(summary.percent_billed)} of contract billed
               </p>
             </CardContent>
@@ -283,7 +283,7 @@ export function PaymentApplicationsPage() {
                 {/* Search */}
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       type="text"
                       placeholder="Search applications..."
@@ -318,8 +318,8 @@ export function PaymentApplicationsPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Project</h3>
-              <p className="text-gray-500">
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">Select a Project</h3>
+              <p className="text-muted">
                 Choose a project above to view and manage payment applications
               </p>
             </CardContent>
@@ -327,24 +327,24 @@ export function PaymentApplicationsPage() {
         ) : applicationsLoading ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-500">Loading payment applications...</p>
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+              <p className="text-muted">Loading payment applications...</p>
             </CardContent>
           </Card>
         ) : error ? (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
-              <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2">Error Loading Applications</h3>
-              <p className="text-red-600">{error.message}</p>
+              <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Applications</h3>
+              <p className="text-error">{error.message}</p>
             </CardContent>
           </Card>
         ) : filteredApplications.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <Receipt className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Payment Applications</h3>
-              <p className="text-gray-500 mb-4">
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No Payment Applications</h3>
+              <p className="text-muted mb-4">
                 {searchTerm || statusFilter !== 'all'
                   ? 'No applications match your filters'
                   : 'Create your first payment application to start billing'}

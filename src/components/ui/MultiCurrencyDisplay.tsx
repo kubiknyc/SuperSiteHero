@@ -45,7 +45,7 @@ export function MultiCurrencyDisplay({
   }
 
   const isNegative = amount < 0;
-  const colorClass = colorize ? (isNegative ? 'text-red-600' : 'text-green-600') : '';
+  const colorClass = colorize ? (isNegative ? 'text-error' : 'text-success') : '';
 
   // Display mode: original only
   if (displayMode === 'original') {
@@ -62,7 +62,7 @@ export function MultiCurrencyDisplay({
               <div className="text-sm">
                 <div>Base: {formatCurrency(baseAmount, baseCurrency)}</div>
                 {exchangeRate && (
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-xs text-muted mt-1">
                     Rate: {exchangeRate.toFixed(4)}
                   </div>
                 )}
@@ -88,7 +88,7 @@ export function MultiCurrencyDisplay({
             <div className="text-sm">
               <div>Original: {formatCurrency(amount, currency)}</div>
               {exchangeRate && (
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs text-muted mt-1">
                   Rate: {exchangeRate.toFixed(4)}
                 </div>
               )}
@@ -110,7 +110,7 @@ export function MultiCurrencyDisplay({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <ArrowRightLeft className="h-3 w-3 text-gray-400" />
+                <ArrowRightLeft className="h-3 w-3 text-disabled" />
               </TooltipTrigger>
               <TooltipContent>
                 <div className="text-xs">
@@ -120,7 +120,7 @@ export function MultiCurrencyDisplay({
             </Tooltip>
           </TooltipProvider>
         )}
-        <span className="text-gray-500 text-sm">
+        <span className="text-muted text-sm">
           ({formatCurrency(baseAmount, baseCurrency, { compactNotation: compact })})
         </span>
       </div>
@@ -201,24 +201,24 @@ export function CurrencyConversionPreview({
   }
 
   return (
-    <div className={`text-sm text-gray-600 ${className}`}>
+    <div className={`text-sm text-secondary ${className}`}>
       {isConverting ? (
         <span className="italic">Converting...</span>
       ) : convertedAmount !== null ? (
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="font-medium">{formatCurrency(amount, fromCurrency)}</span>
-            <ArrowRightLeft className="h-3 w-3 text-gray-400" />
+            <ArrowRightLeft className="h-3 w-3 text-disabled" />
             <span className="font-medium">{formatCurrency(convertedAmount, toCurrency)}</span>
           </div>
           {exchangeRate && (
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-muted">
               Rate: 1 {fromCurrency} = {exchangeRate.toFixed(4)} {toCurrency}
             </div>
           )}
         </div>
       ) : (
-        <span className="text-red-500">Conversion unavailable</span>
+        <span className="text-error">Conversion unavailable</span>
       )}
     </div>
   );
@@ -260,7 +260,7 @@ export function MultiCurrencySummary({
       </div>
 
       {Object.keys(currencyTotals).length > 1 && (
-        <div className="text-sm text-gray-600 space-y-1">
+        <div className="text-sm text-secondary space-y-1">
           <div className="font-medium">Breakdown by Currency:</div>
           {Object.entries(currencyTotals).map(([currency, total]) => (
             <div key={currency} className="flex items-center gap-2">

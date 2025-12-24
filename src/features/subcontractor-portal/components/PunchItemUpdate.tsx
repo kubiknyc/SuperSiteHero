@@ -62,22 +62,22 @@ const statusConfig: Record<string, { label: string; icon: React.ReactNode; color
   open: {
     label: 'Open',
     icon: <AlertCircle className="h-4 w-4" />,
-    color: 'bg-red-100 text-red-700 border-red-200',
+    color: 'bg-error-light text-error-dark border-red-200',
   },
   in_progress: {
     label: 'In Progress',
     icon: <Clock className="h-4 w-4" />,
-    color: 'bg-yellow-100 text-yellow-700 border-yellow-200',
+    color: 'bg-warning-light text-yellow-700 border-yellow-200',
   },
   ready_for_review: {
     label: 'Ready for Review',
     icon: <Clock className="h-4 w-4" />,
-    color: 'bg-blue-100 text-blue-700 border-blue-200',
+    color: 'bg-info-light text-primary-hover border-blue-200',
   },
   completed: {
     label: 'Completed',
     icon: <Check className="h-4 w-4" />,
-    color: 'bg-green-100 text-green-700 border-green-200',
+    color: 'bg-success-light text-success-dark border-green-200',
   },
   verified: {
     label: 'Verified',
@@ -89,7 +89,7 @@ const statusConfig: Record<string, { label: string; icon: React.ReactNode; color
 const priorityConfig: Record<string, { label: string; color: string }> = {
   critical: { label: 'Critical', color: 'bg-red-500 text-white' },
   high: { label: 'High', color: 'bg-orange-500 text-white' },
-  medium: { label: 'Medium', color: 'bg-yellow-500 text-white' },
+  medium: { label: 'Medium', color: 'bg-warning text-white' },
   low: { label: 'Low', color: 'bg-gray-400 text-white' },
 }
 
@@ -227,7 +227,7 @@ export function PunchItemUpdate() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -236,9 +236,9 @@ export function PunchItemUpdate() {
   if (error || !punchItem) {
     return (
       <div className="flex flex-col items-center justify-center h-64 p-4 text-center">
-        <AlertCircle className="h-12 w-12 text-red-500 mb-4" />
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Punch Item Not Found</h2>
-        <p className="text-sm text-gray-500 mb-4">
+        <AlertCircle className="h-12 w-12 text-error mb-4" />
+        <h2 className="text-lg font-semibold text-foreground mb-2" className="heading-section">Punch Item Not Found</h2>
+        <p className="text-sm text-muted mb-4">
           The punch item you're looking for doesn't exist or you don't have access.
         </p>
         <Button variant="outline" onClick={() => navigate(-1)}>
@@ -255,9 +255,9 @@ export function PunchItemUpdate() {
   const totalProofPhotos = (proofPhotos?.length || 0) + photos.length
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-surface">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-10">
+      <div className="bg-card border-b border-border px-4 py-3 sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -268,15 +268,15 @@ export function PunchItemUpdate() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-semibold text-gray-900 truncate">
+            <h1 className="text-base font-semibold text-foreground truncate" className="heading-page">
               {punchItem.title}
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               #{punchItem.item_number || punchItem.id.slice(0, 8)}
             </p>
           </div>
           {!isOnline && (
-            <Badge variant="outline" className="text-yellow-600 border-yellow-300 bg-yellow-50">
+            <Badge variant="outline" className="text-warning border-yellow-300 bg-warning-light">
               Offline
             </Badge>
           )}
@@ -295,7 +295,7 @@ export function PunchItemUpdate() {
             {priority.label}
           </Badge>
           {gcVerificationPending && (
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+            <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">
               GC Review Pending
             </Badge>
           )}
@@ -303,8 +303,8 @@ export function PunchItemUpdate() {
 
         {/* Pending Updates Banner */}
         {pendingUpdates > 0 && (
-          <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <Clock className="h-4 w-4 text-yellow-600" />
+          <div className="flex items-center gap-2 p-3 bg-warning-light border border-yellow-200 rounded-lg">
+            <Clock className="h-4 w-4 text-warning" />
             <span className="text-sm text-yellow-800">
               {pendingUpdates} update(s) pending sync
             </span>
@@ -316,15 +316,15 @@ export function PunchItemUpdate() {
           <Card className="border-blue-200 bg-blue-50">
             <CardContent className="p-3">
               <div className="flex items-start gap-2">
-                <Clock className="h-4 w-4 text-blue-600 mt-0.5" />
+                <Clock className="h-4 w-4 text-primary mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-blue-800">
                     Completion Request Pending
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-primary mt-1">
                     {punchItem.status_change_request.reason}
                   </p>
-                  <p className="text-xs text-blue-500 mt-1">
+                  <p className="text-xs text-primary mt-1">
                     Requested {formatDistanceToNow(new Date(punchItem.status_change_request.requested_at), { addSuffix: true })}
                   </p>
                 </div>
@@ -341,14 +341,14 @@ export function PunchItemUpdate() {
           <CardContent className="space-y-3">
             {punchItem.description && (
               <div>
-                <p className="text-xs font-medium text-gray-500 mb-1">Description</p>
-                <p className="text-sm text-gray-900">{punchItem.description}</p>
+                <p className="text-xs font-medium text-muted mb-1">Description</p>
+                <p className="text-sm text-foreground">{punchItem.description}</p>
               </div>
             )}
 
             {/* Location */}
             <div className="flex items-start gap-2">
-              <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+              <MapPin className="h-4 w-4 text-disabled mt-0.5" />
               <div className="text-sm">
                 {[punchItem.building, punchItem.floor, punchItem.room, punchItem.area]
                   .filter(Boolean)
@@ -359,10 +359,10 @@ export function PunchItemUpdate() {
             {/* Due Date */}
             {punchItem.due_date && (
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
+                <Calendar className="h-4 w-4 text-disabled" />
                 <span className={cn(
                   'text-sm',
-                  new Date(punchItem.due_date) < new Date() ? 'text-red-600 font-medium' : 'text-gray-700'
+                  new Date(punchItem.due_date) < new Date() ? 'text-error font-medium' : 'text-secondary'
                 )}>
                   Due: {format(new Date(punchItem.due_date), 'MMM d, yyyy')}
                 </span>
@@ -372,8 +372,8 @@ export function PunchItemUpdate() {
             {/* Assigned By */}
             {punchItem.created_by_name && (
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-gray-400" />
-                <span className="text-sm text-gray-700">
+                <User className="h-4 w-4 text-disabled" />
+                <span className="text-sm text-secondary">
                   Assigned by: {punchItem.created_by_name}
                 </span>
               </div>
@@ -395,13 +395,13 @@ export function PunchItemUpdate() {
             {/* Existing proof photos */}
             {proofPhotos && proofPhotos.length > 0 && (
               <div className="mb-3">
-                <p className="text-xs text-gray-500 mb-2">Uploaded Photos</p>
+                <p className="text-xs text-muted mb-2">Uploaded Photos</p>
                 <div className="flex flex-wrap gap-2">
                   {proofPhotos.map((photo: any) => (
                     <button
                       key={photo.id}
                       onClick={() => setShowPhotoViewer(photo.file_url)}
-                      className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100"
+                      className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted"
                     >
                       <img
                         src={photo.file_url}
@@ -420,12 +420,12 @@ export function PunchItemUpdate() {
             {/* New photo previews */}
             {photos.length > 0 && (
               <div className="mb-3">
-                <p className="text-xs text-gray-500 mb-2">New Photos (pending upload)</p>
+                <p className="text-xs text-muted mb-2">New Photos (pending upload)</p>
                 <div className="flex flex-wrap gap-2">
                   {photos.map(photo => (
                     <div
                       key={photo.id}
-                      className="relative w-16 h-16 rounded-lg overflow-hidden bg-gray-100"
+                      className="relative w-16 h-16 rounded-lg overflow-hidden bg-muted"
                     >
                       <img
                         src={photo.url}
@@ -515,11 +515,11 @@ export function PunchItemUpdate() {
 
             {/* Existing notes */}
             {punchItem.subcontractor_notes && (
-              <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs font-medium text-gray-500 mb-1">Previous Notes</p>
-                <p className="text-sm text-gray-700">{punchItem.subcontractor_notes}</p>
+              <div className="mt-3 p-3 bg-surface rounded-lg">
+                <p className="text-xs font-medium text-muted mb-1">Previous Notes</p>
+                <p className="text-sm text-secondary">{punchItem.subcontractor_notes}</p>
                 {punchItem.subcontractor_updated_at && (
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-disabled mt-1">
                     {formatDistanceToNow(new Date(punchItem.subcontractor_updated_at), { addSuffix: true })}
                   </p>
                 )}
@@ -531,7 +531,7 @@ export function PunchItemUpdate() {
 
       {/* Bottom Action Bar */}
       {!hasStatusRequest && punchItem.status !== 'completed' && punchItem.status !== 'verified' && (
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 safe-area-bottom">
+        <div className="sticky bottom-0 bg-card border-t border-border p-4 safe-area-bottom">
           <Button
             onClick={() => setShowCompletionDialog(true)}
             disabled={totalProofPhotos === 0}
@@ -541,7 +541,7 @@ export function PunchItemUpdate() {
             Request Completion
           </Button>
           {totalProofPhotos === 0 && (
-            <p className="text-xs text-center text-gray-500 mt-2">
+            <p className="text-xs text-center text-muted mt-2">
               Add at least one photo to request completion
             </p>
           )}
@@ -571,7 +571,7 @@ export function PunchItemUpdate() {
             </div>
 
             <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
-              <Image className="h-4 w-4 text-blue-600" />
+              <Image className="h-4 w-4 text-primary" />
               <span className="text-sm text-blue-800">
                 {totalProofPhotos} proof photo(s) attached
               </span>

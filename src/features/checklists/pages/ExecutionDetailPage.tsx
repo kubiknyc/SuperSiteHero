@@ -80,37 +80,37 @@ export function ExecutionDetailPage() {
             <div className="flex items-center gap-2">
               {response.score_value === 'pass' && (
                 <>
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
-                  <span className="font-medium text-green-700">Pass</span>
+                  <CheckCircle2 className="w-5 h-5 text-success" />
+                  <span className="font-medium text-success-dark">Pass</span>
                 </>
               )}
               {response.score_value === 'fail' && (
                 <>
-                  <XCircle className="w-5 h-5 text-red-600" />
-                  <span className="font-medium text-red-700">Fail</span>
+                  <XCircle className="w-5 h-5 text-error" />
+                  <span className="font-medium text-error-dark">Fail</span>
                 </>
               )}
               {response.score_value === 'na' && (
                 <>
-                  <Minus className="w-5 h-5 text-gray-600" />
-                  <span className="font-medium text-gray-700">N/A</span>
+                  <Minus className="w-5 h-5 text-secondary" />
+                  <span className="font-medium text-secondary">N/A</span>
                 </>
               )}
             </div>
           )
         }
         return (
-          <span className="text-gray-700">
+          <span className="text-secondary">
             {data?.value === 'checked' ? 'Checked' : 'Unchecked'}
           </span>
         )
 
       case 'text':
-        return <p className="text-gray-700 whitespace-pre-wrap">{data?.value || 'No response'}</p>
+        return <p className="text-secondary whitespace-pre-wrap">{data?.value || 'No response'}</p>
 
       case 'number':
         return (
-          <span className="text-gray-700">
+          <span className="text-secondary">
             {data?.value} {data?.units || ''}
           </span>
         )
@@ -126,12 +126,12 @@ export function ExecutionDetailPage() {
             ))}
           </div>
         ) : (
-          <span className="text-gray-500">No photos</span>
+          <span className="text-muted">No photos</span>
         )
 
       case 'signature':
         return response.signature_url ? (
-          <div className="border rounded-lg p-4 bg-gray-50 max-w-xs">
+          <div className="border rounded-lg p-4 bg-surface max-w-xs">
             <img
               src={response.signature_url}
               alt="Signature"
@@ -139,20 +139,20 @@ export function ExecutionDetailPage() {
             />
           </div>
         ) : (
-          <span className="text-gray-500">No signature</span>
+          <span className="text-muted">No signature</span>
         )
 
       default:
-        return <span className="text-gray-500">Unknown type</span>
+        return <span className="text-muted">Unknown type</span>
     }
   }
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4" />
-          <p className="text-gray-600">Loading checklist...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+          <p className="text-secondary">Loading checklist...</p>
         </div>
       </div>
     )
@@ -160,9 +160,9 @@ export function ExecutionDetailPage() {
 
   if (!execution) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Checklist not found</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Checklist not found</h2>
           <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Checklists
@@ -187,7 +187,7 @@ export function ExecutionDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
@@ -203,9 +203,9 @@ export function ExecutionDetailPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{execution.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{execution.name}</h1>
               {execution.description && (
-                <p className="text-gray-600 mb-3">{execution.description}</p>
+                <p className="text-secondary mb-3">{execution.description}</p>
               )}
               <div className="flex items-center gap-3 flex-wrap">
                 <Badge
@@ -213,10 +213,10 @@ export function ExecutionDetailPage() {
                     execution.status === 'approved'
                       ? 'bg-emerald-100 text-emerald-800'
                       : execution.status === 'rejected'
-                      ? 'bg-red-100 text-red-800'
+                      ? 'bg-error-light text-red-800'
                       : execution.status === 'submitted'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-blue-100 text-blue-800'
+                      ? 'bg-success-light text-green-800'
+                      : 'bg-info-light text-blue-800'
                   }
                 >
                   {execution.status.replace('_', ' ')}
@@ -289,55 +289,55 @@ export function ExecutionDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               {execution.location && (
                 <div className="flex items-start gap-2">
-                  <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-disabled mt-0.5" />
                   <div>
-                    <div className="text-gray-500">Location</div>
-                    <div className="text-gray-900 font-medium">{execution.location}</div>
+                    <div className="text-muted">Location</div>
+                    <div className="text-foreground font-medium">{execution.location}</div>
                   </div>
                 </div>
               )}
               {execution.inspector_name && (
                 <div className="flex items-start gap-2">
-                  <User className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <User className="w-4 h-4 text-disabled mt-0.5" />
                   <div>
-                    <div className="text-gray-500">Inspector</div>
-                    <div className="text-gray-900 font-medium">{execution.inspector_name}</div>
+                    <div className="text-muted">Inspector</div>
+                    <div className="text-foreground font-medium">{execution.inspector_name}</div>
                   </div>
                 </div>
               )}
               {execution.weather_conditions && (
                 <div className="flex items-start gap-2">
-                  <Cloud className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <Cloud className="w-4 h-4 text-disabled mt-0.5" />
                   <div>
-                    <div className="text-gray-500">Weather</div>
-                    <div className="text-gray-900 font-medium">{execution.weather_conditions}</div>
+                    <div className="text-muted">Weather</div>
+                    <div className="text-foreground font-medium">{execution.weather_conditions}</div>
                   </div>
                 </div>
               )}
               {execution.temperature && (
                 <div className="flex items-start gap-2">
-                  <Thermometer className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <Thermometer className="w-4 h-4 text-disabled mt-0.5" />
                   <div>
-                    <div className="text-gray-500">Temperature</div>
-                    <div className="text-gray-900 font-medium">{execution.temperature}°F</div>
+                    <div className="text-muted">Temperature</div>
+                    <div className="text-foreground font-medium">{execution.temperature}°F</div>
                   </div>
                 </div>
               )}
               <div className="flex items-start gap-2">
-                <Calendar className="w-4 h-4 text-gray-400 mt-0.5" />
+                <Calendar className="w-4 h-4 text-disabled mt-0.5" />
                 <div>
-                  <div className="text-gray-500">Created</div>
-                  <div className="text-gray-900 font-medium">
+                  <div className="text-muted">Created</div>
+                  <div className="text-foreground font-medium">
                     {format(new Date(execution.created_at), 'PPP p')}
                   </div>
                 </div>
               </div>
               {execution.completed_at && (
                 <div className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-gray-400 mt-0.5" />
+                  <CheckCircle2 className="w-4 h-4 text-disabled mt-0.5" />
                   <div>
-                    <div className="text-gray-500">Completed</div>
-                    <div className="text-gray-900 font-medium">
+                    <div className="text-muted">Completed</div>
+                    <div className="text-foreground font-medium">
                       {format(new Date(execution.completed_at), 'PPP p')}
                     </div>
                   </div>
@@ -356,22 +356,22 @@ export function ExecutionDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {section.items.map(({ templateItem, response }) => (
-                  <div key={response!.id} className="border-b border-gray-200 pb-4 last:border-0">
+                  <div key={response!.id} className="border-b border-border pb-4 last:border-0">
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-medium text-gray-900">{templateItem.label}</h3>
+                          <h3 className="font-medium text-foreground" className="heading-subsection">{templateItem.label}</h3>
                           <Badge variant="outline" className="text-xs">
                             {templateItem.item_type}
                           </Badge>
                           {templateItem.is_required && (
-                            <Badge variant="outline" className="text-xs text-red-600">
+                            <Badge variant="outline" className="text-xs text-error">
                               Required
                             </Badge>
                           )}
                         </div>
                         {templateItem.description && (
-                          <p className="text-sm text-gray-600 mt-1">{templateItem.description}</p>
+                          <p className="text-sm text-secondary mt-1">{templateItem.description}</p>
                         )}
                       </div>
                     </div>
@@ -381,12 +381,12 @@ export function ExecutionDetailPage() {
                     </div>
 
                     {response!.notes && (
-                      <div className="mt-3 pl-4 border-l-2 border-gray-200">
+                      <div className="mt-3 pl-4 border-l-2 border-border">
                         <div className="flex items-start gap-2">
-                          <FileText className="w-4 h-4 text-gray-400 mt-0.5" />
+                          <FileText className="w-4 h-4 text-disabled mt-0.5" />
                           <div>
-                            <div className="text-xs text-gray-500 mb-1">Notes</div>
-                            <p className="text-sm text-gray-700">{response!.notes}</p>
+                            <div className="text-xs text-muted mb-1">Notes</div>
+                            <p className="text-sm text-secondary">{response!.notes}</p>
                           </div>
                         </div>
                       </div>

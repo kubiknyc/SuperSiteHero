@@ -58,9 +58,9 @@ export function DailyReportFormV2({
   const isTabletOrDesktop = layout === 'tablet-portrait' || layout === 'tablet-landscape' || layout === 'desktop';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       {/* Top Navigation - Optimized for tablets */}
-      <div className="bg-white border-b sticky top-0 z-30">
+      <div className="bg-card border-b sticky top-0 z-30">
         <div className={cn(
           'mx-auto px-4 py-3',
           // Wider container on tablets
@@ -97,7 +97,7 @@ export function DailyReportFormV2({
                 </h1>
                 {projectName && (
                   <p className={cn(
-                    'text-gray-600',
+                    'text-secondary',
                     isTabletOrDesktop ? 'text-base' : 'text-sm'
                   )}>
                     {projectName}
@@ -108,7 +108,7 @@ export function DailyReportFormV2({
 
             {/* Mode Toggle - Larger on tablets */}
             <div className={cn(
-              'flex items-center gap-2 p-1 bg-gray-100 rounded-lg',
+              'flex items-center gap-2 p-1 bg-muted rounded-lg',
               isTablet && 'p-1.5'
             )}>
               <button
@@ -119,8 +119,8 @@ export function DailyReportFormV2({
                   // Larger touch targets on tablets
                   isTablet ? 'px-4 py-2 text-base min-h-touch' : 'px-3 py-1.5 text-sm',
                   formMode === 'quick'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-card text-primary shadow-sm'
+                    : 'text-secondary hover:text-foreground'
                 )}
               >
                 <Zap className={isTablet ? 'h-5 w-5' : 'h-4 w-4'} />
@@ -133,8 +133,8 @@ export function DailyReportFormV2({
                   'flex items-center gap-1.5 rounded-md font-medium transition-colors',
                   isTablet ? 'px-4 py-2 text-base min-h-touch' : 'px-3 py-1.5 text-sm',
                   formMode === 'detailed'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900'
+                    ? 'bg-card text-primary shadow-sm'
+                    : 'text-secondary hover:text-foreground'
                 )}
               >
                 <FileText className={isTablet ? 'h-5 w-5' : 'h-4 w-4'} />
@@ -191,12 +191,12 @@ function DetailedModeForm({
       isTabletOrDesktop ? 'max-w-5xl tablet:p-6' : 'max-w-4xl'
     )}>
       <div className={cn(
-        'bg-white rounded-lg shadow-sm border text-center',
+        'bg-card rounded-lg shadow-sm border text-center',
         // More padding on tablets
         isTablet ? 'p-10' : 'p-8'
       )}>
         <FileText className={cn(
-          'mx-auto text-gray-400 mb-4',
+          'mx-auto text-disabled mb-4',
           isTablet ? 'h-16 w-16' : 'h-12 w-12'
         )} />
         <h2 className={cn(
@@ -206,14 +206,14 @@ function DetailedModeForm({
           Detailed Mode
         </h2>
         <p className={cn(
-          'text-gray-600 mb-4',
+          'text-secondary mb-4',
           isTablet && 'text-lg'
         )}>
           Full form with all sections including safety incidents, inspections,
           T&M work, progress tracking, and more.
         </p>
         <p className={cn(
-          'text-gray-500 mb-6',
+          'text-muted mb-6',
           isTablet ? 'text-base' : 'text-sm'
         )}>
           Coming soon! For now, use Quick Mode for fast daily report entry.

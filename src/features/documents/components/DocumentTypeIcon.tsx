@@ -28,7 +28,7 @@ interface DocumentTypeIconProps {
  * Usage:
  * ```tsx
  * <DocumentTypeIcon type="drawing" />
- * <DocumentTypeIcon type="photo" className="w-6 h-6 text-blue-500" />
+ * <DocumentTypeIcon type="photo" className="w-6 h-6 text-primary" />
  * ```
  */
 export function DocumentTypeIcon({

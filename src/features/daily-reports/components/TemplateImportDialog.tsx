@@ -162,13 +162,13 @@ export function TemplateImportDialog({
         className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
           isSelected
             ? 'border-blue-500 bg-blue-50'
-            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+            : 'border-border hover:border-input hover:bg-surface'
         }`}
       >
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium text-gray-900 truncate">{template.name}</h4>
+              <h4 className="font-medium text-foreground truncate" className="heading-card">{template.name}</h4>
               <Badge variant="outline" className="flex items-center gap-1 text-xs">
                 <ScopeIcon className="h-3 w-3" />
                 {SCOPE_LABELS[template.scope]}
@@ -181,13 +181,13 @@ export function TemplateImportDialog({
               )}
             </div>
             {template.description && (
-              <p className="text-sm text-gray-500 mt-1 line-clamp-2">{template.description}</p>
+              <p className="text-sm text-muted mt-1 line-clamp-2">{template.description}</p>
             )}
 
             {/* Template Stats */}
             <div className="flex items-center gap-4 mt-3">
               {workforceCount > 0 && (
-                <div className="flex items-center gap-1 text-xs text-gray-600">
+                <div className="flex items-center gap-1 text-xs text-secondary">
                   <Users className="h-3.5 w-3.5" />
                   <span>
                     {workforceCount} crew{workforceCount !== 1 ? 's' : ''}
@@ -195,13 +195,13 @@ export function TemplateImportDialog({
                 </div>
               )}
               {equipmentCount > 0 && (
-                <div className="flex items-center gap-1 text-xs text-gray-600">
+                <div className="flex items-center gap-1 text-xs text-secondary">
                   <Truck className="h-3.5 w-3.5" />
                   <span>{equipmentCount} equipment</span>
                 </div>
               )}
               {template.usage_count > 0 && (
-                <div className="flex items-center gap-1 text-xs text-gray-400">
+                <div className="flex items-center gap-1 text-xs text-disabled">
                   <TrendingUp className="h-3.5 w-3.5" />
                   <span>Used {template.usage_count}x</span>
                 </div>
@@ -226,7 +226,7 @@ export function TemplateImportDialog({
           </div>
 
           {/* Selection indicator */}
-          <div className={`flex-shrink-0 ml-4 ${isSelected ? 'text-blue-600' : 'text-gray-300'}`}>
+          <div className={`flex-shrink-0 ml-4 ${isSelected ? 'text-primary' : 'text-gray-300'}`}>
             <CheckCircle className={`h-6 w-6 ${isSelected ? 'fill-blue-100' : ''}`} />
           </div>
         </div>
@@ -236,7 +236,7 @@ export function TemplateImportDialog({
 
   // Empty state component
   const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.ElementType }) => (
-    <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+    <div className="flex flex-col items-center justify-center py-12 text-muted">
       <Icon className="h-12 w-12 mb-4 opacity-50" />
       <p className="text-sm font-medium">{message}</p>
     </div>
@@ -250,7 +250,7 @@ export function TemplateImportDialog({
       <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-600" />
+            <FileText className="h-5 w-5 text-primary" />
             Apply Template
           </DialogTitle>
           <DialogDescription>
@@ -260,7 +260,7 @@ export function TemplateImportDialog({
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
           <Input
             placeholder="Search templates by name, description, or tags..."
             value={searchQuery}
@@ -306,7 +306,7 @@ export function TemplateImportDialog({
             <ScrollArea className="h-[350px] pr-4">
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-disabled" />
                 </div>
               ) : filteredTemplates.length === 0 ? (
                 <EmptyState
@@ -337,7 +337,7 @@ export function TemplateImportDialog({
             <ScrollArea className="h-[350px] pr-4">
               {isLoadingRecent ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-disabled" />
                 </div>
               ) : !recentTemplates || recentTemplates.length === 0 ? (
                 <EmptyState message="No recently used templates" icon={Clock} />
@@ -361,7 +361,7 @@ export function TemplateImportDialog({
             <ScrollArea className="h-[350px] pr-4">
               {isLoadingPopular ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                  <Loader2 className="h-8 w-8 animate-spin text-disabled" />
                 </div>
               ) : !popularTemplates || popularTemplates.length === 0 ? (
                 <EmptyState message="No popular templates yet" icon={TrendingUp} />
@@ -385,65 +385,65 @@ export function TemplateImportDialog({
         {selectedTemplate && (
           <>
             <Separator />
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h4 className="text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
+            <div className="bg-surface rounded-lg p-4">
+              <h4 className="text-sm font-medium text-secondary mb-3 flex items-center gap-2" className="heading-card">
                 <ChevronRight className="h-4 w-4" />
                 Template Preview: {selectedTemplate.name}
               </h4>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 {/* Workforce Preview */}
-                <div className="bg-white rounded-lg p-3 border">
-                  <div className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+                <div className="bg-card rounded-lg p-3 border">
+                  <div className="flex items-center gap-2 text-secondary font-medium mb-2">
                     <Users className="h-4 w-4" />
                     Workforce Entries
                   </div>
                   {(selectedTemplate.workforce_template?.length ?? 0) > 0 ? (
-                    <ul className="space-y-1 text-gray-600 text-xs">
+                    <ul className="space-y-1 text-secondary text-xs">
                       {selectedTemplate.workforce_template?.slice(0, 4).map((entry, idx) => (
                         <li key={idx} className="truncate flex items-center gap-1">
                           <span className="w-1 h-1 rounded-full bg-gray-400" />
                           {entry.company_name || entry.trade || 'Crew entry'}
                           {entry.worker_count && (
-                            <span className="text-gray-400">({entry.worker_count} workers)</span>
+                            <span className="text-disabled">({entry.worker_count} workers)</span>
                           )}
                         </li>
                       ))}
                       {(selectedTemplate.workforce_template?.length ?? 0) > 4 && (
-                        <li className="text-gray-400 italic">
+                        <li className="text-disabled italic">
                           +{(selectedTemplate.workforce_template?.length ?? 0) - 4} more...
                         </li>
                       )}
                     </ul>
                   ) : (
-                    <p className="text-gray-400 italic text-xs">No workforce entries</p>
+                    <p className="text-disabled italic text-xs">No workforce entries</p>
                   )}
                 </div>
 
                 {/* Equipment Preview */}
-                <div className="bg-white rounded-lg p-3 border">
-                  <div className="flex items-center gap-2 text-gray-700 font-medium mb-2">
+                <div className="bg-card rounded-lg p-3 border">
+                  <div className="flex items-center gap-2 text-secondary font-medium mb-2">
                     <Truck className="h-4 w-4" />
                     Equipment Entries
                   </div>
                   {(selectedTemplate.equipment_template?.length ?? 0) > 0 ? (
-                    <ul className="space-y-1 text-gray-600 text-xs">
+                    <ul className="space-y-1 text-secondary text-xs">
                       {selectedTemplate.equipment_template?.slice(0, 4).map((entry, idx) => (
                         <li key={idx} className="truncate flex items-center gap-1">
                           <span className="w-1 h-1 rounded-full bg-gray-400" />
                           {entry.equipment_type || 'Equipment'}
                           {entry.quantity && entry.quantity > 1 && (
-                            <span className="text-gray-400">(x{entry.quantity})</span>
+                            <span className="text-disabled">(x{entry.quantity})</span>
                           )}
                         </li>
                       ))}
                       {(selectedTemplate.equipment_template?.length ?? 0) > 4 && (
-                        <li className="text-gray-400 italic">
+                        <li className="text-disabled italic">
                           +{(selectedTemplate.equipment_template?.length ?? 0) - 4} more...
                         </li>
                       )}
                     </ul>
                   ) : (
-                    <p className="text-gray-400 italic text-xs">No equipment entries</p>
+                    <p className="text-disabled italic text-xs">No equipment entries</p>
                   )}
                 </div>
               </div>

@@ -44,19 +44,19 @@ export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSection
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <Briefcase className="h-5 w-5 text-gray-600" />
+          <Briefcase className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">Work Progress</CardTitle>
             <CardDescription>Daily work summary and accomplishments</CardDescription>
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
@@ -85,7 +85,7 @@ export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSection
               }}
               onBlur={(e) => validateField('work_performed', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px] ${
-                errors.work_performed ? 'border-red-500' : 'border-gray-300'
+                errors.work_performed ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>
@@ -112,7 +112,7 @@ export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSection
               }}
               onBlur={(e) => validateField('work_completed', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] ${
-                errors.work_completed ? 'border-red-500' : 'border-gray-300'
+                errors.work_completed ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>
@@ -139,7 +139,7 @@ export function WorkSection({ expanded, onToggle, draft, onUpdate }: WorkSection
               }}
               onBlur={(e) => validateField('work_planned', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] ${
-                errors.work_planned ? 'border-red-500' : 'border-gray-300'
+                errors.work_planned ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>

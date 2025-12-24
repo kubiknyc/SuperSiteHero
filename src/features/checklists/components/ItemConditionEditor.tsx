@@ -178,7 +178,7 @@ export function ItemConditionEditor({
     <div className="space-y-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
       <div className="flex items-center justify-between">
         <Label className="text-sm font-semibold flex items-center gap-2">
-          <Link className="h-4 w-4 text-blue-600" />
+          <Link className="h-4 w-4 text-primary" />
           Conditional Visibility
         </Label>
         {hasConditions && (
@@ -186,7 +186,7 @@ export function ItemConditionEditor({
             variant="ghost"
             size="sm"
             onClick={handleClear}
-            className="text-gray-500 hover:text-red-600 h-7 px-2"
+            className="text-muted hover:text-error h-7 px-2"
           >
             Clear All
           </Button>
@@ -194,7 +194,7 @@ export function ItemConditionEditor({
       </div>
 
       {availableTargetItems.length === 0 ? (
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted">
           No items above this one to create conditions from. Add items before this one first.
         </p>
       ) : (
@@ -203,7 +203,7 @@ export function ItemConditionEditor({
             <>
               {/* Logic and Action selectors */}
               <div className="flex items-center gap-3 text-sm">
-                <span className="text-gray-600">
+                <span className="text-secondary">
                   {conditions.action === 'show' ? (
                     <Eye className="h-4 w-4 inline mr-1" />
                   ) : (
@@ -223,7 +223,7 @@ export function ItemConditionEditor({
                   <option value="show">Show</option>
                   <option value="hide">Hide</option>
                 </Select>
-                <span className="text-gray-600">this item when</span>
+                <span className="text-secondary">this item when</span>
                 {conditions.rules.length > 1 && (
                   <Select
                     value={conditions.logic}
@@ -240,7 +240,7 @@ export function ItemConditionEditor({
                   </Select>
                 )}
                 {conditions.rules.length > 1 && (
-                  <span className="text-gray-600">of these rules match:</span>
+                  <span className="text-secondary">of these rules match:</span>
                 )}
               </div>
 
@@ -255,7 +255,7 @@ export function ItemConditionEditor({
                   return (
                     <div
                       key={index}
-                      className="flex items-center gap-2 flex-wrap bg-white p-2 rounded border"
+                      className="flex items-center gap-2 flex-wrap bg-card p-2 rounded border"
                     >
                       <Select
                         value={rule.target_item_id}
@@ -298,7 +298,7 @@ export function ItemConditionEditor({
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDeleteRule(index)}
-                        className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                        className="h-8 w-8 text-error hover:text-error-dark hover:bg-error-light"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -315,7 +315,7 @@ export function ItemConditionEditor({
               variant="outline"
               size="sm"
               onClick={handleAddRule}
-              className="text-blue-600 border-blue-300 hover:bg-blue-50"
+              className="text-primary border-blue-300 hover:bg-blue-50"
             >
               <Plus className="h-4 w-4 mr-1" />
               Add Rule

@@ -17,8 +17,8 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No project selected</p>
+          <AlertCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+          <p className="text-secondary">No project selected</p>
         </CardContent>
       </Card>
     )
@@ -28,8 +28,8 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading punch list data...</p>
+          <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+          <p className="text-secondary">Loading punch list data...</p>
         </CardContent>
       </Card>
     )
@@ -40,7 +40,7 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
       <Card>
         <CardContent className="p-12 text-center">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <p className="text-red-600">Failed to load punch list report</p>
+          <p className="text-error">Failed to load punch list report</p>
         </CardContent>
       </Card>
     )
@@ -67,8 +67,8 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
             <CardDescription>Total Items</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-gray-900">{report.totalItems}</div>
-            <p className="text-xs text-gray-600 mt-2">Punch list items</p>
+            <div className="text-3xl font-bold text-foreground">{report.totalItems}</div>
+            <p className="text-xs text-secondary mt-2">Punch list items</p>
           </CardContent>
         </Card>
 
@@ -77,8 +77,8 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
             <CardDescription>Completion Rate</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">{formatPercentage(completionRate)}</div>
-            <p className="text-xs text-gray-600 mt-2">Items completed/verified</p>
+            <div className="text-3xl font-bold text-success">{formatPercentage(completionRate)}</div>
+            <p className="text-xs text-secondary mt-2">Items completed/verified</p>
           </CardContent>
         </Card>
 
@@ -90,7 +90,7 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
             <div className="text-3xl font-bold text-orange-600">
               {report.totalItems - (report.byStatus['completed'] || 0) - (report.byStatus['verified'] || 0)}
             </div>
-            <p className="text-xs text-gray-600 mt-2">Requiring attention</p>
+            <p className="text-xs text-secondary mt-2">Requiring attention</p>
           </CardContent>
         </Card>
 
@@ -99,8 +99,8 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
             <CardDescription>Rejection Rate</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-red-600">{formatPercentage(report.rejectionRate)}</div>
-            <p className="text-xs text-gray-600 mt-2">Items rejected</p>
+            <div className="text-3xl font-bold text-error">{formatPercentage(report.rejectionRate)}</div>
+            <p className="text-xs text-secondary mt-2">Items rejected</p>
           </CardContent>
         </Card>
       </div>
@@ -117,17 +117,17 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
               .map(([status, count]) => (
                 <div key={status}>
                   <div className="flex justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-700 capitalize">{status.replace('_', ' ')}</span>
-                    <span className="text-sm font-bold text-gray-900">{count}</span>
+                    <span className="text-sm font-medium text-secondary capitalize">{status.replace('_', ' ')}</span>
+                    <span className="text-sm font-bold text-foreground">{count}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all ${
                         status === 'verified' || status === 'completed'
-                          ? 'bg-green-600'
+                          ? 'bg-success'
                           : status === 'rejected'
-                            ? 'bg-red-600'
-                            : 'bg-blue-600'
+                            ? 'bg-error'
+                            : 'bg-primary'
                       }`}
                       style={{ width: `${(count / report.totalItems) * 100}%` }}
                     />
@@ -149,24 +149,24 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-2 px-2 font-medium text-gray-700">Trade</th>
-                    <th className="text-right py-2 px-2 font-medium text-gray-700">Items</th>
-                    <th className="text-right py-2 px-2 font-medium text-gray-700">Completion %</th>
+                    <th className="text-left py-2 px-2 font-medium text-secondary">Trade</th>
+                    <th className="text-right py-2 px-2 font-medium text-secondary">Items</th>
+                    <th className="text-right py-2 px-2 font-medium text-secondary">Completion %</th>
                   </tr>
                 </thead>
                 <tbody>
                   {report.byTrade.map((trade) => (
-                    <tr key={trade.trade} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-2 font-medium text-gray-900">{trade.trade}</td>
-                      <td className="py-2 px-2 text-right text-gray-600">{trade.count}</td>
+                    <tr key={trade.trade} className="border-b hover:bg-surface">
+                      <td className="py-2 px-2 font-medium text-foreground">{trade.trade}</td>
+                      <td className="py-2 px-2 text-right text-secondary">{trade.count}</td>
                       <td className="py-2 px-2 text-right">
                         <span
                           className={`font-semibold ${
                             trade.completionRate === 100
-                              ? 'text-green-600'
+                              ? 'text-success'
                               : trade.completionRate >= 50
-                                ? 'text-yellow-600'
-                                : 'text-red-600'
+                                ? 'text-warning'
+                                : 'text-error'
                           }`}
                         >
                           {formatPercentage(trade.completionRate)}
@@ -191,8 +191,8 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {report.byLocation.map((location) => (
                 <div key={location.location} className="border rounded-lg p-3">
-                  <p className="text-sm font-medium text-gray-900">{location.location}</p>
-                  <p className="text-2xl font-bold text-gray-600 mt-1">{location.count} items</p>
+                  <p className="text-sm font-medium text-foreground">{location.location}</p>
+                  <p className="text-2xl font-bold text-secondary mt-1">{location.count} items</p>
                 </div>
               ))}
             </div>
@@ -208,12 +208,12 @@ export function PunchListReport({ projectId }: PunchListReportProps) {
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div className="border-l-4 border-blue-500 pl-4">
-              <p className="text-sm text-gray-600">Average Days Open</p>
-              <p className="text-2xl font-bold text-gray-900">{report.averageDaysOpen.toFixed(1)}</p>
+              <p className="text-sm text-secondary">Average Days Open</p>
+              <p className="text-2xl font-bold text-foreground">{report.averageDaysOpen.toFixed(1)}</p>
             </div>
             <div className="border-l-4 border-red-500 pl-4">
-              <p className="text-sm text-gray-600">Items Overdue</p>
-              <p className="text-2xl font-bold text-red-600">{report.itemsOverdue}</p>
+              <p className="text-sm text-secondary">Items Overdue</p>
+              <p className="text-2xl font-bold text-error">{report.itemsOverdue}</p>
             </div>
           </div>
         </CardContent>

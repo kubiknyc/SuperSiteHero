@@ -118,8 +118,8 @@ export function ClientPhotos() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Project Photos</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Project Photos</h1>
+        <p className="text-secondary mt-1">
           Browse progress photos from the project.
         </p>
       </div>
@@ -128,7 +128,7 @@ export function ClientPhotos() {
       {photos && photos.length > 0 && (
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search photos by caption..."
               value={searchTerm}
@@ -156,7 +156,7 @@ export function ClientPhotos() {
 
       {/* Photo Count */}
       {filteredPhotos.length > 0 && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted">
           Showing {filteredPhotos.length} photo{filteredPhotos.length !== 1 ? 's' : ''}
           {searchTerm || categoryFilter !== 'all' ? ' (filtered)' : ''}
         </p>
@@ -173,10 +173,10 @@ export function ClientPhotos() {
 
             return (
               <div key={dateKey}>
-                <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-gray-400" />
+                <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-subsection">
+                  <Calendar className="h-5 w-5 text-disabled" />
                   {displayDate}
-                  <span className="text-sm font-normal text-gray-500">
+                  <span className="text-sm font-normal text-muted">
                     ({datePhotos.length} photo{datePhotos.length !== 1 ? 's' : ''})
                   </span>
                 </h3>
@@ -185,7 +185,7 @@ export function ClientPhotos() {
                     <button
                       key={photo.id}
                       onClick={() => openLightbox(photo)}
-                      className="group relative aspect-square rounded-lg overflow-hidden bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      className="group relative aspect-square rounded-lg overflow-hidden bg-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                       <img
                         src={photo.thumbnail_url || photo.photo_url}
@@ -206,7 +206,7 @@ export function ClientPhotos() {
                       {/* Category Badge */}
                       {photo.category && (
                         <div className="absolute top-2 left-2">
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white/90 text-gray-700">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-card/90 text-secondary">
                             {photo.category}
                           </span>
                         </div>
@@ -221,9 +221,9 @@ export function ClientPhotos() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <Image className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No Photos Available</h3>
-            <p className="text-gray-500 mt-1">
+            <Image className="h-12 w-12 text-disabled mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Photos Available</h3>
+            <p className="text-muted mt-1">
               {searchTerm || categoryFilter !== 'all'
                 ? 'No photos match your filters. Try adjusting your search.'
                 : 'Project photos will appear here once they\'re uploaded.'}
@@ -257,7 +257,7 @@ export function ClientPhotos() {
           <Button
             variant="ghost"
             size="icon"
-            className="absolute top-4 right-4 z-20 text-white hover:bg-white/20"
+            className="absolute top-4 right-4 z-20 text-white hover:bg-card/20"
             onClick={() => setSelectedPhoto(null)}
           >
             <X className="h-6 w-6" />
@@ -269,7 +269,7 @@ export function ClientPhotos() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-white hover:bg-white/20 h-12 w-12"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-20 text-white hover:bg-card/20 h-12 w-12"
                 onClick={() => navigateLightbox('prev')}
               >
                 <ChevronLeft className="h-8 w-8" />
@@ -277,7 +277,7 @@ export function ClientPhotos() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-white hover:bg-white/20 h-12 w-12"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-20 text-white hover:bg-card/20 h-12 w-12"
                 onClick={() => navigateLightbox('next')}
               >
                 <ChevronRight className="h-8 w-8" />
@@ -313,11 +313,11 @@ export function ClientPhotos() {
                   </span>
                 )}
                 {selectedPhoto.category && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-white/20">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-card/20">
                     {selectedPhoto.category}
                   </span>
                 )}
-                <span className="text-gray-400 ml-auto">
+                <span className="text-disabled ml-auto">
                   {lightboxIndex + 1} of {filteredPhotos.length}
                 </span>
               </div>

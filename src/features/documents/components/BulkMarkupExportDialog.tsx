@@ -73,7 +73,7 @@ function DrawingListItem({ drawing, onToggle }: DrawingListItemProps) {
         'flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
         drawing.selected
           ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+          : 'border-border hover:border-input hover:bg-surface'
       )}
       onClick={() => onToggle(drawing.id)}
     >
@@ -84,7 +84,7 @@ function DrawingListItem({ drawing, onToggle }: DrawingListItemProps) {
       />
       <div className="flex-1 min-w-0">
         <p className="font-medium text-sm truncate">{drawing.name}</p>
-        <p className="text-xs text-gray-500">{drawing.file_name}</p>
+        <p className="text-xs text-muted">{drawing.file_name}</p>
       </div>
       <Badge variant={drawing.markupCount > 0 ? 'default' : 'secondary'}>
         {drawing.markupCount} markup{drawing.markupCount !== 1 ? 's' : ''}
@@ -128,24 +128,24 @@ function FormatOption({ format, selected, onSelect, disabled }: FormatOptionProp
         'flex items-start gap-3 p-4 rounded-lg border text-left transition-all w-full',
         selected
           ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-200'
-          : 'border-gray-200 hover:border-gray-300',
+          : 'border-border hover:border-input',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
     >
       <div
         className={cn(
           'p-2 rounded-lg',
-          selected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
+          selected ? 'bg-info-light text-primary' : 'bg-muted text-secondary'
         )}
       >
         <Icon className="w-5 h-5" />
       </div>
       <div className="flex-1">
         <p className="font-medium text-sm">{labels[format]}</p>
-        <p className="text-xs text-gray-500 mt-0.5">{descriptions[format]}</p>
+        <p className="text-xs text-muted mt-0.5">{descriptions[format]}</p>
       </div>
       {selected && (
-        <div className="text-blue-600">
+        <div className="text-primary">
           <Check className="w-5 h-5" />
         </div>
       )}
@@ -185,14 +185,14 @@ function ModeOption({ mode, selected, onSelect, disabled }: ModeOptionProps) {
         'flex items-center gap-3 p-3 rounded-lg border text-left transition-all flex-1',
         selected
           ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-200 hover:border-gray-300',
+          : 'border-border hover:border-input',
         disabled && 'opacity-50 cursor-not-allowed'
       )}
     >
-      <Icon className={cn('w-4 h-4', selected ? 'text-blue-600' : 'text-gray-500')} />
+      <Icon className={cn('w-4 h-4', selected ? 'text-primary' : 'text-muted')} />
       <div className="flex-1">
         <p className="font-medium text-sm">{labels[mode]}</p>
-        <p className="text-xs text-gray-500">{descriptions[mode]}</p>
+        <p className="text-xs text-muted">{descriptions[mode]}</p>
       </div>
     </button>
   )
@@ -267,8 +267,8 @@ export function BulkMarkupExportDialog({
             <DialogTitle>Bulk Markup Export</DialogTitle>
           </DialogHeader>
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <span className="ml-3 text-gray-600">Loading drawings...</span>
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+            <span className="ml-3 text-secondary">Loading drawings...</span>
           </div>
         </DialogContent>
       </Dialog>
@@ -310,16 +310,16 @@ export function BulkMarkupExportDialog({
           </DialogHeader>
           <div className="py-6 space-y-4">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-600">{progress.currentStep}</span>
+              <span className="text-secondary">{progress.currentStep}</span>
               <span className="font-medium">{progress.percentage}%</span>
             </div>
             <Progress value={progress.percentage} className="h-2" />
             {progress.drawingName && (
-              <p className="text-sm text-gray-500 truncate">
+              <p className="text-sm text-muted truncate">
                 Processing: {progress.drawingName}
               </p>
             )}
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted">
               Drawing {progress.currentDrawing} of {progress.totalDrawings}
             </p>
           </div>
@@ -334,23 +334,23 @@ export function BulkMarkupExportDialog({
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-green-600">
+            <DialogTitle className="flex items-center gap-2 text-success">
               <Check className="w-5 h-5" />
               Export Complete
             </DialogTitle>
           </DialogHeader>
           <div className="py-6 space-y-4">
-            <div className="bg-green-50 rounded-lg p-4 space-y-2">
+            <div className="bg-success-light rounded-lg p-4 space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Files exported:</span>
+                <span className="text-secondary">Files exported:</span>
                 <span className="font-medium">{lastResult.fileCount}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Total markups:</span>
+                <span className="text-secondary">Total markups:</span>
                 <span className="font-medium">{lastResult.totalMarkups}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Format:</span>
+                <span className="text-secondary">Format:</span>
                 <span className="font-medium">{lastResult.mimeType.split('/')[1].toUpperCase()}</span>
               </div>
             </div>
@@ -397,7 +397,7 @@ export function BulkMarkupExportDialog({
           <TabsContent value="selection" className="flex-1 flex flex-col min-h-0 mt-4">
             {/* Summary bar */}
             <div className="flex items-center justify-between mb-4">
-              <div className="text-sm text-gray-600">
+              <div className="text-sm text-secondary">
                 {summary.totalDrawings} drawing(s), {summary.drawingsWithMarkups} with markups
               </div>
               <div className="flex items-center gap-2">
@@ -425,7 +425,7 @@ export function BulkMarkupExportDialog({
             <ScrollArea className="flex-1 border rounded-lg">
               <div className="p-2 space-y-2">
                 {drawings.length === 0 ? (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted">
                     <FileImage className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p>No drawings found in this project</p>
                   </div>
@@ -445,12 +445,12 @@ export function BulkMarkupExportDialog({
             {summary.selectedCount > 0 && (
               <div className="mt-4 p-3 bg-blue-50 rounded-lg flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Check className="w-4 h-4 text-blue-600" />
+                  <Check className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium text-blue-800">
                     {summary.selectedCount} drawing(s) selected
                   </span>
                 </div>
-                <span className="text-sm text-blue-600">
+                <span className="text-sm text-primary">
                   ~{selectedDrawings.reduce((sum, d) => sum + d.markupCount, 0)} markups
                 </span>
               </div>
@@ -563,7 +563,7 @@ export function BulkMarkupExportDialog({
                     />
                     <label
                       htmlFor="include-metadata"
-                      className="text-sm text-gray-600 cursor-pointer"
+                      className="text-sm text-secondary cursor-pointer"
                     >
                       Metadata (author, date, document info)
                     </label>
@@ -576,7 +576,7 @@ export function BulkMarkupExportDialog({
                     />
                     <label
                       htmlFor="include-comments"
-                      className="text-sm text-gray-600 cursor-pointer"
+                      className="text-sm text-secondary cursor-pointer"
                     >
                       Comments and notes
                     </label>
@@ -584,21 +584,21 @@ export function BulkMarkupExportDialog({
                 </div>
 
                 {/* Export summary */}
-                <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="bg-surface rounded-lg p-4 space-y-2">
                   <div className="flex items-center gap-2 mb-3">
-                    <Info className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm font-medium text-gray-700">Export Summary</span>
+                    <Info className="w-4 h-4 text-muted" />
+                    <span className="text-sm font-medium text-secondary">Export Summary</span>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="text-gray-600">Drawings:</div>
+                    <div className="text-secondary">Drawings:</div>
                     <div className="font-medium">{summary.selectedCount}</div>
-                    <div className="text-gray-600">Total markups:</div>
+                    <div className="text-secondary">Total markups:</div>
                     <div className="font-medium">
                       {selectedDrawings.reduce((sum, d) => sum + d.markupCount, 0)}
                     </div>
-                    <div className="text-gray-600">Estimated size:</div>
+                    <div className="text-secondary">Estimated size:</div>
                     <div className="font-medium">{summary.estimatedSize}</div>
-                    <div className="text-gray-600">Output:</div>
+                    <div className="text-secondary">Output:</div>
                     <div className="font-medium">
                       {state.format === 'json'
                         ? 'JSON file'

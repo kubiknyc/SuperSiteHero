@@ -37,7 +37,7 @@ export function ProjectDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center">
-            <p className="text-red-600">Project ID not found</p>
+            <p className="text-error">Project ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -49,8 +49,8 @@ export function ProjectDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading project details...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading project details...</p>
           </div>
         </div>
       </AppLayout>
@@ -68,7 +68,7 @@ export function ProjectDetailPage() {
             </Button>
           </div>
           <div className="text-center py-12">
-            <p className="text-red-600">
+            <p className="text-error">
               {error?.message || 'Failed to load project details'}
             </p>
           </div>
@@ -112,9 +112,9 @@ export function ProjectDetailPage() {
         {/* Header - Enhanced typography */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="heading-page text-gray-900 dark:text-white tracking-tight leading-tight">{project.name}</h1>
+            <h1 className="heading-page text-foreground dark:text-white tracking-tight leading-tight" className="heading-page">{project.name}</h1>
             {project.project_number && (
-              <p className="body-base text-gray-600 dark:text-gray-400 mt-2">#{project.project_number}</p>
+              <p className="body-base text-secondary dark:text-disabled mt-2">#{project.project_number}</p>
             )}
           </div>
           <div className="flex gap-2">
@@ -156,7 +156,7 @@ export function ProjectDetailPage() {
                   <CardTitle className="heading-card">Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                  <p className="text-secondary dark:text-gray-300 whitespace-pre-wrap">
                     {project.description}
                   </p>
                 </CardContent>
@@ -171,27 +171,27 @@ export function ProjectDetailPage() {
               <CardContent className="space-y-4">
                 {project.address && (
                   <div>
-                    <Label className="text-label text-gray-600 dark:text-gray-400">Address</Label>
-                    <p className="text-gray-900 dark:text-white">{project.address}</p>
+                    <Label className="text-label text-secondary dark:text-disabled">Address</Label>
+                    <p className="text-foreground dark:text-white">{project.address}</p>
                   </div>
                 )}
                 <div className="grid grid-cols-3 gap-4">
                   {project.city && (
                     <div>
-                      <Label className="text-label text-gray-600 dark:text-gray-400">City</Label>
-                      <p className="text-gray-900 dark:text-white">{project.city}</p>
+                      <Label className="text-label text-secondary dark:text-disabled">City</Label>
+                      <p className="text-foreground dark:text-white">{project.city}</p>
                     </div>
                   )}
                   {project.state && (
                     <div>
-                      <Label className="text-label text-gray-600 dark:text-gray-400">State</Label>
-                      <p className="text-gray-900 dark:text-white">{project.state}</p>
+                      <Label className="text-label text-secondary dark:text-disabled">State</Label>
+                      <p className="text-foreground dark:text-white">{project.state}</p>
                     </div>
                   )}
                   {project.zip && (
                     <div>
-                      <Label className="text-label text-gray-600 dark:text-gray-400">ZIP</Label>
-                      <p className="text-gray-900 dark:text-white">{project.zip}</p>
+                      <Label className="text-label text-secondary dark:text-disabled">ZIP</Label>
+                      <p className="text-foreground dark:text-white">{project.zip}</p>
                     </div>
                   )}
                 </div>
@@ -224,16 +224,16 @@ export function ProjectDetailPage() {
               <CardContent className="space-y-4">
                 {project.start_date && (
                   <div>
-                    <Label className="text-label text-gray-600 dark:text-gray-400">Start Date</Label>
-                    <p className="text-gray-900 dark:text-white">
+                    <Label className="text-label text-secondary dark:text-disabled">Start Date</Label>
+                    <p className="text-foreground dark:text-white">
                       {project.start_date ? format(new Date(project.start_date), 'MMM d, yyyy') : 'N/A'}
                     </p>
                   </div>
                 )}
                 {project.end_date && (
                   <div>
-                    <Label className="text-label text-gray-600 dark:text-gray-400">Est. End Date</Label>
-                    <p className="text-gray-900 dark:text-white">
+                    <Label className="text-label text-secondary dark:text-disabled">Est. End Date</Label>
+                    <p className="text-foreground dark:text-white">
                       {project.end_date ? format(new Date(project.end_date), 'MMM d, yyyy') : 'N/A'}
                     </p>
                   </div>
@@ -248,7 +248,7 @@ export function ProjectDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-caption text-gray-600 dark:text-gray-400">Status</Label>
+                  <Label className="text-caption text-secondary dark:text-disabled">Status</Label>
                   <Badge variant={getStatusVariant(project.status ?? 'planning')} className="mt-1">
                     {formatStatus(project.status ?? 'planning')}
                   </Badge>

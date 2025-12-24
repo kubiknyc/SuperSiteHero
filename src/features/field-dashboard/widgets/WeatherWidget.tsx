@@ -78,7 +78,7 @@ export function WeatherWidget({
             Weather
           </CardTitle>
           {hasWeatherAlert && (
-            <AlertTriangle className="h-4 w-4 text-amber-500" />
+            <AlertTriangle className="h-4 w-4 text-warning" />
           )}
         </div>
       </CardHeader>
@@ -102,7 +102,7 @@ export function WeatherWidget({
         <div className="grid grid-cols-2 gap-2 text-sm">
           {weather.precipitation !== null && weather.precipitation > 0 && (
             <div className="flex items-center gap-2 p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
-              <Droplets className="h-4 w-4 text-blue-500" />
+              <Droplets className="h-4 w-4 text-primary" />
               <div>
                 <p className="text-xs text-muted-foreground">Precip</p>
                 <p className="font-medium">{weather.precipitation.toFixed(2)}"</p>
@@ -114,12 +114,12 @@ export function WeatherWidget({
             <div className={cn(
               'flex items-center gap-2 p-2 rounded',
               weather.windSpeed > 20
-                ? 'bg-amber-50 dark:bg-amber-950/20'
+                ? 'bg-warning-light dark:bg-amber-950/20'
                 : 'bg-muted/50'
             )}>
               <Wind className={cn(
                 'h-4 w-4',
-                weather.windSpeed > 20 ? 'text-amber-500' : 'text-muted-foreground'
+                weather.windSpeed > 20 ? 'text-warning' : 'text-muted-foreground'
               )} />
               <div>
                 <p className="text-xs text-muted-foreground">Wind</p>

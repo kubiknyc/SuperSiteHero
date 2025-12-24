@@ -268,12 +268,12 @@ export function DocuSignRequestDialog({
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               DocuSign Not Connected
             </DialogTitle>
           </DialogHeader>
           <div className="py-4">
-            <p className="text-gray-600">
+            <p className="text-secondary">
               Please connect your DocuSign account in Settings before sending documents for signature.
             </p>
           </div>
@@ -290,7 +290,7 @@ export function DocuSignRequestDialog({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileSignature className="h-5 w-5 text-blue-600" />
+            <FileSignature className="h-5 w-5 text-primary" />
             Send for Signature
           </DialogTitle>
           <DialogDescription>
@@ -338,7 +338,7 @@ export function DocuSignRequestDialog({
             </div>
 
             {signers.length === 0 ? (
-              <div className="text-center py-4 text-gray-500 border-2 border-dashed rounded-lg">
+              <div className="text-center py-4 text-muted border-2 border-dashed rounded-lg">
                 <User className="h-8 w-8 mx-auto mb-2 text-gray-300" />
                 <p>No signers added</p>
                 <Button
@@ -355,7 +355,7 @@ export function DocuSignRequestDialog({
                 {signers.map((signer, index) => (
                   <div
                     key={index}
-                    className="border rounded-lg p-4 bg-gray-50"
+                    className="border rounded-lg p-4 bg-surface"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
@@ -365,7 +365,7 @@ export function DocuSignRequestDialog({
                               type="button"
                               onClick={() => moveSigner(index, 'up')}
                               disabled={index === 0}
-                              className="text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                              className="text-disabled hover:text-secondary disabled:opacity-30"
                             >
                               <ChevronUp className="h-4 w-4" />
                             </button>
@@ -373,7 +373,7 @@ export function DocuSignRequestDialog({
                               type="button"
                               onClick={() => moveSigner(index, 'down')}
                               disabled={index === signers.length - 1}
-                              className="text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                              className="text-disabled hover:text-secondary disabled:opacity-30"
                             >
                               <ChevronDown className="h-4 w-4" />
                             </button>
@@ -382,14 +382,14 @@ export function DocuSignRequestDialog({
                         <Badge variant="secondary">
                           {enableSigningOrder ? `Signer ${index + 1}` : 'Signer'}
                         </Badge>
-                        <span className="text-sm text-gray-500">{signer.role}</span>
+                        <span className="text-sm text-muted">{signer.role}</span>
                       </div>
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
                         onClick={() => removeSigner(index)}
-                        className="text-red-600 hover:text-red-700"
+                        className="text-error hover:text-error-dark"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -397,11 +397,11 @@ export function DocuSignRequestDialog({
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="space-y-1">
-                        <Label className="text-xs text-gray-500">
-                          Full Name <span className="text-red-500">*</span>
+                        <Label className="text-xs text-muted">
+                          Full Name <span className="text-error">*</span>
                         </Label>
                         <div className="relative">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                           <Input
                             value={signer.name}
                             onChange={(e) => updateSigner(index, 'name', e.target.value)}
@@ -411,11 +411,11 @@ export function DocuSignRequestDialog({
                         </div>
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-xs text-gray-500">
-                          Email <span className="text-red-500">*</span>
+                        <Label className="text-xs text-muted">
+                          Email <span className="text-error">*</span>
                         </Label>
                         <div className="relative">
-                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                           <Input
                             type="email"
                             value={signer.email}
@@ -426,7 +426,7 @@ export function DocuSignRequestDialog({
                         </div>
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-xs text-gray-500">Title</Label>
+                        <Label className="text-xs text-muted">Title</Label>
                         <Input
                           value={signer.title || ''}
                           onChange={(e) => updateSigner(index, 'title', e.target.value)}
@@ -434,7 +434,7 @@ export function DocuSignRequestDialog({
                         />
                       </div>
                       <div className="space-y-1">
-                        <Label className="text-xs text-gray-500">Role</Label>
+                        <Label className="text-xs text-muted">Role</Label>
                         <Input
                           value={signer.role}
                           onChange={(e) => updateSigner(index, 'role', e.target.value)}
@@ -458,7 +458,7 @@ export function DocuSignRequestDialog({
                 </span>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-4">
-                <p className="text-sm text-gray-500 mb-3">
+                <p className="text-sm text-muted mb-3">
                   These recipients will receive a copy of the signed document but don't need to sign.
                 </p>
                 {ccRecipients.map((cc, index) => (
@@ -490,7 +490,7 @@ export function DocuSignRequestDialog({
                       size="sm"
                       onClick={() => removeCCRecipient(index)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-600" />
+                      <Trash2 className="h-4 w-4 text-error" />
                     </Button>
                   </div>
                 ))}
@@ -513,7 +513,7 @@ export function DocuSignRequestDialog({
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="signing-order">Enable Signing Order</Label>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   Signers must sign in the specified order
                 </p>
               </div>
@@ -526,7 +526,7 @@ export function DocuSignRequestDialog({
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label htmlFor="reminders">Send Reminders</Label>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   Automatically remind signers who haven't signed
                 </p>
               </div>

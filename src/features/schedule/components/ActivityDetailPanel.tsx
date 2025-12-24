@@ -86,25 +86,25 @@ function getVarianceDays(
 function getStatusIcon(status: ActivityStatus) {
   switch (status) {
     case 'completed':
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />
+      return <CheckCircle2 className="h-4 w-4 text-success" />
     case 'in_progress':
-      return <Circle className="h-4 w-4 text-blue-500 fill-blue-500" />
+      return <Circle className="h-4 w-4 text-primary fill-blue-500" />
     case 'on_hold':
-      return <Pause className="h-4 w-4 text-yellow-500" />
+      return <Pause className="h-4 w-4 text-warning" />
     case 'cancelled':
-      return <XCircle className="h-4 w-4 text-red-500" />
+      return <XCircle className="h-4 w-4 text-error" />
     default:
-      return <Circle className="h-4 w-4 text-gray-400" />
+      return <Circle className="h-4 w-4 text-disabled" />
   }
 }
 
 function getStatusBadge(status: ActivityStatus) {
   const statusConfig: Record<ActivityStatus, { label: string; className: string }> = {
-    not_started: { label: 'Not Started', className: 'bg-gray-100 text-gray-800' },
-    in_progress: { label: 'In Progress', className: 'bg-blue-100 text-blue-800' },
-    completed: { label: 'Completed', className: 'bg-green-100 text-green-800' },
-    on_hold: { label: 'On Hold', className: 'bg-yellow-100 text-yellow-800' },
-    cancelled: { label: 'Cancelled', className: 'bg-red-100 text-red-800' },
+    not_started: { label: 'Not Started', className: 'bg-muted text-foreground' },
+    in_progress: { label: 'In Progress', className: 'bg-info-light text-blue-800' },
+    completed: { label: 'Completed', className: 'bg-success-light text-green-800' },
+    on_hold: { label: 'On Hold', className: 'bg-warning-light text-yellow-800' },
+    cancelled: { label: 'Cancelled', className: 'bg-error-light text-red-800' },
   }
   const config = statusConfig[status] || statusConfig.not_started
   return (
@@ -153,7 +153,7 @@ function VarianceIndicator({ days, label }: VarianceIndicatorProps) {
   return (
     <div
       className={`flex items-center gap-1 text-sm ${
-        isNegative ? 'text-green-600' : isPositive ? 'text-red-600' : 'text-gray-500'
+        isNegative ? 'text-success' : isPositive ? 'text-error' : 'text-muted'
       }`}
     >
       <Icon className="h-3.5 w-3.5" />
@@ -206,7 +206,7 @@ export function ActivityDetailPanel({
             <div className="flex-1">
               <SheetTitle className="flex items-center gap-2">
                 {activity.is_milestone && <Flag className="h-4 w-4 text-orange-500" />}
-                {activity.is_critical && <AlertTriangle className="h-4 w-4 text-red-500" />}
+                {activity.is_critical && <AlertTriangle className="h-4 w-4 text-error" />}
                 {activity.name}
               </SheetTitle>
               <SheetDescription className="flex items-center gap-2 mt-1">
@@ -228,7 +228,7 @@ export function ActivityDetailPanel({
               )}
               {onDelete && (
                 <Button size="sm" variant="outline" onClick={onDelete}>
-                  <Trash2 className="h-4 w-4 text-red-500" />
+                  <Trash2 className="h-4 w-4 text-error" />
                 </Button>
               )}
             </div>
@@ -261,7 +261,7 @@ export function ActivityDetailPanel({
 
           {/* Dates Section */}
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold flex items-center gap-1">
+            <h4 className="text-sm font-semibold flex items-center gap-1" className="heading-card">
               <CalendarDays className="h-4 w-4" />
               Schedule
             </h4>
@@ -307,7 +307,7 @@ export function ActivityDetailPanel({
 
             {/* Baseline Comparison */}
             {(activity.baseline_start || activity.baseline_finish) && (
-              <div className="bg-gray-50 rounded-lg p-3 space-y-2">
+              <div className="bg-surface rounded-lg p-3 space-y-2">
                 <h5 className="text-xs font-medium text-muted-foreground uppercase">
                   Baseline Comparison
                 </h5>
@@ -342,7 +342,7 @@ export function ActivityDetailPanel({
                     <span className="text-muted-foreground">Total Float: </span>
                     <span
                       className={`font-medium ${
-                        activity.total_float <= 0 ? 'text-red-600' : ''
+                        activity.total_float <= 0 ? 'text-error' : ''
                       }`}
                     >
                       {activity.total_float} day{activity.total_float !== 1 ? 's' : ''}
@@ -365,7 +365,7 @@ export function ActivityDetailPanel({
 
           {/* Assignment Section */}
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold flex items-center gap-1">
+            <h4 className="text-sm font-semibold flex items-center gap-1" className="heading-card">
               <User className="h-4 w-4" />
               Assignment
             </h4>
@@ -406,7 +406,7 @@ export function ActivityDetailPanel({
             <>
               <Separator />
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold flex items-center gap-1">
+                <h4 className="text-sm font-semibold flex items-center gap-1" className="heading-card">
                   <DollarSign className="h-4 w-4" />
                   Budget
                 </h4>
@@ -450,7 +450,7 @@ export function ActivityDetailPanel({
               <div className="space-y-3">
                 {activity.description && (
                   <div>
-                    <h4 className="text-sm font-semibold flex items-center gap-1 mb-1">
+                    <h4 className="text-sm font-semibold flex items-center gap-1 mb-1" className="heading-card">
                       <FileText className="h-4 w-4" />
                       Description
                     </h4>
@@ -461,7 +461,7 @@ export function ActivityDetailPanel({
                 )}
                 {activity.notes && (
                   <div>
-                    <h4 className="text-sm font-semibold mb-1">Notes</h4>
+                    <h4 className="text-sm font-semibold mb-1" className="heading-card">Notes</h4>
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                       {activity.notes}
                     </p>

@@ -66,8 +66,8 @@ const INCIDENT_TYPES: {
     value: 'near_miss',
     label: 'Near Miss',
     description: 'Close call, no injury',
-    color: 'text-green-700',
-    bgColor: 'bg-green-100',
+    color: 'text-success-dark',
+    bgColor: 'bg-success-light',
     severity: 1,
   },
   {
@@ -75,7 +75,7 @@ const INCIDENT_TYPES: {
     label: 'First Aid',
     description: 'Minor injury, first aid only',
     color: 'text-yellow-700',
-    bgColor: 'bg-yellow-100',
+    bgColor: 'bg-warning-light',
     severity: 2,
   },
   {
@@ -90,8 +90,8 @@ const INCIDENT_TYPES: {
     value: 'lost_time',
     label: 'Lost Time',
     description: 'Days away from work',
-    color: 'text-red-700',
-    bgColor: 'bg-red-100',
+    color: 'text-error-dark',
+    bgColor: 'bg-error-light',
     severity: 4,
   },
   {
@@ -284,7 +284,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                       <div className="flex items-center gap-2">
                         <span className={`w-2 h-2 rounded-full ${type.bgColor}`} />
                         <span>{type.label}</span>
-                        <span className="text-gray-400 text-xs">- {type.description}</span>
+                        <span className="text-disabled text-xs">- {type.description}</span>
                       </div>
                     </SelectItem>
                   ))}
@@ -294,11 +294,11 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
 
             {/* OSHA Warning Banner */}
             {formData.osha_reportable && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
-                <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+              <div className="p-3 bg-error-light border border-red-200 rounded-lg flex items-start gap-2">
+                <AlertTriangle className="h-5 w-5 text-error mt-0.5 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-red-700">OSHA Reportable Incident</p>
-                  <p className="text-sm text-red-600">
+                  <p className="font-medium text-error-dark">OSHA Reportable Incident</p>
+                  <p className="text-sm text-error">
                     {formData.incident_type === 'fatality'
                       ? 'OSHA requires notification within 8 hours of fatality.'
                       : 'This incident must be recorded on OSHA 300 log.'}
@@ -365,8 +365,8 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
         return (
           <div className="space-y-4">
             {formData.incident_type === 'near_miss' && (
-              <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-sm text-green-700">
+              <div className="p-3 bg-success-light border border-green-200 rounded-lg">
+                <p className="text-sm text-success-dark">
                   Near miss incidents don't require injury details. You may skip to the next section.
                 </p>
               </div>
@@ -518,7 +518,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                       onChange={(e) => handleFormChange({ days_away_from_work: parseInt(e.target.value) || 0 })}
                       placeholder="0"
                     />
-                    <p className="text-xs text-gray-500">Calendar days unable to work</p>
+                    <p className="text-xs text-muted">Calendar days unable to work</p>
                   </div>
                   <div className="space-y-2">
                     <Label>Days on Restricted Duty</Label>
@@ -529,7 +529,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                       onChange={(e) => handleFormChange({ days_on_restricted_duty: parseInt(e.target.value) || 0 })}
                       placeholder="0"
                     />
-                    <p className="text-xs text-gray-500">Days with work restrictions</p>
+                    <p className="text-xs text-muted">Days with work restrictions</p>
                   </div>
                 </div>
               </div>
@@ -537,9 +537,9 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
 
             {/* Hospitalization & Amputation Tracking - OSHA 24-hour reporting */}
             {['recordable', 'lost_time', 'fatality'].includes(formData.incident_type || '') && (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg space-y-4">
+              <div className="p-4 bg-warning-light border border-amber-200 rounded-lg space-y-4">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
+                  <AlertTriangle className="h-4 w-4 text-warning" />
                   <span className="font-medium text-amber-700">Severe Injury Tracking (OSHA 24-hour reporting)</span>
                 </div>
 
@@ -555,7 +555,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                       />
                       <div>
                         <Label htmlFor="hospitalized">In-Patient Hospitalization</Label>
-                        <p className="text-xs text-amber-600 mt-1">
+                        <p className="text-xs text-warning mt-1">
                           OSHA 24-hour reporting required
                         </p>
                       </div>
@@ -570,7 +570,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                           onChange={(e) => handleFormChange({ hospitalization_count: parseInt(e.target.value) || 1 })}
                         />
                         {(formData.hospitalization_count || 0) >= 3 && (
-                          <p className="text-xs text-red-600 font-medium">
+                          <p className="text-xs text-error font-medium">
                             3+ workers hospitalized - OSHA notification required within 24 hours
                           </p>
                         )}
@@ -589,7 +589,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                       />
                       <div>
                         <Label htmlFor="amputation">Amputation Injury</Label>
-                        <p className="text-xs text-amber-600 mt-1">
+                        <p className="text-xs text-warning mt-1">
                           OSHA 24-hour reporting required
                         </p>
                       </div>
@@ -601,10 +601,10 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
 
             {/* Fatality Information - OSHA 8-hour reporting */}
             {formData.incident_type === 'fatality' && (
-              <div className="p-4 bg-red-50 border-2 border-red-500 rounded-lg space-y-4">
+              <div className="p-4 bg-error-light border-2 border-red-500 rounded-lg space-y-4">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
-                  <span className="font-bold text-red-700">FATALITY - OSHA 8-HOUR REPORTING REQUIRED</span>
+                  <AlertTriangle className="h-5 w-5 text-error" />
+                  <span className="font-bold text-error-dark">FATALITY - OSHA 8-HOUR REPORTING REQUIRED</span>
                 </div>
 
                 <div className="space-y-4">
@@ -617,7 +617,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                     />
                   </div>
 
-                  <div className="p-3 bg-white rounded border border-red-300 space-y-3">
+                  <div className="p-3 bg-card rounded border border-red-300 space-y-3">
                     <div className="flex items-center gap-3">
                       <Checkbox
                         id="osha_notified"
@@ -638,8 +638,8 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                         }}
                       />
                       <div>
-                        <Label htmlFor="osha_notified" className="text-red-700 font-medium">OSHA Has Been Notified</Label>
-                        <p className="text-xs text-red-600">Call 1-800-321-OSHA within 8 hours of fatality</p>
+                        <Label htmlFor="osha_notified" className="text-error-dark font-medium">OSHA Has Been Notified</Label>
+                        <p className="text-xs text-error">Call 1-800-321-OSHA within 8 hours of fatality</p>
                       </div>
                     </div>
 
@@ -671,7 +671,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                           </Select>
                         </div>
                         <div className="col-span-2">
-                          <p className="text-xs text-green-600">
+                          <p className="text-xs text-success">
                             OSHA notified at: {new Date(formData.osha_notification_timestamp).toLocaleString()}
                           </p>
                         </div>
@@ -679,7 +679,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                     )}
 
                     {!formData.osha_notification_timestamp && (
-                      <p className="text-xs text-red-700 font-medium">
+                      <p className="text-xs text-error-dark font-medium">
                         You must report this fatality to OSHA by telephone (1-800-321-OSHA) within 8 hours.
                         Also notify: Project Manager, Safety Director, Legal, Insurance carrier.
                       </p>
@@ -793,10 +793,10 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
           <div className="space-y-4">
             {/* OSHA Section */}
             {formData.osha_reportable && (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-lg space-y-4">
+              <div className="p-4 bg-error-light border border-red-200 rounded-lg space-y-4">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-500" />
-                  <span className="font-medium text-red-700">OSHA Reporting Required</span>
+                  <AlertTriangle className="h-5 w-5 text-error" />
+                  <span className="font-medium text-error-dark">OSHA Reporting Required</span>
                 </div>
                 <div className="space-y-2">
                   <Label>OSHA Case Number (if assigned)</Label>
@@ -817,8 +817,8 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                     }
                   />
                   <div>
-                    <Label htmlFor="privacy_case" className="text-red-700">Privacy Case</Label>
-                    <p className="text-xs text-red-600 mt-1">
+                    <Label htmlFor="privacy_case" className="text-error-dark">Privacy Case</Label>
+                    <p className="text-xs text-error mt-1">
                       Check if employee name should be withheld from OSHA 300 log
                       (sexual assault, HIV, mental illness, or other sensitive conditions)
                     </p>
@@ -899,11 +899,11 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
   const getCompletionStatusIcon = (status: CompletionStatus) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-success" />;
       case 'in_progress':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-warning" />;
       default:
-        return <XCircle className="h-4 w-4 text-gray-400" />;
+        return <XCircle className="h-4 w-4 text-disabled" />;
     }
   };
 
@@ -913,11 +913,11 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${stats.recordableCount > 0 ? 'bg-red-100' : 'bg-orange-100'}`}>
-              <Shield className={`h-5 w-5 ${stats.recordableCount > 0 ? 'text-red-600' : 'text-orange-600'}`} />
+            <div className={`p-2 rounded-lg ${stats.recordableCount > 0 ? 'bg-error-light' : 'bg-orange-100'}`}>
+              <Shield className={`h-5 w-5 ${stats.recordableCount > 0 ? 'text-error' : 'text-orange-600'}`} />
             </div>
             <div className="text-left">
               <CardTitle className="text-base flex items-center gap-2">
@@ -938,17 +938,17 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
             {/* Quick Add Buttons */}
-            <div className="p-4 bg-gray-50 border-b">
-              <div className="text-sm font-medium text-gray-700 mb-2">Log Incident:</div>
+            <div className="p-4 bg-surface border-b">
+              <div className="text-sm font-medium text-secondary mb-2">Log Incident:</div>
               <div className="flex flex-wrap gap-2">
                 {INCIDENT_TYPES.map((type) => (
                   <Button
@@ -974,9 +974,9 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                   <div key={incident.id} className="p-4">
                     {/* OSHA Warning Banner */}
                     {incident.osha_reportable && (
-                      <div className="mb-3 p-2 bg-red-50 border border-red-200 rounded flex items-center gap-2">
-                        <AlertTriangle className="h-4 w-4 text-red-500" />
-                        <span className="text-sm font-medium text-red-700">OSHA Recordable</span>
+                      <div className="mb-3 p-2 bg-error-light border border-red-200 rounded flex items-center gap-2">
+                        <AlertTriangle className="h-4 w-4 text-error" />
+                        <span className="text-sm font-medium text-error-dark">OSHA Recordable</span>
                       </div>
                     )}
 
@@ -987,24 +987,24 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                           {typeInfo.label}
                         </span>
                         {incident.incident_time && (
-                          <span className="text-sm text-gray-500">at {incident.incident_time}</span>
+                          <span className="text-sm text-muted">at {incident.incident_time}</span>
                         )}
                         {incident.incident_location && (
-                          <span className="text-sm text-gray-500">- {incident.incident_location}</span>
+                          <span className="text-sm text-muted">- {incident.incident_location}</span>
                         )}
                       </div>
                       <div className="flex items-center gap-1">
                         <button
                           type="button"
                           onClick={() => handleEdit(incident)}
-                          className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                          className="p-2 text-disabled hover:text-primary hover:bg-blue-50 rounded transition-colors"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(incident.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                          className="p-2 text-disabled hover:text-error hover:bg-error-light rounded transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -1012,30 +1012,30 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-700 mb-3">{incident.description}</p>
+                    <p className="text-sm text-secondary mb-3">{incident.description}</p>
 
                     {/* Details Grid */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                       {incident.injured_party_name && (
                         <div>
-                          <span className="text-gray-500">Injured:</span>
+                          <span className="text-muted">Injured:</span>
                           <span className="ml-1 font-medium">{incident.injured_party_name}</span>
                         </div>
                       )}
                       {incident.injury_type && (
                         <div>
-                          <span className="text-gray-500">Injury:</span>
+                          <span className="text-muted">Injury:</span>
                           <span className="ml-1">{incident.injury_type}</span>
                         </div>
                       )}
                       {incident.body_part_affected && (
                         <div>
-                          <span className="text-gray-500">Body Part:</span>
+                          <span className="text-muted">Body Part:</span>
                           <span className="ml-1">{incident.body_part_affected}</span>
                         </div>
                       )}
                       <div className="flex items-center gap-1">
-                        <span className="text-gray-500">Status:</span>
+                        <span className="text-muted">Status:</span>
                         {getCompletionStatusIcon(incident.completion_status)}
                         <span className="capitalize">{incident.completion_status}</span>
                       </div>
@@ -1044,8 +1044,8 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                     {/* Corrective Actions Preview */}
                     {incident.corrective_actions && (
                       <div className="mt-3 p-2 bg-blue-50 rounded">
-                        <span className="text-xs font-medium text-blue-700">Corrective Actions:</span>
-                        <p className="text-sm text-blue-600">{incident.corrective_actions}</p>
+                        <span className="text-xs font-medium text-primary-hover">Corrective Actions:</span>
+                        <p className="text-sm text-primary">{incident.corrective_actions}</p>
                       </div>
                     )}
                   </div>
@@ -1054,8 +1054,8 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
 
               {/* Empty State */}
               {safetyIncidents.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <Shield className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <div className="p-8 text-center text-muted">
+                  <Shield className="h-8 w-8 mx-auto mb-2 text-disabled" />
                   <p>No safety incidents reported today.</p>
                   <p className="text-sm">Record near misses and incidents to maintain safety documentation.</p>
                 </div>
@@ -1064,7 +1064,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
 
             {/* Summary Footer */}
             {safetyIncidents.length > 0 && (
-              <div className="p-4 bg-gray-100 border-t">
+              <div className="p-4 bg-muted border-t">
                 <div className="flex justify-between text-sm">
                   <span>
                     Total: {safetyIncidents.length} incident{safetyIncidents.length > 1 ? 's' : ''}
@@ -1108,10 +1108,10 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
                 onClick={() => setFormStage(stage.key as FormStage)}
                 className={`flex flex-col items-center gap-1 px-3 py-2 rounded transition-colors ${
                   formStage === stage.key
-                    ? 'bg-blue-100 text-blue-700'
+                    ? 'bg-info-light text-primary-hover'
                     : getStageIndex(stage.key as FormStage) < getStageIndex(formStage)
-                      ? 'text-green-600'
-                      : 'text-gray-400'
+                      ? 'text-success'
+                      : 'text-disabled'
                 }`}
               >
                 <stage.icon className="h-5 w-5" />

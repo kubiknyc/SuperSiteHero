@@ -7,11 +7,11 @@ import { HardHat, FileText, CheckCircle, ArrowRight, Users, Calendar, Plus, BarC
 
 export function DesignConceptsDemo() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-muted">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-card shadow-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-gray-900 text-center">
+          <h1 className="heading-page text-center">
             UI Design Concepts
           </h1>
           <p className="text-gray-600 text-center mt-2">
@@ -28,14 +28,14 @@ export function DesignConceptsDemo() {
           tagline="Clean, breathable, content-first"
           description="Lots of whitespace, subtle shadows, understated elegance. Lets the content speak."
         >
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <div className="bg-card rounded-2xl p-6 shadow-sm border border-gray-100">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center">
                   <HardHat className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-semibold text-gray-900">JobSight</span>
+                <span className="text-xl font-semibold text-foreground">JobSight</span>
               </div>
               <button className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800">
                 New Report
@@ -49,10 +49,10 @@ export function DesignConceptsDemo() {
                 { label: 'Tasks Today', value: '8', change: '3 urgent' },
                 { label: 'Team Members', value: '24', change: 'Online' },
               ].map((stat, i) => (
-                <div key={i} className="p-4 bg-gray-50 rounded-xl">
-                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                  <p className="text-xs text-gray-400 mt-1">{stat.change}</p>
+                <div key={i} className="p-4 bg-surface rounded-xl">
+                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                  <p className="text-sm text-muted">{stat.label}</p>
+                  <p className="text-xs text-disabled mt-1">{stat.change}</p>
                 </div>
               ))}
             </div>
@@ -60,14 +60,14 @@ export function DesignConceptsDemo() {
             {/* Cards */}
             <div className="space-y-3">
               {['Daily Report - Building A', 'Safety Inspection Due', 'RFI Response Needed'].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-gray-200 hover:shadow-sm transition-all cursor-pointer">
+                <div key={i} className="flex items-center justify-between p-4 border border-gray-100 rounded-xl hover:border-border hover:shadow-sm transition-all cursor-pointer">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center">
                       <FileText className="w-4 h-4 text-gray-600" />
                     </div>
-                    <span className="font-medium text-gray-900">{item}</span>
+                    <span className="font-medium text-foreground">{item}</span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  <ChevronRight className="w-4 h-4 text-disabled" />
                 </div>
               ))}
             </div>
@@ -75,7 +75,7 @@ export function DesignConceptsDemo() {
             {/* Buttons */}
             <div className="flex gap-3 mt-6">
               <button className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg">Primary</button>
-              <button className="px-4 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg border border-gray-200">Secondary</button>
+              <button className="px-4 py-2 bg-card text-foreground text-sm font-medium rounded-lg border border-border">Secondary</button>
               <button className="px-4 py-2 text-gray-600 text-sm font-medium">Text Link</button>
             </div>
           </div>
@@ -92,12 +92,12 @@ export function DesignConceptsDemo() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-warning rounded-lg flex items-center justify-center">
                   <HardHat className="w-5 h-5 text-slate-900" />
                 </div>
                 <span className="text-xl font-bold text-white tracking-tight">JOBSIGHT</span>
               </div>
-              <button className="px-4 py-2 bg-amber-500 text-slate-900 text-sm font-bold rounded-lg hover:bg-amber-400">
+              <button className="px-4 py-2 bg-warning text-slate-900 text-sm font-bold rounded-lg hover:bg-amber-400">
                 + NEW REPORT
               </button>
             </div>
@@ -105,7 +105,7 @@ export function DesignConceptsDemo() {
             {/* Stats with accent bar */}
             <div className="grid grid-cols-3 gap-4 mb-6">
               {[
-                { label: 'PROJECTS', value: '12', color: 'bg-amber-500' },
+                { label: 'PROJECTS', value: '12', color: 'bg-warning' },
                 { label: 'TASKS', value: '8', color: 'bg-emerald-500' },
                 { label: 'TEAM', value: '24', color: 'bg-blue-500' },
               ].map((stat, i) => (
@@ -124,7 +124,7 @@ export function DesignConceptsDemo() {
                 { title: 'Safety Inspection Due', status: 'URGENT', statusColor: 'text-red-500' },
                 { title: 'RFI Response Needed', status: 'IN PROGRESS', statusColor: 'text-blue-500' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors cursor-pointer border-l-4 border-amber-500">
+                <div key={i} className="flex items-center justify-between p-4 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors cursor-pointer border-l-4 border-warning">
                   <div className="flex items-center gap-3">
                     <FileText className="w-5 h-5 text-slate-400" />
                     <span className="font-semibold text-white">{item.title}</span>
@@ -136,7 +136,7 @@ export function DesignConceptsDemo() {
 
             {/* Buttons */}
             <div className="flex gap-3 mt-6">
-              <button className="px-4 py-2 bg-amber-500 text-slate-900 text-sm font-bold rounded-lg">PRIMARY</button>
+              <button className="px-4 py-2 bg-warning text-slate-900 text-sm font-bold rounded-lg">PRIMARY</button>
               <button className="px-4 py-2 bg-slate-700 text-white text-sm font-bold rounded-lg border border-slate-600">SECONDARY</button>
               <button className="px-4 py-2 text-amber-500 text-sm font-bold">LINK →</button>
             </div>
@@ -159,7 +159,7 @@ export function DesignConceptsDemo() {
                 </div>
                 <div>
                   <span className="text-xl font-bold text-gray-800">JobSight</span>
-                  <p className="text-xs text-gray-500">Field Management</p>
+                  <p className="text-xs text-muted">Field Management</p>
                 </div>
               </div>
               <button className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-semibold rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all">
@@ -174,10 +174,10 @@ export function DesignConceptsDemo() {
                 { label: 'Tasks Today', value: '8', icon: CheckCircle, color: 'text-emerald-500' },
                 { label: 'Team Online', value: '24', icon: Users, color: 'text-purple-500' },
               ].map((stat, i) => (
-                <div key={i} className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm">
+                <div key={i} className="bg-card/80 backdrop-blur-sm rounded-2xl p-4 shadow-sm">
                   <stat.icon className={`w-5 h-5 ${stat.color} mb-2`} />
                   <p className="text-2xl font-bold text-gray-800">{stat.value}</p>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
+                  <p className="text-sm text-muted">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -185,10 +185,10 @@ export function DesignConceptsDemo() {
             {/* Cards */}
             <div className="space-y-3">
               {['Daily Report - Building A', 'Safety Inspection Due', 'RFI Response Needed'].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer">
+                <div key={i} className="flex items-center justify-between p-4 bg-card rounded-2xl shadow-sm hover:shadow-md transition-shadow cursor-pointer">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                      <FileText className="w-5 h-5 text-primary" />
                     </div>
                     <span className="font-semibold text-gray-800">{item}</span>
                   </div>
@@ -200,8 +200,8 @@ export function DesignConceptsDemo() {
             {/* Buttons */}
             <div className="flex gap-3 mt-6">
               <button className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm font-semibold rounded-xl shadow-lg">Primary</button>
-              <button className="px-5 py-2.5 bg-white text-gray-700 text-sm font-semibold rounded-xl shadow-sm border border-gray-200">Secondary</button>
-              <button className="px-5 py-2.5 text-blue-600 text-sm font-semibold">Learn More</button>
+              <button className="px-5 py-2.5 bg-card text-secondary text-sm font-semibold rounded-xl shadow-sm border border-border">Secondary</button>
+              <button className="px-5 py-2.5 text-primary text-sm font-semibold">Learn More</button>
             </div>
           </div>
         </ConceptSection>
@@ -213,7 +213,7 @@ export function DesignConceptsDemo() {
           tagline="Data-driven, efficient, powerful"
           description="Dense information layout, data visualization focus, productivity-oriented."
         >
-          <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-card rounded-xl border border-border shadow-sm overflow-hidden">
             {/* Top bar */}
             <div className="bg-gray-900 px-4 py-3 flex items-center justify-between">
               <div className="flex items-center gap-6">
@@ -225,9 +225,9 @@ export function DesignConceptsDemo() {
                 </div>
                 <nav className="flex gap-4 text-sm">
                   <a className="text-white font-medium">Dashboard</a>
-                  <a className="text-gray-400 hover:text-white">Projects</a>
-                  <a className="text-gray-400 hover:text-white">Reports</a>
-                  <a className="text-gray-400 hover:text-white">Team</a>
+                  <a className="text-disabled hover:text-white">Projects</a>
+                  <a className="text-disabled hover:text-white">Reports</a>
+                  <a className="text-disabled hover:text-white">Team</a>
                 </nav>
               </div>
               <button className="px-3 py-1.5 bg-emerald-500 text-white text-xs font-semibold rounded">
@@ -245,22 +245,22 @@ export function DesignConceptsDemo() {
                   { label: 'Team Utilization', value: '87%', trend: '+3%', trendUp: true },
                   { label: 'Due This Week', value: '8', trend: '2 urgent', trendUp: false },
                 ].map((stat, i) => (
-                  <div key={i} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                  <div key={i} className="bg-surface rounded-lg p-3 border border-gray-100">
                     <div className="flex items-center justify-between">
-                      <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                      <span className={`text-xs font-medium ${stat.trendUp ? 'text-emerald-600' : 'text-amber-600'}`}>
+                      <p className="text-2xl font-bold text-foreground">{stat.value}</p>
+                      <span className={`text-xs font-medium ${stat.trendUp ? 'text-emerald-600' : 'text-warning'}`}>
                         {stat.trend}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">{stat.label}</p>
+                    <p className="text-xs text-muted mt-1">{stat.label}</p>
                   </div>
                 ))}
               </div>
 
               {/* Table-like list */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
-                  <div className="grid grid-cols-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              <div className="border border-border rounded-lg overflow-hidden">
+                <div className="bg-surface px-4 py-2 border-b border-border">
+                  <div className="grid grid-cols-4 text-xs font-semibold text-muted uppercase tracking-wider">
                     <span>Item</span>
                     <span>Project</span>
                     <span>Status</span>
@@ -272,9 +272,9 @@ export function DesignConceptsDemo() {
                   { item: 'Safety Inspection', project: 'Site B', status: 'Urgent', statusColor: 'bg-red-100 text-red-800', due: 'Overdue' },
                   { item: 'RFI #234', project: 'Building A', status: 'In Review', statusColor: 'bg-blue-100 text-blue-800', due: 'Tomorrow' },
                 ].map((row, i) => (
-                  <div key={i} className="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 cursor-pointer">
+                  <div key={i} className="px-4 py-3 border-b border-gray-100 hover:bg-surface cursor-pointer">
                     <div className="grid grid-cols-4 text-sm">
-                      <span className="font-medium text-gray-900">{row.item}</span>
+                      <span className="font-medium text-foreground">{row.item}</span>
                       <span className="text-gray-600">{row.project}</span>
                       <span><span className={`px-2 py-0.5 rounded text-xs font-medium ${row.statusColor}`}>{row.status}</span></span>
                       <span className="text-gray-600">{row.due}</span>
@@ -286,7 +286,7 @@ export function DesignConceptsDemo() {
               {/* Buttons */}
               <div className="flex gap-2 mt-4">
                 <button className="px-3 py-1.5 bg-emerald-500 text-white text-sm font-medium rounded">Primary</button>
-                <button className="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded border border-gray-200">Secondary</button>
+                <button className="px-3 py-1.5 bg-muted text-secondary text-sm font-medium rounded border border-border">Secondary</button>
                 <button className="px-3 py-1.5 text-emerald-600 text-sm font-medium">View All →</button>
               </div>
             </div>
@@ -304,12 +304,12 @@ export function DesignConceptsDemo() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-card/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
                   <HardHat className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-2xl font-bold text-white">JobSight</span>
               </div>
-              <button className="px-5 py-2.5 bg-white text-purple-700 text-sm font-bold rounded-xl hover:bg-purple-50 transition-colors">
+              <button className="px-5 py-2.5 bg-card text-purple-700 text-sm font-bold rounded-xl hover:bg-purple-50 transition-colors">
                 + New Report
               </button>
             </div>
@@ -321,7 +321,7 @@ export function DesignConceptsDemo() {
                 { label: 'Tasks', value: '8', icon: CheckCircle },
                 { label: 'Team', value: '24', icon: Users },
               ].map((stat, i) => (
-                <div key={i} className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                <div key={i} className="bg-card/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                   <stat.icon className="w-5 h-5 text-white/70 mb-2" />
                   <p className="text-3xl font-bold text-white">{stat.value}</p>
                   <p className="text-sm text-white/70">{stat.label}</p>
@@ -336,9 +336,9 @@ export function DesignConceptsDemo() {
                 { title: 'Safety Inspection Due', badge: '⚡ Urgent', badgeBg: 'bg-red-500' },
                 { title: 'RFI Response Needed', badge: '📝 New', badgeBg: 'bg-emerald-500' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-white/20 transition-colors cursor-pointer">
+                <div key={i} className="flex items-center justify-between p-4 bg-card/10 backdrop-blur-sm rounded-2xl border border-white/20 hover:bg-card/20 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <div className="w-10 h-10 bg-card/20 rounded-xl flex items-center justify-center">
                       <FileText className="w-5 h-5 text-white" />
                     </div>
                     <span className="font-semibold text-white">{item.title}</span>
@@ -350,8 +350,8 @@ export function DesignConceptsDemo() {
 
             {/* Buttons */}
             <div className="flex gap-3 mt-6">
-              <button className="px-5 py-2.5 bg-white text-purple-700 text-sm font-bold rounded-xl">Primary</button>
-              <button className="px-5 py-2.5 bg-white/20 text-white text-sm font-bold rounded-xl border border-white/30">Secondary</button>
+              <button className="px-5 py-2.5 bg-card text-purple-700 text-sm font-bold rounded-xl">Primary</button>
+              <button className="px-5 py-2.5 bg-card/20 text-white text-sm font-bold rounded-xl border border-white/30">Secondary</button>
               <button className="px-5 py-2.5 text-white text-sm font-bold">Learn More →</button>
             </div>
           </div>
@@ -398,7 +398,7 @@ export function DesignConceptsDemo() {
             {/* Cards */}
             <div className="space-y-2">
               {['Daily Report - Building A', 'Safety Inspection Due', 'RFI Response Needed'].map((item, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white rounded-lg border border-neutral-200 hover:border-teal-300 transition-colors cursor-pointer">
+                <div key={i} className="flex items-center justify-between p-4 bg-card rounded-lg border border-neutral-200 hover:border-teal-300 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3">
                     <FileText className="w-5 h-5 text-neutral-400" />
                     <span className="font-medium text-neutral-900">{item}</span>
@@ -411,7 +411,7 @@ export function DesignConceptsDemo() {
             {/* Buttons */}
             <div className="flex gap-3 mt-6">
               <button className="px-4 py-2 bg-teal-600 text-white text-sm font-semibold rounded-lg">Primary</button>
-              <button className="px-4 py-2 bg-white text-neutral-700 text-sm font-semibold rounded-lg border border-neutral-300">Secondary</button>
+              <button className="px-4 py-2 bg-card text-neutral-700 text-sm font-semibold rounded-lg border border-neutral-300">Secondary</button>
               <button className="px-4 py-2 text-teal-600 text-sm font-semibold">Text Link</button>
             </div>
           </div>
@@ -419,12 +419,12 @@ export function DesignConceptsDemo() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-8 mt-8">
+      <footer className="bg-card border-t border-border py-8 mt-8">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-lg text-gray-700 mb-2">
+          <p className="text-lg text-secondary mb-2">
             Which design concept appeals to you? <strong>1, 2, 3, 4, 5, or 6?</strong>
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             I'll build out the full design system based on your choice.
           </p>
         </div>
@@ -453,10 +453,10 @@ function ConceptSection({
           <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
             {id}
           </span>
-          <h2 className="text-2xl font-bold text-gray-900">{name}</h2>
+          <h2 className="text-2xl font-bold text-foreground" className="heading-section">{name}</h2>
         </div>
-        <p className="text-lg text-gray-700 font-medium">{tagline}</p>
-        <p className="text-gray-500">{description}</p>
+        <p className="text-lg text-secondary font-medium">{tagline}</p>
+        <p className="text-muted">{description}</p>
       </div>
       {children}
     </section>

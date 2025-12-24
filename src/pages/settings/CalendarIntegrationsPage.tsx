@@ -83,7 +83,7 @@ export function CalendarIntegrationsPage() {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold">Calendar Integrations</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">Calendar Integrations</h1>
             <p className="text-muted-foreground">
               Connect your calendars to sync meetings and events automatically
             </p>
@@ -102,10 +102,10 @@ export function CalendarIntegrationsPage() {
         )}
 
         {oauthStatus === 'success' && (
-          <Alert className="bg-green-50 border-green-200">
-            <CheckCircle2 className="h-4 w-4 text-green-600" />
+          <Alert className="bg-success-light border-green-200">
+            <CheckCircle2 className="h-4 w-4 text-success" />
             <AlertTitle className="text-green-800">Connected!</AlertTitle>
-            <AlertDescription className="text-green-700">
+            <AlertDescription className="text-success-dark">
               Your calendar has been connected successfully. You can now configure sync settings below.
             </AlertDescription>
           </Alert>
@@ -125,9 +125,9 @@ export function CalendarIntegrationsPage() {
         <Card className="bg-blue-50 border-blue-200">
           <CardContent className="pt-6">
             <div className="flex gap-3">
-              <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+              <Info className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
               <div className="space-y-2">
-                <h3 className="font-medium text-blue-900">About Calendar Integration</h3>
+                <h3 className="font-medium text-blue-900" className="heading-subsection">About Calendar Integration</h3>
                 <ul className="text-sm text-blue-800 space-y-1">
                   <li>- Automatically sync meetings to your calendar</li>
                   <li>- Import calendar events as project meetings</li>
@@ -185,19 +185,19 @@ export function CalendarIntegrationsPage() {
           <CardContent className="space-y-4">
             <div className="grid gap-4 md:grid-cols-3">
               <div className="p-4 rounded-lg bg-muted">
-                <h4 className="font-medium mb-2">Two-way Sync</h4>
+                <h4 className="font-medium mb-2" className="heading-card">Two-way Sync</h4>
                 <p className="text-sm text-muted-foreground">
                   Changes in either system automatically update the other. Best for keeping both calendars in sync.
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-muted">
-                <h4 className="font-medium mb-2">App to Calendar</h4>
+                <h4 className="font-medium mb-2" className="heading-card">App to Calendar</h4>
                 <p className="text-sm text-muted-foreground">
                   Meetings created here appear in your calendar. Calendar changes do not sync back.
                 </p>
               </div>
               <div className="p-4 rounded-lg bg-muted">
-                <h4 className="font-medium mb-2">Calendar to App</h4>
+                <h4 className="font-medium mb-2" className="heading-card">Calendar to App</h4>
                 <p className="text-sm text-muted-foreground">
                   Import events from your calendar. Changes made here do not sync to your calendar.
                 </p>

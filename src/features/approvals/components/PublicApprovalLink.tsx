@@ -134,8 +134,8 @@ export function PublicApprovalLink({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Link2 className="w-5 h-5 text-gray-500" />
-          <h3 className="font-medium text-gray-900">Client Approval Links</h3>
+          <Link2 className="w-5 h-5 text-muted" />
+          <h3 className="font-medium text-foreground" className="heading-subsection">Client Approval Links</h3>
         </div>
         {!showCreateForm && (
           <Button
@@ -150,8 +150,8 @@ export function PublicApprovalLink({
 
       {/* Create Form */}
       {showCreateForm && (
-        <div className="bg-gray-50 rounded-lg p-4 border">
-          <h4 className="text-sm font-medium text-gray-700 mb-3">
+        <div className="bg-surface rounded-lg p-4 border">
+          <h4 className="text-sm font-medium text-secondary mb-3" className="heading-card">
             Generate New Approval Link
           </h4>
 
@@ -159,26 +159,26 @@ export function PublicApprovalLink({
             {/* Client Info (Optional) */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-xs font-medium text-secondary mb-1">
                   Client Email (Optional)
                 </label>
                 <input
                   type="email"
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="client@example.com"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-xs font-medium text-secondary mb-1">
                   Client Name (Optional)
                 </label>
                 <input
                   type="text"
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="John Smith"
                 />
               </div>
@@ -186,7 +186,7 @@ export function PublicApprovalLink({
 
             {/* Link Type */}
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
+              <label className="block text-xs font-medium text-secondary mb-1">
                 Link Type
               </label>
               <div className="flex gap-4">
@@ -195,7 +195,7 @@ export function PublicApprovalLink({
                     type="radio"
                     checked={linkType === 'single_use'}
                     onChange={() => setLinkType('single_use')}
-                    className="text-blue-600"
+                    className="text-primary"
                   />
                   <span className="text-sm">Single Use</span>
                 </label>
@@ -204,7 +204,7 @@ export function PublicApprovalLink({
                     type="radio"
                     checked={linkType === 'multi_use'}
                     onChange={() => setLinkType('multi_use')}
-                    className="text-blue-600"
+                    className="text-primary"
                   />
                   <span className="text-sm">Multi-Use</span>
                 </label>
@@ -214,13 +214,13 @@ export function PublicApprovalLink({
             {/* Expiration */}
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
+                <label className="block text-xs font-medium text-secondary mb-1">
                   Expires In
                 </label>
                 <select
                   value={expiresInDays}
                   onChange={(e) => setExpiresInDays(Number(e.target.value))}
-                  className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 text-sm border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value={7}>7 days</option>
                   <option value={14}>14 days</option>
@@ -231,7 +231,7 @@ export function PublicApprovalLink({
               </div>
               {linkType === 'multi_use' && (
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                  <label className="block text-xs font-medium text-secondary mb-1">
                     Max Uses
                   </label>
                   <input
@@ -240,7 +240,7 @@ export function PublicApprovalLink({
                     max={100}
                     value={maxUses}
                     onChange={(e) => setMaxUses(Number(e.target.value))}
-                    className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-3 py-2 text-sm border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               )}
@@ -283,27 +283,27 @@ export function PublicApprovalLink({
           {activeLinks.map((link) => (
             <div
               key={link.id}
-              className="flex items-center justify-between p-3 bg-white border rounded-lg"
+              className="flex items-center justify-between p-3 bg-card border rounded-lg"
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   {link.client_name || link.client_email ? (
                     <>
-                      <Users className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900 truncate">
+                      <Users className="w-4 h-4 text-disabled" />
+                      <span className="text-sm font-medium text-foreground truncate">
                         {link.client_name || link.client_email}
                       </span>
                     </>
                   ) : (
                     <>
-                      <Link2 className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
+                      <Link2 className="w-4 h-4 text-disabled" />
+                      <span className="text-sm text-secondary">
                         General approval link
                       </span>
                     </>
                   )}
                 </div>
-                <div className="flex items-center gap-3 mt-1 text-xs text-gray-500">
+                <div className="flex items-center gap-3 mt-1 text-xs text-muted">
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {formatExpiration(link.expires_at)}
@@ -330,7 +330,7 @@ export function PublicApprovalLink({
                   title="Copy link"
                 >
                   {copiedLinkId === link.id ? (
-                    <Check className="w-4 h-4 text-green-600" />
+                    <Check className="w-4 h-4 text-success" />
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
@@ -369,7 +369,7 @@ export function PublicApprovalLink({
                   size="sm"
                   onClick={() => onRevokeLink(link.id)}
                   title="Revoke link"
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-error hover:text-error-dark hover:bg-error-light"
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -379,7 +379,7 @@ export function PublicApprovalLink({
         </div>
       ) : (
         !showCreateForm && (
-          <div className="text-center py-6 text-gray-500">
+          <div className="text-center py-6 text-muted">
             <Link2 className="w-8 h-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No active approval links</p>
             <p className="text-xs">Generate a link to share with clients</p>
@@ -388,8 +388,8 @@ export function PublicApprovalLink({
       )}
 
       {/* Security Notice */}
-      <div className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <AlertCircle className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+      <div className="flex items-start gap-2 p-3 bg-warning-light border border-yellow-200 rounded-lg">
+        <AlertCircle className="w-4 h-4 text-warning mt-0.5 flex-shrink-0" />
         <div className="text-xs text-yellow-800">
           <p className="font-medium">Security Notice</p>
           <p>

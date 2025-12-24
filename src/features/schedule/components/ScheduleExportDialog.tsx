@@ -237,8 +237,8 @@ export function ScheduleExportDialog({
           // Export in progress
           <div className="py-8 space-y-6">
             <div className="text-center">
-              <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto" />
-              <p className="mt-4 text-sm text-gray-600">{currentStep}</p>
+              <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+              <p className="mt-4 text-sm text-secondary">{currentStep}</p>
             </div>
             <Progress value={progress} className="h-2" />
             <div className="text-center">
@@ -294,29 +294,29 @@ export function ScheduleExportDialog({
                       className={`flex items-start gap-3 p-3 border rounded-lg cursor-pointer transition-colors text-left w-full ${
                         isSelected
                           ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:bg-gray-50'
+                          : 'border-border hover:bg-surface'
                       }`}
                     >
                       <div
                         className={`w-4 h-4 mt-0.5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                           isSelected
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-input'
                         }`}
                       >
                         {isSelected && (
-                          <div className="w-2 h-2 bg-white rounded-full" />
+                          <div className="w-2 h-2 bg-card rounded-full" />
                         )}
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4 text-gray-600" />
+                          <Icon className="h-4 w-4 text-secondary" />
                           <span className="font-medium text-sm">{info.label}</span>
                           <Badge variant="outline" className="text-xs">
                             {info.extension}
                           </Badge>
                         </div>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-muted mt-0.5">
                           {info.description}
                         </p>
                       </div>
@@ -387,7 +387,7 @@ export function ScheduleExportDialog({
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs text-gray-500">From</Label>
+                  <Label className="text-xs text-muted">From</Label>
                   <Input
                     type="date"
                     value={dateFrom}
@@ -396,7 +396,7 @@ export function ScheduleExportDialog({
                   />
                 </div>
                 <div>
-                  <Label className="text-xs text-gray-500">To</Label>
+                  <Label className="text-xs text-muted">To</Label>
                   <Input
                     type="date"
                     value={dateTo}
@@ -437,19 +437,19 @@ export function ScheduleExportDialog({
             )}
 
             {/* Export summary */}
-            <div className="bg-gray-50 rounded-lg p-3">
+            <div className="bg-surface rounded-lg p-3">
               <div className="flex items-start gap-2 text-sm">
-                <Info className="h-4 w-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                <Info className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
                 <div className="space-y-1">
                   <p>
                     <strong>{estimatedCount.toLocaleString()}</strong> activities will be
                     exported
                   </p>
-                  <p className="text-gray-500">
+                  <p className="text-muted">
                     Estimated file size: ~{sizeEstimate.formatted}
                   </p>
                   {rateLimitStatus.allowed && (
-                    <p className="text-gray-500">
+                    <p className="text-muted">
                       {rateLimitStatus.remaining} exports remaining this hour
                     </p>
                   )}

@@ -105,16 +105,16 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, subtitle, icon: Icon, trend, trendValue, status = 'neutral' }: MetricCardProps) {
   const statusColors = {
-    success: 'text-green-600 bg-green-50 border-green-200',
-    warning: 'text-yellow-600 bg-yellow-50 border-yellow-200',
-    danger: 'text-red-600 bg-red-50 border-red-200',
-    neutral: 'text-gray-600 bg-gray-50 border-gray-200',
+    success: 'text-success bg-success-light border-green-200',
+    warning: 'text-warning bg-warning-light border-yellow-200',
+    danger: 'text-error bg-error-light border-red-200',
+    neutral: 'text-secondary bg-surface border-border',
   }
 
   const trendColors = {
-    up: 'text-green-600',
-    down: 'text-red-600',
-    neutral: 'text-gray-500',
+    up: 'text-success',
+    down: 'text-error',
+    neutral: 'text-muted',
   }
 
   return (
@@ -132,9 +132,9 @@ function MetricCard({ title, value, subtitle, icon: Icon, trend, trendValue, sta
           )}
         </div>
         <div className="mt-3">
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+          <p className="text-2xl font-bold text-foreground">{value}</p>
+          <p className="text-sm font-medium text-secondary">{title}</p>
+          {subtitle && <p className="text-xs text-muted mt-1">{subtitle}</p>}
         </div>
       </CardContent>
     </Card>
@@ -152,7 +152,7 @@ function BottleneckCard({ bottlenecks }: BottleneckCardProps) {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-base flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-yellow-500" />
+          <AlertTriangle className="h-4 w-4 text-warning" />
           Bottleneck Analysis
         </CardTitle>
         <CardDescription>Stages taking longer than expected</CardDescription>
@@ -160,8 +160,8 @@ function BottleneckCard({ bottlenecks }: BottleneckCardProps) {
       <CardContent>
         {significantBottlenecks.length === 0 ? (
           <div className="text-center py-4">
-            <CheckCircle className="h-8 w-8 text-green-500 mx-auto mb-2" />
-            <p className="text-sm text-gray-600">No significant bottlenecks detected</p>
+            <CheckCircle className="h-8 w-8 text-success mx-auto mb-2" />
+            <p className="text-sm text-secondary">No significant bottlenecks detected</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -178,12 +178,12 @@ function BottleneckCard({ bottlenecks }: BottleneckCardProps) {
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-sm font-medium text-gray-900 capitalize">
+                      <p className="text-sm font-medium text-foreground capitalize">
                         {bottleneck.stage.replace(/_/g, ' ')}
                       </p>
                       <span className={cn(
                         'text-sm font-semibold',
-                        isAboveExpected ? 'text-red-600' : 'text-gray-600'
+                        isAboveExpected ? 'text-error' : 'text-secondary'
                       )}>
                         {bottleneck.averageDays} days avg
                       </span>
@@ -192,7 +192,7 @@ function BottleneckCard({ bottlenecks }: BottleneckCardProps) {
                       value={Math.min((bottleneck.averageDays / 14) * 100, 100)}
                       className="h-1.5"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted mt-1">
                       Max: {bottleneck.maxDays} days | {bottleneck.count} submittals
                     </p>
                   </div>
@@ -301,7 +301,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
       <Card className={className}>
         <CardContent className="p-12 text-center">
           <BarChart3 className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-600">No submittal data available</p>
+          <p className="text-secondary">No submittal data available</p>
         </CardContent>
       </Card>
     )
@@ -319,11 +319,11 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
       {/* Header with Date Range Filter */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2" className="heading-section">
             <Timer className="h-6 w-6" />
             Lead Time Analytics
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted mt-1">
             Analyzing {stats.totalSubmittals} submittals
           </p>
         </div>
@@ -449,16 +449,16 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
 
               <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t">
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-green-600">{stats.fastestApprovalDays}</p>
-                  <p className="text-xs text-gray-500">Fastest (days)</p>
+                  <p className="text-2xl font-bold text-success">{stats.fastestApprovalDays}</p>
+                  <p className="text-xs text-muted">Fastest (days)</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-blue-600">{stats.medianLeadTimeDays}</p>
-                  <p className="text-xs text-gray-500">Median (days)</p>
+                  <p className="text-2xl font-bold text-primary">{stats.medianLeadTimeDays}</p>
+                  <p className="text-xs text-muted">Median (days)</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-red-600">{stats.slowestApprovalDays}</p>
-                  <p className="text-xs text-gray-500">Slowest (days)</p>
+                  <p className="text-2xl font-bold text-error">{stats.slowestApprovalDays}</p>
+                  <p className="text-xs text-muted">Slowest (days)</p>
                 </div>
               </div>
             </CardContent>
@@ -503,9 +503,9 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: item.fill }}
                         />
-                        <span className="text-sm text-gray-600 capitalize">{item.name}</span>
+                        <span className="text-sm text-secondary capitalize">{item.name}</span>
                       </div>
-                      <span className="text-sm font-semibold text-gray-900">{item.value}</span>
+                      <span className="text-sm font-semibold text-foreground">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -521,7 +521,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-blue-500" />
+                  <Zap className="h-4 w-4 text-primary" />
                   Performance Metrics
                 </CardTitle>
                 <CardDescription>Key performance indicators</CardDescription>
@@ -529,50 +529,50 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-600">90th Percentile</span>
+                    <span className="text-sm text-secondary">90th Percentile</span>
                     <span className="text-sm font-semibold">{stats.percentile90Days} days</span>
                   </div>
                   <Progress value={(EXPECTED_TIMES.total / stats.percentile90Days) * 100} className="h-2" />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted mt-1">
                     90% of submittals complete within {stats.percentile90Days} days
                   </p>
                 </div>
 
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-gray-600">Business Days Avg</span>
+                    <span className="text-sm text-secondary">Business Days Avg</span>
                     <span className="text-sm font-semibold">{stats.averageBusinessDays} days</span>
                   </div>
                   <Progress value={(10 / stats.averageBusinessDays) * 100} className="h-2" />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted mt-1">
                     Excluding weekends
                   </p>
                 </div>
 
                 <div className="pt-4 border-t">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">Recommendations</h4>
-                  <ul className="space-y-2 text-sm text-gray-600">
+                  <h4 className="text-sm font-medium text-foreground mb-2" className="heading-card">Recommendations</h4>
+                  <ul className="space-y-2 text-sm text-secondary">
                     {stats.averageSubmitToReviewDays > EXPECTED_TIMES.submitToReview && (
                       <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                        <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
                         Consider expediting initial review assignment
                       </li>
                     )}
                     {stats.averageReviewToApprovalDays > EXPECTED_TIMES.reviewToApproval && (
                       <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                        <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
                         Review process may need additional resources
                       </li>
                     )}
                     {stats.overdueCount > 0 && (
                       <li className="flex items-start gap-2">
-                        <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
+                        <AlertTriangle className="h-4 w-4 text-error flex-shrink-0 mt-0.5" />
                         {stats.overdueCount} overdue submittals need attention
                       </li>
                     )}
                     {stats.averageLeadTimeDays <= EXPECTED_TIMES.total && stats.overdueCount === 0 && (
                       <li className="flex items-start gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <CheckCircle className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
                         Submittal process is performing well
                       </li>
                     )}

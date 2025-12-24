@@ -424,7 +424,7 @@ function BasicsStep({ data, updateData, projectName }: BasicsStepProps) {
       <Separator />
 
       <div className="space-y-4">
-        <h3 className="text-sm font-medium">Cover Sheet Information</h3>
+        <h3 className="text-sm font-medium" className="heading-subsection">Cover Sheet Information</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="coverSheetTitle">Cover Sheet Title</Label>
@@ -580,7 +580,7 @@ function DrawingsStep({
       {/* Selected Summary */}
       {selectedDrawings.length > 0 && (
         <div className="bg-muted/50 rounded-lg p-4">
-          <h4 className="text-sm font-medium mb-2">Selected Drawings</h4>
+          <h4 className="text-sm font-medium mb-2" className="heading-card">Selected Drawings</h4>
           <div className="flex flex-wrap gap-2">
             {selectedDrawings.map((drawing) => (
               <Badge
@@ -614,7 +614,7 @@ function SettingsStep({ data, updateData }: SettingsStepProps) {
     <div className="space-y-6">
       {/* Content Options */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium">Package Contents</h3>
+        <h3 className="text-sm font-medium" className="heading-subsection">Package Contents</h3>
         <div className="space-y-3">
           <label className="flex items-center gap-3">
             <Checkbox
@@ -659,7 +659,7 @@ function SettingsStep({ data, updateData }: SettingsStepProps) {
 
       {/* Distribution Options */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium">Distribution Settings</h3>
+        <h3 className="text-sm font-medium" className="heading-subsection">Distribution Settings</h3>
         <div className="space-y-3">
           <label className="flex items-center gap-3">
             <Checkbox
@@ -704,7 +704,7 @@ function SettingsStep({ data, updateData }: SettingsStepProps) {
 
       {/* Security Options */}
       <div className="space-y-4">
-        <h3 className="text-sm font-medium">Security</h3>
+        <h3 className="text-sm font-medium" className="heading-subsection">Security</h3>
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="downloadExpiresAt">Access Expiration (optional)</Label>
@@ -780,7 +780,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
 
       {/* Drawings Summary */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium">
+        <h3 className="text-sm font-medium" className="heading-subsection">
           {selectedDrawings.length} Drawing{selectedDrawings.length !== 1 ? 's' : ''} Included
         </h3>
         {Object.entries(drawingsByDiscipline).map(([discipline, drawings]) => (
@@ -798,11 +798,11 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
 
       {/* Settings Summary */}
       <div className="space-y-3">
-        <h3 className="text-sm font-medium">Package Settings</h3>
+        <h3 className="text-sm font-medium" className="heading-subsection">Package Settings</h3>
         <div className="grid gap-2 text-sm">
           <div className="flex items-center gap-2">
             {data.includeCoverSheet ? (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-success" />
             ) : (
               <X className="h-4 w-4 text-muted-foreground" />
             )}
@@ -810,7 +810,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
           </div>
           <div className="flex items-center gap-2">
             {data.includeToc ? (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-success" />
             ) : (
               <X className="h-4 w-4 text-muted-foreground" />
             )}
@@ -818,7 +818,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
           </div>
           <div className="flex items-center gap-2">
             {data.includeRevisionHistory ? (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-success" />
             ) : (
               <X className="h-4 w-4 text-muted-foreground" />
             )}
@@ -826,7 +826,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
           </div>
           <div className="flex items-center gap-2">
             {data.allowDownload ? (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-success" />
             ) : (
               <X className="h-4 w-4 text-muted-foreground" />
             )}
@@ -834,7 +834,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
           </div>
           <div className="flex items-center gap-2">
             {data.requireAcknowledgment ? (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-success" />
             ) : (
               <X className="h-4 w-4 text-muted-foreground" />
             )}
@@ -845,7 +845,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
           </div>
           {data.downloadExpiresAt && (
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-yellow-500" />
+              <Check className="h-4 w-4 text-warning" />
               <span>
                 Access expires {new Date(data.downloadExpiresAt).toLocaleDateString()}
               </span>
@@ -853,7 +853,7 @@ function ReviewStep({ data, selectedDrawings }: ReviewStepProps) {
           )}
           {data.accessPassword && (
             <div className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-yellow-500" />
+              <Check className="h-4 w-4 text-warning" />
               <span>Password protected</span>
             </div>
           )}

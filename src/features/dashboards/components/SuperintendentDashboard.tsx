@@ -118,15 +118,15 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <HardHat className="h-6 w-6 text-yellow-600" />
+          <h2 className="text-2xl font-bold flex items-center gap-2 heading-section">
+            <HardHat className="h-6 w-6 text-warning" />
             Field Operations Dashboard
           </h2>
           <p className="text-muted-foreground">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
         </div>
         {!dailyReportStatus.submitted && (
           <Link to={projectId ? `/projects/${projectId}/daily-reports/new` : '/daily-reports/new'}>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+            <Button className="bg-primary hover:bg-primary-hover">
               <FileText className="h-4 w-4 mr-2" />
               Submit Daily Report
             </Button>
@@ -136,10 +136,10 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
 
       {/* Daily Report Alert */}
       {!dailyReportStatus.submitted && (
-        <Card className="border-amber-300 bg-amber-50">
+        <Card className="border-amber-300 bg-warning-light">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               <div className="flex-1">
                 <p className="font-medium text-amber-800">Daily Report Not Submitted</p>
                 <p className="text-sm text-amber-700">
@@ -167,17 +167,17 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
                 <p className="text-3xl font-bold">{workforceMetrics.totalOnSite}</p>
                 <div className="flex items-center gap-1 text-xs mt-1">
                   {workforceMetrics.trend === 'up' ? (
-                    <TrendingUp className="h-3 w-3 text-green-600" />
+                    <TrendingUp className="h-3 w-3 text-success" />
                   ) : (
-                    <TrendingDown className="h-3 w-3 text-red-600" />
+                    <TrendingDown className="h-3 w-3 text-error" />
                   )}
-                  <span className={workforceMetrics.trend === 'up' ? 'text-green-600' : 'text-red-600'}>
+                  <span className={workforceMetrics.trend === 'up' ? 'text-success' : 'text-error'}>
                     {workforceMetrics.trendValue}% vs yesterday
                   </span>
                 </div>
               </div>
-              <div className="p-3 rounded-full bg-blue-100">
-                <Users className="h-6 w-6 text-blue-600" />
+              <div className="p-3 rounded-full bg-info-light">
+                <Users className="h-6 w-6 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -189,13 +189,13 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Days Without Incident</p>
-                <p className="text-3xl font-bold text-green-600">{safetyMetrics.daysSinceIncident}</p>
+                <p className="text-3xl font-bold text-success">{safetyMetrics.daysSinceIncident}</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   Safety Score: {safetyMetrics.safetyScore}%
                 </p>
               </div>
-              <div className="p-3 rounded-full bg-green-100">
-                <Shield className="h-6 w-6 text-green-600" />
+              <div className="p-3 rounded-full bg-success-light">
+                <Shield className="h-6 w-6 text-success" />
               </div>
             </div>
           </CardContent>
@@ -230,11 +230,11 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
                   {weather.condition}
                 </p>
               </div>
-              <div className={`p-3 rounded-full ${weather.workable ? 'bg-blue-100' : 'bg-red-100'}`}>
+              <div className={`p-3 rounded-full ${weather.workable ? 'bg-info-light' : 'bg-error-light'}`}>
                 {weather.condition.includes('Rain') ? (
-                  <CloudRain className={`h-6 w-6 ${weather.workable ? 'text-blue-600' : 'text-red-600'}`} />
+                  <CloudRain className={`h-6 w-6 ${weather.workable ? 'text-primary' : 'text-error'}`} />
                 ) : (
-                  <Sun className={`h-6 w-6 ${weather.workable ? 'text-blue-600' : 'text-red-600'}`} />
+                  <Sun className={`h-6 w-6 ${weather.workable ? 'text-primary' : 'text-error'}`} />
                 )}
               </div>
             </div>
@@ -280,7 +280,7 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
               {todaysChecklist.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
-                    item.completed ? 'bg-green-600 border-green-600' : 'border-gray-300'
+                    item.completed ? 'bg-success border-success' : 'border-input'
                   }`}>
                     {item.completed && (
                       <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -328,8 +328,8 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
                   <Badge
                     variant="secondary"
                     className={
-                      equip.status === 'active' ? 'bg-green-100 text-green-800' :
-                      equip.status === 'idle' ? 'bg-gray-100 text-gray-800' :
+                      equip.status === 'active' ? 'bg-success-light text-green-800' :
+                      equip.status === 'idle' ? 'bg-muted text-foreground' :
                       'bg-amber-100 text-amber-800'
                     }
                   >
@@ -366,7 +366,7 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
                   </div>
                   <Badge
                     variant="secondary"
-                    className={inspection.status === 'scheduled' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}
+                    className={inspection.status === 'scheduled' ? 'bg-success-light text-green-800' : 'bg-amber-100 text-amber-800'}
                   >
                     {inspection.status}
                   </Badge>
@@ -398,20 +398,20 @@ export function SuperintendentDashboard({ project, projectId }: SuperintendentDa
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Toolbox Talks Completed</span>
-                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <Badge variant="secondary" className="bg-success-light text-green-800">
                   {safetyMetrics.toolboxTalksCompleted}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Open Observations</span>
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+                <Badge variant="secondary" className="bg-info-light text-blue-800">
                   {safetyMetrics.openObservations}
                 </Badge>
               </div>
               <div className="pt-2 border-t">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-medium">Safety Score</span>
-                  <span className="text-sm font-bold text-green-600">{safetyMetrics.safetyScore}%</span>
+                  <span className="text-sm font-bold text-success">{safetyMetrics.safetyScore}%</span>
                 </div>
                 <Progress value={safetyMetrics.safetyScore} className="h-2" />
               </div>

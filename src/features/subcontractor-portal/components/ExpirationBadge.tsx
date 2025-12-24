@@ -45,7 +45,7 @@ export function ExpirationBadge({
   // Expiring very soon (7 days or less)
   if (daysUntil <= 7) {
     return (
-      <Badge className={cn('gap-1 bg-red-100 text-red-800 hover:bg-red-100', className)}>
+      <Badge className={cn('gap-1 bg-error-light text-red-800 hover:bg-error-light', className)}>
         {showIcon && <AlertTriangle className="h-3 w-3" />}
         {daysUntil === 1 ? 'Expires tomorrow' : `Expires in ${daysUntil}d`}
       </Badge>
@@ -74,7 +74,7 @@ export function ExpirationBadge({
 
   // Valid for a long time
   return (
-    <Badge className={cn('gap-1 bg-green-100 text-green-800 hover:bg-green-100', className)}>
+    <Badge className={cn('gap-1 bg-success-light text-green-800 hover:bg-success-light', className)}>
       {showIcon && <CheckCircle className="h-3 w-3" />}
       Valid
     </Badge>

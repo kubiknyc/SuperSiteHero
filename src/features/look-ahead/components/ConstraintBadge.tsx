@@ -43,9 +43,9 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 }
 
 const statusColors: Record<ConstraintStatus, { bg: string; text: string; border: string }> = {
-  open: { bg: 'bg-red-100', text: 'text-red-700', border: 'border-red-300' },
-  resolved: { bg: 'bg-green-100', text: 'text-green-700', border: 'border-green-300' },
-  waived: { bg: 'bg-gray-100', text: 'text-gray-600', border: 'border-gray-300' },
+  open: { bg: 'bg-error-light', text: 'text-error-dark', border: 'border-red-300' },
+  resolved: { bg: 'bg-success-light', text: 'text-success-dark', border: 'border-green-300' },
+  waived: { bg: 'bg-muted', text: 'text-secondary', border: 'border-input' },
   escalated: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-300' },
 }
 
@@ -108,8 +108,8 @@ export function ConstraintCountBadge({
       className={cn(
         'inline-flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-full font-medium',
         hasOpen
-          ? 'bg-red-100 text-red-700 border border-red-300'
-          : 'bg-green-100 text-green-700 border border-green-300',
+          ? 'bg-error-light text-error-dark border border-red-300'
+          : 'bg-success-light text-success-dark border border-green-300',
         className
       )}
       title={`${openCount} open / ${totalCount} total constraints`}

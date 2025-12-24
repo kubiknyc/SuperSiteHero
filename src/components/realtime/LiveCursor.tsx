@@ -213,7 +213,7 @@ export const OnlineUsersIndicator: React.FC<OnlineUsersIndicatorProps> = memo(
             </div>
           )}
         </div>
-        <span className="ml-2 text-sm text-gray-600">
+        <span className="ml-2 text-sm text-secondary">
           {cursors.length} online
         </span>
       </div>

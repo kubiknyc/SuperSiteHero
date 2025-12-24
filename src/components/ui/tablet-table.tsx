@@ -167,7 +167,7 @@ const TabletTableHeader = React.forwardRef<HTMLTableSectionElement, TabletTableH
       <thead
         ref={ref}
         className={cn(
-          'bg-gray-50 dark:bg-gray-800',
+          'bg-surface dark:bg-surface',
           sticky && 'sticky top-0 z-10',
           className
         )}
@@ -239,18 +239,18 @@ const TabletTableRow = React.forwardRef<HTMLTableRowElement, TabletTableRowProps
       <tr
         ref={ref}
         className={cn(
-          'bg-white dark:bg-gray-900',
-          'border-b border-gray-200 dark:border-gray-700',
+          'bg-card dark:bg-background',
+          'border-b border-border dark:border-gray-700',
           'last:border-b-0',
           // Hover states
           (clickable || selectable) && [
-            'hover:bg-gray-50 dark:hover:bg-gray-800',
+            'hover:bg-surface dark:hover:bg-surface',
             'transition-colors',
           ],
           // Selection state
-          isSelected && 'bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30',
+          isSelected && 'bg-blue-50 dark:bg-blue-900/20 hover:bg-info-light dark:hover:bg-blue-900/30',
           // Touch states
-          isTouchDevice && (clickable || selectable) && 'active:bg-gray-100 dark:active:bg-gray-700',
+          isTouchDevice && (clickable || selectable) && 'active:bg-muted dark:active:bg-gray-700',
           // Cursor
           (clickable || onRowClick) && 'cursor-pointer',
           className
@@ -332,7 +332,7 @@ const TabletTableHead = React.forwardRef<HTMLTableCellElement, TabletTableHeadPr
           className={cn(
             'w-12 px-3',
             isTablet ? 'py-4' : 'py-3',
-            'font-semibold text-gray-700 dark:text-gray-300',
+            'font-semibold text-secondary dark:text-gray-300',
             'text-left',
             className
           )}
@@ -368,16 +368,16 @@ const TabletTableHead = React.forwardRef<HTMLTableCellElement, TabletTableHeadPr
         className={cn(
           'px-4',
           isTablet ? 'py-4' : 'py-3',
-          'font-semibold text-gray-700 dark:text-gray-300',
+          'font-semibold text-secondary dark:text-gray-300',
           'text-left',
           'whitespace-nowrap',
           sortable && [
             'cursor-pointer',
             'select-none',
-            'hover:bg-gray-100 dark:hover:bg-gray-700',
+            'hover:bg-muted dark:hover:bg-gray-700',
             'transition-colors',
           ],
-          isTouchDevice && sortable && 'active:bg-gray-200 dark:active:bg-gray-600',
+          isTouchDevice && sortable && 'active:bg-muted dark:active:bg-gray-600',
           className
         )}
         style={{ minWidth }}
@@ -387,7 +387,7 @@ const TabletTableHead = React.forwardRef<HTMLTableCellElement, TabletTableHeadPr
         <div className="flex items-center gap-2">
           {children}
           {sortable && (
-            <span className="text-gray-400">
+            <span className="text-disabled">
               {sortDirection === 'asc' && (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
@@ -456,7 +456,7 @@ const TabletTableCell = React.forwardRef<HTMLTableCellElement, TabletTableCellPr
         className={cn(
           'px-4',
           isTablet ? 'py-4' : 'py-3',
-          'text-gray-900 dark:text-gray-100',
+          'text-foreground dark:text-gray-100',
           truncate && 'truncate',
           isActions && [
             'text-right',
@@ -506,14 +506,14 @@ const TabletTableEmpty = React.forwardRef<HTMLTableRowElement, TabletTableEmptyP
         <td colSpan={totalColSpan} className="text-center py-12">
           <div className="flex flex-col items-center">
             {icon && (
-              <div className={cn('text-gray-400 mb-4', isTablet ? 'w-16 h-16' : 'w-12 h-12')}>
+              <div className={cn('text-disabled mb-4', isTablet ? 'w-16 h-16' : 'w-12 h-12')}>
                 {icon}
               </div>
             )}
             {title && (
               <h3
                 className={cn(
-                  'font-medium text-gray-900 dark:text-gray-100',
+                  'font-medium text-foreground dark:text-gray-100',
                   isTablet ? 'text-lg' : 'text-base'
                 )}
               >
@@ -523,7 +523,7 @@ const TabletTableEmpty = React.forwardRef<HTMLTableRowElement, TabletTableEmptyP
             {description && (
               <p
                 className={cn(
-                  'text-gray-500 dark:text-gray-400 mt-1',
+                  'text-muted dark:text-disabled mt-1',
                   isTablet ? 'text-base' : 'text-sm'
                 )}
               >

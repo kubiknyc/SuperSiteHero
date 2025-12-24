@@ -26,7 +26,7 @@ export function ClientNotificationSettingsPage() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <Card>
           <CardContent className="py-12 px-8 text-center">
-            <p className="text-gray-600">Please log in to manage notification settings.</p>
+            <p className="text-secondary">Please log in to manage notification settings.</p>
             <Button asChild className="mt-4">
               <Link to="/login">Log In</Link>
             </Button>
@@ -39,10 +39,10 @@ export function ClientNotificationSettingsPage() {
   return (
     <div className="space-y-6">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center gap-2 text-sm text-gray-600">
+      <nav className="flex items-center gap-2 text-sm text-secondary">
         <Link
           to="/client/dashboard"
-          className="hover:text-gray-900 transition-colors flex items-center gap-1"
+          className="hover:text-foreground transition-colors flex items-center gap-1"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -52,14 +52,14 @@ export function ClientNotificationSettingsPage() {
             <ChevronRight className="h-4 w-4" />
             <Link
               to={`/client/projects/${projectId}`}
-              className="hover:text-gray-900 transition-colors"
+              className="hover:text-foreground transition-colors"
             >
               Project
             </Link>
           </>
         )}
         <ChevronRight className="h-4 w-4" />
-        <span className="text-gray-900 font-medium flex items-center gap-2">
+        <span className="text-foreground font-medium flex items-center gap-2">
           <Settings className="h-4 w-4" />
           Notification Settings
         </span>
@@ -69,7 +69,7 @@ export function ClientNotificationSettingsPage() {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="py-6">
           <div className="space-y-3">
-            <h3 className="font-semibold text-blue-900 flex items-center gap-2">
+            <h3 className="font-semibold text-blue-900 flex items-center gap-2" className="heading-subsection">
               <Settings className="h-5 w-5" />
               About Notification Preferences
             </h3>
@@ -104,22 +104,22 @@ export function ClientNotificationSettingsPage() {
       />
 
       {/* Additional Help */}
-      <Card className="border-gray-200">
+      <Card className="border-border">
         <CardContent className="py-6">
           <div className="space-y-3">
-            <h3 className="font-semibold text-gray-900">Need Help?</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-semibold text-foreground" className="heading-subsection">Need Help?</h3>
+            <p className="text-sm text-secondary">
               If you're not receiving notifications as expected, please check:
             </p>
-            <ul className="list-disc list-inside space-y-1 text-sm text-gray-600 ml-2">
+            <ul className="list-disc list-inside space-y-1 text-sm text-secondary ml-2">
               <li>Your email address is correct in your profile settings</li>
               <li>Email notifications aren't being filtered as spam</li>
               <li>You have enabled at least one notification channel for the event type</li>
               <li>Your browser allows in-app notifications (check browser settings)</li>
             </ul>
-            <p className="text-sm text-gray-600 mt-3">
+            <p className="text-sm text-secondary mt-3">
               For further assistance, please contact your project manager or{' '}
-              <a href="mailto:support@example.com" className="text-blue-600 hover:underline">
+              <a href="mailto:support@example.com" className="text-primary hover:underline">
                 support@example.com
               </a>
             </p>

@@ -222,7 +222,7 @@ export function ReportShareDialog({
 
           {sharesLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
             </div>
           ) : !activeShare ? (
             // Create new share form
@@ -346,7 +346,7 @@ export function ReportShareDialog({
               {/* Link Tab */}
               <TabsContent value="link" className="space-y-4">
                 {isExpired(activeShare) && (
-                  <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800">
+                  <div className="flex items-center gap-2 p-3 bg-warning-light border border-yellow-200 rounded-lg text-yellow-800">
                     <AlertTriangle className="h-4 w-4" />
                     <span className="text-sm">This share link has expired</span>
                   </div>
@@ -366,7 +366,7 @@ export function ReportShareDialog({
                       className="shrink-0"
                     >
                       {copied ? (
-                        <Check className="h-4 w-4 text-green-600" />
+                        <Check className="h-4 w-4 text-success" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}
@@ -423,7 +423,7 @@ export function ReportShareDialog({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-red-600 hover:text-red-700"
+                    className="text-error hover:text-error-dark"
                     onClick={() => {
                       setSelectedShare(activeShare)
                       setDeleteDialogOpen(true)
@@ -451,7 +451,7 @@ export function ReportShareDialog({
                   onClick={handleCopyEmbed}
                 >
                   {embedCopied ? (
-                    <Check className="h-4 w-4 mr-2 text-green-600" />
+                    <Check className="h-4 w-4 mr-2 text-success" />
                   ) : (
                     <Copy className="h-4 w-4 mr-2" />
                   )}
@@ -547,7 +547,7 @@ export function ReportShareDialog({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteShare}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               {deleteShare.isPending && (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />

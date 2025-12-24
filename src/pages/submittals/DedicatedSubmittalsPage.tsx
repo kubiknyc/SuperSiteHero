@@ -49,13 +49,13 @@ function SubmittalReviewStatusBadge({ status }: { status: string }) {
   }
 
   const colorClasses: Record<string, string> = {
-    gray: 'bg-gray-100 text-gray-800',
-    blue: 'bg-blue-100 text-blue-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    green: 'bg-green-100 text-green-800',
+    gray: 'bg-muted text-foreground',
+    blue: 'bg-info-light text-blue-800',
+    yellow: 'bg-warning-light text-yellow-800',
+    green: 'bg-success-light text-green-800',
     lime: 'bg-lime-100 text-lime-800',
     orange: 'bg-orange-100 text-orange-800',
-    red: 'bg-red-100 text-red-800',
+    red: 'bg-error-light text-red-800',
   }
 
   return (
@@ -67,7 +67,7 @@ function SubmittalReviewStatusBadge({ status }: { status: string }) {
 
 // Ball-in-court badge
 function BallInCourtBadge({ entity }: { entity: string | null }) {
-  if (!entity) {return <span className="text-gray-400">-</span>}
+  if (!entity) {return <span className="text-disabled">-</span>}
 
   const entityConfig = BALL_IN_COURT_ENTITIES.find((e) => e.value === entity) || {
     label: entity,
@@ -193,8 +193,8 @@ export function DedicatedSubmittalsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Submittals</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Submittals</h1>
+            <p className="text-secondary mt-1">
               Manage project submittals with CSI MasterFormat organization
             </p>
           </div>
@@ -221,58 +221,58 @@ export function DedicatedSubmittalsPage() {
         {!isLoading && submittals && submittals.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === '' ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === '' ? 'ring-2 ring-blue-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: '' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <FileText className="h-5 w-5 text-blue-600" />
+                  <div className="p-2 bg-info-light rounded-lg">
+                    <FileText className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.total}</p>
-                    <p className="text-xs text-gray-500">Total</p>
+                    <p className="text-xs text-muted">Total</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'submitted' ? 'ring-2 ring-yellow-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'submitted' ? 'ring-2 ring-yellow-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'submitted' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-yellow-100 rounded-lg">
-                    <Clock className="h-5 w-5 text-yellow-600" />
+                  <div className="p-2 bg-warning-light rounded-lg">
+                    <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.submitted + stats.underReview}</p>
-                    <p className="text-xs text-gray-500">In Review</p>
+                    <p className="text-xs text-muted">In Review</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'approved' ? 'ring-2 ring-green-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'approved' ? 'ring-2 ring-green-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'approved' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <div className="p-2 bg-success-light rounded-lg">
+                    <CheckCircle2 className="h-5 w-5 text-success" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.approved + stats.approvedAsNoted}</p>
-                    <p className="text-xs text-gray-500">Approved</p>
+                    <p className="text-xs text-muted">Approved</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'revise_resubmit' ? 'ring-2 ring-orange-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'revise_resubmit' ? 'ring-2 ring-orange-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'revise_resubmit' })}
             >
               <CardContent className="p-4">
@@ -282,39 +282,39 @@ export function DedicatedSubmittalsPage() {
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.reviseResubmit}</p>
-                    <p className="text-xs text-gray-500">Revise</p>
+                    <p className="text-xs text-muted">Revise</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'rejected' ? 'ring-2 ring-red-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'rejected' ? 'ring-2 ring-red-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'rejected' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <XCircle className="h-5 w-5 text-red-600" />
+                  <div className="p-2 bg-error-light rounded-lg">
+                    <XCircle className="h-5 w-5 text-error" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.rejected}</p>
-                    <p className="text-xs text-gray-500">Rejected</p>
+                    <p className="text-xs text-muted">Rejected</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {stats.overdue > 0 && (
-              <Card className="border-red-200 bg-red-50">
+              <Card className="border-red-200 bg-error-light">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-red-200 rounded-lg">
-                      <AlertCircle className="h-5 w-5 text-red-700" />
+                      <AlertCircle className="h-5 w-5 text-error-dark" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold text-red-700">{stats.overdue}</p>
-                      <p className="text-xs text-red-600">Overdue</p>
+                      <p className="text-2xl font-bold text-error-dark">{stats.overdue}</p>
+                      <p className="text-xs text-error">Overdue</p>
                     </div>
                   </div>
                 </CardContent>
@@ -328,7 +328,7 @@ export function DedicatedSubmittalsPage() {
           <CardContent className="p-4">
             <div className="flex flex-wrap items-end gap-4">
               <div className="flex-1 min-w-[200px]">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                <label className="block text-sm font-medium text-secondary mb-1">Project</label>
                 <Select
                   value={state.selectedProjectId}
                   onChange={(e) => setState({ ...state, selectedProjectId: e.target.value })}
@@ -346,7 +346,7 @@ export function DedicatedSubmittalsPage() {
               </div>
 
               <div className="flex-1 min-w-[200px]">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <label className="block text-sm font-medium text-secondary mb-1">Search</label>
                 <Input
                   placeholder="Search submittals..."
                   value={state.searchTerm}
@@ -355,7 +355,7 @@ export function DedicatedSubmittalsPage() {
               </div>
 
               <div className="w-40">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <label className="block text-sm font-medium text-secondary mb-1">Status</label>
                 <Select
                   value={state.statusFilter}
                   onChange={(e) =>
@@ -372,7 +372,7 @@ export function DedicatedSubmittalsPage() {
               </div>
 
               <div className="w-40">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Ball-in-Court</label>
+                <label className="block text-sm font-medium text-secondary mb-1">Ball-in-Court</label>
                 <Select
                   value={state.ballInCourtFilter}
                   onChange={(e) =>
@@ -454,18 +454,18 @@ export function DedicatedSubmittalsPage() {
           <CardContent>
             {isLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-                <p className="text-gray-600">Loading submittals...</p>
+                <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+                <p className="text-secondary">Loading submittals...</p>
               </div>
             ) : error ? (
               <div className="text-center py-12">
                 <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-                <p className="text-red-600">Failed to load submittals</p>
+                <p className="text-error">Failed to load submittals</p>
               </div>
             ) : filteredSubmittals.length === 0 ? (
               <div className="text-center py-8">
                 <FileText className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No submittals found</p>
+                <p className="text-muted">No submittals found</p>
                 <Button
                   variant="outline"
                   className="mt-4"
@@ -491,23 +491,23 @@ export function DedicatedSubmittalsPage() {
                     >
                       {/* Section Header */}
                       <button
-                        className="w-full flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 transition-colors"
+                        className="w-full flex items-center justify-between p-4 bg-surface hover:bg-muted transition-colors"
                         onClick={() => toggleSection(group.specSection)}
                       >
                         <div className="flex items-center gap-3">
                           {isExpanded ? (
-                            <ChevronDown className="h-5 w-5 text-gray-400" />
+                            <ChevronDown className="h-5 w-5 text-disabled" />
                           ) : (
-                            <ChevronRight className="h-5 w-5 text-gray-400" />
+                            <ChevronRight className="h-5 w-5 text-disabled" />
                           )}
                           <div className="text-left">
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-blue-600">
+                              <span className="font-mono font-bold text-primary">
                                 {group.specSection}
                               </span>
                               <span className="font-medium">{group.specSectionTitle}</span>
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-muted">
                               Division {group.division} - {group.divisionTitle}
                             </div>
                           </div>
@@ -524,24 +524,24 @@ export function DedicatedSubmittalsPage() {
                       {isExpanded && (
                         <div className="border-t">
                           <table className="w-full text-sm">
-                            <thead className="bg-gray-50">
+                            <thead className="bg-surface">
                               <tr>
-                                <th className="text-left py-2 px-4 font-medium text-gray-700">
+                                <th className="text-left py-2 px-4 font-medium text-secondary">
                                   Number
                                 </th>
-                                <th className="text-left py-2 px-4 font-medium text-gray-700">
+                                <th className="text-left py-2 px-4 font-medium text-secondary">
                                   Title
                                 </th>
-                                <th className="text-left py-2 px-4 font-medium text-gray-700">
+                                <th className="text-left py-2 px-4 font-medium text-secondary">
                                   Type
                                 </th>
-                                <th className="text-left py-2 px-4 font-medium text-gray-700">
+                                <th className="text-left py-2 px-4 font-medium text-secondary">
                                   Status
                                 </th>
-                                <th className="text-left py-2 px-4 font-medium text-gray-700">
+                                <th className="text-left py-2 px-4 font-medium text-secondary">
                                   Ball-in-Court
                                 </th>
-                                <th className="text-left py-2 px-4 font-medium text-gray-700">
+                                <th className="text-left py-2 px-4 font-medium text-secondary">
                                   Due Date
                                 </th>
                               </tr>
@@ -550,21 +550,21 @@ export function DedicatedSubmittalsPage() {
                               {group.submittals.map((submittal) => (
                                 <tr
                                   key={submittal.id}
-                                  className="border-t hover:bg-gray-50 cursor-pointer"
+                                  className="border-t hover:bg-surface cursor-pointer"
                                   onClick={() => navigate(`/submittals-v2/${submittal.id}`)}
                                 >
-                                  <td className="py-2 px-4 font-mono text-blue-600">
+                                  <td className="py-2 px-4 font-mono text-primary">
                                     {submittal.submittal_number}
                                     {(submittal.revision_number || 0) > 0 && (
-                                      <span className="text-gray-400 ml-1">
+                                      <span className="text-disabled ml-1">
                                         R{submittal.revision_number}
                                       </span>
                                     )}
                                   </td>
-                                  <td className="py-2 px-4 text-blue-600 hover:underline">
+                                  <td className="py-2 px-4 text-primary hover:underline">
                                     {submittal.title}
                                   </td>
-                                  <td className="py-2 px-4 text-gray-600 capitalize">
+                                  <td className="py-2 px-4 text-secondary capitalize">
                                     {submittal.submittal_type?.replace(/_/g, ' ')}
                                   </td>
                                   <td className="py-2 px-4">
@@ -573,7 +573,7 @@ export function DedicatedSubmittalsPage() {
                                   <td className="py-2 px-4">
                                     <BallInCourtBadge entity={submittal.ball_in_court_entity} />
                                   </td>
-                                  <td className="py-2 px-4 text-gray-600">
+                                  <td className="py-2 px-4 text-secondary">
                                     {submittal.date_required
                                       ? format(new Date(submittal.date_required), 'MMM d, yyyy')
                                       : '-'}
@@ -594,37 +594,37 @@ export function DedicatedSubmittalsPage() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Number</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Spec Section</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Title</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Type</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Ball-in-Court</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Due Date</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Number</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Spec Section</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Title</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Type</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Status</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Ball-in-Court</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Due Date</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredSubmittals.map((submittal) => (
                       <tr
                         key={submittal.id}
-                        className="border-b hover:bg-gray-50 cursor-pointer"
+                        className="border-b hover:bg-surface cursor-pointer"
                         onClick={() => navigate(`/submittals-v2/${submittal.id}`)}
                       >
-                        <td className="py-3 px-4 font-mono text-blue-600">
+                        <td className="py-3 px-4 font-mono text-primary">
                           {submittal.submittal_number}
                           {(submittal.revision_number || 0) > 0 && (
-                            <span className="text-gray-400 ml-1">R{submittal.revision_number}</span>
+                            <span className="text-disabled ml-1">R{submittal.revision_number}</span>
                           )}
                         </td>
                         <td className="py-3 px-4">
-                          <span className="font-mono text-xs bg-gray-100 px-1 rounded">
+                          <span className="font-mono text-xs bg-muted px-1 rounded">
                             {submittal.spec_section}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-blue-600 hover:underline">
+                        <td className="py-3 px-4 text-primary hover:underline">
                           {submittal.title}
                         </td>
-                        <td className="py-3 px-4 text-gray-600 capitalize">
+                        <td className="py-3 px-4 text-secondary capitalize">
                           {submittal.submittal_type?.replace(/_/g, ' ')}
                         </td>
                         <td className="py-3 px-4">
@@ -633,7 +633,7 @@ export function DedicatedSubmittalsPage() {
                         <td className="py-3 px-4">
                           <BallInCourtBadge entity={submittal.ball_in_court_entity} />
                         </td>
-                        <td className="py-3 px-4 text-gray-600">
+                        <td className="py-3 px-4 text-secondary">
                           {submittal.date_required
                             ? format(new Date(submittal.date_required), 'MMM d, yyyy')
                             : '-'}

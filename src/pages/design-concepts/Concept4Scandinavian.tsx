@@ -12,12 +12,12 @@ export default function Concept4Scandinavian() {
             <Heart className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl font-medium">JobSight</h1>
+            <h1 className="text-2xl font-medium" className="heading-page">JobSight</h1>
             <p className="text-sm text-stone-500">Concept 4: Scandinavian Light</p>
           </div>
         </div>
 
-        <h2 className="text-6xl font-light text-stone-900 mb-6 leading-tight">
+        <h2 className="text-6xl font-light text-stone-900 mb-6 leading-tight" className="heading-section">
           Warm, Friendly,<br/>Minimal
         </h2>
         <p className="text-lg text-stone-600 max-w-xl mb-12 leading-relaxed">
@@ -34,7 +34,7 @@ export default function Concept4Scandinavian() {
           ].map(c => (
             <div key={c.bg} className="rounded-2xl overflow-hidden shadow-sm">
               <div className="h-28" style={{ backgroundColor: c.bg }} />
-              <div className="p-4 bg-white">
+              <div className="p-4 bg-card">
                 <p className="text-sm font-medium text-stone-900">{c.name}</p>
                 <p className="text-xs text-stone-500 font-mono">{c.bg}</p>
               </div>
@@ -47,15 +47,15 @@ export default function Concept4Scandinavian() {
             <button className="px-8 py-4 bg-lime-500 hover:bg-lime-600 text-white rounded-full font-medium shadow-lg transition">
               Get Started
             </button>
-            <button className="px-8 py-4 bg-white hover:bg-stone-50 text-stone-900 rounded-full font-medium shadow-sm transition">
+            <button className="px-8 py-4 bg-card hover:bg-stone-50 text-stone-900 rounded-full font-medium shadow-sm transition">
               Learn More
             </button>
           </div>
 
-          <div className="bg-white rounded-3xl p-8 shadow-sm">
+          <div className="bg-card rounded-3xl p-8 shadow-sm">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h3 className="text-2xl font-medium text-stone-900 mb-2">Harbor Bridge Project</h3>
+                <h3 className="text-2xl font-medium text-stone-900 mb-2" className="heading-subsection">Harbor Bridge Project</h3>
                 <p className="text-stone-600">Infrastructure renovation</p>
               </div>
               <div className="w-16 h-16 bg-lime-100 rounded-full flex items-center justify-center">

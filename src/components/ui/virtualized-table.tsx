@@ -45,22 +45,22 @@ export function VirtualizedTable<T>({
 
   if (data.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
+      <div className="text-center py-12 text-muted">
         {emptyMessage}
       </div>
     )
   }
 
   return (
-    <div className={cn('overflow-hidden rounded-lg border border-gray-200', className)}>
+    <div className={cn('overflow-hidden rounded-lg border border-border', className)}>
       {/* Table Header - Fixed */}
-      <div className={cn('bg-gray-50 border-b border-gray-200', headerClassName)}>
+      <div className={cn('bg-surface border-b border-border', headerClassName)}>
         <div className="grid" style={{ gridTemplateColumns: columns.map(col => col.className?.includes('w-') ? 'auto' : '1fr').join(' ') }}>
           {columns.map((column) => (
             <div
               key={column.key}
               className={cn(
-                'px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider',
+                'px-6 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider',
                 column.className
               )}
             >
@@ -95,7 +95,7 @@ export function VirtualizedTable<T>({
                 data-index={virtualRow.index}
                 ref={virtualizer.measureElement}
                 className={cn(
-                  'absolute top-0 left-0 w-full border-b border-gray-200 hover:bg-gray-50 transition-colors',
+                  'absolute top-0 left-0 w-full border-b border-border hover:bg-surface transition-colors',
                   onRowClick && 'cursor-pointer',
                   rowClassNameValue
                 )}
@@ -154,7 +154,7 @@ export function VirtualizedList<T>({
 
   if (data.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
+      <div className="text-center py-12 text-muted">
         {emptyMessage}
       </div>
     )

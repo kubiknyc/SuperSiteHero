@@ -148,11 +148,11 @@ export function ReportsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <BarChart3 className="h-7 w-7 text-blue-600" />
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <BarChart3 className="h-7 w-7 text-primary" />
               Custom Report Builder
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               Create, manage, and schedule custom reports
             </p>
           </div>
@@ -167,38 +167,38 @@ export function ReportsPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-3xl font-bold text-foreground">
                 {templates?.length || 0}
               </p>
-              <p className="text-sm text-gray-500">Saved Templates</p>
+              <p className="text-sm text-muted">Saved Templates</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-3xl font-bold text-foreground">
                 {scheduledReports?.filter((s) => s.is_active).length || 0}
               </p>
-              <p className="text-sm text-gray-500">Active Schedules</p>
+              <p className="text-sm text-muted">Active Schedules</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-3xl font-bold text-foreground">
                 {generatedReports?.filter(
                   (r) =>
                     new Date(r.created_at) >
                     new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
                 ).length || 0}
               </p>
-              <p className="text-sm text-gray-500">Reports This Week</p>
+              <p className="text-sm text-muted">Reports This Week</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">
+              <p className="text-3xl font-bold text-foreground">
                 {DATA_SOURCE_CONFIG.length}
               </p>
-              <p className="text-sm text-gray-500">Data Sources</p>
+              <p className="text-sm text-muted">Data Sources</p>
             </CardContent>
           </Card>
         </div>
@@ -227,7 +227,7 @@ export function ReportsPage() {
               <CardContent className="py-4">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       placeholder="Search templates..."
                       value={searchTerm}
@@ -265,18 +265,18 @@ export function ReportsPage() {
             ) : templatesError ? (
               <Card>
                 <CardContent className="py-8 text-center">
-                  <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
-                  <p className="text-gray-600">Failed to load templates</p>
+                  <AlertCircle className="h-12 w-12 mx-auto text-error mb-4" />
+                  <p className="text-secondary">Failed to load templates</p>
                 </CardContent>
               </Card>
             ) : filteredTemplates?.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="py-12 text-center">
-                  <FileText className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <FileText className="h-12 w-12 mx-auto text-disabled mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                     No templates yet
                   </h3>
-                  <p className="text-gray-500 mb-4">
+                  <p className="text-muted mb-4">
                     Create your first custom report template
                   </p>
                   <Button onClick={handleCreateNew}>
@@ -308,11 +308,11 @@ export function ReportsPage() {
             {scheduledReports?.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="py-12 text-center">
-                  <Calendar className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <Calendar className="h-12 w-12 mx-auto text-disabled mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                     No scheduled reports
                   </h3>
-                  <p className="text-gray-500">
+                  <p className="text-muted">
                     Schedule reports to be automatically generated and emailed
                   </p>
                 </CardContent>
@@ -324,21 +324,21 @@ export function ReportsPage() {
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium">{schedule.name}</h3>
-                          <p className="text-sm text-gray-500">
+                          <h3 className="font-medium" className="heading-subsection">{schedule.name}</h3>
+                          <p className="text-sm text-muted">
                             {schedule.frequency} &bull; {schedule.recipients.length} recipients
                           </p>
                         </div>
                         <div className="text-right">
                           <span
                             className={`text-sm ${
-                              schedule.is_active ? 'text-green-600' : 'text-gray-400'
+                              schedule.is_active ? 'text-success' : 'text-disabled'
                             }`}
                           >
                             {schedule.is_active ? 'Active' : 'Paused'}
                           </span>
                           {schedule.next_run_at && (
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-muted">
                               Next: {format(new Date(schedule.next_run_at), 'MMM d, h:mm a')}
                             </p>
                           )}
@@ -356,11 +356,11 @@ export function ReportsPage() {
             {generatedReports?.length === 0 ? (
               <Card className="border-dashed">
                 <CardContent className="py-12 text-center">
-                  <History className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                  <History className="h-12 w-12 mx-auto text-disabled mb-4" />
+                  <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                     No reports generated yet
                   </h3>
-                  <p className="text-gray-500">
+                  <p className="text-muted">
                     Generated reports will appear here
                   </p>
                 </CardContent>
@@ -370,11 +370,11 @@ export function ReportsPage() {
                 <CardContent className="p-0">
                   <div className="divide-y">
                     {generatedReports?.slice(0, 20).map((report) => (
-                      <div key={report.id} className="p-4 hover:bg-gray-50">
+                      <div key={report.id} className="p-4 hover:bg-surface">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="font-medium">{report.report_name}</h3>
-                            <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                            <h3 className="font-medium" className="heading-subsection">{report.report_name}</h3>
+                            <div className="flex items-center gap-3 text-sm text-muted mt-1">
                               <DataSourceBadge source={report.data_source} />
                               <span>
                                 {format(new Date(report.created_at), 'MMM d, yyyy h:mm a')}
@@ -389,7 +389,7 @@ export function ReportsPage() {
                               {getOutputFormatLabel(report.output_format)}
                             </span>
                             {report.file_size_bytes && (
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-muted">
                                 {formatFileSize(report.file_size_bytes)}
                               </p>
                             )}

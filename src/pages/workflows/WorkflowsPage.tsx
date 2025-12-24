@@ -25,7 +25,7 @@ export function WorkflowsPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <Card className="border-yellow-200 bg-yellow-50">
+          <Card className="border-yellow-200 bg-warning-light">
             <CardHeader>
               <CardTitle className="text-yellow-900">No Projects Available</CardTitle>
             </CardHeader>
@@ -44,8 +44,8 @@ export function WorkflowsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Workflows</h1>
-            <p className="text-gray-600">Manage RFIs, Change Orders, and Submittals</p>
+            <h1 className="text-3xl font-bold" className="heading-page">Workflows</h1>
+            <p className="text-secondary">Manage RFIs, Change Orders, and Submittals</p>
           </div>
         </div>
 
@@ -90,7 +90,7 @@ export function WorkflowsPage() {
 
           {/* Error State */}
           {typesError && (
-            <Card className="border-red-200 bg-red-50">
+            <Card className="border-red-200 bg-error-light">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-2 text-red-800">
                   <AlertCircle className="h-5 w-5" />
@@ -102,7 +102,7 @@ export function WorkflowsPage() {
 
           {/* Empty State */}
           {!typesLoading && !typesError && activeWorkflowTypes.length === 0 && (
-            <Card className="border-yellow-200 bg-yellow-50">
+            <Card className="border-yellow-200 bg-warning-light">
               <CardContent className="pt-6 text-center">
                 <p className="text-yellow-800">
                   No workflow types configured for your company.

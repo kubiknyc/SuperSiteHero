@@ -120,7 +120,7 @@ export function CreateChangeOrderDialogV2({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileEdit className="h-5 w-5 text-blue-600" />
+            <FileEdit className="h-5 w-5 text-primary" />
             Create Potential Change Order (PCO)
           </DialogTitle>
         </DialogHeader>
@@ -164,7 +164,7 @@ export function CreateChangeOrderDialogV2({
                 </option>
               ))}
             </Select>
-            <p className="text-xs text-gray-500">{getChangeTypeDescription(changeType)}</p>
+            <p className="text-xs text-muted">{getChangeTypeDescription(changeType)}</p>
           </div>
 
           {/* Pricing Method */}
@@ -196,7 +196,7 @@ export function CreateChangeOrderDialogV2({
                 onChange={(e) => setProposedAmount(e.target.value)}
                 placeholder="0.00"
               />
-              <p className="text-xs text-gray-500">Initial estimate (can be updated later)</p>
+              <p className="text-xs text-muted">Initial estimate (can be updated later)</p>
             </div>
 
             <div className="space-y-2">
@@ -209,7 +209,7 @@ export function CreateChangeOrderDialogV2({
                 onChange={(e) => setProposedDays(e.target.value)}
                 placeholder="0"
               />
-              <p className="text-xs text-gray-500">Schedule impact in calendar days</p>
+              <p className="text-xs text-muted">Schedule impact in calendar days</p>
             </div>
           </div>
 

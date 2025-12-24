@@ -22,10 +22,10 @@ const sizeClasses = {
 }
 
 const colorClasses: Record<string, string> = {
-  green: 'bg-green-100 text-green-800 border-green-200',
-  yellow: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  green: 'bg-success-light text-green-800 border-green-200',
+  yellow: 'bg-warning-light text-yellow-800 border-yellow-200',
   orange: 'bg-orange-100 text-orange-800 border-orange-200',
-  red: 'bg-red-100 text-red-800 border-red-200',
+  red: 'bg-error-light text-red-800 border-red-200',
   purple: 'bg-purple-100 text-purple-800 border-purple-200',
 }
 
@@ -49,7 +49,7 @@ export function SeverityBadge({
         {config.label}
       </span>
       {showDescription && (
-        <span className="text-xs text-gray-500 mt-1">
+        <span className="text-xs text-muted mt-1">
           {config.description}
         </span>
       )}

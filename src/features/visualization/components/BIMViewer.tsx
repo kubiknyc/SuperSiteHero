@@ -644,13 +644,13 @@ export function BIMViewer({
     return (
       <div
         className={cn(
-          'relative w-full h-full min-h-[500px] bg-gray-900 flex flex-col items-center justify-center text-white rounded-lg',
+          'relative w-full h-full min-h-[500px] bg-background flex flex-col items-center justify-center text-white rounded-lg',
           className
         )}
       >
         <AlertCircle className="h-12 w-12 text-red-400 mb-4" />
         <p className="text-lg font-medium mb-2">Failed to Load BIM Model</p>
-        <p className="text-sm text-gray-400 max-w-md text-center">{state.error}</p>
+        <p className="text-sm text-disabled max-w-md text-center">{state.error}</p>
       </div>
     );
   }
@@ -659,7 +659,7 @@ export function BIMViewer({
     <div
       ref={containerRef}
       className={cn(
-        'relative flex w-full h-full min-h-[500px] bg-gray-900 rounded-lg overflow-hidden',
+        'relative flex w-full h-full min-h-[500px] bg-background rounded-lg overflow-hidden',
         isFullscreen && 'rounded-none',
         className
       )}
@@ -682,7 +682,7 @@ export function BIMViewer({
                   <Loader2 className="h-10 w-10 animate-spin mb-4" />
                   <p className="text-sm">Loading BIM model...</p>
                   {state.progress && (
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-disabled mt-1">
                       {state.progress.stage} - {state.progress.percentage}%
                     </p>
                   )}
@@ -706,7 +706,7 @@ export function BIMViewer({
             <Loader2 className="h-10 w-10 text-white animate-spin mb-4" />
             <p className="text-white text-sm">Loading BIM model...</p>
             {state.progress && (
-              <p className="text-gray-400 text-xs mt-1">
+              <p className="text-disabled text-xs mt-1">
                 {state.progress.stage} - {state.progress.percentage}%
               </p>
             )}

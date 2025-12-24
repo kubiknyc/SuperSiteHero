@@ -593,8 +593,8 @@ export function DrawingCanvas({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center w-full h-full bg-gray-50">
-        <p className="text-gray-500">Loading annotations...</p>
+      <div className="flex items-center justify-center w-full h-full bg-surface">
+        <p className="text-muted">Loading annotations...</p>
       </div>
     )
   }
@@ -604,14 +604,14 @@ export function DrawingCanvas({
       {/* Mobile view-only notice */}
       {isMobile && !readOnly && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 bg-amber-100 border border-amber-300 rounded-lg px-4 py-2 flex items-center gap-2 shadow-md">
-          <Smartphone className="w-4 h-4 text-amber-600" />
+          <Smartphone className="w-4 h-4 text-warning" />
           <span className="text-sm text-amber-800">View only on mobile devices</span>
         </div>
       )}
 
       {/* Toolbar */}
       {!effectiveReadOnly && (
-        <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-lg p-2 space-y-2">
+        <div className="absolute top-4 left-4 z-10 bg-card rounded-lg shadow-lg p-2 space-y-2">
           {/* Tool buttons */}
           <div className="flex flex-col gap-1">
             <Button
@@ -702,7 +702,7 @@ export function DrawingCanvas({
               className="w-full"
               title="Stroke Width"
             />
-            <p className="text-xs text-center text-gray-600">{strokeWidth}px</p>
+            <p className="text-xs text-center text-secondary">{strokeWidth}px</p>
           </div>
 
           {/* Actions */}

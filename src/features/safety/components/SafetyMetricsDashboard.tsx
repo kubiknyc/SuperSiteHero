@@ -120,14 +120,14 @@ function MetricCard({
       <CardContent className="pt-6">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-500">{shortTitle}</p>
+            <p className="text-sm font-medium text-muted">{shortTitle}</p>
             <p className="text-3xl font-bold mt-1">{format(value)}</p>
           </div>
           <div className={cn('p-2 rounded-full', statusColors.bg)}>
             {status === 'good' && <CheckCircle className={cn('h-5 w-5', statusColors.text)} />}
             {status === 'warning' && <AlertTriangle className={cn('h-5 w-5', statusColors.text)} />}
             {status === 'danger' && <AlertTriangle className={cn('h-5 w-5', statusColors.text)} />}
-            {status === 'unknown' && <Minus className="h-5 w-5 text-gray-400" />}
+            {status === 'unknown' && <Minus className="h-5 w-5 text-disabled" />}
           </div>
         </div>
 
@@ -135,7 +135,7 @@ function MetricCard({
           {percentChange !== null && (
             <div className={cn(
               'flex items-center gap-1',
-              percentChange < 0 ? 'text-green-600' : percentChange > 0 ? 'text-red-600' : 'text-gray-500'
+              percentChange < 0 ? 'text-success' : percentChange > 0 ? 'text-error' : 'text-muted'
             )}>
               {percentChange < 0 ? (
                 <TrendingDown className="h-4 w-4" />
@@ -151,7 +151,7 @@ function MetricCard({
           {benchmarkVariance?.percentVariance !== null && benchmarkVariance && (
             <div className={cn(
               'flex items-center gap-1',
-              benchmarkVariance.isBetter ? 'text-green-600' : 'text-red-600'
+              benchmarkVariance.isBetter ? 'text-success' : 'text-error'
             )}>
               <span>
                 {benchmarkVariance.isBetter ? '-' : '+'}
@@ -161,7 +161,7 @@ function MetricCard({
           )}
         </div>
 
-        <p className="mt-2 text-xs text-gray-500">{description}</p>
+        <p className="mt-2 text-xs text-muted">{description}</p>
       </CardContent>
     </Card>
   )
@@ -200,11 +200,11 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'improving':
-        return <TrendingDown className="h-4 w-4 text-green-600" />
+        return <TrendingDown className="h-4 w-4 text-success" />
       case 'declining':
-        return <TrendingUp className="h-4 w-4 text-red-600" />
+        return <TrendingUp className="h-4 w-4 text-error" />
       case 'stable':
-        return <Minus className="h-4 w-4 text-gray-500" />
+        return <Minus className="h-4 w-4 text-muted" />
       default:
         return null
     }
@@ -213,11 +213,11 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
   const getPerformanceBadge = (performance: string) => {
     switch (performance) {
       case 'below':
-        return <Badge className="bg-green-100 text-green-800">Better than Industry</Badge>
+        return <Badge className="bg-success-light text-green-800">Better than Industry</Badge>
       case 'at':
-        return <Badge className="bg-yellow-100 text-yellow-800">At Industry Average</Badge>
+        return <Badge className="bg-warning-light text-yellow-800">At Industry Average</Badge>
       case 'above':
-        return <Badge className="bg-red-100 text-red-800">Above Industry Average</Badge>
+        return <Badge className="bg-error-light text-red-800">Above Industry Average</Badge>
       default:
         return <Badge variant="outline">Unknown</Badge>
     }
@@ -227,7 +227,7 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-blue-600" />
+          <Shield className="h-5 w-5 text-primary" />
           Safety Scorecard - {scorecard.year}
         </CardTitle>
       </CardHeader>
@@ -235,10 +235,10 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {/* Days Without Incident */}
           <div className="text-center">
-            <div className="text-3xl font-bold text-green-600">
+            <div className="text-3xl font-bold text-success">
               {scorecard.days_without_incident}
             </div>
-            <p className="text-sm text-gray-500">Days Without Incident</p>
+            <p className="text-sm text-muted">Days Without Incident</p>
           </div>
 
           {/* Total Recordable Incidents */}
@@ -246,7 +246,7 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
             <div className="text-3xl font-bold">
               {scorecard.recordable_incidents}
             </div>
-            <p className="text-sm text-gray-500">Recordable Incidents</p>
+            <p className="text-sm text-muted">Recordable Incidents</p>
           </div>
 
           {/* Hours Worked */}
@@ -254,7 +254,7 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
             <div className="text-3xl font-bold">
               {formatLargeNumber(scorecard.total_hours_worked)}
             </div>
-            <p className="text-sm text-gray-500">Hours Worked</p>
+            <p className="text-sm text-muted">Hours Worked</p>
           </div>
 
           {/* EMR */}
@@ -262,20 +262,20 @@ function SafetyScorecardCard({ scorecard, isLoading }: ScorecardProps) {
             <div className="text-3xl font-bold">
               {scorecard.current_emr?.toFixed(3) || 'N/A'}
             </div>
-            <p className="text-sm text-gray-500">EMR</p>
+            <p className="text-sm text-muted">EMR</p>
           </div>
         </div>
 
         <div className="mt-6 pt-6 border-t grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-500 mb-2">TRIR Performance</p>
+            <p className="text-sm text-muted mb-2">TRIR Performance</p>
             <div className="flex items-center gap-2">
               {getPerformanceBadge(scorecard.trir_performance)}
               {getTrendIcon(scorecard.trir_trend)}
             </div>
           </div>
           <div>
-            <p className="text-sm text-gray-500 mb-2">DART Performance</p>
+            <p className="text-sm text-muted mb-2">DART Performance</p>
             <div className="flex items-center gap-2">
               {getPerformanceBadge(scorecard.dart_performance)}
               {getTrendIcon(scorecard.dart_trend)}
@@ -311,7 +311,7 @@ function TrendChart({ data, metric, label, benchmark, isLoading }: TrendChartPro
 
   if (!data || data.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted">
         No trend data available
       </div>
     )
@@ -329,9 +329,9 @@ function TrendChart({ data, metric, label, benchmark, isLoading }: TrendChartPro
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-sm font-medium">{label} Trend</h4>
+        <h4 className="text-sm font-medium" className="heading-card">{label} Trend</h4>
         {benchmark && (
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-muted">
             Industry Avg: {benchmark.toFixed(2)}
           </span>
         )}
@@ -371,7 +371,7 @@ function TrendChart({ data, metric, label, benchmark, isLoading }: TrendChartPro
                   style={{ height: `${Math.max(height, 2)}%` }}
                   title={`${point.period_label}: ${value.toFixed(2)}`}
                 />
-                <span className="text-xs text-gray-500 mt-1 truncate w-full text-center">
+                <span className="text-xs text-muted mt-1 truncate w-full text-center">
                   {point.period_label.split(' ')[0]}
                 </span>
               </div>
@@ -407,7 +407,7 @@ function IndustryComparison({ metrics, benchmark, isLoading }: IndustryCompariso
   if (!benchmark) {
     return (
       <Card>
-        <CardContent className="pt-6 text-center text-gray-500">
+        <CardContent className="pt-6 text-center text-muted">
           No industry benchmark data available
         </CardContent>
       </Card>
@@ -455,14 +455,14 @@ function IndustryComparison({ metrics, benchmark, isLoading }: IndustryCompariso
                   <span className="text-sm font-medium">{comp.label}</span>
                   <span className={cn(
                     'text-sm font-medium',
-                    variance !== null && variance < 0 ? 'text-green-600' : 'text-red-600'
+                    variance !== null && variance < 0 ? 'text-success' : 'text-error'
                   )}>
                     {variance !== null ? (
                       `${variance > 0 ? '+' : ''}${variance.toFixed(1)}%`
                     ) : 'N/A'}
                   </span>
                 </div>
-                <div className="relative h-4 bg-gray-200 rounded-full overflow-hidden">
+                <div className="relative h-4 bg-muted rounded-full overflow-hidden">
                   {/* Industry benchmark line */}
                   {comp.industry && (
                     <div
@@ -483,7 +483,7 @@ function IndustryComparison({ metrics, benchmark, isLoading }: IndustryCompariso
                     />
                   )}
                 </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <div className="flex justify-between text-xs text-muted mt-1">
                   <span>Your Rate: {comp.yours?.toFixed(2) || 'N/A'}</span>
                   <span>Industry: {comp.industry?.toFixed(2) || 'N/A'}</span>
                 </div>
@@ -563,7 +563,7 @@ export function SafetyMetricsDashboard({
     return (
       <Card className={className}>
         <CardContent className="py-8 text-center">
-          <p className="text-gray-500">Unable to load safety metrics</p>
+          <p className="text-muted">Unable to load safety metrics</p>
           <Button variant="outline" onClick={() => refetch()} className="mt-4">
             Retry
           </Button>
@@ -579,11 +579,11 @@ export function SafetyMetricsDashboard({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            <Activity className="h-5 w-5 text-blue-600" />
+          <h2 className="text-xl font-semibold flex items-center gap-2" className="heading-section">
+            <Activity className="h-5 w-5 text-primary" />
             Safety Metrics Dashboard
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             {year} Year-to-Date Performance
           </p>
         </div>
@@ -710,11 +710,11 @@ export function SafetyMetricsDashboard({
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-full bg-blue-100">
-                <Clock className="h-5 w-5 text-blue-600" />
+              <div className="p-3 rounded-full bg-info-light">
+                <Clock className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Hours Worked</p>
+                <p className="text-sm text-muted">Total Hours Worked</p>
                 <p className="text-2xl font-bold">{formatHours(ytd_metrics.total_hours_worked)}</p>
               </div>
             </div>
@@ -724,11 +724,11 @@ export function SafetyMetricsDashboard({
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-3 rounded-full bg-green-100">
-                <Users className="h-5 w-5 text-green-600" />
+              <div className="p-3 rounded-full bg-success-light">
+                <Users className="h-5 w-5 text-success" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Average Employees</p>
+                <p className="text-sm text-muted">Average Employees</p>
                 <p className="text-2xl font-bold">{ytd_metrics.average_employees || 'N/A'}</p>
               </div>
             </div>
@@ -742,7 +742,7 @@ export function SafetyMetricsDashboard({
                 <Calendar className="h-5 w-5 text-orange-600" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Days Away + Restricted</p>
+                <p className="text-sm text-muted">Days Away + Restricted</p>
                 <p className="text-2xl font-bold">
                   {ytd_metrics.total_days_away + ytd_metrics.total_days_restricted}
                 </p>
@@ -755,7 +755,7 @@ export function SafetyMetricsDashboard({
       {/* OSHA Formula Reference */}
       <Card>
         <CardContent className="py-4">
-          <div className="flex flex-wrap items-center gap-6 text-xs text-gray-500">
+          <div className="flex flex-wrap items-center gap-6 text-xs text-muted">
             <span className="font-medium">OSHA Rate Formulas:</span>
             <span>TRIR = (Recordable Cases x 200,000) / Hours Worked</span>
             <span>DART = (DART Cases x 200,000) / Hours Worked</span>

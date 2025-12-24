@@ -53,12 +53,12 @@ import type { ClientChangeOrderView } from '@/types/client-portal'
 
 // Status configuration
 const statusConfig: Record<string, { label: string; color: string; bgColor: string; icon: React.ComponentType<{ className?: string }> }> = {
-  draft: { label: 'Draft', color: 'text-gray-700', bgColor: 'bg-gray-100', icon: FileEdit },
-  pending: { label: 'Pending Approval', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: Clock },
-  submitted: { label: 'Submitted', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: AlertCircle },
-  approved: { label: 'Approved', color: 'text-green-700', bgColor: 'bg-green-100', icon: CheckCircle2 },
-  rejected: { label: 'Rejected', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircle },
-  cancelled: { label: 'Cancelled', color: 'text-gray-700', bgColor: 'bg-gray-100', icon: XCircle },
+  draft: { label: 'Draft', color: 'text-secondary', bgColor: 'bg-muted', icon: FileEdit },
+  pending: { label: 'Pending Approval', color: 'text-yellow-700', bgColor: 'bg-warning-light', icon: Clock },
+  submitted: { label: 'Submitted', color: 'text-primary-hover', bgColor: 'bg-info-light', icon: AlertCircle },
+  approved: { label: 'Approved', color: 'text-success-dark', bgColor: 'bg-success-light', icon: CheckCircle2 },
+  rejected: { label: 'Rejected', color: 'text-error-dark', bgColor: 'bg-error-light', icon: XCircle },
+  cancelled: { label: 'Cancelled', color: 'text-secondary', bgColor: 'bg-muted', icon: XCircle },
 }
 
 // Format currency
@@ -135,8 +135,8 @@ export function ClientChangeOrders() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Change Orders</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Change Orders</h1>
+        <p className="text-secondary mt-1">
           Review and track change orders for your project.
         </p>
       </div>
@@ -147,15 +147,15 @@ export function ClientChangeOrders() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                <div className="p-2 bg-success-light rounded-lg">
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Approved Total</p>
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-sm text-muted">Approved Total</p>
+                  <p className="text-2xl font-bold text-success">
                     {formatCurrency(totals.approved)}
                   </p>
-                  <p className="text-xs text-gray-400">{stats.approved} change orders</p>
+                  <p className="text-xs text-disabled">{stats.approved} change orders</p>
                 </div>
               </div>
             </CardContent>
@@ -164,15 +164,15 @@ export function ClientChangeOrders() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Clock className="h-5 w-5 text-yellow-600" />
+                <div className="p-2 bg-warning-light rounded-lg">
+                  <Clock className="h-5 w-5 text-warning" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Pending Approval</p>
-                  <p className="text-2xl font-bold text-yellow-600">
+                  <p className="text-sm text-muted">Pending Approval</p>
+                  <p className="text-2xl font-bold text-warning">
                     {formatCurrency(totals.pending)}
                   </p>
-                  <p className="text-xs text-gray-400">{stats.pending} change orders</p>
+                  <p className="text-xs text-disabled">{stats.pending} change orders</p>
                 </div>
               </div>
             </CardContent>
@@ -181,13 +181,13 @@ export function ClientChangeOrders() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-100 rounded-lg">
-                  <FileEdit className="h-5 w-5 text-gray-600" />
+                <div className="p-2 bg-muted rounded-lg">
+                  <FileEdit className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Change Orders</p>
+                  <p className="text-sm text-muted">Total Change Orders</p>
                   <p className="text-2xl font-bold">{totals.total}</p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-disabled">
                     {stats.rejected > 0 && `${stats.rejected} rejected`}
                   </p>
                 </div>
@@ -201,7 +201,7 @@ export function ClientChangeOrders() {
       {changeOrders && changeOrders.length > 0 && (
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search by title, description, or CO number..."
               value={searchTerm}
@@ -227,7 +227,7 @@ export function ClientChangeOrders() {
 
       {/* CO Count */}
       {filteredCOs.length > 0 && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted">
           Showing {filteredCOs.length} change order{filteredCOs.length !== 1 ? 's' : ''}
           {searchTerm || statusFilter !== 'all' ? ' (filtered)' : ''}
         </p>
@@ -259,19 +259,19 @@ export function ClientChangeOrders() {
                   return (
                     <TableRow
                       key={co.id}
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer hover:bg-surface"
                       onClick={() => setSelectedCO(co)}
                     >
                       <TableCell>
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-foreground">
                           #{co.number}
                         </span>
                       </TableCell>
                       <TableCell>
                         <div>
-                          <p className="font-medium text-gray-900">{co.title}</p>
+                          <p className="font-medium text-foreground">{co.title}</p>
                           {co.description && (
-                            <p className="text-sm text-gray-500 truncate max-w-xs">
+                            <p className="text-sm text-muted truncate max-w-xs">
                               {co.description}
                             </p>
                           )}
@@ -291,32 +291,32 @@ export function ClientChangeOrders() {
                         {co.cost_impact !== null ? (
                           <span className={cn(
                             'flex items-center justify-end gap-1 font-medium',
-                            hasPositiveCost && 'text-red-600',
-                            hasNegativeCost && 'text-green-600'
+                            hasPositiveCost && 'text-error',
+                            hasNegativeCost && 'text-success'
                           )}>
                             {hasPositiveCost && <ArrowUpRight className="h-4 w-4" />}
                             {hasNegativeCost && <ArrowDownRight className="h-4 w-4" />}
                             {formatCurrency(Math.abs(co.cost_impact))}
                           </span>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-disabled">-</span>
                         )}
                       </TableCell>
                       <TableCell className="text-center">
                         {co.schedule_impact_days !== null ? (
                           <span className={cn(
                             'font-medium',
-                            co.schedule_impact_days > 0 && 'text-red-600',
-                            co.schedule_impact_days < 0 && 'text-green-600'
+                            co.schedule_impact_days > 0 && 'text-error',
+                            co.schedule_impact_days < 0 && 'text-success'
                           )}>
                             {co.schedule_impact_days > 0 ? '+' : ''}
                             {co.schedule_impact_days} days
                           </span>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-disabled">-</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-gray-500">
+                      <TableCell className="text-muted">
                         {format(new Date(co.created_at), 'MMM d, yyyy')}
                       </TableCell>
                       <TableCell>
@@ -334,9 +334,9 @@ export function ClientChangeOrders() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <FileEdit className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No Change Orders Found</h3>
-            <p className="text-gray-500 mt-1">
+            <FileEdit className="h-12 w-12 text-disabled mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Change Orders Found</h3>
+            <p className="text-muted mt-1">
               {searchTerm || statusFilter !== 'all'
                 ? 'No change orders match your filters. Try adjusting your search.'
                 : 'Change orders for this project will appear here.'}
@@ -366,8 +366,8 @@ export function ClientChangeOrders() {
               {selectedCO && (
                 <span className={cn(
                   'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
-                  statusConfig[selectedCO.status]?.bgColor || 'bg-gray-100',
-                  statusConfig[selectedCO.status]?.color || 'text-gray-700'
+                  statusConfig[selectedCO.status]?.bgColor || 'bg-muted',
+                  statusConfig[selectedCO.status]?.color || 'text-secondary'
                 )}>
                   {statusConfig[selectedCO.status]?.label || selectedCO.status}
                 </span>
@@ -378,9 +378,9 @@ export function ClientChangeOrders() {
           {selectedCO && (
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-gray-900">{selectedCO.title}</h4>
+                <h4 className="font-medium text-foreground" className="heading-card">{selectedCO.title}</h4>
                 {selectedCO.description && (
-                  <p className="text-gray-600 mt-2 whitespace-pre-wrap">
+                  <p className="text-secondary mt-2 whitespace-pre-wrap">
                     {selectedCO.description}
                   </p>
                 )}
@@ -388,41 +388,41 @@ export function ClientChangeOrders() {
 
               <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                 <div>
-                  <p className="text-sm text-gray-500">Cost Impact</p>
+                  <p className="text-sm text-muted">Cost Impact</p>
                   {selectedCO.cost_impact !== null ? (
                     <p className={cn(
                       'text-lg font-bold',
-                      selectedCO.cost_impact > 0 && 'text-red-600',
-                      selectedCO.cost_impact < 0 && 'text-green-600'
+                      selectedCO.cost_impact > 0 && 'text-error',
+                      selectedCO.cost_impact < 0 && 'text-success'
                     )}>
                       {selectedCO.cost_impact > 0 ? '+' : ''}
                       {formatCurrency(selectedCO.cost_impact)}
                     </p>
                   ) : (
-                    <p className="text-gray-400">Not specified</p>
+                    <p className="text-disabled">Not specified</p>
                   )}
                 </div>
 
                 <div>
-                  <p className="text-sm text-gray-500">Schedule Impact</p>
+                  <p className="text-sm text-muted">Schedule Impact</p>
                   {selectedCO.schedule_impact_days !== null ? (
                     <p className={cn(
                       'text-lg font-bold',
-                      selectedCO.schedule_impact_days > 0 && 'text-red-600',
-                      selectedCO.schedule_impact_days < 0 && 'text-green-600'
+                      selectedCO.schedule_impact_days > 0 && 'text-error',
+                      selectedCO.schedule_impact_days < 0 && 'text-success'
                     )}>
                       {selectedCO.schedule_impact_days > 0 ? '+' : ''}
                       {selectedCO.schedule_impact_days} days
                     </p>
                   ) : (
-                    <p className="text-gray-400">Not specified</p>
+                    <p className="text-disabled">Not specified</p>
                   )}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                 <div>
-                  <p className="text-sm text-gray-500">Created</p>
+                  <p className="text-sm text-muted">Created</p>
                   <p className="font-medium">
                     {format(new Date(selectedCO.created_at), 'MMMM d, yyyy')}
                   </p>
@@ -430,8 +430,8 @@ export function ClientChangeOrders() {
 
                 {selectedCO.approved_at && (
                   <div>
-                    <p className="text-sm text-gray-500">Approved</p>
-                    <p className="font-medium text-green-600">
+                    <p className="text-sm text-muted">Approved</p>
+                    <p className="font-medium text-success">
                       {format(new Date(selectedCO.approved_at), 'MMMM d, yyyy')}
                     </p>
                   </div>

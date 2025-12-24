@@ -177,7 +177,7 @@ export function BulkActionToolbar({
       <div
         className={cn(
           'fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50',
-          'bg-white border rounded-lg shadow-lg',
+          'bg-card border rounded-lg shadow-lg',
           'flex items-center gap-3 px-4 py-3',
           'animate-in slide-in-from-bottom-5 duration-200',
           className
@@ -187,7 +187,7 @@ export function BulkActionToolbar({
           <Badge variant="secondary" className="px-2.5 py-1">
             {selectedCount}
           </Badge>
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-secondary">
             template{selectedCount > 1 ? 's' : ''} selected
           </span>
         </div>
@@ -255,7 +255,7 @@ export function BulkActionToolbar({
             size="sm"
             onClick={() => setDeleteDialogOpen(true)}
             disabled={isProcessing}
-            className="gap-1.5 text-red-600 hover:text-red-700 hover:bg-red-50"
+            className="gap-1.5 text-error hover:text-error-dark hover:bg-error-light"
           >
             {operationInProgress === 'delete' ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -285,7 +285,7 @@ export function BulkActionToolbar({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertCircle className="h-5 w-5 text-error" />
               Delete {selectedCount} Template{selectedCount > 1 ? 's' : ''}?
             </AlertDialogTitle>
             <AlertDialogDescription>
@@ -300,7 +300,7 @@ export function BulkActionToolbar({
             <AlertDialogAction
               onClick={handleDelete}
               disabled={operationInProgress === 'delete'}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               {operationInProgress === 'delete' && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -333,7 +333,7 @@ export function BulkActionToolbar({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">
-                  <span className="text-gray-500">No category</span>
+                  <span className="text-muted">No category</span>
                 </SelectItem>
                 {categories.map((category) => (
                   <SelectItem key={category.id} value={category.id}>

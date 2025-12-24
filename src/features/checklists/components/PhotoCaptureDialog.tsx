@@ -346,7 +346,7 @@ export function PhotoCaptureDialog({
             <Camera className="w-5 h-5" />
             Manage Photos
             {minPhotos > 0 && (
-              <span className="text-sm font-normal text-gray-500">
+              <span className="text-sm font-normal text-muted">
                 (minimum {minPhotos} required)
               </span>
             )}
@@ -356,7 +356,7 @@ export function PhotoCaptureDialog({
           <div className="flex items-center justify-between gap-2 mt-2">
             <div className="flex items-center gap-2">
               {isOnline ? (
-                <Badge variant="outline" className="text-green-600 border-green-600">
+                <Badge variant="outline" className="text-success border-success">
                   <Wifi className="w-3 h-3 mr-1" />
                   Online
                 </Badge>
@@ -369,7 +369,7 @@ export function PhotoCaptureDialog({
 
               {/* Queue Stats */}
               {stats && (stats.pending > 0 || stats.uploading > 0) && (
-                <Badge variant="outline" className="text-blue-600 border-blue-600">
+                <Badge variant="outline" className="text-primary border-primary">
                   <Clock className="w-3 h-3 mr-1" />
                   {stats.pending} queued
                   {stats.uploading > 0 && `, ${stats.uploading} uploading`}
@@ -422,17 +422,17 @@ export function PhotoCaptureDialog({
               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
                 isDragging
                   ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-300 hover:border-gray-400'
+                  : 'border-input hover:border-gray-400'
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
             >
-              <Camera className="w-12 h-12 mx-auto text-gray-400 mb-3" />
-              <p className="text-sm text-gray-600 mb-2">
+              <Camera className="w-12 h-12 mx-auto text-disabled mb-3" />
+              <p className="text-sm text-secondary mb-2">
                 Drop photos here or click to browse
               </p>
-              <p className="text-xs text-gray-500 mb-4">
+              <p className="text-xs text-muted mb-4">
                 {photosRemaining} photo{photosRemaining > 1 ? 's' : ''} remaining
                 (max {maxPhotos})
               </p>
@@ -516,34 +516,34 @@ export function PhotoCaptureDialog({
           {bulkProgress && (
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <FolderOpen className="w-5 h-5 text-blue-600" />
-                <h3 className="text-sm font-medium text-blue-900">
+                <FolderOpen className="w-5 h-5 text-primary" />
+                <h3 className="text-sm font-medium text-blue-900" className="heading-subsection">
                   Bulk Upload Progress
                 </h3>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-700">
+                  <span className="text-secondary">
                     {bulkProgress.completed + bulkProgress.failed} of {bulkProgress.total} processed
                   </span>
-                  <span className="text-gray-600">
+                  <span className="text-secondary">
                     {Math.round(((bulkProgress.completed + bulkProgress.failed) / bulkProgress.total) * 100)}%
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-muted rounded-full h-2">
                   <div
-                    className="h-2 rounded-full bg-blue-600 transition-all"
+                    className="h-2 rounded-full bg-primary transition-all"
                     style={{
                       width: `${((bulkProgress.completed + bulkProgress.failed) / bulkProgress.total) * 100}%`,
                     }}
                   />
                 </div>
-                <div className="flex gap-4 text-xs text-gray-600">
-                  <span className="text-green-600">
+                <div className="flex gap-4 text-xs text-secondary">
+                  <span className="text-success">
                     ✓ {bulkProgress.completed} succeeded
                   </span>
                   {bulkProgress.failed > 0 && (
-                    <span className="text-red-600">
+                    <span className="text-error">
                       ✗ {bulkProgress.failed} failed
                     </span>
                   )}
@@ -555,19 +555,19 @@ export function PhotoCaptureDialog({
           {/* Upload progress */}
           {uploadingFiles.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-gray-700">Uploading...</h3>
+              <h3 className="text-sm font-medium text-secondary" className="heading-subsection">Uploading...</h3>
               {uploadingFiles.map((uf, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div key={index} className="flex items-center gap-3 p-3 bg-surface rounded-lg">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">{uf.file.name}</span>
+                      <span className="text-sm font-medium text-secondary">{uf.file.name}</span>
                       {uf.error ? (
-                        <span className="text-xs text-red-600">{uf.error}</span>
+                        <span className="text-xs text-error">{uf.error}</span>
                       ) : (
-                        <span className="text-xs text-gray-500">{uf.progress}%</span>
+                        <span className="text-xs text-muted">{uf.progress}%</span>
                       )}
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
                           uf.error
@@ -581,7 +581,7 @@ export function PhotoCaptureDialog({
                     </div>
                   </div>
                   {uf.progress === 100 && (
-                    <Check className="w-5 h-5 text-green-600" />
+                    <Check className="w-5 h-5 text-success" />
                   )}
                 </div>
               ))}

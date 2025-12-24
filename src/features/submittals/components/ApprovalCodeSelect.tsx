@@ -55,7 +55,7 @@ export function ApprovalCodeSelect({
       {label && (
         <Label className="text-sm font-medium">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-error ml-1">*</span>}
         </Label>
       )}
       <Select
@@ -76,7 +76,7 @@ export function ApprovalCodeSelect({
         </SelectTrigger>
         <SelectContent>
           {allowClear && value && (
-            <SelectItem value="clear" className="text-gray-500 italic">
+            <SelectItem value="clear" className="text-muted italic">
               Clear selection
             </SelectItem>
           )}
@@ -86,14 +86,14 @@ export function ApprovalCodeSelect({
                 <ApprovalCodeBadge code={code.value} size="sm" />
                 <div className="flex flex-col">
                   <span className="font-medium">{code.label}</span>
-                  <span className="text-xs text-gray-500">{code.description}</span>
+                  <span className="text-xs text-muted">{code.description}</span>
                 </div>
               </div>
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-error">{error}</p>}
     </div>
   )
 }
@@ -114,8 +114,8 @@ export function ApprovalCodeButtons({
 }) {
   const colorClasses: Record<SubmittalApprovalCode, { base: string; selected: string }> = {
     A: {
-      base: 'border-green-300 hover:bg-green-50',
-      selected: 'bg-green-100 border-green-500 ring-2 ring-green-200',
+      base: 'border-green-300 hover:bg-success-light',
+      selected: 'bg-success-light border-green-500 ring-2 ring-green-200',
     },
     B: {
       base: 'border-lime-300 hover:bg-lime-50',
@@ -126,8 +126,8 @@ export function ApprovalCodeButtons({
       selected: 'bg-orange-100 border-orange-500 ring-2 ring-orange-200',
     },
     D: {
-      base: 'border-red-300 hover:bg-red-50',
-      selected: 'bg-red-100 border-red-500 ring-2 ring-red-200',
+      base: 'border-red-300 hover:bg-error-light',
+      selected: 'bg-error-light border-red-500 ring-2 ring-red-200',
     },
   }
 
@@ -151,7 +151,7 @@ export function ApprovalCodeButtons({
             title={code.description}
           >
             <span className="text-2xl font-bold">{code.value}</span>
-            <span className="text-xs text-gray-600 mt-1">{code.label}</span>
+            <span className="text-xs text-secondary mt-1">{code.label}</span>
           </button>
         )
       })}

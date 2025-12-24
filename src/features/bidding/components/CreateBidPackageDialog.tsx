@@ -385,7 +385,7 @@ export function CreateBidPackageDialog({
                 />
 
                 <div className="space-y-4 pt-4 border-t">
-                  <h4 className="font-medium">Contact Information</h4>
+                  <h4 className="font-medium" className="heading-card">Contact Information</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={form.control}

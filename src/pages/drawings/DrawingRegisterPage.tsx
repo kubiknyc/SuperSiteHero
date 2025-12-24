@@ -74,7 +74,7 @@ export default function DrawingRegisterPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
             <FileText className="h-6 w-6" />
             Drawing Register
           </h1>
@@ -113,23 +113,23 @@ export default function DrawingRegisterPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="h-4 w-4 text-success" />
               Issued for Construction
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{ifcDrawings}</div>
+            <div className="text-2xl font-bold text-success">{ifcDrawings}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
-              <Clock className="h-4 w-4 text-yellow-500" />
+              <Clock className="h-4 w-4 text-warning" />
               Pending IFC
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{pendingDrawings}</div>
+            <div className="text-2xl font-bold text-warning">{pendingDrawings}</div>
           </CardContent>
         </Card>
         <Card>
@@ -158,7 +158,7 @@ export default function DrawingRegisterPage() {
               >
                 {discipline?.prefix || summary.discipline.charAt(0).toUpperCase()}: {summary.totalDrawings}
                 {summary.ifcDrawings > 0 && (
-                  <span className="ml-1 text-green-600">({summary.ifcDrawings} IFC)</span>
+                  <span className="ml-1 text-success">({summary.ifcDrawings} IFC)</span>
                 )}
               </Badge>
             );
@@ -228,7 +228,7 @@ export default function DrawingRegisterPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium">No drawings found</h3>
+            <h3 className="text-lg font-medium" className="heading-subsection">No drawings found</h3>
             <p className="text-muted-foreground mb-4">
               {search || disciplineFilter !== 'all' || ifcFilter !== 'all'
                 ? 'Try adjusting your filters'

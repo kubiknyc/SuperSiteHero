@@ -108,14 +108,14 @@ Use these codes if you lose access to your authenticator app.
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
-          <Shield className="mx-auto h-12 w-12 text-blue-600" />
-          <h2 className="mt-4 text-3xl font-bold text-gray-900">
+          <Shield className="mx-auto h-12 w-12 text-primary" />
+          <h2 className="mt-4 text-3xl font-bold text-foreground" className="heading-section">
             Set Up Two-Factor Authentication
           </h2>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-secondary">
             Add an extra layer of security to your account
           </p>
         </div>
@@ -124,10 +124,10 @@ Use these codes if you lose access to your authenticator app.
           <Card className="p-6">
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <Smartphone className="h-5 w-5 text-blue-600 mt-0.5" />
+                <Smartphone className="h-5 w-5 text-primary mt-0.5" />
                 <div>
-                  <h3 className="font-semibold">How it works</h3>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <h3 className="font-semibold" className="heading-subsection">How it works</h3>
+                  <p className="text-sm text-secondary mt-1">
                     You'll use an authenticator app on your phone to generate
                     time-based verification codes when signing in.
                   </p>
@@ -138,7 +138,7 @@ Use these codes if you lose access to your authenticator app.
                 <AlertTriangle className="h-4 w-4" />
                 <div className="ml-2">
                   <p className="text-sm font-medium">Requirements</p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-secondary mt-1">
                     You'll need an authenticator app like Google Authenticator,
                     Microsoft Authenticator, or Authy installed on your phone.
                   </p>
@@ -167,21 +167,21 @@ Use these codes if you lose access to your authenticator app.
         {step === 'scan' && enrollmentData && (
           <Card className="p-6">
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Scan QR Code</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-lg" className="heading-subsection">Scan QR Code</h3>
+              <p className="text-sm text-secondary">
                 Open your authenticator app and scan this QR code to add your account.
               </p>
 
-              <div className="bg-white p-4 rounded-lg border flex justify-center">
+              <div className="bg-card p-4 rounded-lg border flex justify-center">
                 <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(enrollmentData.qr, { USE_PROFILES: { svg: true } }) }} />
               </div>
 
               <div className="border-t pt-4">
-                <p className="text-sm font-medium text-gray-700 mb-2">
+                <p className="text-sm font-medium text-secondary mb-2">
                   Can't scan? Enter this code manually:
                 </p>
                 <div className="flex items-center space-x-2">
-                  <code className="flex-1 bg-gray-100 px-3 py-2 rounded text-sm font-mono">
+                  <code className="flex-1 bg-muted px-3 py-2 rounded text-sm font-mono">
                     {formatTOTPSecret(enrollmentData.secret)}
                   </code>
                   <Button
@@ -211,13 +211,13 @@ Use these codes if you lose access to your authenticator app.
         {step === 'verify' && (
           <Card className="p-6">
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Verify Setup</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="font-semibold text-lg" className="heading-subsection">Verify Setup</h3>
+              <p className="text-sm text-secondary">
                 Enter the 6-digit code from your authenticator app to verify setup.
               </p>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-secondary mb-2">
                   Verification Code
                 </label>
                 <Input
@@ -255,22 +255,22 @@ Use these codes if you lose access to your authenticator app.
           <Card className="p-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <Shield className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-lg">Save Backup Codes</h3>
+                <Shield className="h-5 w-5 text-success" />
+                <h3 className="font-semibold text-lg" className="heading-subsection">Save Backup Codes</h3>
               </div>
 
               <Alert variant="warning">
                 <AlertTriangle className="h-4 w-4" />
                 <div className="ml-2">
                   <p className="text-sm font-medium">Important</p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-secondary mt-1">
                     Save these backup codes in a safe place. You can use them to
                     access your account if you lose your phone.
                   </p>
                 </div>
               </Alert>
 
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-surface rounded-lg p-4">
                 <div className="grid grid-cols-2 gap-2">
                   {backupCodes.map((code, index) => (
                     <div key={index} className="font-mono text-sm">
@@ -304,14 +304,14 @@ Use these codes if you lose access to your authenticator app.
           <Card className="p-6">
             <div className="text-center space-y-4">
               <div className="flex justify-center">
-                <div className="bg-green-100 rounded-full p-3">
-                  <Check className="h-8 w-8 text-green-600" />
+                <div className="bg-success-light rounded-full p-3">
+                  <Check className="h-8 w-8 text-success" />
                 </div>
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg">Setup Complete!</h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <h3 className="font-semibold text-lg" className="heading-subsection">Setup Complete!</h3>
+                <p className="text-sm text-secondary mt-2">
                   Two-factor authentication is now enabled for your account.
                 </p>
               </div>

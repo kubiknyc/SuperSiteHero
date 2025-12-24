@@ -1,3 +1,7 @@
+---
+name: testing-specialist
+---
+
 # Testing Specialist Agent
 
 **Purpose**: Comprehensive testing strategy and implementation for the construction management platform.

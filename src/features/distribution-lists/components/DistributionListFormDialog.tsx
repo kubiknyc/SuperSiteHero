@@ -376,7 +376,7 @@ export function DistributionListFormDialog({
             {/* Members Tab */}
             <TabsContent value="members" className="space-y-4 mt-0 px-1">
               {/* Add Member Section */}
-              <div className="space-y-3 p-4 bg-gray-50 rounded-lg border">
+              <div className="space-y-3 p-4 bg-surface rounded-lg border">
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">Add Members</Label>
                   <Select value={newMemberRole} onValueChange={(v) => setNewMemberRole(v as MemberRole)}>
@@ -407,13 +407,13 @@ export function DistributionListFormDialog({
 
                 {/* Search results */}
                 {searchQuery && availableUsers.length > 0 && (
-                  <div className="border rounded-md bg-white divide-y max-h-32 overflow-auto">
+                  <div className="border rounded-md bg-card divide-y max-h-32 overflow-auto">
                     {availableUsers.map((user) => (
                       <button
                         key={user.id}
                         type="button"
                         onClick={() => handleAddUser(user.id)}
-                        className="w-full flex items-center gap-2 p-2 text-left hover:bg-gray-50"
+                        className="w-full flex items-center gap-2 p-2 text-left hover:bg-surface"
                       >
                         <Users className="h-4 w-4 text-muted-foreground" />
                         <span className="text-sm">{user.full_name || user.email}</span>
@@ -535,12 +535,12 @@ function MemberRow({
     <div className="flex items-center gap-3 p-3">
       <div className={cn(
         'h-8 w-8 rounded-full flex items-center justify-center',
-        isInternal ? 'bg-blue-100' : 'bg-green-100'
+        isInternal ? 'bg-info-light' : 'bg-success-light'
       )}>
         {isInternal ? (
-          <Users className="h-4 w-4 text-blue-600" />
+          <Users className="h-4 w-4 text-primary" />
         ) : (
-          <Mail className="h-4 w-4 text-green-600" />
+          <Mail className="h-4 w-4 text-success" />
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -553,7 +553,7 @@ function MemberRow({
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-red-600"
+        className="h-8 w-8 text-muted-foreground hover:text-error"
         onClick={onRemove}
         disabled={isRemoving}
       >
@@ -577,15 +577,15 @@ function PendingMemberRow({
   const user = isInternal ? users?.find(u => u.id === member.user_id) : null
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-yellow-50">
+    <div className="flex items-center gap-3 p-3 bg-warning-light">
       <div className={cn(
         'h-8 w-8 rounded-full flex items-center justify-center',
-        isInternal ? 'bg-blue-100' : 'bg-green-100'
+        isInternal ? 'bg-info-light' : 'bg-success-light'
       )}>
         {isInternal ? (
-          <Users className="h-4 w-4 text-blue-600" />
+          <Users className="h-4 w-4 text-primary" />
         ) : (
-          <Mail className="h-4 w-4 text-green-600" />
+          <Mail className="h-4 w-4 text-success" />
         )}
       </div>
       <div className="flex-1 min-w-0">
@@ -596,14 +596,14 @@ function PendingMemberRow({
           {isInternal ? user?.email : member.external_email}
         </p>
       </div>
-      <Badge variant="outline" className="text-xs bg-yellow-100">
+      <Badge variant="outline" className="text-xs bg-warning-light">
         {member.member_role?.toUpperCase() || 'CC'}
       </Badge>
       <Badge variant="secondary" className="text-xs">New</Badge>
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-red-600"
+        className="h-8 w-8 text-muted-foreground hover:text-error"
         onClick={onRemove}
       >
         <X className="h-4 w-4" />

@@ -33,8 +33,8 @@ function StatCard({ title, value, icon, variant = 'default', description }: Stat
             <p
               className={cn(
                 'text-3xl font-bold mt-1',
-                variant === 'warning' && 'text-amber-600',
-                variant === 'danger' && 'text-red-600'
+                variant === 'warning' && 'text-warning',
+                variant === 'danger' && 'text-error'
               )}
             >
               {value}
@@ -47,8 +47,8 @@ function StatCard({ title, value, icon, variant = 'default', description }: Stat
             className={cn(
               'p-3 rounded-full',
               variant === 'default' && 'bg-primary/10 text-primary',
-              variant === 'warning' && 'bg-amber-100 text-amber-600',
-              variant === 'danger' && 'bg-red-100 text-red-600'
+              variant === 'warning' && 'bg-amber-100 text-warning',
+              variant === 'danger' && 'bg-error-light text-error'
             )}
           >
             {icon}

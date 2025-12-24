@@ -146,7 +146,7 @@ export function EstimateItemForm({
               placeholder="e.g., Concrete Flooring"
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-error">{errors.name.message}</p>
             )}
           </div>
 
@@ -187,7 +187,7 @@ export function EstimateItemForm({
                 placeholder="0.00"
               />
               {errors.quantity && (
-                <p className="text-sm text-red-500">{errors.quantity.message}</p>
+                <p className="text-sm text-error">{errors.quantity.message}</p>
               )}
             </div>
 
@@ -206,7 +206,7 @@ export function EstimateItemForm({
                 placeholder="0.00"
               />
               {errors.unit_cost && (
-                <p className="text-sm text-red-500">{errors.unit_cost.message}</p>
+                <p className="text-sm text-error">{errors.unit_cost.message}</p>
               )}
             </div>
           </div>
@@ -227,7 +227,7 @@ export function EstimateItemForm({
                 placeholder="0.00"
               />
               {errors.labor_hours && (
-                <p className="text-sm text-red-500">{errors.labor_hours.message}</p>
+                <p className="text-sm text-error">{errors.labor_hours.message}</p>
               )}
             </div>
 
@@ -245,7 +245,7 @@ export function EstimateItemForm({
                 placeholder="0.00"
               />
               {errors.labor_rate && (
-                <p className="text-sm text-red-500">{errors.labor_rate.message}</p>
+                <p className="text-sm text-error">{errors.labor_rate.message}</p>
               )}
             </div>
           </div>

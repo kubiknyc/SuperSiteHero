@@ -54,24 +54,24 @@ interface OSHA300LogProps {
  */
 function CheckMark({ checked }: { checked: boolean }) {
   if (!checked) {return <span className="text-gray-300">-</span>}
-  return <span className="text-green-600 font-bold">X</span>
+  return <span className="text-success font-bold">X</span>
 }
 
 /**
  * Injury/Illness type indicator badge
  */
 function TypeBadge({ type }: { type: OSHAInjuryIllnessType | null }) {
-  if (!type) {return <span className="text-gray-400">-</span>}
+  if (!type) {return <span className="text-disabled">-</span>}
 
   const config = OSHA_INJURY_ILLNESS_TYPES.find((t) => t.value === type)
 
   const colorClasses: Record<OSHAInjuryIllnessType, string> = {
-    injury: 'bg-red-100 text-red-800',
+    injury: 'bg-error-light text-red-800',
     skin_disorder: 'bg-orange-100 text-orange-800',
-    respiratory: 'bg-blue-100 text-blue-800',
+    respiratory: 'bg-info-light text-blue-800',
     poisoning: 'bg-purple-100 text-purple-800',
-    hearing_loss: 'bg-yellow-100 text-yellow-800',
-    other_illness: 'bg-gray-100 text-gray-800',
+    hearing_loss: 'bg-warning-light text-yellow-800',
+    other_illness: 'bg-muted text-foreground',
   }
 
   return (
@@ -87,10 +87,10 @@ function TypeBadge({ type }: { type: OSHAInjuryIllnessType | null }) {
 function SeverityBadge({ severity }: { severity: IncidentSeverity }) {
   const config = SEVERITY_CONFIG[severity]
   const colorClasses: Record<string, string> = {
-    green: 'bg-green-100 text-green-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
+    green: 'bg-success-light text-green-800',
+    yellow: 'bg-warning-light text-yellow-800',
     orange: 'bg-orange-100 text-orange-800',
-    red: 'bg-red-100 text-red-800',
+    red: 'bg-error-light text-red-800',
     purple: 'bg-purple-100 text-purple-800',
   }
 
@@ -129,22 +129,22 @@ function OSHA300ASummaryCard({ summary, hoursWorked = 0, averageEmployees = 0 }:
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Case Classification */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase">Case Classification</p>
+            <p className="text-xs font-medium text-muted uppercase">Case Classification</p>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <span className="text-gray-600">Deaths:</span>
+                <span className="text-secondary">Deaths:</span>
                 <span className="ml-2 font-bold">{summary.total_deaths}</span>
               </div>
               <div>
-                <span className="text-gray-600">Days Away:</span>
+                <span className="text-secondary">Days Away:</span>
                 <span className="ml-2 font-bold">{summary.total_days_away_cases}</span>
               </div>
               <div>
-                <span className="text-gray-600">Job Transfer:</span>
+                <span className="text-secondary">Job Transfer:</span>
                 <span className="ml-2 font-bold">{summary.total_job_transfer_cases}</span>
               </div>
               <div>
-                <span className="text-gray-600">Other:</span>
+                <span className="text-secondary">Other:</span>
                 <span className="ml-2 font-bold">{summary.total_other_recordable_cases}</span>
               </div>
             </div>
@@ -152,30 +152,30 @@ function OSHA300ASummaryCard({ summary, hoursWorked = 0, averageEmployees = 0 }:
 
           {/* Injury/Illness Types */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase">By Type</p>
+            <p className="text-xs font-medium text-muted uppercase">By Type</p>
             <div className="grid grid-cols-2 gap-2 text-sm">
               <div>
-                <span className="text-gray-600">(G) Injury:</span>
+                <span className="text-secondary">(G) Injury:</span>
                 <span className="ml-2 font-bold">{summary.total_injuries}</span>
               </div>
               <div>
-                <span className="text-gray-600">(H) Skin:</span>
+                <span className="text-secondary">(H) Skin:</span>
                 <span className="ml-2 font-bold">{summary.total_skin_disorders}</span>
               </div>
               <div>
-                <span className="text-gray-600">(I) Resp:</span>
+                <span className="text-secondary">(I) Resp:</span>
                 <span className="ml-2 font-bold">{summary.total_respiratory_conditions}</span>
               </div>
               <div>
-                <span className="text-gray-600">(J) Poison:</span>
+                <span className="text-secondary">(J) Poison:</span>
                 <span className="ml-2 font-bold">{summary.total_poisonings}</span>
               </div>
               <div>
-                <span className="text-gray-600">(K) Hearing:</span>
+                <span className="text-secondary">(K) Hearing:</span>
                 <span className="ml-2 font-bold">{summary.total_hearing_losses}</span>
               </div>
               <div>
-                <span className="text-gray-600">(L) Other:</span>
+                <span className="text-secondary">(L) Other:</span>
                 <span className="ml-2 font-bold">{summary.total_other_illnesses}</span>
               </div>
             </div>
@@ -183,14 +183,14 @@ function OSHA300ASummaryCard({ summary, hoursWorked = 0, averageEmployees = 0 }:
 
           {/* Days Lost */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase">Days</p>
+            <p className="text-xs font-medium text-muted uppercase">Days</p>
             <div className="space-y-1 text-sm">
               <div>
-                <span className="text-gray-600">Days Away:</span>
-                <span className="ml-2 font-bold text-red-600">{summary.total_days_away}</span>
+                <span className="text-secondary">Days Away:</span>
+                <span className="ml-2 font-bold text-error">{summary.total_days_away}</span>
               </div>
               <div>
-                <span className="text-gray-600">Days Restricted:</span>
+                <span className="text-secondary">Days Restricted:</span>
                 <span className="ml-2 font-bold text-orange-600">{summary.total_days_transfer}</span>
               </div>
             </div>
@@ -198,19 +198,19 @@ function OSHA300ASummaryCard({ summary, hoursWorked = 0, averageEmployees = 0 }:
 
           {/* Rates */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase">Rates (per 100 FTE)</p>
+            <p className="text-xs font-medium text-muted uppercase">Rates (per 100 FTE)</p>
             <div className="space-y-1 text-sm">
               <div>
-                <span className="text-gray-600">TRIR:</span>
+                <span className="text-secondary">TRIR:</span>
                 <span className="ml-2 font-bold">{incidentRate}</span>
               </div>
               <div>
-                <span className="text-gray-600">DART:</span>
+                <span className="text-secondary">DART:</span>
                 <span className="ml-2 font-bold">{dartRate}</span>
               </div>
               <div>
-                <span className="text-gray-600">Total Recordable:</span>
-                <span className="ml-2 font-bold text-blue-600">{totalRecordable}</span>
+                <span className="text-secondary">Total Recordable:</span>
+                <span className="ml-2 font-bold text-primary">{totalRecordable}</span>
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@ function OSHA300ASummaryCard({ summary, hoursWorked = 0, averageEmployees = 0 }:
 
         {/* Establishment Info */}
         {hoursWorked > 0 && (
-          <div className="mt-4 pt-4 border-t text-xs text-gray-500">
+          <div className="mt-4 pt-4 border-t text-xs text-muted">
             <span className="mr-4">Hours Worked: {hoursWorked.toLocaleString()}</span>
             {averageEmployees > 0 && (
               <span>Average Employees: {averageEmployees}</span>
@@ -310,11 +310,11 @@ export function OSHA300Log({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">OSHA Form 300 - Log of Work-Related Injuries and Illnesses</h2>
+          <h2 className="text-lg font-semibold" className="heading-section">OSHA Form 300 - Log of Work-Related Injuries and Illnesses</h2>
           {establishmentName && (
-            <p className="text-sm text-gray-500">Establishment: {establishmentName}</p>
+            <p className="text-sm text-muted">Establishment: {establishmentName}</p>
           )}
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             {filteredEntries.length} recordable case{filteredEntries.length !== 1 ? 's' : ''} for {year}
           </p>
         </div>
@@ -374,7 +374,7 @@ export function OSHA300Log({
       </div>
 
       {/* Column Legend */}
-      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 bg-gray-50 p-3 rounded">
+      <div className="flex flex-wrap items-center gap-4 text-xs text-secondary bg-surface p-3 rounded">
         <span className="font-medium">Columns:</span>
         <span>(A) Case No.</span>
         <span>(B) Employee Name</span>
@@ -393,7 +393,7 @@ export function OSHA300Log({
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-surface border-b">
               <tr>
                 <th className="px-2 py-2 text-left font-medium text-xs">(A) Case No.</th>
                 <th className="px-2 py-2 text-left font-medium text-xs min-w-[120px]">(B) Name</th>
@@ -416,9 +416,9 @@ export function OSHA300Log({
                 <tr
                   key={entry.id}
                   className={cn(
-                    'hover:bg-gray-50',
+                    'hover:bg-surface',
                     onEntryClick && 'cursor-pointer',
-                    entry.death && 'bg-red-50'
+                    entry.death && 'bg-error-light'
                   )}
                   onClick={() => onEntryClick?.(entry)}
                 >
@@ -440,10 +440,10 @@ export function OSHA300Log({
                   <td className="px-2 py-2 text-xs">
                     <div className="line-clamp-2">{entry.description}</div>
                     {entry.body_part && (
-                      <div className="text-gray-500">Body: {entry.body_part}</div>
+                      <div className="text-muted">Body: {entry.body_part}</div>
                     )}
                     {entry.object_substance && (
-                      <div className="text-gray-500">Object: {entry.object_substance}</div>
+                      <div className="text-muted">Object: {entry.object_substance}</div>
                     )}
                   </td>
                   <td className="px-2 py-2">
@@ -474,7 +474,7 @@ export function OSHA300Log({
               ))}
               {filteredEntries.length === 0 && (
                 <tr>
-                  <td colSpan={14} className="px-3 py-8 text-center text-gray-500">
+                  <td colSpan={14} className="px-3 py-8 text-center text-muted">
                     No recordable cases found for {year}
                   </td>
                 </tr>
@@ -482,7 +482,7 @@ export function OSHA300Log({
             </tbody>
             {/* Totals Row */}
             {filteredEntries.length > 0 && (
-              <tfoot className="bg-gray-100 border-t-2">
+              <tfoot className="bg-muted border-t-2">
                 <tr className="font-medium">
                   <td colSpan={7} className="px-2 py-2 text-right text-sm">
                     Page Totals:
@@ -514,7 +514,7 @@ export function OSHA300Log({
       </div>
 
       {/* OSHA 300 Form Instructions */}
-      <div className="text-xs text-gray-500 space-y-1 border-t pt-4">
+      <div className="text-xs text-muted space-y-1 border-t pt-4">
         <p className="font-medium">OSHA Form 300 Column Instructions:</p>
         <p>(M) Death - Check if employee died</p>
         <p>(N) Days away from work - Check if employee had days away from work</p>

@@ -158,14 +158,14 @@ export function ChartBuilder({
                     className={cn(
                       'flex flex-col items-center gap-2 p-4 rounded-lg border-2 transition-all',
                       isSelected
-                        ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                        ? 'border-blue-500 bg-blue-50 text-primary-hover'
+                        : 'border-border hover:border-input text-secondary'
                     )}
                   >
                     <Icon className="h-8 w-8" />
                     <div className="text-center">
                       <p className="font-medium text-sm">{type.label}</p>
-                      <p className="text-xs text-gray-500 mt-1">{type.description}</p>
+                      <p className="text-xs text-muted mt-1">{type.description}</p>
                     </div>
                   </button>
                 )
@@ -198,7 +198,7 @@ export function ChartBuilder({
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted mt-1">
                   Field to group data by (categories)
                 </p>
               </div>
@@ -220,7 +220,7 @@ export function ChartBuilder({
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted mt-1">
                   Numeric field to visualize
                 </p>
               </div>
@@ -242,7 +242,7 @@ export function ChartBuilder({
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted mt-1">
                   How to aggregate values for each group
                 </p>
               </div>
@@ -290,7 +290,7 @@ export function ChartBuilder({
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Show Legend</Label>
-                  <p className="text-xs text-gray-500">Display chart legend</p>
+                  <p className="text-xs text-muted">Display chart legend</p>
                 </div>
                 <Switch
                   checked={localConfig.showLegend !== false}
@@ -301,7 +301,7 @@ export function ChartBuilder({
               <div className="flex items-center justify-between">
                 <div>
                   <Label>Show Grid</Label>
-                  <p className="text-xs text-gray-500">Display grid lines</p>
+                  <p className="text-xs text-muted">Display grid lines</p>
                 </div>
                 <Switch
                   checked={localConfig.showGrid !== false}
@@ -313,7 +313,7 @@ export function ChartBuilder({
                 <div className="flex items-center justify-between">
                   <div>
                     <Label>Show Data Labels</Label>
-                    <p className="text-xs text-gray-500">Display percentages on slices</p>
+                    <p className="text-xs text-muted">Display percentages on slices</p>
                   </div>
                   <Switch
                     checked={localConfig.showDataLabels !== false}
@@ -345,7 +345,7 @@ export function ChartBuilder({
                         'flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all',
                         isSelected
                           ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-border hover:border-input'
                       )}
                     >
                       <div className="flex gap-1">
@@ -392,23 +392,23 @@ export function ChartBuilder({
           </CardHeader>
           <CardContent>
             {!localConfig ? (
-              <div className="flex items-center justify-center h-64 text-gray-500">
+              <div className="flex items-center justify-center h-64 text-muted">
                 <div className="text-center">
-                  <BarChart3 className="h-12 w-12 mx-auto mb-3 text-gray-400" />
+                  <BarChart3 className="h-12 w-12 mx-auto mb-3 text-disabled" />
                   <p className="text-sm">Select a chart type to begin</p>
                 </div>
               </div>
             ) : !canCreateChart ? (
-              <div className="flex items-center justify-center h-64 text-gray-500">
+              <div className="flex items-center justify-center h-64 text-muted">
                 <div className="text-center">
                   <p className="text-sm">Configure group and value fields to preview</p>
                 </div>
               </div>
             ) : !canPreview ? (
-              <div className="flex items-center justify-center h-64 text-gray-500">
+              <div className="flex items-center justify-center h-64 text-muted">
                 <div className="text-center">
                   <p className="text-sm">No preview data available</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-disabled mt-1">
                     Save and run the report to see the chart
                   </p>
                 </div>
@@ -416,7 +416,7 @@ export function ChartBuilder({
             ) : showPreview ? (
               <ChartRenderer data={previewData} config={localConfig} />
             ) : (
-              <div className="flex items-center justify-center h-64 text-gray-500">
+              <div className="flex items-center justify-center h-64 text-muted">
                 <p className="text-sm">Preview hidden</p>
               </div>
             )}

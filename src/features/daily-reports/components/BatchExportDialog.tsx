@@ -72,18 +72,18 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
             <Download className="h-5 w-5" />
             Batch Export Reports
           </CardTitle>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
+          <button onClick={onClose} className="p-1 hover:bg-muted rounded">
             <X className="h-5 w-5" />
           </button>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-secondary">
             Export multiple daily reports for <strong>{projectName}</strong>
           </p>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-secondary mb-1">
                 Start Date
               </label>
               <Input
@@ -93,7 +93,7 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-secondary mb-1">
                 End Date
               </label>
               <Input
@@ -120,7 +120,7 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
 
           {summary && summary.totalReports > 0 && (
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-2">Export Summary</h4>
+              <h4 className="font-medium text-blue-900 mb-2" className="heading-card">Export Summary</h4>
               <div className="grid grid-cols-2 gap-2 text-sm text-blue-800">
                 <div>Reports: <strong>{summary.totalReports}</strong></div>
                 <div>Date Range: <strong>{summary.dateRange}</strong></div>
@@ -147,7 +147,7 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
             </Button>
           </div>
 
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-muted text-center">
             CSV export includes main report data and separate workforce file
           </p>
         </CardContent>

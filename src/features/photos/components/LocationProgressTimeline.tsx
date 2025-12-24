@@ -200,7 +200,7 @@ export function LocationProgressTimeline({
           ) : (
             <div className="space-y-4">
               {/* Main Image */}
-              <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+              <div className="relative aspect-video bg-muted rounded-lg overflow-hidden">
                 {currentEntry && (
                   <>
                     <img

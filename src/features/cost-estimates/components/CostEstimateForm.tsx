@@ -97,7 +97,7 @@ export function CostEstimateForm({
             placeholder="e.g., Q1 2024 Estimate"
           />
           {errors.name && (
-            <p className="text-sm text-red-500">{errors.name.message}</p>
+            <p className="text-sm text-error">{errors.name.message}</p>
           )}
         </div>
 
@@ -132,7 +132,7 @@ export function CostEstimateForm({
                   placeholder="0.00"
                 />
                 {errors.labor_rate && (
-                  <p className="text-sm text-red-500">{errors.labor_rate.message}</p>
+                  <p className="text-sm text-error">{errors.labor_rate.message}</p>
                 )}
               </div>
 
@@ -152,7 +152,7 @@ export function CostEstimateForm({
                   placeholder="0.00"
                 />
                 {errors.markup_percentage && (
-                  <p className="text-sm text-red-500">{errors.markup_percentage.message}</p>
+                  <p className="text-sm text-error">{errors.markup_percentage.message}</p>
                 )}
               </div>
             </div>

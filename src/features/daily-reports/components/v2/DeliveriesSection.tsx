@@ -46,26 +46,26 @@ const INSPECTION_STATUS_CONFIG: Record<
 > = {
   pending_inspection: {
     label: 'Pending',
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     icon: <Clock className="h-4 w-4" />,
   },
   accepted: {
     label: 'Accepted',
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success-light',
     icon: <CheckCircle2 className="h-4 w-4" />,
   },
   rejected: {
     label: 'Rejected',
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-error',
+    bgColor: 'bg-error-light',
     icon: <XCircle className="h-4 w-4" />,
   },
   partial: {
     label: 'Partial',
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning-light',
     icon: <AlertCircle className="h-4 w-4" />,
   },
 };
@@ -138,11 +138,11 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 bg-amber-100 rounded-lg">
-              <Truck className="h-5 w-5 text-amber-600" />
+              <Truck className="h-5 w-5 text-warning" />
             </div>
             <div className="text-left">
               <CardTitle className="text-base flex items-center gap-2">
@@ -159,15 +159,15 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-surface border-b">
               <Button type="button" variant="outline" size="sm" onClick={handleAdd}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add Delivery
@@ -181,7 +181,7 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
                   <div key={delivery.id} className="p-4">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2">
-                        <Package className="h-4 w-4 text-gray-400" />
+                        <Package className="h-4 w-4 text-disabled" />
                         <span className="font-medium">{delivery.material_description}</span>
                         <span
                           className={`px-2 py-0.5 rounded text-xs font-medium flex items-center gap-1 ${statusConfig.bgColor} ${statusConfig.color}`}
@@ -194,21 +194,21 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
                         <button
                           type="button"
                           onClick={() => handleEdit(delivery)}
-                          className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded"
+                          className="p-2 text-disabled hover:text-primary hover:bg-blue-50 rounded"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(delivery.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded"
+                          className="p-2 text-disabled hover:text-error hover:bg-error-light rounded"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-gray-600">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-secondary">
                       {delivery.vendor && <div>Vendor: {delivery.vendor}</div>}
                       {delivery.quantity && <div>Qty: {delivery.quantity}</div>}
                       {delivery.po_number && <div>PO#: {delivery.po_number}</div>}
@@ -216,7 +216,7 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
                     </div>
 
                     {delivery.rejection_reason && (
-                      <div className="mt-2 p-2 bg-red-50 rounded text-sm text-red-600">
+                      <div className="mt-2 p-2 bg-error-light rounded text-sm text-error">
                         Rejection: {delivery.rejection_reason}
                       </div>
                     )}
@@ -225,8 +225,8 @@ export function DeliveriesSection({ expanded, onToggle }: DeliveriesSectionProps
               })}
 
               {deliveries.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <Truck className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <div className="p-8 text-center text-muted">
+                  <Truck className="h-8 w-8 mx-auto mb-2 text-disabled" />
                   <p>No deliveries today.</p>
                 </div>
               )}

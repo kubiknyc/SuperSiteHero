@@ -99,7 +99,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+            <Loader2 className="h-6 w-6 animate-spin text-disabled" />
           </div>
         </CardContent>
       </Card>
@@ -116,7 +116,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-red-600 text-sm">Failed to load comments</p>
+          <p className="text-error text-sm">Failed to load comments</p>
         </CardContent>
       </Card>
     )
@@ -129,7 +129,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
           <MessageSquare className="h-4 w-4" />
           Comments
           {comments && comments.length > 0 && (
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-muted">
               ({comments.length})
             </span>
           )}
@@ -168,7 +168,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
             {comments.map((comment) => (
               <div
                 key={comment.id}
-                className="bg-gray-50 rounded-lg p-4 space-y-2"
+                className="bg-surface rounded-lg p-4 space-y-2"
               >
                 {editingCommentId === comment.id ? (
                   // Edit Mode
@@ -212,7 +212,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
                   <>
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1">
-                        <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                        <p className="text-sm text-secondary whitespace-pre-wrap">
                           {comment.comment}
                         </p>
                       </div>
@@ -233,14 +233,14 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
                             variant="ghost"
                             onClick={() => handleDelete(comment.id)}
                             disabled={deleteComment.isPending}
-                            className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            className="h-7 w-7 p-0 text-error hover:text-error-dark hover:bg-error-light"
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted">
                       {comment.created_at
                         ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a')
                         : 'Just now'}
@@ -255,7 +255,7 @@ export function WorkflowItemCommentsPanel({ workflowItemId }: WorkflowItemCommen
             ))}
           </div>
         ) : (
-          <div className="text-center py-6 text-gray-500">
+          <div className="text-center py-6 text-muted">
             <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No comments yet</p>
             <p className="text-xs">Be the first to add a comment</p>

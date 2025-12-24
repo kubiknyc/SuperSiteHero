@@ -219,7 +219,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -229,12 +229,12 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-lg">
-          <div className="p-2 bg-blue-100 rounded-full">
-            <Fingerprint className="h-6 w-6 text-blue-600" />
+          <div className="p-2 bg-info-light rounded-full">
+            <Fingerprint className="h-6 w-6 text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-gray-900">Enable Biometric Login</h3>
-            <p className="text-sm text-gray-600">
+            <h3 className="font-medium text-foreground" className="heading-subsection">Enable Biometric Login</h3>
+            <p className="text-sm text-secondary">
               Use fingerprint or Face ID for quick, secure access
             </p>
           </div>
@@ -275,7 +275,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
                 value={customDeviceName}
                 onChange={(e) => setCustomDeviceName(e.target.value)}
                 placeholder={getDeviceInfo()}
-                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-2 px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <AlertDialogFooter>
@@ -297,8 +297,8 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
       <Card>
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-full">
-              <Fingerprint className="h-6 w-6 text-blue-600" />
+            <div className="p-2 bg-info-light rounded-full">
+              <Fingerprint className="h-6 w-6 text-primary" />
             </div>
             <div>
               <CardTitle>Biometric Authentication</CardTitle>
@@ -315,7 +315,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
               <Label htmlFor="biometric-enabled" className="text-base">
                 Enable Biometric Login
               </Label>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted">
                 Allow signing in with biometrics on registered devices
               </p>
             </div>
@@ -344,7 +344,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
                   <Clock className="h-4 w-4" />
                   Re-authentication Interval
                 </Label>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-sm text-muted mb-4">
                   How often to require biometric verification for sensitive operations
                 </p>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -390,7 +390,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
         </CardHeader>
         <CardContent>
           {settings?.credentials.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               <Smartphone className="h-12 w-12 mx-auto mb-3 opacity-50" />
               <p>No devices registered</p>
               <p className="text-sm">Add a device to enable biometric login</p>
@@ -400,13 +400,13 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
               {settings?.credentials.map((credential) => (
                 <div
                   key={credential.id}
-                  className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-4 bg-surface rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <Smartphone className="h-5 w-5 text-gray-600" />
+                    <Smartphone className="h-5 w-5 text-secondary" />
                     <div>
-                      <p className="font-medium text-gray-900">{credential.deviceName}</p>
-                      <div className="flex items-center gap-3 text-sm text-gray-500">
+                      <p className="font-medium text-foreground">{credential.deviceName}</p>
+                      <div className="flex items-center gap-3 text-sm text-muted">
                         <span>Added {formatDate(credential.createdAt)}</span>
                         {credential.lastUsed && (
                           <>
@@ -418,7 +418,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Active
                     </Badge>
@@ -426,7 +426,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
                       variant="ghost"
                       size="icon"
                       onClick={() => setDeviceToDelete(credential)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="text-error hover:text-error-dark hover:bg-error-light"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -442,25 +442,25 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-green-600" />
+            <ShieldCheck className="h-5 w-5 text-success" />
             Security Information
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 text-sm text-gray-600">
+        <CardContent className="space-y-3 text-sm text-secondary">
           <div className="flex items-start gap-3">
-            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
+            <CheckCircle className="h-4 w-4 text-success mt-0.5" />
             <p>Your biometric data (fingerprint, face) never leaves your device</p>
           </div>
           <div className="flex items-start gap-3">
-            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
+            <CheckCircle className="h-4 w-4 text-success mt-0.5" />
             <p>Only a cryptographic key is stored on our servers</p>
           </div>
           <div className="flex items-start gap-3">
-            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
+            <CheckCircle className="h-4 w-4 text-success mt-0.5" />
             <p>Each device has a unique credential that can be revoked independently</p>
           </div>
           <div className="flex items-start gap-3">
-            <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
+            <CheckCircle className="h-4 w-4 text-success mt-0.5" />
             <p>You can always fall back to password authentication</p>
           </div>
         </CardContent>
@@ -483,7 +483,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
               value={customDeviceName}
               onChange={(e) => setCustomDeviceName(e.target.value)}
               placeholder={getDeviceInfo()}
-              className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full mt-2 px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <AlertDialogFooter>
@@ -515,7 +515,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteDevice}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               Remove Device
             </AlertDialogAction>

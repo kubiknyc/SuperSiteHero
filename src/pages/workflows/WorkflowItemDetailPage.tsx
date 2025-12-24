@@ -44,7 +44,7 @@ export function WorkflowItemDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="pt-6">
               <p className="text-red-800">Invalid workflow item ID</p>
             </CardContent>
@@ -59,7 +59,7 @@ export function WorkflowItemDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
           </div>
         </div>
       </AppLayout>
@@ -70,7 +70,7 @@ export function WorkflowItemDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="pt-6">
               <p className="text-red-800">
                 {error instanceof Error ? error.message : 'Failed to load workflow item'}
@@ -98,9 +98,9 @@ export function WorkflowItemDetailPage() {
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold">{item.title}</h1>
+            <h1 className="text-3xl font-bold" className="heading-page">{item.title}</h1>
             {item.reference_number && (
-              <p className="text-gray-600">Ref: {item.reference_number}</p>
+              <p className="text-secondary">Ref: {item.reference_number}</p>
             )}
           </div>
           <div className="flex gap-2">
@@ -133,7 +133,7 @@ export function WorkflowItemDetailPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <p className="text-sm text-gray-600 mb-2">Current Status</p>
+                <p className="text-sm text-secondary mb-2">Current Status</p>
                 <WorkflowItemStatusBadge
                   status={item.status}
                   priority={item.priority ?? undefined}
@@ -141,7 +141,7 @@ export function WorkflowItemDetailPage() {
               </div>
 
               <div>
-                <label className="text-sm text-gray-600">Change Status</label>
+                <label className="text-sm text-secondary">Change Status</label>
                 <select
                   value={item.status}
                   onChange={(e) => handleStatusChange(e.target.value)}
@@ -167,19 +167,19 @@ export function WorkflowItemDetailPage() {
             <CardContent className="space-y-3">
               {item.discipline && (
                 <div>
-                  <p className="text-sm text-gray-600">Discipline</p>
+                  <p className="text-sm text-secondary">Discipline</p>
                   <p className="font-medium">{item.discipline}</p>
                 </div>
               )}
               {item.due_date && (
                 <div>
-                  <p className="text-sm text-gray-600">Due Date</p>
+                  <p className="text-sm text-secondary">Due Date</p>
                   <p className="font-medium">{format(new Date(item.due_date), 'MMMM dd, yyyy')}</p>
                 </div>
               )}
               {item.priority && (
                 <div>
-                  <p className="text-sm text-gray-600">Priority</p>
+                  <p className="text-sm text-secondary">Priority</p>
                   <p className="font-medium capitalize">{item.priority}</p>
                 </div>
               )}
@@ -202,7 +202,7 @@ export function WorkflowItemDetailPage() {
               <CardTitle className="text-base">Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="whitespace-pre-wrap text-gray-700">{item.description}</p>
+              <p className="whitespace-pre-wrap text-secondary">{item.description}</p>
             </CardContent>
           </Card>
         )}
@@ -215,15 +215,15 @@ export function WorkflowItemDetailPage() {
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {item.cost_impact !== null && (
               <div>
-                <p className="text-sm text-gray-600 mb-1">Cost Impact</p>
-                <p className="text-2xl font-bold text-red-600">
+                <p className="text-sm text-secondary mb-1">Cost Impact</p>
+                <p className="text-2xl font-bold text-error">
                   ${item.cost_impact.toLocaleString()}
                 </p>
               </div>
             )}
             {item.schedule_impact !== null && (
               <div>
-                <p className="text-sm text-gray-600 mb-1">Schedule Impact</p>
+                <p className="text-sm text-secondary mb-1">Schedule Impact</p>
                 <p className="text-2xl font-bold text-orange-600">
                   {item.schedule_impact} {item.schedule_impact === 1 ? 'day' : 'days'}
                 </p>
@@ -239,7 +239,7 @@ export function WorkflowItemDetailPage() {
               <CardTitle className="text-base">Resolution</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="whitespace-pre-wrap text-gray-700">{item.resolution}</p>
+              <p className="whitespace-pre-wrap text-secondary">{item.resolution}</p>
             </CardContent>
           </Card>
         )}
@@ -252,19 +252,19 @@ export function WorkflowItemDetailPage() {
           <CardContent className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
             {item.created_at && (
               <div>
-                <p className="text-gray-600">Created</p>
+                <p className="text-secondary">Created</p>
                 <p className="font-medium">{format(new Date(item.created_at), 'MMM dd, yyyy')}</p>
               </div>
             )}
             {item.updated_at && (
               <div>
-                <p className="text-gray-600">Updated</p>
+                <p className="text-secondary">Updated</p>
                 <p className="font-medium">{format(new Date(item.updated_at), 'MMM dd, yyyy')}</p>
               </div>
             )}
             {item.closed_date && (
               <div>
-                <p className="text-gray-600">Closed</p>
+                <p className="text-secondary">Closed</p>
                 <p className="font-medium">{format(new Date(item.closed_date), 'MMM dd, yyyy')}</p>
               </div>
             )}

@@ -96,8 +96,8 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Activity className="h-6 w-6 text-blue-600" />
+          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2" className="heading-section">
+            <Activity className="h-6 w-6 text-primary" />
             Earned Value Management
           </h2>
           <p className="text-muted-foreground mt-1">
@@ -111,10 +111,10 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
             <Badge
               variant="secondary"
               className={cn(
-                healthCheck.riskLevel === 'low' && 'bg-green-100 text-green-700',
-                healthCheck.riskLevel === 'medium' && 'bg-yellow-100 text-yellow-700',
+                healthCheck.riskLevel === 'low' && 'bg-success-light text-success-dark',
+                healthCheck.riskLevel === 'medium' && 'bg-warning-light text-yellow-700',
                 healthCheck.riskLevel === 'high' && 'bg-orange-100 text-orange-700',
-                healthCheck.riskLevel === 'critical' && 'bg-red-100 text-red-700'
+                healthCheck.riskLevel === 'critical' && 'bg-error-light text-error-dark'
               )}
             >
               {healthCheck.riskLevel === 'low' && 'Healthy'}
@@ -151,7 +151,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card className={cn(
             'border',
-            metrics.CPI >= 1 ? 'border-green-200 bg-green-50/50' : 'border-red-200 bg-red-50/50'
+            metrics.CPI >= 1 ? 'border-green-200 bg-success-light/50' : 'border-red-200 bg-error-light/50'
           )}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                 </div>
                 <DollarSign className={cn(
                   'h-8 w-8',
-                  metrics.CPI >= 1 ? 'text-green-500' : 'text-red-500'
+                  metrics.CPI >= 1 ? 'text-success' : 'text-error'
                 )} />
               </div>
               <p className="text-xs mt-1 text-muted-foreground">
@@ -172,7 +172,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
 
           <Card className={cn(
             'border',
-            metrics.SPI >= 1 ? 'border-green-200 bg-green-50/50' : 'border-red-200 bg-red-50/50'
+            metrics.SPI >= 1 ? 'border-green-200 bg-success-light/50' : 'border-red-200 bg-error-light/50'
           )}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -182,7 +182,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                 </div>
                 <Clock className={cn(
                   'h-8 w-8',
-                  metrics.SPI >= 1 ? 'text-green-500' : 'text-red-500'
+                  metrics.SPI >= 1 ? 'text-success' : 'text-error'
                 )} />
               </div>
               <p className="text-xs mt-1 text-muted-foreground">
@@ -198,7 +198,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                   <p className="text-xs text-muted-foreground">EAC</p>
                   <p className="text-2xl font-bold">{displayValues.eac}</p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-blue-500" />
+                <TrendingUp className="h-8 w-8 text-primary" />
               </div>
               <p className="text-xs mt-1 text-muted-foreground">
                 Estimated final cost
@@ -208,7 +208,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
 
           <Card className={cn(
             'border',
-            metrics.VAC >= 0 ? 'border-green-200 bg-green-50/50' : 'border-red-200 bg-red-50/50'
+            metrics.VAC >= 0 ? 'border-green-200 bg-success-light/50' : 'border-red-200 bg-error-light/50'
           )}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -218,7 +218,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                 </div>
                 <AlertTriangle className={cn(
                   'h-8 w-8',
-                  metrics.VAC >= 0 ? 'text-green-500' : 'text-red-500'
+                  metrics.VAC >= 0 ? 'text-success' : 'text-error'
                 )} />
               </div>
               <p className="text-xs mt-1 text-muted-foreground">
@@ -304,8 +304,8 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                     <p className={cn(
                       'text-lg font-bold',
                       (trend[trend.length - 1].CPI - trend[0].CPI) >= 0
-                        ? 'text-green-600'
-                        : 'text-red-600'
+                        ? 'text-success'
+                        : 'text-error'
                     )}>
                       {(trend[trend.length - 1].CPI - trend[0].CPI) >= 0 ? '+' : ''}
                       {(trend[trend.length - 1].CPI - trend[0].CPI).toFixed(2)}
@@ -317,8 +317,8 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                     <p className={cn(
                       'text-lg font-bold',
                       (trend[trend.length - 1].SPI - trend[0].SPI) >= 0
-                        ? 'text-green-600'
-                        : 'text-red-600'
+                        ? 'text-success'
+                        : 'text-error'
                     )}>
                       {(trend[trend.length - 1].SPI - trend[0].SPI) >= 0 ? '+' : ''}
                       {(trend[trend.length - 1].SPI - trend[0].SPI).toFixed(2)}
@@ -327,7 +327,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Progress Made</p>
-                    <p className="text-lg font-bold text-blue-600">
+                    <p className="text-lg font-bold text-primary">
                       +{(trend[trend.length - 1].percent_complete - trend[0].percent_complete).toFixed(1)}%
                     </p>
                     <p className="text-xs text-muted-foreground">

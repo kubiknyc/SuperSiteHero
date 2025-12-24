@@ -19,7 +19,7 @@ export function ValidationError({ error, errors, className = '' }: ValidationErr
   return (
     <div className={`space-y-1 ${className}`}>
       {messages.map((msg, index) => (
-        <div key={index} className="flex items-center gap-2 text-sm text-red-600">
+        <div key={index} className="flex items-center gap-2 text-sm text-error">
           <AlertCircle className="w-4 h-4 flex-shrink-0" />
           <span>{msg}</span>
         </div>
@@ -68,8 +68,8 @@ export function InputWithError({
         className={`
           px-3 py-2 border rounded-md w-full
           ${hasError
-            ? 'border-red-500 bg-red-50 focus:ring-red-500'
-            : 'border-gray-300 focus:ring-blue-500'
+            ? 'border-red-500 bg-error-light focus:ring-red-500'
+            : 'border-input focus:ring-blue-500'
           }
           focus:outline-none focus:ring-2
           ${className}
@@ -97,8 +97,8 @@ export function TextareaWithError({
         className={`
           px-3 py-2 border rounded-md w-full
           ${hasError
-            ? 'border-red-500 bg-red-50 focus:ring-red-500'
-            : 'border-gray-300 focus:ring-blue-500'
+            ? 'border-red-500 bg-error-light focus:ring-red-500'
+            : 'border-input focus:ring-blue-500'
           }
           focus:outline-none focus:ring-2
           ${className}
@@ -126,8 +126,8 @@ export function SelectWithError({
         className={`
           px-3 py-2 border rounded-md w-full
           ${hasError
-            ? 'border-red-500 bg-red-50 focus:ring-red-500'
-            : 'border-gray-300 focus:ring-blue-500'
+            ? 'border-red-500 bg-error-light focus:ring-red-500'
+            : 'border-input focus:ring-blue-500'
           }
           focus:outline-none focus:ring-2
           ${className}

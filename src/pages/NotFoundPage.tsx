@@ -20,17 +20,17 @@ export function NotFoundPage() {
         </div>
 
         {/* Error Code */}
-        <h1 className="heading-error-code text-orange-500 mb-4">
+        <h1 className="heading-error-code text-orange-500 mb-4" className="heading-page">
           404
         </h1>
 
         {/* Error Title */}
-        <h2 className="heading-page text-gray-900 dark:text-white mb-4">
+        <h2 className="heading-page text-foreground dark:text-white mb-4" className="heading-section">
           Page Not Found
         </h2>
 
         {/* Error Description */}
-        <p className="body-large text-gray-600 dark:text-gray-400 mb-8">
+        <p className="body-large text-secondary dark:text-disabled mb-8">
           The page you're looking for doesn't exist in JobSight.
           It may have been moved, deleted, or the URL might be incorrect.
         </p>
@@ -73,7 +73,7 @@ export function NotFoundPage() {
         </div>
 
         {/* Helpful Links */}
-        <div className="mt-8 body-small text-gray-500 dark:text-gray-400">
+        <div className="mt-8 body-small text-muted dark:text-disabled">
           <p className="mb-2">Quick links:</p>
           <div className="flex flex-wrap gap-4 justify-center">
             <button
@@ -104,8 +104,8 @@ export function NotFoundPage() {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-caption text-gray-400 dark:text-gray-600">
+        <div className="mt-12 pt-8 border-t border-border dark:border-gray-700">
+          <p className="text-caption text-disabled dark:text-secondary">
             <span className="font-semibold text-primary dark:text-primary-400">JobSight</span> - Construction Field Management
           </p>
         </div>

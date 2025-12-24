@@ -39,7 +39,7 @@ export function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
@@ -80,7 +80,7 @@ export function ForgotPasswordPage() {
 
               <Link
                 to="/login"
-                className="flex items-center justify-center gap-2 body-small text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                className="flex items-center justify-center gap-2 body-small text-secondary hover:text-foreground dark:text-disabled dark:hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4" />
                 Back to sign in
@@ -89,7 +89,7 @@ export function ForgotPasswordPage() {
           </form>
         ) : (
           <CardFooter className="flex flex-col space-y-4">
-            <p className="body-small text-center text-gray-600 dark:text-gray-400">
+            <p className="body-small text-center text-secondary dark:text-disabled">
               Didn't receive an email?{' '}
               <button
                 onClick={() => setSubmitted(false)}
@@ -101,7 +101,7 @@ export function ForgotPasswordPage() {
 
             <Link
               to="/login"
-              className="flex items-center justify-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+              className="flex items-center justify-center gap-2 text-sm text-secondary hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to sign in

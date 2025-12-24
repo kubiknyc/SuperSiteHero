@@ -82,10 +82,10 @@ export function DeliveriesSection({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <Package className="h-5 w-5 text-gray-600" />
+          <Package className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">
               Deliveries
@@ -95,27 +95,27 @@ export function DeliveriesSection({
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
       {expanded && (
         <CardContent className="space-y-4 border-t pt-4">
           {entries.length === 0 ? (
-            <p className="text-sm text-gray-500">No deliveries yet</p>
+            <p className="text-sm text-muted">No deliveries yet</p>
           ) : (
             <div className="space-y-3">
               {entries.map((entry) => (
-                <div key={entry.id} className="border rounded-lg p-4 bg-gray-50">
+                <div key={entry.id} className="border rounded-lg p-4 bg-surface">
                   {editingId === entry.id ? (
                     <div className="space-y-3">
                       {validationError && <FormError message={validationError} />}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Material <span className="text-red-600">*</span>
+                          <label className="block text-xs font-medium text-secondary mb-1">
+                            Material <span className="text-error">*</span>
                           </label>
                           <Input
                             placeholder="e.g., Concrete, Steel beams"
@@ -128,7 +128,7 @@ export function DeliveriesSection({
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                          <label className="block text-xs font-medium text-secondary mb-1">
                             Vendor
                           </label>
                           <Input
@@ -142,7 +142,7 @@ export function DeliveriesSection({
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                          <label className="block text-xs font-medium text-secondary mb-1">
                             Quantity
                           </label>
                           <Input
@@ -156,7 +156,7 @@ export function DeliveriesSection({
                           />
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                          <label className="block text-xs font-medium text-secondary mb-1">
                             Ticket #
                           </label>
                           <Input
@@ -183,7 +183,7 @@ export function DeliveriesSection({
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <p className="font-medium text-sm">{entry.material_description}</p>
-                        <div className="flex flex-wrap gap-x-4 text-xs text-gray-600 mt-1">
+                        <div className="flex flex-wrap gap-x-4 text-xs text-secondary mt-1">
                           {entry.vendor && <span>From: {entry.vendor}</span>}
                           {entry.quantity && <span>Qty: {entry.quantity}</span>}
                           {entry.delivery_ticket_number && <span>Ticket: {entry.delivery_ticket_number}</span>}
@@ -193,14 +193,14 @@ export function DeliveriesSection({
                         <button
                           type="button"
                           onClick={() => handleEdit(entry)}
-                          className="p-1 hover:bg-white rounded"
+                          className="p-1 hover:bg-card rounded"
                         >
-                          <Edit2 className="h-4 w-4 text-gray-400" />
+                          <Edit2 className="h-4 w-4 text-disabled" />
                         </button>
                         <button
                           type="button"
                           onClick={() => onRemove(entry.id)}
-                          className="p-1 hover:bg-white rounded"
+                          className="p-1 hover:bg-card rounded"
                         >
                           <Trash2 className="h-4 w-4 text-red-400" />
                         </button>

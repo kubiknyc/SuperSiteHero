@@ -92,8 +92,8 @@ export function SubcontractorDailyReportDetailPage() {
       <div className="p-6">
         <Card>
           <CardContent className="p-12 text-center">
-            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
-            <h2 className="text-xl font-semibold mb-2">Report Not Found</h2>
+            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-error" />
+            <h2 className="text-xl font-semibold mb-2" className="heading-section">Report Not Found</h2>
             <p className="text-muted-foreground mb-4">
               This report doesn't exist or you don't have permission to view it.
             </p>
@@ -120,7 +120,7 @@ export function SubcontractorDailyReportDetailPage() {
               Back to Reports
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
             <FileText className="h-6 w-6" />
             Daily Report
           </h1>
@@ -138,7 +138,7 @@ export function SubcontractorDailyReportDetailPage() {
 
         <Badge
           variant={report.submitted_at ? 'default' : 'secondary'}
-          className={report.submitted_at ? 'bg-green-100 text-green-700' : ''}
+          className={report.submitted_at ? 'bg-success-light text-success-dark' : ''}
         >
           {report.submitted_at ? (
             <>
@@ -178,7 +178,7 @@ export function SubcontractorDailyReportDetailPage() {
         <CardContent className="space-y-4">
           {report.work_completed && (
             <div>
-              <h4 className="text-sm font-medium mb-1">Work Completed</h4>
+              <h4 className="text-sm font-medium mb-1" className="heading-card">Work Completed</h4>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                 {report.work_completed}
               </p>
@@ -186,7 +186,7 @@ export function SubcontractorDailyReportDetailPage() {
           )}
           {report.work_planned_tomorrow && (
             <div>
-              <h4 className="text-sm font-medium mb-1">Work Planned for Tomorrow</h4>
+              <h4 className="text-sm font-medium mb-1" className="heading-card">Work Planned for Tomorrow</h4>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                 {report.work_planned_tomorrow}
               </p>
@@ -194,13 +194,13 @@ export function SubcontractorDailyReportDetailPage() {
           )}
           {report.issues && (
             <div>
-              <h4 className="text-sm font-medium mb-1 text-orange-600">Issues/Delays</h4>
+              <h4 className="text-sm font-medium mb-1 text-orange-600" className="heading-card">Issues/Delays</h4>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report.issues}</p>
             </div>
           )}
           {report.observations && (
             <div>
-              <h4 className="text-sm font-medium mb-1">Observations</h4>
+              <h4 className="text-sm font-medium mb-1" className="heading-card">Observations</h4>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                 {report.observations}
               </p>

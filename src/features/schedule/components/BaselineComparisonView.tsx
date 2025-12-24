@@ -121,36 +121,36 @@ function getVarianceStatus(
 
 function getVarianceColor(status: VarianceStatus): string {
   switch (status) {
-    case 'on_track': return 'text-green-600'
-    case 'caution': return 'text-yellow-600'
+    case 'on_track': return 'text-success'
+    case 'caution': return 'text-warning'
     case 'warning': return 'text-orange-600'
-    case 'critical': return 'text-red-600'
-    default: return 'text-gray-600'
+    case 'critical': return 'text-error'
+    default: return 'text-secondary'
   }
 }
 
 function getVarianceBgColor(status: VarianceStatus): string {
   switch (status) {
-    case 'on_track': return 'bg-green-100 text-green-800'
-    case 'caution': return 'bg-yellow-100 text-yellow-800'
+    case 'on_track': return 'bg-success-light text-green-800'
+    case 'caution': return 'bg-warning-light text-yellow-800'
     case 'warning': return 'bg-orange-100 text-orange-800'
-    case 'critical': return 'bg-red-100 text-red-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'critical': return 'bg-error-light text-red-800'
+    default: return 'bg-muted text-foreground'
   }
 }
 
 function getStatusIcon(status: VarianceStatus) {
   switch (status) {
     case 'on_track':
-      return <CheckCircle2 className="h-4 w-4 text-green-500" />
+      return <CheckCircle2 className="h-4 w-4 text-success" />
     case 'caution':
-      return <AlertTriangle className="h-4 w-4 text-yellow-500" />
+      return <AlertTriangle className="h-4 w-4 text-warning" />
     case 'warning':
       return <AlertTriangle className="h-4 w-4 text-orange-500" />
     case 'critical':
-      return <AlertCircle className="h-4 w-4 text-red-500" />
+      return <AlertCircle className="h-4 w-4 text-error" />
     default:
-      return <Minus className="h-4 w-4 text-gray-400" />
+      return <Minus className="h-4 w-4 text-disabled" />
   }
 }
 
@@ -369,7 +369,7 @@ export function BaselineComparisonView({
           <div className="flex items-center justify-between">
             <div>
               <SheetTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-blue-500" />
+                <Target className="h-5 w-5 text-primary" />
                 Baseline Comparison
               </SheetTitle>
               <SheetDescription className="flex items-center gap-2 mt-1">
@@ -386,19 +386,19 @@ export function BaselineComparisonView({
             <SummaryCard
               title="On Track"
               value={summary.on_track}
-              icon={<CheckCircle2 className="h-6 w-6 text-green-500" />}
+              icon={<CheckCircle2 className="h-6 w-6 text-success" />}
               className="border-green-200"
             />
             <SummaryCard
               title="Caution"
               value={summary.caution}
-              icon={<AlertTriangle className="h-6 w-6 text-yellow-500" />}
+              icon={<AlertTriangle className="h-6 w-6 text-warning" />}
               className="border-yellow-200"
             />
             <SummaryCard
               title="Critical"
               value={summary.warning + summary.critical}
-              icon={<AlertCircle className="h-6 w-6 text-red-500" />}
+              icon={<AlertCircle className="h-6 w-6 text-error" />}
               className="border-red-200"
             />
             <SummaryCard
@@ -406,11 +406,11 @@ export function BaselineComparisonView({
               value={`${summary.avg_variance_days > 0 ? '+' : ''}${summary.avg_variance_days.toFixed(1)}d`}
               icon={
                 summary.avg_variance_days > 0 ? (
-                  <TrendingUp className="h-6 w-6 text-red-500" />
+                  <TrendingUp className="h-6 w-6 text-error" />
                 ) : summary.avg_variance_days < 0 ? (
-                  <TrendingDown className="h-6 w-6 text-green-500" />
+                  <TrendingDown className="h-6 w-6 text-success" />
                 ) : (
-                  <Minus className="h-6 w-6 text-gray-400" />
+                  <Minus className="h-6 w-6 text-disabled" />
                 )
               }
               className={
@@ -428,7 +428,7 @@ export function BaselineComparisonView({
             <>
               <Separator />
               <div>
-                <h3 className="text-sm font-semibold flex items-center gap-2 mb-3">
+                <h3 className="text-sm font-semibold flex items-center gap-2 mb-3" className="heading-subsection">
                   <Flag className="h-4 w-4 text-orange-500" />
                   Milestone Variance
                 </h3>
@@ -477,7 +477,7 @@ export function BaselineComparisonView({
           {/* Activity Variance Table */}
           <Separator />
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold">Activity Variance</h3>
+            <h3 className="text-sm font-semibold" className="heading-subsection">Activity Variance</h3>
 
             {/* Filters */}
             <div className="flex items-center gap-4">
@@ -539,7 +539,7 @@ export function BaselineComparisonView({
                             <Flag className="h-3.5 w-3.5 text-orange-500" />
                           )}
                           {v.activity.is_critical && (
-                            <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
+                            <AlertTriangle className="h-3.5 w-3.5 text-error" />
                           )}
                         </div>
                       </TableCell>
@@ -582,11 +582,11 @@ export function BaselineComparisonView({
             <strong>Variance Thresholds:</strong>
             <div className="flex gap-4 mt-1">
               <span className="flex items-center gap-1">
-                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                <CheckCircle2 className="h-3 w-3 text-success" />
                 ±3 days = On Track
               </span>
               <span className="flex items-center gap-1">
-                <AlertTriangle className="h-3 w-3 text-yellow-500" />
+                <AlertTriangle className="h-3 w-3 text-warning" />
                 ±4-7 days = Caution
               </span>
               <span className="flex items-center gap-1">
@@ -594,7 +594,7 @@ export function BaselineComparisonView({
                 ±8-14 days = Warning
               </span>
               <span className="flex items-center gap-1">
-                <AlertCircle className="h-3 w-3 text-red-500" />
+                <AlertCircle className="h-3 w-3 text-error" />
                 {'>'}14 days = Critical
               </span>
             </div>

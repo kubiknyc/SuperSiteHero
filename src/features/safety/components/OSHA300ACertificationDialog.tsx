@@ -158,7 +158,7 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
         ref={canvasRef}
         width={width}
         height={height}
-        className="border border-gray-300 rounded-md cursor-crosshair bg-white"
+        className="border border-input rounded-md cursor-crosshair bg-card"
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}
@@ -346,8 +346,8 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
         </DialogHeader>
 
         {success ? (
-          <Alert className="border-green-500 bg-green-50">
-            <CheckCircle className="h-5 w-5 text-green-600" />
+          <Alert className="border-green-500 bg-success-light">
+            <CheckCircle className="h-5 w-5 text-success" />
             <AlertDescription className="text-green-800">
               OSHA 300A form certified successfully! Remember to post this form from February 1 to
               April 30, {summary.year + 1}.
@@ -364,7 +364,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
             {/* Summary Stats */}
             <Card>
               <CardContent className="pt-6">
-                <h3 className="font-semibold mb-4">Annual Summary for {summary.year}</h3>
+                <h3 className="font-semibold mb-4" className="heading-subsection">Annual Summary for {summary.year}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">Total Recordable Cases:</span>
@@ -426,7 +426,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
             {formData.total_hours_worked && formData.total_hours_worked > 0 && (
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-semibold mb-4">Calculated Incident Rates</h3>
+                  <h3 className="font-semibold mb-4" className="heading-subsection">Calculated Incident Rates</h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-muted-foreground">
@@ -448,7 +448,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
 
             {/* Certifying Official Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold">Certifying Official Information</h3>
+              <h3 className="font-semibold" className="heading-subsection">Certifying Official Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="official_name">Name *</Label>
@@ -517,7 +517,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
 
             {/* Signature */}
             <div className="space-y-4">
-              <h3 className="font-semibold">Certification Signature *</h3>
+              <h3 className="font-semibold" className="heading-subsection">Certification Signature *</h3>
               <RadioGroup
                 value={formData.signature_type}
                 onValueChange={(value: 'typed' | 'drawn') =>

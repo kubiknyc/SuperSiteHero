@@ -254,7 +254,7 @@ export function DailyReportsPage() {
       header: 'Date',
       render: (report: DailyReport) => (
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-gray-400" />
+          <Calendar className="h-4 w-4 text-disabled" />
           {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
         </div>
       ),
@@ -265,7 +265,7 @@ export function DailyReportsPage() {
       header: 'Weather',
       render: (report: DailyReport) => (
         <div className="flex items-center gap-2">
-          <Cloud className="h-4 w-4 text-gray-400" />
+          <Cloud className="h-4 w-4 text-disabled" />
           {report.weather_condition || 'Not recorded'}
         </div>
       ),
@@ -277,11 +277,11 @@ export function DailyReportsPage() {
         <>
           {report.temperature_high && report.temperature_low ? (
             <div className="flex items-center gap-2">
-              <Thermometer className="h-4 w-4 text-gray-400" />
+              <Thermometer className="h-4 w-4 text-disabled" />
               {report.temperature_high}°/{report.temperature_low}°
             </div>
           ) : (
-            <span className="text-gray-400">-</span>
+            <span className="text-disabled">-</span>
           )}
         </>
       ),
@@ -292,7 +292,7 @@ export function DailyReportsPage() {
       header: 'Workforce',
       render: (report: DailyReport) => (
         <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 text-gray-400" />
+          <Users className="h-4 w-4 text-disabled" />
           {report.total_workers || 0} workers
         </div>
       ),
@@ -312,7 +312,7 @@ export function DailyReportsPage() {
       key: 'createdBy',
       header: 'Created By',
       render: (report: DailyReport) => (
-        <span className="text-sm text-gray-600">{report.created_by || 'Unknown'}</span>
+        <span className="text-sm text-secondary">{report.created_by || 'Unknown'}</span>
       ),
       className: 'w-32',
     },
@@ -345,8 +345,8 @@ export function DailyReportsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="heading-page text-gray-900 dark:text-white">Daily Reports</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="heading-page text-foreground dark:text-white" className="heading-page">Daily Reports</h1>
+            <p className="text-secondary mt-1">
               Track daily activities, weather, and workforce
             </p>
           </div>
@@ -393,7 +393,7 @@ export function DailyReportsPage() {
             {/* Project selector */}
             {projects && projects.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-secondary mb-2">
                   Project
                 </label>
                 <Select
@@ -412,7 +412,7 @@ export function DailyReportsPage() {
 
             {/* Search bar */}
             <div className="flex items-center gap-2">
-              <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
+              <Search className="h-5 w-5 text-disabled flex-shrink-0" />
               <Input
                 type="text"
                 placeholder="Search reports by number, work completed, issues..."
@@ -463,10 +463,10 @@ export function DailyReportsPage() {
 
             {/* Advanced filters panel */}
             {showAdvancedFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 bg-surface rounded-lg">
                 {/* Date range */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-secondary mb-2">
                     Date Range
                   </label>
                   <div className="flex gap-2">
@@ -491,7 +491,7 @@ export function DailyReportsPage() {
 
                 {/* Worker count range */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-secondary mb-2">
                     Worker Count
                   </label>
                   <div className="flex gap-2">
@@ -519,7 +519,7 @@ export function DailyReportsPage() {
                 {/* Created by */}
                 {uniqueCreators.length > 0 && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-secondary mb-2">
                       Created By
                     </label>
                     <Select
@@ -543,14 +543,14 @@ export function DailyReportsPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading daily reports...</p>
+            <p className="text-muted">Loading daily reports...</p>
           </div>
         )}
 
         {/* Error state */}
         {error && (
           <div className="text-center py-12">
-            <p className="text-red-600">Error loading daily reports: {error.message}</p>
+            <p className="text-error">Error loading daily reports: {error.message}</p>
           </div>
         )}
 
@@ -558,11 +558,11 @@ export function DailyReportsPage() {
         {!isLoading && !error && (!filteredReports || filteredReports.length === 0) && (
           <Card>
             <CardContent className="p-12 text-center">
-              <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <FileText className="h-12 w-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 No daily reports yet
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 {activeFilterCount > 0
                   ? 'No reports match your current filters. Try adjusting your search criteria.'
                   : 'Start documenting your daily activities by creating your first report.'}
@@ -615,7 +615,7 @@ export function DailyReportsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-uppercase-label text-gray-600 dark:text-gray-400">Total Reports</p>
+                    <p className="text-uppercase-label text-secondary dark:text-disabled">Total Reports</p>
                     <p className="text-2xl font-bold mt-1">{filteredReports.length}</p>
                   </div>
                   <FileText className="h-8 w-8 text-primary dark:text-primary-400" />
@@ -627,7 +627,7 @@ export function DailyReportsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-uppercase-label text-gray-600 dark:text-gray-400">Pending Approval</p>
+                    <p className="text-uppercase-label text-secondary dark:text-disabled">Pending Approval</p>
                     <p className="text-2xl font-bold mt-1">
                       {filteredReports.filter((r) => r.status === 'submitted').length}
                     </p>
@@ -641,12 +641,12 @@ export function DailyReportsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-uppercase-label text-gray-600 dark:text-gray-400">Weather Delays</p>
+                    <p className="text-uppercase-label text-secondary dark:text-disabled">Weather Delays</p>
                     <p className="text-2xl font-bold mt-1">
                       {filteredReports.filter((r) => r.weather_delays).length}
                     </p>
                   </div>
-                  <Cloud className="h-8 w-8 text-gray-600" />
+                  <Cloud className="h-8 w-8 text-secondary" />
                 </div>
               </CardContent>
             </Card>

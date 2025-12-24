@@ -163,10 +163,10 @@ interface MetricCardProps {
 
 function MetricCard({ title, value, subtitle, icon: Icon, status = 'neutral' }: MetricCardProps) {
   const statusColors = {
-    success: 'text-green-600 bg-green-50 border-green-200',
-    warning: 'text-yellow-600 bg-yellow-50 border-yellow-200',
-    danger: 'text-red-600 bg-red-50 border-red-200',
-    neutral: 'text-gray-600 bg-gray-50 border-gray-200',
+    success: 'text-success bg-success-light border-green-200',
+    warning: 'text-warning bg-warning-light border-yellow-200',
+    danger: 'text-error bg-error-light border-red-200',
+    neutral: 'text-secondary bg-surface border-border',
   }
 
   return (
@@ -178,9 +178,9 @@ function MetricCard({ title, value, subtitle, icon: Icon, status = 'neutral' }: 
           </div>
         </div>
         <div className="mt-3">
-          <p className="text-2xl font-bold text-gray-900">{value}</p>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
+          <p className="text-2xl font-bold text-foreground">{value}</p>
+          <p className="text-sm font-medium text-secondary">{title}</p>
+          {subtitle && <p className="text-xs text-muted mt-1">{subtitle}</p>}
         </div>
       </CardContent>
     </Card>
@@ -443,8 +443,8 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
       <Card className={className}>
         <CardContent className="p-12 text-center">
           <BarChart3 className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-600">No submittal data available for analysis</p>
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-secondary">No submittal data available for analysis</p>
+          <p className="text-sm text-muted mt-2">
             Create some submittals to see analytics here.
           </p>
         </CardContent>
@@ -464,11 +464,11 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
       {/* Header with Date Range Filter */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2" className="heading-section">
             <Timer className="h-6 w-6" />
             Lead Time Analytics
           </h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted mt-1">
             Analyzing {stats.totalSubmittals} submittals
           </p>
         </div>
@@ -584,55 +584,55 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-4 py-4">
-                <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <p className="text-2xl font-bold text-green-600">{stats.fastestApprovalDays}</p>
-                  <p className="text-xs text-gray-500">Fastest (days)</p>
+                <div className="text-center p-4 bg-success-light rounded-lg">
+                  <p className="text-2xl font-bold text-success">{stats.fastestApprovalDays}</p>
+                  <p className="text-xs text-muted">Fastest (days)</p>
                 </div>
                 <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <p className="text-2xl font-bold text-blue-600">{stats.medianLeadTimeDays}</p>
-                  <p className="text-xs text-gray-500">Median (days)</p>
+                  <p className="text-2xl font-bold text-primary">{stats.medianLeadTimeDays}</p>
+                  <p className="text-xs text-muted">Median (days)</p>
                 </div>
-                <div className="text-center p-4 bg-red-50 rounded-lg">
-                  <p className="text-2xl font-bold text-red-600">{stats.slowestApprovalDays}</p>
-                  <p className="text-xs text-gray-500">Slowest (days)</p>
+                <div className="text-center p-4 bg-error-light rounded-lg">
+                  <p className="text-2xl font-bold text-error">{stats.slowestApprovalDays}</p>
+                  <p className="text-xs text-muted">Slowest (days)</p>
                 </div>
               </div>
 
               <div className="mt-6 pt-4 border-t">
-                <h4 className="text-sm font-medium text-gray-900 mb-4">Performance Summary</h4>
+                <h4 className="text-sm font-medium text-foreground mb-4" className="heading-card">Performance Summary</h4>
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-gray-600">Average Lead Time</span>
+                      <span className="text-sm text-secondary">Average Lead Time</span>
                       <span className="text-sm font-semibold">{stats.averageLeadTimeDays} days</span>
                     </div>
                     <Progress
                       value={Math.min((EXPECTED_LEAD_TIME_DAYS / Math.max(stats.averageLeadTimeDays, 1)) * 100, 100)}
                       className="h-2"
                     />
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted mt-1">
                       Target: {EXPECTED_LEAD_TIME_DAYS} days
                     </p>
                   </div>
 
                   <div className="mt-4">
-                    <h5 className="text-sm font-medium text-gray-700 mb-2">Recommendations</h5>
-                    <ul className="space-y-2 text-sm text-gray-600">
+                    <h5 className="text-sm font-medium text-secondary mb-2">Recommendations</h5>
+                    <ul className="space-y-2 text-sm text-secondary">
                       {stats.averageLeadTimeDays > EXPECTED_LEAD_TIME_DAYS && (
                         <li className="flex items-start gap-2">
-                          <AlertTriangle className="h-4 w-4 text-yellow-500 flex-shrink-0 mt-0.5" />
+                          <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
                           Average lead time exceeds target - consider process improvements
                         </li>
                       )}
                       {stats.overdueCount > 0 && (
                         <li className="flex items-start gap-2">
-                          <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5" />
+                          <AlertTriangle className="h-4 w-4 text-error flex-shrink-0 mt-0.5" />
                           {stats.overdueCount} overdue submittal{stats.overdueCount > 1 ? 's' : ''} need{stats.overdueCount === 1 ? 's' : ''} attention
                         </li>
                       )}
                       {stats.averageLeadTimeDays <= EXPECTED_LEAD_TIME_DAYS && stats.overdueCount === 0 && (
                         <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
+                          <CheckCircle className="h-4 w-4 text-success flex-shrink-0 mt-0.5" />
                           Submittal process is performing well
                         </li>
                       )}
@@ -682,9 +682,9 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: item.fill }}
                         />
-                        <span className="text-sm text-gray-600 capitalize">{item.name}</span>
+                        <span className="text-sm text-secondary capitalize">{item.name}</span>
                       </div>
-                      <span className="text-sm font-semibold text-gray-900">{item.value}</span>
+                      <span className="text-sm font-semibold text-foreground">{item.value}</span>
                     </div>
                   ))}
                 </div>
@@ -702,29 +702,29 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
             <CardContent>
               <div className="space-y-3">
                 {stats.bySpecDivision.map(div => (
-                  <div key={div.division} className="p-3 bg-gray-50 rounded-lg">
+                  <div key={div.division} className="p-3 bg-surface rounded-lg">
                     <div className="flex items-center justify-between mb-2">
                       <div>
-                        <span className="font-mono text-sm text-blue-600 mr-2">
+                        <span className="font-mono text-sm text-primary mr-2">
                           Div {div.division}
                         </span>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {div.divisionTitle}
                         </span>
                       </div>
                       <Badge variant="secondary">{div.total} submittals</Badge>
                     </div>
-                    <div className="flex items-center gap-4 text-xs text-gray-600">
+                    <div className="flex items-center gap-4 text-xs text-secondary">
                       <span className="flex items-center gap-1">
                         <span className="w-2 h-2 rounded-full bg-green-500" />
                         {div.approved} approved
                       </span>
                       <span className="flex items-center gap-1">
-                        <span className="w-2 h-2 rounded-full bg-yellow-500" />
+                        <span className="w-2 h-2 rounded-full bg-warning" />
                         {div.pending} pending
                       </span>
                       {div.averageLeadTime > 0 && (
-                        <span className="text-gray-500">
+                        <span className="text-muted">
                           Avg: {div.averageLeadTime} days
                         </span>
                       )}

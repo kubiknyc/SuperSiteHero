@@ -99,15 +99,15 @@ export function WeatherLogsPage() {
     <AppLayout>
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="bg-white border-b px-6 py-4">
+        <div className="bg-card border-b px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <CloudSun className="w-6 h-6 text-blue-600" />
+              <div className="p-2 bg-info-light rounded-lg">
+                <CloudSun className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Weather Logs</h1>
-                <p className="text-sm text-gray-600">
+                <h1 className="text-2xl font-bold text-foreground" className="heading-page">Weather Logs</h1>
+                <p className="text-sm text-secondary">
                   Track daily weather conditions and their impact on work
                 </p>
               </div>
@@ -140,7 +140,7 @@ export function WeatherLogsPage() {
             {/* Search */}
             <div className="flex-1 max-w-md">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-disabled" />
                 <Input
                   type="text"
                   placeholder="Search notes, activities..."
@@ -154,7 +154,7 @@ export function WeatherLogsPage() {
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className={cn(hasActiveFilters && 'border-blue-600 text-blue-600')}
+              className={cn(hasActiveFilters && 'border-primary text-primary')}
             >
               <Filter className="w-4 h-4 mr-2" />
               Filters
@@ -268,13 +268,13 @@ export function WeatherLogsPage() {
 
         {/* Statistics Cards */}
         {activeProjectId && !statsLoading && statistics && (
-          <div className="px-6 py-4 bg-gray-50 border-b">
+          <div className="px-6 py-4 bg-surface border-b">
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <Calendar className="w-4 h-4 text-gray-500" />
-                    <span className="text-sm text-gray-600">Total Logs</span>
+                    <Calendar className="w-4 h-4 text-muted" />
+                    <span className="text-sm text-secondary">Total Logs</span>
                   </div>
                   <p className="text-2xl font-bold">{statistics.totalLogs}</p>
                 </CardContent>
@@ -285,7 +285,7 @@ export function WeatherLogsPage() {
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-1">
                       <ThermometerSun className="w-4 h-4 text-orange-500" />
-                      <span className="text-sm text-gray-600">Avg High</span>
+                      <span className="text-sm text-secondary">Avg High</span>
                     </div>
                     <p className="text-2xl font-bold">{statistics.averageHighTemp}°F</p>
                   </CardContent>
@@ -296,8 +296,8 @@ export function WeatherLogsPage() {
                 <Card>
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <ThermometerSun className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm text-gray-600">Avg Low</span>
+                      <ThermometerSun className="w-4 h-4 text-primary" />
+                      <span className="text-sm text-secondary">Avg Low</span>
                     </div>
                     <p className="text-2xl font-bold">{statistics.averageLowTemp}°F</p>
                   </CardContent>
@@ -308,7 +308,7 @@ export function WeatherLogsPage() {
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <Clock className="w-4 h-4 text-orange-500" />
-                    <span className="text-sm text-gray-600">Hours Lost</span>
+                    <span className="text-sm text-secondary">Hours Lost</span>
                   </div>
                   <p className="text-2xl font-bold">{statistics.totalHoursLost}</p>
                 </CardContent>
@@ -317,8 +317,8 @@ export function WeatherLogsPage() {
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <AlertTriangle className="w-4 h-4 text-yellow-500" />
-                    <span className="text-sm text-gray-600">Days w/ Impact</span>
+                    <AlertTriangle className="w-4 h-4 text-warning" />
+                    <span className="text-sm text-secondary">Days w/ Impact</span>
                   </div>
                   <p className="text-2xl font-bold">{statistics.daysWithImpact}</p>
                 </CardContent>
@@ -327,8 +327,8 @@ export function WeatherLogsPage() {
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-1">
-                    <TrendingUp className="w-4 h-4 text-blue-500" />
-                    <span className="text-sm text-gray-600">Precipitation</span>
+                    <TrendingUp className="w-4 h-4 text-primary" />
+                    <span className="text-sm text-secondary">Precipitation</span>
                   </div>
                   <p className="text-2xl font-bold">{statistics.totalPrecipitation}"</p>
                 </CardContent>
@@ -342,9 +342,9 @@ export function WeatherLogsPage() {
           {!activeProjectId && !projectsLoading && (
             <Card>
               <CardContent className="py-12 text-center">
-                <CloudSun className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No Project Selected</h3>
-                <p className="text-gray-600 mb-4">
+                <CloudSun className="w-16 h-16 text-disabled mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Project Selected</h3>
+                <p className="text-secondary mb-4">
                   Select a project to view its weather logs
                 </p>
               </CardContent>
@@ -353,17 +353,17 @@ export function WeatherLogsPage() {
 
           {isLoading && (
             <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-              <p className="mt-2 text-gray-600">Loading weather logs...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <p className="mt-2 text-secondary">Loading weather logs...</p>
             </div>
           )}
 
           {error && (
             <Card>
               <CardContent className="py-12 text-center">
-                <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Weather Logs</h3>
-                <p className="text-gray-600">{error.message}</p>
+                <AlertTriangle className="w-16 h-16 text-error mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Weather Logs</h3>
+                <p className="text-secondary">{error.message}</p>
               </CardContent>
             </Card>
           )}
@@ -373,11 +373,11 @@ export function WeatherLogsPage() {
               {filteredLogs.length === 0 && (
                 <Card>
                   <CardContent className="py-12 text-center">
-                    <CloudSun className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <CloudSun className="w-16 h-16 text-disabled mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                       {hasActiveFilters ? 'No Weather Logs Match Filters' : 'No Weather Logs Yet'}
                     </h3>
-                    <p className="text-gray-600 mb-4">
+                    <p className="text-secondary mb-4">
                       {hasActiveFilters
                         ? 'Try adjusting your filters to see more results'
                         : 'Start tracking weather conditions by creating your first log'}

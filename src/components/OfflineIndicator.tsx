@@ -107,8 +107,8 @@ export function OfflineIndicator() {
     if (!isOnline) {
       return {
         icon: WifiOff,
-        color: 'text-red-500',
-        bgColor: 'bg-red-50',
+        color: 'text-error',
+        bgColor: 'bg-error-light',
         borderColor: 'border-red-200',
         label: 'Offline',
       };
@@ -117,8 +117,8 @@ export function OfflineIndicator() {
     if (pendingSyncs > 0 || isSyncing) {
       return {
         icon: CloudOff,
-        color: 'text-amber-500',
-        bgColor: 'bg-amber-50',
+        color: 'text-warning',
+        bgColor: 'bg-warning-light',
         borderColor: 'border-amber-200',
         label: 'Syncing',
       };
@@ -136,8 +136,8 @@ export function OfflineIndicator() {
 
     return {
       icon: Cloud,
-      color: 'text-green-500',
-      bgColor: 'bg-green-50',
+      color: 'text-success',
+      bgColor: 'bg-success-light',
       borderColor: 'border-green-200',
       label: 'Online',
     };
@@ -175,7 +175,7 @@ export function OfflineIndicator() {
               </Badge>
             )}
             {isSyncing && (
-              <RefreshCw className="h-3 w-3 animate-spin text-amber-500" />
+              <RefreshCw className="h-3 w-3 animate-spin text-warning" />
             )}
           </Button>
         </DialogTrigger>
@@ -212,7 +212,7 @@ export function OfflineIndicator() {
               )}
 
               {isSyncing && (
-                <div className="flex items-center gap-2 text-sm text-amber-600">
+                <div className="flex items-center gap-2 text-sm text-warning">
                   <RefreshCw className="h-4 w-4 animate-spin" />
                   <span>Syncing changes...</span>
                 </div>
@@ -245,20 +245,20 @@ export function OfflineIndicator() {
                     {formatBytes(storageQuota.used)} / {formatBytes(storageQuota.total)}
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-gray-200">
+                <div className="h-2 w-full rounded-full bg-muted">
                   <div
                     className={`h-full rounded-full ${
                       storageQuota.critical
                         ? 'bg-red-500'
                         : storageQuota.warning
-                        ? 'bg-amber-500'
+                        ? 'bg-warning'
                         : 'bg-green-500'
                     }`}
                     style={{ width: `${Math.min(100, storagePercentage)}%` }}
                   />
                 </div>
                 {storageQuota.warning && (
-                  <p className="text-xs text-amber-600 flex items-center gap-1">
+                  <p className="text-xs text-warning flex items-center gap-1">
                     <AlertTriangle className="h-3 w-3" />
                     {storageQuota.critical
                       ? 'Storage critically low (<5%)'
@@ -270,7 +270,7 @@ export function OfflineIndicator() {
 
             {/* Offline Mode Info */}
             {!isOnline && (
-              <div className="rounded-md bg-amber-50 border border-amber-200 p-3">
+              <div className="rounded-md bg-warning-light border border-amber-200 p-3">
                 <p className="text-sm text-amber-800 flex items-center gap-2">
                   <Info className="h-4 w-4" />
                   You're working offline. Changes will be synced when you reconnect.

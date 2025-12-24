@@ -39,18 +39,18 @@ interface FieldPickerProps {
  */
 function getFieldTypeColor(type: ReportFieldType): string {
   const colors: Record<ReportFieldType, string> = {
-    text: 'bg-gray-100 text-gray-800',
-    number: 'bg-blue-100 text-blue-800',
-    currency: 'bg-green-100 text-green-800',
+    text: 'bg-muted text-foreground',
+    number: 'bg-info-light text-blue-800',
+    currency: 'bg-success-light text-green-800',
     date: 'bg-purple-100 text-purple-800',
     datetime: 'bg-purple-100 text-purple-800',
-    boolean: 'bg-yellow-100 text-yellow-800',
+    boolean: 'bg-warning-light text-yellow-800',
     status: 'bg-orange-100 text-orange-800',
     user: 'bg-cyan-100 text-cyan-800',
     project: 'bg-indigo-100 text-indigo-800',
     company: 'bg-pink-100 text-pink-800',
   }
-  return colors[type] || 'bg-gray-100 text-gray-800'
+  return colors[type] || 'bg-muted text-foreground'
 }
 
 export function FieldPicker({
@@ -191,7 +191,7 @@ export function FieldPicker({
             <Badge variant="secondary">{availableFields.length}</Badge>
           </CardTitle>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search fields..."
               value={searchTerm}
@@ -202,7 +202,7 @@ export function FieldPicker({
         </CardHeader>
         <CardContent className="max-h-[400px] overflow-y-auto">
           {Object.entries(filteredGroups).length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="text-sm text-muted text-center py-4">
               No fields found
             </p>
           ) : (
@@ -211,7 +211,7 @@ export function FieldPicker({
                 <div key={category}>
                   <button
                     type="button"
-                    className="flex items-center w-full text-left py-1.5 text-sm font-medium text-gray-700 hover:text-gray-900"
+                    className="flex items-center w-full text-left py-1.5 text-sm font-medium text-secondary hover:text-foreground"
                     onClick={() => toggleCategory(category)}
                   >
                     {expandedCategories.has(category) ? (
@@ -235,7 +235,7 @@ export function FieldPicker({
                               'flex items-center gap-2 p-2 rounded-md text-sm cursor-pointer',
                               isSelected
                                 ? 'bg-blue-50 border border-blue-200'
-                                : 'hover:bg-gray-50 border border-transparent'
+                                : 'hover:bg-surface border border-transparent'
                             )}
                             onClick={() =>
                               isSelected
@@ -247,7 +247,7 @@ export function FieldPicker({
                             <div className="flex-1 min-w-0">
                               <span className="font-medium">{field.display_name}</span>
                               {field.description && (
-                                <p className="text-xs text-gray-500 truncate">
+                                <p className="text-xs text-muted truncate">
                                   {field.description}
                                 </p>
                               )}
@@ -295,13 +295,13 @@ export function FieldPicker({
               </Button>
             </div>
           </CardTitle>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted">
             Drag to reorder columns in your report
           </p>
         </CardHeader>
         <CardContent className="max-h-[400px] overflow-y-auto">
           {selectedFields.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-8">
+            <p className="text-sm text-muted text-center py-8">
               Click fields on the left to add them to your report
             </p>
           ) : (
@@ -314,18 +314,18 @@ export function FieldPicker({
                   onDragOver={(e) => handleDragOver(e, index)}
                   onDragEnd={handleDragEnd}
                   className={cn(
-                    'flex items-center gap-2 p-2 rounded-md text-sm bg-white border',
+                    'flex items-center gap-2 p-2 rounded-md text-sm bg-card border',
                     draggedIndex === index ? 'opacity-50' : '',
-                    'hover:border-gray-300 cursor-move'
+                    'hover:border-input cursor-move'
                   )}
                 >
-                  <GripVertical className="h-4 w-4 text-gray-400 shrink-0" />
-                  <span className="text-xs text-gray-400 w-5">{index + 1}</span>
+                  <GripVertical className="h-4 w-4 text-disabled shrink-0" />
+                  <span className="text-xs text-disabled w-5">{index + 1}</span>
                   <div className="flex-1 min-w-0">
                     <span
                       className={cn(
                         'font-medium',
-                        !field.is_visible && 'text-gray-400'
+                        !field.is_visible && 'text-disabled'
                       )}
                     >
                       {field.display_name}
@@ -345,15 +345,15 @@ export function FieldPicker({
                     title={field.is_visible ? 'Hide column' : 'Show column'}
                   >
                     {field.is_visible ? (
-                      <Eye className="h-4 w-4 text-gray-500" />
+                      <Eye className="h-4 w-4 text-muted" />
                     ) : (
-                      <EyeOff className="h-4 w-4 text-gray-400" />
+                      <EyeOff className="h-4 w-4 text-disabled" />
                     )}
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-7 w-7 p-0 text-gray-400 hover:text-red-500"
+                    className="h-7 w-7 p-0 text-disabled hover:text-error"
                     onClick={() => removeField(field.field_name)}
                   >
                     <X className="h-4 w-4" />

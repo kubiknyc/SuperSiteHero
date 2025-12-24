@@ -18,10 +18,10 @@ export function SyncQueueBadge() {
 
   return (
     <div
-      className="flex items-center gap-2 px-3 py-2 rounded-md bg-amber-50 border border-amber-200"
+      className="flex items-center gap-2 px-3 py-2 rounded-md bg-warning-light border border-amber-200"
       title={`${syncQueue.length} pending change${syncQueue.length !== 1 ? 's' : ''}`}
     >
-      <Clock className="h-4 w-4 text-amber-600 animate-spin" />
+      <Clock className="h-4 w-4 text-warning animate-spin" />
       <span className="text-xs font-medium text-amber-700">
         {syncQueue.length} pending
       </span>

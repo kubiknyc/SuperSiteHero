@@ -139,12 +139,12 @@ export function NoticeDocumentUpload({
       <div className={cn('border rounded-lg p-4', className)}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <FileIcon className="w-8 h-8 text-blue-500" />
+            <FileIcon className="w-8 h-8 text-primary" />
             <div>
-              <p className="font-medium text-gray-900 text-sm">
+              <p className="font-medium text-foreground text-sm">
                 {getFileNameFromUrl(currentUrl)}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted">
                 {type === 'notice' ? 'Notice Document' : 'Response Document'}
               </p>
             </div>
@@ -165,7 +165,7 @@ export function NoticeDocumentUpload({
                 variant="ghost"
                 size="sm"
                 onClick={onRemove}
-                className="text-red-600 hover:text-red-700"
+                className="text-error hover:text-error-dark"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
@@ -216,8 +216,8 @@ export function NoticeDocumentUpload({
           'border-2 border-dashed rounded-lg p-6 text-center transition-colors',
           isDragging
             ? 'border-blue-500 bg-blue-50'
-            : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50',
-          selectedFile && 'bg-gray-50',
+            : 'border-input hover:border-gray-400 hover:bg-surface',
+          selectedFile && 'bg-surface',
           disabled && 'opacity-50 cursor-not-allowed',
           !disabled && !selectedFile && 'cursor-pointer'
         )}
@@ -228,11 +228,11 @@ export function NoticeDocumentUpload({
       >
         {!selectedFile ? (
           <>
-            <Upload className="w-10 h-10 mx-auto mb-3 text-gray-400" />
-            <p className="text-sm font-medium text-gray-700 mb-1">
+            <Upload className="w-10 h-10 mx-auto mb-3 text-disabled" />
+            <p className="text-sm font-medium text-secondary mb-1">
               Drag and drop {type === 'notice' ? 'notice' : 'response'} document
             </p>
-            <p className="text-xs text-gray-500 mb-3">PDF, Word, Excel, or Images</p>
+            <p className="text-xs text-muted mb-3">PDF, Word, Excel, or Images</p>
             <Button type="button" size="sm" onClick={handleBrowseClick} disabled={disabled}>
               Browse Files
             </Button>
@@ -240,12 +240,12 @@ export function NoticeDocumentUpload({
         ) : (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <FileIcon className="w-8 h-8 text-blue-500" />
+              <FileIcon className="w-8 h-8 text-primary" />
               <div className="text-left">
-                <p className="font-medium text-gray-900 text-sm">
+                <p className="font-medium text-foreground text-sm">
                   {selectedFile.name}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   {formatFileSize(selectedFile.size)}
                 </p>
               </div>

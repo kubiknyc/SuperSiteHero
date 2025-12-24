@@ -35,7 +35,7 @@ export function WaiverComplianceCard({ summary, className }: WaiverComplianceCar
             Lien Waiver Compliance
           </span>
           {isCompliant ? (
-            <Badge className="bg-green-100 text-green-700">
+            <Badge className="bg-success-light text-success-dark">
               <CheckCircle className="h-3 w-3 mr-1" />
               Compliant
             </Badge>
@@ -51,7 +51,7 @@ export function WaiverComplianceCard({ summary, className }: WaiverComplianceCar
         {/* Progress Bar */}
         <div className="space-y-1">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Approved</span>
+            <span className="text-secondary">Approved</span>
             <span className="font-medium">{compliancePercent}%</span>
           </div>
           <Progress value={compliancePercent} className="h-2" />
@@ -59,20 +59,20 @@ export function WaiverComplianceCard({ summary, className }: WaiverComplianceCar
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-            <div className="text-gray-500">Pending</div>
+          <div className="flex items-center gap-2 p-2 bg-surface rounded">
+            <div className="text-muted">Pending</div>
             <div className="font-semibold ml-auto">{summary.pending_count}</div>
           </div>
-          <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-            <div className="text-gray-500">Received</div>
+          <div className="flex items-center gap-2 p-2 bg-surface rounded">
+            <div className="text-muted">Received</div>
             <div className="font-semibold ml-auto">{summary.received_count}</div>
           </div>
-          <div className="flex items-center gap-2 p-2 bg-green-50 rounded">
-            <div className="text-green-700">Approved</div>
-            <div className="font-semibold ml-auto text-green-700">{summary.approved_count}</div>
+          <div className="flex items-center gap-2 p-2 bg-success-light rounded">
+            <div className="text-success-dark">Approved</div>
+            <div className="font-semibold ml-auto text-success-dark">{summary.approved_count}</div>
           </div>
-          <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
-            <div className="text-gray-500">Total</div>
+          <div className="flex items-center gap-2 p-2 bg-surface rounded">
+            <div className="text-muted">Total</div>
             <div className="font-semibold ml-auto">{summary.total_waivers}</div>
           </div>
         </div>
@@ -81,16 +81,16 @@ export function WaiverComplianceCard({ summary, className }: WaiverComplianceCar
         {(summary.missing_count > 0 || summary.overdue_count > 0) && (
           <div className="space-y-2">
             {summary.missing_count > 0 && (
-              <div className="flex items-center gap-2 p-2 bg-amber-50 border border-amber-200 rounded text-sm">
-                <AlertTriangle className="h-4 w-4 text-amber-600" />
+              <div className="flex items-center gap-2 p-2 bg-warning-light border border-amber-200 rounded text-sm">
+                <AlertTriangle className="h-4 w-4 text-warning" />
                 <span className="text-amber-800">
                   {summary.missing_count} missing waiver{summary.missing_count !== 1 ? 's' : ''}
                 </span>
               </div>
             )}
             {summary.overdue_count > 0 && (
-              <div className="flex items-center gap-2 p-2 bg-red-50 border border-red-200 rounded text-sm">
-                <Clock className="h-4 w-4 text-red-600" />
+              <div className="flex items-center gap-2 p-2 bg-error-light border border-red-200 rounded text-sm">
+                <Clock className="h-4 w-4 text-error" />
                 <span className="text-red-800">
                   {summary.overdue_count} overdue waiver{summary.overdue_count !== 1 ? 's' : ''}
                 </span>
@@ -102,8 +102,8 @@ export function WaiverComplianceCard({ summary, className }: WaiverComplianceCar
         {/* Total Amount */}
         <div className="pt-2 border-t">
           <div className="flex justify-between">
-            <span className="text-gray-600">Total Waived Amount</span>
-            <span className="font-semibold text-green-700">
+            <span className="text-secondary">Total Waived Amount</span>
+            <span className="font-semibold text-success-dark">
               {formatWaiverAmount(summary.total_waived_amount)}
             </span>
           </div>

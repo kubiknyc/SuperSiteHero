@@ -152,13 +152,13 @@ export function DailyReportSummaryCard({
             {data.highlights.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <CheckCircle2 className="w-4 h-4 text-green-500" />
+                  <CheckCircle2 className="w-4 h-4 text-success" />
                   <span className="text-sm font-medium">Highlights</span>
                 </div>
                 <ul className="space-y-1">
                   {data.highlights.map((highlight, i) => (
                     <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-green-500 mt-1">•</span>
+                      <span className="text-success mt-1">•</span>
                       {highlight}
                     </li>
                   ))}
@@ -170,13 +170,13 @@ export function DailyReportSummaryCard({
             {data.concerns.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  <AlertTriangle className="w-4 h-4 text-warning" />
                   <span className="text-sm font-medium">Concerns</span>
                 </div>
                 <ul className="space-y-1">
                   {data.concerns.map((concern, i) => (
                     <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-amber-500 mt-1">•</span>
+                      <span className="text-warning mt-1">•</span>
                       {concern}
                     </li>
                   ))}
@@ -188,13 +188,13 @@ export function DailyReportSummaryCard({
             {data.tomorrowFocus.length > 0 && (
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <ArrowRight className="w-4 h-4 text-blue-500" />
+                  <ArrowRight className="w-4 h-4 text-primary" />
                   <span className="text-sm font-medium">Tomorrow's Focus</span>
                 </div>
                 <ul className="space-y-1">
                   {data.tomorrowFocus.map((item, i) => (
                     <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <span className="text-blue-500 mt-1">•</span>
+                      <span className="text-primary mt-1">•</span>
                       {item}
                     </li>
                   ))}
@@ -221,7 +221,7 @@ export function DailyReportSummaryCard({
                   <div className="text-center">
                     <p className={cn(
                       'text-lg font-bold',
-                      data.summary.metrics.safetyIncidents > 0 ? 'text-red-500' : 'text-green-500'
+                      data.summary.metrics.safetyIncidents > 0 ? 'text-error' : 'text-success'
                     )}>
                       {data.summary.metrics.safetyIncidents}
                     </p>

@@ -193,10 +193,10 @@ export function PhotoAnnotationEditor({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3 p-4 bg-gray-50 rounded-lg">
+      <div className="flex flex-wrap items-center gap-3 p-4 bg-surface rounded-lg">
         {/* Drawing Tools */}
         <div className="flex items-center gap-1">
-          <Label className="text-xs text-gray-600 mr-2">Tool:</Label>
+          <Label className="text-xs text-secondary mr-2">Tool:</Label>
           <Button
             type="button"
             size="sm"
@@ -233,14 +233,14 @@ export function PhotoAnnotationEditor({
 
         {/* Colors */}
         <div className="flex items-center gap-1">
-          <Label className="text-xs text-gray-600 mr-2">Color:</Label>
+          <Label className="text-xs text-secondary mr-2">Color:</Label>
           {COLORS.map((color) => (
             <button
               key={color}
               type="button"
               onClick={() => setCurrentColor(color)}
               className={`w-8 h-8 rounded border-2 ${
-                currentColor === color ? 'border-gray-900' : 'border-gray-300'
+                currentColor === color ? 'border-gray-900' : 'border-input'
               }`}
               style={{ backgroundColor: color }}
               title={color}
@@ -250,7 +250,7 @@ export function PhotoAnnotationEditor({
 
         {/* Stroke Width */}
         <div className="flex items-center gap-1">
-          <Label className="text-xs text-gray-600 mr-2">Width:</Label>
+          <Label className="text-xs text-secondary mr-2">Width:</Label>
           {STROKE_WIDTHS.map((width) => (
             <Button
               key={width}
@@ -278,7 +278,7 @@ export function PhotoAnnotationEditor({
       </div>
 
       {/* Canvas */}
-      <div className="border rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+      <div className="border rounded-lg overflow-hidden bg-muted flex items-center justify-center">
         {image && (
           <Stage
             ref={stageRef}
@@ -358,7 +358,7 @@ export function PhotoAnnotationEditor({
 
       {/* Actions */}
       <div className="flex justify-between items-center">
-        <Badge variant="outline" className="text-gray-600">
+        <Badge variant="outline" className="text-secondary">
           {annotations.length} annotation{annotations.length !== 1 ? 's' : ''}
         </Badge>
         <div className="flex gap-2">

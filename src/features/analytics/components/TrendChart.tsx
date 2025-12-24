@@ -56,7 +56,7 @@ export function RiskTrendChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📈</span>
             <p className="mt-2 text-sm">No trend data available</p>
           </div>
@@ -155,7 +155,7 @@ export function ProgressTrendChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📊</span>
             <p className="mt-2 text-sm">No progress data available</p>
           </div>
@@ -261,7 +261,7 @@ export function CostTrendChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">💰</span>
             <p className="mt-2 text-sm">No cost data available</p>
           </div>
@@ -365,7 +365,7 @@ export function MultiMetricChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📉</span>
             <p className="mt-2 text-sm">No metrics data available</p>
           </div>
@@ -469,7 +469,7 @@ export function Sparkline({
   }, [data])
 
   if (data.length === 0) {
-    return <div className={cn('bg-gray-100 rounded', className)} style={{ width, height }} />
+    return <div className={cn('bg-muted rounded', className)} style={{ width, height }} />
   }
 
   return (

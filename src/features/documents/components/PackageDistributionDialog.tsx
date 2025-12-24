@@ -261,7 +261,7 @@ export function PackageDistributionDialog({
               {/* Add Recipient Form */}
               <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">Add Recipients</h3>
+                  <h3 className="text-sm font-medium" className="heading-subsection">Add Recipients</h3>
                   <Button
                     variant="outline"
                     size="sm"
@@ -382,7 +382,7 @@ export function PackageDistributionDialog({
               {/* Recipient List */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium">Pending Recipients</h3>
+                  <h3 className="text-sm font-medium" className="heading-subsection">Pending Recipients</h3>
                   {pendingRecipients.length > 0 && (
                     <Button variant="ghost" size="sm" onClick={selectAllPending}>
                       Select All
@@ -452,7 +452,7 @@ export function PackageDistributionDialog({
 
               {/* Sent Recipients */}
               <div className="space-y-2">
-                <h3 className="text-sm font-medium">Distribution History</h3>
+                <h3 className="text-sm font-medium" className="heading-subsection">Distribution History</h3>
                 {sentRecipients.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground border rounded-lg">
                     No packages have been distributed yet.
@@ -578,9 +578,9 @@ function RecipientRow({
           variant="outline"
           className={cn(
             'text-xs',
-            recipient.distributionMethod === 'email' && 'bg-blue-50 text-blue-700',
+            recipient.distributionMethod === 'email' && 'bg-blue-50 text-primary-hover',
             recipient.distributionMethod === 'link' && 'bg-purple-50 text-purple-700',
-            recipient.distributionMethod === 'download' && 'bg-green-50 text-green-700'
+            recipient.distributionMethod === 'download' && 'bg-success-light text-success-dark'
           )}
         >
           {recipient.distributionMethod === 'email' && <Mail className="h-3 w-3 mr-1" />}
@@ -649,13 +649,13 @@ function RecipientTrackingRow({ recipient }: RecipientTrackingRowProps) {
       </div>
       <div className="grid grid-cols-4 gap-4 text-xs text-muted-foreground">
         <div>
-          <span className="block text-gray-500">Sent</span>
+          <span className="block text-muted">Sent</span>
           {recipient.sentAt
             ? format(new Date(recipient.sentAt), 'MM/dd/yy h:mm a')
             : '-'}
         </div>
         <div>
-          <span className="block text-gray-500">First Viewed</span>
+          <span className="block text-muted">First Viewed</span>
           {recipient.firstAccessedAt
             ? formatDistanceToNow(new Date(recipient.firstAccessedAt), {
                 addSuffix: true,
@@ -663,11 +663,11 @@ function RecipientTrackingRow({ recipient }: RecipientTrackingRowProps) {
             : '-'}
         </div>
         <div>
-          <span className="block text-gray-500">Downloads</span>
+          <span className="block text-muted">Downloads</span>
           {recipient.downloadCount || 0}
         </div>
         <div>
-          <span className="block text-gray-500">Acknowledged</span>
+          <span className="block text-muted">Acknowledged</span>
           {recipient.acknowledgedAt
             ? format(new Date(recipient.acknowledgedAt), 'MM/dd/yy')
             : '-'}
@@ -690,7 +690,7 @@ function StatCard({ label, value, total, icon, highlight }: StatCardProps) {
     <div
       className={cn(
         'p-4 border rounded-lg',
-        highlight && 'border-yellow-500 bg-yellow-50'
+        highlight && 'border-warning bg-warning-light'
       )}
     >
       <div className="flex items-center gap-2 text-muted-foreground mb-1">

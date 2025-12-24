@@ -1,3 +1,7 @@
+---
+name: ui-component-generator
+---
+
 # UI Component Generator Agent
 
 **Purpose**: Generate consistent, accessible, and well-styled UI components following the shadcn/ui pattern for the construction management platform.

@@ -95,7 +95,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
     return (
       <Card>
         <CardContent className="py-8">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-2" />
             Loading equipment costs...
           </div>
@@ -111,11 +111,11 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-yellow-600" />
+              <div className="p-2 bg-warning-light rounded-lg">
+                <AlertCircle className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Unposted Costs</p>
+                <p className="text-sm text-muted">Unposted Costs</p>
                 <p className="text-2xl font-bold">{filteredLogs.length}</p>
               </div>
             </div>
@@ -125,11 +125,11 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <DollarSign className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-info-light rounded-lg">
+                <DollarSign className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Value</p>
+                <p className="text-sm text-muted">Total Value</p>
                 <p className="text-2xl font-bold">{formatCurrency(totals.totalUnposted)}</p>
               </div>
             </div>
@@ -139,11 +139,11 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="h-5 w-5 text-green-600" />
+              <div className="p-2 bg-success-light rounded-lg">
+                <CheckCircle className="h-5 w-5 text-success" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Selected</p>
+                <p className="text-sm text-muted">Selected</p>
                 <p className="text-2xl font-bold">
                   {totals.selectedCount} ({formatCurrency(totals.selectedTotal)})
                 </p>
@@ -168,7 +168,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-gray-400" />
+                <Calendar className="h-4 w-4 text-disabled" />
                 <input
                   type="date"
                   value={dateFilter}
@@ -191,8 +191,8 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
           {filteredLogs.length === 0 ? (
             <div className="text-center py-8">
               <CheckCircle className="h-12 w-12 text-green-300 mx-auto mb-4" />
-              <p className="text-gray-500 font-medium">All equipment costs have been posted!</p>
-              <p className="text-sm text-gray-400">No unposted equipment logs found</p>
+              <p className="text-muted font-medium">All equipment costs have been posted!</p>
+              <p className="text-sm text-disabled">No unposted equipment logs found</p>
             </div>
           ) : (
             <>
@@ -203,7 +203,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
                     checked={selectedLogs.size === filteredLogs.length && filteredLogs.length > 0}
                     onCheckedChange={handleSelectAll}
                   />
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-muted">
                     {selectedLogs.size > 0
                       ? `${selectedLogs.size} selected`
                       : 'Select all'}
@@ -222,7 +222,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
               {/* Table */}
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-surface">
                     <tr>
                       <th className="w-10 p-3"></th>
                       <th className="text-left p-3 font-medium">Date</th>
@@ -238,7 +238,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
                     {filteredLogs.map((log) => (
                       <tr
                         key={log.id}
-                        className={`hover:bg-gray-50 ${
+                        className={`hover:bg-surface ${
                           selectedLogs.has(log.id) ? 'bg-blue-50' : ''
                         }`}
                       >
@@ -263,7 +263,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
                             )}
                           </div>
                           {log.work_description && (
-                            <p className="text-xs text-gray-500 truncate max-w-xs">
+                            <p className="text-xs text-muted truncate max-w-xs">
                               {log.work_description}
                             </p>
                           )}
@@ -271,15 +271,15 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
                         <td className="p-3">
                           {log.cost_code ? (
                             <div className="flex items-center gap-1">
-                              <span className="font-mono text-xs bg-gray-100 px-1 rounded">
+                              <span className="font-mono text-xs bg-muted px-1 rounded">
                                 {log.cost_code.code}
                               </span>
-                              <span className="text-gray-600 text-xs truncate max-w-[100px]">
+                              <span className="text-secondary text-xs truncate max-w-[100px]">
                                 {log.cost_code.name}
                               </span>
                             </div>
                           ) : (
-                            <span className="text-gray-400 text-xs">No cost code</span>
+                            <span className="text-disabled text-xs">No cost code</span>
                           )}
                         </td>
                         <td className="p-3 text-right">
@@ -306,7 +306,7 @@ export function EquipmentCostPosting({ projectId }: EquipmentCostPostingProps) {
                       </tr>
                     ))}
                   </tbody>
-                  <tfoot className="bg-gray-50 border-t-2">
+                  <tfoot className="bg-surface border-t-2">
                     <tr>
                       <td colSpan={6} className="p-3 font-semibold">
                         Total

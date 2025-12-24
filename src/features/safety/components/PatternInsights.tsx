@@ -87,11 +87,11 @@ export function PatternCard({
   const IconComponent = PatternIcons[config?.icon || 'TrendingUp'] || TrendingUp
 
   const statusColors: Record<PatternStatus, string> = {
-    new: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
-    acknowledged: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    new: 'bg-info-light text-blue-800 dark:bg-blue-900/30 dark:text-blue-400',
+    acknowledged: 'bg-warning-light text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
     investigating: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400',
-    resolved: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    dismissed: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400',
+    resolved: 'bg-success-light text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    dismissed: 'bg-muted text-foreground dark:bg-background/30 dark:text-disabled',
   }
 
   return (
@@ -168,7 +168,7 @@ export function PatternCard({
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-green-600 hover:text-green-700"
+                    className="text-success hover:text-success-dark"
                     onClick={() => setShowResolveDialog(true)}
                   >
                     <CheckCircle className="h-3 w-3 mr-1" />
@@ -489,7 +489,7 @@ export function AlertsList({
       <CardContent>
         {!alerts || alerts.length === 0 ? (
           <div className="text-center py-6 text-muted-foreground">
-            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+            <CheckCircle className="h-8 w-8 mx-auto mb-2 text-success" />
             <p className="text-sm">No active alerts</p>
           </div>
         ) : (
@@ -594,7 +594,7 @@ export function RecommendationsList({
                   </Badge>
                 </div>
 
-                <h4 className="font-medium text-sm mb-1">{rec.title}</h4>
+                <h4 className="font-medium text-sm mb-1" className="heading-card">{rec.title}</h4>
                 <p className="text-sm text-muted-foreground mb-3">{rec.description}</p>
 
                 <div className="space-y-1.5">

@@ -93,12 +93,12 @@ const statusConfig: Record<
 > = {
   open: {
     label: 'Open',
-    color: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    color: 'bg-warning-light text-yellow-800 border-yellow-200',
     icon: <AlertCircle className="h-3.5 w-3.5" />,
   },
   in_progress: {
     label: 'In Progress',
-    color: 'bg-blue-100 text-blue-800 border-blue-200',
+    color: 'bg-info-light text-blue-800 border-blue-200',
     icon: <Clock className="h-3.5 w-3.5" />,
   },
   ready_for_review: {
@@ -108,7 +108,7 @@ const statusConfig: Record<
   },
   completed: {
     label: 'Completed',
-    color: 'bg-green-100 text-green-800 border-green-200',
+    color: 'bg-success-light text-green-800 border-green-200',
     icon: <CheckCircle2 className="h-3.5 w-3.5" />,
   },
   verified: {
@@ -118,15 +118,15 @@ const statusConfig: Record<
   },
   rejected: {
     label: 'Rejected',
-    color: 'bg-red-100 text-red-800 border-red-200',
+    color: 'bg-error-light text-red-800 border-red-200',
     icon: <AlertCircle className="h-3.5 w-3.5" />,
   },
 };
 
 const priorityConfig: Record<Priority, { label: string; color: string }> = {
-  low: { label: 'Low', color: 'bg-gray-100 text-gray-700' },
-  normal: { label: 'Normal', color: 'bg-blue-100 text-blue-700' },
-  high: { label: 'High', color: 'bg-red-100 text-red-700' },
+  low: { label: 'Low', color: 'bg-muted text-secondary' },
+  normal: { label: 'Normal', color: 'bg-info-light text-primary-hover' },
+  high: { label: 'High', color: 'bg-error-light text-error-dark' },
 };
 
 export function PunchListItem({
@@ -196,8 +196,8 @@ export function PunchListItem({
   const content = (
     <div
       className={cn(
-        'p-4 border-b border-gray-100 bg-white cursor-pointer',
-        'active:bg-gray-50 transition-colors',
+        'p-4 border-b border-border bg-card cursor-pointer',
+        'active:bg-surface transition-colors',
         compact && 'p-3',
         className
       )}
@@ -209,16 +209,16 @@ export function PunchListItem({
           {/* Title with number */}
           <div className="flex items-center gap-2 mb-1">
             {item.number && (
-              <span className="text-xs font-mono text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+              <span className="text-xs font-mono text-muted bg-muted px-1.5 py-0.5 rounded">
                 #{item.number}
               </span>
             )}
-            <h3 className="font-medium text-gray-900 truncate">{item.title}</h3>
+            <h3 className="font-medium text-foreground truncate" className="heading-subsection">{item.title}</h3>
           </div>
 
           {/* Trade and Status */}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-sm text-gray-600">{item.trade}</span>
+            <span className="text-sm text-secondary">{item.trade}</span>
             <Badge
               className={cn(
                 'text-xs font-medium flex items-center gap-1',
@@ -289,7 +289,7 @@ export function PunchListItem({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleDelete}
-                    className="text-red-600"
+                    className="text-error"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
@@ -303,13 +303,13 @@ export function PunchListItem({
 
       {/* Description (if not compact) */}
       {!compact && item.description && (
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+        <p className="text-sm text-secondary mt-2 line-clamp-2">
           {item.description}
         </p>
       )}
 
       {/* Meta Row */}
-      <div className="flex items-center gap-4 mt-3 text-xs text-gray-500 flex-wrap">
+      <div className="flex items-center gap-4 mt-3 text-xs text-muted flex-wrap">
         {/* Location */}
         {item.location && (
           <div className="flex items-center gap-1">
@@ -323,7 +323,7 @@ export function PunchListItem({
           <div
             className={cn(
               'flex items-center gap-1',
-              isOverdue && 'text-red-600 font-medium'
+              isOverdue && 'text-error font-medium'
             )}
           >
             <Calendar className="h-3.5 w-3.5" />
@@ -363,7 +363,7 @@ export function PunchListItem({
 
       {/* Mobile hint for swipe */}
       {!disableSwipe && (rightActions.length > 0 || leftActions.length > 0) && (
-        <div className="md:hidden mt-2 text-xs text-gray-400 flex items-center gap-1">
+        <div className="md:hidden mt-2 text-xs text-disabled flex items-center gap-1">
           <span className="animate-pulse">Swipe for actions</span>
         </div>
       )}

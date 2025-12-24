@@ -34,7 +34,7 @@ export default function Concept6EarthNatural() {
           ].map(c => (
             <div key={c.bg} className="rounded-lg overflow-hidden shadow-md">
               <div className="h-32" style={{ backgroundColor: c.bg }} />
-              <div className="p-3 bg-white">
+              <div className="p-3 bg-card">
                 <p className="text-sm font-medium" style={{ color: '#78350F' }}>{c.name}</p>
                 <p className="text-xs font-mono" style={{ color: '#92400E' }}>{c.bg}</p>
               </div>
@@ -47,12 +47,12 @@ export default function Concept6EarthNatural() {
             <button className="px-8 py-4 text-white font-serif text-lg rounded-lg shadow-lg hover:shadow-xl transition" style={{ backgroundColor: '#78350F' }}>
               Get Started
             </button>
-            <button className="px-8 py-4 bg-white font-serif text-lg rounded-lg shadow-md hover:shadow-lg transition" style={{ color: '#78350F', border: '2px solid #78350F' }}>
+            <button className="px-8 py-4 bg-card font-serif text-lg rounded-lg shadow-md hover:shadow-lg transition" style={{ color: '#78350F', border: '2px solid #78350F' }}>
               Learn More
             </button>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-lg">
+          <div className="bg-card rounded-2xl p-8 shadow-lg">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h3 className="text-2xl font-serif mb-2" style={{ color: '#451A03' }}>Harbor Bridge Renovation</h3>

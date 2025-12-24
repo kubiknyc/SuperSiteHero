@@ -74,11 +74,11 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
       {/* Header with confidence badge */}
       <div className="flex items-start justify-between">
         <div className="space-y-1">
-          <Label className="text-sm font-medium text-gray-700">Extracted Text</Label>
+          <Label className="text-sm font-medium text-secondary">Extracted Text</Label>
           <div className="flex items-center gap-2">
             <Badge
               variant={lowConfidence ? 'outline' : 'default'}
-              className={lowConfidence ? 'border-orange-500 text-orange-700' : 'bg-green-600'}
+              className={lowConfidence ? 'border-orange-500 text-orange-700' : 'bg-success'}
             >
               {lowConfidence ? (
                 <AlertCircle className="w-3 h-3 mr-1" />
@@ -87,11 +87,11 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
               )}
               {formatConfidence(result.confidence)} Confidence
             </Badge>
-            <Badge variant="outline" className="text-xs text-gray-600">
+            <Badge variant="outline" className="text-xs text-secondary">
               <Clock className="w-3 h-3 mr-1" />
               {(result.processingTime / 1000).toFixed(1)}s
             </Badge>
-            <Badge variant="outline" className="text-xs text-gray-600">
+            <Badge variant="outline" className="text-xs text-secondary">
               {result.words.length} words
             </Badge>
           </div>
@@ -118,13 +118,13 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
       <Card className="p-4">
         <div className="space-y-3">
           <div className="prose prose-sm max-w-none">
-            <pre className="whitespace-pre-wrap break-words font-sans text-sm text-gray-900 bg-gray-50 p-3 rounded border border-gray-200">
+            <pre className="whitespace-pre-wrap break-words font-sans text-sm text-foreground bg-surface p-3 rounded border border-border">
               {result.text || '(No text detected)'}
             </pre>
           </div>
 
           {/* Character and word count */}
-          <div className="flex items-center gap-4 text-xs text-gray-600 pt-2 border-t border-gray-200">
+          <div className="flex items-center gap-4 text-xs text-secondary pt-2 border-t border-border">
             <span>{result.text.length} characters</span>
             <span>{result.words.length} words</span>
             <span>{result.lines.length} lines</span>
@@ -159,36 +159,36 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
 
       {/* Detailed OCR data */}
       {showDetails && (
-        <Card className="p-4 bg-gray-50">
-          <Label className="text-xs font-medium text-gray-700 mb-3 block">Detailed OCR Data</Label>
+        <Card className="p-4 bg-surface">
+          <Label className="text-xs font-medium text-secondary mb-3 block">Detailed OCR Data</Label>
 
           <div className="space-y-4">
             {/* Metadata */}
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <span className="text-gray-600">Language:</span>
+                <span className="text-secondary">Language:</span>
                 <span className="ml-2 font-medium">{result.language}</span>
               </div>
               <div>
-                <span className="text-gray-600">Extracted:</span>
+                <span className="text-secondary">Extracted:</span>
                 <span className="ml-2 font-medium">
                   {new Date(result.extractedAt).toLocaleString()}
                 </span>
               </div>
               <div>
-                <span className="text-gray-600">Processing Time:</span>
+                <span className="text-secondary">Processing Time:</span>
                 <span className="ml-2 font-medium">{(result.processingTime / 1000).toFixed(2)}s</span>
               </div>
               <div>
-                <span className="text-gray-600">Overall Confidence:</span>
+                <span className="text-secondary">Overall Confidence:</span>
                 <span className="ml-2 font-medium">{formatConfidence(result.confidence)}</span>
               </div>
             </div>
 
             {/* Low confidence words */}
             {lowConfidenceWords.length > 0 && (
-              <div className="pt-3 border-t border-gray-300">
-                <Label className="text-xs font-medium text-gray-700 mb-2 block">
+              <div className="pt-3 border-t border-input">
+                <Label className="text-xs font-medium text-secondary mb-2 block">
                   Low Confidence Words ({lowConfidenceWords.length})
                 </Label>
                 <div className="flex flex-wrap gap-2">
@@ -198,22 +198,22 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
                     </Badge>
                   ))}
                   {lowConfidenceWords.length > 20 && (
-                    <span className="text-xs text-gray-600">+{lowConfidenceWords.length - 20} more</span>
+                    <span className="text-xs text-secondary">+{lowConfidenceWords.length - 20} more</span>
                   )}
                 </div>
               </div>
             )}
 
             {/* Text blocks */}
-            <div className="pt-3 border-t border-gray-300">
-              <Label className="text-xs font-medium text-gray-700 mb-2 block">
+            <div className="pt-3 border-t border-input">
+              <Label className="text-xs font-medium text-secondary mb-2 block">
                 Text Blocks ({result.blocks.length})
               </Label>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {result.blocks.map((block, idx) => (
-                  <Card key={idx} className="p-2 bg-white">
+                  <Card key={idx} className="p-2 bg-card">
                     <div className="flex items-start justify-between gap-2">
-                      <p className="text-xs text-gray-900 flex-1">{block.text}</p>
+                      <p className="text-xs text-foreground flex-1">{block.text}</p>
                       <Badge variant="outline" className="text-xs">
                         {formatConfidence(block.confidence)}
                       </Badge>

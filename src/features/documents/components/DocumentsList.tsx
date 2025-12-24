@@ -64,15 +64,15 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
 
     switch (type) {
       case 'pdf':
-        return <FileText {...iconProps} className="h-4 w-4 text-red-600" />
+        return <FileText {...iconProps} className="h-4 w-4 text-error" />
       case 'image':
-        return <ImageIcon {...iconProps} className="h-4 w-4 text-blue-600" />
+        return <ImageIcon {...iconProps} className="h-4 w-4 text-primary" />
       case 'doc':
-        return <File {...iconProps} className="h-4 w-4 text-blue-600" />
+        return <File {...iconProps} className="h-4 w-4 text-primary" />
       case 'sheet':
-        return <File {...iconProps} className="h-4 w-4 text-green-600" />
+        return <File {...iconProps} className="h-4 w-4 text-success" />
       default:
-        return <File {...iconProps} className="h-4 w-4 text-gray-600" />
+        return <File {...iconProps} className="h-4 w-4 text-secondary" />
     }
   }
 
@@ -84,9 +84,9 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
         <div className="flex items-center gap-2">
           {getIconForType(doc.file_name)}
           <div className="flex-1 min-w-0">
-            <p className="font-medium text-gray-900 truncate">{doc.name}</p>
+            <p className="font-medium text-foreground truncate">{doc.name}</p>
             {doc.drawing_number && (
-              <p className="text-xs text-gray-600">#{doc.drawing_number}</p>
+              <p className="text-xs text-secondary">#{doc.drawing_number}</p>
             )}
           </div>
         </div>
@@ -106,7 +106,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
       key: 'size',
       header: 'Size',
       render: (doc: Document) => (
-        <span className="text-gray-600">{formatFileSize(doc.file_size)}</span>
+        <span className="text-secondary">{formatFileSize(doc.file_size)}</span>
       ),
       className: 'w-20',
     },
@@ -114,7 +114,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
       key: 'uploaded',
       header: 'Uploaded',
       render: (doc: Document) => (
-        <span className="text-gray-600">
+        <span className="text-secondary">
           {doc.created_at ? format(new Date(doc.created_at), 'MMM d, yyyy') : 'N/A'}
         </span>
       ),
@@ -127,10 +127,10 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
         <Badge
           variant={doc.status === 'current' ? 'default' : 'secondary'}
           className={cn(
-            doc.status === 'current' && 'bg-green-100 text-green-800',
-            doc.status === 'superseded' && 'bg-yellow-100 text-yellow-800',
-            doc.status === 'archived' && 'bg-gray-100 text-gray-800',
-            doc.status === 'void' && 'bg-red-100 text-red-800'
+            doc.status === 'current' && 'bg-success-light text-green-800',
+            doc.status === 'superseded' && 'bg-warning-light text-yellow-800',
+            doc.status === 'archived' && 'bg-muted text-foreground',
+            doc.status === 'void' && 'bg-error-light text-red-800'
           )}
         >
           {doc.status}
@@ -155,7 +155,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
             disabled={deleteDocument.isPending}
             title="Delete"
           >
-            <Trash2 className="h-4 w-4 text-red-600" />
+            <Trash2 className="h-4 w-4 text-error" />
           </Button>
         </div>
       ),
@@ -167,8 +167,8 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No project selected</p>
+          <AlertCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+          <p className="text-secondary">No project selected</p>
         </CardContent>
       </Card>
     )
@@ -178,8 +178,8 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading documents...</p>
+          <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+          <p className="text-secondary">Loading documents...</p>
         </CardContent>
       </Card>
     )
@@ -190,7 +190,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
       <Card>
         <CardContent className="p-12 text-center">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <p className="text-red-600">Failed to load documents</p>
+          <p className="text-error">Failed to load documents</p>
         </CardContent>
       </Card>
     )
@@ -238,7 +238,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
           {filtered.length === 0 ? (
             <div className="text-center py-8">
               <File className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No documents found</p>
+              <p className="text-muted">No documents found</p>
             </div>
           ) : (
             <VirtualizedTable<Document>

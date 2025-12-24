@@ -338,8 +338,8 @@ export function CSISpecPicker({
   return (
     <div className={`relative ${className}`}>
       {label && (
-        <Label className="block text-sm font-medium text-gray-700 mb-1">
-          {label} {required && <span className="text-red-500">*</span>}
+        <Label className="block text-sm font-medium text-secondary mb-1">
+          {label} {required && <span className="text-error">*</span>}
         </Label>
       )}
 
@@ -365,10 +365,10 @@ export function CSISpecPicker({
                 setSearchTerm('')
               }}
             >
-              <X className="h-4 w-4 text-gray-400" />
+              <X className="h-4 w-4 text-disabled" />
             </Button>
           )}
-          <Search className="h-4 w-4 text-gray-400" />
+          <Search className="h-4 w-4 text-disabled" />
         </div>
       </div>
 
@@ -381,9 +381,9 @@ export function CSISpecPicker({
           />
 
           {/* Dropdown */}
-          <div className="absolute z-20 mt-1 w-full max-h-80 overflow-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+          <div className="absolute z-20 mt-1 w-full max-h-80 overflow-auto bg-card border border-border rounded-lg shadow-lg">
             {filteredResults.divisions.length === 0 ? (
-              <div className="p-4 text-sm text-gray-500 text-center">
+              <div className="p-4 text-sm text-muted text-center">
                 No matching spec sections found
               </div>
             ) : (
@@ -400,41 +400,41 @@ export function CSISpecPicker({
                       {/* Division Header */}
                       <button
                         type="button"
-                        className={`w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-gray-50 ${
+                        className={`w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-surface ${
                           currentDivision === division.code ? 'bg-blue-50' : ''
                         }`}
                         onClick={() => toggleDivision(division.code)}
                       >
                         {sections && sections.length > 0 ? (
                           isExpanded ? (
-                            <ChevronDown className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                            <ChevronDown className="h-4 w-4 text-disabled flex-shrink-0" />
                           ) : (
-                            <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                            <ChevronRight className="h-4 w-4 text-disabled flex-shrink-0" />
                           )
                         ) : (
                           <span className="w-4" />
                         )}
-                        <span className="font-medium text-gray-900">
+                        <span className="font-medium text-foreground">
                           Division {division.code}
                         </span>
-                        <span className="text-sm text-gray-500 truncate">
+                        <span className="text-sm text-muted truncate">
                           {division.title}
                         </span>
                       </button>
 
                       {/* Sections */}
                       {isExpanded && sections && sections.length > 0 && (
-                        <div className="bg-gray-50 border-l-2 border-blue-200 ml-6">
+                        <div className="bg-surface border-l-2 border-blue-200 ml-6">
                           {sections.map((section) => (
                             <button
                               key={section.code}
                               type="button"
-                              className={`w-full flex items-center gap-2 px-4 py-2 text-left text-sm hover:bg-blue-100 ${
-                                value === section.code ? 'bg-blue-100 text-blue-900' : 'text-gray-700'
+                              className={`w-full flex items-center gap-2 px-4 py-2 text-left text-sm hover:bg-info-light ${
+                                value === section.code ? 'bg-info-light text-blue-900' : 'text-secondary'
                               }`}
                               onClick={() => handleSelectSection(section.code, section.title)}
                             >
-                              <span className="font-mono text-xs bg-gray-200 px-1 rounded">
+                              <span className="font-mono text-xs bg-muted px-1 rounded">
                                 {section.code}
                               </span>
                               <span className="truncate">{section.title}</span>
@@ -449,7 +449,7 @@ export function CSISpecPicker({
             )}
 
             {/* Manual entry hint */}
-            <div className="px-3 py-2 text-xs text-gray-400 border-t bg-gray-50">
+            <div className="px-3 py-2 text-xs text-disabled border-t bg-surface">
               Type a spec section (e.g., "03 30 00") or search by name
             </div>
           </div>

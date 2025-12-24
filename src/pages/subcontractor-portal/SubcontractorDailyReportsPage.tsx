@@ -51,16 +51,16 @@ function WeatherBadge({ weather }: { weather: string | null }) {
   if (!weather) {return null}
 
   const weatherColors: Record<string, string> = {
-    sunny: 'bg-yellow-100 text-yellow-700',
-    cloudy: 'bg-gray-100 text-gray-700',
-    rainy: 'bg-blue-100 text-blue-700',
+    sunny: 'bg-warning-light text-yellow-700',
+    cloudy: 'bg-muted text-secondary',
+    rainy: 'bg-info-light text-primary-hover',
     stormy: 'bg-purple-100 text-purple-700',
     snowy: 'bg-slate-100 text-slate-600',
-    foggy: 'bg-gray-200 text-gray-600',
+    foggy: 'bg-muted text-secondary',
   }
 
   return (
-    <Badge variant="secondary" className={weatherColors[weather] || 'bg-gray-100 text-gray-700'}>
+    <Badge variant="secondary" className={weatherColors[weather] || 'bg-muted text-secondary'}>
       <Cloud className="h-3 w-3 mr-1" />
       {weather.charAt(0).toUpperCase() + weather.slice(1)}
     </Badge>
@@ -106,7 +106,7 @@ export function SubcontractorDailyReportsPage() {
         <Card>
           <CardContent className="p-12 text-center">
             <Lock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-semibold mb-2">Access Restricted</h2>
+            <h2 className="text-xl font-semibold mb-2" className="heading-section">Access Restricted</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
               You don't have permission to view daily reports. Contact the project manager to
               request access.
@@ -121,7 +121,7 @@ export function SubcontractorDailyReportsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
           <FileText className="h-6 w-6" />
           Daily Reports
         </h1>
@@ -173,7 +173,7 @@ export function SubcontractorDailyReportsPage() {
       ) : isError ? (
         <Card>
           <CardContent className="p-6 text-center">
-            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-error" />
             <p className="text-muted-foreground">Failed to load daily reports</p>
           </CardContent>
         </Card>
@@ -202,7 +202,7 @@ export function SubcontractorDailyReportsPage() {
                       </span>
                       <WeatherBadge weather={report.weather_condition} />
                       {report.submitted_at && (
-                        <Badge variant="outline" className="text-green-600 border-green-200">
+                        <Badge variant="outline" className="text-success border-green-200">
                           Submitted
                         </Badge>
                       )}

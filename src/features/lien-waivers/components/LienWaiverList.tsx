@@ -51,30 +51,30 @@ interface LienWaiverListProps {
  * Due date indicator with urgency coloring
  */
 function DueDateIndicator({ dueDate, status }: { dueDate: string | null; status: LienWaiverStatus }) {
-  if (!dueDate) {return <span className="text-gray-400">-</span>}
+  if (!dueDate) {return <span className="text-disabled">-</span>}
 
   // Don't show urgency for completed statuses
   if (['approved', 'void'].includes(status)) {
     return (
-      <span className="text-xs text-gray-600">
+      <span className="text-xs text-secondary">
         {new Date(dueDate).toLocaleDateString()}
       </span>
     )
   }
 
   const daysUntil = getDaysUntilDue(dueDate)
-  let colorClass = 'text-gray-600'
+  let colorClass = 'text-secondary'
   let bgClass = ''
 
   if (daysUntil < 0) {
-    colorClass = 'text-red-700'
-    bgClass = 'bg-red-50 px-2 py-0.5 rounded'
+    colorClass = 'text-error-dark'
+    bgClass = 'bg-error-light px-2 py-0.5 rounded'
   } else if (daysUntil <= 3) {
     colorClass = 'text-orange-700'
     bgClass = 'bg-orange-50 px-2 py-0.5 rounded'
   } else if (daysUntil <= 7) {
     colorClass = 'text-yellow-700'
-    bgClass = 'bg-yellow-50 px-2 py-0.5 rounded'
+    bgClass = 'bg-warning-light px-2 py-0.5 rounded'
   }
 
   return (
@@ -134,35 +134,35 @@ function SignatureIndicator({ waiver }: { waiver: LienWaiverWithDetails }) {
 function WaiverSummaryCard({ summary }: { summary: ProjectWaiverSummary }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
-      <div className="text-center p-3 bg-gray-50 rounded-lg">
-        <div className="text-2xl font-bold text-gray-700">{summary.total_waivers}</div>
-        <div className="text-xs text-gray-500">Total</div>
+      <div className="text-center p-3 bg-surface rounded-lg">
+        <div className="text-2xl font-bold text-secondary">{summary.total_waivers}</div>
+        <div className="text-xs text-muted">Total</div>
       </div>
-      <div className="text-center p-3 bg-yellow-50 rounded-lg">
+      <div className="text-center p-3 bg-warning-light rounded-lg">
         <div className="text-2xl font-bold text-yellow-700">{summary.pending_count}</div>
-        <div className="text-xs text-gray-500">Pending</div>
+        <div className="text-xs text-muted">Pending</div>
       </div>
       <div className="text-center p-3 bg-blue-50 rounded-lg">
-        <div className="text-2xl font-bold text-blue-700">{summary.received_count}</div>
-        <div className="text-xs text-gray-500">Received</div>
+        <div className="text-2xl font-bold text-primary-hover">{summary.received_count}</div>
+        <div className="text-xs text-muted">Received</div>
       </div>
-      <div className="text-center p-3 bg-green-50 rounded-lg">
-        <div className="text-2xl font-bold text-green-700">{summary.approved_count}</div>
-        <div className="text-xs text-gray-500">Approved</div>
+      <div className="text-center p-3 bg-success-light rounded-lg">
+        <div className="text-2xl font-bold text-success-dark">{summary.approved_count}</div>
+        <div className="text-xs text-muted">Approved</div>
       </div>
       <div className="text-center p-3 bg-orange-50 rounded-lg">
         <div className="text-2xl font-bold text-orange-700">{summary.missing_count}</div>
-        <div className="text-xs text-gray-500">Missing</div>
+        <div className="text-xs text-muted">Missing</div>
       </div>
-      <div className="text-center p-3 bg-red-50 rounded-lg">
-        <div className="text-2xl font-bold text-red-700">{summary.overdue_count}</div>
-        <div className="text-xs text-gray-500">Overdue</div>
+      <div className="text-center p-3 bg-error-light rounded-lg">
+        <div className="text-2xl font-bold text-error-dark">{summary.overdue_count}</div>
+        <div className="text-xs text-muted">Overdue</div>
       </div>
       <div className="text-center p-3 bg-slate-50 rounded-lg">
         <div className="text-lg font-bold text-slate-700">
           {formatWaiverAmount(summary.total_waived_amount)}
         </div>
-        <div className="text-xs text-gray-500">Total Waived</div>
+        <div className="text-xs text-muted">Total Waived</div>
       </div>
     </div>
   )
@@ -250,8 +250,8 @@ export function LienWaiverList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Lien Waiver Register</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold" className="heading-section">Lien Waiver Register</h2>
+          <p className="text-sm text-muted">
             {filteredWaivers.length} waiver{filteredWaivers.length !== 1 ? 's' : ''}
             {statusFilter !== 'all' && ` (filtered)`}
           </p>
@@ -317,10 +317,10 @@ export function LienWaiverList({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600">
+      <div className="flex flex-wrap items-center gap-4 text-xs text-secondary">
         <span className="font-medium">Type Legend:</span>
         <span className="flex items-center gap-1">
-          <span className="h-2 w-2 rounded-full bg-yellow-500"></span> Conditional
+          <span className="h-2 w-2 rounded-full bg-warning"></span> Conditional
         </span>
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-full bg-green-500"></span> Unconditional
@@ -338,7 +338,7 @@ export function LienWaiverList({
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-surface border-b">
               <tr>
                 <th className="px-3 py-2 text-left font-medium">Waiver No.</th>
                 <th className="px-3 py-2 text-left font-medium">Type</th>
@@ -359,9 +359,9 @@ export function LienWaiverList({
                   <tr
                     key={waiver.id}
                     className={cn(
-                      'hover:bg-gray-50',
+                      'hover:bg-surface',
                       onWaiverClick && 'cursor-pointer',
-                      isOverdue && 'bg-red-50'
+                      isOverdue && 'bg-error-light'
                     )}
                     onClick={() => onWaiverClick?.(waiver)}
                   >
@@ -379,7 +379,7 @@ export function LienWaiverList({
                         {waiver.subcontractor?.company_name || waiver.vendor_name || '-'}
                       </div>
                       {waiver.claimant_name && (
-                        <div className="text-xs text-gray-500">{waiver.claimant_name}</div>
+                        <div className="text-xs text-muted">{waiver.claimant_name}</div>
                       )}
                     </td>
                     <td className="px-3 py-2 text-xs">
@@ -418,7 +418,7 @@ export function LienWaiverList({
               })}
               {filteredWaivers.length === 0 && (
                 <tr>
-                  <td colSpan={10} className="px-3 py-8 text-center text-gray-500">
+                  <td colSpan={10} className="px-3 py-8 text-center text-muted">
                     No lien waivers found
                   </td>
                 </tr>
@@ -430,7 +430,7 @@ export function LienWaiverList({
 
       {/* Total Amount */}
       {filteredWaivers.length > 0 && (
-        <div className="text-right text-sm text-gray-600">
+        <div className="text-right text-sm text-secondary">
           Total Waived Amount: <span className="font-mono font-medium">
             {formatWaiverAmount(filteredWaivers.reduce((sum, w) => sum + w.payment_amount, 0))}
           </span>

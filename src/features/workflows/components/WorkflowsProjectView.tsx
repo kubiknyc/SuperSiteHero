@@ -63,7 +63,7 @@ export function WorkflowsProjectView({
       key: 'discipline',
       header: 'Discipline',
       render: (item: WorkflowItem) => (
-        <span className="text-sm text-gray-600">{item.discipline || '-'}</span>
+        <span className="text-sm text-secondary">{item.discipline || '-'}</span>
       ),
       className: 'w-28',
     },
@@ -126,7 +126,7 @@ export function WorkflowsProjectView({
             size="sm"
             onClick={() => handleDelete(item.id)}
             disabled={deleteItem.isPending}
-            className="text-red-600 hover:text-red-700"
+            className="text-error hover:text-error-dark"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -138,8 +138,8 @@ export function WorkflowsProjectView({
 
   if (error) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-800">
-        <h3 className="font-semibold">Error loading {workflowTypeName}</h3>
+      <div className="rounded-lg border border-red-200 bg-error-light p-4 text-red-800">
+        <h3 className="font-semibold" className="heading-subsection">Error loading {workflowTypeName}</h3>
         <p className="text-sm">{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     )
@@ -149,7 +149,7 @@ export function WorkflowsProjectView({
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">{workflowTypeName}</h2>
+        <h2 className="text-xl font-semibold" className="heading-section">{workflowTypeName}</h2>
         <Button
           onClick={() => setCreateDialogOpen(true)}
           className="gap-2"
@@ -169,11 +169,11 @@ export function WorkflowsProjectView({
 
       {/* Table */}
       {isLoading ? (
-        <div className="py-8 text-center text-gray-500">
+        <div className="py-8 text-center text-muted">
           Loading {workflowTypeName.toLowerCase()}...
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="py-8 text-center text-gray-500">
+        <div className="py-8 text-center text-muted">
           No {workflowTypeName.toLowerCase()} found
         </div>
       ) : (

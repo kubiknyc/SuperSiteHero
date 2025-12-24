@@ -155,13 +155,13 @@ export function ImageViewer({
   return (
     <div
       id="image-viewer-container"
-      className={cn('flex flex-col bg-gray-900', height)}
+      className={cn('flex flex-col bg-background', height)}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
       {/* Toolbar */}
-      <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
+      <div className="bg-surface border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
         {/* Left side - Empty for spacing */}
         <div />
 
@@ -258,9 +258,9 @@ export function ImageViewer({
       </div>
 
       {/* Image Viewer Area */}
-      <div className="flex-1 overflow-hidden bg-gray-900 flex items-center justify-center cursor-grab active:cursor-grabbing relative">
+      <div className="flex-1 overflow-hidden bg-background flex items-center justify-center cursor-grab active:cursor-grabbing relative">
         {isLoading && (
-          <div className="text-gray-400 text-center">
+          <div className="text-disabled text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
             <p>Loading image...</p>
           </div>
@@ -318,7 +318,7 @@ export function ImageViewer({
 
       {/* Info text when zoomed in */}
       {zoom > 100 && (
-        <div className="bg-gray-800 border-t border-gray-700 px-3 py-2 text-xs text-gray-400 text-center">
+        <div className="bg-surface border-t border-gray-700 px-3 py-2 text-xs text-disabled text-center">
           Drag to pan, use zoom controls or keyboard shortcuts
         </div>
       )}

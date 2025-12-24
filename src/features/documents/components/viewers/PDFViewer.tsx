@@ -11,8 +11,11 @@ import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+// Set up PDF.js worker - use local copy from npm package
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString()
 
 interface PDFViewerProps {
   documentId: string
@@ -144,9 +147,9 @@ export function PDFViewer({
   }, [currentPage, numPages])
 
   return (
-    <div className={cn('flex flex-col bg-gray-900', height)}>
+    <div className={cn('flex flex-col bg-background', height)}>
       {/* Toolbar */}
-      <div className="bg-gray-800 border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
+      <div className="bg-surface border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
         {/* Left side - Navigation */}
         <div className="flex items-center gap-2">
           <Button
@@ -259,9 +262,9 @@ export function PDFViewer({
       </div>
 
       {/* PDF Viewer Area */}
-      <div className="flex-1 overflow-auto bg-gray-900 p-4 flex items-center justify-center relative">
+      <div className="flex-1 overflow-auto bg-background p-4 flex items-center justify-center relative">
         {isLoading && (
-          <div className="text-gray-400 text-center">
+          <div className="text-disabled text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
             <p>Loading PDF...</p>
           </div>
@@ -281,7 +284,7 @@ export function PDFViewer({
               onLoadSuccess={handleDocumentLoadSuccess}
               onLoadError={handleDocumentLoadError}
               loading={
-                <div className="text-gray-400">
+                <div className="text-disabled">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
                 </div>
               }

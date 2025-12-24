@@ -16,17 +16,17 @@ interface ConditionStatusBadgeProps {
 const statusConfig: Record<ConditionStatus, { label: string; color: string; icon: typeof CheckCircle }> = {
   good: {
     label: 'Good',
-    color: 'bg-green-100 text-green-800 border-green-300',
+    color: 'bg-success-light text-green-800 border-green-300',
     icon: CheckCircle,
   },
   damaged: {
     label: 'Damaged',
-    color: 'bg-red-100 text-red-800 border-red-300',
+    color: 'bg-error-light text-red-800 border-red-300',
     icon: AlertTriangle,
   },
   defective: {
     label: 'Defective',
-    color: 'bg-red-100 text-red-800 border-red-300',
+    color: 'bg-error-light text-red-800 border-red-300',
     icon: XCircle,
   },
   incorrect: {

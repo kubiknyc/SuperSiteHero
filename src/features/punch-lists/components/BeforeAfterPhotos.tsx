@@ -141,7 +141,7 @@ export function BeforeAfterPhotos({
       className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
         dragOver === type
           ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-300 hover:border-gray-400'
+          : 'border-input hover:border-gray-400'
       }`}
       onClick={() => inputRef.current?.click()}
     >
@@ -155,11 +155,11 @@ export function BeforeAfterPhotos({
       />
       <div className="flex flex-col items-center gap-2">
         {compact ? (
-          <Camera className="h-6 w-6 text-gray-400" />
+          <Camera className="h-6 w-6 text-disabled" />
         ) : (
           <>
-            <ImagePlus className="h-8 w-8 text-gray-400" />
-            <span className="text-sm text-gray-500">
+            <ImagePlus className="h-8 w-8 text-disabled" />
+            <span className="text-sm text-muted">
               Click or drag photos here
             </span>
           </>
@@ -176,17 +176,17 @@ export function BeforeAfterPhotos({
           <Label className="font-medium">
             Before Photos
             {requireBeforePhoto && (
-              <span className="text-red-600 ml-1">*</span>
+              <span className="text-error ml-1">*</span>
             )}
           </Label>
           {requireBeforePhoto && beforePhotos.length === 0 && (
-            <span className="text-xs text-amber-600 flex items-center gap-1">
+            <span className="text-xs text-warning flex items-center gap-1">
               <AlertCircle className="h-3 w-3" />
               Required
             </span>
           )}
         </div>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted">
           Document the issue before work begins
         </p>
 
@@ -202,13 +202,13 @@ export function BeforeAfterPhotos({
             <Label className="font-medium">After Photos</Label>
             {(status === 'completed' || status === 'ready_for_review') &&
               afterPhotos.length === 0 && (
-                <span className="text-xs text-amber-600 flex items-center gap-1">
+                <span className="text-xs text-warning flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
                   Recommended
                 </span>
               )}
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted">
             Document the completed work for verification
           </p>
 
@@ -222,12 +222,12 @@ export function BeforeAfterPhotos({
       {!shouldPromptForAfter && beforePhotos.length > 0 && (
         <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-start gap-2">
-            <Camera className="h-4 w-4 text-blue-600 mt-0.5" />
+            <Camera className="h-4 w-4 text-primary mt-0.5" />
             <div className="text-sm">
               <p className="font-medium text-blue-900">
                 Photo Documentation
               </p>
-              <p className="text-blue-700">
+              <p className="text-primary-hover">
                 When this item is completed, you'll be prompted to add "after"
                 photos to document the fix.
               </p>
@@ -266,7 +266,7 @@ export function PhotoStatusButton({
       <div className="flex gap-0.5">
         <div
           className={`w-2 h-2 rounded-full ${
-            hasBeforePhotos ? 'bg-amber-500' : 'bg-gray-300'
+            hasBeforePhotos ? 'bg-warning' : 'bg-gray-300'
           }`}
           title={hasBeforePhotos ? 'Has before photos' : 'No before photos'}
         />
@@ -290,7 +290,7 @@ interface PhotoComparisonProps {
 export function PhotoComparison({ beforePhoto, afterPhoto }: PhotoComparisonProps) {
   if (!beforePhoto && !afterPhoto) {
     return (
-      <div className="p-4 bg-gray-50 rounded-lg text-center text-gray-500">
+      <div className="p-4 bg-surface rounded-lg text-center text-muted">
         No photos available
       </div>
     )
@@ -300,7 +300,7 @@ export function PhotoComparison({ beforePhoto, afterPhoto }: PhotoComparisonProp
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
         <Label className="text-sm font-medium flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-amber-500" />
+          <div className="w-3 h-3 rounded-full bg-warning" />
           Before
         </Label>
         {beforePhoto ? (
@@ -310,7 +310,7 @@ export function PhotoComparison({ beforePhoto, afterPhoto }: PhotoComparisonProp
             className="w-full aspect-square object-cover rounded-lg border"
           />
         ) : (
-          <div className="w-full aspect-square bg-gray-100 rounded-lg border flex items-center justify-center text-gray-400">
+          <div className="w-full aspect-square bg-muted rounded-lg border flex items-center justify-center text-disabled">
             No photo
           </div>
         )}
@@ -327,7 +327,7 @@ export function PhotoComparison({ beforePhoto, afterPhoto }: PhotoComparisonProp
             className="w-full aspect-square object-cover rounded-lg border"
           />
         ) : (
-          <div className="w-full aspect-square bg-gray-100 rounded-lg border flex items-center justify-center text-gray-400">
+          <div className="w-full aspect-square bg-muted rounded-lg border flex items-center justify-center text-disabled">
             No photo
           </div>
         )}

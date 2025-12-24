@@ -133,7 +133,7 @@ export function InsurancePage() {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
             <Shield className="h-6 w-6" />
             Insurance Tracking
           </h1>
@@ -266,7 +266,7 @@ export function InsurancePage() {
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <FileCheck className="h-12 w-12 text-muted-foreground opacity-50 mb-4" />
-                <h3 className="text-lg font-medium mb-2">No certificates found</h3>
+                <h3 className="text-lg font-medium mb-2" className="heading-subsection">No certificates found</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   {searchQuery || statusFilter !== 'all' || typeFilter !== 'all'
                     ? 'Try adjusting your filters'

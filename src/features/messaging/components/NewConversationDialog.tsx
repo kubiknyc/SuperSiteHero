@@ -230,7 +230,7 @@ export function NewConversationDialog({
                 conversationType === 'direct' && 'border-primary bg-primary/5'
               )}
             >
-              <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-info-light text-primary flex items-center justify-center">
                 <MessageSquare className="h-5 w-5" />
               </div>
               <div>
@@ -251,7 +251,7 @@ export function NewConversationDialog({
                 conversationType === 'group' && 'border-primary bg-primary/5'
               )}
             >
-              <div className="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+              <div className="h-10 w-10 rounded-full bg-success-light text-success flex items-center justify-center">
                 <Users className="h-5 w-5" />
               </div>
               <div>

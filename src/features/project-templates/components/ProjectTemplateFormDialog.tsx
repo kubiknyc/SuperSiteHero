@@ -405,7 +405,7 @@ export function ProjectTemplateFormDialog({
                     key={index}
                     className="flex items-center gap-2 p-2 border rounded-lg"
                   >
-                    <GripVertical className="h-4 w-4 text-gray-400" />
+                    <GripVertical className="h-4 w-4 text-disabled" />
                     <Input
                       value={phase.name}
                       onChange={(e) => updatePhase(index, { name: e.target.value })}
@@ -429,7 +429,7 @@ export function ProjectTemplateFormDialog({
                       size="sm"
                       onClick={() => removePhase(index)}
                     >
-                      <Trash2 className="h-4 w-4 text-red-500" />
+                      <Trash2 className="h-4 w-4 text-error" />
                     </Button>
                   </div>
                 ))}
@@ -501,7 +501,7 @@ function FolderItem({
   const indent = '  '.repeat(depth)
   return (
     <>
-      <div className="text-gray-700">
+      <div className="text-secondary">
         {indent}
         {depth > 0 ? '└─ ' : ''}
         {folder.name}

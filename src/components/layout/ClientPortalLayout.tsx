@@ -107,17 +107,17 @@ export function ClientPortalLayout() {
   const navigation = projectId ? getNavigation() : []
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       {/* Top Header */}
-      <header className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 z-50">
+      <header className="fixed top-0 left-0 right-0 h-16 bg-card border-b border-border z-50">
         <div className="h-full px-4 flex items-center justify-between">
           {/* Logo & Project Selector */}
           <div className="flex items-center gap-4">
             <Link to="/client" className="flex items-center gap-2">
-              <div className="rounded-lg bg-blue-600 p-2">
+              <div className="rounded-lg bg-primary p-2">
                 <Building2 className="h-5 w-5 text-white" />
               </div>
-              <span className="font-semibold text-gray-900">Client Portal</span>
+              <span className="font-semibold text-foreground">Client Portal</span>
             </Link>
 
             {projects && projects.length > 0 && (
@@ -126,10 +126,10 @@ export function ClientPortalLayout() {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="flex items-center gap-2">
-                      <span className="text-gray-700">
+                      <span className="text-secondary">
                         {currentProject?.name || 'Select Project'}
                       </span>
-                      <ChevronDown className="h-4 w-4 text-gray-500" />
+                      <ChevronDown className="h-4 w-4 text-muted" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="start" className="w-64">
@@ -145,7 +145,7 @@ export function ClientPortalLayout() {
                           <div className="flex flex-col">
                             <span>{project.name}</span>
                             {project.project_number && (
-                              <span className="text-xs text-gray-500">
+                              <span className="text-xs text-muted">
                                 #{project.project_number}
                               </span>
                             )}
@@ -163,13 +163,13 @@ export function ClientPortalLayout() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                  <User className="h-4 w-4 text-gray-600" />
+                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                  <User className="h-4 w-4 text-secondary" />
                 </div>
-                <span className="text-gray-700">
+                <span className="text-secondary">
                   {userProfile?.first_name || userProfile?.email?.split('@')[0]}
                 </span>
-                <ChevronDown className="h-4 w-4 text-gray-500" />
+                <ChevronDown className="h-4 w-4 text-muted" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -177,7 +177,7 @@ export function ClientPortalLayout() {
                 {userProfile?.email}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()} className="text-red-600">
+              <DropdownMenuItem onClick={() => signOut()} className="text-error">
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </DropdownMenuItem>
@@ -190,7 +190,7 @@ export function ClientPortalLayout() {
       <div className="pt-16 flex">
         {/* Sidebar (only when project is selected) */}
         {projectId && navigation.length > 0 && (
-          <aside className="fixed left-0 top-16 bottom-0 w-56 bg-white border-r border-gray-200">
+          <aside className="fixed left-0 top-16 bottom-0 w-56 bg-card border-r border-border">
             <nav className="p-4 space-y-1">
               {navigation.map((item) => {
                 const isActive =
@@ -206,8 +206,8 @@ export function ClientPortalLayout() {
                     className={cn(
                       'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
                       isActive
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                        ? 'bg-blue-50 text-primary-hover'
+                        : 'text-secondary hover:bg-muted hover:text-foreground'
                     )}
                   >
                     <Icon className="h-5 w-5" />
@@ -220,12 +220,12 @@ export function ClientPortalLayout() {
             {/* Project Info Card */}
             {currentProject && (
               <div className="absolute bottom-4 left-4 right-4">
-                <div className="bg-gray-50 rounded-lg p-3 text-sm">
-                  <p className="font-medium text-gray-900 truncate">
+                <div className="bg-surface rounded-lg p-3 text-sm">
+                  <p className="font-medium text-foreground truncate">
                     {currentProject.name}
                   </p>
                   {currentProject.address && (
-                    <p className="text-gray-500 text-xs truncate mt-1">
+                    <p className="text-muted text-xs truncate mt-1">
                       {currentProject.address}
                     </p>
                   )}
@@ -234,10 +234,10 @@ export function ClientPortalLayout() {
                       className={cn(
                         'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
                         currentProject.status === 'active'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-success-light text-green-800'
                           : currentProject.status === 'completed'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-info-light text-blue-800'
+                          : 'bg-muted text-foreground'
                       )}
                     >
                       {currentProject.status || 'Active'}

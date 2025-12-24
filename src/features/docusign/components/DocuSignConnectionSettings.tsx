@@ -77,7 +77,7 @@ export function DocuSignConnectionSettings() {
     return (
       <Card>
         <CardContent className="py-8">
-          <div className="flex items-center justify-center text-gray-500">
+          <div className="flex items-center justify-center text-muted">
             <Loader2 className="h-5 w-5 animate-spin mr-2" />
             Loading DocuSign settings...
           </div>
@@ -95,7 +95,7 @@ export function DocuSignConnectionSettings() {
           <div className="flex items-start justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <FileSignature className="h-5 w-5 text-blue-600" />
+                <FileSignature className="h-5 w-5 text-primary" />
                 DocuSign Integration
               </CardTitle>
               <CardDescription>
@@ -115,24 +115,24 @@ export function DocuSignConnectionSettings() {
           <div className={cn(
             'p-4 rounded-lg border',
             isConnected
-              ? 'bg-green-50 border-green-200'
-              : 'bg-gray-50 border-gray-200'
+              ? 'bg-success-light border-green-200'
+              : 'bg-surface border-border'
           )}>
             <div className="flex items-center gap-3">
               {isConnected ? (
-                <CheckCircle className="h-6 w-6 text-green-600" />
+                <CheckCircle className="h-6 w-6 text-success" />
               ) : (
-                <XCircle className="h-6 w-6 text-gray-400" />
+                <XCircle className="h-6 w-6 text-disabled" />
               )}
               <div className="flex-1">
                 <p className={cn(
                   'font-medium',
-                  isConnected ? 'text-green-800' : 'text-gray-700'
+                  isConnected ? 'text-green-800' : 'text-secondary'
                 )}>
                   {isConnected ? 'Connected' : 'Not Connected'}
                 </p>
                 {isConnected && connectionStatus.accountName && (
-                  <p className="text-sm text-green-700">
+                  <p className="text-sm text-success-dark">
                     Account: {connectionStatus.accountName}
                   </p>
                 )}
@@ -159,14 +159,14 @@ export function DocuSignConnectionSettings() {
             {isConnected && (
               <div className="mt-4 pt-4 border-t border-green-200 grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-green-700 font-medium">Account ID</p>
-                  <p className="text-green-600 font-mono text-xs">
+                  <p className="text-success-dark font-medium">Account ID</p>
+                  <p className="text-success font-mono text-xs">
                     {connectionStatus.accountId}
                   </p>
                 </div>
                 <div>
-                  <p className="text-green-700 font-medium">Last Connected</p>
-                  <p className="text-green-600">
+                  <p className="text-success-dark font-medium">Last Connected</p>
+                  <p className="text-success">
                     {connectionStatus.lastConnectedAt
                       ? formatDate(connectionStatus.lastConnectedAt)
                       : 'Unknown'}
@@ -174,8 +174,8 @@ export function DocuSignConnectionSettings() {
                 </div>
                 {connectionStatus.tokenExpiresAt && (
                   <div>
-                    <p className="text-green-700 font-medium">Token Expires</p>
-                    <p className="text-green-600">
+                    <p className="text-success-dark font-medium">Token Expires</p>
+                    <p className="text-success">
                       {formatDate(connectionStatus.tokenExpiresAt)}
                     </p>
                   </div>
@@ -185,7 +185,7 @@ export function DocuSignConnectionSettings() {
 
             {/* Connection error */}
             {connectionStatus?.connectionError && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+              <div className="mt-4 p-3 bg-error-light border border-red-200 rounded text-sm text-error-dark">
                 <strong>Error:</strong> {connectionStatus.connectionError}
               </div>
             )}
@@ -220,7 +220,7 @@ export function DocuSignConnectionSettings() {
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-0.5">
                   <Label htmlFor="demo-mode" className="font-medium">Demo Mode</Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     Use DocuSign sandbox environment for testing
                   </p>
                 </div>
@@ -244,7 +244,7 @@ export function DocuSignConnectionSettings() {
                 Connect DocuSign Account
               </Button>
 
-              <p className="text-xs text-gray-500 text-center">
+              <p className="text-xs text-muted text-center">
                 You will be redirected to DocuSign to authorize access
               </p>
             </div>
@@ -252,7 +252,7 @@ export function DocuSignConnectionSettings() {
 
           {/* Features info */}
           <div className="border-t pt-6">
-            <h4 className="font-medium text-gray-900 mb-4">What you can do with DocuSign</h4>
+            <h4 className="font-medium text-foreground mb-4" className="heading-card">What you can do with DocuSign</h4>
             <div className="grid gap-4 md:grid-cols-3">
               <FeatureCard
                 icon={<FileSignature className="h-5 w-5" />}
@@ -278,7 +278,7 @@ export function DocuSignConnectionSettings() {
               href="https://developers.docusign.com/docs"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:text-blue-700 inline-flex items-center gap-1"
+              className="text-primary hover:text-primary-hover inline-flex items-center gap-1"
             >
               Learn more about DocuSign
               <ExternalLink className="h-3 w-3" />
@@ -302,7 +302,7 @@ export function DocuSignConnectionSettings() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDisconnect}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               {disconnectMutation.isPending ? (
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -328,11 +328,11 @@ function FeatureCard({
 }) {
   return (
     <div className="p-4 border rounded-lg">
-      <div className="flex items-center gap-2 text-blue-600 mb-2">
+      <div className="flex items-center gap-2 text-primary mb-2">
         {icon}
-        <span className="font-medium text-gray-900">{title}</span>
+        <span className="font-medium text-foreground">{title}</span>
       </div>
-      <p className="text-sm text-gray-600">{description}</p>
+      <p className="text-sm text-secondary">{description}</p>
     </div>
   )
 }

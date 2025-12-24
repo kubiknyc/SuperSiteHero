@@ -123,24 +123,24 @@ export function MFAVerifyPage() {
 
   if (!challenge) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
-          <p className="mt-2 text-gray-600">Loading authentication challenge...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="mt-2 text-secondary">Loading authentication challenge...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-surface py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
-          <Shield className="mx-auto h-12 w-12 text-blue-600" />
-          <h2 className="mt-4 text-3xl font-bold text-gray-900">
+          <Shield className="mx-auto h-12 w-12 text-primary" />
+          <h2 className="mt-4 text-3xl font-bold text-foreground" className="heading-section">
             Two-Factor Authentication
           </h2>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-secondary">
             {isBackupCode
               ? 'Enter your backup code to continue'
               : 'Enter the code from your authenticator app'
@@ -157,7 +157,7 @@ export function MFAVerifyPage() {
                   <p className="text-sm font-medium">
                     {maxAttempts - attempts} attempts remaining
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-secondary mt-1">
                     Too many failed attempts will require you to sign in again.
                   </p>
                 </div>
@@ -165,7 +165,7 @@ export function MFAVerifyPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-secondary mb-3">
                 {isBackupCode ? 'Backup Code' : '6-Digit Code'}
               </label>
 
@@ -237,7 +237,7 @@ export function MFAVerifyPage() {
             <div className="text-center">
               <a
                 href="/help/mfa"
-                className="text-sm text-blue-600 hover:text-blue-500"
+                className="text-sm text-primary hover:text-primary"
               >
                 Having trouble? Get help
               </a>

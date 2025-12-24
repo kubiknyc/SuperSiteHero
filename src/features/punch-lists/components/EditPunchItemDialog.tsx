@@ -136,7 +136,7 @@ export function EditPunchItemDialog({
             {/* Title - Required */}
             <div className="md:col-span-2">
               <Label htmlFor="title">
-                Title <span className="text-red-600">*</span>
+                Title <span className="text-error">*</span>
               </Label>
               <Input
                 id="title"
@@ -150,7 +150,7 @@ export function EditPunchItemDialog({
             {/* Trade - Required */}
             <div>
               <Label htmlFor="trade">
-                Trade <span className="text-red-600">*</span>
+                Trade <span className="text-error">*</span>
               </Label>
               <Input
                 id="trade"

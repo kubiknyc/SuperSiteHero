@@ -242,8 +242,8 @@ export function ChangeOrderDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-            <p className="text-gray-500">Loading change order...</p>
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+            <p className="text-muted">Loading change order...</p>
           </div>
         </div>
       </AppLayout>
@@ -255,11 +255,11 @@ export function ChangeOrderDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
-              <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2">Error Loading Change Order</h3>
-              <p className="text-red-600 mb-6">{error?.message || 'Change order not found'}</p>
+              <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Change Order</h3>
+              <p className="text-error mb-6">{error?.message || 'Change order not found'}</p>
               <Link to="/change-orders">
                 <Button>Back to Change Orders</Button>
               </Link>
@@ -292,7 +292,7 @@ export function ChangeOrderDetailPage() {
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold text-gray-900">{displayNumber}</h1>
+                <h1 className="text-3xl font-bold text-foreground" className="heading-page">{displayNumber}</h1>
                 <Badge className={cn('font-medium', getChangeOrderStatusColor(changeOrder.status))}>
                   {getChangeOrderStatusLabel(changeOrder.status)}
                 </Badge>
@@ -301,12 +301,12 @@ export function ChangeOrderDetailPage() {
                     PCO
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="border-green-300 text-green-700 bg-green-50">
+                  <Badge variant="outline" className="border-green-300 text-success-dark bg-success-light">
                     Approved CO
                   </Badge>
                 )}
               </div>
-              <p className="text-gray-600 mt-1">{changeOrder.title}</p>
+              <p className="text-secondary mt-1">{changeOrder.title}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -321,7 +321,7 @@ export function ChangeOrderDetailPage() {
               </Button>
             )}
             {changeOrder.status !== 'void' && changeOrder.status !== 'approved' && (
-              <Button variant="outline" size="sm" className="text-red-600 border-red-200" onClick={handleVoid}>
+              <Button variant="outline" size="sm" className="text-error border-red-200" onClick={handleVoid}>
                 <Ban className="w-4 h-4 mr-2" />
                 Void
               </Button>
@@ -333,7 +333,7 @@ export function ChangeOrderDetailPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium text-gray-700">Workflow Progress</h3>
+              <h3 className="font-medium text-secondary" className="heading-subsection">Workflow Progress</h3>
               {changeOrder.ball_in_court_user && (
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-orange-500" />
@@ -366,7 +366,7 @@ export function ChangeOrderDetailPage() {
                         'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
                         currentStep >= s.step
                           ? 'bg-primary text-white dark:bg-primary'
-                          : 'bg-gray-200 text-gray-500 dark:bg-gray-700'
+                          : 'bg-muted text-muted dark:bg-muted'
                       )}
                     >
                       {currentStep > s.step ? (
@@ -378,7 +378,7 @@ export function ChangeOrderDetailPage() {
                     <span
                       className={cn(
                         'text-xs mt-1 text-center',
-                        currentStep >= s.step ? 'text-primary font-medium dark:text-primary-400' : 'text-gray-500'
+                        currentStep >= s.step ? 'text-primary font-medium dark:text-primary-400' : 'text-muted'
                       )}
                     >
                       {s.label}
@@ -388,7 +388,7 @@ export function ChangeOrderDetailPage() {
                     <div
                       className={cn(
                         'flex-1 h-1 mx-2',
-                        currentStep > s.step ? 'bg-primary dark:bg-primary' : 'bg-gray-200 dark:bg-gray-700'
+                        currentStep > s.step ? 'bg-primary dark:bg-primary' : 'bg-muted dark:bg-muted'
                       )}
                     />
                   )}
@@ -408,7 +408,7 @@ export function ChangeOrderDetailPage() {
                 <>
                   <Button
                     variant="outline"
-                    className="text-red-600 border-red-200"
+                    className="text-error border-red-200"
                     onClick={() => handleInternalApproval(false)}
                     disabled={processInternalApproval.isPending}
                   >
@@ -416,7 +416,7 @@ export function ChangeOrderDetailPage() {
                     Reject
                   </Button>
                   <Button
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-success hover:bg-green-700"
                     onClick={() => handleInternalApproval(true)}
                     disabled={processInternalApproval.isPending}
                   >
@@ -435,7 +435,7 @@ export function ChangeOrderDetailPage() {
                 <>
                   <Button
                     variant="outline"
-                    className="text-red-600 border-red-200"
+                    className="text-error border-red-200"
                     onClick={() => handleOwnerApproval(false)}
                     disabled={processOwnerApproval.isPending}
                   >
@@ -443,7 +443,7 @@ export function ChangeOrderDetailPage() {
                     Owner Reject
                   </Button>
                   <Button
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-success hover:bg-green-700"
                     onClick={() => setShowApprovalDialog(true)}
                     disabled={processOwnerApproval.isPending}
                   >
@@ -458,7 +458,7 @@ export function ChangeOrderDetailPage() {
 
         {/* Owner Approval Dialog */}
         {showApprovalDialog && isPendingOwner && (
-          <Card className="border-green-200 bg-green-50">
+          <Card className="border-green-200 bg-success-light">
             <CardHeader>
               <CardTitle className="text-green-800">Owner Approval</CardTitle>
               <CardDescription>Enter approved amounts and sign</CardDescription>
@@ -497,7 +497,7 @@ export function ChangeOrderDetailPage() {
                   Cancel
                 </Button>
                 <Button
-                  className="bg-green-600 hover:bg-green-700"
+                  className="bg-success hover:bg-green-700"
                   onClick={() => handleOwnerApproval(true)}
                   disabled={processOwnerApproval.isPending}
                 >
@@ -540,24 +540,24 @@ export function ChangeOrderDetailPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div>
-                      <Label className="text-gray-600">Title</Label>
+                      <Label className="text-secondary">Title</Label>
                       <p className="text-lg font-medium mt-1">{changeOrder.title}</p>
                     </div>
                     {changeOrder.description && (
                       <div>
-                        <Label className="text-gray-600">Description</Label>
+                        <Label className="text-secondary">Description</Label>
                         <p className="mt-1 whitespace-pre-wrap">{changeOrder.description}</p>
                       </div>
                     )}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-gray-600">Change Type</Label>
+                        <Label className="text-secondary">Change Type</Label>
                         <Badge variant="outline" className="mt-1">
                           {getChangeTypeLabel(changeOrder.change_type)}
                         </Badge>
                       </div>
                       <div>
-                        <Label className="text-gray-600">Pricing Method</Label>
+                        <Label className="text-secondary">Pricing Method</Label>
                         <Badge variant="outline" className="mt-1 capitalize">
                           {changeOrder.pricing_method?.replace('_', ' ') || 'Lump Sum'}
                         </Badge>
@@ -565,7 +565,7 @@ export function ChangeOrderDetailPage() {
                     </div>
                     {changeOrder.justification && (
                       <div>
-                        <Label className="text-gray-600">Justification</Label>
+                        <Label className="text-secondary">Justification</Label>
                         <p className="mt-1">{changeOrder.justification}</p>
                       </div>
                     )}
@@ -586,21 +586,21 @@ export function ChangeOrderDetailPage() {
                         </p>
                       </div>
                       {changeOrder.approved_amount !== null && (
-                        <div className="p-4 bg-green-50 rounded-lg">
-                          <p className="text-sm text-green-600 font-medium">Approved Amount</p>
-                          <p className="text-2xl font-bold text-green-700">
+                        <div className="p-4 bg-success-light rounded-lg">
+                          <p className="text-sm text-success font-medium">Approved Amount</p>
+                          <p className="text-2xl font-bold text-success-dark">
                             {formatCurrency(changeOrder.approved_amount)}
                           </p>
                         </div>
                       )}
-                      <div className="p-4 bg-amber-50 rounded-lg">
-                        <p className="text-sm text-amber-600 font-medium">Proposed Days</p>
+                      <div className="p-4 bg-warning-light rounded-lg">
+                        <p className="text-sm text-warning font-medium">Proposed Days</p>
                         <p className="text-2xl font-bold text-amber-700">{changeOrder.proposed_days}</p>
                       </div>
                       {changeOrder.approved_days !== null && (
-                        <div className="p-4 bg-green-50 rounded-lg">
-                          <p className="text-sm text-green-600 font-medium">Approved Days</p>
-                          <p className="text-2xl font-bold text-green-700">{changeOrder.approved_days}</p>
+                        <div className="p-4 bg-success-light rounded-lg">
+                          <p className="text-sm text-success font-medium">Approved Days</p>
+                          <p className="text-2xl font-bold text-success-dark">{changeOrder.approved_days}</p>
                         </div>
                       )}
                     </div>
@@ -608,18 +608,18 @@ export function ChangeOrderDetailPage() {
                     {/* Contract Tracking */}
                     {changeOrder.original_contract_amount && (
                       <div className="mt-6 pt-4 border-t">
-                        <h4 className="font-medium text-gray-700 mb-3">Contract Tracking</h4>
+                        <h4 className="font-medium text-secondary mb-3" className="heading-card">Contract Tracking</h4>
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-500">Original Contract</p>
+                            <p className="text-muted">Original Contract</p>
                             <p className="font-medium">{formatCurrency(changeOrder.original_contract_amount)}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500">Previous Changes</p>
+                            <p className="text-muted">Previous Changes</p>
                             <p className="font-medium">{formatCurrency(changeOrder.previous_changes_amount)}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500">Revised Contract</p>
+                            <p className="text-muted">Revised Contract</p>
                             <p className="font-medium">{formatCurrency(changeOrder.revised_contract_amount)}</p>
                           </div>
                         </div>
@@ -638,27 +638,27 @@ export function ChangeOrderDetailPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     {changeOrder.related_rfi && (
-                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                      <div className="flex items-center gap-2 p-2 bg-surface rounded">
                         <FileText className="h-4 w-4 text-primary dark:text-primary-400" />
                         <div className="flex-1">
                           <p className="text-sm font-medium">RFI-{changeOrder.related_rfi.rfi_number}</p>
-                          <p className="text-xs text-gray-500">{changeOrder.related_rfi.subject}</p>
+                          <p className="text-xs text-muted">{changeOrder.related_rfi.subject}</p>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                        <ChevronRight className="h-4 w-4 text-disabled" />
                       </div>
                     )}
                     {changeOrder.related_submittal && (
-                      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded">
+                      <div className="flex items-center gap-2 p-2 bg-surface rounded">
                         <Package className="h-4 w-4 text-purple-600" />
                         <div className="flex-1">
                           <p className="text-sm font-medium">{changeOrder.related_submittal.submittal_number}</p>
-                          <p className="text-xs text-gray-500">{changeOrder.related_submittal.title}</p>
+                          <p className="text-xs text-muted">{changeOrder.related_submittal.title}</p>
                         </div>
-                        <ChevronRight className="h-4 w-4 text-gray-400" />
+                        <ChevronRight className="h-4 w-4 text-disabled" />
                       </div>
                     )}
                     {!changeOrder.related_rfi && !changeOrder.related_submittal && (
-                      <p className="text-sm text-gray-500 text-center py-2">No related items</p>
+                      <p className="text-sm text-muted text-center py-2">No related items</p>
                     )}
                   </CardContent>
                 </Card>
@@ -671,36 +671,36 @@ export function ChangeOrderDetailPage() {
                   <CardContent className="space-y-3">
                     {changeOrder.initiated_by_user && (
                       <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-gray-400" />
+                        <User className="h-4 w-4 text-disabled" />
                         <div>
-                          <p className="text-xs text-gray-500">Initiated By</p>
+                          <p className="text-xs text-muted">Initiated By</p>
                           <p className="text-sm font-medium">{changeOrder.initiated_by_user.full_name}</p>
                         </div>
                       </div>
                     )}
                     {changeOrder.assigned_to_user && (
                       <div className="flex items-center gap-2">
-                        <Target className="h-4 w-4 text-gray-400" />
+                        <Target className="h-4 w-4 text-disabled" />
                         <div>
-                          <p className="text-xs text-gray-500">Assigned To</p>
+                          <p className="text-xs text-muted">Assigned To</p>
                           <p className="text-sm font-medium">{changeOrder.assigned_to_user.full_name}</p>
                         </div>
                       </div>
                     )}
                     {changeOrder.internal_approver_name && (
                       <div className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                         <div>
-                          <p className="text-xs text-gray-500">Internal Approver</p>
+                          <p className="text-xs text-muted">Internal Approver</p>
                           <p className="text-sm font-medium">{changeOrder.internal_approver_name}</p>
                         </div>
                       </div>
                     )}
                     {changeOrder.owner_approver_name && (
                       <div className="flex items-center gap-2">
-                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                         <div>
-                          <p className="text-xs text-gray-500">Owner Approver</p>
+                          <p className="text-xs text-muted">Owner Approver</p>
                           <p className="text-sm font-medium">{changeOrder.owner_approver_name}</p>
                         </div>
                       </div>
@@ -715,9 +715,9 @@ export function ChangeOrderDetailPage() {
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
+                      <Calendar className="h-4 w-4 text-disabled" />
                       <div>
-                        <p className="text-xs text-gray-500">Created</p>
+                        <p className="text-xs text-muted">Created</p>
                         <p className="text-sm">{format(new Date(changeOrder.created_at), 'MMM d, yyyy')}</p>
                       </div>
                     </div>
@@ -725,7 +725,7 @@ export function ChangeOrderDetailPage() {
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-primary-400 dark:text-primary-400" />
                         <div>
-                          <p className="text-xs text-gray-500">Estimated</p>
+                          <p className="text-xs text-muted">Estimated</p>
                           <p className="text-sm">{format(new Date(changeOrder.date_estimated), 'MMM d, yyyy')}</p>
                         </div>
                       </div>
@@ -734,7 +734,7 @@ export function ChangeOrderDetailPage() {
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-purple-400" />
                         <div>
-                          <p className="text-xs text-gray-500">Internal Approved</p>
+                          <p className="text-xs text-muted">Internal Approved</p>
                           <p className="text-sm">{format(new Date(changeOrder.date_internal_approved), 'MMM d, yyyy')}</p>
                         </div>
                       </div>
@@ -743,7 +743,7 @@ export function ChangeOrderDetailPage() {
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-green-400" />
                         <div>
-                          <p className="text-xs text-gray-500">Owner Approved</p>
+                          <p className="text-xs text-muted">Owner Approved</p>
                           <p className="text-sm">{format(new Date(changeOrder.date_owner_approved), 'MMM d, yyyy')}</p>
                         </div>
                       </div>
@@ -762,14 +762,14 @@ export function ChangeOrderDetailPage() {
                   <CardContent>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-gray-500">Status</span>
+                        <span className="text-sm text-muted">Status</span>
                         {changeOrder.owner_signature_url ? (
-                          <Badge className="bg-green-100 text-green-700">
+                          <Badge className="bg-success-light text-success-dark">
                             <CheckCircle className="h-3 w-3 mr-1" />
                             Signed
                           </Badge>
                         ) : (
-                          <Badge variant="outline" className="text-gray-500">
+                          <Badge variant="outline" className="text-muted">
                             <Clock className="h-3 w-3 mr-1" />
                             Pending
                           </Badge>
@@ -778,7 +778,7 @@ export function ChangeOrderDetailPage() {
 
                       {changeOrder.owner_signature_url ? (
                         <div className="space-y-2">
-                          <div className="border rounded-lg p-3 bg-gray-50">
+                          <div className="border rounded-lg p-3 bg-surface">
                             <img
                               src={changeOrder.owner_signature_url}
                               alt="Owner signature"
@@ -786,20 +786,20 @@ export function ChangeOrderDetailPage() {
                             />
                           </div>
                           {changeOrder.owner_approver_name && (
-                            <p className="text-xs text-gray-500 text-center">
+                            <p className="text-xs text-muted text-center">
                               Signed by: {changeOrder.owner_approver_name}
                             </p>
                           )}
                           {changeOrder.date_owner_approved && (
-                            <p className="text-xs text-gray-500 text-center">
+                            <p className="text-xs text-muted text-center">
                               {format(new Date(changeOrder.date_owner_approved), 'MMM d, yyyy')}
                             </p>
                           )}
                         </div>
                       ) : (
-                        <div className="border-2 border-dashed rounded-lg p-4 text-center bg-gray-50">
-                          <PenTool className="h-8 w-8 mx-auto text-gray-400 mb-2" />
-                          <p className="text-sm text-gray-500">Awaiting owner signature</p>
+                        <div className="border-2 border-dashed rounded-lg p-4 text-center bg-surface">
+                          <PenTool className="h-8 w-8 mx-auto text-disabled mb-2" />
+                          <p className="text-sm text-muted">Awaiting owner signature</p>
                         </div>
                       )}
 
@@ -853,7 +853,7 @@ export function ChangeOrderDetailPage() {
                       </thead>
                       <tbody>
                         {items.map((item: ChangeOrderItem) => (
-                          <tr key={item.id} className="border-b hover:bg-gray-50">
+                          <tr key={item.id} className="border-b hover:bg-surface">
                             <td className="py-2 px-2">{item.item_number}</td>
                             <td className="py-2 px-2">{item.description}</td>
                             <td className="py-2 px-2">{item.cost_code || '-'}</td>
@@ -865,7 +865,7 @@ export function ChangeOrderDetailPage() {
                             <td className="py-2 px-2 text-right font-medium">{formatCurrency(item.total_amount)}</td>
                           </tr>
                         ))}
-                        <tr className="bg-gray-50 font-medium">
+                        <tr className="bg-surface font-medium">
                           <td colSpan={8} className="py-2 px-2 text-right">Total:</td>
                           <td className="py-2 px-2 text-right">
                             {formatCurrency(items.reduce((sum: number, i: ChangeOrderItem) => sum + (i.total_amount || 0), 0))}
@@ -877,7 +877,7 @@ export function ChangeOrderDetailPage() {
                 ) : (
                   <div className="text-center py-8">
                     <Package className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-500">No line items yet</p>
+                    <p className="text-muted">No line items yet</p>
                     {isEditable && (
                       <Button className="mt-4" onClick={() => navigate(`/change-orders/${id}/items/new`)}>
                         <Plus className="h-4 w-4 mr-2" />
@@ -906,11 +906,11 @@ export function ChangeOrderDetailPage() {
                 {attachments && attachments.length > 0 ? (
                   <div className="space-y-2">
                     {attachments.map((att) => (
-                      <div key={att.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                        <Paperclip className="h-5 w-5 text-gray-400" />
+                      <div key={att.id} className="flex items-center gap-3 p-3 bg-surface rounded-lg">
+                        <Paperclip className="h-5 w-5 text-disabled" />
                         <div className="flex-1">
                           <p className="font-medium">{att.file_name}</p>
-                          {att.description && <p className="text-sm text-gray-500">{att.description}</p>}
+                          {att.description && <p className="text-sm text-muted">{att.description}</p>}
                         </div>
                         <Button variant="outline" size="sm" asChild>
                           <a href={att.file_url} target="_blank" rel="noopener noreferrer">
@@ -923,7 +923,7 @@ export function ChangeOrderDetailPage() {
                 ) : (
                   <div className="text-center py-8">
                     <Paperclip className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-500">No attachments yet</p>
+                    <p className="text-muted">No attachments yet</p>
                   </div>
                 )}
               </CardContent>
@@ -956,12 +956,12 @@ export function ChangeOrderDetailPage() {
                             )}
                           </div>
                           {entry.old_value && entry.new_value && (
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-secondary mt-1">
                               Changed from "{entry.old_value}" to "{entry.new_value}"
                             </p>
                           )}
-                          {entry.notes && <p className="text-sm text-gray-500 mt-1">{entry.notes}</p>}
-                          <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
+                          {entry.notes && <p className="text-sm text-muted mt-1">{entry.notes}</p>}
+                          <div className="flex items-center gap-2 mt-2 text-xs text-disabled">
                             <span>{entry.changed_by_user?.full_name || 'System'}</span>
                             <span>•</span>
                             <span>{format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}</span>
@@ -973,7 +973,7 @@ export function ChangeOrderDetailPage() {
                 ) : (
                   <div className="text-center py-8">
                     <History className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-                    <p className="text-gray-500">No history recorded yet</p>
+                    <p className="text-muted">No history recorded yet</p>
                   </div>
                 )}
               </CardContent>

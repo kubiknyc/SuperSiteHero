@@ -183,7 +183,7 @@ export function ProjectTemplatesPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Project Templates</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">Project Templates</h1>
             <p className="text-muted-foreground">
               Create and manage reusable templates for new projects
             </p>
@@ -204,7 +204,7 @@ export function ProjectTemplatesPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <LayoutTemplate className="h-4 w-4 text-blue-600" />
+                <LayoutTemplate className="h-4 w-4 text-primary" />
                 <CardTitle className="text-sm font-medium">Total Templates</CardTitle>
               </div>
             </CardHeader>
@@ -216,7 +216,7 @@ export function ProjectTemplatesPage() {
           <Card>
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-green-600" />
+                <TrendingUp className="h-4 w-4 text-success" />
                 <CardTitle className="text-sm font-medium">Most Used</CardTitle>
               </div>
             </CardHeader>
@@ -278,10 +278,10 @@ export function ProjectTemplatesPage() {
                 emptyMessage="No recently used templates"
               />
             ) : (
-              <div className="text-center py-12 border rounded-lg bg-gray-50">
-                <Clock className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-                <p className="text-gray-500">No templates have been used recently</p>
-                <p className="text-sm text-gray-400 mt-1">
+              <div className="text-center py-12 border rounded-lg bg-surface">
+                <Clock className="h-12 w-12 mx-auto text-disabled mb-3" />
+                <p className="text-muted">No templates have been used recently</p>
+                <p className="text-sm text-disabled mt-1">
                   Templates will appear here after you use them to create projects
                 </p>
               </div>
@@ -298,10 +298,10 @@ export function ProjectTemplatesPage() {
                 emptyMessage="No popular templates yet"
               />
             ) : (
-              <div className="text-center py-12 border rounded-lg bg-gray-50">
-                <TrendingUp className="h-12 w-12 mx-auto text-gray-400 mb-3" />
-                <p className="text-gray-500">No templates have been used yet</p>
-                <p className="text-sm text-gray-400 mt-1">
+              <div className="text-center py-12 border rounded-lg bg-surface">
+                <TrendingUp className="h-12 w-12 mx-auto text-disabled mb-3" />
+                <p className="text-muted">No templates have been used yet</p>
+                <p className="text-sm text-disabled mt-1">
                   Popular templates will be ranked by usage count
                 </p>
               </div>
@@ -334,7 +334,7 @@ export function ProjectTemplatesPage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteConfirm}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
               >
                 {deleteMutation.isPending && (
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />

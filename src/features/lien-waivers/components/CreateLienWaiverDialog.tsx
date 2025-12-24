@@ -115,7 +115,7 @@ export function CreateLienWaiverDialog({
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileCheck className="h-5 w-5 text-blue-600" />
+            <FileCheck className="h-5 w-5 text-primary" />
             Request Lien Waiver
           </DialogTitle>
         </DialogHeader>
@@ -135,7 +135,7 @@ export function CreateLienWaiverDialog({
                 </option>
               ))}
             </Select>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               {LIEN_WAIVER_TYPES.find((t) => t.value === waiverType)?.description}
             </p>
           </div>
@@ -180,7 +180,7 @@ export function CreateLienWaiverDialog({
               onChange={(e) => setThroughDate(e.target.value)}
               required
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               Date through which work/materials are covered
             </p>
           </div>
@@ -222,7 +222,7 @@ export function CreateLienWaiverDialog({
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               When waiver should be returned
             </p>
           </div>
@@ -243,7 +243,7 @@ export function CreateLienWaiverDialog({
           {templates && templates.length > 0 && (
             <div className="p-3 bg-blue-50 rounded-lg text-sm">
               <p className="font-medium text-blue-800">Template Available</p>
-              <p className="text-blue-600">
+              <p className="text-primary">
                 Using: {templates[0].name}
                 {templates[0].statute_reference && ` (${templates[0].statute_reference})`}
               </p>

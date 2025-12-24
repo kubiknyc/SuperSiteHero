@@ -288,7 +288,7 @@ function TourNavigation({ nodes, currentNodeId, onNavigate }: TourNavigationProp
       <Button
         variant="ghost"
         size="icon"
-        className="text-white hover:bg-white/20 h-9 w-9"
+        className="text-white hover:bg-card/20 h-9 w-9"
         onClick={handlePrevious}
         disabled={currentIndex <= 0}
       >
@@ -302,7 +302,7 @@ function TourNavigation({ nodes, currentNodeId, onNavigate }: TourNavigationProp
       <Button
         variant="ghost"
         size="icon"
-        className="text-white hover:bg-white/20 h-9 w-9"
+        className="text-white hover:bg-card/20 h-9 w-9"
         onClick={handleNext}
         disabled={currentIndex >= nodes.length - 1}
       >
@@ -419,7 +419,7 @@ function VRControls({
           onClick={isVRActive ? onEndVR : onStartVR}
           className={cn(
             'bg-black/50 hover:bg-black/70 text-white',
-            isVRActive && 'bg-blue-600/80 hover:bg-blue-700/80'
+            isVRActive && 'bg-primary/80 hover:bg-primary-hover/80'
           )}
         >
           <Glasses className="h-4 w-4 mr-2" />
@@ -599,13 +599,13 @@ export function VRWalkthrough({
     return (
       <div
         className={cn(
-          'relative w-full h-full min-h-[400px] bg-gray-900 flex flex-col items-center justify-center text-white rounded-lg',
+          'relative w-full h-full min-h-[400px] bg-background flex flex-col items-center justify-center text-white rounded-lg',
           className
         )}
       >
-        <Eye className="h-16 w-16 mb-4 text-gray-600" />
+        <Eye className="h-16 w-16 mb-4 text-secondary" />
         <p className="text-lg font-medium">No Content</p>
-        <p className="text-sm text-gray-400 mt-1">
+        <p className="text-sm text-disabled mt-1">
           Provide a tour, 360 photo, or 3D model to start
         </p>
       </div>
@@ -682,13 +682,13 @@ export function VRWalkthrough({
       {/* Current location info */}
       {currentNode && (
         <div className="absolute top-4 left-4 bg-black/60 rounded-lg p-3 backdrop-blur-sm text-white max-w-xs">
-          <h3 className="font-medium text-sm">{currentNode.photo.name}</h3>
+          <h3 className="font-medium text-sm" className="heading-subsection">{currentNode.photo.name}</h3>
           {currentNode.photo.tags && (
             <div className="flex flex-wrap gap-1 mt-1">
               {currentNode.photo.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="px-2 py-0.5 bg-white/20 rounded text-xs"
+                  className="px-2 py-0.5 bg-card/20 rounded text-xs"
                 >
                   {tag}
                 </span>

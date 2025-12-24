@@ -134,7 +134,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
                 <div
                   key={version.id}
                   className={`border rounded-lg p-4 ${
-                    version.is_latest_version ? 'bg-blue-50 border-blue-200' : 'bg-white'
+                    version.is_latest_version ? 'bg-blue-50 border-blue-200' : 'bg-card'
                   } ${selectedVersions.includes(version.id) ? 'ring-2 ring-blue-500' : ''}`}
                 >
                   <div className="flex items-start justify-between">
@@ -144,13 +144,13 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
                           type="checkbox"
                           checked={selectedVersions.includes(version.id)}
                           onChange={() => handleVersionSelect(version.id)}
-                          className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                          className="w-4 h-4 text-primary rounded focus:ring-blue-500"
                           aria-label={`Select version ${version.version}`}
                         />
                       )}
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <FileText className="h-4 w-4 text-gray-500" />
+                          <FileText className="h-4 w-4 text-muted" />
                           <span className="font-medium">{version.name}</span>
                         {version.version && (
                           <Badge variant="outline">v{version.version}</Badge>
@@ -163,7 +163,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
                         )}
                       </div>
 
-                      <div className="text-sm text-gray-600 space-y-1">
+                      <div className="text-sm text-secondary space-y-1">
                         {version.description && (
                           <p className="text-sm">{version.description}</p>
                         )}
@@ -219,7 +219,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               <History className="h-12 w-12 mx-auto mb-2 opacity-50" />
               <p>No version history available</p>
             </div>
@@ -229,8 +229,8 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
             <div className="pt-4 border-t">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h3 className="text-sm font-medium">Compare Versions</h3>
-                  <p className="text-xs text-gray-600 mt-1">
+                  <h3 className="text-sm font-medium" className="heading-subsection">Compare Versions</h3>
+                  <p className="text-xs text-secondary mt-1">
                     Select 2 versions using checkboxes to compare ({selectedVersions.length}/2 selected)
                   </p>
                 </div>

@@ -143,15 +143,15 @@ export function HazardEditor({ hazards, onChange, disabled }: HazardEditorProps)
     const color = getRiskLevelColor(level);
     switch (color) {
       case 'green':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-success-light text-green-800 border-green-200';
       case 'yellow':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-warning-light text-yellow-800 border-yellow-200';
       case 'orange':
         return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'red':
-        return 'bg-red-100 text-red-800 border-red-200';
+        return 'bg-error-light text-red-800 border-red-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-muted text-foreground border-border';
     }
   };
 
@@ -159,8 +159,8 @@ export function HazardEditor({ hazards, onChange, disabled }: HazardEditorProps)
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-yellow-500" />
-          <h3 className="text-lg font-medium">Hazards & Controls</h3>
+          <AlertTriangle className="h-5 w-5 text-warning" />
+          <h3 className="text-lg font-medium" className="heading-subsection">Hazards & Controls</h3>
           <Badge variant="outline">{hazards.length} hazards</Badge>
         </div>
         <Button
@@ -402,7 +402,7 @@ function HazardCard({
                               level.color === 'green'
                                 ? 'bg-green-500'
                                 : level.color === 'yellow'
-                                ? 'bg-yellow-500'
+                                ? 'bg-warning'
                                 : level.color === 'orange'
                                 ? 'bg-orange-500'
                                 : 'bg-red-500'

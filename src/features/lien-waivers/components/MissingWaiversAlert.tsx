@@ -92,7 +92,7 @@ export function MissingWaiversAlertBanner({
       </AlertTitle>
       <AlertDescription className="flex items-center gap-4">
         {summary.total_overdue > 0 && (
-          <span className="flex items-center gap-1 text-red-600">
+          <span className="flex items-center gap-1 text-error">
             <Clock className="h-3 w-3" />
             {summary.total_overdue} overdue
           </span>
@@ -180,11 +180,11 @@ export function MissingWaiversAlert({
         {/* Summary Stats */}
         <div className="grid grid-cols-3 gap-3 p-3 bg-muted/50 rounded-lg">
           <div className="text-center">
-            <div className="text-2xl font-bold text-red-600">{summary.total_overdue}</div>
+            <div className="text-2xl font-bold text-error">{summary.total_overdue}</div>
             <div className="text-xs text-muted-foreground">Overdue</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-yellow-600">{summary.total_pending}</div>
+            <div className="text-2xl font-bold text-warning">{summary.total_pending}</div>
             <div className="text-xs text-muted-foreground">Pending</div>
           </div>
           <div className="text-center">
@@ -201,7 +201,7 @@ export function MissingWaiversAlert({
                 key={waiver.id}
                 className={cn(
                   'p-3 hover:bg-muted/50 cursor-pointer transition-colors',
-                  waiver.days_overdue > 0 && 'bg-red-50 hover:bg-red-100'
+                  waiver.days_overdue > 0 && 'bg-error-light hover:bg-error-light'
                 )}
                 onClick={() => onViewWaiver?.(waiver)}
               >
@@ -210,13 +210,13 @@ export function MissingWaiversAlert({
                     <div
                       className={cn(
                         'p-2 rounded-lg',
-                        waiver.days_overdue > 0 ? 'bg-red-100' : 'bg-yellow-100'
+                        waiver.days_overdue > 0 ? 'bg-error-light' : 'bg-warning-light'
                       )}
                     >
                       <FileText
                         className={cn(
                           'h-4 w-4',
-                          waiver.days_overdue > 0 ? 'text-red-600' : 'text-yellow-600'
+                          waiver.days_overdue > 0 ? 'text-error' : 'text-warning'
                         )}
                       />
                     </div>

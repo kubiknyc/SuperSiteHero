@@ -44,11 +44,11 @@ interface LookAheadActivity {
 
 function getStatusBadgeColor(status: string): string {
   const colors: Record<string, string> = {
-    not_started: 'bg-gray-100 text-gray-800',
-    in_progress: 'bg-blue-100 text-blue-800',
-    completed: 'bg-green-100 text-green-800',
-    on_hold: 'bg-yellow-100 text-yellow-800',
-    cancelled: 'bg-red-100 text-red-800',
+    not_started: 'bg-muted text-foreground',
+    in_progress: 'bg-info-light text-blue-800',
+    completed: 'bg-success-light text-green-800',
+    on_hold: 'bg-warning-light text-yellow-800',
+    cancelled: 'bg-error-light text-red-800',
   }
   return colors[status] || colors.not_started
 }
@@ -181,7 +181,7 @@ export function LookAheadPrintView({
       {/* Controls (hidden when printing) */}
       <div className="no-print mb-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">4-Week Look-Ahead Schedule</h2>
+          <h2 className="text-2xl font-bold" className="heading-section">4-Week Look-Ahead Schedule</h2>
           {onClose && (
             <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="h-4 w-4" />
@@ -208,7 +208,7 @@ export function LookAheadPrintView({
                   type="date"
                   value={endDate}
                   disabled
-                  className="bg-gray-50"
+                  className="bg-surface"
                 />
               </div>
             </div>
@@ -243,13 +243,13 @@ export function LookAheadPrintView({
       <div className="print-content">
         {/* Header (visible in print) */}
         <div className="print-only mb-8">
-          <h1 className="text-3xl font-bold">{projectName}</h1>
-          <h2 className="text-xl text-gray-600">4-Week Look-Ahead Schedule</h2>
-          <p className="mt-2 text-sm text-gray-500">
+          <h1 className="text-3xl font-bold" className="heading-page">{projectName}</h1>
+          <h2 className="text-xl text-secondary" className="heading-section">4-Week Look-Ahead Schedule</h2>
+          <p className="mt-2 text-sm text-muted">
             {format(parseISO(startDate), 'MMMM d, yyyy')} -{' '}
             {format(parseISO(endDate), 'MMMM d, yyyy')}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             Printed: {format(new Date(), 'MMMM d, yyyy h:mm a')}
           </p>
         </div>
@@ -258,8 +258,8 @@ export function LookAheadPrintView({
         {filteredActivities.length === 0 ? (
           <Card>
             <CardContent className="py-12">
-              <div className="text-center text-gray-500">
-                <Calendar className="mx-auto mb-4 h-12 w-12 text-gray-400" />
+              <div className="text-center text-muted">
+                <Calendar className="mx-auto mb-4 h-12 w-12 text-disabled" />
                 <p className="text-lg font-medium">No activities scheduled</p>
                 <p className="text-sm">
                   No activities found in the selected 4-week period.
@@ -271,7 +271,7 @@ export function LookAheadPrintView({
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b-2 border-gray-300 bg-gray-50">
+                <tr className="border-b-2 border-input bg-surface">
                   <th className="px-4 py-3 text-left font-semibold">Activity Name</th>
                   <th className="px-4 py-3 text-left font-semibold">Start Date</th>
                   <th className="px-4 py-3 text-left font-semibold">End Date</th>
@@ -286,7 +286,7 @@ export function LookAheadPrintView({
                   <tr
                     key={activity.id}
                     className={`border-b ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-gray-50'
+                      index % 2 === 0 ? 'bg-card' : 'bg-surface'
                     }`}
                   >
                     <td className="px-4 py-3 font-medium">{activity.name}</td>
@@ -307,7 +307,7 @@ export function LookAheadPrintView({
                     <td className="px-4 py-3 text-center">
                       {activity.percentComplete}%
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600">
+                    <td className="px-4 py-3 text-sm text-secondary">
                       {activity.assignedTo || '—'}
                     </td>
                   </tr>
@@ -319,11 +319,11 @@ export function LookAheadPrintView({
 
         {/* Summary (visible in print) */}
         {filteredActivities.length > 0 && (
-          <div className="mt-8 border-t-2 border-gray-300 pt-4">
+          <div className="mt-8 border-t-2 border-input pt-4">
             <p className="text-sm font-semibold">
               Total Activities: {filteredActivities.length}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               {projectName} • {format(parseISO(startDate), 'MMM d')} -{' '}
               {format(parseISO(endDate), 'MMM d, yyyy')}
             </p>

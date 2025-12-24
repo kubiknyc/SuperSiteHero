@@ -118,41 +118,41 @@ export function WorkflowBuilder({
       {/* Basic Info */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Workflow Name <span className="text-red-500">*</span>
+          <label className="block text-sm font-medium text-secondary mb-1">
+            Workflow Name <span className="text-error">*</span>
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g., Document Review Process"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-secondary mb-1">
             Description
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional description of this workflow..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             rows={2}
             disabled={isLoading}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Applies To <span className="text-red-500">*</span>
+          <label className="block text-sm font-medium text-secondary mb-1">
+            Applies To <span className="text-error">*</span>
           </label>
           <select
             value={workflowType}
             onChange={(e) => setWorkflowType(e.target.value as WorkflowEntityType)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             disabled={isLoading || !!initialData}
           >
             {Object.entries(WORKFLOW_ENTITY_CONFIG).map(([key, config]) => (
@@ -167,7 +167,7 @@ export function WorkflowBuilder({
       {/* Steps */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-gray-700">Approval Steps</h3>
+          <h3 className="text-sm font-medium text-secondary heading-subsection">Approval Steps</h3>
           <Button
             type="button"
             variant="outline"
@@ -239,12 +239,12 @@ function StepEditor({
     <div
       className={cn(
         'border rounded-lg p-4',
-        hasError ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-white'
+        hasError ? 'border-red-300 bg-error-light' : 'border-border bg-card'
       )}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="flex items-center justify-center w-6 h-6 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+          <span className="flex items-center justify-center w-6 h-6 bg-info-light text-primary-hover rounded-full text-xs font-medium">
             {index + 1}
           </span>
           <input
@@ -252,7 +252,7 @@ function StepEditor({
             value={step.name}
             onChange={(e) => onUpdate({ name: e.target.value })}
             placeholder="Step name"
-            className="font-medium text-gray-900 bg-transparent border-0 border-b border-transparent hover:border-gray-300 focus:border-blue-500 focus:outline-none px-1"
+            className="font-medium text-foreground bg-transparent border-0 border-b border-transparent hover:border-input focus:border-blue-500 focus:outline-none px-1"
             disabled={disabled}
           />
         </div>
@@ -261,7 +261,7 @@ function StepEditor({
             type="button"
             onClick={onMoveUp}
             disabled={disabled || index === 0}
-            className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+            className="p-1 text-disabled hover:text-secondary disabled:opacity-30"
             title="Move up"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -272,7 +272,7 @@ function StepEditor({
             type="button"
             onClick={onMoveDown}
             disabled={disabled || index === totalSteps - 1}
-            className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+            className="p-1 text-disabled hover:text-secondary disabled:opacity-30"
             title="Move down"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -283,7 +283,7 @@ function StepEditor({
             type="button"
             onClick={onRemove}
             disabled={disabled || totalSteps <= 1}
-            className="p-1 text-gray-400 hover:text-red-600 disabled:opacity-30"
+            className="p-1 text-disabled hover:text-error disabled:opacity-30"
             title="Remove step"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -300,8 +300,8 @@ function StepEditor({
 
       {/* Approvers */}
       <div className="mb-3">
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Approvers <span className="text-red-500">*</span>
+        <label className="block text-xs font-medium text-secondary mb-1">
+          Approvers <span className="text-error">*</span>
         </label>
         <select
           multiple
@@ -312,7 +312,7 @@ function StepEditor({
           }}
           className={cn(
             'w-full px-2 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-            hasError ? 'border-red-300' : 'border-gray-300'
+            hasError ? 'border-red-300' : 'border-input'
           )}
           size={Math.min(3, availableUsers.length)}
           disabled={disabled}
@@ -324,9 +324,9 @@ function StepEditor({
           ))}
         </select>
         {hasError && (
-          <p className="text-xs text-red-600 mt-1">Select at least one approver</p>
+          <p className="text-xs text-error mt-1">Select at least one approver</p>
         )}
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-muted mt-1">
           Hold Ctrl/Cmd to select multiple approvers
         </p>
       </div>
@@ -338,14 +338,14 @@ function StepEditor({
             type="checkbox"
             checked={step.allow_delegation}
             onChange={(e) => onUpdate({ allow_delegation: e.target.checked })}
-            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            className="rounded border-input text-primary focus:ring-blue-500"
             disabled={disabled}
           />
-          <span className="text-gray-600">Allow delegation</span>
+          <span className="text-secondary">Allow delegation</span>
         </label>
 
         <div className="flex items-center gap-2">
-          <label className="text-gray-600">Auto-approve after</label>
+          <label className="text-secondary">Auto-approve after</label>
           <input
             type="number"
             min="0"
@@ -356,11 +356,11 @@ function StepEditor({
                 auto_approve_after_days: e.target.value ? parseInt(e.target.value) : null,
               })
             }
-            className="w-16 px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-16 px-2 py-1 border border-input rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="days"
             disabled={disabled}
           />
-          <span className="text-gray-600">days</span>
+          <span className="text-secondary">days</span>
         </div>
       </div>
     </div>

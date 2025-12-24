@@ -36,11 +36,11 @@ interface ExecutionCardProps {
 }
 
 const STATUS_COLORS = {
-  draft: 'bg-gray-100 text-gray-800',
-  in_progress: 'bg-blue-100 text-blue-800',
-  submitted: 'bg-green-100 text-green-800',
+  draft: 'bg-muted text-foreground',
+  in_progress: 'bg-info-light text-blue-800',
+  submitted: 'bg-success-light text-green-800',
   approved: 'bg-emerald-100 text-emerald-800',
-  rejected: 'bg-red-100 text-red-800',
+  rejected: 'bg-error-light text-red-800',
 }
 
 const STATUS_LABELS = {
@@ -123,7 +123,7 @@ export function ExecutionCard({
                   {execution.name}
                 </h3>
                 {execution.description && (
-                  <p className="text-sm text-gray-600 line-clamp-1">{execution.description}</p>
+                  <p className="text-sm text-secondary line-clamp-1">{execution.description}</p>
                 )}
                 <div className="flex items-center gap-3 mt-2 flex-wrap">
                   <Badge className={`text-xs ${STATUS_COLORS[execution.status]}`}>
@@ -135,18 +135,18 @@ export function ExecutionCard({
                     </Badge>
                   )}
                   {execution.inspector_user_id && (
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                    <span className="text-xs text-muted flex items-center gap-1">
                       <User className="w-3 h-3" />
                       Inspector
                     </span>
                   )}
                   {execution.location && (
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                    <span className="text-xs text-muted flex items-center gap-1">
                       <MapPin className="w-3 h-3" />
                       {execution.location}
                     </span>
                   )}
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-disabled">
                     {execution.completed_at
                       ? `Completed ${formatDistanceToNow(new Date(execution.completed_at), { addSuffix: true })}`
                       : `Created ${formatDistanceToNow(new Date(execution.created_at), { addSuffix: true })}`
@@ -157,14 +157,14 @@ export function ExecutionCard({
                 {/* Progress Bar */}
                 {!isCompleted && (
                   <div className="mt-2">
-                    <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+                    <div className="flex items-center justify-between text-xs text-secondary mb-1">
                       <span>Progress</span>
                       <span>{progressPercentage}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-muted rounded-full h-2">
                       <div
                         className={`h-2 rounded-full transition-all ${
-                          progressPercentage === 100 ? 'bg-green-600' : 'bg-primary dark:bg-primary'
+                          progressPercentage === 100 ? 'bg-success' : 'bg-primary dark:bg-primary'
                         }`}
                         style={{ width: `${progressPercentage}%` }}
                       />
@@ -183,11 +183,11 @@ export function ExecutionCard({
                   <MoreVertical className="w-4 h-4" />
                 </Button>
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                  <div className="absolute right-0 mt-2 w-48 bg-card rounded-md shadow-lg z-10 border border-border">
                     <div className="py-1">
                       <button
                         onClick={() => { handleView(); setShowMenu(false) }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                       >
                         <Eye className="w-4 h-4 mr-2" />
                         View Details
@@ -195,17 +195,17 @@ export function ExecutionCard({
                       {canContinue && (
                         <button
                           onClick={() => { handleContinue(); setShowMenu(false) }}
-                          className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                         >
                           <PlayCircle className="w-4 h-4 mr-2" />
                           Continue
                         </button>
                       )}
-                      <div className="border-t border-gray-200 my-1" />
+                      <div className="border-t border-border my-1" />
                       <button
                         onClick={handleDelete}
                         className={`flex items-center w-full px-4 py-2 text-sm ${
-                          showDeleteConfirm ? 'bg-red-50 text-red-600' : 'text-gray-700 hover:bg-gray-100'
+                          showDeleteConfirm ? 'bg-error-light text-error' : 'text-secondary hover:bg-muted'
                         }`}
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
@@ -252,11 +252,11 @@ export function ExecutionCard({
               <MoreVertical className="w-4 h-4" />
             </Button>
             {showMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+              <div className="absolute right-0 mt-2 w-48 bg-card rounded-md shadow-lg z-10 border border-border">
                 <div className="py-1">
                   <button
                     onClick={() => { handleView(); setShowMenu(false) }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                   >
                     <Eye className="w-4 h-4 mr-2" />
                     View Details
@@ -264,17 +264,17 @@ export function ExecutionCard({
                   {canContinue && (
                     <button
                       onClick={() => { handleContinue(); setShowMenu(false) }}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                     >
                       <PlayCircle className="w-4 h-4 mr-2" />
                       Continue
                     </button>
                   )}
-                  <div className="border-t border-gray-200 my-1" />
+                  <div className="border-t border-border my-1" />
                   <button
                     onClick={handleDelete}
                     className={`flex items-center w-full px-4 py-2 text-sm ${
-                      showDeleteConfirm ? 'bg-red-50 text-red-600' : 'text-gray-700 hover:bg-gray-100'
+                      showDeleteConfirm ? 'bg-error-light text-error' : 'text-secondary hover:bg-muted'
                     }`}
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
@@ -305,7 +305,7 @@ export function ExecutionCard({
           )}
 
           {/* Location & Inspector */}
-          <div className="flex flex-col gap-1 text-sm text-gray-600">
+          <div className="flex flex-col gap-1 text-sm text-secondary">
             {execution.location && (
               <div className="flex items-center gap-1">
                 <MapPin className="w-4 h-4" />
@@ -323,14 +323,14 @@ export function ExecutionCard({
           {/* Progress Bar (only for in-progress) */}
           {!isCompleted && (
             <div className="mt-3">
-              <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
+              <div className="flex items-center justify-between text-xs text-secondary mb-1">
                 <span>Progress</span>
                 <span>{progressPercentage}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-muted rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    progressPercentage === 100 ? 'bg-green-600' : 'bg-primary dark:bg-primary'
+                    progressPercentage === 100 ? 'bg-success' : 'bg-primary dark:bg-primary'
                   }`}
                   style={{ width: `${progressPercentage}%` }}
                 />
@@ -340,7 +340,7 @@ export function ExecutionCard({
         </div>
       </CardContent>
 
-      <CardFooter className="text-xs text-gray-400 flex justify-between" onClick={handleView}>
+      <CardFooter className="text-xs text-disabled flex justify-between" onClick={handleView}>
         <span>
           {execution.completed_at
             ? `Completed ${formatDistanceToNow(new Date(execution.completed_at), { addSuffix: true })}`

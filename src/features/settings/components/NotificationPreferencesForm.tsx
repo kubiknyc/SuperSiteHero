@@ -226,7 +226,7 @@ export function NotificationPreferencesForm() {
     switch (permissionState) {
       case 'granted':
         return (
-          <Badge variant="default" className="bg-green-100 text-green-800">
+          <Badge variant="default" className="bg-success-light text-green-800">
             <CheckCircle className="h-3 w-3 mr-1" />
             Enabled
           </Badge>
@@ -414,7 +414,7 @@ export function NotificationPreferencesForm() {
 
                   {/* Notification Type Toggles */}
                   <div className="space-y-4">
-                    <h4 className="text-sm font-medium">Notification Types</h4>
+                    <h4 className="text-sm font-medium" className="heading-card">Notification Types</h4>
                     {(Object.keys(PUSH_TYPE_LABELS) as Array<keyof typeof PUSH_TYPE_LABELS>).map(
                       (key) => (
                         <div key={key} className="flex items-center justify-between py-1">
@@ -443,7 +443,7 @@ export function NotificationPreferencesForm() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Volume2 className="h-4 w-4" />
-                      <h4 className="text-sm font-medium">Sound</h4>
+                      <h4 className="text-sm font-medium" className="heading-card">Sound</h4>
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <div className="space-y-0.5">
@@ -483,7 +483,7 @@ export function NotificationPreferencesForm() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Vibrate className="h-4 w-4" />
-                      <h4 className="text-sm font-medium">Vibration</h4>
+                      <h4 className="text-sm font-medium" className="heading-card">Vibration</h4>
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <div className="space-y-0.5">
@@ -529,7 +529,7 @@ export function NotificationPreferencesForm() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Moon className="h-4 w-4" />
-                      <h4 className="text-sm font-medium">Push Quiet Hours</h4>
+                      <h4 className="text-sm font-medium" className="heading-card">Push Quiet Hours</h4>
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <div className="space-y-0.5">

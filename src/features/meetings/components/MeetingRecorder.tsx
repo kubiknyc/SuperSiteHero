@@ -135,7 +135,7 @@ export function MeetingRecorder({
       case 'recording':
         return 'bg-red-500';
       case 'paused':
-        return 'bg-yellow-500';
+        return 'bg-warning';
       case 'stopped':
         return 'bg-gray-500';
       default:
@@ -158,7 +158,7 @@ export function MeetingRecorder({
         <CardContent>
           {state === 'idle' ? (
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-secondary">
                 Record this meeting with audio, video, or screen capture. Recordings can be
                 transcribed automatically.
               </p>
@@ -199,7 +199,7 @@ export function MeetingRecorder({
                   {state === 'stopped' && 'Processing...'}
                   {state === 'requesting' && 'Requesting access...'}
                 </span>
-                <span className="text-gray-600 font-mono">{formatDuration(stats.duration)}</span>
+                <span className="text-secondary font-mono">{formatDuration(stats.duration)}</span>
               </div>
 
               <Button variant="outline" size="sm" onClick={() => setShowDialog(true)}>
@@ -223,7 +223,7 @@ export function MeetingRecorder({
           <div className="space-y-4">
             {/* Error Display */}
             {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+              <div className="flex items-center gap-2 p-3 bg-error-light border border-red-200 rounded-lg text-error-dark">
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
                 <span className="text-sm">{error}</span>
               </div>
@@ -251,7 +251,7 @@ export function MeetingRecorder({
 
             {/* Audio-only visualization */}
             {selectedType === 'audio' && isRecordingActive && (
-              <div className="bg-gray-900 rounded-lg p-8 flex items-center justify-center">
+              <div className="bg-background rounded-lg p-8 flex items-center justify-center">
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <div
@@ -270,11 +270,11 @@ export function MeetingRecorder({
             )}
 
             {/* Stats */}
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center justify-between p-4 bg-surface rounded-lg">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <div className={`w-3 h-3 rounded-full ${getStateColor()}`} />
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-secondary">
                     {state === 'recording' && 'Recording'}
                     {state === 'paused' && 'Paused'}
                     {state === 'stopped' && 'Stopped'}
@@ -304,7 +304,7 @@ export function MeetingRecorder({
             {/* Controls */}
             <div className="flex items-center justify-center gap-3">
               {state === 'requesting' && (
-                <div className="flex items-center gap-2 text-gray-600">
+                <div className="flex items-center gap-2 text-secondary">
                   <Loader2 className="h-5 w-5 animate-spin" />
                   <span>Requesting device access...</span>
                 </div>
@@ -371,11 +371,11 @@ export function MeetingRecorder({
           <DialogHeader>
             <DialogTitle>Stop Recording?</DialogTitle>
           </DialogHeader>
-          <p className="text-gray-600">
+          <p className="text-secondary">
             Are you sure you want to stop the recording? The recording will be uploaded and can be
             transcribed.
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             Duration: <span className="font-mono">{formatDuration(stats.duration)}</span>
           </p>
           <DialogFooter>

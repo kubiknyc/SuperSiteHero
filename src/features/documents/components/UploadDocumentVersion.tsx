@@ -112,7 +112,7 @@ export function UploadDocumentVersion({
             <Label className="text-sm font-medium mb-1 block">
               Current Document
             </Label>
-            <p className="text-sm text-gray-600">{documentName}</p>
+            <p className="text-sm text-secondary">{documentName}</p>
           </div>
 
           <div>
@@ -126,7 +126,7 @@ export function UploadDocumentVersion({
               disabled={uploading}
             />
             {file && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-muted mt-1">
                 Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
               </p>
             )}

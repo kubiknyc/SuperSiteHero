@@ -212,7 +212,7 @@ export function QRCodeGenerator({
         </head>
         <body>
           <div class="container">
-            <h1>${instruction.title}</h1>
+            <h1 className="heading-page">${instruction.title}</h1>
             <div class="ref">${instruction.reference_number || ''}</div>
             <div class="qr-code">${svgData}</div>
             <p class="instruction">Scan this QR code to acknowledge receipt of this site instruction</p>
@@ -269,7 +269,7 @@ export function QRCodeGenerator({
           {acknowledgmentUrl && !isExpired ? (
             <Card>
               <CardContent className="flex flex-col items-center py-6">
-                <div ref={qrRef} className="bg-white p-4 rounded-lg">
+                <div ref={qrRef} className="bg-card p-4 rounded-lg">
                   <QRCodeSVG
                     value={acknowledgmentUrl}
                     size={200}
@@ -303,7 +303,7 @@ export function QRCodeGenerator({
               <CardContent className="flex flex-col items-center py-8">
                 {isExpired ? (
                   <>
-                    <Clock className="h-12 w-12 text-amber-500 mb-4" />
+                    <Clock className="h-12 w-12 text-warning mb-4" />
                     <p className="text-center text-muted-foreground mb-4">
                       The QR code has expired. Generate a new one to continue accepting
                       acknowledgments.

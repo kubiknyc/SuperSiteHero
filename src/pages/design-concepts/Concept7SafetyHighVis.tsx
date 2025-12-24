@@ -19,12 +19,12 @@ export default function Concept7SafetyHighVis() {
             <AlertTriangle className="w-10 h-10 text-black transform -rotate-45" />
           </div>
           <div>
-            <h1 className="text-4xl text-yellow-400 tracking-wider">JOBSIGHT</h1>
+            <h1 className="text-4xl text-yellow-400 tracking-wider" className="heading-page">JOBSIGHT</h1>
             <p className="text-yellow-400/60 text-sm tracking-widest">CONCEPT 7: SAFETY HIGH-VIS</p>
           </div>
         </div>
 
-        <h2 className="text-8xl text-yellow-400 mb-8 leading-none tracking-tight">
+        <h2 className="text-8xl text-yellow-400 mb-8 leading-none tracking-tight" className="heading-section">
           SAFETY<br/>FIRST
         </h2>
         <p className="text-2xl text-white mb-16 max-w-2xl leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -51,7 +51,7 @@ export default function Concept7SafetyHighVis() {
             <button className="px-12 py-6 bg-yellow-400 text-black text-xl font-bold hover:bg-yellow-300 transition transform hover:scale-105">
               START PROJECT
             </button>
-            <button className="px-12 py-6 bg-red-600 text-white text-xl font-bold hover:bg-red-700 transition transform hover:scale-105">
+            <button className="px-12 py-6 bg-error text-white text-xl font-bold hover:bg-red-700 transition transform hover:scale-105">
               ALERT
             </button>
           </div>
@@ -68,7 +68,7 @@ export default function Concept7SafetyHighVis() {
             <div className="relative">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="text-4xl font-bold mb-2">DOWNTOWN TOWER</h3>
+                  <h3 className="text-4xl font-bold mb-2" className="heading-subsection">DOWNTOWN TOWER</h3>
                   <p className="text-xl">HIGH-PRIORITY PROJECT</p>
                 </div>
                 <div className="bg-black text-yellow-400 px-6 py-3 text-3xl font-bold">
@@ -76,7 +76,7 @@ export default function Concept7SafetyHighVis() {
                 </div>
               </div>
               <div className="h-10 bg-black relative overflow-hidden">
-                <div className="h-full bg-red-600 absolute" style={{ width: '68%' }} />
+                <div className="h-full bg-error absolute" style={{ width: '68%' }} />
               </div>
             </div>
           </div>

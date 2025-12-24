@@ -46,13 +46,13 @@ const CATEGORY_ICONS: Record<TemplateCategory, React.ComponentType<{ className?:
 
 // Category colors
 const CATEGORY_COLORS: Record<TemplateCategory, { bg: string; text: string }> = {
-  commercial: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  residential: { bg: 'bg-green-100', text: 'text-green-700' },
+  commercial: { bg: 'bg-info-light', text: 'text-primary-hover' },
+  residential: { bg: 'bg-success-light', text: 'text-success-dark' },
   industrial: { bg: 'bg-orange-100', text: 'text-orange-700' },
-  renovation: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
+  renovation: { bg: 'bg-warning-light', text: 'text-yellow-700' },
   civil: { bg: 'bg-purple-100', text: 'text-purple-700' },
   institutional: { bg: 'bg-cyan-100', text: 'text-cyan-700' },
-  custom: { bg: 'bg-gray-100', text: 'text-gray-700' },
+  custom: { bg: 'bg-muted', text: 'text-secondary' },
 }
 
 interface TemplateCardProps {
@@ -91,9 +91,9 @@ export function TemplateCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1 min-w-0">
-                <h3 className="font-semibold text-gray-900 truncate">{template.name}</h3>
+                <h3 className="font-semibold text-foreground truncate" className="heading-subsection">{template.name}</h3>
                 {template.description && (
-                  <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                  <p className="text-sm text-muted mt-1 line-clamp-2">
                     {template.description}
                   </p>
                 )}
@@ -130,7 +130,7 @@ export function TemplateCard({
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
                         onClick={() => onDelete(template)}
-                        className="text-red-600 focus:text-red-600"
+                        className="text-error focus:text-error"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
@@ -153,12 +153,12 @@ export function TemplateCard({
                 </Badge>
               )}
 
-              <div className="flex items-center gap-1 text-xs text-gray-500">
+              <div className="flex items-center gap-1 text-xs text-muted">
                 <Hash className="h-3 w-3" />
                 <span>Used {template.usage_count} times</span>
               </div>
 
-              <div className="flex items-center gap-1 text-xs text-gray-500">
+              <div className="flex items-center gap-1 text-xs text-muted">
                 <Calendar className="h-3 w-3" />
                 <span>{lastUsedText}</span>
               </div>

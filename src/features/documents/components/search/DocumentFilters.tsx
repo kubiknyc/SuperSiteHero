@@ -97,16 +97,16 @@ export function DocumentFilters({
           className="w-full flex items-center justify-between mb-4"
         >
           <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-900">Filters</span>
+            <span className="font-medium text-foreground">Filters</span>
             {activeFilterCount > 0 && (
-              <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+              <span className="px-2 py-1 bg-info-light text-blue-800 text-xs font-semibold rounded-full">
                 {activeFilterCount}
               </span>
             )}
           </div>
           <ChevronDown
             className={cn(
-              'w-4 h-4 text-gray-600 transition-transform',
+              'w-4 h-4 text-secondary transition-transform',
               showPanel && 'rotate-180'
             )}
           />
@@ -115,11 +115,11 @@ export function DocumentFilters({
         {activeFilterCount > 0 && (
           <div className="flex flex-wrap gap-2 mb-4">
             {filters.documentType && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-secondary text-sm rounded">
                 Type: {DOCUMENT_TYPES.find(t => t.value === filters.documentType)?.label}
                 <button
                   onClick={() => handleRemoveFilter('documentType')}
-                  className="hover:text-gray-900"
+                  className="hover:text-foreground"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -127,11 +127,11 @@ export function DocumentFilters({
             )}
 
             {filters.discipline && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-secondary text-sm rounded">
                 Discipline: {filters.discipline}
                 <button
                   onClick={() => handleRemoveFilter('discipline')}
-                  className="hover:text-gray-900"
+                  className="hover:text-foreground"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -139,11 +139,11 @@ export function DocumentFilters({
             )}
 
             {filters.status && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-secondary text-sm rounded">
                 Status: {DOCUMENT_STATUSES.find(s => s.value === filters.status)?.label}
                 <button
                   onClick={() => handleRemoveFilter('status')}
-                  className="hover:text-gray-900"
+                  className="hover:text-foreground"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -151,11 +151,11 @@ export function DocumentFilters({
             )}
 
             {filters.dateFrom && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-secondary text-sm rounded">
                 From: {filters.dateFrom}
                 <button
                   onClick={() => handleRemoveFilter('dateFrom')}
-                  className="hover:text-gray-900"
+                  className="hover:text-foreground"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -163,11 +163,11 @@ export function DocumentFilters({
             )}
 
             {filters.dateTo && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-secondary text-sm rounded">
                 To: {filters.dateTo}
                 <button
                   onClick={() => handleRemoveFilter('dateTo')}
-                  className="hover:text-gray-900"
+                  className="hover:text-foreground"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -175,11 +175,11 @@ export function DocumentFilters({
             )}
 
             {filters.hasPinned === true && (
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-700 text-sm rounded">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-muted text-secondary text-sm rounded">
                 Pinned Only
                 <button
                   onClick={() => handleRemoveFilter('hasPinned')}
-                  className="hover:text-gray-900"
+                  className="hover:text-foreground"
                 >
                   <X className="w-3 h-3" />
                 </button>

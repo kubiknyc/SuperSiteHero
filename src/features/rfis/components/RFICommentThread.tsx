@@ -75,7 +75,7 @@ export function RFICommentThread({
     return parts.map((part, index) => {
       if (part.startsWith('@')) {
         return (
-          <span key={index} className="text-blue-600 font-medium">
+          <span key={index} className="text-primary font-medium">
             {part}
           </span>
         )
@@ -107,7 +107,7 @@ export function RFICommentThread({
         <CardTitle className="flex items-center gap-2">
           <MessageSquare className="h-5 w-5" />
           Activity & Comments
-          <span className="text-sm font-normal text-gray-500">
+          <span className="text-sm font-normal text-muted">
             ({comments.length})
           </span>
         </CardTitle>
@@ -116,13 +116,13 @@ export function RFICommentThread({
         {/* Comments List */}
         {isLoadingComments ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+            <Loader2 className="h-8 w-8 text-disabled animate-spin" />
           </div>
         ) : comments.length === 0 ? (
           <div className="text-center py-8">
             <MessageSquare className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500">No comments yet</p>
-            <p className="text-sm text-gray-400 mt-1">Be the first to comment</p>
+            <p className="text-muted">No comments yet</p>
+            <p className="text-sm text-disabled mt-1">Be the first to comment</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -136,7 +136,7 @@ export function RFICommentThread({
                       'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold',
                       isOwnComment
                         ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700'
+                        : 'bg-muted text-secondary'
                     )}
                     aria-label={`Avatar for ${getDisplayName(comment.created_by || '')}`}
                   >
@@ -149,18 +149,18 @@ export function RFICommentThread({
                       <span
                         className={cn(
                           'font-medium text-sm',
-                          isOwnComment ? 'text-blue-600' : 'text-gray-900'
+                          isOwnComment ? 'text-primary' : 'text-foreground'
                         )}
                       >
                         {getDisplayName(comment.created_by || '')}
                       </span>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted">
                         {comment.created_at ? formatDistanceToNow(new Date(comment.created_at), {
                           addSuffix: true,
                         }) : 'Unknown time'}
                       </span>
                     </div>
-                    <div className="text-sm text-gray-700 break-words">
+                    <div className="text-sm text-secondary break-words">
                       {highlightMentions(comment.comment)}
                     </div>
                   </div>
@@ -182,7 +182,7 @@ export function RFICommentThread({
             aria-label="New comment"
           />
           <div className="flex justify-between items-center">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               Tip: Use @username to notify team members
             </p>
             <Button type="submit" disabled={isAddingComment || !newComment.trim()}>

@@ -147,7 +147,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
         <Card>
           <CardContent className="py-4">
             <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-gray-500">Overall Progress</span>
+              <span className="text-muted">Overall Progress</span>
               <span className="font-medium">
                 {summary.completed_items} of {summary.total_items} completed
               </span>
@@ -167,7 +167,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
               <div className="flex flex-wrap gap-4">
                 <div className="flex-1 min-w-[200px]">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       placeholder="Search action items..."
                       value={searchQuery}
@@ -212,7 +212,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
               <TabsTrigger value="all">
                 All ({allItems?.length || 0})
               </TabsTrigger>
-              <TabsTrigger value="overdue" className="text-red-600">
+              <TabsTrigger value="overdue" className="text-error">
                 Overdue ({overdueItems?.length || 0})
               </TabsTrigger>
               <TabsTrigger value="due-soon" className="text-orange-600">
@@ -227,7 +227,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
               {isLoading ? (
                 <Card>
                   <CardContent className="py-8">
-                    <div className="flex items-center justify-center text-gray-500">
+                    <div className="flex items-center justify-center text-muted">
                       <Loader2 className="h-5 w-5 animate-spin mr-2" />
                       Loading action items...
                     </div>
@@ -236,8 +236,8 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
               ) : displayItems.length === 0 ? (
                 <Card>
                   <CardContent className="py-8">
-                    <div className="text-center text-gray-500">
-                      <CheckCircle className="h-10 w-10 mx-auto mb-3 text-green-500" />
+                    <div className="text-center text-muted">
+                      <CheckCircle className="h-10 w-10 mx-auto mb-3 text-success" />
                       <p className="font-medium">
                         {activeTab === 'all' ? 'No action items found' :
                          activeTab === 'overdue' ? 'No overdue items' :
@@ -275,7 +275,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
             </CardHeader>
             <CardContent>
               {!byAssignee || byAssignee.length === 0 ? (
-                <p className="text-sm text-gray-500">No assignees yet</p>
+                <p className="text-sm text-muted">No assignees yet</p>
               ) : (
                 <div className="space-y-3">
                   {byAssignee.slice(0, 5).map((assignee, idx) => (
@@ -285,7 +285,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
                           {assignee.assignee}
                         </p>
                         {assignee.assigned_company && (
-                          <p className="text-xs text-gray-500 truncate">
+                          <p className="text-xs text-muted truncate">
                             {assignee.assigned_company}
                           </p>
                         )}
@@ -317,16 +317,16 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">In Progress</span>
+                <span className="text-muted">In Progress</span>
                 <span className="font-medium">{summary?.in_progress_items ?? 0}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Chronic Items (3+ carryovers)</span>
-                <span className="font-medium text-red-600">{summary?.chronic_items ?? 0}</span>
+                <span className="text-muted">Chronic Items (3+ carryovers)</span>
+                <span className="font-medium text-error">{summary?.chronic_items ?? 0}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Completed This Week</span>
-                <span className="font-medium text-green-600">
+                <span className="text-muted">Completed This Week</span>
+                <span className="font-medium text-success">
                   {/* Would need separate query */}
                   --
                 </span>
@@ -359,14 +359,14 @@ function SummaryCard({
   highlight?: boolean
 }) {
   const colorClasses = {
-    blue: 'text-blue-600 bg-blue-50',
-    green: 'text-green-600 bg-green-50',
-    red: 'text-red-600 bg-red-50',
+    blue: 'text-primary bg-blue-50',
+    green: 'text-success bg-success-light',
+    red: 'text-error bg-error-light',
     orange: 'text-orange-600 bg-orange-50',
   }
 
   return (
-    <Card className={cn(highlight && 'border-red-300 bg-red-50/50')}>
+    <Card className={cn(highlight && 'border-red-300 bg-error-light/50')}>
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div className={cn('p-2 rounded-lg', colorClasses[color])}>
@@ -375,8 +375,8 @@ function SummaryCard({
         </div>
         <div className="mt-4">
           <p className="text-2xl font-bold">{value}</p>
-          <p className="text-xs text-gray-500">{title}</p>
-          <p className="text-xs text-gray-400 mt-1">{subtitle}</p>
+          <p className="text-xs text-muted">{title}</p>
+          <p className="text-xs text-disabled mt-1">{subtitle}</p>
         </div>
       </CardContent>
     </Card>
@@ -404,7 +404,7 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
 
   return (
     <Card className={cn(
-      item.urgency_status === 'overdue' && 'border-red-200 bg-red-50/30',
+      item.urgency_status === 'overdue' && 'border-red-200 bg-error-light/30',
       item.escalation_level > 0 && 'border-orange-200'
     )}>
       <CardContent className="py-4">
@@ -412,7 +412,7 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
           {/* Status indicator */}
           <div className="mt-1">
             {item.status === 'completed' ? (
-              <CheckCircle className="h-5 w-5 text-green-500" />
+              <CheckCircle className="h-5 w-5 text-success" />
             ) : item.status === 'in_progress' ? (
               <div className="h-5 w-5 rounded-full border-2 border-blue-500 flex items-center justify-center">
                 <div className="h-2.5 w-2.5 rounded-full bg-blue-500" />
@@ -428,11 +428,11 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
               <div>
                 <p className={cn(
                   'font-medium',
-                  item.status === 'completed' && 'line-through text-gray-500'
+                  item.status === 'completed' && 'line-through text-muted'
                 )}>
                   {item.title}
                 </p>
-                <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-muted">
                   {item.meeting_title && (
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
@@ -443,7 +443,7 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
                     <span>• {item.assigned_to}</span>
                   )}
                   {item.task_id && (
-                    <span className="flex items-center gap-1 text-blue-600">
+                    <span className="flex items-center gap-1 text-primary">
                       <Link2 className="h-3 w-3" />
                       Task linked
                     </span>
@@ -491,8 +491,8 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
                   className={cn(
                     'text-xs',
                     item.urgency_status === 'due_today' && 'bg-orange-100 text-orange-800',
-                    item.urgency_status === 'due_soon' && 'bg-yellow-100 text-yellow-800',
-                    item.urgency_status === 'on_track' && 'bg-green-100 text-green-800'
+                    item.urgency_status === 'due_soon' && 'bg-warning-light text-yellow-800',
+                    item.urgency_status === 'on_track' && 'bg-success-light text-green-800'
                   )}
                 >
                   {urgencyConfig.label}
@@ -532,7 +532,7 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
 
               {/* Due date */}
               {item.due_date && (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted">
                   Due: {formatDate(item.due_date)}
                 </span>
               )}

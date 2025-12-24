@@ -106,7 +106,7 @@ export function ContactFormPage() {
     return (
       <AppLayout>
         <div className="p-6 flex items-center justify-center min-h-96">
-          <Loader2 className="h-12 w-12 text-gray-400 animate-spin" />
+          <Loader2 className="h-12 w-12 text-disabled animate-spin" />
         </div>
       </AppLayout>
     )
@@ -117,10 +117,10 @@ export function ContactFormPage() {
       <div className="p-6 max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-foreground" className="heading-page">
             {isEditMode ? 'Edit Contact' : 'Add New Contact'}
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-secondary mt-1">
             {isEditMode ? 'Update contact information' : 'Create a new contact for your project'}
           </p>
         </div>
@@ -316,7 +316,7 @@ export function ContactFormPage() {
                     id="is_primary"
                     checked={formData.is_primary}
                     onChange={(e) => setFormData({ ...formData, is_primary: e.target.checked })}
-                    className="rounded border-gray-300"
+                    className="rounded border-input"
                   />
                   <Label htmlFor="is_primary" className="font-normal cursor-pointer">
                     Primary Contact
@@ -329,7 +329,7 @@ export function ContactFormPage() {
                     id="is_emergency_contact"
                     checked={formData.is_emergency_contact}
                     onChange={(e) => setFormData({ ...formData, is_emergency_contact: e.target.checked })}
-                    className="rounded border-gray-300"
+                    className="rounded border-input"
                   />
                   <Label htmlFor="is_emergency_contact" className="font-normal cursor-pointer">
                     Emergency Contact

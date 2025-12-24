@@ -46,15 +46,15 @@ interface MeetingActionItemExtractorProps {
 }
 
 const PRIORITY_COLORS = {
-  high: 'bg-red-100 text-red-800 border-red-200',
+  high: 'bg-error-light text-red-800 border-red-200',
   medium: 'bg-amber-100 text-amber-800 border-amber-200',
-  low: 'bg-green-100 text-green-800 border-green-200',
+  low: 'bg-success-light text-green-800 border-green-200',
 }
 
 const STATUS_COLORS = {
-  extracted: 'bg-blue-100 text-blue-800',
-  confirmed: 'bg-green-100 text-green-800',
-  rejected: 'bg-gray-100 text-gray-500 line-through',
+  extracted: 'bg-info-light text-blue-800',
+  confirmed: 'bg-success-light text-green-800',
+  rejected: 'bg-muted text-muted line-through',
   completed: 'bg-purple-100 text-purple-800',
 }
 
@@ -184,7 +184,7 @@ export function MeetingActionItemExtractor({
               <Badge variant={pendingItems.length > 0 ? 'default' : 'secondary'}>
                 {pendingItems.length} pending review
               </Badge>
-              <Badge variant="outline" className="text-green-600">
+              <Badge variant="outline" className="text-success">
                 {confirmedItems.length} confirmed
               </Badge>
               <Badge variant="outline" className="text-purple-600">
@@ -226,8 +226,8 @@ export function MeetingActionItemExtractor({
                 </CollapsibleTrigger>
                 <CollapsibleContent className="mt-2 space-y-1">
                   {data.decisions.map((decision, i) => (
-                    <div key={i} className="p-2 bg-green-50 rounded text-sm flex items-start gap-2">
-                      <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
+                    <div key={i} className="p-2 bg-success-light rounded text-sm flex items-start gap-2">
+                      <Check className="w-4 h-4 text-success mt-0.5 shrink-0" />
                       {decision}
                     </div>
                   ))}
@@ -340,7 +340,7 @@ function ActionItemCard({
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+              className="h-7 w-7 p-0 text-success hover:text-success-dark hover:bg-success-light"
               onClick={onConfirm}
             >
               <Check className="w-4 h-4" />
@@ -348,7 +348,7 @@ function ActionItemCard({
             <Button
               size="sm"
               variant="ghost"
-              className="h-7 w-7 p-0 text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="h-7 w-7 p-0 text-error hover:text-error-dark hover:bg-error-light"
               onClick={onReject}
             >
               <X className="w-4 h-4" />

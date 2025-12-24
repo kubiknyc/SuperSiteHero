@@ -116,7 +116,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
       <Card>
         <CardContent className="py-12 text-center">
           <AlertCircle className="h-12 w-12 mx-auto text-destructive mb-4" />
-          <h3 className="text-lg font-medium mb-2">Transmittal Not Found</h3>
+          <h3 className="text-lg font-medium mb-2" className="heading-subsection">Transmittal Not Found</h3>
           <p className="text-muted-foreground mb-4">
             The transmittal you're looking for doesn't exist or you don't have access.
           </p>
@@ -148,15 +148,15 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <h1 className="text-2xl font-bold">{transmittal.transmittal_number}</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">{transmittal.transmittal_number}</h1>
             <Badge
               variant="outline"
               className={`
-                ${statusColor === 'gray' ? 'bg-gray-100 text-gray-800 border-gray-200' : ''}
-                ${statusColor === 'blue' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}
-                ${statusColor === 'green' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+                ${statusColor === 'gray' ? 'bg-muted text-foreground border-border' : ''}
+                ${statusColor === 'blue' ? 'bg-info-light text-blue-800 border-blue-200' : ''}
+                ${statusColor === 'green' ? 'bg-success-light text-green-800 border-green-200' : ''}
                 ${statusColor === 'emerald' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : ''}
-                ${statusColor === 'red' ? 'bg-red-100 text-red-800 border-red-200' : ''}
+                ${statusColor === 'red' ? 'bg-error-light text-red-800 border-red-200' : ''}
               `}
             >
               <span className="mr-1">{icon}</span>
@@ -253,7 +253,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* From */}
                 <div className="space-y-3">
-                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground">
+                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground" className="heading-card">
                     <Building2 className="h-4 w-4" />
                     From
                   </h4>
@@ -282,7 +282,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
 
                 {/* To */}
                 <div className="space-y-3">
-                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground">
+                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground" className="heading-card">
                     <Building2 className="h-4 w-4" />
                     To
                   </h4>
@@ -495,17 +495,17 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
               {transmittal.response_required && (
                 <>
                   <Separator />
-                  <div className="bg-amber-50 dark:bg-amber-950 p-3 rounded-lg">
+                  <div className="bg-warning-light dark:bg-amber-950 p-3 rounded-lg">
                     <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
                       Response Required
                     </p>
                     {transmittal.response_due_date && (
-                      <p className="text-sm text-amber-600 dark:text-amber-400">
+                      <p className="text-sm text-warning dark:text-amber-400">
                         Due: {format(new Date(transmittal.response_due_date), 'MMM d, yyyy')}
                       </p>
                     )}
                     {transmittal.response_received && (
-                      <Badge className="mt-2 bg-green-100 text-green-800">
+                      <Badge className="mt-2 bg-success-light text-green-800">
                         Response Received
                       </Badge>
                     )}
@@ -520,7 +520,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-success" />
                   Receipt
                 </CardTitle>
               </CardHeader>

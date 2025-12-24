@@ -47,23 +47,23 @@ const STAMP_PRESETS: StampPreset[] = [
     type: 'APPROVED',
     label: 'APPROVED',
     icon: <CheckCircle2 className="w-4 h-4" />,
-    color: 'text-green-700',
-    bgColor: 'bg-green-50',
+    color: 'text-success-dark',
+    bgColor: 'bg-success-light',
     borderColor: 'border-green-500',
   },
   {
     type: 'REJECTED',
     label: 'REJECTED',
     icon: <X className="w-4 h-4" />,
-    color: 'text-red-700',
-    bgColor: 'bg-red-50',
+    color: 'text-error-dark',
+    bgColor: 'bg-error-light',
     borderColor: 'border-red-500',
   },
   {
     type: 'REVIEWED',
     label: 'REVIEWED',
     icon: <Eye className="w-4 h-4" />,
-    color: 'text-blue-700',
+    color: 'text-primary-hover',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-500',
   },
@@ -72,8 +72,8 @@ const STAMP_PRESETS: StampPreset[] = [
     label: 'REVISED',
     icon: <AlertCircle className="w-4 h-4" />,
     color: 'text-amber-700',
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-500',
+    bgColor: 'bg-warning-light',
+    borderColor: 'border-warning',
   },
   {
     type: 'FOR_INFORMATION',
@@ -95,8 +95,8 @@ const STAMP_PRESETS: StampPreset[] = [
     type: 'VOID',
     label: 'VOID',
     icon: <X className="w-4 h-4" />,
-    color: 'text-gray-700',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     borderColor: 'border-gray-500',
   },
   {
@@ -104,7 +104,7 @@ const STAMP_PRESETS: StampPreset[] = [
     label: 'PRELIMINARY',
     icon: <Clock className="w-4 h-4" />,
     color: 'text-cyan-700',
-    bgColor: 'bg-cyan-50',
+    bgColor: 'bg-info-light',
     borderColor: 'border-cyan-500',
   },
   {
@@ -163,7 +163,7 @@ export function StampTools({
       </PopoverTrigger>
       <PopoverContent className="w-64 p-2" align="start">
         <div className="space-y-2">
-          <Label className="text-xs font-medium text-gray-600">Select Stamp</Label>
+          <Label className="text-xs font-medium text-secondary">Select Stamp</Label>
 
           {/* Stamp Grid */}
           <div className="grid grid-cols-2 gap-1">
@@ -178,7 +178,7 @@ export function StampTools({
                   preset.color,
                   selectedStamp === preset.type
                     ? `${preset.borderColor} ring-2 ring-offset-1 ring-blue-300`
-                    : 'border-transparent hover:border-gray-300'
+                    : 'border-transparent hover:border-input'
                 )}
               >
                 {preset.icon}
@@ -194,10 +194,10 @@ export function StampTools({
               disabled={disabled}
               className={cn(
                 'w-full flex items-center gap-2 px-2 py-1.5 rounded border-2 text-xs font-bold transition-all',
-                'bg-gray-50 text-gray-700',
+                'bg-surface text-secondary',
                 selectedStamp === 'CUSTOM'
                   ? 'border-gray-500 ring-2 ring-offset-1 ring-blue-300'
-                  : 'border-transparent hover:border-gray-300'
+                  : 'border-transparent hover:border-input'
               )}
             >
               <Stamp className="w-4 h-4" />
@@ -214,7 +214,7 @@ export function StampTools({
                   maxLength={30}
                   disabled={disabled}
                 />
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted mt-1">
                   Max 30 characters, will appear in uppercase
                 </p>
               </div>
@@ -224,7 +224,7 @@ export function StampTools({
           {/* Preview */}
           {selectedStamp && (
             <div className="pt-2 border-t">
-              <Label className="text-xs font-medium text-gray-600 mb-2 block">Preview</Label>
+              <Label className="text-xs font-medium text-secondary mb-2 block">Preview</Label>
               <div className="flex justify-center">
                 <StampPreview
                   type={selectedStamp}
@@ -235,7 +235,7 @@ export function StampTools({
           )}
 
           {/* Instructions */}
-          <div className="pt-2 border-t text-xs text-gray-500">
+          <div className="pt-2 border-t text-xs text-muted">
             <p>Click on the document to place the stamp. You can resize and rotate it after placing.</p>
           </div>
         </div>
@@ -251,7 +251,7 @@ function StampPreview({ type, customText }: { type: StampType; customText?: stri
   if (!preset && type !== 'CUSTOM') {return null}
 
   const label = type === 'CUSTOM' ? (customText || 'CUSTOM') : preset?.label
-  const color = preset?.color || 'text-gray-700'
+  const color = preset?.color || 'text-secondary'
   const borderColor = preset?.borderColor || 'border-gray-500'
 
   return (
@@ -284,13 +284,13 @@ export function getStampColor(type: StampType): string {
 
   // Extract hex color from the color class
   const colorMap: Record<string, string> = {
-    'text-green-700': '#15803d',
-    'text-red-700': '#b91c1c',
-    'text-blue-700': '#1d4ed8',
+    'text-success-dark': '#15803d',
+    'text-error-dark': '#b91c1c',
+    'text-primary-hover': '#1d4ed8',
     'text-amber-700': '#b45309',
     'text-purple-700': '#7e22ce',
     'text-orange-700': '#c2410c',
-    'text-gray-700': '#374151',
+    'text-secondary': '#374151',
     'text-cyan-700': '#0e7490',
     'text-emerald-700': '#047857',
   }

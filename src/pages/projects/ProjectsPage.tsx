@@ -57,8 +57,8 @@ export function ProjectsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Projects</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Projects</h1>
+            <p className="text-secondary mt-1">
               Manage and track your construction projects
             </p>
           </div>
@@ -72,7 +72,7 @@ export function ProjectsPage() {
 
         {/* Search bar */}
         <div className="mb-6 relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-disabled" />
           <Input
             type="text"
             placeholder="Search projects by name or address..."
@@ -85,21 +85,21 @@ export function ProjectsPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading projects...</p>
+            <p className="text-muted">Loading projects...</p>
           </div>
         )}
 
         {/* Error state */}
         {error && (
           <div className="text-center py-12">
-            <p className="text-red-600">Error loading projects: {error.message}</p>
+            <p className="text-error">Error loading projects: {error.message}</p>
           </div>
         )}
 
         {/* Empty state */}
         {!isLoading && !error && filteredProjects && filteredProjects.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500 mb-4">
+            <p className="text-muted mb-4">
               {searchQuery ? 'No projects found matching your search.' : 'No projects yet.'}
             </p>
             {!searchQuery && (
@@ -123,7 +123,7 @@ export function ProjectsPage() {
                         <CardTitle className="text-lg">{project.name}</CardTitle>
                       </Link>
                       {project.project_number && (
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-muted mt-1">
                           #{project.project_number}
                         </p>
                       )}
@@ -142,13 +142,13 @@ export function ProjectsPage() {
                 <CardContent className="flex-1">
                   <div className="space-y-2 text-sm">
                     {project.start_date && (
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-secondary">
                         <Calendar className="h-4 w-4" />
                         <span>Started {project.start_date ? format(new Date(project.start_date), 'MMM d, yyyy') : 'N/A'}</span>
                       </div>
                     )}
                     {project.description && (
-                      <p className="text-gray-600 line-clamp-2 mt-2">
+                      <p className="text-secondary line-clamp-2 mt-2">
                         {project.description}
                       </p>
                     )}

@@ -489,8 +489,8 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
               size="sm"
               className={cn(
                 'h-9 w-9 p-0 flex-shrink-0',
-                priority === 'high' && 'text-amber-600 border-amber-300 bg-amber-50 hover:bg-amber-100',
-                priority === 'urgent' && 'text-red-600 border-red-300 bg-red-50 hover:bg-red-100'
+                priority === 'high' && 'text-warning border-amber-300 bg-warning-light hover:bg-amber-100',
+                priority === 'urgent' && 'text-error border-red-300 bg-error-light hover:bg-error-light'
               )}
               title={`Priority: ${MESSAGE_PRIORITY_CONFIG[priority].label}`}
             >
@@ -520,7 +520,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
               className={cn(priority === 'high' && 'bg-muted')}
             >
               <span className="flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                <AlertTriangle className="h-4 w-4 text-warning" />
                 High Priority
               </span>
             </DropdownMenuItem>
@@ -529,7 +529,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
               className={cn(priority === 'urgent' && 'bg-muted')}
             >
               <span className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-red-500" />
+                <AlertCircle className="h-4 w-4 text-error" />
                 Urgent - Safety
               </span>
             </DropdownMenuItem>

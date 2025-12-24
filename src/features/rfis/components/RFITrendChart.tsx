@@ -88,11 +88,11 @@ function formatChartDate(dateStr: string, granularity: 'day' | 'week' | 'month')
 function getTrendIcon(trend: TrendDirection): React.ReactNode {
   switch (trend) {
     case 'improving':
-      return <TrendingDown className="w-4 h-4 text-green-600" />
+      return <TrendingDown className="w-4 h-4 text-success" />
     case 'declining':
-      return <TrendingUp className="w-4 h-4 text-red-600" />
+      return <TrendingUp className="w-4 h-4 text-error" />
     case 'stable':
-      return <Minus className="w-4 h-4 text-gray-600" />
+      return <Minus className="w-4 h-4 text-secondary" />
   }
 }
 
@@ -105,21 +105,21 @@ function getTrendBadge(trend: TrendDirection, percentageChange: number): React.R
   switch (trend) {
     case 'improving':
       return (
-        <Badge className="bg-green-100 text-green-800 border-green-200">
+        <Badge className="bg-success-light text-green-800 border-green-200">
           <TrendingDown className="w-3 h-3 mr-1" />
           Improving ({absChange.toFixed(1)}%)
         </Badge>
       )
     case 'declining':
       return (
-        <Badge className="bg-red-100 text-red-800 border-red-200">
+        <Badge className="bg-error-light text-red-800 border-red-200">
           <TrendingUp className="w-3 h-3 mr-1" />
           Declining ({absChange.toFixed(1)}%)
         </Badge>
       )
     case 'stable':
       return (
-        <Badge className="bg-gray-100 text-gray-800 border-gray-200">
+        <Badge className="bg-muted text-foreground border-border">
           <Minus className="w-3 h-3 mr-1" />
           Stable
         </Badge>
@@ -173,7 +173,7 @@ export function RFITrendChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📊</span>
             <p className="mt-2 text-sm">No trend data available</p>
           </div>
@@ -320,7 +320,7 @@ export function RFIPriorityChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📊</span>
             <p className="mt-2 text-sm">No priority data available</p>
           </div>
@@ -438,7 +438,7 @@ export function RFIAssigneeChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📊</span>
             <p className="mt-2 text-sm">No assignee data available</p>
           </div>
@@ -556,7 +556,7 @@ export function RFIOnTimeTrendChart({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-2xl">📊</span>
             <p className="mt-2 text-sm">No trend data available</p>
           </div>

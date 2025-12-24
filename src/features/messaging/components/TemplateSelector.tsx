@@ -87,18 +87,18 @@ function TemplateItem({
       type="button"
       onClick={onSelect}
       className={cn(
-        'w-full text-left p-3 border-b border-gray-100 dark:border-gray-800',
-        'hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors',
-        'focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-800/50'
+        'w-full text-left p-3 border-b border-border dark:border-border',
+        'hover:bg-surface dark:hover:bg-surface/50 transition-colors',
+        'focus:outline-none focus:bg-surface dark:focus:bg-surface/50'
       )}
     >
       <div className="flex items-start gap-3">
-        <div className="p-2 rounded bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+        <div className="p-2 rounded bg-info-light text-primary-hover dark:bg-blue-900/30 dark:text-blue-400">
           <FileText className="w-4 h-4" />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+            <h4 className="font-medium text-foreground dark:text-gray-100 truncate" className="heading-card">
               {highlightText(template.name)}
             </h4>
             {template.category && (
@@ -112,25 +112,25 @@ function TemplateItem({
               </Badge>
             )}
           </div>
-          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+          <p className="text-sm text-muted dark:text-disabled line-clamp-2">
             {highlightText(template.content)}
           </p>
           {template.variables && template.variables.length > 0 && (
             <div className="flex items-center gap-1 mt-1 flex-wrap">
-              <span className="text-xs text-gray-400">Variables:</span>
+              <span className="text-xs text-disabled">Variables:</span>
               {template.variables.slice(0, 3).map(v => (
-                <code key={v} className="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                <code key={v} className="text-xs bg-muted dark:bg-surface px-1 rounded">
                   {`{${v}}`}
                 </code>
               ))}
               {template.variables.length > 3 && (
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-disabled">
                   +{template.variables.length - 3} more
                 </span>
               )}
             </div>
           )}
-          <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
+          <div className="flex items-center gap-2 mt-1 text-xs text-disabled">
             {template.usage_count > 0 && (
               <span className="flex items-center gap-1">
                 <Star className="w-3 h-3" />
@@ -226,10 +226,10 @@ export function TemplateSelector({
           </DialogHeader>
 
           {/* Search and Filter */}
-          <div className="px-6 pb-4 space-y-3 border-b border-gray-200 dark:border-gray-800">
+          <div className="px-6 pb-4 space-y-3 border-b border-border dark:border-border">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
               <Input
                 type="text"
                 placeholder="Search templates..."
@@ -241,7 +241,7 @@ export function TemplateSelector({
                 <button
                   type="button"
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-disabled hover:text-secondary"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -272,18 +272,18 @@ export function TemplateSelector({
           {/* Templates List */}
           <div className="flex-1 overflow-y-auto">
             {isLoading && (
-              <div className="p-8 text-center text-gray-500">
+              <div className="p-8 text-center text-muted">
                 Loading templates...
               </div>
             )}
 
             {!isLoading && filteredTemplates.length === 0 && (
               <div className="p-8 text-center">
-                <FileText className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                <p className="text-gray-500 dark:text-gray-400 mb-1">
+                <FileText className="w-12 h-12 mx-auto text-gray-300 dark:text-secondary mb-3" />
+                <p className="text-muted dark:text-disabled mb-1">
                   {searchQuery ? 'No templates match your search' : 'No templates yet'}
                 </p>
-                <p className="text-sm text-gray-400 dark:text-gray-500">
+                <p className="text-sm text-disabled dark:text-muted">
                   {searchQuery
                     ? 'Try a different search term'
                     : 'Create templates to reuse common messages'}
@@ -306,8 +306,8 @@ export function TemplateSelector({
           </div>
 
           {/* Footer */}
-          <div className="px-6 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
-            <div className="flex items-center justify-between text-xs text-gray-500">
+          <div className="px-6 py-3 border-t border-border dark:border-border bg-surface dark:bg-background/50">
+            <div className="flex items-center justify-between text-xs text-muted">
               <span>
                 {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''}
                 {selectedCategory && ` in ${selectedCategory}`}

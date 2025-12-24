@@ -86,7 +86,7 @@ export function MultiSelectFilter({
 
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 w-56 bg-white border rounded-md shadow-lg max-h-64 overflow-y-auto"
+          className="absolute z-50 mt-1 w-56 bg-card border rounded-md shadow-lg max-h-64 overflow-y-auto"
           role="listbox"
           aria-label={`${label} filter options`}
         >
@@ -94,7 +94,7 @@ export function MultiSelectFilter({
             {options.map(option => (
               <button
                 key={option.value}
-                className="flex items-center w-full px-3 py-2 text-sm hover:bg-gray-100 transition-colors"
+                className="flex items-center w-full px-3 py-2 text-sm hover:bg-muted transition-colors"
                 onClick={() => toggleOption(option.value)}
                 role="option"
                 aria-selected={value.includes(option.value)}
@@ -102,7 +102,7 @@ export function MultiSelectFilter({
                 <div className="flex items-center justify-between w-full">
                   <span className="text-left">{option.label}</span>
                   {value.includes(option.value) && (
-                    <Check className="h-4 w-4 text-blue-600 flex-shrink-0 ml-2" />
+                    <Check className="h-4 w-4 text-primary flex-shrink-0 ml-2" />
                   )}
                 </div>
               </button>

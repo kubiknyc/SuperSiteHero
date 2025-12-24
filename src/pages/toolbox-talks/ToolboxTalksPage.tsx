@@ -104,8 +104,8 @@ export function ToolboxTalksPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <ClipboardList className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-            <h2 className="text-lg font-medium text-gray-900">No Project Selected</h2>
-            <p className="text-gray-500 mt-1">
+            <h2 className="text-lg font-medium text-foreground" className="heading-section">No Project Selected</h2>
+            <p className="text-muted mt-1">
               Please select a project to view toolbox talks.
             </p>
           </div>
@@ -120,8 +120,8 @@ export function ToolboxTalksPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Toolbox Talks</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Toolbox Talks</h1>
+            <p className="text-muted mt-1">
               Safety briefings and attendance tracking
             </p>
           </div>
@@ -136,53 +136,53 @@ export function ToolboxTalksPage() {
         {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-blue-100 rounded-lg p-2">
-                  <ClipboardList className="h-5 w-5 text-blue-600" />
+                <div className="bg-info-light rounded-lg p-2">
+                  <ClipboardList className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Talks</p>
+                  <p className="text-sm text-muted">Total Talks</p>
                   <p className="text-2xl font-bold">{stats.total_talks}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-green-100 rounded-lg p-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                <div className="bg-success-light rounded-lg p-2">
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Completed</p>
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-sm text-muted">Completed</p>
+                  <p className="text-2xl font-bold text-success">
                     {stats.completed_talks}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-yellow-100 rounded-lg p-2">
-                  <Calendar className="h-5 w-5 text-yellow-600" />
+                <div className="bg-warning-light rounded-lg p-2">
+                  <Calendar className="h-5 w-5 text-warning" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Scheduled</p>
-                  <p className="text-2xl font-bold text-yellow-600">
+                  <p className="text-sm text-muted">Scheduled</p>
+                  <p className="text-2xl font-bold text-warning">
                     {stats.scheduled_talks}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
                 <div className="bg-purple-100 rounded-lg p-2">
                   <Users className="h-5 w-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Attendees</p>
+                  <p className="text-sm text-muted">Total Attendees</p>
                   <p className="text-2xl font-bold text-purple-600">
                     {stats.total_attendees}
                   </p>
@@ -196,7 +196,7 @@ export function ToolboxTalksPage() {
         {upcomingTalks.length > 0 && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
             <div className="flex items-center gap-2 mb-2">
-              <Calendar className="h-5 w-5 text-blue-600" />
+              <Calendar className="h-5 w-5 text-primary" />
               <span className="font-medium text-blue-900">
                 {upcomingTalks.length} upcoming talk{upcomingTalks.length > 1 ? 's' : ''} this week
               </span>
@@ -206,7 +206,7 @@ export function ToolboxTalksPage() {
                 <Link
                   key={talk.id}
                   to={`/toolbox-talks/${talk.id}`}
-                  className="inline-flex items-center gap-1 px-2 py-1 bg-white rounded text-sm text-blue-700 hover:bg-blue-100"
+                  className="inline-flex items-center gap-1 px-2 py-1 bg-card rounded text-sm text-primary-hover hover:bg-info-light"
                 >
                   <span>{talk.talk_number}</span>
                   <span className="text-blue-400">-</span>
@@ -214,7 +214,7 @@ export function ToolboxTalksPage() {
                 </Link>
               ))}
               {upcomingTalks.length > 3 && (
-                <span className="text-sm text-blue-600">
+                <span className="text-sm text-primary">
                   +{upcomingTalks.length - 3} more
                 </span>
               )}
@@ -223,11 +223,11 @@ export function ToolboxTalksPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-lg border p-4 mb-6">
+        <div className="bg-card rounded-lg border p-4 mb-6">
           <div className="flex flex-wrap items-center gap-4">
             {/* Search */}
             <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 type="text"
                 placeholder="Search talks..."
@@ -289,20 +289,20 @@ export function ToolboxTalksPage() {
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div
                 key={i}
-                className="bg-white rounded-lg border p-4 animate-pulse"
+                className="bg-card rounded-lg border p-4 animate-pulse"
               >
-                <div className="h-5 bg-gray-200 rounded w-1/3 mb-3" />
-                <div className="h-4 bg-gray-100 rounded w-2/3 mb-2" />
-                <div className="h-3 bg-gray-100 rounded w-1/2 mb-4" />
-                <div className="h-3 bg-gray-100 rounded w-full" />
+                <div className="h-5 bg-muted rounded w-1/3 mb-3" />
+                <div className="h-4 bg-muted rounded w-2/3 mb-2" />
+                <div className="h-3 bg-muted rounded w-1/2 mb-4" />
+                <div className="h-3 bg-muted rounded w-full" />
               </div>
             ))}
           </div>
         ) : filteredTalks.length === 0 ? (
           <div className="text-center py-12">
             <ClipboardList className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-            <h2 className="text-lg font-medium text-gray-900">No Toolbox Talks Found</h2>
-            <p className="text-gray-500 mt-1">
+            <h2 className="text-lg font-medium text-foreground" className="heading-section">No Toolbox Talks Found</h2>
+            <p className="text-muted mt-1">
               {hasActiveFilters || search
                 ? 'Try adjusting your filters or search terms.'
                 : 'Schedule your first toolbox talk to get started.'}
@@ -326,7 +326,7 @@ export function ToolboxTalksPage() {
 
         {/* Results count */}
         {!isLoading && filteredTalks.length > 0 && (
-          <div className="mt-4 text-sm text-gray-500 text-center">
+          <div className="mt-4 text-sm text-muted text-center">
             Showing {filteredTalks.length} toolbox talk{filteredTalks.length !== 1 ? 's' : ''}
           </div>
         )}

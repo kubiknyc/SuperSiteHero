@@ -99,11 +99,11 @@ export function CostCodePicker({
         >
           {selectedCode ? (
             <span className="flex items-center gap-2 truncate">
-              <span className="font-mono text-sm text-gray-600">{selectedCode.code}</span>
+              <span className="font-mono text-sm text-secondary">{selectedCode.code}</span>
               <span className="truncate">{selectedCode.name}</span>
             </span>
           ) : (
-            <span className="text-gray-500">{placeholder}</span>
+            <span className="text-muted">{placeholder}</span>
           )}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -111,7 +111,7 @@ export function CostCodePicker({
       <PopoverContent className="w-[400px] p-0" align="start">
         <div className="p-2 border-b">
           <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search cost codes..."
               value={search}
@@ -123,9 +123,9 @@ export function CostCodePicker({
 
         <div className="max-h-[300px] overflow-y-auto">
           {isLoading ? (
-            <div className="p-4 text-center text-gray-500">Loading cost codes...</div>
+            <div className="p-4 text-center text-muted">Loading cost codes...</div>
           ) : groupedCodes.length === 0 ? (
-            <div className="p-4 text-center text-gray-500">
+            <div className="p-4 text-center text-muted">
               <FolderTree className="h-8 w-8 mx-auto mb-2 text-gray-300" />
               <p>No cost codes found</p>
               {search && <p className="text-sm">Try a different search term</p>}
@@ -133,7 +133,7 @@ export function CostCodePicker({
           ) : (
             groupedCodes.map(([division, codes]) => (
               <div key={division}>
-                <div className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-50 sticky top-0">
+                <div className="px-3 py-2 text-xs font-semibold text-muted bg-surface sticky top-0">
                   Division {division}
                 </div>
                 {codes.map((code) => (
@@ -141,16 +141,16 @@ export function CostCodePicker({
                     key={code.id}
                     onClick={() => handleSelect(code)}
                     className={cn(
-                      'w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 transition-colors',
+                      'w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-muted transition-colors',
                       value === code.id && 'bg-blue-50'
                     )}
                   >
-                    <span className="font-mono text-sm text-gray-600 w-24 shrink-0">
+                    <span className="font-mono text-sm text-secondary w-24 shrink-0">
                       {code.code}
                     </span>
                     <span className="flex-1 truncate text-sm">{code.name}</span>
                     {value === code.id && (
-                      <Check className="h-4 w-4 text-blue-600 shrink-0" />
+                      <Check className="h-4 w-4 text-primary shrink-0" />
                     )}
                   </button>
                 ))}

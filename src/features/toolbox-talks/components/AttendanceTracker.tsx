@@ -118,10 +118,10 @@ export function AttendanceTracker({
   if (isLoading) {
     return (
       <div className={cn('animate-pulse', className)}>
-        <div className="h-8 bg-gray-200 rounded w-1/3 mb-4" />
+        <div className="h-8 bg-muted rounded w-1/3 mb-4" />
         <div className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-12 bg-gray-100 rounded" />
+            <div key={i} className="h-12 bg-muted rounded" />
           ))}
         </div>
       </div>
@@ -133,8 +133,8 @@ export function AttendanceTracker({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-gray-500" />
-          <h3 className="font-medium text-gray-900">
+          <Users className="h-5 w-5 text-muted" />
+          <h3 className="font-medium text-foreground" className="heading-subsection">
             Attendance ({presentAttendees.length}/{attendees.length})
           </h3>
         </div>
@@ -142,7 +142,7 @@ export function AttendanceTracker({
           {canModifyAttendance && expectedAttendees.length > 0 && (
             <button
               onClick={handleBulkSignIn}
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              className="text-sm text-primary hover:text-blue-800 font-medium"
             >
               Sign In All
             </button>
@@ -150,7 +150,7 @@ export function AttendanceTracker({
           {canAddAttendees && (
             <button
               onClick={() => setShowAddForm(!showAddForm)}
-              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 font-medium"
+              className="flex items-center gap-1 text-sm text-primary hover:text-blue-800 font-medium"
             >
               <UserPlus className="h-4 w-4" />
               Add
@@ -161,10 +161,10 @@ export function AttendanceTracker({
 
       {/* Add Attendee Form */}
       {showAddForm && (
-        <div className="bg-gray-50 rounded-lg p-4 space-y-3">
+        <div className="bg-surface rounded-lg p-4 space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-secondary mb-1">
                 Worker Name *
               </label>
               <input
@@ -173,12 +173,12 @@ export function AttendanceTracker({
                 onChange={(e) =>
                   setNewAttendee({ ...newAttendee, worker_name: e.target.value })
                 }
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 text-sm border border-input rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="John Smith"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-secondary mb-1">
                 Company
               </label>
               <input
@@ -187,12 +187,12 @@ export function AttendanceTracker({
                 onChange={(e) =>
                   setNewAttendee({ ...newAttendee, worker_company: e.target.value })
                 }
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 text-sm border border-input rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="ABC Contractors"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-secondary mb-1">
                 Trade
               </label>
               <input
@@ -201,12 +201,12 @@ export function AttendanceTracker({
                 onChange={(e) =>
                   setNewAttendee({ ...newAttendee, worker_trade: e.target.value })
                 }
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 text-sm border border-input rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Electrician"
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">
+              <label className="block text-xs font-medium text-secondary mb-1">
                 Badge #
               </label>
               <input
@@ -215,7 +215,7 @@ export function AttendanceTracker({
                 onChange={(e) =>
                   setNewAttendee({ ...newAttendee, worker_badge_number: e.target.value })
                 }
-                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 text-sm border border-input rounded-md focus:ring-blue-500 focus:border-blue-500"
                 placeholder="12345"
               />
             </div>
@@ -223,14 +223,14 @@ export function AttendanceTracker({
           <div className="flex justify-end gap-2">
             <button
               onClick={() => setShowAddForm(false)}
-              className="px-3 py-1.5 text-sm text-gray-600 hover:text-gray-800"
+              className="px-3 py-1.5 text-sm text-secondary hover:text-foreground"
             >
               Cancel
             </button>
             <button
               onClick={handleAddAttendee}
               disabled={!newAttendee.worker_name.trim() || addAttendee.isPending}
-              className="px-3 py-1.5 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-3 py-1.5 text-sm bg-primary text-white rounded-md hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {addAttendee.isPending ? 'Adding...' : 'Add Attendee'}
             </button>
@@ -240,13 +240,13 @@ export function AttendanceTracker({
 
       {/* Attendee Lists */}
       {attendees.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
+        <div className="text-center py-8 text-muted">
           <Users className="h-12 w-12 mx-auto text-gray-300 mb-2" />
           <p>No attendees added yet</p>
           {canAddAttendees && (
             <button
               onClick={() => setShowAddForm(true)}
-              className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+              className="mt-2 text-sm text-primary hover:text-blue-800"
             >
               Add the first attendee
             </button>
@@ -259,7 +259,7 @@ export function AttendanceTracker({
             <AttendeeGroup
               title="Awaiting Sign-In"
               attendees={expectedAttendees}
-              icon={<Clock className="h-4 w-4 text-gray-400" />}
+              icon={<Clock className="h-4 w-4 text-disabled" />}
               canModify={canModifyAttendance}
               onSignIn={handleQuickSignIn}
               onMarkAbsent={handleMarkAbsent}
@@ -273,7 +273,7 @@ export function AttendanceTracker({
             <AttendeeGroup
               title="Signed In"
               attendees={presentAttendees}
-              icon={<CheckCircle2 className="h-4 w-4 text-green-500" />}
+              icon={<CheckCircle2 className="h-4 w-4 text-success" />}
               canModify={false}
               onRemove={canAddAttendees ? handleRemove : undefined}
             />
@@ -284,7 +284,7 @@ export function AttendanceTracker({
             <AttendeeGroup
               title="Absent"
               attendees={absentAttendees}
-              icon={<XCircle className="h-4 w-4 text-red-500" />}
+              icon={<XCircle className="h-4 w-4 text-error" />}
               canModify={canModifyAttendance}
               onSignIn={handleQuickSignIn}
               onRemove={canAddAttendees ? handleRemove : undefined}
@@ -296,7 +296,7 @@ export function AttendanceTracker({
             <AttendeeGroup
               title="Excused"
               attendees={excusedAttendees}
-              icon={<Clock className="h-4 w-4 text-yellow-500" />}
+              icon={<Clock className="h-4 w-4 text-warning" />}
               canModify={false}
               onRemove={canAddAttendees ? handleRemove : undefined}
             />
@@ -333,7 +333,7 @@ function AttendeeGroup({
     <div>
       <div className="flex items-center gap-2 mb-2">
         {icon}
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-secondary">
           {title} ({attendees.length})
         </span>
       </div>
@@ -375,13 +375,13 @@ function AttendeeRow({
   const [showActions, setShowActions] = useState(false)
 
   return (
-    <div className="flex items-center justify-between p-2 bg-gray-50 rounded-md hover:bg-gray-100">
+    <div className="flex items-center justify-between p-2 bg-surface rounded-md hover:bg-muted">
       <div className="flex items-center gap-3 min-w-0">
         <div className="min-w-0">
-          <div className="font-medium text-sm text-gray-900 truncate">
+          <div className="font-medium text-sm text-foreground truncate">
             {attendee.worker_name}
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-muted">
             {attendee.worker_company && (
               <span className="flex items-center gap-1">
                 <Building2 className="h-3 w-3" />
@@ -409,7 +409,7 @@ function AttendeeRow({
         {canModify && attendee.attendance_status === 'expected' && onSignIn && (
           <button
             onClick={() => onSignIn(attendee)}
-            className="p-1 text-green-600 hover:bg-green-100 rounded"
+            className="p-1 text-success hover:bg-success-light rounded"
             title="Sign In"
           >
             <CheckCircle2 className="h-5 w-5" />
@@ -418,7 +418,7 @@ function AttendeeRow({
 
         {/* Status badge for signed in */}
         {attendee.attendance_status === 'present' && attendee.signed_in_at && (
-          <span className="text-xs text-green-600">
+          <span className="text-xs text-success">
             {new Date(attendee.signed_in_at).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
@@ -431,7 +431,7 @@ function AttendeeRow({
           <div className="relative">
             <button
               onClick={() => setShowActions(!showActions)}
-              className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded"
+              className="p-1 text-disabled hover:text-secondary hover:bg-muted rounded"
             >
               <MoreVertical className="h-4 w-4" />
             </button>
@@ -442,14 +442,14 @@ function AttendeeRow({
                   className="fixed inset-0 z-10"
                   onClick={() => setShowActions(false)}
                 />
-                <div className="absolute right-0 mt-1 w-36 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-20">
+                <div className="absolute right-0 mt-1 w-36 bg-card rounded-md shadow-lg border border-border py-1 z-20">
                   {canModify && attendee.attendance_status !== 'present' && onSignIn && (
                     <button
                       onClick={() => {
                         onSignIn(attendee)
                         setShowActions(false)
                       }}
-                      className="w-full text-left px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left px-3 py-1.5 text-sm text-secondary hover:bg-muted"
                     >
                       Mark Present
                     </button>
@@ -460,7 +460,7 @@ function AttendeeRow({
                         onMarkAbsent(attendee)
                         setShowActions(false)
                       }}
-                      className="w-full text-left px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left px-3 py-1.5 text-sm text-secondary hover:bg-muted"
                     >
                       Mark Absent
                     </button>
@@ -471,7 +471,7 @@ function AttendeeRow({
                         onMarkExcused(attendee)
                         setShowActions(false)
                       }}
-                      className="w-full text-left px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
+                      className="w-full text-left px-3 py-1.5 text-sm text-secondary hover:bg-muted"
                     >
                       Mark Excused
                     </button>
@@ -482,7 +482,7 @@ function AttendeeRow({
                         onRemove(attendee)
                         setShowActions(false)
                       }}
-                      className="w-full text-left px-3 py-1.5 text-sm text-red-600 hover:bg-red-50"
+                      className="w-full text-left px-3 py-1.5 text-sm text-error hover:bg-error-light"
                     >
                       Remove
                     </button>

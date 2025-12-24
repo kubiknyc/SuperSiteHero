@@ -56,11 +56,11 @@ function CloseoutStatusBadge({ status }: { status: CloseoutStatus }) {
   const color = getCloseoutStatusColor(status)
 
   const colorClasses: Record<string, string> = {
-    gray: 'bg-gray-100 text-gray-800',
-    blue: 'bg-blue-100 text-blue-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    green: 'bg-green-100 text-green-800',
-    red: 'bg-red-100 text-red-800',
+    gray: 'bg-muted text-foreground',
+    blue: 'bg-info-light text-blue-800',
+    yellow: 'bg-warning-light text-yellow-800',
+    green: 'bg-success-light text-green-800',
+    red: 'bg-error-light text-red-800',
     purple: 'bg-purple-100 text-purple-800',
     slate: 'bg-slate-100 text-slate-800',
   }
@@ -86,11 +86,11 @@ function CategoryBadge({ category }: { category: CloseoutCategory }) {
   }
 
   const categoryColors: Record<CloseoutCategory, string> = {
-    documentation: 'bg-blue-100 text-blue-800',
+    documentation: 'bg-info-light text-blue-800',
     training: 'bg-purple-100 text-purple-800',
     inspection: 'bg-orange-100 text-orange-800',
-    administrative: 'bg-gray-100 text-gray-800',
-    warranty: 'bg-green-100 text-green-800',
+    administrative: 'bg-muted text-foreground',
+    warranty: 'bg-success-light text-green-800',
     turnover: 'bg-teal-100 text-teal-800',
   }
 
@@ -105,10 +105,10 @@ function CategoryBadge({ category }: { category: CloseoutCategory }) {
  * Due date indicator
  */
 function DueDateIndicator({ dueDate, status }: { dueDate: string | null; status: CloseoutStatus }) {
-  if (!dueDate) {return <span className="text-gray-400">-</span>}
+  if (!dueDate) {return <span className="text-disabled">-</span>}
 
   if (['approved', 'waived', 'not_required', 'na'].includes(status)) {
-    return <span className="text-xs text-gray-500">{new Date(dueDate).toLocaleDateString()}</span>
+    return <span className="text-xs text-muted">{new Date(dueDate).toLocaleDateString()}</span>
   }
 
   const date = new Date(dueDate)
@@ -116,13 +116,13 @@ function DueDateIndicator({ dueDate, status }: { dueDate: string | null; status:
   const daysUntil = Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
   const isOverdue = daysUntil < 0
 
-  let colorClass = 'text-gray-600'
+  let colorClass = 'text-secondary'
   if (isOverdue) {
-    colorClass = 'text-red-600 font-medium'
+    colorClass = 'text-error font-medium'
   } else if (daysUntil <= 7) {
     colorClass = 'text-orange-600'
   } else if (daysUntil <= 14) {
-    colorClass = 'text-yellow-600'
+    colorClass = 'text-warning'
   }
 
   return (
@@ -143,7 +143,7 @@ function CloseoutStatsCard({ stats }: { stats: CloseoutStatistics }) {
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-gray-600">Closeout Progress</span>
+          <span className="text-secondary">Closeout Progress</span>
           <span className="font-medium">{stats.completion_percentage}%</span>
         </div>
         <Progress value={stats.completion_percentage} className="h-3" />
@@ -151,29 +151,29 @@ function CloseoutStatsCard({ stats }: { stats: CloseoutStatistics }) {
 
       {/* Status counts */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        <div className="text-center p-3 bg-gray-50 rounded-lg">
-          <div className="text-2xl font-bold text-gray-700">{stats.total_documents}</div>
-          <div className="text-xs text-gray-500">Total</div>
+        <div className="text-center p-3 bg-surface rounded-lg">
+          <div className="text-2xl font-bold text-secondary">{stats.total_documents}</div>
+          <div className="text-xs text-muted">Total</div>
         </div>
-        <div className="text-center p-3 bg-yellow-50 rounded-lg">
+        <div className="text-center p-3 bg-warning-light rounded-lg">
           <div className="text-2xl font-bold text-yellow-700">{stats.pending_count}</div>
-          <div className="text-xs text-gray-500">Pending</div>
+          <div className="text-xs text-muted">Pending</div>
         </div>
         <div className="text-center p-3 bg-blue-50 rounded-lg">
-          <div className="text-2xl font-bold text-blue-700">{stats.by_status.submitted || 0}</div>
-          <div className="text-xs text-gray-500">Submitted</div>
+          <div className="text-2xl font-bold text-primary-hover">{stats.by_status.submitted || 0}</div>
+          <div className="text-xs text-muted">Submitted</div>
         </div>
-        <div className="text-center p-3 bg-green-50 rounded-lg">
-          <div className="text-2xl font-bold text-green-700">{stats.approved_count}</div>
-          <div className="text-xs text-gray-500">Approved</div>
+        <div className="text-center p-3 bg-success-light rounded-lg">
+          <div className="text-2xl font-bold text-success-dark">{stats.approved_count}</div>
+          <div className="text-xs text-muted">Approved</div>
         </div>
-        <div className="text-center p-3 bg-red-50 rounded-lg">
-          <div className="text-2xl font-bold text-red-700">{stats.rejected_count}</div>
-          <div className="text-xs text-gray-500">Rejected</div>
+        <div className="text-center p-3 bg-error-light rounded-lg">
+          <div className="text-2xl font-bold text-error-dark">{stats.rejected_count}</div>
+          <div className="text-xs text-muted">Rejected</div>
         </div>
         <div className="text-center p-3 bg-slate-50 rounded-lg">
           <div className="text-2xl font-bold text-slate-700">{stats.required_count}</div>
-          <div className="text-xs text-gray-500">Required</div>
+          <div className="text-xs text-muted">Required</div>
         </div>
       </div>
     </div>
@@ -207,7 +207,7 @@ function GroupedDocuments({ documents, onDocumentClick }: GroupedDocumentsProps)
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <CategoryBadge category={category} />
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted">
                   {approved}/{total} complete
                 </span>
               </div>
@@ -219,14 +219,14 @@ function GroupedDocuments({ documents, onDocumentClick }: GroupedDocumentsProps)
                   key={doc.id}
                   className={cn(
                     'p-3 flex items-center gap-4',
-                    'hover:bg-gray-50 cursor-pointer',
-                    doc.status === 'rejected' && 'bg-red-50'
+                    'hover:bg-surface cursor-pointer',
+                    doc.status === 'rejected' && 'bg-error-light'
                   )}
                   onClick={() => onDocumentClick?.(doc)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="font-medium text-sm">{doc.title}</div>
-                    <div className="text-xs text-gray-500 flex items-center gap-2">
+                    <div className="text-xs text-muted flex items-center gap-2">
                       <span>{getCloseoutDocumentTypeLabel(doc.document_type)}</span>
                       {doc.spec_section && <span>| {doc.spec_section}</span>}
                       {doc.subcontractor?.company_name && (
@@ -331,8 +331,8 @@ export function CloseoutDocumentList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Closeout Documents</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold" className="heading-section">Closeout Documents</h2>
+          <p className="text-sm text-muted">
             {filteredDocuments.length} document{filteredDocuments.length !== 1 ? 's' : ''}
           </p>
         </div>
@@ -423,7 +423,7 @@ export function CloseoutDocumentList({
         <div className="border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-surface border-b">
                 <tr>
                   <th className="px-3 py-2 text-left font-medium">Title</th>
                   <th className="px-3 py-2 text-left font-medium">Type</th>
@@ -439,15 +439,15 @@ export function CloseoutDocumentList({
                   <tr
                     key={doc.id}
                     className={cn(
-                      'hover:bg-gray-50 cursor-pointer',
-                      doc.status === 'rejected' && 'bg-red-50'
+                      'hover:bg-surface cursor-pointer',
+                      doc.status === 'rejected' && 'bg-error-light'
                     )}
                     onClick={() => onDocumentClick?.(doc)}
                   >
                     <td className="px-3 py-2">
                       <div className="font-medium">{doc.title}</div>
                       {doc.description && (
-                        <div className="text-xs text-gray-500 line-clamp-1">{doc.description}</div>
+                        <div className="text-xs text-muted line-clamp-1">{doc.description}</div>
                       )}
                     </td>
                     <td className="px-3 py-2 text-xs">
@@ -472,7 +472,7 @@ export function CloseoutDocumentList({
                 ))}
                 {filteredDocuments.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-3 py-8 text-center text-gray-500">
+                    <td colSpan={7} className="px-3 py-8 text-center text-muted">
                       No closeout documents found
                     </td>
                   </tr>

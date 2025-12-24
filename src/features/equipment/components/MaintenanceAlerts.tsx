@@ -113,9 +113,9 @@ export function MaintenanceAlertCard({
 
   const alertStyles = {
     upcoming: 'border-blue-200 bg-blue-50',
-    due: 'border-yellow-200 bg-yellow-50',
+    due: 'border-yellow-200 bg-warning-light',
     overdue: 'border-orange-200 bg-orange-50',
-    critical: 'border-red-200 bg-red-50',
+    critical: 'border-red-200 bg-error-light',
   }[alert.alert_type]
 
   return (
@@ -265,7 +265,7 @@ export function MaintenanceAlertsDashboard({
       <Card>
         <CardContent className="p-6">
           <div className="text-center">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-3" />
+            <CheckCircle className="h-12 w-12 text-success mx-auto mb-3" />
             <p className="text-lg font-medium">All Clear</p>
             <p className="text-muted-foreground">No maintenance alerts at this time</p>
           </div>
@@ -302,7 +302,7 @@ export function MaintenanceAlertsDashboard({
             </Badge>
           )}
           {dueAlerts.length > 0 && (
-            <Badge variant="outline" className="border-yellow-500 text-yellow-700">
+            <Badge variant="outline" className="border-warning text-yellow-700">
               {dueAlerts.length} Due
             </Badge>
           )}
@@ -392,7 +392,7 @@ export function BlockedEquipmentWarning({
   }
 
   return (
-    <Alert variant="destructive" className="border-red-500 bg-red-50">
+    <Alert variant="destructive" className="border-red-500 bg-error-light">
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>Equipment Usage Blocked</AlertTitle>
       <AlertDescription>

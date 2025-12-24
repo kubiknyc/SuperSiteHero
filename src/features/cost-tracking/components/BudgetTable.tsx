@@ -116,7 +116,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
 
   const SortHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
     <th
-      className="text-left py-3 px-3 font-medium text-gray-500 cursor-pointer hover:bg-gray-50 select-none"
+      className="text-left py-3 px-3 font-medium text-muted cursor-pointer hover:bg-surface select-none"
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center gap-1">
@@ -141,11 +141,11 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
 
   if (isLoading) {
     return (
-      <div className="py-12 text-center text-gray-500">
+      <div className="py-12 text-center text-muted">
         <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-gray-200 rounded" />
-          <div className="h-10 bg-gray-200 rounded" />
-          <div className="h-10 bg-gray-200 rounded" />
+          <div className="h-10 bg-muted rounded" />
+          <div className="h-10 bg-muted rounded" />
+          <div className="h-10 bg-muted rounded" />
         </div>
       </div>
     )
@@ -155,8 +155,8 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
     return (
       <div className="py-12 text-center">
         <DollarSign className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-        <p className="text-gray-500">No budget lines found</p>
-        <p className="text-sm text-gray-400">Add budget lines to track costs by cost code</p>
+        <p className="text-muted">No budget lines found</p>
+        <p className="text-sm text-disabled">Add budget lines to track costs by cost code</p>
       </div>
     )
   }
@@ -181,15 +181,15 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
           <thead>
             <tr className="border-b">
               <SortHeader field="cost_code">Cost Code</SortHeader>
-              <th className="text-left py-3 px-3 font-medium text-gray-500">Description</th>
+              <th className="text-left py-3 px-3 font-medium text-muted">Description</th>
               <SortHeader field="original_budget">
                 <span className="text-right w-full">Original</span>
               </SortHeader>
-              <th className="text-right py-3 px-3 font-medium text-gray-500">Changes</th>
+              <th className="text-right py-3 px-3 font-medium text-muted">Changes</th>
               <SortHeader field="revised_budget">
                 <span className="text-right w-full">Revised</span>
               </SortHeader>
-              <th className="text-right py-3 px-3 font-medium text-gray-500">Committed</th>
+              <th className="text-right py-3 px-3 font-medium text-muted">Committed</th>
               <SortHeader field="actual_cost">
                 <span className="text-right w-full">Actual</span>
               </SortHeader>
@@ -210,7 +210,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
               return (
                 <tr
                   key={budget.id}
-                  className="border-b hover:bg-gray-50 transition-colors"
+                  className="border-b hover:bg-surface transition-colors"
                 >
                   <td className="py-3 px-3">
                     <div className="flex items-center gap-2">
@@ -222,14 +222,14 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
                       )}
                     </div>
                   </td>
-                  <td className="py-3 px-3 text-sm text-gray-600 max-w-[200px] truncate">
+                  <td className="py-3 px-3 text-sm text-secondary max-w-[200px] truncate">
                     {budget.cost_code_name}
                   </td>
                   <td className="py-3 px-3 text-right font-mono text-sm">
                     {formatCurrency(budget.original_budget)}
                   </td>
                   <td className="py-3 px-3 text-right font-mono text-sm">
-                    <span className={budget.approved_changes !== 0 ? (budget.approved_changes > 0 ? 'text-blue-600' : 'text-orange-600') : ''}>
+                    <span className={budget.approved_changes !== 0 ? (budget.approved_changes > 0 ? 'text-primary' : 'text-orange-600') : ''}>
                       {budget.approved_changes !== 0 && (budget.approved_changes > 0 ? '+' : '')}
                       {formatCurrency(budget.approved_changes)}
                     </span>
@@ -237,7 +237,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
                   <td className="py-3 px-3 text-right font-mono text-sm font-medium">
                     {formatCurrency(budget.revised_budget)}
                   </td>
-                  <td className="py-3 px-3 text-right font-mono text-sm text-gray-600">
+                  <td className="py-3 px-3 text-right font-mono text-sm text-secondary">
                     {formatCurrency(budget.committed_cost)}
                   </td>
                   <td className="py-3 px-3 text-right font-mono text-sm">
@@ -246,16 +246,16 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
                   <td className="py-3 px-3 text-right">
                     <div className="flex items-center justify-end gap-1">
                       {isOverBudget ? (
-                        <AlertTriangle className="h-4 w-4 text-red-500" />
+                        <AlertTriangle className="h-4 w-4 text-error" />
                       ) : isNearBudget ? (
                         <AlertTriangle className="h-4 w-4 text-orange-500" />
                       ) : (
-                        <CheckCircle className="h-4 w-4 text-green-500" />
+                        <CheckCircle className="h-4 w-4 text-success" />
                       )}
                       <span
                         className={cn(
                           'font-mono text-sm font-medium',
-                          isOverBudget ? 'text-red-600' : isNearBudget ? 'text-orange-600' : 'text-green-600'
+                          isOverBudget ? 'text-error' : isNearBudget ? 'text-orange-600' : 'text-success'
                         )}
                       >
                         {isOverBudget ? '-' : ''}
@@ -265,7 +265,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
                   </td>
                   <td className="py-3 px-3 text-right">
                     <div className="flex items-center gap-2">
-                      <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
                         <div
                           className={cn(
                             'h-full transition-all',
@@ -276,7 +276,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
                           style={{ width: `${Math.min(budget.percent_spent, 100)}%` }}
                         />
                       </div>
-                      <span className="text-xs text-gray-500 w-10 text-right">
+                      <span className="text-xs text-muted w-10 text-right">
                         {budget.percent_spent.toFixed(0)}%
                       </span>
                     </div>
@@ -295,7 +295,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeleteId(budget.id)}
-                          className="text-red-600"
+                          className="text-error"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
                           Delete
@@ -308,7 +308,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
             })}
           </tbody>
           <tfoot>
-            <tr className="bg-gray-50 font-medium border-t-2">
+            <tr className="bg-surface font-medium border-t-2">
               <td className="py-3 px-3" colSpan={2}>
                 Totals ({budgets.length} lines)
               </td>
@@ -322,19 +322,19 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
               <td className="py-3 px-3 text-right font-mono">
                 {formatCurrency(totals.revised)}
               </td>
-              <td className="py-3 px-3 text-right font-mono text-gray-600">
+              <td className="py-3 px-3 text-right font-mono text-secondary">
                 {formatCurrency(totals.committed)}
               </td>
               <td className="py-3 px-3 text-right font-mono">
                 {formatCurrency(totals.actual)}
               </td>
               <td className="py-3 px-3 text-right font-mono">
-                <span className={totals.variance < 0 ? 'text-red-600' : 'text-green-600'}>
+                <span className={totals.variance < 0 ? 'text-error' : 'text-success'}>
                   {totals.variance < 0 ? '-' : ''}
                   {formatCurrency(Math.abs(totals.variance))}
                 </span>
               </td>
-              <td className="py-3 px-3 text-right text-sm text-gray-500">
+              <td className="py-3 px-3 text-right text-sm text-muted">
                 {totals.revised > 0 ? ((totals.actual / totals.revised) * 100).toFixed(0) : 0}%
               </td>
               <td />
@@ -353,7 +353,7 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-error hover:bg-red-700">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

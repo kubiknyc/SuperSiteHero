@@ -35,10 +35,10 @@ export function ApprovalCodeBadge({
   const config = SUBMITTAL_APPROVAL_CODES.find((c) => c.value === code)
 
   const colorClasses: Record<string, string> = {
-    green: 'bg-green-100 text-green-800 border-green-200',
+    green: 'bg-success-light text-green-800 border-green-200',
     lime: 'bg-lime-100 text-lime-800 border-lime-200',
     orange: 'bg-orange-100 text-orange-800 border-orange-200',
-    red: 'bg-red-100 text-red-800 border-red-200',
+    red: 'bg-error-light text-red-800 border-red-200',
   }
 
   const sizeClasses = {
@@ -72,7 +72,7 @@ export function ApprovalCodeLegend({ className }: { className?: string }) {
       {SUBMITTAL_APPROVAL_CODES.map((code) => (
         <div key={code.value} className="flex items-center gap-2">
           <ApprovalCodeBadge code={code.value} size="sm" />
-          <span className="text-xs text-gray-600">{code.description}</span>
+          <span className="text-xs text-secondary">{code.description}</span>
         </div>
       ))}
     </div>

@@ -64,8 +64,8 @@ export function SubmittalsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Submittals</h1>
-            <p className="text-gray-600 mt-1">Manage project submittals and approvals</p>
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Submittals</h1>
+            <p className="text-secondary mt-1">Manage project submittals and approvals</p>
           </div>
           <Button onClick={() => setState({ ...state, createOpen: true })}>
             <Plus className="h-4 w-4 mr-2" />
@@ -77,68 +77,68 @@ export function SubmittalsPage() {
         {!isLoading && submittals && submittals.length > 0 && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === '' ? 'ring-2 ring-blue-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === '' ? 'ring-2 ring-blue-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: '' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <FileText className="h-5 w-5 text-blue-600" />
+                  <div className="p-2 bg-info-light rounded-lg">
+                    <FileText className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.total}</p>
-                    <p className="text-sm text-gray-500">Total</p>
+                    <p className="text-sm text-muted">Total</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'submitted' ? 'ring-2 ring-yellow-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'submitted' ? 'ring-2 ring-yellow-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'submitted' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-yellow-100 rounded-lg">
-                    <Clock className="h-5 w-5 text-yellow-600" />
+                  <div className="p-2 bg-warning-light rounded-lg">
+                    <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.submitted}</p>
-                    <p className="text-sm text-gray-500">Pending</p>
+                    <p className="text-sm text-muted">Pending</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'approved' ? 'ring-2 ring-green-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'approved' ? 'ring-2 ring-green-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'approved' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <div className="p-2 bg-success-light rounded-lg">
+                    <CheckCircle2 className="h-5 w-5 text-success" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.approved}</p>
-                    <p className="text-sm text-gray-500">Approved</p>
+                    <p className="text-sm text-muted">Approved</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'rejected' ? 'ring-2 ring-red-500' : 'hover:bg-gray-50'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'rejected' ? 'ring-2 ring-red-500' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'rejected' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <XCircle className="h-5 w-5 text-red-600" />
+                  <div className="p-2 bg-error-light rounded-lg">
+                    <XCircle className="h-5 w-5 text-error" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.rejected}</p>
-                    <p className="text-sm text-gray-500">Rejected</p>
+                    <p className="text-sm text-muted">Rejected</p>
                   </div>
                 </div>
               </CardContent>
@@ -151,7 +151,7 @@ export function SubmittalsPage() {
           <CardContent className="p-4">
             <div className="flex items-center gap-4">
               <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                <label className="block text-sm font-medium text-secondary mb-1">Project</label>
                 <Select
                   value={state.selectedProjectId}
                   onChange={(e) => setState({ ...state, selectedProjectId: e.target.value })}
@@ -209,51 +209,51 @@ export function SubmittalsPage() {
             {/* Submittals Table */}
             {isLoading ? (
               <div className="text-center py-12">
-                <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-                <p className="text-gray-600">Loading submittals...</p>
+                <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+                <p className="text-secondary">Loading submittals...</p>
               </div>
             ) : error ? (
               <div className="text-center py-12">
                 <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-                <p className="text-red-600">Failed to load submittals</p>
+                <p className="text-error">Failed to load submittals</p>
               </div>
             ) : filtered.length === 0 ? (
               <div className="text-center py-8">
                 <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No submittals found</p>
+                <p className="text-muted">No submittals found</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">#</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Title</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Cost Impact</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Schedule Impact</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Due Date</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Created</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">#</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Title</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Status</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Cost Impact</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Schedule Impact</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Due Date</th>
+                      <th className="text-left py-3 px-4 font-medium text-secondary">Created</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filtered.map((item: WorkflowItem) => (
-                      <tr key={item.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium text-gray-900">{item.number}</td>
+                      <tr key={item.id} className="border-b hover:bg-surface">
+                        <td className="py-3 px-4 font-medium text-foreground">{item.number}</td>
                         <td className="py-3 px-4">
-                          <a href={`/submittals/${item.id}`} className="text-blue-600 hover:underline">
+                          <a href={`/submittals/${item.id}`} className="text-primary hover:underline">
                             {item.title}
                           </a>
                         </td>
                         <td className="py-3 px-4">
                           <SubmittalStatusBadge status={item.status} />
                         </td>
-                        <td className="py-3 px-4 text-gray-600 text-sm">{item.cost_impact || '-'}</td>
-                        <td className="py-3 px-4 text-gray-600 text-sm">{item.schedule_impact || '-'}</td>
-                        <td className="py-3 px-4 text-gray-600 text-sm">
+                        <td className="py-3 px-4 text-secondary text-sm">{item.cost_impact || '-'}</td>
+                        <td className="py-3 px-4 text-secondary text-sm">{item.schedule_impact || '-'}</td>
+                        <td className="py-3 px-4 text-secondary text-sm">
                           {item.due_date ? item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : 'N/A' : '-'}
                         </td>
-                        <td className="py-3 px-4 text-gray-600 text-sm">
+                        <td className="py-3 px-4 text-secondary text-sm">
                           {item.created_at ? format(new Date(item.created_at), 'MMM d, yyyy') : 'N/A'}
                         </td>
                       </tr>

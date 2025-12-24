@@ -89,22 +89,22 @@ const statusConfig: Record<
 > = {
   draft: {
     label: 'Draft',
-    color: 'bg-gray-100 text-gray-700 border-gray-200',
+    color: 'bg-muted text-secondary border-border',
     icon: <FileText className="h-3.5 w-3.5" />,
   },
   submitted: {
     label: 'Submitted',
-    color: 'bg-blue-100 text-blue-800 border-blue-200',
+    color: 'bg-info-light text-blue-800 border-blue-200',
     icon: <Clock className="h-3.5 w-3.5" />,
   },
   approved: {
     label: 'Approved',
-    color: 'bg-green-100 text-green-800 border-green-200',
+    color: 'bg-success-light text-green-800 border-green-200',
     icon: <CheckCircle2 className="h-3.5 w-3.5" />,
   },
   rejected: {
     label: 'Rejected',
-    color: 'bg-red-100 text-red-800 border-red-200',
+    color: 'bg-error-light text-red-800 border-red-200',
     icon: <AlertCircle className="h-3.5 w-3.5" />,
   },
 };
@@ -194,8 +194,8 @@ export function DailyReportListItem({
   const content = (
     <div
       className={cn(
-        'p-4 border-b border-gray-100 bg-white cursor-pointer',
-        'active:bg-gray-50 transition-colors',
+        'p-4 border-b border-border bg-card cursor-pointer',
+        'active:bg-surface transition-colors',
         compact && 'p-3',
         className
       )}
@@ -206,11 +206,11 @@ export function DailyReportListItem({
         <div className="flex-1 min-w-0">
           {/* Date */}
           <div className="flex items-center gap-2 mb-1">
-            <Calendar className="h-4 w-4 text-gray-500" />
-            <h3 className="font-semibold text-gray-900">
+            <Calendar className="h-4 w-4 text-muted" />
+            <h3 className="font-semibold text-foreground" className="heading-subsection">
               {dateDisplay}
               {!isToday && !isYesterday && (
-                <span className="text-gray-500 font-normal ml-2">
+                <span className="text-muted font-normal ml-2">
                   {format(reportDate, 'yyyy')}
                 </span>
               )}
@@ -229,14 +229,14 @@ export function DailyReportListItem({
               {status.label}
             </Badge>
             {report.weather_condition && (
-              <div className="flex items-center gap-1 text-sm text-gray-600">
+              <div className="flex items-center gap-1 text-sm text-secondary">
                 <CloudSun className="h-4 w-4" />
                 <span>
                   {weatherIcons[report.weather_condition] ||
                     report.weather_condition}
                 </span>
                 {report.temperature_high && (
-                  <span className="text-gray-500">
+                  <span className="text-muted">
                     {report.temperature_high}
                     {report.temperature_low && `/${report.temperature_low}`}
                     °F
@@ -292,7 +292,7 @@ export function DailyReportListItem({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={handleDelete}
-                    className="text-red-600"
+                    className="text-error"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
@@ -306,13 +306,13 @@ export function DailyReportListItem({
 
       {/* Work Summary (if not compact) */}
       {!compact && report.work_summary && (
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+        <p className="text-sm text-secondary mt-2 line-clamp-2">
           {report.work_summary}
         </p>
       )}
 
       {/* Stats Row */}
-      <div className="flex items-center gap-4 mt-3 text-xs text-gray-500 flex-wrap">
+      <div className="flex items-center gap-4 mt-3 text-xs text-muted flex-wrap">
         {/* Workforce */}
         {report.workforce_count !== undefined && report.workforce_count > 0 && (
           <div className="flex items-center gap-1">
@@ -337,7 +337,7 @@ export function DailyReportListItem({
 
         {/* Delays */}
         {report.delay_count !== undefined && report.delay_count > 0 && (
-          <div className="flex items-center gap-1 text-yellow-600">
+          <div className="flex items-center gap-1 text-warning">
             <AlertCircle className="h-3.5 w-3.5" />
             <span>
               {report.delay_count} {report.delay_count === 1 ? 'delay' : 'delays'}
@@ -347,10 +347,10 @@ export function DailyReportListItem({
 
         {/* Submitted/Approved by */}
         {(report.submitted_by_name || report.approved_by_name) && (
-          <div className="flex items-center gap-1 ml-auto text-gray-400">
+          <div className="flex items-center gap-1 ml-auto text-disabled">
             {report.approved_by_name ? (
               <>
-                <CheckCircle2 className="h-3.5 w-3.5 text-green-500" />
+                <CheckCircle2 className="h-3.5 w-3.5 text-success" />
                 <span>by {report.approved_by_name}</span>
               </>
             ) : report.submitted_by_name ? (
@@ -367,7 +367,7 @@ export function DailyReportListItem({
       {!disableSwipe &&
         report.status === 'draft' &&
         (rightActions.length > 0 || leftActions.length > 0) && (
-          <div className="md:hidden mt-2 text-xs text-gray-400 flex items-center gap-1">
+          <div className="md:hidden mt-2 text-xs text-disabled flex items-center gap-1">
             <span className="animate-pulse">Swipe for actions</span>
           </div>
         )}

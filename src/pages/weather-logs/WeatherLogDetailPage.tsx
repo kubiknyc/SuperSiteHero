@@ -59,8 +59,8 @@ export function WeatherLogDetailPage() {
       <AppLayout>
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-gray-600">Loading weather log...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
+            <p className="text-secondary">Loading weather log...</p>
           </div>
         </div>
       </AppLayout>
@@ -73,9 +73,9 @@ export function WeatherLogDetailPage() {
         <div className="p-6">
           <Card>
             <CardContent className="py-12 text-center">
-              <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Weather Log Not Found</h3>
-              <p className="text-gray-600 mb-4">
+              <AlertTriangle className="w-16 h-16 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Weather Log Not Found</h3>
+              <p className="text-secondary mb-4">
                 The weather log you're looking for doesn't exist or you don't have access to it.
               </p>
               <Button onClick={() => navigate('/weather-logs')}>
@@ -93,7 +93,7 @@ export function WeatherLogDetailPage() {
     <AppLayout>
       <div className="h-full overflow-y-auto">
         {/* Header */}
-        <div className="bg-white border-b px-6 py-4 sticky top-0 z-10">
+        <div className="bg-card border-b px-6 py-4 sticky top-0 z-10">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm" onClick={() => navigate('/weather-logs')}>
@@ -102,10 +102,10 @@ export function WeatherLogDetailPage() {
               <div className="flex items-center gap-3">
                 <WeatherConditionsIcon condition={weatherLog.conditions} className="w-8 h-8" />
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">
+                  <h1 className="text-2xl font-bold text-foreground" className="heading-page">
                     {getWeatherConditionLabel(weatherLog.conditions)}
                   </h1>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-secondary">
                     {format(new Date(weatherLog.log_date), 'EEEE, MMMM d, yyyy')}
                   </p>
                 </div>
@@ -119,7 +119,7 @@ export function WeatherLogDetailPage() {
               </Button>
               <Button
                 variant="outline"
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="text-error hover:text-error-dark hover:bg-error-light"
                 onClick={() => setShowDeleteConfirm(true)}
                 disabled={deleteMutation.isPending}
               >
@@ -137,7 +137,7 @@ export function WeatherLogDetailPage() {
           <div className="flex items-center gap-4">
             <Link
               to={`/projects/${weatherLog.project.id}`}
-              className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700"
+              className="flex items-center gap-2 text-sm text-primary hover:text-primary-hover"
             >
               <MapPin className="w-4 h-4" />
               {weatherLog.project.name}
@@ -167,12 +167,12 @@ export function WeatherLogDetailPage() {
                     </div>
                     <div className="space-y-1">
                       {weatherLog.temperature_high !== null && (
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-secondary">
                           High: <span className="font-semibold text-lg">{weatherLog.temperature_high}°F</span>
                         </p>
                       )}
                       {weatherLog.temperature_low !== null && (
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-secondary">
                           Low: <span className="font-semibold text-lg">{weatherLog.temperature_low}°F</span>
                         </p>
                       )}
@@ -184,10 +184,10 @@ export function WeatherLogDetailPage() {
                 {weatherLog.precipitation_amount > 0 && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <Droplets className="w-5 h-5 text-blue-500" />
+                      <Droplets className="w-5 h-5 text-primary" />
                       <span className="font-medium">Precipitation</span>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-secondary">
                       <span className="font-semibold text-lg">{weatherLog.precipitation_amount}"</span>
                       {' '}
                       <span className="capitalize">{weatherLog.precipitation_type}</span>
@@ -199,15 +199,15 @@ export function WeatherLogDetailPage() {
                 {weatherLog.wind_speed !== null && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <Wind className="w-5 h-5 text-gray-500" />
+                      <Wind className="w-5 h-5 text-muted" />
                       <span className="font-medium">Wind</span>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-secondary">
                       <span className="font-semibold text-lg">{weatherLog.wind_speed} mph</span>
                       {weatherLog.wind_direction && (
                         <>
                           {' '}
-                          <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                          <span className="text-xs bg-muted px-2 py-1 rounded">
                             {weatherLog.wind_direction}
                           </span>
                         </>
@@ -223,7 +223,7 @@ export function WeatherLogDetailPage() {
                       <Droplets className="w-5 h-5 text-blue-400" />
                       <span className="font-medium">Humidity</span>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-secondary">
                       <span className="font-semibold text-lg">{weatherLog.humidity_percent}%</span>
                     </p>
                   </div>
@@ -244,7 +244,7 @@ export function WeatherLogDetailPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-4">
                   <div>
-                    <span className="text-sm text-gray-600">Impact Level:</span>
+                    <span className="text-sm text-secondary">Impact Level:</span>
                     <div className="mt-1">
                       <WeatherImpactBadge impact={weatherLog.work_impact} />
                     </div>
@@ -252,7 +252,7 @@ export function WeatherLogDetailPage() {
 
                   {weatherLog.hours_lost > 0 && (
                     <div>
-                      <span className="text-sm text-gray-600">Hours Lost:</span>
+                      <span className="text-sm text-secondary">Hours Lost:</span>
                       <div className="flex items-center gap-2 mt-1">
                         <Clock className="w-4 h-4 text-orange-500" />
                         <span className="font-semibold text-lg">{weatherLog.hours_lost}</span>
@@ -270,8 +270,8 @@ export function WeatherLogDetailPage() {
                 {/* Impact Notes */}
                 {weatherLog.impact_notes && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Impact Notes:</h4>
-                    <p className="text-sm text-gray-600 whitespace-pre-wrap bg-gray-50 p-3 rounded-md">
+                    <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">Impact Notes:</h4>
+                    <p className="text-sm text-secondary whitespace-pre-wrap bg-surface p-3 rounded-md">
                       {weatherLog.impact_notes}
                     </p>
                   </div>
@@ -280,7 +280,7 @@ export function WeatherLogDetailPage() {
                 {/* Affected Activities */}
                 {weatherLog.affected_activities.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Affected Activities:</h4>
+                    <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">Affected Activities:</h4>
                     <div className="flex flex-wrap gap-2">
                       {weatherLog.affected_activities.map((activity, index) => (
                         <Badge key={index} variant="outline">
@@ -350,20 +350,20 @@ export function WeatherLogDetailPage() {
             <CardContent>
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">Recorded By:</span>
+                  <span className="text-secondary">Recorded By:</span>
                   <p className="font-medium">
                     {weatherLog.recorded_by_user.first_name} {weatherLog.recorded_by_user.last_name}
                   </p>
                 </div>
                 <div>
-                  <span className="text-gray-600">Created:</span>
+                  <span className="text-secondary">Created:</span>
                   <p className="font-medium">
                     {format(new Date(weatherLog.created_at), 'MMM d, yyyy h:mm a')}
                   </p>
                 </div>
                 {weatherLog.updated_at !== weatherLog.created_at && (
                   <div>
-                    <span className="text-gray-600">Last Updated:</span>
+                    <span className="text-secondary">Last Updated:</span>
                     <p className="font-medium">
                       {format(new Date(weatherLog.updated_at), 'MMM d, yyyy h:mm a')}
                     </p>

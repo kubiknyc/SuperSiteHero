@@ -126,7 +126,7 @@ export function SignatureCaptureDialog({
             Capture Signature
           </DialogTitle>
           {(role || title) && (
-            <div className="text-sm text-gray-600 mt-2">
+            <div className="text-sm text-secondary mt-2">
               {role && <div>Role: {role}</div>}
               {title && <div>Title: {title}</div>}
             </div>
@@ -144,7 +144,7 @@ export function SignatureCaptureDialog({
           />
 
           {currentSignature && !signatureDataUrl && (
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               You can draw a new signature to replace the existing one, or remove it entirely.
             </p>
           )}

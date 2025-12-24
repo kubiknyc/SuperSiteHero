@@ -65,7 +65,7 @@ export function NoticesWidget({ projectId, className }: NoticesWidgetProps) {
       <CardContent className="space-y-3">
         {/* Overdue alert */}
         {overdueCount > 0 && (
-          <div className="flex items-center gap-2 text-red-600">
+          <div className="flex items-center gap-2 text-error">
             <AlertTriangle className="h-4 w-4" />
             <span className="text-sm font-medium">
               {overdueCount} response{overdueCount !== 1 ? 's' : ''} overdue
@@ -85,28 +85,28 @@ export function NoticesWidget({ projectId, className }: NoticesWidgetProps) {
 
         {/* Stats summary */}
         <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="text-gray-600">
-            Total Active: <span className="font-medium text-gray-900">{stats?.total || 0}</span>
+          <div className="text-secondary">
+            Total Active: <span className="font-medium text-foreground">{stats?.total || 0}</span>
           </div>
-          <div className="text-gray-600">
+          <div className="text-secondary">
             Critical: <span className={cn(
               'font-medium',
-              (stats?.critical || 0) > 0 ? 'text-red-600' : 'text-gray-900'
+              (stats?.critical || 0) > 0 ? 'text-error' : 'text-foreground'
             )}>
               {stats?.critical || 0}
             </span>
           </div>
-          <div className="text-gray-600">
-            Awaiting Response: <span className="font-medium text-gray-900">{stats?.awaitingResponse || 0}</span>
+          <div className="text-secondary">
+            Awaiting Response: <span className="font-medium text-foreground">{stats?.awaitingResponse || 0}</span>
           </div>
-          <div className="text-gray-600">
-            Sent This Month: <span className="font-medium text-gray-900">{stats?.sentThisMonth || 0}</span>
+          <div className="text-secondary">
+            Sent This Month: <span className="font-medium text-foreground">{stats?.sentThisMonth || 0}</span>
           </div>
         </div>
 
         {/* No alerts message */}
         {overdueCount === 0 && dueSoonCount === 0 && (stats?.total || 0) === 0 && (
-          <p className="text-sm text-gray-500">No notices for this project</p>
+          <p className="text-sm text-muted">No notices for this project</p>
         )}
 
         {/* Quick action */}

@@ -22,7 +22,7 @@ interface PresenceIndicatorProps {
 
 const statusColors: Record<PresenceStatus, string> = {
   online: 'bg-green-500',
-  away: 'bg-yellow-500',
+  away: 'bg-warning',
   busy: 'bg-red-500',
   offline: 'bg-gray-400',
 }
@@ -68,7 +68,7 @@ export function PresenceIndicator({
         aria-hidden="true"
       />
       {showLabel && (
-        <span className="text-sm text-gray-600 dark:text-gray-400">
+        <span className="text-sm text-secondary dark:text-disabled">
           {statusLabels[status]}
         </span>
       )}

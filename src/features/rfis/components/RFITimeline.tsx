@@ -58,11 +58,11 @@ const ACTION_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  draft: 'bg-gray-100 text-gray-700',
-  submitted: 'bg-blue-100 text-blue-700',
-  answered: 'bg-green-100 text-green-700',
-  approved: 'bg-green-600 text-white',
-  rejected: 'bg-red-100 text-red-700',
+  draft: 'bg-muted text-secondary',
+  submitted: 'bg-info-light text-primary-hover',
+  answered: 'bg-success-light text-success-dark',
+  approved: 'bg-success text-white',
+  rejected: 'bg-error-light text-error-dark',
   closed: 'bg-slate-200 text-slate-700',
 }
 
@@ -165,7 +165,7 @@ export function RFITimeline({
     return parts.map((part, index) => {
       if (part.startsWith('@')) {
         return (
-          <span key={index} className="text-blue-600 font-medium">
+          <span key={index} className="text-primary font-medium">
             {part}
           </span>
         )
@@ -179,7 +179,7 @@ export function RFITimeline({
     switch (event.type) {
       case 'comment':
         return (
-          <div className="text-sm text-gray-700 whitespace-pre-wrap">
+          <div className="text-sm text-secondary whitespace-pre-wrap">
             {highlightMentions(event.data.comment || '')}
           </div>
         )
@@ -187,14 +187,14 @@ export function RFITimeline({
       case 'status_change':
         return (
           <div className="flex items-center gap-2 text-sm">
-            <span className="text-gray-600">changed status from</span>
+            <span className="text-secondary">changed status from</span>
             {event.data.oldValue && (
-              <Badge className={cn('text-xs capitalize', STATUS_COLORS[event.data.oldValue] || 'bg-gray-100')}>
+              <Badge className={cn('text-xs capitalize', STATUS_COLORS[event.data.oldValue] || 'bg-muted')}>
                 {event.data.oldValue}
               </Badge>
             )}
-            <span className="text-gray-600">to</span>
-            <Badge className={cn('text-xs capitalize', STATUS_COLORS[event.data.newValue || ''] || 'bg-gray-100')}>
+            <span className="text-secondary">to</span>
+            <Badge className={cn('text-xs capitalize', STATUS_COLORS[event.data.newValue || ''] || 'bg-muted')}>
               {event.data.newValue}
             </Badge>
           </div>
@@ -202,7 +202,7 @@ export function RFITimeline({
 
       case 'created':
         return (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             created this RFI
           </div>
         )
@@ -210,16 +210,16 @@ export function RFITimeline({
       case 'field_change':
         return (
           <div className="text-sm">
-            <span className="text-gray-600">updated </span>
-            <span className="font-medium text-gray-900">
+            <span className="text-secondary">updated </span>
+            <span className="font-medium text-foreground">
               {formatFieldName(event.data.field || '')}
             </span>
             {event.data.oldValue && event.data.newValue && (
               <>
-                <span className="text-gray-600"> from </span>
-                <span className="text-gray-500 line-through">{event.data.oldValue}</span>
-                <span className="text-gray-600"> to </span>
-                <span className="text-gray-900">{event.data.newValue}</span>
+                <span className="text-secondary"> from </span>
+                <span className="text-muted line-through">{event.data.oldValue}</span>
+                <span className="text-secondary"> to </span>
+                <span className="text-foreground">{event.data.newValue}</span>
               </>
             )}
           </div>
@@ -227,7 +227,7 @@ export function RFITimeline({
 
       default:
         return (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             {event.data.action || 'Activity'}
           </div>
         )
@@ -244,7 +244,7 @@ export function RFITimeline({
           </CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+          <Loader2 className="h-8 w-8 text-disabled animate-spin" />
         </CardContent>
       </Card>
     )
@@ -261,7 +261,7 @@ export function RFITimeline({
         </CardHeader>
         <CardContent className="text-center py-8">
           <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">No activity recorded yet</p>
+          <p className="text-muted">No activity recorded yet</p>
         </CardContent>
       </Card>
     )
@@ -273,7 +273,7 @@ export function RFITimeline({
         <CardTitle className="flex items-center gap-2">
           <History className="h-5 w-5" />
           Activity Timeline
-          <span className="text-sm font-normal text-gray-500">
+          <span className="text-sm font-normal text-muted">
             ({timelineEvents.length} events)
           </span>
         </CardTitle>
@@ -281,7 +281,7 @@ export function RFITimeline({
       <CardContent>
         <div className="relative">
           {/* Timeline line */}
-          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted" />
 
           {/* Timeline events */}
           <div className="space-y-6">
@@ -298,30 +298,30 @@ export function RFITimeline({
                       event.type === 'comment'
                         ? isCurrentUser
                           ? 'bg-blue-500 text-white'
-                          : 'bg-gray-200 text-gray-600'
+                          : 'bg-muted text-secondary'
                         : event.type === 'status_change'
-                        ? 'bg-green-100 text-green-600'
-                        : 'bg-gray-100 text-gray-600'
+                        ? 'bg-success-light text-success'
+                        : 'bg-muted text-secondary'
                     )}
                   >
                     <Icon className="h-4 w-4" />
                   </div>
 
                   {/* Event content */}
-                  <div className="bg-gray-50 rounded-lg p-3">
+                  <div className="bg-surface rounded-lg p-3">
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        <User className="h-3.5 w-3.5 text-gray-400" />
+                        <User className="h-3.5 w-3.5 text-disabled" />
                         <span
                           className={cn(
                             'text-sm font-medium',
-                            isCurrentUser ? 'text-blue-600' : 'text-gray-900'
+                            isCurrentUser ? 'text-primary' : 'text-foreground'
                           )}
                         >
                           {getDisplayName(event.userId)}
                         </span>
                       </div>
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-muted">
                         {event.timestamp
                           ? formatDistanceToNow(new Date(event.timestamp), { addSuffix: true })
                           : 'Unknown time'}
@@ -332,7 +332,7 @@ export function RFITimeline({
 
                     {/* Full timestamp on hover */}
                     {event.timestamp && (
-                      <p className="text-xs text-gray-400 mt-2">
+                      <p className="text-xs text-disabled mt-2">
                         {format(new Date(event.timestamp), 'MMM d, yyyy h:mm a')}
                       </p>
                     )}

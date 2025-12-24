@@ -135,7 +135,7 @@ export function CostEstimatesPage() {
         return 'bg-gray-500'
       case 'draft':
       default:
-        return 'bg-yellow-500'
+        return 'bg-warning'
     }
   }
 
@@ -148,7 +148,7 @@ export function CostEstimatesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Cost Estimates</h1>
+          <h1 className="text-3xl font-bold" className="heading-page">Cost Estimates</h1>
           <p className="text-muted-foreground">
             Create and manage cost estimates for your project
           </p>
@@ -241,7 +241,7 @@ export function CostEstimatesPage() {
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button variant="ghost" size="sm">
-                                <Trash2 className="h-4 w-4 text-red-500" />
+                                <Trash2 className="h-4 w-4 text-error" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -255,7 +255,7 @@ export function CostEstimatesPage() {
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => handleDeleteEstimate(estimate.id)}
-                                  className="bg-red-500 hover:bg-red-600"
+                                  className="bg-red-500 hover:bg-error"
                                 >
                                   Delete
                                 </AlertDialogAction>

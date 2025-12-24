@@ -36,8 +36,8 @@ export function TaskCreatePage() {
     <AppLayout>
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Create Task</h1>
-          <p className="text-gray-600 mt-2">Add a new task to your project</p>
+          <h1 className="text-3xl font-bold text-foreground" className="heading-page">Create Task</h1>
+          <p className="text-secondary mt-2">Add a new task to your project</p>
         </div>
 
         <TaskForm

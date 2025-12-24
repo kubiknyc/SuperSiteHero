@@ -513,8 +513,8 @@ export function TakeoffCanvas({
 
       {/* Measurement info overlay */}
       {selectedMeasurementId && (
-        <div className="absolute top-4 right-4 bg-white p-4 rounded shadow-lg">
-          <h3 className="font-semibold mb-2">Measurement</h3>
+        <div className="absolute top-4 right-4 bg-card p-4 rounded shadow-lg">
+          <h3 className="font-semibold mb-2" className="heading-subsection">Measurement</h3>
           {measurements
             .filter((m) => m.id === selectedMeasurementId)
             .map((m) => (

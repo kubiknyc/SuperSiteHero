@@ -71,19 +71,19 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <Cloud className="h-5 w-5 text-gray-600" />
+          <Cloud className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">Weather Conditions</CardTitle>
             <CardDescription>Temperature, conditions, and weather impacts</CardDescription>
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
@@ -177,7 +177,7 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate
             </FormField>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-secondary mb-2">
                 Precipitation (inches)
               </label>
               <Input
@@ -194,7 +194,7 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-secondary mb-2">
                 Wind Speed (mph)
               </label>
               <Input
@@ -219,7 +219,7 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate
                 onChange={(e) => onUpdate({ weather_delays: e.target.checked })}
                 className="w-4 h-4 rounded"
               />
-              <span className="text-sm font-medium text-gray-700">Weather Caused Delays</span>
+              <span className="text-sm font-medium text-secondary">Weather Caused Delays</span>
             </label>
           </div>
 
@@ -245,7 +245,7 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate
                 }}
                 onBlur={(e) => validateField('weather_notes', e.target.value)}
                 className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] ${
-                  errors.weather_notes ? 'border-red-500' : 'border-gray-300'
+                  errors.weather_notes ? 'border-red-500' : 'border-input'
                 }`}
               />
             </FormField>

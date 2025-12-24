@@ -97,10 +97,10 @@ export function DocumentSearchResults({
         {isLoading && searchQuery && (
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="animate-pulse p-4 bg-gray-50 rounded-lg">
-                <div className="h-4 w-3/4 bg-gray-200 rounded mb-2" />
-                <div className="h-3 w-full bg-gray-100 rounded mb-1" />
-                <div className="h-3 w-2/3 bg-gray-100 rounded" />
+              <div key={i} className="animate-pulse p-4 bg-surface rounded-lg">
+                <div className="h-4 w-3/4 bg-muted rounded mb-2" />
+                <div className="h-3 w-full bg-muted rounded mb-1" />
+                <div className="h-3 w-2/3 bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -108,15 +108,15 @@ export function DocumentSearchResults({
 
         {/* Error state */}
         {error && (
-          <div className="text-center text-red-600 py-4">
+          <div className="text-center text-error py-4">
             <p>Search failed</p>
-            <p className="text-sm text-gray-500">{(error as Error).message}</p>
+            <p className="text-sm text-muted">{(error as Error).message}</p>
           </div>
         )}
 
         {/* Empty state - no search yet */}
         {!searchQuery && !isLoading && (
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-3xl">📄</span>
             <p className="mt-2">Search document content</p>
             <p className="text-sm">
@@ -127,7 +127,7 @@ export function DocumentSearchResults({
 
         {/* No results */}
         {searchQuery && !isLoading && results?.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-3xl">🔍</span>
             <p className="mt-2">No documents found</p>
             <p className="text-sm">
@@ -139,7 +139,7 @@ export function DocumentSearchResults({
         {/* Search results */}
         {results && results.length > 0 && (
           <div className="space-y-3">
-            <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center justify-between text-sm text-muted">
               <span>{results.length} document(s) found</span>
               {isFetching && <span className="animate-pulse">Updating...</span>}
             </div>
@@ -194,7 +194,7 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
   return (
     <div
       className={cn(
-        'p-4 rounded-lg border border-gray-100 bg-gray-50 hover:bg-gray-100 transition-colors',
+        'p-4 rounded-lg border border-border bg-surface hover:bg-muted transition-colors',
         onClick && 'cursor-pointer'
       )}
       onClick={handleClick}
@@ -202,12 +202,12 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm text-gray-900 truncate">
+          <h4 className="font-medium text-sm text-foreground truncate" className="heading-card">
             {result.document_name}
           </h4>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             {result.document_number && (
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted">
                 #{result.document_number}
               </span>
             )}
@@ -233,7 +233,7 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
         <div className="mt-3">
           <p
             className={cn(
-              'text-sm text-gray-600 leading-relaxed',
+              'text-sm text-secondary leading-relaxed',
               !expanded && 'line-clamp-3'
             )}
           >
@@ -243,7 +243,7 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
           {result.content_excerpt.length > 200 && (
             <button
               type="button"
-              className="text-xs text-blue-600 hover:underline mt-1"
+              className="text-xs text-primary hover:underline mt-1"
               onClick={(e) => {
                 e.stopPropagation()
                 setExpanded(!expanded)
@@ -258,7 +258,7 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
       {/* Match locations */}
       {result.match_locations && result.match_locations.length > 0 && (
         <div className="mt-2 flex items-center gap-2">
-          <span className="text-xs text-gray-400">Matches:</span>
+          <span className="text-xs text-disabled">Matches:</span>
           <div className="flex flex-wrap gap-1">
             {result.match_locations.slice(0, 5).map((loc, i) => (
               <Badge key={i} variant="outline" className="text-[10px]">
@@ -267,7 +267,7 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
               </Badge>
             ))}
             {result.match_locations.length > 5 && (
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-disabled">
                 +{result.match_locations.length - 5} more
               </span>
             )}

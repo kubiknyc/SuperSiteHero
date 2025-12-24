@@ -81,18 +81,18 @@ export function QuickBooksCallbackPage() {
         <CardHeader className="text-center">
           <div className="mx-auto mb-4">
             {state === 'processing' && (
-              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-                <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+              <div className="w-16 h-16 rounded-full bg-info-light flex items-center justify-center">
+                <Loader2 className="h-8 w-8 text-primary animate-spin" />
               </div>
             )}
             {state === 'success' && (
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckCircle2 className="h-8 w-8 text-green-600" />
+              <div className="w-16 h-16 rounded-full bg-success-light flex items-center justify-center">
+                <CheckCircle2 className="h-8 w-8 text-success" />
               </div>
             )}
             {state === 'error' && (
-              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                <XCircle className="h-8 w-8 text-red-600" />
+              <div className="w-16 h-16 rounded-full bg-error-light flex items-center justify-center">
+                <XCircle className="h-8 w-8 text-error" />
               </div>
             )}
           </div>
@@ -124,9 +124,9 @@ export function QuickBooksCallbackPage() {
 
           {state === 'success' && (
             <>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm">
-                <h4 className="font-medium text-green-800 mb-2">What's Next?</h4>
-                <ul className="text-green-700 space-y-1">
+              <div className="bg-success-light border border-green-200 rounded-lg p-4 text-sm">
+                <h4 className="font-medium text-green-800 mb-2" className="heading-card">What's Next?</h4>
+                <ul className="text-success-dark space-y-1">
                   <li>• Set up account mappings for cost codes</li>
                   <li>• Configure automatic sync settings</li>
                   <li>• Start syncing vendors and invoices</li>
@@ -142,9 +142,9 @@ export function QuickBooksCallbackPage() {
 
           {state === 'error' && (
             <>
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm">
-                <h4 className="font-medium text-red-800 mb-2">Troubleshooting</h4>
-                <ul className="text-red-700 space-y-1">
+              <div className="bg-error-light border border-red-200 rounded-lg p-4 text-sm">
+                <h4 className="font-medium text-red-800 mb-2" className="heading-card">Troubleshooting</h4>
+                <ul className="text-error-dark space-y-1">
                   <li>• Make sure you authorized the correct QuickBooks company</li>
                   <li>• Check that your QuickBooks subscription is active</li>
                   <li>• Try clearing your browser cache and trying again</li>

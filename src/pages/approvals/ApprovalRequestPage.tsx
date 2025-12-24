@@ -135,7 +135,7 @@ export function ApprovalRequestPage() {
     return (
       <AppLayout>
         <div className="p-6 max-w-4xl mx-auto">
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-muted">
             Loading approval details...
           </div>
         </div>
@@ -148,10 +148,10 @@ export function ApprovalRequestPage() {
       <AppLayout>
         <div className="p-6 max-w-4xl mx-auto">
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
               Approval Request Not Found
             </h2>
-            <p className="text-gray-500 mb-4">
+            <p className="text-muted mb-4">
               The approval request you're looking for doesn't exist or you don't
               have access to it.
             </p>
@@ -181,7 +181,7 @@ export function ApprovalRequestPage() {
         {/* Back link */}
         <Link
           to="/approvals"
-          className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-4"
+          className="inline-flex items-center text-sm text-muted hover:text-secondary mb-4"
         >
           <svg
             className="w-4 h-4 mr-1"
@@ -200,11 +200,11 @@ export function ApprovalRequestPage() {
         </Link>
 
         {/* Header */}
-        <div className="bg-white border rounded-lg p-6 mb-6">
+        <div className="bg-card border rounded-lg p-6 mb-6">
           <div className="flex items-start justify-between mb-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-500">
+                <span className="text-sm font-medium text-muted">
                   {entityConfig?.label}
                 </span>
                 <ApprovalStatusBadge
@@ -213,11 +213,11 @@ export function ApprovalRequestPage() {
                   showConditions
                 />
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-foreground" className="heading-page">
                 {request.workflow?.name || 'Approval Request'}
               </h1>
               {request.workflow?.description && (
-                <p className="text-gray-500 mt-1">
+                <p className="text-muted mt-1">
                   {request.workflow.description}
                 </p>
               )}
@@ -227,24 +227,24 @@ export function ApprovalRequestPage() {
           {/* Meta info */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
             <div>
-              <div className="text-xs text-gray-500 uppercase">Submitted by</div>
-              <div className="font-medium text-gray-900">
+              <div className="text-xs text-muted uppercase">Submitted by</div>
+              <div className="font-medium text-foreground">
                 {request.initiator?.full_name || request.initiator?.email || 'Unknown'}
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-500 uppercase">Submitted on</div>
-              <div className="font-medium text-gray-900">{formattedDate}</div>
+              <div className="text-xs text-muted uppercase">Submitted on</div>
+              <div className="font-medium text-foreground">{formattedDate}</div>
             </div>
             <div>
-              <div className="text-xs text-gray-500 uppercase">Current Step</div>
-              <div className="font-medium text-gray-900">
+              <div className="text-xs text-muted uppercase">Current Step</div>
+              <div className="font-medium text-foreground">
                 {currentStep?.name || `Step ${request.current_step}`} of {steps.length}
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-500 uppercase">Approvers</div>
-              <div className="font-medium text-gray-900">
+              <div className="text-xs text-muted uppercase">Approvers</div>
+              <div className="font-medium text-foreground">
                 {currentStep?.approver_ids?.length || 0} assigned
               </div>
             </div>
@@ -253,13 +253,13 @@ export function ApprovalRequestPage() {
           {/* Progress bar */}
           {steps.length > 0 && (
             <div className="mt-4 pt-4 border-t">
-              <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+              <div className="flex items-center justify-between text-xs text-muted mb-2">
                 <span>Progress</span>
                 <span>
                   {Math.round((request.current_step / steps.length) * 100)}%
                 </span>
               </div>
-              <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div
                   className={cn(
                     'h-full transition-all',
@@ -282,10 +282,10 @@ export function ApprovalRequestPage() {
           {request.status === 'approved_with_conditions' && request.conditions && (
             <div className="mt-4 pt-4 border-t">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-800 mb-1">
+                <h3 className="text-sm font-medium text-blue-800 mb-1" className="heading-subsection">
                   Approval Conditions
                 </h3>
-                <p className="text-blue-700">{request.conditions}</p>
+                <p className="text-primary-hover">{request.conditions}</p>
               </div>
             </div>
           )}
@@ -293,13 +293,13 @@ export function ApprovalRequestPage() {
 
         {/* Actions */}
         {isPending && (canApprove || isInitiator) && (
-          <div className="bg-white border rounded-lg p-6 mb-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
+          <div className="bg-card border rounded-lg p-6 mb-6">
+            <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">Actions</h2>
 
             {/* Reject input */}
             {showRejectInput && canApprove && (
-              <div className="mb-4 p-4 bg-red-50 rounded-lg">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-4 p-4 bg-error-light rounded-lg">
+                <label className="block text-sm font-medium text-secondary mb-2">
                   Rejection reason (required)
                 </label>
                 <textarea
@@ -337,7 +337,7 @@ export function ApprovalRequestPage() {
                   <Button
                     onClick={handleApprove}
                     disabled={isMutating}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-success hover:bg-green-700"
                   >
                     Approve
                   </Button>
@@ -345,7 +345,7 @@ export function ApprovalRequestPage() {
                     variant="outline"
                     onClick={() => setShowConditionsDialog(true)}
                     disabled={isMutating}
-                    className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                    className="border-blue-300 text-primary hover:bg-blue-50"
                   >
                     Approve with Conditions
                   </Button>
@@ -353,7 +353,7 @@ export function ApprovalRequestPage() {
                     variant="outline"
                     onClick={() => setShowRejectInput(true)}
                     disabled={isMutating}
-                    className="border-red-300 text-red-600 hover:bg-red-50"
+                    className="border-red-300 text-error hover:bg-error-light"
                   >
                     Reject
                   </Button>
@@ -366,7 +366,7 @@ export function ApprovalRequestPage() {
                   variant="ghost"
                   onClick={handleCancel}
                   disabled={isMutating}
-                  className="text-gray-600"
+                  className="text-secondary"
                 >
                   Cancel Request
                 </Button>
@@ -376,15 +376,15 @@ export function ApprovalRequestPage() {
         )}
 
         {/* Add comment */}
-        <div className="bg-white border rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-card border rounded-lg p-6 mb-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
             Add Comment
           </h2>
           <textarea
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-input rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows={2}
           />
           <div className="mt-2">
@@ -399,8 +399,8 @@ export function ApprovalRequestPage() {
         </div>
 
         {/* Activity history */}
-        <div className="bg-white border rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-card border rounded-lg p-6">
+          <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
             Activity History
           </h2>
           <ApprovalHistory actions={history || []} />

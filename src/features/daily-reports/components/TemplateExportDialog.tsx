@@ -215,7 +215,7 @@ export function TemplateExportDialog({
           <DialogDescription>
             Create a reusable template from this daily report's configuration.
             {projectName && (
-              <span className="block mt-1 text-xs text-gray-500">
+              <span className="block mt-1 text-xs text-muted">
                 Source: {projectName}
               </span>
             )}
@@ -262,19 +262,19 @@ export function TemplateExportDialog({
                     className={`flex items-start gap-3 p-3 rounded-lg border-2 text-left transition-all ${
                       isSelected
                         ? 'border-primary bg-primary-50 dark:border-primary-600 dark:bg-primary-950/20'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-gray-800'
+                        : 'border-border hover:border-input hover:bg-surface dark:border-gray-700 dark:hover:border-gray-600 dark:hover:bg-surface'
                     }`}
                   >
                     <div
                       className={`p-1.5 rounded-md ${
-                        isSelected ? 'bg-primary-100 text-primary dark:bg-primary-950 dark:text-primary-400' : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                        isSelected ? 'bg-primary-100 text-primary dark:bg-primary-950 dark:text-primary-400' : 'bg-muted text-secondary dark:bg-surface dark:text-disabled'
                       }`}
                     >
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-sm">{option.label}</div>
-                      <div className="text-xs text-gray-500">{option.description}</div>
+                      <div className="text-xs text-muted">{option.description}</div>
                     </div>
                     {isSelected && (
                       <CheckCircle className="h-5 w-5 text-primary dark:text-primary-400 flex-shrink-0" />
@@ -293,7 +293,7 @@ export function TemplateExportDialog({
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeWorkforce
                     ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
-                    : 'border-gray-200 hover:bg-gray-50'
+                    : 'border-border hover:bg-surface'
                 }`}
               >
                 <Checkbox
@@ -301,7 +301,7 @@ export function TemplateExportDialog({
                   onCheckedChange={(checked) => setIncludeWorkforce(checked === true)}
                 />
                 <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-gray-600" />
+                  <Users className="h-4 w-4 text-secondary" />
                   <span className="text-sm">Workforce</span>
                   <Badge variant="secondary" className="text-xs">
                     {workforceCount}
@@ -313,7 +313,7 @@ export function TemplateExportDialog({
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeEquipment
                     ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
-                    : 'border-gray-200 hover:bg-gray-50'
+                    : 'border-border hover:bg-surface'
                 }`}
               >
                 <Checkbox
@@ -321,7 +321,7 @@ export function TemplateExportDialog({
                   onCheckedChange={(checked) => setIncludeEquipment(checked === true)}
                 />
                 <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-gray-600" />
+                  <Truck className="h-4 w-4 text-secondary" />
                   <span className="text-sm">Equipment</span>
                   <Badge variant="secondary" className="text-xs">
                     {equipmentCount}
@@ -333,7 +333,7 @@ export function TemplateExportDialog({
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeWeather
                     ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
-                    : 'border-gray-200 hover:bg-gray-50'
+                    : 'border-border hover:bg-surface'
                 }`}
               >
                 <Checkbox
@@ -341,7 +341,7 @@ export function TemplateExportDialog({
                   onCheckedChange={(checked) => setIncludeWeather(checked === true)}
                 />
                 <div className="flex items-center gap-2">
-                  <Cloud className="h-4 w-4 text-gray-600" />
+                  <Cloud className="h-4 w-4 text-secondary" />
                   <span className="text-sm">Weather</span>
                 </div>
               </label>
@@ -350,7 +350,7 @@ export function TemplateExportDialog({
                 className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                   includeNotes
                     ? 'border-primary-200 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/20'
-                    : 'border-gray-200 hover:bg-gray-50'
+                    : 'border-border hover:bg-surface'
                 }`}
               >
                 <Checkbox
@@ -358,13 +358,13 @@ export function TemplateExportDialog({
                   onCheckedChange={(checked) => setIncludeNotes(checked === true)}
                 />
                 <div className="flex items-center gap-2">
-                  <FileEdit className="h-4 w-4 text-gray-600" />
+                  <FileEdit className="h-4 w-4 text-secondary" />
                   <span className="text-sm">Notes</span>
                 </div>
               </label>
             </div>
             {!includeWorkforce && !includeEquipment && (
-              <p className="text-xs text-red-500">
+              <p className="text-xs text-error">
                 Please select at least workforce or equipment to include
               </p>
             )}
@@ -420,7 +420,7 @@ export function TemplateExportDialog({
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="ml-1 hover:text-red-500"
+                    className="ml-1 hover:text-error"
                   >
                     <X className="h-3 w-3" />
                   </button>

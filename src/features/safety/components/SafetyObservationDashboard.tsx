@@ -109,8 +109,8 @@ export function SafetyObservationDashboard({
       {onCreateObservation && (
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Safety Observations</h2>
-            <p className="text-gray-500">Track and improve safety performance</p>
+            <h2 className="text-2xl font-bold text-foreground" className="heading-section">Safety Observations</h2>
+            <p className="text-muted">Track and improve safety performance</p>
           </div>
           <Button onClick={onCreateObservation} size="lg" className="gap-2">
             <Plus className="h-5 w-5" />
@@ -126,16 +126,16 @@ export function SafetyObservationDashboard({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Total Observations</p>
-                <p className="text-3xl font-bold text-gray-900 mt-1">
+                <p className="text-sm font-medium text-muted">Total Observations</p>
+                <p className="text-3xl font-bold text-foreground mt-1">
                   {stats?.total_observations || 0}
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted mt-1">
                   {stats?.last_30_days || 0} in last 30 days
                 </p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-full">
-                <Eye className="h-6 w-6 text-blue-600" />
+              <div className="p-3 bg-info-light rounded-full">
+                <Eye className="h-6 w-6 text-primary" />
               </div>
             </div>
           </CardContent>
@@ -146,14 +146,14 @@ export function SafetyObservationDashboard({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Positive Ratio</p>
-                <p className="text-3xl font-bold text-green-600 mt-1">
+                <p className="text-sm font-medium text-muted">Positive Ratio</p>
+                <p className="text-3xl font-bold text-success mt-1">
                   {indicators?.positive_observation_ratio.toFixed(0) || 0}%
                 </p>
-                <p className="text-sm text-gray-500 mt-1">Safe behaviors recognized</p>
+                <p className="text-sm text-muted mt-1">Safe behaviors recognized</p>
               </div>
-              <div className="p-3 bg-green-100 rounded-full">
-                <ThumbsUp className="h-6 w-6 text-green-600" />
+              <div className="p-3 bg-success-light rounded-full">
+                <ThumbsUp className="h-6 w-6 text-success" />
               </div>
             </div>
           </CardContent>
@@ -164,11 +164,11 @@ export function SafetyObservationDashboard({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Action Closure Rate</p>
+                <p className="text-sm font-medium text-muted">Action Closure Rate</p>
                 <p className="text-3xl font-bold text-orange-600 mt-1">
                   {indicators?.corrective_action_closure_rate.toFixed(0) || 0}%
                 </p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted mt-1">
                   {stats?.action_required_count || 0} pending
                 </p>
               </div>
@@ -184,11 +184,11 @@ export function SafetyObservationDashboard({
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-500">Participation Rate</p>
+                <p className="text-sm font-medium text-muted">Participation Rate</p>
                 <p className="text-3xl font-bold text-purple-600 mt-1">
                   {indicators?.participation_rate.toFixed(0) || 0}%
                 </p>
-                <p className="text-sm text-gray-500 mt-1">Active observers</p>
+                <p className="text-sm text-muted mt-1">Active observers</p>
               </div>
               <div className="p-3 bg-purple-100 rounded-full">
                 <Users className="h-6 w-6 text-purple-600" />
@@ -234,10 +234,10 @@ export function SafetyObservationDashboard({
                         : 0
 
                     const colorClasses: Record<string, string> = {
-                      green: 'bg-green-100 text-green-700',
-                      yellow: 'bg-yellow-100 text-yellow-700',
+                      green: 'bg-success-light text-success-dark',
+                      yellow: 'bg-warning-light text-yellow-700',
                       orange: 'bg-orange-100 text-orange-700',
-                      blue: 'bg-blue-100 text-blue-700',
+                      blue: 'bg-info-light text-primary-hover',
                     }
 
                     return (
@@ -263,25 +263,25 @@ export function SafetyObservationDashboard({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                  <AlertTriangle className="h-5 w-5 text-error" />
                   Severity Breakdown
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Critical</span>
+                  <span className="text-sm text-secondary">Critical</span>
                   <Badge variant="destructive">{stats?.critical_count || 0}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">High</span>
+                  <span className="text-sm text-secondary">High</span>
                   <Badge className="bg-orange-500">{stats?.high_severity_count || 0}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Pending Review</span>
+                  <span className="text-sm text-secondary">Pending Review</span>
                   <Badge variant="secondary">{stats?.pending_count || 0}</Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Resolved</span>
+                  <span className="text-sm text-secondary">Resolved</span>
                   <Badge className="bg-green-500">{stats?.resolved_count || 0}</Badge>
                 </div>
               </CardContent>
@@ -307,7 +307,7 @@ export function SafetyObservationDashboard({
                   ))}
                 </div>
               ) : recentObservations?.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted">
                   <Eye className="h-12 w-12 mx-auto mb-2 opacity-50" />
                   <p>No observations yet. Submit the first one!</p>
                   {onCreateObservation && (
@@ -351,14 +351,14 @@ export function SafetyObservationDashboard({
                     return (
                       <div
                         key={day.date}
-                        className="flex-1 bg-blue-500 rounded-t transition-all hover:bg-blue-600"
+                        className="flex-1 bg-blue-500 rounded-t transition-all hover:bg-primary"
                         style={{ height: `${Math.max(height, 2)}%` }}
                         title={`${day.date}: ${day.count} observations`}
                       />
                     )
                   })}
                 </div>
-                <div className="flex justify-between mt-2 text-xs text-gray-500">
+                <div className="flex justify-between mt-2 text-xs text-muted">
                   <span>30 days ago</span>
                   <span>Today</span>
                 </div>
@@ -389,10 +389,10 @@ export function SafetyObservationDashboard({
                           : Minus
                     const trendColor =
                       cat.trend === 'up'
-                        ? 'text-green-500'
+                        ? 'text-success'
                         : cat.trend === 'down'
-                          ? 'text-red-500'
-                          : 'text-gray-400'
+                          ? 'text-error'
+                          : 'text-disabled'
 
                     return (
                       <div key={cat.category}>
@@ -401,7 +401,7 @@ export function SafetyObservationDashboard({
                             {CATEGORY_CONFIG[cat.category].label}
                           </span>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-gray-600">{cat.count}</span>
+                            <span className="text-sm text-secondary">{cat.count}</span>
                             <TrendIcon className={cn('h-4 w-4', trendColor)} />
                           </div>
                         </div>
@@ -418,35 +418,35 @@ export function SafetyObservationDashboard({
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-green-500" />
+                <TrendingUp className="h-5 w-5 text-success" />
                 Leading Indicators
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-blue-600">
+                  <p className="text-3xl font-bold text-primary">
                     {indicators?.observation_rate.toFixed(1) || 0}
                   </p>
-                  <p className="text-sm text-gray-500">Observations per Observer</p>
+                  <p className="text-sm text-muted">Observations per Observer</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-green-600">
+                  <p className="text-3xl font-bold text-success">
                     {indicators?.positive_observation_ratio.toFixed(0) || 0}%
                   </p>
-                  <p className="text-sm text-gray-500">Positive Observations</p>
+                  <p className="text-sm text-muted">Positive Observations</p>
                 </div>
                 <div className="text-center">
                   <p className="text-3xl font-bold text-orange-600">
                     {indicators?.average_resolution_time || 0}
                   </p>
-                  <p className="text-sm text-gray-500">Avg. Days to Resolve</p>
+                  <p className="text-sm text-muted">Avg. Days to Resolve</p>
                 </div>
                 <div className="text-center">
                   <p className="text-3xl font-bold text-purple-600">
                     {indicators?.participation_rate.toFixed(0) || 0}%
                   </p>
-                  <p className="text-sm text-gray-500">Team Participation</p>
+                  <p className="text-sm text-muted">Team Participation</p>
                 </div>
               </div>
             </CardContent>
@@ -464,8 +464,8 @@ export function SafetyObservationDashboard({
             </CardHeader>
             <CardContent>
               {actionRequired?.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                <div className="text-center py-8 text-muted">
+                  <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-success" />
                   <p>All corrective actions are resolved!</p>
                 </div>
               ) : (

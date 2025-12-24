@@ -56,8 +56,8 @@ export function NoticesPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Notices</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Notices</h1>
+            <p className="text-secondary mt-1">
               Track formal notices, correspondence, and response deadlines
             </p>
           </div>
@@ -122,7 +122,7 @@ export function NoticesPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading notices...</p>
+            <p className="text-muted">Loading notices...</p>
           </div>
         )}
 
@@ -130,11 +130,11 @@ export function NoticesPage() {
         {error && (
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 Error Loading Notices
               </h3>
-              <p className="text-gray-600">{error.message}</p>
+              <p className="text-secondary">{error.message}</p>
             </CardContent>
           </Card>
         )}
@@ -143,11 +143,11 @@ export function NoticesPage() {
         {!activeProjectId && !isLoading && (
           <Card>
             <CardContent className="p-12 text-center">
-              <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <FileText className="h-12 w-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 Select a Project
               </h3>
-              <p className="text-gray-600">
+              <p className="text-secondary">
                 Choose a project to view and manage notices.
               </p>
             </CardContent>
@@ -158,7 +158,7 @@ export function NoticesPage() {
         {activeProjectId && !isLoading && !error && (
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-foreground" className="heading-section">
                 {filteredNotices.length} Notice{filteredNotices.length !== 1 ? 's' : ''}
               </h2>
             </div>

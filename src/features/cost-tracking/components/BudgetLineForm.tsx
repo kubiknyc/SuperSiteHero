@@ -145,9 +145,9 @@ export function BudgetLineForm({
           <div className="space-y-2">
             <Label htmlFor="cost_code">Cost Code *</Label>
             {isEditing ? (
-              <div className="p-3 bg-gray-50 rounded-md">
+              <div className="p-3 bg-surface rounded-md">
                 <span className="font-mono text-sm">{budget?.cost_code}</span>
-                <span className="text-gray-500 ml-2">{budget?.cost_code_name}</span>
+                <span className="text-muted ml-2">{budget?.cost_code_name}</span>
               </div>
             ) : (
               <CostCodePicker
@@ -163,7 +163,7 @@ export function BudgetLineForm({
           <div className="space-y-2">
             <Label htmlFor="original_budget">Original Budget *</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">$</span>
               <Input
                 id="original_budget"
                 type="text"
@@ -179,7 +179,7 @@ export function BudgetLineForm({
           <div className="space-y-2">
             <Label htmlFor="approved_changes">Approved Changes (COs)</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">$</span>
               <Input
                 id="approved_changes"
                 type="text"
@@ -189,13 +189,13 @@ export function BudgetLineForm({
                 className="pl-7 font-mono"
               />
             </div>
-            <p className="text-xs text-gray-500">Positive for additions, negative for deductions</p>
+            <p className="text-xs text-muted">Positive for additions, negative for deductions</p>
           </div>
 
           {/* Revised Budget (Calculated) */}
-          <div className="p-3 bg-gray-50 rounded-md">
+          <div className="p-3 bg-surface rounded-md">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Revised Budget</span>
+              <span className="text-sm text-secondary">Revised Budget</span>
               <span className="font-mono font-medium">
                 ${revisedBudget.toLocaleString()}
               </span>
@@ -206,7 +206,7 @@ export function BudgetLineForm({
           <div className="space-y-2">
             <Label htmlFor="committed_cost">Committed Cost</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">$</span>
               <Input
                 id="committed_cost"
                 type="text"
@@ -216,14 +216,14 @@ export function BudgetLineForm({
                 className="pl-7 font-mono"
               />
             </div>
-            <p className="text-xs text-gray-500">Contracts and POs issued</p>
+            <p className="text-xs text-muted">Contracts and POs issued</p>
           </div>
 
           {/* Actual Cost */}
           <div className="space-y-2">
             <Label htmlFor="actual_cost">Actual Cost</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">$</span>
               <Input
                 id="actual_cost"
                 type="text"
@@ -236,10 +236,10 @@ export function BudgetLineForm({
           </div>
 
           {/* Variance (Calculated) */}
-          <div className={`p-3 rounded-md ${variance < 0 ? 'bg-red-50' : 'bg-green-50'}`}>
+          <div className={`p-3 rounded-md ${variance < 0 ? 'bg-error-light' : 'bg-success-light'}`}>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-600">Variance</span>
-              <span className={`font-mono font-medium ${variance < 0 ? 'text-red-600' : 'text-green-600'}`}>
+              <span className="text-sm text-secondary">Variance</span>
+              <span className={`font-mono font-medium ${variance < 0 ? 'text-error' : 'text-success'}`}>
                 {variance < 0 ? '-' : '+'}${Math.abs(variance).toLocaleString()}
               </span>
             </div>
@@ -249,7 +249,7 @@ export function BudgetLineForm({
           <div className="space-y-2">
             <Label htmlFor="estimated_cost_at_completion">Estimated Cost at Completion</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">$</span>
               <Input
                 id="estimated_cost_at_completion"
                 type="text"

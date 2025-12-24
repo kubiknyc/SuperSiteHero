@@ -70,14 +70,14 @@ export function BiometricSettings() {
     description: string
   }) => (
     <div className="flex items-start gap-3 py-2">
-      <div className={`mt-0.5 ${supported ? 'text-green-600' : 'text-gray-400'}`}>
+      <div className={`mt-0.5 ${supported ? 'text-success' : 'text-disabled'}`}>
         {supported ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
       </div>
       <div>
-        <p className={`font-medium ${supported ? 'text-gray-900' : 'text-gray-500'}`}>
+        <p className={`font-medium ${supported ? 'text-foreground' : 'text-muted'}`}>
           {label}
         </p>
-        <p className="text-sm text-gray-500">{description}</p>
+        <p className="text-sm text-muted">{description}</p>
       </div>
     </div>
   )
@@ -94,9 +94,9 @@ export function BiometricSettings() {
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-3">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-            <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+            <div className="h-4 bg-muted rounded w-3/4"></div>
+            <div className="h-4 bg-muted rounded w-1/2"></div>
+            <div className="h-4 bg-muted rounded w-2/3"></div>
           </div>
         </CardContent>
       </Card>
@@ -112,8 +112,8 @@ export function BiometricSettings() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-full ${isFullySupported ? 'bg-green-100' : 'bg-yellow-100'}`}>
-                <Fingerprint className={`h-6 w-6 ${isFullySupported ? 'text-green-600' : 'text-yellow-600'}`} />
+              <div className={`p-2 rounded-full ${isFullySupported ? 'bg-success-light' : 'bg-warning-light'}`}>
+                <Fingerprint className={`h-6 w-6 ${isFullySupported ? 'text-success' : 'text-warning'}`} />
               </div>
               <div>
                 <CardTitle>Biometric Authentication</CardTitle>
@@ -130,7 +130,7 @@ export function BiometricSettings() {
         <CardContent>
           {/* Compatibility Checks */}
           <div className="border-b pb-4 mb-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-3">Device Compatibility</h4>
+            <h4 className="text-sm font-medium text-secondary mb-3" className="heading-card">Device Compatibility</h4>
             <CompatibilityItem
               label="WebAuthn API"
               supported={compatibility.webAuthn}
@@ -177,26 +177,26 @@ export function BiometricSettings() {
           )}
 
           {/* Browser Support Info */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+          <div className="bg-surface rounded-lg p-4">
+            <h4 className="text-sm font-medium text-secondary mb-2 flex items-center gap-2" className="heading-card">
               <Shield className="h-4 w-4" />
               Supported Browsers
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-gray-600">Chrome</span>
+                <span className="text-secondary">Chrome</span>
                 <Badge variant="outline" className="text-xs">67+</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-600">Firefox</span>
+                <span className="text-secondary">Firefox</span>
                 <Badge variant="outline" className="text-xs">60+</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-600">Safari</span>
+                <span className="text-secondary">Safari</span>
                 <Badge variant="outline" className="text-xs">13+</Badge>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-gray-600">Edge</span>
+                <span className="text-secondary">Edge</span>
                 <Badge variant="outline" className="text-xs">18+</Badge>
               </div>
             </div>
@@ -214,34 +214,34 @@ export function BiometricSettings() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-4">
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+            <div className="flex-shrink-0 w-8 h-8 bg-info-light rounded-full flex items-center justify-center text-primary font-semibold">
               1
             </div>
             <div>
-              <p className="font-medium text-gray-900">Register Your Device</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-foreground">Register Your Device</p>
+              <p className="text-sm text-muted">
                 Use your device's biometric sensor to create a secure credential
               </p>
             </div>
           </div>
           <div className="flex gap-4">
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+            <div className="flex-shrink-0 w-8 h-8 bg-info-light rounded-full flex items-center justify-center text-primary font-semibold">
               2
             </div>
             <div>
-              <p className="font-medium text-gray-900">Secure Storage</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-foreground">Secure Storage</p>
+              <p className="text-sm text-muted">
                 Your biometric data stays on your device. Only a public key is stored on our servers.
               </p>
             </div>
           </div>
           <div className="flex gap-4">
-            <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold">
+            <div className="flex-shrink-0 w-8 h-8 bg-info-light rounded-full flex items-center justify-center text-primary font-semibold">
               3
             </div>
             <div>
-              <p className="font-medium text-gray-900">Quick Login</p>
-              <p className="text-sm text-gray-500">
+              <p className="font-medium text-foreground">Quick Login</p>
+              <p className="text-sm text-muted">
                 Sign in instantly with your fingerprint or face - no password needed
               </p>
             </div>

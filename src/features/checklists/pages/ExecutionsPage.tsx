@@ -239,14 +239,14 @@ export function ExecutionsPage() {
   ].reduce((a, b) => a + b, 0)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Active Checklists</h1>
-              <p className="text-gray-600">
+              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">Active Checklists</h1>
+              <p className="text-secondary">
                 View and manage inspection checklist executions
               </p>
             </div>
@@ -278,30 +278,30 @@ export function ExecutionsPage() {
 
         {/* Stats Dashboard */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">Total Checklists</div>
-            <div className="text-3xl font-bold text-gray-900 mt-1">{stats.total}</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">Total Checklists</div>
+            <div className="text-3xl font-bold text-foreground mt-1">{stats.total}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">In Progress</div>
-            <div className="text-3xl font-bold text-blue-600 mt-1">{stats.inProgress}</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">In Progress</div>
+            <div className="text-3xl font-bold text-primary mt-1">{stats.inProgress}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">Completed</div>
-            <div className="text-3xl font-bold text-green-600 mt-1">{stats.completed}</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">Completed</div>
+            <div className="text-3xl font-bold text-success mt-1">{stats.completed}</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-4 border border-gray-200">
-            <div className="text-sm font-medium text-gray-600">Avg Score</div>
+          <div className="bg-card rounded-lg shadow p-4 border border-border">
+            <div className="text-sm font-medium text-secondary">Avg Score</div>
             <div className="text-3xl font-bold text-purple-600 mt-1">{stats.avgScore}%</div>
           </div>
         </div>
 
         {/* Filters and View Controls */}
-        <div className="bg-white rounded-lg shadow mb-6 p-4">
+        <div className="bg-card rounded-lg shadow mb-6 p-4">
           <div className="flex flex-col lg:flex-row gap-4">
             {/* Search */}
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 type="text"
                 placeholder="Search checklists by name, description, location..."
@@ -315,7 +315,7 @@ export function ExecutionsPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-              className="flex h-10 w-full lg:w-48 items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex h-10 w-full lg:w-48 items-center justify-between rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-white focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <option value="all">All Statuses</option>
               <option value="draft">Draft</option>
@@ -366,8 +366,8 @@ export function ExecutionsPage() {
 
           {/* Advanced Filters Panel */}
           {showAdvancedFilters && (
-            <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
-              <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+            <div className="mt-4 pt-4 border-t border-border space-y-4">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2" className="heading-subsection">
                 <Filter className="w-4 h-4" />
                 Advanced Filters
               </h3>
@@ -375,14 +375,14 @@ export function ExecutionsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* Date Range Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+                  <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     Date Range
                   </label>
                   <select
                     value={dateRangeFilter}
                     onChange={(e) => setDateRangeFilter(e.target.value as DateRangeFilter)}
-                    className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                    className="w-full h-10 rounded-md border border-input bg-card px-3 py-2 text-sm"
                   >
                     <option value="all">All Time</option>
                     <option value="today">Today</option>
@@ -396,7 +396,7 @@ export function ExecutionsPage() {
                 {dateRangeFilter === 'custom' && (
                   <>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-secondary mb-1">
                         From Date
                       </label>
                       <Input
@@ -406,7 +406,7 @@ export function ExecutionsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-secondary mb-1">
                         To Date
                       </label>
                       <Input
@@ -420,14 +420,14 @@ export function ExecutionsPage() {
 
                 {/* Inspector Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+                  <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-1">
                     <UserIcon className="w-4 h-4" />
                     Inspector
                   </label>
                   <select
                     value={inspectorFilter}
                     onChange={(e) => setInspectorFilter(e.target.value)}
-                    className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                    className="w-full h-10 rounded-md border border-input bg-card px-3 py-2 text-sm"
                   >
                     <option value="">All Inspectors</option>
                     {uniqueInspectors.map((inspector) => (
@@ -440,14 +440,14 @@ export function ExecutionsPage() {
 
                 {/* Score Filter */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+                  <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-1">
                     <TrendingUp className="w-4 h-4" />
                     Pass/Fail Status
                   </label>
                   <select
                     value={scoreFilter}
                     onChange={(e) => setScoreFilter(e.target.value as ScoreFilter)}
-                    className="w-full h-10 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                    className="w-full h-10 rounded-md border border-input bg-card px-3 py-2 text-sm"
                   >
                     <option value="all">All Scores</option>
                     <option value="passed">Passed (≥70%)</option>
@@ -458,7 +458,7 @@ export function ExecutionsPage() {
 
                 {/* Custom Score Range */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Min Score (%)
                   </label>
                   <Input
@@ -471,7 +471,7 @@ export function ExecutionsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Max Score (%)
                   </label>
                   <Input
@@ -502,7 +502,7 @@ export function ExecutionsPage() {
 
           {/* Active Filters Summary */}
           {hasActiveFilters && !showAdvancedFilters && (
-            <div className="mt-4 flex items-center gap-2 flex-wrap text-sm text-gray-600">
+            <div className="mt-4 flex items-center gap-2 flex-wrap text-sm text-secondary">
               <span className="font-medium">Active filters ({activeFilterCount}):</span>
               {searchQuery && (
                 <Badge variant="secondary">
@@ -536,7 +536,7 @@ export function ExecutionsPage() {
               )}
               <button
                 onClick={clearFilters}
-                className="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1"
+                className="text-primary hover:text-blue-800 text-xs font-medium flex items-center gap-1"
               >
                 <X className="w-3 h-3" />
                 Clear all
@@ -547,19 +547,19 @@ export function ExecutionsPage() {
 
         {/* Executions Grid/List */}
         {isLoading ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
-            <p className="mt-4 text-gray-600">Loading checklists...</p>
+          <div className="bg-card rounded-lg shadow p-12 text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            <p className="mt-4 text-secondary">Loading checklists...</p>
           </div>
         ) : filteredExecutions.length === 0 ? (
-          <div className="bg-white rounded-lg shadow p-12 text-center">
-            <div className="text-gray-400 mb-4">
+          <div className="bg-card rounded-lg shadow p-12 text-center">
+            <div className="text-disabled mb-4">
               <ClipboardList className="mx-auto h-12 w-12" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-1">
+            <h3 className="text-lg font-medium text-foreground mb-1" className="heading-subsection">
               {allExecutions.length === 0 ? 'No checklists yet' : 'No checklists match your filters'}
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-secondary mb-4">
               {allExecutions.length === 0
                 ? 'Get started by creating your first checklist from a template.'
                 : 'Try adjusting your search and filter criteria.'}

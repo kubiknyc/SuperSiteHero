@@ -143,7 +143,7 @@ export function AcknowledgmentsList({ instructionId, className }: Acknowledgment
                     </TableCell>
                     <TableCell>
                       {ack.location_lat && ack.location_lng ? (
-                        <div className="flex items-center gap-1 text-sm text-green-600">
+                        <div className="flex items-center gap-1 text-sm text-success">
                           <MapPin className="h-3 w-3" />
                           <span>Captured</span>
                         </div>
@@ -209,7 +209,7 @@ function AcknowledgmentDetail({ acknowledgment: ack }: AcknowledgmentDetailProps
       {ack.signature_data && (
         <div className="space-y-2">
           <label className="text-sm font-medium">Signature</label>
-          <div className="border rounded-lg p-2 bg-white">
+          <div className="border rounded-lg p-2 bg-card">
             <img
               src={ack.signature_data}
               alt="Signature"
@@ -260,7 +260,7 @@ function AcknowledgmentDetail({ acknowledgment: ack }: AcknowledgmentDetailProps
 
       {/* Offline Submission Info */}
       {ack.is_offline_submission && (
-        <div className="flex items-center gap-2 text-sm text-amber-600 bg-amber-50 p-2 rounded">
+        <div className="flex items-center gap-2 text-sm text-warning bg-warning-light p-2 rounded">
           <WifiOff className="h-4 w-4" />
           <span>
             Submitted offline

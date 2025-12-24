@@ -68,8 +68,8 @@ export function PullToRefresh({
     if (isRefreshing) {
       return (
         <div className="flex flex-col items-center gap-2">
-          <RefreshCw className="h-6 w-6 text-blue-600 animate-spin" />
-          <span className="text-sm text-gray-600">{refreshingText}</span>
+          <RefreshCw className="h-6 w-6 text-primary animate-spin" />
+          <span className="text-sm text-secondary">{refreshingText}</span>
         </div>
       );
     }
@@ -78,9 +78,9 @@ export function PullToRefresh({
       return (
         <div className="flex flex-col items-center gap-2">
           <div className="relative">
-            <Check className="h-6 w-6 text-green-600" />
+            <Check className="h-6 w-6 text-success" />
           </div>
-          <span className="text-sm text-green-600 font-medium">{releaseText}</span>
+          <span className="text-sm text-success font-medium">{releaseText}</span>
         </div>
       );
     }
@@ -88,13 +88,13 @@ export function PullToRefresh({
     return (
       <div className="flex flex-col items-center gap-2">
         <ArrowDown
-          className="h-6 w-6 text-gray-400 transition-transform"
+          className="h-6 w-6 text-disabled transition-transform"
           style={{
             transform: `rotate(${rotation}deg) scale(${scale})`,
             opacity,
           }}
         />
-        <span className="text-sm text-gray-500">{pullText}</span>
+        <span className="text-sm text-muted">{pullText}</span>
       </div>
     );
   }, [
@@ -118,7 +118,7 @@ export function PullToRefresh({
       {/* Pull indicator */}
       <div
         className={cn(
-          'absolute left-0 right-0 flex items-center justify-center transition-all duration-200 bg-gray-50 border-b border-gray-100',
+          'absolute left-0 right-0 flex items-center justify-center transition-all duration-200 bg-surface border-b border-border',
           'transform -translate-y-full',
           (isPulling || isRefreshing) && 'translate-y-0'
         )}
@@ -177,7 +177,7 @@ export function RefreshableList({
       >
         {items.length === 0
           ? emptyComponent || (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+              <div className="flex flex-col items-center justify-center py-12 text-muted">
                 <p>No items to display</p>
                 <p className="text-sm mt-1">Pull down to refresh</p>
               </div>

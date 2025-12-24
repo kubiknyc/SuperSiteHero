@@ -49,26 +49,26 @@ const TYPE_ICONS: Record<SafetyObservationType, React.ComponentType<{ className?
 }
 
 const TYPE_COLOR_CLASSES: Record<SafetyObservationType, string> = {
-  safe_behavior: 'text-green-600 bg-green-100',
+  safe_behavior: 'text-success bg-success-light',
   unsafe_condition: 'text-orange-600 bg-orange-100',
-  near_miss: 'text-yellow-600 bg-yellow-100',
-  best_practice: 'text-blue-600 bg-blue-100',
+  near_miss: 'text-warning bg-warning-light',
+  best_practice: 'text-primary bg-info-light',
 }
 
 const SEVERITY_COLOR_CLASSES: Record<string, string> = {
-  gray: 'bg-gray-100 text-gray-800',
-  yellow: 'bg-yellow-100 text-yellow-800',
+  gray: 'bg-muted text-foreground',
+  yellow: 'bg-warning-light text-yellow-800',
   orange: 'bg-orange-100 text-orange-800',
-  red: 'bg-red-100 text-red-800',
+  red: 'bg-error-light text-red-800',
 }
 
 const STATUS_COLOR_CLASSES: Record<string, string> = {
-  blue: 'bg-blue-100 text-blue-800',
+  blue: 'bg-info-light text-blue-800',
   cyan: 'bg-cyan-100 text-cyan-800',
   orange: 'bg-orange-100 text-orange-800',
-  yellow: 'bg-yellow-100 text-yellow-800',
-  green: 'bg-green-100 text-green-800',
-  gray: 'bg-gray-100 text-gray-800',
+  yellow: 'bg-warning-light text-yellow-800',
+  green: 'bg-success-light text-green-800',
+  gray: 'bg-muted text-foreground',
 }
 
 export function SafetyObservationCard({
@@ -100,7 +100,7 @@ export function SafetyObservationCard({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-500">
+              <span className="text-sm font-medium text-muted">
                 {observation.observation_number}
               </span>
               {observation.points_awarded > 0 && (
@@ -110,7 +110,7 @@ export function SafetyObservationCard({
                 </span>
               )}
             </div>
-            <span className="text-xs text-gray-500">{typeConfig.label}</span>
+            <span className="text-xs text-muted">{typeConfig.label}</span>
           </div>
         </div>
 
@@ -128,30 +128,30 @@ export function SafetyObservationCard({
       </div>
 
       {/* Title */}
-      <h3 className="mt-3 text-base font-semibold text-gray-900 line-clamp-2">
+      <h3 className="mt-3 text-base font-semibold text-foreground line-clamp-2" className="heading-subsection">
         {observation.title}
       </h3>
 
       {/* Description */}
-      <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+      <p className="mt-1 text-sm text-secondary line-clamp-2">
         {observation.description}
       </p>
 
       {/* Recognition info (for positive observations) */}
       {isPositive && observation.recognized_person && (
-        <div className="mt-3 p-2 bg-green-50 rounded-lg">
-          <div className="flex items-center gap-2 text-sm text-green-700">
+        <div className="mt-3 p-2 bg-success-light rounded-lg">
+          <div className="flex items-center gap-2 text-sm text-success-dark">
             <User className="h-4 w-4" />
             <span>Recognizing: {observation.recognized_person}</span>
             {observation.recognized_company && (
-              <span className="text-green-600">({observation.recognized_company})</span>
+              <span className="text-success">({observation.recognized_company})</span>
             )}
           </div>
         </div>
       )}
 
       {/* Metadata */}
-      <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+      <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted">
         <div className="flex items-center gap-1">
           <Circle className="h-3 w-3" />
           <span>{categoryConfig.label}</span>
@@ -187,7 +187,7 @@ export function SafetyObservationCard({
       </div>
 
       {/* Footer */}
-      <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
         <span
           className={cn(
             'inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium',
@@ -200,7 +200,7 @@ export function SafetyObservationCard({
           {statusConfig.label}
         </span>
 
-        <div className="flex items-center gap-1 text-xs text-gray-400">
+        <div className="flex items-center gap-1 text-xs text-disabled">
           <Clock className="h-3 w-3" />
           <span>
             {formatDistanceToNow(new Date(observation.created_at), { addSuffix: true })}
@@ -210,7 +210,7 @@ export function SafetyObservationCard({
 
       {/* Project name (optional) */}
       {showProject && observation.project && (
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-muted">
           Project: {observation.project.name}
         </div>
       )}
@@ -226,7 +226,7 @@ export function SafetyObservationCard({
   )
 
   const cardClasses = cn(
-    'block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow',
+    'block bg-card rounded-lg border border-border p-4 hover:shadow-md transition-shadow',
     isPositive && 'border-l-4 border-l-green-500',
     !isPositive && observation.severity === 'critical' && 'border-l-4 border-l-red-500',
     !isPositive && observation.severity === 'high' && 'border-l-4 border-l-orange-500',

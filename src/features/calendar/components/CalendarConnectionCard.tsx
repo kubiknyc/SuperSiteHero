@@ -146,7 +146,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-blue-600" />
+            <Calendar className="h-6 w-6 text-primary" />
             Google Calendar
           </CardTitle>
           <CardDescription>
@@ -155,7 +155,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <h4 className="font-medium text-blue-900 mb-2">Features</h4>
+            <h4 className="font-medium text-blue-900 mb-2" className="heading-card">Features</h4>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>- Sync meetings to Google Calendar automatically</li>
               <li>- Import calendar events as meetings</li>
@@ -183,7 +183,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
           </Button>
 
           {initiateConnection.isError && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-error">
               Failed to connect. Please try again.
             </p>
           )}
@@ -197,7 +197,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-6 w-6 text-blue-600" />
+            <Calendar className="h-6 w-6 text-primary" />
             Google Calendar
           </CardTitle>
           <Badge
@@ -205,7 +205,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
             className={
               status.needsReconnect || status.isTokenExpired
                 ? ''
-                : 'bg-green-100 text-green-800 border-green-300'
+                : 'bg-success-light text-green-800 border-green-300'
             }
           >
             {status.needsReconnect
@@ -228,8 +228,8 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
       <CardContent className="space-y-4">
         {/* Connection Error */}
         {status.connectionError && (
-          <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-md">
-            <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="flex items-start gap-2 p-3 bg-error-light border border-red-200 rounded-md">
+            <AlertTriangle className="h-5 w-5 text-error flex-shrink-0 mt-0.5" />
             <div className="text-sm text-red-800">
               <strong>Connection Error:</strong> {status.connectionError}
             </div>
@@ -238,7 +238,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
 
         {/* Token Status */}
         {(status.needsReconnect || status.isTokenExpired) && (
-          <div className="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+          <div className="flex items-center justify-between p-3 bg-warning-light border border-yellow-200 rounded-md">
             <div className="flex items-center gap-2 text-yellow-800">
               <AlertTriangle className="h-5 w-5" />
               <span className="text-sm">
@@ -266,18 +266,18 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
 
         {/* Sync Statistics */}
         {stats && (
-          <div className="grid grid-cols-3 gap-4 p-3 bg-gray-50 rounded-md">
+          <div className="grid grid-cols-3 gap-4 p-3 bg-surface rounded-md">
             <div className="text-center">
-              <div className="text-2xl font-semibold text-gray-900">{stats.totalSyncedMeetings}</div>
-              <div className="text-xs text-gray-600">Synced</div>
+              <div className="text-2xl font-semibold text-foreground">{stats.totalSyncedMeetings}</div>
+              <div className="text-xs text-secondary">Synced</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-semibold text-yellow-600">{stats.pendingSyncs}</div>
-              <div className="text-xs text-gray-600">Pending</div>
+              <div className="text-2xl font-semibold text-warning">{stats.pendingSyncs}</div>
+              <div className="text-xs text-secondary">Pending</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-semibold text-red-600">{stats.failedSyncs}</div>
-              <div className="text-xs text-gray-600">Failed</div>
+              <div className="text-2xl font-semibold text-error">{stats.failedSyncs}</div>
+              <div className="text-xs text-secondary">Failed</div>
             </div>
           </div>
         )}
@@ -288,7 +288,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
           <span className="flex items-center gap-1">
             {status.lastSyncAt ? (
               <>
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 {formatDistanceToNow(new Date(status.lastSyncAt), { addSuffix: true })}
               </>
             ) : (
@@ -338,7 +338,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         {/* Disconnect Button */}
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
+            <Button variant="outline" className="w-full text-error hover:text-error-dark">
               <Unlink className="mr-2 h-4 w-4" />
               Disconnect
             </Button>
@@ -355,7 +355,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDisconnect}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
               >
                 {disconnect.isPending ? (
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />

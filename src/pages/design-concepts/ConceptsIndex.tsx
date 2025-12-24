@@ -66,18 +66,18 @@ export default function ConceptsIndex() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 shadow-sm">
+      <div className="bg-card border-b border-border shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center gap-4 mb-4">
             <div className="w-14 h-14 bg-black flex items-center justify-center rounded-lg">
               <Palette className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">JobSight Design Concepts</h1>
-              <p className="text-gray-600">8 distinct visual directions for your construction management platform</p>
+              <h1 className="text-3xl font-bold text-foreground" className="heading-page">JobSight Design Concepts</h1>
+              <p className="text-secondary">8 distinct visual directions for your construction management platform</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+          <div className="flex items-center gap-2 text-sm text-muted">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             <span>All concepts feature monochrome black/white logo • No orange</span>
           </div>
@@ -87,8 +87,8 @@ export default function ConceptsIndex() {
       {/* Concepts Grid */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Choose Your Aesthetic</h2>
-          <p className="text-gray-600">
+          <h2 className="text-2xl font-bold text-foreground mb-2" className="heading-section">Choose Your Aesthetic</h2>
+          <p className="text-secondary">
             Each concept showcases complete color palettes, typography systems, and UI components. Click any concept to explore in detail.
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function ConceptsIndex() {
             <Link
               key={concept.id}
               to={concept.path}
-              className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
+              className="group bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
             >
               {/* Color Preview Bar */}
               <div className="h-4 flex">
@@ -115,17 +115,17 @@ export default function ConceptsIndex() {
               <div className="p-8">
                 <div className="flex items-start justify-between mb-4">
                   <div>
-                    <div className="text-sm font-semibold text-gray-500 mb-2">
+                    <div className="text-sm font-semibold text-muted mb-2">
                       CONCEPT {concept.id} / 8
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-gray-700 transition">
+                    <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-secondary transition" className="heading-subsection">
                       {concept.name}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed">
+                    <p className="text-secondary leading-relaxed">
                       {concept.tagline}
                     </p>
                   </div>
-                  <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-gray-900 group-hover:translate-x-1 transition-all" />
+                  <ArrowRight className="w-6 h-6 text-disabled group-hover:text-foreground group-hover:translate-x-1 transition-all" />
                 </div>
 
                 {/* Color Swatches */}
@@ -133,18 +133,18 @@ export default function ConceptsIndex() {
                   {concept.colors.map((color, idx) => (
                     <div key={idx} className="flex-1">
                       <div
-                        className="h-12 rounded-lg shadow-sm border border-gray-200"
+                        className="h-12 rounded-lg shadow-sm border border-border"
                         style={{ backgroundColor: color }}
                       />
-                      <div className="mt-2 text-xs text-gray-500 font-mono text-center">
+                      <div className="mt-2 text-xs text-muted font-mono text-center">
                         {color}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-6 pt-6 border-t border-gray-100">
-                  <button className="text-sm font-semibold text-gray-900 group-hover:text-gray-700 flex items-center gap-2">
+                <div className="mt-6 pt-6 border-t border-border">
+                  <button className="text-sm font-semibold text-foreground group-hover:text-secondary flex items-center gap-2">
                     View Full Concept
                     <ArrowRight className="w-4 h-4" />
                   </button>
@@ -155,8 +155,8 @@ export default function ConceptsIndex() {
         </div>
 
         {/* Quick Compare */}
-        <div className="mt-16 bg-white rounded-2xl p-8 shadow-md">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Quick Comparison</h3>
+        <div className="mt-16 bg-card rounded-2xl p-8 shadow-md">
+          <h3 className="text-xl font-bold text-foreground mb-6" className="heading-subsection">Quick Comparison</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { label: 'Most Bold', concept: 'Industrial Precision' },
@@ -169,8 +169,8 @@ export default function ConceptsIndex() {
               { label: 'Most Refined', concept: 'Navy Premium' }
             ].map((item, idx) => (
               <div key={idx} className="text-center">
-                <div className="text-sm font-semibold text-gray-500 mb-1">{item.label}</div>
-                <div className="text-base text-gray-900">{item.concept}</div>
+                <div className="text-sm font-semibold text-muted mb-1">{item.label}</div>
+                <div className="text-base text-foreground">{item.concept}</div>
               </div>
             ))}
           </div>
@@ -178,18 +178,18 @@ export default function ConceptsIndex() {
 
         {/* Instructions */}
         <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-          <h3 className="text-lg font-bold text-gray-900 mb-4">Next Steps</h3>
-          <ol className="space-y-2 text-gray-700">
+          <h3 className="text-lg font-bold text-foreground mb-4" className="heading-subsection">Next Steps</h3>
+          <ol className="space-y-2 text-secondary">
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
               <span>Browse through each concept to see complete color palettes, typography, and UI components</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
               <span>Choose your preferred aesthetic direction (or combination of elements)</span>
             </li>
             <li className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+              <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
               <span>We'll refine the chosen concept and apply it to your core pages (layout, dashboard, project detail)</span>
             </li>
           </ol>

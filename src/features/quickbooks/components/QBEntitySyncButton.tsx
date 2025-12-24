@@ -41,11 +41,11 @@ interface QBEntitySyncButtonProps {
 }
 
 const STATUS_ICONS: Record<QBSyncStatus, React.ReactNode> = {
-  pending: <Clock className="h-4 w-4 text-yellow-500" />,
-  syncing: <Loader2 className="h-4 w-4 animate-spin text-blue-500" />,
-  synced: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-  failed: <AlertCircle className="h-4 w-4 text-red-500" />,
-  skipped: <Clock className="h-4 w-4 text-gray-400" />,
+  pending: <Clock className="h-4 w-4 text-warning" />,
+  syncing: <Loader2 className="h-4 w-4 animate-spin text-primary" />,
+  synced: <CheckCircle2 className="h-4 w-4 text-success" />,
+  failed: <AlertCircle className="h-4 w-4 text-error" />,
+  skipped: <Clock className="h-4 w-4 text-disabled" />,
 }
 
 export function QBEntitySyncButton({
@@ -86,7 +86,7 @@ export function QBEntitySyncButton({
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="outline" size={size} disabled className="text-yellow-600">
+            <Button variant="outline" size={size} disabled className="text-warning">
               <AlertCircle className="h-4 w-4 mr-2" />
               QB Sync
             </Button>
@@ -115,7 +115,7 @@ export function QBEntitySyncButton({
   if (isSynced && showStatus) {
     return (
       <div className="flex items-center gap-2">
-        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+        <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">
           <CheckCircle2 className="h-3 w-3 mr-1" />
           Synced to QB
         </Badge>
@@ -156,7 +156,7 @@ export function QBEntitySyncButton({
           </>
         ) : syncStatus === 'failed' ? (
           <>
-            <AlertCircle className="h-4 w-4 mr-2 text-red-500" />
+            <AlertCircle className="h-4 w-4 mr-2 text-error" />
             Retry Sync
           </>
         ) : (

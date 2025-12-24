@@ -95,7 +95,7 @@ export function ScheduleMilestonesWidget({
                 className={cn(
                   'rounded-lg p-3 min-h-[56px]',
                   status.isOverdue
-                    ? 'bg-red-50 dark:bg-red-950/20'
+                    ? 'bg-error-light dark:bg-red-950/20'
                     : 'bg-blue-50 dark:bg-blue-950/20'
                 )}
               >
@@ -103,7 +103,7 @@ export function ScheduleMilestonesWidget({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {status.isOverdue && (
-                        <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                        <AlertTriangle className="h-4 w-4 text-error flex-shrink-0" />
                       )}
                       <p className="text-sm font-medium truncate">
                         {milestone.description || milestone.activity_id}
@@ -125,7 +125,7 @@ export function ScheduleMilestonesWidget({
           })
         ) : (
           <div className="text-center py-6">
-            <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+            <CheckCircle2 className="h-8 w-8 text-success mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">No upcoming milestones</p>
           </div>
         )}

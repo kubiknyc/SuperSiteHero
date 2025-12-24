@@ -218,8 +218,8 @@ export function ToolboxTalkFormPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <AlertTriangle className="h-12 w-12 mx-auto text-yellow-400 mb-4" />
-            <h2 className="text-lg font-medium text-gray-900">No Project Selected</h2>
-            <p className="text-gray-500 mt-1">
+            <h2 className="text-lg font-medium text-foreground" className="heading-section">No Project Selected</h2>
+            <p className="text-muted mt-1">
               Please select a project before scheduling a toolbox talk.
             </p>
             <Link to="/projects">
@@ -238,15 +238,15 @@ export function ToolboxTalkFormPage() {
         <div className="mb-6">
           <Link
             to="/toolbox-talks"
-            className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700 mb-2"
+            className="inline-flex items-center text-sm text-muted hover:text-secondary mb-2"
           >
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to Toolbox Talks
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-foreground" className="heading-page">
             {isEditing ? 'Edit Toolbox Talk' : 'Schedule Toolbox Talk'}
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-muted mt-1">
             {isEditing
               ? 'Update the toolbox talk details'
               : 'Schedule a safety briefing for your team'}
@@ -255,11 +255,11 @@ export function ToolboxTalkFormPage() {
 
         {isLoading ? (
           <div className="animate-pulse space-y-6">
-            <div className="bg-white rounded-lg border p-6">
-              <div className="h-6 bg-gray-200 rounded w-1/3 mb-4" />
+            <div className="bg-card rounded-lg border p-6">
+              <div className="h-6 bg-muted rounded w-1/3 mb-4" />
               <div className="space-y-4">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-10 bg-gray-100 rounded" />
+                  <div key={i} className="h-10 bg-muted rounded" />
                 ))}
               </div>
             </div>
@@ -267,9 +267,9 @@ export function ToolboxTalkFormPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Topic Selection */}
-            <div className="bg-white rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                <FileText className="h-5 w-5 text-gray-400" />
+            <div className="bg-card rounded-lg border p-6">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+                <FileText className="h-5 w-5 text-disabled" />
                 Topic
               </h2>
 
@@ -277,7 +277,7 @@ export function ToolboxTalkFormPage() {
                 <div className="space-y-4">
                   {/* Topic dropdown by category */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-secondary mb-1">
                       Select Topic
                     </label>
                     <Select
@@ -292,7 +292,7 @@ export function ToolboxTalkFormPage() {
                       <SelectContent className="max-h-[300px]">
                         {Object.entries(topicsByCategory).map(([category, topics]) => (
                           <div key={category}>
-                            <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                            <div className="px-2 py-1.5 text-xs font-semibold text-muted uppercase tracking-wide">
                               {TOPIC_CATEGORY_LABELS[category as ToolboxTopicCategory]}
                             </div>
                             {topics.map((topic) => (
@@ -300,7 +300,7 @@ export function ToolboxTalkFormPage() {
                                 <div className="flex items-center gap-2">
                                   <span>{topic.title}</span>
                                   {topic.requires_certification && (
-                                    <span className="text-xs text-blue-500">(Cert)</span>
+                                    <span className="text-xs text-primary">(Cert)</span>
                                   )}
                                 </div>
                               </SelectItem>
@@ -310,16 +310,16 @@ export function ToolboxTalkFormPage() {
                       </SelectContent>
                     </Select>
                     {errors.topic_id && (
-                      <p className="text-sm text-red-500 mt-1">{errors.topic_id}</p>
+                      <p className="text-sm text-error mt-1">{errors.topic_id}</p>
                     )}
                   </div>
 
                   {/* Selected topic preview */}
                   {selectedTopic && (
-                    <div className="p-3 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-600">{selectedTopic.description}</p>
+                    <div className="p-3 bg-surface rounded-lg">
+                      <p className="text-sm text-secondary">{selectedTopic.description}</p>
                       {selectedTopic.requires_certification && (
-                        <p className="text-xs text-blue-600 mt-2">
+                        <p className="text-xs text-primary mt-2">
                           This topic grants certification for{' '}
                           {selectedTopic.certification_valid_days} days
                         </p>
@@ -330,7 +330,7 @@ export function ToolboxTalkFormPage() {
                   <button
                     type="button"
                     onClick={handleUseCustomTopic}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm text-primary hover:text-blue-800"
                   >
                     Or create a custom topic...
                   </button>
@@ -338,7 +338,7 @@ export function ToolboxTalkFormPage() {
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-secondary mb-1">
                       Custom Topic Title *
                     </label>
                     <Input
@@ -350,14 +350,14 @@ export function ToolboxTalkFormPage() {
                       className={cn(errors.custom_topic_title && 'border-red-500')}
                     />
                     {errors.custom_topic_title && (
-                      <p className="text-sm text-red-500 mt-1">
+                      <p className="text-sm text-error mt-1">
                         {errors.custom_topic_title}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-secondary mb-1">
                       Description
                     </label>
                     <textarea
@@ -367,12 +367,12 @@ export function ToolboxTalkFormPage() {
                       }
                       placeholder="Brief description of the topic..."
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                      className="w-full px-3 py-2 border border-input rounded-md focus:ring-blue-500 focus:border-blue-500"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-secondary mb-1">
                       Category
                     </label>
                     <Select
@@ -397,7 +397,7 @@ export function ToolboxTalkFormPage() {
                   <button
                     type="button"
                     onClick={() => setUseCustomTopic(false)}
-                    className="text-sm text-blue-600 hover:text-blue-800"
+                    className="text-sm text-primary hover:text-blue-800"
                   >
                     Or select from topic library...
                   </button>
@@ -406,15 +406,15 @@ export function ToolboxTalkFormPage() {
             </div>
 
             {/* Schedule */}
-            <div className="bg-white rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-gray-400" />
+            <div className="bg-card rounded-lg border p-6">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+                <Calendar className="h-5 w-5 text-disabled" />
                 Schedule
               </h2>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Date *
                   </label>
                   <Input
@@ -424,12 +424,12 @@ export function ToolboxTalkFormPage() {
                     className={cn(errors.scheduled_date && 'border-red-500')}
                   />
                   {errors.scheduled_date && (
-                    <p className="text-sm text-red-500 mt-1">{errors.scheduled_date}</p>
+                    <p className="text-sm text-error mt-1">{errors.scheduled_date}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Time
                   </label>
                   <Input
@@ -440,11 +440,11 @@ export function ToolboxTalkFormPage() {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Location
                   </label>
                   <div className="relative">
-                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       value={formData.location}
                       onChange={(e) => handleChange('location', e.target.value)}
@@ -457,15 +457,15 @@ export function ToolboxTalkFormPage() {
             </div>
 
             {/* Presenter */}
-            <div className="bg-white rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-                <User className="h-5 w-5 text-gray-400" />
+            <div className="bg-card rounded-lg border p-6">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+                <User className="h-5 w-5 text-disabled" />
                 Presenter
               </h2>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Name
                   </label>
                   <Input
@@ -476,7 +476,7 @@ export function ToolboxTalkFormPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-sm font-medium text-secondary mb-1">
                     Title
                   </label>
                   <Input

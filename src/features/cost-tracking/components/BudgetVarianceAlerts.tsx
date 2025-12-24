@@ -101,9 +101,9 @@ export function BudgetVarianceAlerts({
           <div className="flex items-center gap-3">
             <Bell className={cn(
               'h-5 w-5',
-              criticalCount > 0 ? 'text-red-600' :
-              warningCount > 0 ? 'text-amber-600' :
-              'text-blue-600'
+              criticalCount > 0 ? 'text-error' :
+              warningCount > 0 ? 'text-warning' :
+              'text-primary'
             )} />
             <CardTitle className="text-base">
               Budget Alerts
@@ -111,7 +111,7 @@ export function BudgetVarianceAlerts({
             {/* Badge counts */}
             <div className="flex items-center gap-2">
               {criticalCount > 0 && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-error-light text-red-800">
                   {criticalCount} Critical
                 </span>
               )}
@@ -121,7 +121,7 @@ export function BudgetVarianceAlerts({
                 </span>
               )}
               {infoCount > 0 && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-info-light text-blue-800">
                   {infoCount} Info
                 </span>
               )}
@@ -133,7 +133,7 @@ export function BudgetVarianceAlerts({
                 variant="ghost"
                 size="sm"
                 onClick={handleRestoreAll}
-                className="text-xs text-gray-500"
+                className="text-xs text-muted"
               >
                 <BellOff className="h-3 w-3 mr-1" />
                 Restore {dismissedAlerts.size}
@@ -160,10 +160,10 @@ export function BudgetVarianceAlerts({
         <CardContent className="pt-0 pb-4">
           {/* Total overrun amount */}
           {summary.total_overrun_amount > 0 && (
-            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-              <p className="text-sm text-gray-600">
+            <div className="mb-4 p-3 bg-surface rounded-lg">
+              <p className="text-sm text-secondary">
                 Total budget overrun:{' '}
-                <span className="font-semibold text-red-600">
+                <span className="font-semibold text-error">
                   {formatCurrency(summary.total_overrun_amount)}
                 </span>
                 {' '}across {summary.lines_over_budget} line{summary.lines_over_budget !== 1 ? 's' : ''}
@@ -204,16 +204,16 @@ export function BudgetVarianceAlerts({
                           <X className="h-3 w-3" />
                         </Button>
                       </div>
-                      <p className="text-sm text-gray-700 mt-0.5">
+                      <p className="text-sm text-secondary mt-0.5">
                         {alert.message}
                       </p>
                       {/* Details row */}
                       {alert.cost_code && (
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-4 mt-2 text-xs text-muted">
                           <span>Code: {alert.cost_code}</span>
                           <span>Budget: {formatCurrency(alert.budget_amount)}</span>
                           <span>Actual: {formatCurrency(alert.actual_amount)}</span>
-                          <span className={alert.variance_amount < 0 ? 'text-red-600' : 'text-green-600'}>
+                          <span className={alert.variance_amount < 0 ? 'text-error' : 'text-success'}>
                             Variance: {formatCurrency(alert.variance_amount)}
                           </span>
                         </div>
@@ -232,7 +232,7 @@ export function BudgetVarianceAlerts({
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowAll(!showAll)}
-                className="text-gray-600"
+                className="text-secondary"
               >
                 {showAll ? (
                   <>
@@ -282,7 +282,7 @@ export function BudgetVarianceAlertBadge({
 
   if (warning_count > 0) {
     return (
-      <span className="inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full text-xs font-medium bg-amber-500 text-white">
+      <span className="inline-flex items-center justify-center h-5 min-w-5 px-1.5 rounded-full text-xs font-medium bg-warning text-white">
         {warning_count}
       </span>
     )

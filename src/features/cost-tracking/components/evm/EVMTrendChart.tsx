@@ -112,13 +112,13 @@ export function EVMTrendChart({
                       {data.fullDate ? format(parseISO(data.fullDate), 'MMMM d, yyyy') : label}
                     </p>
                     <div className="space-y-1">
-                      <p className="text-blue-600">
+                      <p className="text-primary">
                         CPI: <span className="font-semibold">{data.CPI?.toFixed(2) || '—'}</span>
                       </p>
                       <p className="text-emerald-600">
                         SPI: <span className="font-semibold">{data.SPI?.toFixed(2) || '—'}</span>
                       </p>
-                      <p className="text-gray-600">
+                      <p className="text-secondary">
                         Progress: <span className="font-semibold">{data.percent_complete?.toFixed(1)}%</span>
                       </p>
                     </div>

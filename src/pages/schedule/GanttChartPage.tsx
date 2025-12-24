@@ -138,8 +138,8 @@ export function GanttChartPage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading project...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-secondary">Loading project...</p>
           </div>
         </div>
       </AppLayout>
@@ -151,8 +151,8 @@ export function GanttChartPage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Project not found</h2>
-            <p className="text-gray-600 mb-4">The requested project could not be found.</p>
+            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Project not found</h2>
+            <p className="text-secondary mb-4">The requested project could not be found.</p>
             <Button variant="outline" onClick={() => navigate('/projects')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Projects
@@ -167,7 +167,7 @@ export function GanttChartPage() {
     <AppLayout>
       <div className="flex flex-col h-[calc(100vh-64px)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -177,10 +177,10 @@ export function GanttChartPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Project
             </Button>
-            <div className="h-6 border-l border-gray-300" />
+            <div className="h-6 border-l border-input" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Project Schedule</h1>
-              <p className="text-sm text-gray-500">{project.name}</p>
+              <h1 className="text-xl font-bold text-foreground" className="heading-page">Project Schedule</h1>
+              <p className="text-sm text-muted">{project.name}</p>
             </div>
           </div>
 
@@ -201,7 +201,7 @@ export function GanttChartPage() {
         </div>
 
         {/* Gantt Chart */}
-        <div className="flex-1 p-4 bg-gray-100 overflow-hidden">
+        <div className="flex-1 p-4 bg-muted overflow-hidden">
           <GanttChart
             items={items}
             dependencies={dependencies}
@@ -237,44 +237,44 @@ export function GanttChartPage() {
               <CardContent>
                 <dl className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Start Date</dt>
+                    <dt className="text-muted">Start Date</dt>
                     <dd className="font-medium">{selectedTask.start_date}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">End Date</dt>
+                    <dt className="text-muted">End Date</dt>
                     <dd className="font-medium">{selectedTask.finish_date}</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Duration</dt>
+                    <dt className="text-muted">Duration</dt>
                     <dd className="font-medium">{selectedTask.duration_days} days</dd>
                   </div>
                   <div className="flex justify-between">
-                    <dt className="text-gray-500">Progress</dt>
+                    <dt className="text-muted">Progress</dt>
                     <dd className="font-medium">{selectedTask.percent_complete}%</dd>
                   </div>
                   {selectedTask.assigned_to && (
                     <div className="flex justify-between">
-                      <dt className="text-gray-500">Assigned To</dt>
+                      <dt className="text-muted">Assigned To</dt>
                       <dd className="font-medium">{selectedTask.assigned_to}</dd>
                     </div>
                   )}
                   {selectedTask.baseline_start_date && (
                     <>
                       <div className="border-t pt-2 mt-2">
-                        <div className="text-xs text-gray-400 mb-1">Baseline</div>
+                        <div className="text-xs text-disabled mb-1">Baseline</div>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="text-gray-500">Baseline Start</dt>
+                        <dt className="text-muted">Baseline Start</dt>
                         <dd className="font-medium">{selectedTask.baseline_start_date}</dd>
                       </div>
                       <div className="flex justify-between">
-                        <dt className="text-gray-500">Baseline End</dt>
+                        <dt className="text-muted">Baseline End</dt>
                         <dd className="font-medium">{selectedTask.baseline_finish_date}</dd>
                       </div>
                     </>
                   )}
                   {selectedTask.is_critical && (
-                    <div className="mt-2 p-2 bg-red-50 rounded text-red-700 text-xs">
+                    <div className="mt-2 p-2 bg-error-light rounded text-error-dark text-xs">
                       ⚠️ This task is on the critical path
                     </div>
                   )}

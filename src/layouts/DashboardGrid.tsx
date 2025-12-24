@@ -185,7 +185,7 @@ export function DashboardWidget({
             !noPadding && 'p-4 tablet:p-6'
           )}>
             {error ? (
-              <div className="text-red-500 text-center py-8">{error}</div>
+              <div className="text-error text-center py-8">{error}</div>
             ) : (
               children
             )}
@@ -214,7 +214,7 @@ export function DashboardWidget({
         <CardHeader className="flex-shrink-0 flex flex-row items-start justify-between space-y-0 pb-2">
           <div className="flex items-start gap-2">
             {draggable && (
-              <div className="cursor-grab active:cursor-grabbing p-1 -ml-1 text-gray-400 hover:text-gray-600">
+              <div className="cursor-grab active:cursor-grabbing p-1 -ml-1 text-disabled hover:text-secondary">
                 <GripVertical className="h-4 w-4" />
               </div>
             )}
@@ -259,7 +259,7 @@ export function DashboardWidget({
                   {removable && (
                     <DropdownMenuItem
                       onClick={onRemove}
-                      className={cn('text-red-600', isTouchDevice && 'py-3')}
+                      className={cn('text-error', isTouchDevice && 'py-3')}
                     >
                       <X className="h-4 w-4 mr-2" />
                       Remove
@@ -281,7 +281,7 @@ export function DashboardWidget({
             <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>
         ) : error ? (
-          <div className="text-red-500 text-center py-8 text-sm">{error}</div>
+          <div className="text-error text-center py-8 text-sm">{error}</div>
         ) : (
           children
         )}
@@ -363,12 +363,12 @@ export function DashboardSection({
       {(title || description) && (
         <div className="px-4 tablet:px-6">
           {title && (
-            <h2 className="text-lg tablet:text-xl font-semibold text-gray-900">
+            <h2 className="text-lg tablet:text-xl font-semibold text-foreground" className="heading-section">
               {title}
             </h2>
           )}
           {description && (
-            <p className="text-sm text-gray-600 mt-1">{description}</p>
+            <p className="text-sm text-secondary mt-1">{description}</p>
           )}
         </div>
       )}
@@ -407,7 +407,7 @@ export function QuickStatsBar({ stats, className }: QuickStatsBarProps) {
   return (
     <div
       className={cn(
-        'bg-white border-b',
+        'bg-card border-b',
         isMobile ? 'overflow-x-auto scrollbar-hide' : '',
         className
       )}
@@ -425,29 +425,29 @@ export function QuickStatsBar({ stats, className }: QuickStatsBarProps) {
             className={cn(
               'flex-1 flex items-center justify-center gap-3 py-3 px-4 tablet:px-6',
               'transition-colors',
-              stat.onClick && 'hover:bg-gray-50 cursor-pointer',
+              stat.onClick && 'hover:bg-surface cursor-pointer',
               !stat.onClick && 'cursor-default',
               isTouchDevice && 'min-h-touch',
               isMobile && 'min-w-[120px]'
             )}
           >
             {stat.icon && (
-              <div className="text-gray-400">{stat.icon}</div>
+              <div className="text-disabled">{stat.icon}</div>
             )}
             <div className="text-center">
-              <div className="text-xl tablet:text-2xl font-bold text-gray-900">
+              <div className="text-xl tablet:text-2xl font-bold text-foreground">
                 {stat.value}
               </div>
-              <div className="text-xs tablet:text-sm text-gray-500">
+              <div className="text-xs tablet:text-sm text-muted">
                 {stat.label}
               </div>
             </div>
             {stat.trend && (
               <div className={cn(
                 'text-xs font-medium',
-                stat.trend.direction === 'up' && 'text-green-600',
-                stat.trend.direction === 'down' && 'text-red-600',
-                stat.trend.direction === 'neutral' && 'text-gray-500'
+                stat.trend.direction === 'up' && 'text-success',
+                stat.trend.direction === 'down' && 'text-error',
+                stat.trend.direction === 'neutral' && 'text-muted'
               )}>
                 {stat.trend.direction === 'up' && '+'}
                 {stat.trend.value}%

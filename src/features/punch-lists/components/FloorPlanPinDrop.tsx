@@ -217,7 +217,7 @@ function FloorPlanCanvas({
   return (
     <div className="space-y-2">
       {/* Toolbar */}
-      <div className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg">
+      <div className="flex items-center gap-2 p-2 bg-muted rounded-lg">
         <Button
           type="button"
           variant={isPanning ? 'default' : 'outline'}
@@ -245,14 +245,14 @@ function FloorPlanCanvas({
             variant="outline"
             size="sm"
             onClick={() => onPinChange(null)}
-            className="text-red-600 hover:text-red-700"
+            className="text-error hover:text-error-dark"
           >
             <X className="h-4 w-4 mr-1" />
             Clear Pin
           </Button>
         )}
 
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-muted">
           {isPanning ? 'Drag to pan' : 'Click to place pin'}
         </span>
       </div>
@@ -261,7 +261,7 @@ function FloorPlanCanvas({
       <div
         ref={containerRef}
         className={cn(
-          'border rounded-lg overflow-hidden bg-gray-200',
+          'border rounded-lg overflow-hidden bg-muted',
           isPanning ? 'cursor-grab active:cursor-grabbing' : 'cursor-crosshair'
         )}
         style={{ height: 400 }}
@@ -305,15 +305,15 @@ function FloorPlanCanvas({
         {/* Loading state */}
         {!image && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
           </div>
         )}
       </div>
 
       {/* Pin location display */}
       {pinLocation && (
-        <div className="text-sm text-gray-600 flex items-center gap-2">
-          <MapPin className="h-4 w-4 text-red-500" />
+        <div className="text-sm text-secondary flex items-center gap-2">
+          <MapPin className="h-4 w-4 text-error" />
           <span>Pin placed at ({Math.round(pinLocation.x * 100)}%, {Math.round(pinLocation.y * 100)}%)</span>
         </div>
       )}
@@ -408,11 +408,11 @@ export function FloorPlanPinDrop({
       <Label className="text-sm font-medium mb-2 block">Floor Plan Location</Label>
 
       {value ? (
-        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <MapPin className="h-5 w-5 text-green-600" />
+        <div className="flex items-center gap-2 p-3 bg-success-light border border-green-200 rounded-lg">
+          <MapPin className="h-5 w-5 text-success" />
           <div className="flex-1">
             <p className="text-sm font-medium text-green-800">Location marked</p>
-            <p className="text-xs text-green-600">
+            <p className="text-xs text-success">
               {value.sheetName || 'Floor plan'} - ({Math.round(value.x * 100)}%, {Math.round(value.y * 100)}%)
             </p>
           </div>
@@ -445,7 +445,7 @@ export function FloorPlanPinDrop({
             size="sm"
             onClick={handleClear}
             disabled={disabled}
-            className="text-red-600 hover:text-red-700"
+            className="text-error hover:text-error-dark"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -459,10 +459,10 @@ export function FloorPlanPinDrop({
               className="w-full justify-start text-left h-auto py-3"
               disabled={disabled}
             >
-              <MapPin className="h-5 w-5 mr-2 text-gray-400" />
+              <MapPin className="h-5 w-5 mr-2 text-disabled" />
               <div>
                 <p className="font-medium">Mark on Floor Plan</p>
-                <p className="text-xs text-gray-500">Tap to place a pin on a drawing</p>
+                <p className="text-xs text-muted">Tap to place a pin on a drawing</p>
               </div>
             </Button>
           </DialogTrigger>
@@ -513,12 +513,12 @@ function FloorPlanDialogContent({
       <div>
         <Label className="text-sm font-medium mb-2 block">Select Floor Plan</Label>
         {loading ? (
-          <div className="flex items-center gap-2 text-gray-500">
+          <div className="flex items-center gap-2 text-muted">
             <Loader2 className="h-4 w-4 animate-spin" />
             Loading floor plans...
           </div>
         ) : floorPlans.length === 0 ? (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800 text-sm">
+          <div className="p-4 bg-warning-light border border-yellow-200 rounded-lg text-yellow-800 text-sm">
             <p className="font-medium">No floor plans found</p>
             <p className="text-xs mt-1">Upload floor plans to the Documents section to mark locations.</p>
           </div>

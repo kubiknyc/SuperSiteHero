@@ -239,11 +239,11 @@ export function IncidentReportForm({
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
       {/* Severity Warning */}
       {isSerious && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-red-600 mt-0.5" />
+        <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-start gap-3">
+          <AlertTriangle className="h-5 w-5 text-error mt-0.5" />
           <div>
-            <h4 className="font-medium text-red-800">Serious Incident</h4>
-            <p className="text-sm text-red-700 mt-1">
+            <h4 className="font-medium text-red-800" className="heading-card">Serious Incident</h4>
+            <p className="text-sm text-error-dark mt-1">
               This severity level ({SEVERITY_CONFIG[selectedSeverity].label}) requires
               immediate notification to project managers and may require OSHA reporting.
             </p>
@@ -262,7 +262,7 @@ export function IncidentReportForm({
             className={cn(errors.incident_date && 'border-red-500')}
           />
           {errors.incident_date && (
-            <p className="text-sm text-red-500 mt-1">{errors.incident_date.message}</p>
+            <p className="text-sm text-error mt-1">{errors.incident_date.message}</p>
           )}
         </div>
 
@@ -315,7 +315,7 @@ export function IncidentReportForm({
                       className={cn(
                         'w-2 h-2 rounded-full',
                         config.color === 'green' && 'bg-green-500',
-                        config.color === 'yellow' && 'bg-yellow-500',
+                        config.color === 'yellow' && 'bg-warning',
                         config.color === 'orange' && 'bg-orange-500',
                         config.color === 'red' && 'bg-red-500',
                         config.color === 'purple' && 'bg-purple-500'
@@ -327,7 +327,7 @@ export function IncidentReportForm({
               ))}
             </SelectContent>
           </Select>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted mt-1">
             {SEVERITY_CONFIG[selectedSeverity].description}
           </p>
         </div>
@@ -366,7 +366,7 @@ export function IncidentReportForm({
           className={cn(errors.description && 'border-red-500')}
         />
         {errors.description && (
-          <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+          <p className="text-sm text-error mt-1">{errors.description.message}</p>
         )}
       </div>
 
@@ -384,7 +384,7 @@ export function IncidentReportForm({
       {isEditing && (
         <>
           <div className="border-t pt-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-4">
+            <h3 className="text-lg font-medium text-foreground mb-4" className="heading-subsection">
               Root Cause Analysis
             </h3>
 
@@ -436,10 +436,10 @@ export function IncidentReportForm({
 
       {/* OSHA Information */}
       <div className="border-t pt-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4 flex items-center gap-2">
-          <Shield className="h-5 w-5 text-blue-600" />
+        <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-subsection">
+          <Shield className="h-5 w-5 text-primary" />
           OSHA Tracking
-          <span className="text-sm font-normal text-gray-500">(if applicable)</span>
+          <span className="text-sm font-normal text-muted">(if applicable)</span>
         </h3>
 
         <div className="flex items-center gap-2 mb-4">
@@ -447,7 +447,7 @@ export function IncidentReportForm({
             type="checkbox"
             id="osha_recordable"
             {...register('osha_recordable')}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-input"
           />
           <Label htmlFor="osha_recordable" className="font-normal">
             This incident is OSHA recordable
@@ -455,13 +455,13 @@ export function IncidentReportForm({
         </div>
 
         {oshaRecordable && (
-          <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
+          <div className="space-y-4 bg-surface p-4 rounded-lg">
             {/* Basic OSHA fields */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="case_number">
                   OSHA 300 Case Number
-                  {fetchingCaseNumber && <span className="ml-2 text-xs text-blue-600">(Fetching...)</span>}
+                  {fetchingCaseNumber && <span className="ml-2 text-xs text-primary">(Fetching...)</span>}
                 </Label>
                 <Input
                   id="case_number"
@@ -470,17 +470,17 @@ export function IncidentReportForm({
                   disabled={fetchingCaseNumber}
                 />
                 {nextCaseNumber && !currentCaseNumber && (
-                  <p className="text-xs text-green-600 mt-1">
+                  <p className="text-xs text-success mt-1">
                     ✓ Auto-assigned: {nextCaseNumber}
                   </p>
                 )}
                 {!nextCaseNumber && !currentCaseNumber && !fetchingCaseNumber && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted mt-1">
                     Format: YYYY-###. Will auto-assign next available number.
                   </p>
                 )}
                 {currentCaseNumber && currentCaseNumber !== nextCaseNumber && (
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-primary mt-1">
                     Manual override: {currentCaseNumber}
                   </p>
                 )}
@@ -616,7 +616,7 @@ export function IncidentReportForm({
                   type="checkbox"
                   id="is_privacy_case"
                   {...register('is_privacy_case')}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="h-4 w-4 rounded border-input"
                 />
                 <Label htmlFor="is_privacy_case" className="font-normal">
                   Privacy case (hide name on OSHA 300 Log)
@@ -626,7 +626,7 @@ export function IncidentReportForm({
 
             {/* Info box */}
             <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded text-sm">
-              <Info className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+              <Info className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
               <p className="text-blue-800">
                 Privacy cases include: sexual assault, HIV status, mental illness,
                 needle stick injuries involving blood, and other sensitive conditions.

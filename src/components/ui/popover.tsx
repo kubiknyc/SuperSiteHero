@@ -136,7 +136,7 @@ export function PopoverContent({
     <div
       ref={ref}
       className={cn(
-        'absolute z-50 w-72 rounded-md border border-gray-200 bg-white p-4 shadow-lg outline-none dark:border-gray-800 dark:bg-gray-900 dark:text-gray-100',
+        'absolute z-50 w-72 rounded-md border border-border bg-card p-4 shadow-lg outline-none dark:border-border dark:bg-background dark:text-gray-100',
         sideClasses[side],
         alignmentClasses[align],
         className

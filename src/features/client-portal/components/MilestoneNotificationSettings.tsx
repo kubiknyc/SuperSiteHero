@@ -263,7 +263,7 @@ export function MilestoneNotificationSettings({
     return (
       <Card className={cn('border-red-200', className)}>
         <CardContent className="py-8">
-          <div className="flex items-center gap-3 text-red-600">
+          <div className="flex items-center gap-3 text-error">
             <AlertCircle className="h-5 w-5" />
             <p>Failed to load notification preferences. Please try again.</p>
           </div>
@@ -277,8 +277,8 @@ export function MilestoneNotificationSettings({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Notification Preferences</h2>
-          <p className="text-gray-600 mt-1">
+          <h2 className="text-2xl font-bold text-foreground" className="heading-section">Notification Preferences</h2>
+          <p className="text-secondary mt-1">
             Choose which milestone events you want to be notified about and how you'd like to receive them.
           </p>
         </div>
@@ -287,9 +287,9 @@ export function MilestoneNotificationSettings({
       {/* Legend */}
       <Card>
         <CardContent className="py-4">
-          <div className="flex items-center gap-6 text-sm text-gray-600">
+          <div className="flex items-center gap-6 text-sm text-secondary">
             <div className="flex items-center gap-2">
-              <Bell className="h-4 w-4 text-blue-600" />
+              <Bell className="h-4 w-4 text-primary" />
               <span>In-App notifications appear in the application</span>
             </div>
             <div className="flex items-center gap-2">
@@ -308,8 +308,8 @@ export function MilestoneNotificationSettings({
             <AccordionTrigger className="px-6 hover:no-underline">
               <div className="flex items-center justify-between w-full pr-4">
                 <div className="flex-1 text-left">
-                  <h3 className="text-lg font-semibold text-gray-900">{metadata.label}</h3>
-                  <p className="text-sm text-gray-500 mt-0.5">{metadata.description}</p>
+                  <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">{metadata.label}</h3>
+                  <p className="text-sm text-muted mt-0.5">{metadata.description}</p>
                 </div>
                 <Badge variant="secondary" className="ml-4">
                   {eventTypes.filter(isEventEnabled).length} / {eventTypes.length} enabled
@@ -326,7 +326,7 @@ export function MilestoneNotificationSettings({
                   return (
                     <div
                       key={eventType}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-surface rounded-lg"
                     >
                       <div className="flex items-start gap-4 flex-1">
                         <Switch
@@ -336,10 +336,10 @@ export function MilestoneNotificationSettings({
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-medium text-gray-900">{eventMetadata.label}</h4>
-                            {!enabled && <BellOff className="h-4 w-4 text-gray-400" />}
+                            <h4 className="font-medium text-foreground" className="heading-card">{eventMetadata.label}</h4>
+                            {!enabled && <BellOff className="h-4 w-4 text-disabled" />}
                           </div>
-                          <p className="text-sm text-gray-500 mt-0.5">
+                          <p className="text-sm text-muted mt-0.5">
                             {eventMetadata.description}
                           </p>
                         </div>
@@ -380,7 +380,7 @@ export function MilestoneNotificationSettings({
             </Button>
             <div className="flex items-center gap-3">
               {hasChanges && (
-                <span className="text-sm text-amber-600 flex items-center gap-2">
+                <span className="text-sm text-warning flex items-center gap-2">
                   <AlertCircle className="h-4 w-4" />
                   You have unsaved changes
                 </span>

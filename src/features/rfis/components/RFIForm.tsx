@@ -128,7 +128,7 @@ export function RFIForm({ initialData, onSubmit, isLoading, onCancel }: RFIFormP
           {/* Title - Required */}
           <div className="space-y-2">
             <Label htmlFor="title" className="required">
-              Title <span className="text-red-500">*</span>
+              Title <span className="text-error">*</span>
             </Label>
             <Input
               id="title"
@@ -142,7 +142,7 @@ export function RFIForm({ initialData, onSubmit, isLoading, onCancel }: RFIFormP
               aria-describedby={errors.title ? 'title-error' : undefined}
             />
             {errors.title && (
-              <p id="title-error" className="text-sm text-red-600" role="alert">
+              <p id="title-error" className="text-sm text-error" role="alert">
                 {errors.title}
               </p>
             )}
@@ -234,7 +234,7 @@ export function RFIForm({ initialData, onSubmit, isLoading, onCancel }: RFIFormP
                 placeholder="Comma-separated user IDs or names"
                 disabled={isLoading}
               />
-              <p className="text-xs text-gray-500">Separate multiple assignees with commas</p>
+              <p className="text-xs text-muted">Separate multiple assignees with commas</p>
             </div>
           </div>
 

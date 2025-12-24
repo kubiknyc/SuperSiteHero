@@ -94,28 +94,28 @@ export function DocumentViewer({
 
   // Unsupported file type - show error and download option
   return (
-    <div className={`flex items-center justify-center bg-gray-50 ${height}`}>
+    <div className={`flex items-center justify-center bg-surface ${height}`}>
       <Card className="max-w-md mx-auto">
         <CardContent className="p-12 text-center">
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <FileIcon className="w-16 h-16 text-gray-400" />
+              <FileIcon className="w-16 h-16 text-disabled" />
               <AlertCircle className="w-6 h-6 text-orange-500 absolute bottom-0 right-0" />
             </div>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
             Unsupported file type
           </h3>
-          <p className="text-sm text-gray-600 mb-2">
+          <p className="text-sm text-secondary mb-2">
             This file type cannot be previewed in the browser.
           </p>
-          <p className="text-xs text-gray-500 mb-6">
+          <p className="text-xs text-muted mb-6">
             File type: {fileType || 'unknown'}
           </p>
           <a
             href={document.file_url}
             download={fileName}
-            className="inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover transition-colors"
           >
             Download File
           </a>

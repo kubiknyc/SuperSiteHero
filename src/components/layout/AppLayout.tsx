@@ -2,7 +2,7 @@
 // Main application layout with sidebar navigation and mobile bottom nav
 // Enhanced with tablet landscape/portrait optimizations
 
-import { type ReactNode, useEffect, useState, useCallback } from 'react'
+import { type ReactNode, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { cn } from '@/lib/utils'
@@ -13,83 +13,16 @@ import { MobileOfflineBanner } from '@/components/mobile/MobileOfflineIndicator'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { initOfflineListeners } from '@/stores/offline-store'
 import { useTabletMode, useTabletSidebar } from '@/hooks/useTabletMode'
-import {
-  LayoutDashboard,
-  FolderOpen,
-  FileText,
-  ClipboardList,
-  ListChecks,
-  AlertCircle,
-  Shield,
-  Users,
-  Settings,
-  LogOut,
-  HardHat,
-  FileEdit,
-  Workflow,
-  CheckCircle2,
-  CheckSquare,
-  MessageSquare,
-  Mail,
-  Files,
-  ClipboardCheck,
-  Ruler,
-  BarChart3,
-  CloudSun,
-  FileSignature,
-  CalendarCheck,
-  Truck,
-  DollarSign,
-  FileCheck,
-  Menu,
-  X,
-  ChevronLeft,
-} from 'lucide-react'
-import { PendingApprovalsBadge } from '@/features/approvals/components'
-import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge'
+import { Settings, LogOut, Ruler, Menu, X } from 'lucide-react'
 import { GlobalSearchBar } from '@/features/search/components/GlobalSearchBar'
 import { Button } from '@/components/ui/button'
 import { LogoIconLight } from '@/components/brand'
+import { NavigationGroup } from './NavigationGroup'
+import { primaryNavItems, navigationGroups } from '@/config/navigation'
 
 interface AppLayoutProps {
   children: ReactNode
 }
-
-interface NavItem {
-  name: string
-  href: string
-  icon: React.ComponentType<{ className?: string }>
-}
-
-interface NavItemWithBadge extends NavItem {
-  badge?: React.ComponentType
-}
-
-const navigation: NavItemWithBadge[] = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-  { name: 'Projects', href: '/projects', icon: FolderOpen },
-  { name: 'Messages', href: '/messages', icon: MessageSquare, badge: UnreadMessagesBadge },
-  { name: 'Documents', href: '/documents', icon: Files },
-  { name: 'Daily Reports', href: '/daily-reports', icon: FileText },
-  { name: 'Meetings', href: '/meetings', icon: CalendarCheck },
-  { name: 'Weather Logs', href: '/weather-logs', icon: CloudSun },
-  { name: 'Change Orders', href: '/change-orders', icon: FileEdit },
-  { name: 'Workflows', href: '/workflows', icon: Workflow },
-  { name: 'Notices', href: '/notices', icon: Mail },
-  { name: 'Site Instructions', href: '/site-instructions', icon: FileSignature },
-  { name: 'Tasks', href: '/tasks', icon: ClipboardList },
-  { name: 'Approvals', href: '/approvals', icon: CheckCircle2, badge: PendingApprovalsBadge },
-  { name: 'Punch Lists', href: '/punch-lists', icon: ListChecks },
-  { name: 'Checklists', href: '/checklists/templates', icon: CheckSquare },
-  { name: 'RFIs', href: '/rfis', icon: AlertCircle },
-  { name: 'Inspections', href: '/inspections', icon: ClipboardCheck },
-  { name: 'Permits', href: '/permits', icon: FileCheck },
-  { name: 'Safety', href: '/safety', icon: Shield },
-  { name: 'Equipment', href: '/equipment', icon: Truck },
-  { name: 'Budget', href: '/budget', icon: DollarSign },
-  { name: 'Contacts', href: '/contacts', icon: Users },
-  { name: 'Reports', href: '/reports', icon: BarChart3 },
-]
 
 export function AppLayout({ children }: AppLayoutProps) {
   const { signOut, userProfile } = useAuth()
@@ -126,7 +59,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   return (
     <div className={cn(
-      "min-h-screen bg-gray-50 dark:bg-gray-950",
+      "min-h-screen bg-surface dark:bg-gray-950",
       // Tablet landscape: side-by-side layout
       isTablet && isLandscape && "tablet-landscape-sidebar"
     )}>
@@ -148,13 +81,13 @@ export function AppLayout({ children }: AppLayoutProps) {
           onClick={toggleSidebar}
           className={cn(
             "fixed top-4 left-4 z-50 p-2 rounded-lg",
-            "bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700",
-            "hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors",
+            "bg-card dark:bg-surface shadow-lg border border-border dark:border-gray-700",
+            "hover:bg-surface dark:hover:bg-gray-700 transition-colors",
             isTouchDevice && "min-h-[44px] min-w-[44px]"
           )}
           aria-label="Open navigation menu"
         >
-          <Menu className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+          <Menu className="h-6 w-6 text-secondary dark:text-gray-300" />
         </button>
       )}
 
@@ -162,7 +95,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <aside
         className={cn(
           // Base styles
-          "fixed inset-y-0 left-0 bg-gray-900 text-white flex-col z-50",
+          "fixed inset-y-0 left-0 bg-background text-white flex-col z-50",
           // Desktop: always visible
           !isTablet && "hidden md:flex w-64",
           // Tablet landscape: persistent sidebar (slightly narrower)
@@ -196,7 +129,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 )}>
                   JobSight
                 </h1>
-                <p className="text-xs text-gray-400">Field Management</p>
+                <p className="text-xs text-disabled">Field Management</p>
               </div>
             </div>
             {/* Close button for tablet portrait drawer */}
@@ -204,7 +137,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               <button
                 onClick={closeSidebar}
                 className={cn(
-                  "p-2 rounded-lg hover:bg-gray-800 transition-colors",
+                  "p-2 rounded-lg hover:bg-surface transition-colors",
                   isTouchDevice && "min-h-[44px] min-w-[44px] flex items-center justify-center"
                 )}
                 aria-label="Close navigation menu"
@@ -220,7 +153,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               projectId={currentProjectId || undefined}
               placeholder="Search... (Ctrl+K)"
               compact
-              className="w-full bg-gray-800 hover:bg-gray-700 border-gray-700 text-gray-300"
+              className="w-full bg-surface hover:bg-gray-700 border-gray-700 text-gray-300"
             />
           </div>
         </div>
@@ -228,53 +161,76 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* Navigation */}
         <nav className={cn(
           "flex-1 overflow-y-auto",
-          isTablet ? "p-3 space-y-0.5" : "p-4 space-y-1",
+          isTablet ? "p-3 space-y-2" : "p-4 space-y-2",
           isTouchDevice && "scroll-smooth-touch"
         )}>
-          {navigation.map((item) => {
-            const isActive = location.pathname === item.href || location.pathname.startsWith(item.href + '/')
-            const Icon = item.icon
-            const Badge = item.badge
+          {/* Primary Navigation Items (always visible) */}
+          <div className="space-y-1">
+            {primaryNavItems.map((item) => {
+              const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+              const Icon = item.icon
+              const Badge = item.badge
 
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={cn(
-                  'flex items-center gap-3 rounded-md font-medium transition-colors',
-                  // Base styles
-                  isActive
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white',
-                  // Tablet: larger touch targets
-                  isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
-                  // Touch feedback
-                  isTouchDevice && 'active:bg-gray-700'
-                )}
-              >
-                <Icon className={cn(isTablet ? "h-5 w-5" : "h-5 w-5")} />
-                <span className="flex-1">{item.name}</span>
-                {Badge && <Badge />}
-              </Link>
-            )
-          })}
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    'flex items-center gap-3 rounded-md font-medium transition-colors',
+                    // Base styles
+                    isActive
+                      ? 'bg-surface text-white'
+                      : 'text-gray-300 hover:bg-surface hover:text-white',
+                    // Tablet: larger touch targets
+                    isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
+                    // Touch feedback
+                    isTouchDevice && 'active:bg-gray-700'
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="flex-1">{item.label}</span>
+                  {Badge && <Badge />}
+                </Link>
+              )
+            })}
+          </div>
+
+          {/* Divider */}
+          <div className="border-t border-gray-800 my-3" />
+
+          {/* Grouped Navigation (collapsible) */}
+          <div className="space-y-2">
+            {navigationGroups.map((group) => (
+              <NavigationGroup
+                key={group.id}
+                id={group.id}
+                label={group.label}
+                icon={group.icon}
+                items={group.items}
+                defaultExpanded={group.defaultExpanded}
+              />
+            ))}
+          </div>
 
           {/* Conditional Takeoffs navigation - only show when viewing a project and user is internal */}
           {currentProjectId && userRole !== 'client' && userRole !== 'subcontractor' && (
-            <Link
-              to={`/projects/${currentProjectId}/takeoffs`}
-              className={cn(
-                'flex items-center gap-3 rounded-md font-medium transition-colors',
-                location.pathname.includes('/takeoffs')
-                  ? 'bg-gray-800 text-white'
-                  : 'text-gray-300 hover:bg-gray-800 hover:text-white',
-                isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
-                isTouchDevice && 'active:bg-gray-700'
-              )}
-            >
-              <Ruler className={cn(isTablet ? "h-5 w-5" : "h-5 w-5")} />
-              <span className="flex-1">Takeoffs</span>
-            </Link>
+            <>
+              <div className="border-t border-gray-800 my-3" />
+              <Link
+                to={`/projects/${currentProjectId}/takeoffs`}
+                className={cn(
+                  'flex items-center gap-3 rounded-md font-medium transition-colors',
+                  location.pathname.includes('/takeoffs')
+                    ? 'bg-surface text-white'
+                    : 'text-gray-300 hover:bg-surface hover:text-white',
+                  isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
+                  isTouchDevice && 'active:bg-gray-700'
+                )}
+              >
+                <Ruler className="h-5 w-5" />
+                <span className="flex-1">Takeoffs</span>
+              </Link>
+            </>
           )}
         </nav>
 
@@ -288,7 +244,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           {/* Theme toggle */}
           <div className="pb-2 flex items-center justify-between gap-2">
-            <span className="text-sm text-gray-400">Theme</span>
+            <span className="text-sm text-disabled">Theme</span>
             <ThemeToggle compact />
           </div>
 
@@ -298,15 +254,15 @@ export function AppLayout({ children }: AppLayoutProps) {
               <p className="font-medium text-white">
                 {userProfile.first_name} {userProfile.last_name}
               </p>
-              <p className="text-xs text-gray-400">{userProfile.email}</p>
-              <p className="text-xs text-gray-500 capitalize">{userProfile.role}</p>
+              <p className="text-xs text-disabled">{userProfile.email}</p>
+              <p className="text-xs text-muted capitalize">{userProfile.role}</p>
             </div>
           )}
 
           {/* Settings and sign out */}
           <Link
             to="/settings"
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
+            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-surface hover:text-white transition-colors"
           >
             <Settings className="h-5 w-5" />
             Settings
@@ -315,7 +271,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <Button
             onClick={() => signOut()}
             variant="ghost"
-            className="w-full justify-start gap-3 text-gray-300 hover:bg-gray-800 hover:text-white"
+            className="w-full justify-start gap-3 text-gray-300 hover:bg-surface hover:text-white"
           >
             <LogOut className="h-5 w-5" />
             Sign Out

@@ -77,7 +77,7 @@ export function QBPendingSyncsList({ items, compact = false }: QBPendingSyncsLis
     return (
       <div className="space-y-2">
         {failedItems.length > 0 && (
-          <div className="text-xs font-medium text-red-600 mb-1 flex items-center gap-1">
+          <div className="text-xs font-medium text-error mb-1 flex items-center gap-1">
             <AlertCircle className="h-3 w-3" />
             {failedItems.length} failed
           </div>
@@ -86,14 +86,14 @@ export function QBPendingSyncsList({ items, compact = false }: QBPendingSyncsLis
           <div
             key={item.id}
             className={`flex items-center justify-between p-2 border rounded-md text-sm ${
-              item.status === 'failed' ? 'border-red-200 bg-red-50' : ''
+              item.status === 'failed' ? 'border-red-200 bg-error-light' : ''
             }`}
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
               {item.status === 'failed' ? (
-                <AlertCircle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                <AlertCircle className="h-4 w-4 text-error flex-shrink-0" />
               ) : (
-                <Clock className="h-4 w-4 text-yellow-500 flex-shrink-0" />
+                <Clock className="h-4 w-4 text-warning flex-shrink-0" />
               )}
               <span className="truncate">
                 {ENTITY_TYPE_LABELS[item.local_entity_type] || item.local_entity_type}
@@ -125,7 +125,7 @@ export function QBPendingSyncsList({ items, compact = false }: QBPendingSyncsLis
     <div className="space-y-4">
       {failedItems.length > 0 && (
         <div>
-          <div className="text-sm font-medium text-red-600 mb-2 flex items-center gap-1">
+          <div className="text-sm font-medium text-error mb-2 flex items-center gap-1">
             <AlertCircle className="h-4 w-4" />
             Failed Syncs ({failedItems.length})
           </div>
@@ -146,7 +146,7 @@ export function QBPendingSyncsList({ items, compact = false }: QBPendingSyncsLis
 
       {pendingItems.length > 0 && (
         <div>
-          <div className="text-sm font-medium text-yellow-600 mb-2 flex items-center gap-1">
+          <div className="text-sm font-medium text-warning mb-2 flex items-center gap-1">
             <Clock className="h-4 w-4" />
             Pending Syncs ({pendingItems.length})
           </div>
@@ -188,7 +188,7 @@ function PendingSyncItem({
   return (
     <div
       className={`flex items-center justify-between p-3 border rounded-lg ${
-        isFailed ? 'border-red-200 bg-red-50' : 'border-yellow-200 bg-yellow-50'
+        isFailed ? 'border-red-200 bg-error-light' : 'border-yellow-200 bg-warning-light'
       }`}
     >
       <div className="flex-1 min-w-0">
@@ -210,7 +210,7 @@ function PendingSyncItem({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="mt-1 text-xs text-red-600 truncate cursor-help">
+                <div className="mt-1 text-xs text-error truncate cursor-help">
                   Error: {item.last_error}
                 </div>
               </TooltipTrigger>
@@ -252,7 +252,7 @@ function PendingSyncItem({
             <Button
               variant="ghost"
               size="sm"
-              className="text-red-600 hover:text-red-700"
+              className="text-error hover:text-error-dark"
               disabled={isCancelling}
             >
               <X className="h-4 w-4" />
@@ -269,7 +269,7 @@ function PendingSyncItem({
               <AlertDialogCancel>Keep</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => onCancel(item.id)}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
               >
                 Cancel Sync
               </AlertDialogAction>

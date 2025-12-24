@@ -17,7 +17,7 @@ export function FormError({ message, className, id }: FormErrorProps) {
       role="alert"
       aria-live="polite"
       className={cn(
-        'flex items-center gap-2 text-sm font-medium text-red-600 mt-1.5',
+        'flex items-center gap-2 text-sm font-medium text-error mt-1.5',
         className
       )}
     >
@@ -42,7 +42,7 @@ export function FormErrorList({ errors, className }: FormErrorListProps) {
       className={cn('space-y-1.5 mt-2', className)}
     >
       {errors.map((error, index) => (
-        <div key={index} className="flex items-center gap-2 text-sm font-medium text-red-600">
+        <div key={index} className="flex items-center gap-2 text-sm font-medium text-error">
           <AlertCircle className="h-4 w-4 flex-shrink-0" />
           <span>{error}</span>
         </div>

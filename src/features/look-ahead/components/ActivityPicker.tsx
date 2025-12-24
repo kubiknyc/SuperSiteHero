@@ -94,7 +94,7 @@ export function ActivityPicker({
           aria-expanded={open}
           className={cn(
             'w-full justify-between font-normal',
-            !value && 'text-gray-500',
+            !value && 'text-muted',
             className
           )}
           disabled={disabled}
@@ -106,7 +106,7 @@ export function ActivityPicker({
             </span>
           ) : selectedActivity ? (
             <span className="flex items-center gap-2 truncate">
-              <Link2 className="h-4 w-4 flex-shrink-0 text-green-600" />
+              <Link2 className="h-4 w-4 flex-shrink-0 text-success" />
               <span className="truncate">{selectedActivity.activity_name}</span>
               {selectedActivity.trade && (
                 <Badge variant="outline" className="ml-1 flex-shrink-0">
@@ -116,14 +116,14 @@ export function ActivityPicker({
             </span>
           ) : (
             <span className="flex items-center gap-2">
-              <Link2 className="h-4 w-4 text-gray-400" />
+              <Link2 className="h-4 w-4 text-disabled" />
               {placeholder}
             </span>
           )}
           <div className="flex items-center gap-1">
             {value && !disabled && (
               <Unlink
-                className="h-4 w-4 text-gray-400 hover:text-red-500 cursor-pointer"
+                className="h-4 w-4 text-disabled hover:text-error cursor-pointer"
                 onClick={handleUnlink}
               />
             )}
@@ -134,7 +134,7 @@ export function ActivityPicker({
       <PopoverContent className="w-[400px] p-0" align="start">
         <div className="p-2 border-b">
           <div className="relative">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search activities..."
               value={search}
@@ -146,16 +146,16 @@ export function ActivityPicker({
         <div className="max-h-[300px] overflow-y-auto">
           {isLoading ? (
             <div className="flex items-center justify-center py-6">
-              <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+              <Loader2 className="h-5 w-5 animate-spin text-disabled" />
             </div>
           ) : filteredActivities.length === 0 ? (
-            <div className="py-6 text-center text-sm text-gray-500">
+            <div className="py-6 text-center text-sm text-muted">
               No activities found
             </div>
           ) : (
             Array.from(groupedActivities.entries()).map(([trade, items]) => (
               <div key={trade}>
-                <div className="px-3 py-2 text-xs font-semibold text-gray-500 bg-gray-50">
+                <div className="px-3 py-2 text-xs font-semibold text-muted bg-surface">
                   {trade}
                 </div>
                 {items.map((activity) => (
@@ -163,30 +163,30 @@ export function ActivityPicker({
                     key={activity.id}
                     onClick={() => handleSelect(activity.id)}
                     className={cn(
-                      'flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100',
+                      'flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-muted',
                       value === activity.id && 'bg-blue-50'
                     )}
                   >
                     <Check
                       className={cn(
                         'h-4 w-4 flex-shrink-0',
-                        value === activity.id ? 'opacity-100 text-blue-600' : 'opacity-0'
+                        value === activity.id ? 'opacity-100 text-primary' : 'opacity-0'
                       )}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="truncate font-medium text-sm">
                         {activity.activity_name}
                       </div>
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-2 text-xs text-muted">
                         {activity.location && <span>{activity.location}</span>}
                         <span>{activity.percent_complete}% complete</span>
                         <Badge
                           variant="outline"
                           className={cn(
                             'text-xs',
-                            activity.status === 'completed' && 'bg-green-50 text-green-700',
-                            activity.status === 'in_progress' && 'bg-yellow-50 text-yellow-700',
-                            activity.status === 'blocked' && 'bg-red-50 text-red-700'
+                            activity.status === 'completed' && 'bg-success-light text-success-dark',
+                            activity.status === 'in_progress' && 'bg-warning-light text-yellow-700',
+                            activity.status === 'blocked' && 'bg-error-light text-error-dark'
                           )}
                         >
                           {activity.status}

@@ -33,8 +33,8 @@ interface QBSyncLogTableProps {
 }
 
 const DIRECTION_ICONS: Record<QBSyncDirection, React.ReactNode> = {
-  to_quickbooks: <ArrowUpRight className="h-4 w-4 text-blue-500" />,
-  from_quickbooks: <ArrowDownRight className="h-4 w-4 text-green-500" />,
+  to_quickbooks: <ArrowUpRight className="h-4 w-4 text-primary" />,
+  from_quickbooks: <ArrowDownRight className="h-4 w-4 text-success" />,
   bidirectional: <ArrowLeftRight className="h-4 w-4 text-purple-500" />,
 }
 
@@ -123,13 +123,13 @@ export function QBSyncLogTable({ logs, compact = false }: QBSyncLogTableProps) {
               </div>
               <div className="text-xs text-muted-foreground">
                 {log.records_created > 0 && (
-                  <span className="text-green-600">+{log.records_created}</span>
+                  <span className="text-success">+{log.records_created}</span>
                 )}
                 {log.records_updated > 0 && (
-                  <span className="text-blue-600 ml-1">~{log.records_updated}</span>
+                  <span className="text-primary ml-1">~{log.records_updated}</span>
                 )}
                 {log.records_failed > 0 && (
-                  <span className="text-red-600 ml-1">-{log.records_failed}</span>
+                  <span className="text-error ml-1">-{log.records_failed}</span>
                 )}
               </div>
             </TableCell>
@@ -187,16 +187,16 @@ export function QBSyncLogTable({ logs, compact = false }: QBSyncLogTableProps) {
                           <div className="text-lg font-bold">{log.records_processed}</div>
                           <div className="text-xs text-muted-foreground">Processed</div>
                         </div>
-                        <div className="p-2 bg-green-50 rounded text-center">
-                          <div className="text-lg font-bold text-green-600">{log.records_created}</div>
+                        <div className="p-2 bg-success-light rounded text-center">
+                          <div className="text-lg font-bold text-success">{log.records_created}</div>
                           <div className="text-xs text-muted-foreground">Created</div>
                         </div>
                         <div className="p-2 bg-blue-50 rounded text-center">
-                          <div className="text-lg font-bold text-blue-600">{log.records_updated}</div>
+                          <div className="text-lg font-bold text-primary">{log.records_updated}</div>
                           <div className="text-xs text-muted-foreground">Updated</div>
                         </div>
-                        <div className="p-2 bg-red-50 rounded text-center">
-                          <div className="text-lg font-bold text-red-600">{log.records_failed}</div>
+                        <div className="p-2 bg-error-light rounded text-center">
+                          <div className="text-lg font-bold text-error">{log.records_failed}</div>
                           <div className="text-xs text-muted-foreground">Failed</div>
                         </div>
                       </div>
@@ -204,8 +204,8 @@ export function QBSyncLogTable({ logs, compact = false }: QBSyncLogTableProps) {
 
                     {log.error_message && (
                       <div className="border-t pt-4">
-                        <label className="text-sm font-medium text-red-600">Error</label>
-                        <p className="text-sm mt-1 p-2 bg-red-50 rounded text-red-800">
+                        <label className="text-sm font-medium text-error">Error</label>
+                        <p className="text-sm mt-1 p-2 bg-error-light rounded text-red-800">
                           {log.error_message}
                         </p>
                       </div>

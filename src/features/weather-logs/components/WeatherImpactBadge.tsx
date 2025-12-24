@@ -24,13 +24,13 @@ const impactConfig: Record<
   none: {
     label: 'No Impact',
     variant: 'outline',
-    color: 'text-green-600 border-green-600',
+    color: 'text-success border-success',
     icon: CheckCircle,
   },
   minor: {
     label: 'Minor Impact',
     variant: 'secondary',
-    color: 'text-yellow-600 bg-yellow-50 border-yellow-600',
+    color: 'text-warning bg-warning-light border-yellow-600',
     icon: AlertCircle,
   },
   moderate: {
@@ -42,7 +42,7 @@ const impactConfig: Record<
   severe: {
     label: 'Severe Impact',
     variant: 'destructive',
-    color: 'text-red-600 bg-red-50 border-red-600',
+    color: 'text-error bg-error-light border-error',
     icon: XCircle,
   },
 }

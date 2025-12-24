@@ -124,7 +124,7 @@ export default function BidPackagesPage() {
   if (error) {
     return (
       <div className="container py-8">
-        <div className="text-center text-red-600">
+        <div className="text-center text-error">
           Failed to load bid packages. Please try again.
         </div>
       </div>
@@ -136,7 +136,7 @@ export default function BidPackagesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
             <Package className="w-6 h-6" />
             Bid Packages
           </h1>
@@ -262,7 +262,7 @@ export default function BidPackagesPage() {
           ) : filteredPackages.length === 0 ? (
             <div className="text-center py-12">
               <Package className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No bid packages found</h3>
+              <h3 className="text-lg font-medium mb-2" className="heading-subsection">No bid packages found</h3>
               <p className="text-muted-foreground mb-4">
                 {searchTerm || statusFilter.length > 0 || divisionFilter
                   ? 'Try adjusting your filters'

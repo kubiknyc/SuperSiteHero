@@ -236,7 +236,7 @@ export function ReportBuilderPage() {
     return (
       <AppLayout>
         <div className="p-6 flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </AppLayout>
     )
@@ -253,11 +253,11 @@ export function ReportBuilderPage() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-foreground" className="heading-page">
                 {isEditMode ? 'Edit Report Template' : 'New Report Template'}
               </h1>
               {dataSource && (
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-muted text-sm mt-1">
                   {templateName || 'Untitled Report'}
                 </p>
               )}
@@ -299,10 +299,10 @@ export function ReportBuilderPage() {
                     className={cn(
                       'flex items-center gap-2 px-4 py-2 rounded-lg transition-colors',
                       isCurrent
-                        ? 'bg-blue-100 text-blue-700'
+                        ? 'bg-info-light text-primary-hover'
                         : isCompleted
-                        ? 'bg-green-50 text-green-700'
-                        : 'text-gray-500 hover:bg-gray-100'
+                        ? 'bg-success-light text-success-dark'
+                        : 'text-muted hover:bg-muted'
                     )}
                   >
                     {isCompleted ? (
@@ -335,8 +335,8 @@ export function ReportBuilderPage() {
               {fieldsLoading ? (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-blue-600" />
-                    <p className="text-gray-500 mt-2">Loading available fields...</p>
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+                    <p className="text-muted mt-2">Loading available fields...</p>
                   </CardContent>
                 </Card>
               ) : fieldDefinitions ? (
@@ -348,7 +348,7 @@ export function ReportBuilderPage() {
               ) : (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <p className="text-gray-500">No fields available for this data source</p>
+                    <p className="text-muted">No fields available for this data source</p>
                   </CardContent>
                 </Card>
               )}
@@ -361,8 +361,8 @@ export function ReportBuilderPage() {
               {fieldsLoading ? (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-blue-600" />
-                    <p className="text-gray-500 mt-2">Loading available fields...</p>
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+                    <p className="text-muted mt-2">Loading available fields...</p>
                   </CardContent>
                 </Card>
               ) : fieldDefinitions ? (
@@ -374,7 +374,7 @@ export function ReportBuilderPage() {
               ) : (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <p className="text-gray-500">Select a data source first to configure filters</p>
+                    <p className="text-muted">Select a data source first to configure filters</p>
                   </CardContent>
                 </Card>
               )}
@@ -387,8 +387,8 @@ export function ReportBuilderPage() {
               {fieldsLoading ? (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-blue-600" />
-                    <p className="text-gray-500 mt-2">Loading available fields...</p>
+                    <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+                    <p className="text-muted mt-2">Loading available fields...</p>
                   </CardContent>
                 </Card>
               ) : fieldDefinitions ? (
@@ -400,7 +400,7 @@ export function ReportBuilderPage() {
               ) : (
                 <Card>
                   <CardContent className="py-8 text-center">
-                    <p className="text-gray-500">Select a data source first to configure charts</p>
+                    <p className="text-muted">Select a data source first to configure charts</p>
                   </CardContent>
                 </Card>
               )}
@@ -437,7 +437,7 @@ export function ReportBuilderPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>Share with Team</Label>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted">
                         Allow others in your company to use this template
                       </p>
                     </div>
@@ -469,7 +469,7 @@ export function ReportBuilderPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>Include Charts</Label>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted">
                         Add visual charts to the report
                       </p>
                     </div>
@@ -478,7 +478,7 @@ export function ReportBuilderPage() {
                   <div className="flex items-center justify-between">
                     <div>
                       <Label>Include Summary</Label>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted">
                         Add summary totals at the end
                       </p>
                     </div>

@@ -263,7 +263,7 @@ export function LookAheadPrintView({
       {/* Header */}
       <div className="print-header">
         <div>
-          <h1 className="print-title">4-Week Look-Ahead Schedule</h1>
+          <h1 className="print-title" className="heading-page">4-Week Look-Ahead Schedule</h1>
           <p className="print-subtitle">{projectName}</p>
         </div>
         <div className="print-meta">

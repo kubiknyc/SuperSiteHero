@@ -68,11 +68,11 @@ export function BudgetPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
               <DollarSign className="h-6 w-6" />
               Budget
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-muted mt-1">
               Track project budgets and cost codes
             </p>
           </div>
@@ -107,11 +107,11 @@ export function BudgetPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <DollarSign className="h-5 w-5 text-blue-600" />
+                <div className="p-2 bg-info-light rounded-lg">
+                  <DollarSign className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Original Budget</p>
+                  <p className="text-sm text-muted">Original Budget</p>
                   <p className="text-2xl font-bold">{formatCurrency(totals.original)}</p>
                 </div>
               </div>
@@ -125,7 +125,7 @@ export function BudgetPage() {
                   <TrendingUp className="h-5 w-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Revised Budget</p>
+                  <p className="text-sm text-muted">Revised Budget</p>
                   <p className="text-2xl font-bold">{formatCurrency(totals.revised)}</p>
                 </div>
               </div>
@@ -139,29 +139,29 @@ export function BudgetPage() {
                   <DollarSign className="h-5 w-5 text-orange-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Actual Costs</p>
+                  <p className="text-sm text-muted">Actual Costs</p>
                   <p className="text-2xl font-bold">{formatCurrency(totals.actual)}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className={isOverBudget ? 'border-red-200 bg-red-50' : 'border-green-200 bg-green-50'}>
+          <Card className={isOverBudget ? 'border-red-200 bg-error-light' : 'border-green-200 bg-success-light'}>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${isOverBudget ? 'bg-red-100' : 'bg-green-100'}`}>
+                <div className={`p-2 rounded-lg ${isOverBudget ? 'bg-error-light' : 'bg-success-light'}`}>
                   {isOverBudget ? (
-                    <ArrowDownRight className="h-5 w-5 text-red-600" />
+                    <ArrowDownRight className="h-5 w-5 text-error" />
                   ) : (
-                    <ArrowUpRight className="h-5 w-5 text-green-600" />
+                    <ArrowUpRight className="h-5 w-5 text-success" />
                   )}
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Variance</p>
-                  <p className={`text-2xl font-bold ${isOverBudget ? 'text-red-600' : 'text-green-600'}`}>
+                  <p className="text-sm text-muted">Variance</p>
+                  <p className={`text-2xl font-bold ${isOverBudget ? 'text-error' : 'text-success'}`}>
                     {formatCurrency(Math.abs(variance))}
                   </p>
-                  <p className={`text-xs ${isOverBudget ? 'text-red-500' : 'text-green-500'}`}>
+                  <p className={`text-xs ${isOverBudget ? 'text-error' : 'text-success'}`}>
                     {isOverBudget ? 'Over budget' : 'Under budget'} ({variancePercent}%)
                   </p>
                 </div>
@@ -173,7 +173,7 @@ export function BudgetPage() {
         {/* Search and Filters */}
         <div className="flex gap-4">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search cost codes..."
               className="pl-10"
@@ -190,32 +190,32 @@ export function BudgetPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">Loading budgets...</div>
+              <div className="text-center py-8 text-muted">Loading budgets...</div>
             ) : !projectId ? (
               <div className="text-center py-8">
                 <DollarSign className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">Select a project to view budgets</p>
-                <p className="text-sm text-gray-400">Choose a project from the dropdown above</p>
+                <p className="text-muted">Select a project to view budgets</p>
+                <p className="text-sm text-disabled">Choose a project from the dropdown above</p>
               </div>
             ) : filteredBudgets?.length === 0 ? (
               <div className="text-center py-8">
                 <DollarSign className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">No budget lines found</p>
-                <p className="text-sm text-gray-400">Add budget lines to track costs</p>
+                <p className="text-muted">No budget lines found</p>
+                <p className="text-sm text-disabled">Add budget lines to track costs</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
                     <tr className="border-b">
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">Cost Code</th>
-                      <th className="text-left py-3 px-2 font-medium text-gray-500">Description</th>
-                      <th className="text-right py-3 px-2 font-medium text-gray-500">Original</th>
-                      <th className="text-right py-3 px-2 font-medium text-gray-500">Changes</th>
-                      <th className="text-right py-3 px-2 font-medium text-gray-500">Revised</th>
-                      <th className="text-right py-3 px-2 font-medium text-gray-500">Committed</th>
-                      <th className="text-right py-3 px-2 font-medium text-gray-500">Actual</th>
-                      <th className="text-right py-3 px-2 font-medium text-gray-500">Variance</th>
+                      <th className="text-left py-3 px-2 font-medium text-muted">Cost Code</th>
+                      <th className="text-left py-3 px-2 font-medium text-muted">Description</th>
+                      <th className="text-right py-3 px-2 font-medium text-muted">Original</th>
+                      <th className="text-right py-3 px-2 font-medium text-muted">Changes</th>
+                      <th className="text-right py-3 px-2 font-medium text-muted">Revised</th>
+                      <th className="text-right py-3 px-2 font-medium text-muted">Committed</th>
+                      <th className="text-right py-3 px-2 font-medium text-muted">Actual</th>
+                      <th className="text-right py-3 px-2 font-medium text-muted">Variance</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -224,7 +224,7 @@ export function BudgetPage() {
                       const isLineOver = lineVariance < 0
 
                       return (
-                        <tr key={budget.id} className="border-b hover:bg-gray-50">
+                        <tr key={budget.id} className="border-b hover:bg-surface">
                           <td className="py-3 px-2 font-mono text-sm">
                             {budget.cost_code?.code || '-'}
                           </td>
@@ -246,7 +246,7 @@ export function BudgetPage() {
                           <td className="py-3 px-2 text-right">
                             {formatCurrency(budget.actual_costs || 0)}
                           </td>
-                          <td className={`py-3 px-2 text-right font-medium ${isLineOver ? 'text-red-600' : 'text-green-600'}`}>
+                          <td className={`py-3 px-2 text-right font-medium ${isLineOver ? 'text-error' : 'text-success'}`}>
                             {isLineOver ? '-' : ''}{formatCurrency(Math.abs(lineVariance))}
                           </td>
                         </tr>
@@ -254,14 +254,14 @@ export function BudgetPage() {
                     })}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-gray-50 font-medium">
+                    <tr className="bg-surface font-medium">
                       <td className="py-3 px-2" colSpan={2}>Totals</td>
                       <td className="py-3 px-2 text-right">{formatCurrency(totals.original)}</td>
                       <td className="py-3 px-2 text-right">-</td>
                       <td className="py-3 px-2 text-right">{formatCurrency(totals.revised)}</td>
                       <td className="py-3 px-2 text-right">{formatCurrency(totals.committed)}</td>
                       <td className="py-3 px-2 text-right">{formatCurrency(totals.actual)}</td>
-                      <td className={`py-3 px-2 text-right ${isOverBudget ? 'text-red-600' : 'text-green-600'}`}>
+                      <td className={`py-3 px-2 text-right ${isOverBudget ? 'text-error' : 'text-success'}`}>
                         {isOverBudget ? '-' : ''}{formatCurrency(Math.abs(variance))}
                       </td>
                     </tr>

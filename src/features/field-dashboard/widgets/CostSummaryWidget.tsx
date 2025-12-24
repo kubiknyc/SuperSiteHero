@@ -184,21 +184,21 @@ export function CostSummaryWidget({
           <div className={cn(
             'flex items-center justify-between p-3 rounded-lg',
             stats.isOverBudget
-              ? 'bg-red-50 dark:bg-red-950/20'
-              : 'bg-green-50 dark:bg-green-950/20'
+              ? 'bg-error-light dark:bg-red-950/20'
+              : 'bg-success-light dark:bg-green-950/20'
           )}>
             <div className="flex items-center gap-2">
               {stats.isOverBudget ? (
                 <>
-                  <AlertTriangle className="h-4 w-4 text-red-500" />
-                  <span className="text-sm font-medium text-red-700 dark:text-red-300">
+                  <AlertTriangle className="h-4 w-4 text-error" />
+                  <span className="text-sm font-medium text-error-dark dark:text-red-300">
                     Over Budget
                   </span>
                 </>
               ) : (
                 <>
-                  <TrendingDown className="h-4 w-4 text-green-500" />
-                  <span className="text-sm font-medium text-green-700 dark:text-green-300">
+                  <TrendingDown className="h-4 w-4 text-success" />
+                  <span className="text-sm font-medium text-success-dark dark:text-green-300">
                     Under Budget
                   </span>
                 </>
@@ -207,7 +207,7 @@ export function CostSummaryWidget({
             <Badge
               variant={stats.isOverBudget ? 'destructive' : 'default'}
               className={cn(
-                !stats.isOverBudget && 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200'
+                !stats.isOverBudget && 'bg-success-light text-green-800 dark:bg-green-900/30 dark:text-green-200'
               )}
             >
               {stats.isOverBudget ? '-' : '+'}

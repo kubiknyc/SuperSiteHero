@@ -44,8 +44,8 @@ export function VersionHistory({ reportId }: VersionHistoryProps) {
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-2">
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-muted rounded w-3/4"></div>
+            <div className="h-4 bg-muted rounded w-1/2"></div>
           </div>
         </CardContent>
       </Card>
@@ -62,7 +62,7 @@ export function VersionHistory({ reportId }: VersionHistoryProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-500">No version history available</p>
+          <p className="text-sm text-muted">No version history available</p>
         </CardContent>
       </Card>
     )
@@ -74,7 +74,7 @@ export function VersionHistory({ reportId }: VersionHistoryProps) {
         <CardTitle className="flex items-center gap-2 text-base">
           <History className="h-4 w-4" />
           Version History
-          <span className="text-sm font-normal text-gray-500">
+          <span className="text-sm font-normal text-muted">
             ({auditEntries.length} changes)
           </span>
         </CardTitle>
@@ -107,7 +107,7 @@ function VersionEntryCard({ entry, isExpanded, onToggle }: VersionEntryCardProps
     <div className="border rounded-lg overflow-hidden">
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-3 hover:bg-gray-50 text-left"
+        className="w-full flex items-center justify-between p-3 hover:bg-surface text-left"
         disabled={!hasDetails}
       >
         <div className="flex items-center gap-3">
@@ -115,8 +115,8 @@ function VersionEntryCard({ entry, isExpanded, onToggle }: VersionEntryCardProps
             <FileText className="h-3 w-3" />
           </div>
           <div>
-            <p className="text-sm font-medium text-gray-900">{entry.action}</p>
-            <div className="flex items-center gap-3 text-xs text-gray-500">
+            <p className="text-sm font-medium text-foreground">{entry.action}</p>
+            <div className="flex items-center gap-3 text-xs text-muted">
               <span className="flex items-center gap-1">
                 <User className="h-3 w-3" />
                 {entry.user_name}
@@ -130,24 +130,24 @@ function VersionEntryCard({ entry, isExpanded, onToggle }: VersionEntryCardProps
         </div>
         {hasDetails && (
           isExpanded ? (
-            <ChevronUp className="h-4 w-4 text-gray-400" />
+            <ChevronUp className="h-4 w-4 text-disabled" />
           ) : (
-            <ChevronDown className="h-4 w-4 text-gray-400" />
+            <ChevronDown className="h-4 w-4 text-disabled" />
           )
         )}
       </button>
 
       {isExpanded && hasDetails && (
-        <div className="px-3 pb-3 pt-0 border-t bg-gray-50">
-          <p className="text-xs font-medium text-gray-600 mb-2 pt-2">Changes:</p>
+        <div className="px-3 pb-3 pt-0 border-t bg-surface">
+          <p className="text-xs font-medium text-secondary mb-2 pt-2">Changes:</p>
           <div className="space-y-1">
             {entry.field_changes!.map((change, idx) => (
               <div key={idx} className="text-xs">
-                <span className="font-medium text-gray-700">{change.field}:</span>{' '}
-                <span className="text-red-600 line-through">
+                <span className="font-medium text-secondary">{change.field}:</span>{' '}
+                <span className="text-error line-through">
                   {formatValue(change.old_value)}
                 </span>{' '}
-                <span className="text-green-600">
+                <span className="text-success">
                   {formatValue(change.new_value)}
                 </span>
               </div>
@@ -160,11 +160,11 @@ function VersionEntryCard({ entry, isExpanded, onToggle }: VersionEntryCardProps
 }
 
 function getActionColor(action: string): string {
-  if (action.includes('Created')) {return 'bg-green-100 text-green-600'}
-  if (action.includes('Approved')) {return 'bg-blue-100 text-blue-600'}
-  if (action.includes('Rejected')) {return 'bg-red-100 text-red-600'}
-  if (action.includes('Submitted')) {return 'bg-yellow-100 text-yellow-600'}
-  return 'bg-gray-100 text-gray-600'
+  if (action.includes('Created')) {return 'bg-success-light text-success'}
+  if (action.includes('Approved')) {return 'bg-info-light text-primary'}
+  if (action.includes('Rejected')) {return 'bg-error-light text-error'}
+  if (action.includes('Submitted')) {return 'bg-warning-light text-warning'}
+  return 'bg-muted text-secondary'
 }
 
 function formatValue(value: unknown): string {

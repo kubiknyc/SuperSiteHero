@@ -103,8 +103,8 @@ export function NewDailyReportPageV2() {
             Back
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">New Daily Report</h1>
-            <p className="text-gray-600">Start a new daily report for your project</p>
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">New Daily Report</h1>
+            <p className="text-secondary">Start a new daily report for your project</p>
           </div>
         </div>
 
@@ -112,12 +112,12 @@ export function NewDailyReportPageV2() {
         <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-600 rounded-lg">
+              <div className="p-2 bg-primary rounded-lg">
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
                 <p className="font-semibold text-blue-900">Quick Mode Enabled</p>
-                <p className="text-sm text-blue-700">
+                <p className="text-sm text-primary-hover">
                   Complete your daily report in under 5 minutes with our streamlined form
                 </p>
               </div>
@@ -151,7 +151,7 @@ export function NewDailyReportPageV2() {
                   setErrors((prev) => ({ ...prev, project: '' }));
                 }}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.project ? 'border-red-500' : 'border-gray-300'
+                  errors.project ? 'border-red-500' : 'border-input'
                 }`}
                 disabled={projectsLoading}
               >
@@ -180,16 +180,16 @@ export function NewDailyReportPageV2() {
                 }}
                 max={new Date().toISOString().split('T')[0]}
                 className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.date ? 'border-red-500' : 'border-gray-300'
+                  errors.date ? 'border-red-500' : 'border-input'
                 }`}
               />
             </FormField>
 
             {/* Duplicate Report Warning */}
             {duplicateResult?.hasDuplicate && duplicateResult.existingReport && (
-              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <div className="p-4 bg-warning-light border border-amber-200 rounded-lg">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
                     <p className="font-medium text-amber-900">Report Already Exists</p>
                     <p className="text-sm text-amber-700 mb-3">
@@ -219,8 +219,8 @@ export function NewDailyReportPageV2() {
 
             {/* No Projects Warning */}
             {!projectsLoading && projects && projects.length === 0 && (
-              <div className="flex gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+              <div className="flex gap-3 p-4 bg-warning-light border border-yellow-200 rounded-lg">
+                <AlertCircle className="h-5 w-5 text-warning flex-shrink-0" />
                 <div>
                   <p className="font-medium text-yellow-900">No projects available</p>
                   <p className="text-sm text-yellow-700">

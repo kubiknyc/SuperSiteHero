@@ -204,7 +204,7 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
                   </TableCell>
                   <TableCell>
                     {drawing.isIssuedForConstruction ? (
-                      <Badge variant="default" className="bg-green-600">
+                      <Badge variant="default" className="bg-success">
                         <CheckCircle className="h-3 w-3 mr-1" />
                         IFC
                       </Badge>

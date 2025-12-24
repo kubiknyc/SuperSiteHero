@@ -204,7 +204,7 @@ export function CloseoutDocumentFormDialog({
                 <SelectContent>
                   {Object.entries(documentTypesByCategory).map(([category, types]) => (
                     <React.Fragment key={category}>
-                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 uppercase bg-gray-50">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted uppercase bg-surface">
                         {category}
                       </div>
                       {types.map((type) => (
@@ -217,7 +217,7 @@ export function CloseoutDocumentFormDialog({
                 </SelectContent>
               </Select>
               {form.formState.errors.document_type && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-error">
                   {form.formState.errors.document_type.message}
                 </p>
               )}
@@ -233,7 +233,7 @@ export function CloseoutDocumentFormDialog({
               placeholder="e.g., HVAC System O&M Manual"
             />
             {form.formState.errors.title && (
-              <p className="text-sm text-red-500">{form.formState.errors.title.message}</p>
+              <p className="text-sm text-error">{form.formState.errors.title.message}</p>
             )}
           </div>
 

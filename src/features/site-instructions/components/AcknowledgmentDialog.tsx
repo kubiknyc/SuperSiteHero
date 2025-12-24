@@ -121,7 +121,7 @@ export function AcknowledgmentDialog({
                 </Button>
               )}
             </div>
-            <div className="border rounded-md bg-white">
+            <div className="border rounded-md bg-card">
               <canvas
                 ref={canvasRef}
                 width={380}

@@ -180,7 +180,7 @@ export function DrawingMarkupPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-900">
+      <div className="h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-white mx-auto mb-4" />
           <p className="text-white text-lg">Loading drawing...</p>
@@ -192,11 +192,11 @@ export function DrawingMarkupPage() {
   // Error state
   if (error || !currentDocument) {
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-900">
+      <div className="h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-md">
-          <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2">Error Loading Drawing</h2>
-          <p className="text-gray-400 mb-6">{error?.message || 'Document not found'}</p>
+          <AlertCircle className="w-16 h-16 text-error mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-white mb-2" className="heading-section">Error Loading Drawing</h2>
+          <p className="text-disabled mb-6">{error?.message || 'Document not found'}</p>
           <Button onClick={() => navigate('/documents')} variant="outline">
             Back to Documents
           </Button>
@@ -206,9 +206,9 @@ export function DrawingMarkupPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-900 overflow-hidden">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       {/* Top Bar - Minimal Chrome */}
-      <div className="bg-gray-800 border-b border-gray-700 px-4 py-2 flex items-center justify-between flex-shrink-0">
+      <div className="bg-surface border-b border-gray-700 px-4 py-2 flex items-center justify-between flex-shrink-0">
         {/* Left side - Back button and title */}
         <div className="flex items-center gap-3">
           <Button
@@ -222,10 +222,10 @@ export function DrawingMarkupPage() {
           </Button>
           <div className="h-6 w-px bg-gray-600" />
           <div className="text-white">
-            <h1 className="font-semibold text-sm truncate max-w-xs lg:max-w-md">
+            <h1 className="font-semibold text-sm truncate max-w-xs lg:max-w-md" className="heading-page">
               {currentDocument.name}
             </h1>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-disabled">
               {currentDocument.drawing_number && `Drawing: ${currentDocument.drawing_number}`}
               {currentDocument.version && ` • Version ${currentDocument.version}`}
             </p>
@@ -290,9 +290,9 @@ export function DrawingMarkupPage() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Sidebar - Layer Panel */}
         {showLayerPanel && !comparisonMode && (
-          <div className="w-64 bg-gray-800 border-r border-gray-700 overflow-y-auto hidden md:block">
+          <div className="w-64 bg-surface border-r border-gray-700 overflow-y-auto hidden md:block">
             <div className="p-3 border-b border-gray-700">
-              <h3 className="text-sm font-semibold text-white">Layers</h3>
+              <h3 className="text-sm font-semibold text-white" className="heading-subsection">Layers</h3>
             </div>
             <div className="p-2">
               <LayerManager
@@ -311,7 +311,7 @@ export function DrawingMarkupPage() {
             </div>
             {layers.length === 0 && !layersLoading && (
               <div className="p-4 text-center">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   No layers yet. Create a layer to organize your markups.
                 </p>
               </div>
@@ -339,9 +339,9 @@ export function DrawingMarkupPage() {
 
         {/* Right Sidebar - History Panel */}
         {showHistoryPanel && !comparisonMode && (
-          <div className="w-80 bg-gray-800 border-l border-gray-700 overflow-y-auto hidden lg:block">
+          <div className="w-80 bg-surface border-l border-gray-700 overflow-y-auto hidden lg:block">
             <div className="p-3 border-b border-gray-700">
-              <h3 className="text-sm font-semibold text-white">Markup History</h3>
+              <h3 className="text-sm font-semibold text-white" className="heading-subsection">Markup History</h3>
             </div>
             <div className="p-2">
               <MarkupHistoryPanel
@@ -358,7 +358,7 @@ export function DrawingMarkupPage() {
             </div>
             {markups.length === 0 && (
               <div className="p-4 text-center">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   No markups yet. Use the drawing tools to add annotations.
                 </p>
               </div>
@@ -386,7 +386,7 @@ export function DrawingMarkupPage() {
 
       {/* Legacy Mobile Bottom Bar - Shown on non-touch small screens */}
       {!isMobile && (
-        <div className="md:hidden bg-gray-800 border-t border-gray-700 px-4 py-2 flex items-center justify-around">
+        <div className="md:hidden bg-surface border-t border-gray-700 px-4 py-2 flex items-center justify-around">
           <Button
             variant="ghost"
             size="sm"
@@ -443,7 +443,7 @@ export function DrawingMarkupPage() {
       )}
 
       {/* Keyboard Shortcuts Hint */}
-      <div className="hidden xl:block absolute bottom-4 left-4 bg-gray-800/90 backdrop-blur-sm border border-gray-700 rounded-lg px-4 py-2 text-xs text-gray-400">
+      <div className="hidden xl:block absolute bottom-4 left-4 bg-surface/90 backdrop-blur-sm border border-gray-700 rounded-lg px-4 py-2 text-xs text-disabled">
         <p className="font-semibold mb-1 text-white">Keyboard Shortcuts</p>
         <div className="space-y-0.5">
           <p><kbd className="bg-gray-700 px-1 rounded">Esc</kbd> Exit markup mode</p>

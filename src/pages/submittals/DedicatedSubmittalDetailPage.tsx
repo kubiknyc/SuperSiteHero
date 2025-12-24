@@ -51,21 +51,21 @@ import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database'
 function getReviewStatusStyle(status: string): { bg: string; text: string } {
   switch (status) {
     case 'approved':
-      return { bg: 'bg-green-100', text: 'text-green-800' }
+      return { bg: 'bg-success-light', text: 'text-green-800' }
     case 'approved_as_noted':
       return { bg: 'bg-lime-100', text: 'text-lime-800' }
     case 'submitted':
-      return { bg: 'bg-blue-100', text: 'text-blue-800' }
+      return { bg: 'bg-info-light', text: 'text-blue-800' }
     case 'under_review':
-      return { bg: 'bg-yellow-100', text: 'text-yellow-800' }
+      return { bg: 'bg-warning-light', text: 'text-yellow-800' }
     case 'revise_resubmit':
       return { bg: 'bg-orange-100', text: 'text-orange-800' }
     case 'rejected':
-      return { bg: 'bg-red-100', text: 'text-red-800' }
+      return { bg: 'bg-error-light', text: 'text-red-800' }
     case 'void':
-      return { bg: 'bg-gray-100', text: 'text-gray-600' }
+      return { bg: 'bg-muted', text: 'text-secondary' }
     default:
-      return { bg: 'bg-gray-100', text: 'text-gray-800' }
+      return { bg: 'bg-muted', text: 'text-foreground' }
   }
 }
 
@@ -174,7 +174,7 @@ export function DedicatedSubmittalDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center">
-            <p className="text-red-600">Submittal ID not found</p>
+            <p className="text-error">Submittal ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -186,8 +186,8 @@ export function DedicatedSubmittalDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading submittal...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading submittal...</p>
           </div>
         </div>
       </AppLayout>
@@ -206,9 +206,9 @@ export function DedicatedSubmittalDetailPage() {
           </div>
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Submittal</h3>
-              <p className="text-gray-600">{(error as Error)?.message || 'Submittal not found'}</p>
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Submittal</h3>
+              <p className="text-secondary">{(error as Error)?.message || 'Submittal not found'}</p>
             </CardContent>
           </Card>
         </div>
@@ -236,13 +236,13 @@ export function DedicatedSubmittalDetailPage() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold text-gray-900">{submittal.submittal_number}</h1>
+                  <h1 className="text-3xl font-bold text-foreground" className="heading-page">{submittal.submittal_number}</h1>
                   {submittal.revision_number > 0 && (
                     <Badge variant="outline">Rev {submittal.revision_number}</Badge>
                   )}
                 </div>
-                <p className="text-gray-600 mt-1">{submittal.title}</p>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-secondary mt-1">{submittal.title}</p>
+                <p className="text-sm text-muted mt-1">
                   <span className="font-mono">{submittal.spec_section}</span>
                   {submittal.spec_section_title && ` - ${submittal.spec_section_title}`}
                 </p>
@@ -278,11 +278,11 @@ export function DedicatedSubmittalDetailPage() {
 
             {/* Overdue Warning */}
             {isOverdue && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-error" />
                 <div>
                   <p className="font-medium text-red-800">Submittal Overdue</p>
-                  <p className="text-sm text-red-600">
+                  <p className="text-sm text-error">
                     Required by {format(new Date(submittal.date_required!), 'MMM d, yyyy')}
                   </p>
                 </div>
@@ -297,39 +297,39 @@ export function DedicatedSubmittalDetailPage() {
               <CardContent className="space-y-4">
                 {submittal.description && (
                   <div>
-                    <Label className="text-gray-600">Description</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-gray-900">{submittal.description}</p>
+                    <Label className="text-secondary">Description</Label>
+                    <p className="mt-1 whitespace-pre-wrap text-foreground">{submittal.description}</p>
                   </div>
                 )}
 
                 <div className="grid grid-cols-2 gap-4 py-4 border-t">
                   <div>
-                    <Label className="text-gray-600">Submittal Type</Label>
-                    <p className="mt-1 text-gray-900">{typeInfo?.label || submittal.submittal_type}</p>
+                    <Label className="text-secondary">Submittal Type</Label>
+                    <p className="mt-1 text-foreground">{typeInfo?.label || submittal.submittal_type}</p>
                     {typeInfo?.description && (
-                      <p className="text-xs text-gray-500 mt-1">{typeInfo.description}</p>
+                      <p className="text-xs text-muted mt-1">{typeInfo.description}</p>
                     )}
                   </div>
 
                   <div>
-                    <Label className="text-gray-600">Lead Time</Label>
-                    <p className="mt-1 text-gray-900">
+                    <Label className="text-secondary">Lead Time</Label>
+                    <p className="mt-1 text-foreground">
                       {submittal.lead_time_days ? `${submittal.lead_time_days} days` : 'Not specified'}
                     </p>
                   </div>
 
                   {submittal.drawing_reference && (
                     <div>
-                      <Label className="text-gray-600">Drawing Reference</Label>
-                      <p className="mt-1 text-gray-900">{submittal.drawing_reference}</p>
+                      <Label className="text-secondary">Drawing Reference</Label>
+                      <p className="mt-1 text-foreground">{submittal.drawing_reference}</p>
                     </div>
                   )}
                 </div>
 
                 {submittal.review_comments && (
                   <div className="pt-4 border-t">
-                    <Label className="text-gray-600">Latest Review Comments</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-gray-900 bg-gray-50 p-3 rounded">
+                    <Label className="text-secondary">Latest Review Comments</Label>
+                    <p className="mt-1 whitespace-pre-wrap text-foreground bg-surface p-3 rounded">
                       {submittal.review_comments}
                     </p>
                   </div>
@@ -354,18 +354,18 @@ export function DedicatedSubmittalDetailPage() {
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <ReviewStatusBadge status={review.review_status} />
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-muted">
                               by {review.reviewer_name || 'Unknown'}
                             </span>
                           </div>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted">
                             {review.reviewed_at
                               ? format(new Date(review.reviewed_at), 'MMM d, yyyy h:mm a')
                               : 'N/A'}
                           </span>
                         </div>
                         {review.comments && (
-                          <p className="text-sm whitespace-pre-wrap text-gray-700 mt-2">
+                          <p className="text-sm whitespace-pre-wrap text-secondary mt-2">
                             {review.comments}
                           </p>
                         )}
@@ -373,13 +373,13 @@ export function DedicatedSubmittalDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No reviews yet</p>
+                  <p className="text-sm text-muted text-center py-4">No reviews yet</p>
                 )}
 
                 {/* Add Review Form */}
                 {submittal.review_status !== 'not_submitted' && (
                   <div className="mt-6 pt-4 border-t space-y-4">
-                    <h4 className="font-medium text-gray-900">Add Review</h4>
+                    <h4 className="font-medium text-foreground" className="heading-card">Add Review</h4>
                     <div>
                       <Label htmlFor="reviewStatus">Review Decision</Label>
                       <select
@@ -442,13 +442,13 @@ export function DedicatedSubmittalDetailPage() {
                     {attachments.map((attachment) => (
                       <div
                         key={attachment.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        className="flex items-center justify-between p-3 bg-surface rounded-lg"
                       >
                         <div className="flex items-center gap-3">
-                          <FileText className="h-5 w-5 text-gray-400" />
+                          <FileText className="h-5 w-5 text-disabled" />
                           <div>
                             <p className="font-medium text-sm">{attachment.file_name}</p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-muted">
                               {attachment.file_type} • {attachment.uploaded_at && format(new Date(attachment.uploaded_at), 'MMM d, yyyy')}
                             </p>
                           </div>
@@ -460,7 +460,7 @@ export function DedicatedSubmittalDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No attachments</p>
+                  <p className="text-sm text-muted text-center py-4">No attachments</p>
                 )}
               </CardContent>
             </Card>
@@ -477,12 +477,12 @@ export function DedicatedSubmittalDetailPage() {
                       <div key={entry.id} className="flex items-start gap-3 text-sm">
                         <div className="w-2 h-2 rounded-full bg-gray-300 mt-2" />
                         <div>
-                          <p className="text-gray-700">
+                          <p className="text-secondary">
                             <span className="font-medium">{entry.field_name}</span> changed
                             {entry.old_value && ` from "${entry.old_value}"`}
                             {entry.new_value && ` to "${entry.new_value}"`}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted">
                             {entry.changed_at && format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
                           </p>
                         </div>
@@ -503,7 +503,7 @@ export function DedicatedSubmittalDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-gray-600">Review Status</Label>
+                  <Label className="text-secondary">Review Status</Label>
                   <div className="mt-2">
                     <ReviewStatusBadge status={submittal.review_status} />
                   </div>
@@ -530,7 +530,7 @@ export function DedicatedSubmittalDetailPage() {
                 )}
 
                 <div className="pt-2 border-t">
-                  <Label htmlFor="ballInCourt" className="text-gray-600">Ball-in-Court</Label>
+                  <Label htmlFor="ballInCourt" className="text-secondary">Ball-in-Court</Label>
                   <select
                     id="ballInCourt"
                     className="w-full mt-2 border rounded-md px-3 py-2 text-sm"
@@ -556,10 +556,10 @@ export function DedicatedSubmittalDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div className="flex items-start gap-3">
-                  <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <Calendar className="h-4 w-4 text-disabled mt-0.5" />
                   <div>
-                    <Label className="text-gray-600">Created</Label>
-                    <p className="text-gray-900">
+                    <Label className="text-secondary">Created</Label>
+                    <p className="text-foreground">
                       {submittal.created_at
                         ? format(new Date(submittal.created_at), 'MMM d, yyyy')
                         : 'N/A'}
@@ -569,10 +569,10 @@ export function DedicatedSubmittalDetailPage() {
 
                 {submittal.date_required && (
                   <div className="flex items-start gap-3">
-                    <Clock className={`h-4 w-4 mt-0.5 ${isOverdue ? 'text-red-500' : 'text-gray-400'}`} />
+                    <Clock className={`h-4 w-4 mt-0.5 ${isOverdue ? 'text-error' : 'text-disabled'}`} />
                     <div>
-                      <Label className="text-gray-600">Required Date</Label>
-                      <p className={isOverdue ? 'text-red-600 font-medium' : 'text-gray-900'}>
+                      <Label className="text-secondary">Required Date</Label>
+                      <p className={isOverdue ? 'text-error font-medium' : 'text-foreground'}>
                         {format(new Date(submittal.date_required), 'MMM d, yyyy')}
                       </p>
                     </div>
@@ -581,10 +581,10 @@ export function DedicatedSubmittalDetailPage() {
 
                 {submittal.date_submitted && (
                   <div className="flex items-start gap-3">
-                    <Send className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <Send className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Submitted</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Submitted</Label>
+                      <p className="text-foreground">
                         {format(new Date(submittal.date_submitted), 'MMM d, yyyy')}
                       </p>
                     </div>
@@ -593,10 +593,10 @@ export function DedicatedSubmittalDetailPage() {
 
                 {submittal.date_returned && (
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-success mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Returned</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Returned</Label>
+                      <p className="text-foreground">
                         {format(new Date(submittal.date_returned), 'MMM d, yyyy')}
                       </p>
                     </div>
@@ -604,19 +604,19 @@ export function DedicatedSubmittalDetailPage() {
                 )}
 
                 <div className="flex items-start gap-3">
-                  <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <Clock className="h-4 w-4 text-disabled mt-0.5" />
                   <div>
-                    <Label className="text-gray-600">Days Open</Label>
-                    <p className="text-gray-900">{daysOpen} days</p>
+                    <Label className="text-secondary">Days Open</Label>
+                    <p className="text-foreground">{daysOpen} days</p>
                   </div>
                 </div>
 
                 {submittal.subcontractor && (
                   <div className="flex items-start gap-3 pt-2 border-t">
-                    <Building2 className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <Building2 className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Subcontractor</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Subcontractor</Label>
+                      <p className="text-foreground">
                         {submittal.subcontractor.company_name || submittal.subcontractor.name}
                       </p>
                     </div>
@@ -625,10 +625,10 @@ export function DedicatedSubmittalDetailPage() {
 
                 {submittal.project && (
                   <div className="flex items-start gap-3">
-                    <FileText className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <FileText className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Project</Label>
-                      <p className="text-gray-900">{submittal.project.name}</p>
+                      <Label className="text-secondary">Project</Label>
+                      <p className="text-foreground">{submittal.project.name}</p>
                     </div>
                   </div>
                 )}

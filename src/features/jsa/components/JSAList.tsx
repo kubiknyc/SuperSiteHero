@@ -110,22 +110,22 @@ export function JSAList({ projectId, onCreateNew }: JSAListProps) {
           <Card>
             <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">Pending Review</div>
-              <div className="text-2xl font-bold text-yellow-600">{stats.pending_review}</div>
+              <div className="text-2xl font-bold text-warning">{stats.pending_review}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">Approved</div>
-              <div className="text-2xl font-bold text-blue-600">{stats.approved}</div>
+              <div className="text-2xl font-bold text-primary">{stats.approved}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <div className="text-sm text-muted-foreground flex items-center gap-1">
-                <AlertTriangle className="h-4 w-4 text-red-500" />
+                <AlertTriangle className="h-4 w-4 text-error" />
                 High Risk
               </div>
-              <div className="text-2xl font-bold text-red-600">{stats.high_risk_count}</div>
+              <div className="text-2xl font-bold text-error">{stats.high_risk_count}</div>
             </CardContent>
           </Card>
         </div>
@@ -205,7 +205,7 @@ export function JSAList({ projectId, onCreateNew }: JSAListProps) {
           ) : (
             <div className="text-center py-12">
               <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No JSAs found</h3>
+              <h3 className="text-lg font-medium mb-2" className="heading-subsection">No JSAs found</h3>
               <p className="text-muted-foreground mb-4">
                 {filters.search || filters.status
                   ? 'Try adjusting your filters'
@@ -275,10 +275,10 @@ function JSARow({ jsa, projectId }: JSARowProps) {
           {hazardCount > 0 && (
             <Badge
               className={`text-xs ${
-                riskColor === 'green' ? 'bg-green-100 text-green-800 border-green-200' :
-                riskColor === 'yellow' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' :
+                riskColor === 'green' ? 'bg-success-light text-green-800 border-green-200' :
+                riskColor === 'yellow' ? 'bg-warning-light text-yellow-800 border-yellow-200' :
                 riskColor === 'orange' ? 'bg-orange-100 text-orange-800 border-orange-200' :
-                'bg-red-100 text-red-800 border-red-200'
+                'bg-error-light text-red-800 border-red-200'
               }`}
             >
               {overallRisk}
@@ -290,12 +290,12 @@ function JSARow({ jsa, projectId }: JSARowProps) {
         <Badge
           variant="outline"
           className={`
-            ${statusColor === 'gray' ? 'bg-gray-100 text-gray-800 border-gray-200' : ''}
-            ${statusColor === 'yellow' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : ''}
-            ${statusColor === 'blue' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}
+            ${statusColor === 'gray' ? 'bg-muted text-foreground border-border' : ''}
+            ${statusColor === 'yellow' ? 'bg-warning-light text-yellow-800 border-yellow-200' : ''}
+            ${statusColor === 'blue' ? 'bg-info-light text-blue-800 border-blue-200' : ''}
             ${statusColor === 'purple' ? 'bg-purple-100 text-purple-800 border-purple-200' : ''}
-            ${statusColor === 'green' ? 'bg-green-100 text-green-800 border-green-200' : ''}
-            ${statusColor === 'red' ? 'bg-red-100 text-red-800 border-red-200' : ''}
+            ${statusColor === 'green' ? 'bg-success-light text-green-800 border-green-200' : ''}
+            ${statusColor === 'red' ? 'bg-error-light text-red-800 border-red-200' : ''}
           `}
         >
           <span className="mr-1">{icon}</span>

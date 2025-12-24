@@ -273,7 +273,7 @@ export function VideoCapture({
     return (
       <div className={cn('flex flex-col items-center justify-center p-8', className)}>
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h3 className="text-lg font-semibold mb-2">Video Recording Not Supported</h3>
+        <h3 className="text-lg font-semibold mb-2" className="heading-subsection">Video Recording Not Supported</h3>
         <p className="text-muted-foreground text-center">
           Your browser does not support video recording.
           Please try using a modern browser like Chrome, Firefox, or Safari.
@@ -287,7 +287,7 @@ export function VideoCapture({
     return (
       <div className={cn('flex flex-col items-center justify-center p-8', className)}>
         <Camera className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold mb-2">Camera Access Required</h3>
+        <h3 className="text-lg font-semibold mb-2" className="heading-subsection">Camera Access Required</h3>
         <p className="text-muted-foreground text-center mb-4">
           Please allow access to your camera and microphone to record videos.
         </p>
@@ -321,7 +321,7 @@ export function VideoCapture({
               variant="outline"
               size="lg"
               onClick={handleRetry}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+              className="bg-card/10 border-white/20 text-white hover:bg-card/20"
             >
               <RotateCcw className="h-5 w-5 mr-2" />
               Retake
@@ -329,7 +329,7 @@ export function VideoCapture({
             <Button
               size="lg"
               onClick={handleConfirm}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-success hover:bg-green-700"
             >
               <Check className="h-5 w-5 mr-2" />
               Use Video
@@ -353,7 +353,7 @@ export function VideoCapture({
     return (
       <div className={cn('relative bg-black rounded-lg overflow-hidden flex flex-col items-center justify-center min-h-[400px]', className)}>
         <Video className="h-16 w-16 text-white/60 mb-6" />
-        <h3 className="text-white text-lg font-semibold mb-2">Record Video</h3>
+        <h3 className="text-white text-lg font-semibold mb-2" className="heading-subsection">Record Video</h3>
         <p className="text-white/60 text-center mb-6 px-4">
           Tap the button below to open your camera and record a video
         </p>
@@ -363,7 +363,7 @@ export function VideoCapture({
           <div className="mb-6">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                <Button variant="outline" className="bg-card/10 border-white/20 text-white hover:bg-card/20">
                   <Settings className="h-4 w-4 mr-2" />
                   {QUALITY_PRESETS[quality].label}
                 </Button>
@@ -387,7 +387,7 @@ export function VideoCapture({
 
         <button
           onClick={handleStartRecording}
-          className="w-20 h-20 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center border-4 border-white transition-colors"
+          className="w-20 h-20 rounded-full bg-red-500 hover:bg-error flex items-center justify-center border-4 border-white transition-colors"
         >
           <Video className="h-8 w-8 text-white" />
         </button>
@@ -402,7 +402,7 @@ export function VideoCapture({
             variant="ghost"
             size="icon"
             onClick={handleCancel}
-            className="absolute top-4 right-4 text-white hover:bg-white/20"
+            className="absolute top-4 right-4 text-white hover:bg-card/20"
           >
             <X className="h-6 w-6" />
           </Button>
@@ -453,14 +453,14 @@ export function VideoCapture({
           <div
             className={cn(
               'w-3 h-3 rounded-full',
-              isPaused ? 'bg-yellow-500' : 'bg-red-500 animate-pulse'
+              isPaused ? 'bg-warning' : 'bg-red-500 animate-pulse'
             )}
           />
           <span className="text-white font-mono text-lg">
             {formatVideoDuration(duration)}
           </span>
           {isPaused && (
-            <span className="text-yellow-500 text-sm">PAUSED</span>
+            <span className="text-warning text-sm">PAUSED</span>
           )}
         </div>
       )}
@@ -482,7 +482,7 @@ export function VideoCapture({
             variant="ghost"
             size="icon"
             onClick={switchCamera}
-            className="text-white hover:bg-white/20"
+            className="text-white hover:bg-card/20"
             disabled={isInitializing}
           >
             <FlipHorizontal2 className="h-6 w-6" />
@@ -496,7 +496,7 @@ export function VideoCapture({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-card/20"
                     disabled={isInitializing || isRecording}
                   >
                     <Settings className="h-6 w-6" />
@@ -524,7 +524,7 @@ export function VideoCapture({
                 variant="ghost"
                 size="icon"
                 onClick={handleCancel}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-card/20"
                 disabled={isRecording}
               >
                 <X className="h-6 w-6" />
@@ -550,7 +550,7 @@ export function VideoCapture({
               variant="ghost"
               size="icon"
               onClick={isPaused ? resumeRecording : pauseRecording}
-              className="h-12 w-12 text-white hover:bg-white/20"
+              className="h-12 w-12 text-white hover:bg-card/20"
             >
               {isPaused ? (
                 <Play className="h-6 w-6" />
@@ -569,8 +569,8 @@ export function VideoCapture({
               'flex items-center justify-center',
               'border-4 border-white',
               isRecording
-                ? 'bg-red-500 hover:bg-red-600'
-                : 'bg-white/20 hover:bg-white/30',
+                ? 'bg-red-500 hover:bg-error'
+                : 'bg-card/20 hover:bg-card/30',
               isInitializing && 'opacity-50 cursor-not-allowed'
             )}
           >

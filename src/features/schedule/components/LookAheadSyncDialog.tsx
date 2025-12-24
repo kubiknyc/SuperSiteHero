@@ -243,13 +243,13 @@ export function LookAheadSyncDialog({
           <div className="flex-1 flex flex-col items-center justify-center py-8 space-y-4">
             {syncResult.errors.length > 0 ? (
               <>
-                <AlertTriangle className="h-16 w-16 text-yellow-500" />
-                <h3 className="text-lg font-semibold">Sync Completed with Issues</h3>
+                <AlertTriangle className="h-16 w-16 text-warning" />
+                <h3 className="text-lg font-semibold" className="heading-subsection">Sync Completed with Issues</h3>
               </>
             ) : (
               <>
-                <CheckCircle2 className="h-16 w-16 text-green-500" />
-                <h3 className="text-lg font-semibold">Sync Successful</h3>
+                <CheckCircle2 className="h-16 w-16 text-success" />
+                <h3 className="text-lg font-semibold" className="heading-subsection">Sync Successful</h3>
               </>
             )}
 
@@ -368,7 +368,7 @@ export function LookAheadSyncDialog({
                               </Badge>
                             )}
                             {status === 'linked' && (
-                              <Link2 className="h-3.5 w-3.5 text-blue-500 flex-shrink-0" />
+                              <Link2 className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                             )}
                           </div>
                           <div className="text-xs text-muted-foreground">
@@ -411,7 +411,7 @@ export function LookAheadSyncDialog({
                 Overwrite existing look-ahead activities
               </label>
               {overwriteExisting && (
-                <p className="text-xs text-yellow-600 mt-1 ml-6">
+                <p className="text-xs text-warning mt-1 ml-6">
                   Warning: This will replace any existing look-ahead activities linked to the selected schedule activities
                 </p>
               )}

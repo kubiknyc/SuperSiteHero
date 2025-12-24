@@ -122,7 +122,7 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 bg-teal-100 rounded-lg">
@@ -143,15 +143,15 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-surface border-b">
               <Button type="button" variant="outline" size="sm" onClick={handleAdd}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add Visitor
@@ -162,7 +162,7 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
             {visitors.length > 0 && (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-100">
+                  <thead className="bg-muted">
                     <tr>
                       <th className="text-left p-3">Name</th>
                       <th className="text-left p-3">Company</th>
@@ -175,10 +175,10 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
                   </thead>
                   <tbody className="divide-y">
                     {visitors.map((visitor) => (
-                      <tr key={visitor.id} className="hover:bg-gray-50">
+                      <tr key={visitor.id} className="hover:bg-surface">
                         <td className="p-3">
                           <div className="flex items-center gap-2">
-                            <User className="h-4 w-4 text-gray-400" />
+                            <User className="h-4 w-4 text-disabled" />
                             {visitor.visitor_name}
                           </div>
                         </td>
@@ -190,9 +190,9 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
                         </td>
                         <td className="text-center p-3">
                           {visitor.safety_orientation_completed ? (
-                            <ShieldCheck className="h-4 w-4 text-green-500 mx-auto" />
+                            <ShieldCheck className="h-4 w-4 text-success mx-auto" />
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-disabled">-</span>
                           )}
                         </td>
                         <td className="text-center p-3">
@@ -201,7 +201,7 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
                               {visitor.escort_name || 'Required'}
                             </Badge>
                           ) : (
-                            <span className="text-gray-400">-</span>
+                            <span className="text-disabled">-</span>
                           )}
                         </td>
                         <td className="p-3">
@@ -209,14 +209,14 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
                             <button
                               type="button"
                               onClick={() => handleEdit(visitor)}
-                              className="p-1 text-gray-400 hover:text-blue-500"
+                              className="p-1 text-disabled hover:text-primary"
                             >
                               <Pencil className="h-4 w-4" />
                             </button>
                             <button
                               type="button"
                               onClick={() => handleDelete(visitor.id)}
-                              className="p-1 text-gray-400 hover:text-red-500"
+                              className="p-1 text-disabled hover:text-error"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -230,8 +230,8 @@ export function VisitorsSection({ expanded, onToggle }: VisitorsSectionProps) {
             )}
 
             {visitors.length === 0 && (
-              <div className="p-8 text-center text-gray-500">
-                <Users className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+              <div className="p-8 text-center text-muted">
+                <Users className="h-8 w-8 mx-auto mb-2 text-disabled" />
                 <p>No visitors logged today.</p>
               </div>
             )}

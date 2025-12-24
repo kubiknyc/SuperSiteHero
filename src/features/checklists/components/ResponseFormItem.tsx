@@ -85,7 +85,7 @@ export function ResponseFormItem({
               size="lg"
               onClick={() => handleScoreChange('pass')}
               disabled={disabled}
-              className={scoreValue === 'pass' ? 'bg-green-600 hover:bg-green-700' : ''}
+              className={scoreValue === 'pass' ? 'bg-success hover:bg-green-700' : ''}
             >
               <Check className="w-4 h-4 mr-2" />
               Pass
@@ -96,7 +96,7 @@ export function ResponseFormItem({
               size="lg"
               onClick={() => handleScoreChange('fail')}
               disabled={disabled}
-              className={scoreValue === 'fail' ? 'bg-red-600 hover:bg-red-700' : ''}
+              className={scoreValue === 'fail' ? 'bg-error hover:bg-red-700' : ''}
             >
               <X className="w-4 h-4 mr-2" />
               Fail
@@ -128,7 +128,7 @@ export function ResponseFormItem({
                 })
               }
               disabled={disabled}
-              className="w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="w-5 h-5 rounded border-input text-primary focus:ring-blue-500"
             />
             <Label
               htmlFor={`checkbox-${response.id}`}
@@ -166,7 +166,7 @@ export function ResponseFormItem({
             maxLength={maxLength}
             disabled={disabled}
             rows={4}
-            className="w-full px-3 py-2 pr-12 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="w-full px-3 py-2 pr-12 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-muted disabled:cursor-not-allowed"
           />
           <div className="absolute right-2 top-2">
             <VoiceInputButton
@@ -222,7 +222,7 @@ export function ResponseFormItem({
           disabled={disabled}
           className="max-w-xs"
         />
-        {units && <span className="text-sm text-gray-600">{units}</span>}
+        {units && <span className="text-sm text-secondary">{units}</span>}
       </div>
     )
   }
@@ -251,7 +251,7 @@ export function ResponseFormItem({
             minPhotos={minPhotos}
           />
         ) : (
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-secondary">
             <Camera className="w-4 h-4" />
             <span>
               No photos yet
@@ -303,20 +303,20 @@ export function ResponseFormItem({
     return (
       <div className="space-y-3">
         {(role || title) && (
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-secondary">
             {role && <div>Role: {role}</div>}
             {title && <div>Title: {title}</div>}
           </div>
         )}
 
         {signatureUrl ? (
-          <div className="border rounded-lg p-4 bg-gray-50">
+          <div className="border rounded-lg p-4 bg-surface">
             <img src={signatureUrl} alt="Signature" className="max-w-xs h-24 object-contain" />
           </div>
         ) : (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <PenTool className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-            <p className="text-sm text-gray-600">No signature captured</p>
+          <div className="border-2 border-dashed border-input rounded-lg p-8 text-center">
+            <PenTool className="w-8 h-8 mx-auto text-disabled mb-2" />
+            <p className="text-sm text-secondary">No signature captured</p>
           </div>
         )}
 
@@ -347,21 +347,21 @@ export function ResponseFormItem({
   }
 
   return (
-    <div className="border rounded-lg p-4 bg-white">
+    <div className="border rounded-lg p-4 bg-card">
       {/* Item Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center gap-2">
             <Label className="text-base font-medium">
               {templateItem.label}
-              {templateItem.is_required && <span className="text-red-500 ml-1">*</span>}
+              {templateItem.is_required && <span className="text-error ml-1">*</span>}
             </Label>
             <Badge variant="outline" className="text-xs">
               {templateItem.item_type}
             </Badge>
           </div>
           {templateItem.description && (
-            <p className="text-sm text-gray-600 mt-1">{templateItem.description}</p>
+            <p className="text-sm text-secondary mt-1">{templateItem.description}</p>
           )}
         </div>
       </div>
@@ -371,7 +371,7 @@ export function ResponseFormItem({
 
       {/* Notes Section with Voice Input */}
       <div>
-        <Label htmlFor={`notes-${response.id}`} className="text-sm text-gray-700 mb-1">
+        <Label htmlFor={`notes-${response.id}`} className="text-sm text-secondary mb-1">
           Notes (optional)
         </Label>
         <div className="relative">
@@ -383,7 +383,7 @@ export function ResponseFormItem({
             placeholder="Add any additional notes (tap mic to dictate)..."
             rows={2}
             disabled={disabled}
-            className="w-full px-3 py-2 pr-12 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+            className="w-full px-3 py-2 pr-12 text-sm border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-muted disabled:cursor-not-allowed"
           />
           <div className="absolute right-2 top-2">
             <VoiceInputButton

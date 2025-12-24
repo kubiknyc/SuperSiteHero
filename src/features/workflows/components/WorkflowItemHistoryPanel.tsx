@@ -15,15 +15,15 @@ interface WorkflowItemHistoryPanelProps {
 function getActionIcon(action: string) {
   switch (action?.toLowerCase()) {
     case 'created':
-      return <PlayCircle className="h-4 w-4 text-green-600" />
+      return <PlayCircle className="h-4 w-4 text-success" />
     case 'approved':
-      return <CheckCircle className="h-4 w-4 text-green-600" />
+      return <CheckCircle className="h-4 w-4 text-success" />
     case 'rejected':
-      return <XCircle className="h-4 w-4 text-red-600" />
+      return <XCircle className="h-4 w-4 text-error" />
     case 'status_changed':
     case 'updated':
     default:
-      return <Edit2 className="h-4 w-4 text-blue-600" />
+      return <Edit2 className="h-4 w-4 text-primary" />
   }
 }
 
@@ -75,7 +75,7 @@ export function WorkflowItemHistoryPanel({ workflowItemId }: WorkflowItemHistory
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+            <Loader2 className="h-6 w-6 animate-spin text-disabled" />
           </div>
         </CardContent>
       </Card>
@@ -92,7 +92,7 @@ export function WorkflowItemHistoryPanel({ workflowItemId }: WorkflowItemHistory
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-red-600 text-sm">Failed to load history</p>
+          <p className="text-error text-sm">Failed to load history</p>
         </CardContent>
       </Card>
     )
@@ -105,7 +105,7 @@ export function WorkflowItemHistoryPanel({ workflowItemId }: WorkflowItemHistory
           <History className="h-4 w-4" />
           Activity History
           {history && history.length > 0 && (
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-muted">
               ({history.length})
             </span>
           )}
@@ -118,7 +118,7 @@ export function WorkflowItemHistoryPanel({ workflowItemId }: WorkflowItemHistory
               <div
                 key={entry.id}
                 className={`flex gap-3 ${
-                  index < history.length - 1 ? 'pb-4 border-b border-gray-100' : ''
+                  index < history.length - 1 ? 'pb-4 border-b border-border' : ''
                 }`}
               >
                 {/* Icon */}
@@ -128,14 +128,14 @@ export function WorkflowItemHistoryPanel({ workflowItemId }: WorkflowItemHistory
 
                 {/* Content */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-700">
+                  <p className="text-sm text-secondary">
                     {formatActionDescription(entry)}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs font-medium text-gray-600">
+                    <span className="text-xs font-medium text-secondary">
                       {getUserDisplayName(entry)}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-disabled">
                       {entry.changed_at
                         ? formatDistanceToNow(new Date(entry.changed_at), { addSuffix: true })
                         : 'Just now'}
@@ -146,7 +146,7 @@ export function WorkflowItemHistoryPanel({ workflowItemId }: WorkflowItemHistory
             ))}
           </div>
         ) : (
-          <div className="text-center py-6 text-gray-500">
+          <div className="text-center py-6 text-muted">
             <History className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p className="text-sm">No activity recorded yet</p>
             <p className="text-xs">Changes to this item will appear here</p>

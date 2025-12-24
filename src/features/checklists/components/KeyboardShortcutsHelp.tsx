@@ -68,7 +68,7 @@ export function KeyboardShortcutsHelp({ shortcuts }: KeyboardShortcutsHelpProps)
               <div className="space-y-3">
                 {enabledShortcuts.map((shortcut) => (
                   <div key={shortcut.key} className="flex items-center justify-between">
-                    <span className="text-sm text-gray-700">{shortcut.description}</span>
+                    <span className="text-sm text-secondary">{shortcut.description}</span>
                     <Badge variant="outline" className="font-mono uppercase">
                       {shortcut.key === 'enter' ? '↵ Enter' : shortcut.key.toUpperCase()}
                     </Badge>
@@ -76,8 +76,8 @@ export function KeyboardShortcutsHelp({ shortcuts }: KeyboardShortcutsHelpProps)
                 ))}
               </div>
 
-              <div className="mt-6 pt-4 border-t border-gray-200">
-                <p className="text-xs text-gray-500">
+              <div className="mt-6 pt-4 border-t border-border">
+                <p className="text-xs text-muted">
                   <strong>Note:</strong> Shortcuts are disabled when typing in text fields.
                 </p>
               </div>

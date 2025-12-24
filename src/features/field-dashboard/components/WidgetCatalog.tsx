@@ -117,7 +117,7 @@ export function WidgetCatalog({
                   className={cn(
                     'flex items-start gap-4 p-4 rounded-lg border transition-colors',
                     isAdded
-                      ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20'
+                      ? 'border-green-200 bg-success-light dark:border-green-800 dark:bg-green-950/20'
                       : 'border-border hover:bg-muted/50'
                   )}
                 >
@@ -129,7 +129,7 @@ export function WidgetCatalog({
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-medium">{widget.name}</h4>
+                      <h4 className="font-medium" className="heading-card">{widget.name}</h4>
                       <Badge variant="outline" className="text-xs">
                         {widget.category}
                       </Badge>
@@ -145,7 +145,7 @@ export function WidgetCatalog({
                   {/* Action */}
                   <div className="flex-shrink-0">
                     {isAdded ? (
-                      <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
+                      <div className="flex items-center gap-1 text-sm text-success dark:text-green-400">
                         <Check className="h-4 w-4" />
                         Added
                       </div>

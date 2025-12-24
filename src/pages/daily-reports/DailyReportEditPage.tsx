@@ -65,7 +65,7 @@ export function DailyReportEditPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-red-600">Report ID not found</p>
+            <p className="text-error">Report ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -77,7 +77,7 @@ export function DailyReportEditPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading report...</p>
+            <p className="text-muted">Loading report...</p>
           </div>
         </div>
       </AppLayout>
@@ -89,8 +89,8 @@ export function DailyReportEditPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600">Error loading report: {error?.message}</p>
+            <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+            <p className="text-error">Error loading report: {error?.message}</p>
           </div>
         </div>
       </AppLayout>
@@ -105,7 +105,7 @@ export function DailyReportEditPage() {
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />
             <p className="text-orange-600 font-semibold">Cannot edit submitted reports</p>
-            <p className="text-gray-600 mt-2">Only draft reports can be edited</p>
+            <p className="text-secondary mt-2">Only draft reports can be edited</p>
           </div>
         </div>
       </AppLayout>
@@ -140,7 +140,7 @@ export function DailyReportEditPage() {
           <Card className="max-w-md mx-4">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-yellow-600" />
+                <AlertCircle className="h-5 w-5 text-warning" />
                 Unsaved Changes
               </CardTitle>
               <CardDescription>
@@ -172,12 +172,12 @@ export function DailyReportEditPage() {
 
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Edit Daily Report</h1>
-          <p className="text-gray-600 mt-2">
+          <h1 className="text-3xl font-bold text-foreground" className="heading-page">Edit Daily Report</h1>
+          <p className="text-secondary mt-2">
             Update daily activities, weather, and workforce information
           </p>
           {hasUnsavedChanges && (
-            <p className="text-sm text-yellow-600 mt-1 flex items-center gap-1">
+            <p className="text-sm text-warning mt-1 flex items-center gap-1">
               <AlertCircle className="h-4 w-4" />
               You have unsaved changes
             </p>

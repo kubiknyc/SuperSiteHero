@@ -115,15 +115,15 @@ export function SignaturePad({
   return (
     <div className="signature-pad-container">
       <div
-        className={`relative border-2 rounded-lg overflow-hidden bg-white ${
-          disabled ? 'border-gray-300 cursor-not-allowed' : 'border-gray-400'
+        className={`relative border-2 rounded-lg overflow-hidden bg-card ${
+          disabled ? 'border-input cursor-not-allowed' : 'border-gray-400'
         }`}
         style={{ width: `${width}px`, height: `${height}px` }}
       >
         {/* Placeholder text when empty */}
         {!hasSignature && !existingSignature && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-gray-400 text-lg font-light">Sign here</span>
+            <span className="text-disabled text-lg font-light">Sign here</span>
           </div>
         )}
 
@@ -173,7 +173,7 @@ export function SignaturePad({
         <button
           type="button"
           onClick={handleClear}
-          className="mt-2 text-sm text-red-600 hover:text-red-800 font-medium"
+          className="mt-2 text-sm text-error hover:text-red-800 font-medium"
         >
           Clear Signature
         </button>

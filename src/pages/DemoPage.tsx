@@ -37,7 +37,7 @@ export function DemoPage() {
         <LoadingScreen message="Building Your Project..." />
         <button
           onClick={() => setShowFullLoader(false)}
-          className="absolute top-4 right-4 z-50 px-4 py-2 bg-white text-gray-900 rounded-lg shadow-lg hover:bg-gray-100"
+          className="absolute top-4 right-4 z-50 px-4 py-2 bg-card text-foreground rounded-lg shadow-lg hover:bg-muted"
         >
           Close Demo
         </button>
@@ -69,7 +69,7 @@ export function DemoPage() {
             <div className="flex justify-center mb-6">
               <Logo size="2xl" animated />
             </div>
-            <h1 className="text-5xl font-bold mb-4">
+            <h1 className="text-5xl font-bold mb-4" className="heading-page">
               Industrial Modern Design System
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
@@ -92,18 +92,18 @@ export function DemoPage() {
 
         {/* Logo Variants Section */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Logo Components
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Auth Logo */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Auth Logo
               </h3>
-              <div className="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-center min-h-[300px] bg-surface rounded-xl">
                 <AuthLogo />
               </div>
               <p className="text-sm text-gray-600 mt-4">
@@ -113,23 +113,23 @@ export function DemoPage() {
 
             {/* Sidebar Logo */}
             <div className="bg-gray-900 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wide mb-4">
+              <h3 className="text-sm font-semibold text-disabled uppercase tracking-wide mb-4" className="heading-subsection">
                 Sidebar Logo
               </h3>
               <div className="flex items-center justify-center min-h-[300px]">
                 <SidebarLogo />
               </div>
-              <p className="text-sm text-gray-400 mt-4">
+              <p className="text-sm text-disabled mt-4">
                 Enhanced with orange glow effects for dark sidebar navigation
               </p>
             </div>
 
             {/* Compact Logo */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Compact Logo
               </h3>
-              <div className="flex items-center justify-center min-h-[300px] bg-gray-50 rounded-xl">
+              <div className="flex items-center justify-center min-h-[300px] bg-surface rounded-xl">
                 <CompactLogo />
               </div>
               <p className="text-sm text-gray-600 mt-4">
@@ -138,29 +138,29 @@ export function DemoPage() {
             </div>
 
             {/* Logo Sizes */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Size Variants
               </h3>
               <div className="space-y-6 flex flex-col items-center">
                 <div className="text-center">
                   <Logo size="sm" animated />
-                  <p className="text-xs text-gray-500 mt-2">Small</p>
+                  <p className="text-xs text-muted mt-2">Small</p>
                 </div>
                 <div className="text-center">
                   <Logo size="md" animated />
-                  <p className="text-xs text-gray-500 mt-2">Medium</p>
+                  <p className="text-xs text-muted mt-2">Medium</p>
                 </div>
                 <div className="text-center">
                   <Logo size="lg" animated />
-                  <p className="text-xs text-gray-500 mt-2">Large</p>
+                  <p className="text-xs text-muted mt-2">Large</p>
                 </div>
               </div>
             </div>
 
             {/* Icon Variants */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Icon Variants
               </h3>
               <div className="space-y-6">
@@ -181,7 +181,7 @@ export function DemoPage() {
 
             {/* Logo Icon Only */}
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-sm font-semibold text-white dark:text-white uppercase tracking-wide mb-4">
+              <h3 className="text-sm font-semibold text-white dark:text-white uppercase tracking-wide mb-4" className="heading-subsection">
                 Icon Only
               </h3>
               <div className="flex items-center justify-center min-h-[200px]">
@@ -196,15 +196,15 @@ export function DemoPage() {
 
         {/* Loading States Section */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Loading Components
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Full Screen Loader Demo */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Full Screen Loader
               </h3>
               <div className="space-y-4">
@@ -221,8 +221,8 @@ export function DemoPage() {
             </div>
 
             {/* Loading Spinner */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Loading Spinners
               </h3>
               <div className="space-y-6">
@@ -242,8 +242,8 @@ export function DemoPage() {
             </div>
 
             {/* Loading Overlay */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Loading Overlay
               </h3>
               <div className="space-y-4">
@@ -260,8 +260,8 @@ export function DemoPage() {
             </div>
 
             {/* Button Loader */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+            <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
                 Button Loader
               </h3>
               <div className="space-y-4">
@@ -282,7 +282,7 @@ export function DemoPage() {
 
         {/* Background Patterns Section */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Background Patterns
           </h2>
@@ -324,7 +324,7 @@ export function DemoPage() {
 
         {/* Industrial UI Elements */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Industrial UI Elements
           </h2>
@@ -332,7 +332,7 @@ export function DemoPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Glass Cards */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-700">Glass Morphism Cards</h3>
+              <h3 className="text-lg font-semibold text-secondary" className="heading-subsection">Glass Morphism Cards</h3>
 
               {/* Light Glass Card */}
               <div className="relative h-64 rounded-2xl overflow-hidden">
@@ -340,8 +340,8 @@ export function DemoPage() {
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="glass-card p-6 rounded-xl max-w-xs">
                     <HardHat className="w-8 h-8 text-primary dark:text-primary-400 mb-3" />
-                    <h4 className="font-bold text-gray-900 mb-2">Light Glass Card</h4>
-                    <p className="text-sm text-gray-700">
+                    <h4 className="font-bold text-foreground mb-2" className="heading-card">Light Glass Card</h4>
+                    <p className="text-sm text-secondary">
                       Frosted glass effect with backdrop blur for modern depth
                     </p>
                   </div>
@@ -354,7 +354,7 @@ export function DemoPage() {
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="glass-card-dark p-6 rounded-xl max-w-xs">
                     <Shield className="w-8 h-8 text-primary dark:text-primary-400 mb-3" />
-                    <h4 className="font-bold text-white mb-2">Dark Glass Card</h4>
+                    <h4 className="font-bold text-white mb-2" className="heading-card">Dark Glass Card</h4>
                     <p className="text-sm text-gray-300">
                       Dark variant with subtle transparency and border glow
                     </p>
@@ -365,10 +365,10 @@ export function DemoPage() {
 
             {/* Industrial Components */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-gray-700">Industrial Components</h3>
+              <h3 className="text-lg font-semibold text-secondary" className="heading-subsection">Industrial Components</h3>
 
               {/* Industrial Buttons */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 space-y-4">
+              <div className="bg-card rounded-2xl p-6 shadow-lg border border-border space-y-4">
                 <button className="industrial-button w-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80 text-white px-6 py-3 rounded-lg">
                   Primary Action
                 </button>
@@ -381,8 +381,8 @@ export function DemoPage() {
               </div>
 
               {/* Safety Badge */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200">
-                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+              <div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
+                <h4 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-card">
                   Safety Badge
                 </h4>
                 <div className="flex flex-wrap gap-3">
@@ -398,17 +398,17 @@ export function DemoPage() {
               </div>
 
               {/* Status Indicators */}
-              <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-200 space-y-3">
-                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+              <div className="bg-card rounded-2xl p-6 shadow-lg border border-border space-y-3">
+                <h4 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-card">
                   Status Indicators
                 </h4>
-                <div className="status-active text-sm font-medium text-gray-700">
+                <div className="status-active text-sm font-medium text-secondary">
                   Project Active
                 </div>
-                <div className="status-active text-sm font-medium text-gray-700">
+                <div className="status-active text-sm font-medium text-secondary">
                   Equipment Available
                 </div>
-                <div className="status-active text-sm font-medium text-gray-700">
+                <div className="status-active text-sm font-medium text-secondary">
                   Team On-Site
                 </div>
               </div>
@@ -418,7 +418,7 @@ export function DemoPage() {
 
         {/* Feature Cards with Icons */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Feature Cards
           </h2>
@@ -434,12 +434,12 @@ export function DemoPage() {
             ].map((feature, i) => (
               <div
                 key={i}
-                className="group bg-white rounded-2xl p-6 shadow-lg border border-gray-200 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                className="group bg-card rounded-2xl p-6 shadow-lg border border-border hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
               >
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.color} mb-4 group-hover:scale-110 transition-transform`}>
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{feature.title}</h3>
+                <h3 className="font-bold text-foreground mb-2" className="heading-subsection">{feature.title}</h3>
                 <p className="text-sm text-gray-600">{feature.desc}</p>
               </div>
             ))}
@@ -448,40 +448,40 @@ export function DemoPage() {
 
         {/* Color Palette */}
         <section>
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Color Palette
           </h2>
 
-          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+          <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               {/* Primary (Blueprint Blue) Scale */}
               <div className="space-y-2">
                 <div className="h-20 bg-primary-400 dark:bg-primary-400 rounded-lg shadow-md" />
-                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">#60A5FA</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Primary 400</p>
+                <p className="text-xs font-mono text-gray-600 dark:text-disabled">#60A5FA</p>
+                <p className="text-xs text-muted dark:text-disabled">Primary 400</p>
               </div>
               <div className="space-y-2">
                 <div className="h-20 bg-primary dark:bg-primary rounded-lg shadow-md" />
-                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">#1E40AF</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Primary (Blueprint Blue)</p>
+                <p className="text-xs font-mono text-gray-600 dark:text-disabled">#1E40AF</p>
+                <p className="text-xs text-muted dark:text-disabled">Primary (Blueprint Blue)</p>
               </div>
               <div className="space-y-2">
                 <div className="h-20 bg-primary-700 dark:bg-primary-700 rounded-lg shadow-md" />
-                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">#1E3A8A</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Primary 700</p>
+                <p className="text-xs font-mono text-gray-600 dark:text-disabled">#1E3A8A</p>
+                <p className="text-xs text-muted dark:text-disabled">Primary 700</p>
               </div>
 
               {/* Gray Scale */}
               <div className="space-y-2">
-                <div className="h-20 bg-gray-100 rounded-lg shadow-md border border-gray-300" />
+                <div className="h-20 bg-muted rounded-lg shadow-md border border-input" />
                 <p className="text-xs font-mono text-gray-600">#F3F4F6</p>
-                <p className="text-xs text-gray-500">Gray 100</p>
+                <p className="text-xs text-muted">Gray 100</p>
               </div>
               <div className="space-y-2">
                 <div className="h-20 bg-gray-900 rounded-lg shadow-md" />
                 <p className="text-xs font-mono text-gray-100">#111827</p>
-                <p className="text-xs text-gray-500">Gray 900</p>
+                <p className="text-xs text-muted">Gray 900</p>
               </div>
             </div>
           </div>
@@ -495,10 +495,10 @@ export function DemoPage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <SidebarLogo />
             <div className="text-center md:text-right">
-              <p className="text-gray-400 text-sm">
+              <p className="text-disabled text-sm">
                 Industrial Modern Design System
               </p>
-              <p className="text-gray-500 text-xs mt-1">
+              <p className="text-muted text-xs mt-1">
                 Built for construction field management
               </p>
             </div>
@@ -511,7 +511,7 @@ export function DemoPage() {
       {showOverlay && (
         <button
           onClick={() => setShowOverlay(false)}
-          className="fixed bottom-8 right-8 z-[60] px-6 py-3 bg-white text-gray-900 rounded-lg shadow-2xl hover:bg-gray-100 font-semibold"
+          className="fixed bottom-8 right-8 z-[60] px-6 py-3 bg-card text-foreground rounded-lg shadow-2xl hover:bg-muted font-semibold"
         >
           Close Overlay
         </button>

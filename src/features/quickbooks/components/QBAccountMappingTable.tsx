@@ -281,7 +281,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
                 </TableCell>
                 <TableCell className="text-center">
                   {mapping.is_default ? (
-                    <Star className="h-4 w-4 text-yellow-500 mx-auto fill-yellow-500" />
+                    <Star className="h-4 w-4 text-warning mx-auto fill-yellow-500" />
                   ) : (
                     <Button
                       variant="ghost"
@@ -300,7 +300,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
                     size="sm"
                     onClick={() => handleDeleteMapping(mapping.id)}
                     disabled={deleteMapping.isPending}
-                    className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                    className="h-8 w-8 p-0 text-error hover:text-error-dark"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

@@ -70,11 +70,11 @@ const ACTIVITY_TYPES: { value: ActivityType; label: string; description: string 
 ]
 
 const ACTIVITY_STATUSES: { value: ActivityStatus; label: string; color: string }[] = [
-  { value: 'not_started', label: 'Not Started', color: 'bg-gray-100 text-gray-800' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-800' },
-  { value: 'completed', label: 'Completed', color: 'bg-green-100 text-green-800' },
-  { value: 'on_hold', label: 'On Hold', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'cancelled', label: 'Cancelled', color: 'bg-red-100 text-red-800' },
+  { value: 'not_started', label: 'Not Started', color: 'bg-muted text-foreground' },
+  { value: 'in_progress', label: 'In Progress', color: 'bg-info-light text-blue-800' },
+  { value: 'completed', label: 'Completed', color: 'bg-success-light text-green-800' },
+  { value: 'on_hold', label: 'On Hold', color: 'bg-warning-light text-yellow-800' },
+  { value: 'cancelled', label: 'Cancelled', color: 'bg-error-light text-red-800' },
 ]
 
 const CONSTRAINT_TYPES: { value: ConstraintType; label: string }[] = [
@@ -390,7 +390,7 @@ export function ActivityFormDialog({
                       placeholder="e.g., A1010"
                     />
                     {form.formState.errors.activity_id && (
-                      <p className="text-sm text-red-500">
+                      <p className="text-sm text-error">
                         {form.formState.errors.activity_id.message}
                       </p>
                     )}
@@ -403,7 +403,7 @@ export function ActivityFormDialog({
                       placeholder="e.g., Site Excavation"
                     />
                     {form.formState.errors.name && (
-                      <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+                      <p className="text-sm text-error">{form.formState.errors.name.message}</p>
                     )}
                   </div>
                 </div>
@@ -494,8 +494,8 @@ export function ActivityFormDialog({
                     ))}
                     <button
                       type="button"
-                      className={`w-8 h-8 rounded-full border-2 bg-white ${
-                        !form.watch('bar_color') ? 'border-gray-900' : 'border-gray-300'
+                      className={`w-8 h-8 rounded-full border-2 bg-card ${
+                        !form.watch('bar_color') ? 'border-gray-900' : 'border-input'
                       }`}
                       onClick={() => form.setValue('bar_color', '')}
                       title="Default"
@@ -510,7 +510,7 @@ export function ActivityFormDialog({
               <TabsContent value="dates" className="space-y-4 mt-4">
                 {/* Planned Dates */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium flex items-center gap-1">
+                  <h4 className="text-sm font-medium flex items-center gap-1" className="heading-card">
                     <CalendarDays className="h-4 w-4" />
                     Planned Dates
                   </h4>
@@ -550,7 +550,7 @@ export function ActivityFormDialog({
                 {/* Actual Dates (edit mode only) */}
                 {isEditing && (
                   <div className="space-y-4">
-                    <h4 className="text-sm font-medium">Actual Dates</h4>
+                    <h4 className="text-sm font-medium" className="heading-card">Actual Dates</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="actual_start">Actual Start</Label>
@@ -595,7 +595,7 @@ export function ActivityFormDialog({
                 {/* Progress (edit mode only) */}
                 {isEditing && (
                   <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
-                    <h4 className="text-sm font-medium">Progress</h4>
+                    <h4 className="text-sm font-medium" className="heading-card">Progress</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Status</Label>
@@ -710,7 +710,7 @@ export function ActivityFormDialog({
               <TabsContent value="advanced" className="space-y-4 mt-4">
                 {/* Constraints */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium flex items-center gap-1">
+                  <h4 className="text-sm font-medium flex items-center gap-1" className="heading-card">
                     <AlertCircle className="h-4 w-4" />
                     Constraints
                   </h4>
@@ -748,7 +748,7 @@ export function ActivityFormDialog({
 
                 {/* Cost & Hours */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium flex items-center gap-1">
+                  <h4 className="text-sm font-medium flex items-center gap-1" className="heading-card">
                     <DollarSign className="h-4 w-4" />
                     Budget
                   </h4>

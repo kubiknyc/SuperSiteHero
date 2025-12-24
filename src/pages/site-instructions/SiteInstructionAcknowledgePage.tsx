@@ -28,7 +28,7 @@ export function SiteInstructionAcknowledgePage() {
   // Loading state
   if (isLoading || authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <Card className="w-full max-w-md">
           <CardContent className="py-12">
             <div className="flex flex-col items-center">
@@ -47,16 +47,16 @@ export function SiteInstructionAcknowledgePage() {
     const isExpired = errorMessage.toLowerCase().includes('expired')
 
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="min-h-screen flex items-center justify-center bg-surface p-4">
         <Card className="w-full max-w-md">
           <CardContent className="py-12">
             <div className="flex flex-col items-center text-center">
               {isExpired ? (
-                <Clock className="h-16 w-16 text-amber-500 mb-4" />
+                <Clock className="h-16 w-16 text-warning mb-4" />
               ) : (
                 <AlertCircle className="h-16 w-16 text-destructive mb-4" />
               )}
-              <h2 className="text-xl font-semibold mb-2">
+              <h2 className="text-xl font-semibold mb-2" className="heading-section">
                 {isExpired ? 'QR Code Expired' : 'Invalid QR Code'}
               </h2>
               <p className="text-muted-foreground mb-6">
@@ -102,9 +102,9 @@ export function SiteInstructionAcknowledgePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       {/* Header */}
-      <header className="sticky top-0 z-10 bg-white border-b shadow-sm">
+      <header className="sticky top-0 z-10 bg-card border-b shadow-sm">
         <div className="max-w-lg mx-auto px-4 py-3 flex items-center gap-3">
           {user ? (
             <Button variant="ghost" size="sm" asChild>
@@ -132,7 +132,7 @@ export function SiteInstructionAcknowledgePage() {
       <main className="max-w-lg mx-auto px-4 py-6">
         {/* Expiring Soon Warning */}
         {isExpiringSoon && expiresAt && (
-          <div className="mb-4 flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-800 text-sm">
+          <div className="mb-4 flex items-start gap-2 p-3 bg-warning-light border border-amber-200 rounded-lg text-amber-800 text-sm">
             <Clock className="h-4 w-4 mt-0.5 flex-shrink-0" />
             <div>
               <p className="font-medium">QR Code Expiring Soon</p>
@@ -149,7 +149,7 @@ export function SiteInstructionAcknowledgePage() {
             <ShieldAlert className="h-4 w-4 mt-0.5 flex-shrink-0" />
             <div>
               <p className="font-medium">Guest Acknowledgment</p>
-              <p className="text-blue-700">
+              <p className="text-primary-hover">
                 You're acknowledging as a guest.{' '}
                 <Link to="/login" className="underline hover:text-blue-900">
                   Sign in

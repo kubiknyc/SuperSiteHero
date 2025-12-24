@@ -28,7 +28,7 @@ export default function PhotoTemplatesPage() {
           Back
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Photo Progress Templates</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Photo Progress Templates</h1>
           <p className="text-sm text-muted-foreground">
             Create and manage location-based photo templates for progress tracking
           </p>

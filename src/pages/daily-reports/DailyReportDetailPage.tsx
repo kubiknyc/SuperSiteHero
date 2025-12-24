@@ -48,7 +48,7 @@ function IssuesCard({ issuesText }: { issuesText: string | null }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-gray-700 whitespace-pre-wrap">{issuesText}</p>
+        <p className="text-secondary whitespace-pre-wrap">{issuesText}</p>
       </CardContent>
     </Card>
   )
@@ -71,7 +71,7 @@ export function DailyReportDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-red-600">Report ID not found</p>
+            <p className="text-error">Report ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -83,7 +83,7 @@ export function DailyReportDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading report...</p>
+            <p className="text-muted">Loading report...</p>
           </div>
         </div>
       </AppLayout>
@@ -95,8 +95,8 @@ export function DailyReportDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600">Error loading report: {error?.message}</p>
+            <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+            <p className="text-error">Error loading report: {error?.message}</p>
             <Link to="/daily-reports">
               <Button className="mt-4">Back to Reports</Button>
             </Link>
@@ -194,7 +194,7 @@ export function DailyReportDetailPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-foreground" className="heading-page">
                 Daily Report - {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
               </h1>
               <div className="flex items-center gap-2 mt-2">
@@ -264,18 +264,18 @@ export function DailyReportDetailPage() {
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm font-medium text-gray-600">Report Date</p>
+              <p className="text-sm font-medium text-secondary">Report Date</p>
               <p className="text-lg font-semibold mt-1">
                 {report.report_date ? format(new Date(report.report_date), 'EEEE, MMMM d, yyyy') : 'N/A'}
               </p>
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">Created By</p>
+              <p className="text-sm font-medium text-secondary">Created By</p>
               <p className="text-lg font-semibold mt-1">{report.created_by || 'Unknown'}</p>
             </div>
             {report.submitted_at && (
               <div>
-                <p className="text-sm font-medium text-gray-600">Submitted</p>
+                <p className="text-sm font-medium text-secondary">Submitted</p>
                 <p className="text-lg font-semibold mt-1">
                   {report.submitted_at ? format(new Date(report.submitted_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                 </p>
@@ -283,7 +283,7 @@ export function DailyReportDetailPage() {
             )}
             {report.approved_at && (
               <div>
-                <p className="text-sm font-medium text-gray-600">Approved</p>
+                <p className="text-sm font-medium text-secondary">Approved</p>
                 <p className="text-lg font-semibold mt-1">
                   {report.approved_at ? format(new Date(report.approved_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                 </p>
@@ -306,13 +306,13 @@ export function DailyReportDetailPage() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <p className="text-sm font-medium text-gray-600">Weather Condition</p>
+                <p className="text-sm font-medium text-secondary">Weather Condition</p>
                 <p className="text-lg font-semibold mt-1 capitalize">
                   {report.weather_condition || 'Not recorded'}
                 </p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Temperature</p>
+                <p className="text-sm font-medium text-secondary">Temperature</p>
                 <p className="text-lg font-semibold mt-1">
                   {report.temperature_high && report.temperature_low
                     ? `${report.temperature_high}°F / ${report.temperature_low}°F`
@@ -320,7 +320,7 @@ export function DailyReportDetailPage() {
                 </p>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-600">Weather Delays</p>
+                <p className="text-sm font-medium text-secondary">Weather Delays</p>
                 <p className="text-lg font-semibold mt-1">
                   {report.weather_delays ? 'Yes' : 'No'}
                 </p>
@@ -329,8 +329,8 @@ export function DailyReportDetailPage() {
 
             {report.weather_delay_notes && (
               <div className="pt-4 border-t">
-                <p className="text-sm font-medium text-gray-600 mb-2">Delay Notes</p>
-                <p className="text-gray-700 whitespace-pre-wrap">{report.weather_delay_notes}</p>
+                <p className="text-sm font-medium text-secondary mb-2">Delay Notes</p>
+                <p className="text-secondary whitespace-pre-wrap">{report.weather_delay_notes}</p>
               </div>
             )}
           </CardContent>
@@ -345,7 +345,7 @@ export function DailyReportDetailPage() {
               <CardTitle>Observations</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{report.observations}</p>
+              <p className="text-secondary whitespace-pre-wrap">{report.observations}</p>
             </CardContent>
           </Card>
         )}
@@ -357,7 +357,7 @@ export function DailyReportDetailPage() {
               <CardTitle>Comments</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{report.comments}</p>
+              <p className="text-secondary whitespace-pre-wrap">{report.comments}</p>
             </CardContent>
           </Card>
         )}
@@ -390,7 +390,7 @@ export function DailyReportDetailPage() {
 
         {/* Approval Signature Dialog */}
         {showApprovalSignature && (
-          <Card className="border-2 border-green-200 bg-green-50">
+          <Card className="border-2 border-green-200 bg-success-light">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-green-800">
                 <PenTool className="h-5 w-5" />

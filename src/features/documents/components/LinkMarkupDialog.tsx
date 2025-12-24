@@ -254,7 +254,7 @@ export function LinkMarkupDialog({
 
           <div className="mt-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 placeholder={`Search ${typeLabels[activeTab].toLowerCase()}...`}
                 value={searchQuery}
@@ -310,7 +310,7 @@ interface ItemListProps {
 function ItemList({ items, onSelect, isLinking, currentLinkId }: ItemListProps) {
   if (items.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted">
         <p>No items found</p>
       </div>
     )
@@ -324,14 +324,14 @@ function ItemList({ items, onSelect, isLinking, currentLinkId }: ItemListProps) 
           className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
             item.id === currentLinkId
               ? 'bg-blue-50 border-blue-300'
-              : 'hover:bg-gray-50 border-gray-200'
+              : 'hover:bg-surface border-border'
           }`}
           onClick={() => !isLinking && onSelect(item)}
         >
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               {item.number && (
-                <span className="text-sm font-mono text-gray-500">
+                <span className="text-sm font-mono text-muted">
                   #{item.number}
                 </span>
               )}
@@ -349,7 +349,7 @@ function ItemList({ items, onSelect, isLinking, currentLinkId }: ItemListProps) 
                 Linked
               </Badge>
             ) : (
-              <ExternalLink className="h-4 w-4 text-gray-400" />
+              <ExternalLink className="h-4 w-4 text-disabled" />
             )}
           </div>
         </div>

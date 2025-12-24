@@ -363,7 +363,7 @@ export function VideoPlayer({
           onClick={togglePlay}
           className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
         >
-          <div className="w-20 h-20 rounded-full bg-white/90 flex items-center justify-center">
+          <div className="w-20 h-20 rounded-full bg-card/90 flex items-center justify-center">
             <Play className="h-10 w-10 text-black ml-1" />
           </div>
         </button>
@@ -402,7 +402,7 @@ export function VideoPlayer({
                 variant="ghost"
                 size="icon"
                 onClick={togglePlay}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-card/20"
               >
                 {isPlaying ? (
                   <Pause className="h-5 w-5" />
@@ -416,7 +416,7 @@ export function VideoPlayer({
                 variant="ghost"
                 size="icon"
                 onClick={handleRestart}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-card/20"
               >
                 <RotateCcw className="h-5 w-5" />
               </Button>
@@ -427,7 +427,7 @@ export function VideoPlayer({
                   variant="ghost"
                   size="icon"
                   onClick={toggleMute}
-                  className="text-white hover:bg-white/20"
+                  className="text-white hover:bg-card/20"
                 >
                   {isMuted || volume === 0 ? (
                     <VolumeX className="h-5 w-5" />
@@ -452,7 +452,7 @@ export function VideoPlayer({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-card/20"
                   >
                     <Settings className="h-5 w-5" />
                   </Button>
@@ -481,7 +481,7 @@ export function VideoPlayer({
                   variant="ghost"
                   size="icon"
                   onClick={handleDownload}
-                  className="text-white hover:bg-white/20"
+                  className="text-white hover:bg-card/20"
                 >
                   <Download className="h-5 w-5" />
                 </Button>
@@ -492,7 +492,7 @@ export function VideoPlayer({
                 variant="ghost"
                 size="icon"
                 onClick={toggleFullscreen}
-                className="text-white hover:bg-white/20"
+                className="text-white hover:bg-card/20"
               >
                 {isFullscreen ? (
                   <Minimize className="h-5 w-5" />

@@ -241,7 +241,7 @@ export function EditWorkflowItemDialog({
           <div className="space-y-2">
             <Label>Assignees</Label>
             {usersLoading ? (
-              <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex items-center gap-2 text-sm text-muted">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 Loading users...
               </div>
@@ -250,13 +250,13 @@ export function EditWorkflowItemDialog({
                 {projectUsers.map((pu) => (
                   <label
                     key={pu.user_id}
-                    className="flex items-center gap-2 p-1.5 rounded hover:bg-gray-50 cursor-pointer"
+                    className="flex items-center gap-2 p-1.5 rounded hover:bg-surface cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={selectedAssignees.includes(pu.user_id)}
                       onChange={() => toggleAssignee(pu.user_id)}
-                      className="h-4 w-4 rounded border-gray-300 text-blue-600"
+                      className="h-4 w-4 rounded border-input text-primary"
                     />
                     <span className="text-sm">
                       {pu.user?.full_name || pu.user?.email || 'Unknown User'}
@@ -265,10 +265,10 @@ export function EditWorkflowItemDialog({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-gray-500">No users available for this project</p>
+              <p className="text-sm text-muted">No users available for this project</p>
             )}
             {selectedAssignees.length > 0 && (
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted">
                 {selectedAssignees.length} user(s) selected
               </p>
             )}

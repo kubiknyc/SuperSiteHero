@@ -139,8 +139,8 @@ export function TemplateBuilderDialog({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name */}
           <div>
-            <label htmlFor="template-name" className="block text-sm font-medium text-gray-700 mb-1">
-              Template Name <span className="text-red-500">*</span>
+            <label htmlFor="template-name" className="block text-sm font-medium text-secondary mb-1">
+              Template Name <span className="text-error">*</span>
             </label>
             <Input
               id="template-name"
@@ -154,7 +154,7 @@ export function TemplateBuilderDialog({
 
           {/* Description */}
           <div>
-            <label htmlFor="template-description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="template-description" className="block text-sm font-medium text-secondary mb-1">
               Description
             </label>
             <textarea
@@ -163,7 +163,7 @@ export function TemplateBuilderDialog({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of what this checklist is used for..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
             />
           </div>
 
@@ -171,14 +171,14 @@ export function TemplateBuilderDialog({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Category */}
             <div>
-              <label htmlFor="template-category" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="template-category" className="block text-sm font-medium text-secondary mb-1">
                 Category
               </label>
               <select
                 id="template-category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
               >
                 <option value="">Select category...</option>
                 {COMMON_CATEGORIES.map((cat) => (
@@ -191,14 +191,14 @@ export function TemplateBuilderDialog({
 
             {/* Template Level */}
             <div>
-              <label htmlFor="template-level" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="template-level" className="block text-sm font-medium text-secondary mb-1">
                 Template Level
               </label>
               <select
                 id="template-level"
                 value={templateLevel}
                 onChange={(e) => setTemplateLevel(e.target.value as TemplateLevel)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
               >
                 {TEMPLATE_LEVELS.map((level) => (
                   <option key={level.value} value={level.value}>
@@ -211,7 +211,7 @@ export function TemplateBuilderDialog({
 
           {/* Tags */}
           <div>
-            <label htmlFor="template-tags" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="template-tags" className="block text-sm font-medium text-secondary mb-1">
               Tags
             </label>
             <div className="flex gap-2 mb-2">
@@ -239,7 +239,7 @@ export function TemplateBuilderDialog({
                     <button
                       type="button"
                       onClick={() => handleRemoveTag(tag)}
-                      className="ml-1 hover:text-red-600"
+                      className="ml-1 hover:text-error"
                     >
                       <X className="w-3 h-3" />
                     </button>
@@ -251,7 +251,7 @@ export function TemplateBuilderDialog({
 
           {/* Instructions */}
           <div>
-            <label htmlFor="template-instructions" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="template-instructions" className="block text-sm font-medium text-secondary mb-1">
               Instructions for Inspector
             </label>
             <textarea
@@ -260,7 +260,7 @@ export function TemplateBuilderDialog({
               onChange={(e) => setInstructions(e.target.value)}
               placeholder="Detailed instructions on how to complete this checklist..."
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
             />
           </div>
 
@@ -268,7 +268,7 @@ export function TemplateBuilderDialog({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Estimated Duration */}
             <div>
-              <label htmlFor="template-duration" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="template-duration" className="block text-sm font-medium text-secondary mb-1">
                 Estimated Duration (minutes)
               </label>
               <Input
@@ -289,9 +289,9 @@ export function TemplateBuilderDialog({
                   type="checkbox"
                   checked={scoringEnabled}
                   onChange={(e) => setScoringEnabled(e.target.checked)}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-primary border-input rounded focus:ring-blue-500"
                 />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-secondary">
                   Enable Pass/Fail/NA Scoring
                 </span>
               </label>

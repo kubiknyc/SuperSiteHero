@@ -265,8 +265,8 @@ export function MasterSchedulePage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
-            <p className="mt-4 text-gray-600">Loading project...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+            <p className="mt-4 text-secondary">Loading project...</p>
           </div>
         </div>
       </AppLayout>
@@ -279,10 +279,10 @@ export function MasterSchedulePage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
               Project not found
             </h2>
-            <p className="text-gray-600 mb-4">
+            <p className="text-secondary mb-4">
               The requested project could not be found.
             </p>
             <Button variant="outline" onClick={() => navigate('/projects')}>
@@ -299,7 +299,7 @@ export function MasterSchedulePage() {
     <AppLayout>
       <div className="flex flex-col h-[calc(100vh-64px)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b bg-white">
+        <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -309,13 +309,13 @@ export function MasterSchedulePage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
-            <div className="h-6 border-l border-gray-300" />
+            <div className="h-6 border-l border-input" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <h1 className="text-xl font-bold text-foreground flex items-center gap-2" className="heading-page">
                 <Calendar className="h-5 w-5" />
                 Master Schedule
               </h1>
-              <p className="text-sm text-gray-500">{project.name}</p>
+              <p className="text-sm text-muted">{project.name}</p>
             </div>
           </div>
 
@@ -443,24 +443,24 @@ export function MasterSchedulePage() {
 
         {/* Quick Stats Bar (mobile-friendly) */}
         {stats && (
-          <div className="md:hidden flex items-center gap-2 px-4 py-2 bg-gray-50 border-b overflow-x-auto">
+          <div className="md:hidden flex items-center gap-2 px-4 py-2 bg-surface border-b overflow-x-auto">
             <StatBadge
               icon={<Target className="h-3 w-3" />}
               label="Total"
               value={stats.total_activities}
             />
             <StatBadge
-              icon={<CheckCircle2 className="h-3 w-3 text-green-500" />}
+              icon={<CheckCircle2 className="h-3 w-3 text-success" />}
               label="Done"
               value={stats.completed_activities}
             />
             <StatBadge
-              icon={<Clock className="h-3 w-3 text-blue-500" />}
+              icon={<Clock className="h-3 w-3 text-primary" />}
               label="In Progress"
               value={stats.in_progress_activities}
             />
             <StatBadge
-              icon={<XCircle className="h-3 w-3 text-red-500" />}
+              icon={<XCircle className="h-3 w-3 text-error" />}
               label="Overdue"
               value={stats.overdue_activities}
               variant={stats.overdue_activities > 0 ? 'destructive' : 'default'}
@@ -477,7 +477,7 @@ export function MasterSchedulePage() {
         )}
 
         {/* Gantt Chart */}
-        <div className="flex-1 p-4 bg-gray-100 overflow-hidden">
+        <div className="flex-1 p-4 bg-muted overflow-hidden">
           {isLoading ? (
             <Card className="h-full">
               <CardContent className="flex items-center justify-center h-full">
@@ -630,13 +630,13 @@ function StatBadge({
     <div
       className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs whitespace-nowrap ${
         variant === 'destructive'
-          ? 'bg-red-100 text-red-700'
-          : 'bg-white text-gray-700 border'
+          ? 'bg-error-light text-error-dark'
+          : 'bg-card text-secondary border'
       }`}
     >
       {icon}
       <span className="font-medium">{value}</span>
-      <span className="text-gray-500">{label}</span>
+      <span className="text-muted">{label}</span>
     </div>
   )
 }

@@ -28,7 +28,7 @@ export default function DailyPhotoChecklistPage() {
           Back
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Daily Photo Checklist</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Daily Photo Checklist</h1>
           <p className="text-sm text-muted-foreground">
             Track required progress photos for each location
           </p>

@@ -277,7 +277,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
   if (scheduleId && scheduleLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
@@ -305,7 +305,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
               placeholder="e.g., Weekly Progress Report"
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-sm text-error">{errors.name.message}</p>
             )}
           </div>
 
@@ -346,7 +346,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
               )}
             />
             {errors.template_id && (
-              <p className="text-sm text-red-500">{errors.template_id.message}</p>
+              <p className="text-sm text-error">{errors.template_id.message}</p>
             )}
           </div>
 
@@ -503,7 +503,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
                 {...register('time_of_day')}
               />
               {errors.time_of_day && (
-                <p className="text-sm text-red-500">{errors.time_of_day.message}</p>
+                <p className="text-sm text-error">{errors.time_of_day.message}</p>
               )}
             </div>
 
@@ -586,10 +586,10 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
             </Button>
           </div>
           {recipientError && (
-            <p className="text-sm text-red-500">{recipientError}</p>
+            <p className="text-sm text-error">{recipientError}</p>
           )}
           {errors.recipients && (
-            <p className="text-sm text-red-500">{errors.recipients.message}</p>
+            <p className="text-sm text-error">{errors.recipients.message}</p>
           )}
 
           {/* Recipients List */}
@@ -602,7 +602,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-5 w-5 p-0 ml-1 hover:bg-red-100"
+                    className="h-5 w-5 p-0 ml-1 hover:bg-error-light"
                     onClick={() => handleRemoveRecipient(email)}
                   >
                     <X className="h-3 w-3" />

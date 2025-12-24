@@ -117,8 +117,8 @@ export function MyApprovalsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Approvals</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Approvals</h1>
+            <p className="text-muted mt-1">
               {activeTab === 'pending'
                 ? 'Items waiting for your approval'
                 : 'All approval requests you initiated'}
@@ -126,10 +126,10 @@ export function MyApprovalsPage() {
           </div>
           {pendingData && pendingData.total > 0 && (
             <div className="text-right">
-              <div className="text-3xl font-bold text-blue-600">
+              <div className="text-3xl font-bold text-primary">
                 {pendingData.total}
               </div>
-              <div className="text-sm text-gray-500">pending</div>
+              <div className="text-sm text-muted">pending</div>
             </div>
           )}
         </div>
@@ -141,13 +141,13 @@ export function MyApprovalsPage() {
             className={cn(
               'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors',
               activeTab === 'pending'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-blue-500 text-primary'
+                : 'border-transparent text-muted hover:text-secondary'
             )}
           >
             Pending for Me
             {pendingData && pendingData.total > 0 && (
-              <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-600">
+              <span className="ml-2 px-2 py-0.5 text-xs rounded-full bg-error-light text-error">
                 {pendingData.total}
               </span>
             )}
@@ -157,8 +157,8 @@ export function MyApprovalsPage() {
             className={cn(
               'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors',
               activeTab === 'all'
-                ? 'border-blue-500 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700'
+                ? 'border-blue-500 text-primary'
+                : 'border-transparent text-muted hover:text-secondary'
             )}
           >
             My Requests
@@ -188,16 +188,16 @@ export function MyApprovalsPage() {
 
         {/* Loading state */}
         {isLoading && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-muted">
             Loading approvals...
           </div>
         )}
 
         {/* Empty state */}
         {!isLoading && filteredRequests.length === 0 && (
-          <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed">
+          <div className="text-center py-12 bg-surface rounded-lg border border-dashed">
             <svg
-              className="mx-auto h-12 w-12 text-gray-400"
+              className="mx-auto h-12 w-12 text-disabled"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -209,12 +209,12 @@ export function MyApprovalsPage() {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <h3 className="mt-2 text-sm font-medium text-foreground" className="heading-subsection">
               {activeTab === 'pending'
                 ? 'No pending approvals'
                 : 'No approval requests'}
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="mt-1 text-sm text-muted">
               {activeTab === 'pending'
                 ? "You're all caught up! Nothing requires your approval right now."
                 : "You haven't submitted any items for approval yet."}

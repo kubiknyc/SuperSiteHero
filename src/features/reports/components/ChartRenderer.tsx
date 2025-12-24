@@ -53,9 +53,9 @@ function CustomTooltip({ active, payload, label }: any) {
       : value
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3">
-      <p className="font-medium text-gray-900">{label}</p>
-      <p className="text-sm text-gray-600">
+    <div className="bg-card border border-border rounded-lg shadow-lg p-3">
+      <p className="font-medium text-foreground">{label}</p>
+      <p className="text-sm text-secondary">
         Value: <span className="font-semibold">{formattedValue}</span>
       </p>
     </div>
@@ -128,8 +128,8 @@ export function ChartRenderer({
           </CardHeader>
         )}
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-12 text-gray-500">
-            <AlertCircle className="h-12 w-12 mb-3 text-gray-400" />
+          <div className="flex flex-col items-center justify-center py-12 text-muted">
+            <AlertCircle className="h-12 w-12 mb-3 text-disabled" />
             <p className="text-sm">No data available for this chart</p>
           </div>
         </CardContent>
@@ -305,26 +305,26 @@ export function ChartRenderer({
         {config.type !== 'pie' && (
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-4 border-t">
             <div>
-              <p className="text-xs text-gray-500">Total</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs text-muted">Total</p>
+              <p className="text-sm font-semibold text-foreground">
                 {new Intl.NumberFormat('en-US').format(stats.total)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Average</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs text-muted">Average</p>
+              <p className="text-sm font-semibold text-foreground">
                 {new Intl.NumberFormat('en-US').format(stats.average)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Min</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs text-muted">Min</p>
+              <p className="text-sm font-semibold text-foreground">
                 {new Intl.NumberFormat('en-US').format(stats.min)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500">Max</p>
-              <p className="text-sm font-semibold text-gray-900">
+              <p className="text-xs text-muted">Max</p>
+              <p className="text-sm font-semibold text-foreground">
                 {new Intl.NumberFormat('en-US').format(stats.max)}
               </p>
             </div>

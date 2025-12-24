@@ -93,11 +93,11 @@ export function DocumentComments({
           {/* Comments List */}
           <div className="border-t pt-4">
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted">
                 Loading comments...
               </div>
             ) : commentTree.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted">
                 <MessageSquare className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p>No comments yet</p>
                 <p className="text-sm">Be the first to comment on this document</p>
@@ -176,21 +176,21 @@ function CommentItem({ comment, documentId, projectId, depth }: CommentItemProps
   }
 
   return (
-    <div className={cn('space-y-2', depth > 0 && 'ml-6 pl-4 border-l-2 border-gray-200')}>
-      <div className="bg-gray-50 rounded-lg p-3">
+    <div className={cn('space-y-2', depth > 0 && 'ml-6 pl-4 border-l-2 border-border')}>
+      <div className="bg-surface rounded-lg p-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-medium text-sm text-gray-900">
+              <span className="font-medium text-sm text-foreground">
                 {comment.created_by.slice(0, 8)}...
               </span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted">
                 {comment.created_at
                   ? formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })
                   : 'Unknown'}
               </span>
               {comment.updated_at && comment.updated_at !== comment.created_at && (
-                <span className="text-xs text-gray-400">(edited)</span>
+                <span className="text-xs text-disabled">(edited)</span>
               )}
             </div>
 
@@ -211,7 +211,7 @@ function CommentItem({ comment, documentId, projectId, depth }: CommentItemProps
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-gray-700 whitespace-pre-wrap">
+              <p className="text-sm text-secondary whitespace-pre-wrap">
                 {comment.comment_text}
               </p>
             )}
@@ -241,7 +241,7 @@ function CommentItem({ comment, documentId, projectId, depth }: CommentItemProps
                 variant="ghost"
                 size="sm"
                 onClick={handleDelete}
-                className="h-7 w-7 p-0 text-red-600 hover:text-red-700"
+                className="h-7 w-7 p-0 text-error hover:text-error-dark"
                 title="Delete"
                 disabled={deleteComment.isPending}
               >

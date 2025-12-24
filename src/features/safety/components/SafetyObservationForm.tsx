@@ -228,10 +228,10 @@ export function SafetyObservationForm({
                   const isSelected = field.value === type
 
                   const colorClasses: Record<string, string> = {
-                    green: 'border-green-500 bg-green-50 text-green-700',
-                    yellow: 'border-yellow-500 bg-yellow-50 text-yellow-700',
+                    green: 'border-green-500 bg-success-light text-success-dark',
+                    yellow: 'border-warning bg-warning-light text-yellow-700',
                     orange: 'border-orange-500 bg-orange-50 text-orange-700',
-                    blue: 'border-blue-500 bg-blue-50 text-blue-700',
+                    blue: 'border-blue-500 bg-blue-50 text-primary-hover',
                   }
 
                   return (
@@ -243,7 +243,7 @@ export function SafetyObservationForm({
                         'flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all',
                         isSelected
                           ? colorClasses[config.color]
-                          : 'border-gray-200 hover:border-gray-300 bg-white'
+                          : 'border-border hover:border-input bg-card'
                       )}
                     >
                       <Icon className="h-6 w-6 mb-2" />
@@ -302,7 +302,7 @@ export function SafetyObservationForm({
                           <span
                             className={cn('w-2 h-2 rounded-full', {
                               'bg-gray-400': config.color === 'gray',
-                              'bg-yellow-500': config.color === 'yellow',
+                              'bg-warning': config.color === 'yellow',
                               'bg-orange-500': config.color === 'orange',
                               'bg-red-500': config.color === 'red',
                             })}
@@ -332,7 +332,7 @@ export function SafetyObservationForm({
           }
         />
         {errors.title && (
-          <p className="text-sm text-red-500">{errors.title.message}</p>
+          <p className="text-sm text-error">{errors.title.message}</p>
         )}
       </div>
 
@@ -350,7 +350,7 @@ export function SafetyObservationForm({
           }
         />
         {errors.description && (
-          <p className="text-sm text-red-500">{errors.description.message}</p>
+          <p className="text-sm text-error">{errors.description.message}</p>
         )}
       </div>
 
@@ -374,14 +374,14 @@ export function SafetyObservationForm({
             {isGettingLocation ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : locationCoordinates ? (
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-success" />
             ) : (
               <MapPin className="h-4 w-4" />
             )}
           </Button>
         </div>
         {locationCoordinates && (
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted">
             GPS: {locationCoordinates.lat.toFixed(6)}, {locationCoordinates.lng.toFixed(6)}
           </p>
         )}
@@ -389,7 +389,7 @@ export function SafetyObservationForm({
 
       {/* Recognition Fields (for positive observations) */}
       {isPositive && (
-        <Card className="bg-green-50 border-green-200">
+        <Card className="bg-success-light border-green-200">
           <CardHeader className="pb-3">
             <CardTitle className="text-base text-green-800">Recognition Details</CardTitle>
           </CardHeader>
@@ -458,9 +458,9 @@ export function SafetyObservationForm({
               </button>
             </div>
           ))}
-          <label className="w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors">
-            <Camera className="h-6 w-6 text-gray-400" />
-            <span className="text-xs text-gray-500 mt-1">Add Photo</span>
+          <label className="w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed border-input rounded-lg cursor-pointer hover:border-gray-400 transition-colors">
+            <Camera className="h-6 w-6 text-disabled" />
+            <span className="text-xs text-muted mt-1">Add Photo</span>
             <input
               type="file"
               accept="image/*"
@@ -471,14 +471,14 @@ export function SafetyObservationForm({
             />
           </label>
         </div>
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-muted">
           Adding photos earns bonus points!
         </p>
       </div>
 
       {/* Additional Details (collapsible) */}
       <details className="space-y-4">
-        <summary className="cursor-pointer text-sm font-medium text-gray-600 hover:text-gray-800">
+        <summary className="cursor-pointer text-sm font-medium text-secondary hover:text-foreground">
           Additional Details (optional)
         </summary>
         <div className="space-y-4 pt-4">
@@ -524,7 +524,7 @@ export function SafetyObservationForm({
         <CardContent className="py-3">
           <div className="flex items-center justify-between">
             <span className="text-sm text-blue-800">Estimated points for this observation:</span>
-            <span className="text-lg font-bold text-blue-600">
+            <span className="text-lg font-bold text-primary">
               {OBSERVATION_TYPE_CONFIG[observationType].pointsBase}
               {photoUrls.length > 0 && ' + 5'}
               {needsAction && watch('corrective_action') && ' + 10'}
@@ -543,7 +543,7 @@ export function SafetyObservationForm({
         <Button
           type="submit"
           disabled={isSubmitting || createObservation.isPending}
-          className={cn('flex-1', isPositive ? 'bg-green-600 hover:bg-green-700' : '')}
+          className={cn('flex-1', isPositive ? 'bg-success hover:bg-green-700' : '')}
         >
           {isSubmitting || createObservation.isPending ? (
             <>

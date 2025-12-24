@@ -61,10 +61,10 @@ export function PredictiveAnalyticsDashboard({
     return (
       <Card className={cn('border-red-200', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-error">
             <span className="text-3xl">⚠️</span>
             <p className="mt-2 font-medium">Failed to load analytics</p>
-            <p className="text-sm text-gray-500">{(error as Error).message}</p>
+            <p className="text-sm text-muted">{(error as Error).message}</p>
             <Button variant="outline" className="mt-4" onClick={handleRefresh}>
               Retry
             </Button>
@@ -76,9 +76,9 @@ export function PredictiveAnalyticsDashboard({
 
   if (!dashboard) {
     return (
-      <Card className={cn('border-gray-200', className)}>
+      <Card className={cn('border-border', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <span className="text-3xl">📊</span>
             <p className="mt-2">No analytics data available</p>
             <p className="text-sm">Generate your first prediction to get started</p>
@@ -96,10 +96,10 @@ export function PredictiveAnalyticsDashboard({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-foreground" className="heading-section">
             Predictive Analytics
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted">
             {dashboard.project_name} • Last updated{' '}
             {new Date(dashboard.last_updated).toLocaleString()}
           </p>
@@ -217,12 +217,12 @@ export function PredictiveAnalyticsDashboard({
 
             {/* By category */}
             <div className="pt-3 border-t">
-              <p className="text-xs font-medium text-gray-500 mb-2">By Category</p>
+              <p className="text-xs font-medium text-muted mb-2">By Category</p>
               <div className="space-y-1">
                 {Object.entries(dashboard.recommendation_stats.by_category).map(
                   ([category, count]) => (
                     <div key={category} className="flex items-center justify-between text-sm">
-                      <span className="capitalize text-gray-600">{category}</span>
+                      <span className="capitalize text-secondary">{category}</span>
                       <span className="font-medium">{count}</span>
                     </div>
                   )
@@ -232,10 +232,10 @@ export function PredictiveAnalyticsDashboard({
 
             {/* By priority */}
             <div className="pt-3 border-t">
-              <p className="text-xs font-medium text-gray-500 mb-2">By Priority</p>
+              <p className="text-xs font-medium text-muted mb-2">By Priority</p>
               <div className="flex gap-2">
                 {dashboard.recommendation_stats.by_priority.critical > 0 && (
-                  <Badge variant="outline" className="bg-red-50 text-red-700 text-xs">
+                  <Badge variant="outline" className="bg-error-light text-error-dark text-xs">
                     {dashboard.recommendation_stats.by_priority.critical} critical
                   </Badge>
                 )}
@@ -245,7 +245,7 @@ export function PredictiveAnalyticsDashboard({
                   </Badge>
                 )}
                 {dashboard.recommendation_stats.by_priority.medium > 0 && (
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 text-xs">
+                  <Badge variant="outline" className="bg-warning-light text-amber-700 text-xs">
                     {dashboard.recommendation_stats.by_priority.medium} medium
                   </Badge>
                 )}
@@ -257,7 +257,7 @@ export function PredictiveAnalyticsDashboard({
 
       {/* Model info footer */}
       {dashboard.current_prediction && (
-        <div className="text-center text-xs text-gray-400">
+        <div className="text-center text-xs text-disabled">
           Model version: {dashboard.current_prediction.model_version} •
           Generated: {new Date(dashboard.current_prediction.generated_at).toLocaleString()}
         </div>
@@ -278,19 +278,19 @@ interface StatItemProps {
 function StatItem({ label, value, color }: StatItemProps) {
   const colorClass =
     color === 'blue'
-      ? 'text-blue-600'
+      ? 'text-primary'
       : color === 'green'
-      ? 'text-green-600'
+      ? 'text-success'
       : color === 'amber'
-      ? 'text-amber-600'
+      ? 'text-warning'
       : color === 'red'
-      ? 'text-red-600'
-      : 'text-gray-600'
+      ? 'text-error'
+      : 'text-secondary'
 
   return (
-    <div className="bg-gray-50 rounded-lg p-3 text-center">
+    <div className="bg-surface rounded-lg p-3 text-center">
       <p className={cn('text-2xl font-bold', colorClass)}>{value}</p>
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-xs text-muted">{label}</p>
     </div>
   )
 }
@@ -304,10 +304,10 @@ function DashboardSkeleton({ className }: { className?: string }) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <div className="h-6 w-48 bg-gray-200 rounded" />
-          <div className="h-4 w-64 bg-gray-100 rounded mt-2" />
+          <div className="h-6 w-48 bg-muted rounded" />
+          <div className="h-4 w-64 bg-muted rounded mt-2" />
         </div>
-        <div className="h-10 w-24 bg-gray-200 rounded" />
+        <div className="h-10 w-24 bg-muted rounded" />
       </div>
 
       {/* Risk overview */}
@@ -316,8 +316,8 @@ function DashboardSkeleton({ className }: { className?: string }) {
           <div className="grid grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="flex flex-col items-center gap-2">
-                <div className="w-24 h-24 bg-gray-200 rounded-full" />
-                <div className="h-4 w-16 bg-gray-200 rounded" />
+                <div className="w-24 h-24 bg-muted rounded-full" />
+                <div className="h-4 w-16 bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -329,7 +329,7 @@ function DashboardSkeleton({ className }: { className?: string }) {
         {[1, 2].map((i) => (
           <Card key={i}>
             <CardContent className="pt-6">
-              <div className="h-40 bg-gray-100 rounded" />
+              <div className="h-40 bg-muted rounded" />
             </CardContent>
           </Card>
         ))}
@@ -340,7 +340,7 @@ function DashboardSkeleton({ className }: { className?: string }) {
         {[1, 2, 3].map((i) => (
           <Card key={i}>
             <CardContent className="pt-6">
-              <div className="h-48 bg-gray-100 rounded" />
+              <div className="h-48 bg-muted rounded" />
             </CardContent>
           </Card>
         ))}

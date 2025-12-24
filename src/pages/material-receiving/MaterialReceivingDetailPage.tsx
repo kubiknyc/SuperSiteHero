@@ -142,7 +142,7 @@ export function MaterialReceivingDetailPage() {
               Back to Material Receiving
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold">{delivery.material_name}</h1>
+          <h1 className="text-3xl font-bold" className="heading-page">{delivery.material_name}</h1>
           <div className="flex items-center gap-2">
             <DeliveryStatusBadge status={delivery.delivery_status} />
             <ConditionStatusBadge status={delivery.condition_status} />
@@ -165,9 +165,9 @@ export function MaterialReceivingDetailPage() {
 
       {/* Issues Warning */}
       {hasIssues && (
-        <div className="rounded-md bg-yellow-50 border border-yellow-200 p-4">
+        <div className="rounded-md bg-warning-light border border-yellow-200 p-4">
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+            <AlertCircle className="h-5 w-5 text-warning mt-0.5" />
             <div className="flex-1">
               <div className="text-sm font-medium text-yellow-800">Issues Detected</div>
               {delivery.condition_status !== 'good' && (
@@ -290,7 +290,7 @@ export function MaterialReceivingDetailPage() {
                   {delivery.vendor_contact_email && (
                     <div className="text-sm">
                       <span className="font-medium">Email: </span>
-                      <a href={`mailto:${delivery.vendor_contact_email}`} className="text-blue-600 hover:underline">
+                      <a href={`mailto:${delivery.vendor_contact_email}`} className="text-primary hover:underline">
                         {delivery.vendor_contact_email}
                       </a>
                     </div>
@@ -337,8 +337,8 @@ export function MaterialReceivingDetailPage() {
 
                 {(delivery.quantity_rejected || 0) > 0 && (
                   <div>
-                    <div className="text-sm font-medium text-red-600">Quantity Rejected</div>
-                    <div className="text-sm text-red-600">
+                    <div className="text-sm font-medium text-error">Quantity Rejected</div>
+                    <div className="text-sm text-error">
                       {delivery.quantity_rejected} {delivery.unit_of_measure}
                     </div>
                   </div>
@@ -466,7 +466,7 @@ export function MaterialReceivingDetailPage() {
                   <div className="text-sm">
                     <Link
                       to={`/submittals/${delivery.submittal_id}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-primary hover:underline"
                     >
                       View Submittal
                     </Link>
@@ -476,7 +476,7 @@ export function MaterialReceivingDetailPage() {
                   <div className="text-sm">
                     <Link
                       to={`/daily-reports/${delivery.daily_report_id}`}
-                      className="text-blue-600 hover:underline"
+                      className="text-primary hover:underline"
                     >
                       View Daily Report
                     </Link>
@@ -540,7 +540,7 @@ export function MaterialReceivingDetailPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteDelivery}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               Delete
             </AlertDialogAction>

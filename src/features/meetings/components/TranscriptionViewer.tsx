@@ -195,7 +195,7 @@ export function TranscriptionViewer({
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <CollapsibleTrigger asChild>
-              <button className="flex items-center gap-2 hover:text-blue-600 transition-colors">
+              <button className="flex items-center gap-2 hover:text-primary transition-colors">
                 <FileText className="h-5 w-5" />
                 <CardTitle className="text-base">Transcription</CardTitle>
                 {isExpanded ? (
@@ -216,8 +216,8 @@ export function TranscriptionViewer({
             {/* No transcription yet */}
             {!recording.transcription_status && recording.status === 'completed' && (
               <div className="text-center py-6 space-y-3">
-                <Sparkles className="h-10 w-10 mx-auto text-gray-400" />
-                <p className="text-gray-600">Recording ready for transcription</p>
+                <Sparkles className="h-10 w-10 mx-auto text-disabled" />
+                <p className="text-secondary">Recording ready for transcription</p>
                 <Button
                   onClick={handleStartTranscription}
                   disabled={startTranscription.isPending}
@@ -230,7 +230,7 @@ export function TranscriptionViewer({
                   )}
                   Start Transcription
                 </Button>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   Cost: ~$0.006/minute of audio
                 </p>
               </div>
@@ -240,13 +240,13 @@ export function TranscriptionViewer({
             {(recording.transcription_status === 'pending' ||
               recording.transcription_status === 'in_progress') && (
               <div className="text-center py-8 space-y-3">
-                <Loader2 className="h-10 w-10 mx-auto text-blue-500 animate-spin" />
-                <p className="text-gray-600">
+                <Loader2 className="h-10 w-10 mx-auto text-primary animate-spin" />
+                <p className="text-secondary">
                   {recording.transcription_status === 'pending'
                     ? 'Transcription queued...'
                     : 'Transcribing audio...'}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted">
                   This may take a few minutes depending on the recording length.
                 </p>
               </div>
@@ -255,10 +255,10 @@ export function TranscriptionViewer({
             {/* Failed */}
             {recording.transcription_status === 'failed' && (
               <div className="text-center py-6 space-y-3">
-                <AlertCircle className="h-10 w-10 mx-auto text-red-500" />
-                <p className="text-red-600">Transcription failed</p>
+                <AlertCircle className="h-10 w-10 mx-auto text-error" />
+                <p className="text-error">Transcription failed</p>
                 {recording.processing_error && (
-                  <p className="text-sm text-gray-500">{recording.processing_error}</p>
+                  <p className="text-sm text-muted">{recording.processing_error}</p>
                 )}
                 <Button
                   variant="outline"
@@ -282,7 +282,7 @@ export function TranscriptionViewer({
                 {/* Search and Actions */}
                 <div className="flex items-center gap-2">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       placeholder="Search transcript..."
                       value={searchQuery}
@@ -297,7 +297,7 @@ export function TranscriptionViewer({
                     className="gap-1"
                   >
                     {copied ? (
-                      <Check className="h-4 w-4 text-green-600" />
+                      <Check className="h-4 w-4 text-success" />
                     ) : (
                       <Copy className="h-4 w-4" />
                     )}
@@ -309,11 +309,11 @@ export function TranscriptionViewer({
 
                 {/* Auto-scroll toggle */}
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-500">
+                  <span className="text-muted">
                     {filteredSegments.length} segment{filteredSegments.length !== 1 ? 's' : ''}
                     {searchQuery && ` matching "${searchQuery}"`}
                   </span>
-                  <label className="flex items-center gap-2 text-gray-600 cursor-pointer">
+                  <label className="flex items-center gap-2 text-secondary cursor-pointer">
                     <input
                       type="checkbox"
                       checked={autoScroll}
@@ -327,7 +327,7 @@ export function TranscriptionViewer({
                 {/* Segments List */}
                 {isLoadingSegments ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+                    <Loader2 className="h-6 w-6 animate-spin text-disabled" />
                   </div>
                 ) : filteredSegments.length > 0 ? (
                   <ScrollArea className="h-80" ref={scrollContainerRef}>
@@ -346,15 +346,15 @@ export function TranscriptionViewer({
                             className={`group flex gap-3 p-2 rounded-lg transition-colors cursor-pointer ${
                               isActive
                                 ? 'bg-blue-50 border border-blue-200'
-                                : 'hover:bg-gray-50'
+                                : 'hover:bg-surface'
                             }`}
                             onClick={() => onSeekToTime?.(segment.start_time_ms)}
                           >
                             {/* Timestamp */}
                             <button
                               className={`flex items-center gap-1 text-xs font-mono whitespace-nowrap ${
-                                isActive ? 'text-blue-600' : 'text-gray-500'
-                              } hover:text-blue-600 transition-colors`}
+                                isActive ? 'text-primary' : 'text-muted'
+                              } hover:text-primary transition-colors`}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 onSeekToTime?.(segment.start_time_ms);
@@ -367,7 +367,7 @@ export function TranscriptionViewer({
                             {/* Text */}
                             <p
                               className={`flex-1 text-sm ${
-                                isActive ? 'text-gray-900' : 'text-gray-700'
+                                isActive ? 'text-foreground' : 'text-secondary'
                               }`}
                             >
                               {highlightText(segment.text, searchQuery)}
@@ -385,13 +385,13 @@ export function TranscriptionViewer({
                     </div>
                   </ScrollArea>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-muted">
                     {searchQuery ? (
                       <p>No segments matching "{searchQuery}"</p>
                     ) : recording.transcription_text ? (
                       // Show full text if no segments available
                       <div className="text-left">
-                        <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                        <p className="text-sm text-secondary whitespace-pre-wrap">
                           {recording.transcription_text}
                         </p>
                       </div>
@@ -403,7 +403,7 @@ export function TranscriptionViewer({
 
                 {/* Cost Info */}
                 {recording.transcription_cost_cents && (
-                  <p className="text-xs text-gray-400 text-center">
+                  <p className="text-xs text-disabled text-center">
                     Transcription cost: ${(recording.transcription_cost_cents / 100).toFixed(3)}
                   </p>
                 )}

@@ -84,7 +84,7 @@ function getNotificationIcon(type: string): React.ReactNode {
 
     case 'safety_incident':
     case 'incident_reported':
-      return <Shield className={cn(iconClass, 'text-red-500')} />
+      return <Shield className={cn(iconClass, 'text-error')} />
 
     case 'payment_approved':
     case 'payment_application':
@@ -103,7 +103,7 @@ function getNotificationIcon(type: string): React.ReactNode {
 
     case 'notice_response_due':
     case 'notice_overdue':
-      return <AlertCircle className={cn(iconClass, 'text-yellow-500')} />
+      return <AlertCircle className={cn(iconClass, 'text-warning')} />
 
     default:
       return <Bell className={iconClass} />
@@ -115,15 +115,15 @@ function getNotificationIcon(type: string): React.ReactNode {
  */
 function getNotificationBgColor(notification: Notification): string {
   if (notification.priority === 'high') {
-    return 'bg-red-50 hover:bg-red-100'
+    return 'bg-error-light hover:bg-error-light'
   }
 
   if (notification.type === 'safety_incident' || notification.type === 'incident_reported') {
-    return 'bg-red-50 hover:bg-red-100'
+    return 'bg-error-light hover:bg-error-light'
   }
 
   if (notification.type === 'notice_overdue') {
-    return 'bg-yellow-50 hover:bg-yellow-100'
+    return 'bg-warning-light hover:bg-warning-light'
   }
 
   return 'hover:bg-muted/50'
@@ -291,7 +291,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
             <Bell className="h-5 w-5" />
-            <h3 className="font-semibold">Notifications</h3>
+            <h3 className="font-semibold heading-subsection">Notifications</h3>
             {unreadCount > 0 && (
               <Badge variant="secondary" className="ml-1">
                 {unreadCount} new

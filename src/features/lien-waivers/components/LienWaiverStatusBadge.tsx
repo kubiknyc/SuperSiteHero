@@ -12,11 +12,11 @@ interface LienWaiverStatusBadgeProps {
 }
 
 const statusColorMap: Record<string, string> = {
-  gray: 'bg-gray-100 text-gray-700 border-gray-200',
-  blue: 'bg-blue-100 text-blue-700 border-blue-200',
-  yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  green: 'bg-green-100 text-green-700 border-green-200',
-  red: 'bg-red-100 text-red-700 border-red-200',
+  gray: 'bg-muted text-secondary border-border',
+  blue: 'bg-info-light text-primary-hover border-blue-200',
+  yellow: 'bg-warning-light text-yellow-700 border-yellow-200',
+  green: 'bg-success-light text-success-dark border-green-200',
+  red: 'bg-error-light text-error-dark border-red-200',
   orange: 'bg-orange-100 text-orange-700 border-orange-200',
 };
 

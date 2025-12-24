@@ -260,8 +260,8 @@ function DocumentLibraryPage() {
             className={cn(
               'w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors',
               isSelected
-                ? 'bg-blue-100 text-blue-900 font-medium'
-                : 'text-gray-700 hover:bg-gray-100',
+                ? 'bg-info-light text-blue-900 font-medium'
+                : 'text-secondary hover:bg-muted',
             )}
             style={{ paddingLeft: `${12 + level * 16}px` }}
           >
@@ -298,11 +298,11 @@ function DocumentLibraryPage() {
     <AppLayout>
       <div className="h-screen flex flex-col">
         {/* Header */}
-        <div className="border-b bg-white px-6 py-4">
+        <div className="border-b bg-card px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Document Library</h1>
-              <p className="text-sm text-gray-600 mt-1">
+              <h1 className="text-2xl font-bold text-foreground" className="heading-page">Document Library</h1>
+              <p className="text-sm text-secondary mt-1">
                 Manage drawings, specifications, and project documents
               </p>
             </div>
@@ -349,10 +349,10 @@ function DocumentLibraryPage() {
             <Card className="max-w-md mx-auto">
               <CardContent className="p-12 text-center">
                 <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                   Select a Project
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-secondary">
                   Please select a project from the dropdown above to view documents.
                 </p>
               </CardContent>
@@ -363,13 +363,13 @@ function DocumentLibraryPage() {
             {/* Left Sidebar - Folder Navigation */}
             <aside
               className={cn(
-                'w-64 border-r bg-white overflow-y-auto transition-all lg:block',
+                'w-64 border-r bg-card overflow-y-auto transition-all lg:block',
                 sidebarOpen ? 'block' : 'hidden'
               )}
             >
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-gray-900">Folders</h3>
+                  <h3 className="font-semibold text-foreground" className="heading-subsection">Folders</h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -386,8 +386,8 @@ function DocumentLibraryPage() {
                   className={cn(
                     'w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition-colors',
                     currentFolderId === null
-                      ? 'bg-blue-100 text-blue-900 font-medium'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      ? 'bg-info-light text-blue-900 font-medium'
+                      : 'text-secondary hover:bg-muted'
                   )}
                 >
                   <FileText className="w-4 h-4" />
@@ -397,12 +397,12 @@ function DocumentLibraryPage() {
                 {/* Folder Tree */}
                 {foldersLoading ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                    <Loader2 className="w-6 h-6 animate-spin text-disabled" />
                   </div>
                 ) : folderTree.length > 0 ? (
                   renderFolderTree(folderTree)
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">
+                  <p className="text-sm text-muted text-center py-4">
                     No folders yet
                   </p>
                 )}
@@ -413,10 +413,10 @@ function DocumentLibraryPage() {
             <div className="flex-1 overflow-y-auto">
               <div className="p-6 space-y-6">
                 {/* Breadcrumb */}
-                <div className="flex items-center gap-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 text-sm text-secondary">
                   <button
                     onClick={() => handleFolderClick(null)}
-                    className="hover:text-gray-900 transition-colors"
+                    className="hover:text-foreground transition-colors"
                   >
                     All Documents
                   </button>
@@ -426,8 +426,8 @@ function DocumentLibraryPage() {
                       <button
                         onClick={() => handleFolderClick(folder.id)}
                         className={cn(
-                          'hover:text-gray-900 transition-colors',
-                          index === breadcrumbPath.length - 1 && 'text-gray-900 font-medium'
+                          'hover:text-foreground transition-colors',
+                          index === breadcrumbPath.length - 1 && 'text-foreground font-medium'
                         )}
                       >
                         {folder.name}
@@ -540,17 +540,17 @@ function DocumentLibraryPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {documentsLoading ? (
                       <div className="col-span-full flex items-center justify-center py-12">
-                        <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                        <Loader2 className="w-8 h-8 animate-spin text-disabled" />
                       </div>
                     ) : filteredDocuments.length === 0 ? (
                       <div className="col-span-full">
                         <Card>
                           <CardContent className="p-12 text-center">
                             <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                            <h3 className="text-lg font-medium text-gray-900 mb-2">
+                            <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                               No documents found
                             </h3>
-                            <p className="text-gray-500">
+                            <p className="text-muted">
                               Upload your first document to get started.
                             </p>
                           </CardContent>
@@ -567,13 +567,13 @@ function DocumentLibraryPage() {
                             <div className="flex flex-col items-center text-center">
                               <DocumentTypeIcon
                                 type={doc.document_type}
-                                className="w-12 h-12 mb-3 text-blue-500"
+                                className="w-12 h-12 mb-3 text-primary"
                               />
-                              <h4 className="font-medium text-gray-900 text-sm mb-2 line-clamp-2">
+                              <h4 className="font-medium text-foreground text-sm mb-2 line-clamp-2" className="heading-card">
                                 {doc.name}
                               </h4>
                               <DocumentStatusBadge status={doc.status ?? 'draft'} className="text-xs" />
-                              <p className="text-xs text-gray-500 mt-2">
+                              <p className="text-xs text-muted mt-2">
                                 v{doc.version}
                               </p>
                             </div>
@@ -612,7 +612,7 @@ function DocumentLibraryPage() {
               autoFocus
             />
             {currentFolderId && (
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-muted mt-2">
                 Parent folder: {breadcrumbPath[breadcrumbPath.length - 1]?.name || 'Root'}
               </p>
             )}
@@ -647,14 +647,14 @@ function DocumentLibraryPage() {
           </DialogHeader>
 
           <div className="py-4">
-            <p className="text-gray-600">
+            <p className="text-secondary">
               Are you sure you want to delete{' '}
-              <span className="font-semibold text-gray-900">
+              <span className="font-semibold text-foreground">
                 {documentToDelete?.name}
               </span>
               ?
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-muted mt-2">
               This action cannot be undone.
             </p>
           </div>

@@ -485,7 +485,7 @@ export function GanttTaskBar({
       {/* Overdue indicator */}
       {isOverdue && !isDragging && (
         <g transform={`translate(${position.x - 16}, ${position.y + barHeight / 2 - 6})`}>
-          <AlertTriangle className="text-red-500" width={12} height={12} />
+          <AlertTriangle className="text-error" width={12} height={12} />
         </g>
       )}
 

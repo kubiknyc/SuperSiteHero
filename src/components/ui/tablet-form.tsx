@@ -153,14 +153,14 @@ const TabletFormField = React.forwardRef<HTMLDivElement, TabletFormFieldProps>(
           <Label
             htmlFor={htmlFor}
             className={cn(
-              'text-gray-700 dark:text-gray-300',
+              'text-secondary dark:text-gray-300',
               isTablet ? 'text-base font-medium' : 'text-sm font-medium',
               effectiveLabelPosition === 'top' && 'block mb-2',
               effectiveLabelPosition === 'left' && [
                 'flex-shrink-0',
                 isTablet ? 'w-32 pt-3' : 'w-28 pt-2.5',
               ],
-              required && "after:content-['*'] after:ml-0.5 after:text-red-500"
+              required && "after:content-['*'] after:ml-0.5 after:text-error"
             )}
           >
             {label}
@@ -175,7 +175,7 @@ const TabletFormField = React.forwardRef<HTMLDivElement, TabletFormFieldProps>(
               className={cn(
                 'mt-1.5',
                 isTablet ? 'text-sm' : 'text-xs',
-                error ? 'text-red-500' : 'text-gray-500 dark:text-gray-400'
+                error ? 'text-error' : 'text-muted dark:text-disabled'
               )}
             >
               {error || helperText}
@@ -217,7 +217,7 @@ const TabletFormSection = React.forwardRef<HTMLDivElement, TabletFormSectionProp
             {title && (
               <h3
                 className={cn(
-                  'font-semibold text-gray-900 dark:text-gray-100',
+                  'font-semibold text-foreground dark:text-gray-100',
                   isTablet ? 'text-lg' : 'text-base'
                 )}
               >
@@ -227,7 +227,7 @@ const TabletFormSection = React.forwardRef<HTMLDivElement, TabletFormSectionProp
             {description && (
               <p
                 className={cn(
-                  'text-gray-600 dark:text-gray-400 mt-1',
+                  'text-secondary dark:text-disabled mt-1',
                   isTablet ? 'text-base' : 'text-sm'
                 )}
               >
@@ -319,8 +319,8 @@ const TabletFormActions = React.forwardRef<HTMLDivElement, TabletFormActionsProp
           alignClass,
           sticky && [
             'sticky bottom-0',
-            'bg-white dark:bg-gray-900',
-            'border-t border-gray-200 dark:border-gray-800',
+            'bg-card dark:bg-background',
+            'border-t border-border dark:border-border',
             'py-4 -mx-4 px-4 mt-4',
             isTablet && 'py-5 -mx-5 px-5 mt-5',
           ],
@@ -404,7 +404,7 @@ const TabletInput = React.forwardRef<HTMLInputElement, TabletInputProps>(
         {startIcon && (
           <div
             className={cn(
-              'absolute left-3 top-1/2 -translate-y-1/2 text-gray-400',
+              'absolute left-3 top-1/2 -translate-y-1/2 text-disabled',
               sizeClasses.icon
             )}
           >
@@ -418,10 +418,10 @@ const TabletInput = React.forwardRef<HTMLInputElement, TabletInputProps>(
           value={currentValue}
           onChange={handleChange}
           className={cn(
-            'w-full rounded-lg border border-gray-300 dark:border-gray-700',
-            'bg-white dark:bg-gray-900',
-            'text-gray-900 dark:text-gray-100',
-            'placeholder:text-gray-400 dark:placeholder:text-gray-500',
+            'w-full rounded-lg border border-input dark:border-gray-700',
+            'bg-card dark:bg-background',
+            'text-foreground dark:text-gray-100',
+            'placeholder:text-disabled dark:placeholder:text-muted',
             'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             sizeClasses.input,
@@ -447,7 +447,7 @@ const TabletInput = React.forwardRef<HTMLInputElement, TabletInputProps>(
                 type="button"
                 onClick={handleClear}
                 className={cn(
-                  'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300',
+                  'text-disabled hover:text-secondary dark:hover:text-gray-300',
                   'focus:outline-none',
                   isTouchDevice && 'min-w-[44px] min-h-[44px] flex items-center justify-center -mr-3'
                 )}
@@ -468,7 +468,7 @@ const TabletInput = React.forwardRef<HTMLInputElement, TabletInputProps>(
                 </svg>
               </button>
             ) : (
-              <span className="text-gray-400">{endIcon}</span>
+              <span className="text-disabled">{endIcon}</span>
             )}
           </div>
         ) : null}

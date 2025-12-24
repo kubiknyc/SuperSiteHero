@@ -61,17 +61,17 @@ function StatusBadge({ status }: { status: ComplianceDocumentStatus }) {
 function DocumentTypeIcon({ type }: { type: string }) {
   switch (type) {
     case 'insurance_certificate':
-      return <Shield className="h-5 w-5 text-blue-500" />
+      return <Shield className="h-5 w-5 text-primary" />
     case 'license':
       return <FileText className="h-5 w-5 text-purple-500" />
     case 'w9':
-      return <FileText className="h-5 w-5 text-green-500" />
+      return <FileText className="h-5 w-5 text-success" />
     case 'bond':
-      return <DollarSign className="h-5 w-5 text-amber-500" />
+      return <DollarSign className="h-5 w-5 text-warning" />
     case 'safety_cert':
       return <Shield className="h-5 w-5 text-orange-500" />
     default:
-      return <FileText className="h-5 w-5 text-gray-500" />
+      return <FileText className="h-5 w-5 text-muted" />
   }
 }
 
@@ -151,7 +151,7 @@ export function ComplianceDocumentCard({ document, className }: ComplianceDocume
 
         {/* Rejection Notes */}
         {document.status === 'rejected' && document.rejection_notes && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+          <div className="p-3 bg-error-light border border-red-200 rounded-md">
             <p className="text-sm text-red-800">
               <strong>Rejection Reason:</strong> {document.rejection_notes}
             </p>

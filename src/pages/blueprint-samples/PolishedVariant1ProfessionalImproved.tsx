@@ -624,7 +624,7 @@ export default function PolishedVariant1ProfessionalImproved() {
                         lineHeight: '1.5',
                         fontWeight: '500'
                       }}>
-                        <strong style={{ fontWeight: '600' }}>{activity.user}</strong>{' '}
+                        <strong className="font-semibold">{activity.user}</strong>{' '}
                         <span style={{ color: '#64748B', fontWeight: '400' }}>{activity.action}</span>
                       </p>
                       <div style={{

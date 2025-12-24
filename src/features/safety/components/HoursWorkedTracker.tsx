@@ -231,7 +231,7 @@ function HoursEntryDialog({
 
         <div className="space-y-4 py-4">
           {error && (
-            <div className="p-3 bg-red-50 text-red-700 rounded-lg flex items-center gap-2 text-sm">
+            <div className="p-3 bg-error-light text-error-dark rounded-lg flex items-center gap-2 text-sm">
               <AlertCircle className="h-4 w-4" />
               {error}
             </div>
@@ -316,7 +316,7 @@ function HoursEntryDialog({
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label className="text-sm text-gray-600">Regular Hours (optional)</Label>
+                <Label className="text-sm text-secondary">Regular Hours (optional)</Label>
                 <Input
                   type="number"
                   value={regularHours}
@@ -328,7 +328,7 @@ function HoursEntryDialog({
               </div>
 
               <div>
-                <Label className="text-sm text-gray-600">Overtime Hours (optional)</Label>
+                <Label className="text-sm text-secondary">Overtime Hours (optional)</Label>
                 <Input
                   type="number"
                   value={overtimeHours}
@@ -352,7 +352,7 @@ function HoursEntryDialog({
               className="mt-1"
             />
             {averageEmployees && (
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-muted">
                 Estimated hours: {formatHours(estimatedHours)} (based on 2,000 hrs/employee/year)
               </p>
             )}
@@ -422,10 +422,10 @@ function HoursRecordCard({ record, onEdit, onDelete }: HoursRecordCardProps) {
   }
 
   return (
-    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+    <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-surface">
       <div className="flex items-center gap-4">
-        <div className="p-2 bg-blue-100 rounded-lg">
-          <Clock className="h-5 w-5 text-blue-600" />
+        <div className="p-2 bg-info-light rounded-lg">
+          <Clock className="h-5 w-5 text-primary" />
         </div>
 
         <div>
@@ -438,8 +438,8 @@ function HoursRecordCard({ record, onEdit, onDelete }: HoursRecordCardProps) {
               {record.source}
             </Badge>
           </div>
-          <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
-            <span className="font-medium text-gray-900">
+          <div className="flex items-center gap-4 mt-1 text-sm text-muted">
+            <span className="font-medium text-foreground">
               {formatHours(record.total_hours)} hours
             </span>
             {record.average_employees && (
@@ -464,7 +464,7 @@ function HoursRecordCard({ record, onEdit, onDelete }: HoursRecordCardProps) {
           size="sm"
           onClick={handleDelete}
           disabled={deleteHours.isPending}
-          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="text-error hover:text-error-dark hover:bg-error-light"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -524,7 +524,7 @@ export function HoursWorkedTracker({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-blue-600" />
+              <Clock className="h-5 w-5 text-primary" />
               Hours Worked Tracker
             </CardTitle>
             <CardDescription>
@@ -542,26 +542,26 @@ export function HoursWorkedTracker({
         {/* Summary */}
         <div className="grid grid-cols-3 gap-4">
           <div className="p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-gray-600">Total Hours ({year})</p>
-            <p className="text-2xl font-bold text-blue-700">{formatHours(totalHours)}</p>
+            <p className="text-sm text-secondary">Total Hours ({year})</p>
+            <p className="text-2xl font-bold text-primary-hover">{formatHours(totalHours)}</p>
           </div>
-          <div className="p-4 bg-green-50 rounded-lg">
-            <p className="text-sm text-gray-600">Avg Employees</p>
-            <p className="text-2xl font-bold text-green-700">{avgEmployees || 'N/A'}</p>
+          <div className="p-4 bg-success-light rounded-lg">
+            <p className="text-sm text-secondary">Avg Employees</p>
+            <p className="text-2xl font-bold text-success-dark">{avgEmployees || 'N/A'}</p>
           </div>
           <div className="p-4 bg-purple-50 rounded-lg">
-            <p className="text-sm text-gray-600">Records</p>
+            <p className="text-sm text-secondary">Records</p>
             <p className="text-2xl font-bold text-purple-700">{hoursRecords?.length || 0}</p>
           </div>
         </div>
 
         {/* Records List */}
         {isLoading ? (
-          <div className="text-center py-8 text-gray-500">Loading hours records...</div>
+          <div className="text-center py-8 text-muted">Loading hours records...</div>
         ) : !hoursRecords || hoursRecords.length === 0 ? (
           <div className="text-center py-8 border-2 border-dashed rounded-lg">
             <Clock className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 mb-4">No hours records for {year}</p>
+            <p className="text-muted mb-4">No hours records for {year}</p>
             <Button variant="outline" onClick={handleAdd}>
               <Plus className="h-4 w-4 mr-1" />
               Add First Record
@@ -581,8 +581,8 @@ export function HoursWorkedTracker({
         )}
       </CardContent>
 
-      <CardFooter className="bg-gray-50 border-t">
-        <div className="flex items-center gap-2 text-xs text-gray-500">
+      <CardFooter className="bg-surface border-t">
+        <div className="flex items-center gap-2 text-xs text-muted">
           <Calculator className="h-4 w-4" />
           <span>
             Hours worked are used to calculate TRIR, DART, and other OSHA safety rates.

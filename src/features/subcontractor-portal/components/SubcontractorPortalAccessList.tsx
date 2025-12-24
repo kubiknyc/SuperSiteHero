@@ -165,7 +165,7 @@ export function SubcontractorPortalAccessList({ projectId }: SubcontractorPortal
                   <TableCell>
                     {access.is_active ? (
                       access.accepted_at ? (
-                        <Badge variant="default" className="bg-green-100 text-green-800 hover:bg-green-100">
+                        <Badge variant="default" className="bg-success-light text-green-800 hover:bg-success-light">
                           <UserCheck className="mr-1 h-3 w-3" />
                           Active
                         </Badge>
@@ -176,7 +176,7 @@ export function SubcontractorPortalAccessList({ projectId }: SubcontractorPortal
                         </Badge>
                       )
                     ) : (
-                      <Badge variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-100">
+                      <Badge variant="secondary" className="bg-muted text-secondary hover:bg-muted">
                         <UserX className="mr-1 h-3 w-3" />
                         Revoked
                       </Badge>

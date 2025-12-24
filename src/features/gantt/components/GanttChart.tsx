@@ -392,7 +392,7 @@ export function GanttChart({
 
   return (
     <div className={cn(
-      "flex flex-col h-full bg-white rounded-lg shadow overflow-hidden",
+      "flex flex-col h-full bg-card rounded-lg shadow overflow-hidden",
       // Better touch handling on tablets
       isTouchDevice && "touch-manipulation"
     )}>
@@ -446,15 +446,15 @@ export function GanttChart({
             <button
               onClick={toggleSidebar}
               className={cn(
-                "flex-shrink-0 bg-gray-100 border-r flex items-center justify-center",
-                "hover:bg-gray-200 transition-colors",
+                "flex-shrink-0 bg-muted border-r flex items-center justify-center",
+                "hover:bg-muted transition-colors",
                 isTouchDevice ? "w-12 min-w-touch" : "w-8"
               )}
               title="Show task list"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-gray-600"
+                className="h-5 w-5 text-secondary"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -467,7 +467,7 @@ export function GanttChart({
           {/* Sidebar with task names - collapsible on tablets */}
           <div
             className={cn(
-              "flex-shrink-0 bg-gray-50 border-r sticky left-0 z-10 transition-all duration-300",
+              "flex-shrink-0 bg-surface border-r sticky left-0 z-10 transition-all duration-300",
               isSidebarCollapsed && "w-0 overflow-hidden"
             )}
             style={{ width: isSidebarCollapsed ? 0 : config.sidebar_width }}
@@ -476,22 +476,22 @@ export function GanttChart({
             {!isSidebarCollapsed && (isTablet || layout === 'mobile') && (
               <div
                 className={cn(
-                  "flex items-center justify-between px-3 py-2 bg-gray-100 border-b",
+                  "flex items-center justify-between px-3 py-2 bg-muted border-b",
                   isTouchDevice && "min-h-touch"
                 )}
               >
-                <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Tasks</span>
+                <span className="text-xs font-medium text-secondary uppercase tracking-wide">Tasks</span>
                 <button
                   onClick={toggleSidebar}
                   className={cn(
-                    "p-1 rounded hover:bg-gray-200 transition-colors",
+                    "p-1 rounded hover:bg-muted transition-colors",
                     isTouchDevice && "min-w-touch min-h-touch flex items-center justify-center"
                   )}
                   title="Hide task list"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4 text-gray-600"
+                    className="h-4 w-4 text-secondary"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -508,9 +508,9 @@ export function GanttChart({
                   key={task.id}
                   className={cn(
                     "flex items-center px-4 border-b cursor-pointer",
-                    "hover:bg-gray-100 transition-colors",
+                    "hover:bg-muted transition-colors",
                     hoveredTask?.id === task.id && "bg-blue-50",
-                    draggedTaskId === task.id && "bg-yellow-50",
+                    draggedTaskId === task.id && "bg-warning-light",
                     // Larger padding on touch devices
                     isTouchDevice && "px-3"
                   )}
@@ -525,23 +525,23 @@ export function GanttChart({
                         <span className="text-violet-500">◆</span>
                       )}
                       {task.is_critical && showCriticalPath && (
-                        <span className="text-red-500 text-xs">●</span>
+                        <span className="text-error text-xs">●</span>
                       )}
                       <span
                         className={`text-sm font-medium truncate ${
-                          task.percent_complete === 100 ? 'text-gray-400 line-through' : 'text-gray-700'
+                          task.percent_complete === 100 ? 'text-disabled line-through' : 'text-secondary'
                         }`}
                       >
                         {task.task_name}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2 text-xs text-muted">
                       <span>
                         {format(new Date(task.start_date), 'MMM d')} -{' '}
                         {format(new Date(task.finish_date), 'MMM d')}
                       </span>
                       {floatInfo && floatInfo.totalFloat > 0 && (
-                        <span className="text-blue-500" title="Total Float">
+                        <span className="text-primary" title="Total Float">
                           +{floatInfo.totalFloat}d
                         </span>
                       )}
@@ -557,10 +557,10 @@ export function GanttChart({
                     <span
                       className={`text-xs font-medium ${
                         task.percent_complete === 100
-                          ? 'text-green-600'
+                          ? 'text-success'
                           : task.percent_complete > 0
-                          ? 'text-blue-600'
-                          : 'text-gray-400'
+                          ? 'text-primary'
+                          : 'text-disabled'
                       }`}
                     >
                       {task.percent_complete}%
@@ -572,7 +572,7 @@ export function GanttChart({
 
             {/* Empty state in sidebar */}
             {visibleItems.length === 0 && (
-              <div className="flex items-center justify-center h-32 text-gray-500 text-sm">
+              <div className="flex items-center justify-center h-32 text-muted text-sm">
                 No tasks to display
               </div>
             )}
@@ -647,11 +647,11 @@ export function GanttChart({
             {visibleItems.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <div className="text-gray-400 text-6xl mb-4">📅</div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
+                  <div className="text-disabled text-6xl mb-4">📅</div>
+                  <h3 className="text-lg font-medium text-secondary mb-2" className="heading-subsection">
                     No schedule items yet
                   </h3>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     Add tasks to your project schedule or import from MS Project.
                   </p>
                 </div>
@@ -663,9 +663,9 @@ export function GanttChart({
 
       {/* Hover tooltip */}
       {hoveredTask && !isDragging && (
-        <div className="absolute bottom-4 right-4 bg-white rounded-lg shadow-lg border p-3 max-w-xs z-50">
-          <h4 className="font-medium text-gray-900">{hoveredTask.task_name}</h4>
-          <div className="mt-1 text-sm text-gray-600 space-y-1">
+        <div className="absolute bottom-4 right-4 bg-card rounded-lg shadow-lg border p-3 max-w-xs z-50">
+          <h4 className="font-medium text-foreground" className="heading-card">{hoveredTask.task_name}</h4>
+          <div className="mt-1 text-sm text-secondary space-y-1">
             <p>
               <span className="font-medium">Dates:</span>{' '}
               {format(new Date(hoveredTask.start_date), 'MMM d')} -{' '}
@@ -699,10 +699,10 @@ export function GanttChart({
               return null
             })()}
             {hoveredTask.is_critical && (
-              <p className="text-red-600 font-medium">⚠️ Critical Path</p>
+              <p className="text-error font-medium">⚠️ Critical Path</p>
             )}
             {hoveredTask.baseline_start_date && (
-              <p className="text-gray-500 text-xs mt-2 pt-2 border-t">
+              <p className="text-muted text-xs mt-2 pt-2 border-t">
                 Baseline: {format(new Date(hoveredTask.baseline_start_date), 'MMM d')} -{' '}
                 {format(new Date(hoveredTask.baseline_finish_date!), 'MMM d')}
               </p>

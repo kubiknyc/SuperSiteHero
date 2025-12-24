@@ -106,7 +106,7 @@ export function WorkflowItemAssigneesPanel({
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-6">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+            <Loader2 className="h-6 w-6 animate-spin text-disabled" />
           </div>
         </CardContent>
       </Card>
@@ -120,7 +120,7 @@ export function WorkflowItemAssigneesPanel({
           <Users className="h-4 w-4" />
           Assignees
           {assignedUsers.length > 0 && (
-            <span className="text-sm font-normal text-gray-500">
+            <span className="text-sm font-normal text-muted">
               ({assignedUsers.length})
             </span>
           )}
@@ -141,23 +141,23 @@ export function WorkflowItemAssigneesPanel({
         {isEditing ? (
           // Edit Mode - Show all project users as checkboxes
           <div className="space-y-3">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-secondary">
               Select users to assign to this item:
             </p>
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {projectUsers?.map((pu) => (
                 <label
                   key={pu.user_id}
-                  className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-50 cursor-pointer"
+                  className="flex items-center gap-3 p-2 rounded-md hover:bg-surface cursor-pointer"
                 >
                   <input
                     type="checkbox"
                     checked={selectedUserIds.includes(pu.user_id)}
                     onChange={() => handleToggleUser(pu.user_id)}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="h-4 w-4 rounded border-input text-primary focus:ring-blue-500"
                   />
                   <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-medium">
+                    <div className="h-7 w-7 rounded-full bg-info-light text-primary-hover flex items-center justify-center text-xs font-medium">
                       {getInitials(getUserDisplayName(pu.user))}
                     </div>
                     <div>
@@ -165,7 +165,7 @@ export function WorkflowItemAssigneesPanel({
                         {getUserDisplayName(pu.user)}
                       </p>
                       {pu.project_role && (
-                        <p className="text-xs text-gray-500 capitalize">
+                        <p className="text-xs text-muted capitalize">
                           {pu.project_role.replace(/_/g, ' ')}
                         </p>
                       )}
@@ -174,7 +174,7 @@ export function WorkflowItemAssigneesPanel({
                 </label>
               ))}
               {(!projectUsers || projectUsers.length === 0) && (
-                <p className="text-sm text-gray-500 text-center py-2">
+                <p className="text-sm text-muted text-center py-2">
                   No users assigned to this project
                 </p>
               )}
@@ -211,10 +211,10 @@ export function WorkflowItemAssigneesPanel({
                 {assignedUsers.map((pu) => (
                   <div
                     key={pu.user_id}
-                    className="flex items-center justify-between gap-2 p-2 rounded-md bg-gray-50"
+                    className="flex items-center justify-between gap-2 p-2 rounded-md bg-surface"
                   >
                     <div className="flex items-center gap-2">
-                      <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-medium">
+                      <div className="h-8 w-8 rounded-full bg-info-light text-primary-hover flex items-center justify-center text-xs font-medium">
                         {getInitials(getUserDisplayName(pu.user))}
                       </div>
                       <div>
@@ -222,7 +222,7 @@ export function WorkflowItemAssigneesPanel({
                           {getUserDisplayName(pu.user)}
                         </p>
                         {pu.project_role && (
-                          <p className="text-xs text-gray-500 capitalize">
+                          <p className="text-xs text-muted capitalize">
                             {pu.project_role.replace(/_/g, ' ')}
                           </p>
                         )}
@@ -233,7 +233,7 @@ export function WorkflowItemAssigneesPanel({
                       size="sm"
                       onClick={() => handleRemoveAssignee(pu.user_id)}
                       disabled={updateAssignees.isPending}
-                      className="h-7 w-7 p-0 text-gray-400 hover:text-red-600 hover:bg-red-50"
+                      className="h-7 w-7 p-0 text-disabled hover:text-error hover:bg-error-light"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -241,7 +241,7 @@ export function WorkflowItemAssigneesPanel({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-4 text-gray-500">
+              <div className="text-center py-4 text-muted">
                 <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No assignees yet</p>
                 <p className="text-xs">Click "Manage" to add assignees</p>

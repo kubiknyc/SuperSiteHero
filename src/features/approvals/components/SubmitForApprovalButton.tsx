@@ -138,21 +138,21 @@ export function SubmitForApprovalButton({
 
           <div className="py-4">
             {workflowsLoading ? (
-              <div className="text-center py-4 text-gray-500">
+              <div className="text-center py-4 text-muted">
                 Loading workflows...
               </div>
             ) : !workflows || workflows.length === 0 ? (
               <div className="text-center py-4">
-                <p className="text-gray-500 mb-2">
+                <p className="text-muted mb-2">
                   No approval workflows available for {entityConfig.plural.toLowerCase()}.
                 </p>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-disabled">
                   Contact your administrator to set up approval workflows.
                 </p>
               </div>
             ) : (
               <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-secondary mb-2">
                   Select Workflow
                 </label>
                 {workflows.map((workflow) => (
@@ -205,24 +205,24 @@ function WorkflowOption({ workflow, selected, onSelect }: WorkflowOptionProps) {
         'w-full text-left p-3 rounded-lg border-2 transition-colors',
         selected
           ? 'border-blue-500 bg-blue-50'
-          : 'border-gray-200 hover:border-gray-300 bg-white'
+          : 'border-border hover:border-input bg-card'
       )}
     >
       <div className="flex items-start justify-between">
         <div>
-          <div className="font-medium text-gray-900">{workflow.name}</div>
+          <div className="font-medium text-foreground">{workflow.name}</div>
           {workflow.description && (
-            <div className="text-sm text-gray-500 mt-0.5">
+            <div className="text-sm text-muted mt-0.5">
               {workflow.description}
             </div>
           )}
-          <div className="text-xs text-gray-400 mt-1">
+          <div className="text-xs text-disabled mt-1">
             {stepCount} approval step{stepCount !== 1 ? 's' : ''}
           </div>
         </div>
         {selected && (
           <svg
-            className="w-5 h-5 text-blue-500 flex-shrink-0"
+            className="w-5 h-5 text-primary flex-shrink-0"
             fill="currentColor"
             viewBox="0 0 20 20"
           >

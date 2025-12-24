@@ -64,8 +64,8 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
 
   if (photos.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        <FileImage className="h-12 w-12 mx-auto mb-2 text-gray-400" />
+      <div className="text-center py-8 text-muted">
+        <FileImage className="h-12 w-12 mx-auto mb-2 text-disabled" />
         <p>No photos uploaded</p>
       </div>
     )
@@ -79,7 +79,7 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
           <div key={photo.id} className="group relative">
             {/* Photo Thumbnail */}
             <div
-              className="aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer relative"
+              className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer relative"
               onClick={() => setSelectedPhoto(photo)}
             >
               {photo.url || photo.thumbnailUrl ? (
@@ -100,7 +100,7 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
                 />
               ) : (
                 <div className="flex items-center justify-center h-full">
-                  <FileImage className="h-12 w-12 text-gray-400" />
+                  <FileImage className="h-12 w-12 text-disabled" />
                 </div>
               )}
 
@@ -110,9 +110,9 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
                   <span
                     className={`
                     px-2 py-1 text-xs font-medium rounded-full
-                    ${photo.uploadStatus === 'uploading' ? 'bg-blue-100 text-blue-700' : ''}
-                    ${photo.uploadStatus === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                    ${photo.uploadStatus === 'failed' ? 'bg-red-100 text-red-700' : ''}
+                    ${photo.uploadStatus === 'uploading' ? 'bg-info-light text-primary-hover' : ''}
+                    ${photo.uploadStatus === 'pending' ? 'bg-warning-light text-yellow-700' : ''}
+                    ${photo.uploadStatus === 'failed' ? 'bg-error-light text-error-dark' : ''}
                   `}
                   >
                     {photo.uploadStatus}
@@ -146,15 +146,15 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
                 </div>
                 <div className="flex items-center justify-between">
                   {captionError && (
-                    <span className="text-xs text-red-600">{captionError}</span>
+                    <span className="text-xs text-error">{captionError}</span>
                   )}
                   <span
                     className={`text-xs ml-auto ${
                       captionCount.isOverLimit
-                        ? 'text-red-600 font-semibold'
+                        ? 'text-error font-semibold'
                         : captionCount.isNearLimit
-                        ? 'text-yellow-600'
-                        : 'text-gray-500'
+                        ? 'text-warning'
+                        : 'text-muted'
                     }`}
                   >
                     {captionCount.count} / 300
@@ -164,14 +164,14 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
             ) : (
               <div className="mt-2">
                 {photo.caption ? (
-                  <p className="text-sm text-gray-700 line-clamp-2">{photo.caption}</p>
+                  <p className="text-sm text-secondary line-clamp-2">{photo.caption}</p>
                 ) : (
-                  <p className="text-sm text-gray-400 italic">No caption</p>
+                  <p className="text-sm text-disabled italic">No caption</p>
                 )}
                 {!readOnly && onUpdateCaption && (
                   <button
                     onClick={() => startEditCaption(photo)}
-                    className="text-xs text-blue-600 hover:text-blue-700 mt-1"
+                    className="text-xs text-primary hover:text-primary-hover mt-1"
                   >
                     <Edit2 className="h-3 w-3 inline mr-1" />
                     Edit caption
@@ -205,12 +205,12 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
           onClick={() => setSelectedPhoto(null)}
         >
           <div
-            className="max-w-6xl max-h-full bg-white rounded-lg overflow-hidden"
+            className="max-w-6xl max-h-full bg-card rounded-lg overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="p-4 border-b flex items-center justify-between">
-              <h3 className="font-semibold text-lg">{selectedPhoto.metadata.filename}</h3>
+              <h3 className="font-semibold text-lg" className="heading-subsection">{selectedPhoto.metadata.filename}</h3>
               <Button variant="ghost" size="sm" onClick={() => setSelectedPhoto(null)}>
                 <X className="h-5 w-5" />
               </Button>
@@ -226,45 +226,45 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
                 />
               ) : (
                 <div className="flex items-center justify-center h-64">
-                  <FileImage className="h-24 w-24 text-gray-400" />
+                  <FileImage className="h-24 w-24 text-disabled" />
                 </div>
               )}
             </div>
 
             {/* Metadata */}
-            <div className="p-4 border-t bg-gray-50 space-y-3">
+            <div className="p-4 border-t bg-surface space-y-3">
               {selectedPhoto.caption && (
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Caption</p>
-                  <p className="text-sm text-gray-900">{selectedPhoto.caption}</p>
+                  <p className="text-sm font-medium text-secondary">Caption</p>
+                  <p className="text-sm text-foreground">{selectedPhoto.caption}</p>
                 </div>
               )}
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
                 {selectedPhoto.metadata.capturedAt && (
                   <div>
-                    <p className="font-medium text-gray-600 flex items-center gap-1">
+                    <p className="font-medium text-secondary flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
                       Captured
                     </p>
-                    <p className="text-gray-900">
+                    <p className="text-foreground">
                       {format(new Date(selectedPhoto.metadata.capturedAt), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
                 )}
 
                 <div>
-                  <p className="font-medium text-gray-600 flex items-center gap-1">
+                  <p className="font-medium text-secondary flex items-center gap-1">
                     <FileImage className="h-4 w-4" />
                     File Size
                   </p>
-                  <p className="text-gray-900">{formatFileSize(selectedPhoto.metadata.size)}</p>
+                  <p className="text-foreground">{formatFileSize(selectedPhoto.metadata.size)}</p>
                 </div>
 
                 {selectedPhoto.metadata.width && selectedPhoto.metadata.height && (
                   <div>
-                    <p className="font-medium text-gray-600">Dimensions</p>
-                    <p className="text-gray-900">
+                    <p className="font-medium text-secondary">Dimensions</p>
+                    <p className="text-foreground">
                       {selectedPhoto.metadata.width} × {selectedPhoto.metadata.height}
                     </p>
                   </div>
@@ -272,17 +272,17 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
 
                 {selectedPhoto.metadata.gps && (
                   <div className="col-span-2 sm:col-span-3">
-                    <p className="font-medium text-gray-600 flex items-center gap-1">
+                    <p className="font-medium text-secondary flex items-center gap-1">
                       <MapPin className="h-4 w-4" />
                       Location
                     </p>
                     <div className="flex items-center gap-2">
-                      <p className="text-gray-900">{formatGPSCoordinates(selectedPhoto.metadata.gps)}</p>
+                      <p className="text-foreground">{formatGPSCoordinates(selectedPhoto.metadata.gps)}</p>
                       <a
                         href={getGoogleMapsURL(selectedPhoto.metadata.gps)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-700"
+                        className="text-primary hover:text-primary-hover"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
@@ -292,8 +292,8 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
 
                 {selectedPhoto.metadata.exif?.make && selectedPhoto.metadata.exif?.model && (
                   <div className="col-span-2 sm:col-span-3">
-                    <p className="font-medium text-gray-600">Camera</p>
-                    <p className="text-gray-900">
+                    <p className="font-medium text-secondary">Camera</p>
+                    <p className="text-foreground">
                       {selectedPhoto.metadata.exif.make} {selectedPhoto.metadata.exif.model}
                     </p>
                   </div>

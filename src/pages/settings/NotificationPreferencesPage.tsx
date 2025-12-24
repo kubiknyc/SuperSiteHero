@@ -139,7 +139,7 @@ export function NotificationPreferencesPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Notification Preferences</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">Notification Preferences</h1>
             <p className="text-muted-foreground">
               Manage how and when you receive notifications
             </p>
@@ -154,8 +154,8 @@ export function NotificationPreferencesPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-blue-100">
-                  <Mail className="w-5 h-5 text-blue-600" />
+                <div className="p-2 rounded-lg bg-info-light">
+                  <Mail className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <CardTitle>Email Notifications</CardTitle>
@@ -213,8 +213,8 @@ export function NotificationPreferencesPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-green-100">
-                <Bell className="w-5 h-5 text-green-600" />
+              <div className="p-2 rounded-lg bg-success-light">
+                <Bell className="w-5 h-5 text-success" />
               </div>
               <div>
                 <CardTitle>In-App Notifications</CardTitle>

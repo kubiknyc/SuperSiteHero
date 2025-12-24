@@ -207,7 +207,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
                     onChange={(e) => setApprovedAmount(e.target.value)}
                     placeholder={changeOrder.proposed_amount.toString()}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted mt-1">
                     Proposed: ${changeOrder.proposed_amount.toLocaleString()}
                   </p>
                 </div>
@@ -219,7 +219,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
                     onChange={(e) => setApprovedDays(e.target.value)}
                     placeholder={changeOrder.proposed_days.toString()}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted mt-1">
                     Proposed: {changeOrder.proposed_days} days
                   </p>
                 </div>
@@ -251,7 +251,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
             </Button>
             <Button
               variant="outline"
-              className="text-red-600 border-red-200 hover:bg-red-50"
+              className="text-error border-red-200 hover:bg-error-light"
               onClick={() => (isOwnerApproval ? handleOwnerApproval(false) : handleInternalApproval(false))}
               disabled={processInternalApproval.isPending || processOwnerApproval.isPending}
             >
@@ -259,7 +259,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
               Reject
             </Button>
             <Button
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-success hover:bg-green-700"
               onClick={() => (isOwnerApproval ? handleOwnerApproval(true) : handleInternalApproval(true))}
               disabled={processInternalApproval.isPending || processOwnerApproval.isPending}
             >
@@ -311,7 +311,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
             <div
               className={cn(
                 'p-4 rounded-lg mb-4 flex items-center gap-3',
-                isVoid ? 'bg-gray-100 text-gray-700' : 'bg-red-100 text-red-700'
+                isVoid ? 'bg-muted text-secondary' : 'bg-error-light text-error-dark'
               )}
             >
               {isVoid ? <Ban className="h-5 w-5" /> : <XCircle className="h-5 w-5" />}
@@ -339,10 +339,10 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
                       className={cn(
                         'w-10 h-10 rounded-full flex items-center justify-center transition-colors',
                         isCompleted
-                          ? 'bg-green-600 text-white'
+                          ? 'bg-success text-white'
                           : isCurrent
-                          ? 'bg-blue-600 text-white ring-4 ring-blue-100'
-                          : 'bg-gray-200 text-gray-500'
+                          ? 'bg-primary text-white ring-4 ring-blue-100'
+                          : 'bg-muted text-muted'
                       )}
                     >
                       {isCompleted ? <CheckCircle className="h-5 w-5" /> : <StepIcon className="h-5 w-5" />}
@@ -350,7 +350,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
                     <span
                       className={cn(
                         'text-xs mt-2 text-center font-medium',
-                        isActive ? 'text-blue-600' : 'text-gray-400'
+                        isActive ? 'text-primary' : 'text-disabled'
                       )}
                     >
                       {step.label}
@@ -361,7 +361,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
                       <div
                         className={cn(
                           'h-1 rounded',
-                          isCompleted ? 'bg-green-500' : isCurrent ? 'bg-blue-200' : 'bg-gray-200'
+                          isCompleted ? 'bg-green-500' : isCurrent ? 'bg-blue-200' : 'bg-muted'
                         )}
                       />
                     </div>
@@ -376,23 +376,23 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
             <div className="mt-4 pt-4 border-t flex gap-6 text-sm">
               {changeOrder.date_internal_approved && (
                 <div>
-                  <span className="text-gray-500">Internal Approved:</span>{' '}
+                  <span className="text-muted">Internal Approved:</span>{' '}
                   <span className="font-medium">
                     {format(new Date(changeOrder.date_internal_approved), 'MMM d, yyyy')}
                   </span>
                   {changeOrder.internal_approver_name && (
-                    <span className="text-gray-500"> by {changeOrder.internal_approver_name}</span>
+                    <span className="text-muted"> by {changeOrder.internal_approver_name}</span>
                   )}
                 </div>
               )}
               {changeOrder.date_owner_approved && (
                 <div>
-                  <span className="text-gray-500">Owner Approved:</span>{' '}
+                  <span className="text-muted">Owner Approved:</span>{' '}
                   <span className="font-medium">
                     {format(new Date(changeOrder.date_owner_approved), 'MMM d, yyyy')}
                   </span>
                   {changeOrder.owner_approver_name && (
-                    <span className="text-gray-500"> by {changeOrder.owner_approver_name}</span>
+                    <span className="text-muted"> by {changeOrder.owner_approver_name}</span>
                   )}
                 </div>
               )}
@@ -453,7 +453,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
               {changeOrder.status !== 'approved' && (
                 <Button
                   variant="outline"
-                  className="text-red-600 border-red-200 hover:bg-red-50"
+                  className="text-error border-red-200 hover:bg-error-light"
                   onClick={handleVoid}
                   disabled={voidChangeOrder.isPending}
                 >

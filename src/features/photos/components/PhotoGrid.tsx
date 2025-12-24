@@ -145,7 +145,7 @@ export function PhotoGrid({
                   'w-6 h-6 rounded-full flex items-center justify-center transition-colors',
                   isSelected
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-white/80 hover:bg-white'
+                    : 'bg-card/80 hover:bg-card'
                 )}
               >
                 {isSelected ? (
@@ -211,7 +211,7 @@ export function PhotoGrid({
                   <Button
                     variant="secondary"
                     size="icon"
-                    className="h-7 w-7 bg-white/80 hover:bg-white"
+                    className="h-7 w-7 bg-card/80 hover:bg-card"
                   >
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>

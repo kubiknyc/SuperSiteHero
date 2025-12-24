@@ -15,27 +15,27 @@ import type { SubmitClientApprovalInput } from '@/types/approval-workflow';
 // Loading skeleton component
 function LoadingSkeleton() {
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-muted py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm border animate-pulse">
+        <div className="bg-card rounded-lg shadow-sm border animate-pulse">
           <div className="p-6 border-b">
-            <div className="h-4 w-24 bg-gray-200 rounded mb-2" />
-            <div className="h-6 w-64 bg-gray-200 rounded mb-2" />
-            <div className="h-4 w-48 bg-gray-200 rounded" />
+            <div className="h-4 w-24 bg-muted rounded mb-2" />
+            <div className="h-6 w-64 bg-muted rounded mb-2" />
+            <div className="h-4 w-48 bg-muted rounded" />
           </div>
-          <div className="p-6 bg-gray-50">
-            <div className="h-4 w-20 bg-gray-200 rounded mb-4" />
+          <div className="p-6 bg-surface">
+            <div className="h-4 w-20 bg-muted rounded mb-4" />
             <div className="grid grid-cols-2 gap-4">
-              <div className="h-4 bg-gray-200 rounded" />
-              <div className="h-4 bg-gray-200 rounded" />
+              <div className="h-4 bg-muted rounded" />
+              <div className="h-4 bg-muted rounded" />
             </div>
           </div>
           <div className="p-6">
-            <div className="h-4 w-32 bg-gray-200 rounded mb-4" />
+            <div className="h-4 w-32 bg-muted rounded mb-4" />
             <div className="flex gap-4">
-              <div className="flex-1 h-24 bg-gray-200 rounded" />
-              <div className="flex-1 h-24 bg-gray-200 rounded" />
-              <div className="flex-1 h-24 bg-gray-200 rounded" />
+              <div className="flex-1 h-24 bg-muted rounded" />
+              <div className="flex-1 h-24 bg-muted rounded" />
+              <div className="flex-1 h-24 bg-muted rounded" />
             </div>
           </div>
         </div>
@@ -55,13 +55,13 @@ function ErrorPage({
   icon?: React.ElementType;
 }) {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-sm border p-8 text-center">
-        <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center mb-4">
-          <Icon className="w-8 h-8 text-red-600" />
+    <div className="min-h-screen bg-muted flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full bg-card rounded-lg shadow-sm border p-8 text-center">
+        <div className="w-16 h-16 mx-auto rounded-full bg-error-light flex items-center justify-center mb-4">
+          <Icon className="w-8 h-8 text-error" />
         </div>
-        <h1 className="text-xl font-semibold text-gray-900 mb-2">{title}</h1>
-        <p className="text-gray-600">{message}</p>
+        <h1 className="text-xl font-semibold text-foreground mb-2" className="heading-page">{title}</h1>
+        <p className="text-secondary">{message}</p>
       </div>
     </div>
   );
@@ -84,9 +84,9 @@ function SuccessPage({
   };
 
   const getColor = () => {
-    if (decision === 'approved') return 'bg-green-100 text-green-600';
-    if (decision === 'rejected') return 'bg-red-100 text-red-600';
-    return 'bg-yellow-100 text-yellow-600';
+    if (decision === 'approved') return 'bg-success-light text-success';
+    if (decision === 'rejected') return 'bg-error-light text-error';
+    return 'bg-warning-light text-warning';
   };
 
   const getMessage = () => {
@@ -98,22 +98,22 @@ function SuccessPage({
   const Icon = getIcon();
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-sm border p-8 text-center">
+    <div className="min-h-screen bg-muted flex items-center justify-center py-12 px-4">
+      <div className="max-w-md w-full bg-card rounded-lg shadow-sm border p-8 text-center">
         <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${getColor()}`}>
           <Icon className="w-8 h-8" />
         </div>
-        <h1 className="text-xl font-semibold text-gray-900 mb-2">
+        <h1 className="text-xl font-semibold text-foreground mb-2" className="heading-page">
           Response Submitted
         </h1>
-        <p className="text-gray-600 mb-4">{getMessage()}</p>
-        <div className="bg-gray-50 rounded-lg p-4 text-left text-sm">
-          <p className="text-gray-500">Project:</p>
-          <p className="font-medium text-gray-900">{projectName}</p>
-          <p className="text-gray-500 mt-2">Item:</p>
-          <p className="font-medium text-gray-900">{entityName}</p>
+        <p className="text-secondary mb-4">{getMessage()}</p>
+        <div className="bg-surface rounded-lg p-4 text-left text-sm">
+          <p className="text-muted">Project:</p>
+          <p className="font-medium text-foreground">{projectName}</p>
+          <p className="text-muted mt-2">Item:</p>
+          <p className="font-medium text-foreground">{entityName}</p>
         </div>
-        <p className="text-xs text-gray-500 mt-6">
+        <p className="text-xs text-muted mt-6">
           You may close this window. The project team has been notified of your response.
         </p>
       </div>
@@ -205,10 +205,10 @@ export function PublicApprovalPage() {
 
   // Main approval form
   return (
-    <div className="min-h-screen bg-gray-100 py-12 px-4">
+    <div className="min-h-screen bg-muted py-12 px-4">
       {/* Security badge */}
       <div className="max-w-2xl mx-auto mb-4">
-        <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+        <div className="flex items-center justify-center gap-2 text-sm text-muted">
           <Shield className="w-4 h-4" />
           <span>Secure approval page</span>
         </div>
@@ -224,11 +224,11 @@ export function PublicApprovalPage() {
       {/* Error message */}
       {submitError && (
         <div className="max-w-2xl mx-auto mt-4">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-red-800">Submission Failed</p>
-              <p className="text-sm text-red-700 mt-1">
+              <p className="text-sm text-error-dark mt-1">
                 {submitError instanceof Error
                   ? submitError.message
                   : 'An error occurred while submitting your response. Please try again.'}
@@ -240,7 +240,7 @@ export function PublicApprovalPage() {
 
       {/* Footer */}
       <div className="max-w-2xl mx-auto mt-8 text-center">
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-disabled">
           Powered by JobSight - Construction Management Software
         </p>
       </div>

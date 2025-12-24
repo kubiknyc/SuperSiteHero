@@ -113,8 +113,8 @@ export function VoiceMessageRecorder({
     return (
       <div className={cn('flex items-center gap-2', className)}>
         <div className="flex items-center gap-2 bg-blue-50 rounded-lg px-3 py-2">
-          <Mic className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium text-blue-700">
+          <Mic className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium text-primary-hover">
             {formatRecordingDuration(recordedDuration)}
           </span>
         </div>
@@ -122,7 +122,7 @@ export function VoiceMessageRecorder({
           type="button"
           variant="ghost"
           size="sm"
-          className="h-9 w-9 p-0 text-gray-500 hover:text-gray-700"
+          className="h-9 w-9 p-0 text-muted hover:text-secondary"
           onClick={handleCancel}
           disabled={isUploading}
           title="Discard recording"
@@ -175,7 +175,7 @@ export function VoiceMessageRecorder({
         </div>
 
         {/* Duration */}
-        <span className="text-sm font-mono text-red-600 min-w-[40px]">
+        <span className="text-sm font-mono text-error min-w-[40px]">
           {formatRecordingDuration(duration)}
         </span>
 
@@ -184,7 +184,7 @@ export function VoiceMessageRecorder({
           type="button"
           variant="ghost"
           size="sm"
-          className="h-9 w-9 p-0 text-gray-500 hover:text-gray-700"
+          className="h-9 w-9 p-0 text-muted hover:text-secondary"
           onClick={handleCancel}
           title="Cancel recording"
         >
@@ -238,7 +238,7 @@ export function VoiceMessageRecorder({
         <span>Voice Message</span>
       </Button>
       {error && (
-        <span className="text-xs text-red-500">{error}</span>
+        <span className="text-xs text-error">{error}</span>
       )}
     </div>
   )

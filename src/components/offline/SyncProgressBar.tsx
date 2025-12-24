@@ -132,8 +132,8 @@ export function SyncProgressBar({
           {/* Header */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-blue-600" />
-              <h4 className="font-medium text-sm">Syncing Changes</h4>
+              <TrendingUp className="h-4 w-4 text-primary" />
+              <h4 className="font-medium text-sm" className="heading-card">Syncing Changes</h4>
             </div>
             <div className="flex items-center gap-1">
               {/* Pause/Resume button - disabled for now as it requires SyncManager support */}
@@ -174,7 +174,7 @@ export function SyncProgressBar({
               <span>
                 {syncState.current} of {syncState.total} items
               </span>
-              <span className="font-medium text-blue-600">
+              <span className="font-medium text-primary">
                 {syncState.percentage}%
               </span>
             </div>
@@ -193,7 +193,7 @@ export function SyncProgressBar({
               )}
 
               {syncState.paused && (
-                <span className="text-amber-600 font-medium">Paused</span>
+                <span className="text-warning font-medium">Paused</span>
               )}
             </div>
           )}

@@ -45,9 +45,9 @@ export function BudgetPredictionCard({
 
   // Probability color
   const getProbabilityColor = (prob: number) => {
-    if (prob >= 0.7) {return 'text-red-600 bg-red-50'}
-    if (prob >= 0.4) {return 'text-amber-600 bg-amber-50'}
-    return 'text-green-600 bg-green-50'
+    if (prob >= 0.7) {return 'text-error bg-error-light'}
+    if (prob >= 0.4) {return 'text-warning bg-warning-light'}
+    return 'text-success bg-success-light'
   }
 
   // Format currency
@@ -77,7 +77,7 @@ export function BudgetPredictionCard({
       <CardContent className="space-y-4">
         {/* Probability */}
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Probability</span>
+          <span className="text-sm text-secondary">Probability</span>
           <div
             className={cn(
               'px-3 py-1 rounded-full font-bold text-lg',
@@ -90,7 +90,7 @@ export function BudgetPredictionCard({
 
         {/* Amount range */}
         <div className="space-y-2">
-          <span className="text-sm text-gray-600">Projected Overrun Range</span>
+          <span className="text-sm text-secondary">Projected Overrun Range</span>
           <div className="grid grid-cols-3 gap-2">
             <PredictionRangeItem
               label="Low"
@@ -151,9 +151,9 @@ export function SchedulePredictionCard({
 
   // Probability color
   const getProbabilityColor = (prob: number) => {
-    if (prob >= 0.7) {return 'text-red-600 bg-red-50'}
-    if (prob >= 0.4) {return 'text-amber-600 bg-amber-50'}
-    return 'text-green-600 bg-green-50'
+    if (prob >= 0.7) {return 'text-error bg-error-light'}
+    if (prob >= 0.4) {return 'text-warning bg-warning-light'}
+    return 'text-success bg-success-light'
   }
 
   // Format days
@@ -183,7 +183,7 @@ export function SchedulePredictionCard({
       <CardContent className="space-y-4">
         {/* Probability */}
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-600">Probability</span>
+          <span className="text-sm text-secondary">Probability</span>
           <div
             className={cn(
               'px-3 py-1 rounded-full font-bold text-lg',
@@ -196,7 +196,7 @@ export function SchedulePredictionCard({
 
         {/* Delay range */}
         <div className="space-y-2">
-          <span className="text-sm text-gray-600">Projected Delay</span>
+          <span className="text-sm text-secondary">Projected Delay</span>
           <div className="grid grid-cols-3 gap-2">
             <PredictionRangeItem
               label="Best Case"
@@ -219,8 +219,8 @@ export function SchedulePredictionCard({
 
         {/* Projected completion date */}
         {prediction.projected_completion_date && (
-          <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <span className="text-sm text-gray-600">Projected Completion</span>
+          <div className="flex items-center justify-between p-3 bg-surface rounded-lg">
+            <span className="text-sm text-secondary">Projected Completion</span>
             <span className="font-semibold">
               {new Date(prediction.projected_completion_date).toLocaleDateString('en-US', {
                 month: 'short',
@@ -263,15 +263,15 @@ function PredictionRangeItem({
     <div
       className={cn(
         'p-2 rounded-lg text-center',
-        highlight ? 'bg-blue-50 border border-blue-200' : 'bg-gray-50'
+        highlight ? 'bg-blue-50 border border-blue-200' : 'bg-surface'
       )}
     >
-      <p className="text-xs text-gray-500">{label}</p>
-      <p className={cn('font-semibold', highlight ? 'text-blue-700' : 'text-gray-900')}>
+      <p className="text-xs text-muted">{label}</p>
+      <p className={cn('font-semibold', highlight ? 'text-primary-hover' : 'text-foreground')}>
         {value}
       </p>
       {(subValue || percentage !== undefined) && (
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-disabled">
           {percentage !== undefined ? `${percentage.toFixed(1)}%` : subValue}
         </p>
       )}
@@ -289,7 +289,7 @@ function ContributingFactors({ factors, maxItems = 4 }: ContributingFactorsProps
 
   return (
     <div className="pt-3 border-t">
-      <p className="text-xs font-medium text-gray-500 mb-2">Contributing Factors</p>
+      <p className="text-xs font-medium text-muted mb-2">Contributing Factors</p>
       <div className="space-y-1.5">
         {displayFactors.map((factor, index) => (
           <div key={index} className="flex items-center gap-2">
@@ -297,18 +297,18 @@ function ContributingFactors({ factors, maxItems = 4 }: ContributingFactorsProps
               className={cn(
                 'text-xs',
                 factor.direction === 'positive'
-                  ? 'text-red-500'
+                  ? 'text-error'
                   : factor.direction === 'negative'
-                  ? 'text-green-500'
-                  : 'text-gray-400'
+                  ? 'text-success'
+                  : 'text-disabled'
               )}
             >
               {factor.direction === 'positive' ? '↑' : factor.direction === 'negative' ? '↓' : '–'}
             </span>
-            <span className="text-sm text-gray-700 flex-1">{factor.feature}</span>
-            <div className="w-16 bg-gray-200 rounded-full h-1.5">
+            <span className="text-sm text-secondary flex-1">{factor.feature}</span>
+            <div className="w-16 bg-muted rounded-full h-1.5">
               <div
-                className="bg-blue-600 h-1.5 rounded-full"
+                className="bg-primary h-1.5 rounded-full"
                 style={{ width: `${Math.round(factor.importance * 100)}%` }}
               />
             </div>
@@ -336,7 +336,7 @@ export function PredictionSummary({
 }: PredictionSummaryProps) {
   if (!budget && !schedule) {
     return (
-      <div className={cn('text-center text-gray-500 py-8', className)}>
+      <div className={cn('text-center text-muted py-8', className)}>
         <span className="text-3xl">📊</span>
         <p className="mt-2">No predictions available</p>
         <p className="text-sm">Generate a prediction to see results</p>

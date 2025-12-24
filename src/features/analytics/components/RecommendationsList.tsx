@@ -35,7 +35,7 @@ interface RecommendationsListProps {
 // Category configuration
 const CATEGORY_CONFIG: Record<RecommendationCategory, { icon: string; color: string }> = {
   budget: { icon: '💰', color: 'bg-emerald-100 text-emerald-700' },
-  schedule: { icon: '📅', color: 'bg-blue-100 text-blue-700' },
+  schedule: { icon: '📅', color: 'bg-info-light text-primary-hover' },
   risk: { icon: '⚠️', color: 'bg-amber-100 text-amber-700' },
   operational: { icon: '⚙️', color: 'bg-purple-100 text-purple-700' },
   resource: { icon: '👥', color: 'bg-cyan-100 text-cyan-700' },
@@ -43,18 +43,18 @@ const CATEGORY_CONFIG: Record<RecommendationCategory, { icon: string; color: str
 
 // Priority configuration
 const PRIORITY_CONFIG: Record<RecommendationPriority, { color: string; label: string }> = {
-  critical: { color: 'bg-red-100 text-red-700 border-red-200', label: 'Critical' },
+  critical: { color: 'bg-error-light text-error-dark border-red-200', label: 'Critical' },
   high: { color: 'bg-orange-100 text-orange-700 border-orange-200', label: 'High' },
   medium: { color: 'bg-amber-100 text-amber-700 border-amber-200', label: 'Medium' },
-  low: { color: 'bg-gray-100 text-gray-700 border-gray-200', label: 'Low' },
+  low: { color: 'bg-muted text-secondary border-border', label: 'Low' },
 }
 
 // Status configuration
 const STATUS_CONFIG: Record<RecommendationStatus, { color: string; label: string }> = {
-  pending: { color: 'bg-blue-50 text-blue-700', label: 'Pending' },
-  acknowledged: { color: 'bg-amber-50 text-amber-700', label: 'Acknowledged' },
-  implemented: { color: 'bg-green-50 text-green-700', label: 'Implemented' },
-  dismissed: { color: 'bg-gray-50 text-gray-500', label: 'Dismissed' },
+  pending: { color: 'bg-blue-50 text-primary-hover', label: 'Pending' },
+  acknowledged: { color: 'bg-warning-light text-amber-700', label: 'Acknowledged' },
+  implemented: { color: 'bg-success-light text-success-dark', label: 'Implemented' },
+  dismissed: { color: 'bg-surface text-muted', label: 'Dismissed' },
 }
 
 /**
@@ -88,14 +88,14 @@ export function RecommendationsList({
     return (
       <Card className={cn('animate-pulse', className)}>
         <CardHeader>
-          <CardTitle className="h-5 w-48 bg-gray-200 rounded" />
+          <CardTitle className="h-5 w-48 bg-muted rounded" />
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="p-4 bg-gray-50 rounded-lg">
-                <div className="h-4 w-3/4 bg-gray-200 rounded mb-2" />
-                <div className="h-3 w-full bg-gray-100 rounded" />
+              <div key={i} className="p-4 bg-surface rounded-lg">
+                <div className="h-4 w-3/4 bg-muted rounded mb-2" />
+                <div className="h-3 w-full bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -108,7 +108,7 @@ export function RecommendationsList({
     return (
       <Card className={cn('border-red-200', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-error">
             <p>Failed to load recommendations</p>
           </div>
         </CardContent>
@@ -156,7 +156,7 @@ export function RecommendationsList({
                       'px-2 py-1 text-xs rounded-full border transition-colors',
                       statusFilter.includes(status)
                         ? STATUS_CONFIG[status].color
-                        : 'bg-white text-gray-400 border-gray-200'
+                        : 'bg-card text-disabled border-border'
                     )}
                   >
                     {STATUS_CONFIG[status].label}
@@ -170,7 +170,7 @@ export function RecommendationsList({
 
       <CardContent>
         {displayRecommendations?.length === 0 ? (
-          <div className="text-center text-gray-500 py-8">
+          <div className="text-center text-muted py-8">
             <span className="text-3xl">✨</span>
             <p className="mt-2">No recommendations</p>
             <p className="text-sm">No active recommendations for this project</p>
@@ -184,7 +184,7 @@ export function RecommendationsList({
         )}
 
         {maxItems && recommendations && recommendations.length > maxItems && (
-          <p className="text-xs text-gray-400 mt-4 text-center">
+          <p className="text-xs text-disabled mt-4 text-center">
             Showing {maxItems} of {recommendations.length} recommendations
           </p>
         )}
@@ -240,10 +240,10 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
       className={cn(
         'p-4 rounded-lg border transition-colors',
         recommendation.status === 'dismissed'
-          ? 'bg-gray-50 border-gray-100 opacity-60'
+          ? 'bg-surface border-border opacity-60'
           : recommendation.status === 'implemented'
-          ? 'bg-green-50 border-green-100'
-          : 'bg-white border-gray-200 hover:border-gray-300'
+          ? 'bg-success-light border-green-100'
+          : 'bg-card border-border hover:border-input'
       )}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
@@ -256,7 +256,7 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
         <div className="flex-1 min-w-0">
           {/* Title and badges */}
           <div className="flex items-center gap-2 flex-wrap">
-            <h4 className="font-medium text-sm text-gray-900">
+            <h4 className="font-medium text-sm text-foreground" className="heading-card">
               {recommendation.title}
             </h4>
             <Badge variant="outline" className={cn('text-[10px]', priorityConfig.color)}>
@@ -268,11 +268,11 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 mt-1">{recommendation.description}</p>
+          <p className="text-sm text-secondary mt-1">{recommendation.description}</p>
 
           {/* Impact and effort */}
           {(recommendation.impact || recommendation.effort) && (
-            <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted">
               {recommendation.impact && (
                 <span>Impact: <strong>{recommendation.impact}</strong></span>
               )}
@@ -305,7 +305,7 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
               <Button
                 size="sm"
                 variant="ghost"
-                className="text-gray-500"
+                className="text-muted"
                 onClick={() => setShowDismissForm(true)}
               >
                 Dismiss
@@ -346,7 +346,7 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
       </div>
 
       {/* Timestamp */}
-      <div className="mt-2 text-xs text-gray-400">
+      <div className="mt-2 text-xs text-disabled">
         Created {new Date(recommendation.created_at).toLocaleDateString()}
         {recommendation.implemented_at && (
           <span>
@@ -379,11 +379,11 @@ export function RecommendationSummary({ projectId, className }: RecommendationSu
   return (
     <div className={cn('flex items-center gap-2', className)}>
       <span className="text-sm">💡</span>
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-secondary">
         {recommendations.length} pending
       </span>
       {criticalCount > 0 && (
-        <Badge variant="outline" className="text-[10px] bg-red-50 text-red-700">
+        <Badge variant="outline" className="text-[10px] bg-error-light text-error-dark">
           {criticalCount} critical
         </Badge>
       )}

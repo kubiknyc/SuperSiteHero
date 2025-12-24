@@ -248,7 +248,7 @@ export function WarrantyFormDialog({
               placeholder="e.g., HVAC Rooftop Unit Warranty"
             />
             {form.formState.errors.title && (
-              <p className="text-sm text-red-500">{form.formState.errors.title.message}</p>
+              <p className="text-sm text-error">{form.formState.errors.title.message}</p>
             )}
           </div>
 
@@ -325,7 +325,7 @@ export function WarrantyFormDialog({
 
           {/* Manufacturer Information */}
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-gray-700">Manufacturer Information</h4>
+            <h4 className="text-sm font-medium text-secondary" className="heading-card">Manufacturer Information</h4>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="manufacturer_name" className="flex items-center gap-1">
@@ -374,7 +374,7 @@ export function WarrantyFormDialog({
                   placeholder="e.g., support@carrier.com"
                 />
                 {form.formState.errors.manufacturer_email && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-error">
                     {form.formState.errors.manufacturer_email.message}
                   </p>
                 )}
@@ -395,7 +395,7 @@ export function WarrantyFormDialog({
 
           {/* Warranty Period */}
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-gray-700 flex items-center gap-1">
+            <h4 className="text-sm font-medium text-secondary flex items-center gap-1" className="heading-card">
               <Calendar className="h-4 w-4" />
               Warranty Period *
             </h4>
@@ -404,7 +404,7 @@ export function WarrantyFormDialog({
                 <Label htmlFor="start_date">Start Date *</Label>
                 <Input id="start_date" type="date" {...form.register('start_date')} />
                 {form.formState.errors.start_date && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-sm text-error">
                     {form.formState.errors.start_date.message}
                   </p>
                 )}
@@ -413,7 +413,7 @@ export function WarrantyFormDialog({
                 <Label htmlFor="end_date">End Date *</Label>
                 <Input id="end_date" type="date" {...form.register('end_date')} />
                 {form.formState.errors.end_date && (
-                  <p className="text-sm text-red-500">{form.formState.errors.end_date.message}</p>
+                  <p className="text-sm text-error">{form.formState.errors.end_date.message}</p>
                 )}
               </div>
               <div className="space-y-2">
@@ -424,7 +424,7 @@ export function WarrantyFormDialog({
                   step="0.1"
                   {...form.register('duration_years', { valueAsNumber: true })}
                   placeholder="Auto-calculated"
-                  className="bg-gray-50"
+                  className="bg-surface"
                 />
               </div>
             </div>
@@ -438,7 +438,7 @@ export function WarrantyFormDialog({
               {...form.register('notification_days')}
               placeholder="30, 60, 90"
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               Comma-separated list of days before expiration to send notifications
             </p>
           </div>

@@ -96,8 +96,8 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
       <div className="space-y-4">
         {[...Array(5)].map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-32 mb-2" />
-            <div className="h-8 bg-gray-200 rounded" />
+            <div className="h-4 bg-muted rounded w-32 mb-2" />
+            <div className="h-8 bg-muted rounded" />
           </div>
         ))}
       </div>
@@ -108,8 +108,8 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
     return (
       <div className="py-12 text-center">
         <BarChart3 className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-        <p className="text-gray-500">No division data available</p>
-        <p className="text-sm text-gray-400">Add budget lines to see division breakdown</p>
+        <p className="text-muted">No division data available</p>
+        <p className="text-sm text-disabled">Add budget lines to see division breakdown</p>
       </div>
     )
   }
@@ -118,26 +118,26 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
     <div className="space-y-6">
       {/* Summary Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-500">Total Budget</p>
+        <div className="p-4 bg-surface rounded-lg">
+          <p className="text-sm text-muted">Total Budget</p>
           <p className="text-xl font-bold">{formatCurrency(totals.revised)}</p>
         </div>
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-500">Total Spent</p>
+        <div className="p-4 bg-surface rounded-lg">
+          <p className="text-sm text-muted">Total Spent</p>
           <p className="text-xl font-bold">{formatCurrency(totals.actual)}</p>
         </div>
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-500">Divisions</p>
+        <div className="p-4 bg-surface rounded-lg">
+          <p className="text-sm text-muted">Divisions</p>
           <p className="text-xl font-bold">{divisions.length}</p>
         </div>
         <div className={cn(
           'p-4 rounded-lg',
-          totals.variance < 0 ? 'bg-red-50' : 'bg-green-50'
+          totals.variance < 0 ? 'bg-error-light' : 'bg-success-light'
         )}>
-          <p className="text-sm text-gray-500">Variance</p>
+          <p className="text-sm text-muted">Variance</p>
           <p className={cn(
             'text-xl font-bold',
-            totals.variance < 0 ? 'text-red-600' : 'text-green-600'
+            totals.variance < 0 ? 'text-error' : 'text-success'
           )}>
             {totals.variance < 0 ? '-' : '+'}{formatCurrency(Math.abs(totals.variance))}
           </p>
@@ -149,7 +149,7 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
         {groupedDivisions.map(([groupName, groupDivisions]) => (
           <Card key={groupName}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">{groupName}</CardTitle>
+              <CardTitle className="text-sm font-medium text-secondary">{groupName}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {groupDivisions.map((division) => {
@@ -172,15 +172,15 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
                         </span>
                       </div>
                       <div className="flex items-center gap-4 text-sm">
-                        <span className="text-gray-500">
+                        <span className="text-muted">
                           Budget: {formatCompact(division.revised_budget)}
                         </span>
-                        <span className="text-gray-500">
+                        <span className="text-muted">
                           Spent: {formatCompact(division.actual_cost)}
                         </span>
                         <span className={cn(
                           'font-medium flex items-center gap-1',
-                          isOverBudget ? 'text-red-600' : isNearBudget ? 'text-orange-600' : 'text-green-600'
+                          isOverBudget ? 'text-error' : isNearBudget ? 'text-orange-600' : 'text-success'
                         )}>
                           {isOverBudget ? (
                             <TrendingDown className="h-4 w-4" />
@@ -197,7 +197,7 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
                     <div className="relative">
                       {/* Background bar (total available width based on max budget) */}
                       <div
-                        className="h-6 bg-gray-100 rounded-md overflow-hidden"
+                        className="h-6 bg-muted rounded-md overflow-hidden"
                         style={{ width: `${budgetPercent}%`, minWidth: '100px' }}
                       >
                         {/* Budget bar */}
@@ -216,7 +216,7 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
                       </div>
 
                       {/* Percentage label */}
-                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-medium text-gray-700">
+                      <div className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-medium text-secondary">
                         {spentPercent.toFixed(0)}%
                       </div>
                     </div>
@@ -229,7 +229,7 @@ export function DivisionSummaryChart({ divisions, isLoading }: DivisionSummaryCh
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-6 text-sm text-gray-600">
+      <div className="flex items-center justify-center gap-6 text-sm text-secondary">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 bg-blue-200 rounded" />
           <span>Budget</span>

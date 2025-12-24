@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/toast'
+import { useToast } from '@/lib/notifications/ToastContext'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { useCreateSiteInstruction } from '@/features/site-instructions/hooks'
 import { SiteInstructionForm } from '@/features/site-instructions/components'
@@ -11,7 +11,7 @@ export default function CreateSiteInstructionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const projectId = searchParams.get('project') || ''
-  const { addToast } = useToast()
+  const { success, error } = useToast()
 
   const { data: project, isLoading: projectLoading } = useProject(projectId)
   const { data: contacts = [], isLoading: contactsLoading } = useContacts(projectId)
@@ -23,18 +23,10 @@ export default function CreateSiteInstructionPage() {
   const handleSubmit = async (data: any) => {
     try {
       const result = await createMutation.mutateAsync(data)
-      addToast({
-        title: 'Success',
-        description: 'Site instruction created successfully',
-        variant: 'success',
-      })
+      success('Success', 'Site instruction created successfully')
       navigate(`/site-instructions/${result.id}`)
     } catch (err) {
-      addToast({
-        title: 'Error',
-        description: 'Failed to create site instruction',
-        variant: 'destructive',
-      })
+      error('Error', 'Failed to create site instruction')
     }
   }
 
@@ -66,7 +58,7 @@ export default function CreateSiteInstructionPage() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">New Site Instruction</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">New Site Instruction</h1>
           {project && (
             <p className="text-muted-foreground">Project: {project.name}</p>
           )}

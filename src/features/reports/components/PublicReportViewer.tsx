@@ -66,10 +66,10 @@ export function PublicReportViewer() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Loading report...</p>
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-secondary">Loading report...</p>
         </div>
       </div>
     )
@@ -78,14 +78,14 @@ export function PublicReportViewer() {
   // Error state - invalid or expired token
   if (error || !sharedReport) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <Card className="max-w-md w-full mx-4">
           <CardContent className="pt-6 text-center">
-            <AlertTriangle className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            <AlertTriangle className="h-16 w-16 text-warning mx-auto mb-4" />
+            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
               Report Not Available
             </h2>
-            <p className="text-gray-600 mb-6">
+            <p className="text-secondary mb-6">
               This report link may have expired or is no longer available.
               Please contact the person who shared this link with you.
             </p>
@@ -102,9 +102,9 @@ export function PublicReportViewer() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+      <header className="bg-card border-b border-border sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Company Branding */}
@@ -116,15 +116,15 @@ export function PublicReportViewer() {
                   className="h-10 w-auto object-contain"
                 />
               ) : (
-                <div className="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Building2 className="h-6 w-6 text-blue-600" />
+                <div className="h-10 w-10 bg-info-light rounded-lg flex items-center justify-center">
+                  <Building2 className="h-6 w-6 text-primary" />
                 </div>
               )}
               <div>
-                <h1 className="font-semibold text-gray-900">
+                <h1 className="font-semibold text-foreground" className="heading-page">
                   {sharedReport.company.name}
                 </h1>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted">
                   {sharedReport.template.name}
                 </p>
               </div>
@@ -268,9 +268,9 @@ export function PublicReportViewer() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white mt-12">
+      <footer className="border-t border-border bg-card mt-12">
         <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between text-sm text-gray-500">
+          <div className="flex items-center justify-between text-sm text-muted">
             <div className="flex items-center gap-4">
               <span>
                 Report generated {format(new Date(), 'MMMM d, yyyy')}
@@ -284,7 +284,7 @@ export function PublicReportViewer() {
                 href="https://supersitehero.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-blue-600 hover:text-blue-700"
+                className="flex items-center gap-2 text-primary hover:text-primary-hover"
               >
                 Powered by SuperSiteHero
                 <ExternalLink className="h-3 w-3" />

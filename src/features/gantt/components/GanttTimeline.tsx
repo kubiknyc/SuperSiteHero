@@ -71,16 +71,16 @@ export function GanttTimeline({
 
   return (
     <div
-      className="sticky top-0 z-20 bg-white border-b"
+      className="sticky top-0 z-20 bg-card border-b"
       style={{ height: headerHeight }}
     >
       <div className="flex">
         {/* Sidebar placeholder */}
         <div
-          className="flex-shrink-0 bg-gray-50 border-r border-b flex items-end px-4 py-2"
+          className="flex-shrink-0 bg-surface border-r border-b flex items-end px-4 py-2"
           style={{ width: sidebarWidth, height: headerHeight }}
         >
-          <span className="text-sm font-semibold text-gray-700">Task Name</span>
+          <span className="text-sm font-semibold text-secondary">Task Name</span>
         </div>
 
         {/* Timeline */}
@@ -96,13 +96,13 @@ export function GanttTimeline({
             {/* Month row (for day/week views) */}
             {monthGroups.length > 0 && (
               <div
-                className="absolute top-0 left-0 right-0 flex border-b bg-gray-100"
+                className="absolute top-0 left-0 right-0 flex border-b bg-muted"
                 style={{ height: headerHeight / 2 }}
               >
                 {monthGroups.map((group, index) => (
                   <div
                     key={`month-${index}`}
-                    className="flex items-center justify-center text-sm font-semibold text-gray-700 border-r"
+                    className="flex items-center justify-center text-sm font-semibold text-secondary border-r"
                     style={{
                       width: group.width,
                       minWidth: group.width,
@@ -127,7 +127,7 @@ export function GanttTimeline({
                   key={`col-${index}`}
                   className={`
                     flex flex-col items-center justify-center text-xs border-r
-                    ${column.is_weekend ? 'bg-gray-100' : 'bg-white'}
+                    ${column.is_weekend ? 'bg-muted' : 'bg-card'}
                     ${column.is_today ? 'bg-orange-50 border-orange-300' : ''}
                   `}
                   style={{
@@ -137,7 +137,7 @@ export function GanttTimeline({
                 >
                   <span
                     className={`font-medium ${
-                      column.is_today ? 'text-orange-600' : 'text-gray-700'
+                      column.is_today ? 'text-orange-600' : 'text-secondary'
                     }`}
                   >
                     {column.label}
@@ -145,7 +145,7 @@ export function GanttTimeline({
                   {column.sub_label && (
                     <span
                       className={`text-[10px] ${
-                        column.is_today ? 'text-orange-500' : 'text-gray-500'
+                        column.is_today ? 'text-orange-500' : 'text-muted'
                       }`}
                     >
                       {column.sub_label}

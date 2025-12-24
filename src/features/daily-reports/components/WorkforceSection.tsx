@@ -67,10 +67,10 @@ export function WorkforceSection({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-gray-600" />
+          <Users className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">
               Workforce
@@ -80,27 +80,27 @@ export function WorkforceSection({
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
       {expanded && (
         <CardContent className="space-y-4 border-t pt-4">
           {entries.length === 0 ? (
-            <p className="text-sm text-gray-500">No workforce entries yet</p>
+            <p className="text-sm text-muted">No workforce entries yet</p>
           ) : (
             <div className="space-y-3">
               {entries.map((entry) => (
-                <div key={entry.id} className="border rounded-lg p-4 bg-gray-50">
+                <div key={entry.id} className="border rounded-lg p-4 bg-surface">
                   {editingId === entry.id ? (
                     <div className="space-y-3">
                       {validationError && <FormError message={validationError} />}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
-                            Type <span className="text-red-600">*</span>
+                          <label className="block text-xs font-medium text-secondary mb-1">
+                            Type <span className="text-error">*</span>
                           </label>
                           <select
                             value={editForm.entry_type || 'team'}
@@ -111,14 +111,14 @@ export function WorkforceSection({
                               })
                               setValidationError('')
                             }}
-                            className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                            className="w-full px-2 py-1 border border-input rounded text-sm"
                           >
                             <option value="team">Team</option>
                             <option value="individual">Individual</option>
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-700 mb-1">
+                          <label className="block text-xs font-medium text-secondary mb-1">
                             Trade
                           </label>
                           <Input
@@ -156,21 +156,21 @@ export function WorkforceSection({
                           {entry.trade || 'Workforce Entry'}
                         </p>
                         {entry.hours_worked && (
-                          <p className="text-xs text-gray-600">{entry.hours_worked} hours</p>
+                          <p className="text-xs text-secondary">{entry.hours_worked} hours</p>
                         )}
                       </div>
                       <div className="flex gap-1">
                         <button
                           type="button"
                           onClick={() => handleEdit(entry)}
-                          className="p-1 hover:bg-white rounded"
+                          className="p-1 hover:bg-card rounded"
                         >
-                          <Edit2 className="h-4 w-4 text-gray-400" />
+                          <Edit2 className="h-4 w-4 text-disabled" />
                         </button>
                         <button
                           type="button"
                           onClick={() => onRemove(entry.id)}
-                          className="p-1 hover:bg-white rounded"
+                          className="p-1 hover:bg-card rounded"
                         >
                           <Trash2 className="h-4 w-4 text-red-400" />
                         </button>

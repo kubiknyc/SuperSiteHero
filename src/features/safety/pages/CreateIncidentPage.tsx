@@ -31,14 +31,14 @@ export function CreateIncidentPage() {
               Back to Incidents
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Report Safety Incident</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-2xl font-bold text-foreground" className="heading-page">Report Safety Incident</h1>
+          <p className="text-muted mt-1">
             Complete this OSHA-compliant form to report a safety incident
           </p>
         </div>
 
         {/* Form */}
-        <div className="bg-white rounded-lg border p-6">
+        <div className="bg-card rounded-lg border p-6">
           <IncidentReportForm
             onSuccess={handleSuccess}
             onCancel={() => navigate('/safety')}

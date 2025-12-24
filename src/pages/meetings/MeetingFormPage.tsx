@@ -265,7 +265,7 @@ export function MeetingFormPage() {
     return (
       <AppLayout>
         <div className="p-6 text-center">
-          <p className="text-gray-500">Loading meeting...</p>
+          <p className="text-muted">Loading meeting...</p>
         </div>
       </AppLayout>
     )
@@ -287,7 +287,7 @@ export function MeetingFormPage() {
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Meetings
             </Button>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">
               {isEditing ? 'Edit Meeting' : 'New Meeting'}
             </h1>
           </div>
@@ -327,7 +327,7 @@ export function MeetingFormPage() {
                       ))}
                     </Select>
                     {errors.project_id && (
-                      <p className="text-sm text-red-500 mt-1">{errors.project_id}</p>
+                      <p className="text-sm text-error mt-1">{errors.project_id}</p>
                     )}
                   </div>
 
@@ -347,7 +347,7 @@ export function MeetingFormPage() {
                       ))}
                     </Select>
                     {errors.meeting_type && (
-                      <p className="text-sm text-red-500 mt-1">{errors.meeting_type}</p>
+                      <p className="text-sm text-error mt-1">{errors.meeting_type}</p>
                     )}
                   </div>
                 </div>
@@ -387,7 +387,7 @@ export function MeetingFormPage() {
                       className={errors.meeting_date ? 'border-red-500' : ''}
                     />
                     {errors.meeting_date && (
-                      <p className="text-sm text-red-500 mt-1">{errors.meeting_date}</p>
+                      <p className="text-sm text-error mt-1">{errors.meeting_date}</p>
                     )}
                   </div>
 
@@ -519,7 +519,7 @@ export function MeetingFormPage() {
                         size="sm"
                         onClick={() => removeActionItem(index)}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className="h-4 w-4 text-error" />
                       </Button>
                     </div>
                     <div className="grid grid-cols-2 gap-3">
@@ -664,7 +664,7 @@ export function MeetingFormPage() {
                         size="sm"
                         onClick={() => removeAttendee(index)}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className="h-4 w-4 text-error" />
                       </Button>
                     </div>
                     <div className="grid grid-cols-2 gap-2">

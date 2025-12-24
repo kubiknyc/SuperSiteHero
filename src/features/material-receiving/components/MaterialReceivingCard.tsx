@@ -82,7 +82,7 @@ export function MaterialReceivingCard({
               {onDelete && (
                 <DropdownMenuItem
                   onClick={() => onDelete(material.id)}
-                  className="text-red-600"
+                  className="text-error"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete

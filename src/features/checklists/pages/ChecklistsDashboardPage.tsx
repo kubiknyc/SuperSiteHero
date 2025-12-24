@@ -232,10 +232,10 @@ export function ChecklistsDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4" />
-          <p className="text-gray-600">Loading dashboard...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+          <p className="text-secondary">Loading dashboard...</p>
         </div>
       </div>
     )
@@ -253,17 +253,17 @@ export function ChecklistsDashboardPage() {
   const PIE_COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#6366f1']
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <BarChart3 className="w-8 h-8 text-blue-600" />
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3" className="heading-page">
+                <BarChart3 className="w-8 h-8 text-primary" />
                 Checklists Analytics
               </h1>
-              <p className="text-gray-600 mt-1">
+              <p className="text-secondary mt-1">
                 Insights and performance metrics for your checklists
               </p>
             </div>
@@ -286,24 +286,24 @@ export function ChecklistsDashboardPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Executions</p>
-                  <p className="text-3xl font-bold text-gray-900 mt-1">
+                  <p className="text-sm text-secondary">Total Executions</p>
+                  <p className="text-3xl font-bold text-foreground mt-1">
                     {analytics.totalExecutions}
                   </p>
                 </div>
-                <div className="rounded-full bg-blue-100 p-3">
-                  <FileText className="w-6 h-6 text-blue-600" />
+                <div className="rounded-full bg-info-light p-3">
+                  <FileText className="w-6 h-6 text-primary" />
                 </div>
               </div>
               <div className="flex items-center gap-2 mt-3">
                 {analytics.recentTrend >= 0 ? (
-                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <TrendingUp className="w-4 h-4 text-success" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-red-600" />
+                  <TrendingDown className="w-4 h-4 text-error" />
                 )}
                 <span
                   className={`text-sm ${
-                    analytics.recentTrend >= 0 ? 'text-green-600' : 'text-red-600'
+                    analytics.recentTrend >= 0 ? 'text-success' : 'text-error'
                   }`}
                 >
                   {Math.abs(analytics.recentTrend).toFixed(1)}% vs last week
@@ -317,16 +317,16 @@ export function ChecklistsDashboardPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Completed</p>
-                  <p className="text-3xl font-bold text-green-600 mt-1">
+                  <p className="text-sm text-secondary">Completed</p>
+                  <p className="text-3xl font-bold text-success mt-1">
                     {analytics.completedExecutions}
                   </p>
                 </div>
-                <div className="rounded-full bg-green-100 p-3">
-                  <CheckCircle2 className="w-6 h-6 text-green-600" />
+                <div className="rounded-full bg-success-light p-3">
+                  <CheckCircle2 className="w-6 h-6 text-success" />
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mt-3">
+              <p className="text-sm text-muted mt-3">
                 {analytics.totalExecutions > 0
                   ? Math.round(
                       (analytics.completedExecutions / analytics.totalExecutions) * 100
@@ -342,16 +342,16 @@ export function ChecklistsDashboardPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">In Progress</p>
-                  <p className="text-3xl font-bold text-amber-600 mt-1">
+                  <p className="text-sm text-secondary">In Progress</p>
+                  <p className="text-3xl font-bold text-warning mt-1">
                     {analytics.inProgressExecutions}
                   </p>
                 </div>
                 <div className="rounded-full bg-amber-100 p-3">
-                  <Clock className="w-6 h-6 text-amber-600" />
+                  <Clock className="w-6 h-6 text-warning" />
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mt-3">Pending completion</p>
+              <p className="text-sm text-muted mt-3">Pending completion</p>
             </CardContent>
           </Card>
 
@@ -360,16 +360,16 @@ export function ChecklistsDashboardPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Average Score</p>
-                  <p className="text-3xl font-bold text-blue-600 mt-1">
+                  <p className="text-sm text-secondary">Average Score</p>
+                  <p className="text-3xl font-bold text-primary mt-1">
                     {analytics.avgScore.toFixed(1)}%
                   </p>
                 </div>
-                <div className="rounded-full bg-blue-100 p-3">
-                  <BarChart3 className="w-6 h-6 text-blue-600" />
+                <div className="rounded-full bg-info-light p-3">
+                  <BarChart3 className="w-6 h-6 text-primary" />
                 </div>
               </div>
-              <p className="text-sm text-gray-500 mt-3">Across all completed checklists</p>
+              <p className="text-sm text-muted mt-3">Across all completed checklists</p>
             </CardContent>
           </Card>
         </div>
@@ -434,16 +434,16 @@ export function ChecklistsDashboardPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-green-600" />
-                      <span className="text-sm font-medium text-gray-700">Pass</span>
+                      <CheckCircle2 className="w-4 h-4 text-success" />
+                      <span className="text-sm font-medium text-secondary">Pass</span>
                     </div>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-foreground">
                       {analytics.passRate.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
-                      className="bg-green-600 h-2 rounded-full transition-all"
+                      className="bg-success h-2 rounded-full transition-all"
                       style={{ width: `${analytics.passRate}%` }}
                     />
                   </div>
@@ -453,16 +453,16 @@ export function ChecklistsDashboardPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <XCircle className="w-4 h-4 text-red-600" />
-                      <span className="text-sm font-medium text-gray-700">Fail</span>
+                      <XCircle className="w-4 h-4 text-error" />
+                      <span className="text-sm font-medium text-secondary">Fail</span>
                     </div>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-foreground">
                       {analytics.failRate.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
-                      className="bg-red-600 h-2 rounded-full transition-all"
+                      className="bg-error h-2 rounded-full transition-all"
                       style={{ width: `${analytics.failRate}%` }}
                     />
                   </div>
@@ -472,14 +472,14 @@ export function ChecklistsDashboardPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <MinusCircle className="w-4 h-4 text-gray-600" />
-                      <span className="text-sm font-medium text-gray-700">N/A</span>
+                      <MinusCircle className="w-4 h-4 text-secondary" />
+                      <span className="text-sm font-medium text-secondary">N/A</span>
                     </div>
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-foreground">
                       {analytics.naRate.toFixed(1)}%
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div
                       className="bg-gray-600 h-2 rounded-full transition-all"
                       style={{ width: `${analytics.naRate}%` }}
@@ -488,10 +488,10 @@ export function ChecklistsDashboardPage() {
                 </div>
 
                 {/* Summary */}
-                <div className="pt-4 border-t border-gray-200">
-                  <p className="text-sm text-gray-600">
+                <div className="pt-4 border-t border-border">
+                  <p className="text-sm text-secondary">
                     Total responses across all checklists:{' '}
-                    <span className="font-semibold text-gray-900">
+                    <span className="font-semibold text-foreground">
                       {allExecutions.reduce((sum, e) => sum + e.score_total, 0).toLocaleString()}
                     </span>
                   </p>
@@ -581,24 +581,24 @@ export function ChecklistsDashboardPage() {
                   {analytics.topInspectors.map((inspector, index) => (
                     <div
                       key={inspector.name}
-                      className="flex items-center justify-between pb-3 border-b border-gray-200 last:border-0"
+                      className="flex items-center justify-between pb-3 border-b border-border last:border-0"
                     >
                       <div className="flex items-center gap-3">
                         <Badge variant="outline" className="w-6 h-6 flex items-center justify-center p-0">
                           {index + 1}
                         </Badge>
-                        <span className="text-sm font-medium text-gray-900">
+                        <span className="text-sm font-medium text-foreground">
                           {inspector.name}
                         </span>
                       </div>
-                      <span className="text-sm font-semibold text-blue-600">
+                      <span className="text-sm font-semibold text-primary">
                         {inspector.count}
                       </span>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">No data available</p>
+                <p className="text-sm text-muted">No data available</p>
               )}
             </CardContent>
           </Card>
@@ -616,7 +616,7 @@ export function ChecklistsDashboardPage() {
                       key={template.name}
                       className="flex items-center justify-between py-2"
                     >
-                      <span className="text-sm text-gray-700 truncate" title={template.name}>
+                      <span className="text-sm text-secondary truncate" title={template.name}>
                         {template.name}
                       </span>
                       <Badge variant="outline">{template.count}</Badge>
@@ -624,7 +624,7 @@ export function ChecklistsDashboardPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-gray-500">No templates used yet</p>
+                <p className="text-sm text-muted">No templates used yet</p>
               )}
             </CardContent>
           </Card>
@@ -633,7 +633,7 @@ export function ChecklistsDashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-amber-600" />
+                <AlertTriangle className="w-5 h-5 text-warning" />
                 Needs Attention
               </CardTitle>
             </CardHeader>
@@ -643,21 +643,21 @@ export function ChecklistsDashboardPage() {
                   {analytics.lowScoringExecutions.map((execution) => (
                     <div
                       key={execution.id}
-                      className="pb-3 border-b border-gray-200 last:border-0 cursor-pointer hover:bg-gray-50 rounded p-2 -m-2"
+                      className="pb-3 border-b border-border last:border-0 cursor-pointer hover:bg-surface rounded p-2 -m-2"
                       onClick={() => navigate(`/checklists/executions/${execution.id}`)}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">
+                          <p className="text-sm font-medium text-foreground truncate">
                             {execution.name}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-muted mt-1">
                             {execution.category || 'Uncategorized'}
                           </p>
                         </div>
                         <Badge
                           variant="outline"
-                          className="ml-2 text-red-600 border-red-600"
+                          className="ml-2 text-error border-error"
                         >
                           {execution.score_percentage?.toFixed(0)}%
                         </Badge>
@@ -667,8 +667,8 @@ export function ChecklistsDashboardPage() {
                 </div>
               ) : (
                 <div className="text-center py-6">
-                  <CheckCircle2 className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <p className="text-sm text-gray-600">All checklists performing well!</p>
+                  <CheckCircle2 className="w-8 h-8 text-success mx-auto mb-2" />
+                  <p className="text-sm text-secondary">All checklists performing well!</p>
                 </div>
               )}
             </CardContent>
@@ -679,11 +679,11 @@ export function ChecklistsDashboardPage() {
         {analytics.totalExecutions === 0 && (
           <Card className="mt-6">
             <CardContent className="py-12 text-center">
-              <BarChart3 className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <BarChart3 className="w-16 h-16 text-disabled mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-foreground mb-2" className="heading-subsection">
                 No checklist data yet
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 Start completing checklists to see analytics and insights here.
               </p>
               <Button onClick={() => navigate('/checklists/templates')}>

@@ -211,7 +211,7 @@ export function CreateDedicatedRFIDialog({
           {/* Subject */}
           <div className="space-y-2">
             <Label htmlFor="subject" className="flex items-center gap-1">
-              Subject <span className="text-red-500">*</span>
+              Subject <span className="text-error">*</span>
             </Label>
             <Input
               id="subject"
@@ -222,7 +222,7 @@ export function CreateDedicatedRFIDialog({
               disabled={createRFI.isPending}
               maxLength={255}
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               Be specific: "Foundation detail at grid B-5" vs "Foundation question"
             </p>
           </div>
@@ -293,7 +293,7 @@ export function CreateDedicatedRFIDialog({
                 placeholder="e.g., 03 30 00"
                 disabled={createRFI.isPending}
               />
-              <p className="text-xs text-gray-500">CSI MasterFormat section</p>
+              <p className="text-xs text-muted">CSI MasterFormat section</p>
             </div>
           </div>
 
@@ -312,7 +312,7 @@ export function CreateDedicatedRFIDialog({
                 disabled={createRFI.isPending}
                 min={format(new Date(), 'yyyy-MM-dd')}
               />
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted">
                 Default is 7 days. Check your contract for required response times.
               </p>
             </div>
@@ -335,7 +335,7 @@ export function CreateDedicatedRFIDialog({
                   </option>
                 ))}
               </Select>
-              <p className="text-xs text-gray-500">Who is responsible for responding?</p>
+              <p className="text-xs text-muted">Who is responsible for responding?</p>
             </div>
           </div>
 
@@ -357,7 +357,7 @@ export function CreateDedicatedRFIDialog({
                 {showDistributionPicker ? 'Hide' : 'Add Recipients'}
               </Button>
             </div>
-            <p className="text-xs text-blue-700">
+            <p className="text-xs text-primary-hover">
               Add team members who should receive copies of this RFI and its responses.
             </p>
 
@@ -367,7 +367,7 @@ export function CreateDedicatedRFIDialog({
                 {distributionList.map((user) => (
                   <div
                     key={user.id}
-                    className="flex items-center gap-1 bg-white border border-blue-200 rounded-full pl-1 pr-2 py-1"
+                    className="flex items-center gap-1 bg-card border border-blue-200 rounded-full pl-1 pr-2 py-1"
                   >
                     {user.avatar_url ? (
                       <img
@@ -376,7 +376,7 @@ export function CreateDedicatedRFIDialog({
                         className="h-5 w-5 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-600">
+                      <div className="h-5 w-5 rounded-full bg-info-light flex items-center justify-center text-[10px] text-primary">
                         {getFullName(user).charAt(0) || '?'}
                       </div>
                     )}
@@ -384,7 +384,7 @@ export function CreateDedicatedRFIDialog({
                     <button
                       type="button"
                       onClick={() => toggleDistributionUser(user)}
-                      className="text-blue-400 hover:text-blue-600 ml-1"
+                      className="text-blue-400 hover:text-primary ml-1"
                       disabled={createRFI.isPending}
                     >
                       <X className="h-3 w-3" />
@@ -403,12 +403,12 @@ export function CreateDedicatedRFIDialog({
                     placeholder="Search project members..."
                     value={distributionFilter}
                     onChange={(e) => setDistributionFilter(e.target.value)}
-                    className="pl-9 bg-white"
+                    className="pl-9 bg-card"
                     disabled={createRFI.isPending}
                   />
                 </div>
 
-                <div className="max-h-[200px] overflow-auto bg-white border rounded-lg">
+                <div className="max-h-[200px] overflow-auto bg-card border rounded-lg">
                   {isLoadingUsers ? (
                     <div className="py-4 text-center text-muted-foreground text-sm">
                       Loading project members...
@@ -459,7 +459,7 @@ export function CreateDedicatedRFIDialog({
                               </span>
                             )}
                             {isSelected && (
-                              <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                              <Check className="h-4 w-4 text-primary flex-shrink-0" />
                             )}
                           </button>
                         )
@@ -474,7 +474,7 @@ export function CreateDedicatedRFIDialog({
           {/* Question */}
           <div className="space-y-2">
             <Label htmlFor="question" className="flex items-center gap-1">
-              Question <span className="text-red-500">*</span>
+              Question <span className="text-error">*</span>
             </Label>
             <Textarea
               id="question"
@@ -499,7 +499,7 @@ export function CreateDedicatedRFIDialog({
           )}
 
           {/* Impact Assessment */}
-          <div className="space-y-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="space-y-4 p-4 bg-warning-light border border-amber-200 rounded-lg">
             <div className="flex items-center gap-2 text-amber-800">
               <AlertTriangle className="h-4 w-4" />
               <span className="font-medium text-sm">Impact Assessment</span>
@@ -511,7 +511,7 @@ export function CreateDedicatedRFIDialog({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="cost-impact" className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-green-600" />
+                  <DollarSign className="h-4 w-4 text-success" />
                   Estimated Cost Impact
                 </Label>
                 <Input

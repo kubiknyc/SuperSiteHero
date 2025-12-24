@@ -146,7 +146,7 @@ export function SidebarLogo({ className, animated = true }: { className?: string
           alt="JobSight"
           className="h-8 object-contain"
         />
-        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-medium mt-0.5 letterspacing-tight">
+        <p className="text-[10px] text-disabled uppercase tracking-widest font-medium mt-0.5 letterspacing-tight">
           Field Management
         </p>
       </div>
@@ -163,8 +163,8 @@ export function AuthLogo({ className }: { className?: string }) {
       {/* Dramatic icon presentation */}
       <div className="relative">
         {/* Outer glow rings */}
-        <div className="absolute inset-0 -m-8 bg-blue-600/[0.18] blur-3xl rounded-full animate-pulse" />
-        <div className="absolute inset-0 -m-4 border-2 border-blue-600/30 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
+        <div className="absolute inset-0 -m-8 bg-primary/[0.18] blur-3xl rounded-full animate-pulse" />
+        <div className="absolute inset-0 -m-4 border-2 border-primary/30 rounded-2xl animate-pulse" style={{ animationDelay: '0.5s' }} />
 
         {/* Icon container */}
         <div className="relative rounded-2xl bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 p-6 shadow-2xl shadow-blue-600/30">
@@ -180,7 +180,7 @@ export function AuthLogo({ className }: { className?: string }) {
           alt="JobSight"
           className="h-12 object-contain mx-auto dark:brightness-0 dark:invert"
         />
-        <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-[0.2em] font-medium">
+        <p className="text-sm text-muted dark:text-disabled uppercase tracking-[0.2em] font-medium">
           Construction Field Management
         </p>
       </div>
@@ -223,7 +223,7 @@ export function LogoIconWithBadge({
     <div className={cn('relative inline-flex', className)}>
       <LogoIcon className="h-10 w-10" />
       {badge && (
-        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white shadow-lg">
+        <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-lg">
           {badge}
         </span>
       )}

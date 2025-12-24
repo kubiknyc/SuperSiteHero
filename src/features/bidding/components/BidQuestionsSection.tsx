@@ -83,7 +83,7 @@ function QuestionItem({ question, onAnswer, isAnswering, readOnly }: QuestionIte
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
       <div className="border rounded-lg">
         <CollapsibleTrigger asChild>
-          <div className="flex items-start justify-between p-4 cursor-pointer hover:bg-gray-50">
+          <div className="flex items-start justify-between p-4 cursor-pointer hover:bg-surface">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <Badge variant="outline" className="font-mono">
@@ -135,7 +135,7 @@ function QuestionItem({ question, onAnswer, isAnswering, readOnly }: QuestionIte
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:underline flex items-center gap-1"
+                      className="text-xs text-primary hover:underline flex items-center gap-1"
                     >
                       <FileText className="w-3 h-3" />
                       Attachment {i + 1}

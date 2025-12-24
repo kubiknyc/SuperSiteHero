@@ -898,8 +898,8 @@ export function UnifiedDrawingCanvas({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center w-full h-full bg-gray-50">
-        <p className="text-gray-500">Loading annotations...</p>
+      <div className="flex items-center justify-center w-full h-full bg-surface">
+        <p className="text-muted">Loading annotations...</p>
       </div>
     )
   }
@@ -1008,7 +1008,7 @@ export function UnifiedDrawingCanvas({
 
       {/* Action Buttons (Undo/Redo/Clear) */}
       {!readOnly && (
-        <div className="absolute top-16 right-4 z-10 bg-white rounded-lg shadow-lg p-2 flex gap-1">
+        <div className="absolute top-16 right-4 z-10 bg-card rounded-lg shadow-lg p-2 flex gap-1">
           <Button
             size="sm"
             variant="outline"
@@ -1058,7 +1058,7 @@ export function UnifiedDrawingCanvas({
       )}
 
       {/* Konva Stage */}
-      <div className="flex-1 overflow-hidden bg-gray-100">
+      <div className="flex-1 overflow-hidden bg-muted">
         <Stage
           ref={stageRef}
           width={width}
@@ -1307,7 +1307,7 @@ export function UnifiedDrawingCanvas({
       </div>
 
       {/* Status Bar */}
-      <div className="p-2 bg-white border-t flex items-center justify-between text-sm text-gray-600">
+      <div className="p-2 bg-card border-t flex items-center justify-between text-sm text-secondary">
         <div className="flex items-center gap-4">
           <span>Zoom: {Math.round(scale * 100)}%</span>
           <span>Tool: {tool}</span>

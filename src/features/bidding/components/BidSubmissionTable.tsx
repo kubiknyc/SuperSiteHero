@@ -127,10 +127,10 @@ export function BidSubmissionTable({
   }
 
   const getVarianceColor = (variance: number) => {
-    if (variance <= -10) {return 'text-green-600'}
-    if (variance <= 0) {return 'text-green-500'}
-    if (variance <= 10) {return 'text-yellow-600'}
-    return 'text-red-600'
+    if (variance <= -10) {return 'text-success'}
+    if (variance <= 0) {return 'text-success'}
+    if (variance <= 10) {return 'text-warning'}
+    return 'text-error'
   }
 
   const isLowBid = (amount: number) => lowBid !== null && amount === lowBid
@@ -156,7 +156,7 @@ export function BidSubmissionTable({
         </div>
         <div className="p-4 rounded-lg border bg-card">
           <div className="text-sm text-muted-foreground">Low Bid</div>
-          <div className="text-2xl font-bold text-green-600">
+          <div className="text-2xl font-bold text-success">
             {lowBid ? formatBidAmount(lowBid) : '-'}
           </div>
           {estimatedValue && lowBid && (
@@ -259,18 +259,18 @@ export function BidSubmissionTable({
                     key={submission.id}
                     className={
                       isAwarded
-                        ? 'bg-green-50'
+                        ? 'bg-success-light'
                         : isLow
-                        ? 'bg-yellow-50'
+                        ? 'bg-warning-light'
                         : ''
                     }
                   >
                     <TableCell>
                       <div className="flex items-center gap-1">
                         {isAwarded ? (
-                          <Trophy className="w-4 h-4 text-green-600" />
+                          <Trophy className="w-4 h-4 text-success" />
                         ) : isLow ? (
-                          <Star className="w-4 h-4 text-yellow-500" />
+                          <Star className="w-4 h-4 text-warning" />
                         ) : (
                           <span className="text-muted-foreground">{index + 1}</span>
                         )}
@@ -291,7 +291,7 @@ export function BidSubmissionTable({
                     </TableCell>
                     <TableCell>
                       <div className="space-y-1">
-                        <div className={`font-semibold ${isLow ? 'text-green-600' : ''}`}>
+                        <div className={`font-semibold ${isLow ? 'text-success' : ''}`}>
                           {formatBidAmount(submission.base_bid_amount)}
                         </div>
                         {variance !== null && (
@@ -338,8 +338,8 @@ export function BidSubmissionTable({
                               <div
                                 className={`p-1 rounded ${
                                   submission.bid_bond_included
-                                    ? 'bg-green-100 text-green-600'
-                                    : 'bg-gray-100 text-gray-400'
+                                    ? 'bg-success-light text-success'
+                                    : 'bg-muted text-disabled'
                                 }`}
                               >
                                 <Shield className="w-4 h-4" />
@@ -358,8 +358,8 @@ export function BidSubmissionTable({
                               <div
                                 className={`p-1 rounded ${
                                   submission.insurance_cert_included
-                                    ? 'bg-green-100 text-green-600'
-                                    : 'bg-gray-100 text-gray-400'
+                                    ? 'bg-success-light text-success'
+                                    : 'bg-muted text-disabled'
                                 }`}
                               >
                                 <FileText className="w-4 h-4" />
@@ -399,14 +399,14 @@ export function BidSubmissionTable({
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
                                 onClick={() => onAwardBid?.(submission.id)}
-                                className="text-green-600"
+                                className="text-success"
                               >
                                 <Trophy className="w-4 h-4 mr-2" />
                                 Award Contract
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => onDisqualify?.(submission.id)}
-                                className="text-red-600"
+                                className="text-error"
                               >
                                 <XCircle className="w-4 h-4 mr-2" />
                                 Disqualify

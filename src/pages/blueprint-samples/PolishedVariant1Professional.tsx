@@ -27,7 +27,7 @@ export default function PolishedVariant1Professional() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 font-sans">
+    <div className="min-h-screen bg-surface dark:bg-gray-950 font-sans">
       {/* Blueprint grid pattern overlay */}
       <div
         className="fixed inset-0 pointer-events-none opacity-30 dark:opacity-20"
@@ -43,15 +43,15 @@ export default function PolishedVariant1Professional() {
       <div className="relative">
       {/* Header */}
       <header
-        className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-colors"
+        className="sticky top-0 z-50 bg-card dark:bg-background border-b border-border dark:border-border shadow-sm transition-colors"
         role="banner"
       >
         <div className="max-w-7xl mx-auto px-4 py-3 md:px-6 md:py-4">
           <div className="flex justify-between items-center gap-4">
             <Link
               to="/blueprint-samples/variants"
-              className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400
-                         hover:text-blue-600 dark:hover:text-blue-400
+              className="inline-flex items-center gap-2 text-sm font-medium text-secondary dark:text-disabled
+                         hover:text-primary dark:hover:text-blue-400
                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
                          focus-visible:ring-offset-2 dark:ring-offset-gray-950
                          rounded-md px-3 py-2.5 min-h-[44px] md:min-h-0
@@ -63,7 +63,7 @@ export default function PolishedVariant1Professional() {
             </Link>
 
             <div
-              className="px-3 py-2 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300
+              className="px-3 py-2 bg-blue-50 dark:bg-blue-950/30 text-primary-hover dark:text-blue-300
                          text-xs font-semibold rounded-md tracking-wide border border-blue-100 dark:border-blue-900"
               role="status"
               aria-label="Current variant"
@@ -81,19 +81,19 @@ export default function PolishedVariant1Professional() {
           <div className="flex items-center gap-3 mb-3">
             {/* Blue accent bar - decorative */}
             <div
-              className="w-1 h-10 bg-blue-700 dark:bg-blue-600 rounded-sm flex-shrink-0"
+              className="w-1 h-10 bg-primary-hover dark:bg-primary rounded-sm flex-shrink-0"
               aria-hidden="true"
             />
 
             {/* Main heading */}
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-900 dark:text-gray-50
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-foreground dark:text-gray-50
                            font-['DM_Sans'] tracking-tight">
               Dashboard
             </h1>
           </div>
 
           {/* Welcome text */}
-          <p className="text-sm text-gray-600 dark:text-gray-400 pl-0 md:pl-5">
+          <p className="text-sm text-secondary dark:text-disabled pl-0 md:pl-5">
             Welcome back, John • {new Date().toLocaleDateString('en-US', {
               weekday: 'long',
               month: 'long',
@@ -113,12 +113,12 @@ export default function PolishedVariant1Professional() {
               <button
                 key={stat.label}
                 type="button"
-                className="group relative bg-white dark:bg-gray-900
-                           border border-gray-200 dark:border-gray-800
+                className="group relative bg-card dark:bg-background
+                           border border-border dark:border-border
                            rounded-lg p-4 md:p-6
                            transition-all duration-200
                            hover:border-blue-700 hover:shadow-lg hover:shadow-blue-700/10
-                           dark:hover:border-blue-600 dark:hover:shadow-blue-600/20
+                           dark:hover:border-primary dark:hover:shadow-blue-600/20
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
                            focus-visible:ring-offset-2 dark:ring-offset-gray-950
                            min-h-[44px] md:min-h-0 text-left w-full"
@@ -148,8 +148,8 @@ export default function PolishedVariant1Professional() {
                     className={cn(
                       "px-2.5 py-1.5 rounded-md text-xs font-semibold flex items-center gap-1 border",
                       stat.trend === 'up'
-                        ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-900"
-                        : "bg-red-50 text-red-700 border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900"
+                        ? "bg-success-light text-success-dark border-green-200 dark:bg-green-950/30 dark:text-green-400 dark:border-green-900"
+                        : "bg-error-light text-error-dark border-red-200 dark:bg-red-950/30 dark:text-red-400 dark:border-red-900"
                     )}
                     aria-label={`Trend: ${stat.change}`}
                   >
@@ -165,16 +165,16 @@ export default function PolishedVariant1Professional() {
                 {/* Stat details */}
                 <div className="mb-4">
                   {/* Label */}
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
+                  <p className="text-sm font-medium text-secondary dark:text-disabled mb-2">
                     {stat.label}
                   </p>
 
                   {/* Value and target */}
                   <div className="flex items-baseline gap-2">
-                    <p className="text-3xl md:text-4xl font-semibold text-gray-900 dark:text-gray-50 leading-none">
+                    <p className="text-3xl md:text-4xl font-semibold text-foreground dark:text-gray-50 leading-none">
                       {stat.value}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 font-medium">
+                    <p className="text-sm text-muted dark:text-muted font-medium">
                       / {stat.target}
                     </p>
                   </div>
@@ -183,7 +183,7 @@ export default function PolishedVariant1Professional() {
                 {/* Progress bar */}
                 <div className="relative">
                   {/* Background track */}
-                  <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-muted dark:bg-surface rounded-full overflow-hidden">
                     {/* Progress fill */}
                     <div
                       className="h-full rounded-full transition-all duration-500 ease-out"
@@ -208,7 +208,7 @@ export default function PolishedVariant1Professional() {
         <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 md:gap-6">
           {/* Active Projects */}
           <section
-            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800
+            className="bg-card dark:bg-background border border-border dark:border-border
                        rounded-lg p-4 md:p-6 transition-colors"
             aria-labelledby="active-projects-heading"
           >
@@ -216,7 +216,7 @@ export default function PolishedVariant1Professional() {
             <div className="flex justify-between items-center mb-4 md:mb-6 gap-4">
               <h2
                 id="active-projects-heading"
-                className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-50
+                className="text-base md:text-lg font-semibold text-foreground dark:text-gray-50
                            font-['DM_Sans']"
               >
                 Active Projects
@@ -224,7 +224,7 @@ export default function PolishedVariant1Professional() {
 
               <button
                 type="button"
-                className="text-sm font-medium text-blue-700 dark:text-blue-400
+                className="text-sm font-medium text-primary-hover dark:text-blue-400
                            hover:text-blue-800 dark:hover:text-blue-300
                            hover:underline
                            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600
@@ -241,11 +241,11 @@ export default function PolishedVariant1Professional() {
               {projects.map((project) => (
                 <li
                   key={project.name}
-                  className="group p-3 md:p-4 bg-gray-50 dark:bg-gray-800/50
-                             border border-gray-100 dark:border-gray-700
+                  className="group p-3 md:p-4 bg-surface dark:bg-surface/50
+                             border border-border dark:border-gray-700
                              rounded-lg transition-all duration-150
-                             hover:bg-white dark:hover:bg-gray-800
-                             hover:border-gray-200 dark:hover:border-gray-600
+                             hover:bg-card dark:hover:bg-surface
+                             hover:border-border dark:hover:border-gray-600
                              hover:shadow-md
                              focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2
                              dark:ring-offset-gray-950"
@@ -259,14 +259,14 @@ export default function PolishedVariant1Professional() {
                     {/* Project header */}
                     <div className="flex justify-between items-start mb-3 gap-3">
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm md:text-base font-semibold text-gray-900 dark:text-gray-50
-                                       mb-1 group-hover:text-blue-700 dark:group-hover:text-blue-400
+                        <h3 className="text-sm md:text-base font-semibold text-foreground dark:text-gray-50
+                                       mb-1 group-hover:text-primary-hover dark:group-hover:text-blue-400
                                        transition-colors truncate">
                           {project.name}
                         </h3>
 
                         {/* Project metadata */}
-                        <div className="flex items-center gap-3 md:gap-4 text-xs text-gray-600 dark:text-gray-400
+                        <div className="flex items-center gap-3 md:gap-4 text-xs text-secondary dark:text-disabled
                                        flex-wrap">
                           <span className="flex items-center gap-1.5">
                             <Calendar className="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
@@ -282,9 +282,9 @@ export default function PolishedVariant1Professional() {
                       <span
                         className={cn(
                           "px-2.5 py-1 rounded-md text-xs font-semibold whitespace-nowrap flex-shrink-0",
-                          project.status === 'On Track' && "bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-400",
-                          project.status === 'Ahead' && "bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-400",
-                          project.status === 'At Risk' && "bg-red-50 text-red-700 dark:bg-red-950/30 dark:text-red-400"
+                          project.status === 'On Track' && "bg-success-light text-success-dark dark:bg-green-950/30 dark:text-green-400",
+                          project.status === 'Ahead' && "bg-blue-50 text-primary-hover dark:bg-blue-950/30 dark:text-blue-400",
+                          project.status === 'At Risk' && "bg-error-light text-error-dark dark:bg-red-950/30 dark:text-red-400"
                         )}
                         role="status"
                         aria-label={`Project status: ${project.status}`}
@@ -296,18 +296,18 @@ export default function PolishedVariant1Professional() {
                     {/* Progress section */}
                     <div>
                       <div className="flex justify-between mb-2 text-xs">
-                        <span className="text-gray-600 dark:text-gray-400 font-medium">
+                        <span className="text-secondary dark:text-disabled font-medium">
                           Progress
                         </span>
-                        <span className="text-gray-900 dark:text-gray-50 font-semibold">
+                        <span className="text-foreground dark:text-gray-50 font-semibold">
                           {project.progress}%
                         </span>
                       </div>
 
                       {/* Progress bar */}
-                      <div className="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="w-full h-1.5 bg-muted dark:bg-muted rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-blue-700 dark:bg-blue-600 rounded-full transition-all duration-500 ease-out"
+                          className="h-full bg-primary-hover dark:bg-primary rounded-full transition-all duration-500 ease-out"
                           style={{ width: `${project.progress}%` }}
                           role="progressbar"
                           aria-valuenow={project.progress}
@@ -325,13 +325,13 @@ export default function PolishedVariant1Professional() {
 
           {/* Recent Activity */}
           <section
-            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800
+            className="bg-card dark:bg-background border border-border dark:border-border
                        rounded-lg p-4 md:p-6 transition-colors"
             aria-labelledby="recent-activity-heading"
           >
             <h2
               id="recent-activity-heading"
-              className="text-base md:text-lg font-semibold text-gray-900 dark:text-gray-50
+              className="text-base md:text-lg font-semibold text-foreground dark:text-gray-50
                          font-['DM_Sans'] mb-4 md:mb-6"
             >
               Recent Activity
@@ -352,19 +352,19 @@ export default function PolishedVariant1Professional() {
                                border border-blue-100 dark:border-blue-900"
                     aria-hidden="true"
                   >
-                    <span className="text-xs font-semibold text-blue-700 dark:text-blue-400">
+                    <span className="text-xs font-semibold text-primary-hover dark:text-blue-400">
                       {activity.user.split(' ').map(n => n[0]).join('')}
                     </span>
                   </div>
 
                   {/* Activity content */}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-900 dark:text-gray-50 mb-1 leading-relaxed">
+                    <p className="text-sm text-foreground dark:text-gray-50 mb-1 leading-relaxed">
                       <span className="font-semibold">{activity.user}</span>{' '}
-                      <span className="text-gray-600 dark:text-gray-400">{activity.action}</span>
+                      <span className="text-secondary dark:text-disabled">{activity.action}</span>
                     </p>
 
-                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                    <p className="text-xs text-muted dark:text-muted">
                       <span>{activity.project}</span>
                       <span className="mx-1.5" aria-hidden="true">•</span>
                       <time dateTime={activity.time}>{activity.time}</time>

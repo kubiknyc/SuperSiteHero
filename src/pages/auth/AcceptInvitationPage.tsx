@@ -72,7 +72,7 @@ export function AcceptInvitationPage() {
   // Show loading state
   if (authLoading || validating) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-surface flex items-center justify-center p-4">
         <InvitationSkeleton />
       </div>
     )
@@ -81,11 +81,11 @@ export function AcceptInvitationPage() {
   // Invalid or expired invitation
   if (isError || !validation?.is_valid) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-surface flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-              <XCircle className="h-8 w-8 text-red-600" />
+            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-error-light flex items-center justify-center">
+              <XCircle className="h-8 w-8 text-error" />
             </div>
             <CardTitle>Invalid Invitation</CardTitle>
             <CardDescription>
@@ -108,11 +108,11 @@ export function AcceptInvitationPage() {
   // Successfully accepted
   if (accepted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-surface flex items-center justify-center p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-success-light flex items-center justify-center">
+              <CheckCircle className="h-8 w-8 text-success" />
             </div>
             <CardTitle>Welcome to the Portal!</CardTitle>
             <CardDescription>
@@ -120,7 +120,7 @@ export function AcceptInvitationPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center space-y-4">
-            <div className="rounded-lg bg-green-50 p-4">
+            <div className="rounded-lg bg-success-light p-4">
               <p className="text-sm text-green-800">
                 You now have access to the subcontractor portal for{' '}
                 <strong>{validation.project?.name}</strong>.
@@ -138,7 +138,7 @@ export function AcceptInvitationPage() {
 
   // Show invitation details (user not logged in)
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-surface flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">

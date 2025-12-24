@@ -9,12 +9,12 @@ export default function Concept3ModernDark() {
       <div className="max-w-6xl mx-auto px-6 py-20">
         <div className="mb-8">
           <div className="inline-flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 bg-white flex items-center justify-center">
+            <div className="w-10 h-10 bg-card flex items-center justify-center">
               <Zap className="w-5 h-5 text-black" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold tracking-tight">JOBSIGHT</h1>
-              <p className="text-xs text-gray-500 tracking-wider">CONCEPT 3</p>
+              <h1 className="text-xl font-semibold tracking-tight" className="heading-page">JOBSIGHT</h1>
+              <p className="text-xs text-muted tracking-wider">CONCEPT 3</p>
             </div>
           </div>
         </div>
@@ -22,7 +22,7 @@ export default function Concept3ModernDark() {
         <h2 className="text-7xl font-bold mb-6" style={{ lineHeight: '1.1' }}>
           Modern<br/>Dark Mode
         </h2>
-        <p className="text-xl text-gray-400 max-w-2xl mb-12 leading-relaxed">
+        <p className="text-xl text-disabled max-w-2xl mb-12 leading-relaxed">
           Premium software aesthetic. Pure blacks, subtle grays, and electric purple accents. Built for focus and efficiency.
         </p>
 
@@ -39,7 +39,7 @@ export default function Concept3ModernDark() {
             <div key={c.hex}>
               <div className="h-32 mb-2" style={{ backgroundColor: c.hex }} />
               <p className="text-sm font-medium">{c.name}</p>
-              <p className="text-xs text-gray-500 font-mono">{c.hex}</p>
+              <p className="text-xs text-muted font-mono">{c.hex}</p>
             </div>
           ))}
         </div>
@@ -58,8 +58,8 @@ export default function Concept3ModernDark() {
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-semibold mb-1">Downtown Tower</h3>
-                <p className="text-sm text-gray-400">Construction Management</p>
+                <h3 className="text-xl font-semibold mb-1" className="heading-subsection">Downtown Tower</h3>
+                <p className="text-sm text-disabled">Construction Management</p>
               </div>
               <span className="px-3 py-1 bg-purple-500/10 text-purple-400 text-sm font-medium rounded-full border border-purple-500/20">
                 Active
@@ -67,7 +67,7 @@ export default function Concept3ModernDark() {
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-400">Progress</span>
+                <span className="text-disabled">Progress</span>
                 <span className="font-mono text-purple-400">68.5%</span>
               </div>
               <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">

@@ -124,17 +124,17 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
 
   const getNoteTypeBadgeColor = (type: string) => {
     const colors: Record<string, string> = {
-      general: 'bg-gray-100 text-gray-800',
-      decision: 'bg-green-100 text-green-800',
-      discussion: 'bg-blue-100 text-blue-800',
+      general: 'bg-muted text-foreground',
+      decision: 'bg-success-light text-green-800',
+      discussion: 'bg-info-light text-blue-800',
       agenda_item: 'bg-purple-100 text-purple-800',
     }
-    return colors[type] || 'bg-gray-100 text-gray-800'
+    return colors[type] || 'bg-muted text-foreground'
   }
 
   if (isLoading) {
     return (
-      <div className="text-center py-4 text-gray-500">Loading notes...</div>
+      <div className="text-center py-4 text-muted">Loading notes...</div>
     )
   }
 
@@ -142,7 +142,7 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="font-medium flex items-center gap-2">
+        <h3 className="font-medium flex items-center gap-2" className="heading-subsection">
           <FileText className="h-4 w-4" />
           Meeting Notes
         </h3>
@@ -156,9 +156,9 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
 
       {/* Notes List */}
       {notes?.length === 0 ? (
-        <div className="text-center py-8 border rounded-lg bg-gray-50">
+        <div className="text-center py-8 border rounded-lg bg-surface">
           <FileText className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-          <p className="text-gray-500 text-sm">No notes yet</p>
+          <p className="text-muted text-sm">No notes yet</p>
           {!readOnly && (
             <Button
               variant="outline"
@@ -181,12 +181,12 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
                   <div className="flex items-start gap-3">
                     {!readOnly && (
                       <div className="pt-1 cursor-grab">
-                        <GripVertical className="h-4 w-4 text-gray-400" />
+                        <GripVertical className="h-4 w-4 text-disabled" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <Icon className="h-4 w-4 text-gray-500" />
+                        <Icon className="h-4 w-4 text-muted" />
                         {note.section_title && (
                           <span className="font-medium">{note.section_title}</span>
                         )}
@@ -194,9 +194,9 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
                           {getNoteTypeLabel(note.note_type)}
                         </Badge>
                       </div>
-                      <p className="text-gray-700 whitespace-pre-wrap">{note.content}</p>
+                      <p className="text-secondary whitespace-pre-wrap">{note.content}</p>
                       {note.created_by_user && (
-                        <p className="text-xs text-gray-400 mt-2">
+                        <p className="text-xs text-disabled mt-2">
                           Added by {note.created_by_user.full_name}
                         </p>
                       )}
@@ -213,7 +213,7 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-red-600"
+                          className="text-error"
                           onClick={() => {
                             if (confirm('Delete this note?')) {
                               deleteNote.mutate(note.id)

@@ -30,20 +30,20 @@ interface RFIRowProps {
 
 const RFIRow = memo(function RFIRow({ rfi, workflowTypePrefix, getStatusColor, onDelete, isDeleting }: RFIRowProps) {
   return (
-    <tr className="border-b hover:bg-gray-50">
-      <td className="py-3 px-4 font-medium text-gray-900">
+    <tr className="border-b hover:bg-surface">
+      <td className="py-3 px-4 font-medium text-foreground">
         {workflowTypePrefix}-{String(rfi.number).padStart(3, '0')}
       </td>
       <td className="py-3 px-4">
         <div className="flex-1 min-w-0">
           <a
             href={`/rfis/${rfi.id}`}
-            className="font-medium text-blue-600 hover:underline truncate"
+            className="font-medium text-primary hover:underline truncate"
           >
             {rfi.title}
           </a>
           {rfi.description && (
-            <p className="text-xs text-gray-600 truncate mt-1">{rfi.description}</p>
+            <p className="text-xs text-secondary truncate mt-1">{rfi.description}</p>
           )}
         </div>
       </td>
@@ -52,10 +52,10 @@ const RFIRow = memo(function RFIRow({ rfi, workflowTypePrefix, getStatusColor, o
           {rfi.status}
         </Badge>
       </td>
-      <td className="py-3 px-4 text-gray-600 text-sm">
+      <td className="py-3 px-4 text-secondary text-sm">
         {rfi.raised_by ? rfi.raised_by.substring(0, 8) : '-'}
       </td>
-      <td className="py-3 px-4 text-gray-600 text-sm">
+      <td className="py-3 px-4 text-secondary text-sm">
         {rfi.created_at ? format(new Date(rfi.created_at), 'MMM d, yyyy') : 'N/A'}
       </td>
       <td className="py-3 px-4">
@@ -67,7 +67,7 @@ const RFIRow = memo(function RFIRow({ rfi, workflowTypePrefix, getStatusColor, o
             disabled={isDeleting}
             title="Delete"
           >
-            <Trash2 className="h-4 w-4 text-red-600" />
+            <Trash2 className="h-4 w-4 text-error" />
           </Button>
         </div>
       </td>
@@ -97,14 +97,14 @@ export function RFIsList({ projectId }: RFIsListProps) {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      draft: 'bg-gray-100 text-gray-800',
-      submitted: 'bg-blue-100 text-blue-800',
-      answered: 'bg-green-100 text-green-800',
-      approved: 'bg-green-600 text-white',
-      rejected: 'bg-red-100 text-red-800',
-      closed: 'bg-gray-300 text-gray-900',
+      draft: 'bg-muted text-foreground',
+      submitted: 'bg-info-light text-blue-800',
+      answered: 'bg-success-light text-green-800',
+      approved: 'bg-success text-white',
+      rejected: 'bg-error-light text-red-800',
+      closed: 'bg-gray-300 text-foreground',
     }
-    return colors[status] || 'bg-gray-100 text-gray-800'
+    return colors[status] || 'bg-muted text-foreground'
   }
 
   const handleDelete = useCallback(async (rfiId: string) => {
@@ -125,8 +125,8 @@ export function RFIsList({ projectId }: RFIsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No project selected</p>
+          <AlertCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+          <p className="text-secondary">No project selected</p>
         </CardContent>
       </Card>
     )
@@ -136,8 +136,8 @@ export function RFIsList({ projectId }: RFIsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading RFIs...</p>
+          <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+          <p className="text-secondary">Loading RFIs...</p>
         </CardContent>
       </Card>
     )
@@ -148,7 +148,7 @@ export function RFIsList({ projectId }: RFIsListProps) {
       <Card>
         <CardContent className="p-12 text-center">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <p className="text-red-600">Failed to load RFIs</p>
+          <p className="text-error">Failed to load RFIs</p>
         </CardContent>
       </Card>
     )
@@ -194,19 +194,19 @@ export function RFIsList({ projectId }: RFIsListProps) {
           {filtered.length === 0 ? (
             <div className="text-center py-8">
               <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No RFIs found</p>
+              <p className="text-muted">No RFIs found</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">RFI #</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Title</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Raised By</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Created</th>
-                    <th className="text-right py-3 px-4 font-medium text-gray-700">Actions</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">RFI #</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Title</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Status</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Raised By</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Created</th>
+                    <th className="text-right py-3 px-4 font-medium text-secondary">Actions</th>
                   </tr>
                 </thead>
                 <tbody>

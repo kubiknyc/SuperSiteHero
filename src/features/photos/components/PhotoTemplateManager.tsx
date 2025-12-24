@@ -348,7 +348,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
                   placeholder="e.g., North Elevation, Main Entry"
                 />
                 {form.formState.errors.name && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="mt-1 text-sm text-error">
                     {form.formState.errors.name.message}
                   </p>
                 )}
@@ -367,7 +367,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
 
             {/* Location Details */}
             <div className="space-y-4">
-              <h4 className="font-medium flex items-center gap-2">
+              <h4 className="font-medium flex items-center gap-2" className="heading-card">
                 <Building2 className="h-4 w-4" />
                 Location Details
               </h4>
@@ -401,7 +401,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
 
             {/* Schedule */}
             <div className="space-y-4">
-              <h4 className="font-medium flex items-center gap-2">
+              <h4 className="font-medium flex items-center gap-2" className="heading-card">
                 <Clock className="h-4 w-4" />
                 Schedule
               </h4>
@@ -481,7 +481,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
 
             {/* Instructions */}
             <div className="space-y-4">
-              <h4 className="font-medium flex items-center gap-2">
+              <h4 className="font-medium flex items-center gap-2" className="heading-card">
                 <Camera className="h-4 w-4" />
                 Photo Instructions
               </h4>
@@ -578,7 +578,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>
@@ -608,10 +608,10 @@ function TemplateCard({ template, onEdit, onDuplicate, onDelete }: TemplateCardP
     <div
       className={cn(
         'flex items-center gap-3 rounded-lg border p-3',
-        !template.isActive && 'opacity-50 bg-gray-50'
+        !template.isActive && 'opacity-50 bg-surface'
       )}
     >
-      <GripVertical className="h-4 w-4 text-gray-400 cursor-grab" />
+      <GripVertical className="h-4 w-4 text-disabled cursor-grab" />
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
@@ -650,7 +650,7 @@ function TemplateCard({ template, onEdit, onDuplicate, onDelete }: TemplateCardP
         <Button
           size="icon"
           variant="ghost"
-          className="text-red-600"
+          className="text-error"
           onClick={() => onDelete(template)}
         >
           <Trash2 className="h-4 w-4" />

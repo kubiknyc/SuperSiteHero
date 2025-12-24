@@ -38,8 +38,8 @@ const ACTION_CONFIG: Record<
 > = {
   created: {
     icon: Plus,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success-light',
     label: 'Created',
   },
   updated: {
@@ -68,8 +68,8 @@ const ACTION_CONFIG: Record<
   },
   internal_rejected: {
     icon: XCircle,
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-error',
+    bgColor: 'bg-error-light',
     label: 'Internally Rejected',
   },
   owner_submitted: {
@@ -80,38 +80,38 @@ const ACTION_CONFIG: Record<
   },
   owner_approved: {
     icon: CheckCircle,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success-light',
     label: 'Owner Approved',
   },
   owner_rejected: {
     icon: XCircle,
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-error',
+    bgColor: 'bg-error-light',
     label: 'Owner Rejected',
   },
   approved: {
     icon: CheckCircle,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success-light',
     label: 'Approved',
   },
   rejected: {
     icon: XCircle,
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-error',
+    bgColor: 'bg-error-light',
     label: 'Rejected',
   },
   voided: {
     icon: Ban,
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     label: 'Voided',
   },
   void: {
     icon: Ban,
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     label: 'Voided',
   },
   status_change: {
@@ -122,8 +122,8 @@ const ACTION_CONFIG: Record<
   },
   amount_changed: {
     icon: DollarSign,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success-light',
     label: 'Amount Updated',
   },
   item_added: {
@@ -140,8 +140,8 @@ const ACTION_CONFIG: Record<
   },
   item_deleted: {
     icon: Trash2,
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-error',
+    bgColor: 'bg-error-light',
     label: 'Item Deleted',
   },
   attachment_added: {
@@ -158,8 +158,8 @@ const ACTION_CONFIG: Record<
   },
   default: {
     icon: History,
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     label: 'Change',
   },
 }
@@ -225,8 +225,8 @@ export function ChangeOrderHistoryTimeline({
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-          <p className="text-gray-500">Loading history...</p>
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+          <p className="text-muted">Loading history...</p>
         </CardContent>
       </Card>
     )
@@ -234,10 +234,10 @@ export function ChangeOrderHistoryTimeline({
 
   if (error) {
     return (
-      <Card className="border-red-200 bg-red-50">
+      <Card className="border-red-200 bg-error-light">
         <CardContent className="py-8 text-center">
-          <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-          <p className="text-red-600">{error.message}</p>
+          <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+          <p className="text-error">{error.message}</p>
         </CardContent>
       </Card>
     )
@@ -262,7 +262,7 @@ export function ChangeOrderHistoryTimeline({
         {displayHistory && displayHistory.length > 0 ? (
           <div className="relative">
             {/* Timeline line */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-muted" />
 
             {/* Timeline items */}
             <div className="space-y-6">
@@ -301,11 +301,11 @@ export function ChangeOrderHistoryTimeline({
                           {/* Value change display */}
                           {entry.old_value !== null && entry.new_value !== null && (
                             <div className="mt-1 text-sm flex items-center gap-2">
-                              <span className="text-gray-500 line-through">
+                              <span className="text-muted line-through">
                                 {formatValue(entry.old_value, entry.field_changed)}
                               </span>
-                              <span className="text-gray-400">→</span>
-                              <span className="text-gray-900 font-medium">
+                              <span className="text-disabled">→</span>
+                              <span className="text-foreground font-medium">
                                 {formatValue(entry.new_value, entry.field_changed)}
                               </span>
                             </div>
@@ -313,11 +313,11 @@ export function ChangeOrderHistoryTimeline({
 
                           {/* Notes */}
                           {entry.notes && (
-                            <p className="mt-1 text-sm text-gray-600 italic">{entry.notes}</p>
+                            <p className="mt-1 text-sm text-secondary italic">{entry.notes}</p>
                           )}
 
                           {/* User and time */}
-                          <div className="mt-2 flex items-center gap-3 text-xs text-gray-400">
+                          <div className="mt-2 flex items-center gap-3 text-xs text-disabled">
                             {entry.changed_by_user ? (
                               <span className="flex items-center gap-1">
                                 <User className="h-3 w-3" />
@@ -339,7 +339,7 @@ export function ChangeOrderHistoryTimeline({
 
                         {/* Full timestamp on hover */}
                         <span
-                          className="text-xs text-gray-400 shrink-0"
+                          className="text-xs text-disabled shrink-0"
                           title={format(new Date(entry.changed_at), 'PPpp')}
                         >
                           {format(new Date(entry.changed_at), 'MMM d')}
@@ -354,7 +354,7 @@ export function ChangeOrderHistoryTimeline({
             {/* Show more indicator */}
             {maxItems && history && history.length > maxItems && (
               <div className="mt-4 text-center">
-                <Badge variant="outline" className="text-gray-500">
+                <Badge variant="outline" className="text-muted">
                   + {history.length - maxItems} more events
                 </Badge>
               </div>
@@ -363,8 +363,8 @@ export function ChangeOrderHistoryTimeline({
         ) : (
           <div className="text-center py-8">
             <History className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500">No history recorded yet</p>
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-muted">No history recorded yet</p>
+            <p className="text-xs text-disabled mt-1">
               Changes will be tracked as the change order progresses
             </p>
           </div>

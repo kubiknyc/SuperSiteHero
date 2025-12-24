@@ -168,8 +168,8 @@ export function ScoringReportView({
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900">{summary.total_executions}</div>
-              <div className="text-sm text-gray-600 mt-1">Total Checklists</div>
+              <div className="text-3xl font-bold text-foreground">{summary.total_executions}</div>
+              <div className="text-sm text-secondary mt-1">Total Checklists</div>
             </div>
           </CardContent>
         </Card>
@@ -177,8 +177,8 @@ export function ScoringReportView({
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600">{summary.passed_count}</div>
-              <div className="text-sm text-gray-600 mt-1">Passed</div>
+              <div className="text-3xl font-bold text-success">{summary.passed_count}</div>
+              <div className="text-sm text-secondary mt-1">Passed</div>
             </div>
           </CardContent>
         </Card>
@@ -186,8 +186,8 @@ export function ScoringReportView({
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-red-600">{summary.failed_count}</div>
-              <div className="text-sm text-gray-600 mt-1">Failed</div>
+              <div className="text-3xl font-bold text-error">{summary.failed_count}</div>
+              <div className="text-sm text-secondary mt-1">Failed</div>
             </div>
           </CardContent>
         </Card>
@@ -195,10 +195,10 @@ export function ScoringReportView({
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600">
+              <div className="text-3xl font-bold text-primary">
                 {summary.average_score.toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 mt-1">Average Score</div>
+              <div className="text-sm text-secondary mt-1">Average Score</div>
             </div>
           </CardContent>
         </Card>
@@ -213,18 +213,18 @@ export function ScoringReportView({
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-secondary">
                   {summary.passed_count} / {summary.total_executions} passed
                 </span>
-                <span className="text-lg font-bold text-gray-900">
+                <span className="text-lg font-bold text-foreground">
                   {summary.pass_rate.toFixed(1)}%
                 </span>
               </div>
-              <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden">
+              <div className="w-full h-4 bg-muted rounded-full overflow-hidden">
                 <div
                   className={cn(
                     'h-full transition-all',
-                    summary.pass_rate >= 70 ? 'bg-green-600' : 'bg-red-600'
+                    summary.pass_rate >= 70 ? 'bg-success' : 'bg-error'
                   )}
                   style={{ width: `${summary.pass_rate}%` }}
                 />
@@ -247,8 +247,8 @@ export function ScoringReportView({
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
               {Object.entries(summary.grade_distribution).map(([grade, count]) => (
                 <div key={grade} className="text-center p-3 border rounded-lg">
-                  <div className="text-2xl font-bold text-gray-900">{grade}</div>
-                  <div className="text-sm text-gray-600">{count}</div>
+                  <div className="text-2xl font-bold text-foreground">{grade}</div>
+                  <div className="text-sm text-secondary">{count}</div>
                 </div>
               ))}
             </div>
@@ -382,11 +382,11 @@ export function ScoringReportView({
         <CardContent>
           {isLoading ? (
             <div className="text-center py-8">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4" />
-              <p className="text-gray-600">Loading scores...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+              <p className="text-secondary">Loading scores...</p>
             </div>
           ) : filteredExecutions.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               <p>No results found with current filters</p>
             </div>
           ) : (
@@ -395,7 +395,7 @@ export function ScoringReportView({
                 <TableHeader>
                   <TableRow>
                     <TableHead
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer hover:bg-surface"
                       onClick={() => toggleSort('name')}
                     >
                       <div className="flex items-center gap-2">
@@ -407,7 +407,7 @@ export function ScoringReportView({
                     <TableHead>Category</TableHead>
                     <TableHead>Inspector</TableHead>
                     <TableHead
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer hover:bg-surface"
                       onClick={() => toggleSort('score')}
                     >
                       <div className="flex items-center gap-2">
@@ -418,7 +418,7 @@ export function ScoringReportView({
                     </TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead
-                      className="cursor-pointer hover:bg-gray-50"
+                      className="cursor-pointer hover:bg-surface"
                       onClick={() => toggleSort('date')}
                     >
                       <div className="flex items-center gap-2">
@@ -440,7 +440,7 @@ export function ScoringReportView({
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-gray-400" />
+                          <User className="w-4 h-4 text-disabled" />
                           <span className="text-sm">{execution.inspector_name || 'N/A'}</span>
                         </div>
                       </TableCell>
@@ -449,19 +449,19 @@ export function ScoringReportView({
                       </TableCell>
                       <TableCell>
                         {(execution.score_percentage || 0) >= 70 ? (
-                          <div className="flex items-center gap-2 text-green-600">
+                          <div className="flex items-center gap-2 text-success">
                             <CheckCircle2 className="w-4 h-4" />
                             <span className="text-sm font-medium">Passed</span>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 text-red-600">
+                          <div className="flex items-center gap-2 text-error">
                             <XCircle className="w-4 h-4" />
                             <span className="text-sm font-medium">Failed</span>
                           </div>
                         )}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <div className="flex items-center gap-2 text-sm text-secondary">
                           <Calendar className="w-4 h-4" />
                           {execution.completed_at
                             ? format(new Date(execution.completed_at), 'MMM d, yyyy')

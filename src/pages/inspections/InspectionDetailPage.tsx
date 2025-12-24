@@ -127,8 +127,8 @@ export function InspectionDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
-            <p className="text-gray-500 mt-4">Loading inspection...</p>
+            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+            <p className="text-muted mt-4">Loading inspection...</p>
           </div>
         </div>
       </AppLayout>
@@ -139,12 +139,12 @@ export function InspectionDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <div className="text-center py-12 bg-white rounded-lg border">
+          <div className="text-center py-12 bg-card rounded-lg border">
             <AlertTriangle className="h-12 w-12 text-red-400 mx-auto" />
-            <h3 className="text-lg font-medium text-gray-900 mt-4">
+            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">
               Inspection Not Found
             </h3>
-            <p className="text-gray-500 mt-2">
+            <p className="text-muted mt-2">
               The inspection you're looking for doesn't exist or has been deleted.
             </p>
             <Link to="/inspections" className="mt-4 inline-block">
@@ -171,13 +171,13 @@ export function InspectionDetailPage() {
           <div className="flex items-start gap-4">
             <Link
               to="/inspections"
-              className="mt-1 p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="mt-1 p-2 hover:bg-muted rounded-lg transition-colors"
             >
-              <ArrowLeft className="h-5 w-5 text-gray-500" />
+              <ArrowLeft className="h-5 w-5 text-muted" />
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-foreground" className="heading-page">
                   {inspection.inspection_name}
                 </h1>
                 <InspectionTypeBadge type={inspection.inspection_type} />
@@ -218,7 +218,7 @@ export function InspectionDetailPage() {
             )}
             <Button
               variant="outline"
-              className="text-red-600 hover:text-red-700"
+              className="text-error hover:text-error-dark"
               onClick={() => setShowDeleteConfirm(true)}
             >
               <Trash2 className="h-4 w-4" />
@@ -236,7 +236,7 @@ export function InspectionDetailPage() {
                   <CardTitle className="text-lg">Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 whitespace-pre-wrap">
+                  <p className="text-secondary whitespace-pre-wrap">
                     {inspection.description}
                   </p>
                 </CardContent>
@@ -252,20 +252,20 @@ export function InspectionDetailPage() {
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-3">
                     {inspection.result === 'pass' && (
-                      <CheckCircle className="h-8 w-8 text-green-500" />
+                      <CheckCircle className="h-8 w-8 text-success" />
                     )}
                     {inspection.result === 'fail' && (
-                      <XCircle className="h-8 w-8 text-red-500" />
+                      <XCircle className="h-8 w-8 text-error" />
                     )}
                     {inspection.result === 'conditional' && (
-                      <AlertTriangle className="h-8 w-8 text-yellow-500" />
+                      <AlertTriangle className="h-8 w-8 text-warning" />
                     )}
                     <div>
                       <p className="font-medium text-lg capitalize">
                         {inspection.result}
                       </p>
                       {inspection.result_date && (
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-muted">
                           {format(new Date(inspection.result_date), 'MMMM d, yyyy')}
                         </p>
                       )}
@@ -274,10 +274,10 @@ export function InspectionDetailPage() {
 
                   {inspection.inspector_notes && (
                     <div>
-                      <h4 className="text-sm font-medium text-gray-700 mb-1">
+                      <h4 className="text-sm font-medium text-secondary mb-1" className="heading-card">
                         Inspector Notes
                       </h4>
-                      <p className="text-gray-600 whitespace-pre-wrap bg-gray-50 p-3 rounded-lg">
+                      <p className="text-secondary whitespace-pre-wrap bg-surface p-3 rounded-lg">
                         {inspection.inspector_notes}
                       </p>
                     </div>
@@ -285,10 +285,10 @@ export function InspectionDetailPage() {
 
                   {inspection.failure_reasons && (
                     <div>
-                      <h4 className="text-sm font-medium text-red-700 mb-1">
+                      <h4 className="text-sm font-medium text-error-dark mb-1" className="heading-card">
                         Failure Reasons
                       </h4>
-                      <p className="text-gray-600 whitespace-pre-wrap bg-red-50 p-3 rounded-lg border border-red-200">
+                      <p className="text-secondary whitespace-pre-wrap bg-error-light p-3 rounded-lg border border-red-200">
                         {inspection.failure_reasons}
                       </p>
                     </div>
@@ -296,10 +296,10 @@ export function InspectionDetailPage() {
 
                   {inspection.corrective_actions_required && (
                     <div>
-                      <h4 className="text-sm font-medium text-orange-700 mb-1">
+                      <h4 className="text-sm font-medium text-orange-700 mb-1" className="heading-card">
                         Corrective Actions Required
                       </h4>
-                      <p className="text-gray-600 whitespace-pre-wrap bg-orange-50 p-3 rounded-lg border border-orange-200">
+                      <p className="text-secondary whitespace-pre-wrap bg-orange-50 p-3 rounded-lg border border-orange-200">
                         {inspection.corrective_actions_required}
                       </p>
                     </div>
@@ -307,12 +307,12 @@ export function InspectionDetailPage() {
 
                   {inspection.reinspection_scheduled_date && (
                     <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                      <Calendar className="h-5 w-5 text-blue-600" />
+                      <Calendar className="h-5 w-5 text-primary" />
                       <div>
-                        <p className="text-sm font-medium text-blue-700">
+                        <p className="text-sm font-medium text-primary-hover">
                           Reinspection Scheduled
                         </p>
-                        <p className="text-blue-600">
+                        <p className="text-primary">
                           {format(
                             new Date(inspection.reinspection_scheduled_date),
                             'MMMM d, yyyy'
@@ -335,41 +335,41 @@ export function InspectionDetailPage() {
                   {inspection.related_checklist_id ? (
                     <Link
                       to={`/checklists/executions/${inspection.related_checklist_id}`}
-                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                      className="flex items-center gap-3 p-3 bg-surface rounded-lg hover:bg-muted transition-colors"
                     >
-                      <ClipboardCheck className="h-5 w-5 text-gray-500" />
+                      <ClipboardCheck className="h-5 w-5 text-muted" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-foreground">
                           Related Checklist
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted">
                           View linked checklist
                         </p>
                       </div>
-                      <LinkIcon className="h-4 w-4 text-gray-400 ml-auto" />
+                      <LinkIcon className="h-4 w-4 text-disabled ml-auto" />
                     </Link>
                   ) : (
-                    <p className="text-sm text-gray-500">No checklist linked</p>
+                    <p className="text-sm text-muted">No checklist linked</p>
                   )}
 
                   {inspection.related_permit_id ? (
                     <Link
                       to={`/permits/${inspection.related_permit_id}`}
-                      className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                      className="flex items-center gap-3 p-3 bg-surface rounded-lg hover:bg-muted transition-colors"
                     >
-                      <FileText className="h-5 w-5 text-gray-500" />
+                      <FileText className="h-5 w-5 text-muted" />
                       <div>
-                        <p className="text-sm font-medium text-gray-900">
+                        <p className="text-sm font-medium text-foreground">
                           Related Permit
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-muted">
                           View linked permit
                         </p>
                       </div>
-                      <LinkIcon className="h-4 w-4 text-gray-400 ml-auto" />
+                      <LinkIcon className="h-4 w-4 text-disabled ml-auto" />
                     </Link>
                   ) : (
-                    <p className="text-sm text-gray-500">No permit linked</p>
+                    <p className="text-sm text-muted">No permit linked</p>
                   )}
                 </div>
               </CardContent>
@@ -386,9 +386,9 @@ export function InspectionDetailPage() {
               <CardContent className="space-y-4">
                 {inspection.scheduled_date && (
                   <div className="flex items-center gap-3">
-                    <Calendar className="h-5 w-5 text-gray-400" />
+                    <Calendar className="h-5 w-5 text-disabled" />
                     <div>
-                      <p className="text-sm text-gray-500">Scheduled Date</p>
+                      <p className="text-sm text-muted">Scheduled Date</p>
                       <p className="font-medium">
                         {format(
                           new Date(inspection.scheduled_date),
@@ -401,16 +401,16 @@ export function InspectionDetailPage() {
 
                 {inspection.scheduled_time && (
                   <div className="flex items-center gap-3">
-                    <Clock className="h-5 w-5 text-gray-400" />
+                    <Clock className="h-5 w-5 text-disabled" />
                     <div>
-                      <p className="text-sm text-gray-500">Scheduled Time</p>
+                      <p className="text-sm text-muted">Scheduled Time</p>
                       <p className="font-medium">{inspection.scheduled_time}</p>
                     </div>
                   </div>
                 )}
 
                 {inspection.reminder_days_before && (
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-muted">
                     Reminder: {inspection.reminder_days_before} day
                     {inspection.reminder_days_before > 1 ? 's' : ''} before
                   </div>
@@ -427,18 +427,18 @@ export function InspectionDetailPage() {
                 {inspection.inspector_name ? (
                   <>
                     <div className="flex items-center gap-3">
-                      <User className="h-5 w-5 text-gray-400" />
+                      <User className="h-5 w-5 text-disabled" />
                       <div>
-                        <p className="text-sm text-gray-500">Name</p>
+                        <p className="text-sm text-muted">Name</p>
                         <p className="font-medium">{inspection.inspector_name}</p>
                       </div>
                     </div>
 
                     {inspection.inspector_company && (
                       <div className="flex items-center gap-3">
-                        <Building className="h-5 w-5 text-gray-400" />
+                        <Building className="h-5 w-5 text-disabled" />
                         <div>
-                          <p className="text-sm text-gray-500">Company</p>
+                          <p className="text-sm text-muted">Company</p>
                           <p className="font-medium">
                             {inspection.inspector_company}
                           </p>
@@ -448,12 +448,12 @@ export function InspectionDetailPage() {
 
                     {inspection.inspector_phone && (
                       <div className="flex items-center gap-3">
-                        <Phone className="h-5 w-5 text-gray-400" />
+                        <Phone className="h-5 w-5 text-disabled" />
                         <div>
-                          <p className="text-sm text-gray-500">Phone</p>
+                          <p className="text-sm text-muted">Phone</p>
                           <a
                             href={`tel:${inspection.inspector_phone}`}
-                            className="font-medium text-blue-600 hover:underline"
+                            className="font-medium text-primary hover:underline"
                           >
                             {inspection.inspector_phone}
                           </a>
@@ -462,7 +462,7 @@ export function InspectionDetailPage() {
                     )}
                   </>
                 ) : (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     No inspector information
                   </p>
                 )}
@@ -477,7 +477,7 @@ export function InspectionDetailPage() {
               <CardContent className="space-y-3 text-sm">
                 {inspection.created_at && (
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Created</span>
+                    <span className="text-muted">Created</span>
                     <span className="font-medium">
                       {format(new Date(inspection.created_at), 'MMM d, yyyy')}
                     </span>
@@ -485,7 +485,7 @@ export function InspectionDetailPage() {
                 )}
                 {inspection.updated_at && (
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Last Updated</span>
+                    <span className="text-muted">Last Updated</span>
                     <span className="font-medium">
                       {format(new Date(inspection.updated_at), 'MMM d, yyyy')}
                     </span>
@@ -499,11 +499,11 @@ export function InspectionDetailPage() {
         {/* Delete Confirmation Dialog */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-lg font-medium text-gray-900">
+            <div className="bg-card rounded-lg p-6 max-w-md w-full mx-4">
+              <h3 className="text-lg font-medium text-foreground" className="heading-subsection">
                 Delete Inspection
               </h3>
-              <p className="text-gray-500 mt-2">
+              <p className="text-muted mt-2">
                 Are you sure you want to delete this inspection? This action
                 cannot be undone.
               </p>

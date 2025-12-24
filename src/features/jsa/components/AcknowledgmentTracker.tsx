@@ -127,7 +127,7 @@ export function AcknowledgmentTracker({
                       className="cursor-default flex items-center gap-1"
                     >
                       {ack.has_questions && (
-                        <HelpCircle className="h-3 w-3 text-yellow-500" />
+                        <HelpCircle className="h-3 w-3 text-warning" />
                       )}
                       {ack.worker_name}
                       {!disabled && (
@@ -218,9 +218,9 @@ export function AcknowledgmentTracker({
                     <TableCell>
                       <div className="flex items-center gap-2">
                         {ack.signature_data ? (
-                          <PenLine className="h-4 w-4 text-green-500" />
+                          <PenLine className="h-4 w-4 text-success" />
                         ) : (
-                          <CheckCircle className="h-4 w-4 text-blue-500" />
+                          <CheckCircle className="h-4 w-4 text-primary" />
                         )}
                         <span className="font-medium">{ack.worker_name}</span>
                         {ack.worker_badge_number && (
@@ -240,14 +240,14 @@ export function AcknowledgmentTracker({
                         {ack.understands_hazards ? (
                           <Badge
                             variant="outline"
-                            className="bg-green-50 text-green-700 border-green-200"
+                            className="bg-success-light text-success-dark border-green-200"
                           >
                             Understood
                           </Badge>
                         ) : (
                           <Badge
                             variant="outline"
-                            className="bg-yellow-50 text-yellow-700 border-yellow-200"
+                            className="bg-warning-light text-yellow-700 border-yellow-200"
                           >
                             Not confirmed
                           </Badge>
@@ -256,7 +256,7 @@ export function AcknowledgmentTracker({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger>
-                                <HelpCircle className="h-4 w-4 text-yellow-500" />
+                                <HelpCircle className="h-4 w-4 text-warning" />
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p className="max-w-[200px]">
@@ -558,7 +558,7 @@ function AddAcknowledgmentDialog({
                 </Button>
               )}
             </div>
-            <div className="border rounded-md p-1 bg-white">
+            <div className="border rounded-md p-1 bg-card">
               <canvas
                 ref={canvasRef}
                 width={450}

@@ -56,14 +56,14 @@ export function Pagination({
   return (
     <div
       className={cn(
-        'flex items-center justify-between gap-4 px-4 py-3 border-t border-gray-200',
+        'flex items-center justify-between gap-4 px-4 py-3 border-t border-border',
         className
       )}
     >
       {/* Page size selector */}
       {showPageSizeSelector && (
         <div className="flex items-center gap-2">
-          <label htmlFor="page-size" className="text-sm text-gray-600">
+          <label htmlFor="page-size" className="text-sm text-secondary">
             Items per page:
           </label>
           <Select
@@ -82,7 +82,7 @@ export function Pagination({
       )}
 
       {/* Item count display */}
-      <div className="text-sm text-gray-600">
+      <div className="text-sm text-secondary">
         {totalCount === 0 ? (
           <span>No items</span>
         ) : (
@@ -122,9 +122,9 @@ export function Pagination({
 
         {/* Page number display */}
         <div className="flex items-center gap-1 px-2 text-sm">
-          <span className="text-gray-600">Page</span>
+          <span className="text-secondary">Page</span>
           <span className="font-medium">{page + 1}</span>
-          <span className="text-gray-600">of</span>
+          <span className="text-secondary">of</span>
           <span className="font-medium">{totalPages}</span>
         </div>
 
@@ -181,7 +181,7 @@ export function SimplePagination({
         Previous
       </Button>
 
-      <span className="text-sm text-gray-600">
+      <span className="text-sm text-secondary">
         Page {page + 1} of {totalPages}
       </span>
 

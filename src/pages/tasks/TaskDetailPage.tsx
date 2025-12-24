@@ -31,7 +31,7 @@ export function TaskDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-red-600">Task ID not found</p>
+            <p className="text-error">Task ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -43,7 +43,7 @@ export function TaskDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading task...</p>
+            <p className="text-muted">Loading task...</p>
           </div>
         </div>
       </AppLayout>
@@ -55,8 +55,8 @@ export function TaskDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600">Error loading task: {error?.message}</p>
+            <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+            <p className="text-error">Error loading task: {error?.message}</p>
             <Link to="/tasks">
               <Button className="mt-4">Back to Tasks</Button>
             </Link>
@@ -110,13 +110,13 @@ export function TaskDetailPage() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return 'text-blue-600'
+        return 'text-primary'
       case 'normal':
-        return 'text-gray-600'
+        return 'text-secondary'
       case 'high':
-        return 'text-red-600'
+        return 'text-error'
       default:
-        return 'text-gray-600'
+        return 'text-secondary'
     }
   }
 
@@ -135,7 +135,7 @@ export function TaskDetailPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{task.title}</h1>
+              <h1 className="text-3xl font-bold text-foreground" className="heading-page">{task.title}</h1>
               <div className="flex items-center gap-2 mt-2">
                 <Badge variant={getStatusColor(task.status ?? 'pending')}>
                   {(task.status ?? 'pending').replace(/_/g, ' ')}
@@ -186,13 +186,13 @@ export function TaskDetailPage() {
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {task.description && (
               <div className="md:col-span-2">
-                <p className="text-sm font-medium text-gray-600 mb-2">Description</p>
-                <p className="text-gray-700 whitespace-pre-wrap">{task.description}</p>
+                <p className="text-sm font-medium text-secondary mb-2">Description</p>
+                <p className="text-secondary whitespace-pre-wrap">{task.description}</p>
               </div>
             )}
 
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-2">Priority</p>
+              <p className="text-sm font-medium text-secondary mb-2">Priority</p>
               <div className={`flex items-center gap-2 text-lg font-semibold ${getPriorityColor(task.priority ?? 'normal')}`}>
                 <Flag className="h-5 w-5" />
                 {(task.priority ?? 'normal').toUpperCase()}
@@ -201,14 +201,14 @@ export function TaskDetailPage() {
 
             {task.location && (
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-2">Location</p>
+                <p className="text-sm font-medium text-secondary mb-2">Location</p>
                 <p className="text-lg font-semibold">{task.location}</p>
               </div>
             )}
 
             {task.start_date && (
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-2">Start Date</p>
+                <p className="text-sm font-medium text-secondary mb-2">Start Date</p>
                 <p className="text-lg font-semibold flex items-center gap-2">
                   <Calendar className="h-5 w-5" />
                   {task.start_date ? format(new Date(task.start_date), 'MMMM d, yyyy') : 'N/A'}
@@ -218,8 +218,8 @@ export function TaskDetailPage() {
 
             {task.due_date && (
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-2">Due Date</p>
-                <p className={`text-lg font-semibold flex items-center gap-2 ${isOverdue ? 'text-red-600' : ''}`}>
+                <p className="text-sm font-medium text-secondary mb-2">Due Date</p>
+                <p className={`text-lg font-semibold flex items-center gap-2 ${isOverdue ? 'text-error' : ''}`}>
                   <Calendar className="h-5 w-5" />
                   {task.due_date ? format(new Date(task.due_date), 'MMMM d, yyyy') : 'N/A'}
                 </p>
@@ -228,15 +228,15 @@ export function TaskDetailPage() {
 
             {task.completed_date && (
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-2">Completed Date</p>
-                <p className="text-lg font-semibold text-green-600">
+                <p className="text-sm font-medium text-secondary mb-2">Completed Date</p>
+                <p className="text-lg font-semibold text-success">
                   {task.completed_date ? format(new Date(task.completed_date), 'MMMM d, yyyy') : 'N/A'}
                 </p>
               </div>
             )}
 
             <div>
-              <p className="text-sm font-medium text-gray-600 mb-2">Created</p>
+              <p className="text-sm font-medium text-secondary mb-2">Created</p>
               <p className="text-lg font-semibold">
                 {task.created_at ? format(new Date(task.created_at), 'MMMM d, yyyy') : 'N/A'}
               </p>

@@ -69,7 +69,7 @@ export function PunchItemDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center">
-            <p className="text-red-600">Punch item ID not found</p>
+            <p className="text-error">Punch item ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -81,8 +81,8 @@ export function PunchItemDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading punch item...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading punch item...</p>
           </div>
         </div>
       </AppLayout>
@@ -101,9 +101,9 @@ export function PunchItemDetailPage() {
           </div>
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Punch Item</h3>
-              <p className="text-gray-600">{error?.message || 'Punch item not found'}</p>
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Punch Item</h3>
+              <p className="text-secondary">{error?.message || 'Punch item not found'}</p>
             </CardContent>
           </Card>
         </div>
@@ -128,7 +128,7 @@ export function PunchItemDetailPage() {
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{punchItem.title}</h1>
+                <h1 className="text-3xl font-bold text-foreground" className="heading-page">{punchItem.title}</h1>
                 <div className="mt-2">
                   <PunchItemStatusBadge status={punchItem.status} priority={punchItem.priority} />
                 </div>
@@ -157,7 +157,7 @@ export function PunchItemDetailPage() {
                   <CardTitle>Description</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="whitespace-pre-wrap text-gray-900">{punchItem.description}</p>
+                  <p className="whitespace-pre-wrap text-foreground">{punchItem.description}</p>
                 </CardContent>
               </Card>
             )}
@@ -171,33 +171,33 @@ export function PunchItemDetailPage() {
                 <div className="grid grid-cols-2 gap-4">
                   {punchItem.building && (
                     <div>
-                      <Label className="text-gray-600">Building</Label>
-                      <p className="mt-1 text-gray-900">{punchItem.building}</p>
+                      <Label className="text-secondary">Building</Label>
+                      <p className="mt-1 text-foreground">{punchItem.building}</p>
                     </div>
                   )}
                   {punchItem.floor && (
                     <div>
-                      <Label className="text-gray-600">Floor</Label>
-                      <p className="mt-1 text-gray-900">{punchItem.floor}</p>
+                      <Label className="text-secondary">Floor</Label>
+                      <p className="mt-1 text-foreground">{punchItem.floor}</p>
                     </div>
                   )}
                   {punchItem.room && (
                     <div>
-                      <Label className="text-gray-600">Room</Label>
-                      <p className="mt-1 text-gray-900">{punchItem.room}</p>
+                      <Label className="text-secondary">Room</Label>
+                      <p className="mt-1 text-foreground">{punchItem.room}</p>
                     </div>
                   )}
                   {punchItem.area && (
                     <div>
-                      <Label className="text-gray-600">Area</Label>
-                      <p className="mt-1 text-gray-900">{punchItem.area}</p>
+                      <Label className="text-secondary">Area</Label>
+                      <p className="mt-1 text-foreground">{punchItem.area}</p>
                     </div>
                   )}
                 </div>
                 {punchItem.location_notes && (
                   <div>
-                    <Label className="text-gray-600">Location Notes</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-gray-900">{punchItem.location_notes}</p>
+                    <Label className="text-secondary">Location Notes</Label>
+                    <p className="mt-1 whitespace-pre-wrap text-foreground">{punchItem.location_notes}</p>
                   </div>
                 )}
               </CardContent>
@@ -211,27 +211,27 @@ export function PunchItemDetailPage() {
               <CardContent className="space-y-3">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-gray-600">Trade</Label>
-                    <p className="mt-1 text-gray-900">{punchItem.trade}</p>
+                    <Label className="text-secondary">Trade</Label>
+                    <p className="mt-1 text-foreground">{punchItem.trade}</p>
                   </div>
                   <div>
-                    <Label className="text-gray-600">Priority</Label>
+                    <Label className="text-secondary">Priority</Label>
                     <p className="mt-1">
                       <PunchItemStatusBadge status={punchItem.status} priority={punchItem.priority} />
                     </p>
                   </div>
                   {punchItem.due_date && (
                     <div>
-                      <Label className="text-gray-600">Due Date</Label>
-                      <p className="mt-1 text-gray-900">
+                      <Label className="text-secondary">Due Date</Label>
+                      <p className="mt-1 text-foreground">
                         {punchItem.due_date ? format(new Date(punchItem.due_date), 'MMM d, yyyy') : 'N/A'}
                       </p>
                     </div>
                   )}
                   {punchItem.assigned_to && (
                     <div>
-                      <Label className="text-gray-600">Assigned To</Label>
-                      <p className="mt-1 text-gray-900">{punchItem.assigned_to}</p>
+                      <Label className="text-secondary">Assigned To</Label>
+                      <p className="mt-1 text-foreground">{punchItem.assigned_to}</p>
                     </div>
                   )}
                 </div>
@@ -247,24 +247,24 @@ export function PunchItemDetailPage() {
                 <CardContent className="space-y-3">
                   {punchItem.completed_date && (
                     <div>
-                      <Label className="text-gray-600">Completed Date</Label>
-                      <p className="mt-1 text-gray-900">
+                      <Label className="text-secondary">Completed Date</Label>
+                      <p className="mt-1 text-foreground">
                         {punchItem.completed_date ? format(new Date(punchItem.completed_date), 'MMM d, yyyy h:mm a') : 'N/A'}
                       </p>
                     </div>
                   )}
                   {punchItem.verified_date && (
                     <div>
-                      <Label className="text-gray-600">Verified Date</Label>
-                      <p className="mt-1 text-gray-900">
+                      <Label className="text-secondary">Verified Date</Label>
+                      <p className="mt-1 text-foreground">
                         {punchItem.verified_date ? format(new Date(punchItem.verified_date), 'MMM d, yyyy h:mm a') : 'N/A'}
                       </p>
                     </div>
                   )}
                   {punchItem.rejection_notes && (
-                    <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                      <Label className="text-gray-600 font-semibold">Rejection Notes</Label>
-                      <p className="mt-2 whitespace-pre-wrap text-gray-900">{punchItem.rejection_notes}</p>
+                    <div className="p-4 bg-error-light border border-red-200 rounded-lg">
+                      <Label className="text-secondary font-semibold">Rejection Notes</Label>
+                      <p className="mt-2 whitespace-pre-wrap text-foreground">{punchItem.rejection_notes}</p>
                     </div>
                   )}
                 </CardContent>
@@ -314,7 +314,7 @@ export function PunchItemDetailPage() {
 
                   {/* Rejection Form */}
                   {showRejectionForm && (
-                    <form onSubmit={handleReject} className="space-y-3 mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <form onSubmit={handleReject} className="space-y-3 mt-4 p-4 bg-error-light border border-red-200 rounded-lg">
                       <Label htmlFor="rejection-notes">Rejection Notes (Required)</Label>
                       <Textarea
                         id="rejection-notes"
@@ -365,21 +365,21 @@ export function PunchItemDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-gray-600">Created</Label>
-                  <p className="mt-1 text-gray-900">
+                  <Label className="text-secondary">Created</Label>
+                  <p className="mt-1 text-foreground">
                     {punchItem.created_at ? format(new Date(punchItem.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                   </p>
                 </div>
                 <div>
-                  <Label className="text-gray-600">Last Updated</Label>
-                  <p className="mt-1 text-gray-900">
+                  <Label className="text-secondary">Last Updated</Label>
+                  <p className="mt-1 text-foreground">
                     {punchItem.updated_at ? format(new Date(punchItem.updated_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                   </p>
                 </div>
                 {punchItem.number && (
                   <div>
-                    <Label className="text-gray-600">Item Number</Label>
-                    <p className="mt-1 text-gray-900">#{punchItem.number}</p>
+                    <Label className="text-secondary">Item Number</Label>
+                    <p className="mt-1 text-foreground">#{punchItem.number}</p>
                   </div>
                 )}
               </CardContent>

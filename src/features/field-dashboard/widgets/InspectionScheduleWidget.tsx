@@ -114,7 +114,7 @@ export function InspectionScheduleWidget({
           </>
         ) : (
           <div className="text-center py-6">
-            <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+            <CheckCircle2 className="h-8 w-8 text-success mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">No inspections scheduled</p>
           </div>
         )}

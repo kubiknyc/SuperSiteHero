@@ -99,11 +99,11 @@ export function MeetingDetailPage() {
   const getActionItemIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-5 w-5 text-green-600" />
+        return <CheckCircle2 className="h-5 w-5 text-success" />
       case 'in_progress':
-        return <AlertCircle className="h-5 w-5 text-yellow-600" />
+        return <AlertCircle className="h-5 w-5 text-warning" />
       default:
-        return <Circle className="h-5 w-5 text-gray-400" />
+        return <Circle className="h-5 w-5 text-disabled" />
     }
   }
 
@@ -111,7 +111,7 @@ export function MeetingDetailPage() {
     return (
       <AppLayout>
         <div className="p-6 text-center">
-          <p className="text-gray-500">Loading meeting details...</p>
+          <p className="text-muted">Loading meeting details...</p>
         </div>
       </AppLayout>
     )
@@ -121,7 +121,7 @@ export function MeetingDetailPage() {
     return (
       <AppLayout>
         <div className="p-6 text-center">
-          <p className="text-red-600">Failed to load meeting</p>
+          <p className="text-error">Failed to load meeting</p>
           <Button variant="outline" onClick={() => navigate('/meetings')} className="mt-4">
             Back to Meetings
           </Button>
@@ -148,7 +148,7 @@ export function MeetingDetailPage() {
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Meetings
             </Button>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">
               {meeting.meeting_name || getMeetingTypeLabel(meeting.meeting_type)}
             </h1>
             <div className="flex items-center gap-3 mt-2">
@@ -156,7 +156,7 @@ export function MeetingDetailPage() {
               {meeting.projects && (
                 <Link
                   to={`/projects/${meeting.projects.id}`}
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-sm text-primary hover:underline"
                 >
                   {meeting.projects.name}
                 </Link>
@@ -191,7 +191,7 @@ export function MeetingDetailPage() {
 
         {/* Delete Confirmation */}
         {showDeleteConfirm && (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="p-4">
               <p className="text-red-800 mb-4">
                 Are you sure you want to delete this meeting? This action cannot be undone.
@@ -226,28 +226,28 @@ export function MeetingDetailPage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Date</p>
-                    <p className="text-gray-900">
+                    <p className="text-sm font-medium text-muted">Date</p>
+                    <p className="text-foreground">
                       {format(parseISO(meeting.meeting_date), 'EEEE, MMMM d, yyyy')}
                     </p>
                   </div>
                   {meeting.meeting_time && (
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Time</p>
-                      <p className="text-gray-900">{meeting.meeting_time}</p>
+                      <p className="text-sm font-medium text-muted">Time</p>
+                      <p className="text-foreground">{meeting.meeting_time}</p>
                     </div>
                   )}
                   {meeting.duration_minutes && (
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Duration</p>
-                      <p className="text-gray-900">{meeting.duration_minutes} minutes</p>
+                      <p className="text-sm font-medium text-muted">Duration</p>
+                      <p className="text-foreground">{meeting.duration_minutes} minutes</p>
                     </div>
                   )}
                   {meeting.location && (
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Location</p>
-                      <p className="text-gray-900 flex items-center gap-1">
-                        <MapPin className="h-4 w-4 text-gray-400" />
+                      <p className="text-sm font-medium text-muted">Location</p>
+                      <p className="text-foreground flex items-center gap-1">
+                        <MapPin className="h-4 w-4 text-disabled" />
                         {meeting.location}
                       </p>
                     </div>
@@ -267,7 +267,7 @@ export function MeetingDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-sm max-w-none">
-                    <pre className="whitespace-pre-wrap font-sans text-gray-700">
+                    <pre className="whitespace-pre-wrap font-sans text-secondary">
                       {meeting.agenda}
                     </pre>
                   </div>
@@ -286,7 +286,7 @@ export function MeetingDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-sm max-w-none">
-                    <pre className="whitespace-pre-wrap font-sans text-gray-700">
+                    <pre className="whitespace-pre-wrap font-sans text-secondary">
                       {meeting.discussion_notes}
                     </pre>
                   </div>
@@ -302,7 +302,7 @@ export function MeetingDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-sm max-w-none">
-                    <pre className="whitespace-pre-wrap font-sans text-gray-700">
+                    <pre className="whitespace-pre-wrap font-sans text-secondary">
                       {meeting.decisions}
                     </pre>
                   </div>
@@ -327,7 +327,7 @@ export function MeetingDetailPage() {
                     {actionItems.map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50"
+                        className="flex items-start gap-3 p-3 border rounded-lg hover:bg-surface"
                       >
                         <button
                           onClick={() => handleToggleActionItem(item)}
@@ -338,8 +338,8 @@ export function MeetingDetailPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <p
-                              className={`text-gray-900 ${
-                                item.status === 'completed' ? 'line-through text-gray-500' : ''
+                              className={`text-foreground ${
+                                item.status === 'completed' ? 'line-through text-muted' : ''
                               }`}
                             >
                               {item.description}
@@ -364,7 +364,7 @@ export function MeetingDetailPage() {
                               </Badge>
                             )}
                           </div>
-                          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-500">
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-muted">
                             {item.assignee && (
                               <span>
                                 Assigned to: {item.assignee}
@@ -375,7 +375,7 @@ export function MeetingDetailPage() {
                               <span>Due: {format(parseISO(item.dueDate), 'MMM d, yyyy')}</span>
                             )}
                             {item.completedDate && (
-                              <span className="text-green-600">
+                              <span className="text-success">
                                 Completed: {format(parseISO(item.completedDate), 'MMM d, yyyy')}
                               </span>
                             )}
@@ -388,7 +388,7 @@ export function MeetingDetailPage() {
                                 </span>
                               )}
                               {item.schedule_impact && (
-                                <span className="text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                                <span className="text-primary bg-blue-50 px-2 py-0.5 rounded">
                                   Schedule Impact
                                   {item.schedule_impact_days && ` (${item.schedule_impact_days} days)`}
                                 </span>
@@ -413,7 +413,7 @@ export function MeetingDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-4">
+                  <p className="text-muted text-center py-4">
                     No action items recorded for this meeting.
                   </p>
                 )}
@@ -448,7 +448,7 @@ export function MeetingDetailPage() {
                 {/* Existing Recordings */}
                 {recordings && recordings.length > 0 && (
                   <div className="space-y-4 mt-4">
-                    <h4 className="text-sm font-medium text-gray-700">Saved Recordings</h4>
+                    <h4 className="text-sm font-medium text-secondary" className="heading-card">Saved Recordings</h4>
 
                     {/* Recording Tabs */}
                     <Tabs
@@ -458,7 +458,7 @@ export function MeetingDetailPage() {
                         if (rec) setSelectedRecording(rec)
                       }}
                     >
-                      <TabsList className="w-full flex-wrap h-auto gap-1 bg-gray-100 p-1">
+                      <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted p-1">
                         {recordings.map((rec, index) => (
                           <TabsTrigger
                             key={rec.id}
@@ -501,7 +501,7 @@ export function MeetingDetailPage() {
                           />
 
                           {/* Recording Info */}
-                          <div className="flex flex-wrap items-center gap-3 text-xs text-gray-500 pt-2 border-t">
+                          <div className="flex flex-wrap items-center gap-3 text-xs text-muted pt-2 border-t">
                             <span>
                               Recorded: {format(parseISO(rec.recorded_at), 'MMM d, yyyy h:mm a')}
                             </span>
@@ -526,8 +526,8 @@ export function MeetingDetailPage() {
 
                 {/* Empty State */}
                 {(!recordings || recordings.length === 0) && !meeting.project_id && (
-                  <div className="text-center py-6 text-gray-500">
-                    <Video className="h-10 w-10 mx-auto mb-2 text-gray-400" />
+                  <div className="text-center py-6 text-muted">
+                    <Video className="h-10 w-10 mx-auto mb-2 text-disabled" />
                     <p>No recordings yet</p>
                     <p className="text-xs mt-1">
                       Start a recording to capture audio, video, or screen share
@@ -560,7 +560,7 @@ export function MeetingDetailPage() {
                 {attendees && attendees.length > 0 ? (
                   <div className="space-y-3">
                     {attendees.map((attendee, index) => (
-                      <div key={index} className="p-3 border rounded-lg hover:bg-gray-50">
+                      <div key={index} className="p-3 border rounded-lg hover:bg-surface">
                         <div className="flex items-start gap-3">
                           <div
                             className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
@@ -569,7 +569,7 @@ export function MeetingDetailPage() {
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 mb-1">
-                              <p className="font-medium text-gray-900">{attendee.name}</p>
+                              <p className="font-medium text-foreground">{attendee.name}</p>
                               {attendee.required && (
                                 <Badge variant="outline" className="text-xs">Required</Badge>
                               )}
@@ -580,19 +580,19 @@ export function MeetingDetailPage() {
                               )}
                             </div>
                             {attendee.title && (
-                              <p className="text-sm text-gray-700">{attendee.title}</p>
+                              <p className="text-sm text-secondary">{attendee.title}</p>
                             )}
                             {attendee.company && (
-                              <p className="text-sm text-gray-500">{attendee.company}</p>
+                              <p className="text-sm text-muted">{attendee.company}</p>
                             )}
-                            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-gray-500">
+                            <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-muted">
                               {attendee.role && <span>Role: {attendee.role}</span>}
                               {attendee.trade && <span>Trade: {attendee.trade}</span>}
                               {attendee.email && <span>{attendee.email}</span>}
                               {attendee.phone && <span>{attendee.phone}</span>}
                             </div>
                             {attendee.signature && (
-                              <p className="text-xs text-green-600 mt-1">✓ Signed</p>
+                              <p className="text-xs text-success mt-1">✓ Signed</p>
                             )}
                           </div>
                         </div>
@@ -600,7 +600,7 @@ export function MeetingDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-4">No attendees recorded.</p>
+                  <p className="text-muted text-center py-4">No attendees recorded.</p>
                 )}
               </CardContent>
             </Card>
@@ -617,7 +617,7 @@ export function MeetingDetailPage() {
                 <CardContent>
                   <div className="space-y-1">
                     {meeting.distributed_to.map((email, index) => (
-                      <p key={index} className="text-sm text-gray-600">
+                      <p key={index} className="text-sm text-secondary">
                         {email}
                       </p>
                     ))}
@@ -634,16 +634,16 @@ export function MeetingDetailPage() {
               <CardContent className="space-y-3 text-sm">
                 {meeting.created_at && (
                   <div>
-                    <p className="text-gray-500">Created</p>
-                    <p className="text-gray-900">
+                    <p className="text-muted">Created</p>
+                    <p className="text-foreground">
                       {format(parseISO(meeting.created_at), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
                 )}
                 {meeting.updated_at && (
                   <div>
-                    <p className="text-gray-500">Last Updated</p>
-                    <p className="text-gray-900">
+                    <p className="text-muted">Last Updated</p>
+                    <p className="text-foreground">
                       {format(parseISO(meeting.updated_at), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
@@ -654,7 +654,7 @@ export function MeetingDetailPage() {
                       href={meeting.minutes_pdf_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline flex items-center gap-1"
+                      className="text-primary hover:underline flex items-center gap-1"
                     >
                       <Download className="h-4 w-4" />
                       Download Minutes PDF

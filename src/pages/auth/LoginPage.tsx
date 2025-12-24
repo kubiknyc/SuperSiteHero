@@ -117,7 +117,7 @@ export function LoginPage() {
   const isLoading = loading || biometricLoading
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-gray-950 px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
           <AuthLogo />
@@ -157,7 +157,7 @@ export function LoginPage() {
                   <Separator className="w-full" />
                 </div>
                 <div className="relative flex justify-center">
-                  <span className="bg-white dark:bg-gray-900 px-2 text-uppercase-label text-gray-500 dark:text-gray-400">or continue with email</span>
+                  <span className="bg-card dark:bg-background px-2 text-uppercase-label text-muted dark:text-disabled">or continue with email</span>
                 </div>
               </div>
             </div>
@@ -217,7 +217,7 @@ export function LoginPage() {
               )}
             </Button>
 
-            <p className="body-small text-center text-gray-600 dark:text-gray-400">
+            <p className="body-small text-center text-secondary dark:text-disabled">
               Don't have an account?{' '}
               <Link
                 to="/signup"

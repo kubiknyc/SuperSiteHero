@@ -56,8 +56,8 @@ export function DataSourceSelector({ value, onChange, className }: DataSourceSel
   return (
     <div className={cn('space-y-4', className)}>
       <div>
-        <h3 className="text-lg font-medium text-gray-900">Select Data Source</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Select Data Source</h3>
+        <p className="text-sm text-muted mt-1">
           Choose which type of data you want to include in your report
         </p>
       </div>
@@ -74,7 +74,7 @@ export function DataSourceSelector({ value, onChange, className }: DataSourceSel
                 'cursor-pointer transition-all hover:shadow-md',
                 isSelected
                   ? 'ring-2 ring-blue-500 bg-blue-50 border-blue-200'
-                  : 'hover:border-gray-300'
+                  : 'hover:border-input'
               )}
               onClick={() => onChange(source.value)}
             >
@@ -82,25 +82,25 @@ export function DataSourceSelector({ value, onChange, className }: DataSourceSel
                 <div
                   className={cn(
                     'w-10 h-10 rounded-lg flex items-center justify-center mx-auto mb-2',
-                    isSelected ? 'bg-blue-100' : 'bg-gray-100'
+                    isSelected ? 'bg-info-light' : 'bg-muted'
                   )}
                 >
                   <Icon
                     className={cn(
                       'h-5 w-5',
-                      isSelected ? 'text-blue-600' : 'text-gray-600'
+                      isSelected ? 'text-primary' : 'text-secondary'
                     )}
                   />
                 </div>
                 <p
                   className={cn(
                     'text-sm font-medium',
-                    isSelected ? 'text-blue-900' : 'text-gray-900'
+                    isSelected ? 'text-blue-900' : 'text-foreground'
                   )}
                 >
                   {source.label}
                 </p>
-                <p className="text-xs text-gray-500 mt-1 line-clamp-1">
+                <p className="text-xs text-muted mt-1 line-clamp-1">
                   {source.description}
                 </p>
               </CardContent>
@@ -120,17 +120,17 @@ export function DataSourceBadge({ source }: { source: ReportDataSource }) {
   const Icon = config ? iconMap[config.icon] || File : File
 
   const colorClasses: Record<string, string> = {
-    blue: 'bg-blue-100 text-blue-800',
-    green: 'bg-green-100 text-green-800',
+    blue: 'bg-info-light text-blue-800',
+    green: 'bg-success-light text-green-800',
     orange: 'bg-orange-100 text-orange-800',
     purple: 'bg-purple-100 text-purple-800',
     emerald: 'bg-emerald-100 text-emerald-800',
-    red: 'bg-red-100 text-red-800',
+    red: 'bg-error-light text-red-800',
     cyan: 'bg-cyan-100 text-cyan-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
+    yellow: 'bg-warning-light text-yellow-800',
     indigo: 'bg-indigo-100 text-indigo-800',
     slate: 'bg-slate-100 text-slate-800',
-    gray: 'bg-gray-100 text-gray-800',
+    gray: 'bg-muted text-foreground',
     amber: 'bg-amber-100 text-amber-800',
     teal: 'bg-teal-100 text-teal-800',
     sky: 'bg-sky-100 text-sky-800',

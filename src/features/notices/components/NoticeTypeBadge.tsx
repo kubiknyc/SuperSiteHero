@@ -11,17 +11,17 @@ interface NoticeTypeBadgeProps {
 }
 
 const typeColors: Record<string, string> = {
-  claim: 'bg-red-100 text-red-800 border-red-200',
+  claim: 'bg-error-light text-red-800 border-red-200',
   delay: 'bg-orange-100 text-orange-800 border-orange-200',
-  change_directive: 'bg-blue-100 text-blue-800 border-blue-200',
-  cure: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  completion: 'bg-green-100 text-green-800 border-green-200',
-  termination: 'bg-red-100 text-red-800 border-red-200',
+  change_directive: 'bg-info-light text-blue-800 border-blue-200',
+  cure: 'bg-warning-light text-yellow-800 border-yellow-200',
+  completion: 'bg-success-light text-green-800 border-green-200',
+  termination: 'bg-error-light text-red-800 border-red-200',
   insurance: 'bg-purple-100 text-purple-800 border-purple-200',
   payment: 'bg-emerald-100 text-emerald-800 border-emerald-200',
   deficiency: 'bg-amber-100 text-amber-800 border-amber-200',
-  stop_work: 'bg-red-100 text-red-800 border-red-200',
-  general: 'bg-gray-100 text-gray-800 border-gray-200',
+  stop_work: 'bg-error-light text-red-800 border-red-200',
+  general: 'bg-muted text-foreground border-border',
 }
 
 export function NoticeTypeBadge({ type, className }: NoticeTypeBadgeProps) {

@@ -469,7 +469,7 @@ export function MaintenanceScheduleDialog({
             </div>
 
             {/* Warning Thresholds */}
-            <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200 space-y-4">
+            <div className="p-4 bg-warning-light rounded-lg border border-yellow-200 space-y-4">
               <div className="flex items-center gap-2 text-yellow-800 font-medium">
                 <AlertTriangle className="h-4 w-4" />
                 Warning Thresholds
@@ -534,7 +534,7 @@ export function MaintenanceScheduleDialog({
                 <FormItem
                   className={cn(
                     'flex items-start space-x-3 space-y-0 rounded-lg border p-4',
-                    field.value ? 'border-red-200 bg-red-50' : ''
+                    field.value ? 'border-red-200 bg-error-light' : ''
                   )}
                 >
                   <FormControl>
@@ -558,7 +558,7 @@ export function MaintenanceScheduleDialog({
             />
 
             {watchBlockUsage && (
-              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              <div className="p-3 bg-error-light border border-red-200 rounded-lg text-sm text-error-dark">
                 <strong>Warning:</strong> When enabled, this equipment cannot be
                 assigned to daily reports or scheduled work if this maintenance
                 becomes overdue.

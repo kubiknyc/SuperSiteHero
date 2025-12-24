@@ -186,28 +186,28 @@ export function DailyReportForm({
 
   const getBgClass = () => {
     if (!isOnline) {return 'bg-blue-50 border border-blue-200'}
-    if (syncStatus === 'success') {return 'bg-green-50 border border-green-200'}
-    if (syncStatus === 'syncing') {return 'bg-yellow-50 border border-yellow-200'}
-    if (syncStatus === 'error') {return 'bg-red-50 border border-red-200'}
-    return 'bg-gray-50 border border-gray-200'
+    if (syncStatus === 'success') {return 'bg-success-light border border-green-200'}
+    if (syncStatus === 'syncing') {return 'bg-warning-light border border-yellow-200'}
+    if (syncStatus === 'error') {return 'bg-error-light border border-red-200'}
+    return 'bg-surface border border-border'
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Validation Errors Summary */}
       {validationErrors.length > 0 && (
-        <Card className="border-red-200 bg-red-50">
+        <Card className="border-red-200 bg-error-light">
           <CardHeader>
-            <CardTitle className="text-red-700 flex items-center gap-2">
+            <CardTitle className="text-error-dark flex items-center gap-2">
               <AlertCircle className="h-5 w-5" />
               Validation Errors
             </CardTitle>
-            <CardDescription className="text-red-600">
+            <CardDescription className="text-error">
               Please correct the following errors before submitting
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ul className="list-disc list-inside space-y-1 text-sm text-red-700">
+            <ul className="list-disc list-inside space-y-1 text-sm text-error-dark">
               {validationErrors.map((error, index) => (
                 <li key={index}>{error}</li>
               ))}
@@ -220,50 +220,50 @@ export function DailyReportForm({
         <div className="flex items-center gap-2">
           {!isOnline ? (
             <>
-              <CloudOff className="h-5 w-5 text-gray-600" />
+              <CloudOff className="h-5 w-5 text-secondary" />
               <div>
-                <p className="font-medium text-gray-900">Offline Mode</p>
-                <p className="text-sm text-gray-600">Changes are saved locally</p>
+                <p className="font-medium text-foreground">Offline Mode</p>
+                <p className="text-sm text-secondary">Changes are saved locally</p>
               </div>
             </>
           ) : syncStatus === 'syncing' ? (
             <>
               <div className="animate-spin">
-                <Cloud className="h-5 w-5 text-yellow-600" />
+                <Cloud className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="font-medium text-gray-900">Syncing</p>
-                <p className="text-sm text-gray-600">Uploading to server</p>
+                <p className="font-medium text-foreground">Syncing</p>
+                <p className="text-sm text-secondary">Uploading to server</p>
               </div>
             </>
           ) : syncStatus === 'success' ? (
             <>
-              <Check className="h-5 w-5 text-green-600" />
+              <Check className="h-5 w-5 text-success" />
               <div>
-                <p className="font-medium text-gray-900">Synced</p>
-                <p className="text-sm text-gray-600">All changes saved</p>
+                <p className="font-medium text-foreground">Synced</p>
+                <p className="text-sm text-secondary">All changes saved</p>
               </div>
             </>
           ) : syncStatus === 'error' ? (
             <>
-              <AlertCircle className="h-5 w-5 text-red-600" />
+              <AlertCircle className="h-5 w-5 text-error" />
               <div>
-                <p className="font-medium text-gray-900">Sync Error</p>
-                <p className="text-sm text-gray-600">Will retry when online</p>
+                <p className="font-medium text-foreground">Sync Error</p>
+                <p className="text-sm text-secondary">Will retry when online</p>
               </div>
             </>
           ) : (
             <>
-              <Cloud className="h-5 w-5 text-gray-600" />
+              <Cloud className="h-5 w-5 text-secondary" />
               <div>
-                <p className="font-medium text-gray-900">Ready to Sync</p>
-                <p className="text-sm text-gray-600">Connected to server</p>
+                <p className="font-medium text-foreground">Ready to Sync</p>
+                <p className="text-sm text-secondary">Connected to server</p>
               </div>
             </>
           )}
         </div>
         {hasPendingSync && (
-          <span className="inline-flex items-center gap-1 bg-white px-3 py-1 rounded-full text-sm font-medium text-gray-700 border border-gray-200">
+          <span className="inline-flex items-center gap-1 bg-card px-3 py-1 rounded-full text-sm font-medium text-secondary border border-border">
             {store.syncQueue.length} pending
           </span>
         )}
@@ -277,11 +277,11 @@ export function DailyReportForm({
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Report Date</label>
-              <Input type="date" value={reportDate} disabled className="bg-gray-50" />
+              <label className="block text-sm font-medium text-secondary mb-2">Report Date</label>
+              <Input type="date" value={reportDate} disabled className="bg-surface" />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Report Number (Optional)</label>
+              <label className="block text-sm font-medium text-secondary mb-2">Report Number (Optional)</label>
               <Input
                 type="text"
                 placeholder="e.g., DR-2025-001"
@@ -402,7 +402,7 @@ export function DailyReportForm({
         </>
       )}
 
-      <div className="flex gap-3 sticky bottom-0 bg-white p-6 border-t">
+      <div className="flex gap-3 sticky bottom-0 bg-card p-6 border-t">
         <Button type="button" variant="outline" onClick={onCancel} className="flex-1 h-12">
           <X className="h-4 w-4 mr-2" />
           Cancel

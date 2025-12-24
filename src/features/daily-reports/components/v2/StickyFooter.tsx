@@ -58,28 +58,28 @@ export function StickyFooter({
     switch (syncStatus) {
       case 'success':
         return (
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+          <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">
             <Check className="h-3 w-3 mr-1" />
             Saved
           </Badge>
         );
       case 'idle':
         return (
-          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+          <Badge variant="outline" className="bg-warning-light text-yellow-700 border-yellow-200">
             <Cloud className="h-3 w-3 mr-1" />
             Pending Sync
           </Badge>
         );
       case 'syncing':
         return (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">
             <Loader2 className="h-3 w-3 mr-1 animate-spin" />
             Syncing...
           </Badge>
         );
       case 'error':
         return (
-          <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+          <Badge variant="outline" className="bg-error-light text-error-dark border-red-200">
             <AlertCircle className="h-3 w-3 mr-1" />
             Sync Error
           </Badge>
@@ -96,15 +96,15 @@ export function StickyFooter({
     !isSaving;
 
   return (
-    <div className="sticky bottom-0 z-20 bg-white border-t shadow-lg">
+    <div className="sticky bottom-0 z-20 bg-card border-t shadow-lg">
       {/* Validation Errors */}
       {validationErrors.length > 0 && showErrors && (
-        <div className="p-3 bg-red-50 border-b border-red-100">
+        <div className="p-3 bg-error-light border-b border-red-100">
           <div className="flex items-start gap-2">
-            <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 flex-shrink-0" />
+            <AlertCircle className="h-4 w-4 text-error mt-0.5 flex-shrink-0" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-red-700">Please fix the following issues:</p>
-              <ul className="mt-1 text-sm text-red-600 list-disc list-inside">
+              <p className="text-sm font-medium text-error-dark">Please fix the following issues:</p>
+              <ul className="mt-1 text-sm text-error list-disc list-inside">
                 {validationErrors.slice(0, 3).map((error, index) => (
                   <li key={index}>{error}</li>
                 ))}
@@ -116,7 +116,7 @@ export function StickyFooter({
             <button
               type="button"
               onClick={() => setShowErrors(false)}
-              className="text-red-500 hover:text-red-700"
+              className="text-error hover:text-error-dark"
             >
               ×
             </button>
@@ -130,7 +130,7 @@ export function StickyFooter({
           <div className="flex items-center gap-3">
             {/* Online/Offline */}
             {isOnline ? (
-              <div className="flex items-center gap-1 text-green-600 text-sm">
+              <div className="flex items-center gap-1 text-success text-sm">
                 <Wifi className="h-4 w-4" />
                 <span className="hidden sm:inline">Online</span>
               </div>
@@ -149,7 +149,7 @@ export function StickyFooter({
               <button
                 type="button"
                 onClick={() => setShowErrors(!showErrors)}
-                className="flex items-center gap-1 text-red-600 text-sm hover:underline"
+                className="flex items-center gap-1 text-error text-sm hover:underline"
               >
                 <AlertCircle className="h-4 w-4" />
                 {validationErrors.length} {validationErrors.length === 1 ? 'issue' : 'issues'}
@@ -183,7 +183,7 @@ export function StickyFooter({
               type="button"
               onClick={onSubmit}
               disabled={!canSubmit}
-              className="min-w-[120px] bg-green-600 hover:bg-green-700"
+              className="min-w-[120px] bg-success hover:bg-green-700"
             >
               {isSubmitting ? (
                 <>

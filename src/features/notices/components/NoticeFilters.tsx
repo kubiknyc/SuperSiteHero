@@ -104,7 +104,7 @@ export function NoticeFilters({
     <div className={cn('space-y-4', className)}>
       {/* Search bar */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
         <Input
           type="text"
           placeholder="Search by reference, subject, or party..."
@@ -115,7 +115,7 @@ export function NoticeFilters({
         {filters.search && (
           <button
             onClick={() => handleSearchChange('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-disabled hover:text-secondary"
           >
             <X className="w-4 h-4" />
           </button>
@@ -152,7 +152,7 @@ export function NoticeFilters({
             variant="ghost"
             size="sm"
             onClick={handleClearFilters}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-muted hover:text-secondary"
           >
             <X className="w-4 h-4 mr-1" />
             Clear
@@ -171,7 +171,7 @@ export function NoticeFilters({
               notice_type: (e.target.value as any) || undefined,
             })
           }
-          className="text-sm border rounded-md px-2 py-1.5 bg-white"
+          className="text-sm border rounded-md px-2 py-1.5 bg-card"
         >
           <option value="">All Types</option>
           {NOTICE_TYPES.map((type) => (
@@ -190,7 +190,7 @@ export function NoticeFilters({
               status: (e.target.value as any) || undefined,
             })
           }
-          className="text-sm border rounded-md px-2 py-1.5 bg-white"
+          className="text-sm border rounded-md px-2 py-1.5 bg-card"
         >
           <option value="">All Statuses</option>
           {NOTICE_STATUSES.map((status) => (

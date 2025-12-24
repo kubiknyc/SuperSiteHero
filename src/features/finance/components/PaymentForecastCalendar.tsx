@@ -131,8 +131,8 @@ function getPaymentTypeColor(type: PaymentType): string {
   const colors: Record<string, string> = {
     blue: 'bg-blue-500',
     purple: 'bg-purple-500',
-    emerald: 'bg-emerald-500',
-    amber: 'bg-amber-500',
+    emerald: 'bg-success',
+    amber: 'bg-warning',
     pink: 'bg-pink-500',
     cyan: 'bg-cyan-500',
   }
@@ -196,10 +196,10 @@ function SummaryCards({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Expected Incoming</CardTitle>
-          <ArrowDownRight className="h-4 w-4 text-green-500" />
+          <ArrowDownRight className="h-4 w-4 text-success" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-green-600">{formatCurrency(totalIncoming)}</div>
+          <div className="text-2xl font-bold text-success">{formatCurrency(totalIncoming)}</div>
           <p className="text-xs text-muted-foreground">Owner requisitions & billings</p>
         </CardContent>
       </Card>
@@ -207,38 +207,38 @@ function SummaryCards({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Scheduled Outgoing</CardTitle>
-          <ArrowUpRight className="h-4 w-4 text-red-500" />
+          <ArrowUpRight className="h-4 w-4 text-error" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-red-600">{formatCurrency(totalOutgoing)}</div>
+          <div className="text-2xl font-bold text-error">{formatCurrency(totalOutgoing)}</div>
           <p className="text-xs text-muted-foreground">Subcontractor & vendor payments</p>
         </CardContent>
       </Card>
 
-      <Card className={netCashFlow >= 0 ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
+      <Card className={netCashFlow >= 0 ? 'border-green-200 bg-success-light' : 'border-red-200 bg-error-light'}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Net Cash Flow</CardTitle>
           {netCashFlow >= 0 ? (
-            <TrendingUp className="h-4 w-4 text-green-500" />
+            <TrendingUp className="h-4 w-4 text-success" />
           ) : (
-            <TrendingDown className="h-4 w-4 text-red-500" />
+            <TrendingDown className="h-4 w-4 text-error" />
           )}
         </CardHeader>
         <CardContent>
-          <div className={cn('text-2xl font-bold', netCashFlow >= 0 ? 'text-green-600' : 'text-red-600')}>
+          <div className={cn('text-2xl font-bold', netCashFlow >= 0 ? 'text-success' : 'text-error')}>
             {formatCurrency(netCashFlow)}
           </div>
           <p className="text-xs text-muted-foreground">Projected for period</p>
         </CardContent>
       </Card>
 
-      <Card className={overdueCount > 0 ? 'border-red-200 bg-red-50' : ''}>
+      <Card className={overdueCount > 0 ? 'border-red-200 bg-error-light' : ''}>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Overdue Payments</CardTitle>
-          <AlertTriangle className={cn('h-4 w-4', overdueCount > 0 ? 'text-red-500' : 'text-muted-foreground')} />
+          <AlertTriangle className={cn('h-4 w-4', overdueCount > 0 ? 'text-error' : 'text-muted-foreground')} />
         </CardHeader>
         <CardContent>
-          <div className={cn('text-2xl font-bold', overdueCount > 0 ? 'text-red-600' : 'text-gray-900')}>
+          <div className={cn('text-2xl font-bold', overdueCount > 0 ? 'text-error' : 'text-foreground')}>
             {overdueCount}
           </div>
           <p className="text-xs text-muted-foreground">Requires attention</p>
@@ -248,7 +248,7 @@ function SummaryCards({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Pending Approval</CardTitle>
-          <Clock className="h-4 w-4 text-yellow-500" />
+          <Clock className="h-4 w-4 text-warning" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{pendingCount}</div>
@@ -313,16 +313,16 @@ function CalendarGrid({ monthData, currentMonth, onDayClick }: CalendarGridProps
                       <button
                         className={cn(
                           'relative min-h-[80px] p-2 text-left rounded-lg border transition-colors',
-                          isCurrentMonth ? 'bg-white' : 'bg-gray-50',
+                          isCurrentMonth ? 'bg-card' : 'bg-surface',
                           isDayToday && 'ring-2 ring-blue-500',
-                          hasPayments && 'cursor-pointer hover:bg-gray-50',
-                          !isCurrentMonth && 'text-gray-400'
+                          hasPayments && 'cursor-pointer hover:bg-surface',
+                          !isCurrentMonth && 'text-disabled'
                         )}
                         onClick={() => hasPayments && onDayClick?.(day.date, day.events)}
                       >
                         <span className={cn(
                           'text-sm font-medium',
-                          isDayToday && 'text-blue-600'
+                          isDayToday && 'text-primary'
                         )}>
                           {format(dayDate, 'd')}
                         </span>
@@ -335,7 +335,7 @@ function CalendarGrid({ monthData, currentMonth, onDayClick }: CalendarGridProps
                                 key={event.id}
                                 className={cn(
                                   'text-xs px-1 py-0.5 rounded truncate',
-                                  event.is_incoming ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                                  event.is_incoming ? 'bg-success-light text-success-dark' : 'bg-error-light text-error-dark'
                                 )}
                               >
                                 {formatCurrencyCompact(event.amount)}
@@ -363,17 +363,17 @@ function CalendarGrid({ monthData, currentMonth, onDayClick }: CalendarGridProps
                     {hasPayments && (
                       <PopoverContent className="w-80 p-0" align="start">
                         <div className="p-4 border-b">
-                          <h4 className="font-medium">{format(dayDate, 'EEEE, MMMM d, yyyy')}</h4>
+                          <h4 className="font-medium" className="heading-card">{format(dayDate, 'EEEE, MMMM d, yyyy')}</h4>
                           <div className="flex gap-4 mt-2 text-sm">
-                            <span className="text-green-600">In: {formatCurrency(day.incoming)}</span>
-                            <span className="text-red-600">Out: {formatCurrency(day.outgoing)}</span>
+                            <span className="text-success">In: {formatCurrency(day.incoming)}</span>
+                            <span className="text-error">Out: {formatCurrency(day.outgoing)}</span>
                           </div>
                         </div>
                         <div className="max-h-64 overflow-y-auto p-2">
                           {day.events.map((event) => (
                             <div
                               key={event.id}
-                              className="flex items-center gap-2 p-2 rounded hover:bg-gray-50"
+                              className="flex items-center gap-2 p-2 rounded hover:bg-surface"
                             >
                               <div className={cn('w-2 h-2 rounded-full', getPaymentTypeColor(event.payment_type))} />
                               <div className="flex-1 min-w-0">
@@ -382,7 +382,7 @@ function CalendarGrid({ monthData, currentMonth, onDayClick }: CalendarGridProps
                                   {event.payee_name || getPaymentTypeConfig(event.payment_type).label}
                                 </p>
                               </div>
-                              <div className={cn('text-sm font-medium', event.is_incoming ? 'text-green-600' : 'text-red-600')}>
+                              <div className={cn('text-sm font-medium', event.is_incoming ? 'text-success' : 'text-error')}>
                                 {event.is_incoming ? '+' : '-'}{formatCurrency(event.amount)}
                               </div>
                             </div>
@@ -448,7 +448,7 @@ function PaymentList({ payments, showProject = true }: PaymentListProps) {
                 <TableCell className="text-muted-foreground">{payment.project_name}</TableCell>
               )}
               <TableCell>{payment.payee_name || '-'}</TableCell>
-              <TableCell className={cn('text-right font-medium', payment.is_incoming ? 'text-green-600' : 'text-red-600')}>
+              <TableCell className={cn('text-right font-medium', payment.is_incoming ? 'text-success' : 'text-error')}>
                 {payment.is_incoming ? '+' : '-'}{formatCurrency(payment.amount)}
               </TableCell>
               <TableCell>
@@ -493,39 +493,39 @@ function CashFlowChart({ projections }: CashFlowChartProps) {
               <div key={projection.month} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-medium">{projection.month_name}</span>
-                  <span className={cn('font-medium', projection.net_cash_flow >= 0 ? 'text-green-600' : 'text-red-600')}>
+                  <span className={cn('font-medium', projection.net_cash_flow >= 0 ? 'text-success' : 'text-error')}>
                     Net: {formatCurrency(projection.net_cash_flow)}
                   </span>
                 </div>
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground w-16">Incoming</span>
-                    <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden">
                       <div
                         className="h-full bg-green-500 rounded-full transition-all"
                         style={{ width: `${incomingWidth}%` }}
                       />
                     </div>
-                    <span className="text-xs font-medium text-green-600 w-20 text-right">
+                    <span className="text-xs font-medium text-success w-20 text-right">
                       {formatCurrencyCompact(projection.projected_incoming)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-muted-foreground w-16">Outgoing</span>
-                    <div className="flex-1 h-4 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-4 bg-muted rounded-full overflow-hidden">
                       <div
                         className="h-full bg-red-500 rounded-full transition-all"
                         style={{ width: `${outgoingWidth}%` }}
                       />
                     </div>
-                    <span className="text-xs font-medium text-red-600 w-20 text-right">
+                    <span className="text-xs font-medium text-error w-20 text-right">
                       {formatCurrencyCompact(projection.projected_outgoing)}
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span>Confidence: {projection.confidence_percent}%</span>
-                  <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1 bg-muted rounded-full overflow-hidden">
                     <div
                       className={cn(
                         'h-full rounded-full',
@@ -575,18 +575,18 @@ function PaymentsByType({ byType }: PaymentsByTypeProps) {
 
             return (
               <div key={item.payment_type} className="flex items-center gap-3">
-                <div className={cn('p-2 rounded-lg', isIncoming ? 'bg-green-100' : 'bg-red-100')}>
+                <div className={cn('p-2 rounded-lg', isIncoming ? 'bg-success-light' : 'bg-error-light')}>
                   {getPaymentTypeIcon(item.payment_type)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">{item.label}</span>
-                    <span className={cn('text-sm font-medium', isIncoming ? 'text-green-600' : 'text-red-600')}>
+                    <span className={cn('text-sm font-medium', isIncoming ? 'text-success' : 'text-error')}>
                       {formatCurrency(item.amount)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                       <div
                         className={cn('h-full rounded-full', getPaymentTypeColor(item.payment_type))}
                         style={{ width: `${percentage}%` }}
@@ -674,7 +674,7 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
       <Card className={className}>
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
-            <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+            <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-error" />
             <p>Failed to load payment forecast data</p>
             <Button variant="outline" className="mt-2" onClick={() => refetch()}>
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -691,7 +691,7 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Payment Forecast</h2>
+          <h2 className="text-2xl font-bold tracking-tight" className="heading-section">Payment Forecast</h2>
           <p className="text-muted-foreground">
             Upcoming payment schedules and cash flow projections
           </p>
@@ -766,15 +766,15 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
 
               {/* Overdue Alert */}
               {overdueCount > 0 && (
-                <Card className="border-red-200 bg-red-50">
+                <Card className="border-red-200 bg-error-light">
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-red-700 flex items-center gap-2">
+                    <CardTitle className="text-error-dark flex items-center gap-2">
                       <AlertTriangle className="h-5 w-5" />
                       Overdue Payments
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-red-600 mb-3">
+                    <p className="text-sm text-error mb-3">
                       {overdueCount} payment{overdueCount !== 1 ? 's' : ''} require immediate attention
                     </p>
                     {overdue?.slice(0, 3).map((payment) => (
@@ -784,11 +784,11 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
                       >
                         <div>
                           <p className="text-sm font-medium">{payment.description}</p>
-                          <p className="text-xs text-red-600">
+                          <p className="text-xs text-error">
                             Due: {format(parseISO(payment.due_date), 'MMM d')}
                           </p>
                         </div>
-                        <span className="text-sm font-medium text-red-700">
+                        <span className="text-sm font-medium text-error-dark">
                           {formatCurrency(payment.amount)}
                         </span>
                       </div>
@@ -818,39 +818,39 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
               <CardContent className="space-y-4">
                 {cashFlow?.total_forecast && (
                   <>
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-success-light rounded-lg">
                       <div className="flex items-center gap-2">
-                        <ArrowDownRight className="h-5 w-5 text-green-600" />
+                        <ArrowDownRight className="h-5 w-5 text-success" />
                         <span className="font-medium">Total Incoming</span>
                       </div>
-                      <span className="text-lg font-bold text-green-600">
+                      <span className="text-lg font-bold text-success">
                         {formatCurrency(cashFlow.total_forecast.incoming)}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                    <div className="flex items-center justify-between p-3 bg-error-light rounded-lg">
                       <div className="flex items-center gap-2">
-                        <ArrowUpRight className="h-5 w-5 text-red-600" />
+                        <ArrowUpRight className="h-5 w-5 text-error" />
                         <span className="font-medium">Total Outgoing</span>
                       </div>
-                      <span className="text-lg font-bold text-red-600">
+                      <span className="text-lg font-bold text-error">
                         {formatCurrency(cashFlow.total_forecast.outgoing)}
                       </span>
                     </div>
                     <div className={cn(
                       'flex items-center justify-between p-3 rounded-lg',
-                      cashFlow.total_forecast.net >= 0 ? 'bg-green-100' : 'bg-red-100'
+                      cashFlow.total_forecast.net >= 0 ? 'bg-success-light' : 'bg-error-light'
                     )}>
                       <div className="flex items-center gap-2">
                         {cashFlow.total_forecast.net >= 0 ? (
-                          <CheckCircle className="h-5 w-5 text-green-600" />
+                          <CheckCircle className="h-5 w-5 text-success" />
                         ) : (
-                          <XCircle className="h-5 w-5 text-red-600" />
+                          <XCircle className="h-5 w-5 text-error" />
                         )}
                         <span className="font-medium">Net Position</span>
                       </div>
                       <span className={cn(
                         'text-lg font-bold',
-                        cashFlow.total_forecast.net >= 0 ? 'text-green-600' : 'text-red-600'
+                        cashFlow.total_forecast.net >= 0 ? 'text-success' : 'text-error'
                       )}>
                         {formatCurrency(cashFlow.total_forecast.net)}
                       </span>
@@ -861,7 +861,7 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
                 {/* Payment Patterns */}
                 {cashFlow?.patterns && cashFlow.patterns.length > 0 && (
                   <div className="mt-6">
-                    <h4 className="font-medium mb-3">Historical Patterns</h4>
+                    <h4 className="font-medium mb-3" className="heading-card">Historical Patterns</h4>
                     <div className="space-y-2">
                       {cashFlow.patterns.slice(0, 4).map((pattern) => (
                         <div

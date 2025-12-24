@@ -83,31 +83,31 @@ function AssignmentItem({
     switch (status) {
       case 'completed':
       case 'verified':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />
+        return <CheckCircle2 className="h-4 w-4 text-success" />
       case 'in_progress':
       case 'ready_for_review':
-        return <Clock className="h-4 w-4 text-yellow-500" />
+        return <Clock className="h-4 w-4 text-warning" />
       default:
-        return <Circle className="h-4 w-4 text-gray-400" />
+        return <Circle className="h-4 w-4 text-disabled" />
     }
   }
 
   const getPriorityColor = () => {
     switch (priority) {
       case 'critical':
-        return 'bg-red-100 text-red-700 border-red-200'
+        return 'bg-error-light text-error-dark border-red-200'
       case 'high':
         return 'bg-orange-100 text-orange-700 border-orange-200'
       case 'medium':
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200'
+        return 'bg-warning-light text-yellow-700 border-yellow-200'
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-200'
+        return 'bg-muted text-secondary border-border'
     }
   }
 
   const content = (
     <div
-      className="flex items-center gap-3 p-4 bg-white border-b border-gray-100 active:bg-gray-50"
+      className="flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface"
       onClick={onClick}
     >
       {/* Status Icon */}
@@ -118,15 +118,15 @@ function AssignmentItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h4 className="text-sm font-medium text-gray-900 truncate">
+          <h4 className="text-sm font-medium text-foreground truncate" className="heading-card">
             {title}
           </h4>
           {hasPhotos && (
-            <Camera className="h-3.5 w-3.5 text-blue-500 flex-shrink-0" />
+            <Camera className="h-3.5 w-3.5 text-primary flex-shrink-0" />
           )}
         </div>
         {subtitle && (
-          <p className="text-xs text-gray-500 truncate mt-0.5">
+          <p className="text-xs text-muted truncate mt-0.5">
             {subtitle}
           </p>
         )}
@@ -139,7 +139,7 @@ function AssignmentItem({
           {dueDate && (
             <span className={cn(
               'text-[10px]',
-              isOverdue ? 'text-red-600 font-medium' : 'text-gray-500'
+              isOverdue ? 'text-error font-medium' : 'text-muted'
             )}>
               {isOverdue ? 'Overdue: ' : 'Due: '}
               {formatDistanceToNow(new Date(dueDate), { addSuffix: true })}
@@ -149,7 +149,7 @@ function AssignmentItem({
       </div>
 
       {/* Arrow */}
-      <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0" />
+      <ChevronRight className="h-4 w-4 text-disabled flex-shrink-0" />
     </div>
   )
 
@@ -188,13 +188,13 @@ function EmptyState({ tab }: { tab: TabType }) {
 
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-        <CheckCircle2 className="h-8 w-8 text-gray-400" />
+      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+        <CheckCircle2 className="h-8 w-8 text-disabled" />
       </div>
-      <h3 className="text-sm font-medium text-gray-900 mb-1">
+      <h3 className="text-sm font-medium text-foreground mb-1" className="heading-subsection">
         {messages[tab].title}
       </h3>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-muted">
         {messages[tab].description}
       </p>
     </div>
@@ -282,7 +282,7 @@ export function MyAssignments() {
         if (loadingPunch) {
           return (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
             </div>
           )
         }
@@ -319,11 +319,11 @@ export function MyAssignments() {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-surface">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3">
+      <div className="bg-card border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-gray-900">My Assignments</h1>
+          <h1 className="text-lg font-semibold text-foreground" className="heading-page">My Assignments</h1>
           <div className="flex items-center gap-2">
             {/* Sort Button */}
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
@@ -358,7 +358,7 @@ export function MyAssignments() {
                 </SheetHeader>
                 <div className="mt-4 space-y-4">
                   <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                    <label className="text-sm font-medium text-secondary mb-2 block">
                       Status
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -401,7 +401,7 @@ export function MyAssignments() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="bg-card border-b border-border">
         <div className="flex overflow-x-auto scrollbar-hide">
           {tabs.map(tab => (
             <button
@@ -411,8 +411,8 @@ export function MyAssignments() {
                 'flex items-center gap-1.5 px-4 py-3 text-sm font-medium whitespace-nowrap',
                 'border-b-2 transition-colors',
                 activeTab === tab.id
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  ? 'border-primary text-primary'
+                  : 'border-transparent text-muted hover:text-secondary'
               )}
             >
               {tab.icon}

@@ -91,7 +91,7 @@ export function SubmittalDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center">
-            <p className="text-red-600">Submittal ID not found</p>
+            <p className="text-error">Submittal ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -103,8 +103,8 @@ export function SubmittalDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading submittal...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading submittal...</p>
           </div>
         </div>
       </AppLayout>
@@ -123,9 +123,9 @@ export function SubmittalDetailPage() {
           </div>
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Submittal</h3>
-              <p className="text-gray-600">{error?.message || 'Submittal not found'}</p>
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Submittal</h3>
+              <p className="text-secondary">{error?.message || 'Submittal not found'}</p>
             </CardContent>
           </Card>
         </div>
@@ -150,8 +150,8 @@ export function SubmittalDetailPage() {
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">S-{String(submittal.number).padStart(3, '0')}</h1>
-                <p className="text-gray-600 mt-1">{submittal.title}</p>
+                <h1 className="text-3xl font-bold text-foreground" className="heading-page">S-{String(submittal.number).padStart(3, '0')}</h1>
+                <p className="text-secondary mt-1">{submittal.title}</p>
               </div>
               <Button
                 variant="outline"
@@ -172,23 +172,23 @@ export function SubmittalDetailPage() {
               <CardContent className="space-y-4">
                 {submittal.description && (
                   <div>
-                    <Label className="text-gray-600">Description</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-gray-900">{submittal.description}</p>
+                    <Label className="text-secondary">Description</Label>
+                    <p className="mt-1 whitespace-pre-wrap text-foreground">{submittal.description}</p>
                   </div>
                 )}
 
                 <div className="grid grid-cols-2 gap-4 py-4 border-t">
                   {submittal.cost_impact && (
                     <div>
-                      <Label className="text-gray-600">Cost Impact</Label>
-                      <p className="mt-1 text-gray-900 font-semibold">{submittal.cost_impact}</p>
+                      <Label className="text-secondary">Cost Impact</Label>
+                      <p className="mt-1 text-foreground font-semibold">{submittal.cost_impact}</p>
                     </div>
                   )}
 
                   {submittal.schedule_impact && (
                     <div>
-                      <Label className="text-gray-600">Schedule Impact</Label>
-                      <p className="mt-1 text-gray-900 font-semibold">{submittal.schedule_impact}</p>
+                      <Label className="text-secondary">Schedule Impact</Label>
+                      <p className="mt-1 text-foreground font-semibold">{submittal.schedule_impact}</p>
                     </div>
                   )}
                 </div>
@@ -208,9 +208,9 @@ export function SubmittalDetailPage() {
                       <div key={record.id} className="border rounded-lg p-4">
                         <div className="flex items-start justify-between mb-3">
                           <div>
-                            <p className="font-semibold text-gray-900">{record.vendor || 'Vendor'}</p>
+                            <p className="font-semibold text-foreground">{record.vendor || 'Vendor'}</p>
                             {record.order_number && (
-                              <p className="text-sm text-gray-600">Order: {record.order_number}</p>
+                              <p className="text-sm text-secondary">Order: {record.order_number}</p>
                             )}
                           </div>
                           <Select
@@ -228,10 +228,10 @@ export function SubmittalDetailPage() {
                         </div>
 
                         {record.notes && (
-                          <p className="text-sm text-gray-600 mt-2">{record.notes}</p>
+                          <p className="text-sm text-secondary mt-2">{record.notes}</p>
                         )}
 
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="text-xs text-muted mt-2">
                           Updated {record.updated_at ? format(new Date(record.updated_at), 'MMM d, yyyy') : 'N/A'}
                         </p>
                       </div>
@@ -253,19 +253,19 @@ export function SubmittalDetailPage() {
                     {comments.map((comment: any) => (
                       <div key={comment.id} className="border-b pb-4 last:border-0">
                         <div className="flex justify-between items-start mb-2">
-                          <span className="font-semibold text-sm text-gray-900">
+                          <span className="font-semibold text-sm text-foreground">
                             {comment.created_by?.substring(0, 8) || 'User'}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted">
                             {comment.created_at ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                           </span>
                         </div>
-                        <p className="text-sm whitespace-pre-wrap text-gray-700">{comment.comment}</p>
+                        <p className="text-sm whitespace-pre-wrap text-secondary">{comment.comment}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No comments yet</p>
+                  <p className="text-sm text-muted text-center py-4">No comments yet</p>
                 )}
               </CardContent>
             </Card>
@@ -301,7 +301,7 @@ export function SubmittalDetailPage() {
                 {/* Approval Status */}
                 {approvalStatus?.has_active_request && (
                   <div className="pt-2 border-t">
-                    <Label className="text-gray-600">Approval Status</Label>
+                    <Label className="text-secondary">Approval Status</Label>
                     <div className="mt-2">
                       <ApprovalStatusBadge
                         status={approvalStatus.status!}
@@ -333,16 +333,16 @@ export function SubmittalDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-gray-600">Created</Label>
-                  <p className="mt-1 text-gray-900">
+                  <Label className="text-secondary">Created</Label>
+                  <p className="mt-1 text-foreground">
                     {submittal.created_at ? format(new Date(submittal.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                   </p>
                 </div>
 
                 {submittal.due_date && (
                   <div>
-                    <Label className="text-gray-600">Due Date</Label>
-                    <p className="mt-1 text-gray-900">
+                    <Label className="text-secondary">Due Date</Label>
+                    <p className="mt-1 text-foreground">
                       {submittal.due_date ? format(new Date(submittal.due_date), 'MMM d, yyyy') : 'N/A'}
                     </p>
                   </div>
@@ -350,8 +350,8 @@ export function SubmittalDetailPage() {
 
                 {submittal.assignees && submittal.assignees.length > 0 && (
                   <div>
-                    <Label className="text-gray-600">Assigned To</Label>
-                    <p className="mt-1 text-gray-900">{submittal.assignees.length} user(s)</p>
+                    <Label className="text-secondary">Assigned To</Label>
+                    <p className="mt-1 text-foreground">{submittal.assignees.length} user(s)</p>
                   </div>
                 )}
 

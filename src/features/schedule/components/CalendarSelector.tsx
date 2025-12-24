@@ -104,7 +104,7 @@ export function CalendarSelector({
   // Render error state
   if (isError) {
     return (
-      <div className="text-sm text-red-500 p-2 border border-red-200 rounded-md bg-red-50">
+      <div className="text-sm text-error p-2 border border-red-200 rounded-md bg-error-light">
         Failed to load calendars
       </div>
     )
@@ -127,7 +127,7 @@ export function CalendarSelector({
                   ({calculateWeeklyHours(selectedCalendar)}h/wk)
                 </span>
                 {selectedCalendar.is_default && (
-                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                  <Star className="h-3 w-3 text-warning fill-yellow-500" />
                 )}
               </div>
             ) : (
@@ -153,12 +153,12 @@ export function CalendarSelector({
               return (
                 <SelectItem key={calendar.id} value={calendar.id}>
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-blue-500" />
+                    <Calendar className="h-4 w-4 text-primary" />
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
                         <span className="font-medium">{calendar.name}</span>
                         {calendar.is_default && (
-                          <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                          <Star className="h-3 w-3 text-warning fill-yellow-500" />
                         )}
                       </div>
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -221,12 +221,12 @@ export function CalendarDisplay({ calendar, className }: CalendarDisplayProps) {
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <Calendar className="h-4 w-4 text-blue-500" />
+      <Calendar className="h-4 w-4 text-primary" />
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <span className="font-medium">{calendar.name}</span>
           {calendar.is_default && (
-            <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+            <Star className="h-3 w-3 text-warning fill-yellow-500" />
           )}
         </div>
         <span className="text-xs text-muted-foreground">
@@ -258,7 +258,7 @@ export function CalendarBadge({ calendar, className }: CalendarBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-blue-50 text-blue-700 ${className}`}
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-blue-50 text-primary-hover ${className}`}
       title={`${calendar.name} - ${weeklyHours}h/week`}
     >
       <Clock className="h-3 w-3" />

@@ -50,7 +50,7 @@ export function EntitySyncBadge({
         return {
           icon: RefreshCw,
           label: 'Syncing',
-          className: 'bg-blue-100 text-blue-700 border-blue-300 animate-pulse',
+          className: 'bg-info-light text-primary-hover border-blue-300 animate-pulse',
           iconClassName: 'animate-spin',
           tooltip: 'Currently syncing with server',
         };
@@ -58,7 +58,7 @@ export function EntitySyncBadge({
         return {
           icon: CheckCircle2,
           label: 'Synced',
-          className: 'bg-green-100 text-green-700 border-green-300',
+          className: 'bg-success-light text-success-dark border-green-300',
           tooltip: lastSyncTime
             ? `Synced ${formatDistanceToNow(lastSyncTime, { addSuffix: true })}`
             : 'Synced with server',
@@ -67,7 +67,7 @@ export function EntitySyncBadge({
         return {
           icon: AlertCircle,
           label: 'Sync failed',
-          className: 'bg-red-100 text-red-700 border-red-300',
+          className: 'bg-error-light text-error-dark border-red-300',
           tooltip: error || 'Sync failed - will retry automatically',
         };
     }
@@ -84,7 +84,7 @@ export function EntitySyncBadge({
             <div
               className={cn(
                 'inline-flex h-2 w-2 rounded-full',
-                status === 'queued' && 'bg-amber-500',
+                status === 'queued' && 'bg-warning',
                 status === 'syncing' && 'bg-blue-500 animate-pulse',
                 status === 'synced' && 'bg-green-500',
                 status === 'error' && 'bg-red-500',

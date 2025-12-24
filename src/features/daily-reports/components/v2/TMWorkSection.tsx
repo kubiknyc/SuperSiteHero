@@ -243,17 +243,17 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <DollarSign className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-success-light rounded-lg">
+              <DollarSign className="h-5 w-5 text-success" />
             </div>
             <div className="text-left">
               <CardTitle className="text-base flex items-center gap-2">
                 T&M Work
                 {tmWork.length > 0 && (
-                  <Badge variant="secondary" className="bg-green-100 text-green-700">
+                  <Badge variant="secondary" className="bg-success-light text-success-dark">
                     {tmWork.length} {tmWork.length === 1 ? 'entry' : 'entries'}
                   </Badge>
                 )}
@@ -266,16 +266,16 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
             {/* Add Button */}
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-surface border-b">
               <Button type="button" variant="outline" size="sm" onClick={handleAdd}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add T&M Entry
@@ -295,20 +295,20 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                       <span className="font-medium">{entry.description}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-green-600">
+                      <span className="font-bold text-success">
                         {formatCurrency(entry.total_cost)}
                       </span>
                       <button
                         type="button"
                         onClick={() => handleEdit(entry)}
-                        className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                        className="p-2 text-disabled hover:text-primary hover:bg-blue-50 rounded transition-colors"
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(entry.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                        className="p-2 text-disabled hover:text-error hover:bg-error-light rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -318,7 +318,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                   {/* Cost Breakdown */}
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div className="p-2 bg-blue-50 rounded">
-                      <div className="flex items-center gap-1 text-blue-600 font-medium">
+                      <div className="flex items-center gap-1 text-primary font-medium">
                         <Users className="h-4 w-4" />
                         Labor
                       </div>
@@ -345,7 +345,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
 
                   {/* Authorization */}
                   {entry.authorized_by && (
-                    <div className="mt-3 text-sm text-gray-600">
+                    <div className="mt-3 text-sm text-secondary">
                       Authorized by: {entry.authorized_by}
                       {entry.authorization_date && ` on ${entry.authorization_date}`}
                     </div>
@@ -355,8 +355,8 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
 
               {/* Empty State */}
               {tmWork.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <DollarSign className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <div className="p-8 text-center text-muted">
+                  <DollarSign className="h-8 w-8 mx-auto mb-2 text-disabled" />
                   <p>No Time & Materials work recorded today.</p>
                   <p className="text-sm">Add T&M entries to document extra work for change orders.</p>
                 </div>
@@ -365,7 +365,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
 
             {/* Summary Footer */}
             {tmWork.length > 0 && (
-              <div className="p-4 bg-green-50 border-t">
+              <div className="p-4 bg-success-light border-t">
                 <div className="flex justify-between items-center">
                   <div className="text-sm space-y-1">
                     <div>Labor: {formatCurrency(totals.labor)}</div>
@@ -373,8 +373,8 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                     <div>Equipment: {formatCurrency(totals.equipment)}</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm text-gray-600">Grand Total</div>
-                    <div className="text-2xl font-bold text-green-600">
+                    <div className="text-sm text-secondary">Grand Total</div>
+                    <div className="text-2xl font-bold text-success">
                       {formatCurrency(totals.total)}
                     </div>
                   </div>
@@ -427,12 +427,12 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
               <AccordionItem value="labor" className="border rounded-lg">
                 <AccordionTrigger className="px-4 hover:bg-blue-50">
                   <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-blue-600" />
+                    <Users className="h-4 w-4 text-primary" />
                     <span>Labor</span>
                     <Badge variant="secondary" className="ml-2">
                       {(formData.labor_entries || []).length} entries
                     </Badge>
-                    <span className="ml-auto mr-4 font-semibold text-blue-600">
+                    <span className="ml-auto mr-4 font-semibold text-primary">
                       {formatCurrency(formData.total_labor_cost)}
                     </span>
                   </div>
@@ -440,7 +440,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                 <AccordionContent className="px-4 pb-4">
                   <div className="space-y-2">
                     {/* Labor Table Header */}
-                    <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 px-2">
+                    <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted px-2">
                       <div className="col-span-4">Trade</div>
                       <div className="col-span-2">Hours</div>
                       <div className="col-span-2">Rate</div>
@@ -473,7 +473,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                         </div>
                         <div className="col-span-2">
                           <div className="relative">
-                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">$</span>
+                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
                             <Input
                               type="number"
                               min="0"
@@ -491,7 +491,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                           <button
                             type="button"
                             onClick={() => handleRemoveLabor(index)}
-                            className="p-1 text-gray-400 hover:text-red-500"
+                            className="p-1 text-disabled hover:text-error"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -524,7 +524,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                 <AccordionContent className="px-4 pb-4">
                   <div className="space-y-2">
                     {/* Materials Table Header */}
-                    <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 px-2">
+                    <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted px-2">
                       <div className="col-span-4">Item</div>
                       <div className="col-span-2">Qty</div>
                       <div className="col-span-1">Unit</div>
@@ -566,7 +566,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                         </div>
                         <div className="col-span-2">
                           <div className="relative">
-                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">$</span>
+                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
                             <Input
                               type="number"
                               min="0"
@@ -584,7 +584,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                           <button
                             type="button"
                             onClick={() => handleRemoveMaterial(index)}
-                            className="p-1 text-gray-400 hover:text-red-500"
+                            className="p-1 text-disabled hover:text-error"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -617,7 +617,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                 <AccordionContent className="px-4 pb-4">
                   <div className="space-y-2">
                     {/* Equipment Table Header */}
-                    <div className="grid grid-cols-12 gap-2 text-xs font-medium text-gray-500 px-2">
+                    <div className="grid grid-cols-12 gap-2 text-xs font-medium text-muted px-2">
                       <div className="col-span-4">Type</div>
                       <div className="col-span-2">Hours</div>
                       <div className="col-span-2">Rate</div>
@@ -649,7 +649,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                         </div>
                         <div className="col-span-2">
                           <div className="relative">
-                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 text-xs">$</span>
+                            <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted text-xs">$</span>
                             <Input
                               type="number"
                               min="0"
@@ -667,7 +667,7 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
                           <button
                             type="button"
                             onClick={() => handleRemoveEquipment(index)}
-                            className="p-1 text-gray-400 hover:text-red-500"
+                            className="p-1 text-disabled hover:text-error"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -692,13 +692,13 @@ export function TMWorkSection({ expanded, onToggle }: TMWorkSectionProps) {
             </datalist>
 
             {/* Grand Total Display */}
-            <div className="p-4 bg-green-50 rounded-lg">
+            <div className="p-4 bg-success-light rounded-lg">
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Calculator className="h-5 w-5 text-green-600" />
+                  <Calculator className="h-5 w-5 text-success" />
                   <span className="font-medium">Grand Total</span>
                 </div>
-                <span className="text-2xl font-bold text-green-600">
+                <span className="text-2xl font-bold text-success">
                   {formatCurrency(formData.total_cost)}
                 </span>
               </div>

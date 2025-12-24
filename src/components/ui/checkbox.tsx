@@ -7,7 +7,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const checkboxVariants = cva(
-  'rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation cursor-pointer dark:border-gray-600 dark:bg-gray-800 dark:ring-offset-gray-950 dark:focus:ring-blue-400 dark:checked:bg-blue-500 dark:checked:border-blue-500',
+  'rounded border-input text-primary focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation cursor-pointer dark:border-gray-600 dark:bg-surface dark:ring-offset-gray-950 dark:focus:ring-blue-400 dark:checked:bg-blue-500 dark:checked:border-blue-500',
   {
     variants: {
       checkboxSize: {

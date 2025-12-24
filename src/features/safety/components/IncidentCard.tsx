@@ -37,25 +37,25 @@ export function IncidentCard({
   const statusConfig = INCIDENT_STATUS_CONFIG[incident.status]
 
   const statusColorClasses: Record<string, string> = {
-    blue: 'bg-blue-100 text-blue-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
+    blue: 'bg-info-light text-blue-800',
+    yellow: 'bg-warning-light text-yellow-800',
     orange: 'bg-orange-100 text-orange-800',
-    green: 'bg-green-100 text-green-800',
+    green: 'bg-success-light text-green-800',
   }
 
   return (
     <Link
       to={`/safety/${incident.id}`}
       className={cn(
-        'block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow',
+        'block bg-card rounded-lg border border-border p-4 hover:shadow-md transition-shadow',
         className
       )}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-gray-400" />
-          <span className="font-medium text-gray-900">
+          <AlertTriangle className="h-5 w-5 text-disabled" />
+          <span className="font-medium text-foreground">
             {incident.incident_number}
           </span>
         </div>
@@ -63,12 +63,12 @@ export function IncidentCard({
       </div>
 
       {/* Description */}
-      <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+      <p className="mt-2 text-sm text-secondary line-clamp-2">
         {incident.description}
       </p>
 
       {/* Metadata */}
-      <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+      <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted">
         <div className="flex items-center gap-1">
           <FileWarning className="h-3.5 w-3.5" />
           <span>{typeConfig.label}</span>
@@ -95,7 +95,7 @@ export function IncidentCard({
       </div>
 
       {/* Footer */}
-      <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
         <span
           className={cn(
             'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
@@ -105,7 +105,7 @@ export function IncidentCard({
           {statusConfig.label}
         </span>
 
-        <div className="flex items-center gap-1 text-xs text-gray-400">
+        <div className="flex items-center gap-1 text-xs text-disabled">
           <Clock className="h-3 w-3" />
           <span>
             {formatDistanceToNow(new Date(incident.reported_at), { addSuffix: true })}
@@ -115,14 +115,14 @@ export function IncidentCard({
 
       {/* Project name (optional) */}
       {showProject && incident.project && (
-        <div className="mt-2 text-xs text-gray-500">
+        <div className="mt-2 text-xs text-muted">
           Project: {incident.project.name}
         </div>
       )}
 
       {/* OSHA indicator */}
       {incident.osha_recordable && (
-        <div className="mt-2 inline-flex items-center gap-1 text-xs text-red-600 font-medium">
+        <div className="mt-2 inline-flex items-center gap-1 text-xs text-error font-medium">
           <span className="w-2 h-2 bg-red-500 rounded-full" />
           OSHA Recordable
         </div>

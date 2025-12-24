@@ -163,7 +163,7 @@ export function PhotoDetailDialog({
           <div className="flex items-center justify-between">
             <DialogTitle className="flex items-center gap-2">
               {(photo as PhotoWithVideo).isVideo ? (
-                <Video className="h-5 w-5 text-blue-500" />
+                <Video className="h-5 w-5 text-primary" />
               ) : photo.is360 ? (
                 <FileImage className="h-5 w-5 text-purple-500" />
               ) : (
@@ -235,7 +235,7 @@ export function PhotoDetailDialog({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-card/20"
                     onClick={() => setZoom((z) => Math.max(0.5, z - 0.25))}
                   >
                     <ZoomOut className="h-4 w-4" />
@@ -246,16 +246,16 @@ export function PhotoDetailDialog({
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-card/20"
                     onClick={() => setZoom((z) => Math.min(3, z + 0.25))}
                   >
                     <ZoomIn className="h-4 w-4" />
                   </Button>
-                  <Separator orientation="vertical" className="h-6 bg-white/30" />
+                  <Separator orientation="vertical" className="h-6 bg-card/30" />
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-white hover:bg-white/20"
+                    className="text-white hover:bg-card/20"
                     onClick={() => setRotation((r) => (r + 90) % 360)}
                   >
                     <RotateCw className="h-4 w-4" />
@@ -416,7 +416,7 @@ export function PhotoDetailDialog({
                     <div className="space-y-2">
                       <Label className="text-sm font-medium">Location</Label>
                       <div className="flex items-start gap-3">
-                        <MapPin className="h-4 w-4 mt-1 text-green-500" />
+                        <MapPin className="h-4 w-4 mt-1 text-success" />
                         <div>
                           <p className="text-sm text-muted-foreground">
                             {formatGPS(photo.latitude, photo.longitude)}
@@ -486,7 +486,7 @@ export function PhotoDetailDialog({
                       onClick={handleCopyUrl}
                     >
                       {copied ? (
-                        <Check className="h-4 w-4 text-green-500" />
+                        <Check className="h-4 w-4 text-success" />
                       ) : (
                         <Copy className="h-4 w-4" />
                       )}

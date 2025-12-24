@@ -230,7 +230,7 @@ export function PWAInstallBanner({ className, position = 'bottom', onAnalyticsEv
           className
         )}
       >
-        <Card className="max-w-md mx-auto shadow-lg border-primary-200 dark:border-primary-800 bg-white dark:bg-gray-900 dark:border-gray-700">
+        <Card className="max-w-md mx-auto shadow-lg border-primary-200 dark:border-primary-800 bg-card dark:bg-background dark:border-gray-700">
           <CardContent className="p-4">
             <IOSInstallInstructions
               onClose={() => setShowIOSInstructions(false)}
@@ -252,7 +252,7 @@ export function PWAInstallBanner({ className, position = 'bottom', onAnalyticsEv
         className
       )}
     >
-      <Card className="max-w-md mx-auto shadow-lg border-primary-200 dark:border-primary-800 bg-white dark:bg-gray-900 dark:border-gray-700">
+      <Card className="max-w-md mx-auto shadow-lg border-primary-200 dark:border-primary-800 bg-card dark:bg-background dark:border-gray-700">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
             <div className="p-2 bg-primary-100 dark:bg-primary-950 rounded-lg flex-shrink-0">
@@ -346,17 +346,17 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
       <Card className={cn('border-green-200 dark:border-green-800', className)}>
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-              <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+            <div className="p-2 bg-success-light dark:bg-green-900 rounded-lg">
+              <CheckCircle2 className="h-5 w-5 text-success dark:text-green-400" />
             </div>
             <div className="flex-1">
               <p className="font-medium text-green-800 dark:text-green-200">App Installed</p>
-              <p className="text-sm text-green-600 dark:text-green-400">
+              <p className="text-sm text-success dark:text-green-400">
                 JobSight is installed on your device
               </p>
             </div>
           </div>
-          <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="mt-4 p-3 bg-surface dark:bg-surface rounded-lg">
             <p className="text-xs text-muted-foreground">
               <strong>Status:</strong> Running in standalone mode
             </p>
@@ -385,11 +385,11 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
   // Not installable state (browser doesn't support or already dismissed)
   if (!isInstallable && !isIOS) {
     return (
-      <Card className={cn('border-gray-200 dark:border-gray-700', className)}>
+      <Card className={cn('border-border dark:border-gray-700', className)}>
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
-              <Monitor className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+            <div className="p-2 bg-muted dark:bg-surface rounded-lg">
+              <Monitor className="h-5 w-5 text-secondary dark:text-disabled" />
             </div>
             <div className="flex-1">
               <CardTitle className="text-base mb-1">Install JobSight App</CardTitle>
@@ -478,7 +478,7 @@ export function PWAInstallIndicator({ className, onAnalyticsEvent }: PWAInstallI
       </Button>
 
       {showTooltip && isIOS && (
-        <div className="absolute top-full right-0 mt-2 w-72 p-3 bg-white dark:bg-gray-900 rounded-lg shadow-lg border z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full right-0 mt-2 w-72 p-3 bg-card dark:bg-background rounded-lg shadow-lg border z-50 animate-in fade-in slide-in-from-top-2 duration-200">
           <IOSInstallInstructions
             onClose={() => setShowTooltip(false)}
             onDontShowAgain={() => {

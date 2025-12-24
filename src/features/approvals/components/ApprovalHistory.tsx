@@ -23,17 +23,17 @@ const actionColorClasses: Record<ApprovalActionType, string> = {
 }
 
 const actionBgClasses: Record<ApprovalActionType, string> = {
-  approve: 'bg-green-50 border-green-200',
+  approve: 'bg-success-light border-green-200',
   approve_with_conditions: 'bg-blue-50 border-blue-200',
-  reject: 'bg-red-50 border-red-200',
+  reject: 'bg-error-light border-red-200',
   delegate: 'bg-purple-50 border-purple-200',
-  comment: 'bg-gray-50 border-gray-200',
+  comment: 'bg-surface border-border',
 }
 
 export function ApprovalHistory({ actions, className }: ApprovalHistoryProps) {
   if (!actions || actions.length === 0) {
     return (
-      <div className={cn('text-sm text-gray-500 text-center py-4', className)}>
+      <div className={cn('text-sm text-muted text-center py-4', className)}>
         No activity yet
       </div>
     )
@@ -74,7 +74,7 @@ function HistoryItem({ action, isLast }: HistoryItemProps) {
     <div className="relative flex gap-4">
       {/* Timeline line */}
       {!isLast && (
-        <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-gray-200" />
+        <div className="absolute left-[11px] top-6 bottom-0 w-0.5 bg-muted" />
       )}
 
       {/* Timeline dot */}
@@ -87,31 +87,31 @@ function HistoryItem({ action, isLast }: HistoryItemProps) {
         {/* Header */}
         <div className="flex items-start justify-between gap-2 mb-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm text-gray-900">
+            <span className="font-medium text-sm text-foreground">
               {action.user?.full_name || action.user?.email || 'Unknown User'}
             </span>
-            <span className="text-xs text-gray-500">{config.pastTense}</span>
+            <span className="text-xs text-muted">{config.pastTense}</span>
           </div>
-          <span className="text-xs text-gray-500 whitespace-nowrap">{formattedDate}</span>
+          <span className="text-xs text-muted whitespace-nowrap">{formattedDate}</span>
         </div>
 
         {/* Step info */}
         {action.step && (
-          <div className="text-xs text-gray-500 mb-2">
+          <div className="text-xs text-muted mb-2">
             Step: {action.step.name}
           </div>
         )}
 
         {/* Conditions (for approve_with_conditions) */}
         {action.action === 'approve_with_conditions' && action.conditions && (
-          <div className="bg-blue-100 text-blue-800 text-sm rounded p-2 mb-2">
+          <div className="bg-info-light text-blue-800 text-sm rounded p-2 mb-2">
             <span className="font-medium">Conditions:</span> {action.conditions}
           </div>
         )}
 
         {/* Delegation info */}
         {action.action === 'delegate' && action.delegated_user && (
-          <div className="text-sm text-gray-600 mb-2">
+          <div className="text-sm text-secondary mb-2">
             Delegated to:{' '}
             <span className="font-medium">
               {action.delegated_user.full_name || action.delegated_user.email}
@@ -121,7 +121,7 @@ function HistoryItem({ action, isLast }: HistoryItemProps) {
 
         {/* Comment */}
         {action.comment && (
-          <div className="text-sm text-gray-700 bg-white rounded p-2 border border-gray-100">
+          <div className="text-sm text-secondary bg-card rounded p-2 border border-border">
             {action.comment}
           </div>
         )}

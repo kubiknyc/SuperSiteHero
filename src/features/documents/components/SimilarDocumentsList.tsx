@@ -40,16 +40,16 @@ export function SimilarDocumentsList({
     return (
       <Card className={cn('animate-pulse', className)}>
         <CardHeader>
-          <CardTitle className="h-4 w-40 bg-gray-200 rounded" />
+          <CardTitle className="h-4 w-40 bg-muted rounded" />
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="h-10 w-10 bg-gray-200 rounded" />
+              <div key={i} className="flex items-center gap-3 p-3 bg-surface rounded-lg">
+                <div className="h-10 w-10 bg-muted rounded" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 w-3/4 bg-gray-200 rounded" />
-                  <div className="h-3 w-1/2 bg-gray-100 rounded" />
+                  <div className="h-4 w-3/4 bg-muted rounded" />
+                  <div className="h-3 w-1/2 bg-muted rounded" />
                 </div>
               </div>
             ))}
@@ -63,7 +63,7 @@ export function SimilarDocumentsList({
     return (
       <Card className={cn('border-red-200', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-error">
             <p>Failed to find similar documents</p>
           </div>
         </CardContent>
@@ -75,9 +75,9 @@ export function SimilarDocumentsList({
 
   if (documents.length === 0) {
     return (
-      <Card className={cn('border-gray-200', className)}>
+      <Card className={cn('border-border', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <span className="text-2xl">🔗</span>
             <p className="mt-2">No similar documents found</p>
             <p className="text-sm mt-1">
@@ -112,7 +112,7 @@ export function SimilarDocumentsList({
         </div>
 
         {similarDocs && similarDocs.length > maxItems && (
-          <p className="text-xs text-gray-400 mt-4 text-center">
+          <p className="text-xs text-disabled mt-4 text-center">
             Showing {maxItems} of {similarDocs.length} similar documents
           </p>
         )}
@@ -134,10 +134,10 @@ function SimilarDocumentItem({ document, onClick }: SimilarDocumentItemProps) {
 
   // Similarity color scale
   const getSimilarityColor = (score: number) => {
-    if (score >= 0.9) {return 'text-green-600 bg-green-50'}
-    if (score >= 0.7) {return 'text-blue-600 bg-blue-50'}
-    if (score >= 0.5) {return 'text-amber-600 bg-amber-50'}
-    return 'text-gray-600 bg-gray-50'
+    if (score >= 0.9) {return 'text-success bg-success-light'}
+    if (score >= 0.7) {return 'text-primary bg-blue-50'}
+    if (score >= 0.5) {return 'text-warning bg-warning-light'}
+    return 'text-secondary bg-surface'
   }
 
   const handleClick = () => {
@@ -147,7 +147,7 @@ function SimilarDocumentItem({ document, onClick }: SimilarDocumentItemProps) {
   return (
     <div
       className={cn(
-        'flex items-center gap-3 p-3 rounded-lg border border-gray-100 bg-gray-50 hover:bg-gray-100 transition-colors',
+        'flex items-center gap-3 p-3 rounded-lg border border-border bg-surface hover:bg-muted transition-colors',
         onClick && 'cursor-pointer'
       )}
       onClick={handleClick}
@@ -164,7 +164,7 @@ function SimilarDocumentItem({ document, onClick }: SimilarDocumentItemProps) {
 
       {/* Document info */}
       <div className="flex-1 min-w-0">
-        <h4 className="font-medium text-sm text-gray-900 truncate">
+        <h4 className="font-medium text-sm text-foreground truncate" className="heading-card">
           {document.document_name}
         </h4>
         <div className="flex items-center gap-2 mt-1">
@@ -175,7 +175,7 @@ function SimilarDocumentItem({ document, onClick }: SimilarDocumentItemProps) {
             />
           )}
           {document.document_number && (
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted">
               #{document.document_number}
             </span>
           )}
@@ -191,7 +191,7 @@ function SimilarDocumentItem({ document, onClick }: SimilarDocumentItemProps) {
 
       {/* Arrow indicator */}
       {onClick && (
-        <span className="text-gray-400 flex-shrink-0">→</span>
+        <span className="text-disabled flex-shrink-0">→</span>
       )}
     </div>
   )

@@ -256,15 +256,15 @@ export default function TakeoffPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-surface">
       {/* Header */}
-      <div className="bg-white border-b shadow-sm">
+      <div className="bg-card border-b shadow-sm">
         <div className="flex items-center gap-4 p-4">
           <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-semibold">Takeoff Measurements</h1>
+            <h1 className="text-xl font-semibold" className="heading-page">Takeoff Measurements</h1>
             <p className="text-sm text-muted-foreground">
               Document ID: {documentId} • Page {pageNumber}
             </p>
@@ -314,7 +314,7 @@ export default function TakeoffPage() {
               <div className="text-muted-foreground">Loading measurements...</div>
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="bg-card rounded-lg shadow-lg overflow-hidden">
               <TakeoffCanvas
                 documentId={documentId}
                 projectId={projectId}
@@ -336,7 +336,7 @@ export default function TakeoffPage() {
 
         {/* Side Panel */}
         {showList && (
-          <div className="w-96 flex flex-col border-l bg-white">
+          <div className="w-96 flex flex-col border-l bg-card">
             {selectedMeasurement ? (
               <div className="flex-1 overflow-auto p-4">
                 <TakeoffItemCard

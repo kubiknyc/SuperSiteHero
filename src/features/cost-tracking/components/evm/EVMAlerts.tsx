@@ -31,14 +31,14 @@ interface EVMAlertsProps {
 const SEVERITY_CONFIG = {
   critical: {
     icon: AlertCircle,
-    bg: 'bg-red-50',
+    bg: 'bg-error-light',
     border: 'border-red-200',
-    text: 'text-red-700',
-    badge: 'bg-red-100 text-red-700',
+    text: 'text-error-dark',
+    badge: 'bg-error-light text-error-dark',
   },
   warning: {
     icon: AlertTriangle,
-    bg: 'bg-amber-50',
+    bg: 'bg-warning-light',
     border: 'border-amber-200',
     text: 'text-amber-700',
     badge: 'bg-amber-100 text-amber-700',
@@ -47,8 +47,8 @@ const SEVERITY_CONFIG = {
     icon: Info,
     bg: 'bg-blue-50',
     border: 'border-blue-200',
-    text: 'text-blue-700',
-    badge: 'bg-blue-100 text-blue-700',
+    text: 'text-primary-hover',
+    badge: 'bg-info-light text-primary-hover',
   },
 }
 

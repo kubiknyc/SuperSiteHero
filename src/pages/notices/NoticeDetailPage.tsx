@@ -71,11 +71,11 @@ export function NoticeDetailPage() {
         <div className="p-6">
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <AlertTriangle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 Notice Not Found
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 {error?.message || 'The notice you are looking for does not exist.'}
               </p>
               <Link to="/notices">
@@ -113,7 +113,7 @@ export function NoticeDetailPage() {
               size="sm"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="text-red-600 hover:text-red-700"
+              className="text-error hover:text-error-dark"
             >
               <Trash2 className="w-4 h-4 mr-2" />
               Delete
@@ -145,7 +145,7 @@ export function NoticeDetailPage() {
                   <NoticeTypeBadge type={notice.notice_type} />
                   <NoticeStatusBadge status={notice.status} />
                   {notice.is_critical && (
-                    <Badge className="bg-red-100 text-red-800">
+                    <Badge className="bg-error-light text-red-800">
                       <AlertTriangle className="w-3 h-3 mr-1" />
                       Critical
                     </Badge>
@@ -166,7 +166,7 @@ export function NoticeDetailPage() {
                 </div>
 
                 {/* Subject */}
-                <h1 className="text-2xl font-bold text-gray-900 mb-4">
+                <h1 className="text-2xl font-bold text-foreground mb-4" className="heading-page">
                   {notice.subject}
                 </h1>
 
@@ -191,20 +191,20 @@ export function NoticeDetailPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">From Party</p>
+                  <p className="text-sm text-muted">From Party</p>
                   <p className="font-medium">{notice.from_party || '—'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">To Party</p>
+                  <p className="text-sm text-muted">To Party</p>
                   <p className="font-medium">{notice.to_party || '—'}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">Notice Date</p>
+                  <p className="text-sm text-muted">Notice Date</p>
                   <p className="font-medium flex items-center gap-1">
-                    <Calendar className="w-4 h-4 text-gray-400" />
+                    <Calendar className="w-4 h-4 text-disabled" />
                     {notice.notice_date
                       ? format(new Date(notice.notice_date), 'MMM d, yyyy')
                       : '—'}
@@ -212,7 +212,7 @@ export function NoticeDetailPage() {
                 </div>
                 {notice.direction === 'incoming' && (
                   <div>
-                    <p className="text-sm text-gray-500">Received Date</p>
+                    <p className="text-sm text-muted">Received Date</p>
                     <p className="font-medium">
                       {notice.received_date
                         ? format(new Date(notice.received_date), 'MMM d, yyyy')
@@ -225,11 +225,11 @@ export function NoticeDetailPage() {
               {notice.response_required && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500">Response Due</p>
+                    <p className="text-sm text-muted">Response Due</p>
                     <p
                       className={cn(
                         'font-medium',
-                        overdue && 'text-red-600'
+                        overdue && 'text-error'
                       )}
                     >
                       {notice.response_due_date
@@ -238,7 +238,7 @@ export function NoticeDetailPage() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Response Date</p>
+                    <p className="text-sm text-muted">Response Date</p>
                     <p className="font-medium">
                       {notice.response_date
                         ? format(new Date(notice.response_date), 'MMM d, yyyy')
@@ -258,48 +258,48 @@ export function NoticeDetailPage() {
             <CardContent className="space-y-4">
               {/* Notice Document */}
               <div>
-                <p className="text-sm font-medium text-gray-700 mb-2">
+                <p className="text-sm font-medium text-secondary mb-2">
                   Notice Document
                 </p>
                 {notice.document_url ? (
                   <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-blue-500" />
+                    <FileText className="w-5 h-5 text-primary" />
                     <a
                       href={notice.document_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline flex items-center gap-1"
+                      className="text-primary hover:underline flex items-center gap-1"
                     >
                       View Document
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-sm">No document attached</p>
+                  <p className="text-muted text-sm">No document attached</p>
                 )}
               </div>
 
               {/* Response Document */}
               {notice.response_required && (
                 <div>
-                  <p className="text-sm font-medium text-gray-700 mb-2">
+                  <p className="text-sm font-medium text-secondary mb-2">
                     Response Document
                   </p>
                   {notice.response_document_url ? (
                     <div className="flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-green-500" />
+                      <FileText className="w-5 h-5 text-success" />
                       <a
                         href={notice.response_document_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline flex items-center gap-1"
+                        className="text-primary hover:underline flex items-center gap-1"
                       >
                         View Response
                         <ExternalLink className="w-3 h-3" />
                       </a>
                     </div>
                   ) : (
-                    <p className="text-gray-500 text-sm">
+                    <p className="text-muted text-sm">
                       No response document attached
                     </p>
                   )}
@@ -316,7 +316,7 @@ export function NoticeDetailPage() {
               <CardTitle className="text-lg">Description</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">
+              <p className="text-secondary whitespace-pre-wrap">
                 {notice.description}
               </p>
             </CardContent>
@@ -330,7 +330,7 @@ export function NoticeDetailPage() {
               <CardTitle className="text-lg">Internal Notes</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{notice.notes}</p>
+              <p className="text-secondary whitespace-pre-wrap">{notice.notes}</p>
             </CardContent>
           </Card>
         )}
@@ -338,7 +338,7 @@ export function NoticeDetailPage() {
         {/* Metadata */}
         <Card>
           <CardContent className="p-4">
-            <div className="flex items-center gap-6 text-sm text-gray-500">
+            <div className="flex items-center gap-6 text-sm text-muted">
               <span>
                 Created:{' '}
                 {notice.created_at

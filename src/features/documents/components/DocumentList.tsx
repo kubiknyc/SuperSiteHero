@@ -87,8 +87,8 @@ export function DocumentList({
       <Card>
         <CardContent className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-            <span className="ml-3 text-gray-600">Loading documents...</span>
+            <Loader2 className="w-8 h-8 animate-spin text-disabled" />
+            <span className="ml-3 text-secondary">Loading documents...</span>
           </div>
         </CardContent>
       </Card>
@@ -102,10 +102,10 @@ export function DocumentList({
         <CardContent className="p-6">
           <div className="text-center py-12">
             <DocumentTypeIcon type="general" className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
               No documents found
             </h3>
-            <p className="text-gray-500">
+            <p className="text-muted">
               Upload your first document to get started.
             </p>
           </div>
@@ -140,12 +140,12 @@ export function DocumentList({
                     <div className="flex items-center space-x-3">
                       <DocumentTypeIcon type={doc.document_type} className="flex-shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-foreground truncate">
                           {searchTerm
                             ? highlightSearchTerm(doc.name, searchTerm)
                             : doc.name}
                         </p>
-                        <p className="text-sm text-gray-500 truncate">
+                        <p className="text-sm text-muted truncate">
                           {searchTerm && doc.drawing_number
                             ? highlightSearchTerm(doc.drawing_number, searchTerm)
                             : doc.drawing_number || doc.file_name}
@@ -156,7 +156,7 @@ export function DocumentList({
 
                   {/* Type column */}
                   <TableCell>
-                    <span className="text-sm text-gray-600 capitalize">
+                    <span className="text-sm text-secondary capitalize">
                       {doc.document_type.replace('_', ' ')}
                     </span>
                   </TableCell>
@@ -168,7 +168,7 @@ export function DocumentList({
 
                   {/* Version column */}
                   <TableCell>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-secondary">
                       {doc.version}
                       {doc.revision && ` (${doc.revision})`}
                     </span>
@@ -176,14 +176,14 @@ export function DocumentList({
 
                   {/* Size column */}
                   <TableCell>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-secondary">
                       {formatFileSize(doc.file_size)}
                     </span>
                   </TableCell>
 
                   {/* Created date column */}
                   <TableCell>
-                    <span className="text-sm text-gray-600">
+                    <span className="text-sm text-secondary">
                       {formatDate(doc.created_at)}
                     </span>
                   </TableCell>
@@ -215,7 +215,7 @@ export function DocumentList({
                         onClick={() => onDelete(doc)}
                         title="Delete document"
                         aria-label={`Delete ${doc.name}`}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="text-error hover:text-error-dark hover:bg-error-light"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

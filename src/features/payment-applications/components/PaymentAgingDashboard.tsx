@@ -106,11 +106,11 @@ function getBucketBadgeVariant(
 function getSeverityIcon(severity: 'info' | 'warning' | 'critical') {
   switch (severity) {
     case 'critical':
-      return <AlertTriangle className="h-4 w-4 text-red-500" />
+      return <AlertTriangle className="h-4 w-4 text-error" />
     case 'warning':
-      return <AlertCircle className="h-4 w-4 text-yellow-500" />
+      return <AlertCircle className="h-4 w-4 text-warning" />
     case 'info':
-      return <Info className="h-4 w-4 text-blue-500" />
+      return <Info className="h-4 w-4 text-primary" />
   }
 }
 
@@ -173,19 +173,19 @@ function AgingSummaryCards({
             <span
               className={cn(
                 'text-2xl font-bold',
-                dsoStatus === 'good' && 'text-green-600',
-                dsoStatus === 'warning' && 'text-yellow-600',
-                dsoStatus === 'bad' && 'text-red-600'
+                dsoStatus === 'good' && 'text-success',
+                dsoStatus === 'warning' && 'text-warning',
+                dsoStatus === 'bad' && 'text-error'
               )}
             >
               {currentDSO}
             </span>
             {dsoStatus === 'good' ? (
-              <TrendingDown className="h-4 w-4 text-green-500" />
+              <TrendingDown className="h-4 w-4 text-success" />
             ) : dsoStatus === 'warning' ? (
-              <Minus className="h-4 w-4 text-yellow-500" />
+              <Minus className="h-4 w-4 text-warning" />
             ) : (
-              <TrendingUp className="h-4 w-4 text-red-500" />
+              <TrendingUp className="h-4 w-4 text-error" />
             )}
           </div>
           <p className="text-xs text-muted-foreground">Target: {targetDSO} days</p>
@@ -235,7 +235,7 @@ function AgingBucketChart({ buckets, total }: AgingBucketChartProps) {
                   'transition-all duration-300',
                   bucket.bucket === 'current' && 'bg-green-500',
                   bucket.bucket === '1-30' && 'bg-blue-500',
-                  bucket.bucket === '31-60' && 'bg-yellow-500',
+                  bucket.bucket === '31-60' && 'bg-warning',
                   bucket.bucket === '61-90' && 'bg-orange-500',
                   bucket.bucket === '90+' && 'bg-red-500'
                 )}
@@ -256,7 +256,7 @@ function AgingBucketChart({ buckets, total }: AgingBucketChartProps) {
                     'h-3 w-3 rounded-full',
                     bucket.bucket === 'current' && 'bg-green-500',
                     bucket.bucket === '1-30' && 'bg-blue-500',
-                    bucket.bucket === '31-60' && 'bg-yellow-500',
+                    bucket.bucket === '31-60' && 'bg-warning',
                     bucket.bucket === '61-90' && 'bg-orange-500',
                     bucket.bucket === '90+' && 'bg-red-500'
                   )}
@@ -298,11 +298,11 @@ function AlertsList({ alerts, maxItems = 5 }: AlertsListProps) {
             <CardTitle>Payment Alerts</CardTitle>
             <CardDescription>
               {criticalCount > 0 && (
-                <span className="text-red-600 font-medium">{criticalCount} critical</span>
+                <span className="text-error font-medium">{criticalCount} critical</span>
               )}
               {criticalCount > 0 && warningCount > 0 && ', '}
               {warningCount > 0 && (
-                <span className="text-yellow-600 font-medium">{warningCount} warnings</span>
+                <span className="text-warning font-medium">{warningCount} warnings</span>
               )}
               {criticalCount === 0 && warningCount === 0 && 'No urgent alerts'}
             </CardDescription>
@@ -321,8 +321,8 @@ function AlertsList({ alerts, maxItems = 5 }: AlertsListProps) {
                 key={alert.id}
                 className={cn(
                   'flex items-start gap-3 p-3 rounded-lg border',
-                  alert.severity === 'critical' && 'bg-red-50 border-red-200',
-                  alert.severity === 'warning' && 'bg-yellow-50 border-yellow-200',
+                  alert.severity === 'critical' && 'bg-error-light border-red-200',
+                  alert.severity === 'warning' && 'bg-warning-light border-yellow-200',
                   alert.severity === 'info' && 'bg-blue-50 border-blue-200'
                 )}
               >
@@ -603,7 +603,7 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
       <Card className={className}>
         <CardContent className="pt-6">
           <div className="text-center text-muted-foreground">
-            <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-red-500" />
+            <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-error" />
             <p>Failed to load aging data</p>
             <Button variant="outline" className="mt-2" onClick={() => refetch()}>
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -624,7 +624,7 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Payment Aging</h2>
+          <h2 className="text-2xl font-bold tracking-tight" className="heading-section">Payment Aging</h2>
           <p className="text-muted-foreground">
             As of {format(parseISO(report.as_of_date), 'MMMM d, yyyy')}
           </p>

@@ -20,26 +20,26 @@ const statusConfig = {
   synced: {
     icon: Check,
     label: 'Synced',
-    className: 'text-green-600 bg-green-50 border-green-200',
-    iconClassName: 'text-green-600',
+    className: 'text-success bg-success-light border-green-200',
+    iconClassName: 'text-success',
   },
   pending: {
     icon: CloudOff,
     label: 'Pending sync',
-    className: 'text-yellow-600 bg-yellow-50 border-yellow-200',
-    iconClassName: 'text-yellow-600',
+    className: 'text-warning bg-warning-light border-yellow-200',
+    iconClassName: 'text-warning',
   },
   syncing: {
     icon: RefreshCw,
     label: 'Syncing...',
-    className: 'text-blue-600 bg-blue-50 border-blue-200',
-    iconClassName: 'text-blue-600 animate-spin',
+    className: 'text-primary bg-blue-50 border-blue-200',
+    iconClassName: 'text-primary animate-spin',
   },
   error: {
     icon: AlertTriangle,
     label: 'Sync failed',
-    className: 'text-red-600 bg-red-50 border-red-200',
-    iconClassName: 'text-red-600',
+    className: 'text-error bg-error-light border-red-200',
+    iconClassName: 'text-error',
   },
   conflict: {
     icon: AlertTriangle,
@@ -121,12 +121,12 @@ export function SyncBadgeList({ items, onItemClick }: SyncBadgeListProps) {
   return (
     <div className="flex items-center gap-2 text-sm">
       {pendingCount > 0 && (
-        <span className="text-yellow-600">
+        <span className="text-warning">
           {pendingCount} pending
         </span>
       )}
       {errorCount > 0 && (
-        <span className="text-red-600">
+        <span className="text-error">
           {errorCount} failed
         </span>
       )}

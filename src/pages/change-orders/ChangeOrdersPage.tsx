@@ -115,8 +115,8 @@ export function ChangeOrdersPage() {
 
   // Get status icon
   const getStatusIcon = (status: string) => {
-    if (status === 'approved') {return <CheckCircle className="h-4 w-4 text-green-600" />}
-    if (status === 'rejected') {return <XCircle className="h-4 w-4 text-red-600" />}
+    if (status === 'approved') {return <CheckCircle className="h-4 w-4 text-success" />}
+    if (status === 'rejected') {return <XCircle className="h-4 w-4 text-error" />}
     if (status.includes('pending')) {return <Clock className="h-4 w-4 text-orange-500" />}
     return null
   }
@@ -128,7 +128,7 @@ export function ChangeOrdersPage() {
     return (
       <div
         key={co.id}
-        className="py-4 px-4 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors border-b last:border-b-0"
+        className="py-4 px-4 hover:bg-surface cursor-pointer rounded-lg transition-colors border-b last:border-b-0"
         onClick={() => navigate(`/change-orders/${co.id}`)}
       >
         <div className="flex items-start justify-between">
@@ -144,38 +144,38 @@ export function ChangeOrdersPage() {
                   PCO
                 </Badge>
               ) : (
-                <Badge variant="outline" className="border-green-300 text-green-700 bg-green-50">
+                <Badge variant="outline" className="border-green-300 text-success-dark bg-success-light">
                   CO
                 </Badge>
               )}
-              <Badge variant="outline" className="text-gray-600">
+              <Badge variant="outline" className="text-secondary">
                 {getChangeTypeLabel(co.change_type)}
               </Badge>
             </div>
 
             {/* Title */}
-            <p className="text-gray-900 font-medium mb-2">{co.title}</p>
+            <p className="text-foreground font-medium mb-2">{co.title}</p>
 
             {/* Details Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               {/* Proposed Amount */}
               <div>
-                <span className="text-gray-500">Proposed:</span>
-                <p className="font-medium text-blue-700">{formatCurrency(co.proposed_amount)}</p>
+                <span className="text-muted">Proposed:</span>
+                <p className="font-medium text-primary-hover">{formatCurrency(co.proposed_amount)}</p>
               </div>
 
               {/* Approved Amount (if approved) */}
               {co.approved_amount !== null && (
                 <div>
-                  <span className="text-gray-500">Approved:</span>
-                  <p className="font-medium text-green-700">{formatCurrency(co.approved_amount)}</p>
+                  <span className="text-muted">Approved:</span>
+                  <p className="font-medium text-success-dark">{formatCurrency(co.approved_amount)}</p>
                 </div>
               )}
 
               {/* Time Impact */}
               {(co.proposed_days > 0 || (co.approved_days && co.approved_days > 0)) && (
                 <div>
-                  <span className="text-gray-500">Days Impact:</span>
+                  <span className="text-muted">Days Impact:</span>
                   <p className="font-medium">
                     {co.approved_days !== null ? co.approved_days : co.proposed_days} days
                   </p>
@@ -184,7 +184,7 @@ export function ChangeOrdersPage() {
 
               {/* Date Created */}
               <div>
-                <span className="text-gray-500">Created:</span>
+                <span className="text-muted">Created:</span>
                 <p className="font-medium">
                   {co.date_created
                     ? format(new Date(co.date_created), 'MMM d, yyyy')
@@ -210,11 +210,11 @@ export function ChangeOrdersPage() {
 
             {/* Description Preview */}
             {co.description && (
-              <p className="mt-2 text-sm text-gray-600 line-clamp-2">{co.description}</p>
+              <p className="mt-2 text-sm text-secondary line-clamp-2">{co.description}</p>
             )}
           </div>
 
-          <ChevronRight className="h-5 w-5 text-gray-400 mt-2 flex-shrink-0" />
+          <ChevronRight className="h-5 w-5 text-disabled mt-2 flex-shrink-0" />
         </div>
       </div>
     )
@@ -226,11 +226,11 @@ export function ChangeOrdersPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-              <FileEdit className="h-8 w-8 text-blue-600" />
+            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <FileEdit className="h-8 w-8 text-primary" />
               Change Orders
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               PCO → CO workflow with multi-level approval
             </p>
           </div>
@@ -247,7 +247,7 @@ export function ChangeOrdersPage() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <FileEdit className="h-4 w-4" />
                   <span className="text-sm">Total</span>
                 </div>
@@ -265,23 +265,23 @@ export function ChangeOrdersPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-green-200 bg-green-50">
+            <Card className="border-green-200 bg-success-light">
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-green-700 mb-1">
+                <div className="flex items-center gap-2 text-success-dark mb-1">
                   <CheckCircle className="h-4 w-4" />
                   <span className="text-sm">Approved COs</span>
                 </div>
-                <p className="text-2xl font-bold text-green-700">{statistics.approved_co_count}</p>
+                <p className="text-2xl font-bold text-success-dark">{statistics.approved_co_count}</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <DollarSign className="h-4 w-4" />
                   <span className="text-sm">Proposed</span>
                 </div>
-                <p className="text-2xl font-bold text-blue-600">
+                <p className="text-2xl font-bold text-primary">
                   {formatCurrency(statistics.total_proposed_amount)}
                 </p>
               </CardContent>
@@ -289,11 +289,11 @@ export function ChangeOrdersPage() {
 
             <Card>
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-gray-600 mb-1">
+                <div className="flex items-center gap-2 text-secondary mb-1">
                   <DollarSign className="h-4 w-4" />
                   <span className="text-sm">Approved</span>
                 </div>
-                <p className="text-2xl font-bold text-green-600">
+                <p className="text-2xl font-bold text-success">
                   {formatCurrency(statistics.total_approved_amount)}
                 </p>
               </CardContent>
@@ -401,7 +401,7 @@ export function ChangeOrdersPage() {
               <div className="space-y-2">
                 <Label htmlFor="search">Search</Label>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
                   <Input
                     id="search"
                     type="text"
@@ -420,19 +420,19 @@ export function ChangeOrdersPage() {
         {isLoading && (
           <Card>
             <CardContent className="py-12 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-500">Loading change orders...</p>
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+              <p className="text-muted">Loading change orders...</p>
             </CardContent>
           </Card>
         )}
 
         {/* Error state */}
         {error && (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
-              <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2">Error Loading Change Orders</h3>
-              <p className="text-red-600">{error.message}</p>
+              <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Change Orders</h3>
+              <p className="text-error">{error.message}</p>
             </CardContent>
           </Card>
         )}
@@ -442,14 +442,14 @@ export function ChangeOrdersPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <FileEdit className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                 {activeTab === 'pco'
                   ? 'No PCOs found'
                   : activeTab === 'co'
                   ? 'No approved COs found'
                   : 'No change orders yet'}
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-muted mb-6">
                 {searchQuery || statusFilter !== 'all' || typeFilter !== 'all'
                   ? 'Try adjusting your filters to see more results.'
                   : 'Create your first change order to track scope changes and cost adjustments.'}

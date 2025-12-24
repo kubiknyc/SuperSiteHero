@@ -107,7 +107,7 @@ export function RFIDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center">
-            <p className="text-red-600">RFI ID not found</p>
+            <p className="text-error">RFI ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -119,8 +119,8 @@ export function RFIDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading RFI...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading RFI...</p>
           </div>
         </div>
       </AppLayout>
@@ -139,9 +139,9 @@ export function RFIDetailPage() {
           </div>
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading RFI</h3>
-              <p className="text-gray-600">{error?.message || 'RFI not found'}</p>
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading RFI</h3>
+              <p className="text-secondary">{error?.message || 'RFI not found'}</p>
             </CardContent>
           </Card>
         </div>
@@ -153,14 +153,14 @@ export function RFIDetailPage() {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      draft: 'bg-gray-100 text-gray-800',
-      submitted: 'bg-blue-100 text-blue-800',
-      answered: 'bg-green-100 text-green-800',
-      approved: 'bg-green-600 text-white',
-      rejected: 'bg-red-100 text-red-800',
-      closed: 'bg-gray-300 text-gray-900',
+      draft: 'bg-muted text-foreground',
+      submitted: 'bg-info-light text-blue-800',
+      answered: 'bg-success-light text-green-800',
+      approved: 'bg-success text-white',
+      rejected: 'bg-error-light text-red-800',
+      closed: 'bg-gray-300 text-foreground',
     }
-    return colors[status] || 'bg-gray-100 text-gray-800'
+    return colors[status] || 'bg-muted text-foreground'
   }
 
   return (
@@ -180,8 +180,8 @@ export function RFIDetailPage() {
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">{rfiNumber}</h1>
-                <p className="text-gray-600 mt-1">{rfi.title}</p>
+                <h1 className="text-3xl font-bold text-foreground" className="heading-page">{rfiNumber}</h1>
+                <p className="text-secondary mt-1">{rfi.title}</p>
               </div>
               <Button
                 variant="outline"
@@ -202,23 +202,23 @@ export function RFIDetailPage() {
               <CardContent className="space-y-4">
                 {rfi.description && (
                   <div>
-                    <Label className="text-gray-600">Description</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-gray-900">{rfi.description}</p>
+                    <Label className="text-secondary">Description</Label>
+                    <p className="mt-1 whitespace-pre-wrap text-foreground">{rfi.description}</p>
                   </div>
                 )}
 
                 {rfi.more_information && (
                   <div>
-                    <Label className="text-gray-600">Additional Information</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-gray-900">{rfi.more_information}</p>
+                    <Label className="text-secondary">Additional Information</Label>
+                    <p className="mt-1 whitespace-pre-wrap text-foreground">{rfi.more_information}</p>
                   </div>
                 )}
 
                 {rfi.resolution && (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <Label className="text-gray-600 font-semibold">Answer</Label>
-                    <p className="mt-2 whitespace-pre-wrap text-gray-900">{rfi.resolution}</p>
-                    <p className="text-xs text-gray-500 mt-2">Answered on {rfi.updated_at ? format(new Date(rfi.updated_at), 'MMM d, yyyy h:mm a') : 'N/A'}</p>
+                  <div className="p-4 bg-success-light border border-green-200 rounded-lg">
+                    <Label className="text-secondary font-semibold">Answer</Label>
+                    <p className="mt-2 whitespace-pre-wrap text-foreground">{rfi.resolution}</p>
+                    <p className="text-xs text-muted mt-2">Answered on {rfi.updated_at ? format(new Date(rfi.updated_at), 'MMM d, yyyy h:mm a') : 'N/A'}</p>
                   </div>
                 )}
               </CardContent>
@@ -280,19 +280,19 @@ export function RFIDetailPage() {
                     {comments.map((comment: any) => (
                       <div key={comment.id} className="border-b pb-4 last:border-0">
                         <div className="flex justify-between items-start mb-2">
-                          <span className="font-semibold text-sm text-gray-900">
+                          <span className="font-semibold text-sm text-foreground">
                             {comment.created_by?.substring(0, 8) || 'User'}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted">
                             {comment.created_at ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                           </span>
                         </div>
-                        <p className="text-sm whitespace-pre-wrap text-gray-700">{comment.comment}</p>
+                        <p className="text-sm whitespace-pre-wrap text-secondary">{comment.comment}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No comments yet</p>
+                  <p className="text-sm text-muted text-center py-4">No comments yet</p>
                 )}
               </CardContent>
             </Card>
@@ -330,7 +330,7 @@ export function RFIDetailPage() {
                 {/* Approval Status */}
                 {approvalStatus?.has_active_request && (
                   <div className="pt-2 border-t">
-                    <Label className="text-gray-600">Approval Status</Label>
+                    <Label className="text-secondary">Approval Status</Label>
                     <div className="mt-2">
                       <ApprovalStatusBadge
                         status={approvalStatus.status!}
@@ -362,16 +362,16 @@ export function RFIDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div>
-                  <Label className="text-gray-600">Created</Label>
-                  <p className="mt-1 text-gray-900">
+                  <Label className="text-secondary">Created</Label>
+                  <p className="mt-1 text-foreground">
                     {rfi.created_at ? format(new Date(rfi.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                   </p>
                 </div>
 
                 {rfi.due_date && (
                   <div>
-                    <Label className="text-gray-600">Due Date</Label>
-                    <p className="mt-1 text-gray-900">
+                    <Label className="text-secondary">Due Date</Label>
+                    <p className="mt-1 text-foreground">
                       {rfi.due_date ? format(new Date(rfi.due_date), 'MMM d, yyyy') : 'N/A'}
                     </p>
                   </div>
@@ -379,8 +379,8 @@ export function RFIDetailPage() {
 
                 {rfi.assignees && rfi.assignees.length > 0 && (
                   <div>
-                    <Label className="text-gray-600">Assigned To</Label>
-                    <p className="mt-1 text-gray-900">{rfi.assignees.length} user(s)</p>
+                    <Label className="text-secondary">Assigned To</Label>
+                    <p className="mt-1 text-foreground">{rfi.assignees.length} user(s)</p>
                   </div>
                 )}
 

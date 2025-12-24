@@ -134,7 +134,7 @@ export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDi
             <div className="grid grid-cols-2 gap-4">
               <div className="col-span-2 sm:col-span-1 space-y-2">
                 <Label htmlFor="name">
-                  Project Name <span className="text-red-500">*</span>
+                  Project Name <span className="text-error">*</span>
                 </Label>
                 <InputWithError
                   id="name"

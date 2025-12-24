@@ -53,10 +53,10 @@ function WarrantyStatusBadge({ status }: { status: WarrantyStatus }) {
   const color = getWarrantyStatusColor(status)
 
   const colorClasses: Record<string, string> = {
-    gray: 'bg-gray-100 text-gray-800',
-    green: 'bg-green-100 text-green-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    red: 'bg-red-100 text-red-800',
+    gray: 'bg-muted text-foreground',
+    green: 'bg-success-light text-green-800',
+    yellow: 'bg-warning-light text-yellow-800',
+    red: 'bg-error-light text-red-800',
   }
 
   return (
@@ -75,7 +75,7 @@ function WarrantyTypeBadge({ type }: { type: WarrantyType | null }) {
   const config = WARRANTY_TYPES.find((t) => t.value === type)
 
   return (
-    <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
+    <Badge variant="outline" className="text-xs bg-blue-50 text-primary-hover">
       {config?.label || type}
     </Badge>
   )
@@ -89,22 +89,22 @@ function ExpirationDisplay({ warranty }: { warranty: WarrantyWithDetails }) {
   const isExpiringSoon = isWarrantyExpiringSoon(warranty)
   const isExpired = daysUntil <= 0
 
-  let colorClass = 'text-gray-600'
+  let colorClass = 'text-secondary'
   let bgClass = ''
 
   if (isExpired) {
-    colorClass = 'text-red-700 font-medium'
-    bgClass = 'bg-red-50 px-2 py-0.5 rounded'
+    colorClass = 'text-error-dark font-medium'
+    bgClass = 'bg-error-light px-2 py-0.5 rounded'
   } else if (isExpiringSoon) {
     colorClass = 'text-orange-700'
     bgClass = 'bg-orange-50 px-2 py-0.5 rounded'
   } else if (warranty.status === 'active') {
-    colorClass = 'text-green-700'
+    colorClass = 'text-success-dark'
   }
 
   return (
     <div className="text-right">
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-muted">
         {new Date(warranty.end_date).toLocaleDateString()}
       </div>
       {warranty.status === 'active' && (
@@ -129,21 +129,21 @@ function ExpirationDisplay({ warranty }: { warranty: WarrantyWithDetails }) {
 function WarrantyStatsCard({ stats }: { stats: WarrantyStatistics }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-      <div className="text-center p-3 bg-gray-50 rounded-lg">
-        <div className="text-2xl font-bold text-gray-700">{stats.total_warranties}</div>
-        <div className="text-xs text-gray-500">Total</div>
+      <div className="text-center p-3 bg-surface rounded-lg">
+        <div className="text-2xl font-bold text-secondary">{stats.total_warranties}</div>
+        <div className="text-xs text-muted">Total</div>
       </div>
-      <div className="text-center p-3 bg-green-50 rounded-lg">
-        <div className="text-2xl font-bold text-green-700">{stats.active_count}</div>
-        <div className="text-xs text-gray-500">Active</div>
+      <div className="text-center p-3 bg-success-light rounded-lg">
+        <div className="text-2xl font-bold text-success-dark">{stats.active_count}</div>
+        <div className="text-xs text-muted">Active</div>
       </div>
       <div className="text-center p-3 bg-orange-50 rounded-lg">
         <div className="text-2xl font-bold text-orange-700">{stats.expiring_soon_count}</div>
-        <div className="text-xs text-gray-500">Expiring Soon</div>
+        <div className="text-xs text-muted">Expiring Soon</div>
       </div>
-      <div className="text-center p-3 bg-red-50 rounded-lg">
-        <div className="text-2xl font-bold text-red-700">{stats.expired_count}</div>
-        <div className="text-xs text-gray-500">Expired</div>
+      <div className="text-center p-3 bg-error-light rounded-lg">
+        <div className="text-2xl font-bold text-error-dark">{stats.expired_count}</div>
+        <div className="text-xs text-muted">Expired</div>
       </div>
     </div>
   )
@@ -239,8 +239,8 @@ export function WarrantyList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Warranties</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold" className="heading-section">Warranties</h2>
+          <p className="text-sm text-muted">
             {filteredWarranties.length} warrant{filteredWarranties.length !== 1 ? 'ies' : 'y'}
           </p>
         </div>
@@ -307,7 +307,7 @@ export function WarrantyList({
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-surface border-b">
               <tr>
                 <th className="px-3 py-2 text-left font-medium min-w-[200px]">Title</th>
                 <th className="px-3 py-2 text-left font-medium">Type</th>
@@ -328,8 +328,8 @@ export function WarrantyList({
                   <tr
                     key={warranty.id}
                     className={cn(
-                      'hover:bg-gray-50 cursor-pointer',
-                      isExpired && warranty.status === 'active' && 'bg-red-50',
+                      'hover:bg-surface cursor-pointer',
+                      isExpired && warranty.status === 'active' && 'bg-error-light',
                       isExpiringSoon && 'bg-orange-50'
                     )}
                     onClick={() => onWarrantyClick?.(warranty)}
@@ -337,7 +337,7 @@ export function WarrantyList({
                     <td className="px-3 py-2">
                       <div className="font-medium">{warranty.title}</div>
                       {warranty.spec_section && (
-                        <div className="text-xs text-gray-500">{warranty.spec_section}</div>
+                        <div className="text-xs text-muted">{warranty.spec_section}</div>
                       )}
                     </td>
                     <td className="px-3 py-2">
@@ -346,7 +346,7 @@ export function WarrantyList({
                     <td className="px-3 py-2 text-xs">
                       <div>{warranty.manufacturer_name || '-'}</div>
                       {warranty.manufacturer_contact && (
-                        <div className="text-gray-500">{warranty.manufacturer_contact}</div>
+                        <div className="text-muted">{warranty.manufacturer_contact}</div>
                       )}
                     </td>
                     <td className="px-3 py-2 text-xs">
@@ -369,7 +369,7 @@ export function WarrantyList({
               })}
               {sortedWarranties.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-3 py-8 text-center text-gray-500">
+                  <td colSpan={8} className="px-3 py-8 text-center text-muted">
                     No warranties found
                   </td>
                 </tr>

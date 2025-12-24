@@ -91,7 +91,7 @@ function useDistributionListUsers(userIds: string[] | undefined) {
 function RFIStatusBadge({ status }: { status: string }) {
   const statusInfo = RFI_STATUSES.find((s) => s.value === status)
   return (
-    <Badge className={statusInfo?.color || 'bg-gray-100 text-gray-800'}>
+    <Badge className={statusInfo?.color || 'bg-muted text-foreground'}>
       {statusInfo?.label || status}
     </Badge>
   )
@@ -101,7 +101,7 @@ function RFIStatusBadge({ status }: { status: string }) {
 function PriorityBadge({ priority }: { priority: string }) {
   const priorityInfo = RFI_PRIORITIES.find((p) => p.value === priority)
   return (
-    <Badge className={priorityInfo?.color || 'bg-gray-100 text-gray-800'}>
+    <Badge className={priorityInfo?.color || 'bg-muted text-foreground'}>
       {priorityInfo?.label || priority}
     </Badge>
   )
@@ -283,7 +283,7 @@ export function DedicatedRFIDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center">
-            <p className="text-red-600">RFI ID not found</p>
+            <p className="text-error">RFI ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -295,8 +295,8 @@ export function DedicatedRFIDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <p className="ml-2 text-gray-500">Loading RFI...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <p className="ml-2 text-muted">Loading RFI...</p>
           </div>
         </div>
       </AppLayout>
@@ -315,9 +315,9 @@ export function DedicatedRFIDetailPage() {
           </div>
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading RFI</h3>
-              <p className="text-gray-600">{(error as Error)?.message || 'RFI not found'}</p>
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading RFI</h3>
+              <p className="text-secondary">{(error as Error)?.message || 'RFI not found'}</p>
             </CardContent>
           </Card>
         </div>
@@ -343,12 +343,12 @@ export function DedicatedRFIDetailPage() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold text-gray-900">
+                  <h1 className="text-3xl font-bold text-foreground" className="heading-page">
                     {formatRFINumber(rfi.rfi_number)}
                   </h1>
                   {rfi.priority && <PriorityBadge priority={rfi.priority} />}
                 </div>
-                <p className="text-gray-600 mt-1">{rfi.subject}</p>
+                <p className="text-secondary mt-1">{rfi.subject}</p>
               </div>
               <div className="flex gap-2">
                 <Button
@@ -380,11 +380,11 @@ export function DedicatedRFIDetailPage() {
 
             {/* Overdue Warning */}
             {isOverdue && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-error" />
                 <div>
                   <p className="font-medium text-red-800">RFI Overdue</p>
-                  <p className="text-sm text-red-600">
+                  <p className="text-sm text-error">
                     Required by {format(new Date(rfi.date_required!), 'MMM d, yyyy')}
                   </p>
                 </div>
@@ -397,7 +397,7 @@ export function DedicatedRFIDetailPage() {
                 <CardTitle>Question</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="whitespace-pre-wrap text-gray-900">
+                <div className="whitespace-pre-wrap text-foreground">
                   {rfi.question || 'No question provided'}
                 </div>
 
@@ -406,19 +406,19 @@ export function DedicatedRFIDetailPage() {
                   <div className="pt-4 border-t grid grid-cols-2 gap-4">
                     {rfi.drawing_reference && (
                       <div className="flex items-start gap-2">
-                        <Image className="h-4 w-4 text-gray-400 mt-0.5" />
+                        <Image className="h-4 w-4 text-disabled mt-0.5" />
                         <div>
-                          <Label className="text-gray-600">Drawing Reference</Label>
-                          <p className="text-gray-900">{rfi.drawing_reference}</p>
+                          <Label className="text-secondary">Drawing Reference</Label>
+                          <p className="text-foreground">{rfi.drawing_reference}</p>
                         </div>
                       </div>
                     )}
                     {rfi.spec_section && (
                       <div className="flex items-start gap-2">
-                        <FileText className="h-4 w-4 text-gray-400 mt-0.5" />
+                        <FileText className="h-4 w-4 text-disabled mt-0.5" />
                         <div>
-                          <Label className="text-gray-600">Spec Section</Label>
-                          <p className="text-gray-900 font-mono">{rfi.spec_section}</p>
+                          <Label className="text-secondary">Spec Section</Label>
+                          <p className="text-foreground font-mono">{rfi.spec_section}</p>
                         </div>
                       </div>
                     )}
@@ -434,9 +434,9 @@ export function DedicatedRFIDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {rfi.response ? (
-                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="whitespace-pre-wrap text-gray-900">{rfi.response}</p>
-                    <div className="mt-3 pt-3 border-t border-green-200 text-sm text-gray-600">
+                  <div className="p-4 bg-success-light border border-green-200 rounded-lg">
+                    <p className="whitespace-pre-wrap text-foreground">{rfi.response}</p>
+                    <div className="mt-3 pt-3 border-t border-green-200 text-sm text-secondary">
                       {rfi.responded_by_user && (
                         <p>Responded by {rfi.responded_by_user.full_name || rfi.responded_by_user.email}</p>
                       )}
@@ -449,7 +449,7 @@ export function DedicatedRFIDetailPage() {
                   <>
                     {!showResponseForm ? (
                       <div className="text-center py-4">
-                        <p className="text-gray-500 mb-4">No response yet</p>
+                        <p className="text-muted mb-4">No response yet</p>
                         {['draft', 'open', 'pending_response'].includes(rfi.status) && (
                           <Button onClick={() => setShowResponseForm(true)}>
                             <MessageSquare className="h-4 w-4 mr-2" />
@@ -508,10 +508,10 @@ export function DedicatedRFIDetailPage() {
                 <CardContent>
                   <div className="grid grid-cols-2 gap-4">
                     {rfi.cost_impact !== undefined && (
-                      <div className="flex items-center gap-3 p-3 bg-amber-50 rounded-lg">
-                        <DollarSign className={`h-5 w-5 ${rfi.cost_impact ? 'text-amber-600' : 'text-green-600'}`} />
+                      <div className="flex items-center gap-3 p-3 bg-warning-light rounded-lg">
+                        <DollarSign className={`h-5 w-5 ${rfi.cost_impact ? 'text-warning' : 'text-success'}`} />
                         <div>
-                          <Label className="text-gray-600">Cost Impact</Label>
+                          <Label className="text-secondary">Cost Impact</Label>
                           <p className="font-medium">
                             {rfi.cost_impact ? 'Yes - Cost impact expected' : 'No cost impact'}
                           </p>
@@ -520,9 +520,9 @@ export function DedicatedRFIDetailPage() {
                     )}
                     {rfi.schedule_impact_days !== null && rfi.schedule_impact_days !== undefined && (
                       <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                        <CalendarClock className={`h-5 w-5 ${rfi.schedule_impact_days > 0 ? 'text-orange-600' : 'text-green-600'}`} />
+                        <CalendarClock className={`h-5 w-5 ${rfi.schedule_impact_days > 0 ? 'text-orange-600' : 'text-success'}`} />
                         <div>
-                          <Label className="text-gray-600">Schedule Impact</Label>
+                          <Label className="text-secondary">Schedule Impact</Label>
                           <p className="font-medium">
                             {rfi.schedule_impact_days > 0
                               ? `${rfi.schedule_impact_days} days delay`
@@ -583,15 +583,15 @@ export function DedicatedRFIDetailPage() {
                     {attachments.map((attachment: any) => (
                       <div
                         key={attachment.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                        className="flex items-center justify-between p-3 bg-surface rounded-lg"
                       >
                         <div className="flex items-center gap-3">
-                          <FileText className="h-5 w-5 text-gray-400" />
+                          <FileText className="h-5 w-5 text-disabled" />
                           <div>
                             <p className="font-medium text-sm">
                               {attachment.document?.name || 'Untitled'}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-muted">
                               {attachment.document?.file_type}
                             </p>
                           </div>
@@ -603,7 +603,7 @@ export function DedicatedRFIDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No attachments</p>
+                  <p className="text-sm text-muted text-center py-4">No attachments</p>
                 )}
               </CardContent>
             </Card>
@@ -621,11 +621,11 @@ export function DedicatedRFIDetailPage() {
                       <div key={comment.id} className="border-b pb-4 last:border-0">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-                              <User className="h-4 w-4 text-gray-500" />
+                            <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
+                              <User className="h-4 w-4 text-muted" />
                             </div>
                             <div>
-                              <span className="font-medium text-sm text-gray-900">
+                              <span className="font-medium text-sm text-foreground">
                                 {comment.created_by_user?.full_name || 'User'}
                               </span>
                               {comment.comment_type && comment.comment_type !== 'comment' && (
@@ -635,20 +635,20 @@ export function DedicatedRFIDetailPage() {
                               )}
                             </div>
                           </div>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-muted">
                             {comment.created_at
                               ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a')
                               : 'N/A'}
                           </span>
                         </div>
-                        <p className="text-sm whitespace-pre-wrap text-gray-700 ml-10">
+                        <p className="text-sm whitespace-pre-wrap text-secondary ml-10">
                           {comment.comment}
                         </p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-500 text-center py-4">No comments yet</p>
+                  <p className="text-sm text-muted text-center py-4">No comments yet</p>
                 )}
 
                 {/* Add Comment Form */}
@@ -695,12 +695,12 @@ export function DedicatedRFIDetailPage() {
                       <div key={entry.id} className="flex items-start gap-3 text-sm">
                         <div className="w-2 h-2 rounded-full bg-gray-300 mt-2" />
                         <div>
-                          <p className="text-gray-700">
+                          <p className="text-secondary">
                             <span className="font-medium">{entry.field_name}</span> changed
                             {entry.old_value && ` from "${entry.old_value}"`}
                             {entry.new_value && ` to "${entry.new_value}"`}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted">
                             {entry.changed_by_user?.full_name && `by ${entry.changed_by_user.full_name} • `}
                             {entry.changed_at && format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
                           </p>
@@ -722,7 +722,7 @@ export function DedicatedRFIDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label htmlFor="status" className="text-gray-600">Current Status</Label>
+                  <Label htmlFor="status" className="text-secondary">Current Status</Label>
                   <select
                     id="status"
                     className="w-full mt-2 border rounded-md px-3 py-2 text-sm"
@@ -743,7 +743,7 @@ export function DedicatedRFIDetailPage() {
                 </div>
 
                 <div className="pt-2 border-t">
-                  <Label htmlFor="ballInCourt" className="text-gray-600">Ball-in-Court</Label>
+                  <Label htmlFor="ballInCourt" className="text-secondary">Ball-in-Court</Label>
                   <select
                     id="ballInCourt"
                     className="w-full mt-2 border rounded-md px-3 py-2 text-sm"
@@ -860,7 +860,7 @@ export function DedicatedRFIDetailPage() {
                                   </p>
                                 </div>
                                 {isSelected && (
-                                  <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                                  <Check className="h-4 w-4 text-primary flex-shrink-0" />
                                 )}
                               </button>
                             )
@@ -908,7 +908,7 @@ export function DedicatedRFIDetailPage() {
                               className="h-6 w-6 rounded-full object-cover"
                             />
                           ) : (
-                            <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center text-xs text-blue-600">
+                            <div className="h-6 w-6 rounded-full bg-info-light flex items-center justify-center text-xs text-primary">
                               {(user.first_name?.[0] || user.email?.[0] || '?').toUpperCase()}
                             </div>
                           )}
@@ -955,10 +955,10 @@ export function DedicatedRFIDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4 text-sm">
                 <div className="flex items-start gap-3">
-                  <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <Calendar className="h-4 w-4 text-disabled mt-0.5" />
                   <div>
-                    <Label className="text-gray-600">Created</Label>
-                    <p className="text-gray-900">
+                    <Label className="text-secondary">Created</Label>
+                    <p className="text-foreground">
                       {rfi.created_at
                         ? format(new Date(rfi.created_at), 'MMM d, yyyy')
                         : 'N/A'}
@@ -968,10 +968,10 @@ export function DedicatedRFIDetailPage() {
 
                 {rfi.date_submitted && (
                   <div className="flex items-start gap-3">
-                    <Send className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <Send className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Submitted</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Submitted</Label>
+                      <p className="text-foreground">
                         {format(new Date(rfi.date_submitted), 'MMM d, yyyy')}
                       </p>
                     </div>
@@ -980,10 +980,10 @@ export function DedicatedRFIDetailPage() {
 
                 {rfi.date_required && (
                   <div className="flex items-start gap-3">
-                    <Clock className={`h-4 w-4 mt-0.5 ${isOverdue ? 'text-red-500' : 'text-gray-400'}`} />
+                    <Clock className={`h-4 w-4 mt-0.5 ${isOverdue ? 'text-error' : 'text-disabled'}`} />
                     <div>
-                      <Label className="text-gray-600">Required Date</Label>
-                      <p className={isOverdue ? 'text-red-600 font-medium' : 'text-gray-900'}>
+                      <Label className="text-secondary">Required Date</Label>
+                      <p className={isOverdue ? 'text-error font-medium' : 'text-foreground'}>
                         {format(new Date(rfi.date_required), 'MMM d, yyyy')}
                       </p>
                     </div>
@@ -992,10 +992,10 @@ export function DedicatedRFIDetailPage() {
 
                 {rfi.date_closed && (
                   <div className="flex items-start gap-3">
-                    <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-success mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Closed</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Closed</Label>
+                      <p className="text-foreground">
                         {format(new Date(rfi.date_closed), 'MMM d, yyyy')}
                       </p>
                     </div>
@@ -1003,19 +1003,19 @@ export function DedicatedRFIDetailPage() {
                 )}
 
                 <div className="flex items-start gap-3">
-                  <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <Clock className="h-4 w-4 text-disabled mt-0.5" />
                   <div>
-                    <Label className="text-gray-600">Days Open</Label>
-                    <p className="text-gray-900">{daysOpen} days</p>
+                    <Label className="text-secondary">Days Open</Label>
+                    <p className="text-foreground">{daysOpen} days</p>
                   </div>
                 </div>
 
                 {rfi.submitted_by_user && (
                   <div className="flex items-start gap-3 pt-2 border-t">
-                    <User className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <User className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Submitted By</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Submitted By</Label>
+                      <p className="text-foreground">
                         {rfi.submitted_by_user.full_name || rfi.submitted_by_user.email}
                       </p>
                     </div>
@@ -1024,10 +1024,10 @@ export function DedicatedRFIDetailPage() {
 
                 {rfi.assigned_to_user && (
                   <div className="flex items-start gap-3">
-                    <User className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <User className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Assigned To</Label>
-                      <p className="text-gray-900">
+                      <Label className="text-secondary">Assigned To</Label>
+                      <p className="text-foreground">
                         {rfi.assigned_to_user.full_name || rfi.assigned_to_user.email}
                       </p>
                     </div>
@@ -1036,10 +1036,10 @@ export function DedicatedRFIDetailPage() {
 
                 {rfi.project && (
                   <div className="flex items-start gap-3">
-                    <Building2 className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <Building2 className="h-4 w-4 text-disabled mt-0.5" />
                     <div>
-                      <Label className="text-gray-600">Project</Label>
-                      <p className="text-gray-900">{rfi.project.name}</p>
+                      <Label className="text-secondary">Project</Label>
+                      <p className="text-foreground">{rfi.project.name}</p>
                     </div>
                   </div>
                 )}

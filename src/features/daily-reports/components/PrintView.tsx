@@ -44,7 +44,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
   const reportDate = report.report_date ? format(new Date(report.report_date), 'MMMM d, yyyy') : 'N/A'
 
   return (
-    <div className="print-view bg-white p-8 max-w-4xl mx-auto">
+    <div className="print-view bg-card p-8 max-w-4xl mx-auto">
       {/* Print-specific styles */}
       <style>{`
         @media print {
@@ -75,8 +75,8 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
 
       {/* Header */}
       <div className="text-center border-b-2 border-gray-800 pb-4 mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">DAILY REPORT</h1>
-        <p className="text-lg text-gray-600">{report.project?.name || 'Project'}</p>
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">DAILY REPORT</h1>
+        <p className="text-lg text-secondary">{report.project?.name || 'Project'}</p>
       </div>
 
       {/* Report Info */}
@@ -95,7 +95,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
 
       {/* Weather Section */}
       <section className="mb-6">
-        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3">Weather Conditions</h2>
+        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Weather Conditions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
             <span className="font-semibold">Condition:</span> {report.weather_condition || 'N/A'}
@@ -112,7 +112,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
         </div>
         {report.weather_delays && (
           <div className="mt-2 text-sm">
-            <span className="font-semibold text-red-600">Weather Delays:</span>{' '}
+            <span className="font-semibold text-error">Weather Delays:</span>{' '}
             {report.weather_delay_notes || 'Yes'}
           </div>
         )}
@@ -120,7 +120,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
 
       {/* Work Section */}
       <section className="mb-6">
-        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3">Work Summary</h2>
+        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Work Summary</h2>
         {report.work_completed && (
           <div className="mb-2">
             <span className="font-semibold">Work Completed:</span>
@@ -135,7 +135,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
         )}
         {report.issues && (
           <div className="mb-2">
-            <span className="font-semibold text-red-600">Issues:</span>
+            <span className="font-semibold text-error">Issues:</span>
             <p className="text-sm whitespace-pre-wrap">{report.issues}</p>
           </div>
         )}
@@ -144,35 +144,35 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Workforce Section */}
       {workforce.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3">
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">
             Workforce ({report.total_workers || workforce.length} workers)
           </h2>
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-2 py-1 text-left">Type</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Name/Team</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Trade</th>
-                <th className="border border-gray-300 px-2 py-1 text-center">Count</th>
-                <th className="border border-gray-300 px-2 py-1 text-center">Hours</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Activity</th>
+              <tr className="bg-muted">
+                <th className="border border-input px-2 py-1 text-left">Type</th>
+                <th className="border border-input px-2 py-1 text-left">Name/Team</th>
+                <th className="border border-input px-2 py-1 text-left">Trade</th>
+                <th className="border border-input px-2 py-1 text-center">Count</th>
+                <th className="border border-input px-2 py-1 text-center">Hours</th>
+                <th className="border border-input px-2 py-1 text-left">Activity</th>
               </tr>
             </thead>
             <tbody>
               {workforce.map((entry, idx) => (
                 <tr key={idx}>
-                  <td className="border border-gray-300 px-2 py-1 capitalize">{entry.entry_type}</td>
-                  <td className="border border-gray-300 px-2 py-1">
+                  <td className="border border-input px-2 py-1 capitalize">{entry.entry_type}</td>
+                  <td className="border border-input px-2 py-1">
                     {entry.entry_type === 'team' ? entry.team_name : entry.worker_name}
                   </td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.trade || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">
+                  <td className="border border-input px-2 py-1">{entry.trade || '-'}</td>
+                  <td className="border border-input px-2 py-1 text-center">
                     {entry.worker_count || 1}
                   </td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">
+                  <td className="border border-input px-2 py-1 text-center">
                     {entry.hours_worked || '-'}
                   </td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.activity || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.activity || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -183,25 +183,25 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Equipment Section */}
       {equipment.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3">Equipment</h2>
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Equipment</h2>
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-2 py-1 text-left">Type</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Description</th>
-                <th className="border border-gray-300 px-2 py-1 text-center">Qty</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Owner</th>
-                <th className="border border-gray-300 px-2 py-1 text-center">Hours</th>
+              <tr className="bg-muted">
+                <th className="border border-input px-2 py-1 text-left">Type</th>
+                <th className="border border-input px-2 py-1 text-left">Description</th>
+                <th className="border border-input px-2 py-1 text-center">Qty</th>
+                <th className="border border-input px-2 py-1 text-left">Owner</th>
+                <th className="border border-input px-2 py-1 text-center">Hours</th>
               </tr>
             </thead>
             <tbody>
               {equipment.map((entry, idx) => (
                 <tr key={idx}>
-                  <td className="border border-gray-300 px-2 py-1">{entry.equipment_type}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.equipment_description || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">{entry.quantity}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.owner || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">{entry.hours_used || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.equipment_type}</td>
+                  <td className="border border-input px-2 py-1">{entry.equipment_description || '-'}</td>
+                  <td className="border border-input px-2 py-1 text-center">{entry.quantity}</td>
+                  <td className="border border-input px-2 py-1">{entry.owner || '-'}</td>
+                  <td className="border border-input px-2 py-1 text-center">{entry.hours_used || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -212,25 +212,25 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Deliveries Section */}
       {deliveries.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3">Deliveries</h2>
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Deliveries</h2>
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-2 py-1 text-left">Material</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Vendor</th>
-                <th className="border border-gray-300 px-2 py-1 text-center">Qty</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Ticket #</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Time</th>
+              <tr className="bg-muted">
+                <th className="border border-input px-2 py-1 text-left">Material</th>
+                <th className="border border-input px-2 py-1 text-left">Vendor</th>
+                <th className="border border-input px-2 py-1 text-center">Qty</th>
+                <th className="border border-input px-2 py-1 text-left">Ticket #</th>
+                <th className="border border-input px-2 py-1 text-left">Time</th>
               </tr>
             </thead>
             <tbody>
               {deliveries.map((entry, idx) => (
                 <tr key={idx}>
-                  <td className="border border-gray-300 px-2 py-1">{entry.material_description}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.vendor || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1 text-center">{entry.quantity || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.delivery_ticket_number || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.delivery_time || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.material_description}</td>
+                  <td className="border border-input px-2 py-1">{entry.vendor || '-'}</td>
+                  <td className="border border-input px-2 py-1 text-center">{entry.quantity || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.delivery_ticket_number || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.delivery_time || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -241,25 +241,25 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Visitors Section */}
       {visitors.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3">Visitors</h2>
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Visitors</h2>
           <table className="w-full text-sm border-collapse">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border border-gray-300 px-2 py-1 text-left">Name</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Company</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Purpose</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Arrival</th>
-                <th className="border border-gray-300 px-2 py-1 text-left">Departure</th>
+              <tr className="bg-muted">
+                <th className="border border-input px-2 py-1 text-left">Name</th>
+                <th className="border border-input px-2 py-1 text-left">Company</th>
+                <th className="border border-input px-2 py-1 text-left">Purpose</th>
+                <th className="border border-input px-2 py-1 text-left">Arrival</th>
+                <th className="border border-input px-2 py-1 text-left">Departure</th>
               </tr>
             </thead>
             <tbody>
               {visitors.map((entry, idx) => (
                 <tr key={idx}>
-                  <td className="border border-gray-300 px-2 py-1">{entry.visitor_name}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.company || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.purpose || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.arrival_time || '-'}</td>
-                  <td className="border border-gray-300 px-2 py-1">{entry.departure_time || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.visitor_name}</td>
+                  <td className="border border-input px-2 py-1">{entry.company || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.purpose || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.arrival_time || '-'}</td>
+                  <td className="border border-input px-2 py-1">{entry.departure_time || '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -273,18 +273,18 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
           <div>
             <p className="font-semibold mb-8">Submitted By:</p>
             <div className="border-b border-gray-400 mb-1"></div>
-            <p className="text-sm text-gray-600">Signature / Date</p>
+            <p className="text-sm text-secondary">Signature / Date</p>
           </div>
           <div>
             <p className="font-semibold mb-8">Approved By:</p>
             <div className="border-b border-gray-400 mb-1"></div>
-            <p className="text-sm text-gray-600">Signature / Date</p>
+            <p className="text-sm text-secondary">Signature / Date</p>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <div className="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-500 text-center">
+      <div className="mt-8 pt-4 border-t border-border text-xs text-muted text-center">
         Generated on {format(new Date(), 'MMMM d, yyyy h:mm a')}
       </div>
     </div>

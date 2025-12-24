@@ -97,16 +97,16 @@ export function ExtractedMetadataCard({
     return (
       <Card className={cn('animate-pulse', className)}>
         <CardHeader>
-          <CardTitle className="h-4 w-40 bg-gray-200 rounded" />
-          <CardDescription className="h-3 w-32 bg-gray-100 rounded mt-1" />
+          <CardTitle className="h-4 w-40 bg-muted rounded" />
+          <CardDescription className="h-3 w-32 bg-muted rounded mt-1" />
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center gap-2">
-                <div className="h-4 w-4 bg-gray-200 rounded" />
-                <div className="h-4 w-24 bg-gray-200 rounded" />
-                <div className="h-4 w-32 bg-gray-100 rounded ml-auto" />
+                <div className="h-4 w-4 bg-muted rounded" />
+                <div className="h-4 w-24 bg-muted rounded" />
+                <div className="h-4 w-32 bg-muted rounded ml-auto" />
               </div>
             ))}
           </div>
@@ -119,7 +119,7 @@ export function ExtractedMetadataCard({
     return (
       <Card className={cn('border-red-200', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600">
+          <div className="text-center text-error">
             <p>Failed to load metadata</p>
           </div>
         </CardContent>
@@ -129,9 +129,9 @@ export function ExtractedMetadataCard({
 
   if (!metadata || metadata.extracted_fields.length === 0) {
     return (
-      <Card className={cn('border-gray-200', className)}>
+      <Card className={cn('border-border', className)}>
         <CardContent className="pt-6">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <span className="text-2xl">🔍</span>
             <p className="mt-2">No metadata extracted</p>
             <p className="text-sm mt-1">
@@ -176,7 +176,7 @@ export function ExtractedMetadataCard({
         {/* Applied fields (read-only) */}
         {appliedFields.length > 0 && (
           <div>
-            <h4 className="text-xs font-medium text-gray-500 mb-2">Applied Fields</h4>
+            <h4 className="text-xs font-medium text-muted mb-2" className="heading-card">Applied Fields</h4>
             <div className="space-y-2">
               {appliedFields.map((field) => (
                 <MetadataFieldRow
@@ -193,7 +193,7 @@ export function ExtractedMetadataCard({
         {pendingFields.length > 0 && (
           <div>
             {appliedFields.length > 0 && (
-              <h4 className="text-xs font-medium text-gray-500 mb-2">Pending Fields</h4>
+              <h4 className="text-xs font-medium text-muted mb-2" className="heading-card">Pending Fields</h4>
             )}
             <div className="space-y-2">
               {pendingFields.map((field) => (
@@ -208,7 +208,7 @@ export function ExtractedMetadataCard({
 
             {/* Apply button */}
             <div className="mt-4 flex items-center justify-between">
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-muted">
                 {selectedFields.size} field(s) selected
               </span>
               <Button
@@ -223,7 +223,7 @@ export function ExtractedMetadataCard({
         )}
 
         {/* Processing info */}
-        <div className="pt-4 border-t text-xs text-gray-400">
+        <div className="pt-4 border-t text-xs text-disabled">
           Extracted: {new Date(metadata.extracted_at).toLocaleString()}
         </div>
       </CardContent>
@@ -254,20 +254,20 @@ function MetadataFieldRow({
 
   const confidenceColor =
     field.confidence >= 0.9
-      ? 'text-green-600'
+      ? 'text-success'
       : field.confidence >= 0.7
-      ? 'text-amber-600'
-      : 'text-red-600'
+      ? 'text-warning'
+      : 'text-error'
 
   return (
     <div
       className={cn(
         'flex items-center gap-3 p-2 rounded-lg transition-colors',
         isApplied
-          ? 'bg-green-50 border border-green-100'
+          ? 'bg-success-light border border-green-100'
           : isSelected
           ? 'bg-blue-50 border border-blue-200 cursor-pointer'
-          : 'bg-gray-50 border border-gray-100 cursor-pointer hover:bg-gray-100'
+          : 'bg-surface border border-border cursor-pointer hover:bg-muted'
       )}
       onClick={!isApplied ? onToggle : undefined}
     >
@@ -277,7 +277,7 @@ function MetadataFieldRow({
           type="checkbox"
           checked={isSelected}
           onChange={onToggle}
-          className="h-4 w-4 text-blue-600 rounded"
+          className="h-4 w-4 text-primary rounded"
         />
       )}
 
@@ -285,12 +285,12 @@ function MetadataFieldRow({
       <span className="text-sm">{config.icon}</span>
 
       {/* Field name */}
-      <span className="text-sm font-medium text-gray-700 min-w-[100px]">
+      <span className="text-sm font-medium text-secondary min-w-[100px]">
         {config.label}
       </span>
 
       {/* Value */}
-      <span className="text-sm text-gray-900 flex-1 truncate" title={field.value}>
+      <span className="text-sm text-foreground flex-1 truncate" title={field.value}>
         {field.value}
       </span>
 
@@ -301,7 +301,7 @@ function MetadataFieldRow({
 
       {/* Applied indicator */}
       {isApplied && (
-        <Badge variant="outline" className="text-[10px] bg-green-100 text-green-700">
+        <Badge variant="outline" className="text-[10px] bg-success-light text-success-dark">
           Applied
         </Badge>
       )}

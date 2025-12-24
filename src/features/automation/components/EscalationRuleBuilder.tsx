@@ -240,7 +240,7 @@ export function EscalationRuleBuilder({
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-yellow-500" />
+            <Zap className="h-5 w-5 text-warning" />
             {isEditing ? 'Edit Escalation Rule' : 'Create Escalation Rule'}
           </DialogTitle>
           <DialogDescription>
@@ -552,15 +552,15 @@ export function EscalationRuleBuilder({
                   <div className="flex items-center gap-2">
                     {testResult ? (
                       <>
-                        <CheckCircle2 className="h-5 w-5 text-green-500" />
-                        <span className="text-green-600 font-medium">
+                        <CheckCircle2 className="h-5 w-5 text-success" />
+                        <span className="text-success font-medium">
                           Condition matched!
                         </span>
                       </>
                     ) : (
                       <>
-                        <XCircle className="h-5 w-5 text-red-500" />
-                        <span className="text-red-600 font-medium">
+                        <XCircle className="h-5 w-5 text-error" />
+                        <span className="text-error font-medium">
                           Condition not matched
                         </span>
                       </>

@@ -102,19 +102,19 @@ function WeatherIcon({ condition, size = 24, className = '' }: WeatherIconProps)
     return <CloudSnow size={size} className={`text-blue-300 ${className}`} />;
   }
   if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle') || lowerCondition.includes('shower')) {
-    return <CloudRain size={size} className={`text-blue-500 ${className}`} />;
+    return <CloudRain size={size} className={`text-primary ${className}`} />;
   }
   if (lowerCondition.includes('fog')) {
-    return <Cloud size={size} className={`text-gray-400 ${className}`} />;
+    return <Cloud size={size} className={`text-disabled ${className}`} />;
   }
   if (lowerCondition.includes('cloud') || lowerCondition.includes('overcast')) {
-    return <Cloud size={size} className={`text-gray-500 ${className}`} />;
+    return <Cloud size={size} className={`text-muted ${className}`} />;
   }
   if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) {
-    return <Sun size={size} className={`text-yellow-500 ${className}`} />;
+    return <Sun size={size} className={`text-warning ${className}`} />;
   }
 
-  return <Cloud size={size} className={`text-gray-400 ${className}`} />;
+  return <Cloud size={size} className={`text-disabled ${className}`} />;
 }
 
 // =============================================
@@ -127,10 +127,10 @@ interface SeverityBadgeProps {
 
 function SeverityBadge({ severity }: SeverityBadgeProps) {
   const colors = {
-    low: 'bg-blue-100 text-blue-800',
-    medium: 'bg-yellow-100 text-yellow-800',
+    low: 'bg-info-light text-blue-800',
+    medium: 'bg-warning-light text-yellow-800',
     high: 'bg-orange-100 text-orange-800',
-    critical: 'bg-red-100 text-red-800',
+    critical: 'bg-error-light text-red-800',
   };
 
   return (
@@ -166,17 +166,17 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
             <SeverityBadge severity={suggestion.severity} />
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-muted">
               <Clock className="w-3 h-3 inline mr-1" />
               {suggestion.estimated_hours}h estimated
             </span>
           </div>
-          <h4 className="font-medium text-gray-900">{suggestion.title}</h4>
-          <p className="text-sm text-gray-600 mt-1">{suggestion.description}</p>
+          <h4 className="font-medium text-foreground" className="heading-card">{suggestion.title}</h4>
+          <p className="text-sm text-secondary mt-1">{suggestion.description}</p>
         </div>
         <button
           onClick={() => setExpanded(!expanded)}
-          className="p-1 text-gray-400 hover:text-gray-600"
+          className="p-1 text-disabled hover:text-secondary"
           type="button"
         >
           {expanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -184,10 +184,10 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
       </div>
 
       {expanded && (
-        <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+        <div className="mt-4 pt-4 border-t border-border space-y-3">
           {/* Affected Activities */}
           <div>
-            <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <h5 className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               <HardHat className="w-3 h-3 inline mr-1" />
               Affected Activities
             </h5>
@@ -195,7 +195,7 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
               {suggestion.affected_activities.map((activity, idx) => (
                 <span
                   key={idx}
-                  className="inline-block px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded"
+                  className="inline-block px-2 py-0.5 bg-muted text-secondary text-xs rounded"
                 >
                   {activity}
                 </span>
@@ -205,11 +205,11 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
 
           {/* Safety Concerns */}
           <div>
-            <h5 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-2">
+            <h5 className="text-xs font-medium text-muted uppercase tracking-wide mb-2">
               <Shield className="w-3 h-3 inline mr-1" />
               Safety Concerns
             </h5>
-            <ul className="text-sm text-gray-600 space-y-1">
+            <ul className="text-sm text-secondary space-y-1">
               {suggestion.safety_concerns.map((concern, idx) => (
                 <li key={idx} className="flex items-start gap-2">
                   <AlertTriangle className="w-3 h-3 text-orange-500 mt-0.5 flex-shrink-0" />
@@ -248,11 +248,11 @@ interface WeatherSummaryProps {
 
 function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
   const severityColors = {
-    none: 'bg-green-50 border-green-200',
+    none: 'bg-success-light border-green-200',
     low: 'bg-blue-50 border-blue-200',
-    medium: 'bg-yellow-50 border-yellow-200',
+    medium: 'bg-warning-light border-yellow-200',
     high: 'bg-orange-50 border-orange-200',
-    critical: 'bg-red-50 border-red-200',
+    critical: 'bg-error-light border-red-200',
   };
 
   if (compact) {
@@ -260,10 +260,10 @@ function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
       <div className={`flex items-center gap-3 p-3 rounded-lg border ${severityColors[severity]}`}>
         <WeatherIcon condition={weather.condition.description} size={28} />
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-gray-900 truncate">
+          <p className="font-medium text-foreground truncate">
             {weather.condition.description}
           </p>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-secondary">
             {weather.temperature_high}F / {weather.temperature_low}F
             {weather.precipitation > 0 && ` | ${weather.precipitation}" precip`}
             {weather.wind_speed >= WEATHER_THRESHOLDS.HIGH_WIND && ` | ${weather.wind_speed} mph wind`}
@@ -271,9 +271,9 @@ function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
         </div>
         {severity !== 'none' && (
           <AlertTriangle className={`w-5 h-5 ${
-            severity === 'critical' ? 'text-red-500' :
+            severity === 'critical' ? 'text-error' :
             severity === 'high' ? 'text-orange-500' :
-            severity === 'medium' ? 'text-yellow-500' : 'text-blue-500'
+            severity === 'medium' ? 'text-warning' : 'text-primary'
           }`} />
         )}
       </div>
@@ -286,8 +286,8 @@ function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
         <div className="flex items-center gap-3">
           <WeatherIcon condition={weather.condition.description} size={40} />
           <div>
-            <h3 className="font-semibold text-gray-900">{weather.condition.description}</h3>
-            <p className="text-sm text-gray-500">
+            <h3 className="font-semibold text-foreground" className="heading-subsection">{weather.condition.description}</h3>
+            <p className="text-sm text-muted">
               {new Date(weather.date).toLocaleDateString('en-US', {
                 weekday: 'long',
                 month: 'short',
@@ -299,9 +299,9 @@ function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
         {severity !== 'none' && (
           <div className="flex items-center gap-2">
             <AlertTriangle className={`w-5 h-5 ${
-              severity === 'critical' ? 'text-red-500' :
+              severity === 'critical' ? 'text-error' :
               severity === 'high' ? 'text-orange-500' :
-              severity === 'medium' ? 'text-yellow-500' : 'text-blue-500'
+              severity === 'medium' ? 'text-warning' : 'text-primary'
             }`} />
             <span className="text-sm font-medium capitalize">{severity} Impact</span>
           </div>
@@ -310,36 +310,36 @@ function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="flex items-center gap-2">
-          <Thermometer className="w-4 h-4 text-red-500" />
+          <Thermometer className="w-4 h-4 text-error" />
           <div>
-            <p className="text-xs text-gray-500">High</p>
+            <p className="text-xs text-muted">High</p>
             <p className="font-medium">{weather.temperature_high}F</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Thermometer className="w-4 h-4 text-blue-500" />
+          <Thermometer className="w-4 h-4 text-primary" />
           <div>
-            <p className="text-xs text-gray-500">Low</p>
+            <p className="text-xs text-muted">Low</p>
             <p className="font-medium">{weather.temperature_low}F</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <CloudRain className="w-4 h-4 text-blue-500" />
+          <CloudRain className="w-4 h-4 text-primary" />
           <div>
-            <p className="text-xs text-gray-500">Precipitation</p>
+            <p className="text-xs text-muted">Precipitation</p>
             <p className="font-medium">{weather.precipitation}"</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Wind className="w-4 h-4 text-gray-500" />
+          <Wind className="w-4 h-4 text-muted" />
           <div>
-            <p className="text-xs text-gray-500">Wind</p>
+            <p className="text-xs text-muted">Wind</p>
             <p className="font-medium">{weather.wind_speed} mph</p>
           </div>
         </div>
       </div>
 
-      <p className="mt-3 text-xs text-gray-400">
+      <p className="mt-3 text-xs text-disabled">
         Source: {weather.source} | Updated: {new Date(weather.fetched_at).toLocaleTimeString()}
       </p>
     </div>
@@ -432,8 +432,8 @@ export function WeatherDelayAutoSuggest({
   // No location provided
   if (latitude === undefined || longitude === undefined) {
     return (
-      <div className={`p-4 bg-gray-50 rounded-lg border border-gray-200 ${className}`}>
-        <div className="flex items-center gap-2 text-gray-500">
+      <div className={`p-4 bg-surface rounded-lg border border-border ${className}`}>
+        <div className="flex items-center gap-2 text-muted">
           <Info className="w-5 h-5" />
           <span>Weather suggestions require project location (latitude/longitude).</span>
         </div>
@@ -444,8 +444,8 @@ export function WeatherDelayAutoSuggest({
   // Loading state
   if (isLoading) {
     return (
-      <div className={`p-4 bg-gray-50 rounded-lg border border-gray-200 ${className}`}>
-        <div className="flex items-center gap-2 text-gray-500">
+      <div className={`p-4 bg-surface rounded-lg border border-border ${className}`}>
+        <div className="flex items-center gap-2 text-muted">
           <Loader2 className="w-5 h-5 animate-spin" />
           <span>Loading weather data...</span>
         </div>
@@ -456,16 +456,16 @@ export function WeatherDelayAutoSuggest({
   // Error state
   if (isError) {
     return (
-      <div className={`p-4 bg-red-50 rounded-lg border border-red-200 ${className}`}>
+      <div className={`p-4 bg-error-light rounded-lg border border-red-200 ${className}`}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-red-700">
+          <div className="flex items-center gap-2 text-error-dark">
             <AlertTriangle className="w-5 h-5" />
             <span>Failed to load weather data: {(error as Error)?.message || 'Unknown error'}</span>
           </div>
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="p-1.5 text-red-700 hover:bg-red-100 rounded"
+            className="p-1.5 text-error-dark hover:bg-error-light rounded"
             type="button"
           >
             <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
@@ -478,8 +478,8 @@ export function WeatherDelayAutoSuggest({
   // No data
   if (!data?.weather) {
     return (
-      <div className={`p-4 bg-gray-50 rounded-lg border border-gray-200 ${className}`}>
-        <div className="flex items-center gap-2 text-gray-500">
+      <div className={`p-4 bg-surface rounded-lg border border-border ${className}`}>
+        <div className="flex items-center gap-2 text-muted">
           <Info className="w-5 h-5" />
           <span>No weather data available for this date.</span>
         </div>
@@ -496,14 +496,14 @@ export function WeatherDelayAutoSuggest({
       {data.suggestions.length > 0 ? (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-gray-900 flex items-center gap-2">
+            <h3 className="font-medium text-foreground flex items-center gap-2" className="heading-subsection">
               <AlertTriangle className="w-4 h-4 text-orange-500" />
               Weather Delay Suggestions ({data.suggestions.length})
             </h3>
             <button
               onClick={() => refetch()}
               disabled={isFetching}
-              className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded"
+              className="p-1.5 text-muted hover:text-secondary hover:bg-muted rounded"
               type="button"
               title="Refresh weather data"
             >
@@ -535,7 +535,7 @@ export function WeatherDelayAutoSuggest({
           {showAllSuggestions && data.suggestions.length > 2 && (
             <button
               onClick={() => setShowAllSuggestions(false)}
-              className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+              className="w-full py-2 text-sm text-muted hover:text-secondary hover:bg-surface rounded-lg transition-colors"
               type="button"
             >
               Show fewer suggestions
@@ -543,8 +543,8 @@ export function WeatherDelayAutoSuggest({
           )}
         </div>
       ) : (
-        <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-          <div className="flex items-center gap-2 text-green-700">
+        <div className="p-4 bg-success-light rounded-lg border border-green-200">
+          <div className="flex items-center gap-2 text-success-dark">
             <CheckCircle2 className="w-5 h-5" />
             <span>Weather conditions look favorable - no delays expected.</span>
           </div>

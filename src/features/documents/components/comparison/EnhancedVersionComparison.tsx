@@ -41,8 +41,11 @@ import type { Document as DocumentType } from '@/types/database'
 import type { OverlaySettings, ChangeRegion } from '../../types/markup'
 import { useCompareVersions } from '../../hooks/useDocumentComparison'
 
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+// Set up PDF.js worker - use local copy from npm package
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.mjs',
+  import.meta.url
+).toString()
 
 interface EnhancedVersionComparisonProps {
   version1: DocumentType
@@ -218,28 +221,28 @@ export function EnhancedVersionComparison({
       <DialogContent className="max-w-[95vw] max-h-[95vh] w-full h-full p-0">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <DialogHeader className="p-4 border-b bg-gray-50 flex-shrink-0">
+          <DialogHeader className="p-4 border-b bg-surface flex-shrink-0">
             <div className="flex items-center justify-between">
               <div>
                 <DialogTitle className="flex items-center gap-2">
                   <GitCompare className="w-5 h-5" />
                   Version Comparison
                 </DialogTitle>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted mt-1">
                   {olderVersion.name} - v{olderVersion.version} vs v{newerVersion.version}
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
                 {/* View Mode Toggle */}
-                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                <div className="flex items-center bg-muted rounded-lg p-1">
                   <button
                     onClick={() => setViewMode('side-by-side')}
                     className={cn(
                       'px-3 py-1.5 rounded text-sm font-medium transition-colors',
                       viewMode === 'side-by-side'
-                        ? 'bg-white shadow text-blue-600'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-card shadow text-primary'
+                        : 'text-secondary hover:text-foreground'
                     )}
                   >
                     <SplitSquareHorizontal className="w-4 h-4 inline mr-1" />
@@ -250,8 +253,8 @@ export function EnhancedVersionComparison({
                     className={cn(
                       'px-3 py-1.5 rounded text-sm font-medium transition-colors',
                       viewMode === 'overlay'
-                        ? 'bg-white shadow text-blue-600'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-card shadow text-primary'
+                        : 'text-secondary hover:text-foreground'
                     )}
                   >
                     <Layers className="w-4 h-4 inline mr-1" />
@@ -267,7 +270,7 @@ export function EnhancedVersionComparison({
           </DialogHeader>
 
           {/* Toolbar */}
-          <div className="p-2 border-b bg-white flex items-center justify-between flex-shrink-0">
+          <div className="p-2 border-b bg-card flex items-center justify-between flex-shrink-0">
             {/* Left: Zoom Controls */}
             <div className="flex items-center gap-2">
               <Button size="sm" variant="outline" onClick={handleZoomOut}>
@@ -334,12 +337,12 @@ export function EnhancedVersionComparison({
             <div className="flex items-center gap-4">
               {/* Comparison Status */}
               {isComparing ? (
-                <div className="flex items-center gap-2 text-sm text-blue-600">
+                <div className="flex items-center gap-2 text-sm text-primary">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span>Analyzing changes...</span>
                 </div>
               ) : comparisonError ? (
-                <div className="flex items-center gap-2 text-sm text-red-600">
+                <div className="flex items-center gap-2 text-sm text-error">
                   <AlertCircle className="w-4 h-4" />
                   <span>Comparison failed</span>
                 </div>
@@ -349,7 +352,7 @@ export function EnhancedVersionComparison({
                     {changeRegions.length} changes
                   </Badge>
                   {comparisonResult.overallChangePercentage > 0 && (
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-muted">
                       ({comparisonResult.overallChangePercentage.toFixed(1)}% changed)
                     </span>
                   )}
@@ -425,7 +428,7 @@ export function EnhancedVersionComparison({
           <div
             ref={containerRef}
             className={cn(
-              'flex-1 overflow-hidden bg-gray-900',
+              'flex-1 overflow-hidden bg-background',
               isPanning && 'cursor-grabbing'
             )}
             onMouseDown={handleMouseDown}
@@ -478,7 +481,7 @@ export function EnhancedVersionComparison({
                 {/* Newer Version */}
                 <div className="relative overflow-hidden">
                   <div className="absolute top-2 left-2 z-10">
-                    <Badge className="bg-blue-600 text-white">
+                    <Badge className="bg-primary text-white">
                       v{newerVersion.version} (Newer)
                     </Badge>
                   </div>
@@ -619,11 +622,11 @@ export function EnhancedVersionComparison({
           </div>
 
           {/* Footer with Version Info */}
-          <div className="p-3 border-t bg-gray-50 flex-shrink-0">
+          <div className="p-3 border-t bg-surface flex-shrink-0">
             {/* Comparison Summary */}
             {comparisonResult && (
-              <div className="mb-3 p-2 bg-white rounded border text-sm">
-                <p className="text-gray-700">{comparisonResult.summary}</p>
+              <div className="mb-3 p-2 bg-card rounded border text-sm">
+                <p className="text-secondary">{comparisonResult.summary}</p>
                 {showChangeRegions && changeRegions.length > 0 && (
                   <div className="mt-2 flex gap-4 text-xs">
                     <span className="flex items-center gap-1">
@@ -647,7 +650,7 @@ export function EnhancedVersionComparison({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">v{olderVersion.version}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted">
                     {olderVersion.created_at
                       ? format(new Date(olderVersion.created_at), 'MMM d, yyyy h:mm a')
                       : 'Unknown date'}
@@ -656,7 +659,7 @@ export function EnhancedVersionComparison({
                 <a
                   href={olderVersion.file_url}
                   download
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-primary hover:text-blue-800"
                 >
                   <Download className="w-4 h-4" />
                 </a>
@@ -664,7 +667,7 @@ export function EnhancedVersionComparison({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium">v{newerVersion.version}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted">
                     {newerVersion.created_at
                       ? format(new Date(newerVersion.created_at), 'MMM d, yyyy h:mm a')
                       : 'Unknown date'}
@@ -673,7 +676,7 @@ export function EnhancedVersionComparison({
                 <a
                   href={newerVersion.file_url}
                   download
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-primary hover:text-blue-800"
                 >
                   <Download className="w-4 h-4" />
                 </a>

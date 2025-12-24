@@ -95,7 +95,7 @@ function getSourceSystemLabel(source: 'ms_project' | 'primavera_p6'): string {
 
 function getSourceSystemIcon(source: 'ms_project' | 'primavera_p6') {
   return source === 'ms_project' ? (
-    <FileText className="h-4 w-4 text-blue-500" />
+    <FileText className="h-4 w-4 text-primary" />
   ) : (
     <FileText className="h-4 w-4 text-orange-500" />
   )
@@ -329,7 +329,7 @@ function ErrorWarningList({ errors, warnings }: ErrorWarningListProps) {
 
       {warnings.length > 0 && (
         <Alert>
-          <AlertTriangle className="h-4 w-4 text-yellow-500" />
+          <AlertTriangle className="h-4 w-4 text-warning" />
           <AlertTitle>Warnings ({warnings.length})</AlertTitle>
           <AlertDescription>
             <ScrollArea className="h-[100px] mt-2">
@@ -383,11 +383,11 @@ function ImportComplete({ results, onClose }: ImportCompleteProps) {
     <div className="space-y-6 py-4">
       <div className="text-center">
         {hasErrors ? (
-          <AlertCircle className="h-16 w-16 text-yellow-500 mx-auto" />
+          <AlertCircle className="h-16 w-16 text-warning mx-auto" />
         ) : (
-          <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto" />
+          <CheckCircle2 className="h-16 w-16 text-success mx-auto" />
         )}
-        <h3 className="text-lg font-semibold mt-4">
+        <h3 className="text-lg font-semibold mt-4" className="heading-subsection">
           {hasErrors ? 'Import Completed with Errors' : 'Import Successful'}
         </h3>
         <p className="text-muted-foreground mt-1">
@@ -594,9 +594,9 @@ export function ScheduleImportDialog({
                     {parsedData.errors.length > 0 ? (
                       <AlertCircle className="h-4 w-4 text-destructive" />
                     ) : parsedData.warnings.length > 0 ? (
-                      <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                      <AlertTriangle className="h-4 w-4 text-warning" />
                     ) : (
-                      <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <CheckCircle2 className="h-4 w-4 text-success" />
                     )}
                     Validation
                   </TabsTrigger>

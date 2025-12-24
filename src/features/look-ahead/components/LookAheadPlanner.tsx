@@ -129,15 +129,15 @@ export function LookAheadPlanner({
           {/* PPC Metrics Row */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div className="bg-blue-50 rounded-lg p-3">
-              <div className="text-sm text-blue-600 font-medium">Current PPC</div>
-              <div className="text-2xl font-bold text-blue-700">
+              <div className="text-sm text-primary font-medium">Current PPC</div>
+              <div className="text-2xl font-bold text-primary-hover">
                 {ppcMetrics?.currentWeekPPC || 0}%
               </div>
               {ppcMetrics?.ppcChange !== undefined && ppcMetrics.ppcChange !== 0 && (
                 <div
                   className={cn(
                     'flex items-center gap-1 text-xs mt-1',
-                    ppcMetrics.ppcChange > 0 ? 'text-green-600' : 'text-red-600'
+                    ppcMetrics.ppcChange > 0 ? 'text-success' : 'text-error'
                   )}
                 >
                   <TrendingUp
@@ -147,27 +147,27 @@ export function LookAheadPlanner({
                 </div>
               )}
             </div>
-            <div className="bg-green-50 rounded-lg p-3">
-              <div className="text-sm text-green-600 font-medium">Completed</div>
-              <div className="text-2xl font-bold text-green-700">
+            <div className="bg-success-light rounded-lg p-3">
+              <div className="text-sm text-success font-medium">Completed</div>
+              <div className="text-2xl font-bold text-success-dark">
                 {ppcMetrics?.totalCompleted || 0}
               </div>
-              <div className="text-xs text-green-600 mt-1">activities</div>
+              <div className="text-xs text-success mt-1">activities</div>
             </div>
-            <div className="bg-yellow-50 rounded-lg p-3">
-              <div className="text-sm text-yellow-600 font-medium">In Progress</div>
+            <div className="bg-warning-light rounded-lg p-3">
+              <div className="text-sm text-warning font-medium">In Progress</div>
               <div className="text-2xl font-bold text-yellow-700">
                 {ppcMetrics?.totalPlanned || 0}
               </div>
-              <div className="text-xs text-yellow-600 mt-1">planned activities</div>
+              <div className="text-xs text-warning mt-1">planned activities</div>
             </div>
-            <div className="bg-red-50 rounded-lg p-3">
-              <div className="text-sm text-red-600 font-medium">Open Constraints</div>
-              <div className="text-2xl font-bold text-red-700">
+            <div className="bg-error-light rounded-lg p-3">
+              <div className="text-sm text-error font-medium">Open Constraints</div>
+              <div className="text-2xl font-bold text-error-dark">
                 {openConstraints?.length || 0}
               </div>
               {openConstraints && openConstraints.length > 0 && (
-                <div className="flex items-center gap-1 text-xs text-red-600 mt-1">
+                <div className="flex items-center gap-1 text-xs text-error mt-1">
                   <AlertTriangle className="w-3 h-3" />
                   Needs attention
                 </div>
@@ -176,10 +176,10 @@ export function LookAheadPlanner({
           </div>
 
           {/* Filters Row */}
-          <div className="flex flex-wrap items-center gap-3 p-3 bg-gray-50 rounded-lg">
+          <div className="flex flex-wrap items-center gap-3 p-3 bg-surface rounded-lg">
             <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-gray-500" />
-              <span className="text-sm text-gray-600 font-medium">Filters:</span>
+              <Filter className="w-4 h-4 text-muted" />
+              <span className="text-sm text-secondary font-medium">Filters:</span>
             </div>
             <Select
               value={tradeFilter}
@@ -231,7 +231,7 @@ export function LookAheadPlanner({
             <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-secondary">
           Showing {weeks.length > 0 ? formatDateRange(weeks[0], weeks[weeks.length - 1]) : ''}
         </div>
       </div>

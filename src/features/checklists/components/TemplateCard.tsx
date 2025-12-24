@@ -81,8 +81,8 @@ export function TemplateCard({
         <div className="flex items-center p-4 gap-4">
           {/* Icon */}
           <div className="flex-shrink-0">
-            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
-              <CheckSquare className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 rounded-lg bg-info-light flex items-center justify-center">
+              <CheckSquare className="w-6 h-6 text-primary" />
             </div>
           </div>
 
@@ -91,13 +91,13 @@ export function TemplateCard({
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
                 <h3
-                  className="text-base font-semibold truncate cursor-pointer hover:text-blue-600"
+                  className="text-base font-semibold truncate cursor-pointer hover:text-primary"
                   onClick={() => onView?.(template)}
                 >
                   {template.name}
                 </h3>
                 {template.description && (
-                  <p className="text-sm text-gray-600 line-clamp-1">{template.description}</p>
+                  <p className="text-sm text-secondary line-clamp-1">{template.description}</p>
                 )}
                 <div className="flex items-center gap-3 mt-2">
                   {template.category && (
@@ -111,12 +111,12 @@ export function TemplateCard({
                     </Badge>
                   )}
                   {template.estimated_duration_minutes && (
-                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                    <span className="text-xs text-muted flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {template.estimated_duration_minutes} min
                     </span>
                   )}
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-disabled">
                     Updated {formatDistanceToNow(new Date(template.updated_at), { addSuffix: true })}
                   </span>
                 </div>
@@ -132,41 +132,41 @@ export function TemplateCard({
                   <MoreVertical className="w-4 h-4" />
                 </Button>
                 {showMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+                  <div className="absolute right-0 mt-2 w-48 bg-card rounded-md shadow-lg z-10 border border-border">
                     <div className="py-1">
                       <button
                         onClick={() => { onView?.(template); setShowMenu(false) }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                       >
                         <FileText className="w-4 h-4 mr-2" />
                         View Details
                       </button>
                       <button
                         onClick={() => { onEdit?.(template); setShowMenu(false) }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                       >
                         <Edit className="w-4 h-4 mr-2" />
                         Edit Template
                       </button>
                       <button
                         onClick={() => { onEditItems?.(template); setShowMenu(false) }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                       >
                         <ListChecks className="w-4 h-4 mr-2" />
                         Edit Items
                       </button>
                       <button
                         onClick={() => { onDuplicate?.(template); setShowMenu(false) }}
-                        className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                       >
                         <Copy className="w-4 h-4 mr-2" />
                         Duplicate
                       </button>
-                      <div className="border-t border-gray-200 my-1" />
+                      <div className="border-t border-border my-1" />
                       <button
                         onClick={handleDelete}
                         className={`flex items-center w-full px-4 py-2 text-sm ${
-                          showDeleteConfirm ? 'bg-red-50 text-red-600' : 'text-gray-700 hover:bg-gray-100'
+                          showDeleteConfirm ? 'bg-error-light text-error' : 'text-secondary hover:bg-muted'
                         }`}
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
@@ -189,11 +189,11 @@ export function TemplateCard({
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center mb-3">
-              <CheckSquare className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 rounded-lg bg-info-light flex items-center justify-center mb-3">
+              <CheckSquare className="w-6 h-6 text-primary" />
             </div>
             <CardTitle
-              className="text-lg truncate group-hover:text-blue-600"
+              className="text-lg truncate group-hover:text-primary"
               onClick={() => onView?.(template)}
             >
               {template.name}
@@ -208,41 +208,41 @@ export function TemplateCard({
               <MoreVertical className="w-4 h-4" />
             </Button>
             {showMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
+              <div className="absolute right-0 mt-2 w-48 bg-card rounded-md shadow-lg z-10 border border-border">
                 <div className="py-1">
                   <button
                     onClick={() => { onView?.(template); setShowMenu(false) }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     View Details
                   </button>
                   <button
                     onClick={() => { onEdit?.(template); setShowMenu(false) }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                   >
                     <Edit className="w-4 h-4 mr-2" />
                     Edit Template
                   </button>
                   <button
                     onClick={() => { onEditItems?.(template); setShowMenu(false) }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                   >
                     <ListChecks className="w-4 h-4 mr-2" />
                     Edit Items
                   </button>
                   <button
                     onClick={() => { onDuplicate?.(template); setShowMenu(false) }}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="flex items-center w-full px-4 py-2 text-sm text-secondary hover:bg-muted"
                   >
                     <Copy className="w-4 h-4 mr-2" />
                     Duplicate
                   </button>
-                  <div className="border-t border-gray-200 my-1" />
+                  <div className="border-t border-border my-1" />
                   <button
                     onClick={handleDelete}
                     className={`flex items-center w-full px-4 py-2 text-sm ${
-                      showDeleteConfirm ? 'bg-red-50 text-red-600' : 'text-gray-700 hover:bg-gray-100'
+                      showDeleteConfirm ? 'bg-error-light text-error' : 'text-secondary hover:bg-muted'
                     }`}
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
@@ -280,21 +280,21 @@ export function TemplateCard({
           {/* Tags */}
           {template.tags && template.tags.length > 0 && (
             <div className="flex items-center gap-1 flex-wrap">
-              <Tag className="w-3 h-3 text-gray-400" />
+              <Tag className="w-3 h-3 text-disabled" />
               {template.tags.slice(0, 3).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-xs">
                   {tag}
                 </Badge>
               ))}
               {template.tags.length > 3 && (
-                <span className="text-xs text-gray-500">+{template.tags.length - 3} more</span>
+                <span className="text-xs text-muted">+{template.tags.length - 3} more</span>
               )}
             </div>
           )}
 
           {/* Duration */}
           {template.estimated_duration_minutes && (
-            <div className="flex items-center gap-1 text-sm text-gray-600">
+            <div className="flex items-center gap-1 text-sm text-secondary">
               <Clock className="w-4 h-4" />
               <span>{template.estimated_duration_minutes} minutes</span>
             </div>
@@ -302,7 +302,7 @@ export function TemplateCard({
         </div>
       </CardContent>
 
-      <CardFooter className="text-xs text-gray-400" onClick={() => onView?.(template)}>
+      <CardFooter className="text-xs text-disabled" onClick={() => onView?.(template)}>
         Updated {formatDistanceToNow(new Date(template.updated_at), { addSuffix: true })}
       </CardFooter>
     </Card>

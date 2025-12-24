@@ -204,7 +204,7 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, SignatureCanvas
 
     return (
       <div ref={containerRef} className={cn('relative', className)}>
-        <div className="relative border rounded-lg overflow-hidden bg-white">
+        <div className="relative border rounded-lg overflow-hidden bg-card">
           <canvas
             ref={canvasRef}
             className="touch-none cursor-crosshair"
@@ -220,14 +220,14 @@ export const SignatureCanvas = forwardRef<SignatureCanvasHandle, SignatureCanvas
 
           {/* Signature line hint */}
           <div
-            className="absolute bottom-8 left-4 right-4 border-b border-dashed border-gray-300 pointer-events-none"
+            className="absolute bottom-8 left-4 right-4 border-b border-dashed border-input pointer-events-none"
             style={{ opacity: hasSignature ? 0 : 0.5 }}
           />
 
           {/* Placeholder text */}
           {!hasSignature && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <span className="text-gray-400 text-sm">Sign here</span>
+              <span className="text-disabled text-sm">Sign here</span>
             </div>
           )}
 

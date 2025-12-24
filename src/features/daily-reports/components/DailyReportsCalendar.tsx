@@ -29,7 +29,7 @@ interface ReportsByDate {
 const statusColors: Record<string, string> = {
   draft: 'bg-gray-400',
   submitted: 'bg-blue-500',
-  in_review: 'bg-yellow-500',
+  in_review: 'bg-warning',
   approved: 'bg-green-500',
 }
 

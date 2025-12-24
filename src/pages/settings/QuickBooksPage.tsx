@@ -33,7 +33,7 @@ export function QuickBooksPage() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">QuickBooks Integration</h1>
+            <h1 className="text-2xl font-bold tracking-tight" className="heading-page">QuickBooks Integration</h1>
             <p className="text-muted-foreground">
               Sync your financial data with QuickBooks Online
             </p>
@@ -131,7 +131,7 @@ export function QuickBooksPage() {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
-                    <h3 className="text-sm font-medium">Entity Sync Configuration</h3>
+                    <h3 className="text-sm font-medium" className="heading-subsection">Entity Sync Configuration</h3>
                     <p className="text-sm text-muted-foreground">
                       Choose which entities are automatically synced to QuickBooks.
                     </p>
@@ -161,7 +161,7 @@ export function QuickBooksPage() {
                   </div>
 
                   <div className="border-t pt-6 space-y-4">
-                    <h3 className="text-sm font-medium">Data Sync Direction</h3>
+                    <h3 className="text-sm font-medium" className="heading-subsection">Data Sync Direction</h3>
                     <p className="text-sm text-muted-foreground">
                       Currently, sync is one-way from your platform to QuickBooks.
                       Two-way sync will be available in a future update.
@@ -226,7 +226,7 @@ export function QuickBooksPage() {
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-2">What gets synced?</h4>
+                <h4 className="font-medium mb-2" className="heading-card">What gets synced?</h4>
                 <ul className="text-sm text-muted-foreground space-y-1">
                   <li>• <strong>Subcontractors</strong> → QuickBooks Vendors</li>
                   <li>• <strong>Payment Applications</strong> → QuickBooks Invoices</li>
@@ -255,7 +255,7 @@ function SetupStep({ number, title, description }: SetupStepProps) {
         {number}
       </div>
       <div>
-        <h4 className="font-medium">{title}</h4>
+        <h4 className="font-medium" className="heading-card">{title}</h4>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
     </div>
@@ -270,10 +270,10 @@ interface SyncEntityCardProps {
 
 function SyncEntityCard({ title, description, enabled }: SyncEntityCardProps) {
   return (
-    <div className={`p-4 border rounded-lg ${enabled ? 'bg-green-50 border-green-200' : 'bg-muted'}`}>
+    <div className={`p-4 border rounded-lg ${enabled ? 'bg-success-light border-green-200' : 'bg-muted'}`}>
       <div className="flex items-center justify-between mb-1">
         <span className="font-medium text-sm">{title}</span>
-        <span className={`text-xs ${enabled ? 'text-green-600' : 'text-muted-foreground'}`}>
+        <span className={`text-xs ${enabled ? 'text-success' : 'text-muted-foreground'}`}>
           {enabled ? 'Enabled' : 'Coming Soon'}
         </span>
       </div>

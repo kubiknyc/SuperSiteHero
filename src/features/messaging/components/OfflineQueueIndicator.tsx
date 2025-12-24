@@ -58,9 +58,9 @@ export function OfflineQueueIndicator({
             <div
               className={cn(
                 'flex items-center gap-1',
-                !isOnline && 'text-yellow-600 dark:text-yellow-500',
-                failedCount > 0 && 'text-red-600 dark:text-red-500',
-                isOnline && pendingCount > 0 && 'text-blue-600 dark:text-blue-500',
+                !isOnline && 'text-warning dark:text-warning',
+                failedCount > 0 && 'text-error dark:text-error',
+                isOnline && pendingCount > 0 && 'text-primary dark:text-primary',
                 className
               )}
             >
@@ -103,9 +103,9 @@ export function OfflineQueueIndicator({
           size="sm"
           className={cn(
             'flex items-center gap-1.5 h-8',
-            !isOnline && 'text-yellow-600 hover:text-yellow-700',
-            failedCount > 0 && 'text-red-600 hover:text-red-700',
-            isOnline && pendingCount > 0 && 'text-blue-600 hover:text-blue-700',
+            !isOnline && 'text-warning hover:text-yellow-700',
+            failedCount > 0 && 'text-error hover:text-error-dark',
+            isOnline && pendingCount > 0 && 'text-primary hover:text-primary-hover',
             className
           )}
         >
@@ -132,15 +132,15 @@ export function OfflineQueueIndicator({
       <PopoverContent className="w-72 p-3" align="end">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">Message Queue</h4>
+            <h4 className="text-sm font-medium" className="heading-card">Message Queue</h4>
             {isOnline ? (
-              <span className="flex items-center gap-1 text-xs text-green-600">
+              <span className="flex items-center gap-1 text-xs text-success">
                 <span className="h-2 w-2 rounded-full bg-green-500" />
                 Online
               </span>
             ) : (
-              <span className="flex items-center gap-1 text-xs text-yellow-600">
-                <span className="h-2 w-2 rounded-full bg-yellow-500" />
+              <span className="flex items-center gap-1 text-xs text-warning">
+                <span className="h-2 w-2 rounded-full bg-warning" />
                 Offline
               </span>
             )}
@@ -154,7 +154,7 @@ export function OfflineQueueIndicator({
             </div>
             <div className="flex items-center justify-between p-2 bg-muted rounded-md">
               <span className="text-muted-foreground">Failed</span>
-              <span className={cn('font-medium', failedCount > 0 && 'text-red-600')}>
+              <span className={cn('font-medium', failedCount > 0 && 'text-error')}>
                 {failedCount}
               </span>
             </div>
@@ -220,11 +220,11 @@ export function OfflineQueueIndicator({
                 {failedMessages.slice(0, 5).map((msg) => (
                   <div
                     key={msg.id}
-                    className="text-xs p-1.5 bg-red-50 dark:bg-red-950/30 rounded text-red-700 dark:text-red-300"
+                    className="text-xs p-1.5 bg-error-light dark:bg-red-950/30 rounded text-error-dark dark:text-red-300"
                   >
                     <p className="truncate">{msg.content}</p>
                     {msg.error && (
-                      <p className="text-[10px] text-red-500 mt-0.5">
+                      <p className="text-[10px] text-error mt-0.5">
                         {msg.error}
                       </p>
                     )}

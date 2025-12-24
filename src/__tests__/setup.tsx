@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { vi } from 'vitest';
 
 // Cleanup after each test
 afterEach(() => {
@@ -41,6 +41,20 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 } as any;
 
+// Mock window.screen.orientation
+Object.defineProperty(window.screen, 'orientation', {
+  writable: true,
+  configurable: true,
+  value: {
+    angle: 0,
+    type: 'landscape-primary',
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    lock: vi.fn().mockResolvedValue(undefined),
+    unlock: vi.fn(),
+  },
+});
+
 // Mock react-hot-toast
 vi.mock('react-hot-toast', () => ({
   default: {
@@ -61,10 +75,17 @@ vi.mock('react-hot-toast', () => ({
 // Mock @/ path alias imports (for Vitest Windows path resolution issue)
 // These mocks allow components to import from @/ paths in tests
 
-// Mock utility functions
-vi.mock('@/lib/utils', () => ({
-  cn: (...inputs: any[]) => inputs.filter(Boolean).join(' '),
-}));
+// Mock utility functions - use real clsx and twMerge for proper functionality
+vi.mock('@/lib/utils', async () => {
+  const { clsx } = await import('clsx');
+  const { twMerge } = await import('tailwind-merge');
+
+  return {
+    cn: (...inputs: any[]) => twMerge(clsx(inputs)),
+    formatDate: (date: any) => date ? new Date(date).toLocaleDateString() : '-',
+    formatCurrency: (amount: any) => amount !== null && amount !== undefined ? `$${amount}` : '-',
+  };
+});
 
 // Mock UI components
 vi.mock('@/components/ui/label', () => ({

@@ -116,11 +116,11 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-green-100 rounded-lg">
-            <Briefcase className="h-5 w-5 text-green-600" />
+          <div className="p-2 bg-success-light rounded-lg">
+            <Briefcase className="h-5 w-5 text-success" />
           </div>
           <div className="text-left">
             <CardTitle className="text-base flex items-center gap-2">
@@ -141,9 +141,9 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
@@ -152,11 +152,11 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
           {/* Work Summary */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="work_summary" className="text-sm font-medium text-gray-700">
-                Work Performed Today <span className="text-red-500">*</span>
+              <label htmlFor="work_summary" className="text-sm font-medium text-secondary">
+                Work Performed Today <span className="text-error">*</span>
               </label>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">{summaryLength}/2000</span>
+                <span className="text-xs text-muted">{summaryLength}/2000</span>
                 {speechSupported && (
                   <Button
                     type="button"
@@ -192,13 +192,13 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
               className={`w-full px-3 py-2 border rounded-lg text-sm min-h-[120px] focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isListening && activeField === 'summary'
                   ? 'border-red-500 ring-2 ring-red-200'
-                  : 'border-gray-300'
+                  : 'border-input'
               }`}
               maxLength={2000}
             />
             {isListening && activeField === 'summary' && (
-              <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+              <div className="flex items-center gap-2 mt-1 text-error text-sm">
+                <div className="w-2 h-2 bg-error rounded-full animate-pulse" />
                 Listening...
               </div>
             )}
@@ -207,11 +207,11 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
           {/* Work Planned */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label htmlFor="work_planned" className="text-sm font-medium text-gray-700">
+              <label htmlFor="work_planned" className="text-sm font-medium text-secondary">
                 Work Planned for Tomorrow
               </label>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">{plannedLength}/1000</span>
+                <span className="text-xs text-muted">{plannedLength}/1000</span>
                 {speechSupported && (
                   <Button
                     type="button"
@@ -247,13 +247,13 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
               className={`w-full px-3 py-2 border rounded-lg text-sm min-h-[80px] focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                 isListening && activeField === 'planned'
                   ? 'border-red-500 ring-2 ring-red-200'
-                  : 'border-gray-300'
+                  : 'border-input'
               }`}
               maxLength={1000}
             />
             {isListening && activeField === 'planned' && (
-              <div className="flex items-center gap-2 mt-1 text-red-600 text-sm">
-                <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+              <div className="flex items-center gap-2 mt-1 text-error text-sm">
+                <div className="w-2 h-2 bg-error rounded-full animate-pulse" />
                 Listening...
               </div>
             )}
@@ -261,7 +261,7 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
 
           {/* Voice Not Supported Warning */}
           {!speechSupported && (
-            <div className="flex items-center gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+            <div className="flex items-center gap-2 p-3 bg-warning-light border border-yellow-200 rounded-lg text-sm text-yellow-800">
               <AlertCircle className="h-4 w-4" />
               Voice input is not supported in this browser. Try Chrome or Edge.
             </div>

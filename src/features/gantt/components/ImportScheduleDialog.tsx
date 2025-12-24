@@ -131,7 +131,7 @@ export function ImportScheduleDialog({
             className={`
               border-2 border-dashed rounded-lg p-8
               transition-colors cursor-pointer
-              ${file ? 'border-green-300 bg-green-50' : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50'}
+              ${file ? 'border-green-300 bg-success-light' : 'border-input hover:border-blue-400 hover:bg-blue-50'}
             `}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -147,14 +147,14 @@ export function ImportScheduleDialog({
             <div className="flex flex-col items-center gap-2 text-center">
               {isParsing ? (
                 <>
-                  <Loader2 className="h-10 w-10 text-blue-500 animate-spin" />
-                  <p className="text-sm text-gray-600">Parsing file...</p>
+                  <Loader2 className="h-10 w-10 text-primary animate-spin" />
+                  <p className="text-sm text-secondary">Parsing file...</p>
                 </>
               ) : file ? (
                 <>
-                  <FileText className="h-10 w-10 text-green-500" />
-                  <p className="font-medium text-gray-700">{file.name}</p>
-                  <p className="text-xs text-gray-500">
+                  <FileText className="h-10 w-10 text-success" />
+                  <p className="font-medium text-secondary">{file.name}</p>
+                  <p className="text-xs text-muted">
                     {(file.size / 1024).toFixed(1)} KB
                   </p>
                   <Button
@@ -172,11 +172,11 @@ export function ImportScheduleDialog({
                 </>
               ) : (
                 <>
-                  <Upload className="h-10 w-10 text-gray-400" />
-                  <p className="text-sm text-gray-600">
+                  <Upload className="h-10 w-10 text-disabled" />
+                  <p className="text-sm text-secondary">
                     Drop MS Project XML file here or click to browse
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-disabled">
                     Supports .xml exports from Microsoft Project
                   </p>
                 </>
@@ -186,11 +186,11 @@ export function ImportScheduleDialog({
 
           {/* Parse error */}
           {parseError && (
-            <div className="flex items-start gap-2 p-3 rounded-lg bg-red-50 border border-red-200">
-              <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 p-3 rounded-lg bg-error-light border border-red-200">
+              <AlertCircle className="h-5 w-5 text-error flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-sm font-medium text-red-800">Failed to parse file</p>
-                <p className="text-xs text-red-600">{parseError}</p>
+                <p className="text-xs text-error">{parseError}</p>
               </div>
             </div>
           )}
@@ -199,9 +199,9 @@ export function ImportScheduleDialog({
           {parsedData && (
             <div className="space-y-3">
               {/* Summary */}
-              <div className="flex items-center gap-4 p-3 rounded-lg bg-gray-50">
+              <div className="flex items-center gap-4 p-3 rounded-lg bg-surface">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <CheckCircle className="h-5 w-5 text-success" />
                   <span className="text-sm font-medium">{parsedData.tasks.length} tasks</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -218,14 +218,14 @@ export function ImportScheduleDialog({
 
               {/* Errors */}
               {hasErrors && (
-                <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                <div className="p-3 rounded-lg bg-error-light border border-red-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <AlertCircle className="h-4 w-4 text-red-500" />
+                    <AlertCircle className="h-4 w-4 text-error" />
                     <span className="text-sm font-medium text-red-800">
                       {parsedData.errors.length} Error{parsedData.errors.length > 1 ? 's' : ''}
                     </span>
                   </div>
-                  <ul className="text-xs text-red-600 space-y-1 max-h-24 overflow-y-auto">
+                  <ul className="text-xs text-error space-y-1 max-h-24 overflow-y-auto">
                     {parsedData.errors.map((error, i) => (
                       <li key={i}>• {error}</li>
                     ))}
@@ -235,9 +235,9 @@ export function ImportScheduleDialog({
 
               {/* Warnings */}
               {hasWarnings && !hasErrors && (
-                <div className="p-3 rounded-lg bg-yellow-50 border border-yellow-200">
+                <div className="p-3 rounded-lg bg-warning-light border border-yellow-200">
                   <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                    <AlertTriangle className="h-4 w-4 text-warning" />
                     <span className="text-sm font-medium text-yellow-800">
                       {parsedData.warnings.length} Warning{parsedData.warnings.length > 1 ? 's' : ''}
                     </span>
@@ -253,7 +253,7 @@ export function ImportScheduleDialog({
               {/* Preview tasks */}
               {parsedData.tasks.length > 0 && (
                 <div className="border rounded-lg max-h-48 overflow-y-auto">
-                  <div className="p-2 bg-gray-50 border-b text-xs font-medium text-gray-600 sticky top-0">
+                  <div className="p-2 bg-surface border-b text-xs font-medium text-secondary sticky top-0">
                     Preview (first 10 tasks)
                   </div>
                   <div className="divide-y">
@@ -265,7 +265,7 @@ export function ImportScheduleDialog({
                           )}
                           <span className="text-sm">{task.task_name}</span>
                         </div>
-                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className="flex items-center gap-2 text-xs text-muted">
                           <span>{task.start_date}</span>
                           <span>→</span>
                           <span>{task.finish_date}</span>
@@ -276,7 +276,7 @@ export function ImportScheduleDialog({
                       </div>
                     ))}
                     {parsedData.tasks.length > 10 && (
-                      <div className="px-3 py-2 text-xs text-gray-500 text-center">
+                      <div className="px-3 py-2 text-xs text-muted text-center">
                         ...and {parsedData.tasks.length - 10} more tasks
                       </div>
                     )}
@@ -285,7 +285,7 @@ export function ImportScheduleDialog({
               )}
 
               {/* Options */}
-              <div className="flex items-center gap-2 p-3 rounded-lg bg-gray-50">
+              <div className="flex items-center gap-2 p-3 rounded-lg bg-surface">
                 <Checkbox
                   id="clear-existing"
                   checked={clearExisting}

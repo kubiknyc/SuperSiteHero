@@ -164,17 +164,17 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
 
   const getStatusIcon = (status: string) => {
     if (status === ActionItemStatus.COMPLETED) {
-      return <CheckCircle2 className="h-5 w-5 text-green-600" />
+      return <CheckCircle2 className="h-5 w-5 text-success" />
     }
     if (status === ActionItemStatus.IN_PROGRESS) {
-      return <Clock className="h-5 w-5 text-blue-600" />
+      return <Clock className="h-5 w-5 text-primary" />
     }
-    return <Circle className="h-5 w-5 text-gray-400" />
+    return <Circle className="h-5 w-5 text-disabled" />
   }
 
   if (isLoading) {
     return (
-      <div className="text-center py-4 text-gray-500">Loading action items...</div>
+      <div className="text-center py-4 text-muted">Loading action items...</div>
     )
   }
 
@@ -190,7 +190,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="font-medium flex items-center gap-2">
+        <h3 className="font-medium flex items-center gap-2" className="heading-subsection">
           <CheckCircle2 className="h-4 w-4" />
           Action Items
           {actionItems && actionItems.length > 0 && (
@@ -209,9 +209,9 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
 
       {/* Action Items List */}
       {actionItems?.length === 0 ? (
-        <div className="text-center py-8 border rounded-lg bg-gray-50">
+        <div className="text-center py-8 border rounded-lg bg-surface">
           <CheckCircle2 className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-          <p className="text-gray-500 text-sm">No action items yet</p>
+          <p className="text-muted text-sm">No action items yet</p>
           {!readOnly && (
             <Button
               variant="outline"
@@ -262,7 +262,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-6 w-6 text-red-600"
+                                className="h-6 w-6 text-error"
                                 onClick={() => {
                                   if (confirm('Delete this action item?')) {
                                     deleteItem.mutate(item.id)
@@ -276,7 +276,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+                      <div className="flex items-center gap-4 mt-2 text-xs text-muted">
                         {(item.assignee_name || item.assignee?.full_name) && (
                           <span className="flex items-center gap-1">
                             <User className="h-3 w-3" />
@@ -285,12 +285,12 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
                           </span>
                         )}
                         {item.due_date && (
-                          <span className={`flex items-center gap-1 ${overdue ? 'text-red-600 font-medium' : ''}`}>
+                          <span className={`flex items-center gap-1 ${overdue ? 'text-error font-medium' : ''}`}>
                             <Calendar className="h-3 w-3" />
                             {overdue ? 'Overdue: ' : ''}
                             {new Date(item.due_date).toLocaleDateString()}
                             {!overdue && daysUntil !== null && daysUntil <= 7 && (
-                              <span className="text-yellow-600">({daysUntil} days)</span>
+                              <span className="text-warning">({daysUntil} days)</span>
                             )}
                           </span>
                         )}
@@ -302,7 +302,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
                       </div>
 
                       {item.notes && (
-                        <p className="text-xs text-gray-500 mt-1">{item.notes}</p>
+                        <p className="text-xs text-muted mt-1">{item.notes}</p>
                       )}
 
                       {/* Convert to Task button */}
@@ -328,11 +328,11 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
           {/* Completed Items */}
           {completedItems.length > 0 && (
             <div className="pt-4">
-              <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">
+              <p className="text-xs text-muted mb-2 uppercase tracking-wide">
                 Completed ({completedItems.length})
               </p>
               {completedItems.map((item) => (
-                <Card key={item.id} className="bg-gray-50 opacity-75">
+                <Card key={item.id} className="bg-surface opacity-75">
                   <CardContent className="p-3">
                     <div className="flex items-start gap-3">
                       {!readOnly && (
@@ -344,10 +344,10 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
                         </button>
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm line-through text-gray-500">
+                        <p className="text-sm line-through text-muted">
                           {item.description}
                         </p>
-                        <div className="flex items-center gap-4 mt-1 text-xs text-gray-400">
+                        <div className="flex items-center gap-4 mt-1 text-xs text-disabled">
                           {(item.assignee_name || item.assignee?.full_name) && (
                             <span className="flex items-center gap-1">
                               <User className="h-3 w-3" />

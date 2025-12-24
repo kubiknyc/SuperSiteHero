@@ -52,15 +52,15 @@ const VIEW_CONFIG = {
     label: 'Field Operations',
     icon: HardHat,
     description: 'Workforce, safety, punch lists, inspections',
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning-light',
   },
   project_manager: {
     label: 'Project Management',
     icon: Briefcase,
     description: 'Budget, schedule, RFIs, submittals, change orders',
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary',
+    bgColor: 'bg-info-light',
   },
   executive: {
     label: 'Executive Overview',
@@ -73,8 +73,8 @@ const VIEW_CONFIG = {
     label: 'General Dashboard',
     icon: LayoutDashboard,
     description: 'Standard project overview',
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
   },
 }
 

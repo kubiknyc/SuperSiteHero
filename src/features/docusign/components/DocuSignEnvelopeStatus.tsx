@@ -104,7 +104,7 @@ export function DocuSignEnvelopeStatus({
         <CardContent className="py-6">
           <div className="text-center">
             <FileSignature className="h-10 w-10 mx-auto mb-3 text-gray-300" />
-            <p className="text-gray-600 mb-3">
+            <p className="text-secondary mb-3">
               This document hasn't been sent for signature yet.
             </p>
             {onSendNew && (
@@ -128,7 +128,7 @@ export function DocuSignEnvelopeStatus({
     ) : (
       <Card>
         <CardContent className="py-6">
-          <div className="flex items-center justify-center text-gray-500">
+          <div className="flex items-center justify-center text-muted">
             <Loader2 className="h-5 w-5 animate-spin mr-2" />
             Loading envelope status...
           </div>
@@ -168,8 +168,8 @@ export function DocuSignEnvelopeStatus({
               variant={envelope.status === 'completed' ? 'default' : 'secondary'}
               className={cn(
                 'gap-1 cursor-pointer',
-                envelope.status === 'completed' && 'bg-green-100 text-green-700 hover:bg-green-200',
-                envelope.status === 'declined' && 'bg-red-100 text-red-700'
+                envelope.status === 'completed' && 'bg-success-light text-success-dark hover:bg-green-200',
+                envelope.status === 'declined' && 'bg-error-light text-error-dark'
               )}
             >
               {envelope.status === 'completed' ? (
@@ -198,7 +198,7 @@ export function DocuSignEnvelopeStatus({
           <div className="flex items-start justify-between">
             <div>
               <CardTitle className="text-base flex items-center gap-2">
-                <FileSignature className="h-5 w-5 text-blue-600" />
+                <FileSignature className="h-5 w-5 text-primary" />
                 Signature Status
               </CardTitle>
               <CardDescription>
@@ -208,8 +208,8 @@ export function DocuSignEnvelopeStatus({
             <Badge
               variant={envelope.status === 'completed' ? 'default' : 'secondary'}
               className={cn(
-                envelope.status === 'completed' && 'bg-green-100 text-green-700',
-                envelope.status === 'declined' && 'bg-red-100 text-red-700'
+                envelope.status === 'completed' && 'bg-success-light text-success-dark',
+                envelope.status === 'declined' && 'bg-error-light text-error-dark'
               )}
             >
               {statusConfig.label}
@@ -222,7 +222,7 @@ export function DocuSignEnvelopeStatus({
           {!isEnvelopeTerminal(envelope.status) && (
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Signing Progress</span>
+                <span className="text-muted">Signing Progress</span>
                 <span className="font-medium">{signedCount} / {signers.length}</span>
               </div>
               <Progress value={progress} className="h-2" />
@@ -238,7 +238,7 @@ export function DocuSignEnvelopeStatus({
 
           {/* Completed message */}
           {envelope.status === 'completed' && envelope.completed_at && (
-            <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700">
+            <div className="flex items-center gap-2 p-3 bg-success-light border border-green-200 rounded-lg text-sm text-success-dark">
               <CheckCircle className="h-5 w-5" />
               <span>
                 Completed on {formatDate(envelope.completed_at)}
@@ -248,7 +248,7 @@ export function DocuSignEnvelopeStatus({
 
           {/* Declined message */}
           {envelope.status === 'declined' && (
-            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            <div className="flex items-center gap-2 p-3 bg-error-light border border-red-200 rounded-lg text-sm text-error-dark">
               <XCircle className="h-5 w-5" />
               <span>
                 This envelope was declined by a recipient.
@@ -258,7 +258,7 @@ export function DocuSignEnvelopeStatus({
 
           {/* Voided message */}
           {envelope.status === 'voided' && (
-            <div className="flex items-center gap-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700">
+            <div className="flex items-center gap-2 p-3 bg-surface border border-border rounded-lg text-sm text-secondary">
               <Ban className="h-5 w-5" />
               <span>
                 This envelope was voided.
@@ -289,7 +289,7 @@ export function DocuSignEnvelopeStatus({
                   variant="outline"
                   size="sm"
                   onClick={() => setShowVoidDialog(true)}
-                  className="text-red-600 hover:text-red-700"
+                  className="text-error hover:text-error-dark"
                 >
                   <Ban className="h-4 w-4 mr-1" />
                   Void
@@ -333,7 +333,7 @@ export function DocuSignEnvelopeStatus({
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleVoid}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
               disabled={voidMutation.isPending}
             >
               {voidMutation.isPending && (
@@ -367,9 +367,9 @@ function RecipientRow({
     <div className="flex items-center gap-3 p-3 border rounded-lg">
       <div className={cn(
         'flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium',
-        isSigned && 'bg-green-100 text-green-700',
-        isDeclined && 'bg-red-100 text-red-700',
-        isPending && 'bg-gray-100 text-gray-700'
+        isSigned && 'bg-success-light text-success-dark',
+        isDeclined && 'bg-error-light text-error-dark',
+        isPending && 'bg-muted text-secondary'
       )}>
         {isSigned ? (
           <CheckCircle className="h-4 w-4" />
@@ -384,25 +384,25 @@ function RecipientRow({
         <p className="font-medium text-sm truncate">
           {recipient.name}
           {recipient.role_name && (
-            <span className="text-gray-500 font-normal ml-2">
+            <span className="text-muted font-normal ml-2">
               ({recipient.role_name})
             </span>
           )}
         </p>
-        <p className="text-xs text-gray-500 truncate">{recipient.email}</p>
+        <p className="text-xs text-muted truncate">{recipient.email}</p>
       </div>
 
       <div className="text-right">
         {isSigned && recipient.signed_at && (
-          <p className="text-xs text-green-600">
+          <p className="text-xs text-success">
             Signed {formatDate(recipient.signed_at)}
           </p>
         )}
         {isDeclined && (
-          <p className="text-xs text-red-600">
+          <p className="text-xs text-error">
             Declined
             {recipient.decline_reason && (
-              <span className="block text-gray-500">{recipient.decline_reason}</span>
+              <span className="block text-muted">{recipient.decline_reason}</span>
             )}
           </p>
         )}

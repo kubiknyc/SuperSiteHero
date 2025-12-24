@@ -102,7 +102,7 @@ export function PresenceAvatars({
             <TooltipContent side="bottom">
               <p className="font-medium">{user.name}</p>
               {user.currentPage && (
-                <p className="text-gray-400 text-xs">Viewing: {user.currentPage}</p>
+                <p className="text-disabled text-xs">Viewing: {user.currentPage}</p>
               )}
             </TooltipContent>
           </Tooltip>
@@ -113,7 +113,7 @@ export function PresenceAvatars({
             <TooltipTrigger asChild>
               <div
                 className={cn(
-                  'flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 ring-2 ring-white dark:ring-gray-900 font-medium text-gray-600 dark:text-gray-300',
+                  'flex items-center justify-center rounded-full bg-muted dark:bg-muted ring-2 ring-white dark:ring-gray-900 font-medium text-secondary dark:text-gray-300',
                   sizeClasses[size],
                   overlapClasses[size]
                 )}

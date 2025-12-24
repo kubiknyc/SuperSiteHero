@@ -139,7 +139,7 @@ export function MobileLayerDrawer({
         <div className="space-y-4">
           {/* Create New Layer */}
           {isCreating ? (
-            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+            <div className="bg-surface p-4 rounded-lg space-y-3">
               <Input
                 placeholder="Layer name"
                 value={newLayerName}
@@ -193,7 +193,7 @@ export function MobileLayerDrawer({
           {/* Layer List */}
           <ScrollArea className="h-[calc(70vh-200px)]">
             {layers.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted">
                 <Layers className="w-12 h-12 mx-auto mb-3 opacity-50" />
                 <p className="text-base">No layers yet</p>
                 <p className="text-sm mt-1">Create a layer to organize your markups</p>
@@ -209,8 +209,8 @@ export function MobileLayerDrawer({
                     <div
                       key={layer.id}
                       className={cn(
-                        'bg-white border rounded-lg p-3 transition-colors',
-                        isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200',
+                        'bg-card border rounded-lg p-3 transition-colors',
+                        isSelected ? 'border-blue-500 bg-blue-50' : 'border-border',
                         !layer.visible && 'opacity-60'
                       )}
                     >
@@ -242,7 +242,7 @@ export function MobileLayerDrawer({
                             >
                               <p className="font-medium truncate">{layer.name}</p>
                               {layer.createdBy && layer.createdBy !== currentUserId && (
-                                <p className="text-xs text-gray-500 flex items-center gap-1">
+                                <p className="text-xs text-muted flex items-center gap-1">
                                   <User className="w-3 h-3" />
                                   Shared layer
                                 </p>
@@ -265,7 +265,7 @@ export function MobileLayerDrawer({
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-10 w-10 p-0 text-green-600"
+                              className="h-10 w-10 p-0 text-success"
                               onClick={handleSaveEdit}
                             >
                               <Check className="w-4 h-4" />
@@ -284,7 +284,7 @@ export function MobileLayerDrawer({
                               {layer.visible ? (
                                 <Eye className="w-4 h-4" />
                               ) : (
-                                <EyeOff className="w-4 h-4 text-gray-400" />
+                                <EyeOff className="w-4 h-4 text-disabled" />
                               )}
                             </Button>
 
@@ -297,9 +297,9 @@ export function MobileLayerDrawer({
                               disabled={disabled || !isOwner}
                             >
                               {layer.locked ? (
-                                <Lock className="w-4 h-4 text-amber-500" />
+                                <Lock className="w-4 h-4 text-warning" />
                               ) : (
-                                <Unlock className="w-4 h-4 text-gray-400" />
+                                <Unlock className="w-4 h-4 text-disabled" />
                               )}
                             </Button>
                           </div>
@@ -340,7 +340,7 @@ export function MobileLayerDrawer({
                           <Button
                             variant="outline"
                             size="sm"
-                            className="h-10 px-3 text-red-600 hover:bg-red-50"
+                            className="h-10 px-3 text-error hover:bg-error-light"
                             onClick={() => onDeleteLayer(layer.id)}
                             disabled={disabled || !isOwner}
                           >

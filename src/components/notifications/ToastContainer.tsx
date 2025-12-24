@@ -25,9 +25,9 @@ interface ToastProps {
 
 function Toast({ toast, onClose }: ToastProps) {
   const bgColor = {
-    success: 'bg-green-50 border-green-200',
-    error: 'bg-red-50 border-red-200',
-    warning: 'bg-yellow-50 border-yellow-200',
+    success: 'bg-success-light border-green-200',
+    error: 'bg-error-light border-red-200',
+    warning: 'bg-warning-light border-yellow-200',
     info: 'bg-blue-50 border-blue-200',
   }[toast.type]
 
@@ -39,10 +39,10 @@ function Toast({ toast, onClose }: ToastProps) {
   }[toast.type]
 
   const iconColor = {
-    success: 'text-green-600',
-    error: 'text-red-600',
-    warning: 'text-yellow-600',
-    info: 'text-blue-600',
+    success: 'text-success',
+    error: 'text-error',
+    warning: 'text-warning',
+    info: 'text-primary',
   }[toast.type]
 
   const Icon = {
@@ -77,10 +77,10 @@ function Toast({ toast, onClose }: ToastProps) {
               }}
               className={`
                 mt-2 text-sm font-medium
-                ${toast.type === 'success' && 'text-green-700 hover:text-green-900'}
-                ${toast.type === 'error' && 'text-red-700 hover:text-red-900'}
+                ${toast.type === 'success' && 'text-success-dark hover:text-green-900'}
+                ${toast.type === 'error' && 'text-error-dark hover:text-red-900'}
                 ${toast.type === 'warning' && 'text-yellow-700 hover:text-yellow-900'}
-                ${toast.type === 'info' && 'text-blue-700 hover:text-blue-900'}
+                ${toast.type === 'info' && 'text-primary-hover hover:text-blue-900'}
                 underline
               `}
             >

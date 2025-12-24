@@ -47,11 +47,11 @@ const statusConfig: Record<
   RequirementStatus,
   { icon: typeof CheckCircle2; color: string; label: string }
 > = {
-  completed: { icon: CheckCircle2, color: 'text-green-600', label: 'Completed' },
-  pending: { icon: Circle, color: 'text-gray-400', label: 'Pending' },
-  partial: { icon: Clock, color: 'text-yellow-600', label: 'Partial' },
-  missed: { icon: AlertCircle, color: 'text-red-600', label: 'Missed' },
-  skipped: { icon: SkipForward, color: 'text-gray-500', label: 'Skipped' },
+  completed: { icon: CheckCircle2, color: 'text-success', label: 'Completed' },
+  pending: { icon: Circle, color: 'text-disabled', label: 'Pending' },
+  partial: { icon: Clock, color: 'text-warning', label: 'Partial' },
+  missed: { icon: AlertCircle, color: 'text-error', label: 'Missed' },
+  skipped: { icon: SkipForward, color: 'text-muted', label: 'Skipped' },
 };
 
 export function DailyPhotoChecklist({
@@ -149,7 +149,7 @@ export function DailyPhotoChecklist({
               </div>
               <Progress value={completionPercent} className="h-2" />
               {checklist.stats.overdue > 0 && (
-                <p className="text-sm text-red-600">
+                <p className="text-sm text-error">
                   {checklist.stats.overdue} overdue photo{checklist.stats.overdue > 1 ? 's' : ''}
                 </p>
               )}
@@ -239,9 +239,9 @@ function RequirementCard({
     <div
       className={cn(
         'flex items-start gap-3 rounded-lg border p-3 transition-colors',
-        requirement.status === 'completed' && 'bg-green-50 border-green-200',
-        requirement.status === 'missed' && 'bg-red-50 border-red-200',
-        requirement.status === 'pending' && 'hover:bg-gray-50'
+        requirement.status === 'completed' && 'bg-success-light border-green-200',
+        requirement.status === 'missed' && 'bg-error-light border-red-200',
+        requirement.status === 'pending' && 'hover:bg-surface'
       )}
     >
       <StatusIcon className={cn('mt-0.5 h-5 w-5 shrink-0', status.color)} />
@@ -249,7 +249,7 @@ function RequirementCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h4 className="font-medium">{template?.name || 'Unknown Location'}</h4>
+            <h4 className="font-medium" className="heading-card">{template?.name || 'Unknown Location'}</h4>
             {locationParts && (
               <p className="mt-0.5 flex items-center gap-1 text-sm text-muted-foreground">
                 <Building2 className="h-3 w-3" />

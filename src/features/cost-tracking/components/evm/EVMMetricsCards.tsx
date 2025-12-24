@@ -32,11 +32,11 @@ interface EVMMetricsCardsProps {
 
 const STATUS_COLORS: Record<EVMPerformanceStatus | 'unknown', { bg: string; text: string; border: string }> = {
   excellent: { bg: 'bg-emerald-50', text: 'text-emerald-700', border: 'border-emerald-200' },
-  good: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
-  fair: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200' },
+  good: { bg: 'bg-success-light', text: 'text-success-dark', border: 'border-green-200' },
+  fair: { bg: 'bg-warning-light', text: 'text-yellow-700', border: 'border-yellow-200' },
   poor: { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200' },
-  critical: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200' },
-  unknown: { bg: 'bg-gray-50', text: 'text-gray-700', border: 'border-gray-200' },
+  critical: { bg: 'bg-error-light', text: 'text-error-dark', border: 'border-red-200' },
+  unknown: { bg: 'bg-surface', text: 'text-secondary', border: 'border-border' },
 }
 
 const STATUS_ICONS: Record<EVMPerformanceStatus | 'unknown', typeof CheckCircle> = {
@@ -106,9 +106,9 @@ function MetricCard({
             <span
               className={cn(
                 'flex items-center text-xs',
-                trend === 'up' && 'text-green-600',
-                trend === 'down' && 'text-red-600',
-                trend === 'neutral' && 'text-gray-500'
+                trend === 'up' && 'text-success',
+                trend === 'down' && 'text-error',
+                trend === 'neutral' && 'text-muted'
               )}
             >
               {trend === 'up' && <ArrowUp className="h-3 w-3" />}
@@ -179,7 +179,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
     <div className="space-y-6">
       {/* Performance Indices */}
       <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3">Performance Indices</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3" className="heading-subsection">Performance Indices</h3>
         <div className={cn('grid gap-4', compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4')}>
           <MetricCard
             title="Cost Performance Index (CPI)"
@@ -220,7 +220,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
 
       {/* Cost Metrics */}
       <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3">Cost Analysis</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3" className="heading-subsection">Cost Analysis</h3>
         <div className={cn('grid gap-4', compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4')}>
           <MetricCard
             title="Budget at Completion (BAC)"
@@ -256,7 +256,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
 
       {/* Variances */}
       <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3">Current Variances</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3" className="heading-subsection">Current Variances</h3>
         <div className={cn('grid gap-4', compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4')}>
           <MetricCard
             title="Cost Variance (CV)"
@@ -301,7 +301,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
             <div>
               <p className="text-xs text-muted-foreground">Planned Progress</p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-500 rounded-full"
                     style={{ width: `${Math.min(100, metrics.percent_complete_planned)}%` }}
@@ -313,7 +313,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
             <div>
               <p className="text-xs text-muted-foreground">Actual Progress</p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className={cn(
                       'h-full rounded-full',
@@ -330,7 +330,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
             <div>
               <p className="text-xs text-muted-foreground">Budget Spent</p>
               <div className="flex items-center gap-2 mt-1">
-                <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className={cn(
                       'h-full rounded-full',

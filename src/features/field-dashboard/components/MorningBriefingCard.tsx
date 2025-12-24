@@ -92,7 +92,7 @@ export function MorningBriefingCard({
           {/* Weather Section */}
           {data.weather && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
+              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
                 {weatherIcon}
                 Weather
               </h3>
@@ -142,7 +142,7 @@ export function MorningBriefingCard({
           {/* Punch Items Section */}
           <section className="space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
+              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
                 <ClipboardCheck className="h-4 w-4" />
                 Punch Items
               </h3>
@@ -196,7 +196,7 @@ export function MorningBriefingCard({
           {/* Inspections Section */}
           {data.inspections.total > 0 && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
+              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
                 <CheckCircle2 className="h-4 w-4" />
                 Scheduled Inspections ({data.inspections.total})
               </h3>
@@ -240,7 +240,7 @@ export function MorningBriefingCard({
           {/* Safety Alerts Section */}
           {data.safetyAlerts.total > 0 && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2 text-amber-600">
+              <h3 className="text-sm font-semibold flex items-center gap-2 text-warning" className="heading-subsection">
                 <HardHat className="h-4 w-4" />
                 Safety Alerts ({data.safetyAlerts.total})
               </h3>
@@ -248,7 +248,7 @@ export function MorningBriefingCard({
                 {data.safetyAlerts.recent.slice(0, 3).map((observation) => (
                   <div
                     key={observation.id}
-                    className="rounded-lg bg-amber-50 dark:bg-amber-950/20 p-3 cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-950/30 transition-colors min-h-[44px]"
+                    className="rounded-lg bg-warning-light dark:bg-amber-950/20 p-3 cursor-pointer hover:bg-amber-100 dark:hover:bg-amber-950/30 transition-colors min-h-[44px]"
                     onClick={() => navigate(`/projects/${projectId}/safety/observations/${observation.id}`)}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -275,7 +275,7 @@ export function MorningBriefingCard({
           {/* Schedule Milestones */}
           {data.schedule.milestones.length > 0 && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2">
+              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
                 <Calendar className="h-4 w-4" />
                 Upcoming Milestones
               </h3>
@@ -303,7 +303,7 @@ export function MorningBriefingCard({
             data.safetyAlerts.total === 0 &&
             data.schedule.activitiesToday.length === 0 && (
               <div className="py-8 text-center">
-                <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-3" />
+                <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-3" />
                 <p className="text-sm font-medium">All clear for today!</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   No pending tasks or scheduled activities

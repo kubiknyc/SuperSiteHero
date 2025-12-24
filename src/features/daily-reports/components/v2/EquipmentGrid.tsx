@@ -42,8 +42,8 @@ const COMMON_EQUIPMENT = [
 
 // Equipment owner type options
 const OWNER_TYPE_OPTIONS = [
-  { value: 'owned', label: 'Owned', color: 'bg-blue-100 text-blue-700' },
-  { value: 'rented', label: 'Rented', color: 'bg-yellow-100 text-yellow-700' },
+  { value: 'owned', label: 'Owned', color: 'bg-info-light text-primary-hover' },
+  { value: 'rented', label: 'Rented', color: 'bg-warning-light text-yellow-700' },
   { value: 'subcontractor', label: 'Subcontractor', color: 'bg-purple-100 text-purple-700' },
 ];
 
@@ -114,7 +114,7 @@ export function EquipmentGrid({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className="p-2 bg-orange-100 rounded-lg">
@@ -137,16 +137,16 @@ export function EquipmentGrid({
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
       {expanded && (
         <CardContent className="border-t p-0">
           {/* Quick Actions */}
-          <div className="flex gap-2 p-4 bg-gray-50 border-b">
+          <div className="flex gap-2 p-4 bg-surface border-b">
             {onCopyFromYesterday && (
               <Button
                 type="button"
@@ -174,27 +174,27 @@ export function EquipmentGrid({
           {/* Grid Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-surface border-b">
                 <tr>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[160px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[160px]">
                     Type
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[120px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[120px]">
                     Equipment ID
                   </th>
-                  <th className="text-center p-3 font-medium text-gray-700 w-24">
+                  <th className="text-center p-3 font-medium text-secondary w-24">
                     Owner
                   </th>
-                  <th className="text-center p-3 font-medium text-gray-700 w-20">
+                  <th className="text-center p-3 font-medium text-secondary w-20">
                     Hours
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[140px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[140px]">
                     Operator
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[120px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[120px]">
                     Work Area
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[100px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[100px]">
                     Cost Code
                   </th>
                   <th className="w-12"></th>
@@ -204,8 +204,8 @@ export function EquipmentGrid({
                 {equipment.map((entry, index) => (
                   <tr
                     key={entry.id}
-                    className={`border-b hover:bg-gray-50 ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
+                    className={`border-b hover:bg-surface ${
+                      index % 2 === 0 ? 'bg-card' : 'bg-gray-25'
                     }`}
                   >
                     {/* Equipment Type - with dropdown */}
@@ -224,7 +224,7 @@ export function EquipmentGrid({
                         className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
                       />
                       {showTypeDropdown === entry.id && (
-                        <div className="absolute z-10 left-2 right-2 mt-1 bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                        <div className="absolute z-10 left-2 right-2 mt-1 bg-card border rounded-lg shadow-lg max-h-48 overflow-y-auto">
                           {COMMON_EQUIPMENT.filter(
                             (t) =>
                               !entry.equipment_type ||
@@ -233,7 +233,7 @@ export function EquipmentGrid({
                             <button
                               key={type}
                               type="button"
-                              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-muted"
                               onMouseDown={() => handleTypeSelect(entry.id, type)}
                             >
                               {type}
@@ -337,7 +337,7 @@ export function EquipmentGrid({
                       <button
                         type="button"
                         onClick={() => removeEquipmentEntry(entry.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                        className="p-2 text-disabled hover:text-error hover:bg-error-light rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -348,7 +348,7 @@ export function EquipmentGrid({
                 {/* Empty state */}
                 {equipment.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="p-8 text-center text-gray-500">
+                    <td colSpan={8} className="p-8 text-center text-muted">
                       No equipment entries yet. Add a row to get started.
                     </td>
                   </tr>
@@ -357,15 +357,15 @@ export function EquipmentGrid({
 
               {/* Totals row */}
               {equipment.length > 0 && (
-                <tfoot className="bg-gray-100 border-t-2">
+                <tfoot className="bg-muted border-t-2">
                   <tr>
-                    <td className="p-3 font-semibold text-gray-700" colSpan={2}>
+                    <td className="p-3 font-semibold text-secondary" colSpan={2}>
                       Totals ({equipment.length} items)
                     </td>
                     <td className="p-3 text-center">
-                      <span className="text-gray-600">{activeCount} active</span>
+                      <span className="text-secondary">{activeCount} active</span>
                     </td>
-                    <td className="p-3 text-center font-semibold text-gray-700">
+                    <td className="p-3 text-center font-semibold text-secondary">
                       {totalHours.toFixed(1)} hrs
                     </td>
                     <td colSpan={4}></td>

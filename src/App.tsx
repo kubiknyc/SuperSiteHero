@@ -190,6 +190,9 @@ const MeetingsPage = lazy(() => import('./pages/meetings/MeetingsPage').then(m =
 const MeetingDetailPage = lazy(() => import('./pages/meetings/MeetingDetailPage').then(m => ({ default: m.MeetingDetailPage })))
 const MeetingFormPage = lazy(() => import('./pages/meetings/MeetingFormPage').then(m => ({ default: m.MeetingFormPage })))
 
+// Action Items feature
+const ActionItemsDashboard = lazy(() => import('./features/action-items/components/ActionItemsDashboard').then(m => ({ default: m.ActionItemsDashboard })))
+
 // Equipment feature
 const EquipmentPage = lazy(() => import('./pages/equipment/EquipmentPage').then(m => ({ default: m.EquipmentPage })))
 
@@ -532,6 +535,9 @@ function App() {
                 <Route path="/meetings/new" element={<ProtectedRoute><MeetingFormPage /></ProtectedRoute>} />
                 <Route path="/meetings/:id" element={<ProtectedRoute><MeetingDetailPage /></ProtectedRoute>} />
                 <Route path="/meetings/:id/edit" element={<ProtectedRoute><MeetingFormPage /></ProtectedRoute>} />
+
+                {/* Action Items feature */}
+                <Route path="/action-items" element={<ProtectedRoute><ActionItemsDashboard /></ProtectedRoute>} />
 
                 {/* Equipment feature */}
                 <Route path="/equipment" element={<ProtectedRoute><EquipmentPage /></ProtectedRoute>} />

@@ -93,22 +93,22 @@ const notificationTypeConfig: Record<string, {
   rfi_response: {
     label: 'RFI',
     icon: MessageSquare,
-    color: 'text-blue-600 bg-blue-100',
+    color: 'text-primary bg-info-light',
   },
   rfi_assigned: {
     label: 'RFI',
     icon: MessageSquare,
-    color: 'text-blue-600 bg-blue-100',
+    color: 'text-primary bg-info-light',
   },
   submittal_approved: {
     label: 'Submittal',
     icon: FileText,
-    color: 'text-green-600 bg-green-100',
+    color: 'text-success bg-success-light',
   },
   submittal_rejected: {
     label: 'Submittal',
     icon: FileText,
-    color: 'text-red-600 bg-red-100',
+    color: 'text-error bg-error-light',
   },
   task_assigned: {
     label: 'Task',
@@ -118,7 +118,7 @@ const notificationTypeConfig: Record<string, {
   task_due_reminder: {
     label: 'Task Due',
     icon: Clock,
-    color: 'text-yellow-600 bg-yellow-100',
+    color: 'text-warning bg-warning-light',
   },
   payment_updated: {
     label: 'Payment',
@@ -128,17 +128,17 @@ const notificationTypeConfig: Record<string, {
   safety_incident: {
     label: 'Safety',
     icon: Shield,
-    color: 'text-red-600 bg-red-100',
+    color: 'text-error bg-error-light',
   },
   document_approved: {
     label: 'Document',
     icon: FileText,
-    color: 'text-green-600 bg-green-100',
+    color: 'text-success bg-success-light',
   },
   document_rejected: {
     label: 'Document',
     icon: FileText,
-    color: 'text-red-600 bg-red-100',
+    color: 'text-error bg-error-light',
   },
   bid_invited: {
     label: 'Bid',
@@ -148,17 +148,17 @@ const notificationTypeConfig: Record<string, {
   compliance_expiring: {
     label: 'Compliance',
     icon: AlertCircle,
-    color: 'text-amber-600 bg-amber-100',
+    color: 'text-warning bg-amber-100',
   },
   schedule_change: {
     label: 'Schedule',
     icon: Calendar,
-    color: 'text-cyan-600 bg-cyan-100',
+    color: 'text-info bg-cyan-100',
   },
   default: {
     label: 'Notification',
     icon: Bell,
-    color: 'text-gray-600 bg-gray-100',
+    color: 'text-secondary bg-muted',
   },
 }
 
@@ -193,9 +193,9 @@ function NotificationItem({
     <div
       className={cn(
         'relative flex items-start gap-3 p-4 cursor-pointer transition-colors',
-        'border-b border-gray-100 last:border-b-0',
+        'border-b border-border last:border-b-0',
         !notification.read && 'bg-blue-50/50',
-        'hover:bg-gray-50 active:bg-gray-100'
+        'hover:bg-surface active:bg-muted'
       )}
       onClick={() => onClick(notification)}
       role="button"
@@ -219,18 +219,18 @@ function NotificationItem({
           <div className="flex-1 min-w-0">
             <p className={cn(
               'text-sm font-medium line-clamp-1',
-              !notification.read && 'text-gray-900'
+              !notification.read && 'text-foreground'
             )}>
               {notification.title}
             </p>
-            <p className="text-sm text-gray-500 line-clamp-2 mt-0.5">
+            <p className="text-sm text-muted line-clamp-2 mt-0.5">
               {notification.message}
             </p>
             <div className="flex items-center gap-2 mt-1">
               <Badge variant="outline" className="text-[10px] px-1.5 py-0">
                 {config.label}
               </Badge>
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-disabled">
                 {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
               </span>
             </div>
@@ -260,7 +260,7 @@ function NotificationItem({
 
       {/* Chevron for navigation hint */}
       {notification.link && (
-        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0 self-center" />
+        <ChevronRight className="h-4 w-4 text-disabled flex-shrink-0 self-center" />
       )}
     </div>
   )
@@ -269,17 +269,17 @@ function NotificationItem({
 function EmptyState({ filtered }: { filtered: boolean }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-      <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         {filtered ? (
-          <Filter className="h-8 w-8 text-gray-400" />
+          <Filter className="h-8 w-8 text-disabled" />
         ) : (
-          <BellOff className="h-8 w-8 text-gray-400" />
+          <BellOff className="h-8 w-8 text-disabled" />
         )}
       </div>
-      <h3 className="text-sm font-medium text-gray-900 mb-1">
+      <h3 className="text-sm font-medium text-foreground mb-1" className="heading-subsection">
         {filtered ? 'No matching notifications' : 'All caught up!'}
       </h3>
-      <p className="text-xs text-gray-500">
+      <p className="text-xs text-muted">
         {filtered
           ? 'Try adjusting your filter'
           : "You don't have any notifications right now"}
@@ -367,10 +367,10 @@ export function NotificationCenter({
   const content = (
     <div className="flex flex-col h-full max-h-[80vh] md:max-h-[500px]">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div className="flex items-center gap-2">
-          <Bell className="h-5 w-5 text-gray-700" />
-          <h3 className="font-semibold text-gray-900">Notifications</h3>
+          <Bell className="h-5 w-5 text-secondary" />
+          <h3 className="font-semibold text-foreground" className="heading-subsection">Notifications</h3>
           {unreadCount > 0 && (
             <Badge variant="secondary" className="text-xs">
               {unreadCount} new
@@ -461,8 +461,8 @@ export function NotificationCenter({
 
         {/* Active filter indicator */}
         {typeFilter !== 'all' && (
-          <div className="px-4 py-2 bg-gray-50 border-b flex items-center justify-between">
-            <span className="text-xs text-gray-600">
+          <div className="px-4 py-2 bg-surface border-b flex items-center justify-between">
+            <span className="text-xs text-secondary">
               Filtered by: <span className="font-medium">{typeFilter}</span>
             </span>
             <Button
@@ -480,7 +480,7 @@ export function NotificationCenter({
           <ScrollArea className="h-[350px]">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                <Loader2 className="h-8 w-8 animate-spin text-disabled" />
               </div>
             ) : filteredNotifications.length === 0 ? (
               <EmptyState filtered={typeFilter !== 'all'} />
@@ -504,7 +504,7 @@ export function NotificationCenter({
           <ScrollArea className="h-[350px]">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+                <Loader2 className="h-8 w-8 animate-spin text-disabled" />
               </div>
             ) : filteredNotifications.length === 0 ? (
               <EmptyState filtered={typeFilter !== 'all'} />

@@ -15,10 +15,10 @@ interface RiskScoreGaugeProps {
 
 // Risk level configuration
 const RISK_COLORS: Record<RiskLevel, { stroke: string; bg: string; text: string }> = {
-  low: { stroke: '#22c55e', bg: 'bg-green-50', text: 'text-green-700' },
-  medium: { stroke: '#f59e0b', bg: 'bg-amber-50', text: 'text-amber-700' },
+  low: { stroke: '#22c55e', bg: 'bg-success-light', text: 'text-success-dark' },
+  medium: { stroke: '#f59e0b', bg: 'bg-warning-light', text: 'text-amber-700' },
   high: { stroke: '#f97316', bg: 'bg-orange-50', text: 'text-orange-700' },
-  critical: { stroke: '#ef4444', bg: 'bg-red-50', text: 'text-red-700' },
+  critical: { stroke: '#ef4444', bg: 'bg-error-light', text: 'text-error-dark' },
 }
 
 const SIZE_CONFIG = {
@@ -102,7 +102,7 @@ export function RiskScoreGauge({
       {/* Label */}
       {showLabel && (
         <div className="mt-2 text-center">
-          <p className="text-sm font-medium text-gray-700">{label}</p>
+          <p className="text-sm font-medium text-secondary">{label}</p>
           <p className={cn('text-xs font-medium capitalize', colors.text)}>
             {level} Risk
           </p>
@@ -155,7 +155,7 @@ export function RiskIndicator({ level, className }: RiskIndicatorProps) {
       className={cn(
         'inline-block w-2 h-2 rounded-full',
         level === 'low' && 'bg-green-500',
-        level === 'medium' && 'bg-amber-500',
+        level === 'medium' && 'bg-warning',
         level === 'high' && 'bg-orange-500',
         level === 'critical' && 'bg-red-500',
         className

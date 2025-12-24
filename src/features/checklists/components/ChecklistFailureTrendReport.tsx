@@ -84,7 +84,7 @@ export function ChecklistFailureTrendReport({
           <CardContent className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-4"></div>
-              <p className="text-sm text-gray-600">Loading analytics...</p>
+              <p className="text-sm text-secondary">Loading analytics...</p>
             </div>
           </CardContent>
         </Card>
@@ -97,10 +97,10 @@ export function ChecklistFailureTrendReport({
       <div className={className}>
         <Card>
           <CardContent className="flex items-center justify-center h-64">
-            <div className="text-center text-red-600">
+            <div className="text-center text-error">
               <AlertCircle className="h-8 w-8 mx-auto mb-2" />
               <p>Failed to load analytics</p>
-              <p className="text-sm text-gray-600 mt-1">{(error as Error).message}</p>
+              <p className="text-sm text-secondary mt-1">{(error as Error).message}</p>
             </div>
           </CardContent>
         </Card>
@@ -117,8 +117,8 @@ export function ChecklistFailureTrendReport({
       {/* Header with filters */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Checklist Failure Trend Analysis</h2>
-          <p className="text-gray-600 mt-1">
+          <h2 className="text-2xl font-bold" className="heading-section">Checklist Failure Trend Analysis</h2>
+          <p className="text-secondary mt-1">
             Identify recurring quality issues and improvement opportunities
           </p>
         </div>
@@ -150,7 +150,7 @@ export function ChecklistFailureTrendReport({
           value={data.summary.totalFailures}
           trend={data.summary.trend}
           icon={<AlertCircle className="h-5 w-5" />}
-          iconColor="text-red-600"
+          iconColor="text-error"
         />
         <SummaryCard
           title="Failure Rate"
@@ -163,13 +163,13 @@ export function ChecklistFailureTrendReport({
           title="Unique Failed Items"
           value={data.summary.uniqueFailedItems}
           icon={<FileText className="h-5 w-5" />}
-          iconColor="text-blue-600"
+          iconColor="text-primary"
         />
         <SummaryCard
           title="Total Inspections"
           value={data.summary.totalExecutions}
           icon={<CheckCircle2 className="h-5 w-5" />}
-          iconColor="text-green-600"
+          iconColor="text-success"
         />
       </div>
 
@@ -235,7 +235,7 @@ function SummaryCard({ title, value, trend, icon, iconColor }: SummaryCardProps)
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-600">{title}</p>
+            <p className="text-sm font-medium text-secondary">{title}</p>
             <p className="text-2xl font-bold mt-2">{value}</p>
             {trend && (
               <div className="flex items-center gap-1 mt-2">
@@ -243,7 +243,7 @@ function SummaryCard({ title, value, trend, icon, iconColor }: SummaryCardProps)
               </div>
             )}
           </div>
-          <div className={`${iconColor || 'text-gray-400'}`}>{icon}</div>
+          <div className={`${iconColor || 'text-disabled'}`}>{icon}</div>
         </div>
       </CardContent>
     </Card>
@@ -253,7 +253,7 @@ function SummaryCard({ title, value, trend, icon, iconColor }: SummaryCardProps)
 function TrendBadge({ trend }: { trend: 'improving' | 'declining' | 'stable' }) {
   if (trend === 'improving') {
     return (
-      <Badge variant="outline" className="text-green-600 border-green-600">
+      <Badge variant="outline" className="text-success border-success">
         <TrendingUp className="h-3 w-3 mr-1" />
         Improving
       </Badge>
@@ -262,7 +262,7 @@ function TrendBadge({ trend }: { trend: 'improving' | 'declining' | 'stable' }) 
 
   if (trend === 'declining') {
     return (
-      <Badge variant="outline" className="text-red-600 border-red-600">
+      <Badge variant="outline" className="text-error border-error">
         <TrendingDown className="h-3 w-3 mr-1" />
         Declining
       </Badge>
@@ -270,7 +270,7 @@ function TrendBadge({ trend }: { trend: 'improving' | 'declining' | 'stable' }) 
   }
 
   return (
-    <Badge variant="outline" className="text-gray-600 border-gray-600">
+    <Badge variant="outline" className="text-secondary border-gray-600">
       <Minus className="h-3 w-3 mr-1" />
       Stable
     </Badge>
@@ -282,7 +282,7 @@ function FailureFrequencyTable({ data }: { data: FailureFrequency[] }) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p>No failure data available</p>
           </div>
@@ -405,7 +405,7 @@ function FailureClustersList({
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <AlertCircle className="h-12 w-12 mx-auto mb-2 opacity-50" />
             <p>No failure clusters detected</p>
             <p className="text-sm mt-1">Items need to fail together at least 3 times</p>
@@ -419,7 +419,7 @@ function FailureClustersList({
     <Card>
       <CardHeader>
         <CardTitle>Items That Frequently Fail Together</CardTitle>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="text-sm text-secondary mt-1">
           These items often fail in the same inspection, suggesting related issues
         </p>
       </CardHeader>
@@ -429,7 +429,7 @@ function FailureClustersList({
             <div key={index} className="border rounded-lg p-4">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
-                  <h4 className="font-medium mb-2">Cluster #{index + 1}</h4>
+                  <h4 className="font-medium mb-2" className="heading-card">Cluster #{index + 1}</h4>
                   <div className="flex flex-wrap gap-2">
                     {cluster.items.map((item, i) => (
                       <Badge key={i} variant="secondary">
@@ -440,8 +440,8 @@ function FailureClustersList({
                 </div>
                 <div className="text-right ml-4">
                   <div className="text-2xl font-bold">{cluster.coOccurrenceCount}</div>
-                  <div className="text-sm text-gray-600">occurrences</div>
-                  <div className="text-sm text-gray-600 mt-1">
+                  <div className="text-sm text-secondary">occurrences</div>
+                  <div className="text-sm text-secondary mt-1">
                     {cluster.coOccurrenceRate.toFixed(1)}% rate
                   </div>
                 </div>

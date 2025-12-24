@@ -86,10 +86,10 @@ export function InsuranceExpirationAlerts({
           )}
         </AlertTitle>
         <AlertDescription>
-          {expiredCount > 0 && <span className="text-red-600">{expiredCount} expired</span>}
+          {expiredCount > 0 && <span className="text-error">{expiredCount} expired</span>}
           {expiredCount > 0 && expiringCount > 0 && ' and '}
           {expiringCount > 0 && (
-            <span className="text-yellow-600">{expiringCount} expiring within {daysAhead} days</span>
+            <span className="text-warning">{expiringCount} expiring within {daysAhead} days</span>
           )}
         </AlertDescription>
       </Alert>
@@ -101,8 +101,8 @@ export function InsuranceExpirationAlerts({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
-          <Bell className="h-5 w-5 text-yellow-500" />
-          <h3 className="font-semibold">Insurance Alerts</h3>
+          <Bell className="h-5 w-5 text-warning" />
+          <h3 className="font-semibold" className="heading-subsection">Insurance Alerts</h3>
           <Badge variant={expiredCount > 0 ? 'destructive' : 'secondary'}>
             {expiringCertificates.length}
           </Badge>
@@ -118,20 +118,20 @@ export function InsuranceExpirationAlerts({
       {/* Summary Stats */}
       <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-red-100 rounded-lg">
-            <XCircle className="h-4 w-4 text-red-600" />
+          <div className="p-2 bg-error-light rounded-lg">
+            <XCircle className="h-4 w-4 text-error" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-red-600">{expiredCount}</p>
+            <p className="text-2xl font-bold text-error">{expiredCount}</p>
             <p className="text-xs text-muted-foreground">Expired</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-yellow-100 rounded-lg">
-            <Clock className="h-4 w-4 text-yellow-600" />
+          <div className="p-2 bg-warning-light rounded-lg">
+            <Clock className="h-4 w-4 text-warning" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-yellow-600">{expiringCount}</p>
+            <p className="text-2xl font-bold text-warning">{expiringCount}</p>
             <p className="text-xs text-muted-foreground">Expiring Soon</p>
           </div>
         </div>
@@ -145,7 +145,7 @@ export function InsuranceExpirationAlerts({
               key={cert.id}
               className={cn(
                 'p-4 hover:bg-muted/50 cursor-pointer transition-colors',
-                cert.days_until_expiry < 0 && 'bg-red-50 hover:bg-red-100'
+                cert.days_until_expiry < 0 && 'bg-error-light hover:bg-error-light'
               )}
               onClick={() => onViewCertificate?.(cert)}
             >
@@ -154,13 +154,13 @@ export function InsuranceExpirationAlerts({
                   <div
                     className={cn(
                       'p-2 rounded-lg',
-                      cert.days_until_expiry < 0 ? 'bg-red-100' : 'bg-yellow-100'
+                      cert.days_until_expiry < 0 ? 'bg-error-light' : 'bg-warning-light'
                     )}
                   >
                     <Shield
                       className={cn(
                         'h-4 w-4',
-                        cert.days_until_expiry < 0 ? 'text-red-600' : 'text-yellow-600'
+                        cert.days_until_expiry < 0 ? 'text-error' : 'text-warning'
                       )}
                     />
                   </div>

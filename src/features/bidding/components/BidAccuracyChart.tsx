@@ -89,7 +89,7 @@ export function BidAccuracyChart({ data }: BidAccuracyChartProps) {
                   <td className="p-3 font-medium">{item.division_name}</td>
                   <td className="p-3 text-right">{formatCurrency(item.estimated_amount)}</td>
                   <td className="p-3 text-right">{formatCurrency(item.actual_amount)}</td>
-                  <td className={`p-3 text-right font-medium ${item.is_over_budget ? 'text-red-600' : 'text-green-600'}`}>
+                  <td className={`p-3 text-right font-medium ${item.is_over_budget ? 'text-error' : 'text-success'}`}>
                     {item.is_over_budget ? '+' : ''}{formatPercentage(item.variance_percentage)}
                   </td>
                   <td className="p-3 text-center">

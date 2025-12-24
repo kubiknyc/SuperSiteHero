@@ -51,7 +51,7 @@ interface SummaryCardProps {
   colorClass?: string
 }
 
-function SummaryCard({ title, value, subtitle, icon, trend, colorClass = 'text-blue-600' }: SummaryCardProps) {
+function SummaryCard({ title, value, subtitle, icon, trend, colorClass = 'text-primary' }: SummaryCardProps) {
   return (
     <Card>
       <CardContent className="pt-6">
@@ -64,16 +64,16 @@ function SummaryCard({ title, value, subtitle, icon, trend, colorClass = 'text-b
             )}
             {trend && (
               <div className="flex items-center gap-1 mt-2">
-                {trend.direction === 'increasing' && <TrendingUp className="h-4 w-4 text-red-500" />}
-                {trend.direction === 'decreasing' && <TrendingDown className="h-4 w-4 text-green-500" />}
-                {trend.direction === 'stable' && <Minus className="h-4 w-4 text-gray-500" />}
+                {trend.direction === 'increasing' && <TrendingUp className="h-4 w-4 text-error" />}
+                {trend.direction === 'decreasing' && <TrendingDown className="h-4 w-4 text-success" />}
+                {trend.direction === 'stable' && <Minus className="h-4 w-4 text-muted" />}
                 <span className={`text-sm font-medium text-${getTrendColor(trend.direction)}-600`}>
                   {trend.value}
                 </span>
               </div>
             )}
           </div>
-          <div className={`p-3 rounded-lg bg-gray-100 ${colorClass}`}>
+          <div className={`p-3 rounded-lg bg-muted ${colorClass}`}>
             {icon}
           </div>
         </div>
@@ -143,7 +143,7 @@ export function HistoricalBidAnalysis() {
   if (isError) {
     return (
       <div className="p-8 text-center">
-        <p className="text-red-600 font-medium">Failed to load bid analysis data</p>
+        <p className="text-error font-medium">Failed to load bid analysis data</p>
         <Button onClick={handleRefresh} className="mt-4">
           <RefreshCw className="h-4 w-4 mr-2" />
           Retry
@@ -157,7 +157,7 @@ export function HistoricalBidAnalysis() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Historical Bid Analysis</h1>
+          <h1 className="text-3xl font-bold tracking-tight" className="heading-page">Historical Bid Analysis</h1>
           <p className="text-muted-foreground mt-1">
             Analyze past bid performance, vendor trends, and pricing accuracy
           </p>
@@ -256,14 +256,14 @@ export function HistoricalBidAnalysis() {
               title="Total Bids Analyzed"
               value={summaryMetrics.totalBids.toLocaleString()}
               icon={<Target className="h-6 w-6" />}
-              colorClass="text-blue-600"
+              colorClass="text-primary"
             />
             <SummaryCard
               title="Average Accuracy"
               value={formatPercentage(summaryMetrics.avgAccuracy)}
               subtitle="Estimated vs Actual"
               icon={<DollarSign className="h-6 w-6" />}
-              colorClass="text-green-600"
+              colorClass="text-success"
             />
             <SummaryCard
               title="Top Vendors"
@@ -443,7 +443,7 @@ export function HistoricalBidAnalysis() {
                       <div className="flex-1 space-y-2">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="font-semibold">{vendor.vendor_name}</h4>
+                            <h4 className="font-semibold" className="heading-card">{vendor.vendor_name}</h4>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge variant="outline" className="text-xs">
                                 Score: {vendor.score.toFixed(1)}

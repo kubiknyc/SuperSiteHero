@@ -73,8 +73,8 @@ export function TransactionTable({
   const getTransactionTypeBadge = (type: TransactionType) => {
     const config = TRANSACTION_TYPES.find(t => t.value === type)
     const colorMap: Record<string, string> = {
-      blue: 'bg-blue-100 text-blue-700',
-      green: 'bg-green-100 text-green-700',
+      blue: 'bg-info-light text-primary-hover',
+      green: 'bg-success-light text-success-dark',
       orange: 'bg-orange-100 text-orange-700',
       purple: 'bg-purple-100 text-purple-700',
     }
@@ -90,17 +90,17 @@ export function TransactionTable({
       case 'change_order':
         return <FileText className="h-4 w-4 text-purple-500" />
       case 'invoice':
-        return <Receipt className="h-4 w-4 text-green-500" />
+        return <Receipt className="h-4 w-4 text-success" />
       case 'subcontract':
-        return <Building2 className="h-4 w-4 text-blue-500" />
+        return <Building2 className="h-4 w-4 text-primary" />
       case 'material':
         return <Truck className="h-4 w-4 text-orange-500" />
       case 'equipment':
-        return <Wrench className="h-4 w-4 text-gray-500" />
+        return <Wrench className="h-4 w-4 text-muted" />
       case 'timesheet':
         return <Clock className="h-4 w-4 text-indigo-500" />
       default:
-        return <Receipt className="h-4 w-4 text-gray-400" />
+        return <Receipt className="h-4 w-4 text-disabled" />
     }
   }
 
@@ -159,7 +159,7 @@ export function TransactionTable({
 
   const SortHeader = ({ field, children, className }: { field: SortField; children: React.ReactNode; className?: string }) => (
     <th
-      className={cn('py-3 px-3 font-medium text-gray-500 cursor-pointer hover:bg-gray-50 select-none', className)}
+      className={cn('py-3 px-3 font-medium text-muted cursor-pointer hover:bg-surface select-none', className)}
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center gap-1">
@@ -194,11 +194,11 @@ export function TransactionTable({
 
   if (isLoading) {
     return (
-      <div className="py-12 text-center text-gray-500">
+      <div className="py-12 text-center text-muted">
         <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-gray-200 rounded" />
-          <div className="h-10 bg-gray-200 rounded" />
-          <div className="h-10 bg-gray-200 rounded" />
+          <div className="h-10 bg-muted rounded" />
+          <div className="h-10 bg-muted rounded" />
+          <div className="h-10 bg-muted rounded" />
         </div>
       </div>
     )
@@ -208,8 +208,8 @@ export function TransactionTable({
     return (
       <div className="py-12 text-center">
         <Receipt className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-        <p className="text-gray-500">No transactions found</p>
-        <p className="text-sm text-gray-400">Record cost transactions to track spending</p>
+        <p className="text-muted">No transactions found</p>
+        <p className="text-sm text-disabled">Record cost transactions to track spending</p>
       </div>
     )
   }
@@ -217,7 +217,7 @@ export function TransactionTable({
   return (
     <>
       {/* Totals by Type */}
-      <div className="flex flex-wrap gap-4 mb-4 p-3 bg-gray-50 rounded-lg">
+      <div className="flex flex-wrap gap-4 mb-4 p-3 bg-surface rounded-lg">
         {TRANSACTION_TYPES.map(type => (
           <div key={type.value} className="flex items-center gap-2">
             {getTransactionTypeBadge(type.value)}
@@ -237,10 +237,10 @@ export function TransactionTable({
             <tr className="border-b">
               <SortHeader field="transaction_date" className="text-left">Date</SortHeader>
               <SortHeader field="cost_code" className="text-left">Cost Code</SortHeader>
-              <th className="text-left py-3 px-3 font-medium text-gray-500">Description</th>
+              <th className="text-left py-3 px-3 font-medium text-muted">Description</th>
               <SortHeader field="transaction_type" className="text-left">Type</SortHeader>
-              <th className="text-left py-3 px-3 font-medium text-gray-500">Source</th>
-              <th className="text-left py-3 px-3 font-medium text-gray-500">Vendor</th>
+              <th className="text-left py-3 px-3 font-medium text-muted">Source</th>
+              <th className="text-left py-3 px-3 font-medium text-muted">Vendor</th>
               <SortHeader field="amount" className="text-right">Amount</SortHeader>
               <th className="w-10" />
             </tr>
@@ -249,7 +249,7 @@ export function TransactionTable({
             {sortedTransactions.map((transaction) => (
               <tr
                 key={transaction.id}
-                className="border-b hover:bg-gray-50 transition-colors"
+                className="border-b hover:bg-surface transition-colors"
               >
                 <td className="py-3 px-3 text-sm">
                   {format(new Date(transaction.transaction_date), 'MMM d, yyyy')}
@@ -257,7 +257,7 @@ export function TransactionTable({
                 <td className="py-3 px-3">
                   <div className="flex flex-col">
                     <span className="font-mono text-sm">{transaction.cost_code?.code}</span>
-                    <span className="text-xs text-gray-500 truncate max-w-[150px]">
+                    <span className="text-xs text-muted truncate max-w-[150px]">
                       {transaction.cost_code?.name}
                     </span>
                   </div>
@@ -265,7 +265,7 @@ export function TransactionTable({
                 <td className="py-3 px-3 text-sm max-w-[200px]">
                   <p className="truncate">{transaction.description}</p>
                   {(transaction.invoice_number || transaction.po_number) && (
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted">
                       {transaction.invoice_number && `Inv: ${transaction.invoice_number}`}
                       {transaction.invoice_number && transaction.po_number && ' | '}
                       {transaction.po_number && `PO: ${transaction.po_number}`}
@@ -279,7 +279,7 @@ export function TransactionTable({
                   {transaction.source_type && (
                     <div className="flex items-center gap-1">
                       {getSourceIcon(transaction.source_type)}
-                      <span className="text-xs text-gray-600">
+                      <span className="text-xs text-secondary">
                         {SOURCE_TYPES.find(s => s.value === transaction.source_type)?.label}
                       </span>
                     </div>
@@ -305,7 +305,7 @@ export function TransactionTable({
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => setDeleteId(transaction.id)}
-                        className="text-red-600"
+                        className="text-error"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         Delete
@@ -329,7 +329,7 @@ export function TransactionTable({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleConfirmDelete} className="bg-error hover:bg-red-700">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

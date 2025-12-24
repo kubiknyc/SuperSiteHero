@@ -52,36 +52,36 @@ const INSPECTION_RESULTS: {
   {
     value: 'pass',
     label: 'Pass',
-    color: 'text-green-700',
-    bgColor: 'bg-green-100',
+    color: 'text-success-dark',
+    bgColor: 'bg-success-light',
     icon: <CheckCircle2 className="h-4 w-4" />,
   },
   {
     value: 'fail',
     label: 'Fail',
-    color: 'text-red-700',
-    bgColor: 'bg-red-100',
+    color: 'text-error-dark',
+    bgColor: 'bg-error-light',
     icon: <XCircle className="h-4 w-4" />,
   },
   {
     value: 'conditional',
     label: 'Conditional',
     color: 'text-yellow-700',
-    bgColor: 'bg-yellow-100',
+    bgColor: 'bg-warning-light',
     icon: <AlertCircle className="h-4 w-4" />,
   },
   {
     value: 'scheduled',
     label: 'Scheduled',
-    color: 'text-blue-700',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary-hover',
+    bgColor: 'bg-info-light',
     icon: <Calendar className="h-4 w-4" />,
   },
   {
     value: 'cancelled',
     label: 'Cancelled',
-    color: 'text-gray-700',
-    bgColor: 'bg-gray-100',
+    color: 'text-secondary',
+    bgColor: 'bg-muted',
     icon: <XCircle className="h-4 w-4" />,
   },
   {
@@ -207,11 +207,11 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${stats.failed > 0 ? 'bg-red-100' : 'bg-blue-100'}`}>
-              <ClipboardCheck className={`h-5 w-5 ${stats.failed > 0 ? 'text-red-600' : 'text-blue-600'}`} />
+            <div className={`p-2 rounded-lg ${stats.failed > 0 ? 'bg-error-light' : 'bg-info-light'}`}>
+              <ClipboardCheck className={`h-5 w-5 ${stats.failed > 0 ? 'text-error' : 'text-primary'}`} />
             </div>
             <div className="text-left">
               <CardTitle className="text-base flex items-center gap-2">
@@ -219,7 +219,7 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
                 {inspections.length > 0 && (
                   <div className="flex gap-1">
                     {stats.passed > 0 && (
-                      <Badge variant="secondary" className="bg-green-100 text-green-700">
+                      <Badge variant="secondary" className="bg-success-light text-success-dark">
                         {stats.passed} passed
                       </Badge>
                     )}
@@ -227,7 +227,7 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
                       <Badge variant="destructive">{stats.failed} failed</Badge>
                     )}
                     {stats.conditional > 0 && (
-                      <Badge variant="secondary" className="bg-yellow-100 text-yellow-700">
+                      <Badge variant="secondary" className="bg-warning-light text-yellow-700">
                         {stats.conditional} conditional
                       </Badge>
                     )}
@@ -242,16 +242,16 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
             {/* Add Button */}
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-surface border-b">
               <Button type="button" variant="outline" size="sm" onClick={handleAdd}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add Inspection
@@ -268,7 +268,7 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-medium">{inspection.inspection_type}</span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-muted">
                           ({getCategoryLabel(inspection.inspection_category)})
                         </span>
                         {inspection.result && (
@@ -289,14 +289,14 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
                         <button
                           type="button"
                           onClick={() => handleEdit(inspection)}
-                          className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                          className="p-2 text-disabled hover:text-primary hover:bg-blue-50 rounded transition-colors"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
                         <button
                           type="button"
                           onClick={() => handleDelete(inspection.id)}
-                          className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                          className="p-2 text-disabled hover:text-error hover:bg-error-light rounded transition-colors"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -307,25 +307,25 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm mb-2">
                       {inspection.inspector_name && (
                         <div>
-                          <span className="text-gray-500">Inspector:</span>
+                          <span className="text-muted">Inspector:</span>
                           <span className="ml-1">{inspection.inspector_name}</span>
                         </div>
                       )}
                       {inspection.inspector_company && (
                         <div>
-                          <span className="text-gray-500">Company:</span>
+                          <span className="text-muted">Company:</span>
                           <span className="ml-1">{inspection.inspector_company}</span>
                         </div>
                       )}
                       {inspection.inspection_time && (
                         <div>
-                          <span className="text-gray-500">Time:</span>
+                          <span className="text-muted">Time:</span>
                           <span className="ml-1">{inspection.inspection_time}</span>
                         </div>
                       )}
                       {inspection.permit_number && (
                         <div>
-                          <span className="text-gray-500">Permit #:</span>
+                          <span className="text-muted">Permit #:</span>
                           <span className="ml-1">{inspection.permit_number}</span>
                         </div>
                       )}
@@ -333,25 +333,25 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
 
                     {/* Deficiencies */}
                     {inspection.deficiencies_noted && (
-                      <div className="p-2 bg-red-50 rounded mb-2">
-                        <span className="text-xs font-medium text-red-700">Deficiencies:</span>
-                        <p className="text-sm text-red-600">{inspection.deficiencies_noted}</p>
+                      <div className="p-2 bg-error-light rounded mb-2">
+                        <span className="text-xs font-medium text-error-dark">Deficiencies:</span>
+                        <p className="text-sm text-error">{inspection.deficiencies_noted}</p>
                       </div>
                     )}
 
                     {/* Conditions */}
                     {inspection.pass_with_conditions && (
-                      <div className="p-2 bg-yellow-50 rounded mb-2">
+                      <div className="p-2 bg-warning-light rounded mb-2">
                         <span className="text-xs font-medium text-yellow-700">Conditions:</span>
-                        <p className="text-sm text-yellow-600">{inspection.pass_with_conditions}</p>
+                        <p className="text-sm text-warning">{inspection.pass_with_conditions}</p>
                       </div>
                     )}
 
                     {/* Corrective Actions */}
                     {inspection.corrective_actions_required && (
                       <div className="p-2 bg-blue-50 rounded">
-                        <span className="text-xs font-medium text-blue-700">Corrective Actions:</span>
-                        <p className="text-sm text-blue-600">{inspection.corrective_actions_required}</p>
+                        <span className="text-xs font-medium text-primary-hover">Corrective Actions:</span>
+                        <p className="text-sm text-primary">{inspection.corrective_actions_required}</p>
                       </div>
                     )}
 
@@ -368,8 +368,8 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
 
               {/* Empty State */}
               {inspections.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <ClipboardCheck className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <div className="p-8 text-center text-muted">
+                  <ClipboardCheck className="h-8 w-8 mx-auto mb-2 text-disabled" />
                   <p>No inspections scheduled or completed today.</p>
                   <p className="text-sm">Add inspections to track permit compliance.</p>
                 </div>
@@ -378,7 +378,7 @@ export function InspectionsSection({ expanded, onToggle }: InspectionsSectionPro
 
             {/* Summary Footer */}
             {inspections.length > 0 && (
-              <div className="p-4 bg-gray-100 border-t">
+              <div className="p-4 bg-muted border-t">
                 <div className="flex justify-between text-sm">
                   <span>
                     Total: {inspections.length} inspection{inspections.length > 1 ? 's' : ''}

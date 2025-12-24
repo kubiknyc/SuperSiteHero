@@ -344,7 +344,7 @@ export function QuickPunchMode({
         <DialogHeader
           className={cn(
             'p-4 pb-2 text-white shrink-0',
-            isOnline ? 'bg-blue-600' : 'bg-amber-600'
+            isOnline ? 'bg-primary' : 'bg-amber-600'
           )}
         >
           <DialogTitle className="flex items-center gap-2">
@@ -365,7 +365,7 @@ export function QuickPunchMode({
         {/* Pull to refresh indicator */}
         {pullDistance > 0 && (
           <div
-            className="flex items-center justify-center py-2 bg-blue-50 text-blue-600 text-sm"
+            className="flex items-center justify-center py-2 bg-blue-50 text-primary text-sm"
             style={{ height: Math.min(pullDistance, 60) }}
           >
             {isRefreshing ? (
@@ -398,7 +398,7 @@ export function QuickPunchMode({
               <Camera className="h-4 w-4" />
               <Label className="text-sm font-medium">Photo Evidence</Label>
               {photos.length > 0 && (
-                <span className="ml-auto text-xs text-gray-500">
+                <span className="ml-auto text-xs text-muted">
                   {photos.length} photo{photos.length !== 1 ? 's' : ''}
                 </span>
               )}
@@ -430,13 +430,13 @@ export function QuickPunchMode({
             {/* Upload progress bar */}
             {isUploading && (
               <div className="mb-3">
-                <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="h-2 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-blue-600 transition-all duration-300"
+                    className="h-full bg-primary transition-all duration-300"
                     style={{ width: `${uploadProgress}%` }}
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1 text-center">
+                <p className="text-xs text-muted mt-1 text-center">
                   Processing... {uploadProgress}%
                 </p>
               </div>
@@ -496,7 +496,7 @@ export function QuickPunchMode({
           <div>
             <div className="flex items-center justify-between mb-2">
               <Label htmlFor="description" className="text-sm font-medium">
-                Describe the Issue <span className="text-red-500">*</span>
+                Describe the Issue <span className="text-error">*</span>
               </Label>
               {voiceSupported && (
                 <Button
@@ -537,11 +537,11 @@ export function QuickPunchMode({
                 'w-full px-3 py-3 text-base border rounded-lg resize-none',
                 'focus:outline-none focus:ring-2 focus:ring-blue-600',
                 'min-h-[88px] touch-manipulation',
-                isListening && 'border-red-400 bg-red-50'
+                isListening && 'border-red-400 bg-error-light'
               )}
             />
             {isListening && (
-              <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+              <p className="text-xs text-error mt-1 flex items-center gap-1">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
@@ -550,7 +550,7 @@ export function QuickPunchMode({
               </p>
             )}
             {voiceError && !isListening && (
-              <p className="text-xs text-amber-600 mt-1">{voiceError}</p>
+              <p className="text-xs text-warning mt-1">{voiceError}</p>
             )}
           </div>
 
@@ -558,7 +558,7 @@ export function QuickPunchMode({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="trade" className="text-sm font-medium">
-                Trade <span className="text-red-500">*</span>
+                Trade <span className="text-error">*</span>
               </Label>
               <Select
                 id="trade"
@@ -606,7 +606,7 @@ export function QuickPunchMode({
                 setShowLocation(!showLocation)
                 triggerHaptic(5)
               }}
-              className="w-full flex items-center justify-between p-4 text-sm font-medium text-gray-700 min-h-[52px] touch-manipulation"
+              className="w-full flex items-center justify-between p-4 text-sm font-medium text-secondary min-h-[52px] touch-manipulation"
             >
               <span className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
@@ -663,7 +663,7 @@ export function QuickPunchMode({
         </div>
 
         {/* Action Buttons - touch optimized, fixed at bottom */}
-        <div className="p-4 pt-3 border-t bg-gray-50 flex gap-3 shrink-0">
+        <div className="p-4 pt-3 border-t bg-surface flex gap-3 shrink-0">
           <Button
             type="button"
             variant="outline"
@@ -680,7 +680,7 @@ export function QuickPunchMode({
           </Button>
           <Button
             type="button"
-            className="flex-1 bg-green-600 hover:bg-green-700 min-h-[52px] text-base touch-manipulation"
+            className="flex-1 bg-success hover:bg-green-700 min-h-[52px] text-base touch-manipulation"
             onClick={handleSubmit}
             disabled={
               createMutation.isPending || !description.trim() || !trade

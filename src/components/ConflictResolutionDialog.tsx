@@ -120,7 +120,7 @@ export function ConflictResolutionDialog({
       <DialogContent className="max-w-4xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-amber-500" />
+            <AlertCircle className="h-5 w-5 text-warning" />
             Sync Conflict Detected
           </DialogTitle>
           <DialogDescription>
@@ -183,7 +183,7 @@ export function ConflictResolutionDialog({
                   <div className="space-y-4">
                     {differences.map((diff) => (
                       <div key={diff.field} className="space-y-2">
-                        <h4 className="font-medium text-sm capitalize">
+                        <h4 className="font-medium text-sm capitalize heading-card">
                           {diff.field.replace(/_/g, ' ')}
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
@@ -191,7 +191,7 @@ export function ConflictResolutionDialog({
                             <p className="text-xs text-muted-foreground flex items-center gap-1">
                               <HardDrive className="h-3 w-3" /> Local
                             </p>
-                            <div className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded p-2">
+                            <div className="bg-warning-light dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded p-2">
                               <pre className="text-xs whitespace-pre-wrap break-words">
                                 {renderValue(diff.local)}
                               </pre>

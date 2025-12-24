@@ -25,22 +25,22 @@ const statusConfig: Record<
   { color: string; label: string; icon: React.ElementType }
 > = {
   connected: {
-    color: 'text-green-500',
+    color: 'text-success',
     label: 'Connected',
     icon: Wifi,
   },
   connecting: {
-    color: 'text-yellow-500',
+    color: 'text-warning',
     label: 'Connecting...',
     icon: Loader2,
   },
   reconnecting: {
-    color: 'text-yellow-500',
+    color: 'text-warning',
     label: 'Reconnecting...',
     icon: Loader2,
   },
   disconnected: {
-    color: 'text-gray-400',
+    color: 'text-disabled',
     label: 'Offline',
     icon: WifiOff,
   },
@@ -76,7 +76,7 @@ export function ConnectionStatus({
       className={cn(
         'flex items-center gap-1.5',
         variant === 'floating' &&
-          'fixed bottom-4 right-4 rounded-full bg-white dark:bg-gray-800 px-3 py-1.5 shadow-lg border border-gray-200 dark:border-gray-700',
+          'fixed bottom-4 right-4 rounded-full bg-card dark:bg-surface px-3 py-1.5 shadow-lg border border-border dark:border-gray-700',
         className
       )}
     >
@@ -118,7 +118,7 @@ export function ConnectionBanner() {
     <div
       className={cn(
         'fixed top-0 left-0 right-0 z-50 flex items-center justify-center gap-2 py-2 text-sm font-medium text-white',
-        connectionState === 'disconnected' ? 'bg-gray-600' : 'bg-yellow-500'
+        connectionState === 'disconnected' ? 'bg-gray-600' : 'bg-warning'
       )}
     >
       <config.icon

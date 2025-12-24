@@ -99,8 +99,8 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
       <Card>
         <CardContent className="p-12">
           <div className="flex flex-col items-center justify-center">
-            <Loader2 className="h-12 w-12 text-gray-400 animate-spin mb-4" />
-            <p className="text-gray-600">Loading RFIs...</p>
+            <Loader2 className="h-12 w-12 text-disabled animate-spin mb-4" />
+            <p className="text-secondary">Loading RFIs...</p>
           </div>
         </CardContent>
       </Card>
@@ -117,8 +117,8 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
         <CardContent className="p-12">
           <div className="flex flex-col items-center justify-center">
             <AlertCircle className="h-12 w-12 text-gray-300 mb-4" />
-            <p className="text-gray-600 font-medium">No RFIs found</p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-secondary font-medium">No RFIs found</p>
+            <p className="text-sm text-muted mt-2">
               {filters?.status || filters?.priority
                 ? 'Try adjusting your filters'
                 : 'Create your first RFI to get started'}
@@ -134,7 +134,7 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
       <CardHeader>
         <CardTitle>
           RFIs
-          <span className="ml-2 text-sm font-normal text-gray-500">
+          <span className="ml-2 text-sm font-normal text-muted">
             ({filteredRFIs.length})
           </span>
         </CardTitle>
@@ -161,8 +161,8 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
                   <TableRow
                     key={rfi.id}
                     className={cn(
-                      'cursor-pointer hover:bg-gray-50',
-                      overdueStatus && 'bg-red-50/50 hover:bg-red-50'
+                      'cursor-pointer hover:bg-surface',
+                      overdueStatus && 'bg-error-light/50 hover:bg-error-light'
                     )}
                     onClick={() => onSelectRFI(rfi)}
                   >
@@ -174,11 +174,11 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
                     {/* Title */}
                     <TableCell>
                       <div className="max-w-md">
-                        <p className="font-medium text-gray-900 truncate">
+                        <p className="font-medium text-foreground truncate">
                           {rfi.title || 'Untitled RFI'}
                         </p>
                         {rfi.description && (
-                          <p className="text-xs text-gray-500 truncate mt-1">
+                          <p className="text-xs text-muted truncate mt-1">
                             {rfi.description}
                           </p>
                         )}
@@ -198,7 +198,7 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
                     </TableCell>
 
                     {/* Assignees */}
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-secondary">
                       {getAssigneesText(rfi.assignees)}
                     </TableCell>
 
@@ -206,7 +206,7 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
                     <TableCell
                       className={cn(
                         'text-sm',
-                        overdueStatus ? 'text-red-600 font-medium' : 'text-gray-600'
+                        overdueStatus ? 'text-error font-medium' : 'text-secondary'
                       )}
                     >
                       {formatDate(rfi.due_date)}
@@ -216,7 +216,7 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
                     </TableCell>
 
                     {/* Created Date */}
-                    <TableCell className="text-sm text-gray-600">
+                    <TableCell className="text-sm text-secondary">
                       {formatDate(rfi.created_at)}
                     </TableCell>
 

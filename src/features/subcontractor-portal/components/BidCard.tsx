@@ -19,15 +19,15 @@ interface BidCardProps {
 function getBidStatusBadge(status: string) {
   switch (status) {
     case 'pending':
-      return <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">Pending Response</Badge>
+      return <Badge variant="outline" className="bg-warning-light text-amber-700 border-amber-200">Pending Response</Badge>
     case 'submitted':
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Submitted</Badge>
+      return <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">Submitted</Badge>
     case 'awarded':
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Awarded</Badge>
+      return <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">Awarded</Badge>
     case 'rejected':
-      return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Not Selected</Badge>
+      return <Badge variant="outline" className="bg-error-light text-error-dark border-red-200">Not Selected</Badge>
     case 'declined':
-      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Declined</Badge>
+      return <Badge variant="outline" className="bg-surface text-secondary border-border">Declined</Badge>
     default:
       return <Badge variant="outline">{status}</Badge>
   }

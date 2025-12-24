@@ -75,7 +75,7 @@ export function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCa
         </div>
 
         {/* Due Date */}
-        <div className={`flex items-center gap-2 text-sm ${isOverdue ? 'text-red-600' : isDueSoon ? 'text-orange-600' : 'text-muted-foreground'}`}>
+        <div className={`flex items-center gap-2 text-sm ${isOverdue ? 'text-error' : isDueSoon ? 'text-orange-600' : 'text-muted-foreground'}`}>
           {isOverdue ? (
             <AlertTriangle className="w-4 h-4" />
           ) : isDueSoon ? (
@@ -121,8 +121,8 @@ export function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCa
             </div>
             <Progress value={responseRate} className="h-2" />
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="text-green-600">{bidPackage.accepted_count || 0} accepted</span>
-              <span className="text-red-600">{bidPackage.declined_count || 0} declined</span>
+              <span className="text-success">{bidPackage.accepted_count || 0} accepted</span>
+              <span className="text-error">{bidPackage.declined_count || 0} declined</span>
               <span>{(totalInvited - responsesReceived)} pending</span>
             </div>
           </div>
@@ -139,7 +139,7 @@ export function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCa
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="flex flex-col">
                   <span className="text-muted-foreground">Low Bid</span>
-                  <span className="font-medium text-green-600">{formatBidAmount(bidPackage.low_bid)}</span>
+                  <span className="font-medium text-success">{formatBidAmount(bidPackage.low_bid)}</span>
                 </div>
                 <div className="flex flex-col">
                   <span className="text-muted-foreground">High Bid</span>
@@ -160,7 +160,7 @@ export function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCa
 
         {/* Awarded */}
         {bidPackage.status === 'awarded' && bidPackage.awarded_bidder && (
-          <div className="flex items-center gap-2 text-sm text-green-600 pt-2 border-t">
+          <div className="flex items-center gap-2 text-sm text-success pt-2 border-t">
             <CheckCircle2 className="w-4 h-4" />
             <span>Awarded to {bidPackage.awarded_bidder.company_name}</span>
           </div>

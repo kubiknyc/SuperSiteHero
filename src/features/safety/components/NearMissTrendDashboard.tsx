@@ -144,7 +144,7 @@ export function NearMissTrendDashboard({
       <Card className={className}>
         <CardContent className="py-8 text-center">
           <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-destructive" />
-          <h3 className="font-medium mb-2">Failed to load analytics</h3>
+          <h3 className="font-medium mb-2" className="heading-subsection">Failed to load analytics</h3>
           <p className="text-muted-foreground text-sm mb-4">
             There was an error loading the near-miss analytics data.
           </p>
@@ -162,7 +162,7 @@ export function NearMissTrendDashboard({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">Near-Miss Trend Analysis</h2>
+          <h2 className="text-2xl font-bold" className="heading-section">Near-Miss Trend Analysis</h2>
           <p className="text-muted-foreground">
             Identify patterns before they become incidents
           </p>
@@ -203,13 +203,13 @@ export function NearMissTrendDashboard({
         <SummaryCard
           title="Active Alerts"
           value={summary?.active_alerts_count}
-          icon={<AlertTriangle className="h-4 w-4 text-amber-500" />}
+          icon={<AlertTriangle className="h-4 w-4 text-warning" />}
           isLoading={isLoading}
         />
         <SummaryCard
           title="Unresolved Patterns"
           value={summary?.unresolved_patterns_count}
-          icon={<TrendingUp className="h-4 w-4 text-blue-500" />}
+          icon={<TrendingUp className="h-4 w-4 text-primary" />}
           isLoading={isLoading}
         />
         <SummaryCard
@@ -341,18 +341,18 @@ function SummaryCard({
 
   const trendColor =
     trend?.direction === 'increasing'
-      ? 'text-red-500' // Increasing near-misses is concerning
+      ? 'text-error' // Increasing near-misses is concerning
       : trend?.direction === 'decreasing'
-        ? 'text-green-500'
-        : 'text-gray-500'
+        ? 'text-success'
+        : 'text-muted'
 
   const statusColor =
     status === 'good'
-      ? 'text-green-500'
+      ? 'text-success'
       : status === 'warning'
-        ? 'text-amber-500'
+        ? 'text-warning'
         : status === 'critical'
-          ? 'text-red-500'
+          ? 'text-error'
           : ''
 
   return (
@@ -462,7 +462,7 @@ function TrendChart({ data, isLoading, height = 250 }: TrendChartProps) {
                         </p>
                       )}
                       {d.lost_time_potential_count > 0 && (
-                        <p className="text-red-600">
+                        <p className="text-error">
                           Lost time potential: {d.lost_time_potential_count}
                         </p>
                       )}

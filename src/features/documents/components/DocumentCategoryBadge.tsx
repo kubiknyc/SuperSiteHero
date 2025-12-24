@@ -35,7 +35,7 @@ const CATEGORY_LABELS: Record<DocumentCategoryType, string> = {
 
 // Category color classes using Tailwind
 const CATEGORY_COLORS: Record<DocumentCategoryType, string> = {
-  drawing: 'bg-blue-100 text-blue-800 border-blue-200',
+  drawing: 'bg-info-light text-blue-800 border-blue-200',
   specification: 'bg-purple-100 text-purple-800 border-purple-200',
   contract: 'bg-indigo-100 text-indigo-800 border-indigo-200',
   submittal: 'bg-cyan-100 text-cyan-800 border-cyan-200',
@@ -48,10 +48,10 @@ const CATEGORY_COLORS: Record<DocumentCategoryType, string> = {
   photo: 'bg-pink-100 text-pink-800 border-pink-200',
   permit: 'bg-lime-100 text-lime-800 border-lime-200',
   schedule: 'bg-violet-100 text-violet-800 border-violet-200',
-  safety_report: 'bg-red-100 text-red-800 border-red-200',
-  inspection: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  safety_report: 'bg-error-light text-red-800 border-red-200',
+  inspection: 'bg-warning-light text-yellow-800 border-yellow-200',
   insurance: 'bg-fuchsia-100 text-fuchsia-800 border-fuchsia-200',
-  other: 'bg-gray-100 text-gray-800 border-gray-200',
+  other: 'bg-muted text-foreground border-border',
 }
 
 // Category icons (using emoji for simplicity, could use Lucide icons)
@@ -95,7 +95,7 @@ export function DocumentCategoryBadge({
   // Handle null/undefined category
   if (!category) {
     return (
-      <Badge variant="outline" className={cn('bg-gray-100 text-gray-500', className)}>
+      <Badge variant="outline" className={cn('bg-muted text-muted', className)}>
         Uncategorized
       </Badge>
     )

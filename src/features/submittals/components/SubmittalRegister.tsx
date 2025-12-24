@@ -55,7 +55,7 @@ interface SubmittalRegisterProps {
 function TrafficLight({ status }: { status: 'green' | 'yellow' | 'red' }) {
   const colors = {
     green: 'bg-green-500',
-    yellow: 'bg-yellow-500',
+    yellow: 'bg-warning',
     red: 'bg-red-500',
   }
 
@@ -98,11 +98,11 @@ function StatusBadge({ status }: { status: SubmittalReviewStatus }) {
   const config = SUBMITTAL_REVIEW_STATUSES.find(s => s.value === status)
 
   const colorClasses: Record<string, string> = {
-    gray: 'bg-gray-100 text-gray-800',
-    blue: 'bg-blue-100 text-blue-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    green: 'bg-green-100 text-green-800',
-    red: 'bg-red-100 text-red-800',
+    gray: 'bg-muted text-foreground',
+    blue: 'bg-info-light text-blue-800',
+    yellow: 'bg-warning-light text-yellow-800',
+    green: 'bg-success-light text-green-800',
+    red: 'bg-error-light text-red-800',
     orange: 'bg-orange-100 text-orange-800',
   }
 
@@ -216,8 +216,8 @@ export function SubmittalRegister({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Submittal Register</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold" className="heading-section">Submittal Register</h2>
+          <p className="text-sm text-muted">
             {stats.total} submittals | {stats.approved} approved | {stats.pending} pending | {stats.overdue} overdue
           </p>
         </div>
@@ -261,7 +261,7 @@ export function SubmittalRegister({
       </div>
 
       {/* Traffic Light Legend */}
-      <div className="flex items-center gap-4 text-xs text-gray-600">
+      <div className="flex items-center gap-4 text-xs text-secondary">
         <span className="flex items-center gap-1.5"><TrafficLight status="green" /> On Track</span>
         <span className="flex items-center gap-1.5"><TrafficLight status="yellow" /> At Risk</span>
         <span className="flex items-center gap-1.5"><TrafficLight status="red" /> Overdue</span>
@@ -271,7 +271,7 @@ export function SubmittalRegister({
       <div className="border rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
+            <thead className="bg-surface border-b">
               <tr>
                 <th className="px-3 py-2 text-left font-medium w-8"></th>
                 <th className="px-3 py-2 text-left font-medium">No.</th>
@@ -288,8 +288,8 @@ export function SubmittalRegister({
               {groupedBySpec.map(([division, entries]) => (
                 <React.Fragment key={division}>
                   {/* Division header */}
-                  <tr className="bg-gray-100">
-                    <td colSpan={9} className="px-3 py-1.5 font-medium text-gray-700">
+                  <tr className="bg-muted">
+                    <td colSpan={9} className="px-3 py-1.5 font-medium text-secondary">
                       Division {division}
                     </td>
                   </tr>
@@ -298,8 +298,8 @@ export function SubmittalRegister({
                     <tr
                       key={entry.id}
                       className={cn(
-                        'hover:bg-gray-50 cursor-pointer',
-                        entry.is_overdue && 'bg-red-50'
+                        'hover:bg-surface cursor-pointer',
+                        entry.is_overdue && 'bg-error-light'
                       )}
                       onClick={() => onSubmittalClick?.(entry.id)}
                     >
@@ -315,7 +315,7 @@ export function SubmittalRegister({
                       <td className="px-3 py-2">
                         <div className="line-clamp-2">{entry.title}</div>
                         {entry.subcontractor_name && (
-                          <div className="text-xs text-gray-500">{entry.subcontractor_name}</div>
+                          <div className="text-xs text-muted">{entry.subcontractor_name}</div>
                         )}
                       </td>
                       <td className="px-3 py-2">
@@ -343,7 +343,7 @@ export function SubmittalRegister({
               ))}
               {filteredSubmittals.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-3 py-8 text-center text-gray-500">
+                  <td colSpan={9} className="px-3 py-8 text-center text-muted">
                     No submittals found
                   </td>
                 </tr>

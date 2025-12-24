@@ -110,7 +110,7 @@ export function DailyReportSyncDialog({
         </DialogHeader>
 
         {/* Date Range Filter */}
-        <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+        <div className="grid grid-cols-2 gap-4 p-4 bg-surface rounded-lg">
           <div className="space-y-2">
             <Label htmlFor="dateFrom">From Date</Label>
             <Input
@@ -136,8 +136,8 @@ export function DailyReportSyncDialog({
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Activity className="h-4 w-4 text-blue-600" />
-                <span className="text-sm text-gray-500">Total Activities</span>
+                <Activity className="h-4 w-4 text-primary" />
+                <span className="text-sm text-muted">Total Activities</span>
               </div>
               <p className="text-2xl font-bold mt-1">
                 {loadingStatus ? '...' : syncStatus?.total_activities || 0}
@@ -147,8 +147,8 @@ export function DailyReportSyncDialog({
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-green-600" />
-                <span className="text-sm text-gray-500">With Progress Data</span>
+                <FileText className="h-4 w-4 text-success" />
+                <span className="text-sm text-muted">With Progress Data</span>
               </div>
               <p className="text-2xl font-bold mt-1">
                 {loadingSummaries ? '...' : totalCount}
@@ -158,8 +158,8 @@ export function DailyReportSyncDialog({
           <Card className={needsSyncCount > 0 ? 'border-orange-200 bg-orange-50' : ''}>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <AlertTriangle className={`h-4 w-4 ${needsSyncCount > 0 ? 'text-orange-600' : 'text-gray-400'}`} />
-                <span className="text-sm text-gray-500">Needs Sync</span>
+                <AlertTriangle className={`h-4 w-4 ${needsSyncCount > 0 ? 'text-orange-600' : 'text-disabled'}`} />
+                <span className="text-sm text-muted">Needs Sync</span>
               </div>
               <p className={`text-2xl font-bold mt-1 ${needsSyncCount > 0 ? 'text-orange-600' : ''}`}>
                 {loadingSummaries ? '...' : needsSyncCount}
@@ -210,11 +210,11 @@ export function DailyReportSyncDialog({
 
         {/* Activities List */}
         <div className="space-y-2 max-h-[400px] overflow-y-auto">
-          <h3 className="font-medium text-sm text-gray-500">Activities with Progress Data</h3>
+          <h3 className="font-medium text-sm text-muted" className="heading-subsection">Activities with Progress Data</h3>
 
           {loadingSummaries ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
+              <Loader2 className="h-6 w-6 animate-spin text-disabled" />
             </div>
           ) : summaries && summaries.length > 0 ? (
             summaries.map((summary) => (
@@ -226,7 +226,7 @@ export function DailyReportSyncDialog({
               />
             ))
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted">
               <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
               <p>No linked progress entries found</p>
               <p className="text-sm mt-1">
@@ -261,7 +261,7 @@ function ActivitySyncCard({
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium truncate">{summary.activity_name}</h4>
+              <h4 className="font-medium truncate" className="heading-card">{summary.activity_name}</h4>
               {summary.needs_sync && (
                 <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
                   Needs Sync
@@ -269,7 +269,7 @@ function ActivitySyncCard({
               )}
             </div>
 
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+            <div className="flex items-center gap-4 mt-2 text-sm text-muted">
               <span className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
                 {summary.total_entries} report(s)
@@ -286,14 +286,14 @@ function ActivitySyncCard({
             {/* Progress comparison */}
             <div className="mt-3 space-y-2">
               <div className="flex items-center gap-2 text-sm">
-                <span className="w-24 text-gray-500">Look-Ahead:</span>
+                <span className="w-24 text-muted">Look-Ahead:</span>
                 <Progress value={currentPercent} className="flex-1 h-2" />
                 <span className="w-12 text-right font-mono">{currentPercent}%</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
-                <span className="w-24 text-gray-500">Daily Reports:</span>
+                <span className="w-24 text-muted">Daily Reports:</span>
                 <Progress value={newPercent} className="flex-1 h-2 [&>div]:bg-green-500" />
-                <span className="w-12 text-right font-mono text-green-600">{newPercent}%</span>
+                <span className="w-12 text-right font-mono text-success">{newPercent}%</span>
               </div>
             </div>
 
@@ -301,8 +301,8 @@ function ActivitySyncCard({
             {summary.needs_sync && summary.look_ahead_activity && (
               <div className="mt-3 flex items-center gap-2 text-sm">
                 <Badge variant="outline">{summary.look_ahead_activity.status}</Badge>
-                <ArrowRight className="h-4 w-4 text-gray-400" />
-                <Badge className="bg-green-100 text-green-700 border-green-200">
+                <ArrowRight className="h-4 w-4 text-disabled" />
+                <Badge className="bg-success-light text-success-dark border-green-200">
                   {summary.suggested_status}
                 </Badge>
               </div>

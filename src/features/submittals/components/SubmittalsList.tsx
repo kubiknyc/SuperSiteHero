@@ -26,20 +26,20 @@ interface SubmittalRowProps {
 
 const SubmittalRow = memo(function SubmittalRow({ item }: SubmittalRowProps) {
   return (
-    <tr className="border-b hover:bg-gray-50">
-      <td className="py-3 px-4 font-medium text-gray-900">{item.number}</td>
+    <tr className="border-b hover:bg-surface">
+      <td className="py-3 px-4 font-medium text-foreground">{item.number}</td>
       <td className="py-3 px-4">
-        <a href={`/submittals/${item.id}`} className="text-blue-600 hover:underline">
+        <a href={`/submittals/${item.id}`} className="text-primary hover:underline">
           {item.title}
         </a>
       </td>
       <td className="py-3 px-4">
         <SubmittalStatusBadge status={item.status} />
       </td>
-      <td className="py-3 px-4 text-gray-600 text-sm">
+      <td className="py-3 px-4 text-secondary text-sm">
         {item.created_at ? format(new Date(item.created_at), 'MMM d, yyyy') : '-'}
       </td>
-      <td className="py-3 px-4 text-gray-600 text-sm">
+      <td className="py-3 px-4 text-secondary text-sm">
         {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
       </td>
     </tr>
@@ -86,8 +86,8 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No project selected</p>
+          <AlertCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+          <p className="text-secondary">No project selected</p>
         </CardContent>
       </Card>
     )
@@ -97,8 +97,8 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading submittals...</p>
+          <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+          <p className="text-secondary">Loading submittals...</p>
         </CardContent>
       </Card>
     )
@@ -109,7 +109,7 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
       <Card>
         <CardContent className="p-12 text-center">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <p className="text-red-600">Failed to load submittals</p>
+          <p className="text-error">Failed to load submittals</p>
         </CardContent>
       </Card>
     )
@@ -156,18 +156,18 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
           {filtered.length === 0 ? (
             <div className="text-center py-8">
               <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No submittals found</p>
+              <p className="text-muted">No submittals found</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">#</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Title</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Submitted</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Due Date</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">#</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Title</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Status</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Submitted</th>
+                    <th className="text-left py-3 px-4 font-medium text-secondary">Due Date</th>
                   </tr>
                 </thead>
                 <tbody>

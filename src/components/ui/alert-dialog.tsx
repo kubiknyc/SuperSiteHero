@@ -80,7 +80,7 @@ export function AlertDialogContent({
       <div className="fixed inset-0 bg-black/50" onClick={() => onOpenChange(false)} />
       <div
         className={cn(
-          'relative z-50 w-full max-w-lg rounded-lg bg-white p-6 shadow-lg',
+          'relative z-50 w-full max-w-lg rounded-lg bg-card p-6 shadow-lg',
           className
         )}
       >

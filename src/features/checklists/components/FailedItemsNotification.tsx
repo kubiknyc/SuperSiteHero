@@ -62,12 +62,12 @@ export function FailedItemsNotification({
   }
 
   return (
-    <Card className="border-red-200 bg-red-50">
+    <Card className="border-red-200 bg-error-light">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
-            <div className="rounded-full bg-red-100 p-2">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
+            <div className="rounded-full bg-error-light p-2">
+              <AlertTriangle className="w-5 h-5 text-error" />
             </div>
             <div className="flex-1">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -76,11 +76,11 @@ export function FailedItemsNotification({
                   {failedItems.length} {failedItems.length === 1 ? 'Item' : 'Items'}
                 </Badge>
               </CardTitle>
-              <p className="text-sm text-red-700 mt-1">
+              <p className="text-sm text-error-dark mt-1">
                 {execution.name} has {failedItems.length} failed{' '}
                 {failedItems.length === 1 ? 'item' : 'items'} requiring attention
               </p>
-              <p className="text-xs text-red-600 mt-1">
+              <p className="text-xs text-error mt-1">
                 Completed: {format(new Date(execution.completed_at || execution.created_at), 'PPp')}
               </p>
             </div>
@@ -89,7 +89,7 @@ export function FailedItemsNotification({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-red-600 hover:text-red-800"
+              className="h-8 w-8 text-error hover:text-red-800"
               onClick={() => setIsExpanded(!isExpanded)}
             >
               {isExpanded ? (
@@ -101,7 +101,7 @@ export function FailedItemsNotification({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-red-600 hover:text-red-800"
+              className="h-8 w-8 text-error hover:text-red-800"
               onClick={handleDismiss}
             >
               <X className="w-4 h-4" />
@@ -116,17 +116,17 @@ export function FailedItemsNotification({
             {failedItems.map((item, index) => (
               <div
                 key={item.id}
-                className="flex items-start justify-between p-3 bg-white rounded-md border border-red-200"
+                className="flex items-start justify-between p-3 bg-card rounded-md border border-red-200"
               >
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <Badge variant="destructive" className="text-xs">
                       #{index + 1}
                     </Badge>
-                    <span className="font-medium text-gray-900">{item.item_label}</span>
+                    <span className="font-medium text-foreground">{item.item_label}</span>
                   </div>
                   {item.notes && (
-                    <p className="text-sm text-gray-600 mt-1 ml-12">{item.notes}</p>
+                    <p className="text-sm text-secondary mt-1 ml-12">{item.notes}</p>
                   )}
                 </div>
               </div>
@@ -164,7 +164,7 @@ export function FailedItemsBadge({ count, onClick }: FailedItemsBadgeProps) {
   return (
     <button
       onClick={onClick}
-      className="relative inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-100 text-red-700 hover:bg-red-200 transition-colors"
+      className="relative inline-flex items-center gap-1 px-2 py-1 rounded-full bg-error-light text-error-dark hover:bg-red-200 transition-colors"
       aria-label={`${count} failed items`}
     >
       <Bell className="w-3 h-3" />
@@ -194,16 +194,16 @@ export function FailedItemsBanner({
   const affectedExecutions = executions.length
 
   return (
-    <div className="bg-red-50 border-l-4 border-red-600 p-4 mb-6">
+    <div className="bg-error-light border-l-4 border-error p-4 mb-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <AlertTriangle className="w-5 h-5 text-red-600" />
+          <AlertTriangle className="w-5 h-5 text-error" />
           <div>
             <p className="text-sm font-medium text-red-900">
               {totalFailedCount} Failed {totalFailedCount === 1 ? 'Item' : 'Items'} Across{' '}
               {affectedExecutions} {affectedExecutions === 1 ? 'Checklist' : 'Checklists'}
             </p>
-            <p className="text-xs text-red-700 mt-1">
+            <p className="text-xs text-error-dark mt-1">
               These items require immediate attention and corrective action
             </p>
           </div>
@@ -218,7 +218,7 @@ export function FailedItemsBanner({
             size="sm"
             variant="ghost"
             onClick={() => setIsDismissed(true)}
-            className="text-red-600 hover:text-red-800"
+            className="text-error hover:text-red-800"
           >
             <X className="w-4 h-4" />
           </Button>

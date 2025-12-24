@@ -52,7 +52,7 @@ export function MarkupToolbar({
   disabled = false,
 }: MarkupToolbarProps) {
   return (
-    <div className="flex items-center gap-2 p-2 bg-white border-b">
+    <div className="flex items-center gap-2 p-2 bg-card border-b">
       {/* Selection Tools */}
       <div className="flex items-center gap-1 pr-2 border-r">
         <Button
@@ -126,13 +126,13 @@ export function MarkupToolbar({
 
       {/* Color Picker */}
       <div className="flex items-center gap-1 pr-2 border-r">
-        <span className="text-sm text-gray-600">Color:</span>
+        <span className="text-sm text-secondary">Color:</span>
         <div className="flex gap-1">
           {PRESET_COLORS.map((color) => (
             <button
               key={color}
               className={`w-6 h-6 rounded border-2 ${
-                selectedColor === color ? 'border-blue-500' : 'border-gray-300'
+                selectedColor === color ? 'border-blue-500' : 'border-input'
               }`}
               style={{ backgroundColor: color }}
               onClick={() => onColorChange(color)}
@@ -152,7 +152,7 @@ export function MarkupToolbar({
 
       {/* Line Width */}
       <div className="flex items-center gap-1 pr-2 border-r">
-        <span className="text-sm text-gray-600">Width:</span>
+        <span className="text-sm text-secondary">Width:</span>
         <div className="flex gap-1">
           {LINE_WIDTHS.map((width) => (
             <Button

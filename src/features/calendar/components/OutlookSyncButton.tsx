@@ -108,7 +108,7 @@ export function OutlookSyncButton({
                 <Button
                   variant={variant}
                   size={size}
-                  className={cn('text-green-600 hover:text-green-700', className)}
+                  className={cn('text-success hover:text-success-dark', className)}
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -152,7 +152,7 @@ export function OutlookSyncButton({
               size={size}
               onClick={handleSync}
               disabled={isLoading || !canSync}
-              className={cn('text-red-600 hover:text-red-700', className)}
+              className={cn('text-error hover:text-error-dark', className)}
             >
               {isLoading ? (
                 <RefreshCw className="h-4 w-4 animate-spin" />
@@ -182,7 +182,7 @@ export function OutlookSyncButton({
             onClick={handleSync}
             disabled={isLoading || !canSync}
             className={cn(
-              syncStatus === 'pending' && 'text-yellow-600 hover:text-yellow-700',
+              syncStatus === 'pending' && 'text-warning hover:text-yellow-700',
               className
             )}
           >

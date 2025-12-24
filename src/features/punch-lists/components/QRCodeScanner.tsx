@@ -208,8 +208,8 @@ export function QRCodeScanner({
         <div className="py-4">
           {error ? (
             <div className="text-center py-8">
-              <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
-              <p className="text-red-600 mb-4">{error}</p>
+              <AlertCircle className="h-12 w-12 mx-auto text-error mb-4" />
+              <p className="text-error mb-4">{error}</p>
               <Button onClick={handleRetry} variant="outline" className="gap-1">
                 <RefreshCw className="h-4 w-4" />
                 Try Again
@@ -224,28 +224,28 @@ export function QRCodeScanner({
                 className={cn(
                   'rounded-lg overflow-hidden',
                   '[&_#qr-reader__dashboard_section_csr]:mt-2',
-                  '[&_#qr-reader__dashboard_section_csr_button]:bg-blue-600',
+                  '[&_#qr-reader__dashboard_section_csr_button]:bg-primary',
                   '[&_#qr-reader__dashboard_section_csr_button]:text-white',
                   '[&_#qr-reader__dashboard_section_csr_button]:rounded-lg',
                   '[&_#qr-reader__dashboard_section_csr_button]:px-4',
                   '[&_#qr-reader__dashboard_section_csr_button]:py-2',
                   '[&_#qr-reader__header_message]:hidden',
                   '[&_#qr-reader__status_span]:text-sm',
-                  '[&_#qr-reader__status_span]:text-gray-600',
+                  '[&_#qr-reader__status_span]:text-secondary',
                 )}
               />
 
               {!isScanning && (
                 <div className="text-center py-8">
-                  <Camera className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-                  <p className="text-gray-600">Initializing camera...</p>
+                  <Camera className="h-12 w-12 mx-auto text-disabled mb-4" />
+                  <p className="text-secondary">Initializing camera...</p>
                 </div>
               )}
             </>
           )}
         </div>
 
-        <div className="text-xs text-gray-500 text-center border-t pt-3">
+        <div className="text-xs text-muted text-center border-t pt-3">
           Point your camera at a punch item QR code to quickly access it
         </div>
       </DialogContent>
@@ -268,7 +268,7 @@ export function FloatingScanButton({ onScanSuccess }: FloatingScanButtonProps) {
         buttonLabel=""
         buttonVariant="default"
         buttonSize="lg"
-        className="h-14 w-14 rounded-full shadow-lg bg-blue-600 hover:bg-blue-700"
+        className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary-hover"
       />
     </div>
   )

@@ -102,19 +102,19 @@ function AreaRow({ area, onViewDetails }: AreaRowProps) {
 
   return (
     <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
-      <div className="border rounded-lg p-4 mb-2 hover:bg-gray-50 transition-colors">
+      <div className="border rounded-lg p-4 mb-2 hover:bg-surface transition-colors">
         <CollapsibleTrigger className="w-full">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {isExpanded ? (
-                <ChevronDown className="h-4 w-4 text-gray-400" />
+                <ChevronDown className="h-4 w-4 text-disabled" />
               ) : (
-                <ChevronRight className="h-4 w-4 text-gray-400" />
+                <ChevronRight className="h-4 w-4 text-disabled" />
               )}
-              <MapPin className="h-4 w-4 text-blue-600" />
+              <MapPin className="h-4 w-4 text-primary" />
               <div className="text-left">
-                <p className="font-medium text-gray-900">{area.fullLocation}</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-foreground">{area.fullLocation}</p>
+                <p className="text-sm text-muted">
                   {area.total} item{area.total !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -124,17 +124,17 @@ function AreaRow({ area, onViewDetails }: AreaRowProps) {
               {/* Status Badges */}
               <div className="hidden md:flex items-center gap-2">
                 {area.open > 0 && (
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">
                     {area.open} Open
                   </Badge>
                 )}
                 {area.inProgress > 0 && (
-                  <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                  <Badge variant="outline" className="bg-warning-light text-yellow-700 border-yellow-200">
                     {area.inProgress} In Progress
                   </Badge>
                 )}
                 {area.overdue > 0 && (
-                  <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                  <Badge variant="outline" className="bg-error-light text-error-dark border-red-200">
                     <AlertTriangle className="h-3 w-3 mr-1" />
                     {area.overdue} Overdue
                   </Badge>
@@ -143,10 +143,10 @@ function AreaRow({ area, onViewDetails }: AreaRowProps) {
 
               {/* Priority Score */}
               <div className="text-right min-w-[80px]">
-                <p className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-secondary">
                   Priority: {area.averagePriorityScore}
                 </p>
-                <div className="w-full h-1.5 bg-gray-200 rounded-full mt-1">
+                <div className="w-full h-1.5 bg-muted rounded-full mt-1">
                   <div
                     className={cn(
                       'h-full rounded-full',
@@ -155,7 +155,7 @@ function AreaRow({ area, onViewDetails }: AreaRowProps) {
                         : area.averagePriorityScore >= 55
                         ? 'bg-orange-500'
                         : area.averagePriorityScore >= 35
-                        ? 'bg-yellow-500'
+                        ? 'bg-warning'
                         : 'bg-green-500'
                     )}
                     style={{ width: `${area.averagePriorityScore}%` }}
@@ -165,7 +165,7 @@ function AreaRow({ area, onViewDetails }: AreaRowProps) {
 
               {/* Completion Rate */}
               <div className="text-right min-w-[100px]">
-                <p className="text-sm font-medium text-gray-700">{completionRate}% Complete</p>
+                <p className="text-sm font-medium text-secondary">{completionRate}% Complete</p>
                 <Progress value={completionRate} className="h-1.5 mt-1" />
               </div>
             </div>
@@ -176,28 +176,28 @@ function AreaRow({ area, onViewDetails }: AreaRowProps) {
           <div className="mt-4 pt-4 border-t">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
               <div className="bg-blue-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-blue-700">{area.open}</p>
-                <p className="text-sm text-blue-600">Open</p>
+                <p className="text-2xl font-bold text-primary-hover">{area.open}</p>
+                <p className="text-sm text-primary">Open</p>
               </div>
-              <div className="bg-yellow-50 rounded-lg p-3 text-center">
+              <div className="bg-warning-light rounded-lg p-3 text-center">
                 <p className="text-2xl font-bold text-yellow-700">{area.inProgress}</p>
-                <p className="text-sm text-yellow-600">In Progress</p>
+                <p className="text-sm text-warning">In Progress</p>
               </div>
-              <div className="bg-green-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-green-700">
+              <div className="bg-success-light rounded-lg p-3 text-center">
+                <p className="text-2xl font-bold text-success-dark">
                   {area.completed + area.verified}
                 </p>
-                <p className="text-sm text-green-600">Completed</p>
+                <p className="text-sm text-success">Completed</p>
               </div>
-              <div className="bg-red-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-red-700">{area.overdue}</p>
-                <p className="text-sm text-red-600">Overdue</p>
+              <div className="bg-error-light rounded-lg p-3 text-center">
+                <p className="text-2xl font-bold text-error-dark">{area.overdue}</p>
+                <p className="text-sm text-error">Overdue</p>
               </div>
             </div>
 
             {/* Priority Distribution */}
             <div className="mb-4">
-              <p className="text-sm font-medium text-gray-700 mb-2">Priority Distribution</p>
+              <p className="text-sm font-medium text-secondary mb-2">Priority Distribution</p>
               <div className="flex gap-2">
                 {PRIORITY_OPTIONS.map(({ value, label }) => (
                   <Badge
@@ -452,26 +452,26 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
           </style>
         </head>
         <body>
-          <h1>Punch by Area Summary Report</h1>
+          <h1 className="heading-page">Punch by Area Summary Report</h1>
           <p class="meta">
             Project: ${project?.name || 'N/A'} | Generated: ${format(new Date(), 'MMMM d, yyyy h:mm a')}
           </p>
 
           <div class="summary">
             <div class="summary-card">
-              <h3>${summary.totals.totalItems}</h3>
+              <h3 className="heading-subsection">${summary.totals.totalItems}</h3>
               <p>Total Items</p>
             </div>
             <div class="summary-card">
-              <h3>${summary.totals.totalOpen}</h3>
+              <h3 className="heading-subsection">${summary.totals.totalOpen}</h3>
               <p>Open</p>
             </div>
             <div class="summary-card">
-              <h3>${summary.totals.totalInProgress}</h3>
+              <h3 className="heading-subsection">${summary.totals.totalInProgress}</h3>
               <p>In Progress</p>
             </div>
             <div class="summary-card">
-              <h3>${summary.totals.totalCompleted + summary.totals.totalVerified}</h3>
+              <h3 className="heading-subsection">${summary.totals.totalCompleted + summary.totals.totalVerified}</h3>
               <p>Completed</p>
             </div>
             <div class="summary-card">
@@ -564,9 +564,9 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
       <div className="p-6">
         <Card>
           <CardContent className="p-12 text-center">
-            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Report</h3>
-            <p className="text-gray-600 mb-4">{error.message}</p>
+            <AlertTriangle className="h-12 w-12 text-error mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Report</h3>
+            <p className="text-secondary mb-4">{error.message}</p>
             <Button onClick={() => refetch()}>Try Again</Button>
           </CardContent>
         </Card>
@@ -583,7 +583,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
               <BarChart3 className="h-6 w-6" />
               Punch by Area Report
             </h1>
@@ -628,34 +628,34 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">{summary.totals.totalItems}</p>
-              <p className="text-sm text-gray-600">Total Items</p>
+              <p className="text-3xl font-bold text-foreground">{summary.totals.totalItems}</p>
+              <p className="text-sm text-secondary">Total Items</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-blue-600">{summary.totals.totalOpen}</p>
-              <p className="text-sm text-gray-600">Open</p>
+              <p className="text-3xl font-bold text-primary">{summary.totals.totalOpen}</p>
+              <p className="text-sm text-secondary">Open</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-yellow-600">{summary.totals.totalInProgress}</p>
-              <p className="text-sm text-gray-600">In Progress</p>
+              <p className="text-3xl font-bold text-warning">{summary.totals.totalInProgress}</p>
+              <p className="text-sm text-secondary">In Progress</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-green-600">
+              <p className="text-3xl font-bold text-success">
                 {summary.totals.totalCompleted + summary.totals.totalVerified}
               </p>
-              <p className="text-sm text-gray-600">Completed</p>
+              <p className="text-sm text-secondary">Completed</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <p className="text-3xl font-bold text-red-600">{summary.totals.totalOverdue}</p>
-              <p className="text-sm text-gray-600">Overdue</p>
+              <p className="text-3xl font-bold text-error">{summary.totals.totalOverdue}</p>
+              <p className="text-sm text-secondary">Overdue</p>
             </CardContent>
           </Card>
         </div>
@@ -667,7 +667,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
           <div className="flex flex-col md:flex-row gap-4">
             {/* Search */}
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 placeholder="Search by location, building, floor..."
                 value={searchQuery}
@@ -706,7 +706,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
           {/* Status Filters */}
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="text-sm text-gray-600 mr-2">Status:</span>
+            <span className="text-sm text-secondary mr-2">Status:</span>
             {STATUS_OPTIONS.map(({ value, label }) => (
               <Badge
                 key={value}
@@ -721,7 +721,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
           {/* Priority Filters */}
           <div className="mt-2 flex flex-wrap gap-2">
-            <span className="text-sm text-gray-600 mr-2">Priority:</span>
+            <span className="text-sm text-secondary mr-2">Priority:</span>
             {PRIORITY_OPTIONS.map(({ value, label }) => (
               <Badge
                 key={value}
@@ -751,15 +751,15 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
           {filteredAreas.length === 0 ? (
             <div className="text-center py-12">
               <MapPin className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600">No areas found matching your filters</p>
+              <p className="text-secondary">No areas found matching your filters</p>
             </div>
           ) : (
             <div>
               {Object.entries(groupedAreas).map(([groupName, areas]) => (
                 <div key={groupName} className="mb-6">
                   {groupBy !== 'area' && (
-                    <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Building2 className="h-5 w-5 text-gray-400" />
+                    <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2" className="heading-subsection">
+                      <Building2 className="h-5 w-5 text-disabled" />
                       {groupName}
                       <Badge variant="secondary">{areas.length} areas</Badge>
                     </h3>

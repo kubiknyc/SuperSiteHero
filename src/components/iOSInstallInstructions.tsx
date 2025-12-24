@@ -83,7 +83,7 @@ export function IOSInstallInstructionsPage({
       title: 'Scroll to Find "Add to Home Screen"',
       description: 'In the share sheet, scroll down through the options',
       icon: ArrowDown,
-      iconColor: 'text-gray-500',
+      iconColor: 'text-muted',
       details: 'You may need to scroll past the app suggestions to find this option.',
     },
     {
@@ -91,7 +91,7 @@ export function IOSInstallInstructionsPage({
       title: 'Tap "Add to Home Screen"',
       description: 'Look for the option with a plus icon',
       icon: AddToHomeScreenIcon,
-      iconColor: 'text-gray-700',
+      iconColor: 'text-secondary',
       details: 'This will open a dialog to customize the app name.',
     },
     {
@@ -113,7 +113,7 @@ export function IOSInstallInstructionsPage({
               <Smartphone className="h-6 w-6 text-primary dark:text-primary-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold">Install {appName} on iOS</h2>
+              <h2 className="text-lg font-semibold" className="heading-section">Install {appName} on iOS</h2>
               <p className="text-sm text-muted-foreground">Follow these steps in Safari</p>
             </div>
           </div>
@@ -129,8 +129,8 @@ export function IOSInstallInstructionsPage({
       )}
 
       {/* Safari Requirement Notice */}
-      <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-        <Info className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+      <div className="flex items-start gap-3 p-4 bg-warning-light dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
+        <Info className="h-5 w-5 text-warning dark:text-amber-400 mt-0.5 flex-shrink-0" />
         <div>
           <p className="font-medium text-amber-800 dark:text-amber-200">Safari Required</p>
           <p className="text-sm text-amber-700 dark:text-amber-300">
@@ -147,7 +147,7 @@ export function IOSInstallInstructionsPage({
           return (
             <div
               key={step.step}
-              className="flex gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg"
+              className="flex gap-4 p-4 bg-surface dark:bg-surface/50 rounded-lg"
             >
               <div className="flex-shrink-0">
                 <div className="w-8 h-8 bg-primary-100 dark:bg-primary-950 rounded-full flex items-center justify-center text-primary-700 dark:text-primary-300 font-semibold text-sm">
@@ -157,7 +157,7 @@ export function IOSInstallInstructionsPage({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <Icon className={cn('h-5 w-5', step.iconColor)} />
-                  <h3 className="font-medium">{step.title}</h3>
+                  <h3 className="font-medium" className="heading-subsection">{step.title}</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">{step.description}</p>
                 <p className="text-xs text-muted-foreground/80 italic">{step.details}</p>
@@ -174,7 +174,7 @@ export function IOSInstallInstructionsPage({
 
       {/* Benefits */}
       <div className="border-t pt-4">
-        <h3 className="font-medium mb-3">Why Install?</h3>
+        <h3 className="font-medium mb-3" className="heading-subsection">Why Install?</h3>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />

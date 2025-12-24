@@ -154,7 +154,7 @@ export function SignatureCapture({
       <CardContent className="space-y-3">
         <div
           className={`relative border-2 rounded-lg ${
-            disabled ? 'bg-gray-100 border-gray-200' : 'border-gray-300 bg-white'
+            disabled ? 'bg-muted border-border' : 'border-input bg-card'
           }`}
         >
           <canvas
@@ -170,7 +170,7 @@ export function SignatureCapture({
             onTouchEnd={stopDrawing}
           />
           {!hasSignature && !disabled && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-gray-400 text-sm">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-disabled text-sm">
               Sign here
             </div>
           )}
@@ -201,7 +201,7 @@ export function SignatureCapture({
         </div>
 
         {existingSignature && (
-          <p className="text-xs text-green-600 flex items-center gap-1">
+          <p className="text-xs text-success flex items-center gap-1">
             <Check className="h-3 w-3" />
             Signature saved
           </p>

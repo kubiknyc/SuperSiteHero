@@ -196,7 +196,7 @@ function PropertyRow({ property, unitSystem, editable, onEdit }: PropertyRowProp
                       onClick={handleCopy}
                     >
                       {copied ? (
-                        <Check className="h-3 w-3 text-green-500" />
+                        <Check className="h-3 w-3 text-success" />
                       ) : (
                         <Copy className="h-3 w-3" />
                       )}
@@ -427,7 +427,7 @@ export function BIMProperties({
           </DropdownMenu>
         </div>
 
-        <h3 className="font-semibold text-lg truncate">{element.name}</h3>
+        <h3 className="font-semibold text-lg truncate" className="heading-subsection">{element.name}</h3>
 
         {elementInfo?.category && (
           <p className="text-sm text-muted-foreground">

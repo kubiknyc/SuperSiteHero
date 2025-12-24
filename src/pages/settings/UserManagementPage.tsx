@@ -152,7 +152,7 @@ export function UserManagementPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">User Management</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">User Management</h1>
             <p className="text-muted-foreground">
               Manage team members and control access
             </p>
@@ -168,7 +168,7 @@ export function UserManagementPage() {
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-cyan-100">
-                <Users className="h-5 w-5 text-cyan-600" />
+                <Users className="h-5 w-5 text-info" />
               </div>
               <div>
                 <CardTitle>Team Members</CardTitle>
@@ -244,7 +244,7 @@ export function UserManagementPage() {
                         <TableCell>
                           <Badge
                             variant={user.is_active ? 'default' : 'secondary'}
-                            className={user.is_active ? 'bg-green-100 text-green-800' : ''}
+                            className={user.is_active ? 'bg-success-light text-green-800' : ''}
                           >
                             {user.is_active ? 'Active' : 'Inactive'}
                           </Badge>

@@ -154,7 +154,7 @@ export function MarkupFilterPanel({
       <PopoverContent className="w-80" align="start">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium text-sm">Filter Markups</h4>
+            <h4 className="font-medium text-sm" className="heading-card">Filter Markups</h4>
             <Button variant="ghost" size="sm" onClick={handleResetFilters}>
               Reset
             </Button>
@@ -163,7 +163,7 @@ export function MarkupFilterPanel({
           {/* My Markups Only Toggle */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-gray-500" />
+              <User className="h-4 w-4 text-muted" />
               <span className="text-sm font-medium">Creator</span>
             </div>
             <div className="flex items-center space-x-2">
@@ -181,7 +181,7 @@ export function MarkupFilterPanel({
           {/* Type Filters */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-gray-500" />
+              <Layers className="h-4 w-4 text-muted" />
               <span className="text-sm font-medium">Types</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
@@ -199,7 +199,7 @@ export function MarkupFilterPanel({
                     {typeIcons[type]}
                     <span>{typeLabels[type]}</span>
                     {markupCounts[type] !== undefined && (
-                      <span className="text-gray-400">({markupCounts[type]})</span>
+                      <span className="text-disabled">({markupCounts[type]})</span>
                     )}
                   </label>
                 </div>
@@ -210,7 +210,7 @@ export function MarkupFilterPanel({
           {/* Date Range */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-gray-500" />
+              <Calendar className="h-4 w-4 text-muted" />
               <span className="text-sm font-medium">Date Range</span>
             </div>
             <div className="flex flex-wrap gap-1">
@@ -238,27 +238,27 @@ export function MarkupFilterPanel({
           {creators.length > 0 && (
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Eye className="h-4 w-4 text-gray-500" />
+                <Eye className="h-4 w-4 text-muted" />
                 <span className="text-sm font-medium">Layer Visibility</span>
               </div>
               <div className="space-y-1 max-h-32 overflow-y-auto">
                 {creators.map(creator => (
                   <div
                     key={creator.id}
-                    className="flex items-center justify-between py-1 px-2 hover:bg-gray-50 rounded cursor-pointer"
+                    className="flex items-center justify-between py-1 px-2 hover:bg-surface rounded cursor-pointer"
                     onClick={() => handleToggleLayer(creator.id)}
                   >
                     <span className="text-sm">
                       {creator.name}
                       {creator.id === currentUserId && (
-                        <span className="text-gray-400 ml-1">(you)</span>
+                        <span className="text-disabled ml-1">(you)</span>
                       )}
                     </span>
                     <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                       {filter.hiddenLayers.includes(creator.id) ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
+                        <EyeOff className="h-4 w-4 text-disabled" />
                       ) : (
-                        <Eye className="h-4 w-4 text-blue-600" />
+                        <Eye className="h-4 w-4 text-primary" />
                       )}
                     </Button>
                   </div>

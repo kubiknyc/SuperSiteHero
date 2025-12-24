@@ -37,7 +37,7 @@ export function EstimateSummaryCard({ estimate }: EstimateSummaryCardProps) {
         return 'bg-gray-500'
       case 'draft':
       default:
-        return 'bg-yellow-500'
+        return 'bg-warning'
     }
   }
 
@@ -109,7 +109,7 @@ export function EstimateSummaryCard({ estimate }: EstimateSummaryCardProps) {
 
         {/* Configuration */}
         <div className="pt-4 space-y-2 border-t">
-          <h4 className="text-sm font-semibold text-muted-foreground">Configuration</h4>
+          <h4 className="text-sm font-semibold text-muted-foreground" className="heading-card">Configuration</h4>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
               <span className="text-muted-foreground">Labor Rate:</span>

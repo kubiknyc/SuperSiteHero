@@ -179,7 +179,7 @@ function TemplateCard({ template, onEdit, onDelete, onCopy, onExport }: Template
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => onDelete(template)}
-                className="text-red-600 focus:text-red-600"
+                className="text-error focus:text-error"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete
@@ -194,7 +194,7 @@ function TemplateCard({ template, onEdit, onDelete, onCopy, onExport }: Template
         )}
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-sm text-gray-600">
+        <div className="flex items-center gap-4 text-sm text-secondary">
           <div className="flex items-center gap-1">
             <Users className="h-4 w-4" />
             <span>{workforceCount}</span>
@@ -204,7 +204,7 @@ function TemplateCard({ template, onEdit, onDelete, onCopy, onExport }: Template
             <span>{equipmentCount}</span>
           </div>
           {template.usage_count > 0 && (
-            <div className="flex items-center gap-1 text-gray-400">
+            <div className="flex items-center gap-1 text-disabled">
               <TrendingUp className="h-4 w-4" />
               <span>{template.usage_count}x</span>
             </div>
@@ -229,7 +229,7 @@ function TemplateCard({ template, onEdit, onDelete, onCopy, onExport }: Template
 
         {/* Last used */}
         {template.last_used_at && (
-          <div className="flex items-center gap-1 mt-3 text-xs text-gray-400">
+          <div className="flex items-center gap-1 mt-3 text-xs text-disabled">
             <Clock className="h-3 w-3" />
             <span>Last used {new Date(template.last_used_at).toLocaleDateString()}</span>
           </div>
@@ -361,7 +361,7 @@ function EditTemplateDialog({ template, open, onOpenChange }: EditTemplateDialog
                     <button
                       type="button"
                       onClick={() => setTags(tags.filter((t) => t !== tag))}
-                      className="ml-1 hover:text-red-500"
+                      className="ml-1 hover:text-error"
                     >
                       <X className="h-3 w-3" />
                     </button>
@@ -579,7 +579,7 @@ function ImportTemplateDialog({ open, onOpenChange }: ImportTemplateDialogProps)
             </Select>
           </div>
 
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {error && <p className="text-sm text-error">{error}</p>}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
@@ -700,7 +700,7 @@ export function TemplateManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Template Library</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Template Library</h1>
           <p className="text-muted-foreground">
             Manage and share daily report templates across your organization
           </p>
@@ -723,7 +723,7 @@ export function TemplateManagementPage() {
           <div className="flex flex-wrap items-center gap-4">
             {/* Search */}
             <div className="relative flex-1 min-w-[200px]">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 placeholder="Search templates..."
                 value={searchQuery}
@@ -786,14 +786,14 @@ export function TemplateManagementPage() {
       {/* Templates Grid */}
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-disabled" />
         </div>
       ) : filteredTemplates.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-gray-600">No templates found</h3>
-            <p className="text-sm text-gray-400 mt-1">
+            <h3 className="text-lg font-medium text-secondary" className="heading-subsection">No templates found</h3>
+            <p className="text-sm text-disabled mt-1">
               {hasFilters
                 ? 'Try adjusting your filters'
                 : 'Create templates from your daily reports to see them here'}
@@ -843,7 +843,7 @@ export function TemplateManagementPage() {
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center py-12">
                     <FileText className="h-12 w-12 text-gray-300 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-600">No {scope} templates</h3>
+                    <h3 className="text-lg font-medium text-secondary" className="heading-subsection">No {scope} templates</h3>
                   </CardContent>
                 </Card>
               ) : (
@@ -909,7 +909,7 @@ export function TemplateManagementPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
               disabled={deleteTemplateMutation.isPending}
             >
               {deleteTemplateMutation.isPending ? (

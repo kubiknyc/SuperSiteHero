@@ -95,8 +95,8 @@ export function LienWaiversPage() {
       <div
         key={waiver.id}
         className={cn(
-          'py-4 px-4 hover:bg-gray-50 cursor-pointer rounded-lg transition-colors border-b last:border-b-0',
-          isOverdue && 'bg-red-50 hover:bg-red-100'
+          'py-4 px-4 hover:bg-surface cursor-pointer rounded-lg transition-colors border-b last:border-b-0',
+          isOverdue && 'bg-error-light hover:bg-error-light'
         )}
         onClick={() => navigate(`/lien-waivers/${waiver.id}`)}
       >
@@ -107,7 +107,7 @@ export function LienWaiversPage() {
               <LienWaiverStatusBadge status={waiver.status} />
               <LienWaiverTypeBadge type={waiver.waiver_type} />
               {isOverdue && (
-                <Badge className="bg-red-100 text-red-700">
+                <Badge className="bg-error-light text-error-dark">
                   <AlertTriangle className="h-3 w-3 mr-1" />
                   Overdue
                 </Badge>
@@ -117,7 +117,7 @@ export function LienWaiversPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               {/* Vendor/Sub */}
               <div>
-                <span className="text-gray-500">Vendor:</span>
+                <span className="text-muted">Vendor:</span>
                 <p className="font-medium">
                   {waiver.subcontractor?.company_name || waiver.vendor_name || 'N/A'}
                 </p>
@@ -125,15 +125,15 @@ export function LienWaiversPage() {
 
               {/* Amount */}
               <div>
-                <span className="text-gray-500">Amount:</span>
-                <p className="font-medium text-green-700">
+                <span className="text-muted">Amount:</span>
+                <p className="font-medium text-success-dark">
                   {formatWaiverAmount(waiver.payment_amount)}
                 </p>
               </div>
 
               {/* Through Date */}
               <div>
-                <span className="text-gray-500">Through:</span>
+                <span className="text-muted">Through:</span>
                 <p className="font-medium">
                   {format(new Date(waiver.through_date), 'MMM d, yyyy')}
                 </p>
@@ -141,13 +141,13 @@ export function LienWaiversPage() {
 
               {/* Due Date */}
               <div>
-                <span className="text-gray-500">Due:</span>
-                <p className={cn('font-medium', isOverdue && 'text-red-600')}>
+                <span className="text-muted">Due:</span>
+                <p className={cn('font-medium', isOverdue && 'text-error')}>
                   {waiver.due_date ? (
                     <>
                       {format(new Date(waiver.due_date), 'MMM d, yyyy')}
                       {daysUntilDue !== null && !isOverdue && daysUntilDue <= 7 && (
-                        <span className="text-amber-600 ml-1">({daysUntilDue}d)</span>
+                        <span className="text-warning ml-1">({daysUntilDue}d)</span>
                       )}
                     </>
                   ) : (
@@ -159,7 +159,7 @@ export function LienWaiversPage() {
 
             {/* Status-specific info */}
             {waiver.status === 'sent' && waiver.sent_at && (
-              <div className="mt-2 text-sm text-blue-600 flex items-center gap-1">
+              <div className="mt-2 text-sm text-primary flex items-center gap-1">
                 <Send className="h-4 w-4" />
                 Sent: {format(new Date(waiver.sent_at), 'MMM d, yyyy')}
                 {waiver.sent_to_email && ` to ${waiver.sent_to_email}`}
@@ -167,20 +167,20 @@ export function LienWaiversPage() {
             )}
 
             {waiver.status === 'approved' && waiver.approved_at && (
-              <div className="mt-2 text-sm text-green-600 flex items-center gap-1">
+              <div className="mt-2 text-sm text-success flex items-center gap-1">
                 <CheckCircle className="h-4 w-4" />
                 Approved: {format(new Date(waiver.approved_at), 'MMM d, yyyy')}
               </div>
             )}
 
             {waiver.status === 'rejected' && waiver.rejection_reason && (
-              <div className="mt-2 text-sm text-red-600">
+              <div className="mt-2 text-sm text-error">
                 Rejection: {waiver.rejection_reason}
               </div>
             )}
           </div>
 
-          <ChevronRight className="h-5 w-5 text-gray-400 mt-2" />
+          <ChevronRight className="h-5 w-5 text-disabled mt-2" />
         </div>
       </div>
     );
@@ -192,11 +192,11 @@ export function LienWaiversPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <FileCheck className="h-7 w-7 text-blue-600" />
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <FileCheck className="h-7 w-7 text-primary" />
               Lien Waivers
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               Manage lien waiver requests and compliance
             </p>
           </div>
@@ -254,7 +254,7 @@ export function LienWaiversPage() {
               <CardContent className="space-y-2">
                 {LIEN_WAIVER_STATUSES.slice(0, 6).map((status) => (
                   <div key={status.value} className="flex justify-between text-sm">
-                    <span className="text-gray-600">{status.label}</span>
+                    <span className="text-secondary">{status.label}</span>
                     <Badge variant="outline">{statusCounts[status.value] || 0}</Badge>
                   </div>
                 ))}
@@ -271,7 +271,7 @@ export function LienWaiversPage() {
                 {/* Search */}
                 <div className="flex-1">
                   <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
                     <Input
                       type="text"
                       placeholder="Search waivers..."
@@ -321,8 +321,8 @@ export function LienWaiversPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Project</h3>
-              <p className="text-gray-500">
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">Select a Project</h3>
+              <p className="text-muted">
                 Choose a project above to view and manage lien waivers
               </p>
             </CardContent>
@@ -330,24 +330,24 @@ export function LienWaiversPage() {
         ) : waiversLoading ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-500">Loading lien waivers...</p>
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+              <p className="text-muted">Loading lien waivers...</p>
             </CardContent>
           </Card>
         ) : error ? (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
-              <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2">Error Loading Waivers</h3>
-              <p className="text-red-600">{error.message}</p>
+              <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Waivers</h3>
+              <p className="text-error">{error.message}</p>
             </CardContent>
           </Card>
         ) : filteredWaivers.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <FileCheck className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Lien Waivers</h3>
-              <p className="text-gray-500 mb-4">
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No Lien Waivers</h3>
+              <p className="text-muted mb-4">
                 {searchTerm || statusFilter !== 'all' || typeFilter !== 'all'
                   ? 'No waivers match your filters'
                   : 'Create your first waiver request to start tracking'}

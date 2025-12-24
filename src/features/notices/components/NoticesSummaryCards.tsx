@@ -41,17 +41,17 @@ function StatCard({
     <Card
       className={cn(
         'cursor-pointer hover:shadow-md transition-shadow',
-        highlight && 'border-red-200 bg-red-50'
+        highlight && 'border-red-200 bg-error-light'
       )}
       onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500">{title}</p>
+            <p className="text-sm text-muted">{title}</p>
             <p className={cn(
               'text-2xl font-bold',
-              highlight ? 'text-red-600' : 'text-gray-900'
+              highlight ? 'text-error' : 'text-foreground'
             )}>
               {value}
             </p>
@@ -117,7 +117,7 @@ export function NoticesSummaryCards({
         title="Awaiting Response"
         value={safeStats.awaitingResponse}
         icon={Clock}
-        iconColor="bg-yellow-500"
+        iconColor="bg-warning"
       />
       <StatCard
         title="Critical"

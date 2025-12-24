@@ -85,8 +85,8 @@ export function RecordResponseDialog({
         </DialogHeader>
 
         {/* Notice reference */}
-        <div className="bg-gray-50 rounded-lg p-3 text-sm">
-          <p className="text-gray-500">Recording response for:</p>
+        <div className="bg-surface rounded-lg p-3 text-sm">
+          <p className="text-muted">Recording response for:</p>
           <p className="font-medium">
             {notice.reference_number && `${notice.reference_number} - `}
             {notice.subject}

@@ -91,8 +91,8 @@ export function CreateInspectionPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
-            <p className="text-gray-500 mt-4">Loading inspection...</p>
+            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+            <p className="text-muted mt-4">Loading inspection...</p>
           </div>
         </div>
       </AppLayout>
@@ -108,12 +108,12 @@ export function CreateInspectionPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <div className="text-center py-12 bg-white rounded-lg border">
+          <div className="text-center py-12 bg-card rounded-lg border">
             <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-gray-900 mt-4">
+            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">
               Project Required
             </h3>
-            <p className="text-gray-500 mt-2">
+            <p className="text-muted mt-2">
               Please select a project before scheduling an inspection.
             </p>
             <Link to="/inspections" className="mt-4 inline-block">
@@ -135,15 +135,15 @@ export function CreateInspectionPage() {
         <div className="flex items-center gap-4 mb-6">
           <button
             onClick={handleCancel}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-muted rounded-lg transition-colors"
           >
-            <ArrowLeft className="h-5 w-5 text-gray-500" />
+            <ArrowLeft className="h-5 w-5 text-muted" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">
               {isEditMode ? 'Edit Inspection' : 'Schedule New Inspection'}
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-muted mt-1">
               {isEditMode
                 ? 'Update the inspection details below'
                 : 'Fill in the details to schedule an inspection'}

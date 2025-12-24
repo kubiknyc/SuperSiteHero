@@ -19,22 +19,22 @@ const STATUS_CONFIG: Record<
 > = {
   pending: {
     label: 'Pending',
-    color: 'bg-gray-100 text-gray-700 border-gray-200',
+    color: 'bg-muted text-secondary border-border',
     icon: '⏳',
   },
   processing: {
     label: 'Processing',
-    color: 'bg-blue-100 text-blue-700 border-blue-200',
+    color: 'bg-info-light text-primary-hover border-blue-200',
     icon: '🔄',
   },
   completed: {
     label: 'Completed',
-    color: 'bg-green-100 text-green-700 border-green-200',
+    color: 'bg-success-light text-success-dark border-green-200',
     icon: '✅',
   },
   failed: {
     label: 'Failed',
-    color: 'bg-red-100 text-red-700 border-red-200',
+    color: 'bg-error-light text-error-dark border-red-200',
     icon: '❌',
   },
   skipped: {
@@ -152,13 +152,13 @@ function DetailedStatus({
       {/* Progress bar (if processing) */}
       {isProcessing && (
         <div className="space-y-1">
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-muted rounded-full h-2">
             <div
-              className="bg-blue-600 h-2 rounded-full transition-all animate-pulse"
+              className="bg-primary h-2 rounded-full transition-all animate-pulse"
               style={{ width: '60%' }}
             />
           </div>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted">
             Processing in progress...
           </p>
         </div>
@@ -190,7 +190,7 @@ function DetailedStatus({
 
       {/* Timestamps */}
       {status.started_at && (
-        <div className="text-xs text-gray-400 space-y-1 pt-2 border-t">
+        <div className="text-xs text-disabled space-y-1 pt-2 border-t">
           <div>Started: {new Date(status.started_at).toLocaleString()}</div>
           {status.completed_at && (
             <div>Completed: {new Date(status.completed_at).toLocaleString()}</div>
@@ -220,13 +220,13 @@ function ProcessStatusItem({
     <div
       className={cn(
         'flex items-center gap-2 p-2 rounded',
-        effectiveStatus === 'failed' ? 'bg-red-50' : 'bg-gray-50'
+        effectiveStatus === 'failed' ? 'bg-error-light' : 'bg-surface'
       )}
       title={error || undefined}
     >
       <span>{config.icon}</span>
       <span className="font-medium">{label}</span>
-      {error && <span className="text-red-500 text-[10px]">!</span>}
+      {error && <span className="text-error text-[10px]">!</span>}
     </div>
   )
 }
@@ -244,11 +244,11 @@ function LoadingIndicator({
   if (variant === 'detailed') {
     return (
       <div className={cn('animate-pulse space-y-3', className)}>
-        <div className="h-6 w-32 bg-gray-200 rounded" />
-        <div className="h-2 w-full bg-gray-200 rounded" />
+        <div className="h-6 w-32 bg-muted rounded" />
+        <div className="h-2 w-full bg-muted rounded" />
         <div className="grid grid-cols-2 gap-2">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-8 bg-gray-100 rounded" />
+            <div key={i} className="h-8 bg-muted rounded" />
           ))}
         </div>
       </div>
@@ -256,7 +256,7 @@ function LoadingIndicator({
   }
 
   return (
-    <Badge variant="outline" className={cn('bg-gray-100 animate-pulse', className)}>
+    <Badge variant="outline" className={cn('bg-muted animate-pulse', className)}>
       Loading...
     </Badge>
   )
@@ -274,7 +274,7 @@ function EmptyStatusIndicator({
 }) {
   if (variant === 'detailed') {
     return (
-      <div className={cn('text-center text-gray-500 py-4', className)}>
+      <div className={cn('text-center text-muted py-4', className)}>
         <span className="text-2xl">🤖</span>
         <p className="mt-2 text-sm">No AI processing status</p>
         <p className="text-xs">Document has not been queued for processing</p>
@@ -283,7 +283,7 @@ function EmptyStatusIndicator({
   }
 
   return (
-    <Badge variant="outline" className={cn('bg-gray-100 text-gray-500', className)}>
+    <Badge variant="outline" className={cn('bg-muted text-muted', className)}>
       Not processed
     </Badge>
   )

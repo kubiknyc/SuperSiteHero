@@ -41,19 +41,19 @@ const resultOptions: {
     value: 'pass',
     label: 'Pass',
     icon: CheckCircle,
-    color: 'text-green-600 border-green-500 bg-green-50',
+    color: 'text-success border-green-500 bg-success-light',
   },
   {
     value: 'fail',
     label: 'Fail',
     icon: XCircle,
-    color: 'text-red-600 border-red-500 bg-red-50',
+    color: 'text-error border-red-500 bg-error-light',
   },
   {
     value: 'conditional',
     label: 'Conditional',
     icon: AlertCircle,
-    color: 'text-yellow-600 border-yellow-500 bg-yellow-50',
+    color: 'text-warning border-warning bg-warning-light',
   },
 ]
 
@@ -152,7 +152,7 @@ export function InspectionResultDialog({
           {/* Result Selection */}
           <div className="space-y-3">
             <Label>
-              Result <span className="text-red-500">*</span>
+              Result <span className="text-error">*</span>
             </Label>
             <div className="grid grid-cols-3 gap-3">
               {resultOptions.map((option) => {
@@ -165,19 +165,19 @@ export function InspectionResultDialog({
                     onClick={() => setResult(option.value)}
                     className={cn(
                       'flex flex-col items-center justify-center p-4 rounded-lg border-2 transition-all',
-                      isSelected ? option.color : 'border-gray-200 hover:border-gray-300'
+                      isSelected ? option.color : 'border-border hover:border-input'
                     )}
                   >
                     <Icon
                       className={cn(
                         'h-8 w-8 mb-2',
-                        isSelected ? '' : 'text-gray-400'
+                        isSelected ? '' : 'text-disabled'
                       )}
                     />
                     <span
                       className={cn(
                         'font-medium',
-                        isSelected ? '' : 'text-gray-600'
+                        isSelected ? '' : 'text-secondary'
                       )}
                     >
                       {option.label}
@@ -187,14 +187,14 @@ export function InspectionResultDialog({
               })}
             </div>
             {errors.result && (
-              <p className="text-sm text-red-500">{errors.result}</p>
+              <p className="text-sm text-error">{errors.result}</p>
             )}
           </div>
 
           {/* Result Date */}
           <div className="space-y-2">
             <Label htmlFor="resultDate">
-              Result Date <span className="text-red-500">*</span>
+              Result Date <span className="text-error">*</span>
             </Label>
             <Input
               id="resultDate"
@@ -204,14 +204,14 @@ export function InspectionResultDialog({
               className={cn(errors.resultDate && 'border-red-500')}
             />
             {errors.resultDate && (
-              <p className="text-sm text-red-500">{errors.resultDate}</p>
+              <p className="text-sm text-error">{errors.resultDate}</p>
             )}
           </div>
 
           {/* Inspector Notes */}
           <div className="space-y-2">
             <Label htmlFor="inspectorNotes">
-              Inspector Notes <span className="text-red-500">*</span>
+              Inspector Notes <span className="text-error">*</span>
             </Label>
             <Textarea
               id="inspectorNotes"
@@ -222,7 +222,7 @@ export function InspectionResultDialog({
               className={cn(errors.inspectorNotes && 'border-red-500')}
             />
             {errors.inspectorNotes && (
-              <p className="text-sm text-red-500">{errors.inspectorNotes}</p>
+              <p className="text-sm text-error">{errors.inspectorNotes}</p>
             )}
           </div>
 
@@ -233,7 +233,7 @@ export function InspectionResultDialog({
               <div className="space-y-2">
                 <Label htmlFor="failureReasons">
                   Failure Reasons{' '}
-                  {result === 'fail' && <span className="text-red-500">*</span>}
+                  {result === 'fail' && <span className="text-error">*</span>}
                 </Label>
                 <Textarea
                   id="failureReasons"
@@ -244,7 +244,7 @@ export function InspectionResultDialog({
                   className={cn(errors.failureReasons && 'border-red-500')}
                 />
                 {errors.failureReasons && (
-                  <p className="text-sm text-red-500">{errors.failureReasons}</p>
+                  <p className="text-sm text-error">{errors.failureReasons}</p>
                 )}
               </div>
 
@@ -252,7 +252,7 @@ export function InspectionResultDialog({
               <div className="space-y-2">
                 <Label htmlFor="correctiveActions">
                   Corrective Actions Required{' '}
-                  {result === 'fail' && <span className="text-red-500">*</span>}
+                  {result === 'fail' && <span className="text-error">*</span>}
                 </Label>
                 <Textarea
                   id="correctiveActions"
@@ -263,7 +263,7 @@ export function InspectionResultDialog({
                   className={cn(errors.correctiveActions && 'border-red-500')}
                 />
                 {errors.correctiveActions && (
-                  <p className="text-sm text-red-500">{errors.correctiveActions}</p>
+                  <p className="text-sm text-error">{errors.correctiveActions}</p>
                 )}
               </div>
 
@@ -279,7 +279,7 @@ export function InspectionResultDialog({
                     value={reinspectionDate}
                     onChange={(e) => setReinspectionDate(e.target.value)}
                   />
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted">
                     Schedule a reinspection date if known
                   </p>
                 </div>

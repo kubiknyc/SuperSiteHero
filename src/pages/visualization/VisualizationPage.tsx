@@ -112,15 +112,15 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
     switch (format) {
       case 'gltf':
       case 'glb':
-        return 'bg-green-100 text-green-800';
+        return 'bg-success-light text-green-800';
       case 'ifc':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-info-light text-blue-800';
       case 'obj':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-light text-yellow-800';
       case 'fbx':
         return 'bg-purple-100 text-purple-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-foreground';
     }
   };
 
@@ -130,7 +130,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
         className="flex items-center gap-4 p-3 border rounded-lg hover:bg-accent cursor-pointer group"
         onClick={onView}
       >
-        <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+        <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center shrink-0">
           {model.thumbnailUrl ? (
             <img
               src={model.thumbnailUrl}
@@ -138,12 +138,12 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
               className="w-full h-full object-cover rounded-lg"
             />
           ) : (
-            <Box className="h-8 w-8 text-gray-400" />
+            <Box className="h-8 w-8 text-disabled" />
           )}
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium truncate">{model.name}</h3>
+          <h3 className="font-medium truncate" className="heading-subsection">{model.name}</h3>
           <p className="text-sm text-muted-foreground truncate">
             {model.description || 'No description'}
           </p>
@@ -193,7 +193,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
               )}
               <DropdownMenuSeparator />
               {onDelete && (
-                <DropdownMenuItem onClick={onDelete} className="text-red-600">
+                <DropdownMenuItem onClick={onDelete} className="text-error">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -208,7 +208,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
   // Gallery view
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group" onClick={onView}>
-      <div className="aspect-video bg-gray-100 relative">
+      <div className="aspect-video bg-muted relative">
         {model.thumbnailUrl ? (
           <img
             src={model.thumbnailUrl}
@@ -217,7 +217,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Box className="h-12 w-12 text-gray-400" />
+            <Box className="h-12 w-12 text-disabled" />
           </div>
         )}
 
@@ -240,7 +240,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
       </div>
 
       <CardContent className="p-4">
-        <h3 className="font-medium truncate">{model.name}</h3>
+        <h3 className="font-medium truncate" className="heading-subsection">{model.name}</h3>
         <p className="text-sm text-muted-foreground truncate mt-1">
           {model.description || 'No description'}
         </p>
@@ -297,7 +297,7 @@ function EmptyState({ type, onUpload }: EmptyStateProps) {
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         <Icon className="h-8 w-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium mb-2">{title}</h3>
+      <h3 className="text-lg font-medium mb-2" className="heading-subsection">{title}</h3>
       <p className="text-muted-foreground max-w-md mb-6">{description}</p>
       <Button onClick={onUpload}>
         <Plus className="h-4 w-4 mr-2" />
@@ -427,7 +427,7 @@ export function VisualizationPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold">Site Visualization</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Site Visualization</h1>
           <p className="text-muted-foreground">
             3D models, BIM data, and immersive VR/AR experiences
           </p>
@@ -452,8 +452,8 @@ export function VisualizationPage() {
           onClick={() => handleTabChange('3d-models')}
         >
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-green-100">
-              <Box className="h-5 w-5 text-green-600" />
+            <div className="p-2 rounded-lg bg-success-light">
+              <Box className="h-5 w-5 text-success" />
             </div>
             <div>
               <p className="font-medium">3D Models</p>
@@ -467,8 +467,8 @@ export function VisualizationPage() {
           onClick={() => handleTabChange('bim')}
         >
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-100">
-              <Building2 className="h-5 w-5 text-blue-600" />
+            <div className="p-2 rounded-lg bg-info-light">
+              <Building2 className="h-5 w-5 text-primary" />
             </div>
             <div>
               <p className="font-medium">BIM Models</p>
@@ -652,7 +652,7 @@ export function VisualizationPage() {
                     <Glasses className="h-16 w-16 text-white/80" />
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-medium">{tour.name}</h3>
+                    <h3 className="font-medium" className="heading-subsection">{tour.name}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {tour.description || 'No description'}
                     </p>
@@ -686,7 +686,7 @@ export function VisualizationPage() {
                     // setSelectedPhoto(photo);
                   }}
                 >
-                  <div className="aspect-video bg-gray-100 relative">
+                  <div className="aspect-video bg-muted relative">
                     {photo.thumbnailUrl ? (
                       <img
                         src={photo.thumbnailUrl}
@@ -695,7 +695,7 @@ export function VisualizationPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Camera className="h-12 w-12 text-gray-400" />
+                        <Camera className="h-12 w-12 text-disabled" />
                       </div>
                     )}
                     <Badge className="absolute top-2 left-2 text-xs bg-orange-500">
@@ -703,7 +703,7 @@ export function VisualizationPage() {
                     </Badge>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-medium truncate">{photo.name}</h3>
+                    <h3 className="font-medium truncate" className="heading-subsection">{photo.name}</h3>
                     <div className="flex items-center gap-2 mt-2">
                       {photo.tags?.slice(0, 2).map((tag) => (
                         <Badge key={tag} variant="outline" className="text-xs">
@@ -809,8 +809,8 @@ export function VisualizationPage() {
           <div className="grid grid-cols-2 gap-4 py-4">
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
-                <Box className="h-10 w-10 text-green-600 mb-3" />
-                <h3 className="font-medium">3D Model</h3>
+                <Box className="h-10 w-10 text-success mb-3" />
+                <h3 className="font-medium" className="heading-subsection">3D Model</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   GLB, GLTF, OBJ, FBX
                 </p>
@@ -819,8 +819,8 @@ export function VisualizationPage() {
 
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
-                <Building2 className="h-10 w-10 text-blue-600 mb-3" />
-                <h3 className="font-medium">BIM/IFC File</h3>
+                <Building2 className="h-10 w-10 text-primary mb-3" />
+                <h3 className="font-medium" className="heading-subsection">BIM/IFC File</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   IFC, IFC4
                 </p>
@@ -830,7 +830,7 @@ export function VisualizationPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <Camera className="h-10 w-10 text-orange-600 mb-3" />
-                <h3 className="font-medium">360 Photo</h3>
+                <h3 className="font-medium" className="heading-subsection">360 Photo</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Equirectangular JPG, PNG
                 </p>
@@ -840,7 +840,7 @@ export function VisualizationPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <FolderOpen className="h-10 w-10 text-purple-600 mb-3" />
-                <h3 className="font-medium">Batch Upload</h3>
+                <h3 className="font-medium" className="heading-subsection">Batch Upload</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Multiple files at once
                 </p>

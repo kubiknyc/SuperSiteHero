@@ -150,7 +150,7 @@ export function CreateRFIDialog({
           {/* Title */}
           <div className="space-y-2">
             <Label htmlFor="title" className="flex items-center gap-1">
-              RFI Title <span className="text-red-500">*</span>
+              RFI Title <span className="text-error">*</span>
             </Label>
             <Input
               id="title"
@@ -161,7 +161,7 @@ export function CreateRFIDialog({
               disabled={createRFI.isPending}
               maxLength={255}
             />
-            <p className="text-xs text-gray-500">Be specific: "Foundation detail at grid B-5" vs "Foundation question"</p>
+            <p className="text-xs text-muted">Be specific: "Foundation detail at grid B-5" vs "Foundation question"</p>
           </div>
 
           {/* Priority and Discipline Row */}
@@ -214,7 +214,7 @@ export function CreateRFIDialog({
               disabled={createRFI.isPending}
               min={format(new Date(), 'yyyy-MM-dd')}
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted">
               Default is 7 days. Check your contract for required response times.
             </p>
           </div>
@@ -246,7 +246,7 @@ export function CreateRFIDialog({
           </div>
 
           {/* Impact Flags */}
-          <div className="space-y-3 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="space-y-3 p-4 bg-warning-light border border-amber-200 rounded-lg">
             <div className="flex items-center gap-2 text-amber-800">
               <AlertTriangle className="h-4 w-4" />
               <span className="font-medium text-sm">Impact Assessment</span>
@@ -259,8 +259,8 @@ export function CreateRFIDialog({
                 className={cn(
                   'flex items-center gap-2 p-3 rounded-md border cursor-pointer transition-colors',
                   hasCostImpact
-                    ? 'bg-red-50 border-red-300'
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    ? 'bg-error-light border-red-300'
+                    : 'bg-card border-border hover:border-input'
                 )}
               >
                 <Checkbox
@@ -268,8 +268,8 @@ export function CreateRFIDialog({
                   onCheckedChange={(checked) => setHasCostImpact(checked === true)}
                   disabled={createRFI.isPending}
                 />
-                <DollarSign className={cn('h-4 w-4', hasCostImpact ? 'text-red-600' : 'text-gray-400')} />
-                <span className={cn('text-sm', hasCostImpact ? 'text-red-700 font-medium' : 'text-gray-700')}>
+                <DollarSign className={cn('h-4 w-4', hasCostImpact ? 'text-error' : 'text-disabled')} />
+                <span className={cn('text-sm', hasCostImpact ? 'text-error-dark font-medium' : 'text-secondary')}>
                   Potential Cost Impact
                 </span>
               </label>
@@ -279,7 +279,7 @@ export function CreateRFIDialog({
                   'flex items-center gap-2 p-3 rounded-md border cursor-pointer transition-colors',
                   hasScheduleImpact
                     ? 'bg-orange-50 border-orange-300'
-                    : 'bg-white border-gray-200 hover:border-gray-300'
+                    : 'bg-card border-border hover:border-input'
                 )}
               >
                 <Checkbox
@@ -287,8 +287,8 @@ export function CreateRFIDialog({
                   onCheckedChange={(checked) => setHasScheduleImpact(checked === true)}
                   disabled={createRFI.isPending}
                 />
-                <Clock className={cn('h-4 w-4', hasScheduleImpact ? 'text-orange-600' : 'text-gray-400')} />
-                <span className={cn('text-sm', hasScheduleImpact ? 'text-orange-700 font-medium' : 'text-gray-700')}>
+                <Clock className={cn('h-4 w-4', hasScheduleImpact ? 'text-orange-600' : 'text-disabled')} />
+                <span className={cn('text-sm', hasScheduleImpact ? 'text-orange-700 font-medium' : 'text-secondary')}>
                   Potential Schedule Impact
                 </span>
               </label>

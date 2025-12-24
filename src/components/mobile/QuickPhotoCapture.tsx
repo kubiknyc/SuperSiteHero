@@ -400,11 +400,11 @@ export function QuickPhotoCapture({
           disabled={isCapturing}
           className={cn(
             'h-16 w-16 rounded-full shadow-lg',
-            'bg-blue-600 hover:bg-blue-700 text-white',
+            'bg-primary hover:bg-primary-hover text-white',
             'flex items-center justify-center',
             'transition-all duration-200',
             isCapturing && 'animate-pulse',
-            showSuccess && 'bg-green-600 hover:bg-green-600'
+            showSuccess && 'bg-success hover:bg-success'
           )}
           aria-label="Take photo"
         >
@@ -422,7 +422,7 @@ export function QuickPhotoCapture({
           <span
             className={cn(
               'absolute -top-2 -right-2 px-2 py-0.5 text-xs font-medium',
-              'bg-gray-800 text-white rounded-full',
+              'bg-surface text-white rounded-full',
               'shadow-sm'
             )}
           >

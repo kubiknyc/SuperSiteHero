@@ -33,7 +33,7 @@ export function VendorPerformanceCard({ vendor, onClick }: VendorPerformanceCard
                 <Building2 className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h4 className="font-semibold text-lg">{vendor.vendor_name}</h4>
+                <h4 className="font-semibold text-lg" className="heading-card">{vendor.vendor_name}</h4>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="outline" className={`text-${reliabilityConfig?.color}-700 bg-${reliabilityConfig?.color}-50 border-${reliabilityConfig?.color}-200`}>
                     {reliabilityConfig?.label} Reliability
@@ -117,7 +117,7 @@ export function VendorPerformanceCard({ vendor, onClick }: VendorPerformanceCard
           {/* Quality Score */}
           {vendor.quality_score !== null && (
             <div className="flex items-center gap-2 pt-2 border-t">
-              <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+              <Star className="h-4 w-4 text-warning fill-yellow-500" />
               <span className="text-sm">
                 Quality Score: <span className="font-semibold">{vendor.quality_score.toFixed(1)}/100</span>
               </span>

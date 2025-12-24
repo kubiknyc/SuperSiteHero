@@ -95,7 +95,7 @@ export function MasterDetailLayout({
       return (
         <div className={cn('flex flex-col h-full', className)}>
           {/* Detail Header */}
-          <div className="flex items-center gap-3 p-4 border-b bg-white sticky top-0 z-10">
+          <div className="flex items-center gap-3 p-4 border-b bg-card sticky top-0 z-10">
             <Button
               variant="ghost"
               size="sm"
@@ -106,7 +106,7 @@ export function MasterDetailLayout({
               <span className="sr-only">Back to list</span>
             </Button>
             {detailTitle && (
-              <h2 className="font-semibold text-lg flex-1 truncate">{detailTitle}</h2>
+              <h2 className="font-semibold text-lg flex-1 truncate" className="heading-section">{detailTitle}</h2>
             )}
             {detailActions}
           </div>
@@ -122,8 +122,8 @@ export function MasterDetailLayout({
       <div className={cn('flex flex-col h-full', className)}>
         {/* Master Header */}
         {masterTitle && (
-          <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0 z-10">
-            <h2 className="font-semibold text-lg">{masterTitle}</h2>
+          <div className="flex items-center justify-between p-4 border-b bg-card sticky top-0 z-10">
+            <h2 className="font-semibold text-lg" className="heading-section">{masterTitle}</h2>
             {masterActions}
           </div>
         )}
@@ -141,13 +141,13 @@ export function MasterDetailLayout({
       <div className={cn('relative flex h-full', className)}>
         {/* Master Panel */}
         <div className={cn(
-          'flex flex-col h-full bg-white border-r transition-all duration-300',
+          'flex flex-col h-full bg-card border-r transition-all duration-300',
           hasSelection && !isCollapsed ? 'w-[280px]' : 'flex-1'
         )}>
           {/* Master Header */}
           {masterTitle && (
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="font-semibold text-lg">{masterTitle}</h2>
+              <h2 className="font-semibold text-lg" className="heading-section">{masterTitle}</h2>
               <div className="flex items-center gap-2">
                 {masterActions}
                 {collapsible && hasSelection && (
@@ -172,13 +172,13 @@ export function MasterDetailLayout({
         {/* Detail Panel - Slide in from right on tablet portrait */}
         {hasSelection && !isCollapsed && (
           <div className={cn(
-            'flex flex-col h-full bg-white flex-1 min-w-detail-panel',
+            'flex flex-col h-full bg-card flex-1 min-w-detail-panel',
             'animate-in slide-in-from-right-4 duration-300'
           )}>
             {/* Detail Header */}
             <div className="flex items-center justify-between p-4 border-b">
               {detailTitle && (
-                <h2 className="font-semibold text-lg flex-1 truncate">{detailTitle}</h2>
+                <h2 className="font-semibold text-lg flex-1 truncate" className="heading-section">{detailTitle}</h2>
               )}
               <div className="flex items-center gap-2">
                 {detailActions}
@@ -207,14 +207,14 @@ export function MasterDetailLayout({
     <div className={cn('flex h-full', className)}>
       {/* Master Panel */}
       <div className={cn(
-        'flex flex-col h-full bg-white border-r transition-all duration-300',
+        'flex flex-col h-full bg-card border-r transition-all duration-300',
         isCollapsed ? 'w-0 overflow-hidden' : masterWidth,
         'flex-shrink-0'
       )}>
         {/* Master Header */}
         {masterTitle && !isCollapsed && (
           <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="font-semibold text-lg">{masterTitle}</h2>
+            <h2 className="font-semibold text-lg" className="heading-section">{masterTitle}</h2>
             <div className="flex items-center gap-2">
               {masterActions}
               {collapsible && (
@@ -251,12 +251,12 @@ export function MasterDetailLayout({
       )}
 
       {/* Detail Panel */}
-      <div className="flex flex-col flex-1 h-full bg-gray-50">
+      <div className="flex flex-col flex-1 h-full bg-surface">
         {/* Detail Header */}
         {(detailTitle || detailActions) && (
-          <div className="flex items-center justify-between p-4 border-b bg-white">
+          <div className="flex items-center justify-between p-4 border-b bg-card">
             {detailTitle && (
-              <h2 className="font-semibold text-lg">{detailTitle}</h2>
+              <h2 className="font-semibold text-lg" className="heading-section">{detailTitle}</h2>
             )}
             {detailActions}
           </div>
@@ -265,7 +265,7 @@ export function MasterDetailLayout({
         <div className="flex-1 overflow-auto">
           {hasSelection ? detailPanel : (
             emptyDetailPlaceholder || (
-              <div className="flex items-center justify-center h-full text-gray-500">
+              <div className="flex items-center justify-center h-full text-muted">
                 <p>Select an item to view details</p>
               </div>
             )
@@ -396,7 +396,7 @@ export function CollapsibleSidebarLayout({
   }, [isMobileOrPortrait, isOpen, showOverlay, onOpenChange]);
 
   const sidebarClasses = cn(
-    'flex-shrink-0 bg-white transition-all duration-300',
+    'flex-shrink-0 bg-card transition-all duration-300',
     position === 'left' ? 'border-r' : 'border-l',
     isOpen ? sidebarWidth : 'w-0 overflow-hidden',
     isMobileOrPortrait && isOpen && 'fixed inset-y-0 z-40',
@@ -552,7 +552,7 @@ export function SplitViewLayout({
       {resizable && !isMobile && (
         <div
           className={cn(
-            'flex-shrink-0 bg-gray-200 hover:bg-blue-400 transition-colors',
+            'flex-shrink-0 bg-muted hover:bg-blue-400 transition-colors',
             effectiveDirection === 'horizontal' ? 'w-1 cursor-col-resize' : 'h-1 cursor-row-resize',
             isDragging && 'bg-blue-500'
           )}

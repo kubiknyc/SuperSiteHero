@@ -56,7 +56,7 @@ export function DocuSignDashboard() {
     return (
       <Card>
         <CardContent className="py-8">
-          <div className="text-center text-gray-500">
+          <div className="text-center text-muted">
             <FileSignature className="h-12 w-12 mx-auto mb-4 text-gray-300" />
             <p className="font-medium">DocuSign Not Connected</p>
             <p className="text-sm mt-1">
@@ -72,7 +72,7 @@ export function DocuSignDashboard() {
     return (
       <Card>
         <CardContent className="py-8">
-          <div className="flex items-center justify-center text-gray-500">
+          <div className="flex items-center justify-center text-muted">
             <Loader2 className="h-5 w-5 animate-spin mr-2" />
             Loading dashboard...
           </div>
@@ -85,7 +85,7 @@ export function DocuSignDashboard() {
     return (
       <Card>
         <CardContent className="py-8">
-          <div className="text-center text-red-500">
+          <div className="text-center text-error">
             <AlertTriangle className="h-12 w-12 mx-auto mb-4" />
             <p>Failed to load dashboard</p>
             <Button variant="outline" onClick={() => refetch()} className="mt-4">
@@ -174,8 +174,8 @@ export function DocuSignDashboard() {
           <CardContent>
             <TabsContent value="pending" className="mt-0">
               {pendingSignatures.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
-                  <CheckCircle className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                <div className="text-center py-8 text-muted">
+                  <CheckCircle className="h-8 w-8 mx-auto mb-2 text-success" />
                   <p>No pending signatures</p>
                 </div>
               ) : (
@@ -184,7 +184,7 @@ export function DocuSignDashboard() {
             </TabsContent>
             <TabsContent value="recent" className="mt-0">
               {recentEnvelopes.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted">
                   <FileSignature className="h-8 w-8 mx-auto mb-2 text-gray-300" />
                   <p>No recent envelopes</p>
                 </div>
@@ -214,10 +214,10 @@ function StatCard({
   trend?: number | null
 }) {
   const colorClasses = {
-    blue: 'text-blue-600 bg-blue-50',
-    green: 'text-green-600 bg-green-50',
-    yellow: 'text-yellow-600 bg-yellow-50',
-    red: 'text-red-600 bg-red-50',
+    blue: 'text-primary bg-blue-50',
+    green: 'text-success bg-success-light',
+    yellow: 'text-warning bg-warning-light',
+    red: 'text-error bg-error-light',
   }
 
   return (
@@ -230,7 +230,7 @@ function StatCard({
           {trend !== null && trend !== undefined && (
             <div className={cn(
               'flex items-center text-sm',
-              trend >= 0 ? 'text-green-600' : 'text-red-600'
+              trend >= 0 ? 'text-success' : 'text-error'
             )}>
               <TrendingUp className={cn('h-4 w-4', trend < 0 && 'rotate-180')} />
               <span>{Math.abs(trend)}%</span>
@@ -239,7 +239,7 @@ function StatCard({
         </div>
         <div className="mt-4">
           <p className="text-2xl font-bold">{value}</p>
-          <p className="text-sm text-gray-500">{title}</p>
+          <p className="text-sm text-muted">{title}</p>
         </div>
       </CardContent>
     </Card>
@@ -262,27 +262,27 @@ function DocumentTypeStats({
 
   return (
     <div className="p-4 border rounded-lg">
-      <p className="font-medium text-gray-900">{label}</p>
+      <p className="font-medium text-foreground">{label}</p>
       <div className="mt-2 space-y-1 text-sm">
         <div className="flex justify-between">
-          <span className="text-gray-500">Total</span>
+          <span className="text-muted">Total</span>
           <span className="font-medium">{stats.total}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Pending</span>
-          <span className="font-medium text-yellow-600">{stats.pending}</span>
+          <span className="text-muted">Pending</span>
+          <span className="font-medium text-warning">{stats.pending}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-gray-500">Completed</span>
-          <span className="font-medium text-green-600">{stats.completed}</span>
+          <span className="text-muted">Completed</span>
+          <span className="font-medium text-success">{stats.completed}</span>
         </div>
       </div>
       <div className="mt-3">
         <div className="flex items-center justify-between text-xs mb-1">
-          <span className="text-gray-500">Completion Rate</span>
+          <span className="text-muted">Completion Rate</span>
           <span className="font-medium">{completionRate}%</span>
         </div>
-        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div className="h-2 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-green-500 rounded-full transition-all"
             style={{ width: `${completionRate}%` }}
@@ -307,23 +307,23 @@ function EnvelopeList({ envelopes }: { envelopes: DSEnvelope[] }) {
         return (
           <div
             key={envelope.id}
-            className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+            className="flex items-center justify-between p-4 border rounded-lg hover:bg-surface"
           >
             <div className="flex items-center gap-4">
               <div className={cn(
                 'p-2 rounded-lg',
-                envelope.status === 'completed' ? 'bg-green-50 text-green-600' :
-                envelope.status === 'declined' ? 'bg-red-50 text-red-600' :
-                envelope.status === 'voided' ? 'bg-gray-50 text-gray-600' :
-                'bg-blue-50 text-blue-600'
+                envelope.status === 'completed' ? 'bg-success-light text-success' :
+                envelope.status === 'declined' ? 'bg-error-light text-error' :
+                envelope.status === 'voided' ? 'bg-surface text-secondary' :
+                'bg-blue-50 text-primary'
               )}>
                 <FileSignature className="h-5 w-5" />
               </div>
               <div>
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-foreground">
                   {envelope.subject || `${docTypeConfig.label} Signature Request`}
                 </p>
-                <div className="flex items-center gap-2 mt-1 text-sm text-gray-500">
+                <div className="flex items-center gap-2 mt-1 text-sm text-muted">
                   <span>{docTypeConfig.label}</span>
                   <span>•</span>
                   <span>{formatDate(envelope.created_at)}</span>
@@ -365,7 +365,7 @@ function EnvelopeList({ envelopes }: { envelopes: DSEnvelope[] }) {
                         Resend
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-600"
+                        className="text-error"
                         onClick={() => voidMutation.mutate({
                           envelope_id: envelope.envelope_id,
                           reason: 'Voided by user',

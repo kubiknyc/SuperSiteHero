@@ -117,7 +117,7 @@ export function QBSyncDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending Syncs</CardTitle>
-            <Clock className="h-4 w-4 text-yellow-500" />
+            <Clock className="h-4 w-4 text-warning" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.pendingSyncs}</div>
@@ -128,10 +128,10 @@ export function QBSyncDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Failed Syncs</CardTitle>
-            <AlertCircle className="h-4 w-4 text-red-500" />
+            <AlertCircle className="h-4 w-4 text-error" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.failedSyncs}</div>
+            <div className="text-2xl font-bold text-error">{stats.failedSyncs}</div>
             <p className="text-xs text-muted-foreground">Require attention</p>
           </CardContent>
         </Card>
@@ -197,7 +197,7 @@ export function QBSyncDashboard() {
                     <div className="flex items-center gap-3 text-muted-foreground">
                       <span>{entityStats.synced}/{entityStats.total} synced</span>
                       {entityStats.pending > 0 && (
-                        <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                        <Badge variant="secondary" className="bg-warning-light text-yellow-800">
                           {entityStats.pending} pending
                         </Badge>
                       )}

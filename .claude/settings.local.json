@@ -28,8 +28,8 @@
       "Bash(winget install:*)",
       "Bash(where gh:*)",
       "Bash(git checkout:*)",
-      "Bash(npm test:*)"
-      "Bash(claude mcp:*)",
+      "Bash(npm test:*)",
+      "Bash(claude mcp:*)"
     ],
     "deny": [],
     "ask": [],

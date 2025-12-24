@@ -51,20 +51,20 @@ export function DistributionListCard({
           {/* Icon */}
           <div className={cn(
             'p-2.5 rounded-lg',
-            list.project_id ? 'bg-blue-100' : 'bg-gray-100'
+            list.project_id ? 'bg-info-light' : 'bg-muted'
           )}>
             <Users className={cn(
               'h-5 w-5',
-              list.project_id ? 'text-blue-600' : 'text-gray-600'
+              list.project_id ? 'text-primary' : 'text-secondary'
             )} />
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-base truncate">{list.name}</h3>
+              <h3 className="font-semibold text-base truncate" className="heading-subsection">{list.name}</h3>
               {list.is_default && (
-                <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                <Star className="h-4 w-4 text-warning fill-yellow-500 flex-shrink-0" />
               )}
             </div>
 
@@ -131,7 +131,7 @@ export function DistributionListCard({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => onDelete(list)}
-                    className="text-red-600 focus:text-red-600"
+                    className="text-error focus:text-error"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete

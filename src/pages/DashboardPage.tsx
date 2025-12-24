@@ -256,7 +256,7 @@ export function DashboardPage() {
                       </p>
 
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                        <p className="text-4xl font-bold text-gray-900 dark:text-gray-50 leading-none tracking-tight">
+                        <p className="text-4xl font-bold text-foreground dark:text-gray-50 leading-none tracking-tight">
                           {stat.value}
                         </p>
                         <p className="text-base text-muted font-medium">
@@ -274,7 +274,7 @@ export function DashboardPage() {
                     <div>
                       <div className="flex justify-between mb-2 text-xs text-muted font-medium">
                         <span>Progress to Target</span>
-                        <span className="text-gray-900 dark:text-gray-50 font-semibold">{Math.round(percentage)}%</span>
+                        <span className="text-foreground dark:text-gray-50 font-semibold">{Math.round(percentage)}%</span>
                       </div>
                       <div style={{
                         width: '100%',
@@ -327,7 +327,7 @@ export function DashboardPage() {
               }}>
                 <div className="flex justify-between items-center mb-8">
                   <div>
-                    <h2 className="heading-card mb-1">
+                    <h2 className="heading-card mb-1 heading-section">
                       Active Projects
                     </h2>
                     <p className="body-small text-muted">
@@ -367,7 +367,7 @@ export function DashboardPage() {
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
                             <div style={{ flex: 1 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50">
+                                <h3 className="text-lg font-semibold text-foreground dark:text-gray-50 heading-subsection">
                                   {project.name}
                                 </h3>
                                 {/* Health indicator */}
@@ -407,7 +407,7 @@ export function DashboardPage() {
                           <div>
                             <div className="flex justify-between mb-2 text-xs text-muted">
                               <span>Progress</span>
-                              <span className="text-gray-900 dark:text-gray-50 font-semibold">{progress}%</span>
+                              <span className="text-foreground dark:text-gray-50 font-semibold">{progress}%</span>
                             </div>
                             <div style={{
                               width: '100%',
@@ -430,7 +430,7 @@ export function DashboardPage() {
                     })
                   ) : (
                     <div className="p-12 text-center">
-                      <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                      <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-secondary" />
                       <p className="body-small text-muted">No active projects</p>
                     </div>
                   )}

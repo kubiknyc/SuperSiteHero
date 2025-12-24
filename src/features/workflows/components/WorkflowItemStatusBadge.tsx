@@ -11,12 +11,12 @@ interface WorkflowItemStatusBadgeProps {
 
 // Status color mappings
 const statusColors: Record<string, string> = {
-  open: 'bg-blue-100 text-blue-800 border-blue-300',
-  in_progress: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  open: 'bg-info-light text-blue-800 border-blue-300',
+  in_progress: 'bg-warning-light text-yellow-800 border-yellow-300',
   pending_review: 'bg-purple-100 text-purple-800 border-purple-300',
-  approved: 'bg-green-100 text-green-800 border-green-300',
-  rejected: 'bg-red-100 text-red-800 border-red-300',
-  closed: 'bg-gray-100 text-gray-800 border-gray-300',
+  approved: 'bg-success-light text-green-800 border-green-300',
+  rejected: 'bg-error-light text-red-800 border-red-300',
+  closed: 'bg-muted text-foreground border-input',
 }
 
 // Status label mappings
@@ -31,10 +31,10 @@ const statusLabels: Record<string, string> = {
 
 // Priority color mappings
 const priorityColors: Record<string, string> = {
-  low: 'bg-green-100 text-green-800 border-green-300',
-  medium: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+  low: 'bg-success-light text-green-800 border-green-300',
+  medium: 'bg-warning-light text-yellow-800 border-yellow-300',
   high: 'bg-orange-100 text-orange-800 border-orange-300',
-  critical: 'bg-red-100 text-red-800 border-red-300',
+  critical: 'bg-error-light text-red-800 border-red-300',
 }
 
 // Priority label mappings

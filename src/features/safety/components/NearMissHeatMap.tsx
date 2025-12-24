@@ -152,15 +152,15 @@ function LocationHeatMapRow({ location, maxCount, onClick }: LocationHeatMapRowP
   const riskLevel = getRiskLevel(location.incident_count, location.high_severity_count)
 
   const bgColor = {
-    low: 'bg-green-100 dark:bg-green-900/30',
-    medium: 'bg-yellow-100 dark:bg-yellow-900/30',
+    low: 'bg-success-light dark:bg-green-900/30',
+    medium: 'bg-warning-light dark:bg-yellow-900/30',
     high: 'bg-orange-100 dark:bg-orange-900/30',
-    critical: 'bg-red-100 dark:bg-red-900/30',
+    critical: 'bg-error-light dark:bg-red-900/30',
   }[riskLevel]
 
   const barColor = {
     low: 'bg-green-500',
-    medium: 'bg-yellow-500',
+    medium: 'bg-warning',
     high: 'bg-orange-500',
     critical: 'bg-red-500',
   }[riskLevel]
@@ -200,7 +200,7 @@ function LocationHeatMapRow({ location, maxCount, onClick }: LocationHeatMapRowP
             </div>
 
             {/* Progress bar */}
-            <div className="h-2 bg-white/50 rounded-full overflow-hidden">
+            <div className="h-2 bg-card/50 rounded-full overflow-hidden">
               <div
                 className={cn('h-full rounded-full transition-all', barColor)}
                 style={{ width: `${percentage}%` }}
@@ -360,7 +360,7 @@ export function TimeHeatMap({ data, isLoading, className }: TimeHeatMapProps) {
         <div className="mt-4 pt-4 border-t flex items-center gap-2 text-xs text-muted-foreground">
           <span>Intensity:</span>
           <div className="flex items-center gap-1">
-            <div className="w-4 h-4 rounded bg-gray-100 dark:bg-gray-800" />
+            <div className="w-4 h-4 rounded bg-muted dark:bg-surface" />
             <span>0</span>
           </div>
           <div className="w-16 h-4 rounded bg-gradient-to-r from-blue-100 via-blue-300 to-blue-600" />
@@ -372,11 +372,11 @@ export function TimeHeatMap({ data, isLoading, className }: TimeHeatMapProps) {
 }
 
 function getHeatColor(intensity: number): string {
-  if (intensity === 0) {return 'bg-gray-100 dark:bg-gray-800'}
-  if (intensity < 0.25) {return 'bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-200'}
+  if (intensity === 0) {return 'bg-muted dark:bg-surface'}
+  if (intensity < 0.25) {return 'bg-info-light dark:bg-blue-900/40 text-blue-800 dark:text-blue-200'}
   if (intensity < 0.5) {return 'bg-blue-200 dark:bg-blue-800/50 text-blue-800 dark:text-blue-200'}
-  if (intensity < 0.75) {return 'bg-blue-400 dark:bg-blue-700/60 text-white'}
-  return 'bg-blue-600 dark:bg-blue-600 text-white'
+  if (intensity < 0.75) {return 'bg-blue-400 dark:bg-primary-hover/60 text-white'}
+  return 'bg-primary dark:bg-primary text-white'
 }
 
 // ============================================================================
@@ -393,10 +393,10 @@ export function RiskScoreBadge({ score, showLabel = true, size = 'md' }: RiskSco
   const riskLevel = getRiskLevelFromScore(score)
 
   const colors = {
-    low: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
-    medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
+    low: 'bg-success-light text-green-800 dark:bg-green-900/30 dark:text-green-400',
+    medium: 'bg-warning-light text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400',
     high: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400',
-    critical: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400',
+    critical: 'bg-error-light text-red-800 dark:bg-red-900/30 dark:text-red-400',
   }
 
   const sizes = {

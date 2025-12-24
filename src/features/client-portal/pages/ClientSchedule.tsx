@@ -59,23 +59,23 @@ export function ClientSchedule() {
     const startDate = new Date(item.start_date)
 
     if (item.percent_complete >= 100) {
-      return { label: 'Complete', color: 'text-green-600', bgColor: 'bg-green-100' }
+      return { label: 'Complete', color: 'text-success', bgColor: 'bg-success-light' }
     }
     if (isBefore(finishDate, today) && item.percent_complete < 100) {
-      return { label: 'Overdue', color: 'text-red-600', bgColor: 'bg-red-100' }
+      return { label: 'Overdue', color: 'text-error', bgColor: 'bg-error-light' }
     }
     if (isAfter(startDate, today)) {
-      return { label: 'Not Started', color: 'text-gray-600', bgColor: 'bg-gray-100' }
+      return { label: 'Not Started', color: 'text-secondary', bgColor: 'bg-muted' }
     }
-    return { label: 'In Progress', color: 'text-blue-600', bgColor: 'bg-blue-100' }
+    return { label: 'In Progress', color: 'text-primary', bgColor: 'bg-info-light' }
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Project Schedule</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Project Schedule</h1>
+        <p className="text-secondary mt-1">
           Track project timeline and milestones.
         </p>
       </div>
@@ -91,8 +91,8 @@ export function ClientSchedule() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-bold text-gray-900">{overallProgress}%</span>
-              <span className="text-sm text-gray-500">
+              <span className="text-3xl font-bold text-foreground">{overallProgress}%</span>
+              <span className="text-sm text-muted">
                 {completedTasks} of {totalTasks} tasks complete
               </span>
             </div>
@@ -104,7 +104,7 @@ export function ClientSchedule() {
       {/* Upcoming Milestones */}
       {upcomingMilestones.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2" className="heading-section">
             <Flag className="h-5 w-5 text-orange-500" />
             Upcoming Milestones
           </h2>
@@ -119,13 +119,13 @@ export function ClientSchedule() {
                         <Flag className="h-5 w-5 text-orange-600" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium text-gray-900">{milestone.task_name}</h3>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <h3 className="font-medium text-foreground" className="heading-subsection">{milestone.task_name}</h3>
+                        <p className="text-sm text-muted mt-1">
                           {format(new Date(milestone.finish_date), 'MMM d, yyyy')}
                         </p>
                         <p className={cn(
                           'text-sm font-medium mt-2',
-                          daysUntil <= 7 ? 'text-orange-600' : 'text-gray-600'
+                          daysUntil <= 7 ? 'text-orange-600' : 'text-secondary'
                         )}>
                           {daysUntil === 0 ? 'Today' : `${daysUntil} days away`}
                         </p>
@@ -142,7 +142,7 @@ export function ClientSchedule() {
       {/* All Milestones */}
       {milestones.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2" className="heading-section">
             <Flag className="h-5 w-5" />
             All Milestones ({milestones.length})
           </h2>
@@ -159,29 +159,29 @@ export function ClientSchedule() {
                       key={milestone.id}
                       className={cn(
                         'flex items-center gap-4 p-3 rounded-lg',
-                        isComplete ? 'bg-green-50' : isPast ? 'bg-red-50' : 'bg-gray-50'
+                        isComplete ? 'bg-success-light' : isPast ? 'bg-error-light' : 'bg-surface'
                       )}
                     >
                       <div className={cn(
                         'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center',
-                        isComplete ? 'bg-green-200' : isPast ? 'bg-red-200' : 'bg-gray-200'
+                        isComplete ? 'bg-green-200' : isPast ? 'bg-red-200' : 'bg-muted'
                       )}>
                         {isComplete ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-600" />
+                          <CheckCircle2 className="h-5 w-5 text-success" />
                         ) : (
-                          <span className="text-sm font-medium text-gray-600">{index + 1}</span>
+                          <span className="text-sm font-medium text-secondary">{index + 1}</span>
                         )}
                       </div>
                       <div className="flex-1">
                         <p className={cn(
                           'font-medium',
-                          isComplete ? 'text-green-800' : isPast ? 'text-red-800' : 'text-gray-900'
+                          isComplete ? 'text-green-800' : isPast ? 'text-red-800' : 'text-foreground'
                         )}>
                           {milestone.task_name}
                         </p>
                         <p className={cn(
                           'text-sm',
-                          isComplete ? 'text-green-600' : isPast ? 'text-red-600' : 'text-gray-500'
+                          isComplete ? 'text-success' : isPast ? 'text-error' : 'text-muted'
                         )}>
                           {format(finishDate, 'MMM d, yyyy')}
                           {isPast && !isComplete && ' (Overdue)'}
@@ -190,7 +190,7 @@ export function ClientSchedule() {
                       </div>
                       {milestone.is_critical && (
                         <span title="Critical Path">
-                          <AlertTriangle className="h-5 w-5 text-amber-500" />
+                          <AlertTriangle className="h-5 w-5 text-warning" />
                         </span>
                       )}
                     </div>
@@ -205,7 +205,7 @@ export function ClientSchedule() {
       {/* Tasks List */}
       {tasks.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2" className="heading-section">
             <Calendar className="h-5 w-5" />
             Schedule Items ({tasks.length})
           </h2>
@@ -217,20 +217,20 @@ export function ClientSchedule() {
                   return (
                     <div
                       key={task.id}
-                      className="flex items-center gap-4 p-4 rounded-lg border bg-white hover:bg-gray-50 transition-colors"
+                      className="flex items-center gap-4 p-4 rounded-lg border bg-card hover:bg-surface transition-colors"
                     >
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <p className="font-medium text-gray-900 truncate">
+                          <p className="font-medium text-foreground truncate">
                             {task.task_name}
                           </p>
                           {task.is_critical && (
                             <span title="Critical Path">
-                              <AlertTriangle className="h-4 w-4 text-amber-500 flex-shrink-0" />
+                              <AlertTriangle className="h-4 w-4 text-warning flex-shrink-0" />
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
+                        <div className="flex items-center gap-4 mt-1 text-sm text-muted">
                           <span className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {format(new Date(task.start_date), 'MMM d')} - {format(new Date(task.finish_date), 'MMM d, yyyy')}
@@ -242,7 +242,7 @@ export function ClientSchedule() {
                       <div className="flex items-center gap-4">
                         <div className="w-32">
                           <div className="flex items-center justify-between text-sm mb-1">
-                            <span className="text-gray-500">Progress</span>
+                            <span className="text-muted">Progress</span>
                             <span className="font-medium">{task.percent_complete}%</span>
                           </div>
                           <Progress value={task.percent_complete} className="h-2" />
@@ -269,9 +269,9 @@ export function ClientSchedule() {
       {(!scheduleItems || scheduleItems.length === 0) && (
         <Card>
           <CardContent className="py-12 text-center">
-            <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No Schedule Available</h3>
-            <p className="text-gray-500 mt-1">
+            <Calendar className="h-12 w-12 text-disabled mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Schedule Available</h3>
+            <p className="text-muted mt-1">
               Schedule information will appear here once it's added.
             </p>
           </CardContent>

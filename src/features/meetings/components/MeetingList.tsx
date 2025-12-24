@@ -54,10 +54,10 @@ function MeetingStatusBadge({ status }: { status: MeetingStatus }) {
   const color = getMeetingStatusColor(status)
 
   const colorClasses: Record<string, string> = {
-    gray: 'bg-gray-100 text-gray-800',
-    blue: 'bg-blue-100 text-blue-800',
-    yellow: 'bg-yellow-100 text-yellow-800',
-    green: 'bg-green-100 text-green-800',
+    gray: 'bg-muted text-foreground',
+    blue: 'bg-info-light text-blue-800',
+    yellow: 'bg-warning-light text-yellow-800',
+    green: 'bg-success-light text-green-800',
     cyan: 'bg-cyan-100 text-cyan-800',
     purple: 'bg-purple-100 text-purple-800',
   }
@@ -76,17 +76,17 @@ function MeetingTypeBadge({ type }: { type: MeetingType }) {
   const typeColors: Record<MeetingType, string> = {
     oac: 'bg-purple-100 text-purple-800',
     subcontractor: 'bg-orange-100 text-orange-800',
-    safety: 'bg-red-100 text-red-800',
-    progress: 'bg-blue-100 text-blue-800',
+    safety: 'bg-error-light text-red-800',
+    progress: 'bg-info-light text-blue-800',
     preconstruction: 'bg-cyan-100 text-cyan-800',
-    kickoff: 'bg-green-100 text-green-800',
+    kickoff: 'bg-success-light text-green-800',
     closeout: 'bg-slate-100 text-slate-800',
     weekly: 'bg-indigo-100 text-indigo-800',
     schedule: 'bg-amber-100 text-amber-800',
     budget: 'bg-emerald-100 text-emerald-800',
     quality: 'bg-teal-100 text-teal-800',
     design: 'bg-violet-100 text-violet-800',
-    other: 'bg-gray-100 text-gray-800',
+    other: 'bg-muted text-foreground',
   }
 
   return (
@@ -112,7 +112,7 @@ function LocationIndicator({ type }: { type: 'in_person' | 'virtual' | 'hybrid' 
   }
 
   return (
-    <span className="text-xs text-gray-600 flex items-center gap-1">
+    <span className="text-xs text-secondary flex items-center gap-1">
       <span>{icons[type]}</span>
       <span>{labels[type]}</span>
     </span>
@@ -126,17 +126,17 @@ function AttendeeCount({ meeting }: { meeting: MeetingWithDetails }) {
   const total = meeting.attendee_count || meeting.attendees?.length || 0
   const confirmed = meeting.confirmed_count || 0
 
-  if (total === 0) {return <span className="text-gray-400">-</span>}
+  if (total === 0) {return <span className="text-disabled">-</span>}
 
   return (
     <span className="text-xs">
       {confirmed > 0 ? (
         <>
-          <span className="text-green-600 font-medium">{confirmed}</span>
-          <span className="text-gray-400">/{total}</span>
+          <span className="text-success font-medium">{confirmed}</span>
+          <span className="text-disabled">/{total}</span>
         </>
       ) : (
-        <span className="text-gray-600">{total}</span>
+        <span className="text-secondary">{total}</span>
       )}
     </span>
   )
@@ -149,17 +149,17 @@ function ActionItemsCount({ meeting }: { meeting: MeetingWithDetails }) {
   const total = meeting.action_items?.length || 0
   const open = meeting.open_action_items_count || 0
 
-  if (total === 0) {return <span className="text-gray-400">-</span>}
+  if (total === 0) {return <span className="text-disabled">-</span>}
 
   return (
     <span className="text-xs">
       {open > 0 ? (
         <>
           <span className="text-orange-600 font-medium">{open}</span>
-          <span className="text-gray-400">/{total} open</span>
+          <span className="text-disabled">/{total} open</span>
         </>
       ) : (
-        <span className="text-green-600">{total} done</span>
+        <span className="text-success">{total} done</span>
       )}
     </span>
   )
@@ -172,29 +172,29 @@ function ActionItemsCount({ meeting }: { meeting: MeetingWithDetails }) {
 function MeetingStatsCard({ stats }: { stats: MeetingStatistics }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-      <div className="text-center p-3 bg-gray-50 rounded-lg">
-        <div className="text-2xl font-bold text-gray-700">{stats.total_meetings}</div>
-        <div className="text-xs text-gray-500">Total Meetings</div>
+      <div className="text-center p-3 bg-surface rounded-lg">
+        <div className="text-2xl font-bold text-secondary">{stats.total_meetings}</div>
+        <div className="text-xs text-muted">Total Meetings</div>
       </div>
       <div className="text-center p-3 bg-primary-50 dark:bg-primary-950/20 rounded-lg">
         <div className="text-2xl font-bold text-primary-700 dark:text-primary-300">{stats.upcoming_count}</div>
-        <div className="text-xs text-gray-500">Upcoming</div>
+        <div className="text-xs text-muted">Upcoming</div>
       </div>
-      <div className="text-center p-3 bg-green-50 rounded-lg">
-        <div className="text-2xl font-bold text-green-700">{stats.this_month_count}</div>
-        <div className="text-xs text-gray-500">This Month</div>
+      <div className="text-center p-3 bg-success-light rounded-lg">
+        <div className="text-2xl font-bold text-success-dark">{stats.this_month_count}</div>
+        <div className="text-xs text-muted">This Month</div>
       </div>
-      <div className="text-center p-3 bg-yellow-50 rounded-lg">
+      <div className="text-center p-3 bg-warning-light rounded-lg">
         <div className="text-2xl font-bold text-yellow-700">{stats.total_action_items}</div>
-        <div className="text-xs text-gray-500">Action Items</div>
+        <div className="text-xs text-muted">Action Items</div>
       </div>
       <div className="text-center p-3 bg-orange-50 rounded-lg">
         <div className="text-2xl font-bold text-orange-700">{stats.open_action_items}</div>
-        <div className="text-xs text-gray-500">Open Items</div>
+        <div className="text-xs text-muted">Open Items</div>
       </div>
-      <div className="text-center p-3 bg-red-50 rounded-lg">
-        <div className="text-2xl font-bold text-red-700">{stats.overdue_action_items}</div>
-        <div className="text-xs text-gray-500">Overdue</div>
+      <div className="text-center p-3 bg-error-light rounded-lg">
+        <div className="text-2xl font-bold text-error-dark">{stats.overdue_action_items}</div>
+        <div className="text-xs text-muted">Overdue</div>
       </div>
     </div>
   )
@@ -290,8 +290,8 @@ export function MeetingList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold">Meeting Minutes</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold" className="heading-section">Meeting Minutes</h2>
+          <p className="text-sm text-muted">
             {filteredMeetings.length} meeting{filteredMeetings.length !== 1 ? 's' : ''}
             {upcomingMeetings.length > 0 && ` (${upcomingMeetings.length} upcoming)`}
           </p>
@@ -348,7 +348,7 @@ export function MeetingList({
       {/* Upcoming Meetings Section */}
       {upcomingMeetings.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-600 flex items-center gap-2">
+          <h3 className="text-sm font-medium text-secondary flex items-center gap-2" className="heading-subsection">
             <span className="h-2 w-2 rounded-full bg-primary dark:bg-primary-400 animate-pulse"></span>
             Upcoming Meetings
           </h3>
@@ -387,13 +387,13 @@ export function MeetingList({
                     <td className="px-3 py-2">
                       <div className="font-medium">{meeting.title}</div>
                       {meeting.meeting_number && (
-                        <div className="text-xs text-gray-500">#{meeting.meeting_number}</div>
+                        <div className="text-xs text-muted">#{meeting.meeting_number}</div>
                       )}
                     </td>
                     <td className="px-3 py-2">
                       <LocationIndicator type={meeting.location_type} />
                       {meeting.location && (
-                        <div className="text-xs text-gray-500 truncate max-w-[150px]">
+                        <div className="text-xs text-muted truncate max-w-[150px]">
                           {meeting.location}
                         </div>
                       )}
@@ -415,12 +415,12 @@ export function MeetingList({
       {/* Past/All Meetings Section */}
       <div className="space-y-2">
         {upcomingMeetings.length > 0 && (
-          <h3 className="text-sm font-medium text-gray-600">Past Meetings</h3>
+          <h3 className="text-sm font-medium text-secondary" className="heading-subsection">Past Meetings</h3>
         )}
         <div className="border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-surface border-b">
                 <tr>
                   <th className="px-3 py-2 text-left font-medium">Date</th>
                   <th className="px-3 py-2 text-left font-medium">Time</th>
@@ -436,7 +436,7 @@ export function MeetingList({
                 {pastMeetings.map((meeting) => (
                   <tr
                     key={meeting.id}
-                    className="hover:bg-gray-50 cursor-pointer"
+                    className="hover:bg-surface cursor-pointer"
                     onClick={() => onMeetingClick?.(meeting)}
                   >
                     <td className="px-3 py-2 text-xs">
@@ -451,7 +451,7 @@ export function MeetingList({
                     <td className="px-3 py-2">
                       <div>{meeting.title}</div>
                       {meeting.meeting_number && (
-                        <div className="text-xs text-gray-500">#{meeting.meeting_number}</div>
+                        <div className="text-xs text-muted">#{meeting.meeting_number}</div>
                       )}
                     </td>
                     <td className="px-3 py-2">
@@ -470,7 +470,7 @@ export function MeetingList({
                 ))}
                 {pastMeetings.length === 0 && upcomingMeetings.length === 0 && (
                   <tr>
-                    <td colSpan={8} className="px-3 py-8 text-center text-gray-500">
+                    <td colSpan={8} className="px-3 py-8 text-center text-muted">
                       No meetings found
                     </td>
                   </tr>

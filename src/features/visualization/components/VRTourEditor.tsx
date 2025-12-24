@@ -193,7 +193,7 @@ function SortableNodeItem({
       </div>
 
       <div
-        className="w-16 h-12 bg-gray-100 rounded shrink-0 cursor-pointer overflow-hidden"
+        className="w-16 h-12 bg-muted rounded shrink-0 cursor-pointer overflow-hidden"
         onClick={onSelect}
       >
         {node.photo.thumbnailUrl ? (
@@ -204,7 +204,7 @@ function SortableNodeItem({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Camera className="h-5 w-5 text-gray-400" />
+            <Camera className="h-5 w-5 text-disabled" />
           </div>
         )}
       </div>
@@ -337,7 +337,7 @@ function PhotoPicker({
                   )}
                   onClick={() => handleToggle(photo.id)}
                 >
-                  <div className="aspect-video bg-gray-100">
+                  <div className="aspect-video bg-muted">
                     {photo.thumbnailUrl ? (
                       <img
                         src={photo.thumbnailUrl}
@@ -346,7 +346,7 @@ function PhotoPicker({
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Camera className="h-8 w-8 text-gray-400" />
+                        <Camera className="h-8 w-8 text-disabled" />
                       </div>
                     )}
                   </div>
@@ -806,7 +806,7 @@ export function VRTourEditor({
         {/* Nodes List */}
         <ScrollArea className="flex-1 p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-sm">Locations ({nodes.length})</h3>
+            <h3 className="font-medium text-sm" className="heading-subsection">Locations ({nodes.length})</h3>
             <Button
               variant="outline"
               size="sm"
@@ -885,7 +885,7 @@ export function VRTourEditor({
             {/* Node Header */}
             <div className="p-4 border-b flex items-center justify-between">
               <div>
-                <h2 className="font-semibold">{selectedNode.photo.name}</h2>
+                <h2 className="font-semibold" className="heading-section">{selectedNode.photo.name}</h2>
                 <p className="text-sm text-muted-foreground">
                   {selectedNode.photo.tags?.join(', ') || 'No tags'}
                 </p>
@@ -937,7 +937,7 @@ export function VRTourEditor({
             </div>
 
             {/* Node Preview */}
-            <div className="flex-1 relative bg-gray-100">
+            <div className="flex-1 relative bg-muted">
               <img
                 src={selectedNode.photo.url}
                 alt={selectedNode.photo.name}
@@ -967,7 +967,7 @@ export function VRTourEditor({
               {selectedNode.annotations.map((ann, index) => (
                 <div
                   key={index}
-                  className="absolute bg-yellow-500 text-white p-1 rounded-full"
+                  className="absolute bg-warning text-white p-1 rounded-full"
                   style={{
                     left: `${50 + ann.position.yaw / 3.6}%`,
                     top: `${50 - ann.position.pitch / 1.8}%`,
@@ -1064,7 +1064,7 @@ export function VRTourEditor({
           <div className="flex-1 flex items-center justify-center text-center">
             <div>
               <Camera className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-medium mb-2">Select a Location</h3>
+              <h3 className="font-medium mb-2" className="heading-subsection">Select a Location</h3>
               <p className="text-sm text-muted-foreground max-w-md">
                 Select a location from the list to view and edit its connections
                 and annotations

@@ -211,8 +211,8 @@ export function ChangeOrderItemsEditor({
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-          <p className="text-gray-500">Loading items...</p>
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+          <p className="text-muted">Loading items...</p>
         </CardContent>
       </Card>
     )
@@ -221,10 +221,10 @@ export function ChangeOrderItemsEditor({
   // Error state
   if (error) {
     return (
-      <Card className="border-red-200 bg-red-50">
+      <Card className="border-red-200 bg-error-light">
         <CardContent className="py-8 text-center">
-          <AlertCircle className="h-8 w-8 mx-auto text-red-500 mb-4" />
-          <p className="text-red-600">{error.message}</p>
+          <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
+          <p className="text-error">{error.message}</p>
         </CardContent>
       </Card>
     )
@@ -282,7 +282,7 @@ export function ChangeOrderItemsEditor({
       </div>
 
       <div className="border-t pt-4">
-        <h4 className="font-medium text-gray-700 mb-3">Cost Breakdown</h4>
+        <h4 className="font-medium text-secondary mb-3" className="heading-card">Cost Breakdown</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <Label>Labor Hours</Label>
@@ -363,7 +363,7 @@ export function ChangeOrderItemsEditor({
 
       <div className="flex items-center justify-between border-t pt-4">
         <div className="text-lg font-medium">
-          Line Total: <span className="text-blue-600">{formatCurrency(calculateFormTotal(formData))}</span>
+          Line Total: <span className="text-primary">{formatCurrency(calculateFormTotal(formData))}</span>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={cancelEditing}>
@@ -410,9 +410,9 @@ export function ChangeOrderItemsEditor({
                 {editingId === item.id ? (
                   renderItemForm()
                 ) : (
-                  <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                  <div className="flex items-start gap-3 p-4 bg-surface rounded-lg hover:bg-muted transition-colors">
                     {isEditable && (
-                      <div className="text-gray-400 cursor-grab">
+                      <div className="text-disabled cursor-grab">
                         <GripVertical className="h-5 w-5" />
                       </div>
                     )}
@@ -420,7 +420,7 @@ export function ChangeOrderItemsEditor({
                       <div className="flex items-start justify-between">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-500">#{item.item_number}</span>
+                            <span className="font-medium text-muted">#{item.item_number}</span>
                             {item.cost_code && (
                               <Badge variant="outline" className="text-xs">
                                 {item.cost_code}
@@ -430,17 +430,17 @@ export function ChangeOrderItemsEditor({
                           <p className="font-medium mt-1">{item.description}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-bold text-blue-600">
+                          <p className="text-lg font-bold text-primary">
                             {formatCurrency(item.total_amount)}
                           </p>
                           {item.markup_percent && (
-                            <p className="text-xs text-gray-500">+{item.markup_percent}% markup</p>
+                            <p className="text-xs text-muted">+{item.markup_percent}% markup</p>
                           )}
                         </div>
                       </div>
 
                       {/* Cost breakdown summary */}
-                      <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
+                      <div className="flex flex-wrap gap-4 mt-2 text-sm text-secondary">
                         {item.labor_amount && item.labor_amount > 0 && (
                           <span>Labor: {formatCurrency(item.labor_amount)}</span>
                         )}
@@ -460,7 +460,7 @@ export function ChangeOrderItemsEditor({
                         )}
                       </div>
 
-                      {item.notes && <p className="text-sm text-gray-500 mt-2 italic">{item.notes}</p>}
+                      {item.notes && <p className="text-sm text-muted mt-2 italic">{item.notes}</p>}
                     </div>
 
                     {isEditable && (
@@ -471,7 +471,7 @@ export function ChangeOrderItemsEditor({
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                          className="text-error hover:text-error-dark hover:bg-error-light"
                           onClick={() => handleDelete(item.id)}
                           disabled={deleteItem.isPending}
                         >
@@ -485,18 +485,18 @@ export function ChangeOrderItemsEditor({
             ))}
 
             {/* Total row */}
-            <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg font-medium">
+            <div className="flex items-center justify-between p-4 bg-muted rounded-lg font-medium">
               <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-gray-600" />
+                <DollarSign className="h-5 w-5 text-secondary" />
                 <span>Total ({items.length} items)</span>
               </div>
-              <span className="text-xl font-bold text-blue-700">{formatCurrency(total)}</span>
+              <span className="text-xl font-bold text-primary-hover">{formatCurrency(total)}</span>
             </div>
           </div>
         ) : !showAddForm ? (
           <div className="text-center py-8">
             <Package className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-            <p className="text-gray-500 mb-4">No line items yet</p>
+            <p className="text-muted mb-4">No line items yet</p>
             {isEditable && (
               <Button onClick={() => setShowAddForm(true)}>
                 <Plus className="h-4 w-4 mr-2" />

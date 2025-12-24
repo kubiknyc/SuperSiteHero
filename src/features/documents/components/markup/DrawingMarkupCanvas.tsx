@@ -330,7 +330,7 @@ export function DrawingMarkupCanvas({
         disabled={readOnly}
       />
 
-      <div className="flex-1 overflow-hidden bg-gray-100">
+      <div className="flex-1 overflow-hidden bg-muted">
         <Stage
           ref={stageRef}
           width={width}
@@ -362,7 +362,7 @@ export function DrawingMarkupCanvas({
         </Stage>
       </div>
 
-      <div className="p-2 bg-white border-t flex items-center justify-between text-sm text-gray-600">
+      <div className="p-2 bg-card border-t flex items-center justify-between text-sm text-secondary">
         <div>
           Zoom: {Math.round(scale * 100)}% | Tool: {tool}
         </div>

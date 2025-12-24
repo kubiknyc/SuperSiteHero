@@ -160,8 +160,8 @@ export function MarkupDiffViewer({
 
   if (!diffImageDataUrl) {
     return (
-      <div className={cn('flex items-center justify-center h-full bg-gray-900', className)}>
-        <div className="text-center text-gray-400">
+      <div className={cn('flex items-center justify-center h-full bg-background', className)}>
+        <div className="text-center text-disabled">
           <ZoomIn className="w-12 h-12 mx-auto mb-3 opacity-50" />
           <p className="text-sm">No diff image available</p>
           <p className="text-xs mt-1">Please run a comparison first</p>
@@ -171,9 +171,9 @@ export function MarkupDiffViewer({
   }
 
   return (
-    <div className={cn('flex items-center justify-center h-full bg-gray-900 overflow-hidden', className)}>
+    <div className={cn('flex items-center justify-center h-full bg-background overflow-hidden', className)}>
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-background/50 z-10">
           <div className="text-center text-white">
             <Loader2 className="w-8 h-8 mx-auto mb-2 animate-spin" />
             <p className="text-sm">Loading diff visualization...</p>

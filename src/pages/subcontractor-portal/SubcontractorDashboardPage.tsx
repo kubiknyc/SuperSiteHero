@@ -77,7 +77,7 @@ export function SubcontractorDashboardPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold">
+        <h1 className="text-2xl font-bold" className="heading-page">
           Welcome, {data.subcontractor.company_name}
         </h1>
         <p className="text-muted-foreground">
@@ -213,7 +213,7 @@ export function SubcontractorDashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="text-lg flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                <AlertTriangle className="h-5 w-5 text-warning" />
                 Expiring Documents
               </CardTitle>
               <CardDescription>Documents expiring within 30 days</CardDescription>
@@ -246,8 +246,8 @@ export function SubcontractorDashboardPage() {
                       variant="outline"
                       className={
                         doc.days_until_expiration <= 7
-                          ? 'bg-red-50 text-red-700 border-red-200'
-                          : 'bg-amber-50 text-amber-700 border-amber-200'
+                          ? 'bg-error-light text-error-dark border-red-200'
+                          : 'bg-warning-light text-amber-700 border-amber-200'
                       }
                     >
                       {doc.days_until_expiration} days left
@@ -291,7 +291,7 @@ export function SubcontractorDashboardPage() {
                 >
                   <Card className="hover:bg-muted/50 transition-colors h-full">
                     <CardContent className="p-4">
-                      <h3 className="font-medium truncate">{project.name}</h3>
+                      <h3 className="font-medium truncate" className="heading-subsection">{project.name}</h3>
                       <p className="text-sm text-muted-foreground truncate">
                         {project.trade}
                       </p>

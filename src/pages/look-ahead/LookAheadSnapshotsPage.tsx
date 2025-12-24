@@ -99,11 +99,11 @@ export function LookAheadSnapshotsPage() {
   }
 
   const getTrendIcon = (current: number, previous: number | undefined) => {
-    if (previous === undefined) {return <Minus className="h-4 w-4 text-gray-400" />}
+    if (previous === undefined) {return <Minus className="h-4 w-4 text-disabled" />}
     const diff = current - previous
-    if (diff > 0) {return <TrendingUp className="h-4 w-4 text-green-500" />}
-    if (diff < 0) {return <TrendingDown className="h-4 w-4 text-red-500" />}
-    return <Minus className="h-4 w-4 text-gray-400" />
+    if (diff > 0) {return <TrendingUp className="h-4 w-4 text-success" />}
+    if (diff < 0) {return <TrendingDown className="h-4 w-4 text-error" />}
+    return <Minus className="h-4 w-4 text-disabled" />
   }
 
   if (isLoading) {
@@ -131,7 +131,7 @@ export function LookAheadSnapshotsPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
               <BarChart3 className="h-6 w-6" />
               PPC History
             </h1>
@@ -228,7 +228,7 @@ export function LookAheadSnapshotsPage() {
           <CardContent>
             {snapshots && snapshots.length > 0 ? (
               <>
-                <div className="text-3xl font-bold text-green-600">
+                <div className="text-3xl font-bold text-success">
                   {formatPPC(Math.max(...snapshots.map((s) => s.ppc_percentage)))}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -255,13 +255,13 @@ export function LookAheadSnapshotsPage() {
               {ppcMetrics && (
                 <>
                   {ppcMetrics.trend === 'up' && (
-                    <TrendingUp className="h-8 w-8 text-green-500" />
+                    <TrendingUp className="h-8 w-8 text-success" />
                   )}
                   {ppcMetrics.trend === 'down' && (
-                    <TrendingDown className="h-8 w-8 text-red-500" />
+                    <TrendingDown className="h-8 w-8 text-error" />
                   )}
                   {ppcMetrics.trend === 'stable' && (
-                    <Minus className="h-8 w-8 text-gray-400" />
+                    <Minus className="h-8 w-8 text-disabled" />
                   )}
                   <div>
                     <div className="text-lg font-bold capitalize">{ppcMetrics.trend}</div>
@@ -347,7 +347,7 @@ export function LookAheadSnapshotsPage() {
                         {snapshot.planned_activities}
                       </TableCell>
                       <TableCell className="text-center">
-                        <span className="text-green-600 font-medium">
+                        <span className="text-success font-medium">
                           {snapshot.completed_activities}
                         </span>
                       </TableCell>
@@ -362,7 +362,7 @@ export function LookAheadSnapshotsPage() {
                       </TableCell>
                       <TableCell className="text-center">
                         {snapshot.blocked_activities > 0 ? (
-                          <span className="text-red-600 font-medium">
+                          <span className="text-error font-medium">
                             {snapshot.blocked_activities}
                           </span>
                         ) : (
@@ -392,7 +392,7 @@ export function LookAheadSnapshotsPage() {
           ) : (
             <div className="text-center py-12">
               <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-medium mb-2">No snapshots yet</h3>
+              <h3 className="text-lg font-medium mb-2" className="heading-subsection">No snapshots yet</h3>
               <p className="text-muted-foreground mb-4">
                 Create your first weekly snapshot to start tracking PPC
               </p>
@@ -429,7 +429,7 @@ export function LookAheadSnapshotsPage() {
                 </div>
                 <div className="p-4 bg-muted rounded-lg">
                   <p className="text-sm text-muted-foreground">Completed</p>
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-2xl font-bold text-success">
                     {selectedSnapshot.completed_activities} /{' '}
                     {selectedSnapshot.planned_activities}
                   </p>

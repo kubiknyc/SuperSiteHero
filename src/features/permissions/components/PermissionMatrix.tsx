@@ -120,8 +120,8 @@ export function PermissionMatrix({
                         key={perm.id}
                         className={cn(
                           'flex items-center gap-3 p-2 rounded-md transition-colors',
-                          isDangerous && 'bg-red-50 border border-red-100',
-                          !isDangerous && isGranted && 'bg-green-50',
+                          isDangerous && 'bg-error-light border border-red-100',
+                          !isDangerous && isGranted && 'bg-success-light',
                           !isDangerous && !isGranted && 'hover:bg-muted/50'
                         )}
                       >
@@ -149,7 +149,7 @@ export function PermissionMatrix({
                             {isDangerous && (
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <AlertTriangle className="h-3.5 w-3.5 text-red-500" />
+                                  <AlertTriangle className="h-3.5 w-3.5 text-error" />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                   <p className="text-xs">

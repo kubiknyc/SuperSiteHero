@@ -13,11 +13,11 @@ interface StatusBadgeProps {
 }
 
 const statusColors: Record<MaterialStatus, string> = {
-  received: 'bg-blue-100 text-blue-800 border-blue-200',
+  received: 'bg-info-light text-blue-800 border-blue-200',
   inspected: 'bg-purple-100 text-purple-800 border-purple-200',
-  stored: 'bg-green-100 text-green-800 border-green-200',
+  stored: 'bg-success-light text-green-800 border-green-200',
   issued: 'bg-orange-100 text-orange-800 border-orange-200',
-  returned: 'bg-gray-100 text-gray-800 border-gray-200',
+  returned: 'bg-muted text-foreground border-border',
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {

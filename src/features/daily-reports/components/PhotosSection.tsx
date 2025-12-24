@@ -87,10 +87,10 @@ export function PhotosSection({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <Camera className="h-5 w-5 text-gray-600" />
+          <Camera className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">Photos</CardTitle>
             <CardDescription>
@@ -100,9 +100,9 @@ export function PhotosSection({
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
@@ -130,7 +130,7 @@ export function PhotosSection({
 
           {/* Processing Indicator */}
           {isProcessing && (
-            <div className="text-center text-sm text-gray-600">
+            <div className="text-center text-sm text-secondary">
               Processing photos...
             </div>
           )}

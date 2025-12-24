@@ -52,11 +52,11 @@ const statusConfig: Record<
   CertificateStatus,
   { icon: typeof CheckCircle; color: string; bg: string }
 > = {
-  active: { icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50' },
-  expiring_soon: { icon: Clock, color: 'text-yellow-600', bg: 'bg-yellow-50' },
-  expired: { icon: AlertTriangle, color: 'text-red-600', bg: 'bg-red-50' },
-  pending_renewal: { icon: Clock, color: 'text-blue-600', bg: 'bg-blue-50' },
-  void: { icon: XCircle, color: 'text-gray-600', bg: 'bg-gray-50' },
+  active: { icon: CheckCircle, color: 'text-success', bg: 'bg-success-light' },
+  expiring_soon: { icon: Clock, color: 'text-warning', bg: 'bg-warning-light' },
+  expired: { icon: AlertTriangle, color: 'text-error', bg: 'bg-error-light' },
+  pending_renewal: { icon: Clock, color: 'text-primary', bg: 'bg-blue-50' },
+  void: { icon: XCircle, color: 'text-secondary', bg: 'bg-surface' },
 }
 
 export function InsuranceCertificateCard({
@@ -166,13 +166,13 @@ export function InsuranceCertificateCard({
                 {certificate.status !== 'void' && (
                   <DropdownMenuItem
                     onClick={() => onVoid?.(certificate)}
-                    className="text-yellow-600"
+                    className="text-warning"
                   >
                     <Ban className="h-4 w-4 mr-2" />
                     Void Certificate
                   </DropdownMenuItem>
                 )}
-                <DropdownMenuItem onClick={() => onDelete?.(certificate)} className="text-red-600">
+                <DropdownMenuItem onClick={() => onDelete?.(certificate)} className="text-error">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -203,7 +203,7 @@ export function InsuranceCertificateCard({
           </div>
           <div>
             <p className="text-muted-foreground">Expiration Date</p>
-            <p className={cn('font-medium', daysUntilExpiry < 30 && 'text-yellow-600')}>
+            <p className={cn('font-medium', daysUntilExpiry < 30 && 'text-warning')}>
               {formatDate(certificate.expiration_date)}
               {daysUntilExpiry >= 0 && daysUntilExpiry <= 30 && (
                 <span className="text-xs ml-1">({daysUntilExpiry} days)</span>

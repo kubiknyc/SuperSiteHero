@@ -298,13 +298,13 @@ export function QuickModeForm({
   if (!draftReport) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-surface pb-24">
       {/* Sticky Header */}
       <HeaderBar />
 
@@ -344,7 +344,7 @@ export function QuickModeForm({
             <button
               type="button"
               onClick={onSwitchToDetailed}
-              className="text-blue-600 hover:text-blue-800 text-sm underline"
+              className="text-primary hover:text-blue-800 text-sm underline"
             >
               Need more options? Switch to Detailed Mode
             </button>

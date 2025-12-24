@@ -183,7 +183,7 @@ export function EmailThreadView({
         )}
 
         <div className="flex-1 min-w-0">
-          <h2 className="text-lg font-semibold truncate">{thread.subject}</h2>
+          <h2 className="text-lg font-semibold truncate" className="heading-section">{thread.subject}</h2>
           <p className="text-sm text-muted-foreground">
             {thread.message_count} message{thread.message_count !== 1 ? 's' : ''}
           </p>
@@ -391,7 +391,7 @@ function EmailMessage({
           {/* Attachments */}
           {email.has_attachments && email.attachments.length > 0 && (
             <div className="border-t mt-4 pt-4">
-              <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+              <h4 className="text-sm font-medium mb-2 flex items-center gap-2" className="heading-card">
                 <Paperclip className="h-4 w-4" />
                 Attachments ({email.attachments.length})
               </h4>

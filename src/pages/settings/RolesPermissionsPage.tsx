@@ -153,7 +153,7 @@ export function RolesPermissionsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Roles & Permissions</h1>
+            <h1 className="text-2xl font-bold" className="heading-page">Roles & Permissions</h1>
             <p className="text-muted-foreground">
               Manage custom roles, permissions, and feature access
             </p>
@@ -211,9 +211,9 @@ export function RolesPermissionsPage() {
                 ))}
               </div>
             ) : filteredRoles.length === 0 ? (
-              <div className="text-center py-12 border rounded-lg bg-gray-50">
+              <div className="text-center py-12 border rounded-lg bg-surface">
                 <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-medium text-lg mb-1">No custom roles</h3>
+                <h3 className="font-medium text-lg mb-1" className="heading-subsection">No custom roles</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   {searchQuery
                     ? 'Try adjusting your search'
@@ -266,7 +266,7 @@ export function RolesPermissionsPage() {
                 </div>
 
                 <div className="border-t pt-4">
-                  <h4 className="font-medium mb-4">
+                  <h4 className="font-medium mb-4" className="heading-card">
                     Permissions for {formatRole(selectedDefaultRole)}
                   </h4>
                   {loadingDefaultPerms ? (
@@ -286,9 +286,9 @@ export function RolesPermissionsPage() {
               </CardContent>
             </Card>
 
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+            <div className="p-4 bg-warning-light border border-amber-200 rounded-lg">
               <div className="flex items-start gap-3">
-                <AlertCircle className="h-5 w-5 text-amber-600 mt-0.5" />
+                <AlertCircle className="h-5 w-5 text-warning mt-0.5" />
                 <div>
                   <p className="text-sm text-amber-800 font-medium">
                     Default roles cannot be modified
@@ -385,7 +385,7 @@ export function RolesPermissionsPage() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleDeleteConfirm}
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-error hover:bg-red-700"
                 disabled={deleteMutation.isPending}
               >
                 {deleteMutation.isPending && (

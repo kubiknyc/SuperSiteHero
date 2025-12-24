@@ -65,17 +65,17 @@ const TabletCard = React.forwardRef<HTMLDivElement, TabletCardProps>(
         ref={ref}
         className={cn(
           // Base styles
-          'rounded-lg bg-white dark:bg-gray-900',
+          'rounded-lg bg-card dark:bg-background',
           paddingClasses,
           // Border
-          bordered && 'border border-gray-200 dark:border-gray-800',
+          bordered && 'border border-border dark:border-border',
           // Shadow
           'shadow-sm',
           // Interactive states
           interactive && [
             'cursor-pointer',
             'transition-all duration-200',
-            'hover:shadow-md hover:border-gray-300 dark:hover:border-gray-700',
+            'hover:shadow-md hover:border-input dark:hover:border-gray-700',
             isTouchDevice && 'active:scale-[0.98] active:shadow-sm',
           ],
           // Touch-friendly minimum size on tablets
@@ -96,7 +96,7 @@ const TabletCard = React.forwardRef<HTMLDivElement, TabletCardProps>(
             {icon && (
               <div
                 className={cn(
-                  'flex-shrink-0 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800',
+                  'flex-shrink-0 flex items-center justify-center rounded-lg bg-muted dark:bg-surface',
                   isTablet ? 'w-12 h-12' : 'w-10 h-10',
                   '[&>svg]:w-6 [&>svg]:h-6',
                   isTablet && '[&>svg]:w-7 [&>svg]:h-7'
@@ -111,7 +111,7 @@ const TabletCard = React.forwardRef<HTMLDivElement, TabletCardProps>(
               {title && (
                 <h3
                   className={cn(
-                    'font-semibold text-gray-900 dark:text-gray-100 truncate',
+                    'font-semibold text-foreground dark:text-gray-100 truncate',
                     isTablet ? 'text-lg' : 'text-base'
                   )}
                 >
@@ -121,7 +121,7 @@ const TabletCard = React.forwardRef<HTMLDivElement, TabletCardProps>(
               {description && (
                 <p
                   className={cn(
-                    'text-gray-600 dark:text-gray-400 line-clamp-2',
+                    'text-secondary dark:text-disabled line-clamp-2',
                     isTablet ? 'text-base mt-1' : 'text-sm mt-0.5'
                   )}
                 >
@@ -150,7 +150,7 @@ const TabletCard = React.forwardRef<HTMLDivElement, TabletCardProps>(
         {footer && (
           <div
             className={cn(
-              'border-t border-gray-200 dark:border-gray-800 -mx-4 -mb-4 px-4 py-3',
+              'border-t border-border dark:border-border -mx-4 -mb-4 px-4 py-3',
               isTablet && '-mx-5 -mb-5 px-5 py-4',
               variant === 'spacious' && (isTablet ? '-mx-6 -mb-6 px-6 py-4' : '-mx-5 -mb-5 px-5 py-3')
             )}

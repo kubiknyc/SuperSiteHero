@@ -16,22 +16,22 @@ interface DeliveryStatusBadgeProps {
 const statusConfig: Record<DeliveryStatus, { label: string; color: string; icon: typeof Package }> = {
   scheduled: {
     label: 'Scheduled',
-    color: 'bg-gray-100 text-gray-800 border-gray-300',
+    color: 'bg-muted text-foreground border-input',
     icon: Clock,
   },
   received: {
     label: 'Received',
-    color: 'bg-green-100 text-green-800 border-green-300',
+    color: 'bg-success-light text-green-800 border-green-300',
     icon: PackageCheck,
   },
   partially_received: {
     label: 'Partial',
-    color: 'bg-yellow-100 text-yellow-800 border-yellow-300',
+    color: 'bg-warning-light text-yellow-800 border-yellow-300',
     icon: PackageMinus,
   },
   rejected: {
     label: 'Rejected',
-    color: 'bg-red-100 text-red-800 border-red-300',
+    color: 'bg-error-light text-red-800 border-red-300',
     icon: PackageX,
   },
   back_ordered: {

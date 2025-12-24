@@ -42,26 +42,26 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Error Code */}
-        <h1 className="heading-error-code text-orange-500 mb-4">
+        <h1 className="heading-error-code text-orange-500 mb-4" className="heading-page">
           500
         </h1>
 
         {/* Error Title */}
-        <h2 className="heading-page text-gray-900 dark:text-white mb-4">
+        <h2 className="heading-page text-foreground dark:text-white mb-4" className="heading-section">
           Something Went Wrong
         </h2>
 
         {/* Error Description */}
-        <p className="body-large text-gray-600 dark:text-gray-400 mb-8">
+        <p className="body-large text-secondary dark:text-disabled mb-8">
           We encountered an unexpected error. Our team has been notified and is working on a fix.
           Please try refreshing the page or returning to the dashboard.
         </p>
 
         {/* Error Details (Development Only) */}
         {import.meta.env.DEV && error && (
-          <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg text-left">
+          <div className="mb-8 p-4 bg-error-light dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg text-left">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400 mt-1 flex-shrink-0" />
+              <AlertTriangle className="w-5 h-5 text-error dark:text-red-400 mt-1 flex-shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-red-900 dark:text-red-100 mb-2">
                   Error Details (Development Mode):
@@ -71,10 +71,10 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
                 </p>
                 {error.stack && (
                   <details className="mt-2">
-                    <summary className="text-xs text-red-700 dark:text-red-300 cursor-pointer hover:underline">
+                    <summary className="text-xs text-error-dark dark:text-red-300 cursor-pointer hover:underline">
                       Stack Trace
                     </summary>
-                    <pre className="mt-2 text-xs text-red-700 dark:text-red-300 overflow-x-auto whitespace-pre-wrap break-words">
+                    <pre className="mt-2 text-xs text-error-dark dark:text-red-300 overflow-x-auto whitespace-pre-wrap break-words">
                       {error.stack}
                     </pre>
                   </details>
@@ -107,11 +107,11 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Help Section */}
-        <div className="mt-12 p-6 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <h3 className="heading-sub text-gray-900 dark:text-white mb-3">
+        <div className="mt-12 p-6 bg-surface dark:bg-surface/50 border border-border dark:border-gray-700 rounded-lg">
+          <h3 className="heading-sub text-foreground dark:text-white mb-3" className="heading-subsection">
             Still having issues?
           </h3>
-          <p className="body-small text-gray-600 dark:text-gray-400 mb-4">
+          <p className="body-small text-secondary dark:text-disabled mb-4">
             If the problem persists, please contact our support team. We're here to help!
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center text-sm">
@@ -121,14 +121,14 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
             >
               support@jobsightapp.com
             </a>
-            <span className="hidden sm:inline text-gray-300 dark:text-gray-600">•</span>
+            <span className="hidden sm:inline text-gray-300 dark:text-secondary">•</span>
             <button
               onClick={() => navigate('/help')}
               className="text-primary dark:text-primary-400 hover:underline font-medium"
             >
               Visit Help Center
             </button>
-            <span className="hidden sm:inline text-gray-300 dark:text-gray-600">•</span>
+            <span className="hidden sm:inline text-gray-300 dark:text-secondary">•</span>
             <button
               onClick={() => navigate('/settings/feedback')}
               className="text-primary dark:text-primary-400 hover:underline font-medium"
@@ -140,10 +140,10 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* What to Try */}
         <div className="mt-8 text-left">
-          <h4 className="text-label text-gray-700 dark:text-gray-300 mb-3">
+          <h4 className="text-label text-secondary dark:text-gray-300 mb-3" className="heading-card">
             What you can try:
           </h4>
-          <ul className="space-y-2 body-small text-gray-600 dark:text-gray-400">
+          <ul className="space-y-2 body-small text-secondary dark:text-disabled">
             <li className="flex items-start gap-2">
               <span className="text-primary dark:text-primary-400 mt-0.5">•</span>
               <span>Refresh the page and try again</span>
@@ -164,11 +164,11 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-          <p className="text-caption text-gray-400 dark:text-gray-600">
+        <div className="mt-12 pt-8 border-t border-border dark:border-gray-700">
+          <p className="text-caption text-disabled dark:text-secondary">
             <span className="font-semibold text-primary dark:text-primary-400">JobSight</span> - Construction Field Management
           </p>
-          <p className="text-caption text-gray-400 dark:text-gray-600 mt-1">
+          <p className="text-caption text-disabled dark:text-secondary mt-1">
             Error ID: {Date.now().toString(36).toUpperCase()}
           </p>
         </div>

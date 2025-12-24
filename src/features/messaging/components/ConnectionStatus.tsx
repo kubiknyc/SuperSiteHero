@@ -28,20 +28,20 @@ const STATUS_CONFIG = {
   connected: {
     icon: Wifi,
     text: 'Connected',
-    className: 'text-green-600 dark:text-green-500',
+    className: 'text-success dark:text-success',
     dotClassName: 'bg-green-500',
   },
   connecting: {
     icon: Loader2,
     text: 'Connecting...',
-    className: 'text-yellow-600 dark:text-yellow-500',
-    dotClassName: 'bg-yellow-500',
+    className: 'text-warning dark:text-warning',
+    dotClassName: 'bg-warning',
     animate: true,
   },
   disconnected: {
     icon: WifiOff,
     text: 'Disconnected',
-    className: 'text-red-600 dark:text-red-500',
+    className: 'text-error dark:text-error',
     dotClassName: 'bg-red-500',
   },
 }

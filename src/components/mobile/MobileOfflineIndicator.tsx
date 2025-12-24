@@ -65,16 +65,16 @@ export function MobileOfflineIndicator({
     return (
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-3 bg-green-50 border-b border-green-200',
+          'flex items-center gap-3 px-4 py-3 bg-success-light border-b border-green-200',
           className
         )}
       >
-        <Wifi className="h-5 w-5 text-green-600 flex-shrink-0" />
+        <Wifi className="h-5 w-5 text-success flex-shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-green-800">Back Online</p>
-          <p className="text-xs text-green-600">Syncing your changes...</p>
+          <p className="text-xs text-success">Syncing your changes...</p>
         </div>
-        <RefreshCw className="h-4 w-4 text-green-600 animate-spin" />
+        <RefreshCw className="h-4 w-4 text-success animate-spin" />
       </div>
     )
   }
@@ -84,11 +84,11 @@ export function MobileOfflineIndicator({
     return (
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-3 bg-green-50 border-b border-green-200',
+          'flex items-center gap-3 px-4 py-3 bg-success-light border-b border-green-200',
           className
         )}
       >
-        <Wifi className="h-5 w-5 text-green-600 flex-shrink-0" />
+        <Wifi className="h-5 w-5 text-success flex-shrink-0" />
         <p className="text-sm font-medium text-green-800">Connected</p>
       </div>
     )
@@ -98,26 +98,26 @@ export function MobileOfflineIndicator({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 px-4 py-3 bg-amber-50 border-b border-amber-200',
+        'flex items-center gap-3 px-4 py-3 bg-warning-light border-b border-amber-200',
         className
       )}
     >
       {isReconnecting ? (
         <>
-          <RefreshCw className="h-5 w-5 text-amber-600 flex-shrink-0 animate-spin" />
+          <RefreshCw className="h-5 w-5 text-warning flex-shrink-0 animate-spin" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-amber-800">Reconnecting...</p>
-            <p className="text-xs text-amber-600">Trying to restore connection</p>
+            <p className="text-xs text-warning">Trying to restore connection</p>
           </div>
         </>
       ) : (
         <>
-          <WifiOff className="h-5 w-5 text-amber-600 flex-shrink-0" />
+          <WifiOff className="h-5 w-5 text-warning flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-amber-800">You're Offline</p>
-            <p className="text-xs text-amber-600">Changes will sync when connected</p>
+            <p className="text-xs text-warning">Changes will sync when connected</p>
           </div>
-          <CloudOff className="h-4 w-4 text-amber-500" />
+          <CloudOff className="h-4 w-4 text-warning" />
         </>
       )}
     </div>
@@ -157,7 +157,7 @@ export function MobileOfflineBanner() {
 
   return (
     <div className="md:hidden fixed top-0 left-0 right-0 z-50 safe-area-top">
-      <div className="bg-amber-500 text-white px-4 py-2 flex items-center justify-between">
+      <div className="bg-warning text-white px-4 py-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <WifiOff className="h-4 w-4" />
           <span className="text-sm font-medium">Offline Mode</span>

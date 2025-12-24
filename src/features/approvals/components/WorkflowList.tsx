@@ -66,14 +66,14 @@ export function WorkflowList({
 
       {/* Loading state */}
       {isLoading && (
-        <div className="text-center py-8 text-gray-500">Loading workflows...</div>
+        <div className="text-center py-8 text-muted">Loading workflows...</div>
       )}
 
       {/* Empty state */}
       {!isLoading && filteredWorkflows.length === 0 && (
         <div className="text-center py-8">
-          <p className="text-gray-500">No approval workflows found.</p>
-          <p className="text-sm text-gray-400 mt-1">
+          <p className="text-muted">No approval workflows found.</p>
+          <p className="text-sm text-disabled mt-1">
             Create a workflow to start defining approval processes.
           </p>
         </div>
@@ -83,26 +83,26 @@ export function WorkflowList({
       {!isLoading && filteredWorkflows.length > 0 && (
         <div className="overflow-hidden border rounded-lg">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-surface">
               <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">
                   Workflow
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">
                   Type
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">
                   Steps
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-right text-xs font-medium text-muted uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-card divide-y divide-gray-200">
               {filteredWorkflows.map((workflow) => (
                 <WorkflowRow
                   key={workflow.id}
@@ -136,15 +136,15 @@ function TypeTab({ label, value, selected, count, onClick }: TypeTabProps) {
       className={cn(
         'px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors',
         selected
-          ? 'border-blue-500 text-blue-600'
-          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+          ? 'border-blue-500 text-primary'
+          : 'border-transparent text-muted hover:text-secondary hover:border-input'
       )}
     >
       {label}
       <span
         className={cn(
           'ml-2 px-2 py-0.5 text-xs rounded-full',
-          selected ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-600'
+          selected ? 'bg-info-light text-primary' : 'bg-muted text-secondary'
         )}
       >
         {count}
@@ -172,21 +172,21 @@ function WorkflowRow({
   const stepCount = workflow.steps?.length || 0
 
   return (
-    <tr className="hover:bg-gray-50">
+    <tr className="hover:bg-surface">
       <td className="px-4 py-3">
-        <div className="font-medium text-gray-900">{workflow.name}</div>
+        <div className="font-medium text-foreground">{workflow.name}</div>
         {workflow.description && (
-          <div className="text-sm text-gray-500 truncate max-w-xs">
+          <div className="text-sm text-muted truncate max-w-xs">
             {workflow.description}
           </div>
         )}
       </td>
       <td className="px-4 py-3">
-        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-muted text-foreground">
           {entityConfig.plural}
         </span>
       </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
+      <td className="px-4 py-3 text-sm text-muted">
         {stepCount} step{stepCount !== 1 ? 's' : ''}
       </td>
       <td className="px-4 py-3">
@@ -195,8 +195,8 @@ function WorkflowRow({
           className={cn(
             'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
             workflow.is_active
-              ? 'bg-green-100 text-green-800 hover:bg-green-200'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-success-light text-green-800 hover:bg-green-200'
+              : 'bg-muted text-secondary hover:bg-muted'
           )}
         >
           {workflow.is_active ? 'Active' : 'Inactive'}
@@ -254,7 +254,7 @@ function WorkflowRow({
               size="sm"
               onClick={() => onDelete(workflow)}
               title="Delete"
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="text-error hover:text-error-dark hover:bg-error-light"
             >
               <svg
                 className="w-4 h-4"

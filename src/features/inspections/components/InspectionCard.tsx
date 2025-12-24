@@ -44,16 +44,16 @@ export function InspectionCard({
     <Link
       to={`/inspections/${inspection.id}`}
       className={cn(
-        'block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow',
-        isOverdue && 'border-red-300 bg-red-50',
+        'block bg-card rounded-lg border border-border p-4 hover:shadow-md transition-shadow',
+        isOverdue && 'border-red-300 bg-error-light',
         className
       )}
     >
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2">
-          <ClipboardCheck className="h-5 w-5 text-gray-400" />
-          <span className="font-medium text-gray-900 line-clamp-1">
+          <ClipboardCheck className="h-5 w-5 text-disabled" />
+          <span className="font-medium text-foreground line-clamp-1">
             {inspection.inspection_name}
           </span>
         </div>
@@ -62,15 +62,15 @@ export function InspectionCard({
 
       {/* Description */}
       {inspection.description && (
-        <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+        <p className="mt-2 text-sm text-secondary line-clamp-2">
           {inspection.description}
         </p>
       )}
 
       {/* Metadata */}
-      <div className="mt-3 flex flex-wrap gap-3 text-xs text-gray-500">
+      <div className="mt-3 flex flex-wrap gap-3 text-xs text-muted">
         {scheduledDate && (
-          <div className={cn('flex items-center gap-1', isOverdue && 'text-red-600')}>
+          <div className={cn('flex items-center gap-1', isOverdue && 'text-error')}>
             <Calendar className="h-3.5 w-3.5" />
             <span>{format(scheduledDate, 'MMM d, yyyy')}</span>
             {isOverdue && (
@@ -106,7 +106,7 @@ export function InspectionCard({
       </div>
 
       {/* Footer */}
-      <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+      <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
         <InspectionStatusBadge
           status={inspection.status}
           result={inspection.result}
@@ -114,7 +114,7 @@ export function InspectionCard({
         />
 
         {scheduledDate && (
-          <div className="text-xs text-gray-400">
+          <div className="text-xs text-disabled">
             {isToday(scheduledDate)
               ? 'Today'
               : formatDistanceToNow(scheduledDate, { addSuffix: true })}
@@ -124,7 +124,7 @@ export function InspectionCard({
 
       {/* Overdue warning */}
       {isOverdue && (
-        <div className="mt-2 flex items-center gap-1 text-xs text-red-600 font-medium">
+        <div className="mt-2 flex items-center gap-1 text-xs text-error font-medium">
           <AlertTriangle className="h-3.5 w-3.5" />
           Overdue - inspection not completed
         </div>

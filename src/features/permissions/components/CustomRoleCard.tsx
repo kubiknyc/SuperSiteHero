@@ -57,7 +57,7 @@ export function CustomRoleCard({
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-base truncate">{role.name}</h3>
+              <h3 className="font-semibold text-base truncate" className="heading-subsection">{role.name}</h3>
               {!role.is_active && (
                 <Badge variant="secondary" className="text-xs">Inactive</Badge>
               )}
@@ -124,7 +124,7 @@ export function CustomRoleCard({
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onClick={() => onDelete(role)}
-                    className="text-red-600 focus:text-red-600"
+                    className="text-error focus:text-error"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete

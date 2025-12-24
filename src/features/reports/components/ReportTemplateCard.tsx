@@ -60,7 +60,7 @@ export function ReportTemplateCard({
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium text-gray-900 truncate">{template.name}</h3>
+              <h3 className="font-medium text-foreground truncate" className="heading-subsection">{template.name}</h3>
               {isSystemTemplate && (
                 <Badge variant="outline" className="text-xs">
                   <Lock className="h-3 w-3 mr-1" />
@@ -76,12 +76,12 @@ export function ReportTemplateCard({
             </div>
 
             {template.description && (
-              <p className="text-sm text-gray-500 line-clamp-2 mb-2">
+              <p className="text-sm text-muted line-clamp-2 mb-2">
                 {template.description}
               </p>
             )}
 
-            <div className="flex items-center gap-3 text-xs text-gray-500">
+            <div className="flex items-center gap-3 text-xs text-muted">
               <DataSourceBadge source={template.data_source} />
               <span>
                 {format(new Date(template.created_at), 'MMM d, yyyy')}
@@ -135,7 +135,7 @@ export function ReportTemplateCard({
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => onDelete(template)}
-                      className="text-red-600"
+                      className="text-error"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
                       Delete
@@ -160,14 +160,14 @@ export function ReportTemplateCardSkeleton() {
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
-            <div className="h-5 bg-gray-200 rounded w-48 mb-2 animate-pulse" />
-            <div className="h-4 bg-gray-200 rounded w-full mb-2 animate-pulse" />
+            <div className="h-5 bg-muted rounded w-48 mb-2 animate-pulse" />
+            <div className="h-4 bg-muted rounded w-full mb-2 animate-pulse" />
             <div className="flex items-center gap-3">
-              <div className="h-5 bg-gray-200 rounded w-20 animate-pulse" />
-              <div className="h-4 bg-gray-200 rounded w-24 animate-pulse" />
+              <div className="h-5 bg-muted rounded w-20 animate-pulse" />
+              <div className="h-4 bg-muted rounded w-24 animate-pulse" />
             </div>
           </div>
-          <div className="h-8 w-16 bg-gray-200 rounded animate-pulse" />
+          <div className="h-8 w-16 bg-muted rounded animate-pulse" />
         </div>
       </CardContent>
     </Card>

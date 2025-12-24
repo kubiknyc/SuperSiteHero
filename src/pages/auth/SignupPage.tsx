@@ -98,7 +98,7 @@ export function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-8">
+    <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-background px-4 py-8">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
           <div className="flex justify-center">
@@ -184,7 +184,7 @@ export function SignupPage() {
                 onChange={handleChange}
                 disabled={loading}
               />
-              <p className="text-caption text-gray-500 dark:text-gray-400">Must be at least 8 characters with uppercase, lowercase, number, and special character</p>
+              <p className="text-caption text-muted dark:text-disabled">Must be at least 8 characters with uppercase, lowercase, number, and special character</p>
             </div>
 
             <div className="space-y-2">
@@ -207,7 +207,7 @@ export function SignupPage() {
               {loading ? 'Creating account...' : 'Create account'}
             </Button>
 
-            <p className="body-small text-center text-gray-600 dark:text-gray-400">
+            <p className="body-small text-center text-secondary dark:text-disabled">
               Already have an account?{' '}
               <Link
                 to="/login"

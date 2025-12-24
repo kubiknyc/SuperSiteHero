@@ -198,7 +198,7 @@ export function PunchItemQRCode({
 
   const QRCodeDisplay = ({ showActions = false }: { showActions?: boolean }) => (
     <div className="flex flex-col items-center">
-      <div className="bg-white p-4 rounded-lg border shadow-sm">
+      <div className="bg-card p-4 rounded-lg border shadow-sm">
         <QRCodeSVG
           id={`qr-${punchItem.id}`}
           value={qrUrl}
@@ -211,8 +211,8 @@ export function PunchItemQRCode({
       </div>
 
       <div className="mt-3 text-center">
-        <p className="font-mono text-sm font-semibold text-gray-700">{shortId}</p>
-        <p className="text-xs text-gray-500 mt-1 max-w-[200px] truncate">{punchItem.title}</p>
+        <p className="font-mono text-sm font-semibold text-secondary">{shortId}</p>
+        <p className="text-xs text-muted mt-1 max-w-[200px] truncate">{punchItem.title}</p>
       </div>
 
       {showActions && (
@@ -282,7 +282,7 @@ export function PunchItemQRCode({
         <div className="py-4">
           <QRCodeDisplay showActions />
         </div>
-        <div className="text-xs text-gray-500 text-center">
+        <div className="text-xs text-muted text-center">
           Scan this code to quickly access this punch item on any device
         </div>
       </DialogContent>

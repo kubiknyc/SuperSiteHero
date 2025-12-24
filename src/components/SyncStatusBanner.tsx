@@ -68,18 +68,18 @@ export function SyncStatusBanner({
   if (!isOnline) {
     return (
       <div className={cn(
-        'fixed top-0 left-0 right-0 z-50 bg-yellow-50 border-b border-yellow-200 shadow-sm',
+        'fixed top-0 left-0 right-0 z-50 bg-warning-light border-b border-yellow-200 shadow-sm',
         className
       )}>
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <WifiOff className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+              <WifiOff className="w-5 h-5 text-warning flex-shrink-0" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-yellow-800">
                   You're offline
                 </p>
-                <p className="text-xs text-yellow-600 mt-0.5">
+                <p className="text-xs text-warning mt-0.5">
                   Changes will sync automatically when you're back online
                   {pendingSyncs > 0 && (
                     <span className="ml-1 font-medium">
@@ -91,7 +91,7 @@ export function SyncStatusBanner({
             </div>
             <button
               onClick={handleDismiss}
-              className="text-yellow-600 hover:text-yellow-800 text-xs"
+              className="text-warning hover:text-yellow-800 text-xs"
             >
               Dismiss
             </button>
@@ -142,12 +142,12 @@ export function SyncStatusBanner({
       )}>
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center gap-3">
-            <RefreshCw className="w-5 h-5 text-blue-600 animate-spin flex-shrink-0" />
+            <RefreshCw className="w-5 h-5 text-primary animate-spin flex-shrink-0" />
             <div className="flex-1">
               <p className="text-sm font-medium text-blue-800">
                 Syncing {pendingSyncs} {pendingSyncs === 1 ? 'change' : 'changes'}...
               </p>
-              <p className="text-xs text-blue-600 mt-0.5">
+              <p className="text-xs text-primary mt-0.5">
                 Please don't close the app
               </p>
             </div>
@@ -161,18 +161,18 @@ export function SyncStatusBanner({
   if (syncError) {
     return (
       <div className={cn(
-        'fixed top-0 left-0 right-0 z-50 bg-red-50 border-b border-red-200 shadow-sm',
+        'fixed top-0 left-0 right-0 z-50 bg-error-light border-b border-red-200 shadow-sm',
         className
       )}>
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <CloudOff className="w-5 h-5 text-red-600 flex-shrink-0" />
+              <CloudOff className="w-5 h-5 text-error flex-shrink-0" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-red-800">
                   Sync failed
                 </p>
-                <p className="text-xs text-red-600 mt-0.5">
+                <p className="text-xs text-error mt-0.5">
                   {syncError}
                 </p>
               </div>
@@ -181,14 +181,14 @@ export function SyncStatusBanner({
               {onRetrySync && (
                 <button
                   onClick={onRetrySync}
-                  className="text-xs px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                  className="text-xs px-3 py-1 bg-error text-white rounded hover:bg-red-700"
                 >
                   Retry
                 </button>
               )}
               <button
                 onClick={handleDismiss}
-                className="text-red-600 hover:text-red-800 text-xs"
+                className="text-error hover:text-red-800 text-xs"
               >
                 Dismiss
               </button>
@@ -205,25 +205,25 @@ export function SyncStatusBanner({
     if (timeAgo < 60) {
       return (
         <div className={cn(
-          'fixed top-0 left-0 right-0 z-50 bg-green-50 border-b border-green-200 shadow-sm',
+          'fixed top-0 left-0 right-0 z-50 bg-success-light border-b border-green-200 shadow-sm',
           className
         )}>
           <div className="container mx-auto px-4 py-3">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-green-800">
                     All changes synced
                   </p>
-                  <p className="text-xs text-green-600 mt-0.5">
+                  <p className="text-xs text-success mt-0.5">
                     Last synced {timeAgo < 5 ? 'just now' : `${timeAgo} seconds ago`}
                   </p>
                 </div>
               </div>
               <button
                 onClick={handleDismiss}
-                className="text-green-600 hover:text-green-800 text-xs"
+                className="text-success hover:text-green-800 text-xs"
               >
                 Dismiss
               </button>

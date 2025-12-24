@@ -151,7 +151,7 @@ function LocationTreeNode({
     <div>
       <div
         className={`flex items-center gap-2 px-2 py-1.5 rounded cursor-pointer transition-colors ${
-          isSelected ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-100'
+          isSelected ? 'bg-info-light text-blue-800' : 'hover:bg-muted'
         }`}
         style={{ paddingLeft: `${(level * 16) + 8}px` }}
         onClick={handleClick}
@@ -167,7 +167,7 @@ function LocationTreeNode({
         ) : (
           <span className="w-5" />
         )}
-        <Icon className="h-4 w-4 text-gray-500" />
+        <Icon className="h-4 w-4 text-muted" />
         <span className="flex-1 truncate text-sm">{node.name}</span>
         <Badge variant="secondary" className="text-xs">
           {node.photoCount}
@@ -277,17 +277,17 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
         <CardContent>
           {/* Summary */}
           <div className="grid grid-cols-3 gap-2 mb-4 text-center">
-            <div className="bg-gray-50 rounded p-2">
+            <div className="bg-surface rounded p-2">
               <p className="text-lg font-bold">{locationSummary.buildings}</p>
-              <p className="text-xs text-gray-500">Buildings</p>
+              <p className="text-xs text-muted">Buildings</p>
             </div>
-            <div className="bg-gray-50 rounded p-2">
+            <div className="bg-surface rounded p-2">
               <p className="text-lg font-bold">{locationSummary.floors}</p>
-              <p className="text-xs text-gray-500">Floors</p>
+              <p className="text-xs text-muted">Floors</p>
             </div>
-            <div className="bg-gray-50 rounded p-2">
+            <div className="bg-surface rounded p-2">
               <p className="text-lg font-bold">{locationSummary.areas}</p>
-              <p className="text-xs text-gray-500">Areas</p>
+              <p className="text-xs text-muted">Areas</p>
             </div>
           </div>
 
@@ -295,11 +295,11 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
           <div className="border rounded-lg max-h-[400px] overflow-y-auto">
             <div
               className={`flex items-center gap-2 px-2 py-1.5 border-b cursor-pointer ${
-                !selectedPath ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-100'
+                !selectedPath ? 'bg-info-light text-blue-800' : 'hover:bg-muted'
               }`}
               onClick={handleClearSelection}
             >
-              <Image className="h-4 w-4 text-gray-500" />
+              <Image className="h-4 w-4 text-muted" />
               <span className="flex-1 text-sm font-medium">All Photos</span>
               <Badge variant="secondary" className="text-xs">
                 {photos.length}
@@ -332,7 +332,7 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
                 <Image className="h-4 w-4" />
                 Photos
                 {breadcrumb.length > 0 && (
-                  <span className="text-gray-500 font-normal">
+                  <span className="text-muted font-normal">
                     in {breadcrumb.join(' > ')}
                   </span>
                 )}
@@ -355,7 +355,7 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
               </Button>
             )}
             <div className="relative flex-1">
-              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
               <Input
                 placeholder="Search photos..."
                 className="pl-8 h-8"
@@ -367,7 +367,7 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
                   className="absolute right-2 top-1/2 -translate-y-1/2"
                   onClick={() => setSearchTerm('')}
                 >
-                  <X className="h-4 w-4 text-gray-400" />
+                  <X className="h-4 w-4 text-disabled" />
                 </button>
               )}
             </div>
@@ -377,14 +377,14 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
           {filteredPhotos.length === 0 ? (
             <div className="text-center py-12">
               <Image className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No photos in this location</p>
+              <p className="text-muted">No photos in this location</p>
             </div>
           ) : (
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-[500px] overflow-y-auto">
               {filteredPhotos.map(photo => (
                 <div
                   key={photo.id}
-                  className="aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all"
+                  className="aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all"
                   onClick={() => onPhotoClick?.(photo)}
                 >
                   {photo.thumbnailUrl || photo.fileUrl ? (
@@ -395,7 +395,7 @@ export function LocationBrowser({ photos, onSelectPhotos, onPhotoClick }: Locati
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <Image className="h-8 w-8 text-gray-400" />
+                      <Image className="h-8 w-8 text-disabled" />
                     </div>
                   )}
                 </div>

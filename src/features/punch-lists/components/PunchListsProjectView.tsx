@@ -38,27 +38,27 @@ const PunchItemRow = memo(function PunchItemRow({
   return (
     <tr
       className={cn(
-        "border-b hover:bg-gray-50 cursor-pointer transition-colors",
-        isSelected && "bg-blue-50 hover:bg-blue-100",
+        "border-b hover:bg-surface cursor-pointer transition-colors",
+        isSelected && "bg-blue-50 hover:bg-info-light",
         // Larger row height on touch devices
         isTouchDevice && "h-14"
       )}
       onClick={() => onSelect?.(item)}
     >
-      <td className={cn("py-3 px-4 font-medium text-gray-900", isTouchDevice && "py-4")}>{item.number}</td>
+      <td className={cn("py-3 px-4 font-medium text-foreground", isTouchDevice && "py-4")}>{item.number}</td>
       <td className={cn("py-3 px-4", isTouchDevice && "py-4")}>
-        <a href={`/punch-lists/${item.id}`} className="text-blue-600 hover:underline">
+        <a href={`/punch-lists/${item.id}`} className="text-primary hover:underline">
           {item.title}
         </a>
       </td>
-      <td className={cn("py-3 px-4 text-gray-600 capitalize", isTouchDevice && "py-4")}>{item.trade}</td>
-      <td className={cn("py-3 px-4 text-gray-600 text-sm", isTouchDevice && "py-4")}>
+      <td className={cn("py-3 px-4 text-secondary capitalize", isTouchDevice && "py-4")}>{item.trade}</td>
+      <td className={cn("py-3 px-4 text-secondary text-sm", isTouchDevice && "py-4")}>
         {[item.building, item.floor, item.room].filter(Boolean).join(' / ')}
       </td>
       <td className={cn("py-3 px-4", isTouchDevice && "py-4")}>
         <PunchItemStatusBadge status={item.status} priority={item.priority} />
       </td>
-      <td className={cn("py-3 px-4 text-gray-600 text-sm", isTouchDevice && "py-4")}>
+      <td className={cn("py-3 px-4 text-secondary text-sm", isTouchDevice && "py-4")}>
         {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
       </td>
     </tr>
@@ -83,8 +83,8 @@ const PunchItemListItem = memo(function PunchItemListItem({
     <div
       className={cn(
         "flex items-center justify-between p-4 border-b cursor-pointer transition-colors",
-        "hover:bg-gray-50",
-        isSelected && "bg-blue-50 hover:bg-blue-100 border-l-4 border-l-blue-500",
+        "hover:bg-surface",
+        isSelected && "bg-blue-50 hover:bg-info-light border-l-4 border-l-blue-500",
         // Larger touch target on touch devices
         isTouchDevice && "min-h-touch"
       )}
@@ -92,15 +92,15 @@ const PunchItemListItem = memo(function PunchItemListItem({
     >
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-sm font-medium text-gray-500">#{item.number}</span>
+          <span className="text-sm font-medium text-muted">#{item.number}</span>
           <PunchItemStatusBadge status={item.status} priority={item.priority} />
         </div>
-        <h4 className="font-medium text-gray-900 truncate">{item.title}</h4>
-        <p className="text-sm text-gray-500 truncate">
+        <h4 className="font-medium text-foreground truncate" className="heading-card">{item.title}</h4>
+        <p className="text-sm text-muted truncate">
           {[item.building, item.floor, item.room].filter(Boolean).join(' / ') || 'No location'}
         </p>
       </div>
-      <ChevronRight className="h-5 w-5 text-gray-400 flex-shrink-0 ml-2" />
+      <ChevronRight className="h-5 w-5 text-disabled flex-shrink-0 ml-2" />
     </div>
   )
 })
@@ -115,7 +115,7 @@ interface PunchItemDetailPanelProps {
 function PunchItemDetailPanel({ item, onClose, isTouchDevice }: PunchItemDetailPanelProps) {
   if (!item) {
     return (
-      <div className="flex items-center justify-center h-full text-gray-500">
+      <div className="flex items-center justify-center h-full text-muted">
         <p>Select a punch item to view details</p>
       </div>
     )
@@ -123,10 +123,10 @@ function PunchItemDetailPanel({ item, onClose, isTouchDevice }: PunchItemDetailP
 
   return (
     <div className="h-full overflow-auto">
-      <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between">
+      <div className="sticky top-0 bg-card border-b p-4 flex items-center justify-between">
         <div>
-          <span className="text-sm text-gray-500">#{item.number}</span>
-          <h3 className="font-semibold text-lg">{item.title}</h3>
+          <span className="text-sm text-muted">#{item.number}</span>
+          <h3 className="font-semibold text-lg" className="heading-subsection">{item.title}</h3>
         </div>
         {onClose && (
           <Button
@@ -146,30 +146,30 @@ function PunchItemDetailPanel({ item, onClose, isTouchDevice }: PunchItemDetailP
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium text-gray-500">Trade</label>
-            <p className="text-gray-900 capitalize">{item.trade || '-'}</p>
+            <label className="text-sm font-medium text-muted">Trade</label>
+            <p className="text-foreground capitalize">{item.trade || '-'}</p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-500">Due Date</label>
-            <p className="text-gray-900">
+            <label className="text-sm font-medium text-muted">Due Date</label>
+            <p className="text-foreground">
               {item.due_date ? format(new Date(item.due_date), 'MMM d, yyyy') : '-'}
             </p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-500">Location</label>
-            <p className="text-gray-900">
+            <label className="text-sm font-medium text-muted">Location</label>
+            <p className="text-foreground">
               {[item.building, item.floor, item.room].filter(Boolean).join(' / ') || '-'}
             </p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-500">Area</label>
-            <p className="text-gray-900">{item.area || '-'}</p>
+            <label className="text-sm font-medium text-muted">Area</label>
+            <p className="text-foreground">{item.area || '-'}</p>
           </div>
         </div>
 
         <div>
-          <label className="text-sm font-medium text-gray-500">Description</label>
-          <p className="text-gray-900 mt-1">{item.description || 'No description provided'}</p>
+          <label className="text-sm font-medium text-muted">Description</label>
+          <p className="text-foreground mt-1">{item.description || 'No description provided'}</p>
         </div>
 
         <div className="pt-4 flex gap-2">
@@ -241,8 +241,8 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No project selected</p>
+          <AlertCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+          <p className="text-secondary">No project selected</p>
         </CardContent>
       </Card>
     )
@@ -252,8 +252,8 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <Loader2 className="h-12 w-12 text-gray-400 mx-auto mb-4 animate-spin" />
-          <p className="text-gray-600">Loading punch lists...</p>
+          <Loader2 className="h-12 w-12 text-disabled mx-auto mb-4 animate-spin" />
+          <p className="text-secondary">Loading punch lists...</p>
         </CardContent>
       </Card>
     )
@@ -264,7 +264,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
       <Card>
         <CardContent className="p-12 text-center">
           <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-          <p className="text-red-600">Failed to load punch lists</p>
+          <p className="text-error">Failed to load punch lists</p>
         </CardContent>
       </Card>
     )
@@ -274,17 +274,17 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
   if (useMasterDetailLayout) {
     return (
       <>
-        <div className="flex h-[calc(100vh-200px)] min-h-[500px] border rounded-lg overflow-hidden bg-white">
+        <div className="flex h-[calc(100vh-200px)] min-h-[500px] border rounded-lg overflow-hidden bg-card">
           {/* Master Panel - List */}
           <div className={cn(
             "flex flex-col border-r",
             selectedItem ? "w-[360px] flex-shrink-0" : "flex-1"
           )}>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-gray-50">
+            <div className="flex items-center justify-between p-4 border-b bg-surface">
               <div>
-                <h2 className="font-semibold">Punch List</h2>
-                <p className="text-sm text-gray-500">
+                <h2 className="font-semibold" className="heading-section">Punch List</h2>
+                <p className="text-sm text-muted">
                   {filtered.length} item{filtered.length !== 1 ? 's' : ''}
                 </p>
               </div>
@@ -326,7 +326,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
               {filtered.length === 0 ? (
                 <div className="text-center py-8">
                   <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-                  <p className="text-gray-500 text-sm">No items found</p>
+                  <p className="text-muted text-sm">No items found</p>
                 </div>
               ) : (
                 filtered.map((item: PunchItem) => (
@@ -344,7 +344,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
 
           {/* Detail Panel */}
           {selectedItem && (
-            <div className="flex-1 bg-gray-50">
+            <div className="flex-1 bg-surface">
               <PunchItemDetailPanel
                 item={selectedItem}
                 onClose={handleCloseDetail}
@@ -355,7 +355,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
 
           {/* Empty state for detail panel */}
           {!selectedItem && (
-            <div className="flex-1 flex items-center justify-center bg-gray-50 text-gray-500">
+            <div className="flex-1 flex items-center justify-center bg-surface text-muted">
               <div className="text-center">
                 <AlertCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
                 <p>Select a punch item to view details</p>
@@ -421,7 +421,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
             {filtered.length === 0 ? (
               <div className="text-center py-8">
                 <AlertCircle className="h-10 w-10 text-gray-300 mx-auto mb-2" />
-                <p className="text-gray-500">No punch items found</p>
+                <p className="text-muted">No punch items found</p>
               </div>
             ) : (
               <div className="border rounded-lg overflow-hidden divide-y">
@@ -496,19 +496,19 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
           {filtered.length === 0 ? (
             <div className="text-center py-8">
               <AlertCircle className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-              <p className="text-gray-500">No punch items found</p>
+              <p className="text-muted">No punch items found</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>#</th>
-                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Title</th>
-                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Trade</th>
-                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Location</th>
-                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Status</th>
-                    <th className={cn("text-left py-3 px-4 font-medium text-gray-700", isTouchDevice && "py-4")}>Due Date</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-secondary", isTouchDevice && "py-4")}>#</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-secondary", isTouchDevice && "py-4")}>Title</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-secondary", isTouchDevice && "py-4")}>Trade</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-secondary", isTouchDevice && "py-4")}>Location</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-secondary", isTouchDevice && "py-4")}>Status</th>
+                    <th className={cn("text-left py-3 px-4 font-medium text-secondary", isTouchDevice && "py-4")}>Due Date</th>
                   </tr>
                 </thead>
                 <tbody>

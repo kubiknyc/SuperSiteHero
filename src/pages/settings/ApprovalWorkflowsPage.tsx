@@ -111,7 +111,7 @@ export function ApprovalWorkflowsPage() {
     return (
       <AppLayout>
         <div className="p-6 max-w-6xl mx-auto">
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-muted">
             Please log in to manage approval workflows.
           </div>
         </div>
@@ -125,10 +125,10 @@ export function ApprovalWorkflowsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">
               Approval Workflows
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-muted mt-1">
               Configure approval workflows for documents, submittals, RFIs, and change orders
             </p>
           </div>
@@ -154,8 +154,8 @@ export function ApprovalWorkflowsPage() {
         )}
 
         {viewMode === 'create' && (
-          <div className="bg-white border rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-card border rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
               Create New Workflow
             </h2>
             <WorkflowBuilder
@@ -169,8 +169,8 @@ export function ApprovalWorkflowsPage() {
         )}
 
         {viewMode === 'edit' && editingWorkflow && (
-          <div className="bg-white border rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-card border rounded-lg p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
               Edit Workflow
             </h2>
             <WorkflowBuilder

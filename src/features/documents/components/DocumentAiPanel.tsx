@@ -103,8 +103,8 @@ export function DocumentAiPanel({
               className={cn(
                 'flex items-center gap-1.5 px-3 py-2 text-sm font-medium rounded-t-lg transition-colors',
                 activeTab === tab.id
-                  ? 'bg-white border-b-2 border-blue-600 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  ? 'bg-card border-b-2 border-primary text-primary'
+                  : 'text-muted hover:text-secondary hover:bg-surface'
               )}
             >
               <span>{tab.icon}</span>
@@ -192,8 +192,8 @@ function OverviewTab({
     return (
       <div className="text-center py-8">
         <span className="text-4xl">🤖</span>
-        <h3 className="text-lg font-medium mt-4">AI Analysis Available</h3>
-        <p className="text-gray-500 mt-2">
+        <h3 className="text-lg font-medium mt-4" className="heading-subsection">AI Analysis Available</h3>
+        <p className="text-muted mt-2">
           Run AI analysis to extract text, detect category, and find similar documents.
         </p>
         <Button
@@ -211,8 +211,8 @@ function OverviewTab({
     return (
       <div className="text-center py-8">
         <div className="inline-block animate-spin text-4xl">⚙️</div>
-        <h3 className="text-lg font-medium mt-4">Processing...</h3>
-        <p className="text-gray-500 mt-2">
+        <h3 className="text-lg font-medium mt-4" className="heading-subsection">Processing...</h3>
+        <p className="text-muted mt-2">
           AI analysis is in progress. This may take a few moments.
         </p>
         <DocumentAiStatusIndicator
@@ -227,9 +227,9 @@ function OverviewTab({
   return (
     <div className="space-y-6">
       {/* Category */}
-      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+      <div className="flex items-center justify-between p-4 bg-surface rounded-lg">
         <div>
-          <p className="text-sm text-gray-500">Detected Category</p>
+          <p className="text-sm text-muted">Detected Category</p>
           <div className="mt-1">
             {category ? (
               <DocumentCategoryBadge
@@ -238,7 +238,7 @@ function OverviewTab({
                 showConfidence
               />
             ) : (
-              <span className="text-gray-400">Not categorized</span>
+              <span className="text-disabled">Not categorized</span>
             )}
           </div>
         </div>
@@ -306,10 +306,10 @@ interface QuickStatProps {
 
 function QuickStat({ label, value, icon }: QuickStatProps) {
   return (
-    <div className="text-center p-3 bg-gray-50 rounded-lg">
+    <div className="text-center p-3 bg-surface rounded-lg">
       <span className="text-xl">{icon}</span>
       <p className="text-lg font-semibold mt-1">{value}</p>
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-xs text-muted">{label}</p>
     </div>
   )
 }

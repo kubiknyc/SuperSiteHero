@@ -132,13 +132,13 @@ export function SchedulesPage() {
   const getStatusColor = (status: ScheduleStatus): string => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800 border-green-200'
+        return 'bg-success-light text-green-800 border-green-200'
       case 'paused':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200'
+        return 'bg-warning-light text-yellow-800 border-yellow-200'
       case 'completed':
-        return 'bg-blue-100 text-blue-800 border-blue-200'
+        return 'bg-info-light text-blue-800 border-blue-200'
       case 'cancelled':
-        return 'bg-gray-100 text-gray-800 border-gray-200'
+        return 'bg-muted text-foreground border-border'
     }
   }
 
@@ -156,17 +156,17 @@ export function SchedulesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 flex items-center gap-3">
-                <Repeat className="w-8 h-8 text-blue-600" />
+              <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3" className="heading-page">
+                <Repeat className="w-8 h-8 text-primary" />
                 Recurring Schedules
               </h1>
-              <p className="text-gray-600">
+              <p className="text-secondary">
                 Manage automated checklist creation and reminders
               </p>
             </div>
@@ -200,31 +200,31 @@ export function SchedulesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-5 gap-4 mb-6">
             <Card>
               <CardContent className="pt-6">
-                <div className="text-sm font-medium text-gray-600">Total Schedules</div>
-                <div className="text-3xl font-bold text-gray-900 mt-1">{stats.total_schedules}</div>
+                <div className="text-sm font-medium text-secondary">Total Schedules</div>
+                <div className="text-3xl font-bold text-foreground mt-1">{stats.total_schedules}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-sm font-medium text-gray-600">Active</div>
-                <div className="text-3xl font-bold text-green-600 mt-1">{stats.active_schedules}</div>
+                <div className="text-sm font-medium text-secondary">Active</div>
+                <div className="text-3xl font-bold text-success mt-1">{stats.active_schedules}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-sm font-medium text-gray-600">Upcoming</div>
-                <div className="text-3xl font-bold text-blue-600 mt-1">{stats.upcoming_due_count}</div>
+                <div className="text-sm font-medium text-secondary">Upcoming</div>
+                <div className="text-3xl font-bold text-primary mt-1">{stats.upcoming_due_count}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-sm font-medium text-gray-600">Overdue</div>
-                <div className="text-3xl font-bold text-red-600 mt-1">{stats.overdue_count}</div>
+                <div className="text-sm font-medium text-secondary">Overdue</div>
+                <div className="text-3xl font-bold text-error mt-1">{stats.overdue_count}</div>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-6">
-                <div className="text-sm font-medium text-gray-600">Total Created</div>
+                <div className="text-sm font-medium text-secondary">Total Created</div>
                 <div className="text-3xl font-bold text-purple-600 mt-1">
                   {stats.total_executions_created}
                 </div>
@@ -240,7 +240,7 @@ export function SchedulesPage() {
               {/* Search */}
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-disabled w-4 h-4" />
                   <Input
                     placeholder="Search schedules..."
                     value={searchQuery}
@@ -255,7 +255,7 @@ export function SchedulesPage() {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-                  className="h-10 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+                  className="h-10 rounded-md border border-input bg-card px-3 py-2 text-sm"
                 >
                   <option value="all">All Statuses</option>
                   <option value="active">Active</option>
@@ -272,18 +272,18 @@ export function SchedulesPage() {
         {isLoading ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4" />
-              <p className="text-gray-600">Loading schedules...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+              <p className="text-secondary">Loading schedules...</p>
             </CardContent>
           </Card>
         ) : filteredSchedules.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Repeat className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <Repeat className="w-12 h-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
                 {allSchedules.length === 0 ? 'No schedules yet' : 'No schedules match your filters'}
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-secondary mb-4">
                 {allSchedules.length === 0
                   ? 'Create your first recurring schedule to automate checklist creation.'
                   : 'Try adjusting your search and filter criteria.'}
@@ -312,7 +312,7 @@ export function SchedulesPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">{schedule.name}</h3>
+                          <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">{schedule.name}</h3>
                           <Badge className={getStatusColor(schedule.status)}>
                             {getStatusIcon(schedule.status)}
                             <span className="ml-1">{schedule.status}</span>
@@ -326,53 +326,53 @@ export function SchedulesPage() {
                         </div>
 
                         {schedule.description && (
-                          <p className="text-sm text-gray-600 mb-3">{schedule.description}</p>
+                          <p className="text-sm text-secondary mb-3">{schedule.description}</p>
                         )}
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-500">Template</p>
-                            <p className="font-medium text-gray-900">{template?.name || 'Unknown'}</p>
+                            <p className="text-muted">Template</p>
+                            <p className="font-medium text-foreground">{template?.name || 'Unknown'}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500">Project</p>
-                            <p className="font-medium text-gray-900">{project?.name || 'Unknown'}</p>
+                            <p className="text-muted">Project</p>
+                            <p className="font-medium text-foreground">{project?.name || 'Unknown'}</p>
                           </div>
                           <div>
-                            <p className="text-gray-500 flex items-center gap-1">
+                            <p className="text-muted flex items-center gap-1">
                               <Repeat className="w-3 h-3" />
                               Frequency
                             </p>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-medium text-foreground">
                               {getFrequencyLabel(schedule.frequency, schedule.interval)}
                             </p>
                             {schedule.frequency === 'weekly' && schedule.days_of_week && (
-                              <p className="text-xs text-gray-500">
+                              <p className="text-xs text-muted">
                                 {schedule.days_of_week.map(getDayOfWeekLabel).join(', ')}
                               </p>
                             )}
                           </div>
                           <div>
-                            <p className="text-gray-500 flex items-center gap-1">
+                            <p className="text-muted flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
                               Next Due
                             </p>
                             {nextDue ? (
                               <>
-                                <p className="font-medium text-gray-900">
+                                <p className="font-medium text-foreground">
                                   {format(nextDue, 'MMM d, yyyy')}
                                 </p>
-                                <p className="text-xs text-gray-500">
+                                <p className="text-xs text-muted">
                                   {formatDistanceToNow(nextDue, { addSuffix: true })}
                                 </p>
                               </>
                             ) : (
-                              <p className="text-gray-500">-</p>
+                              <p className="text-muted">-</p>
                             )}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-4 mt-4 text-xs text-gray-500">
+                        <div className="flex items-center gap-4 mt-4 text-xs text-muted">
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             Created {formatDistanceToNow(new Date(schedule.created_at))} ago
@@ -381,7 +381,7 @@ export function SchedulesPage() {
                             Executions: {schedule.total_executions_created}
                           </span>
                           {schedule.reminder_enabled && (
-                            <span className="flex items-center gap-1 text-blue-600">
+                            <span className="flex items-center gap-1 text-primary">
                               <Clock className="w-3 h-3" />
                               Reminder {schedule.reminder_hours_before}h before
                             </span>
@@ -423,7 +423,7 @@ export function SchedulesPage() {
                           size="icon"
                           onClick={() => handleDeleteSchedule(schedule)}
                           title="Delete schedule"
-                          className="text-red-600 hover:text-red-800"
+                          className="text-error hover:text-red-800"
                         >
                           <Trash2 className="w-4 h-4" />
                         </Button>

@@ -102,7 +102,7 @@ export function GanttToolbar({
   }
 
   return (
-    <div className="flex items-center justify-between p-3 bg-white border-b">
+    <div className="flex items-center justify-between p-3 bg-card border-b">
       {/* Left: Navigation & Zoom */}
       <div className="flex items-center gap-2">
         {/* Navigation */}
@@ -183,7 +183,7 @@ export function GanttToolbar({
           size="sm"
           onClick={onToggleCriticalPath}
           title="Toggle critical path"
-          className={showCriticalPath ? 'bg-red-600 hover:bg-red-700' : ''}
+          className={showCriticalPath ? 'bg-error hover:bg-red-700' : ''}
         >
           <AlertTriangle className="h-4 w-4 mr-1" />
           Critical Path
@@ -244,7 +244,7 @@ export function GanttToolbar({
               </DropdownMenuItem>
             )}
             {onClearBaseline && hasBaseline && (
-              <DropdownMenuItem onClick={onClearBaseline} className="text-red-600">
+              <DropdownMenuItem onClick={onClearBaseline} className="text-error">
                 <Trash2 className="h-4 w-4 mr-2" />
                 Clear Baseline
               </DropdownMenuItem>
@@ -265,8 +265,8 @@ export function GanttToolbar({
         {/* Project duration from critical path */}
         {criticalPathInfo && (
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-gray-400" />
-            <span className="text-sm text-gray-500">
+            <Clock className="h-4 w-4 text-disabled" />
+            <span className="text-sm text-muted">
               {criticalPathInfo.projectDuration} days
             </span>
           </div>
@@ -274,30 +274,30 @@ export function GanttToolbar({
 
         {stats && (
           <>
-            <div className="h-4 border-l border-gray-300" />
+            <div className="h-4 border-l border-input" />
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-500">Progress:</span>
+              <span className="text-sm text-muted">Progress:</span>
               <Badge
                 variant="outline"
                 className={
                   stats.overall_progress >= 75
-                    ? 'bg-green-50 text-green-700 border-green-200'
+                    ? 'bg-success-light text-success-dark border-green-200'
                     : stats.overall_progress >= 50
-                    ? 'bg-blue-50 text-blue-700 border-blue-200'
+                    ? 'bg-blue-50 text-primary-hover border-blue-200'
                     : stats.overall_progress >= 25
-                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                    : 'bg-gray-50 text-gray-700 border-gray-200'
+                    ? 'bg-warning-light text-yellow-700 border-yellow-200'
+                    : 'bg-surface text-secondary border-border'
                 }
               >
                 {stats.overall_progress}%
               </Badge>
             </div>
 
-            <div className="h-4 border-l border-gray-300" />
+            <div className="h-4 border-l border-input" />
 
             <div className="flex items-center gap-2 text-sm">
-              <span className="text-gray-500">Tasks:</span>
+              <span className="text-muted">Tasks:</span>
               <span className="font-medium">
                 {stats.completed_tasks}/{stats.total_tasks}
               </span>
@@ -305,7 +305,7 @@ export function GanttToolbar({
 
             {stats.overdue_tasks > 0 && (
               <>
-                <div className="h-4 border-l border-gray-300" />
+                <div className="h-4 border-l border-input" />
                 <Badge variant="destructive" className="gap-1">
                   <AlertTriangle className="h-3 w-3" />
                   {stats.overdue_tasks} overdue
@@ -315,8 +315,8 @@ export function GanttToolbar({
 
             {stats.critical_tasks > 0 && (
               <>
-                <div className="h-4 border-l border-gray-300" />
-                <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                <div className="h-4 border-l border-input" />
+                <Badge variant="outline" className="bg-error-light text-error-dark border-red-200">
                   {stats.critical_tasks} critical
                 </Badge>
               </>

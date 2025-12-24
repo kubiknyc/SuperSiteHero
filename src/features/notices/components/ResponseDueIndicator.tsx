@@ -24,7 +24,7 @@ export function ResponseDueIndicator({
 
   if (notice.response_date) {
     return (
-      <div className={cn('flex items-center gap-1 text-green-600', className)}>
+      <div className={cn('flex items-center gap-1 text-success', className)}>
         {showIcon && <CheckCircle className="w-4 h-4" />}
         <span className="text-sm">Responded</span>
       </div>
@@ -33,7 +33,7 @@ export function ResponseDueIndicator({
 
   if (!notice.response_due_date) {
     return (
-      <div className={cn('flex items-center gap-1 text-gray-500', className)}>
+      <div className={cn('flex items-center gap-1 text-muted', className)}>
         {showIcon && <Clock className="w-4 h-4" />}
         <span className="text-sm">Response required (no due date)</span>
       </div>
@@ -46,17 +46,17 @@ export function ResponseDueIndicator({
   if (daysUntilDue === null) {return null}
 
   // Determine urgency level and styling
-  let urgencyClass = 'text-gray-600'
+  let urgencyClass = 'text-secondary'
   let Icon = Clock
   let label = ''
 
   if (overdue) {
-    urgencyClass = 'text-red-600 font-medium'
+    urgencyClass = 'text-error font-medium'
     Icon = AlertTriangle
     const daysOverdue = Math.abs(daysUntilDue)
     label = daysOverdue === 1 ? '1 day overdue' : `${daysOverdue} days overdue`
   } else if (daysUntilDue === 0) {
-    urgencyClass = 'text-red-600 font-medium'
+    urgencyClass = 'text-error font-medium'
     Icon = AlertTriangle
     label = 'Due today'
   } else if (daysUntilDue === 1) {
@@ -67,7 +67,7 @@ export function ResponseDueIndicator({
     urgencyClass = 'text-orange-500'
     label = `Due in ${daysUntilDue} days`
   } else if (daysUntilDue <= 7) {
-    urgencyClass = 'text-yellow-600'
+    urgencyClass = 'text-warning'
     label = `Due in ${daysUntilDue} days`
   } else {
     label = `Due in ${daysUntilDue} days`

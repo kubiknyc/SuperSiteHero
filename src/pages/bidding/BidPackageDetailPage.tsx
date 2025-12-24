@@ -109,7 +109,7 @@ export default function BidPackageDetailPage() {
       <div className="container py-8">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-xl font-semibold mb-2">Bid Package Not Found</h2>
+          <h2 className="text-xl font-semibold mb-2" className="heading-section">Bid Package Not Found</h2>
           <p className="text-muted-foreground mb-4">
             The bid package you're looking for doesn't exist or you don't have access.
           </p>
@@ -175,7 +175,7 @@ export default function BidPackageDetailPage() {
             Back to Bid Packages
           </Button>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold">
+            <h1 className="text-2xl font-bold" className="heading-page">
               {bidPackage.package_number} - {bidPackage.name}
             </h1>
             <BidPackageStatusBadge status={bidPackage.status} />
@@ -238,7 +238,7 @@ export default function BidPackageDetailPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className={`text-xl font-semibold ${isOverdue ? 'text-red-600' : isDueSoon ? 'text-orange-600' : ''}`}>
+            <div className={`text-xl font-semibold ${isOverdue ? 'text-error' : isDueSoon ? 'text-orange-600' : ''}`}>
               {format(new Date(bidPackage.bid_due_date), 'MMM d, yyyy')}
             </div>
             <div className="text-sm text-muted-foreground">
@@ -273,7 +273,7 @@ export default function BidPackageDetailPage() {
           <CardContent>
             <div className="text-xl font-semibold">{stats?.bids_received || 0}</div>
             {stats?.low_bid && (
-              <div className="text-sm text-green-600">
+              <div className="text-sm text-success">
                 Low: {formatBidAmount(stats.low_bid)}
               </div>
             )}
@@ -381,17 +381,17 @@ export default function BidPackageDetailPage() {
                 <CardContent className="space-y-3">
                   <div className="flex items-center gap-3">
                     {bidPackage.requires_prequalification ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      <CheckCircle2 className="w-5 h-5 text-success" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                      <div className="w-5 h-5 rounded-full border-2 border-input" />
                     )}
                     <span>Prequalification Required</span>
                   </div>
                   <div className="flex items-center gap-3">
                     {bidPackage.requires_bid_bond ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      <CheckCircle2 className="w-5 h-5 text-success" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                      <div className="w-5 h-5 rounded-full border-2 border-input" />
                     )}
                     <span>
                       Bid Bond Required
@@ -400,17 +400,17 @@ export default function BidPackageDetailPage() {
                   </div>
                   <div className="flex items-center gap-3">
                     {bidPackage.requires_performance_bond ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      <CheckCircle2 className="w-5 h-5 text-success" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                      <div className="w-5 h-5 rounded-full border-2 border-input" />
                     )}
                     <span>Performance Bond Required</span>
                   </div>
                   <div className="flex items-center gap-3">
                     {bidPackage.requires_insurance_cert ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
+                      <CheckCircle2 className="w-5 h-5 text-success" />
                     ) : (
-                      <div className="w-5 h-5 rounded-full border-2 border-gray-300" />
+                      <div className="w-5 h-5 rounded-full border-2 border-input" />
                     )}
                     <span>Insurance Certificate Required</span>
                   </div>
@@ -486,14 +486,14 @@ export default function BidPackageDetailPage() {
                   <CardContent className="space-y-4">
                     <Progress value={responseRate} className="h-2" />
                     <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="text-center p-2 rounded bg-green-50">
-                        <div className="text-lg font-semibold text-green-600">
+                      <div className="text-center p-2 rounded bg-success-light">
+                        <div className="text-lg font-semibold text-success">
                           {invitations?.filter((i) => i.response_status === 'accepted').length || 0}
                         </div>
                         <div className="text-muted-foreground">Accepted</div>
                       </div>
-                      <div className="text-center p-2 rounded bg-red-50">
-                        <div className="text-lg font-semibold text-red-600">
+                      <div className="text-center p-2 rounded bg-error-light">
+                        <div className="text-lg font-semibold text-error">
                           {invitations?.filter((i) => i.response_status === 'declined').length || 0}
                         </div>
                         <div className="text-muted-foreground">Declined</div>

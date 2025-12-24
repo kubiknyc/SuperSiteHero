@@ -58,17 +58,17 @@ type SortField = 'amount' | 'rank' | 'company' | 'variance'
 type SortDirection = 'asc' | 'desc'
 
 function getRankIcon(rank: number) {
-  if (rank === 1) {return <Trophy className="w-4 h-4 text-yellow-500" />}
-  if (rank === 2) {return <Medal className="w-4 h-4 text-gray-400" />}
-  if (rank === 3) {return <Medal className="w-4 h-4 text-amber-600" />}
+  if (rank === 1) {return <Trophy className="w-4 h-4 text-warning" />}
+  if (rank === 2) {return <Medal className="w-4 h-4 text-disabled" />}
+  if (rank === 3) {return <Medal className="w-4 h-4 text-warning" />}
   return <span className="text-sm font-medium">#{rank}</span>
 }
 
 function getVarianceColor(variance: number): string {
-  if (variance <= 0) {return 'text-green-600'}
-  if (variance <= 5) {return 'text-yellow-600'}
+  if (variance <= 0) {return 'text-success'}
+  if (variance <= 5) {return 'text-warning'}
   if (variance <= 10) {return 'text-orange-600'}
-  return 'text-red-600'
+  return 'text-error'
 }
 
 interface BidBarProps {
@@ -92,14 +92,14 @@ function BidBar({ submission, maxBid, lowBid, estimatedValue }: BidBarProps) {
     <div className="space-y-1">
       <div className="flex items-center justify-between text-sm">
         <div className="flex items-center gap-2">
-          <span className={cn('font-medium', isLow && 'text-green-600')}>
+          <span className={cn('font-medium', isLow && 'text-success')}>
             {submission.bidder_company_name}
           </span>
-          {isLow && <Badge variant="default" className="text-xs bg-green-600">Low Bid</Badge>}
+          {isLow && <Badge variant="default" className="text-xs bg-success">Low Bid</Badge>}
           {submission.is_late && <Badge variant="destructive" className="text-xs">Late</Badge>}
         </div>
         <div className="flex items-center gap-4 text-muted-foreground">
-          <span className={cn('font-semibold', isLow ? 'text-green-600' : 'text-foreground')}>
+          <span className={cn('font-semibold', isLow ? 'text-success' : 'text-foreground')}>
             {formatBidAmount(submission.base_bid_amount)}
           </span>
           {varianceFromLow > 0 && (
@@ -276,7 +276,7 @@ export function BidComparisonView({
             <Card>
               <CardContent className="p-4">
                 <div className="text-sm text-muted-foreground">Low Bid</div>
-                <div className="text-xl font-semibold text-green-600">
+                <div className="text-xl font-semibold text-success">
                   {formatBidAmount(stats.low)}
                 </div>
               </CardContent>
@@ -284,7 +284,7 @@ export function BidComparisonView({
             <Card>
               <CardContent className="p-4">
                 <div className="text-sm text-muted-foreground">High Bid</div>
-                <div className="text-xl font-semibold text-red-600">
+                <div className="text-xl font-semibold text-error">
                   {formatBidAmount(stats.high)}
                 </div>
               </CardContent>
@@ -311,7 +311,7 @@ export function BidComparisonView({
                   <div className="text-sm text-muted-foreground">vs Estimate</div>
                   <div className={cn(
                     'text-xl font-semibold flex items-center gap-1',
-                    stats.low < estimatedValue ? 'text-green-600' : 'text-red-600'
+                    stats.low < estimatedValue ? 'text-success' : 'text-error'
                   )}>
                     {stats.low < estimatedValue ? (
                       <TrendingDown className="w-4 h-4" />
@@ -397,7 +397,7 @@ export function BidComparisonView({
             </TableHeader>
             <TableBody>
               {sortedBids.map((bid) => (
-                <TableRow key={bid.id} className={cn(bid.rank === 1 && 'bg-green-50')}>
+                <TableRow key={bid.id} className={cn(bid.rank === 1 && 'bg-success-light')}>
                   <TableCell>
                     <div className="flex items-center justify-center">
                       {getRankIcon(bid.rank)}
@@ -413,7 +413,7 @@ export function BidComparisonView({
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className={cn('text-right font-mono', bid.rank === 1 && 'text-green-600 font-semibold')}>
+                  <TableCell className={cn('text-right font-mono', bid.rank === 1 && 'text-success font-semibold')}>
                     {formatBidAmount(bid.base_bid_amount)}
                   </TableCell>
                   <TableCell className="text-right font-mono text-muted-foreground">
@@ -429,8 +429,8 @@ export function BidComparisonView({
                     <TableCell className={cn(
                       'text-right',
                       bid.varianceFromEstimate !== null && bid.varianceFromEstimate < 0
-                        ? 'text-green-600'
-                        : 'text-red-600'
+                        ? 'text-success'
+                        : 'text-error'
                     )}>
                       {bid.varianceFromEstimate !== null
                         ? `${bid.varianceFromEstimate > 0 ? '+' : ''}${bid.varianceFromEstimate.toFixed(1)}%`
@@ -445,7 +445,7 @@ export function BidComparisonView({
                         bid.status === 'shortlisted' ? 'outline' :
                         'secondary'
                       }
-                      className={cn(bid.status === 'awarded' && 'bg-green-600')}
+                      className={cn(bid.status === 'awarded' && 'bg-success')}
                     >
                       {bid.status}
                     </Badge>

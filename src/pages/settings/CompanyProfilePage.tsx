@@ -139,7 +139,7 @@ export function CompanyProfilePage() {
       <div className="container max-w-4xl py-6 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold">Company Profile</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Company Profile</h1>
           <p className="text-muted-foreground">
             Manage your company information and branding
           </p>
@@ -210,8 +210,8 @@ export function CompanyProfilePage() {
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-blue-100">
-                <MapPin className="h-5 w-5 text-blue-600" />
+              <div className="p-2 rounded-lg bg-info-light">
+                <MapPin className="h-5 w-5 text-primary" />
               </div>
               <div>
                 <CardTitle>Address</CardTitle>

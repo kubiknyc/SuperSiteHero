@@ -30,17 +30,17 @@ export function MFAQRCode({
     <div className="space-y-4">
       <Card className="p-6">
         <div className="flex items-center justify-center mb-4">
-          <div className="bg-blue-100 rounded-full p-3">
-            <Shield className="h-6 w-6 text-blue-600" />
+          <div className="bg-info-light rounded-full p-3">
+            <Shield className="h-6 w-6 text-primary" />
           </div>
         </div>
 
-        <h3 className="text-lg font-semibold text-center mb-4">
+        <h3 className="text-lg font-semibold text-center mb-4" className="heading-subsection">
           Scan with Authenticator App
         </h3>
 
         {/* QR Code */}
-        <div className="bg-white p-4 rounded-lg border-2 border-gray-200 flex justify-center">
+        <div className="bg-card p-4 rounded-lg border-2 border-border flex justify-center">
           <div
             className="qr-code-container"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(qrSvg, { USE_PROFILES: { svg: true } }) }}
@@ -52,31 +52,31 @@ export function MFAQRCode({
           />
         </div>
 
-        <div className="mt-4 text-center text-sm text-gray-600">
+        <div className="mt-4 text-center text-sm text-secondary">
           <Smartphone className="h-4 w-4 inline mr-1" />
           Use Google Authenticator, Microsoft Authenticator, or Authy
         </div>
       </Card>
 
       {/* Manual Entry Option */}
-      <Card className="p-4 bg-gray-50">
-        <h4 className="text-sm font-medium text-gray-700 mb-2">
+      <Card className="p-4 bg-surface">
+        <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">
           Can't scan? Enter code manually:
         </h4>
 
         <div className="space-y-2">
           {accountName && (
-            <div className="text-xs text-gray-600">
+            <div className="text-xs text-secondary">
               <span className="font-medium">Account:</span> {accountName}
             </div>
           )}
 
-          <div className="text-xs text-gray-600">
+          <div className="text-xs text-secondary">
             <span className="font-medium">Issuer:</span> {issuer}
           </div>
 
           <div className="mt-3">
-            <div className="flex items-center justify-between bg-white rounded border px-3 py-2">
+            <div className="flex items-center justify-between bg-card rounded border px-3 py-2">
               <code className="text-sm font-mono tracking-wider select-all">
                 {formattedSecret}
               </code>
@@ -84,20 +84,20 @@ export function MFAQRCode({
               {onCopySecret && (
                 <button
                   onClick={onCopySecret}
-                  className="ml-2 p-1.5 hover:bg-gray-100 rounded transition-colors"
+                  className="ml-2 p-1.5 hover:bg-muted rounded transition-colors"
                   title="Copy secret key"
                 >
                   {secretCopied ? (
-                    <Check className="h-4 w-4 text-green-600" />
+                    <Check className="h-4 w-4 text-success" />
                   ) : (
-                    <Copy className="h-4 w-4 text-gray-600" />
+                    <Copy className="h-4 w-4 text-secondary" />
                   )}
                 </button>
               )}
             </div>
           </div>
 
-          <div className="text-xs text-gray-500 mt-2">
+          <div className="text-xs text-muted mt-2">
             <strong>Type:</strong> Time-based (TOTP) - 6 digits, 30 second interval
           </div>
         </div>
@@ -105,7 +105,7 @@ export function MFAQRCode({
 
       {/* Instructions */}
       <div className="bg-blue-50 rounded-lg p-4 text-sm">
-        <h4 className="font-medium text-blue-900 mb-2">Setup Instructions:</h4>
+        <h4 className="font-medium text-blue-900 mb-2" className="heading-card">Setup Instructions:</h4>
         <ol className="list-decimal list-inside space-y-1 text-blue-800">
           <li>Open your authenticator app</li>
           <li>Tap the + or Add Account button</li>

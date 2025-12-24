@@ -16,15 +16,15 @@ interface ConditionBadgeProps {
 
 const conditionConfig: Record<MaterialCondition, { color: string; icon: typeof CheckCircle }> = {
   good: {
-    color: 'bg-green-100 text-green-800 border-green-200',
+    color: 'bg-success-light text-green-800 border-green-200',
     icon: CheckCircle,
   },
   damaged: {
-    color: 'bg-red-100 text-red-800 border-red-200',
+    color: 'bg-error-light text-red-800 border-red-200',
     icon: XCircle,
   },
   defective: {
-    color: 'bg-red-100 text-red-800 border-red-200',
+    color: 'bg-error-light text-red-800 border-red-200',
     icon: AlertTriangle,
   },
   incorrect: {

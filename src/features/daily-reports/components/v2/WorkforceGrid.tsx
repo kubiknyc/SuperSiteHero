@@ -92,11 +92,11 @@ export function WorkforceGrid({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Users className="h-5 w-5 text-blue-600" />
+          <div className="p-2 bg-info-light rounded-lg">
+            <Users className="h-5 w-5 text-primary" />
           </div>
           <div className="text-left">
             <CardTitle className="text-base flex items-center gap-2">
@@ -115,16 +115,16 @@ export function WorkforceGrid({
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
       {expanded && (
         <CardContent className="border-t p-0">
           {/* Quick Actions */}
-          <div className="flex gap-2 p-4 bg-gray-50 border-b">
+          <div className="flex gap-2 p-4 bg-surface border-b">
             {onCopyFromYesterday && (
               <Button
                 type="button"
@@ -152,24 +152,24 @@ export function WorkforceGrid({
           {/* Grid Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-surface border-b">
                 <tr>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[180px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[180px]">
                     Company / Team
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[140px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[140px]">
                     Trade
                   </th>
-                  <th className="text-center p-3 font-medium text-gray-700 w-20">
+                  <th className="text-center p-3 font-medium text-secondary w-20">
                     Workers
                   </th>
-                  <th className="text-center p-3 font-medium text-gray-700 w-20">
+                  <th className="text-center p-3 font-medium text-secondary w-20">
                     Hours
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[140px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[140px]">
                     Work Area
                   </th>
-                  <th className="text-left p-3 font-medium text-gray-700 min-w-[100px]">
+                  <th className="text-left p-3 font-medium text-secondary min-w-[100px]">
                     Cost Code
                   </th>
                   <th className="w-12"></th>
@@ -179,8 +179,8 @@ export function WorkforceGrid({
                 {workforce.map((entry, index) => (
                   <tr
                     key={entry.id}
-                    className={`border-b hover:bg-gray-50 ${
-                      index % 2 === 0 ? 'bg-white' : 'bg-gray-25'
+                    className={`border-b hover:bg-surface ${
+                      index % 2 === 0 ? 'bg-card' : 'bg-gray-25'
                     }`}
                   >
                     {/* Company/Team */}
@@ -218,7 +218,7 @@ export function WorkforceGrid({
                         className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
                       />
                       {showTradeDropdown === entry.id && (
-                        <div className="absolute z-10 left-2 right-2 mt-1 bg-white border rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                        <div className="absolute z-10 left-2 right-2 mt-1 bg-card border rounded-lg shadow-lg max-h-48 overflow-y-auto">
                           {COMMON_TRADES.filter(
                             (t) =>
                               !entry.trade ||
@@ -227,7 +227,7 @@ export function WorkforceGrid({
                             <button
                               key={trade}
                               type="button"
-                              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100"
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-muted"
                               onMouseDown={() => handleTradeSelect(entry.id, trade)}
                             >
                               {trade}
@@ -306,7 +306,7 @@ export function WorkforceGrid({
                       <button
                         type="button"
                         onClick={() => removeWorkforceEntry(entry.id)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                        className="p-2 text-disabled hover:text-error hover:bg-error-light rounded transition-colors"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -317,7 +317,7 @@ export function WorkforceGrid({
                 {/* Empty state */}
                 {workforce.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="p-8 text-center text-gray-500">
+                    <td colSpan={7} className="p-8 text-center text-muted">
                       No workforce entries yet. Add a row to get started.
                     </td>
                   </tr>
@@ -326,15 +326,15 @@ export function WorkforceGrid({
 
               {/* Totals row */}
               {workforce.length > 0 && (
-                <tfoot className="bg-gray-100 border-t-2">
+                <tfoot className="bg-muted border-t-2">
                   <tr>
-                    <td className="p-3 font-semibold text-gray-700" colSpan={2}>
+                    <td className="p-3 font-semibold text-secondary" colSpan={2}>
                       Totals
                     </td>
-                    <td className="p-3 text-center font-semibold text-gray-700">
+                    <td className="p-3 text-center font-semibold text-secondary">
                       {totalWorkers}
                     </td>
-                    <td className="p-3 text-center font-semibold text-gray-700">
+                    <td className="p-3 text-center font-semibold text-secondary">
                       {totalHours.toFixed(1)}
                     </td>
                     <td colSpan={3}></td>

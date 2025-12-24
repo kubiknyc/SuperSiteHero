@@ -166,9 +166,9 @@ export function TransactionForm({
           <div className="space-y-2">
             <Label htmlFor="cost_code">Cost Code *</Label>
             {isEditing ? (
-              <div className="p-3 bg-gray-50 rounded-md">
+              <div className="p-3 bg-surface rounded-md">
                 <span className="font-mono text-sm">{transaction?.cost_code?.code}</span>
-                <span className="text-gray-500 ml-2">{transaction?.cost_code?.name}</span>
+                <span className="text-muted ml-2">{transaction?.cost_code?.name}</span>
               </div>
             ) : (
               <CostCodePicker
@@ -215,7 +215,7 @@ export function TransactionForm({
           <div className="space-y-2">
             <Label htmlFor="amount">Amount *</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted">$</span>
               <Input
                 id="amount"
                 type="text"

@@ -87,13 +87,13 @@ export function TasksPage() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-info-light text-blue-800'
       case 'normal':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-foreground'
       case 'high':
-        return 'bg-red-100 text-red-800'
+        return 'bg-error-light text-red-800'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-muted text-foreground'
     }
   }
 
@@ -122,8 +122,8 @@ export function TasksPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Tasks</h1>
-            <p className="text-gray-600 mt-1">Manage and track project tasks</p>
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Tasks</h1>
+            <p className="text-secondary mt-1">Manage and track project tasks</p>
           </div>
           {activeProjectId && (
             <Link to={`/tasks/new?projectId=${activeProjectId}`}>
@@ -141,10 +141,10 @@ export function TasksPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Tasks</p>
+                  <p className="text-sm font-medium text-secondary">Total Tasks</p>
                   <p className="text-2xl font-bold mt-1">{stats.total}</p>
                 </div>
-                <Clock className="h-8 w-8 text-blue-600" />
+                <Clock className="h-8 w-8 text-primary" />
               </div>
             </CardContent>
           </Card>
@@ -153,7 +153,7 @@ export function TasksPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Pending</p>
+                  <p className="text-sm font-medium text-secondary">Pending</p>
                   <p className="text-2xl font-bold mt-1">{stats.pending}</p>
                 </div>
                 <AlertCircle className="h-8 w-8 text-orange-600" />
@@ -165,10 +165,10 @@ export function TasksPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">In Progress</p>
+                  <p className="text-sm font-medium text-secondary">In Progress</p>
                   <p className="text-2xl font-bold mt-1">{stats.inProgress}</p>
                 </div>
-                <Clock className="h-8 w-8 text-yellow-600" />
+                <Clock className="h-8 w-8 text-warning" />
               </div>
             </CardContent>
           </Card>
@@ -177,23 +177,23 @@ export function TasksPage() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Completed</p>
+                  <p className="text-sm font-medium text-secondary">Completed</p>
                   <p className="text-2xl font-bold mt-1">{stats.completed}</p>
                 </div>
-                <CheckCircle2 className="h-8 w-8 text-green-600" />
+                <CheckCircle2 className="h-8 w-8 text-success" />
               </div>
             </CardContent>
           </Card>
 
           {stats.overdue > 0 && (
-            <Card className="border-red-200 bg-red-50">
+            <Card className="border-red-200 bg-error-light">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-red-600">Overdue</p>
-                    <p className="text-2xl font-bold mt-1 text-red-600">{stats.overdue}</p>
+                    <p className="text-sm font-medium text-error">Overdue</p>
+                    <p className="text-2xl font-bold mt-1 text-error">{stats.overdue}</p>
                   </div>
-                  <AlertCircle className="h-8 w-8 text-red-600" />
+                  <AlertCircle className="h-8 w-8 text-error" />
                 </div>
               </CardContent>
             </Card>
@@ -272,14 +272,14 @@ export function TasksPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading tasks...</p>
+            <p className="text-muted">Loading tasks...</p>
           </div>
         )}
 
         {/* Error state */}
         {error && (
           <div className="text-center py-12">
-            <p className="text-red-600">Error loading tasks: {error.message}</p>
+            <p className="text-error">Error loading tasks: {error.message}</p>
           </div>
         )}
 
@@ -287,11 +287,11 @@ export function TasksPage() {
         {!isLoading && !error && (!filteredTasks || filteredTasks.length === 0) && (
           <Card>
             <CardContent className="p-12 text-center">
-              <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <Clock className="h-12 w-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 {tasks && tasks.length > 0 ? 'No matching tasks' : 'No tasks yet'}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 {tasks && tasks.length > 0
                   ? 'Try adjusting your filters to see more results.'
                   : 'Create your first task to get started.'}
@@ -321,7 +321,7 @@ export function TasksPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-lg text-gray-900">{task.title}</h3>
+                        <h3 className="font-semibold text-lg text-foreground" className="heading-subsection">{task.title}</h3>
                         <Badge variant={getStatusColor(task.status ?? 'pending')}>
                           {formatStatus(task.status ?? 'pending')}
                         </Badge>
@@ -331,10 +331,10 @@ export function TasksPage() {
                       </div>
 
                       {task.description && (
-                        <p className="text-sm text-gray-600 mb-3 line-clamp-2">{task.description}</p>
+                        <p className="text-sm text-secondary mb-3 line-clamp-2">{task.description}</p>
                       )}
 
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                      <div className="flex flex-wrap items-center gap-4 text-sm text-secondary">
                         {task.location && <span>📍 {task.location}</span>}
 
                         {task.start_date && (
@@ -348,7 +348,7 @@ export function TasksPage() {
                           <div
                             className={`flex items-center gap-1 ${
                               isPast(new Date(task.due_date)) && task.status !== 'completed'
-                                ? 'text-red-600 font-semibold'
+                                ? 'text-error font-semibold'
                                 : ''
                             }`}
                           >

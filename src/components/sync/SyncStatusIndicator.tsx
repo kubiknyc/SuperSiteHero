@@ -24,26 +24,26 @@ export function SyncStatusIndicator() {
     switch (syncStatus) {
       case 'syncing':
         return {
-          icon: <Loader2 className="h-4 w-4 text-blue-600 animate-spin" />,
+          icon: <Loader2 className="h-4 w-4 text-primary animate-spin" />,
           label: 'Syncing...',
           className: 'bg-blue-50 border-blue-200',
-          textColor: 'text-blue-700',
+          textColor: 'text-primary-hover',
           tooltip: 'Changes are being synced to the server',
         }
       case 'success':
         return {
-          icon: <CheckCircle2 className="h-4 w-4 text-green-600" />,
+          icon: <CheckCircle2 className="h-4 w-4 text-success" />,
           label: 'Synced',
-          className: 'bg-green-50 border-green-200',
-          textColor: 'text-green-700',
+          className: 'bg-success-light border-green-200',
+          textColor: 'text-success-dark',
           tooltip: 'All changes have been synced successfully',
         }
       case 'error':
         return {
-          icon: <AlertCircle className="h-4 w-4 text-red-600" />,
+          icon: <AlertCircle className="h-4 w-4 text-error" />,
           label: 'Sync Failed',
-          className: 'bg-red-50 border-red-200',
-          textColor: 'text-red-700',
+          className: 'bg-error-light border-red-200',
+          textColor: 'text-error-dark',
           tooltip: syncError || 'An error occurred during sync. Please try again.',
         }
       default:

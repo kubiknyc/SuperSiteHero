@@ -69,7 +69,7 @@ export function SafetyAlertsWidget({
     <Card className={cn('h-full', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium flex items-center gap-2 text-amber-600 dark:text-amber-400">
+          <CardTitle className="text-sm font-medium flex items-center gap-2 text-warning dark:text-amber-400">
             <HardHat className="h-4 w-4" />
             Safety Alerts
             {actionRequiredCount > 0 && (
@@ -98,8 +98,8 @@ export function SafetyAlertsWidget({
               className={cn(
                 'w-full rounded-lg p-3 text-left transition-colors min-h-[56px]',
                 observation.status === 'action_required'
-                  ? 'bg-red-50 hover:bg-red-100 dark:bg-red-950/20 dark:hover:bg-red-950/30'
-                  : 'bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/20 dark:hover:bg-amber-950/30'
+                  ? 'bg-error-light hover:bg-error-light dark:bg-red-950/20 dark:hover:bg-red-950/30'
+                  : 'bg-warning-light hover:bg-amber-100 dark:bg-amber-950/20 dark:hover:bg-amber-950/30'
               )}
             >
               <div className="flex items-start justify-between gap-2">
@@ -126,7 +126,7 @@ export function SafetyAlertsWidget({
           ))
         ) : (
           <div className="text-center py-6">
-            <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+            <CheckCircle2 className="h-8 w-8 text-success mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">No active safety alerts</p>
           </div>
         )}

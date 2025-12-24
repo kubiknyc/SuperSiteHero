@@ -228,7 +228,7 @@ function MeasurementRenderer({
         <div
           className={cn(
             'px-2 py-1 rounded text-xs font-medium whitespace-nowrap backdrop-blur-sm',
-            isActive ? 'bg-green-600 text-white' : 'bg-yellow-600 text-white'
+            isActive ? 'bg-success text-white' : 'bg-yellow-600 text-white'
           )}
         >
           {measurement.label || formatValue()}
@@ -434,7 +434,7 @@ export function MeasurementTools({
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8 text-white hover:bg-white/20',
+                  'h-8 w-8 text-white hover:bg-card/20',
                   activeTool === 'distance' && 'bg-primary/50'
                 )}
                 onClick={() => onToolChange(activeTool === 'distance' ? null : 'distance')}
@@ -451,7 +451,7 @@ export function MeasurementTools({
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8 text-white hover:bg-white/20',
+                  'h-8 w-8 text-white hover:bg-card/20',
                   activeTool === 'area' && 'bg-primary/50'
                 )}
                 onClick={() => onToolChange(activeTool === 'area' ? null : 'area')}
@@ -468,7 +468,7 @@ export function MeasurementTools({
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  'h-8 w-8 text-white hover:bg-white/20',
+                  'h-8 w-8 text-white hover:bg-card/20',
                   activeTool === 'angle' && 'bg-primary/50'
                 )}
                 onClick={() => onToolChange(activeTool === 'angle' ? null : 'angle')}
@@ -479,14 +479,14 @@ export function MeasurementTools({
             <TooltipContent>Measure Angle</TooltipContent>
           </Tooltip>
 
-          <div className="w-px h-6 bg-white/30 mx-1" />
+          <div className="w-px h-6 bg-card/30 mx-1" />
 
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20"
+                className="h-8 w-8 text-white hover:bg-card/20"
                 onClick={() => setShowMeasurements(!showMeasurements)}
               >
                 {showMeasurements ? (
@@ -506,7 +506,7 @@ export function MeasurementTools({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20"
+                className="h-8 w-8 text-white hover:bg-card/20"
               >
                 <Settings className="h-4 w-4" />
               </Button>
@@ -560,7 +560,7 @@ export function MeasurementTools({
               <DropdownMenuItem
                 onClick={handleClearAll}
                 disabled={measurements.length === 0}
-                className="text-red-500"
+                className="text-error"
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Clear All
@@ -580,7 +580,7 @@ export function MeasurementTools({
           <Button
             variant="ghost"
             size="icon"
-            className="h-5 w-5 ml-auto hover:bg-white/20"
+            className="h-5 w-5 ml-auto hover:bg-card/20"
             onClick={() => onToolChange(null)}
           >
             <X className="h-3 w-3" />
@@ -616,7 +616,7 @@ export function MeasurementTools({
                     'flex items-center justify-between px-2 py-1 rounded cursor-pointer',
                     selectedMeasurementId === m.id
                       ? 'bg-primary/50'
-                      : 'hover:bg-white/10'
+                      : 'hover:bg-card/10'
                   )}
                   onClick={() => setSelectedMeasurementId(m.id)}
                 >
@@ -642,7 +642,7 @@ export function MeasurementTools({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-7 text-white hover:bg-white/20 flex-1"
+                className="h-7 text-white hover:bg-card/20 flex-1"
                 onClick={handleCopy}
               >
                 <Copy className="h-3 w-3 mr-1" />

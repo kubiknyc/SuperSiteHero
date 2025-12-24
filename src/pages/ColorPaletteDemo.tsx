@@ -92,15 +92,15 @@ const palettes = [
 
 export function ColorPaletteDemo() {
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-muted dark:bg-background">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+      <header className="bg-card dark:bg-surface shadow-sm border-b border-border dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h1 className="text-4xl font-bold text-foreground dark:text-white mb-4" className="heading-page">
               Choose Your Color Palette
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-secondary dark:text-disabled max-w-3xl mx-auto">
               Select a color scheme for JobSight. Each palette is designed for construction field management with professional, accessible colors.
             </p>
           </div>
@@ -117,12 +117,12 @@ export function ColorPaletteDemo() {
       </div>
 
       {/* Footer Instructions */}
-      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-8">
+      <footer className="bg-card dark:bg-surface border-t border-border dark:border-gray-700 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
+          <p className="text-lg text-secondary dark:text-gray-300 mb-4">
             Tell me which palette number (1-6) you prefer!
           </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-muted dark:text-disabled">
             I'll update the entire design system with your chosen colors.
           </p>
         </div>
@@ -133,7 +133,7 @@ export function ColorPaletteDemo() {
 
 function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+    <div className="bg-card dark:bg-surface rounded-2xl shadow-xl overflow-hidden border border-border dark:border-gray-700">
       {/* Header with gradient */}
       <div
         className="relative h-32 flex items-center justify-between px-6"
@@ -152,15 +152,15 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
         />
 
         <div className="relative z-10">
-          <span className="inline-block px-2 py-1 text-xs font-bold uppercase tracking-wider bg-white/20 text-white rounded mb-2">
+          <span className="inline-block px-2 py-1 text-xs font-bold uppercase tracking-wider bg-card/20 text-white rounded mb-2">
             {palette.tag}
           </span>
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-2xl font-bold text-white" className="heading-section">
             {palette.id}. {palette.name}
           </h2>
         </div>
 
-        <div className="relative z-10 rounded-xl bg-white/20 p-3">
+        <div className="relative z-10 rounded-xl bg-card/20 p-3">
           <HardHat className="w-8 h-8 text-white" />
         </div>
       </div>
@@ -169,15 +169,15 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
       <div className="p-6 space-y-6">
         {/* Description */}
         <div>
-          <p className="text-gray-600 dark:text-gray-400">{palette.description}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+          <p className="text-secondary dark:text-disabled">{palette.description}</p>
+          <p className="text-sm text-muted dark:text-muted mt-1">
             Vibe: {palette.vibe}
           </p>
         </div>
 
         {/* Color Swatches */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
             Color Swatches
           </h3>
           <div className="flex gap-3">
@@ -191,7 +191,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Buttons */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
             Button Styles
           </h3>
           <div className="flex flex-wrap gap-3">
@@ -202,14 +202,14 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
               Primary Button
             </button>
             <button
-              className="px-4 py-2 rounded-lg font-semibold border-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="px-4 py-2 rounded-lg font-semibold border-2 transition-colors hover:bg-surface dark:hover:bg-gray-700"
               style={{ borderColor: palette.primary, color: palette.primary }}
             >
               Outline Button
             </button>
             {palette.hasGoldAccent && (
               <button
-                className="px-4 py-2 rounded-lg font-semibold text-gray-900 shadow-lg"
+                className="px-4 py-2 rounded-lg font-semibold text-foreground shadow-lg"
                 style={{ backgroundColor: palette.accent }}
               >
                 Gold Accent
@@ -220,10 +220,10 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Card */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
             Sample Card
           </h3>
-          <div className="rounded-xl border border-gray-200 dark:border-gray-700 p-4 hover:shadow-lg transition-shadow relative overflow-hidden group">
+          <div className="rounded-xl border border-border dark:border-gray-700 p-4 hover:shadow-lg transition-shadow relative overflow-hidden group">
             {/* Accent line on hover */}
             <div
               className="absolute bottom-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -238,8 +238,8 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-gray-900 dark:text-white">Daily Report</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <h4 className="font-bold text-foreground dark:text-white" className="heading-card">Daily Report</h4>
+                <p className="text-sm text-secondary dark:text-disabled mt-1">
                   Create today's field report
                 </p>
               </div>
@@ -253,7 +253,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Stats */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
             Sample Stats
           </h3>
           <div className="grid grid-cols-3 gap-3">
@@ -262,13 +262,13 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
               { icon: Users, label: 'Team', value: '8' },
               { icon: Calendar, label: 'Days', value: '45' },
             ].map((stat) => (
-              <div key={stat.label} className="text-center p-3 rounded-lg bg-gray-50 dark:bg-gray-700/50">
+              <div key={stat.label} className="text-center p-3 rounded-lg bg-surface dark:bg-muted/50">
                 <stat.icon
                   className="w-6 h-6 mx-auto mb-1"
                   style={{ color: palette.primary }}
                 />
-                <p className="text-xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">{stat.label}</p>
+                <p className="text-xl font-bold text-foreground dark:text-white">{stat.value}</p>
+                <p className="text-xs text-muted dark:text-disabled">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -276,7 +276,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Hero Preview */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
             Hero Section Preview
           </h3>
           <div
@@ -310,7 +310,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
               </div>
               <div>
                 <p className="text-white font-bold text-sm">Field Command Center</p>
-                <p className="text-gray-400 text-xs">Welcome back, User</p>
+                <p className="text-disabled text-xs">Welcome back, User</p>
               </div>
             </div>
           </div>
@@ -318,7 +318,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Timeline Preview */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-3">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
             Timeline Connector
           </h3>
           <div className="flex items-center gap-3">
@@ -351,11 +351,11 @@ function ColorSwatch({ color, label }: { color: string; label: string }) {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="w-12 h-12 rounded-lg shadow-md border border-gray-200 dark:border-gray-600"
+        className="w-12 h-12 rounded-lg shadow-md border border-border dark:border-gray-600"
         style={{ backgroundColor: color }}
       />
-      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</p>
-      <p className="text-xs font-mono text-gray-400">{color}</p>
+      <p className="text-xs text-muted dark:text-disabled mt-1">{label}</p>
+      <p className="text-xs font-mono text-disabled">{color}</p>
     </div>
   );
 }

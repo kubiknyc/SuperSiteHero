@@ -51,11 +51,11 @@ export function PhotoGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-        <Camera className="w-12 h-12 mx-auto text-gray-400 mb-2" />
-        <p className="text-sm text-gray-600">No photos yet</p>
+      <div className="border-2 border-dashed border-input rounded-lg p-8 text-center">
+        <Camera className="w-12 h-12 mx-auto text-disabled mb-2" />
+        <p className="text-sm text-secondary">No photos yet</p>
         {minPhotos > 0 && (
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-muted mt-1">
             Minimum {minPhotos} photo{minPhotos > 1 ? 's' : ''} required
           </p>
         )}
@@ -67,13 +67,13 @@ export function PhotoGallery({
     <>
       <div className="space-y-3">
         {/* Photo count indicator */}
-        <div className="flex items-center justify-between text-sm text-gray-600">
+        <div className="flex items-center justify-between text-sm text-secondary">
           <span>
             {photos.length} photo{photos.length > 1 ? 's' : ''}
             {maxPhotos && ` / ${maxPhotos} max`}
           </span>
           {minPhotos > 0 && photos.length < minPhotos && (
-            <span className="text-red-600 text-xs">
+            <span className="text-error text-xs">
               {minPhotos - photos.length} more required
             </span>
           )}
@@ -104,10 +104,10 @@ export function PhotoGallery({
                 <button
                   type="button"
                   onClick={() => setPreviewPhoto(url)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white rounded-full p-2 hover:bg-gray-100"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-card rounded-full p-2 hover:bg-muted"
                   title="Preview"
                 >
-                  <ZoomIn className="w-4 h-4 text-gray-700" />
+                  <ZoomIn className="w-4 h-4 text-secondary" />
                 </button>
 
                 {/* Delete button */}
@@ -119,7 +119,7 @@ export function PhotoGallery({
                     className={`opacity-0 group-hover:opacity-100 transition-opacity rounded-full p-2 ${
                       photos.length <= minPhotos
                         ? 'bg-gray-300 cursor-not-allowed'
-                        : 'bg-red-600 hover:bg-red-700'
+                        : 'bg-error hover:bg-red-700'
                     }`}
                     title={
                       photos.length <= minPhotos

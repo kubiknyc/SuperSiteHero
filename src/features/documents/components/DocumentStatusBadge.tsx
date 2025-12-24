@@ -22,10 +22,10 @@ const STATUS_LABELS: Record<ValidDocumentStatus, string> = {
 
 // Status color classes using Tailwind
 const STATUS_COLORS: Record<ValidDocumentStatus, string> = {
-  current: 'bg-green-100 text-green-800 border-green-200',
+  current: 'bg-success-light text-green-800 border-green-200',
   superseded: 'bg-amber-100 text-amber-800 border-amber-200',
-  archived: 'bg-gray-100 text-gray-800 border-gray-200',
-  void: 'bg-red-100 text-red-800 border-red-200',
+  archived: 'bg-muted text-foreground border-border',
+  void: 'bg-error-light text-red-800 border-red-200',
 }
 
 /**
@@ -52,7 +52,7 @@ export function DocumentStatusBadge({
   // Handle null status gracefully
   if (!status) {
     return (
-      <Badge variant="outline" className={cn('bg-gray-100 text-gray-800', className)}>
+      <Badge variant="outline" className={cn('bg-muted text-foreground', className)}>
         Unknown
       </Badge>
     )

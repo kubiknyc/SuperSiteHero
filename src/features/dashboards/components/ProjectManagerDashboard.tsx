@@ -130,8 +130,8 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Briefcase className="h-6 w-6 text-blue-600" />
+          <h2 className="text-2xl font-bold flex items-center gap-2 heading-section">
+            <Briefcase className="h-6 w-6 text-primary" />
             Project Manager Dashboard
           </h2>
           <p className="text-muted-foreground">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
@@ -160,13 +160,13 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
               <div key={index} className="flex items-center gap-3">
                 <div className={`w-3 h-3 rounded-full ${
                   risk.level === 'low' ? 'bg-green-500' :
-                  risk.level === 'medium' ? 'bg-amber-500' : 'bg-red-500'
+                  risk.level === 'medium' ? 'bg-warning' : 'bg-red-500'
                 }`} />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">{risk.area}</span>
-                    {risk.trend === 'up' && <ArrowUpRight className="h-3 w-3 text-green-600" />}
-                    {risk.trend === 'down' && <ArrowDownRight className="h-3 w-3 text-red-600" />}
+                    {risk.trend === 'up' && <ArrowUpRight className="h-3 w-3 text-success" />}
+                    {risk.trend === 'down' && <ArrowDownRight className="h-3 w-3 text-error" />}
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{risk.message}</p>
                 </div>
@@ -192,7 +192,7 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
             <Progress value={budgetMetrics.percentComplete} className="h-2 mb-2" />
             <div className="flex items-center justify-between text-xs">
               <span>{budgetMetrics.percentComplete}% spent</span>
-              <span className={budgetMetrics.variance > 0 ? 'text-red-600' : 'text-green-600'}>
+              <span className={budgetMetrics.variance > 0 ? 'text-error' : 'text-success'}>
                 {budgetMetrics.variance > 0 ? '+' : ''}{formatCurrency(budgetMetrics.variance)} variance
               </span>
             </div>
@@ -213,7 +213,7 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
             <Progress value={scheduleMetrics.percentComplete} className="h-2 mb-2" />
             <div className="flex items-center justify-between text-xs">
               <span>Due: {format(scheduleMetrics.baselineEndDate, 'MMM d, yyyy')}</span>
-              <span className={scheduleMetrics.varianceDays > 0 ? 'text-red-600' : 'text-green-600'}>
+              <span className={scheduleMetrics.varianceDays > 0 ? 'text-error' : 'text-success'}>
                 {scheduleMetrics.varianceDays > 0 ? '+' : ''}{scheduleMetrics.varianceDays} days
               </span>
             </div>
@@ -233,11 +233,11 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
             </p>
             <div className="flex gap-2 mt-2">
               {rfiMetrics.overdue > 0 && (
-                <Badge variant="secondary" className="bg-red-100 text-red-800">
+                <Badge variant="secondary" className="bg-error-light text-red-800">
                   {rfiMetrics.overdue} overdue
                 </Badge>
               )}
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              <Badge variant="secondary" className="bg-info-light text-blue-800">
                 {rfiMetrics.avgResponseDays.toFixed(1)}d avg response
               </Badge>
             </div>
@@ -257,11 +257,11 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
             </p>
             <div className="flex gap-2 mt-2">
               {submittalMetrics.overdue > 0 && (
-                <Badge variant="secondary" className="bg-red-100 text-red-800">
+                <Badge variant="secondary" className="bg-error-light text-red-800">
                   {submittalMetrics.overdue} overdue
                 </Badge>
               )}
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
+              <Badge variant="secondary" className="bg-success-light text-green-800">
                 {submittalMetrics.approved} approved
               </Badge>
             </div>
@@ -285,7 +285,7 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-warning-light rounded-lg">
                 <div>
                   <p className="text-sm font-medium">Pending Approval</p>
                   <p className="text-xs text-muted-foreground">{changeOrderMetrics.pendingCount} items</p>
@@ -294,19 +294,19 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
                   {formatCurrency(changeOrderMetrics.pendingValue)}
                 </p>
               </div>
-              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+              <div className="flex items-center justify-between p-3 bg-success-light rounded-lg">
                 <div>
                   <p className="text-sm font-medium">Approved</p>
                   <p className="text-xs text-muted-foreground">{changeOrderMetrics.approvedCount} items</p>
                 </div>
-                <p className="text-lg font-bold text-green-700">
+                <p className="text-lg font-bold text-success-dark">
                   {formatCurrency(changeOrderMetrics.approvedValue)}
                 </p>
               </div>
               <div className="pt-2 border-t">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Net Contract Change</span>
-                  <span className={`font-bold ${changeOrderMetrics.netChange > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  <span className={`font-bold ${changeOrderMetrics.netChange > 0 ? 'text-error' : 'text-success'}`}>
                     {changeOrderMetrics.netChange > 0 ? '+' : ''}{formatCurrency(changeOrderMetrics.netChange)}
                   </span>
                 </div>
@@ -332,14 +332,14 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
               {actionItems.map((item, index) => (
                 <div key={index} className="flex items-start gap-3 pb-3 border-b last:border-0 last:pb-0">
                   <CircleDot className={`h-4 w-4 mt-0.5 ${
-                    item.priority === 'high' ? 'text-red-500' : 'text-amber-500'
+                    item.priority === 'high' ? 'text-error' : 'text-warning'
                   }`} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate">{item.title}</p>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span>{item.assignee}</span>
                       <span>•</span>
-                      <span className={item.dueDate === 'Today' ? 'text-red-600' : ''}>
+                      <span className={item.dueDate === 'Today' ? 'text-error' : ''}>
                         {item.dueDate}
                       </span>
                     </div>
@@ -367,7 +367,7 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
               {teamWorkload.map((member, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium">
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
                       {member.name.split(' ').map(n => n[0]).join('')}
                     </div>
                     <div>
@@ -378,7 +378,7 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary">{member.tasks} tasks</Badge>
                     {member.overdue > 0 && (
-                      <Badge variant="secondary" className="bg-red-100 text-red-800">
+                      <Badge variant="secondary" className="bg-error-light text-red-800">
                         {member.overdue} overdue
                       </Badge>
                     )}
@@ -397,29 +397,29 @@ export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDa
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface rounded-lg">
               <p className="text-xs text-muted-foreground">Contract Value</p>
               <p className="text-lg font-bold">{formatCurrency(budgetMetrics.contractValue)}</p>
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface rounded-lg">
               <p className="text-xs text-muted-foreground">Cost to Date</p>
               <p className="text-lg font-bold">{formatCurrency(budgetMetrics.costToDate)}</p>
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface rounded-lg">
               <p className="text-xs text-muted-foreground">Committed Costs</p>
               <p className="text-lg font-bold">{formatCurrency(budgetMetrics.committedCosts)}</p>
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface rounded-lg">
               <p className="text-xs text-muted-foreground">Pending Changes</p>
-              <p className="text-lg font-bold text-amber-600">{formatCurrency(budgetMetrics.pendingChanges)}</p>
+              <p className="text-lg font-bold text-warning">{formatCurrency(budgetMetrics.pendingChanges)}</p>
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface rounded-lg">
               <p className="text-xs text-muted-foreground">Projected Final</p>
               <p className="text-lg font-bold">{formatCurrency(budgetMetrics.projectedFinal)}</p>
             </div>
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-3 bg-surface rounded-lg">
               <p className="text-xs text-muted-foreground">Variance</p>
-              <p className={`text-lg font-bold ${budgetMetrics.variance > 0 ? 'text-red-600' : 'text-green-600'}`}>
+              <p className={`text-lg font-bold ${budgetMetrics.variance > 0 ? 'text-error' : 'text-success'}`}>
                 {budgetMetrics.variance > 0 ? '+' : ''}{formatCurrency(budgetMetrics.variance)}
                 <span className="text-xs ml-1">({budgetMetrics.variancePercent}%)</span>
               </p>

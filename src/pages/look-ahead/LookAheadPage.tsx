@@ -376,7 +376,7 @@ export function LookAheadPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
               <Calendar className="h-6 w-6" />
               Look-Ahead Schedule
             </h1>

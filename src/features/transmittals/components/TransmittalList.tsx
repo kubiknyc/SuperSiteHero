@@ -110,19 +110,19 @@ export function TransmittalList({ projectId, onCreateNew }: TransmittalListProps
           <Card>
             <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">Draft</div>
-              <div className="text-2xl font-bold text-gray-600">{stats.draft}</div>
+              <div className="text-2xl font-bold text-secondary">{stats.draft}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">Sent</div>
-              <div className="text-2xl font-bold text-blue-600">{stats.sent}</div>
+              <div className="text-2xl font-bold text-primary">{stats.sent}</div>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="p-4">
               <div className="text-sm text-muted-foreground">Received</div>
-              <div className="text-2xl font-bold text-green-600">{stats.received}</div>
+              <div className="text-2xl font-bold text-success">{stats.received}</div>
             </CardContent>
           </Card>
           <Card>
@@ -212,7 +212,7 @@ export function TransmittalList({ projectId, onCreateNew }: TransmittalListProps
           ) : (
             <div className="text-center py-12">
               <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">No transmittals found</h3>
+              <h3 className="text-lg font-medium mb-2" className="heading-subsection">No transmittals found</h3>
               <p className="text-muted-foreground mb-4">
                 {filters.search || filters.status
                   ? 'Try adjusting your filters'
@@ -284,11 +284,11 @@ function TransmittalRow({ transmittal, projectId }: TransmittalRowProps) {
         <Badge
           variant="outline"
           className={`
-            ${statusColor === 'gray' ? 'bg-gray-100 text-gray-800 border-gray-200' : ''}
-            ${statusColor === 'blue' ? 'bg-blue-100 text-blue-800 border-blue-200' : ''}
-            ${statusColor === 'green' ? 'bg-green-100 text-green-800 border-green-200' : ''}
+            ${statusColor === 'gray' ? 'bg-muted text-foreground border-border' : ''}
+            ${statusColor === 'blue' ? 'bg-info-light text-blue-800 border-blue-200' : ''}
+            ${statusColor === 'green' ? 'bg-success-light text-green-800 border-green-200' : ''}
             ${statusColor === 'emerald' ? 'bg-emerald-100 text-emerald-800 border-emerald-200' : ''}
-            ${statusColor === 'red' ? 'bg-red-100 text-red-800 border-red-200' : ''}
+            ${statusColor === 'red' ? 'bg-error-light text-red-800 border-red-200' : ''}
           `}
         >
           <span className="mr-1">{icon}</span>

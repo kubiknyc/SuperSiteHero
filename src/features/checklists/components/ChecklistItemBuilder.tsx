@@ -367,7 +367,7 @@ export function ChecklistItemBuilder({
       {/* Existing Items */}
       <div className="space-y-2">
         {items.length === 0 ? (
-          <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
+          <div className="text-center py-8 text-muted border-2 border-dashed border-input rounded-lg">
             <p>No items yet. Add your first checklist item below.</p>
           </div>
         ) : (
@@ -378,12 +378,12 @@ export function ChecklistItemBuilder({
               onDragStart={() => handleDragStart(index)}
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
-              className={`border rounded-lg bg-white ${
+              className={`border rounded-lg bg-card ${
                 draggedIndex === index ? 'opacity-50' : ''
               }`}
             >
               <div className="p-3 flex items-center gap-3">
-                <div className="cursor-move text-gray-400">
+                <div className="cursor-move text-disabled">
                   <GripVertical className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
@@ -396,7 +396,7 @@ export function ChecklistItemBuilder({
                       placeholder="Item label"
                     />
                     {item.is_required && (
-                      <span className="text-red-500 text-sm">*</span>
+                      <span className="text-error text-sm">*</span>
                     )}
                   </div>
                 </div>
@@ -415,14 +415,14 @@ export function ChecklistItemBuilder({
                   variant="ghost"
                   size="sm"
                   onClick={() => onDeleteItem(item.id)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  className="text-error hover:text-error-dark hover:bg-error-light"
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
 
               {expandedItems.has(item.id) && (
-                <div className="px-3 pb-3 pt-0 space-y-3 border-t bg-gray-50">
+                <div className="px-3 pb-3 pt-0 space-y-3 border-t bg-surface">
                   <div className="grid grid-cols-2 gap-3 pt-3">
                     <div>
                       <Label htmlFor={`${item.id}-section`}>Section (optional)</Label>
@@ -471,8 +471,8 @@ export function ChecklistItemBuilder({
       </div>
 
       {/* Add New Item Form */}
-      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
-        <h3 className="font-semibold mb-3 flex items-center gap-2">
+      <div className="border-2 border-dashed border-input rounded-lg p-4 bg-surface">
+        <h3 className="font-semibold mb-3 flex items-center gap-2" className="heading-subsection">
           <Plus className="h-5 w-5" />
           Add New Item
         </h3>

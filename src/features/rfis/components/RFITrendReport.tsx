@@ -98,11 +98,11 @@ const PRIORITY_OPTIONS: { value: RFIPriority | 'all'; label: string }[] = [
 function getTrendIndicator(trend: TrendDirection): React.ReactNode {
   switch (trend) {
     case 'improving':
-      return <TrendingDown className="w-4 h-4 text-green-600" />
+      return <TrendingDown className="w-4 h-4 text-success" />
     case 'declining':
-      return <TrendingUp className="w-4 h-4 text-red-600" />
+      return <TrendingUp className="w-4 h-4 text-error" />
     case 'stable':
-      return <Minus className="w-4 h-4 text-gray-600" />
+      return <Minus className="w-4 h-4 text-secondary" />
   }
 }
 
@@ -112,11 +112,11 @@ function getTrendIndicator(trend: TrendDirection): React.ReactNode {
 function getTrendColor(trend: TrendDirection): string {
   switch (trend) {
     case 'improving':
-      return 'text-green-600'
+      return 'text-success'
     case 'declining':
-      return 'text-red-600'
+      return 'text-error'
     case 'stable':
-      return 'text-gray-600'
+      return 'text-secondary'
   }
 }
 
@@ -215,10 +215,10 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="text-center text-red-600 py-8">
+          <div className="text-center text-error py-8">
             <AlertCircle className="w-12 h-12 mx-auto mb-4" />
             <p className="font-medium">Failed to load trend report</p>
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="text-sm text-secondary mt-2">
               {error instanceof Error ? error.message : 'An error occurred'}
             </p>
           </div>
@@ -232,8 +232,8 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">RFI Trend Report</h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <h2 className="text-2xl font-bold text-foreground" className="heading-section">RFI Trend Report</h2>
+          <p className="text-sm text-secondary mt-1">
             Analysis generated on {format(new Date(analytics.generatedAt), 'MMMM d, yyyy')}
           </p>
         </div>
@@ -284,17 +284,17 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-secondary">
               Overall Trend
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-foreground">
                   {analytics.summary.overallAverageResponseDays.toFixed(1)} days
                 </div>
-                <p className="text-xs text-gray-600 mt-1">Average Response Time</p>
+                <p className="text-xs text-secondary mt-1">Average Response Time</p>
               </div>
               <div className={cn('flex items-center gap-1', getTrendColor(analytics.trends.overallTrend))}>
                 {getTrendIndicator(analytics.trends.overallTrend)}
@@ -308,59 +308,59 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-secondary">
               Total RFIs
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-foreground">
                   {analytics.summary.totalRFIs}
                 </div>
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-xs text-secondary mt-1">
                   {analytics.summary.respondedRFIs} Responded
                 </p>
               </div>
-              <FileText className="w-8 h-8 text-blue-600" />
+              <FileText className="w-8 h-8 text-primary" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-secondary">
               On-Time Performance
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-foreground">
                   {analytics.summary.onTimePercentage.toFixed(1)}%
                 </div>
-                <p className="text-xs text-gray-600 mt-1">
+                <p className="text-xs text-secondary mt-1">
                   {analytics.summary.onTimeCount} of {analytics.summary.respondedRFIs}
                 </p>
               </div>
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+              <CheckCircle2 className="w-8 h-8 text-success" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-secondary">
               Median Response
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold text-gray-900">
+                <div className="text-2xl font-bold text-foreground">
                   {analytics.summary.overallMedianResponseDays.toFixed(1)} days
                 </div>
-                <p className="text-xs text-gray-600 mt-1">50th Percentile</p>
+                <p className="text-xs text-secondary mt-1">50th Percentile</p>
               </div>
               <Clock className="w-8 h-8 text-purple-600" />
             </div>
@@ -409,18 +409,18 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
               recurringIssues.map((issue) => (
                 <div
                   key={issue.category}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-surface rounded-lg"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-900 capitalize">
+                      <span className="font-medium text-foreground capitalize">
                         {issue.category.replace(/_/g, ' ')}
                       </span>
                       <Badge variant="secondary" className="text-xs">
                         {issue.count} responses
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 mt-1 text-sm text-gray-600">
+                    <div className="flex items-center gap-4 mt-1 text-sm text-secondary">
                       <span>{issue.percentage.toFixed(1)}% of total</span>
                       <span>Avg: {issue.averageResponseDays.toFixed(1)} days</span>
                     </div>
@@ -431,7 +431,7 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
                 </div>
               ))
             ) : (
-              <div className="text-center text-gray-500 py-8">
+              <div className="text-center text-muted py-8">
                 <FileText className="w-12 h-12 mx-auto mb-2 opacity-50" />
                 <p className="text-sm">No recurring issues identified</p>
               </div>
@@ -446,7 +446,7 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <Users className="w-5 h-5 text-green-600" />
+              <Users className="w-5 h-5 text-success" />
               Top Performers
             </CardTitle>
             <CardDescription>
@@ -460,23 +460,23 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
                   topPerformers.map((assignee) => (
                     <div
                       key={assignee.assigneeId}
-                      className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-success-light border border-green-200 rounded-lg"
                     >
                       <div>
-                        <p className="font-medium text-gray-900">{assignee.assigneeName}</p>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <p className="font-medium text-foreground">{assignee.assigneeName}</p>
+                        <p className="text-xs text-secondary mt-1">
                           {assignee.respondedCount} responses • Avg: {assignee.averageResponseDays.toFixed(1)} days
                         </p>
                       </div>
                       <div className="text-right">
-                        <Badge className="bg-green-100 text-green-800 border-green-200">
+                        <Badge className="bg-success-light text-green-800 border-green-200">
                           {assignee.onTimePercentage.toFixed(1)}%
                         </Badge>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="text-center text-muted py-8">
                     <p className="text-sm">No data available</p>
                   </div>
                 )}
@@ -489,7 +489,7 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600" />
+              <AlertCircle className="w-5 h-5 text-error" />
               Needs Attention
             </CardTitle>
             <CardDescription>
@@ -503,23 +503,23 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
                   needsAttention.map((assignee) => (
                     <div
                       key={assignee.assigneeId}
-                      className="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg"
+                      className="flex items-center justify-between p-3 bg-error-light border border-red-200 rounded-lg"
                     >
                       <div>
-                        <p className="font-medium text-gray-900">{assignee.assigneeName}</p>
-                        <p className="text-xs text-gray-600 mt-1">
+                        <p className="font-medium text-foreground">{assignee.assigneeName}</p>
+                        <p className="text-xs text-secondary mt-1">
                           {assignee.respondedCount} responses • Avg: {assignee.averageResponseDays.toFixed(1)} days
                         </p>
                       </div>
                       <div className="text-right">
-                        <Badge className="bg-red-100 text-red-800 border-red-200">
+                        <Badge className="bg-error-light text-red-800 border-red-200">
                           {assignee.onTimePercentage.toFixed(1)}%
                         </Badge>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="text-center text-gray-500 py-8">
+                  <div className="text-center text-muted py-8">
                     <CheckCircle2 className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">All assignees performing well</p>
                   </div>
@@ -538,11 +538,11 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
         <CardContent>
           <div className="space-y-3">
             {analytics.trends.overallTrend === 'improving' && (
-              <div className="flex gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <div className="flex gap-3 p-3 bg-success-light border border-green-200 rounded-lg">
+                <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-green-900">Response times are improving</p>
-                  <p className="text-sm text-green-700 mt-1">
+                  <p className="text-sm text-success-dark mt-1">
                     Average response time has decreased by {Math.abs(analytics.trends.trendPercentageChange).toFixed(1)}%.
                     Continue current practices and consider sharing best practices across the team.
                   </p>
@@ -551,11 +551,11 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
             )}
 
             {analytics.trends.overallTrend === 'declining' && (
-              <div className="flex gap-3 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex gap-3 p-3 bg-error-light border border-red-200 rounded-lg">
+                <AlertCircle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-red-900">Response times are declining</p>
-                  <p className="text-sm text-red-700 mt-1">
+                  <p className="text-sm text-error-dark mt-1">
                     Average response time has increased by {Math.abs(analytics.trends.trendPercentageChange).toFixed(1)}%.
                     Review workload distribution and consider additional resources.
                   </p>
@@ -564,8 +564,8 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
             )}
 
             {analytics.summary.onTimePercentage < 80 && (
-              <div className="flex gap-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <Clock className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div className="flex gap-3 p-3 bg-warning-light border border-yellow-200 rounded-lg">
+                <Clock className="w-5 h-5 text-warning flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-yellow-900">On-time performance needs improvement</p>
                   <p className="text-sm text-yellow-700 mt-1">
@@ -578,10 +578,10 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
 
             {needsAttention.length > 0 && (
               <div className="flex gap-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                <Users className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <Users className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-blue-900">Consider workload redistribution</p>
-                  <p className="text-sm text-blue-700 mt-1">
+                  <p className="text-sm text-primary-hover mt-1">
                     {needsAttention.length} assignee{needsAttention.length > 1 ? 's need' : ' needs'} support.
                     Review their workload and consider redistributing RFIs to top performers.
                   </p>

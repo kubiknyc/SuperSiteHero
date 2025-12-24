@@ -157,7 +157,7 @@ export function TakeoffToolbar({
   const currentToolData = MEASUREMENT_TOOLS.find((t) => t.type === currentTool)
 
   return (
-    <div className="flex items-center gap-2 p-2 bg-white border-b shadow-sm">
+    <div className="flex items-center gap-2 p-2 bg-card border-b shadow-sm">
       {/* Tool Selection Dropdown */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

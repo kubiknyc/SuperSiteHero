@@ -143,7 +143,7 @@ export function CreateProjectDialogValidated({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information Section */}
           <fieldset className="space-y-4">
-            <legend className="font-semibold text-sm text-gray-900">
+            <legend className="font-semibold text-sm text-foreground">
               Basic Information
             </legend>
 
@@ -151,7 +151,7 @@ export function CreateProjectDialogValidated({
               {/* Project Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">
-                  Project Name <span className="text-red-600">*</span>
+                  Project Name <span className="text-error">*</span>
                 </Label>
                 <InputWithError
                   id="name"
@@ -195,7 +195,7 @@ export function CreateProjectDialogValidated({
 
           {/* Location Section */}
           <fieldset className="space-y-4">
-            <legend className="font-semibold text-sm text-gray-900">Location</legend>
+            <legend className="font-semibold text-sm text-foreground">Location</legend>
 
             {/* Address */}
             <div className="space-y-2">
@@ -253,7 +253,7 @@ export function CreateProjectDialogValidated({
 
           {/* Timeline Section */}
           <fieldset className="space-y-4">
-            <legend className="font-semibold text-sm text-gray-900">Timeline</legend>
+            <legend className="font-semibold text-sm text-foreground">Timeline</legend>
 
             <div className="grid grid-cols-2 gap-4">
               {/* Start Date */}
@@ -315,7 +315,7 @@ export function CreateProjectDialogValidated({
             <Button
               type="submit"
               disabled={createProject.isPending}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-primary hover:bg-primary-hover"
             >
               {createProject.isPending ? (
                 <>

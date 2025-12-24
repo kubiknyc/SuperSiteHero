@@ -29,16 +29,16 @@ export function ActionRequiredBanner({
     <div className={cn('space-y-2', className)}>
       {/* Overdue banner - red, prominent */}
       {overdueCount > 0 && (
-        <div className="flex items-center justify-between bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+        <div className="flex items-center justify-between bg-error-light border border-red-200 rounded-lg px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-red-100 rounded-full">
-              <AlertTriangle className="w-5 h-5 text-red-600" />
+            <div className="p-2 bg-error-light rounded-full">
+              <AlertTriangle className="w-5 h-5 text-error" />
             </div>
             <div>
               <p className="font-medium text-red-800">
                 {overdueCount} {overdueCount === 1 ? 'Response' : 'Responses'} Overdue
               </p>
-              <p className="text-sm text-red-600">
+              <p className="text-sm text-error">
                 These notices have passed their response due date
               </p>
             </div>
@@ -48,7 +48,7 @@ export function ActionRequiredBanner({
               variant="outline"
               size="sm"
               onClick={onViewOverdue}
-              className="border-red-300 text-red-700 hover:bg-red-100"
+              className="border-red-300 text-error-dark hover:bg-error-light"
             >
               View All
               <ChevronRight className="w-4 h-4 ml-1" />

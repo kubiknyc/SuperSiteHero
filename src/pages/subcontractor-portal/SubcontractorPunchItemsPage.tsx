@@ -61,7 +61,7 @@ export function SubcontractorPunchItemsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
           <ClipboardList className="h-6 w-6" />
           Punch Items
         </h1>
@@ -119,7 +119,7 @@ export function SubcontractorPunchItemsPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium truncate">{item.title}</h3>
+                      <h3 className="font-medium truncate" className="heading-subsection">{item.title}</h3>
                       {item.priority === 'high' && (
                         <Badge variant="destructive" className="text-xs">
                           High Priority

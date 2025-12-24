@@ -134,7 +134,7 @@ export function EstimateItemsTable({
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="ghost" size="sm">
-                              <Trash2 className="h-4 w-4 text-red-500" />
+                              <Trash2 className="h-4 w-4 text-error" />
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -148,7 +148,7 @@ export function EstimateItemsTable({
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction
                                 onClick={() => onDeleteItem(item.id)}
-                                className="bg-red-500 hover:bg-red-600"
+                                className="bg-red-500 hover:bg-error"
                               >
                                 Delete
                               </AlertDialogAction>

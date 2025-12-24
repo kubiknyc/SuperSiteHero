@@ -25,30 +25,30 @@ export function ChecklistGradeDisplay({
   const getColorScheme = () => {
     if (score.breakdown.critical_failures && score.breakdown.critical_failures.length > 0) {
       return {
-        bg: 'bg-red-50',
+        bg: 'bg-error-light',
         border: 'border-red-200',
-        text: 'text-red-700',
-        icon: 'text-red-600',
-        badge: 'bg-red-100 text-red-800',
+        text: 'text-error-dark',
+        icon: 'text-error',
+        badge: 'bg-error-light text-red-800',
       }
     }
 
     if (score.passed) {
       return {
-        bg: 'bg-green-50',
+        bg: 'bg-success-light',
         border: 'border-green-200',
-        text: 'text-green-700',
-        icon: 'text-green-600',
-        badge: 'bg-green-100 text-green-800',
+        text: 'text-success-dark',
+        icon: 'text-success',
+        badge: 'bg-success-light text-green-800',
       }
     }
 
     return {
-      bg: 'bg-red-50',
+      bg: 'bg-error-light',
       border: 'border-red-200',
-      text: 'text-red-700',
-      icon: 'text-red-600',
-      badge: 'bg-red-100 text-red-800',
+      text: 'text-error-dark',
+      icon: 'text-error',
+      badge: 'bg-error-light text-red-800',
     }
   }
 
@@ -132,7 +132,7 @@ export function ChecklistGradeDisplay({
                   {score.score.toFixed(1)}
                   <span className={cn('text-2xl ml-1', sizes.label)}>%</span>
                 </div>
-                <div className={cn('text-gray-600', sizes.label)}>
+                <div className={cn('text-secondary', sizes.label)}>
                   {score.scoring_type === 'binary' && 'Binary Score'}
                   {score.scoring_type === 'percentage' && 'Pass Rate'}
                   {score.scoring_type === 'points' && 'Points Score'}
@@ -147,7 +147,7 @@ export function ChecklistGradeDisplay({
               value={score.score}
               className="h-3"
               indicatorClassName={cn(
-                score.passed ? 'bg-green-600' : 'bg-red-600'
+                score.passed ? 'bg-success' : 'bg-error'
               )}
             />
           </div>
@@ -159,31 +159,31 @@ export function ChecklistGradeDisplay({
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1">
-                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                    <span className="text-2xl font-bold text-green-600">
+                    <CheckCircle2 className="w-4 h-4 text-success" />
+                    <span className="text-2xl font-bold text-success">
                       {score.breakdown.pass_count}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600">Pass</div>
+                  <div className="text-xs text-secondary">Pass</div>
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1">
-                    <XCircle className="w-4 h-4 text-red-600" />
-                    <span className="text-2xl font-bold text-red-600">
+                    <XCircle className="w-4 h-4 text-error" />
+                    <span className="text-2xl font-bold text-error">
                       {score.breakdown.fail_count}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600">Fail</div>
+                  <div className="text-xs text-secondary">Fail</div>
                 </div>
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-center gap-1">
-                    <span className="text-2xl font-bold text-gray-600">
+                    <span className="text-2xl font-bold text-secondary">
                       {score.breakdown.na_count}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-600">N/A</div>
+                  <div className="text-xs text-secondary">N/A</div>
                 </div>
               </div>
 
@@ -191,7 +191,7 @@ export function ChecklistGradeDisplay({
               {score.scoring_type === 'points' && score.breakdown.total_points && (
                 <div className="pt-4 border-t">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Points Earned</span>
+                    <span className="text-secondary">Points Earned</span>
                     <span className="font-semibold">
                       {score.breakdown.earned_points} / {score.breakdown.total_points}
                     </span>
@@ -202,13 +202,13 @@ export function ChecklistGradeDisplay({
               {/* Completion Status */}
               <div className="pt-4 border-t">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Items Completed</span>
+                  <span className="text-secondary">Items Completed</span>
                   <span className="font-semibold">
                     {score.breakdown.completed_items} / {score.breakdown.total_items}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-sm mt-2">
-                  <span className="text-gray-600">Scorable Items</span>
+                  <span className="text-secondary">Scorable Items</span>
                   <span className="font-semibold">{score.breakdown.scorable_items}</span>
                 </div>
               </div>
@@ -216,11 +216,11 @@ export function ChecklistGradeDisplay({
               {/* Critical Failures Alert */}
               {score.breakdown.critical_failures && score.breakdown.critical_failures.length > 0 && (
                 <div className="pt-4 border-t">
-                  <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2 p-3 bg-error-light border border-red-200 rounded-lg">
+                    <AlertTriangle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
                     <div>
                       <p className="font-medium text-red-900 text-sm">Critical Item Failures</p>
-                      <p className="text-xs text-red-700 mt-1">
+                      <p className="text-xs text-error-dark mt-1">
                         {score.breakdown.critical_failures.length} critical{' '}
                         {score.breakdown.critical_failures.length === 1 ? 'item' : 'items'} failed
                       </p>
@@ -230,7 +230,7 @@ export function ChecklistGradeDisplay({
               )}
 
               {/* Timestamp */}
-              <div className="text-xs text-gray-500 text-center pt-2">
+              <div className="text-xs text-muted text-center pt-2">
                 Calculated {new Date(score.calculated_at).toLocaleString()}
               </div>
             </div>
@@ -244,8 +244,8 @@ export function ChecklistGradeDisplay({
 // Compact version for use in lists
 export function CompactGradeDisplay({ score }: { score: ChecklistScore }) {
   const colors = score.passed
-    ? 'bg-green-100 text-green-800 border-green-300'
-    : 'bg-red-100 text-red-800 border-red-300'
+    ? 'bg-success-light text-green-800 border-green-300'
+    : 'bg-error-light text-red-800 border-red-300'
 
   return (
     <div className={cn('inline-flex items-center gap-2 px-3 py-1.5 rounded-full border', colors)}>
@@ -280,7 +280,7 @@ export function ScoreTrendIndicator({
 
   if (isUnchanged) {
     return (
-      <div className="inline-flex items-center gap-1 text-gray-600 text-sm">
+      <div className="inline-flex items-center gap-1 text-secondary text-sm">
         <span className="font-medium">No change</span>
       </div>
     )
@@ -290,7 +290,7 @@ export function ScoreTrendIndicator({
     <div
       className={cn(
         'inline-flex items-center gap-1 text-sm font-medium',
-        isImproving ? 'text-green-600' : 'text-red-600'
+        isImproving ? 'text-success' : 'text-error'
       )}
     >
       {isImproving ? (

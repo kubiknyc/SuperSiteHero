@@ -230,15 +230,15 @@ export function ConversationList({
                       ) : (
                         <div className={cn(
                           'h-10 w-10 rounded-full flex items-center justify-center',
-                          conv.type === 'direct' && 'bg-blue-100 text-blue-600',
-                          conv.type === 'group' && 'bg-green-100 text-green-600',
+                          conv.type === 'direct' && 'bg-info-light text-primary',
+                          conv.type === 'group' && 'bg-success-light text-success',
                           conv.type === 'project' && 'bg-purple-100 text-purple-600'
                         )}>
                           <Icon className="h-5 w-5" />
                         </div>
                       )}
                       {hasUnread && (
-                        <Circle className="absolute -top-1 -right-1 h-3 w-3 fill-blue-500 text-blue-500" />
+                        <Circle className="absolute -top-1 -right-1 h-3 w-3 fill-blue-500 text-primary" />
                       )}
                     </div>
 

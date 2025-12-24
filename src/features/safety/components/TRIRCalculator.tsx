@@ -96,23 +96,23 @@ function RateDisplay({ label, shortLabel, value, benchmark, formula, description
         {value !== null ? value.toFixed(2) : 'N/A'}
       </div>
 
-      <div className="mt-2 text-xs text-gray-600">
+      <div className="mt-2 text-xs text-secondary">
         <p className="font-medium">{label}</p>
-        <p className="mt-1 text-gray-500">{formula}</p>
+        <p className="mt-1 text-muted">{formula}</p>
       </div>
 
       {value !== null && benchmark !== null && (
         <div className="mt-2">
           {value < benchmark ? (
-            <Badge className="bg-green-100 text-green-800 text-xs">
+            <Badge className="bg-success-light text-green-800 text-xs">
               {((1 - value / benchmark) * 100).toFixed(1)}% better than industry
             </Badge>
           ) : value > benchmark ? (
-            <Badge className="bg-red-100 text-red-800 text-xs">
+            <Badge className="bg-error-light text-red-800 text-xs">
               {((value / benchmark - 1) * 100).toFixed(1)}% above industry
             </Badge>
           ) : (
-            <Badge className="bg-yellow-100 text-yellow-800 text-xs">
+            <Badge className="bg-warning-light text-yellow-800 text-xs">
               At industry average
             </Badge>
           )}
@@ -163,7 +163,7 @@ function NumberInput({
         className="mt-1"
       />
       {helpText && (
-        <p className="mt-1 text-xs text-gray-500">{helpText}</p>
+        <p className="mt-1 text-xs text-muted">{helpText}</p>
       )}
     </div>
   )
@@ -270,7 +270,7 @@ Industry Benchmarks (NAICS ${naicsCode}):
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Calculator className="h-5 w-5 text-blue-600" />
+          <Calculator className="h-5 w-5 text-primary" />
           OSHA Rate Calculator
         </CardTitle>
         <CardDescription>
@@ -291,7 +291,7 @@ Industry Benchmarks (NAICS ${naicsCode}):
           />
 
           <div className="mt-3 flex flex-wrap gap-2">
-            <span className="text-xs text-gray-500">Quick estimate from employees:</span>
+            <span className="text-xs text-muted">Quick estimate from employees:</span>
             {[25, 50, 100, 250, 500].map((count) => (
               <Button
                 key={count}
@@ -390,7 +390,7 @@ Industry Benchmarks (NAICS ${naicsCode}):
 
         {/* Actions */}
         <div className="flex items-center justify-between pt-4 border-t">
-          <div className="flex items-center gap-2 text-xs text-gray-500">
+          <div className="flex items-center gap-2 text-xs text-muted">
             <Info className="h-4 w-4" />
             <span>200,000 = 100 full-time employees working 40 hrs/week for 50 weeks</span>
           </div>
@@ -404,7 +404,7 @@ Industry Benchmarks (NAICS ${naicsCode}):
             <Button variant="outline" size="sm" onClick={handleCopy}>
               {copied ? (
                 <>
-                  <CheckCircle className="h-4 w-4 mr-1 text-green-600" />
+                  <CheckCircle className="h-4 w-4 mr-1 text-success" />
                   Copied!
                 </>
               ) : (
@@ -418,36 +418,36 @@ Industry Benchmarks (NAICS ${naicsCode}):
         </div>
 
         {/* Formula Reference */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h4 className="text-sm font-medium mb-3">OSHA Rate Formulas</h4>
+        <div className="bg-surface rounded-lg p-4">
+          <h4 className="text-sm font-medium mb-3" className="heading-card">OSHA Rate Formulas</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <p className="font-medium">TRIR (Total Recordable Incident Rate)</p>
-              <p className="text-gray-600 font-mono text-xs mt-1">
+              <p className="text-secondary font-mono text-xs mt-1">
                 = (Number of Recordable Cases x 200,000) / Hours Worked
               </p>
             </div>
             <div>
               <p className="font-medium">DART Rate</p>
-              <p className="text-gray-600 font-mono text-xs mt-1">
+              <p className="text-secondary font-mono text-xs mt-1">
                 = (DART Cases x 200,000) / Hours Worked
               </p>
             </div>
             <div>
               <p className="font-medium">LTIR (Lost Time Injury Rate)</p>
-              <p className="text-gray-600 font-mono text-xs mt-1">
+              <p className="text-secondary font-mono text-xs mt-1">
                 = (Lost Time Cases x 200,000) / Hours Worked
               </p>
             </div>
             <div>
               <p className="font-medium">Severity Rate</p>
-              <p className="text-gray-600 font-mono text-xs mt-1">
+              <p className="text-secondary font-mono text-xs mt-1">
                 = (Days Away + Restricted x 200,000) / Hours Worked
               </p>
             </div>
           </div>
 
-          <div className="mt-4 pt-4 border-t text-xs text-gray-500">
+          <div className="mt-4 pt-4 border-t text-xs text-muted">
             <p className="font-medium mb-2">What counts as DART?</p>
             <ul className="list-disc list-inside space-y-1">
               <li>Cases resulting in days away from work</li>

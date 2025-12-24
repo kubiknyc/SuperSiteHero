@@ -192,9 +192,9 @@ export function OutlookCalendarConnect({
         <CardHeader className={compact ? 'p-0 pb-4' : ''}>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-blue-600" />
+              <Calendar className="h-5 w-5 text-primary" />
               Outlook Calendar
-              <Badge variant="outline" className="ml-2 bg-green-50 text-green-700 border-green-200">
+              <Badge variant="outline" className="ml-2 bg-success-light text-success-dark border-green-200">
                 <Check className="mr-1 h-3 w-3" />
                 Connected
               </Badge>
@@ -267,11 +267,11 @@ export function OutlookCalendarConnect({
                 <div className="text-xs text-muted-foreground">Synced Events</div>
               </div>
               <div className="text-center p-3 bg-muted rounded-lg">
-                <div className="text-2xl font-bold text-yellow-600">{syncStats.pendingSyncs}</div>
+                <div className="text-2xl font-bold text-warning">{syncStats.pendingSyncs}</div>
                 <div className="text-xs text-muted-foreground">Pending</div>
               </div>
               <div className="text-center p-3 bg-muted rounded-lg">
-                <div className="text-2xl font-bold text-red-600">{syncStats.failedSyncs}</div>
+                <div className="text-2xl font-bold text-error">{syncStats.failedSyncs}</div>
                 <div className="text-xs text-muted-foreground">Failed</div>
               </div>
               <div className="text-center p-3 bg-muted rounded-lg">

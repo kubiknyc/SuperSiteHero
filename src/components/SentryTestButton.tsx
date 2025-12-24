@@ -66,8 +66,8 @@ export function SentryTestButton() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 p-4 bg-white border border-gray-200 rounded-lg shadow-lg">
-      <p className="text-xs font-semibold text-gray-700 mb-2">
+    <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 p-4 bg-card border border-border rounded-lg shadow-lg">
+      <p className="text-xs font-semibold text-secondary mb-2">
         🧪 Sentry Testing (Dev Only)
       </p>
 
@@ -89,7 +89,7 @@ export function SentryTestButton() {
         Test Message Capture
       </Button>
 
-      <p className="text-xs text-gray-500 mt-2">
+      <p className="text-xs text-muted mt-2">
         Remove before production!
       </p>
     </div>

@@ -215,8 +215,8 @@ export function MobileAcknowledgmentForm({
       <Card className="max-w-lg mx-auto">
         <CardContent className="py-12">
           <div className="flex flex-col items-center text-center">
-            <CheckCircle2 className="h-16 w-16 text-green-500 mb-4" />
-            <h2 className="text-2xl font-semibold mb-2">Thank You!</h2>
+            <CheckCircle2 className="h-16 w-16 text-success mb-4" />
+            <h2 className="text-2xl font-semibold mb-2" className="heading-section">Thank You!</h2>
             <p className="text-muted-foreground mb-6">
               Your acknowledgment has been {isOnline ? 'recorded' : 'saved'} successfully.
             </p>
@@ -242,8 +242,8 @@ export function MobileAcknowledgmentForm({
     <div className="max-w-lg mx-auto space-y-4 pb-8">
       {/* Offline indicator */}
       {!isOnline && (
-        <Alert variant="default" className="bg-amber-50 border-amber-200">
-          <WifiOff className="h-4 w-4 text-amber-600" />
+        <Alert variant="default" className="bg-warning-light border-amber-200">
+          <WifiOff className="h-4 w-4 text-warning" />
           <AlertDescription className="text-amber-800">
             You're offline. Your acknowledgment will be saved locally and synced when connected.
           </AlertDescription>
@@ -367,7 +367,7 @@ export function MobileAcknowledgmentForm({
                     </div>
                   ) : locationError ? (
                     <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-amber-600">
+                      <div className="flex items-center gap-2 text-sm text-warning">
                         <AlertCircle className="h-4 w-4" />
                         {locationError}
                       </div>
@@ -381,7 +381,7 @@ export function MobileAcknowledgmentForm({
                       </Button>
                     </div>
                   ) : location ? (
-                    <div className="flex items-center gap-2 text-sm text-green-600">
+                    <div className="flex items-center gap-2 text-sm text-success">
                       <CheckCircle2 className="h-4 w-4" />
                       Location captured ({location.accuracy.toFixed(0)}m accuracy)
                     </div>

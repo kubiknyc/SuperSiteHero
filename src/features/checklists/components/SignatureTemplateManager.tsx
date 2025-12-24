@@ -167,7 +167,7 @@ export function SignatureTemplateManager({
       {/* Template list */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <Label className="text-sm font-medium text-gray-700">
+          <Label className="text-sm font-medium text-secondary">
             Saved Templates ({templates.length})
           </Label>
           {templates.length >= 10 && (
@@ -179,8 +179,8 @@ export function SignatureTemplateManager({
 
         {templates.length === 0 ? (
           <Card className="p-8 text-center">
-            <p className="text-sm text-gray-600">No saved templates</p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-sm text-secondary">No saved templates</p>
+            <p className="text-xs text-muted mt-1">
               Draw a signature and save it as a template for quick reuse
             </p>
           </Card>
@@ -189,11 +189,11 @@ export function SignatureTemplateManager({
             {templates.map((template) => (
               <Card
                 key={template.id}
-                className="p-3 hover:bg-gray-50 transition-colors"
+                className="p-3 hover:bg-surface transition-colors"
               >
                 <div className="flex items-center gap-3">
                   {/* Signature preview */}
-                  <div className="w-24 h-12 border rounded bg-white flex items-center justify-center overflow-hidden flex-shrink-0">
+                  <div className="w-24 h-12 border rounded bg-card flex items-center justify-center overflow-hidden flex-shrink-0">
                     <img
                       src={template.dataUrl}
                       alt={template.name}
@@ -226,7 +226,7 @@ export function SignatureTemplateManager({
                           onClick={() => handleSaveEdit(template.id)}
                           className="h-8 px-2"
                         >
-                          <Check className="w-4 h-4 text-green-600" />
+                          <Check className="w-4 h-4 text-success" />
                         </Button>
                         <Button
                           type="button"
@@ -235,15 +235,15 @@ export function SignatureTemplateManager({
                           onClick={handleCancelEdit}
                           className="h-8 px-2"
                         >
-                          <X className="w-4 h-4 text-gray-600" />
+                          <X className="w-4 h-4 text-secondary" />
                         </Button>
                       </div>
                     ) : (
                       <>
-                        <div className="font-medium text-sm text-gray-900 truncate">
+                        <div className="font-medium text-sm text-foreground truncate">
                           {template.name}
                         </div>
-                        <div className="flex items-center gap-2 mt-1 text-xs text-gray-500">
+                        <div className="flex items-center gap-2 mt-1 text-xs text-muted">
                           <Clock className="w-3 h-3" />
                           <span>
                             {template.lastUsedAt
@@ -279,7 +279,7 @@ export function SignatureTemplateManager({
                         onClick={() => handleStartEdit(template)}
                         className="h-8 px-2"
                       >
-                        <Edit2 className="w-4 h-4 text-gray-600" />
+                        <Edit2 className="w-4 h-4 text-secondary" />
                       </Button>
                       <Button
                         type="button"
@@ -288,7 +288,7 @@ export function SignatureTemplateManager({
                         onClick={() => handleDeleteTemplate(template.id, template.name)}
                         className="h-8 px-2"
                       >
-                        <Trash2 className="w-4 h-4 text-red-600" />
+                        <Trash2 className="w-4 h-4 text-error" />
                       </Button>
                     </div>
                   )}

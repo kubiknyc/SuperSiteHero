@@ -169,10 +169,10 @@ export function MobileMarkupToolbar({
     <div className={cn('fixed bottom-0 left-0 right-0 z-50', className)}>
       {/* Expanded Panel - Advanced Options */}
       {isExpanded && (
-        <div className="bg-white border-t border-gray-200 px-4 py-3 space-y-3 animate-in slide-in-from-bottom duration-200">
+        <div className="bg-card border-t border-border px-4 py-3 space-y-3 animate-in slide-in-from-bottom duration-200">
           {/* Color Selection */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Color</p>
+            <p className="text-xs font-medium text-muted uppercase tracking-wide">Color</p>
             <div className="flex items-center gap-2">
               {QUICK_COLORS.map((color) => (
                 <button
@@ -180,7 +180,7 @@ export function MobileMarkupToolbar({
                   type="button"
                   className={cn(
                     'w-10 h-10 rounded-full border-2 transition-transform active:scale-95',
-                    selectedColor === color ? 'border-gray-900 scale-110' : 'border-gray-200'
+                    selectedColor === color ? 'border-gray-900 scale-110' : 'border-border'
                   )}
                   style={{ backgroundColor: color }}
                   onClick={() => onColorChange(color)}
@@ -215,7 +215,7 @@ export function MobileMarkupToolbar({
 
           {/* Line Width */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Line Width</p>
+            <p className="text-xs font-medium text-muted uppercase tracking-wide">Line Width</p>
             <div className="flex items-center gap-4">
               <div className="flex gap-2">
                 {LINE_WIDTH_PRESETS.map((preset) => (
@@ -242,13 +242,13 @@ export function MobileMarkupToolbar({
                   className="w-full"
                 />
               </div>
-              <span className="text-sm text-gray-600 w-8 text-right">{lineWidth}px</span>
+              <span className="text-sm text-secondary w-8 text-right">{lineWidth}px</span>
             </div>
           </div>
 
           {/* Advanced Tools */}
           <div className="space-y-2">
-            <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Advanced Tools</p>
+            <p className="text-xs font-medium text-muted uppercase tracking-wide">Advanced Tools</p>
             <div className="flex gap-2">
               {onOpenLayers && (
                 <Button
@@ -293,7 +293,7 @@ export function MobileMarkupToolbar({
 
       {/* Shape Tools Drawer */}
       {showShapeTools && (
-        <div className="bg-white border-t border-gray-200 px-4 py-3 animate-in slide-in-from-bottom duration-200">
+        <div className="bg-card border-t border-border px-4 py-3 animate-in slide-in-from-bottom duration-200">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium">Shapes</p>
             <Button
@@ -323,7 +323,7 @@ export function MobileMarkupToolbar({
       )}
 
       {/* Main Toolbar */}
-      <div className="bg-white border-t border-gray-200 px-2 py-2 safe-area-pb">
+      <div className="bg-card border-t border-border px-2 py-2 safe-area-pb">
         <div className="flex items-center justify-between gap-1">
           {/* Quick Tools */}
           <div className="flex items-center gap-1">
@@ -379,14 +379,14 @@ export function MobileMarkupToolbar({
             {/* Current Color */}
             <button
               type="button"
-              className="w-8 h-8 rounded-full border-2 border-gray-300 shadow-sm"
+              className="w-8 h-8 rounded-full border-2 border-input shadow-sm"
               style={{ backgroundColor: selectedColor }}
               onClick={() => setIsExpanded(!isExpanded)}
               disabled={disabled}
             />
 
             {/* Zoom Controls */}
-            <div className="flex items-center bg-gray-100 rounded-lg">
+            <div className="flex items-center bg-muted rounded-lg">
               <Button
                 variant="ghost"
                 size="sm"

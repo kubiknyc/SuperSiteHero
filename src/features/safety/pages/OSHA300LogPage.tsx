@@ -199,11 +199,11 @@ export function OSHA300LogPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <ClipboardList className="h-7 w-7 text-red-600" />
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <ClipboardList className="h-7 w-7 text-error" />
               OSHA 300 Log
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               Log of Work-Related Injuries and Illnesses
             </p>
           </div>
@@ -232,10 +232,10 @@ export function OSHA300LogPage() {
         <Card className="border-blue-200 bg-blue-50">
           <CardContent className="py-4">
             <div className="flex items-start gap-3">
-              <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+              <Info className="h-5 w-5 text-primary mt-0.5" />
               <div className="text-sm">
                 <p className="font-medium text-blue-800">OSHA Recordkeeping Requirements</p>
-                <p className="text-blue-700 mt-1">
+                <p className="text-primary-hover mt-1">
                   Employers with 10+ employees must maintain OSHA 300 logs. The log must be
                   retained for 5 years. Post the 300A summary from Feb 1 - April 30 annually.
                 </p>
@@ -259,8 +259,8 @@ export function OSHA300LogPage() {
             const isUpcoming = currentMonth === 1 // Before Feb 1
 
             return (
-              <Alert className={isOverdue ? "border-red-500 bg-red-50" : isActive ? "border-orange-500 bg-orange-50" : "border-yellow-500 bg-yellow-50"}>
-                <CalendarCheck className={`h-5 w-5 ${isOverdue ? "text-red-600" : isActive ? "text-orange-600" : "text-yellow-600"}`} />
+              <Alert className={isOverdue ? "border-red-500 bg-error-light" : isActive ? "border-orange-500 bg-orange-50" : "border-warning bg-warning-light"}>
+                <CalendarCheck className={`h-5 w-5 ${isOverdue ? "text-error" : isActive ? "text-orange-600" : "text-warning"}`} />
                 <AlertDescription className={isOverdue ? "text-red-800" : isActive ? "text-orange-800" : "text-yellow-800"}>
                   {isOverdue ? (
                     <span>
@@ -289,7 +289,7 @@ export function OSHA300LogPage() {
             <div className="flex flex-col md:flex-row gap-4">
               {/* Year Selector */}
               <div className="w-full md:w-48">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-secondary mb-1">
                   Calendar Year
                 </label>
                 <Select
@@ -311,7 +311,7 @@ export function OSHA300LogPage() {
 
               {/* Project Selector */}
               <div className="flex-1 max-w-md">
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
                   Project / Establishment
                 </label>
@@ -341,34 +341,34 @@ export function OSHA300LogPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">{totalCases}</p>
-              <p className="text-sm text-gray-500">Total Cases</p>
+              <p className="text-3xl font-bold text-foreground">{totalCases}</p>
+              <p className="text-sm text-muted">Total Cases</p>
             </CardContent>
           </Card>
-          <Card className={deathCount > 0 ? 'border-red-300 bg-red-50' : ''}>
+          <Card className={deathCount > 0 ? 'border-red-300 bg-error-light' : ''}>
             <CardContent className="py-4 text-center">
-              <p className={`text-3xl font-bold ${deathCount > 0 ? 'text-red-600' : 'text-gray-900'}`}>
+              <p className={`text-3xl font-bold ${deathCount > 0 ? 'text-error' : 'text-foreground'}`}>
                 {deathCount}
               </p>
-              <p className="text-sm text-gray-500">Deaths (G)</p>
+              <p className="text-sm text-muted">Deaths (G)</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">{daysAwayCount}</p>
-              <p className="text-sm text-gray-500">Days Away (H)</p>
+              <p className="text-3xl font-bold text-foreground">{daysAwayCount}</p>
+              <p className="text-sm text-muted">Days Away (H)</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">{restrictedCount}</p>
-              <p className="text-sm text-gray-500">Restricted (I)</p>
+              <p className="text-3xl font-bold text-foreground">{restrictedCount}</p>
+              <p className="text-sm text-muted">Restricted (I)</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="py-4 text-center">
-              <p className="text-3xl font-bold text-gray-900">{otherRecordableCount}</p>
-              <p className="text-sm text-gray-500">Other (J)</p>
+              <p className="text-3xl font-bold text-foreground">{otherRecordableCount}</p>
+              <p className="text-sm text-muted">Other (J)</p>
             </CardContent>
           </Card>
         </div>
@@ -377,20 +377,20 @@ export function OSHA300LogPage() {
         {incidentsLoading ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
-              <p className="text-gray-500 mt-4">Loading OSHA 300 log...</p>
+              <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+              <p className="text-muted mt-4">Loading OSHA 300 log...</p>
             </CardContent>
           </Card>
         ) : oshaEntries.length === 0 ? (
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
-              <AlertTriangle className="h-12 w-12 mx-auto text-green-500 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No Recordable Incidents</h3>
-              <p className="text-gray-500">
+              <AlertTriangle className="h-12 w-12 mx-auto text-success mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No Recordable Incidents</h3>
+              <p className="text-muted">
                 No OSHA recordable incidents for {selectedYear}
                 {selectedProjectId ? ' on this project' : ' company-wide'}.
               </p>
-              <p className="text-sm text-green-600 mt-2">
+              <p className="text-sm text-success mt-2">
                 Keep up the great safety record!
               </p>
             </CardContent>
@@ -424,9 +424,9 @@ export function OSHA300LogPage() {
               className="w-full justify-start"
               variant="outline"
             >
-              <FileSpreadsheet className="h-4 w-4 mr-2 text-green-600" />
+              <FileSpreadsheet className="h-4 w-4 mr-2 text-success" />
               Export to Excel (.xlsx)
-              <span className="ml-auto text-xs text-gray-500">Includes 300A Summary</span>
+              <span className="ml-auto text-xs text-muted">Includes 300A Summary</span>
             </Button>
             <Button
               onClick={handleExportCSV}
@@ -434,11 +434,11 @@ export function OSHA300LogPage() {
               className="w-full justify-start"
               variant="outline"
             >
-              <FileDown className="h-4 w-4 mr-2 text-blue-600" />
+              <FileDown className="h-4 w-4 mr-2 text-primary" />
               Export to CSV
-              <span className="ml-auto text-xs text-gray-500">Log data only</span>
+              <span className="ml-auto text-xs text-muted">Log data only</span>
             </Button>
-            <div className="text-xs text-gray-500 mt-2">
+            <div className="text-xs text-muted mt-2">
               <p>Note: Set hours worked and employee count in Settings for accurate rate calculations.</p>
             </div>
           </div>
@@ -465,7 +465,7 @@ export function OSHA300LogPage() {
                 onChange={(e) => setHoursWorked(parseInt(e.target.value) || 0)}
                 placeholder="e.g., 250000"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Total hours worked by all employees during the year
               </p>
             </div>
@@ -479,24 +479,24 @@ export function OSHA300LogPage() {
                 onChange={(e) => setAverageEmployees(parseInt(e.target.value) || 0)}
                 placeholder="e.g., 125"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Annual average number of employees
               </p>
             </div>
 
             {hoursWorked > 0 && (
-              <Card className="bg-gray-50">
+              <Card className="bg-surface">
                 <CardContent className="py-3">
-                  <p className="text-sm font-medium text-gray-700">Calculated Rates</p>
+                  <p className="text-sm font-medium text-secondary">Calculated Rates</p>
                   <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
                     <div>
-                      <span className="text-gray-600">TRIR:</span>
+                      <span className="text-secondary">TRIR:</span>
                       <span className="ml-2 font-bold">
                         {((totalCases * 200000) / hoursWorked).toFixed(2)}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-600">DART:</span>
+                      <span className="text-secondary">DART:</span>
                       <span className="ml-2 font-bold">
                         {(((daysAwayCount + restrictedCount) * 200000) / hoursWorked).toFixed(2)}
                       </span>

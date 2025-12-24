@@ -131,11 +131,11 @@ export function PermitsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
               <FileCheck className="h-6 w-6" />
               Permits
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-muted mt-1">
               Track building permits, approvals, and renewals
             </p>
           </div>
@@ -150,11 +150,11 @@ export function PermitsPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <FileCheck className="h-5 w-5 text-blue-600" />
+                <div className="p-2 bg-info-light rounded-lg">
+                  <FileCheck className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Permits</p>
+                  <p className="text-sm text-muted">Total Permits</p>
                   <p className="text-2xl font-bold">{stats?.total || 0}</p>
                 </div>
               </div>
@@ -164,11 +164,11 @@ export function PermitsPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
+                <div className="p-2 bg-success-light rounded-lg">
+                  <CheckCircle className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Active/Issued</p>
+                  <p className="text-sm text-muted">Active/Issued</p>
                   <p className="text-2xl font-bold">
                     {(stats?.by_status?.['active'] || 0) + (stats?.by_status?.['issued'] || 0)}
                   </p>
@@ -180,11 +180,11 @@ export function PermitsPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Clock className="h-5 w-5 text-yellow-600" />
+                <div className="p-2 bg-warning-light rounded-lg">
+                  <Clock className="h-5 w-5 text-warning" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Expiring Soon</p>
+                  <p className="text-sm text-muted">Expiring Soon</p>
                   <p className="text-2xl font-bold">{stats?.expiring_soon || 0}</p>
                 </div>
               </div>
@@ -194,11 +194,11 @@ export function PermitsPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                <div className="p-2 bg-error-light rounded-lg">
+                  <AlertTriangle className="h-5 w-5 text-error" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Critical Pending</p>
+                  <p className="text-sm text-muted">Critical Pending</p>
                   <p className="text-2xl font-bold">{stats?.critical_permits || 0}</p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export function PermitsPage() {
         {/* Filters */}
         <div className="flex gap-4 flex-wrap">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search permits..."
               className="pl-10"
@@ -265,12 +265,12 @@ export function PermitsPage() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">Loading permits...</div>
+              <div className="text-center py-8 text-muted">Loading permits...</div>
             ) : filteredPermits?.length === 0 ? (
               <div className="text-center py-8">
                 <FileCheck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500">No permits found</p>
-                <p className="text-sm text-gray-400">Add permits to get started</p>
+                <p className="text-muted">No permits found</p>
+                <p className="text-sm text-disabled">Add permits to get started</p>
               </div>
             ) : (
               <div className="divide-y">
@@ -283,29 +283,29 @@ export function PermitsPage() {
                     <Link
                       key={permit.id}
                       to={`/permits/${permit.id}`}
-                      className="block py-4 hover:bg-gray-50 px-2 -mx-2 rounded cursor-pointer"
+                      className="block py-4 hover:bg-surface px-2 -mx-2 rounded cursor-pointer"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-4">
                           <div className={`p-2 rounded-lg ${
                             permit.work_cannot_proceed_without
-                              ? 'bg-red-100'
-                              : 'bg-gray-100'
+                              ? 'bg-error-light'
+                              : 'bg-muted'
                           }`}>
                             <FileCheck className={`h-6 w-6 ${
                               permit.work_cannot_proceed_without
-                                ? 'text-red-600'
-                                : 'text-gray-600'
+                                ? 'text-error'
+                                : 'text-secondary'
                             }`} />
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-medium">{permit.permit_name}</h3>
+                              <h3 className="font-medium" className="heading-subsection">{permit.permit_name}</h3>
                               {permit.work_cannot_proceed_without && (
-                                <AlertCircle className="h-4 w-4 text-red-500" aria-label="Critical - Work cannot proceed without this permit" />
+                                <AlertCircle className="h-4 w-4 text-error" aria-label="Critical - Work cannot proceed without this permit" />
                               )}
                             </div>
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-muted">
                               {permit.permit_number && `#${permit.permit_number}`}
                               {permit.permit_number && permit.issuing_agency && ' | '}
                               {permit.issuing_agency}
@@ -315,7 +315,7 @@ export function PermitsPage() {
                                 {getPermitTypeLabel(permit.permit_type)}
                               </Badge>
                               {permit.project && (
-                                <span className="text-xs text-gray-400 flex items-center gap-1">
+                                <span className="text-xs text-disabled flex items-center gap-1">
                                   <Building2 className="h-3 w-3" />
                                   {permit.project.name}
                                 </span>
@@ -327,14 +327,14 @@ export function PermitsPage() {
                           <div className="text-right">
                             {permit.expiration_date && (
                               <p className={`text-sm flex items-center gap-1 ${
-                                expired ? 'text-red-600' : expiringSoon ? 'text-yellow-600' : 'text-gray-500'
+                                expired ? 'text-error' : expiringSoon ? 'text-warning' : 'text-muted'
                               }`}>
                                 <Calendar className="h-3 w-3" />
                                 {expired ? 'Expired' : expiringSoon ? `${daysUntilExpiration} days left` : new Date(permit.expiration_date).toLocaleDateString()}
                               </p>
                             )}
                             {permit.requires_inspections && (
-                              <p className="text-xs text-gray-400">Requires inspections</p>
+                              <p className="text-xs text-disabled">Requires inspections</p>
                             )}
                           </div>
                           <Badge className={getPermitStatusColor(permit.status)}>

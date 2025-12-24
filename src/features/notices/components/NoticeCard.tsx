@@ -52,7 +52,7 @@ function NoticeCardComponent({ notice }: NoticeCardProps) {
             <NoticeTypeBadge type={notice.notice_type} />
             <NoticeStatusBadge status={notice.status} />
             {notice.is_critical && (
-              <Badge className="bg-red-100 text-red-800">
+              <Badge className="bg-error-light text-red-800">
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 Critical
               </Badge>
@@ -74,37 +74,37 @@ function NoticeCardComponent({ notice }: NoticeCardProps) {
           </div>
 
           {/* Subject */}
-          <h3 className="font-medium text-gray-900 mb-2 line-clamp-2">
+          <h3 className="font-medium text-foreground mb-2 line-clamp-2 heading-subsection">
             {notice.subject}
           </h3>
 
           {/* Description preview */}
           {notice.description && (
-            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+            <p className="text-sm text-secondary mb-3 line-clamp-2">
               {notice.description}
             </p>
           )}
 
           {/* Metadata row */}
-          <div className="flex items-center gap-4 flex-wrap text-sm text-gray-600">
+          <div className="flex items-center gap-4 flex-wrap text-sm text-secondary">
             {notice.from_party && (
               <span>
-                <span className="text-gray-500">From:</span> {notice.from_party}
+                <span className="text-muted">From:</span> {notice.from_party}
               </span>
             )}
             {notice.to_party && (
               <span>
-                <span className="text-gray-500">To:</span> {notice.to_party}
+                <span className="text-muted">To:</span> {notice.to_party}
               </span>
             )}
             <span>
-              <span className="text-gray-500">Date:</span>{' '}
+              <span className="text-muted">Date:</span>{' '}
               {notice.notice_date
                 ? format(new Date(notice.notice_date), 'MMM d, yyyy')
                 : 'N/A'}
             </span>
             {notice.document_url && (
-              <span className="flex items-center gap-1 text-blue-600">
+              <span className="flex items-center gap-1 text-primary">
                 <Paperclip className="w-3 h-3" />
                 Attachment
               </span>

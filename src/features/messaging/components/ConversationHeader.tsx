@@ -166,8 +166,8 @@ export function ConversationHeader({
         ) : (
           <div className={cn(
             'h-10 w-10 rounded-full flex items-center justify-center',
-            conversation?.type === 'direct' && 'bg-blue-100 text-blue-600',
-            conversation?.type === 'group' && 'bg-green-100 text-green-600',
+            conversation?.type === 'direct' && 'bg-info-light text-primary',
+            conversation?.type === 'group' && 'bg-success-light text-success',
             conversation?.type === 'project' && 'bg-purple-100 text-purple-600'
           )}>
             <Users className="h-5 w-5" />
@@ -180,10 +180,10 @@ export function ConversationHeader({
 
       {/* Conversation info */}
       <div className="flex-1 min-w-0">
-        <h2 className="font-semibold truncate">{getDisplayName()}</h2>
+        <h2 className="font-semibold truncate" className="heading-section">{getDisplayName()}</h2>
         <p className={cn(
           'text-sm truncate',
-          isOnline ? 'text-green-600' : 'text-muted-foreground'
+          isOnline ? 'text-success' : 'text-muted-foreground'
         )}>
           {subtitle}
         </p>

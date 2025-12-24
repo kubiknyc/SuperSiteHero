@@ -209,13 +209,13 @@ export function Photo360Viewer({
     return (
       <div
         className={cn(
-          'relative w-full h-full min-h-[300px] bg-gray-900 flex flex-col items-center justify-center text-white',
+          'relative w-full h-full min-h-[300px] bg-background flex flex-col items-center justify-center text-white',
           className
         )}
       >
         <AlertCircle className="h-12 w-12 text-red-400 mb-4" />
         <p className="text-lg font-medium mb-2">Failed to Load Panorama</p>
-        <p className="text-sm text-gray-400 max-w-md text-center">{error}</p>
+        <p className="text-sm text-disabled max-w-md text-center">{error}</p>
       </div>
     );
   }
@@ -248,7 +248,7 @@ export function Photo360Viewer({
               variant="ghost"
               size="icon"
               className={cn(
-                'text-white hover:bg-white/20 h-9 w-9',
+                'text-white hover:bg-card/20 h-9 w-9',
                 gyroscopeEnabled && 'bg-primary/30'
               )}
               onClick={toggleGyroscope}
@@ -266,7 +266,7 @@ export function Photo360Viewer({
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20 h-9 w-9"
+            className="text-white hover:bg-card/20 h-9 w-9"
             onClick={resetView}
             title="Reset view"
           >
@@ -277,7 +277,7 @@ export function Photo360Viewer({
           <Button
             variant="ghost"
             size="icon"
-            className="text-white hover:bg-white/20 h-9 w-9"
+            className="text-white hover:bg-card/20 h-9 w-9"
             onClick={toggleFullscreen}
             title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
           >

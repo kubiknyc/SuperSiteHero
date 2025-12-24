@@ -216,22 +216,22 @@ function FilterRow({
       {/* Group separator (AND) */}
       {showGroupSeparator && !isFirstInGroup && (
         <div className="flex items-center gap-2 py-1">
-          <div className="flex-1 h-px bg-gray-200" />
+          <div className="flex-1 h-px bg-muted" />
           <Badge variant="secondary" className="text-xs">AND</Badge>
-          <div className="flex-1 h-px bg-gray-200" />
+          <div className="flex-1 h-px bg-muted" />
         </div>
       )}
 
-      <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-start gap-3 p-3 bg-surface rounded-lg">
         {/* Row number */}
-        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs font-medium text-gray-600">
+        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-secondary">
           {index + 1}
         </div>
 
         <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-3 items-start">
           {/* Field selector */}
           <div className="md:col-span-4">
-            <Label className="text-xs text-gray-500 mb-1 block">Field</Label>
+            <Label className="text-xs text-muted mb-1 block">Field</Label>
             <Select value={filter.field_name} onValueChange={handleFieldChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select field..." />
@@ -251,7 +251,7 @@ function FilterRow({
 
           {/* Operator selector */}
           <div className="md:col-span-3">
-            <Label className="text-xs text-gray-500 mb-1 block">Condition</Label>
+            <Label className="text-xs text-muted mb-1 block">Condition</Label>
             <Select
               value={filter.operator}
               onValueChange={(v) => handleOperatorChange(v as ReportFilterOperator)}
@@ -273,7 +273,7 @@ function FilterRow({
           {/* Value input */}
           {selectedOperator?.requiresValue && (
             <div className="md:col-span-4">
-              <Label className="text-xs text-gray-500 mb-1 block">Value</Label>
+              <Label className="text-xs text-muted mb-1 block">Value</Label>
 
               {showDatePresets ? (
                 <div className="space-y-2">
@@ -360,7 +360,7 @@ function FilterRow({
           variant="ghost"
           size="sm"
           onClick={() => onRemove(index)}
-          className="flex-shrink-0 text-gray-400 hover:text-red-600"
+          className="flex-shrink-0 text-disabled hover:text-error"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -440,9 +440,9 @@ export function FilterBuilder({
       <CardContent className="space-y-4">
         {/* Filter rows */}
         {filters.length === 0 ? (
-          <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
-            <Filter className="h-12 w-12 mx-auto text-gray-400 mb-4" />
-            <p className="text-gray-500 mb-4">
+          <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+            <Filter className="h-12 w-12 mx-auto text-disabled mb-4" />
+            <p className="text-muted mb-4">
               No filters applied. All data will be included in the report.
             </p>
             <Button onClick={handleAddFilter}>
@@ -475,7 +475,7 @@ export function FilterBuilder({
 
         {/* Help text */}
         {filters.length > 1 && (
-          <p className="text-xs text-gray-500 mt-4">
+          <p className="text-xs text-muted mt-4">
             Multiple filters are combined using AND logic. All conditions must be met.
           </p>
         )}
@@ -483,10 +483,10 @@ export function FilterBuilder({
         {/* Filter summary */}
         {filters.length > 0 && (
           <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-            <p className="text-sm text-blue-700 font-medium">
+            <p className="text-sm text-primary-hover font-medium">
               {filters.length} filter{filters.length !== 1 ? 's' : ''} applied
             </p>
-            <p className="text-xs text-blue-600 mt-1">
+            <p className="text-xs text-primary mt-1">
               {filters
                 .filter(f => f.field_name)
                 .map(f => {

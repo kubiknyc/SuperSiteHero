@@ -153,7 +153,7 @@ export function DocumentSearchBar({
     <div className="relative w-full">
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-disabled" />
         <Input
           type="text"
           value={searchTerm}
@@ -179,7 +179,7 @@ export function DocumentSearchBar({
         {/* Loading Indicator */}
         {isLoading && (
           <div className="absolute right-10 top-1/2 -translate-y-1/2">
-            <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+            <Loader2 className="w-4 h-4 animate-spin text-disabled" />
           </div>
         )}
       </div>
@@ -188,12 +188,12 @@ export function DocumentSearchBar({
       {shouldShowDropdown && showSuggestions && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden"
+          className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden"
         >
           {/* Search Results */}
           {hasResults && (
             <div className="max-h-96 overflow-y-auto">
-              <div className="px-3 py-2 bg-gray-50 text-xs font-semibold text-gray-600">
+              <div className="px-3 py-2 bg-surface text-xs font-semibold text-secondary">
                 Search Results
               </div>
               <div className="divide-y">
@@ -201,22 +201,22 @@ export function DocumentSearchBar({
                   <button
                     key={doc.id}
                     onClick={() => handleSuggestionClick(doc)}
-                    className="w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors flex items-start gap-3"
+                    className="w-full px-3 py-2 text-left hover:bg-surface transition-colors flex items-start gap-3"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-foreground truncate">
                         {doc.name}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">
+                      <p className="text-xs text-muted truncate">
                         {doc.file_name}
                       </p>
                       {doc.drawing_number && (
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-disabled">
                           Drawing: {doc.drawing_number}
                         </p>
                       )}
                     </div>
-                    <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded whitespace-nowrap">
+                    <span className="text-xs px-2 py-1 bg-muted text-secondary rounded whitespace-nowrap">
                       {doc.document_type.replace('_', ' ')}
                     </span>
                   </button>
@@ -228,7 +228,7 @@ export function DocumentSearchBar({
           {/* Recent Searches */}
           {!hasResults && hasRecentSearches && searchTerm.length === 0 && (
             <div>
-              <div className="px-3 py-2 bg-gray-50 text-xs font-semibold text-gray-600">
+              <div className="px-3 py-2 bg-surface text-xs font-semibold text-secondary">
                 Recent Searches
               </div>
               <div className="divide-y">
@@ -236,7 +236,7 @@ export function DocumentSearchBar({
                   <button
                     key={term}
                     onClick={() => handleRecentClick(term)}
-                    className="w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors text-sm text-gray-700"
+                    className="w-full px-3 py-2 text-left hover:bg-surface transition-colors text-sm text-secondary"
                   >
                     {term}
                   </button>
@@ -248,8 +248,8 @@ export function DocumentSearchBar({
           {/* Empty State */}
           {!hasResults && !hasRecentSearches && searchTerm.length >= 2 && (
             <div className="px-3 py-8 text-center">
-              <p className="text-sm text-gray-500">No documents found</p>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-sm text-muted">No documents found</p>
+              <p className="text-xs text-disabled mt-1">
                 Try different keywords
               </p>
             </div>
@@ -258,7 +258,7 @@ export function DocumentSearchBar({
           {/* No Results */}
           {!hasResults && hasRecentSearches && searchTerm.length >= 2 && (
             <div className="px-3 py-4 text-center">
-              <p className="text-sm text-gray-500">No matching documents</p>
+              <p className="text-sm text-muted">No matching documents</p>
             </div>
           )}
         </div>

@@ -51,14 +51,14 @@ import { BatchUploadProgress } from './BatchUploadProgress';
 import type { PhotoEntryV2, PhotoCategory } from '@/types/daily-reports-v2';
 
 const PHOTO_CATEGORIES: { value: PhotoCategory; label: string; color: string }[] = [
-  { value: 'progress', label: 'Progress', color: 'bg-blue-100 text-blue-700' },
-  { value: 'safety', label: 'Safety', color: 'bg-red-100 text-red-700' },
-  { value: 'quality', label: 'Quality', color: 'bg-green-100 text-green-700' },
+  { value: 'progress', label: 'Progress', color: 'bg-info-light text-primary-hover' },
+  { value: 'safety', label: 'Safety', color: 'bg-error-light text-error-dark' },
+  { value: 'quality', label: 'Quality', color: 'bg-success-light text-success-dark' },
   { value: 'delivery', label: 'Delivery', color: 'bg-orange-100 text-orange-700' },
   { value: 'weather', label: 'Weather', color: 'bg-cyan-100 text-cyan-700' },
-  { value: 'issue', label: 'Issue', color: 'bg-yellow-100 text-yellow-700' },
+  { value: 'issue', label: 'Issue', color: 'bg-warning-light text-yellow-700' },
   { value: 'inspection', label: 'Inspection', color: 'bg-purple-100 text-purple-700' },
-  { value: 'general', label: 'General', color: 'bg-gray-100 text-gray-700' },
+  { value: 'general', label: 'General', color: 'bg-muted text-secondary' },
 ];
 
 interface PhotosSectionProps {
@@ -238,7 +238,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
             <div className="p-2 bg-pink-100 rounded-lg">
@@ -259,16 +259,16 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
             {/* Upload Area */}
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-surface border-b">
               {/* GPS Status Bar */}
               {gpsSupported && (
                 <div className="flex items-center justify-between mb-3 px-1">
@@ -280,29 +280,29 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         onCheckedChange={setAutoGpsEnabled}
                         className="data-[state=checked]:bg-green-500"
                       />
-                      <Label htmlFor="auto-gps" className="text-sm text-gray-600 cursor-pointer">
+                      <Label htmlFor="auto-gps" className="text-sm text-secondary cursor-pointer">
                         Auto GPS
                       </Label>
                     </div>
                     {autoGpsEnabled && (
                       <div className="flex items-center gap-1 text-xs">
                         {isGpsLoading ? (
-                          <span className="text-blue-500 flex items-center gap-1">
+                          <span className="text-primary flex items-center gap-1">
                             <Loader2 className="h-3 w-3 animate-spin" />
                             Getting location...
                           </span>
                         ) : currentPosition ? (
-                          <span className="text-green-600 flex items-center gap-1">
+                          <span className="text-success flex items-center gap-1">
                             <MapPin className="h-3 w-3" />
                             {formatCoordinates(currentPosition.latitude, currentPosition.longitude, 4)}
                           </span>
                         ) : gpsError ? (
-                          <span className="text-red-500 flex items-center gap-1">
+                          <span className="text-error flex items-center gap-1">
                             <MapPinOff className="h-3 w-3" />
                             Location unavailable
                           </span>
                         ) : permissionStatus === 'denied' ? (
-                          <span className="text-amber-500 flex items-center gap-1">
+                          <span className="text-warning flex items-center gap-1">
                             <AlertCircle className="h-3 w-3" />
                             Permission denied
                           </span>
@@ -328,28 +328,28 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                 className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
                   isProcessing || isUploading
                     ? 'border-blue-300 bg-blue-50 cursor-wait'
-                    : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                    : 'border-input hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
                 }`}
                 onClick={() => !isProcessing && !isUploading && fileInputRef.current?.click()}
               >
                 {isProcessing ? (
                   <>
-                    <Loader2 className="h-8 w-8 mx-auto mb-2 text-blue-500 animate-spin" />
-                    <p className="text-sm text-blue-600">Processing photos...</p>
+                    <Loader2 className="h-8 w-8 mx-auto mb-2 text-primary animate-spin" />
+                    <p className="text-sm text-primary">Processing photos...</p>
                     <p className="text-xs text-blue-400">Compressing and extracting metadata</p>
                   </>
                 ) : isUploading ? (
                   <>
-                    <Loader2 className="h-8 w-8 mx-auto mb-2 text-blue-500 animate-spin" />
-                    <p className="text-sm text-blue-600">Uploading photos...</p>
+                    <Loader2 className="h-8 w-8 mx-auto mb-2 text-primary animate-spin" />
+                    <p className="text-sm text-primary">Uploading photos...</p>
                   </>
                 ) : (
                   <>
-                    <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
-                    <p className="text-sm text-gray-600">Click to upload photos</p>
-                    <p className="text-xs text-gray-400">or drag and drop</p>
+                    <Upload className="h-8 w-8 mx-auto mb-2 text-disabled" />
+                    <p className="text-sm text-secondary">Click to upload photos</p>
+                    <p className="text-xs text-disabled">or drag and drop</p>
                     {autoGpsEnabled && currentPosition && (
-                      <p className="text-xs text-green-500 mt-1 flex items-center justify-center gap-1">
+                      <p className="text-xs text-success mt-1 flex items-center justify-center gap-1">
                         <MapPin className="h-3 w-3" />
                         Location will be added to photos
                       </p>
@@ -431,7 +431,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         {/* Success Indicator */}
                         {photo.upload_status === 'uploaded' && progress?.status === 'uploaded' && (
                           <div className="absolute top-2 right-2">
-                            <CheckCircle2 className="h-4 w-4 text-green-500 bg-white rounded-full" />
+                            <CheckCircle2 className="h-4 w-4 text-success bg-card rounded-full" />
                           </div>
                         )}
 
@@ -441,16 +441,16 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                             <button
                               type="button"
                               onClick={() => handleEdit(photo)}
-                              className="p-1.5 bg-white rounded shadow hover:bg-blue-50"
+                              className="p-1.5 bg-card rounded shadow hover:bg-blue-50"
                             >
                               <Pencil className="h-3 w-3" />
                             </button>
                             <button
                               type="button"
                               onClick={() => handleDelete(photo.id)}
-                              className="p-1.5 bg-white rounded shadow hover:bg-red-50"
+                              className="p-1.5 bg-card rounded shadow hover:bg-error-light"
                             >
-                              <Trash2 className="h-3 w-3 text-red-500" />
+                              <Trash2 className="h-3 w-3 text-error" />
                             </button>
                           </div>
                         </div>
@@ -483,8 +483,8 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
             )}
 
             {photos.length === 0 && (
-              <div className="p-8 text-center text-gray-500">
-                <Image className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+              <div className="p-8 text-center text-muted">
+                <Image className="h-8 w-8 mx-auto mb-2 text-disabled" />
                 <p>No photos added.</p>
                 <p className="text-sm">Upload photos to document work.</p>
               </div>
@@ -492,7 +492,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
             {/* Summary by Category */}
             {photos.length > 0 && stats.byCategory.length > 0 && (
-              <div className="p-4 bg-gray-100 border-t">
+              <div className="p-4 bg-muted border-t">
                 <div className="flex flex-wrap gap-2">
                   {stats.byCategory.map((cat) => (
                     <Badge key={cat.value} variant="secondary" className={cat.color}>
@@ -580,8 +580,8 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
             {/* GPS Info (read-only) */}
             {(formData.gps_latitude || formData.gps_longitude) && (
-              <div className="p-3 bg-gray-100 rounded-lg text-sm">
-                <div className="flex items-center gap-2 text-gray-600">
+              <div className="p-3 bg-muted rounded-lg text-sm">
+                <div className="flex items-center gap-2 text-secondary">
                   <MapPin className="h-4 w-4" />
                   <span>
                     {formData.gps_latitude?.toFixed(6)}, {formData.gps_longitude?.toFixed(6)}
@@ -616,13 +616,13 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                   {/* Delays */}
                   {delays.length > 0 && (
                     <>
-                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted bg-surface">
                         Delays
                       </div>
                       {delays.map((delay) => (
                         <SelectItem key={`delay:${delay.id}`} value={`delay:${delay.id}`}>
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-amber-500" />
+                            <span className="w-2 h-2 rounded-full bg-warning" />
                             {delay.delay_type} - {delay.description?.substring(0, 30) || 'Delay'}
                             {delay.description && delay.description.length > 30 && '...'}
                           </div>
@@ -634,7 +634,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                   {/* Safety Incidents */}
                   {safetyIncidents.length > 0 && (
                     <>
-                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted bg-surface">
                         Safety Incidents
                       </div>
                       {safetyIncidents.map((incident) => (
@@ -652,7 +652,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                   {/* Inspections */}
                   {inspections.length > 0 && (
                     <>
-                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted bg-surface">
                         Inspections
                       </div>
                       {inspections.map((inspection) => (
@@ -669,7 +669,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                   {/* Deliveries */}
                   {deliveries.length > 0 && (
                     <>
-                      <div className="px-2 py-1.5 text-xs font-semibold text-gray-500 bg-gray-50">
+                      <div className="px-2 py-1.5 text-xs font-semibold text-muted bg-surface">
                         Deliveries
                       </div>
                       {deliveries.map((delivery) => (
@@ -685,7 +685,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                   )}
                 </SelectContent>
               </Select>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted">
                 Link this photo to a delay, safety incident, inspection, or delivery for documentation
               </p>
             </div>

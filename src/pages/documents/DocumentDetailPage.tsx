@@ -164,17 +164,17 @@ export function DocumentDetailPage() {
 
   // Get file icon component
   const getFileIcon = () => {
-    if (!document) {return <File className="w-20 h-20 text-gray-400" />}
+    if (!document) {return <File className="w-20 h-20 text-disabled" />}
 
     const ext = document.file_name.split('.').pop()?.toLowerCase()
 
     if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(ext || '')) {
-      return <ImageIcon className="w-20 h-20 text-blue-500" />
+      return <ImageIcon className="w-20 h-20 text-primary" />
     }
     if (['pdf'].includes(ext || '')) {
-      return <FileText className="w-20 h-20 text-red-500" />
+      return <FileText className="w-20 h-20 text-error" />
     }
-    return <File className="w-20 h-20 text-gray-500" />
+    return <File className="w-20 h-20 text-muted" />
   }
 
   // Find documents that supersede this one
@@ -189,8 +189,8 @@ export function DocumentDetailPage() {
       <AppLayout>
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
-            <p className="ml-3 text-gray-500">Loading document...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-disabled" />
+            <p className="ml-3 text-muted">Loading document...</p>
           </div>
         </div>
       </AppLayout>
@@ -208,11 +208,11 @@ export function DocumentDetailPage() {
           </Button>
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <AlertCircle className="w-12 h-12 text-error mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 Error Loading Document
               </h3>
-              <p className="text-gray-600">
+              <p className="text-secondary">
                 {error?.message || 'Document not found'}
               </p>
             </CardContent>
@@ -237,7 +237,7 @@ export function DocumentDetailPage() {
         <div className="flex items-start gap-4">
           <DocumentTypeIcon type={document.document_type} className="w-8 h-8 flex-shrink-0" />
           <div className="flex-1 min-w-0">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{document.name}</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{document.name}</h1>
             <div className="flex flex-wrap items-center gap-2">
               <DocumentStatusBadge status={document.status ?? 'draft'} />
               {document.is_pinned && (
@@ -254,7 +254,7 @@ export function DocumentDetailPage() {
         </div>
 
         {/* Document Viewer */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-card rounded-lg border border-border overflow-hidden">
           <DocumentViewer
             document={document}
             allowMarkup={true}
@@ -273,7 +273,7 @@ export function DocumentDetailPage() {
               <CardHeader className="text-center pb-4">
                 <div className="flex justify-center mb-4">{getFileIcon()}</div>
                 <CardTitle className="text-xl">{document.file_name}</CardTitle>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-muted mt-2">
                   {formatFileSize(document.file_size)}
                 </p>
               </CardHeader>
@@ -301,19 +301,19 @@ export function DocumentDetailPage() {
 
                 {/* File Information */}
                 <div className="border-t pt-4 space-y-3">
-                  <h4 className="font-semibold text-gray-900">File Information</h4>
+                  <h4 className="font-semibold text-foreground" className="heading-card">File Information</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
-                      <Label className="text-gray-600">File Name</Label>
-                      <p className="text-gray-900 break-all">{document.file_name}</p>
+                      <Label className="text-secondary">File Name</Label>
+                      <p className="text-foreground break-all">{document.file_name}</p>
                     </div>
                     <div>
-                      <Label className="text-gray-600">File Size</Label>
-                      <p className="text-gray-900">{formatFileSize(document.file_size)}</p>
+                      <Label className="text-secondary">File Size</Label>
+                      <p className="text-foreground">{formatFileSize(document.file_size)}</p>
                     </div>
                     <div>
-                      <Label className="text-gray-600">File Type</Label>
-                      <p className="text-gray-900">{document.file_type || 'Unknown'}</p>
+                      <Label className="text-secondary">File Type</Label>
+                      <p className="text-foreground">{document.file_type || 'Unknown'}</p>
                     </div>
                   </div>
                 </div>
@@ -328,8 +328,8 @@ export function DocumentDetailPage() {
               <CardContent className="space-y-4">
                 {document.description && (
                   <div>
-                    <Label className="text-gray-600">Description</Label>
-                    <p className="mt-1 text-gray-900 whitespace-pre-wrap">
+                    <Label className="text-secondary">Description</Label>
+                    <p className="mt-1 text-foreground whitespace-pre-wrap">
                       {document.description}
                     </p>
                   </div>
@@ -337,15 +337,15 @@ export function DocumentDetailPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-gray-600">Document Type</Label>
-                    <p className="mt-1 text-gray-900 capitalize">
+                    <Label className="text-secondary">Document Type</Label>
+                    <p className="mt-1 text-foreground capitalize">
                       {document.document_type.replace('_', ' ')}
                     </p>
                   </div>
 
                   <div>
-                    <Label className="text-gray-600">Version</Label>
-                    <p className="mt-1 text-gray-900">
+                    <Label className="text-secondary">Version</Label>
+                    <p className="mt-1 text-foreground">
                       {document.version}
                       {document.revision && ` (Rev ${document.revision})`}
                     </p>
@@ -353,29 +353,29 @@ export function DocumentDetailPage() {
 
                   {document.drawing_number && (
                     <div>
-                      <Label className="text-gray-600">Drawing Number</Label>
-                      <p className="mt-1 text-gray-900">{document.drawing_number}</p>
+                      <Label className="text-secondary">Drawing Number</Label>
+                      <p className="mt-1 text-foreground">{document.drawing_number}</p>
                     </div>
                   )}
 
                   {document.discipline && (
                     <div>
-                      <Label className="text-gray-600">Discipline</Label>
-                      <p className="mt-1 text-gray-900 capitalize">{document.discipline}</p>
+                      <Label className="text-secondary">Discipline</Label>
+                      <p className="mt-1 text-foreground capitalize">{document.discipline}</p>
                     </div>
                   )}
 
                   {document.specification_section && (
                     <div>
-                      <Label className="text-gray-600">Specification Section</Label>
-                      <p className="mt-1 text-gray-900">{document.specification_section}</p>
+                      <Label className="text-secondary">Specification Section</Label>
+                      <p className="mt-1 text-foreground">{document.specification_section}</p>
                     </div>
                   )}
 
                   {document.issue_date && (
                     <div>
-                      <Label className="text-gray-600">Issue Date</Label>
-                      <p className="mt-1 text-gray-900">
+                      <Label className="text-secondary">Issue Date</Label>
+                      <p className="mt-1 text-foreground">
                         {document.issue_date ? format(new Date(document.issue_date), 'MMM d, yyyy') : 'N/A'}
                       </p>
                     </div>
@@ -383,24 +383,24 @@ export function DocumentDetailPage() {
 
                   {document.received_date && (
                     <div>
-                      <Label className="text-gray-600">Received Date</Label>
-                      <p className="mt-1 text-gray-900">
+                      <Label className="text-secondary">Received Date</Label>
+                      <p className="mt-1 text-foreground">
                         {document.received_date ? format(new Date(document.received_date), 'MMM d, yyyy') : 'N/A'}
                       </p>
                     </div>
                   )}
 
                   <div>
-                    <Label className="text-gray-600">Created Date</Label>
-                    <p className="mt-1 text-gray-900">
+                    <Label className="text-secondary">Created Date</Label>
+                    <p className="mt-1 text-foreground">
                       {document.created_at ? format(new Date(document.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                     </p>
                   </div>
 
                   {document.updated_at && document.updated_at !== document.created_at && (
                     <div>
-                      <Label className="text-gray-600">Last Modified</Label>
-                      <p className="mt-1 text-gray-900">
+                      <Label className="text-secondary">Last Modified</Label>
+                      <p className="mt-1 text-foreground">
                         {document.updated_at ? format(new Date(document.updated_at), 'MMM d, yyyy h:mm a') : 'N/A'}
                       </p>
                     </div>
@@ -417,7 +417,7 @@ export function DocumentDetailPage() {
                   <Button
                     onClick={() => navigate(`/documents/${document.id}/markup`)}
                     size="lg"
-                    className="bg-blue-600 hover:bg-blue-700"
+                    className="bg-primary hover:bg-primary-hover"
                   >
                     <Pencil className="w-5 h-5 mr-2" />
                     Open Markup Mode
@@ -474,7 +474,7 @@ export function DocumentDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-gray-600">Document Status</Label>
+                  <Label className="text-secondary">Document Status</Label>
                   <div className="mt-2">
                     <DocumentStatusBadge status={document.status ?? 'draft'} className="text-base px-3 py-1" />
                   </div>
@@ -483,7 +483,7 @@ export function DocumentDetailPage() {
                 {/* Approval Status */}
                 {approvalStatus?.has_active_request && (
                   <div>
-                    <Label className="text-gray-600">Approval Status</Label>
+                    <Label className="text-secondary">Approval Status</Label>
                     <div className="mt-2">
                       <ApprovalStatusBadge
                         status={approvalStatus.status!}
@@ -508,10 +508,10 @@ export function DocumentDetailPage() {
 
                 {document.requires_approval && !approvalStatus?.has_active_request && !approvalStatus?.can_submit && (
                   <div>
-                    <Label className="text-gray-600">Approval Status</Label>
+                    <Label className="text-secondary">Approval Status</Label>
                     <div className="mt-2 flex items-center gap-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-600" />
-                      <span className="text-sm font-medium text-green-700">Already Approved</span>
+                      <CheckCircle2 className="w-5 h-5 text-success" />
+                      <span className="text-sm font-medium text-success-dark">Already Approved</span>
                     </div>
                   </div>
                 )}
@@ -526,7 +526,7 @@ export function DocumentDetailPage() {
               <CardContent>
                 {versionsLoading ? (
                   <div className="flex items-center justify-center py-4">
-                    <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
+                    <Loader2 className="w-5 h-5 animate-spin text-disabled" />
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -536,12 +536,12 @@ export function DocumentDetailPage() {
                         <span className="font-semibold text-blue-900">
                           Version {document.version}
                         </span>
-                        <Badge className="bg-blue-600 text-white text-xs">Current</Badge>
+                        <Badge className="bg-primary text-white text-xs">Current</Badge>
                       </div>
                       {document.revision && (
-                        <p className="text-sm text-blue-700">Revision {document.revision}</p>
+                        <p className="text-sm text-primary-hover">Revision {document.revision}</p>
                       )}
-                      <p className="text-xs text-blue-600 mt-1">
+                      <p className="text-xs text-primary mt-1">
                         {document.created_at ? format(new Date(document.created_at), 'MMM d, yyyy') : 'N/A'}
                       </p>
                     </div>
@@ -551,25 +551,25 @@ export function DocumentDetailPage() {
                       versionHistory.map(version => (
                         <div
                           key={version.id}
-                          className="border-l-4 border-gray-300 pl-3 py-2 hover:bg-gray-50 cursor-pointer transition-colors"
+                          className="border-l-4 border-input pl-3 py-2 hover:bg-surface cursor-pointer transition-colors"
                           onClick={() => navigate(`/documents/${version.id}`)}
                         >
                           <div className="flex items-center justify-between mb-1">
-                            <span className="font-medium text-gray-900">
+                            <span className="font-medium text-foreground">
                               Version {version.version}
                             </span>
                             <DocumentStatusBadge status={version.status ?? 'draft'} className="text-xs" />
                           </div>
                           {version.revision && (
-                            <p className="text-sm text-gray-600">Revision {version.revision}</p>
+                            <p className="text-sm text-secondary">Revision {version.revision}</p>
                           )}
-                          <p className="text-xs text-gray-500 mt-1">
+                          <p className="text-xs text-muted mt-1">
                             {version.created_at ? format(new Date(version.created_at), 'MMM d, yyyy') : 'N/A'}
                           </p>
                         </div>
                       ))
                     ) : (
-                      <p className="text-sm text-gray-500 text-center py-4">
+                      <p className="text-sm text-muted text-center py-4">
                         No previous versions
                       </p>
                     )}
@@ -586,9 +586,9 @@ export function DocumentDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <Label className="text-gray-600">Superseded By</Label>
+                    <Label className="text-secondary">Superseded By</Label>
                     <div
-                      className="p-3 bg-amber-50 border border-amber-200 rounded-md cursor-pointer hover:bg-amber-100 transition-colors"
+                      className="p-3 bg-warning-light border border-amber-200 rounded-md cursor-pointer hover:bg-amber-100 transition-colors"
                       onClick={() => navigate(`/documents/${supersededBy.id}`)}
                     >
                       <div className="flex items-center gap-2 mb-1">
@@ -782,11 +782,11 @@ export function DocumentDetailPage() {
           </DialogHeader>
 
           <div className="py-4">
-            <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-md">
-              <XCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-error-light border border-red-200 rounded-md">
+              <XCircle className="w-5 h-5 text-error flex-shrink-0 mt-0.5" />
               <div className="flex-1">
                 <p className="font-medium text-red-900">{document.name}</p>
-                <p className="text-sm text-red-700 mt-1">{document.file_name}</p>
+                <p className="text-sm text-error-dark mt-1">{document.file_name}</p>
               </div>
             </div>
           </div>

@@ -163,8 +163,8 @@ export function CalendarSyncBadge({
       <PopoverContent className="w-72" align="end">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-blue-600" />
+            <h4 className="font-medium flex items-center gap-2" className="heading-card">
+              <Calendar className="h-4 w-4 text-primary" />
               Google Calendar
             </h4>
             <Badge
@@ -182,7 +182,7 @@ export function CalendarSyncBadge({
           )}
 
           {lastError && (
-            <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-800">
+            <div className="p-2 bg-error-light border border-red-200 rounded text-xs text-red-800">
               {lastError}
             </div>
           )}
@@ -226,7 +226,7 @@ export function CalendarSyncBadge({
             <Button
               variant="ghost"
               size="sm"
-              className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="w-full text-error hover:text-error-dark hover:bg-error-light"
               onClick={handleDelete}
               disabled={syncMutation.isPending}
             >
@@ -235,7 +235,7 @@ export function CalendarSyncBadge({
           )}
 
           {!connectionStatus.syncEnabled && (
-            <p className="text-xs text-yellow-600">
+            <p className="text-xs text-warning">
               Calendar sync is disabled. Enable it in Settings to sync this meeting.
             </p>
           )}
@@ -310,7 +310,7 @@ export function QuickSyncButton({
             {syncMutation.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : isSynced ? (
-              <CheckCircle2 className="h-4 w-4 text-green-600" />
+              <CheckCircle2 className="h-4 w-4 text-success" />
             ) : (
               <Calendar className="h-4 w-4" />
             )}

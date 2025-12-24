@@ -32,12 +32,12 @@ const actionIcons: Record<AccessAction, React.ReactNode> = {
 }
 
 const actionColors: Record<AccessAction, string> = {
-  view: 'bg-blue-100 text-blue-800',
-  download: 'bg-green-100 text-green-800',
+  view: 'bg-info-light text-blue-800',
+  download: 'bg-success-light text-green-800',
   print: 'bg-purple-100 text-purple-800',
-  share: 'bg-yellow-100 text-yellow-800',
+  share: 'bg-warning-light text-yellow-800',
   edit: 'bg-orange-100 text-orange-800',
-  revert: 'bg-red-100 text-red-800',
+  revert: 'bg-error-light text-red-800',
 }
 
 export function DocumentAccessLog({
@@ -82,12 +82,12 @@ export function DocumentAccessLog({
           {stats && (
             <div className="grid grid-cols-4 gap-3">
               <StatCard
-                icon={<Eye className="h-5 w-5 text-blue-600" />}
+                icon={<Eye className="h-5 w-5 text-primary" />}
                 label="Total Views"
                 value={stats.totalViews}
               />
               <StatCard
-                icon={<Download className="h-5 w-5 text-green-600" />}
+                icon={<Download className="h-5 w-5 text-success" />}
                 label="Downloads"
                 value={stats.totalDownloads}
               />
@@ -111,7 +111,7 @@ export function DocumentAccessLog({
 
           {/* Filter */}
           <div className="flex items-center gap-2 pt-2 border-t">
-            <span className="text-sm text-gray-600">Filter by action:</span>
+            <span className="text-sm text-secondary">Filter by action:</span>
             <Select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value as AccessAction | 'all')}
@@ -130,28 +130,28 @@ export function DocumentAccessLog({
           {/* Access Log List */}
           <div className="border rounded-lg overflow-hidden">
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted">
                 Loading access history...
               </div>
             ) : !accessLog || accessLog.length === 0 ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-muted">
                 <Activity className="h-12 w-12 mx-auto mb-2 opacity-50" />
                 <p>No access history recorded</p>
               </div>
             ) : (
               <table className="w-full">
-                <thead className="bg-gray-50 border-b">
+                <thead className="bg-surface border-b">
                   <tr>
-                    <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">
+                    <th className="text-left py-2 px-4 text-sm font-medium text-secondary">
                       Action
                     </th>
-                    <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">
+                    <th className="text-left py-2 px-4 text-sm font-medium text-secondary">
                       User
                     </th>
-                    <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">
+                    <th className="text-left py-2 px-4 text-sm font-medium text-secondary">
                       Date & Time
                     </th>
-                    <th className="text-left py-2 px-4 text-sm font-medium text-gray-600">
+                    <th className="text-left py-2 px-4 text-sm font-medium text-secondary">
                       Details
                     </th>
                   </tr>
@@ -179,10 +179,10 @@ interface StatCardProps {
 
 function StatCard({ icon, label, value, isText }: StatCardProps) {
   return (
-    <div className="bg-gray-50 rounded-lg p-3">
+    <div className="bg-surface rounded-lg p-3">
       <div className="flex items-center gap-2 mb-1">
         {icon}
-        <span className="text-xs text-gray-600">{label}</span>
+        <span className="text-xs text-secondary">{label}</span>
       </div>
       <div className={isText ? 'text-sm font-medium' : 'text-2xl font-bold'}>
         {value}
@@ -198,12 +198,12 @@ interface AccessLogRowProps {
 function AccessLogRow({ entry }: AccessLogRowProps) {
   const action = entry.action as AccessAction
   const icon = actionIcons[action] || <Activity className="h-4 w-4" />
-  const colorClass = actionColors[action] || 'bg-gray-100 text-gray-800'
+  const colorClass = actionColors[action] || 'bg-muted text-foreground'
 
   const details = entry.details as Record<string, unknown> | null
 
   return (
-    <tr className="hover:bg-gray-50">
+    <tr className="hover:bg-surface">
       <td className="py-3 px-4">
         <Badge className={colorClass} variant="secondary">
           <span className="flex items-center gap-1">
@@ -218,21 +218,21 @@ function AccessLogRow({ entry }: AccessLogRowProps) {
         </div>
       </td>
       <td className="py-3 px-4">
-        <div className="text-sm text-gray-600">
+        <div className="text-sm text-secondary">
           {format(new Date(entry.created_at), 'MMM d, yyyy')}
         </div>
-        <div className="text-xs text-gray-400">
+        <div className="text-xs text-disabled">
           {format(new Date(entry.created_at), 'h:mm a')}
         </div>
       </td>
       <td className="py-3 px-4">
         {details && (
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted">
             {(typeof details.versionNumber === 'string' || typeof details.versionNumber === 'number') && details.versionNumber && (
               <span className="mr-2">v{details.versionNumber}</span>
             )}
             {typeof details.versionId === 'string' && details.versionId && (
-              <span className="text-gray-400">
+              <span className="text-disabled">
                 ID: {details.versionId.slice(0, 8)}...
               </span>
             )}

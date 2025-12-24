@@ -39,10 +39,10 @@ export interface SwipeableListItemProps {
 
 const colorClasses = {
   default: 'bg-gray-500 text-white',
-  primary: 'bg-blue-600 text-white',
-  success: 'bg-green-600 text-white',
-  warning: 'bg-yellow-500 text-white',
-  danger: 'bg-red-600 text-white',
+  primary: 'bg-primary text-white',
+  success: 'bg-success text-white',
+  warning: 'bg-warning text-white',
+  danger: 'bg-error text-white',
 };
 
 export function SwipeableListItem({
@@ -227,7 +227,7 @@ export function SwipeableListItem({
       {/* Content */}
       <div
         className={cn(
-          'relative bg-white z-10',
+          'relative bg-card z-10',
           isAnimating && 'transition-transform duration-200 ease-out'
         )}
         style={{ transform: `translateX(${translateX}px)` }}
@@ -249,7 +249,7 @@ export function SwipeableListItem({
             <div
               className={cn(
                 'px-3 py-1 rounded-full text-xs font-medium',
-                translateX > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                translateX > 0 ? 'bg-success-light text-success-dark' : 'bg-error-light text-error-dark'
               )}
             >
               {translateX > 0 ? 'Release to confirm' : 'Release to show actions'}

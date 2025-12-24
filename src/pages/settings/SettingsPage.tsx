@@ -33,7 +33,7 @@ const settingsSections: SettingsSection[] = [
     href: '/settings/users',
     icon: Users,
     iconBgColor: 'bg-cyan-100',
-    iconColor: 'text-cyan-600',
+    iconColor: 'text-info',
     adminOnly: true,
   },
   {
@@ -41,8 +41,8 @@ const settingsSections: SettingsSection[] = [
     description: 'Manage your email and in-app notification preferences',
     href: '/settings/notifications',
     icon: Bell,
-    iconBgColor: 'bg-blue-100',
-    iconColor: 'text-blue-600',
+    iconBgColor: 'bg-info-light',
+    iconColor: 'text-primary',
   },
   {
     title: 'Calendar Integrations',
@@ -50,7 +50,7 @@ const settingsSections: SettingsSection[] = [
     href: '/settings/calendar',
     icon: Calendar,
     iconBgColor: 'bg-sky-100',
-    iconColor: 'text-sky-600',
+    iconColor: 'text-info',
   },
   {
     title: 'Approval Workflows',
@@ -91,8 +91,8 @@ const settingsSections: SettingsSection[] = [
     description: 'Sync your financial data with QuickBooks Online',
     href: '/settings/quickbooks',
     icon: Receipt,
-    iconBgColor: 'bg-green-100',
-    iconColor: 'text-green-600',
+    iconBgColor: 'bg-success-light',
+    iconColor: 'text-success',
   },
   {
     title: 'AI Settings',
@@ -118,7 +118,7 @@ export function SettingsPage() {
     <AppLayout>
       <div className="container max-w-4xl py-6 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold">Settings</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Settings</h1>
           <p className="text-muted-foreground">
             Manage your account settings and preferences
           </p>
@@ -126,7 +126,7 @@ export function SettingsPage() {
 
         {/* Appearance & App Settings */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Appearance & App</h2>
+          <h2 className="text-lg font-semibold" className="heading-section">Appearance & App</h2>
 
           {/* Theme Selector */}
           <Card>
@@ -159,7 +159,7 @@ export function SettingsPage() {
 
         {/* Settings Sections */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Configuration</h2>
+          <h2 className="text-lg font-semibold" className="heading-section">Configuration</h2>
           <div className="grid gap-4">
             {visibleSections.map((section) => {
               const Icon = section.icon

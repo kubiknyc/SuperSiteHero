@@ -70,17 +70,17 @@ const AGING_CONFIG = {
 
 const AGING_COLORS = {
   overdue: {
-    badge: 'bg-red-100 text-red-800 border-red-200',
-    text: 'text-red-700',
-    bg: 'bg-red-50',
+    badge: 'bg-error-light text-red-800 border-red-200',
+    text: 'text-error-dark',
+    bg: 'bg-error-light',
     border: 'border-red-200',
     icon: AlertTriangle,
     label: 'Overdue',
   },
   critical: {
-    badge: 'bg-red-100 text-red-800 border-red-200',
-    text: 'text-red-600',
-    bg: 'bg-red-50',
+    badge: 'bg-error-light text-red-800 border-red-200',
+    text: 'text-error',
+    bg: 'bg-error-light',
     border: 'border-red-200',
     icon: AlertCircle,
     label: 'Critical',
@@ -94,17 +94,17 @@ const AGING_COLORS = {
     label: 'Urgent',
   },
   warning: {
-    badge: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    text: 'text-yellow-600',
-    bg: 'bg-yellow-50',
+    badge: 'bg-warning-light text-yellow-800 border-yellow-200',
+    text: 'text-warning',
+    bg: 'bg-warning-light',
     border: 'border-yellow-200',
     icon: Bell,
     label: 'Due Soon',
   },
   healthy: {
-    badge: 'bg-green-100 text-green-800 border-green-200',
-    text: 'text-green-600',
-    bg: 'bg-green-50',
+    badge: 'bg-success-light text-green-800 border-green-200',
+    text: 'text-success',
+    bg: 'bg-success-light',
     border: 'border-green-200',
     icon: CheckCircle2,
     label: 'On Track',
@@ -112,9 +112,9 @@ const AGING_COLORS = {
 }
 
 const PRIORITY_COLORS = {
-  high: 'bg-red-100 text-red-800',
-  normal: 'bg-blue-100 text-blue-800',
-  low: 'bg-gray-100 text-gray-800',
+  high: 'bg-error-light text-red-800',
+  normal: 'bg-info-light text-blue-800',
+  low: 'bg-muted text-foreground',
 }
 
 // ============================================================================
@@ -175,7 +175,7 @@ function RFIAgingItem({ rfi, projectId }: RFIAgingItemProps) {
     <Link
       to={`/projects/${projectId}/rfis/${rfi.id}`}
       className={cn(
-        'block p-3 rounded-lg border transition-colors hover:bg-gray-50',
+        'block p-3 rounded-lg border transition-colors hover:bg-surface',
         config.border
       )}
     >
@@ -186,14 +186,14 @@ function RFIAgingItem({ rfi, projectId }: RFIAgingItemProps) {
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 text-sm">
+              <span className="font-semibold text-foreground text-sm">
                 {formatRFINumber(rfi.number)}
               </span>
               <Badge variant="outline" className={cn('text-xs', PRIORITY_COLORS[rfi.priority as keyof typeof PRIORITY_COLORS] || PRIORITY_COLORS.normal)}>
                 {rfi.priority || 'normal'}
               </Badge>
             </div>
-            <p className="text-sm text-gray-700 truncate mb-1">
+            <p className="text-sm text-secondary truncate mb-1">
               {rfi.title}
             </p>
             <div className="flex items-center gap-2 text-xs">
@@ -206,7 +206,7 @@ function RFIAgingItem({ rfi, projectId }: RFIAgingItemProps) {
             </div>
           </div>
         </div>
-        <ChevronRight className="h-4 w-4 text-gray-400 flex-shrink-0 mt-1" />
+        <ChevronRight className="h-4 w-4 text-disabled flex-shrink-0 mt-1" />
       </div>
     </Link>
   )
@@ -223,27 +223,27 @@ function AgingSummaryCard({ stats }: AgingSummaryCardProps) {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-      <div className={cn('p-3 rounded-lg text-center', stats.overdue > 0 ? 'bg-red-50' : 'bg-gray-50')}>
-        <p className={cn('text-2xl font-bold', stats.overdue > 0 ? 'text-red-700' : 'text-gray-400')}>
+      <div className={cn('p-3 rounded-lg text-center', stats.overdue > 0 ? 'bg-error-light' : 'bg-surface')}>
+        <p className={cn('text-2xl font-bold', stats.overdue > 0 ? 'text-error-dark' : 'text-disabled')}>
           {stats.overdue}
         </p>
-        <p className="text-xs text-gray-600">Overdue</p>
+        <p className="text-xs text-secondary">Overdue</p>
       </div>
-      <div className={cn('p-3 rounded-lg text-center', stats.critical > 0 ? 'bg-orange-50' : 'bg-gray-50')}>
-        <p className={cn('text-2xl font-bold', stats.critical > 0 ? 'text-orange-700' : 'text-gray-400')}>
+      <div className={cn('p-3 rounded-lg text-center', stats.critical > 0 ? 'bg-orange-50' : 'bg-surface')}>
+        <p className={cn('text-2xl font-bold', stats.critical > 0 ? 'text-orange-700' : 'text-disabled')}>
           {stats.critical + stats.urgent}
         </p>
-        <p className="text-xs text-gray-600">Critical/Urgent</p>
+        <p className="text-xs text-secondary">Critical/Urgent</p>
       </div>
-      <div className={cn('p-3 rounded-lg text-center', stats.warning > 0 ? 'bg-yellow-50' : 'bg-gray-50')}>
-        <p className={cn('text-2xl font-bold', stats.warning > 0 ? 'text-yellow-700' : 'text-gray-400')}>
+      <div className={cn('p-3 rounded-lg text-center', stats.warning > 0 ? 'bg-warning-light' : 'bg-surface')}>
+        <p className={cn('text-2xl font-bold', stats.warning > 0 ? 'text-yellow-700' : 'text-disabled')}>
           {stats.warning}
         </p>
-        <p className="text-xs text-gray-600">Due Soon</p>
+        <p className="text-xs text-secondary">Due Soon</p>
       </div>
-      <div className="p-3 rounded-lg text-center bg-green-50">
-        <p className="text-2xl font-bold text-green-700">{healthPercentage}%</p>
-        <p className="text-xs text-gray-600">On Track</p>
+      <div className="p-3 rounded-lg text-center bg-success-light">
+        <p className="text-2xl font-bold text-success-dark">{healthPercentage}%</p>
+        <p className="text-xs text-secondary">On Track</p>
       </div>
     </div>
   )
@@ -372,8 +372,8 @@ export function RFIAgingAlerts({
     return (
       <Card className={className}>
         <CardContent className="p-6 text-center">
-          <AlertCircle className="h-8 w-8 text-red-500 mx-auto mb-2" />
-          <p className="text-sm text-gray-600">Failed to load RFI aging data</p>
+          <AlertCircle className="h-8 w-8 text-error mx-auto mb-2" />
+          <p className="text-sm text-secondary">Failed to load RFI aging data</p>
         </CardContent>
       </Card>
     )
@@ -387,7 +387,7 @@ export function RFIAgingAlerts({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-gray-500" />
+            <CalendarClock className="h-5 w-5 text-muted" />
             <CardTitle className="text-lg">RFI Aging Alerts</CardTitle>
           </div>
           {stats.overdue > 0 && (
@@ -419,9 +419,9 @@ export function RFIAgingAlerts({
           </ScrollArea>
         ) : (
           <div className="text-center py-8">
-            <CheckCircle2 className="h-12 w-12 text-green-500 mx-auto mb-3" />
-            <p className="text-gray-600 font-medium">All Clear!</p>
-            <p className="text-sm text-gray-500">No RFIs require immediate attention</p>
+            <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-3" />
+            <p className="text-secondary font-medium">All Clear!</p>
+            <p className="text-sm text-muted">No RFIs require immediate attention</p>
           </div>
         )}
 

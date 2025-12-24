@@ -128,8 +128,8 @@ export function ClientDocuments() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Project Documents</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Project Documents</h1>
+        <p className="text-secondary mt-1">
           Access and download project documents and files.
         </p>
       </div>
@@ -138,7 +138,7 @@ export function ClientDocuments() {
       {documents && documents.length > 0 && (
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search by name or document number..."
               value={searchTerm}
@@ -166,7 +166,7 @@ export function ClientDocuments() {
 
       {/* Document Count */}
       {filteredDocuments.length > 0 && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted">
           Showing {filteredDocuments.length} document{filteredDocuments.length !== 1 ? 's' : ''}
           {searchTerm || categoryFilter !== 'all' ? ' (filtered)' : ''}
         </p>
@@ -194,35 +194,35 @@ export function ClientDocuments() {
                     <TableRow key={doc.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-gray-100 rounded-lg">
-                            <FileIcon className="h-5 w-5 text-gray-600" />
+                          <div className="p-2 bg-muted rounded-lg">
+                            <FileIcon className="h-5 w-5 text-secondary" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{doc.name}</p>
+                            <p className="font-medium text-foreground">{doc.name}</p>
                             {doc.document_number && (
-                              <p className="text-sm text-gray-500">#{doc.document_number}</p>
+                              <p className="text-sm text-muted">#{doc.document_number}</p>
                             )}
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
                         {doc.category ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-secondary">
                             {doc.category}
                           </span>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-disabled">-</span>
                         )}
                       </TableCell>
                       <TableCell>
                         {doc.version || (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-disabled">-</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-gray-500">
+                      <TableCell className="text-muted">
                         {formatFileSize(doc.file_size)}
                       </TableCell>
-                      <TableCell className="text-gray-500">
+                      <TableCell className="text-muted">
                         {format(new Date(doc.uploaded_at), 'MMM d, yyyy')}
                       </TableCell>
                       <TableCell className="text-right">
@@ -261,9 +261,9 @@ export function ClientDocuments() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <FolderOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No Documents Available</h3>
-            <p className="text-gray-500 mt-1">
+            <FolderOpen className="h-12 w-12 text-disabled mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Documents Available</h3>
+            <p className="text-muted mt-1">
               {searchTerm || categoryFilter !== 'all'
                 ? 'No documents match your filters. Try adjusting your search.'
                 : 'Project documents will appear here once they\'re uploaded.'}
@@ -287,17 +287,17 @@ export function ClientDocuments() {
       {/* Documents by Category (Alternative View) */}
       {Object.keys(documentsByCategory).length > 1 && categoryFilter === 'all' && (
         <div className="space-y-6 mt-8">
-          <h2 className="text-lg font-semibold text-gray-900">By Category</h2>
+          <h2 className="text-lg font-semibold text-foreground" className="heading-section">By Category</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {Object.entries(documentsByCategory).map(([category, docs]) => (
               <Card key={category}>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base flex items-center justify-between">
                     <span className="flex items-center gap-2">
-                      <FolderOpen className="h-5 w-5 text-gray-400" />
+                      <FolderOpen className="h-5 w-5 text-disabled" />
                       {category}
                     </span>
-                    <span className="text-sm font-normal text-gray-500">
+                    <span className="text-sm font-normal text-muted">
                       {docs.length} file{docs.length !== 1 ? 's' : ''}
                     </span>
                   </CardTitle>
@@ -310,13 +310,13 @@ export function ClientDocuments() {
                         <button
                           key={doc.id}
                           onClick={() => handleDownload(doc)}
-                          className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors text-left"
+                          className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-surface transition-colors text-left"
                         >
-                          <FileIcon className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                          <span className="text-sm text-gray-700 truncate flex-1">
+                          <FileIcon className="h-4 w-4 text-disabled flex-shrink-0" />
+                          <span className="text-sm text-secondary truncate flex-1">
                             {doc.name}
                           </span>
-                          <Download className="h-4 w-4 text-gray-400" />
+                          <Download className="h-4 w-4 text-disabled" />
                         </button>
                       )
                     })}

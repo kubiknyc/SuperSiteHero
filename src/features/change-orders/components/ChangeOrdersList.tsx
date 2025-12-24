@@ -17,14 +17,14 @@ interface ChangeOrdersListProps {
 export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
   const getStatusColor = (status: string) => {
     const statusColors: Record<string, string> = {
-      draft: 'bg-gray-100 text-gray-800',
-      submitted: 'bg-blue-100 text-blue-800',
-      'under_review': 'bg-yellow-100 text-yellow-800',
-      approved: 'bg-green-100 text-green-800',
-      rejected: 'bg-red-100 text-red-800',
-      closed: 'bg-gray-100 text-gray-600',
+      draft: 'bg-muted text-foreground',
+      submitted: 'bg-info-light text-blue-800',
+      'under_review': 'bg-warning-light text-yellow-800',
+      approved: 'bg-success-light text-green-800',
+      rejected: 'bg-error-light text-red-800',
+      closed: 'bg-muted text-secondary',
     }
-    return statusColors[status] || 'bg-gray-100 text-gray-800'
+    return statusColors[status] || 'bg-muted text-foreground'
   }
 
   const getPriorityColor = (priority: string | null) => {
@@ -49,7 +49,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
   if (changeOrders.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">No change orders found</p>
+        <p className="text-muted">No change orders found</p>
       </div>
     )
   }
@@ -71,7 +71,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="font-semibold text-lg">
+                  <h3 className="font-semibold text-lg" className="heading-subsection">
                     {co.workflow_type?.prefix || 'CO'}-{String(co.number).padStart(3, '0')}
                   </h3>
                   <Badge className={getStatusColor(co.status)}>
@@ -82,15 +82,15 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
                   </Badge>
                 </div>
 
-                <p className="text-gray-900 mb-2">{co.title}</p>
+                <p className="text-foreground mb-2">{co.title}</p>
 
                 {co.description && (
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-secondary mb-3 line-clamp-2">
                     {co.description}
                   </p>
                 )}
 
-                <div className="flex items-center gap-6 text-sm text-gray-600">
+                <div className="flex items-center gap-6 text-sm text-secondary">
                   {totalCost !== null && (
                     <div className="flex items-center gap-1">
                       <DollarSign className="w-4 h-4" />
@@ -116,7 +116,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
                   </span>
 
                   {co.bids && co.bids.length > 0 && (
-                    <span className="text-blue-600">
+                    <span className="text-primary">
                       {co.bids.length} bid{co.bids.length !== 1 ? 's' : ''}
                     </span>
                   )}

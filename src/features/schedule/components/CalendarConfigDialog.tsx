@@ -292,7 +292,7 @@ export function CalendarConfigDialog({
               placeholder="e.g., Standard Work Week"
             />
             {form.formState.errors.name && (
-              <p className="text-sm text-red-500">{form.formState.errors.name.message}</p>
+              <p className="text-sm text-error">{form.formState.errors.name.message}</p>
             )}
           </div>
 
@@ -349,7 +349,7 @@ export function CalendarConfigDialog({
                 <Clock className="h-4 w-4" />
                 Work Hours
               </Label>
-              <span className="text-sm font-medium text-blue-600">
+              <span className="text-sm font-medium text-primary">
                 Total: {totalHours}h/week
               </span>
             </div>
@@ -397,7 +397,7 @@ export function CalendarConfigDialog({
                     return (
                       <tr
                         key={day.key}
-                        className={`border-t ${isWorkDay ? 'bg-green-50/50' : 'bg-gray-50/50'}`}
+                        className={`border-t ${isWorkDay ? 'bg-success-light/50' : 'bg-surface/50'}`}
                       >
                         <td className="px-3 py-2 text-sm">{day.label}</td>
                         <td className="px-3 py-2">

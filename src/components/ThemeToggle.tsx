@@ -220,7 +220,7 @@ export function ThemeSwitch({ className, showLabel = true }: ThemeSwitchProps) {
         {isDarkMode ? (
           <MoonIcon className="h-5 w-5 text-blue-400" />
         ) : (
-          <SunIcon className="h-5 w-5 text-yellow-500" />
+          <SunIcon className="h-5 w-5 text-warning" />
         )}
         {showLabel && (
           <div className="flex flex-col">

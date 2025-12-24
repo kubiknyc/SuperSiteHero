@@ -42,11 +42,11 @@ function triggerHaptic(pattern: number | number[] = 10): void {
 
 // Status badge colors
 const statusColors: Record<string, string> = {
-  open: 'bg-red-100 text-red-800',
-  'in-progress': 'bg-yellow-100 text-yellow-800',
-  completed: 'bg-green-100 text-green-800',
-  verified: 'bg-blue-100 text-blue-800',
-  rejected: 'bg-gray-100 text-gray-800',
+  open: 'bg-error-light text-red-800',
+  'in-progress': 'bg-warning-light text-yellow-800',
+  completed: 'bg-success-light text-green-800',
+  verified: 'bg-info-light text-blue-800',
+  rejected: 'bg-muted text-foreground',
 }
 
 // Priority indicator colors
@@ -150,7 +150,7 @@ export function SwipeablePunchItem({
           <CheckCircle2
             className={cn(
               'h-8 w-8 transition-transform',
-              state.progress >= 1 ? 'text-white scale-110' : 'text-green-600'
+              state.progress >= 1 ? 'text-white scale-110' : 'text-success'
             )}
           />
           {state.progress >= 1 && (
@@ -175,7 +175,7 @@ export function SwipeablePunchItem({
           <XCircle
             className={cn(
               'h-8 w-8 transition-transform',
-              state.progress >= 1 ? 'text-white scale-110' : 'text-red-600'
+              state.progress >= 1 ? 'text-white scale-110' : 'text-error'
             )}
           />
         </div>
@@ -203,9 +203,9 @@ export function SwipeablePunchItem({
         {...handlers}
         onClick={handlePress}
         className={cn(
-          'relative bg-white border rounded-lg p-4 shadow-sm transition-all duration-200',
+          'relative bg-card border rounded-lg p-4 shadow-sm transition-all duration-200',
           'touch-manipulation cursor-pointer',
-          !disabled && 'active:bg-gray-50',
+          !disabled && 'active:bg-surface',
           isAnimating && 'opacity-50',
           state.isSwiping && 'shadow-md'
         )}
@@ -227,11 +227,11 @@ export function SwipeablePunchItem({
           {/* Header row */}
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-gray-900 truncate pr-2">
+              <h3 className="font-medium text-foreground truncate pr-2" className="heading-subsection">
                 {punchItem.title}
               </h3>
               {punchItem.description && (
-                <p className="text-sm text-gray-600 line-clamp-2 mt-0.5">
+                <p className="text-sm text-secondary line-clamp-2 mt-0.5">
                   {punchItem.description}
                 </p>
               )}
@@ -245,14 +245,14 @@ export function SwipeablePunchItem({
               >
                 {punchItem.status || 'open'}
               </span>
-              <ChevronRight className="h-5 w-5 text-gray-400" />
+              <ChevronRight className="h-5 w-5 text-disabled" />
             </div>
           </div>
 
           {/* Meta row */}
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-4 text-xs text-muted">
             {/* Trade */}
-            <span className="font-medium text-gray-700">{punchItem.trade}</span>
+            <span className="font-medium text-secondary">{punchItem.trade}</span>
 
             {/* Location */}
             {locationString && (
@@ -273,7 +273,7 @@ export function SwipeablePunchItem({
 
           {/* Status change request indicator */}
           {(punchItem as any).status_change_request && (
-            <div className="mt-2 flex items-center gap-1 text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+            <div className="mt-2 flex items-center gap-1 text-xs text-warning bg-warning-light px-2 py-1 rounded">
               <AlertCircle className="h-3 w-3" />
               Status change requested
             </div>
@@ -282,7 +282,7 @@ export function SwipeablePunchItem({
 
         {/* Swipe hints */}
         {showSwipeHints && !state.isSwiping && !disabled && (
-          <div className="absolute inset-x-0 bottom-1 flex justify-between px-4 text-[10px] text-gray-400 pointer-events-none">
+          <div className="absolute inset-x-0 bottom-1 flex justify-between px-4 text-[10px] text-disabled pointer-events-none">
             <span className="flex items-center gap-0.5">
               <XCircle className="h-3 w-3" />
               Swipe to reject

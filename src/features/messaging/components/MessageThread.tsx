@@ -334,8 +334,8 @@ export function MessageThread({ conversationId, className }: MessageThreadProps)
                 <div
                   className={cn(
                     'flex items-center gap-1 text-xs font-medium mb-1 px-1',
-                    messagePriority === 'high' && 'text-amber-600',
-                    messagePriority === 'urgent' && 'text-red-600'
+                    messagePriority === 'high' && 'text-warning',
+                    messagePriority === 'urgent' && 'text-error'
                   )}
                 >
                   {messagePriority === 'high' ? (

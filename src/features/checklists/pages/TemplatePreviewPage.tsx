@@ -34,17 +34,17 @@ export function TemplatePreviewPage() {
   const getItemIcon = (itemType: string) => {
     switch (itemType) {
       case 'checkbox':
-        return <CheckSquare className="w-4 h-4 text-blue-600" />
+        return <CheckSquare className="w-4 h-4 text-primary" />
       case 'text':
         return <Type className="w-4 h-4 text-purple-600" />
       case 'number':
-        return <Hash className="w-4 h-4 text-green-600" />
+        return <Hash className="w-4 h-4 text-success" />
       case 'photo':
         return <Image className="w-4 h-4 text-orange-600" />
       case 'signature':
-        return <PenTool className="w-4 h-4 text-red-600" />
+        return <PenTool className="w-4 h-4 text-error" />
       default:
-        return <FileText className="w-4 h-4 text-gray-600" />
+        return <FileText className="w-4 h-4 text-secondary" />
     }
   }
 
@@ -67,10 +67,10 @@ export function TemplatePreviewPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4" />
-          <p className="text-gray-600">Loading template...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+          <p className="text-secondary">Loading template...</p>
         </div>
       </div>
     )
@@ -78,9 +78,9 @@ export function TemplatePreviewPage() {
 
   if (!template) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Template not found</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Template not found</h2>
           <Button variant="outline" onClick={() => navigate('/checklists/templates')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Templates
@@ -95,7 +95,7 @@ export function TemplatePreviewPage() {
   const requiredItems = template.template_items?.filter((item) => item.is_required).length || 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
@@ -111,14 +111,14 @@ export function TemplatePreviewPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{template.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{template.name}</h1>
               {template.description && (
-                <p className="text-gray-600 mb-3">{template.description}</p>
+                <p className="text-secondary mb-3">{template.description}</p>
               )}
               <div className="flex items-center gap-3 flex-wrap">
                 {template.category && <Badge variant="outline">{template.category}</Badge>}
                 {template.is_system_template && (
-                  <Badge className="bg-blue-100 text-blue-800">System Template</Badge>
+                  <Badge className="bg-info-light text-blue-800">System Template</Badge>
                 )}
                 {template.tags &&
                   template.tags.map((tag) => (
@@ -144,37 +144,37 @@ export function TemplatePreviewPage() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">{totalItems}</div>
-                <div className="text-sm text-gray-600">Total Items</div>
+                <div className="text-3xl font-bold text-primary">{totalItems}</div>
+                <div className="text-sm text-secondary">Total Items</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-red-600">{requiredItems}</div>
-                <div className="text-sm text-gray-600">Required</div>
+                <div className="text-3xl font-bold text-error">{requiredItems}</div>
+                <div className="text-sm text-secondary">Required</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-green-600">{sections.length}</div>
-                <div className="text-sm text-gray-600">Sections</div>
+                <div className="text-3xl font-bold text-success">{sections.length}</div>
+                <div className="text-sm text-secondary">Sections</div>
               </div>
               {template.estimated_duration_minutes && (
                 <div className="text-center">
                   <div className="flex items-center justify-center gap-1">
-                    <Clock className="w-5 h-5 text-gray-600" />
-                    <span className="text-3xl font-bold text-gray-600">
+                    <Clock className="w-5 h-5 text-secondary" />
+                    <span className="text-3xl font-bold text-secondary">
                       {template.estimated_duration_minutes}
                     </span>
                   </div>
-                  <div className="text-sm text-gray-600">Minutes</div>
+                  <div className="text-sm text-secondary">Minutes</div>
                 </div>
               )}
             </div>
 
             {template.instructions && (
-              <div className="mt-4 pt-4 border-t border-gray-200">
-                <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2">
+              <div className="mt-4 pt-4 border-t border-border">
+                <h3 className="font-medium text-foreground mb-2 flex items-center gap-2" className="heading-subsection">
                   <FileText className="w-4 h-4" />
                   Instructions
                 </h3>
-                <p className="text-sm text-gray-700 whitespace-pre-wrap">{template.instructions}</p>
+                <p className="text-sm text-secondary whitespace-pre-wrap">{template.instructions}</p>
               </div>
             )}
           </CardContent>
@@ -191,29 +191,29 @@ export function TemplatePreviewPage() {
                 {section.items.map((item, index) => (
                   <div
                     key={item.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                    className="border border-border rounded-lg p-4 hover:bg-surface transition-colors"
                   >
                     <div className="flex items-start gap-3">
                       <div className="flex-shrink-0 mt-1">{getItemIcon(item.item_type)}</div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium text-gray-900">{item.label}</h3>
+                          <h3 className="font-medium text-foreground" className="heading-subsection">{item.label}</h3>
                           <Badge variant="outline" className="text-xs">
                             {item.item_type}
                           </Badge>
                           {item.is_required && (
-                            <Badge variant="outline" className="text-xs text-red-600">
+                            <Badge variant="outline" className="text-xs text-error">
                               <Star className="w-3 h-3 mr-1" />
                               Required
                             </Badge>
                           )}
                         </div>
                         {item.description && (
-                          <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                          <p className="text-sm text-secondary mb-2">{item.description}</p>
                         )}
 
                         {/* Item-specific details */}
-                        <div className="flex flex-wrap gap-3 text-xs text-gray-500">
+                        <div className="flex flex-wrap gap-3 text-xs text-muted">
                           {item.item_type === 'photo' && (
                             <>
                               {item.min_photos && <span>Min photos: {item.min_photos}</span>}
@@ -228,7 +228,7 @@ export function TemplatePreviewPage() {
                           )}
                         </div>
                       </div>
-                      <div className="flex-shrink-0 text-sm text-gray-400">#{index + 1}</div>
+                      <div className="flex-shrink-0 text-sm text-disabled">#{index + 1}</div>
                     </div>
                   </div>
                 ))}
@@ -241,9 +241,9 @@ export function TemplatePreviewPage() {
         {totalItems === 0 && (
           <Card>
             <CardContent className="py-12 text-center">
-              <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No items yet</h3>
-              <p className="text-gray-600 mb-4">
+              <FileText className="w-12 h-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No items yet</h3>
+              <p className="text-secondary mb-4">
                 This template doesn't have any items configured yet.
               </p>
               <Button

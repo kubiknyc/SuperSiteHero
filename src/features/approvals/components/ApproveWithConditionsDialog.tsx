@@ -60,20 +60,20 @@ export function ApproveWithConditionsDialog({
           <div>
             <label
               htmlFor="conditions"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-secondary mb-1"
             >
-              Conditions <span className="text-red-500">*</span>
+              Conditions <span className="text-error">*</span>
             </label>
             <textarea
               id="conditions"
               value={conditions}
               onChange={(e) => setConditions(e.target.value)}
               placeholder="Enter the conditions that must be met..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+              className="w-full px-3 py-2 border border-input rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
               rows={3}
               disabled={isLoading}
             />
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-muted">
               These conditions will be visible to the requester.
             </p>
           </div>
@@ -82,7 +82,7 @@ export function ApproveWithConditionsDialog({
           <div>
             <label
               htmlFor="comment"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-secondary mb-1"
             >
               Additional Comment (optional)
             </label>
@@ -91,7 +91,7 @@ export function ApproveWithConditionsDialog({
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Add any additional notes..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+              className="w-full px-3 py-2 border border-input rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
               rows={2}
               disabled={isLoading}
             />
@@ -111,7 +111,7 @@ export function ApproveWithConditionsDialog({
             type="button"
             onClick={handleConfirm}
             disabled={!conditions.trim() || isLoading}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-primary hover:bg-primary-hover"
           >
             {isLoading ? 'Approving...' : 'Approve with Conditions'}
           </Button>

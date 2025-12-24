@@ -219,11 +219,11 @@ export function EnhancedConflictResolutionDialog({
   const getDiffTypeBadge = (diff: FieldDiff) => {
     switch (diff.type) {
       case 'added':
-        return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Added</Badge>;
+        return <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">Added</Badge>;
       case 'removed':
-        return <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">Removed</Badge>;
+        return <Badge variant="outline" className="bg-error-light text-error-dark border-red-200">Removed</Badge>;
       case 'modified':
-        return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Modified</Badge>;
+        return <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">Modified</Badge>;
     }
   };
 
@@ -237,7 +237,7 @@ export function EnhancedConflictResolutionDialog({
       <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden flex flex-col">
         <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-amber-500" />
+            <AlertCircle className="h-5 w-5 text-warning" />
             Sync Conflict Resolution
           </DialogTitle>
           <DialogDescription>
@@ -349,7 +349,7 @@ export function EnhancedConflictResolutionDialog({
                 <div className="space-y-3 pr-4">
                   {diffs.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
-                      <Check className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                      <Check className="h-12 w-12 mx-auto mb-2 text-success" />
                       <p className="text-sm font-medium">No differences found</p>
                     </div>
                   ) : (
@@ -363,13 +363,13 @@ export function EnhancedConflictResolutionDialog({
                           className={cn(
                             'border rounded-lg overflow-hidden transition-colors',
                             diff.canAutoMerge
-                              ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-950/20'
-                              : 'border-amber-200 bg-amber-50/50 dark:border-amber-800 dark:bg-amber-950/20'
+                              ? 'border-green-200 bg-success-light/50 dark:border-green-800 dark:bg-green-950/20'
+                              : 'border-amber-200 bg-warning-light/50 dark:border-amber-800 dark:bg-amber-950/20'
                           )}
                         >
                           {/* Field header */}
                           <div
-                            className="flex items-center justify-between p-3 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5"
+                            className="flex items-center justify-between p-3 cursor-pointer hover:bg-black/5 dark:hover:bg-card/5"
                             onClick={() => toggleFieldExpanded(diff.field)}
                           >
                             <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -380,7 +380,7 @@ export function EnhancedConflictResolutionDialog({
                               )}
                               <span className="font-medium text-sm truncate">{formatFieldName(diff.field)}</span>
                               {diff.canAutoMerge && (
-                                <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300 text-xs">
+                                <Badge variant="outline" className="bg-success-light text-success-dark border-green-300 text-xs">
                                   <Sparkles className="h-3 w-3 mr-1" />
                                   Auto-merge
                                 </Badge>
@@ -410,7 +410,7 @@ export function EnhancedConflictResolutionDialog({
                                           <span className="font-medium">Local</span>
                                         </Label>
                                       </div>
-                                      <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded p-2">
+                                      <div className="bg-warning-light dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded p-2">
                                         <pre className="text-xs whitespace-pre-wrap break-words font-mono">
                                           {formatValue(diff.localValue)}
                                         </pre>
@@ -447,7 +447,7 @@ export function EnhancedConflictResolutionDialog({
                                       <HardDrive className="h-3 w-3" />
                                       Local
                                     </Label>
-                                    <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded p-2">
+                                    <div className="bg-warning-light dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded p-2">
                                       <pre className="text-xs whitespace-pre-wrap break-words font-mono">
                                         {formatValue(diff.localValue)}
                                       </pre>
@@ -485,7 +485,7 @@ export function EnhancedConflictResolutionDialog({
                   {preview && (
                     <>
                       <div className="bg-muted/50 p-3 rounded-lg space-y-2">
-                        <h4 className="font-medium text-sm">Merge Summary</h4>
+                        <h4 className="font-medium text-sm" className="heading-card">Merge Summary</h4>
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
                             <span className="text-muted-foreground">Strategy:</span>
@@ -498,7 +498,7 @@ export function EnhancedConflictResolutionDialog({
                           {preview.manualFields.length > 0 && (
                             <div className="col-span-2">
                               <span className="text-muted-foreground">Requires attention:</span>
-                              <span className="ml-2 font-medium text-amber-600">
+                              <span className="ml-2 font-medium text-warning">
                                 {preview.manualFields.length} field{preview.manualFields.length !== 1 ? 's' : ''}
                               </span>
                             </div>
@@ -506,7 +506,7 @@ export function EnhancedConflictResolutionDialog({
                         </div>
                       </div>
                       <div className="bg-card border rounded-lg p-4">
-                        <h4 className="font-medium text-sm mb-2">Merged Result:</h4>
+                        <h4 className="font-medium text-sm mb-2" className="heading-card">Merged Result:</h4>
                         <pre className="text-xs whitespace-pre-wrap break-words font-mono">
                           {formatValue(preview.mergedData)}
                         </pre>

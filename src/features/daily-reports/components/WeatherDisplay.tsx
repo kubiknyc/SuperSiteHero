@@ -67,12 +67,12 @@ function getWeatherIconColor(condition: string): string {
 
   if (lowerCondition.includes('thunder')) {return 'text-purple-500'}
   if (lowerCondition.includes('snow')) {return 'text-blue-300'}
-  if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle')) {return 'text-blue-500'}
-  if (lowerCondition.includes('fog')) {return 'text-gray-400'}
-  if (lowerCondition.includes('overcast') || lowerCondition.includes('cloudy')) {return 'text-gray-500'}
-  if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) {return 'text-yellow-500'}
+  if (lowerCondition.includes('rain') || lowerCondition.includes('drizzle')) {return 'text-primary'}
+  if (lowerCondition.includes('fog')) {return 'text-disabled'}
+  if (lowerCondition.includes('overcast') || lowerCondition.includes('cloudy')) {return 'text-muted'}
+  if (lowerCondition.includes('clear') || lowerCondition.includes('sunny')) {return 'text-warning'}
 
-  return 'text-gray-500'
+  return 'text-muted'
 }
 
 /**
@@ -129,20 +129,20 @@ export function WeatherSummaryRow({
         <span>{weather.condition}</span>
       </div>
       <div className="flex items-center gap-1">
-        <Thermometer className="h-3 w-3 text-red-500" />
+        <Thermometer className="h-3 w-3 text-error" />
         <span>
           {formatTemperature(weather.temperatureHigh)} / {formatTemperature(weather.temperatureLow)}
         </span>
       </div>
       {weather.precipitation != null && weather.precipitation > 0 && (
         <div className="flex items-center gap-1">
-          <Droplets className="h-3 w-3 text-blue-500" />
+          <Droplets className="h-3 w-3 text-primary" />
           <span>{formatPrecipitation(weather.precipitation)}</span>
         </div>
       )}
       {weather.windSpeed != null && (
         <div className="flex items-center gap-1">
-          <Wind className="h-3 w-3 text-gray-500" />
+          <Wind className="h-3 w-3 text-muted" />
           <span>{formatWindSpeed(weather.windSpeed)}</span>
         </div>
       )}
@@ -249,12 +249,12 @@ export function WeatherDisplay({
         {showWorkability && (
           <div className="ml-auto">
             {workability.workable ? (
-              <Badge className="bg-green-100 text-green-700">
+              <Badge className="bg-success-light text-success-dark">
                 <CheckCircle className="h-3 w-3 mr-1" />
                 Workable
               </Badge>
             ) : (
-              <Badge className="bg-red-100 text-red-700">
+              <Badge className="bg-error-light text-error-dark">
                 <AlertTriangle className="h-3 w-3 mr-1" />
                 Caution
               </Badge>
@@ -299,12 +299,12 @@ export function WeatherDisplay({
             className={cn(
               'p-4 rounded-full',
               weather.condition.toLowerCase().includes('rain')
-                ? 'bg-blue-100'
+                ? 'bg-info-light'
                 : weather.condition.toLowerCase().includes('snow')
                   ? 'bg-blue-50'
                   : weather.condition.toLowerCase().includes('clear')
-                    ? 'bg-yellow-100'
-                    : 'bg-gray-100'
+                    ? 'bg-warning-light'
+                    : 'bg-muted'
             )}
           >
             <IconComponent className={cn('h-10 w-10', iconColor)} />
@@ -325,7 +325,7 @@ export function WeatherDisplay({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {/* Temperature */}
           <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-            <Thermometer className="h-5 w-5 text-red-500" />
+            <Thermometer className="h-5 w-5 text-error" />
             <div>
               <p className="text-xs text-muted-foreground">High / Low</p>
               <p className="font-medium">
@@ -337,7 +337,7 @@ export function WeatherDisplay({
 
           {/* Precipitation */}
           <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-            <Droplets className="h-5 w-5 text-blue-500" />
+            <Droplets className="h-5 w-5 text-primary" />
             <div>
               <p className="text-xs text-muted-foreground">Precipitation</p>
               <p className="font-medium">{formatPrecipitation(weather.precipitation)}</p>
@@ -346,7 +346,7 @@ export function WeatherDisplay({
 
           {/* Wind */}
           <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
-            <Wind className="h-5 w-5 text-gray-500" />
+            <Wind className="h-5 w-5 text-muted" />
             <div>
               <p className="text-xs text-muted-foreground">Wind Speed</p>
               <p className="font-medium">{formatWindSpeed(weather.windSpeed)}</p>
@@ -368,20 +368,20 @@ export function WeatherDisplay({
           <Alert
             className={cn(
               workability.workable
-                ? 'border-green-200 bg-green-50'
-                : 'border-red-200 bg-red-50'
+                ? 'border-green-200 bg-success-light'
+                : 'border-red-200 bg-error-light'
             )}
           >
             {workability.workable ? (
               <>
-                <CheckCircle className="h-4 w-4 text-green-600" />
+                <CheckCircle className="h-4 w-4 text-success" />
                 <AlertDescription className="text-green-800">
                   Weather conditions are suitable for outdoor work
                 </AlertDescription>
               </>
             ) : (
               <>
-                <AlertTriangle className="h-4 w-4 text-red-600" />
+                <AlertTriangle className="h-4 w-4 text-error" />
                 <AlertDescription className="text-red-800">
                   {workability.reason || 'Weather conditions may impact work'}
                 </AlertDescription>

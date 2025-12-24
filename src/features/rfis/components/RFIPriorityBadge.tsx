@@ -13,7 +13,7 @@ export interface RFIPriorityBadgeProps {
 const priorityConfig: Record<RFIPriority, { label: string; className: string }> = {
   low: {
     label: 'Low',
-    className: 'bg-green-100 text-green-800',
+    className: 'bg-success-light text-green-800',
   },
   normal: {
     label: 'Normal',
@@ -21,7 +21,7 @@ const priorityConfig: Record<RFIPriority, { label: string; className: string }> 
   },
   high: {
     label: 'High',
-    className: 'bg-red-100 text-red-800',
+    className: 'bg-error-light text-red-800',
   },
 }
 

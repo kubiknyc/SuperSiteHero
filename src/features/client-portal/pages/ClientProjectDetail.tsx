@@ -44,8 +44,8 @@ export function ClientProjectDetail() {
   if (!project) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-xl font-semibold text-gray-900">Project Not Found</h2>
-        <p className="text-gray-500 mt-2">This project may not exist or you don't have access.</p>
+        <h2 className="text-xl font-semibold text-foreground" className="heading-section">Project Not Found</h2>
+        <p className="text-muted mt-2">This project may not exist or you don't have access.</p>
         <Button asChild className="mt-4">
           <Link to="/client">Back to Dashboard</Link>
         </Button>
@@ -60,7 +60,7 @@ export function ClientProjectDetail() {
       href: `/client/projects/${projectId}/schedule`,
       icon: Calendar,
       enabled: project.show_schedule,
-      color: 'bg-blue-100 text-blue-600',
+      color: 'bg-info-light text-primary',
     },
     {
       name: 'Photos',
@@ -68,7 +68,7 @@ export function ClientProjectDetail() {
       href: `/client/projects/${projectId}/photos`,
       icon: Image,
       enabled: project.show_photos,
-      color: 'bg-green-100 text-green-600',
+      color: 'bg-success-light text-success',
     },
     {
       name: 'Documents',
@@ -84,7 +84,7 @@ export function ClientProjectDetail() {
       href: `/client/projects/${projectId}/rfis`,
       icon: HelpCircle,
       enabled: project.show_rfis,
-      color: 'bg-yellow-100 text-yellow-600',
+      color: 'bg-warning-light text-warning',
     },
     {
       name: 'Change Orders',
@@ -118,24 +118,24 @@ export function ClientProjectDetail() {
           <CardContent className="space-y-4">
             {project.project_number && (
               <div>
-                <p className="text-sm text-gray-500">Project Number</p>
+                <p className="text-sm text-muted">Project Number</p>
                 <p className="font-medium">#{project.project_number}</p>
               </div>
             )}
 
             {project.description && (
               <div>
-                <p className="text-sm text-gray-500">Description</p>
-                <p className="text-gray-700">{project.description}</p>
+                <p className="text-sm text-muted">Description</p>
+                <p className="text-secondary">{project.description}</p>
               </div>
             )}
 
             {project.address && (
               <div className="flex items-start gap-2">
-                <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+                <MapPin className="h-4 w-4 text-disabled mt-0.5" />
                 <div>
-                  <p className="text-sm text-gray-500">Location</p>
-                  <p className="text-gray-700">
+                  <p className="text-sm text-muted">Location</p>
+                  <p className="text-secondary">
                     {project.address}
                     {project.city && <>, {project.city}</>}
                     {project.state && <>, {project.state}</>}
@@ -150,12 +150,12 @@ export function ClientProjectDetail() {
                 className={cn(
                   'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                   project.status === 'active'
-                    ? 'bg-green-100 text-green-800'
+                    ? 'bg-success-light text-green-800'
                     : project.status === 'completed'
-                    ? 'bg-blue-100 text-blue-800'
+                    ? 'bg-info-light text-blue-800'
                     : project.status === 'on_hold'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-gray-100 text-gray-800'
+                    ? 'bg-warning-light text-yellow-800'
+                    : 'bg-muted text-foreground'
                 )}
               >
                 {project.status?.replace('_', ' ') || 'Active'}
@@ -173,11 +173,11 @@ export function ClientProjectDetail() {
           <CardContent className="space-y-4">
             {project.start_date && (
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <Clock className="h-4 w-4 text-green-600" />
+                <div className="p-2 bg-success-light rounded-lg">
+                  <Clock className="h-4 w-4 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Start Date</p>
+                  <p className="text-sm text-muted">Start Date</p>
                   <p className="font-medium">
                     {format(new Date(project.start_date), 'MMMM d, yyyy')}
                   </p>
@@ -187,11 +187,11 @@ export function ClientProjectDetail() {
 
             {project.substantial_completion_date && (
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Target className="h-4 w-4 text-blue-600" />
+                <div className="p-2 bg-info-light rounded-lg">
+                  <Target className="h-4 w-4 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Substantial Completion</p>
+                  <p className="text-sm text-muted">Substantial Completion</p>
                   <p className="font-medium">
                     {format(new Date(project.substantial_completion_date), 'MMMM d, yyyy')}
                   </p>
@@ -205,7 +205,7 @@ export function ClientProjectDetail() {
                   <Calendar className="h-4 w-4 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Final Completion</p>
+                  <p className="text-sm text-muted">Final Completion</p>
                   <p className="font-medium">
                     {format(new Date(project.final_completion_date), 'MMMM d, yyyy')}
                   </p>
@@ -215,11 +215,11 @@ export function ClientProjectDetail() {
 
             {project.end_date && !project.final_completion_date && (
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <Calendar className="h-4 w-4 text-red-600" />
+                <div className="p-2 bg-error-light rounded-lg">
+                  <Calendar className="h-4 w-4 text-error" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">End Date</p>
+                  <p className="text-sm text-muted">End Date</p>
                   <p className="font-medium">
                     {format(new Date(project.end_date), 'MMMM d, yyyy')}
                   </p>
@@ -228,7 +228,7 @@ export function ClientProjectDetail() {
             )}
 
             {!project.start_date && !project.end_date && (
-              <p className="text-gray-500 text-sm">No timeline information available.</p>
+              <p className="text-muted text-sm">No timeline information available.</p>
             )}
           </CardContent>
         </Card>
@@ -244,16 +244,16 @@ export function ClientProjectDetail() {
             <div className="grid gap-4 md:grid-cols-2">
               {project.contract_value !== null && (
                 <div>
-                  <p className="text-sm text-gray-500">Contract Value</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-sm text-muted">Contract Value</p>
+                  <p className="text-2xl font-bold text-foreground">
                     ${project.contract_value.toLocaleString()}
                   </p>
                 </div>
               )}
               {project.budget !== null && (
                 <div>
-                  <p className="text-sm text-gray-500">Budget</p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-sm text-muted">Budget</p>
+                  <p className="text-2xl font-bold text-foreground">
                     ${project.budget.toLocaleString()}
                   </p>
                 </div>
@@ -266,7 +266,7 @@ export function ClientProjectDetail() {
       {/* Available Sections */}
       {availableSections.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Project Resources</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">Project Resources</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {availableSections.map((section) => {
               const Icon = section.icon
@@ -280,15 +280,15 @@ export function ClientProjectDetail() {
                             <Icon className="h-6 w-6" />
                           </div>
                           <div>
-                            <h3 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                            <h3 className="font-medium text-foreground group-hover:text-primary transition-colors" className="heading-subsection">
                               {section.name}
                             </h3>
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-muted mt-1">
                               {section.description}
                             </p>
                           </div>
                         </div>
-                        <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                        <ChevronRight className="h-5 w-5 text-disabled group-hover:text-primary transition-colors" />
                       </div>
                     </CardContent>
                   </Card>

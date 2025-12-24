@@ -23,14 +23,14 @@ import {
 import { cn } from '@/lib/utils'
 
 const contactTypeColors: Record<string, string> = {
-  subcontractor: 'bg-blue-100 text-blue-800',
+  subcontractor: 'bg-info-light text-blue-800',
   architect: 'bg-purple-100 text-purple-800',
-  engineer: 'bg-green-100 text-green-800',
+  engineer: 'bg-success-light text-green-800',
   inspector: 'bg-orange-100 text-orange-800',
-  supplier: 'bg-yellow-100 text-yellow-800',
-  owner: 'bg-red-100 text-red-800',
+  supplier: 'bg-warning-light text-yellow-800',
+  owner: 'bg-error-light text-red-800',
   consultant: 'bg-indigo-100 text-indigo-800',
-  other: 'bg-gray-100 text-gray-800',
+  other: 'bg-muted text-foreground',
 }
 
 export function ContactDetailPage() {
@@ -64,7 +64,7 @@ export function ContactDetailPage() {
     return (
       <AppLayout>
         <div className="p-6 flex items-center justify-center min-h-96">
-          <Loader2 className="h-12 w-12 text-gray-400 animate-spin" />
+          <Loader2 className="h-12 w-12 text-disabled animate-spin" />
         </div>
       </AppLayout>
     )
@@ -77,8 +77,8 @@ export function ContactDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Contact Not Found</h3>
-              <p className="text-gray-600 mb-4">{error?.message || 'The contact could not be loaded'}</p>
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Contact Not Found</h3>
+              <p className="text-secondary mb-4">{error?.message || 'The contact could not be loaded'}</p>
               <Button onClick={() => navigate('/contacts')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Contacts
@@ -104,12 +104,12 @@ export function ContactDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold text-gray-900">{displayName}</h1>
+                <h1 className="text-3xl font-bold text-foreground" className="heading-page">{displayName}</h1>
                 {contact.is_primary && (
-                  <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" aria-label="Primary Contact" />
+                  <Star className="h-5 w-5 text-warning fill-yellow-500" aria-label="Primary Contact" />
                 )}
               </div>
-              {contact.title && <p className="text-gray-600 mt-1">{contact.title}</p>}
+              {contact.title && <p className="text-secondary mt-1">{contact.title}</p>}
             </div>
           </div>
           <div className="flex gap-2">
@@ -154,11 +154,11 @@ export function ContactDetailPage() {
             {/* Company */}
             {contact.company_name && fullName && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gray-100">
-                  <Building2 className="h-5 w-5 text-gray-600" />
+                <div className="p-2 rounded-lg bg-muted">
+                  <Building2 className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Company</p>
+                  <p className="text-sm text-secondary">Company</p>
                   <p className="font-medium">{contact.company_name}</p>
                 </div>
               </div>
@@ -167,12 +167,12 @@ export function ContactDetailPage() {
             {/* Phone Numbers */}
             {contact.phone_mobile && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-blue-100">
-                  <Phone className="h-5 w-5 text-blue-600" />
+                <div className="p-2 rounded-lg bg-info-light">
+                  <Phone className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Mobile</p>
-                  <a href={`tel:${contact.phone_mobile}`} className="font-medium text-blue-600 hover:underline">
+                  <p className="text-sm text-secondary">Mobile</p>
+                  <a href={`tel:${contact.phone_mobile}`} className="font-medium text-primary hover:underline">
                     {contact.phone_mobile}
                   </a>
                 </div>
@@ -181,12 +181,12 @@ export function ContactDetailPage() {
 
             {contact.phone_office && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-blue-100">
-                  <Phone className="h-5 w-5 text-blue-600" />
+                <div className="p-2 rounded-lg bg-info-light">
+                  <Phone className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Office</p>
-                  <a href={`tel:${contact.phone_office}`} className="font-medium text-blue-600 hover:underline">
+                  <p className="text-sm text-secondary">Office</p>
+                  <a href={`tel:${contact.phone_office}`} className="font-medium text-primary hover:underline">
                     {contact.phone_office}
                   </a>
                 </div>
@@ -195,11 +195,11 @@ export function ContactDetailPage() {
 
             {contact.phone_fax && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gray-100">
-                  <Phone className="h-5 w-5 text-gray-600" />
+                <div className="p-2 rounded-lg bg-muted">
+                  <Phone className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Fax</p>
+                  <p className="text-sm text-secondary">Fax</p>
                   <p className="font-medium">{contact.phone_fax}</p>
                 </div>
               </div>
@@ -208,12 +208,12 @@ export function ContactDetailPage() {
             {/* Email */}
             {contact.email && (
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-green-100">
-                  <Mail className="h-5 w-5 text-green-600" />
+                <div className="p-2 rounded-lg bg-success-light">
+                  <Mail className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Email</p>
-                  <a href={`mailto:${contact.email}`} className="font-medium text-blue-600 hover:underline">
+                  <p className="text-sm text-secondary">Email</p>
+                  <a href={`mailto:${contact.email}`} className="font-medium text-primary hover:underline">
                     {contact.email}
                   </a>
                 </div>
@@ -227,7 +227,7 @@ export function ContactDetailPage() {
                   <MapPin className="h-5 w-5 text-purple-600" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Address</p>
+                  <p className="text-sm text-secondary">Address</p>
                   <div className="font-medium">
                     {contact.address && <p>{contact.address}</p>}
                     {(contact.city || contact.state || contact.zip) && (
@@ -247,7 +247,7 @@ export function ContactDetailPage() {
               <CardTitle>Notes</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{contact.notes}</p>
+              <p className="text-secondary whitespace-pre-wrap">{contact.notes}</p>
             </CardContent>
           </Card>
         )}

@@ -113,13 +113,13 @@ function MakeReadyCard({ status, count, total, onClick }: MakeReadyCardProps) {
         <span className={cn('font-semibold text-sm', config.color)}>{config.label}</span>
         <span className={cn('text-2xl font-bold', config.color)}>{count}</span>
       </div>
-      <div className="w-full bg-white/50 rounded-full h-2">
+      <div className="w-full bg-card/50 rounded-full h-2">
         <div
           className={cn('h-2 rounded-full', config.color.replace('text-', 'bg-'))}
           style={{ width: `${percentage}%` }}
         />
       </div>
-      <span className="text-xs text-gray-600 mt-1">{percentage}% of activities</span>
+      <span className="text-xs text-secondary mt-1">{percentage}% of activities</span>
     </button>
   )
 }
@@ -135,7 +135,7 @@ interface VarianceAnalysisProps {
 function VarianceAnalysis({ varianceReasons }: VarianceAnalysisProps) {
   if (!varianceReasons || varianceReasons.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-4">
+      <div className="text-center text-muted py-4">
         No variance reasons recorded
       </div>
     )
@@ -158,14 +158,14 @@ function VarianceAnalysis({ varianceReasons }: VarianceAnalysisProps) {
       {sortedCategories.map(([category, data]) => {
         const config = VARIANCE_CATEGORY_CONFIG[category as VarianceCategory]
         return (
-          <div key={category} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+          <div key={category} className="flex items-center justify-between p-2 bg-surface rounded">
             <div className="flex flex-col">
               <span className="font-medium text-sm">{config.label}</span>
-              <span className="text-xs text-gray-500">{config.description}</span>
+              <span className="text-xs text-muted">{config.description}</span>
             </div>
             <div className="text-right">
               <span className="text-lg font-bold text-orange-600">{data.activities}</span>
-              <span className="text-xs text-gray-500 block">activities</span>
+              <span className="text-xs text-muted block">activities</span>
             </div>
           </div>
         )
@@ -185,7 +185,7 @@ interface PPCTrendProps {
 function PPCTrend({ snapshots }: PPCTrendProps) {
   if (!snapshots || snapshots.length === 0) {
     return (
-      <div className="text-center text-gray-500 py-4">
+      <div className="text-center text-muted py-4">
         No historical data available
       </div>
     )
@@ -206,20 +206,20 @@ function PPCTrend({ snapshots }: PPCTrendProps) {
               key={snapshot.id || index}
               className="flex-1 flex flex-col items-center gap-1"
             >
-              <div className="w-full bg-gray-100 rounded-t relative" style={{ height: '100%' }}>
+              <div className="w-full bg-muted rounded-t relative" style={{ height: '100%' }}>
                 <div
                   className={cn('absolute bottom-0 w-full rounded-t transition-all', color.replace('text-', 'bg-'))}
                   style={{ height: `${height}%` }}
                 />
               </div>
-              <span className="text-[10px] text-gray-500 truncate w-full text-center">
+              <span className="text-[10px] text-muted truncate w-full text-center">
                 {new Date(snapshot.week_start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
               </span>
             </div>
           )
         })}
       </div>
-      <div className="flex justify-between text-xs text-gray-500">
+      <div className="flex justify-between text-xs text-muted">
         <span>Older</span>
         <span>Recent</span>
       </div>
@@ -282,10 +282,10 @@ export function PPCDashboard({
           <PPCGauge ppc={calculatedPPC} size="lg" />
           {metrics && (
             <div className="mt-4 flex items-center gap-2 text-sm">
-              {metrics.trend === 'up' && <span className="text-green-600">+{metrics.ppcChange}%</span>}
-              {metrics.trend === 'down' && <span className="text-red-600">{metrics.ppcChange}%</span>}
-              {metrics.trend === 'stable' && <span className="text-gray-500">No change</span>}
-              <span className="text-gray-500">vs last week</span>
+              {metrics.trend === 'up' && <span className="text-success">+{metrics.ppcChange}%</span>}
+              {metrics.trend === 'down' && <span className="text-error">{metrics.ppcChange}%</span>}
+              {metrics.trend === 'stable' && <span className="text-muted">No change</span>}
+              <span className="text-muted">vs last week</span>
             </div>
           )}
         </CardContent>
@@ -298,7 +298,7 @@ export function PPCDashboard({
         </CardHeader>
         <CardContent className="flex flex-col items-center">
           <PPCGauge ppc={reliabilityIndex} size="lg" showLabel={false} />
-          <p className="mt-2 text-sm text-gray-600 text-center">
+          <p className="mt-2 text-sm text-secondary text-center">
             Commitments completed as planned
           </p>
         </CardContent>
@@ -312,26 +312,26 @@ export function PPCDashboard({
         <CardContent>
           <div className="grid grid-cols-2 gap-2">
             <div className="text-center p-2 bg-blue-50 rounded">
-              <div className="text-2xl font-bold text-blue-600">{activities.length}</div>
-              <div className="text-xs text-gray-600">Total</div>
+              <div className="text-2xl font-bold text-primary">{activities.length}</div>
+              <div className="text-xs text-secondary">Total</div>
             </div>
-            <div className="text-center p-2 bg-green-50 rounded">
-              <div className="text-2xl font-bold text-green-600">
+            <div className="text-center p-2 bg-success-light rounded">
+              <div className="text-2xl font-bold text-success">
                 {activities.filter(a => a.status === 'completed').length}
               </div>
-              <div className="text-xs text-gray-600">Completed</div>
+              <div className="text-xs text-secondary">Completed</div>
             </div>
-            <div className="text-center p-2 bg-yellow-50 rounded">
-              <div className="text-2xl font-bold text-yellow-600">
+            <div className="text-center p-2 bg-warning-light rounded">
+              <div className="text-2xl font-bold text-warning">
                 {activities.filter(a => a.status === 'in_progress').length}
               </div>
-              <div className="text-xs text-gray-600">In Progress</div>
+              <div className="text-xs text-secondary">In Progress</div>
             </div>
-            <div className="text-center p-2 bg-red-50 rounded">
-              <div className="text-2xl font-bold text-red-600">
+            <div className="text-center p-2 bg-error-light rounded">
+              <div className="text-2xl font-bold text-error">
                 {activities.filter(a => a.status === 'blocked' || a.status === 'delayed').length}
               </div>
-              <div className="text-xs text-gray-600">Blocked/Delayed</div>
+              <div className="text-xs text-secondary">Blocked/Delayed</div>
             </div>
           </div>
         </CardContent>

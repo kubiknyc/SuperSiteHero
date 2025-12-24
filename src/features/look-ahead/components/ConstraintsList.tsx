@@ -84,9 +84,9 @@ const constraintTypeIcons: Record<ConstraintType, React.ReactNode> = {
 }
 
 const statusColors: Record<ConstraintStatus, { color: string; bgColor: string }> = {
-  open: { color: 'text-red-700', bgColor: 'bg-red-100' },
-  resolved: { color: 'text-green-700', bgColor: 'bg-green-100' },
-  waived: { color: 'text-yellow-700', bgColor: 'bg-yellow-100' },
+  open: { color: 'text-error-dark', bgColor: 'bg-error-light' },
+  resolved: { color: 'text-success-dark', bgColor: 'bg-success-light' },
+  waived: { color: 'text-yellow-700', bgColor: 'bg-warning-light' },
   escalated: { color: 'text-purple-700', bgColor: 'bg-purple-100' },
 }
 
@@ -150,7 +150,7 @@ export function ConstraintsList({
         <CardContent className="p-3">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-start gap-2 flex-1">
-              <div className={cn('mt-0.5', constraint.status === 'open' ? 'text-red-500' : 'text-gray-400')}>
+              <div className={cn('mt-0.5', constraint.status === 'open' ? 'text-error' : 'text-disabled')}>
                 {constraintTypeIcons[constraint.constraint_type]}
               </div>
               <div className="flex-1 min-w-0">
@@ -169,7 +169,7 @@ export function ConstraintsList({
                   <Button
                     variant="link"
                     size="sm"
-                    className="h-auto p-0 text-xs text-blue-600"
+                    className="h-auto p-0 text-xs text-primary"
                     onClick={() => onViewLinkedEntity?.('rfi', constraint.rfi_id!)}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
@@ -180,7 +180,7 @@ export function ConstraintsList({
                   <Button
                     variant="link"
                     size="sm"
-                    className="h-auto p-0 text-xs text-blue-600"
+                    className="h-auto p-0 text-xs text-primary"
                     onClick={() => onViewLinkedEntity?.('submittal', constraint.submittal_id!)}
                   >
                     <ExternalLink className="h-3 w-3 mr-1" />
@@ -206,7 +206,7 @@ export function ConstraintsList({
 
                 {/* Resolution Notes */}
                 {constraint.resolution_notes && (
-                  <div className="mt-2 p-2 bg-green-50 rounded text-xs text-green-800">
+                  <div className="mt-2 p-2 bg-success-light rounded text-xs text-green-800">
                     <strong>Resolution:</strong> {constraint.resolution_notes}
                   </div>
                 )}
@@ -228,7 +228,7 @@ export function ConstraintsList({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-xs text-red-600"
+                  className="text-xs text-error"
                   onClick={() => onDeleteConstraint?.(constraint.id)}
                 >
                   <Trash2 className="h-3 w-3" />
@@ -247,7 +247,7 @@ export function ConstraintsList({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Link2 className="h-5 w-5" />
-          <h3 className="font-medium">Constraints</h3>
+          <h3 className="font-medium" className="heading-subsection">Constraints</h3>
           {openConstraints.length > 0 && (
             <Badge variant="destructive" className="text-xs">
               {openConstraints.length} open
@@ -338,7 +338,7 @@ export function ConstraintsList({
       {/* Open Constraints */}
       {openConstraints.length > 0 && (
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-red-700 mb-2 flex items-center gap-1">
+          <h4 className="text-sm font-medium text-error-dark mb-2 flex items-center gap-1" className="heading-card">
             <AlertTriangle className="h-4 w-4" />
             Open Constraints ({openConstraints.length})
           </h4>
@@ -349,7 +349,7 @@ export function ConstraintsList({
       {/* Resolved Constraints */}
       {resolvedConstraints.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-green-700 mb-2 flex items-center gap-1">
+          <h4 className="text-sm font-medium text-success-dark mb-2 flex items-center gap-1" className="heading-card">
             <CheckCircle className="h-4 w-4" />
             Resolved ({resolvedConstraints.length})
           </h4>

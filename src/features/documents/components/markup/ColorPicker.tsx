@@ -89,17 +89,17 @@ export function ColorPicker({
           className={cn('flex items-center gap-2', className)}
         >
           <div
-            className="w-5 h-5 rounded border border-gray-300 shadow-inner"
+            className="w-5 h-5 rounded border border-input shadow-inner"
             style={{ backgroundColor: value }}
           />
-          <ChevronDown className="w-3 h-3 text-gray-500" />
+          <ChevronDown className="w-3 h-3 text-muted" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-72 p-3" align="start">
         <div className="space-y-4">
           {/* Custom Color Input */}
           <div className="space-y-2">
-            <Label className="text-xs font-medium text-gray-600 flex items-center gap-1">
+            <Label className="text-xs font-medium text-secondary flex items-center gap-1">
               <Palette className="w-3 h-3" />
               Custom Color
             </Label>
@@ -132,7 +132,7 @@ export function ColorPicker({
           {/* Recent Colors */}
           {recentColors.length > 0 && (
             <div className="space-y-2">
-              <Label className="text-xs font-medium text-gray-600 flex items-center gap-1">
+              <Label className="text-xs font-medium text-secondary flex items-center gap-1">
                 <History className="w-3 h-3" />
                 Recent Colors
               </Label>
@@ -142,7 +142,7 @@ export function ColorPicker({
                     key={`${color}-${index}`}
                     className={cn(
                       'w-6 h-6 rounded border-2 transition-all hover:scale-110 relative',
-                      value === color ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-300'
+                      value === color ? 'border-blue-500 ring-2 ring-blue-200' : 'border-input'
                     )}
                     style={{ backgroundColor: color }}
                     onClick={() => handleColorSelect(color)}
@@ -153,7 +153,7 @@ export function ColorPicker({
                       <Check
                         className={cn(
                           'w-3 h-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-                          isLightColor(color) ? 'text-gray-800' : 'text-white'
+                          isLightColor(color) ? 'text-foreground' : 'text-white'
                         )}
                       />
                     )}
@@ -166,17 +166,17 @@ export function ColorPicker({
           {/* Trade Color Presets */}
           {showTradePresets && (
             <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-600">Trade Colors</Label>
+              <Label className="text-xs font-medium text-secondary">Trade Colors</Label>
               {Object.entries(colorsByTrade).map(([trade, presets]) => (
                 <div key={trade} className="space-y-1">
-                  <span className="text-xs text-gray-500">{trade}</span>
+                  <span className="text-xs text-muted">{trade}</span>
                   <div className="flex flex-wrap gap-1">
                     {presets.map((preset) => (
                       <button
                         key={preset.hex}
                         className={cn(
                           'w-6 h-6 rounded border-2 transition-all hover:scale-110 relative',
-                          value === preset.hex ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-300'
+                          value === preset.hex ? 'border-blue-500 ring-2 ring-blue-200' : 'border-input'
                         )}
                         style={{ backgroundColor: preset.hex }}
                         onClick={() => handleColorSelect(preset.hex)}
@@ -187,7 +187,7 @@ export function ColorPicker({
                           <Check
                             className={cn(
                               'w-3 h-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
-                              isLightColor(preset.hex) ? 'text-gray-800' : 'text-white'
+                              isLightColor(preset.hex) ? 'text-foreground' : 'text-white'
                             )}
                           />
                         )}
@@ -200,7 +200,7 @@ export function ColorPicker({
           )}
 
           {/* Color Legend Info */}
-          <div className="pt-2 border-t text-xs text-gray-500">
+          <div className="pt-2 border-t text-xs text-muted">
             <p>Tip: Use consistent colors for each trade to improve collaboration.</p>
           </div>
         </div>

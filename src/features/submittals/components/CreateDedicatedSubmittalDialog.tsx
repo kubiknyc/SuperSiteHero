@@ -162,7 +162,7 @@ export function CreateDedicatedSubmittalDialog({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Spec Section - Most Important Field */}
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-4">
-            <h3 className="font-semibold text-blue-900">Specification Reference</h3>
+            <h3 className="font-semibold text-blue-900" className="heading-subsection">Specification Reference</h3>
 
             <CSISpecPicker
               value={specSection}
@@ -174,7 +174,7 @@ export function CreateDedicatedSubmittalDialog({
 
             {submittalNumber && (
               <div className="flex items-center gap-2">
-                <Label className="text-sm text-blue-700">Submittal Number:</Label>
+                <Label className="text-sm text-primary-hover">Submittal Number:</Label>
                 <span className="font-mono font-bold text-blue-900">{submittalNumber}</span>
               </div>
             )}
@@ -208,7 +208,7 @@ export function CreateDedicatedSubmittalDialog({
                   </option>
                 ))}
               </Select>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted">
                 {SUBMITTAL_TYPES.find((t) => t.value === submittalType)?.description}
               </p>
             </div>
@@ -249,8 +249,8 @@ export function CreateDedicatedSubmittalDialog({
           </div>
 
           {/* Assignment & Tracking */}
-          <div className="p-4 bg-gray-50 border rounded-lg space-y-4">
-            <h3 className="font-semibold text-gray-900">Assignment & Tracking</h3>
+          <div className="p-4 bg-surface border rounded-lg space-y-4">
+            <h3 className="font-semibold text-foreground" className="heading-subsection">Assignment & Tracking</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -284,14 +284,14 @@ export function CreateDedicatedSubmittalDialog({
                     </option>
                   ))}
                 </Select>
-                <p className="text-xs text-gray-500">Who currently has responsibility for action</p>
+                <p className="text-xs text-muted">Who currently has responsibility for action</p>
               </div>
             </div>
           </div>
 
           {/* Dates */}
-          <div className="p-4 bg-gray-50 border rounded-lg space-y-4">
-            <h3 className="font-semibold text-gray-900">Schedule</h3>
+          <div className="p-4 bg-surface border rounded-lg space-y-4">
+            <h3 className="font-semibold text-foreground" className="heading-subsection">Schedule</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -303,7 +303,7 @@ export function CreateDedicatedSubmittalDialog({
                   onChange={(e) => setDateRequired(e.target.value)}
                   disabled={createSubmittal.isPending}
                 />
-                <p className="text-xs text-gray-500">When material/equipment must be on site</p>
+                <p className="text-xs text-muted">When material/equipment must be on site</p>
               </div>
 
               <div className="space-y-2">
@@ -317,7 +317,7 @@ export function CreateDedicatedSubmittalDialog({
                   max="90"
                   disabled={createSubmittal.isPending}
                 />
-                <p className="text-xs text-gray-500">Standard: 14 days for Architect review</p>
+                <p className="text-xs text-muted">Standard: 14 days for Architect review</p>
               </div>
             </div>
           </div>

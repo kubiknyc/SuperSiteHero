@@ -124,7 +124,7 @@ function LoadingIndicator() {
       <div className="flex flex-col items-center justify-center bg-black/80 rounded-lg p-6 text-white">
         <Loader2 className="h-10 w-10 animate-spin mb-4" />
         <p className="text-sm font-medium">Loading model...</p>
-        <p className="text-xs text-gray-400 mt-1">{Math.round(progress)}%</p>
+        <p className="text-xs text-disabled mt-1">{Math.round(progress)}%</p>
       </div>
     </Html>
   );
@@ -311,7 +311,7 @@ function ControlsToolbar({
         variant="ghost"
         size="icon"
         className={cn(
-          'text-white hover:bg-white/20 h-9 w-9',
+          'text-white hover:bg-card/20 h-9 w-9',
           settings.autoRotate && 'bg-primary/30'
         )}
         onClick={() => onSettingsChange({ autoRotate: !settings.autoRotate })}
@@ -325,7 +325,7 @@ function ControlsToolbar({
         variant="ghost"
         size="icon"
         className={cn(
-          'text-white hover:bg-white/20 h-9 w-9',
+          'text-white hover:bg-card/20 h-9 w-9',
           settings.gridEnabled && 'bg-primary/30'
         )}
         onClick={() => onSettingsChange({ gridEnabled: !settings.gridEnabled })}
@@ -339,7 +339,7 @@ function ControlsToolbar({
         variant="ghost"
         size="icon"
         className={cn(
-          'text-white hover:bg-white/20 h-9 w-9',
+          'text-white hover:bg-card/20 h-9 w-9',
           settings.axesEnabled && 'bg-primary/30'
         )}
         onClick={() => onSettingsChange({ axesEnabled: !settings.axesEnabled })}
@@ -353,7 +353,7 @@ function ControlsToolbar({
         variant="ghost"
         size="icon"
         className={cn(
-          'text-white hover:bg-white/20 h-9 w-9',
+          'text-white hover:bg-card/20 h-9 w-9',
           settings.wireframeEnabled && 'bg-primary/30'
         )}
         onClick={() => onSettingsChange({ wireframeEnabled: !settings.wireframeEnabled })}
@@ -367,7 +367,7 @@ function ControlsToolbar({
         variant="ghost"
         size="icon"
         className={cn(
-          'text-white hover:bg-white/20 h-9 w-9',
+          'text-white hover:bg-card/20 h-9 w-9',
           settings.enableShadows && 'bg-primary/30'
         )}
         onClick={() => onSettingsChange({ enableShadows: !settings.enableShadows })}
@@ -380,7 +380,7 @@ function ControlsToolbar({
         )}
       </Button>
 
-      <div className="w-px h-6 bg-white/30" />
+      <div className="w-px h-6 bg-card/30" />
 
       {/* Animation controls */}
       {animations.length > 0 && (
@@ -389,7 +389,7 @@ function ControlsToolbar({
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:bg-white/20 h-9 w-9"
+              className="text-white hover:bg-card/20 h-9 w-9"
               title="Animations"
             >
               {isPlaying ? (
@@ -426,7 +426,7 @@ function ControlsToolbar({
       <Button
         variant="ghost"
         size="icon"
-        className="text-white hover:bg-white/20 h-9 w-9"
+        className="text-white hover:bg-card/20 h-9 w-9"
         onClick={onScreenshot}
         title="Screenshot"
       >
@@ -437,7 +437,7 @@ function ControlsToolbar({
       <Button
         variant="ghost"
         size="icon"
-        className="text-white hover:bg-white/20 h-9 w-9"
+        className="text-white hover:bg-card/20 h-9 w-9"
         onClick={onReset}
         title="Reset view"
       >
@@ -448,7 +448,7 @@ function ControlsToolbar({
       <Button
         variant="ghost"
         size="icon"
-        className="text-white hover:bg-white/20 h-9 w-9"
+        className="text-white hover:bg-card/20 h-9 w-9"
         onClick={onFullscreen}
         title={isFullscreen ? 'Exit fullscreen' : 'Fullscreen'}
       >
@@ -585,13 +585,13 @@ export function ModelViewer3D({
     return (
       <div
         className={cn(
-          'relative w-full h-full min-h-[400px] bg-gray-900 flex flex-col items-center justify-center text-white rounded-lg',
+          'relative w-full h-full min-h-[400px] bg-background flex flex-col items-center justify-center text-white rounded-lg',
           className
         )}
       >
         <AlertCircle className="h-12 w-12 text-red-400 mb-4" />
         <p className="text-lg font-medium mb-2">Failed to Load Model</p>
-        <p className="text-sm text-gray-400 max-w-md text-center">{error}</p>
+        <p className="text-sm text-disabled max-w-md text-center">{error}</p>
         {modelUrl && (
           <Button
             variant="outline"

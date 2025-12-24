@@ -208,7 +208,7 @@ export function RecordingPlayback({
     return (
       <Card className={className}>
         <CardContent className="p-8 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+          <Loader2 className="h-8 w-8 animate-spin text-disabled" />
         </CardContent>
       </Card>
     );
@@ -218,7 +218,7 @@ export function RecordingPlayback({
     return (
       <Card className={className}>
         <CardContent className="p-8">
-          <div className="flex items-center gap-2 text-red-600">
+          <div className="flex items-center gap-2 text-error">
             <AlertCircle className="h-5 w-5" />
             <span>{error || 'Failed to load recording'}</span>
           </div>
@@ -308,8 +308,8 @@ export function RecordingPlayback({
               onClick={togglePlayPause}
               className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors"
             >
-              <div className="w-16 h-16 rounded-full bg-white/90 flex items-center justify-center">
-                <Play className="h-8 w-8 text-gray-900 ml-1" />
+              <div className="w-16 h-16 rounded-full bg-card/90 flex items-center justify-center">
+                <Play className="h-8 w-8 text-foreground ml-1" />
               </div>
             </button>
           )}
@@ -324,7 +324,7 @@ export function RecordingPlayback({
             onValueChange={handleSeek}
             className="cursor-pointer"
           />
-          <div className="flex justify-between text-xs text-gray-500">
+          <div className="flex justify-between text-xs text-muted">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
           </div>
@@ -400,7 +400,7 @@ export function RecordingPlayback({
 
         {/* Duration Info */}
         {recording.duration_seconds && (
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-muted text-center">
             Total Duration: {formatTime(recording.duration_seconds)}
           </p>
         )}

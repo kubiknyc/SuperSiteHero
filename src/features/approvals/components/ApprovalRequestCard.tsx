@@ -81,12 +81,12 @@ export function ApprovalRequestCard({
   })
 
   return (
-    <div className={cn('bg-white border rounded-lg shadow-sm p-4', className)}>
+    <div className={cn('bg-card border rounded-lg shadow-sm p-4', className)}>
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-medium text-gray-500">
+            <span className="text-sm font-medium text-muted">
               {entityConfig.label}
             </span>
             <ApprovalStatusBadge
@@ -95,24 +95,24 @@ export function ApprovalRequestCard({
               showConditions
             />
           </div>
-          <h3 className="font-semibold text-gray-900">
+          <h3 className="font-semibold text-foreground heading-subsection">
             {request.workflow?.name || 'Approval Request'}
           </h3>
         </div>
-        <span className="text-xs text-gray-500 whitespace-nowrap">{formattedDate}</span>
+        <span className="text-xs text-muted whitespace-nowrap">{formattedDate}</span>
       </div>
 
       {/* Progress indicator */}
       {totalSteps > 0 && (
         <div className="mb-4">
-          <div className="flex items-center justify-between text-xs text-gray-500 mb-1">
+          <div className="flex items-center justify-between text-xs text-muted mb-1">
             <span>
               Step {request.current_step} of {totalSteps}
               {currentStep && `: ${currentStep.name}`}
             </span>
             <span>{Math.round((request.current_step / totalSteps) * 100)}%</span>
           </div>
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
             <div
               className={cn(
                 'h-full transition-all',
@@ -132,12 +132,12 @@ export function ApprovalRequestCard({
       {request.status === 'approved_with_conditions' && request.conditions && (
         <div className="bg-blue-50 border border-blue-200 rounded p-3 mb-4">
           <span className="text-sm font-medium text-blue-800">Conditions:</span>
-          <p className="text-sm text-blue-700 mt-1">{request.conditions}</p>
+          <p className="text-sm text-primary-hover mt-1">{request.conditions}</p>
         </div>
       )}
 
       {/* Initiator info */}
-      <div className="text-sm text-gray-600 mb-4">
+      <div className="text-sm text-secondary mb-4">
         Submitted by{' '}
         <span className="font-medium">
           {request.initiator?.full_name || request.initiator?.email || 'Unknown'}
@@ -146,15 +146,15 @@ export function ApprovalRequestCard({
 
       {/* Reject comment input */}
       {showRejectInput && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="mb-4 p-3 bg-surface rounded-lg">
+          <label className="block text-sm font-medium text-secondary mb-1">
             Rejection reason (required)
           </label>
           <textarea
             value={rejectComment}
             onChange={(e) => setRejectComment(e.target.value)}
             placeholder="Please provide a reason for rejection..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full px-3 py-2 border border-input rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
             rows={2}
           />
           <div className="flex gap-2 mt-2">
@@ -189,7 +189,7 @@ export function ApprovalRequestCard({
               size="sm"
               onClick={handleApprove}
               disabled={isLoading}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-success hover:bg-green-700"
             >
               Approve
             </Button>
@@ -198,7 +198,7 @@ export function ApprovalRequestCard({
               variant="outline"
               onClick={() => setShowConditionsDialog(true)}
               disabled={isLoading}
-              className="border-blue-300 text-blue-600 hover:bg-blue-50"
+              className="border-blue-300 text-primary hover:bg-blue-50"
             >
               Approve with Conditions
             </Button>
@@ -207,7 +207,7 @@ export function ApprovalRequestCard({
               variant="outline"
               onClick={() => setShowRejectInput(true)}
               disabled={isLoading}
-              className="border-red-300 text-red-600 hover:bg-red-50"
+              className="border-red-300 text-error hover:bg-error-light"
             >
               Reject
             </Button>
@@ -221,7 +221,7 @@ export function ApprovalRequestCard({
             variant="ghost"
             onClick={() => onCancel(request.id)}
             disabled={isLoading}
-            className="text-gray-600"
+            className="text-secondary"
           >
             Cancel Request
           </Button>

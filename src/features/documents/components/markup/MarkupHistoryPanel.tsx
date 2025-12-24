@@ -69,19 +69,19 @@ const TYPE_LABELS: Record<string, string> = {
 }
 
 const TYPE_COLORS: Record<string, string> = {
-  arrow: 'bg-blue-100 text-blue-800',
-  rectangle: 'bg-green-100 text-green-800',
+  arrow: 'bg-info-light text-blue-800',
+  rectangle: 'bg-success-light text-green-800',
   circle: 'bg-purple-100 text-purple-800',
-  text: 'bg-yellow-100 text-yellow-800',
+  text: 'bg-warning-light text-yellow-800',
   freehand: 'bg-orange-100 text-orange-800',
   cloud: 'bg-pink-100 text-pink-800',
   dimension: 'bg-cyan-100 text-cyan-800',
-  stamp: 'bg-red-100 text-red-800',
+  stamp: 'bg-error-light text-red-800',
   'photo-pin': 'bg-indigo-100 text-indigo-800',
   'measurement-line': 'bg-teal-100 text-teal-800',
   'measurement-area': 'bg-emerald-100 text-emerald-800',
   highlight: 'bg-amber-100 text-amber-800',
-  callout: 'bg-gray-100 text-gray-800',
+  callout: 'bg-muted text-foreground',
 }
 
 export function MarkupHistoryPanel({
@@ -221,15 +221,15 @@ export function MarkupHistoryPanel({
       </PopoverTrigger>
       <PopoverContent className="w-96 p-0" align="end">
         {/* Header with Search */}
-        <div className="p-3 border-b bg-gray-50">
+        <div className="p-3 border-b bg-surface">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="font-medium text-sm">Markup History</h4>
+            <h4 className="font-medium text-sm" className="heading-card">Markup History</h4>
             <Badge variant="secondary" className="text-xs">
               {filteredMarkups.length} markup{filteredMarkups.length !== 1 ? 's' : ''}
             </Badge>
           </div>
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-disabled" />
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -240,7 +240,7 @@ export function MarkupHistoryPanel({
         </div>
 
         {/* Filters */}
-        <div className="p-2 border-b flex items-center gap-2 bg-white">
+        <div className="p-2 border-b flex items-center gap-2 bg-card">
           <Select
             value={filterAuthor}
             onChange={(e) => setFilterAuthor(e.target.value)}
@@ -284,8 +284,8 @@ export function MarkupHistoryPanel({
         {/* Markup List */}
         <div className="max-h-96 overflow-y-auto">
           {Object.keys(groupedMarkups).length === 0 ? (
-            <div className="p-6 text-center text-gray-500">
-              <History className="w-10 h-10 mx-auto mb-2 text-gray-400" />
+            <div className="p-6 text-center text-muted">
+              <History className="w-10 h-10 mx-auto mb-2 text-disabled" />
               <p className="text-sm">No markups found</p>
               {searchQuery && (
                 <Button
@@ -303,18 +303,18 @@ export function MarkupHistoryPanel({
               <div key={groupKey} className="border-b last:border-b-0">
                 {/* Group Header */}
                 <button
-                  className="w-full flex items-center justify-between px-3 py-2 bg-gray-50 hover:bg-gray-100 transition-colors"
+                  className="w-full flex items-center justify-between px-3 py-2 bg-surface hover:bg-muted transition-colors"
                   onClick={() => toggleGroup(groupKey)}
                 >
-                  <span className="text-xs font-medium text-gray-600">{groupKey}</span>
+                  <span className="text-xs font-medium text-secondary">{groupKey}</span>
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary" className="text-xs">
                       {groupMarkups.length}
                     </Badge>
                     {isGroupExpanded(groupKey) ? (
-                      <ChevronUp className="w-4 h-4 text-gray-400" />
+                      <ChevronUp className="w-4 h-4 text-disabled" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-gray-400" />
+                      <ChevronDown className="w-4 h-4 text-disabled" />
                     )}
                   </div>
                 </button>
@@ -326,7 +326,7 @@ export function MarkupHistoryPanel({
                       <div
                         key={markup.id}
                         className={cn(
-                          'p-2 hover:bg-gray-50 transition-colors cursor-pointer',
+                          'p-2 hover:bg-surface transition-colors cursor-pointer',
                           selectedMarkupId === markup.id && 'bg-blue-50 border-l-2 border-blue-500'
                         )}
                         onClick={() => onSelectMarkup(markup.id)}
@@ -338,7 +338,7 @@ export function MarkupHistoryPanel({
                                 {TYPE_LABELS[markup.type] || markup.type}
                               </Badge>
                               {markup.layerName && (
-                                <span className="text-xs text-gray-500 truncate">
+                                <span className="text-xs text-muted truncate">
                                   {markup.layerName}
                                 </span>
                               )}
@@ -346,12 +346,12 @@ export function MarkupHistoryPanel({
 
                             {/* Text preview for text/callout markups */}
                             {markup.text && (
-                              <p className="text-xs text-gray-600 truncate mb-1">
+                              <p className="text-xs text-secondary truncate mb-1">
                                 "{markup.text}"
                               </p>
                             )}
 
-                            <div className="flex items-center gap-2 text-xs text-gray-500">
+                            <div className="flex items-center gap-2 text-xs text-muted">
                               <div className="flex items-center gap-1">
                                 <User className="w-3 h-3" />
                                 <span className="truncate max-w-20">
@@ -372,10 +372,10 @@ export function MarkupHistoryPanel({
                                 e.stopPropagation()
                                 onViewMarkup(markup.id)
                               }}
-                              className="p-1 hover:bg-gray-200 rounded"
+                              className="p-1 hover:bg-muted rounded"
                               title="Zoom to markup"
                             >
-                              <Eye className="w-3 h-3 text-gray-500" />
+                              <Eye className="w-3 h-3 text-muted" />
                             </button>
                             {markup.createdBy === currentUserId && (
                               <>
@@ -384,22 +384,22 @@ export function MarkupHistoryPanel({
                                     e.stopPropagation()
                                     onEditMarkup(markup.id)
                                   }}
-                                  className="p-1 hover:bg-gray-200 rounded"
+                                  className="p-1 hover:bg-muted rounded"
                                   title="Edit markup"
                                   disabled={disabled}
                                 >
-                                  <Edit2 className="w-3 h-3 text-gray-500" />
+                                  <Edit2 className="w-3 h-3 text-muted" />
                                 </button>
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     onDeleteMarkup(markup.id)
                                   }}
-                                  className="p-1 hover:bg-gray-200 rounded"
+                                  className="p-1 hover:bg-muted rounded"
                                   title="Delete markup"
                                   disabled={disabled}
                                 >
-                                  <Trash2 className="w-3 h-3 text-red-500" />
+                                  <Trash2 className="w-3 h-3 text-error" />
                                 </button>
                               </>
                             )}
@@ -421,7 +421,7 @@ export function MarkupHistoryPanel({
         </div>
 
         {/* Footer Stats */}
-        <div className="p-2 border-t bg-gray-50 text-xs text-gray-500">
+        <div className="p-2 border-t bg-surface text-xs text-muted">
           <div className="flex items-center justify-between">
             <span>
               {authors.length} contributor{authors.length !== 1 ? 's' : ''}

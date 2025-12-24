@@ -111,8 +111,8 @@ export function TemplateItemsPage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading template...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-secondary">Loading template...</p>
           </div>
         </div>
       </AppLayout>
@@ -124,7 +124,7 @@ export function TemplateItemsPage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <p className="text-gray-600">Template not found</p>
+            <p className="text-secondary">Template not found</p>
             <Button
               variant="outline"
               onClick={() => navigate('/checklists/templates')}
@@ -150,8 +150,8 @@ export function TemplateItemsPage() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold">{template.name}</h1>
-              <p className="text-gray-600">{template.description}</p>
+              <h1 className="text-2xl font-bold" className="heading-page">{template.name}</h1>
+              <p className="text-secondary">{template.description}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -174,15 +174,15 @@ export function TemplateItemsPage() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Category:</span>
+                <span className="text-secondary">Category:</span>
                 <p className="font-medium">{template.category || 'Uncategorized'}</p>
               </div>
               <div>
-                <span className="text-gray-600">Level:</span>
+                <span className="text-secondary">Level:</span>
                 <p className="font-medium capitalize">{template.template_level || 'project'}</p>
               </div>
               <div>
-                <span className="text-gray-600">Duration:</span>
+                <span className="text-secondary">Duration:</span>
                 <p className="font-medium">
                   {template.estimated_duration_minutes
                     ? `${template.estimated_duration_minutes} min`
@@ -190,18 +190,18 @@ export function TemplateItemsPage() {
                 </p>
               </div>
               <div>
-                <span className="text-gray-600">Scoring:</span>
+                <span className="text-secondary">Scoring:</span>
                 <p className="font-medium">{template.scoring_enabled ? 'Enabled' : 'Disabled'}</p>
               </div>
             </div>
             {template.tags && template.tags.length > 0 && (
               <div className="mt-4">
-                <span className="text-gray-600 text-sm">Tags:</span>
+                <span className="text-secondary text-sm">Tags:</span>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {template.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-xs"
+                      className="px-2 py-1 bg-muted text-secondary rounded-md text-xs"
                     >
                       {tag}
                     </span>
@@ -217,7 +217,7 @@ export function TemplateItemsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Checklist Items ({localItems.length})</CardTitle>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-secondary">
                 Drag items to reorder • Click to expand settings
               </span>
             </div>

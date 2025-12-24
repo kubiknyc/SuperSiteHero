@@ -38,7 +38,7 @@ export function FormField({
       <div className="flex items-center justify-between">
         <Label htmlFor={htmlFor} className="flex items-center gap-1">
           {label}
-          {required && <span className="text-red-600" aria-label="required">*</span>}
+          {required && <span className="text-error" aria-label="required">*</span>}
         </Label>
 
         {/* Character Counter */}
@@ -47,10 +47,10 @@ export function FormField({
             className={cn(
               'text-xs',
               characterCount.isOverLimit
-                ? 'text-red-600 font-semibold'
+                ? 'text-error font-semibold'
                 : characterCount.isNearLimit
-                ? 'text-yellow-600'
-                : 'text-gray-500'
+                ? 'text-warning'
+                : 'text-muted'
             )}
           >
             {characterCount.current} / {characterCount.max}
@@ -60,7 +60,7 @@ export function FormField({
 
       {/* Description */}
       {description && (
-        <p className="text-sm text-gray-600">{description}</p>
+        <p className="text-sm text-secondary">{description}</p>
       )}
 
       {/* Input Field */}
@@ -92,9 +92,9 @@ export function FormSection({
   return (
     <div className={cn('space-y-4', className)}>
       <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">{title}</h3>
         {description && (
-          <p className="text-sm text-gray-600 mt-1">{description}</p>
+          <p className="text-sm text-secondary mt-1">{description}</p>
         )}
       </div>
 

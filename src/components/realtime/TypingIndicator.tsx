@@ -44,7 +44,7 @@ export function TypingIndicator({
   return (
     <div
       className={cn(
-        'flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400',
+        'flex items-center gap-2 text-sm text-muted dark:text-disabled',
         className
       )}
     >

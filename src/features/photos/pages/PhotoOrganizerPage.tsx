@@ -470,7 +470,7 @@ export function PhotoOrganizerPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Photos</h1>
+          <h1 className="text-2xl font-bold" className="heading-page">Photos</h1>
           <p className="text-muted-foreground">
             Capture, organize, and manage project photos
           </p>
@@ -622,7 +622,7 @@ export function PhotoOrganizerPage() {
         <Card>
           <CardContent className="py-16 text-center">
             <Image className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="font-semibold mb-2">No Photos Yet</h3>
+            <h3 className="font-semibold mb-2" className="heading-subsection">No Photos Yet</h3>
             <p className="text-muted-foreground mb-4">
               Start by capturing or uploading photos for this project
             </p>

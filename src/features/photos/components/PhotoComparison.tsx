@@ -129,7 +129,7 @@ export function PhotoComparison({
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center">
         <ArrowLeftRight className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-medium mb-2">Select Photos to Compare</h3>
+        <h3 className="text-lg font-medium mb-2" className="heading-subsection">Select Photos to Compare</h3>
         <p className="text-sm text-muted-foreground">
           Choose a before and after photo to create a comparison
         </p>
@@ -142,7 +142,7 @@ export function PhotoComparison({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
-          <h2 className="font-semibold">
+          <h2 className="font-semibold" className="heading-section">
             {comparison?.title || 'Photo Comparison'}
           </h2>
           {comparison?.comparisonType && (
@@ -224,12 +224,12 @@ export function PhotoComparison({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-sm">
-              <Badge variant="outline" className="bg-red-50">Before</Badge>
+              <Badge variant="outline" className="bg-error-light">Before</Badge>
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span>{formatDate(beforePhoto.capturedAt)}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <Badge variant="outline" className="bg-green-50">After</Badge>
+              <Badge variant="outline" className="bg-success-light">After</Badge>
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span>{formatDate(afterPhoto.capturedAt)}</span>
             </div>
@@ -311,13 +311,13 @@ function SliderView({
 
       {/* Slider Handle */}
       <div
-        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize shadow-lg"
+        className="absolute top-0 bottom-0 w-1 bg-card cursor-ew-resize shadow-lg"
         style={{ left: `${sliderPosition}%`, transform: 'translateX(-50%)' }}
         onMouseDown={onMouseDown}
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center">
-          <ChevronLeft className="h-4 w-4 text-gray-600 -mr-1" />
-          <ChevronRight className="h-4 w-4 text-gray-600 -ml-1" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-card rounded-full shadow-lg flex items-center justify-center">
+          <ChevronLeft className="h-4 w-4 text-secondary -mr-1" />
+          <ChevronRight className="h-4 w-4 text-secondary -ml-1" />
         </div>
       </div>
 

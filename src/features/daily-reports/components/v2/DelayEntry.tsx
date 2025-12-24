@@ -27,13 +27,13 @@ import type { DelayType, DelayCategory } from '@/types/daily-reports-v2';
 
 const DELAY_TYPES: { value: DelayType; label: string; icon: React.ReactNode; color: string }[] = [
   { value: 'owner', label: 'Owner', icon: <Building className="h-4 w-4" />, color: 'bg-purple-100 text-purple-700' },
-  { value: 'contractor', label: 'Contractor', icon: <Wrench className="h-4 w-4" />, color: 'bg-blue-100 text-blue-700' },
+  { value: 'contractor', label: 'Contractor', icon: <Wrench className="h-4 w-4" />, color: 'bg-info-light text-primary-hover' },
   { value: 'weather', label: 'Weather', icon: <CloudRain className="h-4 w-4" />, color: 'bg-cyan-100 text-cyan-700' },
   { value: 'material', label: 'Material', icon: <Truck className="h-4 w-4" />, color: 'bg-orange-100 text-orange-700' },
-  { value: 'labor', label: 'Labor', icon: <Users className="h-4 w-4" />, color: 'bg-green-100 text-green-700' },
-  { value: 'design', label: 'Design/RFI', icon: <FileQuestion className="h-4 w-4" />, color: 'bg-yellow-100 text-yellow-700' },
-  { value: 'inspection', label: 'Inspection', icon: <AlertTriangle className="h-4 w-4" />, color: 'bg-red-100 text-red-700' },
-  { value: 'other', label: 'Other', icon: <Clock className="h-4 w-4" />, color: 'bg-gray-100 text-gray-700' },
+  { value: 'labor', label: 'Labor', icon: <Users className="h-4 w-4" />, color: 'bg-success-light text-success-dark' },
+  { value: 'design', label: 'Design/RFI', icon: <FileQuestion className="h-4 w-4" />, color: 'bg-warning-light text-yellow-700' },
+  { value: 'inspection', label: 'Inspection', icon: <AlertTriangle className="h-4 w-4" />, color: 'bg-error-light text-error-dark' },
+  { value: 'other', label: 'Other', icon: <Clock className="h-4 w-4" />, color: 'bg-muted text-secondary' },
 ];
 
 const DELAY_CATEGORIES: { value: DelayCategory; label: string; description: string }[] = [
@@ -78,11 +78,11 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-red-100 rounded-lg">
-            <AlertTriangle className="h-5 w-5 text-red-600" />
+          <div className="p-2 bg-error-light rounded-lg">
+            <AlertTriangle className="h-5 w-5 text-error" />
           </div>
           <div className="text-left">
             <CardTitle className="text-base flex items-center gap-2">
@@ -101,17 +101,17 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
       {expanded && (
         <CardContent className="border-t p-0">
           {/* Quick Add Buttons */}
-          <div className="p-4 bg-gray-50 border-b">
-            <div className="text-sm font-medium text-gray-700 mb-2">Quick Add Delay:</div>
+          <div className="p-4 bg-surface border-b">
+            <div className="text-sm font-medium text-secondary mb-2">Quick Add Delay:</div>
             <div className="flex flex-wrap gap-2">
               {DELAY_TYPES.map((type) => (
                 <Button
@@ -159,7 +159,7 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
                     <button
                       type="button"
                       onClick={() => removeDelayEntry(delay.id)}
-                      className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors"
+                      className="p-2 text-disabled hover:text-error hover:bg-error-light rounded transition-colors"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -168,7 +168,7 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
                   {/* Time and Duration */}
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-600">Start:</label>
+                      <label className="text-sm text-secondary">Start:</label>
                       <Input
                         type="time"
                         value={delay.start_time || ''}
@@ -177,7 +177,7 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
                       />
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-600">End:</label>
+                      <label className="text-sm text-secondary">End:</label>
                       <Input
                         type="time"
                         value={delay.end_time || ''}
@@ -186,7 +186,7 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
                       />
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-600">Hours:</label>
+                      <label className="text-sm text-secondary">Hours:</label>
                       <Input
                         type="number"
                         min="0"
@@ -241,7 +241,7 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
                   {/* Impact Fields */}
                   <div className="flex gap-4">
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-600">Schedule Impact (days):</label>
+                      <label className="text-sm text-secondary">Schedule Impact (days):</label>
                       <Input
                         type="number"
                         min="0"
@@ -254,9 +254,9 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
                       />
                     </div>
                     <div className="flex items-center gap-2">
-                      <label className="text-sm text-gray-600">Est. Cost Impact:</label>
+                      <label className="text-sm text-secondary">Est. Cost Impact:</label>
                       <div className="relative">
-                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 text-muted">$</span>
                         <Input
                           type="number"
                           min="0"
@@ -276,8 +276,8 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
 
             {/* Empty state */}
             {delays.length === 0 && (
-              <div className="p-8 text-center text-gray-500">
-                <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+              <div className="p-8 text-center text-muted">
+                <AlertTriangle className="h-8 w-8 mx-auto mb-2 text-disabled" />
                 <p>No delays recorded today.</p>
                 <p className="text-sm">Use the buttons above to log any delays.</p>
               </div>
@@ -286,10 +286,10 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
 
           {/* Summary Footer */}
           {delays.length > 0 && (
-            <div className="p-4 bg-gray-100 border-t">
+            <div className="p-4 bg-muted border-t">
               <div className="flex justify-between text-sm">
                 <span className="font-medium">Total Delays:</span>
-                <span className="font-bold text-red-600">{totalDelayHours.toFixed(1)} hours</span>
+                <span className="font-bold text-error">{totalDelayHours.toFixed(1)} hours</span>
               </div>
             </div>
           )}

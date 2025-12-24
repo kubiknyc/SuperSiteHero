@@ -8,6 +8,11 @@ import json
 import sys
 import os
 import re
+import codecs
+
+# Fix Windows console encoding for emojis
+if sys.platform == 'win32':
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'replace')
 
 def parse_context_from_transcript(transcript_path):
     """Parse context usage from transcript file."""
@@ -80,26 +85,26 @@ def parse_context_from_transcript(transcript_path):
 def get_context_display(context_info):
     """Generate context display with visual indicators."""
     if not context_info:
-        return "🔵 ???"
+        return "??? CTX"
     
     percent = context_info.get('percent', 0)
     warning = context_info.get('warning')
     
     # Color and icon based on usage level
     if percent >= 95:
-        icon, color = "🚨", "\033[31;1m"  # Blinking red
+        icon, color = "!!", "\033[31;1m"  # Blinking red
         alert = "CRIT"
     elif percent >= 90:
-        icon, color = "🔴", "\033[31m"    # Red
+        icon, color = "!!", "\033[31m"    # Red
         alert = "HIGH"
     elif percent >= 75:
-        icon, color = "🟠", "\033[91m"   # Light red
+        icon, color = "! ", "\033[91m"   # Light red
         alert = ""
     elif percent >= 50:
-        icon, color = "🟡", "\033[33m"   # Yellow
+        icon, color = "~ ", "\033[33m"   # Yellow
         alert = ""
     else:
-        icon, color = "🟢", "\033[32m"   # Green
+        icon, color = "OK", "\033[32m"   # Green
         alert = ""
     
     # Create progress bar
@@ -140,9 +145,9 @@ def get_session_metrics(cost_data):
     """Get session metrics display."""
     if not cost_data:
         return ""
-    
+
     metrics = []
-    
+
     # Cost
     cost_usd = cost_data.get('total_cost_usd', 0)
     if cost_usd > 0:
@@ -152,9 +157,9 @@ def get_session_metrics(cost_data):
             cost_color = "\033[33m"  # Yellow for moderate
         else:
             cost_color = "\033[32m"  # Green for cheap
-        
-        cost_str = f"{cost_usd*100:.0f}¢" if cost_usd < 0.01 else f"${cost_usd:.3f}"
-        metrics.append(f"{cost_color}💰 {cost_str}\033[0m")
+
+        cost_str = f"{cost_usd*100:.0f}c" if cost_usd < 0.01 else f"${cost_usd:.3f}"
+        metrics.append(f"{cost_color}$ {cost_str}\033[0m")
     
     # Duration
     duration_ms = cost_data.get('total_duration_ms', 0)
@@ -169,8 +174,8 @@ def get_session_metrics(cost_data):
             duration_str = f"{duration_ms//1000}s"
         else:
             duration_str = f"{minutes:.0f}m"
-        
-        metrics.append(f"{duration_color}⏱ {duration_str}\033[0m")
+
+        metrics.append(f"{duration_color}T {duration_str}\033[0m")
     
     # Lines changed
     lines_added = cost_data.get('total_lines_added', 0)
@@ -186,7 +191,7 @@ def get_session_metrics(cost_data):
             lines_color = "\033[33m"  # Yellow for neutral
         
         sign = "+" if net_lines >= 0 else ""
-        metrics.append(f"{lines_color}📝 {sign}{net_lines}\033[0m")
+        metrics.append(f"{lines_color}L {sign}{net_lines}\033[0m")
     
     return f" \033[90m|\033[0m {' '.join(metrics)}" if metrics else ""
 
@@ -224,13 +229,16 @@ def main():
             model_display = f"\033[94m[{model_name}]\033[0m"
         
         # Combine all components
-        status_line = f"{model_display} \033[93m📁 {directory}\033[0m 🧠 {context_display}{session_metrics}"
-        
-        print(status_line)
-        
+        status_line = f"{model_display} \033[93mDIR: {directory}\033[0m | CTX: {context_display}{session_metrics}"
+
+        print(status_line, flush=True)
+
     except Exception as e:
-        # Fallback display on any error
-        print(f"\033[94m[Claude]\033[0m \033[93m📁 {os.path.basename(os.getcwd())}\033[0m 🧠 \033[31m[Error: {str(e)[:20]}]\033[0m")
+        # Fallback display on any error - simple text only
+        try:
+            print(f"[Claude] DIR: {os.path.basename(os.getcwd())} | CTX: Error", flush=True)
+        except:
+            print("[Claude] CTX: Error", flush=True)
 
 if __name__ == "__main__":
     main()

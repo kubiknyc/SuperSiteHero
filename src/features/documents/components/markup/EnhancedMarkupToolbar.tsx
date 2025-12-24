@@ -210,7 +210,7 @@ export function EnhancedMarkupToolbar({
 }: EnhancedMarkupToolbarProps) {
   return (
     <TooltipProvider delayDuration={300}>
-      <div className={cn('flex items-center gap-2 p-2 bg-white border-b flex-wrap', className)}>
+      <div className={cn('flex items-center gap-2 p-2 bg-card border-b flex-wrap', className)}>
         {/* Tool Groups */}
         {TOOL_GROUPS.map((group, groupIndex) => (
           <div key={group.name} className="flex items-center gap-1">
@@ -228,7 +228,7 @@ export function EnhancedMarkupToolbar({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{tool.label} <span className="text-gray-400">({tool.shortcut})</span></p>
+                  <p>{tool.label} <span className="text-disabled">({tool.shortcut})</span></p>
                 </TooltipContent>
               </Tooltip>
             ))}
@@ -252,7 +252,7 @@ export function EnhancedMarkupToolbar({
 
         {/* Line Width */}
         <div className="flex items-center gap-1">
-          <span className="text-xs text-gray-600 hidden sm:inline">Width:</span>
+          <span className="text-xs text-secondary hidden sm:inline">Width:</span>
           <div className="flex gap-0.5">
             {LINE_WIDTHS.map((width) => (
               <Tooltip key={width}>

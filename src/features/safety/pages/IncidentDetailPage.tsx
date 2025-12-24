@@ -74,7 +74,7 @@ export function IncidentDetailPage() {
     return (
       <AppLayout>
         <div className="flex items-center justify-center h-96">
-          <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full" />
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
         </div>
       </AppLayout>
     )
@@ -84,9 +84,9 @@ export function IncidentDetailPage() {
     return (
       <AppLayout>
         <div className="p-6 text-center">
-          <AlertTriangle className="h-12 w-12 text-gray-400 mx-auto" />
-          <h2 className="text-lg font-medium text-gray-900 mt-4">Incident not found</h2>
-          <p className="text-gray-500 mt-2">The incident you're looking for doesn't exist.</p>
+          <AlertTriangle className="h-12 w-12 text-disabled mx-auto" />
+          <h2 className="text-lg font-medium text-foreground mt-4" className="heading-section">Incident not found</h2>
+          <p className="text-muted mt-2">The incident you're looking for doesn't exist.</p>
           <Link to="/safety" className="mt-4 inline-block">
             <Button>Back to Incidents</Button>
           </Link>
@@ -141,9 +141,9 @@ export function IncidentDetailPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Cancel Edit
             </Button>
-            <h1 className="text-2xl font-bold text-gray-900">Edit Incident</h1>
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Edit Incident</h1>
           </div>
-          <div className="bg-white rounded-lg border p-6">
+          <div className="bg-card rounded-lg border p-6">
             <IncidentReportForm
               incident={incident}
               onSuccess={() => setIsEditing(false)}
@@ -170,13 +170,13 @@ export function IncidentDetailPage() {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-gray-900">{incident.incident_number}</h1>
+                <h1 className="text-2xl font-bold text-foreground" className="heading-page">{incident.incident_number}</h1>
                 <SeverityBadge severity={incident.severity} />
                 <Badge className={cn('text-xs', statusConfig.color)}>
                   {statusConfig.label}
                 </Badge>
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-4 text-sm text-muted">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
                   {format(new Date(incident.incident_date), 'MMM d, yyyy')}
@@ -203,7 +203,7 @@ export function IncidentDetailPage() {
               </Button>
               <Button
                 variant="outline"
-                className="text-red-600 hover:bg-red-50"
+                className="text-error hover:bg-error-light"
                 onClick={() => setShowDeleteConfirm(true)}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
@@ -216,9 +216,9 @@ export function IncidentDetailPage() {
         {/* Delete Confirmation Modal */}
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 max-w-md mx-4">
-              <h3 className="text-lg font-semibold text-gray-900">Delete Incident?</h3>
-              <p className="text-gray-500 mt-2">
+            <div className="bg-card rounded-lg p-6 max-w-md mx-4">
+              <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">Delete Incident?</h3>
+              <p className="text-muted mt-2">
                 This action cannot be undone. All data associated with this incident will be
                 permanently deleted.
               </p>
@@ -239,8 +239,8 @@ export function IncidentDetailPage() {
         )}
 
         {/* Status Actions */}
-        <div className="bg-white rounded-lg border p-4 mb-6">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Update Status</h3>
+        <div className="bg-card rounded-lg border p-4 mb-6">
+          <h3 className="text-sm font-medium text-secondary mb-3" className="heading-subsection">Update Status</h3>
           <div className="flex flex-wrap gap-2">
             {Object.entries(INCIDENT_STATUS_CONFIG).map(([status, config]) => (
               <Button
@@ -281,34 +281,34 @@ export function IncidentDetailPage() {
           <TabsContent value="details">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Incident Information */}
-              <div className="bg-white rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">Incident Information</h3>
+              <div className="bg-card rounded-lg border p-6">
+                <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Incident Information</h3>
                 <dl className="space-y-4">
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">Type</dt>
+                    <dt className="text-sm font-medium text-muted">Type</dt>
                     <dd className="mt-1">
                       <Badge variant="outline">{typeConfig.label}</Badge>
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">Description</dt>
-                    <dd className="mt-1 text-gray-900">{incident.description}</dd>
+                    <dt className="text-sm font-medium text-muted">Description</dt>
+                    <dd className="mt-1 text-foreground">{incident.description}</dd>
                   </div>
                   {incident.immediate_actions && (
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Immediate Actions Taken</dt>
-                      <dd className="mt-1 text-gray-900">{incident.immediate_actions}</dd>
+                      <dt className="text-sm font-medium text-muted">Immediate Actions Taken</dt>
+                      <dd className="mt-1 text-foreground">{incident.immediate_actions}</dd>
                     </div>
                   )}
                   {incident.root_cause && (
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Root Cause</dt>
-                      <dd className="mt-1 text-gray-900">{incident.root_cause}</dd>
+                      <dt className="text-sm font-medium text-muted">Root Cause</dt>
+                      <dd className="mt-1 text-foreground">{incident.root_cause}</dd>
                     </div>
                   )}
                   {incident.root_cause_category && (
                     <div>
-                      <dt className="text-sm font-medium text-gray-500">Root Cause Category</dt>
+                      <dt className="text-sm font-medium text-muted">Root Cause Category</dt>
                       <dd className="mt-1">
                         <Badge variant="outline">
                           {ROOT_CAUSE_CATEGORY_CONFIG[incident.root_cause_category]?.label ||
@@ -321,11 +321,11 @@ export function IncidentDetailPage() {
               </div>
 
               {/* OSHA Information */}
-              <div className="bg-white rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">OSHA Information</h3>
+              <div className="bg-card rounded-lg border p-6">
+                <h3 className="text-lg font-semibold mb-4" className="heading-subsection">OSHA Information</h3>
                 <dl className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <dt className="text-sm font-medium text-gray-500">OSHA Recordable</dt>
+                    <dt className="text-sm font-medium text-muted">OSHA Recordable</dt>
                     <dd>
                       <Badge variant={incident.osha_recordable ? 'destructive' : 'secondary'}>
                         {incident.osha_recordable ? 'Yes' : 'No'}
@@ -333,7 +333,7 @@ export function IncidentDetailPage() {
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className="text-sm font-medium text-gray-500">Lost Time</dt>
+                    <dt className="text-sm font-medium text-muted">Lost Time</dt>
                     <dd>
                       <Badge variant={incident.days_away_from_work > 0 ? 'destructive' : 'secondary'}>
                         {incident.days_away_from_work} days
@@ -341,7 +341,7 @@ export function IncidentDetailPage() {
                     </dd>
                   </div>
                   <div className="flex items-center justify-between">
-                    <dt className="text-sm font-medium text-gray-500">Restricted Duty</dt>
+                    <dt className="text-sm font-medium text-muted">Restricted Duty</dt>
                     <dd>
                       <Badge variant={incident.days_restricted_duty > 0 ? 'default' : 'secondary'}>
                         {incident.days_restricted_duty} days
@@ -353,11 +353,11 @@ export function IncidentDetailPage() {
 
               {/* Project Information */}
               {incident.project && (
-                <div className="bg-white rounded-lg border p-6">
-                  <h3 className="text-lg font-semibold mb-4">Project</h3>
+                <div className="bg-card rounded-lg border p-6">
+                  <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Project</h3>
                   <div className="flex items-center gap-3">
-                    <div className="bg-blue-100 rounded-lg p-2">
-                      <Building className="h-5 w-5 text-blue-600" />
+                    <div className="bg-info-light rounded-lg p-2">
+                      <Building className="h-5 w-5 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">{incident.project.name}</p>
@@ -367,17 +367,17 @@ export function IncidentDetailPage() {
               )}
 
               {/* Reporter Information */}
-              <div className="bg-white rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4">Reported By</h3>
+              <div className="bg-card rounded-lg border p-6">
+                <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Reported By</h3>
                 <div className="flex items-center gap-3">
-                  <div className="bg-gray-100 rounded-full p-2">
-                    <User className="h-5 w-5 text-gray-600" />
+                  <div className="bg-muted rounded-full p-2">
+                    <User className="h-5 w-5 text-secondary" />
                   </div>
                   <div>
                     <p className="font-medium">
                       {incident.reporter?.full_name || 'Unknown'}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted">
                       {format(new Date(incident.created_at), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
@@ -388,10 +388,10 @@ export function IncidentDetailPage() {
 
           {/* People Tab */}
           <TabsContent value="people">
-            <div className="bg-white rounded-lg border p-6">
-              <h3 className="text-lg font-semibold mb-4">People Involved</h3>
+            <div className="bg-card rounded-lg border p-6">
+              <h3 className="text-lg font-semibold mb-4" className="heading-subsection">People Involved</h3>
               {people.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">
+                <p className="text-muted text-center py-8">
                   No people have been added to this incident.
                 </p>
               ) : (
@@ -399,23 +399,23 @@ export function IncidentDetailPage() {
                   {people.map((person) => (
                     <div
                       key={person.id}
-                      className="flex items-start justify-between p-4 bg-gray-50 rounded-lg"
+                      className="flex items-start justify-between p-4 bg-surface rounded-lg"
                     >
                       <div>
                         <p className="font-medium">{person.name}</p>
-                        <p className="text-sm text-gray-500 capitalize">
+                        <p className="text-sm text-muted capitalize">
                           {person.person_type.replace('_', ' ')}
                         </p>
                         {person.company_name && (
-                          <p className="text-sm text-gray-500">{person.company_name}</p>
+                          <p className="text-sm text-muted">{person.company_name}</p>
                         )}
                         {person.contact_phone && (
-                          <p className="text-sm text-gray-500">{person.contact_phone}</p>
+                          <p className="text-sm text-muted">{person.contact_phone}</p>
                         )}
                       </div>
                       {person.statement && (
-                        <div className="text-sm text-gray-600 max-w-md">
-                          <p className="font-medium text-gray-700">Statement:</p>
+                        <div className="text-sm text-secondary max-w-md">
+                          <p className="font-medium text-secondary">Statement:</p>
                           <p className="italic">"{person.statement}"</p>
                         </div>
                       )}
@@ -428,10 +428,10 @@ export function IncidentDetailPage() {
 
           {/* Photos Tab */}
           <TabsContent value="photos">
-            <div className="bg-white rounded-lg border p-6">
-              <h3 className="text-lg font-semibold mb-4">Photos & Evidence</h3>
+            <div className="bg-card rounded-lg border p-6">
+              <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Photos & Evidence</h3>
               {photos.length === 0 ? (
-                <p className="text-gray-500 text-center py-8">
+                <p className="text-muted text-center py-8">
                   No photos have been added to this incident.
                 </p>
               ) : (
@@ -457,9 +457,9 @@ export function IncidentDetailPage() {
 
           {/* Corrective Actions Tab */}
           <TabsContent value="actions">
-            <div className="bg-white rounded-lg border p-6">
+            <div className="bg-card rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Corrective Actions</h3>
+                <h3 className="text-lg font-semibold" className="heading-subsection">Corrective Actions</h3>
                 <Button size="sm" onClick={() => setShowAddAction(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Action
@@ -468,9 +468,9 @@ export function IncidentDetailPage() {
 
               {/* Add Action Form */}
               {showAddAction && (
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <div className="bg-surface rounded-lg p-4 mb-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium">New Corrective Action</h4>
+                    <h4 className="font-medium" className="heading-card">New Corrective Action</h4>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -481,7 +481,7 @@ export function IncidentDetailPage() {
                   </div>
                   <div className="space-y-3">
                     <div>
-                      <label className="text-sm font-medium text-gray-700">Description *</label>
+                      <label className="text-sm font-medium text-secondary">Description *</label>
                       <textarea
                         value={newAction.description}
                         onChange={(e) =>
@@ -494,7 +494,7 @@ export function IncidentDetailPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-3">
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Assigned To</label>
+                        <label className="text-sm font-medium text-secondary">Assigned To</label>
                         <input
                           type="text"
                           value={newAction.assigned_to}
@@ -506,7 +506,7 @@ export function IncidentDetailPage() {
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Due Date</label>
+                        <label className="text-sm font-medium text-secondary">Due Date</label>
                         <input
                           type="date"
                           value={newAction.due_date}
@@ -531,7 +531,7 @@ export function IncidentDetailPage() {
               )}
 
               {correctiveActions.length === 0 && !showAddAction ? (
-                <p className="text-gray-500 text-center py-8">
+                <p className="text-muted text-center py-8">
                   No corrective actions have been added yet.
                 </p>
               ) : (
@@ -542,16 +542,16 @@ export function IncidentDetailPage() {
                       className={cn(
                         'p-4 rounded-lg border',
                         action.status === 'completed'
-                          ? 'bg-green-50 border-green-200'
+                          ? 'bg-success-light border-green-200'
                           : action.status === 'in_progress'
                             ? 'bg-blue-50 border-blue-200'
-                            : 'bg-gray-50 border-gray-200'
+                            : 'bg-surface border-border'
                       )}
                     >
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <p className="font-medium">{action.description}</p>
-                          <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                          <div className="flex items-center gap-4 mt-2 text-sm text-muted">
                             {action.assigned_to && (
                               <span>Assigned: {action.assigned_to}</span>
                             )}
@@ -559,7 +559,7 @@ export function IncidentDetailPage() {
                               <span>Due: {format(new Date(action.due_date), 'MMM d, yyyy')}</span>
                             )}
                             {action.completed_date && (
-                              <span className="text-green-600">
+                              <span className="text-success">
                                 Completed: {format(new Date(action.completed_date), 'MMM d, yyyy')}
                               </span>
                             )}

@@ -212,11 +212,11 @@ export function CostTrackingPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2">
+            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
               <DollarSign className="h-6 w-6" />
               Cost Tracking
             </h1>
-            <p className="text-gray-500 mt-1">
+            <p className="text-muted mt-1">
               Manage project budgets, track costs, and analyze spending by division
             </p>
           </div>
@@ -269,8 +269,8 @@ export function CostTrackingPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <DollarSign className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-700">Select a Project</h3>
-              <p className="text-gray-500 mt-1">
+              <h3 className="text-lg font-medium text-secondary" className="heading-subsection">Select a Project</h3>
+              <p className="text-muted mt-1">
                 Choose a project from the dropdown above to view and manage costs
               </p>
             </CardContent>
@@ -303,7 +303,7 @@ export function CostTrackingPage() {
                   <CardTitle>Budget Lines</CardTitle>
                   <div className="flex items-center gap-2">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                       <Input
                         placeholder="Search cost codes..."
                         className="pl-9 w-64"
@@ -335,7 +335,7 @@ export function CostTrackingPage() {
                   <CardTitle>Cost Transactions</CardTitle>
                   <div className="flex items-center gap-2">
                     <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                       <Input
                         placeholder="Search transactions..."
                         className="pl-9 w-64"

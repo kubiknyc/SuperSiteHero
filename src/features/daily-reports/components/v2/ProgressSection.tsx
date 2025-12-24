@@ -67,10 +67,10 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
   }, [progress]);
 
   const getVarianceColor = (variance: number | undefined) => {
-    if (!variance) {return { text: 'text-gray-500', bg: 'bg-gray-100' };}
-    if (variance > 5) {return { text: 'text-green-600', bg: 'bg-green-100' };}
-    if (variance < -5) {return { text: 'text-red-600', bg: 'bg-red-100' };}
-    return { text: 'text-yellow-600', bg: 'bg-yellow-100' };
+    if (!variance) {return { text: 'text-muted', bg: 'bg-muted' };}
+    if (variance > 5) {return { text: 'text-success', bg: 'bg-success-light' };}
+    if (variance < -5) {return { text: 'text-error', bg: 'bg-error-light' };}
+    return { text: 'text-warning', bg: 'bg-warning-light' };
   };
 
   const handleAdd = useCallback(() => {
@@ -127,11 +127,11 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
         <button
           type="button"
           onClick={onToggle}
-          className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+          className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-lg ${stats.behindCount > 0 ? 'bg-red-100' : 'bg-indigo-100'}`}>
-              <Target className={`h-5 w-5 ${stats.behindCount > 0 ? 'text-red-600' : 'text-indigo-600'}`} />
+            <div className={`p-2 rounded-lg ${stats.behindCount > 0 ? 'bg-error-light' : 'bg-indigo-100'}`}>
+              <Target className={`h-5 w-5 ${stats.behindCount > 0 ? 'text-error' : 'text-indigo-600'}`} />
             </div>
             <div className="text-left">
               <CardTitle className="text-base flex items-center gap-2">
@@ -139,7 +139,7 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
                 {progress.length > 0 && (
                   <div className="flex gap-1">
                     {stats.aheadCount > 0 && (
-                      <Badge variant="secondary" className="bg-green-100 text-green-700">
+                      <Badge variant="secondary" className="bg-success-light text-success-dark">
                         {stats.aheadCount} ahead
                       </Badge>
                     )}
@@ -157,16 +157,16 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
             </div>
           </div>
           {expanded ? (
-            <ChevronUp className="h-5 w-5 text-gray-400" />
+            <ChevronUp className="h-5 w-5 text-disabled" />
           ) : (
-            <ChevronDown className="h-5 w-5 text-gray-400" />
+            <ChevronDown className="h-5 w-5 text-disabled" />
           )}
         </button>
 
         {expanded && (
           <CardContent className="border-t p-0">
             {/* Add Button */}
-            <div className="p-4 bg-gray-50 border-b">
+            <div className="p-4 bg-surface border-b">
               <Button type="button" variant="outline" size="sm" onClick={handleAdd}>
                 <Plus className="h-4 w-4 mr-1" />
                 Add Activity
@@ -177,7 +177,7 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
             <div className="overflow-x-auto">
               {progress.length > 0 && (
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-100">
+                  <thead className="bg-muted">
                     <tr>
                       <th className="text-left p-3 font-medium">Activity</th>
                       <th className="text-center p-3 font-medium">Planned %</th>
@@ -191,11 +191,11 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
                     {progress.map((entry) => {
                       const varianceColors = getVarianceColor(entry.variance_percentage);
                       return (
-                        <tr key={entry.id} className="hover:bg-gray-50">
+                        <tr key={entry.id} className="hover:bg-surface">
                           <td className="p-3">
                             <div className="font-medium">{entry.activity_name}</div>
                             {entry.cost_code && (
-                              <div className="text-xs text-gray-500">{entry.cost_code}</div>
+                              <div className="text-xs text-muted">{entry.cost_code}</div>
                             )}
                           </td>
                           <td className="text-center p-3">
@@ -218,7 +218,7 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
                           </td>
                           <td className="text-center p-3">
                             <div className="flex items-center justify-center gap-2">
-                              <div className="w-16 h-2 bg-gray-200 rounded-full overflow-hidden">
+                              <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
                                 <div
                                   className="h-full bg-indigo-500 rounded-full"
                                   style={{ width: `${Math.min(entry.cumulative_percentage || 0, 100)}%` }}
@@ -232,14 +232,14 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
                               <button
                                 type="button"
                                 onClick={() => handleEdit(entry)}
-                                className="p-1 text-gray-400 hover:text-blue-500"
+                                className="p-1 text-disabled hover:text-primary"
                               >
                                 <Pencil className="h-4 w-4" />
                               </button>
                               <button
                                 type="button"
                                 onClick={() => handleDelete(entry.id)}
-                                className="p-1 text-gray-400 hover:text-red-500"
+                                className="p-1 text-disabled hover:text-error"
                               >
                                 <Trash2 className="h-4 w-4" />
                               </button>
@@ -254,8 +254,8 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
 
               {/* Empty State */}
               {progress.length === 0 && (
-                <div className="p-8 text-center text-gray-500">
-                  <Target className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                <div className="p-8 text-center text-muted">
+                  <Target className="h-8 w-8 mx-auto mb-2 text-disabled" />
                   <p>No progress entries today.</p>
                   <p className="text-sm">Track activity completion against schedule.</p>
                 </div>
@@ -264,10 +264,10 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
 
             {/* Summary */}
             {progress.length > 0 && (
-              <div className="p-4 bg-gray-100 border-t">
+              <div className="p-4 bg-muted border-t">
                 <div className="text-sm">
                   Average Variance:{' '}
-                  <span className={stats.avgVariance >= 0 ? 'text-green-600' : 'text-red-600'}>
+                  <span className={stats.avgVariance >= 0 ? 'text-success' : 'text-error'}>
                     {stats.avgVariance >= 0 ? '+' : ''}{stats.avgVariance.toFixed(1)}%
                   </span>
                 </div>
@@ -403,7 +403,7 @@ export function ProgressSection({ expanded, onToggle }: ProgressSectionProps) {
               <>
                 <div className="space-y-2">
                   <Label className="flex items-center gap-1">
-                    <AlertCircle className="h-4 w-4 text-red-500" />
+                    <AlertCircle className="h-4 w-4 text-error" />
                     Variance Reason
                   </Label>
                   <textarea

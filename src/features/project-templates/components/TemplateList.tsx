@@ -92,7 +92,7 @@ export function TemplateList({
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-disabled" />
           <Input
             placeholder="Search templates..."
             value={searchQuery}
@@ -144,15 +144,15 @@ export function TemplateList({
       </div>
 
       {/* Results count */}
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-muted">
         {filteredTemplates.length} template{filteredTemplates.length !== 1 ? 's' : ''}
         {searchQuery && ` matching "${searchQuery}"`}
       </div>
 
       {/* Template List */}
       {filteredTemplates.length === 0 ? (
-        <div className="text-center py-12 border rounded-lg bg-gray-50">
-          <p className="text-gray-500">{emptyMessage}</p>
+        <div className="text-center py-12 border rounded-lg bg-surface">
+          <p className="text-muted">{emptyMessage}</p>
           {searchQuery && (
             <Button
               variant="link"

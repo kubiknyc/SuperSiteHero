@@ -108,7 +108,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
               <Label htmlFor="scoring-enabled" className="text-base">
                 Enable Scoring
               </Label>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted">
                 Calculate scores automatically when checklist is completed
               </p>
             </div>
@@ -140,7 +140,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                     <SelectItem value="letter_grade">Letter Grade (A-F)</SelectItem>
                   </SelectContent>
                 </Select>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted">
                   {scoringConfig.scoring_type === 'binary' &&
                     'All items must pass for 100%, any failure results in 0%'}
                   {scoringConfig.scoring_type === 'percentage' &&
@@ -167,7 +167,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                   onValueChange={([value]) => handleUpdate({ pass_threshold: value })}
                   className="w-full"
                 />
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted">
                   Minimum score required to pass the checklist
                 </p>
               </div>
@@ -178,7 +178,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                   <Label htmlFor="include-na" className="text-base">
                     Include N/A in Total
                   </Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     Count N/A items in the total when calculating score
                   </p>
                 </div>
@@ -195,7 +195,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                   <Label htmlFor="fail-critical" className="text-base">
                     Auto-Fail on Critical Items
                   </Label>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     Automatically fail if any critical item fails
                   </p>
                 </div>
@@ -226,7 +226,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                   <div className="flex-1">
                     <p className="font-medium">{item.label}</p>
                     {item.section && (
-                      <p className="text-sm text-gray-500">{item.section}</p>
+                      <p className="text-sm text-muted">{item.section}</p>
                     )}
                   </div>
                   <Input
@@ -239,7 +239,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                     }
                     className="w-24"
                   />
-                  <span className="text-sm text-gray-500">points</span>
+                  <span className="text-sm text-muted">points</span>
                 </div>
               ))}
               <div className="pt-3 border-t">
@@ -289,7 +289,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                       }
                       className="w-24"
                     />
-                    <span className="text-sm text-gray-500">≥</span>
+                    <span className="text-sm text-muted">≥</span>
                     <Input
                       type="number"
                       min={0}
@@ -302,7 +302,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                       }
                       className="w-24"
                     />
-                    <span className="text-sm text-gray-500">%</span>
+                    <span className="text-sm text-muted">%</span>
                     <Input
                       type="color"
                       value={threshold.color || '#000000'}
@@ -333,7 +333,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <AlertCircle className="w-5 h-5 text-red-600" />
+              <AlertCircle className="w-5 h-5 text-error" />
               Critical Items
             </CardTitle>
             <CardDescription>
@@ -347,7 +347,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                 return (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                    className="flex items-center justify-between p-3 border rounded-lg hover:bg-surface cursor-pointer"
                     onClick={() => handleToggleCriticalItem(item.id)}
                   >
                     <div className="flex-1">
@@ -360,7 +360,7 @@ export function ChecklistScoring({ templateItems, config, onChange }: ChecklistS
                         )}
                       </div>
                       {item.section && (
-                        <p className="text-sm text-gray-500">{item.section}</p>
+                        <p className="text-sm text-muted">{item.section}</p>
                       )}
                     </div>
                     <Switch

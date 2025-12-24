@@ -247,8 +247,8 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
         </DialogHeader>
 
         {success ? (
-          <Alert className="border-green-500 bg-green-50">
-            <Check className="h-5 w-5 text-green-600" />
+          <Alert className="border-green-500 bg-success-light">
+            <Check className="h-5 w-5 text-success" />
             <AlertDescription className="text-green-800">
               Operation completed successfully!
             </AlertDescription>
@@ -263,26 +263,26 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
             )}
 
             {/* Selected Incidents Summary */}
-            <Card className="bg-gray-50">
+            <Card className="bg-surface">
               <CardContent className="py-4">
-                <p className="text-sm font-medium text-gray-700 mb-2">
+                <p className="text-sm font-medium text-secondary mb-2">
                   Selected Incidents: {selectedIncidents.length}
                 </p>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <span className="text-gray-600">OSHA Recordable:</span>
+                    <span className="text-secondary">OSHA Recordable:</span>
                     <span className="ml-2 font-semibold">
                       {selectedIncidents.filter((i) => i.osha_recordable).length}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-600">With Case Numbers:</span>
+                    <span className="text-secondary">With Case Numbers:</span>
                     <span className="ml-2 font-semibold">
                       {selectedIncidents.filter((i) => i.case_number).length}
                     </span>
                   </div>
                   <div>
-                    <span className="text-gray-600">Privacy Cases:</span>
+                    <span className="text-secondary">Privacy Cases:</span>
                     <span className="ml-2 font-semibold">
                       {selectedIncidents.filter((i) => i.is_privacy_case).length}
                     </span>
@@ -303,42 +303,42 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
               >
                 <div className="space-y-3">
                   {/* Assign Case Numbers */}
-                  <div className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <div className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-surface cursor-pointer">
                     <RadioGroupItem value="assign_case_numbers" id="assign_case_numbers" className="mt-1" />
                     <Label htmlFor="assign_case_numbers" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2 font-medium">
                         <Hash className="h-4 w-4" />
                         Assign Case Numbers
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-secondary mt-1">
                         Auto-assign sequential case numbers to OSHA recordable incidents
                       </p>
                     </Label>
                   </div>
 
                   {/* Update Recordability */}
-                  <div className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <div className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-surface cursor-pointer">
                     <RadioGroupItem value="update_recordability" id="update_recordability" className="mt-1" />
                     <Label htmlFor="update_recordability" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2 font-medium">
                         <FileText className="h-4 w-4" />
                         Update Recordability Status
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-secondary mt-1">
                         Mark incidents as OSHA recordable or not recordable
                       </p>
                     </Label>
                   </div>
 
                   {/* Toggle Privacy */}
-                  <div className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                  <div className="flex items-start space-x-3 p-3 border rounded-lg hover:bg-surface cursor-pointer">
                     <RadioGroupItem value="toggle_privacy" id="toggle_privacy" className="mt-1" />
                     <Label htmlFor="toggle_privacy" className="flex-1 cursor-pointer">
                       <div className="flex items-center gap-2 font-medium">
                         <EyeOff className="h-4 w-4" />
                         Set Privacy Case Status
                       </div>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm text-secondary mt-1">
                         Mark incidents as privacy cases (withholds employee name on 300 log)
                       </p>
                     </Label>

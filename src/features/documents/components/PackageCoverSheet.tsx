@@ -62,15 +62,15 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
       <div
         ref={ref}
         className={cn(
-          'bg-white text-gray-900 p-8 print:p-0',
+          'bg-card text-foreground p-8 print:p-0',
           className
         )}
         style={{ fontFamily: 'Arial, sans-serif' }}
       >
         {/* Cover Page */}
-        <div className="min-h-[11in] flex flex-col border border-gray-300 print:border-2 mb-8 print:mb-0 print:page-break-after-always">
+        <div className="min-h-[11in] flex flex-col border border-input print:border-2 mb-8 print:mb-0 print:page-break-after-always">
           {/* Header with Logo */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-300">
+          <div className="flex items-center justify-between p-6 border-b border-input">
             {companyLogoUrl || pkg.coverSheetLogoUrl ? (
               <img
                 src={pkg.coverSheetLogoUrl || companyLogoUrl}
@@ -78,12 +78,12 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
                 className="h-16 object-contain"
               />
             ) : (
-              <div className="text-xl font-bold text-gray-700">
+              <div className="text-xl font-bold text-secondary">
                 {companyName || 'Company Name'}
               </div>
             )}
             <div className="text-right">
-              <div className="text-sm text-gray-500">Package Number</div>
+              <div className="text-sm text-muted">Package Number</div>
               <div className="text-lg font-mono font-bold">{pkg.packageNumber}</div>
             </div>
           </div>
@@ -108,50 +108,50 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl font-bold mb-4">
+            <h1 className="text-4xl font-bold mb-4" className="heading-page">
               {pkg.coverSheetTitle || projectName || 'Project Name'}
             </h1>
             {pkg.coverSheetSubtitle && (
-              <h2 className="text-2xl text-gray-600 mb-8">{pkg.coverSheetSubtitle}</h2>
+              <h2 className="text-2xl text-secondary mb-8" className="heading-section">{pkg.coverSheetSubtitle}</h2>
             )}
 
             {/* Package Name */}
-            <div className="text-xl font-semibold text-gray-800 mb-12">
+            <div className="text-xl font-semibold text-foreground mb-12">
               {pkg.name}
             </div>
 
             {/* Package Info Grid */}
             <div className="grid grid-cols-2 gap-x-16 gap-y-4 text-left max-w-md">
               <div>
-                <div className="text-sm text-gray-500">Version</div>
+                <div className="text-sm text-muted">Version</div>
                 <div className="font-semibold">v{pkg.version}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Total Drawings</div>
+                <div className="text-sm text-muted">Total Drawings</div>
                 <div className="font-semibold">{totalDrawings}</div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Issue Date</div>
+                <div className="text-sm text-muted">Issue Date</div>
                 <div className="font-semibold">
                   {format(new Date(pkg.createdAt), 'MMMM d, yyyy')}
                 </div>
               </div>
               <div>
-                <div className="text-sm text-gray-500">Status</div>
+                <div className="text-sm text-muted">Status</div>
                 <div className="font-semibold capitalize">{pkg.status.replace('_', ' ')}</div>
               </div>
             </div>
 
             {/* Notes */}
             {pkg.coverSheetNotes && (
-              <div className="mt-12 max-w-lg text-sm text-gray-600 border-t border-gray-200 pt-6">
+              <div className="mt-12 max-w-lg text-sm text-secondary border-t border-border pt-6">
                 {pkg.coverSheetNotes}
               </div>
             )}
           </div>
 
           {/* Footer */}
-          <div className="p-6 border-t border-gray-300 text-sm text-gray-500">
+          <div className="p-6 border-t border-input text-sm text-muted">
             <div className="flex justify-between">
               <div>
                 {pkg.description && (
@@ -170,10 +170,10 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
 
         {/* Table of Contents */}
         {showTableOfContents && pkg.includeToc && (
-          <div className="min-h-[11in] border border-gray-300 print:border-2 mb-8 print:mb-0 print:page-break-after-always">
-            <div className="p-6 border-b border-gray-300 bg-gray-50">
-              <h2 className="text-2xl font-bold">Table of Contents</h2>
-              <div className="text-sm text-gray-500 mt-1">
+          <div className="min-h-[11in] border border-input print:border-2 mb-8 print:mb-0 print:page-break-after-always">
+            <div className="p-6 border-b border-input bg-surface">
+              <h2 className="text-2xl font-bold" className="heading-section">Table of Contents</h2>
+              <div className="text-sm text-muted mt-1">
                 {totalDrawings} Drawing{totalDrawings !== 1 ? 's' : ''} in Package
               </div>
             </div>
@@ -181,12 +181,12 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
             <div className="p-6">
               {Object.entries(groupedItems).map(([section, items]) => (
                 <div key={section} className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-700 mb-3 pb-2 border-b border-gray-200">
+                  <h3 className="text-lg font-semibold text-secondary mb-3 pb-2 border-b border-border" className="heading-subsection">
                     {section}
                   </h3>
                   <table className="w-full">
                     <thead>
-                      <tr className="text-sm text-gray-500">
+                      <tr className="text-sm text-muted">
                         <th className="text-left py-2 w-32">Number</th>
                         <th className="text-left py-2">Title</th>
                         <th className="text-center py-2 w-24">Revision</th>
@@ -198,8 +198,8 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
                         <tr
                           key={item.id}
                           className={cn(
-                            'border-b border-gray-100',
-                            index % 2 === 0 ? 'bg-gray-50' : ''
+                            'border-b border-border',
+                            index % 2 === 0 ? 'bg-surface' : ''
                           )}
                         >
                           <td className="py-2 font-mono text-sm">
@@ -211,7 +211,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
                           <td className="py-2 text-center font-mono">
                             {item.revision?.revision || item.drawing?.currentRevision || '-'}
                           </td>
-                          <td className="py-2 text-right text-sm text-gray-500">
+                          <td className="py-2 text-right text-sm text-muted">
                             {item.revision?.revisionDate
                               ? format(new Date(item.revision.revisionDate), 'MM/dd/yyyy')
                               : item.drawing?.currentRevisionDate
@@ -226,7 +226,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
               ))}
             </div>
 
-            <div className="p-6 border-t border-gray-300 text-xs text-gray-400">
+            <div className="p-6 border-t border-input text-xs text-disabled">
               <div className="flex justify-between">
                 <span>{pkg.packageNumber}</span>
                 <span>Table of Contents - Page 1 of 1</span>
@@ -238,10 +238,10 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
 
         {/* Revision History */}
         {showRevisionHistory && pkg.includeRevisionHistory && (
-          <div className="min-h-[11in] border border-gray-300 print:border-2 print:page-break-after-always">
-            <div className="p-6 border-b border-gray-300 bg-gray-50">
-              <h2 className="text-2xl font-bold">Revision History</h2>
-              <div className="text-sm text-gray-500 mt-1">
+          <div className="min-h-[11in] border border-input print:border-2 print:page-break-after-always">
+            <div className="p-6 border-b border-input bg-surface">
+              <h2 className="text-2xl font-bold" className="heading-section">Revision History</h2>
+              <div className="text-sm text-muted mt-1">
                 Document revision tracking
               </div>
             </div>
@@ -249,24 +249,24 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
             <div className="p-6">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-gray-100">
-                    <th className="text-left p-3 border border-gray-200 w-24">Version</th>
-                    <th className="text-left p-3 border border-gray-200 w-32">Date</th>
-                    <th className="text-left p-3 border border-gray-200">Description</th>
-                    <th className="text-left p-3 border border-gray-200 w-40">By</th>
+                  <tr className="bg-muted">
+                    <th className="text-left p-3 border border-border w-24">Version</th>
+                    <th className="text-left p-3 border border-border w-32">Date</th>
+                    <th className="text-left p-3 border border-border">Description</th>
+                    <th className="text-left p-3 border border-border w-40">By</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="p-3 border border-gray-200 font-mono">v{pkg.version}</td>
-                    <td className="p-3 border border-gray-200">
+                    <td className="p-3 border border-border font-mono">v{pkg.version}</td>
+                    <td className="p-3 border border-border">
                       {format(new Date(pkg.updatedAt), 'MM/dd/yyyy')}
                     </td>
-                    <td className="p-3 border border-gray-200">
+                    <td className="p-3 border border-border">
                       {pkg.version === 1 ? 'Initial release' : 'Package revision'}
                       {pkg.approvalNotes && ` - ${pkg.approvalNotes}`}
                     </td>
-                    <td className="p-3 border border-gray-200">
+                    <td className="p-3 border border-border">
                       {pkg.approvedByName || pkg.createdByName || 'System'}
                     </td>
                   </tr>
@@ -276,16 +276,16 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
 
               {/* Drawing Revisions */}
               <div className="mt-8">
-                <h3 className="text-lg font-semibold text-gray-700 mb-4">
+                <h3 className="text-lg font-semibold text-secondary mb-4" className="heading-subsection">
                   Drawing Revisions in Package
                 </h3>
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="bg-gray-100">
-                      <th className="text-left p-3 border border-gray-200 w-32">Drawing</th>
-                      <th className="text-left p-3 border border-gray-200 w-24">Revision</th>
-                      <th className="text-left p-3 border border-gray-200 w-32">Date</th>
-                      <th className="text-left p-3 border border-gray-200">Description</th>
+                    <tr className="bg-muted">
+                      <th className="text-left p-3 border border-border w-32">Drawing</th>
+                      <th className="text-left p-3 border border-border w-24">Revision</th>
+                      <th className="text-left p-3 border border-border w-32">Date</th>
+                      <th className="text-left p-3 border border-border">Description</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -293,18 +293,18 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
                       ?.filter((item) => item.isIncluded)
                       .map((item) => (
                         <tr key={item.id}>
-                          <td className="p-3 border border-gray-200 font-mono text-sm">
+                          <td className="p-3 border border-border font-mono text-sm">
                             {item.displayNumber || item.drawing?.drawingNumber}
                           </td>
-                          <td className="p-3 border border-gray-200 font-mono">
+                          <td className="p-3 border border-border font-mono">
                             {item.revision?.revision || item.drawing?.currentRevision || '-'}
                           </td>
-                          <td className="p-3 border border-gray-200 text-sm">
+                          <td className="p-3 border border-border text-sm">
                             {item.revision?.revisionDate
                               ? format(new Date(item.revision.revisionDate), 'MM/dd/yyyy')
                               : '-'}
                           </td>
-                          <td className="p-3 border border-gray-200 text-sm text-gray-600">
+                          <td className="p-3 border border-border text-sm text-secondary">
                             {item.revision?.revisionDescription || '-'}
                           </td>
                         </tr>
@@ -314,7 +314,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-300 text-xs text-gray-400">
+            <div className="p-6 border-t border-input text-xs text-disabled">
               <div className="flex justify-between">
                 <span>{pkg.packageNumber}</span>
                 <span>Revision History - Page 1 of 1</span>
@@ -497,8 +497,8 @@ export function generateCoverSheetHTML(props: PackageCoverSheetProps): string {
     </div>
     <div class="main-content">
       <div class="badge">${packageType?.label || pkg.packageType}</div>
-      <h1>${pkg.coverSheetTitle || projectName || 'Project Name'}</h1>
-      ${pkg.coverSheetSubtitle ? `<h2>${pkg.coverSheetSubtitle}</h2>` : ''}
+      <h1 className="heading-page">${pkg.coverSheetTitle || projectName || 'Project Name'}</h1>
+      ${pkg.coverSheetSubtitle ? `<h2 className="heading-section">${pkg.coverSheetSubtitle}</h2>` : ''}
       <div class="package-name">${pkg.name}</div>
       <div class="info-grid">
         <div>

@@ -66,7 +66,7 @@ export function BidDetailPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">
+          <h1 className="text-2xl font-bold" className="heading-page">
             {bid.workflow_item?.title || 'Change Order Bid'}
           </h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
@@ -123,12 +123,12 @@ export function BidDetailPage() {
                   variant="outline"
                   className={
                     bid.bid_status === 'pending'
-                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                      ? 'bg-warning-light text-amber-700 border-amber-200'
                       : bid.bid_status === 'submitted'
-                      ? 'bg-blue-50 text-blue-700 border-blue-200'
+                      ? 'bg-blue-50 text-primary-hover border-blue-200'
                       : bid.bid_status === 'awarded'
-                      ? 'bg-green-50 text-green-700 border-green-200'
-                      : 'bg-gray-50 text-gray-700 border-gray-200'
+                      ? 'bg-success-light text-success-dark border-green-200'
+                      : 'bg-surface text-secondary border-border'
                   }
                 >
                   {bid.bid_status.charAt(0).toUpperCase() + bid.bid_status.slice(1)}

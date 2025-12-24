@@ -81,21 +81,21 @@ function getStatusBadge(log: ScheduleImportLog) {
     case 'completed':
       if (log.errors && log.errors.length > 0) {
         return (
-          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300">
+          <Badge variant="outline" className="bg-warning-light text-yellow-700 border-yellow-300">
             <AlertTriangle className="h-3 w-3 mr-1" />
             Completed with errors
           </Badge>
         )
       }
       return (
-        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+        <Badge variant="outline" className="bg-success-light text-success-dark border-green-300">
           <CheckCircle2 className="h-3 w-3 mr-1" />
           Completed
         </Badge>
       )
     case 'processing':
       return (
-        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+        <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-300">
           <Loader2 className="h-3 w-3 mr-1 animate-spin" />
           Processing
         </Badge>
@@ -110,7 +110,7 @@ function getStatusBadge(log: ScheduleImportLog) {
     case 'pending':
     default:
       return (
-        <Badge variant="outline" className="bg-gray-50 text-gray-700">
+        <Badge variant="outline" className="bg-surface text-secondary">
           <Clock className="h-3 w-3 mr-1" />
           Pending
         </Badge>
@@ -179,7 +179,7 @@ export function ImportLogDetailDialog({
               <CardContent>
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">
+                    <div className="text-2xl font-bold text-primary">
                       {log.activities_imported}
                     </div>
                     <div className="text-xs text-muted-foreground">Activities</div>
@@ -191,7 +191,7 @@ export function ImportLogDetailDialog({
                     <div className="text-xs text-muted-foreground">Dependencies</div>
                   </div>
                   <div className="text-center p-3 bg-muted/50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">
+                    <div className="text-2xl font-bold text-success">
                       {log.resources_imported}
                     </div>
                     <div className="text-xs text-muted-foreground">Resources</div>
@@ -220,7 +220,7 @@ export function ImportLogDetailDialog({
             {/* Warnings */}
             {hasWarnings && (
               <Alert>
-                <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                <AlertTriangle className="h-4 w-4 text-warning" />
                 <AlertTitle>Warnings ({log.warnings!.length})</AlertTitle>
                 <AlertDescription>
                   <ScrollArea className="max-h-[150px] mt-2">

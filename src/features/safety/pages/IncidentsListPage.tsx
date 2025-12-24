@@ -89,8 +89,8 @@ export function IncidentsListPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Safety Incidents</h1>
-            <p className="text-gray-500 mt-1">
+            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Safety Incidents</h1>
+            <p className="text-muted mt-1">
               Track and manage safety incidents across all projects
             </p>
           </div>
@@ -113,54 +113,54 @@ export function IncidentsListPage() {
         {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-blue-100 rounded-lg p-2">
-                  <AlertTriangle className="h-5 w-5 text-blue-600" />
+                <div className="bg-info-light rounded-lg p-2">
+                  <AlertTriangle className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Total Incidents</p>
+                  <p className="text-sm text-muted">Total Incidents</p>
                   <p className="text-2xl font-bold">{stats.total_incidents}</p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-green-100 rounded-lg p-2">
-                  <Shield className="h-5 w-5 text-green-600" />
+                <div className="bg-success-light rounded-lg p-2">
+                  <Shield className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Days Since Last Incident</p>
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-sm text-muted">Days Since Last Incident</p>
+                  <p className="text-2xl font-bold text-success">
                     {stats.days_since_last_incident}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-yellow-100 rounded-lg p-2">
-                  <TrendingUp className="h-5 w-5 text-yellow-600" />
+                <div className="bg-warning-light rounded-lg p-2">
+                  <TrendingUp className="h-5 w-5 text-warning" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Open Incidents</p>
-                  <p className="text-2xl font-bold text-yellow-600">
+                  <p className="text-sm text-muted">Open Incidents</p>
+                  <p className="text-2xl font-bold text-warning">
                     {stats.open_incidents}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border p-4">
+            <div className="bg-card rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="bg-red-100 rounded-lg p-2">
-                  <Calendar className="h-5 w-5 text-red-600" />
+                <div className="bg-error-light rounded-lg p-2">
+                  <Calendar className="h-5 w-5 text-error" />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">OSHA Recordable</p>
-                  <p className="text-2xl font-bold text-red-600">
+                  <p className="text-sm text-muted">OSHA Recordable</p>
+                  <p className="text-2xl font-bold text-error">
                     {stats.osha_recordable_count}
                   </p>
                 </div>
@@ -171,8 +171,8 @@ export function IncidentsListPage() {
 
         {/* Severity Summary */}
         {stats && (
-          <div className="bg-white rounded-lg border p-4 mb-6">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">By Severity</h3>
+          <div className="bg-card rounded-lg border p-4 mb-6">
+            <h3 className="text-sm font-medium text-secondary mb-3" className="heading-subsection">By Severity</h3>
             <div className="flex flex-wrap gap-4">
               {Object.entries(SEVERITY_CONFIG).map(([severity, config]) => {
                 const count = stats.by_severity[severity as IncidentSeverity] || 0
@@ -186,7 +186,7 @@ export function IncidentsListPage() {
                       'flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors',
                       severity === severityFilter
                         ? 'border-blue-500 bg-blue-50'
-                        : 'hover:bg-gray-50'
+                        : 'hover:bg-surface'
                     )}
                   >
                     <SeverityBadge severity={severity as IncidentSeverity} size="sm" />
@@ -199,12 +199,12 @@ export function IncidentsListPage() {
         )}
 
         {/* Filters */}
-        <div className="bg-white rounded-lg border p-4 mb-6">
+        <div className="bg-card rounded-lg border p-4 mb-6">
           <div className="flex flex-wrap items-center gap-4">
             {/* Search */}
             <div className="flex-1 min-w-[200px] max-w-sm">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                 <Input
                   placeholder="Search incidents..."
                   value={search}
@@ -263,14 +263,14 @@ export function IncidentsListPage() {
         {/* Incidents List */}
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto" />
-            <p className="text-gray-500 mt-4">Loading incidents...</p>
+            <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
+            <p className="text-muted mt-4">Loading incidents...</p>
           </div>
         ) : filteredIncidents.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg border">
+          <div className="text-center py-12 bg-card rounded-lg border">
             <AlertTriangle className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-gray-900 mt-4">No incidents found</h3>
-            <p className="text-gray-500 mt-2">
+            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">No incidents found</h3>
+            <p className="text-muted mt-2">
               {hasActiveFilters
                 ? 'Try adjusting your filters'
                 : 'No safety incidents have been reported yet.'}

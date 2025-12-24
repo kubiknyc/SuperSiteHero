@@ -82,11 +82,11 @@ export function CloseoutPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-              <FolderCheck className="h-7 w-7 text-green-600" />
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <FolderCheck className="h-7 w-7 text-success" />
               Project Closeout
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-secondary mt-1">
               Track closeout documents and warranty information
             </p>
           </div>
@@ -97,7 +97,7 @@ export function CloseoutPage() {
           <CardContent className="pt-4">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1 max-w-md">
-                <label className="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-2">
+                <label className="block text-sm font-medium text-secondary mb-1 flex items-center gap-2">
                   <Building2 className="h-4 w-4" />
                   Select Project
                 </label>
@@ -127,8 +127,8 @@ export function CloseoutPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Project</h3>
-              <p className="text-gray-500">
+              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">Select a Project</h3>
+              <p className="text-muted">
                 Choose a project above to view closeout documents and warranties
               </p>
             </CardContent>
@@ -136,8 +136,8 @@ export function CloseoutPage() {
         ) : isLoading ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto text-gray-400 mb-4" />
-              <p className="text-gray-500">Loading closeout data...</p>
+              <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
+              <p className="text-muted">Loading closeout data...</p>
             </CardContent>
           </Card>
         ) : (
@@ -147,11 +147,11 @@ export function CloseoutPage() {
               <Card>
                 <CardContent className="py-4">
                   <div className="flex items-center gap-3">
-                    <div className="bg-blue-100 rounded-lg p-2">
-                      <FileCheck className="h-5 w-5 text-blue-600" />
+                    <div className="bg-info-light rounded-lg p-2">
+                      <FileCheck className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Documents</p>
+                      <p className="text-sm text-muted">Documents</p>
                       <p className="text-xl font-bold">
                         {receivedDocuments}/{totalDocuments}
                       </p>
@@ -163,12 +163,12 @@ export function CloseoutPage() {
               <Card>
                 <CardContent className="py-4">
                   <div className="flex items-center gap-3">
-                    <div className="bg-green-100 rounded-lg p-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    <div className="bg-success-light rounded-lg p-2">
+                      <CheckCircle2 className="h-5 w-5 text-success" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Completion</p>
-                      <p className="text-xl font-bold text-green-600">
+                      <p className="text-sm text-muted">Completion</p>
+                      <p className="text-xl font-bold text-success">
                         {completionPercent}%
                       </p>
                     </div>
@@ -183,7 +183,7 @@ export function CloseoutPage() {
                       <Shield className="h-5 w-5 text-purple-600" />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Active Warranties</p>
+                      <p className="text-sm text-muted">Active Warranties</p>
                       <p className="text-xl font-bold">{activeWarranties}</p>
                     </div>
                   </div>
@@ -193,11 +193,11 @@ export function CloseoutPage() {
               <Card>
                 <CardContent className="py-4">
                   <div className="flex items-center gap-3">
-                    <div className={`rounded-lg p-2 ${expiringWarranties > 0 ? 'bg-orange-100' : 'bg-gray-100'}`}>
-                      <Clock className={`h-5 w-5 ${expiringWarranties > 0 ? 'text-orange-600' : 'text-gray-600'}`} />
+                    <div className={`rounded-lg p-2 ${expiringWarranties > 0 ? 'bg-orange-100' : 'bg-muted'}`}>
+                      <Clock className={`h-5 w-5 ${expiringWarranties > 0 ? 'text-orange-600' : 'text-secondary'}`} />
                     </div>
                     <div>
-                      <p className="text-sm text-gray-500">Expiring Soon</p>
+                      <p className="text-sm text-muted">Expiring Soon</p>
                       <p className={`text-xl font-bold ${expiringWarranties > 0 ? 'text-orange-600' : ''}`}>
                         {expiringWarranties}
                       </p>

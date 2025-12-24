@@ -13,19 +13,19 @@ export interface RFIStatusBadgeProps {
 const statusConfig: Record<RFIStatus, { label: string; className: string }> = {
   pending: {
     label: 'Pending',
-    className: 'bg-gray-100 text-gray-800',
+    className: 'bg-muted text-foreground',
   },
   submitted: {
     label: 'Submitted',
-    className: 'bg-blue-100 text-blue-800',
+    className: 'bg-info-light text-blue-800',
   },
   approved: {
     label: 'Approved',
-    className: 'bg-green-100 text-green-800',
+    className: 'bg-success-light text-green-800',
   },
   rejected: {
     label: 'Rejected',
-    className: 'bg-red-100 text-red-800',
+    className: 'bg-error-light text-red-800',
   },
   closed: {
     label: 'Closed',

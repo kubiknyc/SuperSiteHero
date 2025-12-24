@@ -42,14 +42,14 @@ interface StatusBadgeProps {
 
 export function StatusBadge({ status, type }: StatusBadgeProps) {
   const statusColors: Record<string, string> = {
-    open: 'bg-gray-100 text-gray-800 border-gray-200',
-    pending: 'bg-gray-100 text-gray-800 border-gray-200',
-    in_progress: 'bg-blue-100 text-blue-800 border-blue-200',
+    open: 'bg-muted text-foreground border-border',
+    pending: 'bg-muted text-foreground border-border',
+    in_progress: 'bg-info-light text-blue-800 border-blue-200',
     ready_for_review: 'bg-amber-100 text-amber-800 border-amber-200',
-    completed: 'bg-green-100 text-green-800 border-green-200',
+    completed: 'bg-success-light text-green-800 border-green-200',
     verified: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    rejected: 'bg-red-100 text-red-800 border-red-200',
-    cancelled: 'bg-gray-100 text-gray-800 border-gray-200',
+    rejected: 'bg-error-light text-red-800 border-red-200',
+    cancelled: 'bg-muted text-foreground border-border',
   }
 
   const statusLabels: Record<string, string> = {

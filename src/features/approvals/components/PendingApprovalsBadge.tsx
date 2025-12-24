@@ -33,7 +33,7 @@ export function PendingApprovalsBadge({
     return (
       <span
         className={cn(
-          'inline-flex items-center justify-center w-5 h-5 text-xs font-medium rounded-full bg-gray-200 animate-pulse',
+          'inline-flex items-center justify-center w-5 h-5 text-xs font-medium rounded-full bg-muted animate-pulse',
           className
         )}
       />
@@ -50,7 +50,7 @@ export function PendingApprovalsBadge({
         'inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-xs font-medium rounded-full',
         count > 0
           ? 'bg-red-500 text-white'
-          : 'bg-gray-200 text-gray-600',
+          : 'bg-muted text-secondary',
         onClick && 'cursor-pointer hover:opacity-80',
         className
       )}
@@ -95,8 +95,8 @@ export function ApprovalsNavItem({
       className={cn(
         'flex items-center justify-between w-full px-3 py-2 text-sm rounded-md transition-colors',
         isActive
-          ? 'bg-blue-50 text-blue-700'
-          : 'text-gray-700 hover:bg-gray-100',
+          ? 'bg-blue-50 text-primary-hover'
+          : 'text-secondary hover:bg-muted',
         className
       )}
     >

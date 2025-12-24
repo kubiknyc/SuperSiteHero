@@ -165,7 +165,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
+          <h2 className="text-2xl font-bold flex items-center gap-2 heading-section">
             <Building2 className="h-6 w-6 text-indigo-600" />
             Executive Dashboard
           </h2>
@@ -260,11 +260,11 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
         <CardContent>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {kpis.map((kpi, index) => (
-              <div key={index} className="p-4 bg-gray-50 rounded-lg">
+              <div key={index} className="p-4 bg-surface rounded-lg">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium">{kpi.name}</span>
-                  {kpi.trend === 'up' && <ArrowUpRight className="h-4 w-4 text-green-600" />}
-                  {kpi.trend === 'down' && <ArrowDownRight className="h-4 w-4 text-red-600" />}
+                  {kpi.trend === 'up' && <ArrowUpRight className="h-4 w-4 text-success" />}
+                  {kpi.trend === 'down' && <ArrowDownRight className="h-4 w-4 text-error" />}
                 </div>
                 <div className="flex items-end gap-2">
                   <span className="text-2xl font-bold">{kpi.value}%</span>
@@ -272,7 +272,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                 </div>
                 <Progress
                   value={kpi.value}
-                  className={`h-2 mt-2 ${kpi.value >= kpi.target ? 'bg-green-100' : 'bg-amber-100'}`}
+                  className={`h-2 mt-2 ${kpi.value >= kpi.target ? 'bg-success-light' : 'bg-amber-100'}`}
                 />
               </div>
             ))}
@@ -309,7 +309,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                 {projectsSummary.map((project) => (
                   <tr key={project.id} className="border-b last:border-0">
                     <td className="py-3">
-                      <Link to={`/projects/${project.id}`} className="font-medium hover:text-blue-600">
+                      <Link to={`/projects/${project.id}`} className="font-medium hover:text-primary">
                         {project.name}
                       </Link>
                     </td>
@@ -321,7 +321,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                       </div>
                     </td>
                     <td className="py-3 text-right">
-                      <span className={project.margin >= 8 ? 'text-green-600' : project.margin >= 6 ? 'text-amber-600' : 'text-red-600'}>
+                      <span className={project.margin >= 8 ? 'text-success' : project.margin >= 6 ? 'text-warning' : 'text-error'}>
                         {project.margin}%
                       </span>
                     </td>
@@ -329,9 +329,9 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                       <Badge
                         variant="secondary"
                         className={
-                          project.scheduleStatus === 'ahead' ? 'bg-green-100 text-green-800' :
-                          project.scheduleStatus === 'on-track' ? 'bg-blue-100 text-blue-800' :
-                          'bg-red-100 text-red-800'
+                          project.scheduleStatus === 'ahead' ? 'bg-success-light text-green-800' :
+                          project.scheduleStatus === 'on-track' ? 'bg-info-light text-blue-800' :
+                          'bg-error-light text-red-800'
                         }
                       >
                         {project.scheduleStatus}
@@ -340,7 +340,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                     <td className="py-3 text-center">
                       <div className={`w-3 h-3 rounded-full mx-auto ${
                         project.risk === 'low' ? 'bg-green-500' :
-                        project.risk === 'medium' ? 'bg-amber-500' : 'bg-red-500'
+                        project.risk === 'medium' ? 'bg-warning' : 'bg-red-500'
                       }`} />
                     </td>
                   </tr>
@@ -362,7 +362,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm">Cash on Hand</span>
-                <span className="font-bold text-green-600">{formatCurrency(financialTrends.cashOnHand)}</span>
+                <span className="font-bold text-success">{formatCurrency(financialTrends.cashOnHand)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm">Unbilled Revenue</span>
@@ -373,11 +373,11 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Current</span>
-                    <span className="text-green-600">{formatCurrency(financialTrends.arAging.current)}</span>
+                    <span className="text-success">{formatCurrency(financialTrends.arAging.current)}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">30-60 days</span>
-                    <span className="text-amber-600">{formatCurrency(financialTrends.arAging.over30)}</span>
+                    <span className="text-warning">{formatCurrency(financialTrends.arAging.over30)}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">60-90 days</span>
@@ -385,7 +385,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground">Over 90 days</span>
-                    <span className="text-red-600">{formatCurrency(financialTrends.arAging.over90)}</span>
+                    <span className="text-error">{formatCurrency(financialTrends.arAging.over90)}</span>
                   </div>
                 </div>
               </div>
@@ -408,19 +408,19 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
           <CardContent>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-green-50 rounded-lg text-center">
-                  <p className="text-2xl font-bold text-green-700">{safetyMetrics.emr}</p>
-                  <p className="text-xs text-green-600">EMR</p>
+                <div className="p-3 bg-success-light rounded-lg text-center">
+                  <p className="text-2xl font-bold text-success-dark">{safetyMetrics.emr}</p>
+                  <p className="text-xs text-success">EMR</p>
                 </div>
                 <div className="p-3 bg-blue-50 rounded-lg text-center">
-                  <p className="text-2xl font-bold text-blue-700">{safetyMetrics.trir}</p>
-                  <p className="text-xs text-blue-600">TRIR</p>
+                  <p className="text-2xl font-bold text-primary-hover">{safetyMetrics.trir}</p>
+                  <p className="text-xs text-primary">TRIR</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Days Without Lost Time</span>
-                  <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  <Badge variant="secondary" className="bg-success-light text-green-800">
                     {safetyMetrics.daysWithoutLostTime}
                   </Badge>
                 </div>
@@ -436,7 +436,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
               <div className="pt-2 border-t">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-medium">Overall Safety Score</span>
-                  <span className="text-sm font-bold text-green-600">{safetyMetrics.safetyScore}%</span>
+                  <span className="text-sm font-bold text-success">{safetyMetrics.safetyScore}%</span>
                 </div>
                 <Progress value={safetyMetrics.safetyScore} className="h-2" />
               </div>

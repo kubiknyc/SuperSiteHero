@@ -248,8 +248,8 @@ export function DocumentUpload({
             'border-2 border-dashed rounded-lg p-8 text-center transition-colors cursor-pointer',
             isDragging
               ? 'border-blue-500 bg-blue-50'
-              : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50',
-            selectedFile && 'bg-gray-50'
+              : 'border-input hover:border-gray-400 hover:bg-surface',
+            selectedFile && 'bg-surface'
           )}
           onClick={!selectedFile ? handleBrowseClick : undefined}
           role="button"
@@ -258,11 +258,11 @@ export function DocumentUpload({
         >
           {!selectedFile ? (
             <>
-              <Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <p className="text-lg font-medium text-gray-700 mb-2">
+              <Upload className="w-12 h-12 mx-auto mb-4 text-disabled" />
+              <p className="text-lg font-medium text-secondary mb-2">
                 Drag and drop a file here
               </p>
-              <p className="text-sm text-gray-500 mb-4">or</p>
+              <p className="text-sm text-muted mb-4">or</p>
               <Button type="button" onClick={handleBrowseClick}>
                 Browse Files
               </Button>
@@ -270,12 +270,12 @@ export function DocumentUpload({
           ) : (
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <FileIcon className="w-10 h-10 text-blue-500" />
+                <FileIcon className="w-10 h-10 text-primary" />
                 <div className="text-left">
-                  <p className="font-medium text-gray-900">
+                  <p className="font-medium text-foreground">
                     {selectedFile.name}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     {formatFileSize(selectedFile.size)}
                   </p>
                 </div>
@@ -316,7 +316,7 @@ export function DocumentUpload({
 
             <div>
               <Label htmlFor="version-notes">
-                Version Notes <span className="text-gray-500 text-sm">(optional)</span>
+                Version Notes <span className="text-muted text-sm">(optional)</span>
               </Label>
               <textarea
                 id="version-notes"
@@ -324,9 +324,9 @@ export function DocumentUpload({
                 onChange={(e) => setVersionNotes(e.target.value)}
                 placeholder="Describe what changed in this version..."
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs text-muted mt-1">
                 Add notes about this upload. If uploading a new version, these notes will be saved with the version history.
               </p>
             </div>
@@ -355,13 +355,13 @@ export function DocumentUpload({
         {/* Upload progress/status */}
         {isUploading && (
           <div className="mt-4">
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="w-full bg-muted rounded-full h-2">
               <div
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="bg-primary h-2 rounded-full transition-all duration-300"
                 style={{ width: `${uploadProgress}%` }}
               ></div>
             </div>
-            <p className="text-sm text-gray-600 mt-2 text-center">
+            <p className="text-sm text-secondary mt-2 text-center">
               Uploading document... {uploadProgress}%
             </p>
           </div>

@@ -420,7 +420,7 @@ export function DocumentSignatureDialog({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileSignature className="h-5 w-5 text-blue-600" />
+            <FileSignature className="h-5 w-5 text-primary" />
             {displayRole} Signature
           </DialogTitle>
           <DialogDescription>
@@ -430,21 +430,21 @@ export function DocumentSignatureDialog({
 
         {/* Existing signature display */}
         {existingSignature && (
-          <div className="border rounded-lg p-4 bg-green-50 border-green-200">
-            <div className="flex items-center gap-2 text-green-700 mb-3">
+          <div className="border rounded-lg p-4 bg-success-light border-green-200">
+            <div className="flex items-center gap-2 text-success-dark mb-3">
               <CheckCircle className="h-5 w-5" />
               <span className="font-medium">Already Signed</span>
             </div>
             <img
               src={existingSignature}
               alt="Current signature"
-              className="max-h-24 border rounded bg-white p-2"
+              className="max-h-24 border rounded bg-card p-2"
             />
             {onSignatureRemove && (
               <Button
                 variant="outline"
                 size="sm"
-                className="mt-3 text-red-600 border-red-200 hover:bg-red-50"
+                className="mt-3 text-error border-red-200 hover:bg-error-light"
                 onClick={handleRemoveSignature}
                 disabled={isLoading}
               >
@@ -477,7 +477,7 @@ export function DocumentSignatureDialog({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="signer-name">
-                    Full Name {requireSignerInfo && <span className="text-red-500">*</span>}
+                    Full Name {requireSignerInfo && <span className="text-error">*</span>}
                   </Label>
                   <Input
                     id="signer-name"
@@ -504,8 +504,8 @@ export function DocumentSignatureDialog({
                 <Label>Signature</Label>
                 <div
                   className={cn(
-                    'relative border-2 rounded-lg bg-white',
-                    disabled ? 'bg-gray-100 border-gray-200' : 'border-gray-300'
+                    'relative border-2 rounded-lg bg-card',
+                    disabled ? 'bg-muted border-border' : 'border-input'
                   )}
                 >
                   <canvas
@@ -521,7 +521,7 @@ export function DocumentSignatureDialog({
                     onTouchEnd={stopDrawing}
                   />
                   {!hasDrawn && !disabled && (
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-gray-400">
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-disabled">
                       <PenTool className="h-5 w-5 mr-2" />
                       Sign here
                     </div>
@@ -533,7 +533,7 @@ export function DocumentSignatureDialog({
                     variant="ghost"
                     size="sm"
                     onClick={clearSignature}
-                    className="text-red-600 hover:text-red-700"
+                    className="text-error hover:text-error-dark"
                   >
                     Clear
                   </Button>
@@ -541,8 +541,8 @@ export function DocumentSignatureDialog({
               </div>
 
               {/* Legal notice */}
-              <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded text-sm">
-                <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+              <div className="flex items-start gap-2 p-3 bg-warning-light border border-amber-200 rounded text-sm">
+                <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                 <p className="text-amber-800">
                   By signing, I certify that I am authorized to sign this document and that
                   the information provided is accurate to the best of my knowledge.
@@ -556,11 +556,11 @@ export function DocumentSignatureDialog({
                 {isDocuSignConnected ? (
                   <>
                     <div className="p-4 border rounded-lg bg-blue-50 border-blue-200">
-                      <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
+                      <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2" className="heading-card">
                         <CheckCircle className="h-4 w-4" />
                         DocuSign Connected
                       </h4>
-                      <p className="text-sm text-blue-700">
+                      <p className="text-sm text-primary-hover">
                         The signer will receive an email with a secure link to review and sign the document.
                       </p>
                     </div>
@@ -568,7 +568,7 @@ export function DocumentSignatureDialog({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="docusign-name">
-                          Signer Name <span className="text-red-500">*</span>
+                          Signer Name <span className="text-error">*</span>
                         </Label>
                         <Input
                           id="docusign-name"
@@ -580,7 +580,7 @@ export function DocumentSignatureDialog({
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="docusign-email">
-                          Signer Email <span className="text-red-500">*</span>
+                          Signer Email <span className="text-error">*</span>
                         </Label>
                         <Input
                           id="docusign-email"
@@ -605,17 +605,17 @@ export function DocumentSignatureDialog({
                     </div>
                   </>
                 ) : (
-                  <div className="p-6 border rounded-lg bg-gray-50 text-center">
-                    <AlertTriangle className="h-10 w-10 mx-auto mb-3 text-amber-500" />
-                    <h4 className="font-medium text-gray-900 mb-2">
+                  <div className="p-6 border rounded-lg bg-surface text-center">
+                    <AlertTriangle className="h-10 w-10 mx-auto mb-3 text-warning" />
+                    <h4 className="font-medium text-foreground mb-2" className="heading-card">
                       DocuSign Not Connected
                     </h4>
-                    <p className="text-sm text-gray-600 mb-4">
+                    <p className="text-sm text-secondary mb-4">
                       Connect your DocuSign account in Company Settings to send documents for electronic signature.
                     </p>
                     <a
                       href="/settings?tab=integrations"
-                      className="inline-flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
+                      className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary-hover"
                     >
                       Go to Settings
                       <ExternalLink className="h-3 w-3" />

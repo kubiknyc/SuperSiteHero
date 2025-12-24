@@ -5,12 +5,13 @@
  */
 
 import { render, screen } from '@testing-library/react'
+import { vi } from 'vitest'
 import { ChartRenderer } from './ChartRenderer'
 import type { ChartConfiguration } from '@/types/report-builder'
 
 // Mock recharts components
-jest.mock('recharts', () => {
-  const OriginalModule = jest.requireActual('recharts')
+vi.mock('recharts', async () => {
+  const OriginalModule = await vi.importActual('recharts')
   return {
     ...OriginalModule,
     ResponsiveContainer: ({ children }: any) => (
@@ -288,7 +289,7 @@ describe('ChartRenderer', () => {
 
   describe('chart interactions', () => {
     it('should handle chart click events', () => {
-      const handleClick = jest.fn()
+      const handleClick = vi.fn()
       const config: ChartConfiguration = {
         type: 'bar',
         groupByField: 'status',

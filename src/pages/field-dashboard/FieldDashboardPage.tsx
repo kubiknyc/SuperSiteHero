@@ -45,8 +45,8 @@ export default function FieldDashboardPage() {
       <div className="container max-w-4xl mx-auto p-4">
         <Card>
           <CardContent className="p-6 text-center">
-            <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto mb-3" />
-            <h2 className="text-lg font-semibold mb-2">No Project Selected</h2>
+            <AlertTriangle className="h-12 w-12 text-warning mx-auto mb-3" />
+            <h2 className="text-lg font-semibold mb-2" className="heading-section">No Project Selected</h2>
             <p className="text-sm text-muted-foreground mb-4">
               Please select a project to view the field dashboard
             </p>
@@ -104,7 +104,7 @@ export default function FieldDashboardPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <LayoutDashboard className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold tracking-tight">Field Dashboard</h1>
+            <h1 className="text-2xl font-bold tracking-tight" className="heading-page">Field Dashboard</h1>
           </div>
           <p className="text-muted-foreground">
             {currentProject.name}
@@ -170,8 +170,8 @@ export default function FieldDashboardPage() {
         >
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-950 flex items-center justify-center">
-                <ClipboardCheck className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div className="h-10 w-10 rounded-full bg-info-light dark:bg-blue-950 flex items-center justify-center">
+                <ClipboardCheck className="h-5 w-5 text-primary dark:text-blue-400" />
               </div>
               <div>
                 <p className="font-semibold text-sm">Inspections</p>
@@ -188,7 +188,7 @@ export default function FieldDashboardPage() {
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-950 flex items-center justify-center">
-                <HardHat className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+                <HardHat className="h-5 w-5 text-warning dark:text-amber-400" />
               </div>
               <div>
                 <p className="font-semibold text-sm">Safety</p>

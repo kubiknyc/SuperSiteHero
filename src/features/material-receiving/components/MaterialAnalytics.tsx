@@ -138,18 +138,18 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Package className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-info-light rounded-lg">
+                <Package className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Deliveries</p>
+                <p className="text-sm text-muted">Total Deliveries</p>
                 <div className="flex items-center gap-2">
                   <p className="text-2xl font-bold">{analytics.totalDeliveries}</p>
                   {analytics.recentTrend === 'up' && (
-                    <TrendingUp className="h-4 w-4 text-green-600" />
+                    <TrendingUp className="h-4 w-4 text-success" />
                   )}
                   {analytics.recentTrend === 'down' && (
-                    <TrendingDown className="h-4 w-4 text-red-600" />
+                    <TrendingDown className="h-4 w-4 text-error" />
                   )}
                 </div>
               </div>
@@ -160,11 +160,11 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <CheckCircle className="h-5 w-5 text-green-600" />
+              <div className="p-2 bg-success-light rounded-lg">
+                <CheckCircle className="h-5 w-5 text-success" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">On-Time Rate</p>
+                <p className="text-sm text-muted">On-Time Rate</p>
                 <p className="text-2xl font-bold">{analytics.onTimeRate}%</p>
               </div>
             </div>
@@ -174,11 +174,11 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Clock className="h-5 w-5 text-yellow-600" />
+              <div className="p-2 bg-warning-light rounded-lg">
+                <Clock className="h-5 w-5 text-warning" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Pending</p>
+                <p className="text-sm text-muted">Pending</p>
                 <p className="text-2xl font-bold">{analytics.pendingDeliveries}</p>
               </div>
             </div>
@@ -188,11 +188,11 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="p-2 bg-error-light rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-error" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Damage Rate</p>
+                <p className="text-sm text-muted">Damage Rate</p>
                 <p className="text-2xl font-bold">{analytics.damageRate}%</p>
               </div>
             </div>
@@ -219,7 +219,7 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
                 const statusColors: Record<string, string> = {
                   scheduled: 'bg-blue-500',
                   received: 'bg-green-500',
-                  partially_received: 'bg-yellow-500',
+                  partially_received: 'bg-warning',
                   rejected: 'bg-red-500',
                   back_ordered: 'bg-gray-500',
                 }
@@ -228,9 +228,9 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
                   <div key={status}>
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span className="capitalize">{status.replace('_', ' ')}</span>
-                      <span className="text-gray-500">{count} ({percentage}%)</span>
+                      <span className="text-muted">{count} ({percentage}%)</span>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="h-2 bg-muted rounded-full overflow-hidden">
                       <div
                         className={`h-full ${statusColors[status] || 'bg-gray-500'}`}
                         style={{ width: `${percentage}%` }}
@@ -253,7 +253,7 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
           </CardHeader>
           <CardContent>
             {topCategories.length === 0 ? (
-              <p className="text-gray-500 text-sm">No category data</p>
+              <p className="text-muted text-sm">No category data</p>
             ) : (
               <div className="space-y-3">
                 {topCategories.map(([category, count]) => {
@@ -265,9 +265,9 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
                     <div key={category}>
                       <div className="flex items-center justify-between text-sm mb-1">
                         <span className="capitalize">{category.replace('_', ' ')}</span>
-                        <span className="text-gray-500">{count} ({percentage}%)</span>
+                        <span className="text-muted">{count} ({percentage}%)</span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-muted rounded-full overflow-hidden">
                         <div
                           className="h-full bg-blue-500"
                           style={{ width: `${percentage}%` }}
@@ -294,7 +294,7 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
           </CardHeader>
           <CardContent>
             {topVendors.length === 0 ? (
-              <p className="text-gray-500 text-sm">No vendor data</p>
+              <p className="text-muted text-sm">No vendor data</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -322,9 +322,9 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
                       if (onTimeRate < 60 || damageRate > 20) {rating = 'poor'}
 
                       const ratingColors = {
-                        good: 'bg-green-100 text-green-800',
-                        fair: 'bg-yellow-100 text-yellow-800',
-                        poor: 'bg-red-100 text-red-800',
+                        good: 'bg-success-light text-green-800',
+                        fair: 'bg-warning-light text-yellow-800',
+                        poor: 'bg-error-light text-red-800',
                       }
 
                       return (
@@ -332,12 +332,12 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
                           <td className="py-3 font-medium">{vendor}</td>
                           <td className="py-3 text-center">{stats.total}</td>
                           <td className="py-3 text-center">
-                            <span className={onTimeRate >= 80 ? 'text-green-600' : 'text-yellow-600'}>
+                            <span className={onTimeRate >= 80 ? 'text-success' : 'text-warning'}>
                               {onTimeRate}%
                             </span>
                           </td>
                           <td className="py-3 text-center">
-                            <span className={damageRate <= 5 ? 'text-green-600' : 'text-red-600'}>
+                            <span className={damageRate <= 5 ? 'text-success' : 'text-error'}>
                               {damageRate}%
                             </span>
                           </td>
@@ -361,9 +361,9 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-sm text-gray-500 mb-1">Completed</p>
-            <p className="text-3xl font-bold text-green-600">{analytics.completedDeliveries}</p>
-            <p className="text-xs text-gray-400">
+            <p className="text-sm text-muted mb-1">Completed</p>
+            <p className="text-3xl font-bold text-success">{analytics.completedDeliveries}</p>
+            <p className="text-xs text-disabled">
               {analytics.totalDeliveries > 0
                 ? `${Math.round((analytics.completedDeliveries / analytics.totalDeliveries) * 100)}% of total`
                 : '0% of total'}
@@ -373,17 +373,17 @@ export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsPr
 
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-sm text-gray-500 mb-1">Rejection Rate</p>
-            <p className="text-3xl font-bold text-red-600">{analytics.rejectionRate}%</p>
-            <p className="text-xs text-gray-400">Target: &lt;5%</p>
+            <p className="text-sm text-muted mb-1">Rejection Rate</p>
+            <p className="text-3xl font-bold text-error">{analytics.rejectionRate}%</p>
+            <p className="text-xs text-disabled">Target: &lt;5%</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-sm text-gray-500 mb-1">Unique Vendors</p>
-            <p className="text-3xl font-bold text-blue-600">{Object.keys(analytics.byVendor).length}</p>
-            <p className="text-xs text-gray-400">Active suppliers</p>
+            <p className="text-sm text-muted mb-1">Unique Vendors</p>
+            <p className="text-3xl font-bold text-primary">{Object.keys(analytics.byVendor).length}</p>
+            <p className="text-xs text-disabled">Active suppliers</p>
           </CardContent>
         </Card>
       </div>

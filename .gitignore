@@ -101,3 +101,28 @@ QUICK_FIX_SQL.sql
 
 # Local Netlify folder
 .netlify
+
+# Generated audit reports
+audit-reports/
+
+# Generated type files (regenerate from Supabase)
+src/types/supabase.ts
+src/types/database.ts
+
+# Backup type files
+src/types/*-backup.ts
+*.backup.ts
+
+# iOS build artifacts
+ios/App/App/public/
+
+# Android build artifacts
+android/app/build/
+
+# Large migration combined files
+migrations/combined*.sql
+migrations/COMBINED*.sql
+
+# Temporary directories
+C/
+~/

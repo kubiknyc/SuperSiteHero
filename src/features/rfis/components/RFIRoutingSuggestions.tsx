@@ -58,12 +58,12 @@ interface RFIRoutingSuggestionsProps {
 
 const ROLE_LABELS: Record<BallInCourtRole, { label: string; color: string }> = {
   architect: { label: 'Architect', color: 'bg-purple-100 text-purple-800' },
-  engineer: { label: 'Engineer', color: 'bg-blue-100 text-blue-800' },
+  engineer: { label: 'Engineer', color: 'bg-info-light text-blue-800' },
   owner: { label: 'Owner', color: 'bg-amber-100 text-amber-800' },
-  gc_pm: { label: 'GC/PM', color: 'bg-green-100 text-green-800' },
+  gc_pm: { label: 'GC/PM', color: 'bg-success-light text-green-800' },
   subcontractor: { label: 'Subcontractor', color: 'bg-orange-100 text-orange-800' },
   consultant: { label: 'Consultant', color: 'bg-cyan-100 text-cyan-800' },
-  inspector: { label: 'Inspector', color: 'bg-red-100 text-red-800' },
+  inspector: { label: 'Inspector', color: 'bg-error-light text-red-800' },
 }
 
 export function RFIRoutingSuggestions({
@@ -402,13 +402,13 @@ export function RFIRoutingSuggestions({
               <div className="flex items-center gap-2 text-sm">
                 {latestSuggestion.feedback_status === 'accepted' && (
                   <>
-                    <ThumbsUp className="w-4 h-4 text-green-500" />
-                    <span className="text-green-700">Suggestion accepted</span>
+                    <ThumbsUp className="w-4 h-4 text-success" />
+                    <span className="text-success-dark">Suggestion accepted</span>
                   </>
                 )}
                 {latestSuggestion.feedback_status === 'modified' && (
                   <>
-                    <Edit2 className="w-4 h-4 text-amber-500" />
+                    <Edit2 className="w-4 h-4 text-warning" />
                     <span className="text-amber-700">
                       Modified to: {ROLE_LABELS[latestSuggestion.actual_role_assigned!].label}
                     </span>
@@ -416,8 +416,8 @@ export function RFIRoutingSuggestions({
                 )}
                 {latestSuggestion.feedback_status === 'rejected' && (
                   <>
-                    <ThumbsDown className="w-4 h-4 text-red-500" />
-                    <span className="text-red-700">Suggestion rejected</span>
+                    <ThumbsDown className="w-4 h-4 text-error" />
+                    <span className="text-error-dark">Suggestion rejected</span>
                   </>
                 )}
               </div>

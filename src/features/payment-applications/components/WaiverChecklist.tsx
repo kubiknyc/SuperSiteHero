@@ -61,23 +61,23 @@ interface SubcontractorWaivers {
 }
 
 const STATUS_ICON_MAP: Record<LienWaiverStatus, React.ReactNode> = {
-  pending: <Circle className="h-4 w-4 text-gray-400" />,
-  draft: <Circle className="h-4 w-4 text-gray-400" />,
-  sent: <Clock className="h-4 w-4 text-blue-500" />,
-  received: <Clock className="h-4 w-4 text-yellow-500" />,
-  under_review: <Clock className="h-4 w-4 text-yellow-500" />,
-  approved: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-  rejected: <AlertTriangle className="h-4 w-4 text-red-500" />,
+  pending: <Circle className="h-4 w-4 text-disabled" />,
+  draft: <Circle className="h-4 w-4 text-disabled" />,
+  sent: <Clock className="h-4 w-4 text-primary" />,
+  received: <Clock className="h-4 w-4 text-warning" />,
+  under_review: <Clock className="h-4 w-4 text-warning" />,
+  approved: <CheckCircle2 className="h-4 w-4 text-success" />,
+  rejected: <AlertTriangle className="h-4 w-4 text-error" />,
   expired: <AlertTriangle className="h-4 w-4 text-orange-500" />,
   void: <Circle className="h-4 w-4 text-gray-300" />,
 }
 
 const STATUS_COLOR_MAP: Record<string, string> = {
-  gray: 'bg-gray-100 text-gray-700 border-gray-200',
-  blue: 'bg-blue-100 text-blue-700 border-blue-200',
-  yellow: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  green: 'bg-green-100 text-green-700 border-green-200',
-  red: 'bg-red-100 text-red-700 border-red-200',
+  gray: 'bg-muted text-secondary border-border',
+  blue: 'bg-info-light text-primary-hover border-blue-200',
+  yellow: 'bg-warning-light text-yellow-700 border-yellow-200',
+  green: 'bg-success-light text-success-dark border-green-200',
+  red: 'bg-error-light text-error-dark border-red-200',
   orange: 'bg-orange-100 text-orange-700 border-orange-200',
   emerald: 'bg-emerald-100 text-emerald-700 border-emerald-200',
 }
@@ -156,8 +156,8 @@ export function WaiverChecklist({
       <Card>
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
-            <Loader2 className="h-6 w-6 animate-spin text-gray-400" />
-            <span className="ml-2 text-gray-500">Loading waivers...</span>
+            <Loader2 className="h-6 w-6 animate-spin text-disabled" />
+            <span className="ml-2 text-muted">Loading waivers...</span>
           </div>
         </CardContent>
       </Card>
@@ -165,7 +165,7 @@ export function WaiverChecklist({
   }
 
   return (
-    <Card className={cn(isPaymentBlocked && 'border-amber-300 bg-amber-50/30')}>
+    <Card className={cn(isPaymentBlocked && 'border-amber-300 bg-warning-light/30')}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -197,7 +197,7 @@ export function WaiverChecklist({
         {totalWaivers > 0 && (
           <div className="mt-4">
             <div className="flex items-center justify-between text-sm mb-1">
-              <span className="text-gray-600">
+              <span className="text-secondary">
                 {approvedWaivers} of {totalWaivers} waivers complete
               </span>
               <span className="font-medium">{completionPercent}%</span>
@@ -209,7 +209,7 @@ export function WaiverChecklist({
         {/* Payment Blocked Warning */}
         {isPaymentBlocked && (
           <div className="mt-3 p-3 bg-amber-100 border border-amber-300 rounded-lg flex items-start gap-2">
-            <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            <AlertTriangle className="h-5 w-5 text-warning mt-0.5 flex-shrink-0" />
             <div>
               <p className="font-medium text-amber-800">Payment Blocked</p>
               <p className="text-sm text-amber-700">
@@ -226,7 +226,7 @@ export function WaiverChecklist({
           {totalWaivers === 0 ? (
             <div className="text-center py-6 border-t">
               <FileCheck className="h-10 w-10 mx-auto text-gray-300 mb-3" />
-              <p className="text-gray-500 mb-4">No lien waivers tracked for this application.</p>
+              <p className="text-muted mb-4">No lien waivers tracked for this application.</p>
               {onCreateWaiver && (
                 <Button variant="outline" onClick={onCreateWaiver} className="gap-2">
                   <Plus className="h-4 w-4" />
@@ -240,14 +240,14 @@ export function WaiverChecklist({
               {groupedWaivers.map((group) => (
                 <div key={group.subcontractorId || group.subcontractorName} className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-gray-900">{group.subcontractorName}</h4>
+                    <h4 className="font-medium text-foreground" className="heading-card">{group.subcontractorName}</h4>
                     {group.isComplete ? (
-                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">
                         <CheckCircle2 className="h-3 w-3 mr-1" />
                         Complete
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                      <Badge variant="outline" className="bg-warning-light text-yellow-700 border-yellow-200">
                         <Clock className="h-3 w-3 mr-1" />
                         Pending
                       </Badge>
@@ -276,7 +276,7 @@ export function WaiverChecklist({
               <div className="pt-2 border-t">
                 <Link
                   to={`/projects/${projectId}/lien-waivers?payment_application=${paymentApplicationId}`}
-                  className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                  className="text-sm text-primary hover:text-primary-hover flex items-center gap-1"
                 >
                   View all project waivers
                   <ExternalLink className="h-3 w-3" />
@@ -299,8 +299,8 @@ function WaiverRow({ waiver, projectId }: { waiver: LienWaiverWithDetails; proje
     <div
       className={cn(
         'flex items-center justify-between p-2 rounded-lg border',
-        isOverdue && waiver.status !== 'approved' && 'border-red-200 bg-red-50',
-        !isOverdue && 'border-gray-100 bg-gray-50'
+        isOverdue && waiver.status !== 'approved' && 'border-red-200 bg-error-light',
+        !isOverdue && 'border-border bg-surface'
       )}
     >
       <div className="flex items-center gap-3">
@@ -322,12 +322,12 @@ function WaiverRow({ waiver, projectId }: { waiver: LienWaiverWithDetails; proje
               {getWaiverStatusLabel(waiver.status)}
             </Badge>
           </div>
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted">
             {formatWaiverAmount(waiver.payment_amount)}
             {waiver.due_date && (
               <>
                 {' · Due '}
-                <span className={cn(isOverdue && 'text-red-600 font-medium')}>
+                <span className={cn(isOverdue && 'text-error font-medium')}>
                   {format(new Date(waiver.due_date), 'MMM d, yyyy')}
                 </span>
               </>
@@ -341,7 +341,7 @@ function WaiverRow({ waiver, projectId }: { waiver: LienWaiverWithDetails; proje
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <AlertTriangle className="h-4 w-4 text-red-500" />
+                <AlertTriangle className="h-4 w-4 text-error" />
               </TooltipTrigger>
               <TooltipContent>
                 <p>Overdue - requires attention</p>

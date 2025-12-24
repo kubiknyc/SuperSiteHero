@@ -77,11 +77,11 @@ export function VersionComparisonView({
   return (
     <div className={`fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4 ${className}`}>
       <Card className="w-full max-w-7xl max-h-[90vh] overflow-auto">
-        <CardHeader className="border-b sticky top-0 bg-white z-10">
+        <CardHeader className="border-b sticky top-0 bg-card z-10">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold">Version Comparison</h2>
-              <p className="text-sm text-gray-600 mt-1">
+              <h2 className="text-2xl font-bold" className="heading-section">Version Comparison</h2>
+              <p className="text-sm text-secondary mt-1">
                 {olderVersion.name} - v{olderVersion.version} vs v{newerVersion.version}
               </p>
             </div>
@@ -111,17 +111,17 @@ export function VersionComparisonView({
           {/* Metadata Comparison Table */}
           {showMetadata && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3">Metadata Comparison</h3>
+              <h3 className="text-lg font-semibold mb-3" className="heading-subsection">Metadata Comparison</h3>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
-                    <tr className="border-b-2 border-gray-300">
+                    <tr className="border-b-2 border-input">
                       <th className="text-left py-2 px-3 font-semibold">Field</th>
                       <th className="text-left py-2 px-3 font-semibold">
                         v{olderVersion.version} (Older)
                       </th>
                       <th className="text-center py-2 px-3 w-12">
-                        <ChevronRight className="w-4 h-4 mx-auto text-gray-400" />
+                        <ChevronRight className="w-4 h-4 mx-auto text-disabled" />
                       </th>
                       <th className="text-left py-2 px-3 font-semibold">
                         v{newerVersion.version} (Newer)
@@ -137,25 +137,25 @@ export function VersionComparisonView({
                       return (
                         <tr
                           key={field.key}
-                          className={`border-b ${changed ? 'bg-yellow-50' : ''}`}
+                          className={`border-b ${changed ? 'bg-warning-light' : ''}`}
                         >
-                          <td className="py-2 px-3 font-medium text-gray-700">
+                          <td className="py-2 px-3 font-medium text-secondary">
                             {field.label}
                             {changed && (
-                              <span className="ml-2 text-xs text-yellow-600 font-semibold">
+                              <span className="ml-2 text-xs text-warning font-semibold">
                                 CHANGED
                               </span>
                             )}
                           </td>
-                          <td className="py-2 px-3 text-gray-600">
+                          <td className="py-2 px-3 text-secondary">
                             {oldValue}
                           </td>
                           <td className="py-2 px-3 text-center">
                             {changed && (
-                              <ChevronRight className="w-4 h-4 mx-auto text-yellow-600" />
+                              <ChevronRight className="w-4 h-4 mx-auto text-warning" />
                             )}
                           </td>
-                          <td className="py-2 px-3 text-gray-900 font-medium">
+                          <td className="py-2 px-3 text-foreground font-medium">
                             {newValue}
                           </td>
                         </tr>
@@ -169,25 +169,25 @@ export function VersionComparisonView({
 
           {/* Side-by-Side File Viewers */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Visual Comparison</h3>
+            <h3 className="text-lg font-semibold mb-3" className="heading-subsection">Visual Comparison</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Version 1 */}
               <div className="border rounded-lg overflow-hidden">
-                <div className="bg-gray-100 px-4 py-2 border-b flex items-center justify-between">
+                <div className="bg-muted px-4 py-2 border-b flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <FileText className="w-4 h-4 text-gray-600" />
+                    <FileText className="w-4 h-4 text-secondary" />
                     <span className="font-semibold">v{olderVersion.version} (Older)</span>
                   </div>
                   <a
                     href={olderVersion.file_url}
                     download
-                    className="text-blue-600 hover:text-blue-800"
+                    className="text-primary hover:text-blue-800"
                     aria-label={`Download version ${olderVersion.version}`}
                   >
                     <Download className="w-4 h-4" />
                   </a>
                 </div>
-                <div className="p-4 bg-white">
+                <div className="p-4 bg-card">
                   {isPdf1 ? (
                     <PDFViewer
                       fileUrl={olderVersion.file_url}
@@ -203,13 +203,13 @@ export function VersionComparisonView({
                       className="w-full h-auto rounded"
                     />
                   ) : (
-                    <div className="text-center py-12 text-gray-500">
-                      <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                    <div className="text-center py-12 text-muted">
+                      <FileText className="w-12 h-12 mx-auto mb-2 text-disabled" />
                       <p>Preview not available for this file type</p>
                       <a
                         href={olderVersion.file_url}
                         download
-                        className="text-blue-600 hover:underline mt-2 inline-block"
+                        className="text-primary hover:underline mt-2 inline-block"
                       >
                         Download to view
                       </a>
@@ -220,21 +220,21 @@ export function VersionComparisonView({
 
               {/* Version 2 */}
               <div className="border rounded-lg overflow-hidden">
-                <div className="bg-gray-100 px-4 py-2 border-b flex items-center justify-between">
+                <div className="bg-muted px-4 py-2 border-b flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <FileText className="w-4 h-4 text-gray-600" />
+                    <FileText className="w-4 h-4 text-secondary" />
                     <span className="font-semibold">v{newerVersion.version} (Newer)</span>
                   </div>
                   <a
                     href={newerVersion.file_url}
                     download
-                    className="text-blue-600 hover:text-blue-800"
+                    className="text-primary hover:text-blue-800"
                     aria-label={`Download version ${newerVersion.version}`}
                   >
                     <Download className="w-4 h-4" />
                   </a>
                 </div>
-                <div className="p-4 bg-white">
+                <div className="p-4 bg-card">
                   {isPdf2 ? (
                     <PDFViewer
                       fileUrl={newerVersion.file_url}
@@ -250,13 +250,13 @@ export function VersionComparisonView({
                       className="w-full h-auto rounded"
                     />
                   ) : (
-                    <div className="text-center py-12 text-gray-500">
-                      <FileText className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                    <div className="text-center py-12 text-muted">
+                      <FileText className="w-12 h-12 mx-auto mb-2 text-disabled" />
                       <p>Preview not available for this file type</p>
                       <a
                         href={newerVersion.file_url}
                         download
-                        className="text-blue-600 hover:underline mt-2 inline-block"
+                        className="text-primary hover:underline mt-2 inline-block"
                       >
                         Download to view
                       </a>
@@ -269,7 +269,7 @@ export function VersionComparisonView({
 
           {/* Summary */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-semibold text-blue-900 mb-2">Summary</h4>
+            <h4 className="font-semibold text-blue-900 mb-2" className="heading-card">Summary</h4>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>
                 • Time difference: {olderVersion.created_at ? formatDistanceToNow(new Date(olderVersion.created_at)) : 'Unknown'} → {newerVersion.created_at ? formatDistanceToNow(new Date(newerVersion.created_at)) : 'Unknown'}

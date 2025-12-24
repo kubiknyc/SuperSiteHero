@@ -46,19 +46,19 @@ export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSec
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-gray-600" />
+          <AlertTriangle className="h-5 w-5 text-secondary" />
           <div className="text-left">
             <CardTitle className="text-base">Issues & Observations</CardTitle>
             <CardDescription>Safety incidents, quality issues, and delays</CardDescription>
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
@@ -86,7 +86,7 @@ export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSec
               }}
               onBlur={(e) => validateField('safety_incidents', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] ${
-                errors.safety_incidents ? 'border-red-500' : 'border-gray-300'
+                errors.safety_incidents ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>
@@ -113,7 +113,7 @@ export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSec
               }}
               onBlur={(e) => validateField('quality_issues', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] ${
-                errors.quality_issues ? 'border-red-500' : 'border-gray-300'
+                errors.quality_issues ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>
@@ -140,7 +140,7 @@ export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSec
               }}
               onBlur={(e) => validateField('schedule_delays', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px] ${
-                errors.schedule_delays ? 'border-red-500' : 'border-gray-300'
+                errors.schedule_delays ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>
@@ -167,7 +167,7 @@ export function IssuesSection({ expanded, onToggle, draft, onUpdate }: IssuesSec
               }}
               onBlur={(e) => validateField('general_notes', e.target.value)}
               className={`w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px] ${
-                errors.general_notes ? 'border-red-500' : 'border-gray-300'
+                errors.general_notes ? 'border-red-500' : 'border-input'
               }`}
             />
           </FormField>

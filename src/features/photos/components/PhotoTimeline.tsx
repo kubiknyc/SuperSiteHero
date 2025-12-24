@@ -171,7 +171,7 @@ export function PhotoTimeline({
                         'w-6 h-6 rounded-full flex items-center justify-center',
                         isSelected
                           ? 'bg-primary text-primary-foreground'
-                          : 'bg-white/80 hover:bg-white'
+                          : 'bg-card/80 hover:bg-card'
                       )}
                     >
                       {isSelected ? (

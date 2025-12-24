@@ -73,7 +73,7 @@ export function InlineCostCodePicker({
 
   if (!companyId) {
     return (
-      <div className={cn('text-gray-400 text-sm', className)}>
+      <div className={cn('text-disabled text-sm', className)}>
         {placeholder}
       </div>
     )
@@ -88,7 +88,7 @@ export function InlineCostCodePicker({
         className={cn(
           'flex items-center justify-between w-full text-left',
           compact ? 'px-2 py-1 text-xs' : 'px-3 py-2 text-sm',
-          'border rounded-md bg-white',
+          'border rounded-md bg-card',
           'hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500',
           disabled && 'opacity-50 cursor-not-allowed',
           className
@@ -96,11 +96,11 @@ export function InlineCostCodePicker({
       >
         <span className={cn(
           'truncate flex-1',
-          !selectedCode && 'text-gray-400'
+          !selectedCode && 'text-disabled'
         )}>
           {selectedCode ? (
             <span className="flex items-center gap-1">
-              <span className="font-mono text-gray-600">{selectedCode.code}</span>
+              <span className="font-mono text-secondary">{selectedCode.code}</span>
               {!compact && <span className="truncate">{selectedCode.name}</span>}
             </span>
           ) : (
@@ -112,13 +112,13 @@ export function InlineCostCodePicker({
             <button
               type="button"
               onClick={handleClear}
-              className="p-0.5 hover:bg-gray-100 rounded"
+              className="p-0.5 hover:bg-muted rounded"
             >
-              <X className="h-3 w-3 text-gray-400" />
+              <X className="h-3 w-3 text-disabled" />
             </button>
           )}
           <ChevronDown className={cn(
-            'h-4 w-4 text-gray-400 transition-transform',
+            'h-4 w-4 text-disabled transition-transform',
             open && 'transform rotate-180'
           )} />
         </div>
@@ -134,13 +134,13 @@ export function InlineCostCodePicker({
 
           {/* Dropdown */}
           <div className={cn(
-            'absolute z-20 mt-1 w-64 bg-white border rounded-lg shadow-lg',
+            'absolute z-20 mt-1 w-64 bg-card border rounded-lg shadow-lg',
             compact ? 'left-0' : 'left-0'
           )}>
             {/* Search */}
             <div className="p-2 border-b">
               <div className="relative">
-                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400" />
+                <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-disabled" />
                 <input
                   type="text"
                   placeholder="Search..."
@@ -155,11 +155,11 @@ export function InlineCostCodePicker({
             {/* Options */}
             <div className="max-h-48 overflow-y-auto">
               {isLoading ? (
-                <div className="p-3 text-center text-gray-500 text-sm">
+                <div className="p-3 text-center text-muted text-sm">
                   Loading...
                 </div>
               ) : filteredCodes.length === 0 ? (
-                <div className="p-3 text-center text-gray-500 text-sm">
+                <div className="p-3 text-center text-muted text-sm">
                   No cost codes found
                 </div>
               ) : (
@@ -169,11 +169,11 @@ export function InlineCostCodePicker({
                     type="button"
                     onClick={() => handleSelect(code)}
                     className={cn(
-                      'w-full flex items-center gap-2 px-3 py-2 text-left text-sm hover:bg-gray-100',
+                      'w-full flex items-center gap-2 px-3 py-2 text-left text-sm hover:bg-muted',
                       value === code.id && 'bg-blue-50'
                     )}
                   >
-                    <span className="font-mono text-xs text-gray-600 w-16 shrink-0">
+                    <span className="font-mono text-xs text-secondary w-16 shrink-0">
                       {code.code}
                     </span>
                     <span className="truncate">{code.name}</span>

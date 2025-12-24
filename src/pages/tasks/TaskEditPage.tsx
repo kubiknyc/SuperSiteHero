@@ -19,7 +19,7 @@ export function TaskEditPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-red-600">Task ID not found</p>
+            <p className="text-error">Task ID not found</p>
           </div>
         </div>
       </AppLayout>
@@ -31,7 +31,7 @@ export function TaskEditPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading task...</p>
+            <p className="text-muted">Loading task...</p>
           </div>
         </div>
       </AppLayout>
@@ -43,8 +43,8 @@ export function TaskEditPage() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600">Error loading task: {error?.message}</p>
+            <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+            <p className="text-error">Error loading task: {error?.message}</p>
           </div>
         </div>
       </AppLayout>
@@ -69,8 +69,8 @@ export function TaskEditPage() {
     <AppLayout>
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Edit Task</h1>
-          <p className="text-gray-600 mt-2">Update task details and status</p>
+          <h1 className="text-3xl font-bold text-foreground" className="heading-page">Edit Task</h1>
+          <p className="text-secondary mt-2">Update task details and status</p>
         </div>
 
         <TaskForm

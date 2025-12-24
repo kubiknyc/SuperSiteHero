@@ -139,7 +139,7 @@ export function MaterialReceivingPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Material Receiving</h1>
+          <h1 className="text-3xl font-bold" className="heading-page">Material Receiving</h1>
           <p className="text-muted-foreground mt-1">
             Track and manage material deliveries for your project
           </p>
@@ -206,7 +206,7 @@ export function MaterialReceivingPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">
+              <div className="text-2xl font-bold text-error">
                 {statistics.damaged_deliveries}
               </div>
             </CardContent>
@@ -441,7 +441,7 @@ export function MaterialReceivingPage() {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteDelivery}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-error hover:bg-red-700"
             >
               Delete
             </AlertDialogAction>

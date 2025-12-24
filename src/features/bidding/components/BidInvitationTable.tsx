@@ -93,13 +93,13 @@ export function BidInvitationTable({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'accepted':
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />
+        return <CheckCircle2 className="w-4 h-4 text-success" />
       case 'declined':
-        return <XCircle className="w-4 h-4 text-red-500" />
+        return <XCircle className="w-4 h-4 text-error" />
       case 'pending':
-        return <Clock className="w-4 h-4 text-gray-400" />
+        return <Clock className="w-4 h-4 text-disabled" />
       case 'no_response':
-        return <AlertTriangle className="w-4 h-4 text-yellow-500" />
+        return <AlertTriangle className="w-4 h-4 text-warning" />
       default:
         return null
     }
@@ -218,7 +218,7 @@ export function BidInvitationTable({
                       </div>
                     )}
                     {invitation.decline_reason && (
-                      <div className="text-xs text-red-600 mt-1">
+                      <div className="text-xs text-error mt-1">
                         Reason: {invitation.decline_reason}
                       </div>
                     )}
@@ -237,7 +237,7 @@ export function BidInvitationTable({
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger className="flex items-center gap-1">
-                              <Download className="w-3 h-3 text-green-500" />
+                              <Download className="w-3 h-3 text-success" />
                               Documents downloaded
                             </TooltipTrigger>
                             <TooltipContent>
@@ -253,7 +253,7 @@ export function BidInvitationTable({
                         </div>
                       )}
                       {invitation.submission && (
-                        <div className="flex items-center gap-1 text-green-600">
+                        <div className="flex items-center gap-1 text-success">
                           <CheckCircle2 className="w-3 h-3" />
                           Bid submitted
                         </div>
@@ -281,7 +281,7 @@ export function BidInvitationTable({
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          className="text-red-600"
+                          className="text-error"
                           onClick={() => onDeleteInvitation?.(invitation.id)}
                         >
                           Remove Invitation
@@ -299,13 +299,13 @@ export function BidInvitationTable({
       {/* Summary */}
       <div className="flex items-center gap-4 text-sm text-muted-foreground">
         <span>{invitations.length} total invitations</span>
-        <span className="text-green-600">
+        <span className="text-success">
           {invitations.filter((i) => i.response_status === 'accepted').length} accepted
         </span>
-        <span className="text-red-600">
+        <span className="text-error">
           {invitations.filter((i) => i.response_status === 'declined').length} declined
         </span>
-        <span className="text-yellow-600">
+        <span className="text-warning">
           {invitations.filter((i) => i.response_status === 'pending').length} pending
         </span>
       </div>

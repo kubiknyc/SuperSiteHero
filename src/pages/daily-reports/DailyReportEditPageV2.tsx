@@ -85,8 +85,8 @@ export function DailyReportEditPageV2() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 font-medium">Report ID not found</p>
+            <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+            <p className="text-error font-medium">Report ID not found</p>
             <Button variant="outline" onClick={() => navigate('/daily-reports')} className="mt-4">
               Back to Reports
             </Button>
@@ -101,8 +101,8 @@ export function DailyReportEditPageV2() {
       <AppLayout>
         <div className="p-6">
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600 mb-4" />
-            <p className="text-gray-500">Loading report...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+            <p className="text-muted">Loading report...</p>
           </div>
         </div>
       </AppLayout>
@@ -114,9 +114,9 @@ export function DailyReportEditPageV2() {
       <AppLayout>
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <p className="text-red-600 font-medium">Error loading report</p>
-            <p className="text-gray-500 text-sm mt-1">{error?.message || 'Report not found'}</p>
+            <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
+            <p className="text-error font-medium">Error loading report</p>
+            <p className="text-muted text-sm mt-1">{error?.message || 'Report not found'}</p>
             <Button variant="outline" onClick={() => navigate('/daily-reports')} className="mt-4">
               Back to Reports
             </Button>
@@ -141,11 +141,11 @@ export function DailyReportEditPageV2() {
       <AppLayout>
         <div className="p-6">
           <div className="max-w-md mx-auto text-center py-12">
-            <div className="bg-gray-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-              <Lock className="h-8 w-8 text-gray-500" />
+            <div className="bg-muted rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+              <Lock className="h-8 w-8 text-muted" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Cannot Edit Report</h2>
-            <p className="text-gray-600 mb-4">
+            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Cannot Edit Report</h2>
+            <p className="text-secondary mb-4">
               This report has been {statusLabels[report.status] || report.status} and cannot be
               edited.
             </p>
@@ -171,7 +171,7 @@ export function DailyReportEditPageV2() {
   const canLock = isApprover && report.status === 'approved';
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <DailyReportFormV2
         projectId={report.project_id}
         reportDate={report.report_date}

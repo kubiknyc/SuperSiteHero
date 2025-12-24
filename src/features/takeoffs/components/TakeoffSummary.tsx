@@ -87,7 +87,7 @@ export function TakeoffSummary({
 
         {/* By Type Breakdown */}
         <div className="space-y-2">
-          <h3 className="font-semibold text-sm">Breakdown by Type</h3>
+          <h3 className="font-semibold text-sm" className="heading-subsection">Breakdown by Type</h3>
           <div className="space-y-2">
             {Object.entries(summary.byType).map(([type, quantity]) => (
               <div
@@ -109,14 +109,14 @@ export function TakeoffSummary({
         {scale && (
           <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="text-sm font-medium text-blue-900 mb-1">Scale Information</div>
-            <div className="text-xs text-blue-700">
+            <div className="text-xs text-primary-hover">
               {scale.pixelsPerUnit.toFixed(4)} pixels per {scale.unit}
             </div>
           </div>
         )}
 
         {!scale && (
-          <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="p-3 bg-warning-light border border-yellow-200 rounded-lg">
             <div className="text-sm font-medium text-yellow-900 mb-1">No Scale Set</div>
             <div className="text-xs text-yellow-700">
               Measurements are shown in pixels. Calibrate scale for accurate quantities.
@@ -126,7 +126,7 @@ export function TakeoffSummary({
 
         {/* Export Buttons */}
         <div className="space-y-2 pt-4 border-t">
-          <h3 className="font-semibold text-sm mb-3">Export Options</h3>
+          <h3 className="font-semibold text-sm mb-3" className="heading-subsection">Export Options</h3>
           <div className="grid grid-cols-2 gap-2">
             <Button
               variant="outline"

@@ -295,8 +295,8 @@ export function DistributionListPicker({
               className={cn(
                 'flex items-center gap-1 rounded-full pl-1 pr-2 py-1',
                 recipient.type === 'user'
-                  ? 'bg-white border border-primary-200 dark:border-primary-800'
-                  : 'bg-green-50 border border-green-200'
+                  ? 'bg-card border border-primary-200 dark:border-primary-800'
+                  : 'bg-success-light border border-green-200'
               )}
             >
               {recipient.type === 'user' ? (
@@ -312,7 +312,7 @@ export function DistributionListPicker({
                   </div>
                 )
               ) : (
-                <Mail className="h-4 w-4 text-green-600 ml-0.5" />
+                <Mail className="h-4 w-4 text-success ml-0.5" />
               )}
               <span
                 className={cn(
@@ -329,7 +329,7 @@ export function DistributionListPicker({
                   'ml-1',
                   recipient.type === 'user'
                     ? 'text-primary-400 dark:text-primary-400 hover:text-primary dark:text-primary-400'
-                    : 'text-green-400 hover:text-green-600'
+                    : 'text-green-400 hover:text-success'
                 )}
                 disabled={disabled}
               >
@@ -348,7 +348,7 @@ export function DistributionListPicker({
             placeholder="Search lists, members, or emails..."
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
-            className="pl-9 bg-white"
+            className="pl-9 bg-card"
             disabled={disabled}
           />
         </div>
@@ -372,7 +372,7 @@ export function DistributionListPicker({
 
           {/* Team Members Tab */}
           <TabsContent value="users" className="mt-2">
-            <ScrollArea className="h-[200px] bg-white border rounded-lg">
+            <ScrollArea className="h-[200px] bg-card border rounded-lg">
               {isLoadingUsers ? (
                 <div className="p-4 space-y-2">
                   <Skeleton className="h-10 w-full" />
@@ -440,7 +440,7 @@ export function DistributionListPicker({
 
           {/* Saved Lists Tab */}
           <TabsContent value="lists" className="mt-2">
-            <ScrollArea className="h-[200px] bg-white border rounded-lg">
+            <ScrollArea className="h-[200px] bg-card border rounded-lg">
               {isLoadingLists ? (
                 <div className="p-4 space-y-2">
                   <Skeleton className="h-12 w-full" />
@@ -472,7 +472,7 @@ export function DistributionListPicker({
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-sm truncate">{list.name}</p>
                             {list.is_default && (
-                              <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                              <Star className="h-3 w-3 text-warning fill-yellow-500" />
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground">
@@ -484,7 +484,7 @@ export function DistributionListPicker({
                           variant="outline"
                           className={cn(
                             'text-xs',
-                            list.project_id ? 'border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300' : 'border-gray-200'
+                            list.project_id ? 'border-primary-200 dark:border-primary-800 text-primary-700 dark:text-primary-300' : 'border-border'
                           )}
                         >
                           {list.project_id ? 'Project' : 'Company'}
@@ -502,7 +502,7 @@ export function DistributionListPicker({
 
           {/* External Tab */}
           <TabsContent value="external" className="mt-2">
-            <div className="bg-white border rounded-lg p-4 space-y-3">
+            <div className="bg-card border rounded-lg p-4 space-y-3">
               <p className="text-xs text-muted-foreground">
                 Add external email addresses for people not in the system.
               </p>
@@ -550,7 +550,7 @@ export function DistributionListPicker({
                       <Badge
                         key={`${contact.email}-${index}`}
                         variant="secondary"
-                        className="bg-green-50 text-green-800 border-green-200"
+                        className="bg-success-light text-green-800 border-green-200"
                       >
                         {contact.name || contact.email}
                         <button
@@ -563,7 +563,7 @@ export function DistributionListPicker({
                               ),
                             })
                           }
-                          className="ml-1 hover:text-green-600"
+                          className="ml-1 hover:text-success"
                           disabled={disabled}
                         >
                           <X className="h-3 w-3" />

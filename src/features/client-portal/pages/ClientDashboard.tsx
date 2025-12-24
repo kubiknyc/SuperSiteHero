@@ -48,8 +48,8 @@ export function ClientDashboard() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Welcome to Your Project Portal</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Welcome to Your Project Portal</h1>
+        <p className="text-secondary mt-1">
           View progress, documents, and updates for your construction projects.
         </p>
       </div>
@@ -60,12 +60,12 @@ export function ClientDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Building2 className="h-6 w-6 text-blue-600" />
+                <div className="p-3 bg-info-light rounded-lg">
+                  <Building2 className="h-6 w-6 text-primary" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.total_projects}</p>
-                  <p className="text-sm text-gray-500">Total Projects</p>
+                  <p className="text-sm text-muted">Total Projects</p>
                 </div>
               </div>
             </CardContent>
@@ -74,12 +74,12 @@ export function ClientDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-green-100 rounded-lg">
-                  <Calendar className="h-6 w-6 text-green-600" />
+                <div className="p-3 bg-success-light rounded-lg">
+                  <Calendar className="h-6 w-6 text-success" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.upcoming_milestones}</p>
-                  <p className="text-sm text-gray-500">Upcoming Milestones</p>
+                  <p className="text-sm text-muted">Upcoming Milestones</p>
                 </div>
               </div>
             </CardContent>
@@ -88,12 +88,12 @@ export function ClientDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-4">
-                <div className="p-3 bg-yellow-100 rounded-lg">
-                  <HelpCircle className="h-6 w-6 text-yellow-600" />
+                <div className="p-3 bg-warning-light rounded-lg">
+                  <HelpCircle className="h-6 w-6 text-warning" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.open_rfis}</p>
-                  <p className="text-sm text-gray-500">Open RFIs</p>
+                  <p className="text-sm text-muted">Open RFIs</p>
                 </div>
               </div>
             </CardContent>
@@ -107,7 +107,7 @@ export function ClientDashboard() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.pending_change_orders}</p>
-                  <p className="text-sm text-gray-500">Pending Change Orders</p>
+                  <p className="text-sm text-muted">Pending Change Orders</p>
                 </div>
               </div>
             </CardContent>
@@ -117,14 +117,14 @@ export function ClientDashboard() {
 
       {/* Projects Grid */}
       <div>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Projects</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">Your Projects</h2>
 
         {!projects || projects.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">No Projects Yet</h3>
-              <p className="text-gray-500 mt-1">
+              <Building2 className="h-12 w-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Projects Yet</h3>
+              <p className="text-muted mt-1">
                 You haven't been added to any projects yet.
               </p>
             </CardContent>
@@ -141,7 +141,7 @@ export function ClientDashboard() {
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <CardTitle className="text-lg group-hover:text-blue-600 transition-colors">
+                        <CardTitle className="text-lg group-hover:text-primary transition-colors">
                           {project.name}
                         </CardTitle>
                         {project.project_number && (
@@ -150,13 +150,13 @@ export function ClientDashboard() {
                           </CardDescription>
                         )}
                       </div>
-                      <ChevronRight className="h-5 w-5 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                      <ChevronRight className="h-5 w-5 text-disabled group-hover:text-primary transition-colors" />
                     </div>
                   </CardHeader>
                   <CardContent>
                     {/* Location */}
                     {project.address && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                      <div className="flex items-center gap-2 text-sm text-secondary mb-3">
                         <MapPin className="h-4 w-4" />
                         <span className="truncate">
                           {project.address}
@@ -168,7 +168,7 @@ export function ClientDashboard() {
 
                     {/* Dates */}
                     {(project.start_date || project.end_date) && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600 mb-3">
+                      <div className="flex items-center gap-2 text-sm text-secondary mb-3">
                         <Clock className="h-4 w-4" />
                         <span>
                           {project.start_date && format(new Date(project.start_date), 'MMM d, yyyy')}
@@ -184,12 +184,12 @@ export function ClientDashboard() {
                         className={cn(
                           'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                           project.status === 'active'
-                            ? 'bg-green-100 text-green-800'
+                            ? 'bg-success-light text-green-800'
                             : project.status === 'completed'
-                            ? 'bg-blue-100 text-blue-800'
+                            ? 'bg-info-light text-blue-800'
                             : project.status === 'on_hold'
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-gray-100 text-gray-800'
+                            ? 'bg-warning-light text-yellow-800'
+                            : 'bg-muted text-foreground'
                         )}
                       >
                         {project.status?.replace('_', ' ') || 'Active'}
@@ -199,17 +199,17 @@ export function ClientDashboard() {
                     {/* Available Sections */}
                     <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t">
                       {project.show_schedule && (
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <span className="inline-flex items-center gap-1 text-xs text-muted">
                           <Calendar className="h-3 w-3" /> Schedule
                         </span>
                       )}
                       {project.show_documents && (
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <span className="inline-flex items-center gap-1 text-xs text-muted">
                           <FileText className="h-3 w-3" /> Documents
                         </span>
                       )}
                       {project.show_rfis && (
-                        <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <span className="inline-flex items-center gap-1 text-xs text-muted">
                           <HelpCircle className="h-3 w-3" /> RFIs
                         </span>
                       )}

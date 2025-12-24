@@ -122,28 +122,28 @@ export function PhotoUpload({
         onDrop={handleDrop}
         className={`
           border-2 border-dashed rounded-lg p-6 text-center transition-colors
-          ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-gray-400'}
+          ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-input hover:border-gray-400'}
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
         onClick={!disabled ? openFilePicker : undefined}
       >
         <div className="flex flex-col items-center gap-3">
           {isProcessing ? (
-            <Loader2 className="h-10 w-10 text-blue-600 animate-spin" />
+            <Loader2 className="h-10 w-10 text-primary animate-spin" />
           ) : (
             <>
               <div className="flex gap-2">
-                <Camera className="h-10 w-10 text-gray-400" />
-                <Upload className="h-10 w-10 text-gray-400" />
+                <Camera className="h-10 w-10 text-disabled" />
+                <Upload className="h-10 w-10 text-disabled" />
               </div>
             </>
           )}
 
           <div>
-            <p className="font-medium text-gray-900">
+            <p className="font-medium text-foreground">
               {isProcessing ? 'Processing...' : 'Click or drag photos here'}
             </p>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-secondary mt-1">
               {multiple ? 'Upload multiple photos' : 'Upload a photo'} (max {maxSizeMB}MB each)
             </p>
           </div>

@@ -150,9 +150,9 @@ export function LayerManager({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80 p-0" align="start">
-          <div className="p-3 border-b bg-gray-50">
+          <div className="p-3 border-b bg-surface">
             <div className="flex items-center justify-between">
-              <h4 className="font-medium text-sm">Markup Layers</h4>
+              <h4 className="font-medium text-sm" className="heading-card">Markup Layers</h4>
               <Button
                 size="sm"
                 variant="ghost"
@@ -171,8 +171,8 @@ export function LayerManager({
 
           <div className="max-h-80 overflow-y-auto">
             {sortedLayers.length === 0 ? (
-              <div className="p-4 text-center text-gray-500 text-sm">
-                <Layers className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+              <div className="p-4 text-center text-muted text-sm">
+                <Layers className="w-8 h-8 mx-auto mb-2 text-disabled" />
                 <p>No layers yet</p>
                 <p className="text-xs mt-1">Create a layer to organize your markups</p>
               </div>
@@ -182,31 +182,31 @@ export function LayerManager({
                   <div
                     key={layer.id}
                     className={cn(
-                      'flex items-center gap-2 p-2 hover:bg-gray-50 transition-colors',
+                      'flex items-center gap-2 p-2 hover:bg-surface transition-colors',
                       selectedLayerId === layer.id && 'bg-blue-50 border-l-2 border-blue-500',
                       layer.locked && 'opacity-60'
                     )}
                   >
                     {/* Drag Handle */}
-                    <div className="cursor-move text-gray-400 hover:text-gray-600">
+                    <div className="cursor-move text-disabled hover:text-secondary">
                       <GripVertical className="w-4 h-4" />
                     </div>
 
                     {/* Color Indicator */}
                     <div
-                      className="w-3 h-3 rounded-full border border-gray-300 flex-shrink-0"
+                      className="w-3 h-3 rounded-full border border-input flex-shrink-0"
                       style={{ backgroundColor: layer.color }}
                     />
 
                     {/* Layer Name - Clickable to select */}
                     <button
-                      className="flex-1 text-left text-sm truncate hover:text-blue-600"
+                      className="flex-1 text-left text-sm truncate hover:text-primary"
                       onClick={() => onSelectLayer(selectedLayerId === layer.id ? null : layer.id)}
                       disabled={disabled}
                     >
                       {layer.name}
                       {selectedLayerId === layer.id && (
-                        <Check className="w-3 h-3 inline ml-1 text-blue-500" />
+                        <Check className="w-3 h-3 inline ml-1 text-primary" />
                       )}
                     </button>
 
@@ -216,13 +216,13 @@ export function LayerManager({
                       <button
                         onClick={() => onToggleVisibility(layer.id)}
                         disabled={disabled}
-                        className="p-1 hover:bg-gray-200 rounded transition-colors"
+                        className="p-1 hover:bg-muted rounded transition-colors"
                         title={layer.visible ? 'Hide layer' : 'Show layer'}
                       >
                         {layer.visible ? (
-                          <Eye className="w-4 h-4 text-gray-600" />
+                          <Eye className="w-4 h-4 text-secondary" />
                         ) : (
-                          <EyeOff className="w-4 h-4 text-gray-400" />
+                          <EyeOff className="w-4 h-4 text-disabled" />
                         )}
                       </button>
 
@@ -230,13 +230,13 @@ export function LayerManager({
                       <button
                         onClick={() => onToggleLock(layer.id)}
                         disabled={disabled}
-                        className="p-1 hover:bg-gray-200 rounded transition-colors"
+                        className="p-1 hover:bg-muted rounded transition-colors"
                         title={layer.locked ? 'Unlock layer' : 'Lock layer'}
                       >
                         {layer.locked ? (
-                          <Lock className="w-4 h-4 text-amber-500" />
+                          <Lock className="w-4 h-4 text-warning" />
                         ) : (
-                          <Unlock className="w-4 h-4 text-gray-400" />
+                          <Unlock className="w-4 h-4 text-disabled" />
                         )}
                       </button>
 
@@ -244,22 +244,22 @@ export function LayerManager({
                       <Popover>
                         <PopoverTrigger asChild>
                           <button
-                            className="p-1 hover:bg-gray-200 rounded transition-colors"
+                            className="p-1 hover:bg-muted rounded transition-colors"
                             disabled={disabled}
                           >
-                            <MoreVertical className="w-4 h-4 text-gray-500" />
+                            <MoreVertical className="w-4 h-4 text-muted" />
                           </button>
                         </PopoverTrigger>
                         <PopoverContent className="w-40 p-1" align="end">
                           <button
-                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-muted rounded"
                             onClick={() => openEditDialog(layer)}
                           >
                             <Edit2 className="w-3 h-3" />
                             Edit
                           </button>
                           <button
-                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-muted rounded"
                             onClick={() => onReorderLayer(layer.id, 'bring-to-front')}
                             disabled={index === 0}
                           >
@@ -267,7 +267,7 @@ export function LayerManager({
                             Bring to Front
                           </button>
                           <button
-                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-gray-100 rounded"
+                            className="w-full flex items-center gap-2 px-2 py-1.5 text-sm hover:bg-muted rounded"
                             onClick={() => onReorderLayer(layer.id, 'send-to-back')}
                             disabled={index === sortedLayers.length - 1}
                           >
@@ -276,7 +276,7 @@ export function LayerManager({
                           </button>
                           {!layer.isDefault && (
                             <button
-                              className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-red-600 hover:bg-red-50 rounded"
+                              className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-error hover:bg-error-light rounded"
                               onClick={() => handleDeleteLayer(layer)}
                             >
                               <Trash2 className="w-3 h-3" />
@@ -293,9 +293,9 @@ export function LayerManager({
           </div>
 
           {/* Quick Actions Footer */}
-          <div className="p-2 border-t bg-gray-50 flex items-center justify-between text-xs text-gray-500">
+          <div className="p-2 border-t bg-surface flex items-center justify-between text-xs text-muted">
             <button
-              className="hover:text-blue-600"
+              className="hover:text-primary"
               onClick={() => {
                 layers.forEach(l => {
                   if (!l.visible) {onToggleVisibility(l.id)}
@@ -306,7 +306,7 @@ export function LayerManager({
               Show All
             </button>
             <button
-              className="hover:text-blue-600"
+              className="hover:text-primary"
               onClick={() => {
                 layers.forEach(l => {
                   if (l.visible) {onToggleVisibility(l.id)}
@@ -351,7 +351,7 @@ export function LayerManager({
                       'w-8 h-8 rounded-full border-2 transition-all hover:scale-110',
                       formData.color === color
                         ? 'border-blue-500 ring-2 ring-blue-200'
-                        : 'border-gray-300'
+                        : 'border-input'
                     )}
                     style={{ backgroundColor: color }}
                     onClick={() => setFormData({ ...formData, color })}
@@ -413,7 +413,7 @@ export function LayerManager({
                       'w-8 h-8 rounded-full border-2 transition-all hover:scale-110',
                       formData.color === color
                         ? 'border-blue-500 ring-2 ring-blue-200'
-                        : 'border-gray-300'
+                        : 'border-input'
                     )}
                     style={{ backgroundColor: color }}
                     onClick={() => setFormData({ ...formData, color })}

@@ -122,21 +122,21 @@ export function TemplateSelector({
       <button
         type="button"
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-6 hover:bg-gray-50"
+        className="w-full flex items-center justify-between p-6 hover:bg-surface"
       >
         <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-gray-600" />
+          <FileText className="h-5 w-5 text-secondary" />
           <div className="text-left">
-            <p className="font-medium text-gray-900">Report Templates</p>
-            <p className="text-sm text-gray-500">
+            <p className="font-medium text-foreground">Report Templates</p>
+            <p className="text-sm text-muted">
               {templates.length} template{templates.length !== 1 ? 's' : ''} available
             </p>
           </div>
         </div>
         {expanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
+          <ChevronUp className="h-5 w-5 text-disabled" />
         ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+          <ChevronDown className="h-5 w-5 text-disabled" />
         )}
       </button>
 
@@ -202,11 +202,11 @@ export function TemplateSelector({
           {/* Template list */}
           {isLoading ? (
             <div className="animate-pulse space-y-2">
-              <div className="h-10 bg-gray-100 rounded"></div>
-              <div className="h-10 bg-gray-100 rounded"></div>
+              <div className="h-10 bg-muted rounded"></div>
+              <div className="h-10 bg-muted rounded"></div>
             </div>
           ) : templates.length === 0 ? (
-            <p className="text-sm text-gray-500 text-center py-4">
+            <p className="text-sm text-muted text-center py-4">
               No templates saved yet. Create one from the current report configuration.
             </p>
           ) : (
@@ -214,14 +214,14 @@ export function TemplateSelector({
               {templates.map((template) => (
                 <div
                   key={template.id}
-                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
+                  className="flex items-center justify-between p-3 bg-surface rounded-lg hover:bg-muted"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 truncate">{template.name}</p>
+                    <p className="font-medium text-foreground truncate">{template.name}</p>
                     {template.description && (
-                      <p className="text-xs text-gray-500 truncate">{template.description}</p>
+                      <p className="text-xs text-muted truncate">{template.description}</p>
                     )}
-                    <div className="flex gap-2 mt-1 text-xs text-gray-400">
+                    <div className="flex gap-2 mt-1 text-xs text-disabled">
                       {template.workforce_entries?.length ? (
                         <span>{template.workforce_entries.length} workers</span>
                       ) : null}
@@ -244,7 +244,7 @@ export function TemplateSelector({
                       variant="ghost"
                       onClick={() => deleteMutation.mutate(template.id)}
                       disabled={deleteMutation.isPending}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      className="text-error hover:text-error-dark hover:bg-error-light"
                       title="Delete template"
                     >
                       <Trash2 className="h-4 w-4" />

@@ -121,7 +121,7 @@ export function SubcontractorLayout() {
           <div className="flex items-center gap-2">
             <Building2 className="h-6 w-6 text-primary" />
             <div>
-              <h2 className="font-semibold text-sm">Subcontractor Portal</h2>
+              <h2 className="font-semibold text-sm" className="heading-section">Subcontractor Portal</h2>
               <p className="text-xs text-muted-foreground truncate">
                 {userProfile?.first_name} {userProfile?.last_name}
               </p>
@@ -202,7 +202,7 @@ export function SubcontractorLayout() {
 
       {/* Mobile Header - shown on mobile only */}
       <div className={cn(
-        'md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200',
+        'md:hidden fixed top-0 left-0 right-0 z-40 bg-card border-b border-border',
         'transition-transform duration-200',
         headerCollapsed ? '-translate-y-full' : 'translate-y-0'
       )}>
@@ -214,7 +214,7 @@ export function SubcontractorLayout() {
           <div className="flex items-center gap-2">
             {/* Notification Button */}
             <NavLink to="/portal/notifications" className="relative p-2">
-              <Bell className="h-5 w-5 text-gray-600" />
+              <Bell className="h-5 w-5 text-secondary" />
               {unreadCount !== undefined && unreadCount > 0 && (
                 <Badge
                   variant="destructive"
@@ -227,7 +227,7 @@ export function SubcontractorLayout() {
             {/* Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-gray-600"
+              className="p-2 text-secondary"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -243,7 +243,7 @@ export function SubcontractorLayout() {
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-50 bg-black/50" onClick={() => setMobileMenuOpen(false)}>
           <div
-            className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-xl"
+            className="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-card shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Menu Header */}
@@ -326,10 +326,10 @@ export function SubcontractorLayout() {
             </nav>
 
             {/* Menu Footer */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-white">
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-card">
               <Button
                 variant="ghost"
-                className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                className="w-full justify-start gap-2 text-error hover:text-error-dark hover:bg-error-light"
                 onClick={() => signOut()}
               >
                 <LogOut className="h-4 w-4" />

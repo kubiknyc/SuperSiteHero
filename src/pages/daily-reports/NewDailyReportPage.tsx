@@ -148,8 +148,8 @@ export function NewDailyReportPage() {
       <AppLayout>
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">New Daily Report</h1>
-            <p className="text-gray-600 mt-1">Create a new daily report for your project</p>
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">New Daily Report</h1>
+            <p className="text-secondary mt-1">Create a new daily report for your project</p>
           </div>
 
           <Card>
@@ -168,7 +168,7 @@ export function NewDailyReportPage() {
                     setErrors((prev) => ({ ...prev, project: '' }))
                   }}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary ${
-                    errors.project ? 'border-red-500' : 'border-gray-300'
+                    errors.project ? 'border-red-500' : 'border-input'
                   }`}
                 >
                   <option value="">-- Select a project --</option>
@@ -195,16 +195,16 @@ export function NewDailyReportPage() {
                     setErrors((prev) => ({ ...prev, date: '' }))
                   }}
                   className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary ${
-                    errors.date ? 'border-red-500' : 'border-gray-300'
+                    errors.date ? 'border-red-500' : 'border-input'
                   }`}
                 />
               </FormField>
 
               {/* Duplicate Report Warning */}
               {duplicateResult?.hasDuplicate && duplicateResult.existingReport && (
-                <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <div className="p-4 bg-warning-light border border-amber-200 rounded-lg">
                   <div className="flex items-start gap-3">
-                    <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
                       <p className="font-medium text-amber-900">Report Already Exists</p>
                       <p className="text-sm text-amber-700 mb-2">
@@ -296,7 +296,7 @@ export function NewDailyReportPage() {
                         disabled={copyFromPrevious || previousReportRelatedData.isLoading}
                         className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md ${
                           copyFromPrevious
-                            ? 'bg-green-100 text-green-800 cursor-default'
+                            ? 'bg-success-light text-green-800 cursor-default'
                             : 'bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80'
                         }`}
                       >
@@ -309,8 +309,8 @@ export function NewDailyReportPage() {
               )}
 
               {selectedProjectId && !previousReport && !isPreviousLoading && (
-                <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <p className="text-sm text-gray-600">
+                <div className="p-4 bg-surface border border-border rounded-lg">
+                  <p className="text-sm text-secondary">
                     No previous reports found for this project. You'll start with a fresh report.
                   </p>
                 </div>
@@ -330,8 +330,8 @@ export function NewDailyReportPage() {
               </button>
 
               {projects && projects.length === 0 && (
-                <div className="flex gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
+                <div className="flex gap-3 p-4 bg-warning-light border border-yellow-200 rounded-lg">
+                  <AlertCircle className="h-5 w-5 text-warning flex-shrink-0" />
                   <div>
                     <p className="font-medium text-yellow-900">No projects available</p>
                     <p className="text-sm text-yellow-700">
@@ -351,8 +351,8 @@ export function NewDailyReportPage() {
     <AppLayout>
       <div className="p-6 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">New Daily Report</h1>
-          <p className="text-gray-600 mt-1">Document your daily activities and progress</p>
+          <h1 className="text-3xl font-bold text-foreground" className="heading-page">New Daily Report</h1>
+          <p className="text-secondary mt-1">Document your daily activities and progress</p>
         </div>
 
         <DailyReportForm

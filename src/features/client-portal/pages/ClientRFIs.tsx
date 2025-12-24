@@ -41,19 +41,19 @@ import type { ClientRFIView } from '@/types/client-portal'
 
 // Status configuration
 const statusConfig: Record<string, { label: string; color: string; bgColor: string; icon: React.ComponentType<{ className?: string }> }> = {
-  open: { label: 'Open', color: 'text-blue-700', bgColor: 'bg-blue-100', icon: Circle },
-  pending: { label: 'Pending', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: Clock },
+  open: { label: 'Open', color: 'text-primary-hover', bgColor: 'bg-info-light', icon: Circle },
+  pending: { label: 'Pending', color: 'text-yellow-700', bgColor: 'bg-warning-light', icon: Clock },
   in_progress: { label: 'In Progress', color: 'text-purple-700', bgColor: 'bg-purple-100', icon: AlertCircle },
-  resolved: { label: 'Resolved', color: 'text-green-700', bgColor: 'bg-green-100', icon: CheckCircle2 },
-  closed: { label: 'Closed', color: 'text-gray-700', bgColor: 'bg-gray-100', icon: CheckCircle2 },
-  cancelled: { label: 'Cancelled', color: 'text-red-700', bgColor: 'bg-red-100', icon: XCircle },
+  resolved: { label: 'Resolved', color: 'text-success-dark', bgColor: 'bg-success-light', icon: CheckCircle2 },
+  closed: { label: 'Closed', color: 'text-secondary', bgColor: 'bg-muted', icon: CheckCircle2 },
+  cancelled: { label: 'Cancelled', color: 'text-error-dark', bgColor: 'bg-error-light', icon: XCircle },
 }
 
 const priorityConfig: Record<string, { label: string; color: string; bgColor: string }> = {
-  low: { label: 'Low', color: 'text-gray-600', bgColor: 'bg-gray-100' },
-  medium: { label: 'Medium', color: 'text-yellow-600', bgColor: 'bg-yellow-100' },
+  low: { label: 'Low', color: 'text-secondary', bgColor: 'bg-muted' },
+  medium: { label: 'Medium', color: 'text-warning', bgColor: 'bg-warning-light' },
   high: { label: 'High', color: 'text-orange-600', bgColor: 'bg-orange-100' },
-  critical: { label: 'Critical', color: 'text-red-600', bgColor: 'bg-red-100' },
+  critical: { label: 'Critical', color: 'text-error', bgColor: 'bg-error-light' },
 }
 
 export function ClientRFIs() {
@@ -105,8 +105,8 @@ export function ClientRFIs() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Requests for Information</h1>
-        <p className="text-gray-600 mt-1">
+        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Requests for Information</h1>
+        <p className="text-secondary mt-1">
           Track RFIs and their responses for your project.
         </p>
       </div>
@@ -117,12 +117,12 @@ export function ClientRFIs() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gray-100 rounded-lg">
-                  <HelpCircle className="h-5 w-5 text-gray-600" />
+                <div className="p-2 bg-muted rounded-lg">
+                  <HelpCircle className="h-5 w-5 text-secondary" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.total}</p>
-                  <p className="text-sm text-gray-500">Total RFIs</p>
+                  <p className="text-sm text-muted">Total RFIs</p>
                 </div>
               </div>
             </CardContent>
@@ -131,12 +131,12 @@ export function ClientRFIs() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <Circle className="h-5 w-5 text-blue-600" />
+                <div className="p-2 bg-info-light rounded-lg">
+                  <Circle className="h-5 w-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.open}</p>
-                  <p className="text-sm text-gray-500">Open</p>
+                  <p className="text-sm text-muted">Open</p>
                 </div>
               </div>
             </CardContent>
@@ -145,12 +145,12 @@ export function ClientRFIs() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-yellow-100 rounded-lg">
-                  <Clock className="h-5 w-5 text-yellow-600" />
+                <div className="p-2 bg-warning-light rounded-lg">
+                  <Clock className="h-5 w-5 text-warning" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.pending}</p>
-                  <p className="text-sm text-gray-500">Pending Response</p>
+                  <p className="text-sm text-muted">Pending Response</p>
                 </div>
               </div>
             </CardContent>
@@ -159,12 +159,12 @@ export function ClientRFIs() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-green-100 rounded-lg">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                <div className="p-2 bg-success-light rounded-lg">
+                  <CheckCircle2 className="h-5 w-5 text-success" />
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{stats.resolved}</p>
-                  <p className="text-sm text-gray-500">Resolved</p>
+                  <p className="text-sm text-muted">Resolved</p>
                 </div>
               </div>
             </CardContent>
@@ -176,7 +176,7 @@ export function ClientRFIs() {
       {rfis && rfis.length > 0 && (
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
             <Input
               placeholder="Search by title, description, or RFI number..."
               value={searchTerm}
@@ -202,7 +202,7 @@ export function ClientRFIs() {
 
       {/* RFI Count */}
       {filteredRFIs.length > 0 && (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted">
           Showing {filteredRFIs.length} RFI{filteredRFIs.length !== 1 ? 's' : ''}
           {searchTerm || statusFilter !== 'all' ? ' (filtered)' : ''}
         </p>
@@ -228,13 +228,13 @@ export function ClientRFIs() {
                     <AccordionTrigger className="hover:no-underline py-4">
                       <div className="flex items-center gap-4 flex-1 text-left">
                         <div className="flex-shrink-0">
-                          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 text-gray-700 font-semibold">
+                          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-muted text-secondary font-semibold">
                             #{rfi.number}
                           </span>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-medium text-gray-900 truncate">
+                            <h3 className="font-medium text-foreground truncate" className="heading-subsection">
                               {rfi.title}
                             </h3>
                             {isOverdue && (
@@ -243,7 +243,7 @@ export function ClientRFIs() {
                               </Badge>
                             )}
                           </div>
-                          <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                          <div className="flex items-center gap-3 mt-1 text-sm text-muted">
                             <span className="flex items-center gap-1">
                               <Calendar className="h-3 w-3" />
                               {format(new Date(rfi.created_at), 'MMM d, yyyy')}
@@ -251,7 +251,7 @@ export function ClientRFIs() {
                             {rfi.due_date && (
                               <span className={cn(
                                 'flex items-center gap-1',
-                                isOverdue && 'text-red-600'
+                                isOverdue && 'text-error'
                               )}>
                                 <Clock className="h-3 w-3" />
                                 Due: {format(new Date(rfi.due_date), 'MMM d, yyyy')}
@@ -285,21 +285,21 @@ export function ClientRFIs() {
                         {/* Description */}
                         {rfi.description && (
                           <div>
-                            <h4 className="text-sm font-medium text-gray-700 mb-1">Description</h4>
-                            <p className="text-gray-600 whitespace-pre-wrap">{rfi.description}</p>
+                            <h4 className="text-sm font-medium text-secondary mb-1" className="heading-card">Description</h4>
+                            <p className="text-secondary whitespace-pre-wrap">{rfi.description}</p>
                           </div>
                         )}
 
                         {/* Resolution */}
                         {rfi.resolution && (
-                          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                            <h4 className="text-sm font-medium text-green-800 mb-1 flex items-center gap-2">
+                          <div className="bg-success-light border border-green-200 rounded-lg p-4">
+                            <h4 className="text-sm font-medium text-green-800 mb-1 flex items-center gap-2" className="heading-card">
                               <CheckCircle2 className="h-4 w-4" />
                               Resolution
                             </h4>
-                            <p className="text-green-700 whitespace-pre-wrap">{rfi.resolution}</p>
+                            <p className="text-success-dark whitespace-pre-wrap">{rfi.resolution}</p>
                             {rfi.resolved_at && (
-                              <p className="text-sm text-green-600 mt-2">
+                              <p className="text-sm text-success mt-2">
                                 Resolved on {format(new Date(rfi.resolved_at), 'MMMM d, yyyy')}
                               </p>
                             )}
@@ -308,8 +308,8 @@ export function ClientRFIs() {
 
                         {/* No resolution yet */}
                         {!rfi.resolution && !['resolved', 'closed', 'cancelled'].includes(rfi.status) && (
-                          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                            <p className="text-gray-500 text-sm">
+                          <div className="bg-surface border border-border rounded-lg p-4">
+                            <p className="text-muted text-sm">
                               Awaiting response...
                             </p>
                           </div>
@@ -325,9 +325,9 @@ export function ClientRFIs() {
       ) : (
         <Card>
           <CardContent className="py-12 text-center">
-            <HelpCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900">No RFIs Found</h3>
-            <p className="text-gray-500 mt-1">
+            <HelpCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No RFIs Found</h3>
+            <p className="text-muted mt-1">
               {searchTerm || statusFilter !== 'all'
                 ? 'No RFIs match your filters. Try adjusting your search.'
                 : 'RFIs for this project will appear here.'}

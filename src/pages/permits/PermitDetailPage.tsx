@@ -143,7 +143,7 @@ export function PermitDetailPage() {
     return (
       <AppLayout>
         <div className="p-6">
-          <div className="text-center py-12 text-gray-500">Loading permit...</div>
+          <div className="text-center py-12 text-muted">Loading permit...</div>
         </div>
       </AppLayout>
     )
@@ -155,7 +155,7 @@ export function PermitDetailPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <FileCheck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">Permit not found</p>
+            <p className="text-muted">Permit not found</p>
             <Button variant="outline" className="mt-4" onClick={() => navigate('/permits')}>
               Back to Permits
             </Button>
@@ -181,14 +181,14 @@ export function PermitDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold">{permit.permit_name}</h1>
+                <h1 className="text-2xl font-bold" className="heading-page">{permit.permit_name}</h1>
                 {permit.work_cannot_proceed_without && (
-                  <AlertCircle className="h-5 w-5 text-red-500" aria-label="Critical permit" />
+                  <AlertCircle className="h-5 w-5 text-error" aria-label="Critical permit" />
                 )}
               </div>
               <div className="flex items-center gap-3 mt-1">
                 {permit.permit_number && (
-                  <span className="text-gray-500">#{permit.permit_number}</span>
+                  <span className="text-muted">#{permit.permit_number}</span>
                 )}
                 <Badge className={getPermitStatusColor(permit.status)}>
                   {getPermitStatusLabel(permit.status)}
@@ -207,7 +207,7 @@ export function PermitDetailPage() {
               <Edit className="h-4 w-4 mr-2" />
               Edit
             </Button>
-            <Button variant="outline" className="text-red-600" onClick={() => setShowDeleteDialog(true)}>
+            <Button variant="outline" className="text-error" onClick={() => setShowDeleteDialog(true)}>
               <Trash2 className="h-4 w-4 mr-2" />
               Delete
             </Button>
@@ -225,19 +225,19 @@ export function PermitDetailPage() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-gray-500">Permit Type</p>
+                    <p className="text-sm text-muted">Permit Type</p>
                     <p className="font-medium">{getPermitTypeLabel(permit.permit_type)}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Permit Number</p>
+                    <p className="text-sm text-muted">Permit Number</p>
                     <p className="font-medium">{permit.permit_number || 'Not assigned'}</p>
                   </div>
                   {permit.project && (
                     <div>
-                      <p className="text-sm text-gray-500">Project</p>
+                      <p className="text-sm text-muted">Project</p>
                       <Link
                         to={`/projects/${permit.project.id}`}
-                        className="font-medium text-blue-600 hover:underline flex items-center gap-1"
+                        className="font-medium text-primary hover:underline flex items-center gap-1"
                       >
                         <Building2 className="h-4 w-4" />
                         {permit.project.name}
@@ -245,7 +245,7 @@ export function PermitDetailPage() {
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-500">Status</p>
+                    <p className="text-sm text-muted">Status</p>
                     <Badge className={getPermitStatusColor(permit.status)}>
                       {getPermitStatusLabel(permit.status)}
                     </Badge>
@@ -255,13 +255,13 @@ export function PermitDetailPage() {
                 <div className="border-t pt-4">
                   <div className="flex items-center gap-4">
                     {permit.work_cannot_proceed_without && (
-                      <div className="flex items-center gap-2 text-red-600">
+                      <div className="flex items-center gap-2 text-error">
                         <AlertCircle className="h-4 w-4" />
                         <span className="text-sm font-medium">Critical - Work cannot proceed without</span>
                       </div>
                     )}
                     {permit.requires_inspections && (
-                      <div className="flex items-center gap-2 text-blue-600">
+                      <div className="flex items-center gap-2 text-primary">
                         <CheckCircle className="h-4 w-4" />
                         <span className="text-sm font-medium">Requires inspections</span>
                       </div>
@@ -271,8 +271,8 @@ export function PermitDetailPage() {
 
                 {permit.notes && (
                   <div className="border-t pt-4">
-                    <p className="text-sm text-gray-500 mb-2">Notes</p>
-                    <p className="text-gray-700 whitespace-pre-wrap">{permit.notes}</p>
+                    <p className="text-sm text-muted mb-2">Notes</p>
+                    <p className="text-secondary whitespace-pre-wrap">{permit.notes}</p>
                   </div>
                 )}
               </CardContent>
@@ -286,35 +286,35 @@ export function PermitDetailPage() {
               <CardContent className="space-y-3">
                 {permit.issuing_agency && (
                   <div className="flex items-center gap-3">
-                    <Building2 className="h-5 w-5 text-gray-400" />
+                    <Building2 className="h-5 w-5 text-disabled" />
                     <div>
-                      <p className="text-sm text-gray-500">Agency</p>
+                      <p className="text-sm text-muted">Agency</p>
                       <p className="font-medium">{permit.issuing_agency}</p>
                     </div>
                   </div>
                 )}
                 {permit.agency_contact && (
                   <div className="flex items-center gap-3">
-                    <User className="h-5 w-5 text-gray-400" />
+                    <User className="h-5 w-5 text-disabled" />
                     <div>
-                      <p className="text-sm text-gray-500">Contact</p>
+                      <p className="text-sm text-muted">Contact</p>
                       <p className="font-medium">{permit.agency_contact}</p>
                     </div>
                   </div>
                 )}
                 {permit.agency_phone && (
                   <div className="flex items-center gap-3">
-                    <Phone className="h-5 w-5 text-gray-400" />
+                    <Phone className="h-5 w-5 text-disabled" />
                     <div>
-                      <p className="text-sm text-gray-500">Phone</p>
-                      <a href={`tel:${permit.agency_phone}`} className="font-medium text-blue-600 hover:underline">
+                      <p className="text-sm text-muted">Phone</p>
+                      <a href={`tel:${permit.agency_phone}`} className="font-medium text-primary hover:underline">
                         {permit.agency_phone}
                       </a>
                     </div>
                   </div>
                 )}
                 {!permit.issuing_agency && !permit.agency_contact && !permit.agency_phone && (
-                  <p className="text-gray-500 text-sm">No agency information provided</p>
+                  <p className="text-muted text-sm">No agency information provided</p>
                 )}
               </CardContent>
             </Card>
@@ -333,7 +333,7 @@ export function PermitDetailPage() {
               <CardContent className="space-y-4">
                 {permit.application_date && (
                   <div>
-                    <p className="text-sm text-gray-500">Application Date</p>
+                    <p className="text-sm text-muted">Application Date</p>
                     <p className="font-medium">
                       {new Date(permit.application_date).toLocaleDateString()}
                     </p>
@@ -341,7 +341,7 @@ export function PermitDetailPage() {
                 )}
                 {permit.issue_date && (
                   <div>
-                    <p className="text-sm text-gray-500">Issue Date</p>
+                    <p className="text-sm text-muted">Issue Date</p>
                     <p className="font-medium">
                       {new Date(permit.issue_date).toLocaleDateString()}
                     </p>
@@ -349,14 +349,14 @@ export function PermitDetailPage() {
                 )}
                 {permit.expiration_date && (
                   <div>
-                    <p className="text-sm text-gray-500">Expiration Date</p>
+                    <p className="text-sm text-muted">Expiration Date</p>
                     <p className={`font-medium flex items-center gap-2 ${
-                      expired ? 'text-red-600' : expiringSoon ? 'text-yellow-600' : ''
+                      expired ? 'text-error' : expiringSoon ? 'text-warning' : ''
                     }`}>
                       {new Date(permit.expiration_date).toLocaleDateString()}
                       {expired && <Badge variant="destructive">Expired</Badge>}
                       {!expired && expiringSoon && (
-                        <Badge className="bg-yellow-100 text-yellow-800">
+                        <Badge className="bg-warning-light text-yellow-800">
                           {daysUntilExpiration} days left
                         </Badge>
                       )}
@@ -365,14 +365,14 @@ export function PermitDetailPage() {
                 )}
                 {permit.renewal_date && (
                   <div>
-                    <p className="text-sm text-gray-500">Renewal Date</p>
+                    <p className="text-sm text-muted">Renewal Date</p>
                     <p className="font-medium">
                       {new Date(permit.renewal_date).toLocaleDateString()}
                     </p>
                   </div>
                 )}
                 {!permit.application_date && !permit.issue_date && !permit.expiration_date && (
-                  <p className="text-gray-500 text-sm">No dates set</p>
+                  <p className="text-muted text-sm">No dates set</p>
                 )}
               </CardContent>
             </Card>
@@ -391,7 +391,7 @@ export function PermitDetailPage() {
                     href={permit.permit_document_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-blue-600 hover:underline"
+                    className="flex items-center gap-2 text-primary hover:underline"
                   >
                     <ExternalLink className="h-4 w-4" />
                     View Document
@@ -408,13 +408,13 @@ export function PermitDetailPage() {
               <CardContent className="space-y-3 text-sm">
                 {permit.created_by_user && (
                   <div>
-                    <p className="text-gray-500">Created By</p>
+                    <p className="text-muted">Created By</p>
                     <p className="font-medium">{permit.created_by_user.full_name}</p>
                   </div>
                 )}
                 {permit.created_at && (
                   <div>
-                    <p className="text-gray-500">Created</p>
+                    <p className="text-muted">Created</p>
                     <p className="font-medium">
                       {new Date(permit.created_at).toLocaleDateString()}
                     </p>
@@ -422,7 +422,7 @@ export function PermitDetailPage() {
                 )}
                 {permit.updated_at && (
                   <div>
-                    <p className="text-gray-500">Last Updated</p>
+                    <p className="text-muted">Last Updated</p>
                     <p className="font-medium">
                       {new Date(permit.updated_at).toLocaleDateString()}
                     </p>
@@ -443,7 +443,7 @@ export function PermitDetailPage() {
               </DialogDescription>
             </DialogHeader>
             <div className="py-4">
-              <p className="text-sm text-gray-500 mb-3">
+              <p className="text-sm text-muted mb-3">
                 Current status: <Badge className={getPermitStatusColor(permit.status)}>
                   {getPermitStatusLabel(permit.status)}
                 </Badge>
@@ -464,7 +464,7 @@ export function PermitDetailPage() {
                     </Button>
                   ))
                 ) : (
-                  <p className="text-gray-500 text-sm">This permit is in a final state and cannot be updated.</p>
+                  <p className="text-muted text-sm">This permit is in a final state and cannot be updated.</p>
                 )}
               </div>
             </div>
@@ -514,7 +514,7 @@ export function PermitDetailPage() {
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-3">Issuing Authority</h4>
+                <h4 className="font-medium mb-3" className="heading-card">Issuing Authority</h4>
                 <div className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="edit_issuing_agency">Agency</Label>
@@ -546,7 +546,7 @@ export function PermitDetailPage() {
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-3">Dates</h4>
+                <h4 className="font-medium mb-3" className="heading-card">Dates</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="edit_application_date">Application Date</Label>

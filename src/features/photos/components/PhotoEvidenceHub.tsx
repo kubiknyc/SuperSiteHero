@@ -186,16 +186,16 @@ export function PhotoEvidenceHub({
           <CardContent className="pt-0">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="bg-blue-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-blue-700">{stats.totalPhotos}</p>
-                <p className="text-xs text-blue-600">Total Photos</p>
+                <p className="text-2xl font-bold text-primary-hover">{stats.totalPhotos}</p>
+                <p className="text-xs text-primary">Total Photos</p>
               </div>
-              <div className="bg-green-50 rounded-lg p-3 text-center">
-                <p className="text-2xl font-bold text-green-700">{stats.linkedPhotos}</p>
-                <p className="text-xs text-green-600">Linked</p>
+              <div className="bg-success-light rounded-lg p-3 text-center">
+                <p className="text-2xl font-bold text-success-dark">{stats.linkedPhotos}</p>
+                <p className="text-xs text-success">Linked</p>
               </div>
-              <div className="bg-yellow-50 rounded-lg p-3 text-center">
+              <div className="bg-warning-light rounded-lg p-3 text-center">
                 <p className="text-2xl font-bold text-yellow-700">{stats.orphanPhotos}</p>
-                <p className="text-xs text-yellow-600">Unlinked</p>
+                <p className="text-xs text-warning">Unlinked</p>
               </div>
               <div className="bg-purple-50 rounded-lg p-3 text-center">
                 <p className="text-2xl font-bold text-purple-700">{stats.recentUploads}</p>
@@ -213,7 +213,7 @@ export function PhotoEvidenceHub({
             {/* Search */}
             <div className="flex-1 flex gap-2">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-disabled" />
                 <Input
                   placeholder="Search photos..."
                   className="pl-10"
@@ -229,7 +229,7 @@ export function PhotoEvidenceHub({
                       handleFilterChange('search', undefined);
                     }}
                   >
-                    <X className="h-4 w-4 text-gray-400" />
+                    <X className="h-4 w-4 text-disabled" />
                   </button>
                 )}
               </div>
@@ -276,7 +276,7 @@ export function PhotoEvidenceHub({
           {showFilters && (
             <div className="mt-4 pt-4 border-t grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label className="text-sm font-medium text-secondary mb-1 block">
                   Entity Type
                 </label>
                 <Select
@@ -300,7 +300,7 @@ export function PhotoEvidenceHub({
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label className="text-sm font-medium text-secondary mb-1 block">
                   Building
                 </label>
                 <Input
@@ -311,7 +311,7 @@ export function PhotoEvidenceHub({
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label className="text-sm font-medium text-secondary mb-1 block">
                   Date From
                 </label>
                 <Input
@@ -322,7 +322,7 @@ export function PhotoEvidenceHub({
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700 mb-1 block">
+                <label className="text-sm font-medium text-secondary mb-1 block">
                   Date To
                 </label>
                 <Input
@@ -377,13 +377,13 @@ export function PhotoEvidenceHub({
         <CardContent className="p-4">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <RefreshCw className="h-8 w-8 animate-spin text-gray-400" />
+              <RefreshCw className="h-8 w-8 animate-spin text-disabled" />
             </div>
           ) : filteredPhotos.length === 0 ? (
             <div className="text-center py-12">
               <Image className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No photos found</p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-muted">No photos found</p>
+              <p className="text-sm text-disabled mt-1">
                 Try adjusting your search or filters
               </p>
             </div>
@@ -467,7 +467,7 @@ function PhotoGridItem({
 }: PhotoGridItemProps) {
   return (
     <div
-      className={`relative aspect-square bg-gray-100 rounded-lg overflow-hidden cursor-pointer group transition-all ${
+      className={`relative aspect-square bg-muted rounded-lg overflow-hidden cursor-pointer group transition-all ${
         isSelected ? 'ring-2 ring-blue-500 ring-offset-2' : ''
       }`}
       onClick={onSelect}
@@ -480,7 +480,7 @@ function PhotoGridItem({
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center">
-          <Image className="h-8 w-8 text-gray-400" />
+          <Image className="h-8 w-8 text-disabled" />
         </div>
       )}
 
@@ -489,7 +489,7 @@ function PhotoGridItem({
         <div className="absolute top-2 left-2">
           <Checkbox
             checked={isSelected}
-            className="bg-white"
+            className="bg-card"
             onClick={(e) => e.stopPropagation()}
           />
         </div>
@@ -498,7 +498,7 @@ function PhotoGridItem({
       {/* Link count badge */}
       {photo.linkCount > 0 && (
         <div className="absolute top-2 right-2">
-          <Badge variant="secondary" className="bg-white/90">
+          <Badge variant="secondary" className="bg-card/90">
             <Link2 className="h-3 w-3 mr-1" />
             {photo.linkCount}
           </Badge>
@@ -530,8 +530,8 @@ function PhotoListItem({
 }: PhotoListItemProps) {
   return (
     <div
-      className={`flex items-center gap-4 p-3 rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors ${
-        isSelected ? 'bg-blue-50 border-blue-200' : 'border-gray-200'
+      className={`flex items-center gap-4 p-3 rounded-lg border cursor-pointer hover:bg-surface transition-colors ${
+        isSelected ? 'bg-blue-50 border-blue-200' : 'border-border'
       }`}
       onClick={onSelect}
     >
@@ -542,7 +542,7 @@ function PhotoListItem({
         />
       )}
 
-      <div className="w-16 h-16 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+      <div className="w-16 h-16 bg-muted rounded overflow-hidden flex-shrink-0">
         {photo.thumbnailUrl || photo.fileUrl ? (
           <img
             src={photo.thumbnailUrl || photo.fileUrl}
@@ -551,7 +551,7 @@ function PhotoListItem({
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Image className="h-6 w-6 text-gray-400" />
+            <Image className="h-6 w-6 text-disabled" />
           </div>
         )}
       </div>
@@ -561,13 +561,13 @@ function PhotoListItem({
           {photo.caption || photo.fileName}
         </p>
         {photo.building && (
-          <p className="text-xs text-gray-500 flex items-center gap-1 mt-1">
+          <p className="text-xs text-muted flex items-center gap-1 mt-1">
             <MapPin className="h-3 w-3" />
             {[photo.building, photo.floor, photo.area].filter(Boolean).join(' > ')}
           </p>
         )}
         {photo.capturedAt && (
-          <p className="text-xs text-gray-500 flex items-center gap-1">
+          <p className="text-xs text-muted flex items-center gap-1">
             <Calendar className="h-3 w-3" />
             {new Date(photo.capturedAt).toLocaleDateString()}
           </p>
@@ -603,11 +603,11 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80" onClick={onClose}>
       <div
-        className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+        className="relative max-w-4xl max-h-[90vh] bg-card rounded-lg overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="absolute top-4 right-4 p-2 bg-white/80 rounded-full hover:bg-white z-10"
+          className="absolute top-4 right-4 p-2 bg-card/80 rounded-full hover:bg-card z-10"
           onClick={onClose}
         >
           <X className="h-5 w-5" />
@@ -615,7 +615,7 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
 
         <div className="flex flex-col md:flex-row">
           {/* Image */}
-          <div className="md:w-2/3 bg-gray-900 flex items-center justify-center">
+          <div className="md:w-2/3 bg-background flex items-center justify-center">
             <img
               src={photo.fileUrl}
               alt={photo.caption || photo.fileName}
@@ -625,27 +625,27 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
 
           {/* Details */}
           <div className="md:w-1/3 p-4 overflow-y-auto max-h-[60vh]">
-            <h3 className="font-semibold text-lg mb-2">
+            <h3 className="font-semibold text-lg mb-2" className="heading-subsection">
               {photo.caption || 'Untitled Photo'}
             </h3>
 
-            <p className="text-sm text-gray-500 mb-4">{photo.fileName}</p>
+            <p className="text-sm text-muted mb-4">{photo.fileName}</p>
 
             {photo.description && (
-              <p className="text-sm text-gray-700 mb-4">{photo.description}</p>
+              <p className="text-sm text-secondary mb-4">{photo.description}</p>
             )}
 
             <div className="space-y-3">
               {photo.capturedAt && (
                 <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="h-4 w-4 text-gray-400" />
+                  <Calendar className="h-4 w-4 text-disabled" />
                   <span>{new Date(photo.capturedAt).toLocaleString()}</span>
                 </div>
               )}
 
               {photo.building && (
                 <div className="flex items-center gap-2 text-sm">
-                  <MapPin className="h-4 w-4 text-gray-400" />
+                  <MapPin className="h-4 w-4 text-disabled" />
                   <span>
                     {[photo.building, photo.floor, photo.area]
                       .filter(Boolean)
@@ -656,7 +656,7 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
 
               {photo.tags && photo.tags.length > 0 && (
                 <div className="flex items-start gap-2 text-sm">
-                  <Tag className="h-4 w-4 text-gray-400 mt-0.5" />
+                  <Tag className="h-4 w-4 text-disabled mt-0.5" />
                   <div className="flex flex-wrap gap-1">
                     {photo.tags.map((tag) => (
                       <Badge key={tag} variant="secondary" className="text-xs">
@@ -671,16 +671,16 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
             {/* Linked Entities */}
             {photo.linkedEntities.length > 0 && (
               <div className="mt-6">
-                <h4 className="text-sm font-medium mb-2">Linked To</h4>
+                <h4 className="text-sm font-medium mb-2" className="heading-card">Linked To</h4>
                 <div className="space-y-2">
                   {photo.linkedEntities.map((entity) => (
                     <div
                       key={`${entity.type}-${entity.id}`}
-                      className="flex items-center gap-2 p-2 bg-gray-50 rounded text-sm"
+                      className="flex items-center gap-2 p-2 bg-surface rounded text-sm"
                     >
-                      <Link2 className="h-4 w-4 text-gray-400" />
+                      <Link2 className="h-4 w-4 text-disabled" />
                       <Badge variant="outline">{ENTITY_TYPE_LABELS[entity.type]}</Badge>
-                      <span className="text-gray-600 truncate">
+                      <span className="text-secondary truncate">
                         {entity.displayName}
                       </span>
                     </div>

@@ -119,7 +119,7 @@ export function CreateDailyReportDialog({
             {/* Date */}
             <div className="space-y-2">
               <Label htmlFor="report_date">
-                Report Date <span className="text-red-500">*</span>
+                Report Date <span className="text-error">*</span>
               </Label>
               <InputWithError
                 id="report_date"
@@ -134,7 +134,7 @@ export function CreateDailyReportDialog({
 
             {/* Weather Section */}
             <div className="border-t pt-4">
-              <h3 className="font-semibold text-gray-900 mb-4">Weather Conditions</h3>
+              <h3 className="font-semibold text-foreground mb-4" className="heading-subsection">Weather Conditions</h3>
 
               <div className="space-y-2">
                 <Label htmlFor="weather_condition">Weather Condition</Label>
@@ -196,7 +196,7 @@ export function CreateDailyReportDialog({
 
             {/* Workforce Section */}
             <div className="border-t pt-4">
-              <h3 className="font-semibold text-gray-900 mb-4">Workforce</h3>
+              <h3 className="font-semibold text-foreground mb-4" className="heading-subsection">Workforce</h3>
 
               <div className="space-y-2">
                 <Label htmlFor="total_workers">Total Workers on Site</Label>
@@ -215,7 +215,7 @@ export function CreateDailyReportDialog({
 
             {/* Delays and Notes Section */}
             <div className="border-t pt-4">
-              <h3 className="font-semibold text-gray-900 mb-4">Additional Information</h3>
+              <h3 className="font-semibold text-foreground mb-4" className="heading-subsection">Additional Information</h3>
 
               <div className="space-y-2">
                 <Label htmlFor="other_delays">Other Delays or Issues</Label>

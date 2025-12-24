@@ -127,7 +127,7 @@ export function MessagesPage() {
             /* Empty state */
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
               <MessageSquare className="h-16 w-16 mb-4 opacity-50" />
-              <h2 className="text-xl font-semibold mb-2">Your Messages</h2>
+              <h2 className="text-xl font-semibold mb-2" className="heading-section">Your Messages</h2>
               <p className="text-center max-w-md mb-4">
                 Select a conversation from the list or start a new one to begin messaging.
               </p>

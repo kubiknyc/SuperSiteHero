@@ -346,10 +346,10 @@ export function ActiveExecutionPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-4" />
-          <p className="text-gray-600">Loading checklist...</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+          <p className="text-secondary">Loading checklist...</p>
         </div>
       </div>
     )
@@ -357,9 +357,9 @@ export function ActiveExecutionPage() {
 
   if (!execution) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Checklist not found</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Checklist not found</h2>
           <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Checklists
@@ -370,7 +370,7 @@ export function ActiveExecutionPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header */}
         <div className="mb-6">
@@ -386,22 +386,22 @@ export function ActiveExecutionPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{execution.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{execution.name}</h1>
               {execution.description && (
-                <p className="text-gray-600 mb-3">{execution.description}</p>
+                <p className="text-secondary mb-3">{execution.description}</p>
               )}
               <div className="flex items-center gap-3 flex-wrap">
                 <Badge
                   className={
                     execution.status === 'submitted'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-blue-100 text-blue-800'
+                      ? 'bg-success-light text-green-800'
+                      : 'bg-info-light text-blue-800'
                   }
                 >
                   {execution.status.replace('_', ' ')}
                 </Badge>
                 {execution.category && <Badge variant="outline">{execution.category}</Badge>}
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted">
                   Created {formatDistanceToNow(new Date(execution.created_at), { addSuffix: true })}
                 </span>
               </div>
@@ -411,35 +411,35 @@ export function ActiveExecutionPage() {
         </div>
 
         {/* Progress Bar */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="bg-card rounded-lg shadow p-4 mb-6">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-blue-600" />
-              <span className="font-medium text-gray-900">Progress</span>
+              <CheckCircle2 className="w-5 h-5 text-primary" />
+              <span className="font-medium text-foreground">Progress</span>
             </div>
-            <span className="text-sm font-medium text-gray-700">
+            <span className="text-sm font-medium text-secondary">
               {progress.completed} / {progress.total} items ({progress.percentage}%)
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="w-full bg-muted rounded-full h-3">
             <div
               className={`h-3 rounded-full transition-all ${
-                progress.percentage === 100 ? 'bg-green-600' : 'bg-blue-600'
+                progress.percentage === 100 ? 'bg-success' : 'bg-primary'
               }`}
               style={{ width: `${progress.percentage}%` }}
             />
           </div>
           {lastSaved && (
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-muted mt-2">
               Last saved {formatDistanceToNow(lastSaved, { addSuffix: true })}
             </p>
           )}
         </div>
 
         {/* Metadata Section */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="bg-card rounded-lg shadow p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-gray-900">Inspection Details</h2>
+            <h2 className="text-lg font-semibold text-foreground" className="heading-section">Inspection Details</h2>
             {canEdit && !isEditingMetadata && (
               <Button variant="outline" size="sm" onClick={() => setIsEditingMetadata(true)}>
                 Edit
@@ -452,7 +452,7 @@ export function ActiveExecutionPage() {
               <div>
                 <Label htmlFor="location">Location</Label>
                 <div className="flex items-center gap-2 mt-1">
-                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <MapPin className="w-4 h-4 text-disabled" />
                   <Input
                     id="location"
                     value={location}
@@ -464,7 +464,7 @@ export function ActiveExecutionPage() {
               <div>
                 <Label htmlFor="inspector">Inspector Name</Label>
                 <div className="flex items-center gap-2 mt-1">
-                  <User className="w-4 h-4 text-gray-400" />
+                  <User className="w-4 h-4 text-disabled" />
                   <Input
                     id="inspector"
                     value={inspectorName}
@@ -477,7 +477,7 @@ export function ActiveExecutionPage() {
                 <div>
                   <Label htmlFor="weather">Weather</Label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Cloud className="w-4 h-4 text-gray-400" />
+                    <Cloud className="w-4 h-4 text-disabled" />
                     <Input
                       id="weather"
                       value={weather}
@@ -489,7 +489,7 @@ export function ActiveExecutionPage() {
                 <div>
                   <Label htmlFor="temperature">Temperature (°F)</Label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Thermometer className="w-4 h-4 text-gray-400" />
+                    <Thermometer className="w-4 h-4 text-disabled" />
                     <Input
                       id="temperature"
                       type="number"
@@ -513,26 +513,26 @@ export function ActiveExecutionPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               {execution.location && (
-                <div className="flex items-center gap-2 text-gray-700">
-                  <MapPin className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-secondary">
+                  <MapPin className="w-4 h-4 text-disabled" />
                   <span>{execution.location}</span>
                 </div>
               )}
               {execution.inspector_name && (
-                <div className="flex items-center gap-2 text-gray-700">
-                  <User className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-secondary">
+                  <User className="w-4 h-4 text-disabled" />
                   <span>{execution.inspector_name}</span>
                 </div>
               )}
               {execution.weather_conditions && (
-                <div className="flex items-center gap-2 text-gray-700">
-                  <Cloud className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-secondary">
+                  <Cloud className="w-4 h-4 text-disabled" />
                   <span>{execution.weather_conditions}</span>
                 </div>
               )}
               {execution.temperature && (
-                <div className="flex items-center gap-2 text-gray-700">
-                  <Thermometer className="w-4 h-4 text-gray-400" />
+                <div className="flex items-center gap-2 text-secondary">
+                  <Thermometer className="w-4 h-4 text-disabled" />
                   <span>{execution.temperature}°F</span>
                 </div>
               )}
@@ -544,7 +544,7 @@ export function ActiveExecutionPage() {
         <div className="space-y-6">
           {sections.map((section) => (
             <div key={section.name}>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">{section.name}</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-4" className="heading-section">{section.name}</h2>
               <div className="space-y-3">
                 {section.items.map(({ templateItem, response }) => {
                   const isFocused = currentResponse?.id === response!.id

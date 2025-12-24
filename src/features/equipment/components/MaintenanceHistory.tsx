@@ -302,7 +302,7 @@ export function MaintenanceHistory({ equipment, className }: MaintenanceHistoryP
       <Card className={className}>
         <CardContent className="py-8">
           <div className="flex items-center justify-center">
-            <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
+            <RefreshCw className="h-6 w-6 animate-spin text-disabled" />
           </div>
         </CardContent>
       </Card>
@@ -314,8 +314,8 @@ export function MaintenanceHistory({ equipment, className }: MaintenanceHistoryP
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <History className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-info-light rounded-lg">
+              <History className="h-5 w-5 text-primary" />
             </div>
             <div>
               <CardTitle>Maintenance History</CardTitle>
@@ -343,11 +343,11 @@ export function MaintenanceHistory({ equipment, className }: MaintenanceHistoryP
         {/* Stats and Filters */}
         <div className="flex flex-wrap items-center gap-4 pt-4">
           <div className="flex items-center gap-2 text-sm">
-            <DollarSign className="h-4 w-4 text-gray-500" />
+            <DollarSign className="h-4 w-4 text-muted" />
             <span className="font-medium">
               {formatCurrency(stats.totalCost)}
             </span>
-            <span className="text-gray-500">total cost</span>
+            <span className="text-muted">total cost</span>
           </div>
 
           <div className="flex-1" />
@@ -381,7 +381,7 @@ export function MaintenanceHistory({ equipment, className }: MaintenanceHistoryP
 
       <CardContent>
         {filteredRecords.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-muted">
             <History className="h-12 w-12 mx-auto mb-3 text-gray-300" />
             <p className="font-medium">No maintenance records</p>
             <p className="text-sm">
@@ -437,22 +437,22 @@ function MaintenanceRecordCard({
     <div className="relative">
       {/* Timeline connector */}
       {!isFirst && (
-        <div className="absolute left-4 -top-4 w-0.5 h-4 bg-gray-200" />
+        <div className="absolute left-4 -top-4 w-0.5 h-4 bg-muted" />
       )}
       {!isLast && (
-        <div className="absolute left-4 bottom-0 w-0.5 h-4 bg-gray-200" />
+        <div className="absolute left-4 bottom-0 w-0.5 h-4 bg-muted" />
       )}
 
       <div
         className={cn(
-          'flex items-start gap-4 p-4 rounded-lg border bg-white transition-colors',
-          isExpanded ? 'border-blue-200 bg-blue-50/50' : 'hover:bg-gray-50'
+          'flex items-start gap-4 p-4 rounded-lg border bg-card transition-colors',
+          isExpanded ? 'border-blue-200 bg-blue-50/50' : 'hover:bg-surface'
         )}
       >
         {/* Timeline dot */}
         <div className="relative z-10 flex-shrink-0">
-          <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-            <CheckCircle className="h-4 w-4 text-green-600" />
+          <div className="w-8 h-8 bg-success-light rounded-full flex items-center justify-center">
+            <CheckCircle className="h-4 w-4 text-success" />
           </div>
         </div>
 
@@ -460,10 +460,10 @@ function MaintenanceRecordCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h4 className="font-medium text-gray-900">
+              <h4 className="font-medium text-foreground" className="heading-card">
                 {record.maintenance_type.replace(/_/g, ' ')}
               </h4>
-              <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 mt-1">
+              <div className="flex flex-wrap items-center gap-2 text-sm text-muted mt-1">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3.5 w-3.5" />
                   {format(parseISO(record.performed_at), 'MMM d, yyyy')}
@@ -504,7 +504,7 @@ function MaintenanceRecordCard({
           </div>
 
           {record.description && (
-            <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+            <p className="text-sm text-secondary mt-2 line-clamp-2">
               {record.description}
             </p>
           )}
@@ -514,14 +514,14 @@ function MaintenanceRecordCard({
             <div className="mt-4 pt-4 border-t space-y-3">
               {record.work_performed && (
                 <div>
-                  <Label className="text-xs text-gray-500">Work Performed</Label>
+                  <Label className="text-xs text-muted">Work Performed</Label>
                   <p className="text-sm">{record.work_performed}</p>
                 </div>
               )}
 
               {record.parts_used && record.parts_used.length > 0 && (
                 <div>
-                  <Label className="text-xs text-gray-500 flex items-center gap-1">
+                  <Label className="text-xs text-muted flex items-center gap-1">
                     <Package className="h-3.5 w-3.5" />
                     Parts Used
                   </Label>
@@ -538,7 +538,7 @@ function MaintenanceRecordCard({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {record.labor_cost !== null && (
                   <div>
-                    <Label className="text-xs text-gray-500">Labor Cost</Label>
+                    <Label className="text-xs text-muted">Labor Cost</Label>
                     <p className="text-sm font-medium">
                       {formatCurrency(record.labor_cost)}
                     </p>
@@ -546,7 +546,7 @@ function MaintenanceRecordCard({
                 )}
                 {record.parts_cost !== null && (
                   <div>
-                    <Label className="text-xs text-gray-500">Parts Cost</Label>
+                    <Label className="text-xs text-muted">Parts Cost</Label>
                     <p className="text-sm font-medium">
                       {formatCurrency(record.parts_cost)}
                     </p>
@@ -554,7 +554,7 @@ function MaintenanceRecordCard({
                 )}
                 {record.service_provider && (
                   <div>
-                    <Label className="text-xs text-gray-500 flex items-center gap-1">
+                    <Label className="text-xs text-muted flex items-center gap-1">
                       <Building className="h-3.5 w-3.5" />
                       Service Provider
                     </Label>
@@ -563,7 +563,7 @@ function MaintenanceRecordCard({
                 )}
                 {record.technician_name && (
                   <div>
-                    <Label className="text-xs text-gray-500">Technician</Label>
+                    <Label className="text-xs text-muted">Technician</Label>
                     <p className="text-sm">{record.technician_name}</p>
                   </div>
                 )}
@@ -571,16 +571,16 @@ function MaintenanceRecordCard({
 
               {record.invoice_number && (
                 <div className="flex items-center gap-2">
-                  <FileText className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm text-gray-600">
+                  <FileText className="h-4 w-4 text-disabled" />
+                  <span className="text-sm text-secondary">
                     Invoice: {record.invoice_number}
                   </span>
                 </div>
               )}
 
               {record.notes && (
-                <div className="p-3 bg-gray-100 rounded-lg">
-                  <Label className="text-xs text-gray-500">Notes</Label>
+                <div className="p-3 bg-muted rounded-lg">
+                  <Label className="text-xs text-muted">Notes</Label>
                   <p className="text-sm mt-1">{record.notes}</p>
                 </div>
               )}
@@ -590,7 +590,7 @@ function MaintenanceRecordCard({
                   <AlertCircle className="h-4 w-4" />
                   Next due: {format(parseISO(record.next_due_at), 'MMM d, yyyy')}
                   {record.next_due_hours && (
-                    <span className="text-gray-500">
+                    <span className="text-muted">
                       or at {record.next_due_hours.toFixed(0)} hrs
                     </span>
                   )}

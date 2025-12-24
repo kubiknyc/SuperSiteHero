@@ -171,8 +171,8 @@ export function MeetingsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Meetings</h1>
-            <p className="text-gray-600 mt-1">
+            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Meetings</h1>
+            <p className="text-secondary mt-1">
               Schedule and document project meetings and minutes
             </p>
           </div>
@@ -190,7 +190,7 @@ export function MeetingsPage() {
             {/* Project selector */}
             {projects && projects.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-secondary mb-2">
                   Project
                 </label>
                 <Select
@@ -209,7 +209,7 @@ export function MeetingsPage() {
 
             {/* Search bar */}
             <div className="flex items-center gap-2">
-              <Search className="h-5 w-5 text-gray-400 flex-shrink-0" />
+              <Search className="h-5 w-5 text-disabled flex-shrink-0" />
               <Input
                 type="text"
                 placeholder="Search meetings by name, agenda, location..."
@@ -260,10 +260,10 @@ export function MeetingsPage() {
 
             {/* Advanced filters panel */}
             {showAdvancedFilters && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-surface rounded-lg">
                 {/* Date range */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-secondary mb-2">
                     Date Range
                   </label>
                   <div className="flex gap-2">
@@ -293,7 +293,7 @@ export function MeetingsPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Loading meetings...</p>
+            <p className="text-muted">Loading meetings...</p>
           </div>
         )}
 
@@ -301,11 +301,11 @@ export function MeetingsPage() {
         {!isLoading && (!filteredMeetings || filteredMeetings.length === 0) && (
           <Card>
             <CardContent className="p-12 text-center">
-              <CalendarCheck className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <CalendarCheck className="h-12 w-12 text-disabled mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
                 No meetings found
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-secondary mb-6">
                 {activeFilterCount > 0
                   ? 'No meetings match your current filters. Try adjusting your search criteria.'
                   : 'Schedule your first meeting to start documenting project discussions.'}
@@ -336,12 +336,12 @@ export function MeetingsPage() {
                 {filteredMeetings.map((meeting) => (
                   <div
                     key={meeting.id}
-                    className="py-4 flex items-start justify-between gap-4 hover:bg-gray-50 -mx-4 px-4 cursor-pointer"
+                    className="py-4 flex items-start justify-between gap-4 hover:bg-surface -mx-4 px-4 cursor-pointer"
                     onClick={() => navigate(`/meetings/${meeting.id}`)}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-medium text-gray-900 truncate">
+                        <h3 className="font-medium text-foreground truncate" className="heading-subsection">
                           {meeting.meeting_name || getMeetingTypeLabel(meeting.meeting_type)}
                         </h3>
                         <Badge variant={getDateBadgeVariant(meeting.meeting_date)}>
@@ -349,7 +349,7 @@ export function MeetingsPage() {
                         </Badge>
                       </div>
 
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-600">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-secondary">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-4 w-4" />
                           {format(parseISO(meeting.meeting_date), 'MMM d, yyyy')}
@@ -381,13 +381,13 @@ export function MeetingsPage() {
                       </div>
 
                       {'projects' in meeting && meeting.projects && (
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-muted mt-1">
                           Project: {(meeting.projects as { name?: string })?.name}
                         </p>
                       )}
 
                       {meeting.agenda && (
-                        <p className="text-sm text-gray-500 mt-2 line-clamp-2">
+                        <p className="text-sm text-muted mt-2 line-clamp-2">
                           {meeting.agenda}
                         </p>
                       )}
@@ -428,10 +428,10 @@ export function MeetingsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total Meetings</p>
+                    <p className="text-sm font-medium text-secondary">Total Meetings</p>
                     <p className="text-2xl font-bold mt-1">{stats.total}</p>
                   </div>
-                  <FileText className="h-8 w-8 text-blue-600" />
+                  <FileText className="h-8 w-8 text-primary" />
                 </div>
               </CardContent>
             </Card>
@@ -440,10 +440,10 @@ export function MeetingsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Today</p>
+                    <p className="text-sm font-medium text-secondary">Today</p>
                     <p className="text-2xl font-bold mt-1">{stats.today}</p>
                   </div>
-                  <Calendar className="h-8 w-8 text-green-600" />
+                  <Calendar className="h-8 w-8 text-success" />
                 </div>
               </CardContent>
             </Card>
@@ -452,7 +452,7 @@ export function MeetingsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Upcoming</p>
+                    <p className="text-sm font-medium text-secondary">Upcoming</p>
                     <p className="text-2xl font-bold mt-1">{stats.upcoming}</p>
                   </div>
                   <Clock className="h-8 w-8 text-orange-600" />
@@ -464,7 +464,7 @@ export function MeetingsPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">With Action Items</p>
+                    <p className="text-sm font-medium text-secondary">With Action Items</p>
                     <p className="text-2xl font-bold mt-1">{stats.withActionItems}</p>
                   </div>
                   <Users className="h-8 w-8 text-purple-600" />

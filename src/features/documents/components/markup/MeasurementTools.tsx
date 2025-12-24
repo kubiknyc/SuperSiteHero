@@ -167,7 +167,7 @@ export function MeasurementTools({
         <PopoverContent className="w-80 p-0" align="start">
           {/* Tools Section */}
           <div className="p-3 border-b">
-            <Label className="text-xs font-medium text-gray-600 mb-2 block">Measurement Tools</Label>
+            <Label className="text-xs font-medium text-secondary mb-2 block">Measurement Tools</Label>
             <div className="flex gap-2">
               <Button
                 size="sm"
@@ -195,9 +195,9 @@ export function MeasurementTools({
           </div>
 
           {/* Scale Calibration */}
-          <div className="p-3 border-b bg-gray-50">
+          <div className="p-3 border-b bg-surface">
             <div className="flex items-center justify-between mb-2">
-              <Label className="text-xs font-medium text-gray-600">Scale Calibration</Label>
+              <Label className="text-xs font-medium text-secondary">Scale Calibration</Label>
               <Button
                 size="sm"
                 variant="ghost"
@@ -226,7 +226,7 @@ export function MeasurementTools({
             </div>
 
             {isCalibrating && (
-              <div className="p-2 bg-blue-100 text-blue-800 rounded text-xs mb-2">
+              <div className="p-2 bg-info-light text-blue-800 rounded text-xs mb-2">
                 Draw a line on a known dimension (e.g., a scale bar or dimension line on the drawing)
                 {calibrationPixelDistance && (
                   <div className="mt-1 font-medium">
@@ -235,7 +235,7 @@ export function MeasurementTools({
                       size="sm"
                       variant="link"
                       onClick={() => setIsCalibrationDialogOpen(true)}
-                      className="ml-2 h-auto p-0 text-blue-700"
+                      className="ml-2 h-auto p-0 text-primary-hover"
                     >
                       Enter real distance
                     </Button>
@@ -245,14 +245,14 @@ export function MeasurementTools({
             )}
 
             {scale ? (
-              <div className="text-xs text-gray-600">
+              <div className="text-xs text-secondary">
                 <p>Current scale: {scale.pixelDistance.toFixed(0)}px = {scale.realWorldDistance} {scale.unit}</p>
-                <p className="text-gray-400">
+                <p className="text-disabled">
                   1px = {(scale.realWorldDistance / scale.pixelDistance).toFixed(4)} {scale.unit}
                 </p>
               </div>
             ) : (
-              <p className="text-xs text-amber-600">
+              <p className="text-xs text-warning">
                 No scale calibrated. Calibrate to enable measurements.
               </p>
             )}
@@ -261,7 +261,7 @@ export function MeasurementTools({
           {/* Unit Selection */}
           <div className="p-3 border-b">
             <div className="flex items-center justify-between">
-              <Label className="text-xs font-medium text-gray-600">Display Unit</Label>
+              <Label className="text-xs font-medium text-secondary">Display Unit</Label>
               <Select
                 value={currentUnit}
                 onChange={(e) => onUnitChange(e.target.value as MeasurementUnit)}
@@ -280,8 +280,8 @@ export function MeasurementTools({
           {/* Measurements List */}
           <div className="max-h-48 overflow-y-auto">
             {measurements.length === 0 ? (
-              <div className="p-4 text-center text-gray-500 text-xs">
-                <Ruler className="w-6 h-6 mx-auto mb-1 text-gray-400" />
+              <div className="p-4 text-center text-muted text-xs">
+                <Ruler className="w-6 h-6 mx-auto mb-1 text-disabled" />
                 <p>No measurements yet</p>
               </div>
             ) : (
@@ -289,13 +289,13 @@ export function MeasurementTools({
                 {measurements.map((m, index) => (
                   <div
                     key={m.id}
-                    className="flex items-center justify-between p-2 hover:bg-gray-50"
+                    className="flex items-center justify-between p-2 hover:bg-surface"
                   >
                     <div className="flex items-center gap-2">
                       {m.type === 'distance' ? (
-                        <Ruler className="w-3 h-3 text-blue-500" />
+                        <Ruler className="w-3 h-3 text-primary" />
                       ) : (
-                        <Square className="w-3 h-3 text-green-500" />
+                        <Square className="w-3 h-3 text-success" />
                       )}
                       <span className="text-sm font-medium">
                         {formatMeasurement(m.value, m.unit)}
@@ -305,22 +305,22 @@ export function MeasurementTools({
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleCopyMeasurement(m)}
-                        className="p-1 hover:bg-gray-200 rounded"
+                        className="p-1 hover:bg-muted rounded"
                         title="Copy value"
                       >
                         {copiedId === m.id ? (
-                          <Check className="w-3 h-3 text-green-500" />
+                          <Check className="w-3 h-3 text-success" />
                         ) : (
-                          <Copy className="w-3 h-3 text-gray-500" />
+                          <Copy className="w-3 h-3 text-muted" />
                         )}
                       </button>
                       <button
                         onClick={() => onDeleteMeasurement(m.id)}
-                        className="p-1 hover:bg-gray-200 rounded"
+                        className="p-1 hover:bg-muted rounded"
                         title="Delete measurement"
                         disabled={disabled}
                       >
-                        <Trash2 className="w-3 h-3 text-red-500" />
+                        <Trash2 className="w-3 h-3 text-error" />
                       </button>
                     </div>
                   </div>
@@ -331,16 +331,16 @@ export function MeasurementTools({
 
           {/* Summary Footer */}
           {measurements.length > 0 && (
-            <div className="p-2 border-t bg-gray-50">
+            <div className="p-2 border-t bg-surface">
               <div className="flex items-center justify-between text-xs">
                 <div>
                   {totalDistance > 0 && (
-                    <span className="text-blue-600">
+                    <span className="text-primary">
                       Total: {formatMeasurement(totalDistance, currentUnit)}
                     </span>
                   )}
                   {totalArea > 0 && (
-                    <span className="text-green-600 ml-2">
+                    <span className="text-success ml-2">
                       Area: {formatMeasurement(totalArea, currentUnit)}<sup>2</sup>
                     </span>
                   )}
@@ -350,7 +350,7 @@ export function MeasurementTools({
                   variant="ghost"
                   onClick={onClearAllMeasurements}
                   disabled={disabled}
-                  className="h-6 text-xs text-red-600 hover:text-red-700"
+                  className="h-6 text-xs text-error hover:text-error-dark"
                 >
                   Clear All
                 </Button>
@@ -372,8 +372,8 @@ export function MeasurementTools({
           </DialogHeader>
 
           <div className="space-y-4 py-4">
-            <div className="p-3 bg-gray-100 rounded text-sm">
-              <p className="text-gray-600">
+            <div className="p-3 bg-muted rounded text-sm">
+              <p className="text-secondary">
                 Pixel distance measured: <strong>{calibrationPixelDistance?.toFixed(0)}px</strong>
               </p>
             </div>

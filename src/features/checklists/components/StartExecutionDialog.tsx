@@ -168,8 +168,8 @@ export function StartExecutionDialog({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Template Selector */}
           <div>
-            <Label htmlFor="template" className="block text-sm font-medium text-gray-700 mb-1">
-              Template <span className="text-red-500">*</span>
+            <Label htmlFor="template" className="block text-sm font-medium text-secondary mb-1">
+              Template <span className="text-error">*</span>
             </Label>
             <select
               id="template"
@@ -177,7 +177,7 @@ export function StartExecutionDialog({
               onChange={(e) => setTemplateId(e.target.value)}
               required
               disabled={!!preSelectedTemplateId}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-muted disabled:cursor-not-allowed"
             >
               <option value="">Select a template...</option>
               {templates.map((template) => (
@@ -187,7 +187,7 @@ export function StartExecutionDialog({
               ))}
             </select>
             {selectedTemplate && (
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-secondary">
                 {selectedTemplate.description}
               </p>
             )}
@@ -195,8 +195,8 @@ export function StartExecutionDialog({
 
           {/* Checklist Name */}
           <div>
-            <Label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Checklist Name <span className="text-red-500">*</span>
+            <Label htmlFor="name" className="block text-sm font-medium text-secondary mb-1">
+              Checklist Name <span className="text-error">*</span>
             </Label>
             <Input
               id="name"
@@ -210,7 +210,7 @@ export function StartExecutionDialog({
 
           {/* Description */}
           <div>
-            <Label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <Label htmlFor="description" className="block text-sm font-medium text-secondary mb-1">
               Description
             </Label>
             <textarea
@@ -219,13 +219,13 @@ export function StartExecutionDialog({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Additional notes or context for this checklist..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+              className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
             />
           </div>
 
           {/* Category */}
           <div>
-            <Label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+            <Label htmlFor="category" className="block text-sm font-medium text-secondary mb-1">
               Category
             </Label>
             <Input
@@ -238,7 +238,7 @@ export function StartExecutionDialog({
 
           {/* Location */}
           <div>
-            <Label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-1">
+            <Label htmlFor="location" className="block text-sm font-medium text-secondary mb-1">
               Location
             </Label>
             <Input
@@ -252,7 +252,7 @@ export function StartExecutionDialog({
           {/* Weather & Temperature */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="weather" className="block text-sm font-medium text-gray-700 mb-1">
+              <Label htmlFor="weather" className="block text-sm font-medium text-secondary mb-1">
                 Weather Conditions
               </Label>
               <Input
@@ -263,7 +263,7 @@ export function StartExecutionDialog({
               />
             </div>
             <div>
-              <Label htmlFor="temperature" className="block text-sm font-medium text-gray-700 mb-1">
+              <Label htmlFor="temperature" className="block text-sm font-medium text-secondary mb-1">
                 Temperature (°F)
               </Label>
               <Input

@@ -68,7 +68,7 @@ export function DeliveryCard({
               <DeliveryStatusBadge status={delivery.delivery_status} />
               <ConditionStatusBadge status={delivery.condition_status} />
               {delivery.material_category && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-700 border">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-muted text-secondary border">
                   {delivery.material_category}
                 </span>
               )}
@@ -97,7 +97,7 @@ export function DeliveryCard({
               {onDelete && (
                 <DropdownMenuItem
                   onClick={() => onDelete(delivery.id)}
-                  className="text-red-600"
+                  className="text-error"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
@@ -140,7 +140,7 @@ export function DeliveryCard({
                 </span>
               )}
               {(delivery.quantity_rejected || 0) > 0 && (
-                <span className="text-xs text-red-600 flex items-center gap-1">
+                <span className="text-xs text-error flex items-center gap-1">
                   <AlertCircle className="h-3 w-3" />
                   Rejected: {delivery.quantity_rejected}
                 </span>
@@ -196,9 +196,9 @@ export function DeliveryCard({
 
         {/* Issues Warning */}
         {hasIssues && (
-          <div className="rounded-md bg-yellow-50 border border-yellow-200 p-2">
+          <div className="rounded-md bg-warning-light border border-yellow-200 p-2">
             <div className="flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 text-yellow-600 mt-0.5" />
+              <AlertCircle className="h-4 w-4 text-warning mt-0.5" />
               <div className="text-xs text-yellow-800">
                 <div className="font-medium">Issues Detected</div>
                 {delivery.condition_notes && (

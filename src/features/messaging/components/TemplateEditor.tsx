@@ -203,8 +203,8 @@ export function TemplateEditor({
               rows={6}
               disabled={isSaving}
             />
-            <p className="text-xs text-gray-500">
-              Use <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">{'{variable_name}'}</code>{' '}
+            <p className="text-xs text-muted">
+              Use <code className="bg-muted dark:bg-surface px-1 rounded">{'{variable_name}'}</code>{' '}
               syntax for placeholders that can be filled in later
             </p>
           </div>
@@ -229,18 +229,18 @@ export function TemplateEditor({
           )}
 
           {/* Sharing */}
-          <div className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-800 rounded-lg">
+          <div className="flex items-center justify-between p-4 border border-border dark:border-border rounded-lg">
             <div className="flex items-start gap-3">
               {isShared ? (
-                <Globe className="w-5 h-5 text-blue-500 mt-0.5" />
+                <Globe className="w-5 h-5 text-primary mt-0.5" />
               ) : (
-                <Lock className="w-5 h-5 text-gray-400 mt-0.5" />
+                <Lock className="w-5 h-5 text-disabled mt-0.5" />
               )}
               <div>
                 <Label htmlFor="template-shared" className="cursor-pointer">
                   Share with company
                 </Label>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted">
                   {isShared
                     ? 'All team members can use this template'
                     : 'Only you can see and use this template'}

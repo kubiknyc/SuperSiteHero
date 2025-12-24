@@ -205,8 +205,8 @@ export function VoiceInput({
         placeholder={placeholder}
         disabled={disabled || isListening}
         className={cn(
-          'flex min-h-[80px] w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-12 text-sm',
-          'placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent',
+          'flex min-h-[80px] w-full rounded-md border border-input bg-card px-3 py-2 pr-12 text-sm',
+          'placeholder:text-disabled focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent',
           'disabled:cursor-not-allowed disabled:opacity-50',
           isListening && 'border-red-400 ring-2 ring-red-200',
           error && 'border-red-500'
@@ -241,7 +241,7 @@ export function VoiceInput({
 
       {/* Status indicator */}
       {isListening && (
-        <div className="absolute left-3 bottom-2 flex items-center gap-2 text-xs text-red-600">
+        <div className="absolute left-3 bottom-2 flex items-center gap-2 text-xs text-error">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
@@ -252,7 +252,7 @@ export function VoiceInput({
 
       {/* Error message */}
       {error && errorMessage && (
-        <p className="mt-1 text-xs text-red-600">{errorMessage}</p>
+        <p className="mt-1 text-xs text-error">{errorMessage}</p>
       )}
     </div>
   )
