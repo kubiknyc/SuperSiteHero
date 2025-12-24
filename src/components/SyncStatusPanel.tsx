@@ -83,26 +83,26 @@ export function SyncStatusPanel() {
   const getOperationIcon = (operation: string) => {
     switch (operation) {
       case 'create':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />
+        return <CheckCircle2 className="h-4 w-4 text-success" />
       case 'update':
-        return <RefreshCw className="h-4 w-4 text-blue-500" />
+        return <RefreshCw className="h-4 w-4 text-primary" />
       case 'delete':
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-error" />
       default:
-        return <Clock className="h-4 w-4 text-gray-500" />
+        return <Clock className="h-4 w-4 text-muted" />
     }
   }
 
   const getOperationColor = (operation: string) => {
     switch (operation) {
       case 'create':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400'
+        return 'bg-success-light text-green-800 dark:bg-green-900/20 dark:text-green-400'
       case 'update':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+        return 'bg-info-light text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
       case 'delete':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400'
+        return 'bg-error-light text-red-800 dark:bg-red-900/20 dark:text-red-400'
       default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400'
+        return 'bg-muted text-foreground dark:bg-background/20 dark:text-disabled'
     }
   }
 
@@ -147,15 +147,15 @@ export function SyncStatusPanel() {
               <Separator />
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 text-amber-500" />
-                  <h4 className="font-medium text-sm">Conflicts Require Attention</h4>
+                  <AlertCircle className="h-4 w-4 text-warning" />
+                  <h4 className="font-medium text-sm heading-card">Conflicts Require Attention</h4>
                 </div>
                 <ScrollArea className="h-[120px] w-full rounded-md border p-2">
                   <div className="space-y-2">
                     {conflicts.map((conflict) => (
                       <div
                         key={conflict.id}
-                        className="flex items-center justify-between p-2 bg-amber-50 dark:bg-amber-950/20 rounded border border-amber-200 dark:border-amber-800"
+                        className="flex items-center justify-between p-2 bg-warning-light dark:bg-amber-950/20 rounded border border-amber-200 dark:border-amber-800"
                       >
                         <div className="flex-1">
                           <p className="text-sm font-medium capitalize">{conflict.entityType}</p>
@@ -183,7 +183,7 @@ export function SyncStatusPanel() {
             <>
               <Separator />
               <div className="space-y-2">
-                <h4 className="font-medium text-sm">Pending Operations</h4>
+                <h4 className="font-medium text-sm heading-card">Pending Operations</h4>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(pendingByType).map(([type, count]) => (
                     <Badge key={type} variant="secondary">
@@ -201,7 +201,7 @@ export function SyncStatusPanel() {
               <Separator />
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-sm">Queue Details</h4>
+                  <h4 className="font-medium text-sm heading-card">Queue Details</h4>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -254,7 +254,7 @@ export function SyncStatusPanel() {
           {/* Empty state */}
           {syncQueue.length === 0 && conflicts.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
-              <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-green-500" />
+              <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-success" />
               <p className="text-sm font-medium">All synced up!</p>
               <p className="text-xs">No pending operations or conflicts</p>
             </div>

@@ -107,7 +107,7 @@ export function SubcontractorCompliancePage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
             <Shield className="h-6 w-6" />
             Compliance Documents
           </h1>
@@ -149,9 +149,9 @@ export function SubcontractorCompliancePage() {
         >
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               <div>
-                <p className="text-2xl font-bold text-amber-600">{counts.expiring}</p>
+                <p className="text-2xl font-bold text-warning">{counts.expiring}</p>
                 <p className="text-xs text-muted-foreground">Expiring</p>
               </div>
             </div>
@@ -160,7 +160,7 @@ export function SubcontractorCompliancePage() {
         <Card className="cursor-pointer hover:bg-muted/50" onClick={() => setActiveTab('pending')}>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-blue-500" />
+              <Clock className="h-5 w-5 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{counts.pending}</p>
                 <p className="text-xs text-muted-foreground">Pending</p>
@@ -171,9 +171,9 @@ export function SubcontractorCompliancePage() {
         <Card className="cursor-pointer hover:bg-muted/50" onClick={() => setActiveTab('approved')}>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-500" />
+              <CheckCircle className="h-5 w-5 text-success" />
               <div>
-                <p className="text-2xl font-bold text-green-600">{counts.approved}</p>
+                <p className="text-2xl font-bold text-success">{counts.approved}</p>
                 <p className="text-xs text-muted-foreground">Approved</p>
               </div>
             </div>
@@ -182,9 +182,9 @@ export function SubcontractorCompliancePage() {
         <Card className="cursor-pointer hover:bg-muted/50" onClick={() => setActiveTab('rejected')}>
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <XCircle className="h-5 w-5 text-red-500" />
+              <XCircle className="h-5 w-5 text-error" />
               <div>
-                <p className="text-2xl font-bold text-red-600">{counts.rejected}</p>
+                <p className="text-2xl font-bold text-error">{counts.rejected}</p>
                 <p className="text-xs text-muted-foreground">Rejected</p>
               </div>
             </div>
@@ -196,7 +196,7 @@ export function SubcontractorCompliancePage() {
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
         <TabsList>
           <TabsTrigger value="all">All ({counts.all})</TabsTrigger>
-          <TabsTrigger value="expiring" className="text-amber-600">
+          <TabsTrigger value="expiring" className="text-warning">
             Expiring ({counts.expiring})
           </TabsTrigger>
           <TabsTrigger value="pending">Pending ({counts.pending})</TabsTrigger>
@@ -217,7 +217,7 @@ export function SubcontractorCompliancePage() {
             <Card>
               <CardContent className="p-12 text-center">
                 <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">
+                <h3 className="text-lg font-medium mb-2 heading-subsection">
                   {activeTab === 'all'
                     ? 'No Documents Yet'
                     : activeTab === 'expiring'
@@ -242,7 +242,7 @@ export function SubcontractorCompliancePage() {
             <div className="space-y-8">
               {Object.entries(documentsByType).map(([type, docs]) => (
                 <section key={type}>
-                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 heading-section">
                     {getDocumentTypeLabel(type)}
                     <Badge variant="secondary">{docs.length}</Badge>
                   </h2>

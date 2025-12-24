@@ -69,6 +69,14 @@ jobs:
           path: coverage/
           retention-days: 7
 
+      - name: Coverage Summary Comment
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        if: github.event_name == 'pull_request'
+        with:
+          lcov-file: ./coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          delete-old-comments: true
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:

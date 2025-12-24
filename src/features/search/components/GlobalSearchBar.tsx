@@ -69,11 +69,11 @@ interface EntityFilterOption {
 // ============================================================================
 
 const ENTITY_FILTERS: EntityFilterOption[] = [
-  { type: 'rfi', label: 'RFIs', icon: AlertCircle, color: 'text-red-500' },
-  { type: 'submittal', label: 'Submittals', icon: FileText, color: 'text-blue-500' },
-  { type: 'daily_report', label: 'Daily Reports', icon: ClipboardList, color: 'text-green-500' },
-  { type: 'document', label: 'Documents', icon: FileText, color: 'text-gray-500' },
-  { type: 'punch_item', label: 'Punch Items', icon: ListChecks, color: 'text-yellow-500' },
+  { type: 'rfi', label: 'RFIs', icon: AlertCircle, color: 'text-error' },
+  { type: 'submittal', label: 'Submittals', icon: FileText, color: 'text-primary' },
+  { type: 'daily_report', label: 'Daily Reports', icon: ClipboardList, color: 'text-success' },
+  { type: 'document', label: 'Documents', icon: FileText, color: 'text-muted' },
+  { type: 'punch_item', label: 'Punch Items', icon: ListChecks, color: 'text-warning' },
   { type: 'change_order', label: 'Change Orders', icon: FileEdit, color: 'text-purple-500' },
   { type: 'task', label: 'Tasks', icon: CheckSquare, color: 'text-indigo-500' },
   { type: 'meeting', label: 'Meetings', icon: CalendarDays, color: 'text-pink-500' },
@@ -97,11 +97,11 @@ const ENTITY_TYPE_ICONS: Record<SearchEntityType, React.ComponentType<{ classNam
 }
 
 const ENTITY_TYPE_COLORS: Record<SearchEntityType, string> = {
-  rfi: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-  submittal: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  daily_report: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-  document: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400',
-  punch_item: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  rfi: 'bg-error-light text-error-dark dark:bg-red-900/30 dark:text-red-400',
+  submittal: 'bg-info-light text-primary-hover dark:bg-blue-900/30 dark:text-blue-400',
+  daily_report: 'bg-success-light text-success-dark dark:bg-green-900/30 dark:text-green-400',
+  document: 'bg-muted text-secondary dark:bg-surface dark:text-disabled',
+  punch_item: 'bg-warning-light text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
   change_order: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
   task: 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
   meeting: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
@@ -133,12 +133,12 @@ const ENTITY_TYPE_LABELS: Record<SearchEntityType, string> = {
  */
 function SearchResultSkeleton() {
   return (
-    <div className="animate-pulse p-3 border-b border-gray-100 dark:border-gray-800">
+    <div className="animate-pulse p-3 border-b border-border dark:border-border">
       <div className="flex items-start gap-3">
-        <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="w-8 h-8 bg-muted dark:bg-muted rounded" />
         <div className="flex-1">
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2" />
-          <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-1/2" />
+          <div className="h-4 bg-muted dark:bg-muted rounded w-3/4 mb-2" />
+          <div className="h-3 bg-muted dark:bg-surface rounded w-1/2" />
         </div>
       </div>
     </div>
@@ -184,9 +184,9 @@ function SearchResultItem({
       type="button"
       onClick={onClick}
       className={cn(
-        'w-full text-left p-3 border-b border-gray-100 dark:border-gray-800',
-        'hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors',
-        'focus:outline-none focus:bg-gray-50 dark:focus:bg-gray-800/50',
+        'w-full text-left p-3 border-b border-border dark:border-border',
+        'hover:bg-surface dark:hover:bg-surface/50 transition-colors',
+        'focus:outline-none focus:bg-surface dark:focus:bg-surface/50',
         isSelected && 'bg-primary-50 dark:bg-primary-950/20'
       )}
     >
@@ -203,26 +203,26 @@ function SearchResultItem({
               {ENTITY_TYPE_LABELS[result.entityType]}
             </span>
             {result.status && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-muted dark:text-disabled">
                 {result.status}
               </span>
             )}
           </div>
-          <h4 className="font-medium text-gray-900 dark:text-gray-100 truncate">
+          <h4 className="font-medium text-foreground dark:text-gray-100 truncate heading-card">
             {highlightText(result.title)}
           </h4>
           {result.description && (
-            <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+            <p className="text-sm text-muted dark:text-disabled line-clamp-1 mt-0.5">
               {highlightText(result.description)}
             </p>
           )}
-          <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 dark:text-gray-500">
+          <div className="flex items-center gap-2 mt-1 text-xs text-disabled dark:text-muted">
             <span>{result.projectName}</span>
             <span>-</span>
             <span>{new Date(result.createdAt).toLocaleDateString()}</span>
           </div>
         </div>
-        <div className="text-xs text-gray-400 dark:text-gray-500">
+        <div className="text-xs text-disabled dark:text-muted">
           {result.relevanceScore}%
         </div>
       </div>
@@ -236,11 +236,11 @@ function SearchResultItem({
 function EmptyState({ query }: { query: string }) {
   return (
     <div className="p-8 text-center">
-      <Search className="w-12 h-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-      <p className="text-gray-500 dark:text-gray-400 mb-1">
+      <Search className="w-12 h-12 mx-auto text-gray-300 dark:text-secondary mb-3" />
+      <p className="text-muted dark:text-disabled mb-1">
         No results found for "{query}"
       </p>
-      <p className="text-sm text-gray-400 dark:text-gray-500">
+      <p className="text-sm text-disabled dark:text-muted">
         Try different keywords or remove filters
       </p>
     </div>
@@ -262,15 +262,15 @@ function RecentSearches({
   if (!searches.length) return null
 
   return (
-    <div className="p-3 border-b border-gray-100 dark:border-gray-800">
+    <div className="p-3 border-b border-border dark:border-border">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+        <span className="text-xs font-medium text-muted dark:text-disabled uppercase">
           Recent Searches
         </span>
         <button
           type="button"
           onClick={onClear}
-          className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="text-xs text-disabled hover:text-secondary dark:hover:text-gray-300"
         >
           Clear
         </button>
@@ -281,9 +281,9 @@ function RecentSearches({
             key={index}
             type="button"
             onClick={() => onSelect(search)}
-            className="flex items-center gap-1 px-2 py-1 text-sm bg-gray-100 dark:bg-gray-800 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="flex items-center gap-1 px-2 py-1 text-sm bg-muted dark:bg-surface rounded hover:bg-muted dark:hover:bg-gray-700 transition-colors"
           >
-            <Clock className="w-3 h-3 text-gray-400" />
+            <Clock className="w-3 h-3 text-disabled" />
             {search}
           </button>
         ))}
@@ -439,11 +439,6 @@ export function GlobalSearchBar({
     }
   }, [selectedIndex])
 
-  // Set initial project ID
-  useEffect(() => {
-    setProjectId(initialProjectId)
-  }, [initialProjectId, setProjectId])
-
   // Render compact trigger button
   if (compact) {
     return (
@@ -453,7 +448,7 @@ export function GlobalSearchBar({
           size="sm"
           onClick={() => setIsOpen(true)}
           className={cn(
-            'gap-2 text-gray-500 dark:text-gray-400',
+            'gap-2 text-muted dark:text-disabled',
             className
           )}
         >
@@ -478,8 +473,8 @@ export function GlobalSearchBar({
           </DialogHeader>
 
           {/* Search Input */}
-          <div className="flex items-center gap-2 p-4 border-b border-gray-200 dark:border-gray-800">
-            <Search className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center gap-2 p-4 border-b border-border dark:border-border">
+            <Search className="w-5 h-5 text-disabled" />
             <Input
               ref={inputRef}
               type="text"
@@ -490,7 +485,7 @@ export function GlobalSearchBar({
               className="flex-1 border-0 focus-visible:ring-0 text-base"
               autoFocus
             />
-            {isLoading && <Loader2 className="w-5 h-5 text-gray-400 animate-spin" />}
+            {isLoading && <Loader2 className="w-5 h-5 text-disabled animate-spin" />}
             {query && !isLoading && (
               <button
                 type="button"
@@ -498,9 +493,9 @@ export function GlobalSearchBar({
                   setQuery('')
                   clearResults()
                 }}
-                className="p-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded"
+                className="p-1 hover:bg-muted dark:hover:bg-surface rounded"
               >
-                <X className="w-4 h-4 text-gray-400" />
+                <X className="w-4 h-4 text-disabled" />
               </button>
             )}
             <Button
@@ -513,7 +508,7 @@ export function GlobalSearchBar({
           </div>
 
           {/* Filters Row */}
-          <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+          <div className="flex items-center gap-2 px-4 py-2 border-b border-border dark:border-border bg-surface dark:bg-background/50">
             <button
               type="button"
               onClick={() => setShowFilters(!showFilters)}
@@ -521,7 +516,7 @@ export function GlobalSearchBar({
                 'flex items-center gap-1 px-2 py-1 text-sm rounded border transition-colors',
                 showFilters
                   ? 'bg-primary-100 border-primary-200 text-primary-700 dark:bg-primary-950/30 dark:border-primary-800 dark:text-primary-400'
-                  : 'bg-white border-gray-200 text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
+                  : 'bg-card border-border text-secondary dark:bg-surface dark:border-gray-700 dark:text-gray-300'
               )}
             >
               <Filter className="w-3 h-3" />
@@ -534,7 +529,7 @@ export function GlobalSearchBar({
               <ChevronDown className={cn('w-3 h-3 transition-transform', showFilters && 'rotate-180')} />
             </button>
 
-            <div className="h-4 w-px bg-gray-200 dark:bg-gray-700" />
+            <div className="h-4 w-px bg-muted dark:bg-muted" />
 
             <button
               type="button"
@@ -543,7 +538,7 @@ export function GlobalSearchBar({
                 'flex items-center gap-1 px-2 py-1 text-sm rounded border transition-colors',
                 expansionEnabled
                   ? 'bg-purple-100 border-purple-200 text-purple-700 dark:bg-purple-900/30 dark:border-purple-800 dark:text-purple-400'
-                  : 'bg-white border-gray-200 text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300'
+                  : 'bg-card border-border text-secondary dark:bg-surface dark:border-gray-700 dark:text-gray-300'
               )}
               title={expansionEnabled ? 'AI expansion enabled - click to disable' : 'AI expansion disabled - click to enable'}
             >
@@ -552,7 +547,7 @@ export function GlobalSearchBar({
             </button>
 
             {rateLimit && (
-              <span className="ml-auto text-xs text-gray-400 dark:text-gray-500">
+              <span className="ml-auto text-xs text-disabled dark:text-muted">
                 {rateLimit.remaining}/{rateLimit.limit} searches remaining
               </span>
             )}
@@ -560,7 +555,7 @@ export function GlobalSearchBar({
 
           {/* Entity Filters */}
           {showFilters && (
-            <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30">
+            <div className="px-4 py-3 border-b border-border dark:border-border bg-surface/50 dark:bg-background/30">
               <div className="flex flex-wrap gap-2">
                 {ENTITY_FILTERS.map((filter) => {
                   const Icon = filter.icon
@@ -574,7 +569,7 @@ export function GlobalSearchBar({
                         'flex items-center gap-1.5 px-2 py-1 text-sm rounded border transition-colors',
                         isSelected
                           ? ENTITY_TYPE_COLORS[filter.type]
-                          : 'bg-white border-gray-200 text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                          : 'bg-card border-border text-secondary dark:bg-surface dark:border-gray-700 dark:text-disabled hover:border-input dark:hover:border-gray-600'
                       )}
                     >
                       <Icon className="w-3 h-3" />
@@ -611,7 +606,7 @@ export function GlobalSearchBar({
 
             {/* Error State */}
             {error && (
-              <div className="p-4 text-center text-red-500">
+              <div className="p-4 text-center text-error">
                 <AlertCircle className="w-8 h-8 mx-auto mb-2" />
                 <p>{error.message}</p>
               </div>
@@ -640,7 +635,7 @@ export function GlobalSearchBar({
 
           {/* Footer */}
           {hasSearched && results.length > 0 && (
-            <div className="px-4 py-2 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 text-xs text-gray-500 dark:text-gray-400 flex items-center justify-between">
+            <div className="px-4 py-2 border-t border-border dark:border-border bg-surface dark:bg-background/50 text-xs text-muted dark:text-disabled flex items-center justify-between">
               <span>
                 {totalResults} result{totalResults !== 1 ? 's' : ''} in {searchTimeMs}ms
               </span>
@@ -654,18 +649,18 @@ export function GlobalSearchBar({
           )}
 
           {/* Keyboard Hints */}
-          <div className="px-4 py-2 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 flex items-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+          <div className="px-4 py-2 border-t border-border dark:border-border bg-surface dark:bg-background/50 flex items-center gap-4 text-xs text-disabled dark:text-muted">
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">Enter</kbd>
+              <kbd className="px-1.5 py-0.5 bg-muted dark:bg-muted rounded">Enter</kbd>
               to search/select
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">Up</kbd>
-              <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">Down</kbd>
+              <kbd className="px-1.5 py-0.5 bg-muted dark:bg-muted rounded">Up</kbd>
+              <kbd className="px-1.5 py-0.5 bg-muted dark:bg-muted rounded">Down</kbd>
               to navigate
             </span>
             <span className="flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 bg-gray-200 dark:bg-gray-700 rounded">Esc</kbd>
+              <kbd className="px-1.5 py-0.5 bg-muted dark:bg-muted rounded">Esc</kbd>
               to close
             </span>
           </div>
@@ -679,16 +674,16 @@ export function GlobalSearchBar({
       <div
         onClick={() => setIsOpen(true)}
         className={cn(
-          'flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-md cursor-pointer',
-          'hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors',
+          'flex items-center gap-2 px-3 py-2 bg-muted dark:bg-surface rounded-md cursor-pointer',
+          'hover:bg-muted dark:hover:bg-gray-700 transition-colors',
           className
         )}
       >
-        <Search className="w-4 h-4 text-gray-400" />
-        <span className="text-sm text-gray-500 dark:text-gray-400 flex-1">
+        <Search className="w-4 h-4 text-disabled" />
+        <span className="text-sm text-muted dark:text-disabled flex-1">
           {placeholder}
         </span>
-        <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-white dark:bg-gray-900 px-1.5 font-mono text-[10px] font-medium text-gray-500 dark:text-gray-400">
+        <kbd className="hidden sm:inline-flex h-5 items-center gap-1 rounded border bg-card dark:bg-background px-1.5 font-mono text-[10px] font-medium text-muted dark:text-disabled">
           <span className="text-xs">Ctrl+K</span>
         </kbd>
       </div>

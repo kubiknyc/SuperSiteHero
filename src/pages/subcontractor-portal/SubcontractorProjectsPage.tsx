@@ -155,7 +155,7 @@ function ProjectCard({ project }: { project: SubcontractorProject }) {
             )}
             {project.task_count > 0 && (
               <div className="flex items-center gap-1">
-                <CheckSquare className="h-4 w-4 text-blue-500" />
+                <CheckSquare className="h-4 w-4 text-primary" />
                 <span>{project.task_count} tasks</span>
               </div>
             )}
@@ -208,7 +208,7 @@ export function SubcontractorProjectsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2">
+        <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
           <FolderOpen className="h-6 w-6" />
           My Projects
         </h1>
@@ -230,7 +230,7 @@ export function SubcontractorProjectsPage() {
         <Card>
           <CardContent className="p-12 text-center">
             <FolderOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">No Projects Yet</h3>
+            <h3 className="text-lg font-medium mb-2 heading-subsection">No Projects Yet</h3>
             <p className="text-muted-foreground">
               You haven't been invited to any projects yet. Contact the general contractor to request access.
             </p>
@@ -241,7 +241,7 @@ export function SubcontractorProjectsPage() {
           {/* Active Projects */}
           {activeProjects.length > 0 && (
             <section>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 heading-section">
                 Active Projects
                 <Badge variant="default">{activeProjects.length}</Badge>
               </h2>
@@ -256,7 +256,7 @@ export function SubcontractorProjectsPage() {
           {/* Other Projects */}
           {otherProjects.length > 0 && (
             <section>
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 heading-section">
                 Other Projects
                 <Badge variant="secondary">{otherProjects.length}</Badge>
               </h2>
