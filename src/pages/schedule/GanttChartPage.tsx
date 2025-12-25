@@ -151,7 +151,7 @@ export function GanttChartPage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Project not found</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Project not found</h2>
             <p className="text-secondary mb-4">The requested project could not be found.</p>
             <Button variant="outline" onClick={() => navigate('/projects')}>
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -179,7 +179,7 @@ export function GanttChartPage() {
             </Button>
             <div className="h-6 border-l border-input" />
             <div>
-              <h1 className="text-xl font-bold text-foreground" className="heading-page">Project Schedule</h1>
+              <h1 className="text-xl font-bold text-foreground heading-page">Project Schedule</h1>
               <p className="text-sm text-muted">{project.name}</p>
             </div>
           </div>

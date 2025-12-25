@@ -242,7 +242,7 @@ export function IncidentReportForm({
         <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-start gap-3">
           <AlertTriangle className="h-5 w-5 text-error mt-0.5" />
           <div>
-            <h4 className="font-medium text-red-800" className="heading-card">Serious Incident</h4>
+            <h4 className="font-medium text-red-800 heading-card">Serious Incident</h4>
             <p className="text-sm text-error-dark mt-1">
               This severity level ({SEVERITY_CONFIG[selectedSeverity].label}) requires
               immediate notification to project managers and may require OSHA reporting.
@@ -384,7 +384,7 @@ export function IncidentReportForm({
       {isEditing && (
         <>
           <div className="border-t pt-6">
-            <h3 className="text-lg font-medium text-foreground mb-4" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mb-4 heading-subsection">
               Root Cause Analysis
             </h3>
 
@@ -436,7 +436,7 @@ export function IncidentReportForm({
 
       {/* OSHA Information */}
       <div className="border-t pt-6">
-        <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-subsection">
+        <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-subsection">
           <Shield className="h-5 w-5 text-primary" />
           OSHA Tracking
           <span className="text-sm font-normal text-muted">(if applicable)</span>

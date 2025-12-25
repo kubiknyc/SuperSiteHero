@@ -160,7 +160,7 @@ export function HazardEditor({ hazards, onChange, disabled }: HazardEditorProps)
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <AlertTriangle className="h-5 w-5 text-warning" />
-          <h3 className="text-lg font-medium" className="heading-subsection">Hazards & Controls</h3>
+          <h3 className="text-lg font-medium heading-subsection">Hazards & Controls</h3>
           <Badge variant="outline">{hazards.length} hazards</Badge>
         </div>
         <Button

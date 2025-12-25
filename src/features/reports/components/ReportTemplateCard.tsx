@@ -60,7 +60,7 @@ export function ReportTemplateCard({
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium text-foreground truncate" className="heading-subsection">{template.name}</h3>
+              <h3 className="font-medium text-foreground truncate heading-subsection">{template.name}</h3>
               {isSystemTemplate && (
                 <Badge variant="outline" className="text-xs">
                   <Lock className="h-3 w-3 mr-1" />

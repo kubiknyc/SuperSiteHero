@@ -414,7 +414,7 @@ export function NotificationPreferencesForm() {
 
                   {/* Notification Type Toggles */}
                   <div className="space-y-4">
-                    <h4 className="text-sm font-medium" className="heading-card">Notification Types</h4>
+                    <h4 className="text-sm font-medium heading-card">Notification Types</h4>
                     {(Object.keys(PUSH_TYPE_LABELS) as Array<keyof typeof PUSH_TYPE_LABELS>).map(
                       (key) => (
                         <div key={key} className="flex items-center justify-between py-1">
@@ -443,7 +443,7 @@ export function NotificationPreferencesForm() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Volume2 className="h-4 w-4" />
-                      <h4 className="text-sm font-medium" className="heading-card">Sound</h4>
+                      <h4 className="text-sm font-medium heading-card">Sound</h4>
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <div className="space-y-0.5">
@@ -483,7 +483,7 @@ export function NotificationPreferencesForm() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Vibrate className="h-4 w-4" />
-                      <h4 className="text-sm font-medium" className="heading-card">Vibration</h4>
+                      <h4 className="text-sm font-medium heading-card">Vibration</h4>
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <div className="space-y-0.5">
@@ -529,7 +529,7 @@ export function NotificationPreferencesForm() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Moon className="h-4 w-4" />
-                      <h4 className="text-sm font-medium" className="heading-card">Push Quiet Hours</h4>
+                      <h4 className="text-sm font-medium heading-card">Push Quiet Hours</h4>
                     </div>
                     <div className="flex items-center justify-between py-1">
                       <div className="space-y-0.5">

@@ -73,7 +73,7 @@ export default function ConceptsIndex() {
               <Palette className="w-7 h-7 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-foreground" className="heading-page">JobSight Design Concepts</h1>
+              <h1 className="text-3xl font-bold text-foreground heading-page">JobSight Design Concepts</h1>
               <p className="text-secondary">8 distinct visual directions for your construction management platform</p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function ConceptsIndex() {
       {/* Concepts Grid */}
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground mb-2" className="heading-section">Choose Your Aesthetic</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2 heading-section">Choose Your Aesthetic</h2>
           <p className="text-secondary">
             Each concept showcases complete color palettes, typography systems, and UI components. Click any concept to explore in detail.
           </p>
@@ -118,7 +118,7 @@ export default function ConceptsIndex() {
                     <div className="text-sm font-semibold text-muted mb-2">
                       CONCEPT {concept.id} / 8
                     </div>
-                    <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-secondary transition" className="heading-subsection">
+                    <h3 className="text-2xl font-bold text-foreground mb-2 group-hover:text-secondary transition heading-subsection">
                       {concept.name}
                     </h3>
                     <p className="text-secondary leading-relaxed">
@@ -156,7 +156,7 @@ export default function ConceptsIndex() {
 
         {/* Quick Compare */}
         <div className="mt-16 bg-card rounded-2xl p-8 shadow-md">
-          <h3 className="text-xl font-bold text-foreground mb-6" className="heading-subsection">Quick Comparison</h3>
+          <h3 className="text-xl font-bold text-foreground mb-6 heading-subsection">Quick Comparison</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { label: 'Most Bold', concept: 'Industrial Precision' },
@@ -178,7 +178,7 @@ export default function ConceptsIndex() {
 
         {/* Instructions */}
         <div className="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
-          <h3 className="text-lg font-bold text-foreground mb-4" className="heading-subsection">Next Steps</h3>
+          <h3 className="text-lg font-bold text-foreground mb-4 heading-subsection">Next Steps</h3>
           <ol className="space-y-2 text-secondary">
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>

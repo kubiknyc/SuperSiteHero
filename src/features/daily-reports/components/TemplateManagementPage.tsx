@@ -700,7 +700,7 @@ export function TemplateManagementPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">Template Library</h1>
+          <h1 className="text-2xl font-bold heading-page">Template Library</h1>
           <p className="text-muted-foreground">
             Manage and share daily report templates across your organization
           </p>
@@ -792,7 +792,7 @@ export function TemplateManagementPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-medium text-secondary" className="heading-subsection">No templates found</h3>
+            <h3 className="text-lg font-medium text-secondary heading-subsection">No templates found</h3>
             <p className="text-sm text-disabled mt-1">
               {hasFilters
                 ? 'Try adjusting your filters'
@@ -843,7 +843,7 @@ export function TemplateManagementPage() {
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center py-12">
                     <FileText className="h-12 w-12 text-gray-300 mb-4" />
-                    <h3 className="text-lg font-medium text-secondary" className="heading-subsection">No {scope} templates</h3>
+                    <h3 className="text-lg font-medium text-secondary heading-subsection">No {scope} templates</h3>
                   </CardContent>
                 </Card>
               ) : (

@@ -113,7 +113,7 @@ export function SyncProgressBar({
 
   const formatTimeRemaining = (ms: number): string => {
     const seconds = Math.floor(ms / 1000);
-    if (seconds < 60) return `${seconds}s`;
+    if (seconds < 60) {return `${seconds}s`;}
 
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -133,7 +133,7 @@ export function SyncProgressBar({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-primary" />
-              <h4 className="font-medium text-sm" className="heading-card">Syncing Changes</h4>
+              <h4 className="font-medium text-sm heading-card">Syncing Changes</h4>
             </div>
             <div className="flex items-center gap-1">
               {/* Pause/Resume button - disabled for now as it requires SyncManager support */}

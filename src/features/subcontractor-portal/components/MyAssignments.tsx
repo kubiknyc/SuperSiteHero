@@ -118,7 +118,7 @@ function AssignmentItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h4 className="text-sm font-medium text-foreground truncate" className="heading-card">
+          <h4 className="text-sm font-medium text-foreground truncate heading-card">
             {title}
           </h4>
           {hasPhotos && (
@@ -191,7 +191,7 @@ function EmptyState({ tab }: { tab: TabType }) {
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         <CheckCircle2 className="h-8 w-8 text-disabled" />
       </div>
-      <h3 className="text-sm font-medium text-foreground mb-1" className="heading-subsection">
+      <h3 className="text-sm font-medium text-foreground mb-1 heading-subsection">
         {messages[tab].title}
       </h3>
       <p className="text-xs text-muted">
@@ -252,7 +252,7 @@ export function MyAssignments() {
   // Filter and sort punch items
   const filteredPunchItems = (punchItems || [])
     .filter(item => {
-      if (filterStatus === 'all') return true
+      if (filterStatus === 'all') {return true}
       return item.status === filterStatus
     })
     .sort((a, b) => {
@@ -264,8 +264,8 @@ export function MyAssignments() {
           return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) -
                  (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
         case 'due_date':
-          if (!a.due_date) return 1
-          if (!b.due_date) return -1
+          if (!a.due_date) {return 1}
+          if (!b.due_date) {return -1}
           return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
         default: // newest
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -323,7 +323,7 @@ export function MyAssignments() {
       {/* Header */}
       <div className="bg-card border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-foreground" className="heading-page">My Assignments</h1>
+          <h1 className="text-lg font-semibold text-foreground heading-page">My Assignments</h1>
           <div className="flex items-center gap-2">
             {/* Sort Button */}
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>

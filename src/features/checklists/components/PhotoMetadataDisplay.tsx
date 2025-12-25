@@ -59,7 +59,7 @@ export function PhotoMetadataDisplay({
     <Card className="p-4">
       <div className="flex items-center gap-2 mb-3">
         <Info className="w-4 h-4 text-secondary" />
-        <h4 className="text-sm font-medium text-secondary" className="heading-card">Photo Metadata</h4>
+        <h4 className="text-sm font-medium text-secondary heading-card">Photo Metadata</h4>
       </div>
 
       <div className="space-y-3">

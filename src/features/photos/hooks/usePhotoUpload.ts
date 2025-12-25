@@ -226,7 +226,7 @@ async function extractExifData(file: File): Promise<ExifData> {
       jfif: false,
     });
 
-    if (!exif) return {};
+    if (!exif) {return {};}
 
     return {
       cameraMake: exif.Make,

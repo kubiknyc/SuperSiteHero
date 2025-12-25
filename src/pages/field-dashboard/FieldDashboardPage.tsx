@@ -46,7 +46,7 @@ export default function FieldDashboardPage() {
         <Card>
           <CardContent className="p-6 text-center">
             <AlertTriangle className="h-12 w-12 text-warning mx-auto mb-3" />
-            <h2 className="text-lg font-semibold mb-2" className="heading-section">No Project Selected</h2>
+            <h2 className="text-lg font-semibold mb-2 heading-section">No Project Selected</h2>
             <p className="text-sm text-muted-foreground mb-4">
               Please select a project to view the field dashboard
             </p>
@@ -104,7 +104,7 @@ export default function FieldDashboardPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <LayoutDashboard className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold tracking-tight" className="heading-page">Field Dashboard</h1>
+            <h1 className="text-2xl font-bold tracking-tight heading-page">Field Dashboard</h1>
           </div>
           <p className="text-muted-foreground">
             {currentProject.name}

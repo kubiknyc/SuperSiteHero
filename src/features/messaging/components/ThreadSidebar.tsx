@@ -223,7 +223,7 @@ export function ThreadSidebar({
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-muted-foreground" />
-            <h2 className="font-semibold" className="heading-section">Thread</h2>
+            <h2 className="font-semibold heading-section">Thread</h2>
             {replyCount > 0 && (
               <span className="text-sm text-muted-foreground">
                 ({replyCount} {replyCount === 1 ? 'reply' : 'replies'})

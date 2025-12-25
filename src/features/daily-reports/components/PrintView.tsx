@@ -75,7 +75,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
 
       {/* Header */}
       <div className="text-center border-b-2 border-gray-800 pb-4 mb-6">
-        <h1 className="text-2xl font-bold text-foreground" className="heading-page">DAILY REPORT</h1>
+        <h1 className="text-2xl font-bold text-foreground heading-page">DAILY REPORT</h1>
         <p className="text-lg text-secondary">{report.project?.name || 'Project'}</p>
       </div>
 
@@ -95,7 +95,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
 
       {/* Weather Section */}
       <section className="mb-6">
-        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Weather Conditions</h2>
+        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3 heading-section">Weather Conditions</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div>
             <span className="font-semibold">Condition:</span> {report.weather_condition || 'N/A'}
@@ -120,7 +120,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
 
       {/* Work Section */}
       <section className="mb-6">
-        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Work Summary</h2>
+        <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3 heading-section">Work Summary</h2>
         {report.work_completed && (
           <div className="mb-2">
             <span className="font-semibold">Work Completed:</span>
@@ -144,7 +144,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Workforce Section */}
       {workforce.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3 heading-section">
             Workforce ({report.total_workers || workforce.length} workers)
           </h2>
           <table className="w-full text-sm border-collapse">
@@ -183,7 +183,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Equipment Section */}
       {equipment.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Equipment</h2>
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3 heading-section">Equipment</h2>
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="bg-muted">
@@ -212,7 +212,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Deliveries Section */}
       {deliveries.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Deliveries</h2>
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3 heading-section">Deliveries</h2>
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="bg-muted">
@@ -241,7 +241,7 @@ export function PrintView({ report, workforce, equipment, deliveries, visitors }
       {/* Visitors Section */}
       {visitors.length > 0 && (
         <section className="mb-6">
-          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3" className="heading-section">Visitors</h2>
+          <h2 className="text-lg font-bold border-b border-gray-400 pb-1 mb-3 heading-section">Visitors</h2>
           <table className="w-full text-sm border-collapse">
             <thead>
               <tr className="bg-muted">

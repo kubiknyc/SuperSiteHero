@@ -131,7 +131,7 @@ export function ReportShareDialog({
 
   // Create new share
   const handleCreateShare = async () => {
-    if (!companyId) return
+    if (!companyId) {return}
 
     const expiresAt = expirationDays
       ? addDays(new Date(), expirationDays).toISOString()
@@ -150,23 +150,23 @@ export function ReportShareDialog({
 
   // Copy share URL
   const handleCopyLink = async () => {
-    if (!activeShare) return
+    if (!activeShare) {return}
     const url = reportSharingApi.getShareUrl(activeShare.public_token)
     const success = await copyToClipboard(url, 'Share link')
-    if (success) setCopied(true)
+    if (success) {setCopied(true)}
   }
 
   // Copy embed code
   const handleCopyEmbed = async () => {
-    if (!activeShare) return
+    if (!activeShare) {return}
     const embedCode = reportSharingApi.getEmbedCode(activeShare.public_token)
     const success = await copyToClipboard(embedCode, 'Embed code')
-    if (success) setEmbedCopied(true)
+    if (success) {setEmbedCopied(true)}
   }
 
   // Regenerate token
   const handleRegenerateToken = async () => {
-    if (!activeShare) return
+    if (!activeShare) {return}
     await regenerateToken.mutateAsync({
       shareId: activeShare.id,
       reportTemplateId: template.id,
@@ -175,7 +175,7 @@ export function ReportShareDialog({
 
   // Delete share
   const handleDeleteShare = async () => {
-    if (!selectedShare) return
+    if (!selectedShare) {return}
     await deleteShare.mutateAsync({
       shareId: selectedShare.id,
       reportTemplateId: template.id,
@@ -199,7 +199,7 @@ export function ReportShareDialog({
 
   // Check if share is expired
   const isExpired = (share: SharedReport) => {
-    if (!share.expires_at) return false
+    if (!share.expires_at) {return false}
     return new Date(share.expires_at) < new Date()
   }
 

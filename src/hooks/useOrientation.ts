@@ -94,7 +94,7 @@ function getOrientationAngle(): number {
  * Check if device has touch capability
  */
 function isTouchCapable(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
   return (
     'ontouchstart' in window ||
     navigator.maxTouchPoints > 0 ||
@@ -152,7 +152,7 @@ export function useOrientation(options: UseOrientationOptions = {}): Orientation
   });
 
   const handleOrientationChange = useCallback(() => {
-    if (!enabled) return;
+    if (!enabled) {return;}
 
     // Small delay to ensure dimensions have updated after rotation
     requestAnimationFrame(() => {
@@ -179,7 +179,7 @@ export function useOrientation(options: UseOrientationOptions = {}): Orientation
   }, [enabled, onOrientationChange]);
 
   useEffect(() => {
-    if (!enabled || typeof window === 'undefined') return;
+    if (!enabled || typeof window === 'undefined') {return;}
 
     // Initial state
     handleOrientationChange();
@@ -247,7 +247,7 @@ export function useResponsiveLayout(): 'mobile' | 'tablet-portrait' | 'tablet-la
 export async function lockOrientation(
   orientation: OrientationLockType
 ): Promise<boolean> {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
 
   try {
     if (window.screen?.orientation?.lock) {
@@ -264,7 +264,7 @@ export async function lockOrientation(
  * Utility to unlock screen orientation
  */
 export function unlockOrientation(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
 
   try {
     if (window.screen?.orientation?.unlock) {

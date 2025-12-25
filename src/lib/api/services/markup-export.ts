@@ -621,7 +621,7 @@ async function exportAsMergedPdf(
     </head>
     <body>
       <div class="page cover">
-        <h1>Markup Export</h1>
+        <h1 className="heading-page">Markup Export</h1>
         <div class="info">
           <p>Total Drawings: ${drawings.length}</p>
           <p>Total Markups: ${totalMarkups}</p>

@@ -82,7 +82,7 @@ export function CloseoutPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2 heading-page">
               <FolderCheck className="h-7 w-7 text-success" />
               Project Closeout
             </h1>
@@ -127,7 +127,7 @@ export function CloseoutPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">Select a Project</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">Select a Project</h3>
               <p className="text-muted">
                 Choose a project above to view closeout documents and warranties
               </p>

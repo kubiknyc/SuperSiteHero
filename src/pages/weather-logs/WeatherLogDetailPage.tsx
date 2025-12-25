@@ -74,7 +74,7 @@ export function WeatherLogDetailPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <AlertTriangle className="w-16 h-16 text-error mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Weather Log Not Found</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Weather Log Not Found</h3>
               <p className="text-secondary mb-4">
                 The weather log you're looking for doesn't exist or you don't have access to it.
               </p>
@@ -102,7 +102,7 @@ export function WeatherLogDetailPage() {
               <div className="flex items-center gap-3">
                 <WeatherConditionsIcon condition={weatherLog.conditions} className="w-8 h-8" />
                 <div>
-                  <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+                  <h1 className="text-2xl font-bold text-foreground heading-page">
                     {getWeatherConditionLabel(weatherLog.conditions)}
                   </h1>
                   <p className="text-sm text-secondary">
@@ -270,7 +270,7 @@ export function WeatherLogDetailPage() {
                 {/* Impact Notes */}
                 {weatherLog.impact_notes && (
                   <div>
-                    <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">Impact Notes:</h4>
+                    <h4 className="text-sm font-medium text-secondary mb-2 heading-card">Impact Notes:</h4>
                     <p className="text-sm text-secondary whitespace-pre-wrap bg-surface p-3 rounded-md">
                       {weatherLog.impact_notes}
                     </p>
@@ -280,7 +280,7 @@ export function WeatherLogDetailPage() {
                 {/* Affected Activities */}
                 {weatherLog.affected_activities.length > 0 && (
                   <div>
-                    <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">Affected Activities:</h4>
+                    <h4 className="text-sm font-medium text-secondary mb-2 heading-card">Affected Activities:</h4>
                     <div className="flex flex-wrap gap-2">
                       {weatherLog.affected_activities.map((activity, index) => (
                         <Badge key={index} variant="outline">

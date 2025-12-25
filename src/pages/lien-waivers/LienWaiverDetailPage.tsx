@@ -107,7 +107,7 @@ export function LienWaiverDetailPage() {
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Waiver</h3>
+              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Waiver</h3>
               <p className="text-error">{error?.message || 'Waiver not found'}</p>
               <Button variant="outline" className="mt-4" onClick={() => navigate('/lien-waivers')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -409,7 +409,7 @@ export function LienWaiverDetailPage() {
               Back to Waivers
             </Button>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+              <h1 className="text-2xl font-bold text-foreground heading-page">
                 {waiver.waiver_number}
               </h1>
               <LienWaiverStatusBadge status={waiver.status} />

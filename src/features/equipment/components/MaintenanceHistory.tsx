@@ -114,7 +114,7 @@ function useMaintenanceHistory(equipmentId: string | undefined) {
   return useQuery({
     queryKey: ['maintenance-records', equipmentId],
     queryFn: async (): Promise<MaintenanceRecord[]> => {
-      if (!equipmentId) return []
+      if (!equipmentId) {return []}
 
       const { data, error } = await supabase
         .from('equipment_maintenance_records')
@@ -127,7 +127,7 @@ function useMaintenanceHistory(equipmentId: string | undefined) {
         .eq('equipment_id', equipmentId)
         .order('performed_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data || []
     },
     enabled: !!equipmentId,
@@ -169,7 +169,7 @@ function useCreateMaintenanceRecord() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -212,15 +212,15 @@ export function MaintenanceHistory({ equipment, className }: MaintenanceHistoryP
 
   // Get unique maintenance types for filter
   const maintenanceTypes = useMemo(() => {
-    if (!records) return []
+    if (!records) {return []}
     const types = [...new Set(records.map((r) => r.maintenance_type))]
     return types.sort()
   }, [records])
 
   // Filter records
   const filteredRecords = useMemo(() => {
-    if (!records) return []
-    if (typeFilter === 'all') return records
+    if (!records) {return []}
+    if (typeFilter === 'all') {return records}
     return records.filter((r) => r.maintenance_type === typeFilter)
   }, [records, typeFilter])
 
@@ -250,7 +250,7 @@ export function MaintenanceHistory({ equipment, className }: MaintenanceHistoryP
   }
 
   const handleExportCSV = () => {
-    if (!filteredRecords.length) return
+    if (!filteredRecords.length) {return}
 
     const headers = [
       'Date',
@@ -460,7 +460,7 @@ function MaintenanceRecordCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h4 className="font-medium text-foreground" className="heading-card">
+              <h4 className="font-medium text-foreground heading-card">
                 {record.maintenance_type.replace(/_/g, ' ')}
               </h4>
               <div className="flex flex-wrap items-center gap-2 text-sm text-muted mt-1">
@@ -630,7 +630,7 @@ function AddMaintenanceRecordDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.maintenance_type) return
+    if (!formData.maintenance_type) {return}
 
     await createRecord.mutateAsync({
       equipment_id: equipment.id,

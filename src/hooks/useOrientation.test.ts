@@ -3,6 +3,7 @@
  */
 
 import { renderHook, act, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
 import {
   useOrientation,
   useIsTabletLayout,
@@ -26,7 +27,14 @@ const mockWindow = (width: number, height: number, touchEnabled = false) => {
     value: height,
   });
 
-  // Mock touch detection
+  // Mock touch detection - ontouchstart
+  if (touchEnabled) {
+    (window as any).ontouchstart = () => {};
+  } else {
+    delete (window as any).ontouchstart;
+  }
+
+  // Mock touch detection - maxTouchPoints
   Object.defineProperty(navigator, 'maxTouchPoints', {
     writable: true,
     configurable: true,
@@ -37,22 +45,22 @@ const mockWindow = (width: number, height: number, touchEnabled = false) => {
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     configurable: true,
-    value: jest.fn().mockImplementation((query: string) => ({
+    value: vi.fn().mockImplementation((query: string) => ({
       matches: touchEnabled && query.includes('coarse'),
       media: query,
       onchange: null,
-      addListener: jest.fn(),
-      removeListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
     })),
   });
 };
 
 // Mock requestAnimationFrame
 const mockRequestAnimationFrame = () => {
-  jest.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
+  vi.spyOn(window, 'requestAnimationFrame').mockImplementation((cb) => {
     cb(0);
     return 0;
   });
@@ -60,7 +68,7 @@ const mockRequestAnimationFrame = () => {
 
 describe('useOrientation', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockRequestAnimationFrame();
   });
 
@@ -153,13 +161,15 @@ describe('useOrientation', () => {
   describe('orientation change handling', () => {
     it('should call onOrientationChange callback when orientation changes', async () => {
       mockWindow(1024, 768);
-      const onOrientationChange = jest.fn();
+      const onOrientationChange = vi.fn();
 
       renderHook(() => useOrientation({ onOrientationChange }));
 
       // Simulate orientation change
-      mockWindow(768, 1024);
-      window.dispatchEvent(new Event('resize'));
+      await act(async () => {
+        mockWindow(768, 1024);
+        window.dispatchEvent(new Event('resize'));
+      });
 
       await waitFor(() => {
         expect(onOrientationChange).toHaveBeenCalled();
@@ -251,7 +261,7 @@ describe('useResponsiveLayout', () => {
 describe('orientation lock utilities', () => {
   describe('lockOrientation', () => {
     it('should call screen.orientation.lock when available', async () => {
-      const lockMock = jest.fn().mockResolvedValue(undefined);
+      const lockMock = vi.fn().mockResolvedValue(undefined);
       Object.defineProperty(window.screen, 'orientation', {
         value: { lock: lockMock },
         configurable: true,
@@ -275,7 +285,7 @@ describe('orientation lock utilities', () => {
     });
 
     it('should return false when lock throws an error', async () => {
-      const lockMock = jest.fn().mockRejectedValue(new Error('Not supported'));
+      const lockMock = vi.fn().mockRejectedValue(new Error('Not supported'));
       Object.defineProperty(window.screen, 'orientation', {
         value: { lock: lockMock },
         configurable: true,
@@ -289,7 +299,7 @@ describe('orientation lock utilities', () => {
 
   describe('unlockOrientation', () => {
     it('should call screen.orientation.unlock when available', () => {
-      const unlockMock = jest.fn();
+      const unlockMock = vi.fn();
       Object.defineProperty(window.screen, 'orientation', {
         value: { unlock: unlockMock },
         configurable: true,
@@ -314,6 +324,11 @@ describe('orientation lock utilities', () => {
 describe('edge cases', () => {
   beforeEach(() => {
     mockRequestAnimationFrame();
+
+    // Reset screen.orientation to prevent interference from previous tests
+    if (window.screen) {
+      delete (window.screen as any).orientation;
+    }
   });
 
   it('should handle square screens as landscape', () => {

@@ -264,7 +264,7 @@ export function getOutlookEntityTypeConfig(entityType: OutlookEntityType) {
  * Check if connection needs token refresh
  */
 export function outlookConnectionNeedsRefresh(connection: OutlookCalendarConnection): boolean {
-  if (!connection.token_expires_at) return true
+  if (!connection.token_expires_at) {return true}
   const expiresAt = new Date(connection.token_expires_at)
   const now = new Date()
   // Refresh if expires within 5 minutes
@@ -277,9 +277,9 @@ export function outlookConnectionNeedsRefresh(connection: OutlookCalendarConnect
  */
 export function outlookConnectionNeedsReauth(connection: OutlookCalendarConnection): boolean {
   // If there's a connection error mentioning expired or invalid
-  if (connection.connection_error?.toLowerCase().includes('expired')) return true
-  if (connection.connection_error?.toLowerCase().includes('invalid')) return true
-  if (!connection.refresh_token) return true
+  if (connection.connection_error?.toLowerCase().includes('expired')) {return true}
+  if (connection.connection_error?.toLowerCase().includes('invalid')) {return true}
+  if (!connection.refresh_token) {return true}
   return false
 }
 
@@ -287,7 +287,7 @@ export function outlookConnectionNeedsReauth(connection: OutlookCalendarConnecti
  * Format last sync time
  */
 export function formatLastSyncTime(lastSyncAt: string | null): string {
-  if (!lastSyncAt) return 'Never'
+  if (!lastSyncAt) {return 'Never'}
 
   const syncDate = new Date(lastSyncAt)
   const now = new Date()
@@ -296,9 +296,9 @@ export function formatLastSyncTime(lastSyncAt: string | null): string {
   const diffHours = Math.floor(diffMinutes / 60)
   const diffDays = Math.floor(diffHours / 24)
 
-  if (diffMinutes < 1) return 'Just now'
-  if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`
-  if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`
+  if (diffMinutes < 1) {return 'Just now'}
+  if (diffMinutes < 60) {return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`}
+  if (diffHours < 24) {return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`}
   return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
 }
 

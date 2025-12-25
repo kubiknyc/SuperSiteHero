@@ -148,7 +148,7 @@ export function MeetingDetailPage() {
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Meetings
             </Button>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">
+            <h1 className="text-3xl font-bold text-foreground heading-page">
               {meeting.meeting_name || getMeetingTypeLabel(meeting.meeting_type)}
             </h1>
             <div className="flex items-center gap-3 mt-2">
@@ -448,14 +448,14 @@ export function MeetingDetailPage() {
                 {/* Existing Recordings */}
                 {recordings && recordings.length > 0 && (
                   <div className="space-y-4 mt-4">
-                    <h4 className="text-sm font-medium text-secondary" className="heading-card">Saved Recordings</h4>
+                    <h4 className="text-sm font-medium text-secondary heading-card">Saved Recordings</h4>
 
                     {/* Recording Tabs */}
                     <Tabs
                       value={selectedRecording?.id || recordings[0]?.id}
                       onValueChange={(value) => {
                         const rec = recordings.find((r) => r.id === value)
-                        if (rec) setSelectedRecording(rec)
+                        if (rec) {setSelectedRecording(rec)}
                       }}
                     >
                       <TabsList className="w-full flex-wrap h-auto gap-1 bg-muted p-1">

@@ -193,7 +193,7 @@ export async function compressVideo(
         const canvasStream = canvas.captureStream(30)
 
         // Try to get audio track from original video
-        let audioTrack: MediaStreamTrack | null = null
+        const audioTrack: MediaStreamTrack | null = null
 
         // Note: Getting audio from video element is complex in browsers
         // For full audio support, consider Web Audio API or server-side processing
@@ -281,8 +281,8 @@ export async function trimVideo(
   const metadata = await getVideoMetadata(file)
 
   // Validate times
-  if (startTime < 0) startTime = 0
-  if (endTime > metadata.duration) endTime = metadata.duration
+  if (startTime < 0) {startTime = 0}
+  if (endTime > metadata.duration) {endTime = metadata.duration}
   if (startTime >= endTime) {
     throw new Error('Invalid trim times')
   }
@@ -390,9 +390,9 @@ export function getVideoCodec(mimeType: string): string | undefined {
   }
 
   // Infer codec from container
-  if (mimeType.includes('webm')) return 'vp8/vp9'
-  if (mimeType.includes('mp4')) return 'h264'
-  if (mimeType.includes('quicktime')) return 'h264'
+  if (mimeType.includes('webm')) {return 'vp8/vp9'}
+  if (mimeType.includes('mp4')) {return 'h264'}
+  if (mimeType.includes('quicktime')) {return 'h264'}
 
   return undefined
 }

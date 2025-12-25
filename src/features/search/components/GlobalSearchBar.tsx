@@ -163,7 +163,7 @@ function SearchResultItem({
 
   // Highlight matched terms in title
   const highlightText = (text: string) => {
-    if (!highlightTerms.length) return text
+    if (!highlightTerms.length) {return text}
 
     const regex = new RegExp(`(${highlightTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
     const parts = text.split(regex)
@@ -259,7 +259,7 @@ function RecentSearches({
   onSelect: (query: string) => void
   onClear: () => void
 }) {
-  if (!searches.length) return null
+  if (!searches.length) {return null}
 
   return (
     <div className="p-3 border-b border-border dark:border-border">

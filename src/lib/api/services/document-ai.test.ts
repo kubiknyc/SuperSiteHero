@@ -2,7 +2,9 @@
  * Document AI API Service Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 
 // Use vi.hoisted to define mocks that will be used in vi.mock (which is hoisted)
 const { mockSupabaseChain, mockAuth } = vi.hoisted(() => {

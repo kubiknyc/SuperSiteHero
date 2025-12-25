@@ -90,7 +90,7 @@ serve(async (req) => {
       })
       .eq('id', connectionId)
 
-    if (updateError) throw updateError
+    if (updateError) {throw updateError}
 
     console.log(`Outlook token refreshed successfully for connection ${connectionId}`)
 

@@ -244,12 +244,12 @@ export function LookAheadSyncDialog({
             {syncResult.errors.length > 0 ? (
               <>
                 <AlertTriangle className="h-16 w-16 text-warning" />
-                <h3 className="text-lg font-semibold" className="heading-subsection">Sync Completed with Issues</h3>
+                <h3 className="text-lg font-semibold heading-subsection">Sync Completed with Issues</h3>
               </>
             ) : (
               <>
                 <CheckCircle2 className="h-16 w-16 text-success" />
-                <h3 className="text-lg font-semibold" className="heading-subsection">Sync Successful</h3>
+                <h3 className="text-lg font-semibold heading-subsection">Sync Successful</h3>
               </>
             )}
 

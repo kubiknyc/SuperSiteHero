@@ -212,7 +212,7 @@ export function CostTrackingPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
               <DollarSign className="h-6 w-6" />
               Cost Tracking
             </h1>
@@ -269,7 +269,7 @@ export function CostTrackingPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <DollarSign className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-secondary" className="heading-subsection">Select a Project</h3>
+              <h3 className="text-lg font-medium text-secondary heading-subsection">Select a Project</h3>
               <p className="text-muted mt-1">
                 Choose a project from the dropdown above to view and manage costs
               </p>

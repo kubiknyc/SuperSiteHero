@@ -78,7 +78,7 @@ export function ContactsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Contacts Directory</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Contacts Directory</h1>
             <p className="text-secondary mt-1">Manage contacts for your projects</p>
           </div>
           <Button
@@ -243,7 +243,7 @@ export function ContactsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Project Selected</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">No Project Selected</h3>
               <p className="text-secondary">Select a project above to view and manage contacts</p>
             </CardContent>
           </Card>
@@ -258,7 +258,7 @@ export function ContactsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Contacts</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading Contacts</h3>
               <p className="text-secondary">{contactsError.message}</p>
             </CardContent>
           </Card>
@@ -266,7 +266,7 @@ export function ContactsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Contacts Yet</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">No Contacts Yet</h3>
               <p className="text-secondary mb-4">Add your first contact to get started</p>
               <Button onClick={() => navigate(`/contacts/new?projectId=${selectedProjectId}`)}>
                 <Plus className="h-4 w-4 mr-2" />

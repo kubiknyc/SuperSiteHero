@@ -245,7 +245,7 @@ serve(async (req) => {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       account = data
     } else {
       // Create new account
@@ -272,7 +272,7 @@ serve(async (req) => {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       account = data
     }
 

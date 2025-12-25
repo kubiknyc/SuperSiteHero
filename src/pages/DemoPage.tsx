@@ -69,7 +69,7 @@ export function DemoPage() {
             <div className="flex justify-center mb-6">
               <Logo size="2xl" animated />
             </div>
-            <h1 className="text-5xl font-bold mb-4" className="heading-page">
+            <h1 className="text-5xl font-bold mb-4 heading-page">
               Industrial Modern Design System
             </h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
@@ -92,7 +92,7 @@ export function DemoPage() {
 
         {/* Logo Variants Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3 heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Logo Components
           </h2>
@@ -100,7 +100,7 @@ export function DemoPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Auth Logo */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Auth Logo
               </h3>
               <div className="flex items-center justify-center min-h-[300px] bg-surface rounded-xl">
@@ -113,7 +113,7 @@ export function DemoPage() {
 
             {/* Sidebar Logo */}
             <div className="bg-gray-900 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-sm font-semibold text-disabled uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-disabled uppercase tracking-wide mb-4 heading-subsection">
                 Sidebar Logo
               </h3>
               <div className="flex items-center justify-center min-h-[300px]">
@@ -126,7 +126,7 @@ export function DemoPage() {
 
             {/* Compact Logo */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Compact Logo
               </h3>
               <div className="flex items-center justify-center min-h-[300px] bg-surface rounded-xl">
@@ -139,7 +139,7 @@ export function DemoPage() {
 
             {/* Logo Sizes */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Size Variants
               </h3>
               <div className="space-y-6 flex flex-col items-center">
@@ -160,7 +160,7 @@ export function DemoPage() {
 
             {/* Icon Variants */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Icon Variants
               </h3>
               <div className="space-y-6">
@@ -181,7 +181,7 @@ export function DemoPage() {
 
             {/* Logo Icon Only */}
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-8 shadow-lg">
-              <h3 className="text-sm font-semibold text-white dark:text-white uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-white dark:text-white uppercase tracking-wide mb-4 heading-subsection">
                 Icon Only
               </h3>
               <div className="flex items-center justify-center min-h-[200px]">
@@ -196,7 +196,7 @@ export function DemoPage() {
 
         {/* Loading States Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3 heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Loading Components
           </h2>
@@ -204,7 +204,7 @@ export function DemoPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Full Screen Loader Demo */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Full Screen Loader
               </h3>
               <div className="space-y-4">
@@ -222,7 +222,7 @@ export function DemoPage() {
 
             {/* Loading Spinner */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Loading Spinners
               </h3>
               <div className="space-y-6">
@@ -243,7 +243,7 @@ export function DemoPage() {
 
             {/* Loading Overlay */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Loading Overlay
               </h3>
               <div className="space-y-4">
@@ -261,7 +261,7 @@ export function DemoPage() {
 
             {/* Button Loader */}
             <div className="bg-card rounded-2xl p-8 shadow-lg border border-border">
-              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-subsection">
                 Button Loader
               </h3>
               <div className="space-y-4">
@@ -282,7 +282,7 @@ export function DemoPage() {
 
         {/* Background Patterns Section */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3 heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Background Patterns
           </h2>
@@ -324,7 +324,7 @@ export function DemoPage() {
 
         {/* Industrial UI Elements */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3 heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Industrial UI Elements
           </h2>
@@ -332,7 +332,7 @@ export function DemoPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Glass Cards */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-secondary" className="heading-subsection">Glass Morphism Cards</h3>
+              <h3 className="text-lg font-semibold text-secondary heading-subsection">Glass Morphism Cards</h3>
 
               {/* Light Glass Card */}
               <div className="relative h-64 rounded-2xl overflow-hidden">
@@ -340,7 +340,7 @@ export function DemoPage() {
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="glass-card p-6 rounded-xl max-w-xs">
                     <HardHat className="w-8 h-8 text-primary dark:text-primary-400 mb-3" />
-                    <h4 className="font-bold text-foreground mb-2" className="heading-card">Light Glass Card</h4>
+                    <h4 className="font-bold text-foreground mb-2 heading-card">Light Glass Card</h4>
                     <p className="text-sm text-secondary">
                       Frosted glass effect with backdrop blur for modern depth
                     </p>
@@ -354,7 +354,7 @@ export function DemoPage() {
                 <div className="absolute inset-0 flex items-center justify-center p-8">
                   <div className="glass-card-dark p-6 rounded-xl max-w-xs">
                     <Shield className="w-8 h-8 text-primary dark:text-primary-400 mb-3" />
-                    <h4 className="font-bold text-white mb-2" className="heading-card">Dark Glass Card</h4>
+                    <h4 className="font-bold text-white mb-2 heading-card">Dark Glass Card</h4>
                     <p className="text-sm text-gray-300">
                       Dark variant with subtle transparency and border glow
                     </p>
@@ -365,7 +365,7 @@ export function DemoPage() {
 
             {/* Industrial Components */}
             <div className="space-y-6">
-              <h3 className="text-lg font-semibold text-secondary" className="heading-subsection">Industrial Components</h3>
+              <h3 className="text-lg font-semibold text-secondary heading-subsection">Industrial Components</h3>
 
               {/* Industrial Buttons */}
               <div className="bg-card rounded-2xl p-6 shadow-lg border border-border space-y-4">
@@ -382,7 +382,7 @@ export function DemoPage() {
 
               {/* Safety Badge */}
               <div className="bg-card rounded-2xl p-6 shadow-lg border border-border">
-                <h4 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-card">
+                <h4 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-card">
                   Safety Badge
                 </h4>
                 <div className="flex flex-wrap gap-3">
@@ -399,7 +399,7 @@ export function DemoPage() {
 
               {/* Status Indicators */}
               <div className="bg-card rounded-2xl p-6 shadow-lg border border-border space-y-3">
-                <h4 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4" className="heading-card">
+                <h4 className="text-sm font-semibold text-muted uppercase tracking-wide mb-4 heading-card">
                   Status Indicators
                 </h4>
                 <div className="status-active text-sm font-medium text-secondary">
@@ -418,7 +418,7 @@ export function DemoPage() {
 
         {/* Feature Cards with Icons */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3 heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Feature Cards
           </h2>
@@ -439,7 +439,7 @@ export function DemoPage() {
                 <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.color} mb-4 group-hover:scale-110 transition-transform`}>
                   <feature.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="font-bold text-foreground mb-2" className="heading-subsection">{feature.title}</h3>
+                <h3 className="font-bold text-foreground mb-2 heading-subsection">{feature.title}</h3>
                 <p className="text-sm text-gray-600">{feature.desc}</p>
               </div>
             ))}
@@ -448,7 +448,7 @@ export function DemoPage() {
 
         {/* Color Palette */}
         <section>
-          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3" className="heading-section">
+          <h2 className="text-3xl font-bold text-foreground mb-8 flex items-center gap-3 heading-section">
             <div className="w-1 h-8 bg-primary dark:bg-primary" />
             Color Palette
           </h2>

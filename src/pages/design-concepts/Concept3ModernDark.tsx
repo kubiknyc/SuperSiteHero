@@ -13,7 +13,7 @@ export default function Concept3ModernDark() {
               <Zap className="w-5 h-5 text-black" />
             </div>
             <div>
-              <h1 className="text-xl font-semibold tracking-tight" className="heading-page">JOBSIGHT</h1>
+              <h1 className="text-xl font-semibold tracking-tight heading-page">JOBSIGHT</h1>
               <p className="text-xs text-muted tracking-wider">CONCEPT 3</p>
             </div>
           </div>
@@ -58,7 +58,7 @@ export default function Concept3ModernDark() {
           <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="text-xl font-semibold mb-1" className="heading-subsection">Downtown Tower</h3>
+                <h3 className="text-xl font-semibold mb-1 heading-subsection">Downtown Tower</h3>
                 <p className="text-sm text-disabled">Construction Management</p>
               </div>
               <span className="px-3 py-1 bg-purple-500/10 text-purple-400 text-sm font-medium rounded-full border border-purple-500/20">

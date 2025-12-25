@@ -19,7 +19,7 @@ export interface PortalInvitationEmailData {
 
 export function generatePortalInvitationEmail(data: PortalInvitationEmailData): { html: string; text: string } {
   const content = `
-    <h1>You're Invited to JobSight</h1>
+    <h1 className="heading-page">You're Invited to JobSight</h1>
 
     <p>Hi ${data.recipientName},</p>
 

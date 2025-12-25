@@ -103,9 +103,9 @@ const getSupportedVideoMimeType = (): string => {
 
 // Get video file extension from MIME type
 export function getVideoExtension(mimeType: string): string {
-  if (mimeType.includes('mp4')) return 'mp4'
-  if (mimeType.includes('webm')) return 'webm'
-  if (mimeType.includes('quicktime')) return 'mov'
+  if (mimeType.includes('mp4')) {return 'mp4'}
+  if (mimeType.includes('webm')) {return 'webm'}
+  if (mimeType.includes('quicktime')) {return 'mov'}
   return 'webm'
 }
 
@@ -283,7 +283,7 @@ export function useVideoRecorder(
       return
     }
 
-    if (isRecording) return
+    if (isRecording) {return}
 
     try {
       setError(null)

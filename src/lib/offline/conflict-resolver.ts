@@ -143,9 +143,9 @@ export class ConflictResolver {
    */
   private static areValuesEqual(a: unknown, b: unknown): boolean {
     // Handle null/undefined
-    if (a === b) return true;
-    if (a === null || b === null) return false;
-    if (a === undefined || b === undefined) return false;
+    if (a === b) {return true;}
+    if (a === null || b === null) {return false;}
+    if (a === undefined || b === undefined) {return false;}
 
     // Handle primitives
     if (typeof a !== 'object' || typeof b !== 'object') {
@@ -169,10 +169,10 @@ export class ConflictResolver {
     serverValue: unknown
   ): boolean {
     // Always auto-merge server priority fields
-    if (SERVER_PRIORITY_FIELDS.has(field)) return true;
+    if (SERVER_PRIORITY_FIELDS.has(field)) {return true;}
 
     // Always auto-merge local priority fields
-    if (LOCAL_PRIORITY_FIELDS.has(field)) return true;
+    if (LOCAL_PRIORITY_FIELDS.has(field)) {return true;}
 
     // Can auto-merge if one value is null/undefined and other is set
     if ((localValue === null || localValue === undefined) && serverValue !== null && serverValue !== undefined) {

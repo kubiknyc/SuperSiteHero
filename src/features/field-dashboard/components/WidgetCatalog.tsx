@@ -129,7 +129,7 @@ export function WidgetCatalog({
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-medium" className="heading-card">{widget.name}</h4>
+                      <h4 className="font-medium heading-card">{widget.name}</h4>
                       <Badge variant="outline" className="text-xs">
                         {widget.category}
                       </Badge>

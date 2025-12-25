@@ -262,7 +262,7 @@ export function EquipmentReadyStateChecklist({
           <div className="space-y-4">
             {Array.from(groupedItems.entries()).map(([category, items]) => (
               <div key={category}>
-                <h4 className="text-sm font-medium text-secondary mb-2 flex items-center gap-2" className="heading-card">
+                <h4 className="text-sm font-medium text-secondary mb-2 flex items-center gap-2 heading-card">
                   {category}
                   <Badge variant="outline" className="text-xs font-normal">
                     {items.filter((i) => responses.has(i.id)).length}/{items.length}

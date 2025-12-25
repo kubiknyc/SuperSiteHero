@@ -29,7 +29,7 @@ export function generateRfiAssignedEmail(data: RfiAssignedEmailData): { html: st
   const priorityColor = data.priority ? PRIORITY_COLORS[data.priority.toLowerCase()] || '#3b82f6' : '#3b82f6'
 
   const content = `
-    <h1>RFI Assignment</h1>
+    <h1 className="heading-page">RFI Assignment</h1>
 
     <p>Hi ${data.recipientName},</p>
 

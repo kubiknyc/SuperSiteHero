@@ -105,7 +105,7 @@ export function ClientRFIs() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Requests for Information</h1>
+        <h1 className="text-2xl font-bold text-foreground heading-page">Requests for Information</h1>
         <p className="text-secondary mt-1">
           Track RFIs and their responses for your project.
         </p>
@@ -234,7 +234,7 @@ export function ClientRFIs() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="font-medium text-foreground truncate" className="heading-subsection">
+                            <h3 className="font-medium text-foreground truncate heading-subsection">
                               {rfi.title}
                             </h3>
                             {isOverdue && (
@@ -285,7 +285,7 @@ export function ClientRFIs() {
                         {/* Description */}
                         {rfi.description && (
                           <div>
-                            <h4 className="text-sm font-medium text-secondary mb-1" className="heading-card">Description</h4>
+                            <h4 className="text-sm font-medium text-secondary mb-1 heading-card">Description</h4>
                             <p className="text-secondary whitespace-pre-wrap">{rfi.description}</p>
                           </div>
                         )}
@@ -293,7 +293,7 @@ export function ClientRFIs() {
                         {/* Resolution */}
                         {rfi.resolution && (
                           <div className="bg-success-light border border-green-200 rounded-lg p-4">
-                            <h4 className="text-sm font-medium text-green-800 mb-1 flex items-center gap-2" className="heading-card">
+                            <h4 className="text-sm font-medium text-green-800 mb-1 flex items-center gap-2 heading-card">
                               <CheckCircle2 className="h-4 w-4" />
                               Resolution
                             </h4>
@@ -326,7 +326,7 @@ export function ClientRFIs() {
         <Card>
           <CardContent className="py-12 text-center">
             <HelpCircle className="h-12 w-12 text-disabled mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No RFIs Found</h3>
+            <h3 className="text-lg font-medium text-foreground heading-subsection">No RFIs Found</h3>
             <p className="text-muted mt-1">
               {searchTerm || statusFilter !== 'all'
                 ? 'No RFIs match your filters. Try adjusting your search.'

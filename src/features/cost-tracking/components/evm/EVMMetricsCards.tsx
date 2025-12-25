@@ -179,7 +179,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
     <div className="space-y-6">
       {/* Performance Indices */}
       <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3" className="heading-subsection">Performance Indices</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3 heading-subsection">Performance Indices</h3>
         <div className={cn('grid gap-4', compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4')}>
           <MetricCard
             title="Cost Performance Index (CPI)"
@@ -220,7 +220,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
 
       {/* Cost Metrics */}
       <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3" className="heading-subsection">Cost Analysis</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3 heading-subsection">Cost Analysis</h3>
         <div className={cn('grid gap-4', compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4')}>
           <MetricCard
             title="Budget at Completion (BAC)"
@@ -256,7 +256,7 @@ export function EVMMetricsCards({ metrics, isLoading, compact }: EVMMetricsCards
 
       {/* Variances */}
       <div>
-        <h3 className="text-sm font-semibold text-muted-foreground mb-3" className="heading-subsection">Current Variances</h3>
+        <h3 className="text-sm font-semibold text-muted-foreground mb-3 heading-subsection">Current Variances</h3>
         <div className={cn('grid gap-4', compact ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4')}>
           <MetricCard
             title="Cost Variance (CV)"

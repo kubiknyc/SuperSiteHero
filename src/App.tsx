@@ -27,6 +27,11 @@ import { LoginPage } from './pages/auth/LoginPage'
 import { SignupPage } from './pages/auth/SignupPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
 
+// Registration flow - loaded eagerly as part of initial auth experience
+import { CompanyRegistration } from './features/registration/CompanyRegistration'
+import { PendingApproval } from './features/registration/PendingApproval'
+import { AdminApprovalDashboard } from './features/registration/AdminApprovalDashboard'
+
 // Dashboard - loaded eagerly as it's the main landing page
 import { DashboardPage } from './pages/DashboardPage'
 
@@ -378,7 +383,11 @@ function App() {
                 {/* Public routes - loaded eagerly */}
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route path="/register" element={<CompanyRegistration />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+                {/* Protected registration routes */}
+                <Route path="/pending-approval" element={<ProtectedRoute><PendingApproval /></ProtectedRoute>} />
                 <Route path="/invite/:token" element={<AcceptInvitationPage />} />
                 {/* Public approval page - No auth required */}
                 <Route path="/approve/:token" element={<PublicApprovalPage />} />
@@ -465,6 +474,7 @@ function App() {
                 <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
                 <Route path="/settings/company" element={<ProtectedRoute><CompanyProfilePage /></ProtectedRoute>} />
                 <Route path="/settings/users" element={<ProtectedRoute><UserManagementPage /></ProtectedRoute>} />
+                <Route path="/settings/user-approvals" element={<ProtectedRoute><AdminApprovalDashboard /></ProtectedRoute>} />
                 <Route path="/settings/approval-workflows" element={<ProtectedRoute><ApprovalWorkflowsPage /></ProtectedRoute>} />
                 <Route path="/settings/project-templates" element={<ProtectedRoute><ProjectTemplatesPage /></ProtectedRoute>} />
                 <Route path="/settings/distribution-lists" element={<ProtectedRoute><DistributionListsPage /></ProtectedRoute>} />

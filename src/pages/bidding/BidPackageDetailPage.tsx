@@ -109,7 +109,7 @@ export default function BidPackageDetailPage() {
       <div className="container py-8">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-          <h2 className="text-xl font-semibold mb-2" className="heading-section">Bid Package Not Found</h2>
+          <h2 className="text-xl font-semibold mb-2 heading-section">Bid Package Not Found</h2>
           <p className="text-muted-foreground mb-4">
             The bid package you're looking for doesn't exist or you don't have access.
           </p>
@@ -175,7 +175,7 @@ export default function BidPackageDetailPage() {
             Back to Bid Packages
           </Button>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold" className="heading-page">
+            <h1 className="text-2xl font-bold heading-page">
               {bidPackage.package_number} - {bidPackage.name}
             </h1>
             <BidPackageStatusBadge status={bidPackage.status} />

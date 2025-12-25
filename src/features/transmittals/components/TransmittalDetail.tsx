@@ -116,7 +116,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
       <Card>
         <CardContent className="py-12 text-center">
           <AlertCircle className="h-12 w-12 mx-auto text-destructive mb-4" />
-          <h3 className="text-lg font-medium mb-2" className="heading-subsection">Transmittal Not Found</h3>
+          <h3 className="text-lg font-medium mb-2 heading-subsection">Transmittal Not Found</h3>
           <p className="text-muted-foreground mb-4">
             The transmittal you're looking for doesn't exist or you don't have access.
           </p>
@@ -148,7 +148,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <h1 className="text-2xl font-bold" className="heading-page">{transmittal.transmittal_number}</h1>
+            <h1 className="text-2xl font-bold heading-page">{transmittal.transmittal_number}</h1>
             <Badge
               variant="outline"
               className={`
@@ -253,7 +253,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* From */}
                 <div className="space-y-3">
-                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground" className="heading-card">
+                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground heading-card">
                     <Building2 className="h-4 w-4" />
                     From
                   </h4>
@@ -282,7 +282,7 @@ export function TransmittalDetail({ transmittalId, projectId }: TransmittalDetai
 
                 {/* To */}
                 <div className="space-y-3">
-                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground" className="heading-card">
+                  <h4 className="font-medium flex items-center gap-2 text-muted-foreground heading-card">
                     <Building2 className="h-4 w-4" />
                     To
                   </h4>

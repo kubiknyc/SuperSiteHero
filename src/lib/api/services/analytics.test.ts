@@ -3,7 +3,9 @@
  * Comprehensive tests for predictive analytics functionality
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { analyticsApi } from './analytics'
 import { supabase } from '@/lib/supabase'
 import type {
@@ -592,10 +594,10 @@ describe('Analytics API Service', () => {
       let callCount = 0
       vi.mocked(supabase.from).mockImplementation((table: string) => {
         callCount++
-        if (table === 'projects') return mockProjectQuery as any
-        if (table === 'analytics_predictions' && callCount === 2) return mockPredictionQuery as any
-        if (table === 'analytics_recommendations') return mockRecommendationsQuery as any
-        if (table === 'analytics_project_snapshots') return mockSnapshotsQuery as any
+        if (table === 'projects') {return mockProjectQuery as any}
+        if (table === 'analytics_predictions' && callCount === 2) {return mockPredictionQuery as any}
+        if (table === 'analytics_recommendations') {return mockRecommendationsQuery as any}
+        if (table === 'analytics_project_snapshots') {return mockSnapshotsQuery as any}
         if (table === 'analytics_recommendations' && callCount > 3) {
           return {
             select: vi.fn().mockResolvedValue({ data: [], error: null }),

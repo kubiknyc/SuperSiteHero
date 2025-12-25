@@ -69,7 +69,7 @@ export function TaskEditPage() {
     <AppLayout>
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
-          <h1 className="text-3xl font-bold text-foreground" className="heading-page">Edit Task</h1>
+          <h1 className="text-3xl font-bold text-foreground heading-page">Edit Task</h1>
           <p className="text-secondary mt-2">Update task details and status</p>
         </div>
 

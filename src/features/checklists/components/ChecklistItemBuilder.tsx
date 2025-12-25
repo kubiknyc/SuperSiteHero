@@ -472,7 +472,7 @@ export function ChecklistItemBuilder({
 
       {/* Add New Item Form */}
       <div className="border-2 border-dashed border-input rounded-lg p-4 bg-surface">
-        <h3 className="font-semibold mb-3 flex items-center gap-2" className="heading-subsection">
+        <h3 className="font-semibold mb-3 flex items-center gap-2 heading-subsection">
           <Plus className="h-5 w-5" />
           Add New Item
         </h3>

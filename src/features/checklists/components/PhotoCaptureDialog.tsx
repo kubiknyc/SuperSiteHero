@@ -517,7 +517,7 @@ export function PhotoCaptureDialog({
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
                 <FolderOpen className="w-5 h-5 text-primary" />
-                <h3 className="text-sm font-medium text-blue-900" className="heading-subsection">
+                <h3 className="text-sm font-medium text-blue-900 heading-subsection">
                   Bulk Upload Progress
                 </h3>
               </div>
@@ -555,7 +555,7 @@ export function PhotoCaptureDialog({
           {/* Upload progress */}
           {uploadingFiles.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-secondary" className="heading-subsection">Uploading...</h3>
+              <h3 className="text-sm font-medium text-secondary heading-subsection">Uploading...</h3>
               {uploadingFiles.map((uf, index) => (
                 <div key={index} className="flex items-center gap-3 p-3 bg-surface rounded-lg">
                   <div className="flex-1">

@@ -162,7 +162,7 @@ export function CreateDedicatedSubmittalDialog({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Spec Section - Most Important Field */}
           <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-4">
-            <h3 className="font-semibold text-blue-900" className="heading-subsection">Specification Reference</h3>
+            <h3 className="font-semibold text-blue-900 heading-subsection">Specification Reference</h3>
 
             <CSISpecPicker
               value={specSection}
@@ -250,7 +250,7 @@ export function CreateDedicatedSubmittalDialog({
 
           {/* Assignment & Tracking */}
           <div className="p-4 bg-surface border rounded-lg space-y-4">
-            <h3 className="font-semibold text-foreground" className="heading-subsection">Assignment & Tracking</h3>
+            <h3 className="font-semibold text-foreground heading-subsection">Assignment & Tracking</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -291,7 +291,7 @@ export function CreateDedicatedSubmittalDialog({
 
           {/* Dates */}
           <div className="p-4 bg-surface border rounded-lg space-y-4">
-            <h3 className="font-semibold text-foreground" className="heading-subsection">Schedule</h3>
+            <h3 className="font-semibold text-foreground heading-subsection">Schedule</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">

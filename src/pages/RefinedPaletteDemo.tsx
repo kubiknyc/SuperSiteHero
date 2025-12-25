@@ -82,7 +82,7 @@ export function RefinedPaletteDemo() {
       <header className="bg-card dark:bg-surface shadow-sm border-b border-border dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-foreground dark:text-white mb-4" className="heading-page">
+            <h1 className="text-4xl font-bold text-foreground dark:text-white mb-4 heading-page">
               Choose Your Brand Color
             </h1>
             <p className="text-xl text-secondary dark:text-disabled max-w-3xl mx-auto">
@@ -141,7 +141,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
             <span className="text-white/80 text-xs font-bold uppercase tracking-wider">
               Option {palette.id}
             </span>
-            <h2 className="text-lg font-bold text-white" className="heading-section">{palette.name}</h2>
+            <h2 className="text-lg font-bold text-white heading-section">{palette.name}</h2>
           </div>
         </div>
       </div>

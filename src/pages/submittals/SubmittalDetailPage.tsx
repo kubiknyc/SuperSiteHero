@@ -124,7 +124,7 @@ export function SubmittalDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Submittal</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading Submittal</h3>
               <p className="text-secondary">{error?.message || 'Submittal not found'}</p>
             </CardContent>
           </Card>
@@ -150,7 +150,7 @@ export function SubmittalDetailPage() {
             {/* Header */}
             <div className="flex items-start justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-foreground" className="heading-page">S-{String(submittal.number).padStart(3, '0')}</h1>
+                <h1 className="text-3xl font-bold text-foreground heading-page">S-{String(submittal.number).padStart(3, '0')}</h1>
                 <p className="text-secondary mt-1">{submittal.title}</p>
               </div>
               <Button

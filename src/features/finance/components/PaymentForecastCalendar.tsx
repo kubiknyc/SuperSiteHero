@@ -363,7 +363,7 @@ function CalendarGrid({ monthData, currentMonth, onDayClick }: CalendarGridProps
                     {hasPayments && (
                       <PopoverContent className="w-80 p-0" align="start">
                         <div className="p-4 border-b">
-                          <h4 className="font-medium" className="heading-card">{format(dayDate, 'EEEE, MMMM d, yyyy')}</h4>
+                          <h4 className="font-medium heading-card">{format(dayDate, 'EEEE, MMMM d, yyyy')}</h4>
                           <div className="flex gap-4 mt-2 text-sm">
                             <span className="text-success">In: {formatCurrency(day.incoming)}</span>
                             <span className="text-error">Out: {formatCurrency(day.outgoing)}</span>
@@ -691,7 +691,7 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight" className="heading-section">Payment Forecast</h2>
+          <h2 className="text-2xl font-bold tracking-tight heading-section">Payment Forecast</h2>
           <p className="text-muted-foreground">
             Upcoming payment schedules and cash flow projections
           </p>
@@ -861,7 +861,7 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
                 {/* Payment Patterns */}
                 {cashFlow?.patterns && cashFlow.patterns.length > 0 && (
                   <div className="mt-6">
-                    <h4 className="font-medium mb-3" className="heading-card">Historical Patterns</h4>
+                    <h4 className="font-medium mb-3 heading-card">Historical Patterns</h4>
                     <div className="space-y-2">
                       {cashFlow.patterns.slice(0, 4).map((pattern) => (
                         <div

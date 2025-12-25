@@ -53,10 +53,10 @@ export function ChecklistGradeDisplay({
   }
 
   const getGradeColor = (grade: string) => {
-    if (grade.startsWith('A')) return '#16a34a'
-    if (grade.startsWith('B')) return '#22c55e'
-    if (grade.startsWith('C')) return '#eab308'
-    if (grade.startsWith('D')) return '#f59e0b'
+    if (grade.startsWith('A')) {return '#16a34a'}
+    if (grade.startsWith('B')) {return '#22c55e'}
+    if (grade.startsWith('C')) {return '#eab308'}
+    if (grade.startsWith('D')) {return '#f59e0b'}
     return '#ef4444' // F
   }
 

@@ -103,7 +103,7 @@ export function NewDailyReportPageV2() {
             Back
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">New Daily Report</h1>
+            <h1 className="text-2xl font-bold text-foreground heading-page">New Daily Report</h1>
             <p className="text-secondary">Start a new daily report for your project</p>
           </div>
         </div>

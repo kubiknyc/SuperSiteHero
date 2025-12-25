@@ -104,8 +104,8 @@ export async function getDrawingPackages(filters: DrawingPackageFilters): Promis
   let query = fromTable('drawing_packages')
     .select(`
       *,
-      created_by_user:user_profiles!drawing_packages_created_by_fkey(full_name),
-      approved_by_user:user_profiles!drawing_packages_approved_by_fkey(full_name)
+      created_by_user:profiles!drawing_packages_created_by_fkey(full_name),
+      approved_by_user:profiles!drawing_packages_approved_by_fkey(full_name)
     `)
     .eq('project_id', filters.projectId)
     .order('created_at', { ascending: false });
@@ -145,17 +145,17 @@ export async function getDrawingPackage(id: string): Promise<DrawingPackage | nu
   const { data, error } = await fromTable('drawing_packages')
     .select(`
       *,
-      created_by_user:user_profiles!drawing_packages_created_by_fkey(full_name),
-      approved_by_user:user_profiles!drawing_packages_approved_by_fkey(full_name),
+      created_by_user:profiles!drawing_packages_created_by_fkey(full_name),
+      approved_by_user:profiles!drawing_packages_approved_by_fkey(full_name),
       items:drawing_package_items(
         *,
         drawing:drawings(*),
         revision:drawing_revisions(*),
-        added_by_user:user_profiles!drawing_package_items_added_by_fkey(full_name)
+        added_by_user:profiles!drawing_package_items_added_by_fkey(full_name)
       ),
       recipients:drawing_package_recipients(
         *,
-        sent_by_user:user_profiles!drawing_package_recipients_sent_by_fkey(full_name)
+        sent_by_user:profiles!drawing_package_recipients_sent_by_fkey(full_name)
       )
     `)
     .eq('id', id)
@@ -762,7 +762,7 @@ export async function getPackageActivity(packageId: string, limit: number = 50):
   const { data, error } = await fromTable('drawing_package_activity')
     .select(`
       *,
-      performed_by_user:user_profiles!drawing_package_activity_performed_by_fkey(full_name),
+      performed_by_user:profiles!drawing_package_activity_performed_by_fkey(full_name),
       recipient:drawing_package_recipients(recipient_email)
     `)
     .eq('package_id', packageId)

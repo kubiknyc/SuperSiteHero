@@ -132,7 +132,7 @@ export function OfflineQueueIndicator({
       <PopoverContent className="w-72 p-3" align="end">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium" className="heading-card">Message Queue</h4>
+            <h4 className="text-sm font-medium heading-card">Message Queue</h4>
             {isOnline ? (
               <span className="flex items-center gap-1 text-xs text-success">
                 <span className="h-2 w-2 rounded-full bg-green-500" />

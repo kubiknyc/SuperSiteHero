@@ -367,7 +367,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
 
             {/* Location Details */}
             <div className="space-y-4">
-              <h4 className="font-medium flex items-center gap-2" className="heading-card">
+              <h4 className="font-medium flex items-center gap-2 heading-card">
                 <Building2 className="h-4 w-4" />
                 Location Details
               </h4>
@@ -401,7 +401,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
 
             {/* Schedule */}
             <div className="space-y-4">
-              <h4 className="font-medium flex items-center gap-2" className="heading-card">
+              <h4 className="font-medium flex items-center gap-2 heading-card">
                 <Clock className="h-4 w-4" />
                 Schedule
               </h4>
@@ -481,7 +481,7 @@ export function PhotoTemplateManager({ projectId, className }: PhotoTemplateMana
 
             {/* Instructions */}
             <div className="space-y-4">
-              <h4 className="font-medium flex items-center gap-2" className="heading-card">
+              <h4 className="font-medium flex items-center gap-2 heading-card">
                 <Camera className="h-4 w-4" />
                 Photo Instructions
               </h4>

@@ -174,6 +174,26 @@ const DialogDescription = React.forwardRef<
 ))
 DialogDescription.displayName = 'DialogDescription'
 
+const DialogClose = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }
+>(({ onClick, asChild = false, ...props }, ref) => {
+  const { onOpenChange } = React.useContext(DialogContext)
+  const Comp = asChild ? Slot : 'button'
+
+  return (
+    <Comp
+      ref={ref}
+      onClick={(e) => {
+        onOpenChange(false)
+        onClick?.(e)
+      }}
+      {...props}
+    />
+  )
+})
+DialogClose.displayName = 'DialogClose'
+
 export {
   Dialog,
   DialogTrigger,
@@ -182,4 +202,5 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  DialogClose,
 }

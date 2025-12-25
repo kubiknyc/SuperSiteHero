@@ -259,7 +259,7 @@ export function ChecklistsDashboardPage() {
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3" className="heading-page">
+              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3 heading-page">
                 <BarChart3 className="w-8 h-8 text-primary" />
                 Checklists Analytics
               </h1>
@@ -680,7 +680,7 @@ export function ChecklistsDashboardPage() {
           <Card className="mt-6">
             <CardContent className="py-12 text-center">
               <BarChart3 className="w-16 h-16 text-disabled mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-xl font-semibold text-foreground mb-2 heading-subsection">
                 No checklist data yet
               </h3>
               <p className="text-secondary mb-6">

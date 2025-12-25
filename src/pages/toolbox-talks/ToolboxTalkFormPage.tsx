@@ -218,7 +218,7 @@ export function ToolboxTalkFormPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <AlertTriangle className="h-12 w-12 mx-auto text-yellow-400 mb-4" />
-            <h2 className="text-lg font-medium text-foreground" className="heading-section">No Project Selected</h2>
+            <h2 className="text-lg font-medium text-foreground heading-section">No Project Selected</h2>
             <p className="text-muted mt-1">
               Please select a project before scheduling a toolbox talk.
             </p>
@@ -243,7 +243,7 @@ export function ToolboxTalkFormPage() {
             <ArrowLeft className="h-4 w-4 mr-1" />
             Back to Toolbox Talks
           </Link>
-          <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+          <h1 className="text-2xl font-bold text-foreground heading-page">
             {isEditing ? 'Edit Toolbox Talk' : 'Schedule Toolbox Talk'}
           </h1>
           <p className="text-muted mt-1">
@@ -268,7 +268,7 @@ export function ToolboxTalkFormPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Topic Selection */}
             <div className="bg-card rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                 <FileText className="h-5 w-5 text-disabled" />
                 Topic
               </h2>
@@ -407,7 +407,7 @@ export function ToolboxTalkFormPage() {
 
             {/* Schedule */}
             <div className="bg-card rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                 <Calendar className="h-5 w-5 text-disabled" />
                 Schedule
               </h2>
@@ -458,7 +458,7 @@ export function ToolboxTalkFormPage() {
 
             {/* Presenter */}
             <div className="bg-card rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                 <User className="h-5 w-5 text-disabled" />
                 Presenter
               </h2>

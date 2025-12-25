@@ -120,7 +120,7 @@ export function VideoPlayer({
 
   // Initialize Video.js player
   useEffect(() => {
-    if (!videoRef.current) return
+    if (!videoRef.current) {return}
 
     const player = videojs(videoRef.current, {
       autoplay,
@@ -241,7 +241,7 @@ export function VideoPlayer({
 
   // Control handlers
   const togglePlay = useCallback(() => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
 
     if (isPlaying) {
       playerRef.current.pause()
@@ -251,12 +251,12 @@ export function VideoPlayer({
   }, [isPlaying])
 
   const toggleMute = useCallback(() => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
     playerRef.current.muted(!isMuted)
   }, [isMuted])
 
   const handleVolumeChange = useCallback((value: number[]) => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
     const vol = value[0]
     playerRef.current.volume(vol)
     if (vol > 0 && isMuted) {
@@ -265,17 +265,17 @@ export function VideoPlayer({
   }, [isMuted])
 
   const handleSeek = useCallback((value: number[]) => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
     playerRef.current.currentTime(value[0])
   }, [])
 
   const handlePlaybackRateChange = useCallback((rate: number) => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
     playerRef.current.playbackRate(rate)
   }, [])
 
   const toggleFullscreen = useCallback(() => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
 
     if (isFullscreen) {
       playerRef.current.exitFullscreen()
@@ -285,7 +285,7 @@ export function VideoPlayer({
   }, [isFullscreen])
 
   const handleRestart = useCallback(() => {
-    if (!playerRef.current) return
+    if (!playerRef.current) {return}
     playerRef.current.currentTime(0)
     playerRef.current.play()
   }, [])

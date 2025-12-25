@@ -29,7 +29,7 @@ export function generateTaskAssignedEmail(data: TaskAssignedEmailData): { html: 
   const priorityColor = data.priority ? PRIORITY_COLORS[data.priority.toLowerCase()] || '#3b82f6' : '#3b82f6'
 
   const content = `
-    <h1>New Task Assignment</h1>
+    <h1 className="heading-page">New Task Assignment</h1>
 
     <p>Hi ${data.recipientName},</p>
 

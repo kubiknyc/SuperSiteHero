@@ -2,7 +2,9 @@
  * Client Portal API Service Tests
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { clientPortalApi } from './client-portal'
 
 // Mock Supabase

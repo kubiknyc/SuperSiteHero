@@ -31,7 +31,7 @@ export function CreateIncidentPage() {
               Back to Incidents
             </Button>
           </Link>
-          <h1 className="text-2xl font-bold text-foreground" className="heading-page">Report Safety Incident</h1>
+          <h1 className="text-2xl font-bold text-foreground heading-page">Report Safety Incident</h1>
           <p className="text-muted mt-1">
             Complete this OSHA-compliant form to report a safety incident
           </p>

@@ -252,7 +252,7 @@ export function DocuSignConnectionSettings() {
 
           {/* Features info */}
           <div className="border-t pt-6">
-            <h4 className="font-medium text-foreground mb-4" className="heading-card">What you can do with DocuSign</h4>
+            <h4 className="font-medium text-foreground mb-4 heading-card">What you can do with DocuSign</h4>
             <div className="grid gap-4 md:grid-cols-3">
               <FeatureCard
                 icon={<FileSignature className="h-5 w-5" />}

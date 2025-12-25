@@ -273,7 +273,7 @@ export function VideoCapture({
     return (
       <div className={cn('flex flex-col items-center justify-center p-8', className)}>
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h3 className="text-lg font-semibold mb-2" className="heading-subsection">Video Recording Not Supported</h3>
+        <h3 className="text-lg font-semibold mb-2 heading-subsection">Video Recording Not Supported</h3>
         <p className="text-muted-foreground text-center">
           Your browser does not support video recording.
           Please try using a modern browser like Chrome, Firefox, or Safari.
@@ -287,7 +287,7 @@ export function VideoCapture({
     return (
       <div className={cn('flex flex-col items-center justify-center p-8', className)}>
         <Camera className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold mb-2" className="heading-subsection">Camera Access Required</h3>
+        <h3 className="text-lg font-semibold mb-2 heading-subsection">Camera Access Required</h3>
         <p className="text-muted-foreground text-center mb-4">
           Please allow access to your camera and microphone to record videos.
         </p>
@@ -353,7 +353,7 @@ export function VideoCapture({
     return (
       <div className={cn('relative bg-black rounded-lg overflow-hidden flex flex-col items-center justify-center min-h-[400px]', className)}>
         <Video className="h-16 w-16 text-white/60 mb-6" />
-        <h3 className="text-white text-lg font-semibold mb-2" className="heading-subsection">Record Video</h3>
+        <h3 className="text-white text-lg font-semibold mb-2 heading-subsection">Record Video</h3>
         <p className="text-white/60 text-center mb-6 px-4">
           Tap the button below to open your camera and record a video
         </p>

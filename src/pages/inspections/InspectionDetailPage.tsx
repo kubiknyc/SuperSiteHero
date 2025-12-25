@@ -141,7 +141,7 @@ export function InspectionDetailPage() {
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <AlertTriangle className="h-12 w-12 text-red-400 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">
               Inspection Not Found
             </h3>
             <p className="text-muted mt-2">
@@ -177,7 +177,7 @@ export function InspectionDetailPage() {
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+                <h1 className="text-2xl font-bold text-foreground heading-page">
                   {inspection.inspection_name}
                 </h1>
                 <InspectionTypeBadge type={inspection.inspection_type} />
@@ -274,7 +274,7 @@ export function InspectionDetailPage() {
 
                   {inspection.inspector_notes && (
                     <div>
-                      <h4 className="text-sm font-medium text-secondary mb-1" className="heading-card">
+                      <h4 className="text-sm font-medium text-secondary mb-1 heading-card">
                         Inspector Notes
                       </h4>
                       <p className="text-secondary whitespace-pre-wrap bg-surface p-3 rounded-lg">
@@ -285,7 +285,7 @@ export function InspectionDetailPage() {
 
                   {inspection.failure_reasons && (
                     <div>
-                      <h4 className="text-sm font-medium text-error-dark mb-1" className="heading-card">
+                      <h4 className="text-sm font-medium text-error-dark mb-1 heading-card">
                         Failure Reasons
                       </h4>
                       <p className="text-secondary whitespace-pre-wrap bg-error-light p-3 rounded-lg border border-red-200">
@@ -296,7 +296,7 @@ export function InspectionDetailPage() {
 
                   {inspection.corrective_actions_required && (
                     <div>
-                      <h4 className="text-sm font-medium text-orange-700 mb-1" className="heading-card">
+                      <h4 className="text-sm font-medium text-orange-700 mb-1 heading-card">
                         Corrective Actions Required
                       </h4>
                       <p className="text-secondary whitespace-pre-wrap bg-orange-50 p-3 rounded-lg border border-orange-200">
@@ -500,7 +500,7 @@ export function InspectionDetailPage() {
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-card rounded-lg p-6 max-w-md w-full mx-4">
-              <h3 className="text-lg font-medium text-foreground" className="heading-subsection">
+              <h3 className="text-lg font-medium text-foreground heading-subsection">
                 Delete Inspection
               </h3>
               <p className="text-muted mt-2">

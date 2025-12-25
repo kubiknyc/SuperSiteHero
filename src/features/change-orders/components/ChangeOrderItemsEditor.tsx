@@ -282,7 +282,7 @@ export function ChangeOrderItemsEditor({
       </div>
 
       <div className="border-t pt-4">
-        <h4 className="font-medium text-secondary mb-3" className="heading-card">Cost Breakdown</h4>
+        <h4 className="font-medium text-secondary mb-3 heading-card">Cost Breakdown</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
             <Label>Labor Hours</Label>

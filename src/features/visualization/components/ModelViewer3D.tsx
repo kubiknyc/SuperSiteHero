@@ -530,7 +530,7 @@ export function ModelViewer3D({
 
   // Screenshot
   const handleScreenshot = useCallback(() => {
-    if (!canvasRef.current) return;
+    if (!canvasRef.current) {return;}
 
     const dataUrl = canvasRef.current.toDataURL('image/png');
     const link = document.createElement('a');
@@ -541,7 +541,7 @@ export function ModelViewer3D({
 
   // Fullscreen toggle
   const handleFullscreen = useCallback(async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     try {
       if (!document.fullscreenElement) {

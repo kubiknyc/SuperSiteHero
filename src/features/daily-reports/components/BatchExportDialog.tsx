@@ -120,7 +120,7 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
 
           {summary && summary.totalReports > 0 && (
             <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-900 mb-2" className="heading-card">Export Summary</h4>
+              <h4 className="font-medium text-blue-900 mb-2 heading-card">Export Summary</h4>
               <div className="grid grid-cols-2 gap-2 text-sm text-blue-800">
                 <div>Reports: <strong>{summary.totalReports}</strong></div>
                 <div>Date Range: <strong>{summary.dateRange}</strong></div>

@@ -301,7 +301,7 @@ function DocumentLibraryPage() {
         <div className="border-b bg-card px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold text-foreground" className="heading-page">Document Library</h1>
+              <h1 className="text-2xl font-bold text-foreground heading-page">Document Library</h1>
               <p className="text-sm text-secondary mt-1">
                 Manage drawings, specifications, and project documents
               </p>
@@ -349,7 +349,7 @@ function DocumentLibraryPage() {
             <Card className="max-w-md mx-auto">
               <CardContent className="p-12 text-center">
                 <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+                <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                   Select a Project
                 </h3>
                 <p className="text-secondary">
@@ -369,7 +369,7 @@ function DocumentLibraryPage() {
             >
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-semibold text-foreground" className="heading-subsection">Folders</h3>
+                  <h3 className="font-semibold text-foreground heading-subsection">Folders</h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -547,7 +547,7 @@ function DocumentLibraryPage() {
                         <Card>
                           <CardContent className="p-12 text-center">
                             <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                            <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+                            <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                               No documents found
                             </h3>
                             <p className="text-muted">
@@ -569,7 +569,7 @@ function DocumentLibraryPage() {
                                 type={doc.document_type}
                                 className="w-12 h-12 mb-3 text-primary"
                               />
-                              <h4 className="font-medium text-foreground text-sm mb-2 line-clamp-2" className="heading-card">
+                              <h4 className="font-medium text-foreground text-sm mb-2 line-clamp-2 heading-card">
                                 {doc.name}
                               </h4>
                               <DocumentStatusBadge status={doc.status ?? 'draft'} className="text-xs" />

@@ -229,7 +229,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
             <div className="pt-4 border-t">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h3 className="text-sm font-medium" className="heading-subsection">Compare Versions</h3>
+                  <h3 className="text-sm font-medium heading-subsection">Compare Versions</h3>
                   <p className="text-xs text-secondary mt-1">
                     Select 2 versions using checkboxes to compare ({selectedVersions.length}/2 selected)
                   </p>

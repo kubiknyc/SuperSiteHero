@@ -112,7 +112,7 @@ export function ProjectDetailPage() {
         {/* Header - Enhanced typography */}
         <div className="flex items-start justify-between mb-8">
           <div>
-            <h1 className="heading-page text-foreground dark:text-white tracking-tight leading-tight" className="heading-page">{project.name}</h1>
+            <h1 className="heading-page text-foreground dark:text-white tracking-tight leading-tight heading-page">{project.name}</h1>
             {project.project_number && (
               <p className="body-base text-secondary dark:text-disabled mt-2">#{project.project_number}</p>
             )}

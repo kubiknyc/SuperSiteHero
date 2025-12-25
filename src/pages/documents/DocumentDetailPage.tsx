@@ -209,7 +209,7 @@ export function DocumentDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="w-12 h-12 text-error mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 Error Loading Document
               </h3>
               <p className="text-secondary">
@@ -237,7 +237,7 @@ export function DocumentDetailPage() {
         <div className="flex items-start gap-4">
           <DocumentTypeIcon type={document.document_type} className="w-8 h-8 flex-shrink-0" />
           <div className="flex-1 min-w-0">
-            <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{document.name}</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">{document.name}</h1>
             <div className="flex flex-wrap items-center gap-2">
               <DocumentStatusBadge status={document.status ?? 'draft'} />
               {document.is_pinned && (
@@ -301,7 +301,7 @@ export function DocumentDetailPage() {
 
                 {/* File Information */}
                 <div className="border-t pt-4 space-y-3">
-                  <h4 className="font-semibold text-foreground" className="heading-card">File Information</h4>
+                  <h4 className="font-semibold text-foreground heading-card">File Information</h4>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     <div>
                       <Label className="text-secondary">File Name</Label>

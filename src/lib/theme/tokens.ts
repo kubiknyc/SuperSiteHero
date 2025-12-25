@@ -133,24 +133,24 @@ export const colorClasses = {
   primaryBorder: 'border-primary dark:border-primary-600',
 
   // Semantic colors
-  successBg: 'bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600',
-  successText: 'text-green-600 dark:text-green-400',
-  successBorder: 'border-green-600 dark:border-green-500',
+  successBg: 'bg-success hover:bg-green-700 dark:bg-green-500 dark:hover:bg-success',
+  successText: 'text-success dark:text-green-400',
+  successBorder: 'border-success dark:border-green-500',
 
-  warningBg: 'bg-yellow-500 hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500',
-  warningText: 'text-yellow-600 dark:text-yellow-400',
-  warningBorder: 'border-yellow-500 dark:border-yellow-400',
+  warningBg: 'bg-warning hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-warning',
+  warningText: 'text-warning dark:text-yellow-400',
+  warningBorder: 'border-warning dark:border-yellow-400',
 
-  destructiveBg: 'bg-red-600 hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600',
-  destructiveText: 'text-red-600 dark:text-red-400',
-  destructiveBorder: 'border-red-600 dark:border-red-500',
+  destructiveBg: 'bg-error hover:bg-red-700 dark:bg-red-500 dark:hover:bg-error',
+  destructiveText: 'text-error dark:text-red-400',
+  destructiveBorder: 'border-error dark:border-red-500',
 
-  infoBg: 'bg-cyan-600 hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600',
-  infoText: 'text-cyan-600 dark:text-cyan-400',
-  infoBorder: 'border-cyan-600 dark:border-cyan-500',
+  infoBg: 'bg-info hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-info',
+  infoText: 'text-info dark:text-cyan-400',
+  infoBorder: 'border-info dark:border-cyan-500',
 
   // Surface colors
-  cardBg: 'bg-white dark:bg-surface-900',
+  cardBg: 'bg-card dark:bg-surface-900',
   surfaceBg: 'bg-surface-50 dark:bg-surface-950',
   borderColor: 'border-surface-200 dark:border-surface-800'
 } as const

@@ -30,7 +30,7 @@ export function generatePunchItemAssignedEmail(data: PunchItemAssignedEmailData)
   const priorityColor = data.priority ? PRIORITY_COLORS[data.priority.toLowerCase()] || '#3b82f6' : '#3b82f6'
 
   const content = `
-    <h1>Punch Item Assignment</h1>
+    <h1 className="heading-page">Punch Item Assignment</h1>
 
     <p>Hi ${data.recipientName},</p>
 

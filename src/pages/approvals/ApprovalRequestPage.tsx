@@ -148,7 +148,7 @@ export function ApprovalRequestPage() {
       <AppLayout>
         <div className="p-6 max-w-4xl mx-auto">
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
+            <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">
               Approval Request Not Found
             </h2>
             <p className="text-muted mb-4">
@@ -213,7 +213,7 @@ export function ApprovalRequestPage() {
                   showConditions
                 />
               </div>
-              <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+              <h1 className="text-2xl font-bold text-foreground heading-page">
                 {request.workflow?.name || 'Approval Request'}
               </h1>
               {request.workflow?.description && (
@@ -282,7 +282,7 @@ export function ApprovalRequestPage() {
           {request.status === 'approved_with_conditions' && request.conditions && (
             <div className="mt-4 pt-4 border-t">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <h3 className="text-sm font-medium text-blue-800 mb-1" className="heading-subsection">
+                <h3 className="text-sm font-medium text-blue-800 mb-1 heading-subsection">
                   Approval Conditions
                 </h3>
                 <p className="text-primary-hover">{request.conditions}</p>
@@ -294,7 +294,7 @@ export function ApprovalRequestPage() {
         {/* Actions */}
         {isPending && (canApprove || isInitiator) && (
           <div className="bg-card border rounded-lg p-6 mb-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">Actions</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4 heading-section">Actions</h2>
 
             {/* Reject input */}
             {showRejectInput && canApprove && (
@@ -377,7 +377,7 @@ export function ApprovalRequestPage() {
 
         {/* Add comment */}
         <div className="bg-card border rounded-lg p-6 mb-6">
-          <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
+          <h2 className="text-lg font-semibold text-foreground mb-4 heading-section">
             Add Comment
           </h2>
           <textarea
@@ -400,7 +400,7 @@ export function ApprovalRequestPage() {
 
         {/* Activity history */}
         <div className="bg-card border rounded-lg p-6">
-          <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
+          <h2 className="text-lg font-semibold text-foreground mb-4 heading-section">
             Activity History
           </h2>
           <ApprovalHistory actions={history || []} />

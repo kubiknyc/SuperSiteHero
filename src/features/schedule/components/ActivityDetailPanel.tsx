@@ -261,7 +261,7 @@ export function ActivityDetailPanel({
 
           {/* Dates Section */}
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold flex items-center gap-1" className="heading-card">
+            <h4 className="text-sm font-semibold flex items-center gap-1 heading-card">
               <CalendarDays className="h-4 w-4" />
               Schedule
             </h4>
@@ -365,7 +365,7 @@ export function ActivityDetailPanel({
 
           {/* Assignment Section */}
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold flex items-center gap-1" className="heading-card">
+            <h4 className="text-sm font-semibold flex items-center gap-1 heading-card">
               <User className="h-4 w-4" />
               Assignment
             </h4>
@@ -406,7 +406,7 @@ export function ActivityDetailPanel({
             <>
               <Separator />
               <div className="space-y-2">
-                <h4 className="text-sm font-semibold flex items-center gap-1" className="heading-card">
+                <h4 className="text-sm font-semibold flex items-center gap-1 heading-card">
                   <DollarSign className="h-4 w-4" />
                   Budget
                 </h4>
@@ -450,7 +450,7 @@ export function ActivityDetailPanel({
               <div className="space-y-3">
                 {activity.description && (
                   <div>
-                    <h4 className="text-sm font-semibold flex items-center gap-1 mb-1" className="heading-card">
+                    <h4 className="text-sm font-semibold flex items-center gap-1 mb-1 heading-card">
                       <FileText className="h-4 w-4" />
                       Description
                     </h4>
@@ -461,7 +461,7 @@ export function ActivityDetailPanel({
                 )}
                 {activity.notes && (
                   <div>
-                    <h4 className="text-sm font-semibold mb-1" className="heading-card">Notes</h4>
+                    <h4 className="text-sm font-semibold mb-1 heading-card">Notes</h4>
                     <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                       {activity.notes}
                     </p>

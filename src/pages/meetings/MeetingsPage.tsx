@@ -171,7 +171,7 @@ export function MeetingsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Meetings</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Meetings</h1>
             <p className="text-secondary mt-1">
               Schedule and document project meetings and minutes
             </p>
@@ -302,7 +302,7 @@ export function MeetingsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <CalendarCheck className="h-12 w-12 text-disabled mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 No meetings found
               </h3>
               <p className="text-secondary mb-6">
@@ -341,7 +341,7 @@ export function MeetingsPage() {
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-medium text-foreground truncate" className="heading-subsection">
+                        <h3 className="font-medium text-foreground truncate heading-subsection">
                           {meeting.meeting_name || getMeetingTypeLabel(meeting.meeting_type)}
                         </h3>
                         <Badge variant={getDateBadgeVariant(meeting.meeting_date)}>

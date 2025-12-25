@@ -195,7 +195,7 @@ export function createEmptyDivisionMetrics(
  * @returns Weighted CPI value
  */
 export function calculateWeightedCPI(costCodes: CostCodeEVMData[]): number {
-  if (costCodes.length === 0) return 0;
+  if (costCodes.length === 0) {return 0;}
 
   let totalBAC = 0;
   let weightedSum = 0;
@@ -208,7 +208,7 @@ export function calculateWeightedCPI(costCodes: CostCodeEVMData[]): number {
     }
   }
 
-  if (totalBAC === 0) return 0;
+  if (totalBAC === 0) {return 0;}
   return weightedSum / totalBAC;
 }
 
@@ -221,7 +221,7 @@ export function calculateWeightedCPI(costCodes: CostCodeEVMData[]): number {
  * @returns Weighted SPI value
  */
 export function calculateWeightedSPI(costCodes: CostCodeEVMData[]): number {
-  if (costCodes.length === 0) return 0;
+  if (costCodes.length === 0) {return 0;}
 
   let totalBAC = 0;
   let weightedSum = 0;
@@ -234,7 +234,7 @@ export function calculateWeightedSPI(costCodes: CostCodeEVMData[]): number {
     }
   }
 
-  if (totalBAC === 0) return 0;
+  if (totalBAC === 0) {return 0;}
   return weightedSum / totalBAC;
 }
 
@@ -247,7 +247,7 @@ export function calculateWeightedSPI(costCodes: CostCodeEVMData[]): number {
  * @returns EV-weighted CPI value
  */
 export function calculateEVWeightedCPI(costCodes: CostCodeEVMData[]): number {
-  if (costCodes.length === 0) return 0;
+  if (costCodes.length === 0) {return 0;}
 
   let totalEV = 0;
   let weightedSum = 0;
@@ -262,7 +262,7 @@ export function calculateEVWeightedCPI(costCodes: CostCodeEVMData[]): number {
     }
   }
 
-  if (totalEV === 0) return 0;
+  if (totalEV === 0) {return 0;}
   return weightedSum / totalEV;
 }
 
@@ -275,7 +275,7 @@ export function calculateEVWeightedCPI(costCodes: CostCodeEVMData[]): number {
  * @returns AC-weighted CPI value
  */
 export function calculateACWeightedCPI(costCodes: CostCodeEVMData[]): number {
-  if (costCodes.length === 0) return 0;
+  if (costCodes.length === 0) {return 0;}
 
   let totalAC = 0;
   let weightedSum = 0;
@@ -290,7 +290,7 @@ export function calculateACWeightedCPI(costCodes: CostCodeEVMData[]): number {
     }
   }
 
-  if (totalAC === 0) return 0;
+  if (totalAC === 0) {return 0;}
   return weightedSum / totalAC;
 }
 

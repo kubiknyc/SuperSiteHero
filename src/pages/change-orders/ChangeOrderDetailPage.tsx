@@ -258,7 +258,7 @@ export function ChangeOrderDetailPage() {
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Change Order</h3>
+              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Change Order</h3>
               <p className="text-error mb-6">{error?.message || 'Change order not found'}</p>
               <Link to="/change-orders">
                 <Button>Back to Change Orders</Button>
@@ -292,7 +292,7 @@ export function ChangeOrderDetailPage() {
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold text-foreground" className="heading-page">{displayNumber}</h1>
+                <h1 className="text-3xl font-bold text-foreground heading-page">{displayNumber}</h1>
                 <Badge className={cn('font-medium', getChangeOrderStatusColor(changeOrder.status))}>
                   {getChangeOrderStatusLabel(changeOrder.status)}
                 </Badge>
@@ -333,7 +333,7 @@ export function ChangeOrderDetailPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium text-secondary" className="heading-subsection">Workflow Progress</h3>
+              <h3 className="font-medium text-secondary heading-subsection">Workflow Progress</h3>
               {changeOrder.ball_in_court_user && (
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-orange-500" />
@@ -608,7 +608,7 @@ export function ChangeOrderDetailPage() {
                     {/* Contract Tracking */}
                     {changeOrder.original_contract_amount && (
                       <div className="mt-6 pt-4 border-t">
-                        <h4 className="font-medium text-secondary mb-3" className="heading-card">Contract Tracking</h4>
+                        <h4 className="font-medium text-secondary mb-3 heading-card">Contract Tracking</h4>
                         <div className="grid grid-cols-3 gap-4 text-sm">
                           <div>
                             <p className="text-muted">Original Contract</p>

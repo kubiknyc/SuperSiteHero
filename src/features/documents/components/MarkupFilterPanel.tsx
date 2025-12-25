@@ -154,7 +154,7 @@ export function MarkupFilterPanel({
       <PopoverContent className="w-80" align="start">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium text-sm" className="heading-card">Filter Markups</h4>
+            <h4 className="font-medium text-sm heading-card">Filter Markups</h4>
             <Button variant="ghost" size="sm" onClick={handleResetFilters}>
               Reset
             </Button>

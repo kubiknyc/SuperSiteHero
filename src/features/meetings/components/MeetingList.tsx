@@ -290,7 +290,7 @@ export function MeetingList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold" className="heading-section">Meeting Minutes</h2>
+          <h2 className="text-lg font-semibold heading-section">Meeting Minutes</h2>
           <p className="text-sm text-muted">
             {filteredMeetings.length} meeting{filteredMeetings.length !== 1 ? 's' : ''}
             {upcomingMeetings.length > 0 && ` (${upcomingMeetings.length} upcoming)`}
@@ -348,7 +348,7 @@ export function MeetingList({
       {/* Upcoming Meetings Section */}
       {upcomingMeetings.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-secondary flex items-center gap-2" className="heading-subsection">
+          <h3 className="text-sm font-medium text-secondary flex items-center gap-2 heading-subsection">
             <span className="h-2 w-2 rounded-full bg-primary dark:bg-primary-400 animate-pulse"></span>
             Upcoming Meetings
           </h3>
@@ -415,7 +415,7 @@ export function MeetingList({
       {/* Past/All Meetings Section */}
       <div className="space-y-2">
         {upcomingMeetings.length > 0 && (
-          <h3 className="text-sm font-medium text-secondary" className="heading-subsection">Past Meetings</h3>
+          <h3 className="text-sm font-medium text-secondary heading-subsection">Past Meetings</h3>
         )}
         <div className="border rounded-lg overflow-hidden">
           <div className="overflow-x-auto">

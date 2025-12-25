@@ -142,7 +142,7 @@ export function MeetingNotesEditor({ meetingId, readOnly = false }: MeetingNotes
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="font-medium flex items-center gap-2" className="heading-subsection">
+        <h3 className="font-medium flex items-center gap-2 heading-subsection">
           <FileText className="h-4 w-4" />
           Meeting Notes
         </h3>

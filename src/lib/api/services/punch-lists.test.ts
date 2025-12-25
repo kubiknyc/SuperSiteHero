@@ -1,7 +1,9 @@
 // File: /src/lib/api/services/punch-lists.test.ts
 // Test suite for punch lists API service
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { punchListsApi } from './punch-lists'
 import * as apiClientModule from '../client'
 

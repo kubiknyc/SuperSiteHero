@@ -135,7 +135,7 @@ export function ClientChangeOrders() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Change Orders</h1>
+        <h1 className="text-2xl font-bold text-foreground heading-page">Change Orders</h1>
         <p className="text-secondary mt-1">
           Review and track change orders for your project.
         </p>
@@ -335,7 +335,7 @@ export function ClientChangeOrders() {
         <Card>
           <CardContent className="py-12 text-center">
             <FileEdit className="h-12 w-12 text-disabled mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Change Orders Found</h3>
+            <h3 className="text-lg font-medium text-foreground heading-subsection">No Change Orders Found</h3>
             <p className="text-muted mt-1">
               {searchTerm || statusFilter !== 'all'
                 ? 'No change orders match your filters. Try adjusting your search.'
@@ -378,7 +378,7 @@ export function ClientChangeOrders() {
           {selectedCO && (
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-foreground" className="heading-card">{selectedCO.title}</h4>
+                <h4 className="font-medium text-foreground heading-card">{selectedCO.title}</h4>
                 {selectedCO.description && (
                   <p className="text-secondary mt-2 whitespace-pre-wrap">
                     {selectedCO.description}

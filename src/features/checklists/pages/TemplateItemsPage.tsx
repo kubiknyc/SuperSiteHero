@@ -150,7 +150,7 @@ export function TemplateItemsPage() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold" className="heading-page">{template.name}</h1>
+              <h1 className="text-2xl font-bold heading-page">{template.name}</h1>
               <p className="text-secondary">{template.description}</p>
             </div>
           </div>

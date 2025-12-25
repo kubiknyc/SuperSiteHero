@@ -142,7 +142,7 @@ export function MaterialReceivingDetailPage() {
               Back to Material Receiving
             </Link>
           </Button>
-          <h1 className="text-3xl font-bold" className="heading-page">{delivery.material_name}</h1>
+          <h1 className="text-3xl font-bold heading-page">{delivery.material_name}</h1>
           <div className="flex items-center gap-2">
             <DeliveryStatusBadge status={delivery.delivery_status} />
             <ConditionStatusBadge status={delivery.condition_status} />

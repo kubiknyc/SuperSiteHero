@@ -57,7 +57,7 @@ export function ProjectsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Projects</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Projects</h1>
             <p className="text-secondary mt-1">
               Manage and track your construction projects
             </p>

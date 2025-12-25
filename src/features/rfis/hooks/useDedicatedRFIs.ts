@@ -20,20 +20,20 @@ import type {
 
 // Constants for RFI statuses
 export const RFI_STATUSES: { value: RFIStatus; label: string; color: string }[] = [
-  { value: 'draft', label: 'Draft', color: 'bg-gray-100 text-gray-800' },
-  { value: 'open', label: 'Open', color: 'bg-blue-100 text-blue-800' },
+  { value: 'draft', label: 'Draft', color: 'bg-muted text-foreground' },
+  { value: 'open', label: 'Open', color: 'bg-info-light text-blue-800' },
   { value: 'pending_response', label: 'Pending Response', color: 'bg-amber-100 text-amber-800' },
-  { value: 'responded', label: 'Responded', color: 'bg-green-100 text-green-800' },
+  { value: 'responded', label: 'Responded', color: 'bg-success-light text-green-800' },
   { value: 'closed', label: 'Closed', color: 'bg-slate-200 text-slate-800' },
-  { value: 'void', label: 'Void', color: 'bg-red-100 text-red-800' },
+  { value: 'void', label: 'Void', color: 'bg-error-light text-red-800' },
 ]
 
 // Constants for priorities
 export const RFI_PRIORITIES: { value: RFIPriority; label: string; color: string }[] = [
-  { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
-  { value: 'normal', label: 'Normal', color: 'bg-blue-100 text-blue-800' },
+  { value: 'low', label: 'Low', color: 'bg-success-light text-green-800' },
+  { value: 'normal', label: 'Normal', color: 'bg-info-light text-blue-800' },
   { value: 'high', label: 'High', color: 'bg-amber-100 text-amber-800' },
-  { value: 'urgent', label: 'Urgent', color: 'bg-red-100 text-red-800' },
+  { value: 'urgent', label: 'Urgent', color: 'bg-error-light text-red-800' },
 ]
 
 // Constants for ball-in-court roles
@@ -678,12 +678,12 @@ export function formatRFINumber(rfiNumber: number): string {
 
 // Helper function to get status color
 export function getRFIStatusColor(status: RFIStatus): string {
-  return RFI_STATUSES.find((s) => s.value === status)?.color || 'bg-gray-100 text-gray-800'
+  return RFI_STATUSES.find((s) => s.value === status)?.color || 'bg-muted text-foreground'
 }
 
 // Helper function to get priority color
 export function getRFIPriorityColor(priority: RFIPriority): string {
-  return RFI_PRIORITIES.find((p) => p.value === priority)?.color || 'bg-gray-100 text-gray-800'
+  return RFI_PRIORITIES.find((p) => p.value === priority)?.color || 'bg-muted text-foreground'
 }
 
 // Helper function to get ball-in-court role label

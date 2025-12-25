@@ -256,7 +256,7 @@ function RecommendationItem({ recommendation }: RecommendationItemProps) {
         <div className="flex-1 min-w-0">
           {/* Title and badges */}
           <div className="flex items-center gap-2 flex-wrap">
-            <h4 className="font-medium text-sm text-foreground" className="heading-card">
+            <h4 className="font-medium text-sm text-foreground heading-card">
               {recommendation.title}
             </h4>
             <Badge variant="outline" className={cn('text-[10px]', priorityConfig.color)}>

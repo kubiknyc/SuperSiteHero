@@ -2,7 +2,9 @@
  * Reports API Service Tests
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import {
   getProjectHealthReport,
   getDailyReportAnalytics,

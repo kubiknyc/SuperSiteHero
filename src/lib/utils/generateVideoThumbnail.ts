@@ -79,7 +79,7 @@ export async function generateVideoThumbnail(
           return
         }
 
-        let targetWidth = width
+        const targetWidth = width
         let targetHeight = height
 
         if (!targetHeight) {

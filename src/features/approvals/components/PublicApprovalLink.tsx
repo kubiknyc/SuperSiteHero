@@ -105,7 +105,7 @@ export function PublicApprovalLink({
 
   // Send email with link
   const handleSendEmail = async (link: PublicLinkType) => {
-    if (!onSendEmail || !link.client_email) return;
+    if (!onSendEmail || !link.client_email) {return;}
 
     setSendingEmail(link.id);
     try {
@@ -123,9 +123,9 @@ export function PublicApprovalLink({
     const now = new Date();
     const daysLeft = Math.ceil((expires.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (daysLeft < 0) return 'Expired';
-    if (daysLeft === 0) return 'Expires today';
-    if (daysLeft === 1) return 'Expires tomorrow';
+    if (daysLeft < 0) {return 'Expired';}
+    if (daysLeft === 0) {return 'Expires today';}
+    if (daysLeft === 1) {return 'Expires tomorrow';}
     return `Expires in ${daysLeft} days`;
   };
 
@@ -135,7 +135,7 @@ export function PublicApprovalLink({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Link2 className="w-5 h-5 text-muted" />
-          <h3 className="font-medium text-foreground" className="heading-subsection">Client Approval Links</h3>
+          <h3 className="font-medium text-foreground heading-subsection">Client Approval Links</h3>
         </div>
         {!showCreateForm && (
           <Button
@@ -151,7 +151,7 @@ export function PublicApprovalLink({
       {/* Create Form */}
       {showCreateForm && (
         <div className="bg-surface rounded-lg p-4 border">
-          <h4 className="text-sm font-medium text-secondary mb-3" className="heading-card">
+          <h4 className="text-sm font-medium text-secondary mb-3 heading-card">
             Generate New Approval Link
           </h4>
 

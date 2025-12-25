@@ -287,7 +287,7 @@ export function MeetingFormPage() {
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Meetings
             </Button>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">
+            <h1 className="text-3xl font-bold text-foreground heading-page">
               {isEditing ? 'Edit Meeting' : 'New Meeting'}
             </h1>
           </div>

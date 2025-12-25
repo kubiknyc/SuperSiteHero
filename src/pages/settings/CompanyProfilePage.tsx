@@ -139,7 +139,7 @@ export function CompanyProfilePage() {
       <div className="container max-w-4xl py-6 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">Company Profile</h1>
+          <h1 className="text-2xl font-bold heading-page">Company Profile</h1>
           <p className="text-muted-foreground">
             Manage your company information and branding
           </p>

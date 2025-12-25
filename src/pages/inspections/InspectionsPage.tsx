@@ -89,7 +89,7 @@ export function InspectionsPage() {
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">
               No Projects Found
             </h3>
             <p className="text-muted mt-2">
@@ -107,7 +107,7 @@ export function InspectionsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Inspections</h1>
+            <h1 className="text-2xl font-bold text-foreground heading-page">Inspections</h1>
             <p className="text-muted mt-1">
               Schedule and track inspections for your projects
             </p>
@@ -217,7 +217,7 @@ export function InspectionsPage() {
               <div className="mb-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Clock className="h-5 w-5 text-muted" />
-                  <h2 className="text-lg font-medium text-foreground" className="heading-section">
+                  <h2 className="text-lg font-medium text-foreground heading-section">
                     Upcoming Inspections (Next 7 Days)
                   </h2>
                 </div>
@@ -253,7 +253,7 @@ export function InspectionsPage() {
             ) : filteredInspections.length === 0 ? (
               <div className="text-center py-12 bg-card rounded-lg border">
                 <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
-                <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">
+                <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">
                   No inspections found
                 </h3>
                 <p className="text-muted mt-2">
@@ -276,7 +276,7 @@ export function InspectionsPage() {
             ) : (
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-lg font-medium text-foreground" className="heading-section">
+                  <h2 className="text-lg font-medium text-foreground heading-section">
                     All Inspections
                   </h2>
                   <p className="text-sm text-muted">

@@ -89,7 +89,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
 
   // Load settings
   const loadSettings = useCallback(async () => {
-    if (!user?.id) return
+    if (!user?.id) {return}
 
     setIsLoading(true)
     try {
@@ -108,7 +108,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
 
   // Handle toggle biometric enabled
   const handleToggleEnabled = async (enabled: boolean) => {
-    if (!user?.id || !settings) return
+    if (!user?.id || !settings) {return}
 
     try {
       await updateBiometricSettings(user.id, { enabled })
@@ -121,7 +121,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
 
   // Handle re-auth interval change
   const handleReauthIntervalChange = async (interval: ReauthInterval) => {
-    if (!user?.id || !settings) return
+    if (!user?.id || !settings) {return}
 
     try {
       await updateBiometricSettings(user.id, { reauthInterval: interval })
@@ -165,7 +165,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
 
   // Handle device deletion
   const handleDeleteDevice = async () => {
-    if (!deviceToDelete) return
+    if (!deviceToDelete) {return}
 
     try {
       await deleteBiometricCredential(deviceToDelete.id)
@@ -179,7 +179,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
 
   // Format date for display
   const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'Never'
+    if (!dateString) {return 'Never'}
     return new Date(dateString).toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
@@ -233,7 +233,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
             <Fingerprint className="h-6 w-6 text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-foreground" className="heading-subsection">Enable Biometric Login</h3>
+            <h3 className="font-medium text-foreground heading-subsection">Enable Biometric Login</h3>
             <p className="text-sm text-secondary">
               Use fingerprint or Face ID for quick, secure access
             </p>

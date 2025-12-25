@@ -68,7 +68,7 @@ export function ActivityCard({
         {/* Header */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <h4 className="font-medium text-sm text-foreground truncate" className="heading-card">
+            <h4 className="font-medium text-sm text-foreground truncate heading-card">
               {activity.activity_name}
             </h4>
             {activity.location && (

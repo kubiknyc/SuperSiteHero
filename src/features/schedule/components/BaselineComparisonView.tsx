@@ -428,7 +428,7 @@ export function BaselineComparisonView({
             <>
               <Separator />
               <div>
-                <h3 className="text-sm font-semibold flex items-center gap-2 mb-3" className="heading-subsection">
+                <h3 className="text-sm font-semibold flex items-center gap-2 mb-3 heading-subsection">
                   <Flag className="h-4 w-4 text-orange-500" />
                   Milestone Variance
                 </h3>
@@ -477,7 +477,7 @@ export function BaselineComparisonView({
           {/* Activity Variance Table */}
           <Separator />
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold" className="heading-subsection">Activity Variance</h3>
+            <h3 className="text-sm font-semibold heading-subsection">Activity Variance</h3>
 
             {/* Filters */}
             <div className="flex items-center gap-4">

@@ -240,7 +240,7 @@ export function WaiverChecklist({
               {groupedWaivers.map((group) => (
                 <div key={group.subcontractorId || group.subcontractorName} className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-foreground" className="heading-card">{group.subcontractorName}</h4>
+                    <h4 className="font-medium text-foreground heading-card">{group.subcontractorName}</h4>
                     {group.isComplete ? (
                       <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">
                         <CheckCircle2 className="h-3 w-3 mr-1" />

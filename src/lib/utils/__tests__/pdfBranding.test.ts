@@ -171,7 +171,7 @@ describe('pdfBranding', () => {
         constructor() {
           // Simulate successful load
           setTimeout(() => {
-            if (this.onload) this.onload()
+            if (this.onload) {this.onload()}
           }, 0)
         }
       } as any
@@ -207,7 +207,7 @@ describe('pdfBranding', () => {
         constructor() {
           // Simulate load error
           setTimeout(() => {
-            if (this.onerror) this.onerror(new Error('Failed to load'))
+            if (this.onerror) {this.onerror(new Error('Failed to load'))}
           }, 0)
         }
       } as any

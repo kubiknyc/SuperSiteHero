@@ -388,7 +388,7 @@ function TemplateBrowserDialog({
                     <div className="mb-6">
                       <div className="flex items-center gap-2 mb-3">
                         <Clock className="h-4 w-4 text-muted-foreground" />
-                        <h3 className="text-sm font-medium" className="heading-subsection">Recently Used</h3>
+                        <h3 className="text-sm font-medium heading-subsection">Recently Used</h3>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {recentTemplates.slice(0, 4).map((template) => (
@@ -407,7 +407,7 @@ function TemplateBrowserDialog({
                     <div className="mb-6">
                       <div className="flex items-center gap-2 mb-3">
                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                        <h3 className="text-sm font-medium" className="heading-subsection">Most Popular</h3>
+                        <h3 className="text-sm font-medium heading-subsection">Most Popular</h3>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         {popularTemplates.slice(0, 4).map((template) => (
@@ -428,7 +428,7 @@ function TemplateBrowserDialog({
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <LayoutTemplate className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="text-sm font-medium" className="heading-subsection">
+                  <h3 className="text-sm font-medium heading-subsection">
                     {selectedCategory === 'all'
                       ? 'All Templates'
                       : `${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)} Templates`}
@@ -493,7 +493,7 @@ function BrowserTemplateCard({
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium text-sm truncate" className="heading-card">{template.name}</h4>
+              <h4 className="font-medium text-sm truncate heading-card">{template.name}</h4>
               {isSelected && <Check className="h-4 w-4 text-primary shrink-0" />}
             </div>
             {template.description && (

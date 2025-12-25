@@ -249,7 +249,7 @@ function RequirementCard({
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <h4 className="font-medium" className="heading-card">{template?.name || 'Unknown Location'}</h4>
+            <h4 className="font-medium heading-card">{template?.name || 'Unknown Location'}</h4>
             {locationParts && (
               <p className="mt-0.5 flex items-center gap-1 text-sm text-muted-foreground">
                 <Building2 className="h-3 w-3" />

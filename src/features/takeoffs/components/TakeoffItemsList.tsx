@@ -251,7 +251,7 @@ export function TakeoffItemsList({
       {/* Header */}
       <div className="p-4 border-b space-y-3">
         <div className="flex items-center justify-between">
-          <h3 className="font-semibold" className="heading-subsection">Measurements</h3>
+          <h3 className="font-semibold heading-subsection">Measurements</h3>
           <Badge variant="secondary">{filteredMeasurements.length}</Badge>
         </div>
 

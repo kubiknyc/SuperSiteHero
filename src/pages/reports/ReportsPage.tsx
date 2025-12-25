@@ -148,7 +148,7 @@ export function ReportsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2 heading-page">
               <BarChart3 className="h-7 w-7 text-primary" />
               Custom Report Builder
             </h1>
@@ -273,7 +273,7 @@ export function ReportsPage() {
               <Card className="border-dashed">
                 <CardContent className="py-12 text-center">
                   <FileText className="h-12 w-12 mx-auto text-disabled mb-4" />
-                  <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+                  <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                     No templates yet
                   </h3>
                   <p className="text-muted mb-4">
@@ -309,7 +309,7 @@ export function ReportsPage() {
               <Card className="border-dashed">
                 <CardContent className="py-12 text-center">
                   <Calendar className="h-12 w-12 mx-auto text-disabled mb-4" />
-                  <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+                  <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                     No scheduled reports
                   </h3>
                   <p className="text-muted">
@@ -324,7 +324,7 @@ export function ReportsPage() {
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
-                          <h3 className="font-medium" className="heading-subsection">{schedule.name}</h3>
+                          <h3 className="font-medium heading-subsection">{schedule.name}</h3>
                           <p className="text-sm text-muted">
                             {schedule.frequency} &bull; {schedule.recipients.length} recipients
                           </p>
@@ -357,7 +357,7 @@ export function ReportsPage() {
               <Card className="border-dashed">
                 <CardContent className="py-12 text-center">
                   <History className="h-12 w-12 mx-auto text-disabled mb-4" />
-                  <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+                  <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                     No reports generated yet
                   </h3>
                   <p className="text-muted">
@@ -373,7 +373,7 @@ export function ReportsPage() {
                       <div key={report.id} className="p-4 hover:bg-surface">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="font-medium" className="heading-subsection">{report.report_name}</h3>
+                            <h3 className="font-medium heading-subsection">{report.report_name}</h3>
                             <div className="flex items-center gap-3 text-sm text-muted mt-1">
                               <DataSourceBadge source={report.data_source} />
                               <span>

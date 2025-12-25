@@ -113,7 +113,7 @@ export function IOSInstallInstructionsPage({
               <Smartphone className="h-6 w-6 text-primary dark:text-primary-400" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold" className="heading-section">Install {appName} on iOS</h2>
+              <h2 className="text-lg font-semibold heading-section">Install {appName} on iOS</h2>
               <p className="text-sm text-muted-foreground">Follow these steps in Safari</p>
             </div>
           </div>
@@ -157,7 +157,7 @@ export function IOSInstallInstructionsPage({
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <Icon className={cn('h-5 w-5', step.iconColor)} />
-                  <h3 className="font-medium" className="heading-subsection">{step.title}</h3>
+                  <h3 className="font-medium heading-subsection">{step.title}</h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">{step.description}</p>
                 <p className="text-xs text-muted-foreground/80 italic">{step.details}</p>
@@ -174,7 +174,7 @@ export function IOSInstallInstructionsPage({
 
       {/* Benefits */}
       <div className="border-t pt-4">
-        <h3 className="font-medium mb-3" className="heading-subsection">Why Install?</h3>
+        <h3 className="font-medium mb-3 heading-subsection">Why Install?</h3>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
@@ -293,7 +293,7 @@ export function IOSInstallModal({
   onOpenChange,
   appName = 'JobSight',
 }: IOSInstallModalProps) {
-  if (!open) return null;
+  if (!open) {return null;}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

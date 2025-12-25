@@ -148,7 +148,7 @@ export function NewDailyReportPage() {
       <AppLayout>
         <div className="p-6 space-y-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">New Daily Report</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">New Daily Report</h1>
             <p className="text-secondary mt-1">Create a new daily report for your project</p>
           </div>
 
@@ -351,7 +351,7 @@ export function NewDailyReportPage() {
     <AppLayout>
       <div className="p-6 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground" className="heading-page">New Daily Report</h1>
+          <h1 className="text-3xl font-bold text-foreground heading-page">New Daily Report</h1>
           <p className="text-secondary mt-1">Document your daily activities and progress</p>
         </div>
 

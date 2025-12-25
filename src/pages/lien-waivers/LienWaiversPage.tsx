@@ -192,7 +192,7 @@ export function LienWaiversPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2 heading-page">
               <FileCheck className="h-7 w-7 text-primary" />
               Lien Waivers
             </h1>
@@ -321,7 +321,7 @@ export function LienWaiversPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <Building2 className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">Select a Project</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">Select a Project</h3>
               <p className="text-muted">
                 Choose a project above to view and manage lien waivers
               </p>
@@ -338,7 +338,7 @@ export function LienWaiversPage() {
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Waivers</h3>
+              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Waivers</h3>
               <p className="text-error">{error.message}</p>
             </CardContent>
           </Card>
@@ -346,7 +346,7 @@ export function LienWaiversPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <FileCheck className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No Lien Waivers</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">No Lien Waivers</h3>
               <p className="text-muted mb-4">
                 {searchTerm || statusFilter !== 'all' || typeFilter !== 'all'
                   ? 'No waivers match your filters'

@@ -92,7 +92,7 @@ export function ToolboxTalkDetailPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <AlertTriangle className="h-12 w-12 mx-auto text-red-400 mb-4" />
-            <h2 className="text-lg font-medium text-foreground" className="heading-section">Talk Not Found</h2>
+            <h2 className="text-lg font-medium text-foreground heading-section">Talk Not Found</h2>
             <p className="text-muted mt-1">
               The toolbox talk you're looking for doesn't exist or has been deleted.
             </p>
@@ -155,7 +155,7 @@ export function ToolboxTalkDetailPage() {
               Back to Toolbox Talks
             </Link>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-foreground" className="heading-page">{talk.talk_number}</h1>
+              <h1 className="text-2xl font-bold text-foreground heading-page">{talk.talk_number}</h1>
               <TalkStatusBadge status={talk.status} size="md" />
             </div>
             <p className="text-muted mt-1">{topicTitle}</p>
@@ -218,7 +218,7 @@ export function ToolboxTalkDetailPage() {
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-card rounded-lg p-6 max-w-md mx-4">
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                 Delete Toolbox Talk?
               </h3>
               <p className="text-muted mb-4">
@@ -247,7 +247,7 @@ export function ToolboxTalkDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Talk Details */}
             <div className="bg-card rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                 <ClipboardList className="h-5 w-5 text-disabled" />
                 Talk Details
               </h2>
@@ -353,7 +353,7 @@ export function ToolboxTalkDetailPage() {
             {/* Topic Content */}
             {talk.topic && (
               <div className="bg-card rounded-lg border p-6">
-                <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+                <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                   <FileText className="h-5 w-5 text-disabled" />
                   Topic: {talk.topic.title}
                 </h2>
@@ -365,7 +365,7 @@ export function ToolboxTalkDetailPage() {
                 {/* Talking Points */}
                 {talk.topic.talking_points && talk.topic.talking_points.length > 0 && (
                   <div className="mb-4">
-                    <h3 className="text-sm font-medium text-secondary mb-2 flex items-center gap-1" className="heading-subsection">
+                    <h3 className="text-sm font-medium text-secondary mb-2 flex items-center gap-1 heading-subsection">
                       <ListChecks className="h-4 w-4" />
                       Key Talking Points
                     </h3>
@@ -387,7 +387,7 @@ export function ToolboxTalkDetailPage() {
                 {talk.topic.discussion_questions &&
                   talk.topic.discussion_questions.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-medium text-secondary mb-2 flex items-center gap-1" className="heading-subsection">
+                      <h3 className="text-sm font-medium text-secondary mb-2 flex items-center gap-1 heading-subsection">
                         <MessageSquare className="h-4 w-4" />
                         Discussion Questions
                       </h3>
@@ -436,7 +436,7 @@ export function ToolboxTalkDetailPage() {
             {/* Notes */}
             {talk.notes && (
               <div className="bg-card rounded-lg border p-6">
-                <h2 className="text-lg font-medium text-foreground mb-4" className="heading-section">Notes</h2>
+                <h2 className="text-lg font-medium text-foreground mb-4 heading-section">Notes</h2>
                 <p className="text-sm text-secondary whitespace-pre-wrap">{talk.notes}</p>
               </div>
             )}
@@ -444,7 +444,7 @@ export function ToolboxTalkDetailPage() {
             {/* Hazards Discussed */}
             {talk.hazards_discussed && (
               <div className="bg-card rounded-lg border p-6">
-                <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+                <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                   <AlertTriangle className="h-5 w-5 text-warning" />
                   Hazards Discussed
                 </h2>

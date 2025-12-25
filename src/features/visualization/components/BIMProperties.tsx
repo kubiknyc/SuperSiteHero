@@ -170,8 +170,8 @@ function PropertyRow({ property, unitSystem, editable, onEdit }: PropertyRowProp
               className="h-7 w-32 text-sm"
               autoFocus
               onKeyDown={(e) => {
-                if (e.key === 'Enter') handleSave();
-                if (e.key === 'Escape') handleCancel();
+                if (e.key === 'Enter') {handleSave();}
+                if (e.key === 'Escape') {handleCancel();}
               }}
             />
             <Button variant="ghost" size="icon" className="h-7 w-7" onClick={handleSave}>
@@ -256,7 +256,7 @@ function PropertySetSection({
 
   // Filter properties based on search
   const filteredProperties = useMemo(() => {
-    if (!searchQuery) return propertySet.properties;
+    if (!searchQuery) {return propertySet.properties;}
     const query = searchQuery.toLowerCase();
     return propertySet.properties.filter(
       (p) =>
@@ -266,7 +266,7 @@ function PropertySetSection({
   }, [propertySet.properties, searchQuery]);
 
   // Don't render if no matching properties
-  if (filteredProperties.length === 0) return null;
+  if (filteredProperties.length === 0) {return null;}
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -322,7 +322,7 @@ export function BIMProperties({
 
   // Get element info
   const elementInfo = useMemo(() => {
-    if (!element) return null;
+    if (!element) {return null;}
 
     const category = getIFCCategory(element.type);
     const color = getIFCTypeColor(element.type);
@@ -427,7 +427,7 @@ export function BIMProperties({
           </DropdownMenu>
         </div>
 
-        <h3 className="font-semibold text-lg truncate" className="heading-subsection">{element.name}</h3>
+        <h3 className="font-semibold text-lg truncate heading-subsection">{element.name}</h3>
 
         {elementInfo?.category && (
           <p className="text-sm text-muted-foreground">

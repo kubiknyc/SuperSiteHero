@@ -63,7 +63,7 @@ export function TranscriptionViewer({
 
   // Find active segment based on current time
   const activeSegmentIndex = useMemo(() => {
-    if (!segments) return -1;
+    if (!segments) {return -1;}
     return segments.findIndex(
       (seg) => currentTimeMs >= seg.start_time_ms && currentTimeMs < seg.end_time_ms
     );
@@ -71,8 +71,8 @@ export function TranscriptionViewer({
 
   // Filter segments by search query
   const filteredSegments = useMemo(() => {
-    if (!segments) return [];
-    if (!searchQuery.trim()) return segments;
+    if (!segments) {return [];}
+    if (!searchQuery.trim()) {return segments;}
 
     const query = searchQuery.toLowerCase();
     return segments.filter((seg) => seg.text.toLowerCase().includes(query));
@@ -137,7 +137,7 @@ export function TranscriptionViewer({
 
   // Highlight search matches in text
   const highlightText = (text: string, query: string): React.ReactNode => {
-    if (!query.trim()) return text;
+    if (!query.trim()) {return text;}
 
     const parts = text.split(new RegExp(`(${query})`, 'gi'));
     return parts.map((part, i) =>

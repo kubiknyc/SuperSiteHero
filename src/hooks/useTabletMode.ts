@@ -70,7 +70,7 @@ export interface UseTabletModeOptions {
  * Detect if the device has touch capability
  */
 function detectTouchCapability(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
   return (
     'ontouchstart' in window ||
     navigator.maxTouchPoints > 0 ||
@@ -113,7 +113,7 @@ function getRecommendedGridCols(
   orientation: TabletOrientation,
   tabletType: TabletType
 ): number {
-  if (!isTablet) return 4; // Desktop default
+  if (!isTablet) {return 4;} // Desktop default
 
   if (tabletType === 'pro') {
     return orientation === 'landscape' ? 4 : 3;
@@ -237,7 +237,7 @@ export function useTabletMode(options: UseTabletModeOptions = {}): TabletModeSta
   }, [forceSidebarBehavior, onTabletModeChange, onOrientationChange]);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {return;}
 
     // Initial check
     handleResize();

@@ -38,7 +38,7 @@ export function generateDrawingPackageNotificationEmail(
   const packageTypeLabel = packageTypeLabels[data.packageType] || data.packageType;
 
   const content = `
-    <h1>Drawing Package Available</h1>
+    <h1 className="heading-page">Drawing Package Available</h1>
 
     <p>Hi ${data.recipientName},</p>
 
@@ -162,7 +162,7 @@ export function generateAcknowledgmentReminderEmail(
   const urgencyColor = data.daysRemaining <= 1 ? '#991b1b' : '#92400e';
 
   const content = `
-    <h1>Acknowledgment Reminder</h1>
+    <h1 className="heading-page">Acknowledgment Reminder</h1>
 
     <p>Hi ${data.recipientName},</p>
 
@@ -228,7 +228,7 @@ export function generateDownloadNotificationEmail(
   data: DownloadNotificationEmailData
 ): { html: string; text: string; subject: string } {
   const content = `
-    <h1>Package Downloaded</h1>
+    <h1 className="heading-page">Package Downloaded</h1>
 
     <p>Hi ${data.ownerName},</p>
 
@@ -297,7 +297,7 @@ export function generateAcknowledgmentNotificationEmail(
   data: AcknowledgmentNotificationEmailData
 ): { html: string; text: string; subject: string } {
   const content = `
-    <h1>Package Acknowledged</h1>
+    <h1 className="heading-page">Package Acknowledged</h1>
 
     <p>Hi ${data.ownerName},</p>
 

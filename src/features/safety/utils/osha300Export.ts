@@ -391,7 +391,7 @@ export function generateOSHA300PrintHTML(
       </style>
     </head>
     <body>
-      <h1>OSHA Form 300 - Log of Work-Related Injuries and Illnesses</h1>
+      <h1 className="heading-page">OSHA Form 300 - Log of Work-Related Injuries and Illnesses</h1>
       <div class="header-info">
         <strong>Establishment:</strong> ${options.establishmentName}<br>
         <strong>Calendar Year:</strong> ${options.year}

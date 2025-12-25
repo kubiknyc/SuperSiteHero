@@ -433,7 +433,7 @@ export class SyncManager {
    * Complete telemetry tracking
    */
   private static async completeTelemetry(): Promise<void> {
-    if (!this.telemetry.sync_started_at) return;
+    if (!this.telemetry.sync_started_at) {return;}
 
     const completedTelemetry: SyncTelemetry = {
       id: this.telemetry.id!,

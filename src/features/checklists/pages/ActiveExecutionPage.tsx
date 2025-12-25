@@ -359,7 +359,7 @@ export function ActiveExecutionPage() {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Checklist not found</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Checklist not found</h2>
           <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Checklists
@@ -386,7 +386,7 @@ export function ActiveExecutionPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{execution.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">{execution.name}</h1>
               {execution.description && (
                 <p className="text-secondary mb-3">{execution.description}</p>
               )}
@@ -439,7 +439,7 @@ export function ActiveExecutionPage() {
         {/* Metadata Section */}
         <div className="bg-card rounded-lg shadow p-4 mb-6">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-lg font-semibold text-foreground" className="heading-section">Inspection Details</h2>
+            <h2 className="text-lg font-semibold text-foreground heading-section">Inspection Details</h2>
             {canEdit && !isEditingMetadata && (
               <Button variant="outline" size="sm" onClick={() => setIsEditingMetadata(true)}>
                 Edit
@@ -544,7 +544,7 @@ export function ActiveExecutionPage() {
         <div className="space-y-6">
           {sections.map((section) => (
             <div key={section.name}>
-              <h2 className="text-xl font-semibold text-foreground mb-4" className="heading-section">{section.name}</h2>
+              <h2 className="text-xl font-semibold text-foreground mb-4 heading-section">{section.name}</h2>
               <div className="space-y-3">
                 {section.items.map(({ templateItem, response }) => {
                   const isFocused = currentResponse?.id === response!.id

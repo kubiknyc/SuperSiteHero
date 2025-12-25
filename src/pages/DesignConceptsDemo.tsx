@@ -453,7 +453,7 @@ function ConceptSection({
           <span className="w-8 h-8 bg-gray-900 text-white rounded-lg flex items-center justify-center font-bold text-sm">
             {id}
           </span>
-          <h2 className="text-2xl font-bold text-foreground" className="heading-section">{name}</h2>
+          <h2 className="text-2xl font-bold text-foreground heading-section">{name}</h2>
         </div>
         <p className="text-lg text-secondary font-medium">{tagline}</p>
         <p className="text-muted">{description}</p>

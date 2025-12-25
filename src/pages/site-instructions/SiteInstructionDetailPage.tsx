@@ -202,7 +202,7 @@ export default function SiteInstructionDetailPage() {
             <FileText className="h-4 w-4" />
             <span className="font-mono">{referenceNumber}</span>
           </div>
-          <h1 className="text-2xl font-bold" className="heading-page">{instruction.title}</h1>
+          <h1 className="text-2xl font-bold heading-page">{instruction.title}</h1>
         </div>
         <div className="flex items-center gap-2">
           <SiteInstructionStatusBadge status={status} />

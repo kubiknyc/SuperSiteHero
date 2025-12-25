@@ -457,8 +457,8 @@ export const RATE_CONFIG: Record<'trir' | 'dart' | 'ltir' | 'severity' | 'emr', 
  * Status color mapping
  */
 export const STATUS_COLORS: Record<RateStatus, { bg: string; text: string; border: string }> = {
-  good: { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-300' },
-  warning: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-300' },
-  danger: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300' },
-  unknown: { bg: 'bg-gray-100', text: 'text-gray-600', border: 'border-gray-300' },
+  good: { bg: 'bg-success-light', text: 'text-green-800', border: 'border-green-300' },
+  warning: { bg: 'bg-warning-light', text: 'text-yellow-800', border: 'border-yellow-300' },
+  danger: { bg: 'bg-error-light', text: 'text-red-800', border: 'border-red-300' },
+  unknown: { bg: 'bg-muted', text: 'text-secondary', border: 'border-input' },
 }

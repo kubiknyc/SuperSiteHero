@@ -123,7 +123,7 @@ export function InspectionForm({
     <form onSubmit={handleSubmit} className={cn('space-y-6', className)}>
       {/* Basic Information */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Basic Information</h3>
+        <h3 className="text-lg font-medium text-foreground heading-subsection">Basic Information</h3>
 
         {/* Inspection Name */}
         <div className="space-y-2">
@@ -182,7 +182,7 @@ export function InspectionForm({
 
       {/* Schedule */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Schedule</h3>
+        <h3 className="text-lg font-medium text-foreground heading-subsection">Schedule</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Scheduled Date */}
@@ -237,7 +237,7 @@ export function InspectionForm({
 
       {/* Inspector Information */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Inspector Information</h3>
+        <h3 className="text-lg font-medium text-foreground heading-subsection">Inspector Information</h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Inspector Name */}

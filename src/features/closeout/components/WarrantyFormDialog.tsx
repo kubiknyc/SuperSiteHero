@@ -325,7 +325,7 @@ export function WarrantyFormDialog({
 
           {/* Manufacturer Information */}
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-secondary" className="heading-card">Manufacturer Information</h4>
+            <h4 className="text-sm font-medium text-secondary heading-card">Manufacturer Information</h4>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="manufacturer_name" className="flex items-center gap-1">
@@ -395,7 +395,7 @@ export function WarrantyFormDialog({
 
           {/* Warranty Period */}
           <div className="space-y-4">
-            <h4 className="text-sm font-medium text-secondary flex items-center gap-1" className="heading-card">
+            <h4 className="text-sm font-medium text-secondary flex items-center gap-1 heading-card">
               <Calendar className="h-4 w-4" />
               Warranty Period *
             </h4>

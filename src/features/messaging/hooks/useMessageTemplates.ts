@@ -252,7 +252,7 @@ export function useMessageTemplates(
    * Load categories
    */
   const loadCategories = useCallback(async (): Promise<void> => {
-    if (!companyId) return
+    if (!companyId) {return}
 
     try {
       const data = await messageTemplatesApi.getTemplateCategories(companyId)

@@ -106,7 +106,7 @@ export function WeatherLogsPage() {
                 <CloudSun className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground" className="heading-page">Weather Logs</h1>
+                <h1 className="text-2xl font-bold text-foreground heading-page">Weather Logs</h1>
                 <p className="text-sm text-secondary">
                   Track daily weather conditions and their impact on work
                 </p>
@@ -343,7 +343,7 @@ export function WeatherLogsPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <CloudSun className="w-16 h-16 text-disabled mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Project Selected</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">No Project Selected</h3>
                 <p className="text-secondary mb-4">
                   Select a project to view its weather logs
                 </p>
@@ -362,7 +362,7 @@ export function WeatherLogsPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <AlertTriangle className="w-16 h-16 text-error mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Weather Logs</h3>
+                <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading Weather Logs</h3>
                 <p className="text-secondary">{error.message}</p>
               </CardContent>
             </Card>
@@ -374,7 +374,7 @@ export function WeatherLogsPage() {
                 <Card>
                   <CardContent className="py-12 text-center">
                     <CloudSun className="w-16 h-16 text-disabled mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+                    <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                       {hasActiveFilters ? 'No Weather Logs Match Filters' : 'No Weather Logs Yet'}
                     </h3>
                     <p className="text-secondary mb-4">

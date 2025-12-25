@@ -177,7 +177,7 @@ async function processGoogleEvent(
   },
   googleEvent: GCalEvent
 ): Promise<void> {
-  if (!googleEvent.id) return
+  if (!googleEvent.id) {return}
 
   // Check if this event came from our app (skip to avoid loops)
   const source = googleEvent.extendedProperties?.private?.source

@@ -37,7 +37,7 @@ export function DailyReportCreatePage() {
     <AppLayout>
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
-          <h1 className="text-3xl font-bold text-foreground" className="heading-page">Create Daily Report</h1>
+          <h1 className="text-3xl font-bold text-foreground heading-page">Create Daily Report</h1>
           <p className="text-secondary mt-2">
             Document daily activities, weather, and workforce information
           </p>

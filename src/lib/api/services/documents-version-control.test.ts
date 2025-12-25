@@ -2,7 +2,9 @@
  * Tests for document version control API methods
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { documentsApi } from './documents'
 import { apiClient } from '../client'
 import type { Document } from '@/types/database'

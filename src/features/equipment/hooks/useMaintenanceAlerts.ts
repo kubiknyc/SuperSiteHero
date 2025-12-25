@@ -191,7 +191,7 @@ export function useUnacknowledgedAlertCount(companyId: string | undefined) {
   return useQuery({
     queryKey: maintenanceAlertKeys.unacknowledged(companyId || ''),
     queryFn: async (): Promise<number> => {
-      if (!companyId) return 0
+      if (!companyId) {return 0}
 
       const { count, error } = await supabase
         .from('equipment_maintenance_alerts')
@@ -236,7 +236,7 @@ export function useAcknowledgeMaintenanceAlert() {
         })
         .eq('id', alertId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: maintenanceAlertKeys.all })
@@ -284,7 +284,7 @@ export function useDismissMaintenanceAlert() {
         })
         .eq('id', alertId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: maintenanceAlertKeys.all })
@@ -326,7 +326,7 @@ export function useResolveMaintenanceAlert() {
         })
         .eq('id', alertId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: maintenanceAlertKeys.all })
@@ -494,7 +494,7 @@ export function useBlockedEquipment(projectId: string | undefined) {
   return useQuery({
     queryKey: maintenanceAlertKeys.blockedEquipment(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       // Get equipment assigned to the project
       const { data: assignments, error: assError } = await supabase
@@ -528,7 +528,7 @@ export function useBlockedEquipment(projectId: string | undefined) {
         const eq = assignment.equipment as any
 
         // Skip if equipment is null or already marked unavailable
-        if (!eq) continue
+        if (!eq) {continue}
         if (eq.status === 'maintenance' || eq.status === 'out_of_service') {
           blockedEquipment.push({
             equipment_id: eq.id,
@@ -597,7 +597,7 @@ export function useGenerateMaintenanceAlerts() {
       // Call the database function to generate alerts
       const { data, error } = await supabase.rpc('generate_maintenance_alerts')
 
-      if (error) throw error
+      if (error) {throw error}
       return data as number
     },
     onSuccess: (count) => {

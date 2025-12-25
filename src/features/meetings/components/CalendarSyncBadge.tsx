@@ -62,7 +62,7 @@ export function CalendarSyncBadge({
   }
 
   const handleSync = async () => {
-    if (!connectionStatus.connectionId) return;
+    if (!connectionStatus.connectionId) {return;}
 
     // Prepare meeting data for sync
     const meetingData = {
@@ -94,7 +94,7 @@ export function CalendarSyncBadge({
   };
 
   const handleDelete = async () => {
-    if (!connectionStatus.connectionId || !googleEventId) return;
+    if (!connectionStatus.connectionId || !googleEventId) {return;}
 
     try {
       await syncMutation.mutateAsync({
@@ -129,7 +129,7 @@ export function CalendarSyncBadge({
   };
 
   const getStatusText = () => {
-    if (!syncStatus) return 'Not synced';
+    if (!syncStatus) {return 'Not synced';}
     return getSyncStatusLabel(syncStatus);
   };
 
@@ -163,7 +163,7 @@ export function CalendarSyncBadge({
       <PopoverContent className="w-72" align="end">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h4 className="font-medium flex items-center gap-2" className="heading-card">
+            <h4 className="font-medium flex items-center gap-2 heading-card">
               <Calendar className="h-4 w-4 text-primary" />
               Google Calendar
             </h4>
@@ -268,7 +268,7 @@ export function QuickSyncButton({
   }
 
   const handleSync = async () => {
-    if (!connectionStatus.connectionId) return;
+    if (!connectionStatus.connectionId) {return;}
 
     const meetingData = {
       title: meeting.title,

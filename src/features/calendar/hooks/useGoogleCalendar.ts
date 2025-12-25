@@ -444,7 +444,7 @@ export function useQuickGCalSync(meetingId: string | undefined) {
     !!meetingId;
 
   const sync = async (meetingData: SyncEventDTO['meetingData']) => {
-    if (!canSync || !connectionStatus?.connectionId) return false;
+    if (!canSync || !connectionStatus?.connectionId) {return false;}
 
     try {
       await syncMutation.mutateAsync({

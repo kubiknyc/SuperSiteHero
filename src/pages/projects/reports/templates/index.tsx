@@ -93,7 +93,7 @@ export default function ReportTemplatesPage() {
       {/* Page Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold" className="heading-page">Report Templates</h1>
+          <h1 className="text-3xl font-bold heading-page">Report Templates</h1>
           <p className="text-muted-foreground mt-1">
             Pre-built industry-standard templates for construction project reporting
           </p>
@@ -172,19 +172,19 @@ export default function ReportTemplatesPage() {
         <CardContent>
           <div className="grid md:grid-cols-3 gap-6 text-sm">
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">1. Browse Templates</h4>
+              <h4 className="font-medium mb-2 heading-card">1. Browse Templates</h4>
               <p className="text-muted-foreground">
                 Search and filter through pre-built templates organized by daily, weekly, and monthly reports.
               </p>
             </div>
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">2. Select Template</h4>
+              <h4 className="font-medium mb-2 heading-card">2. Select Template</h4>
               <p className="text-muted-foreground">
                 Click on a template to select it. Preview the fields and configuration before using.
               </p>
             </div>
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">3. Generate or Customize</h4>
+              <h4 className="font-medium mb-2 heading-card">3. Generate or Customize</h4>
               <p className="text-muted-foreground">
                 Use "Quick Generate" for immediate reports or "Customize & Use" to modify the template.
               </p>

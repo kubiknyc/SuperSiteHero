@@ -30,7 +30,7 @@ export function generateApprovalRequestEmail(data: ApprovalRequestEmailData): { 
   const entityLabel = ENTITY_LABELS[data.entityType] || 'Item'
 
   const content = `
-    <h1>Approval Request</h1>
+    <h1 className="heading-page">Approval Request</h1>
 
     <p>Hi ${data.recipientName},</p>
 

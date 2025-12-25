@@ -88,10 +88,10 @@ export function GanttChart({
 
   // Calculate responsive sidebar width based on device
   const responsiveSidebarWidth = useMemo(() => {
-    if (isSidebarCollapsed) return 0
-    if (layout === 'mobile') return 200
-    if (layout === 'tablet-portrait') return 220
-    if (layout === 'tablet-landscape') return 280
+    if (isSidebarCollapsed) {return 0}
+    if (layout === 'mobile') {return 200}
+    if (layout === 'tablet-portrait') {return 220}
+    if (layout === 'tablet-landscape') {return 280}
     return customConfig?.sidebar_width || DEFAULT_GANTT_CONFIG.sidebar_width
   }, [layout, isSidebarCollapsed, customConfig?.sidebar_width])
 
@@ -648,7 +648,7 @@ export function GanttChart({
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <div className="text-disabled text-6xl mb-4">📅</div>
-                  <h3 className="text-lg font-medium text-secondary mb-2" className="heading-subsection">
+                  <h3 className="text-lg font-medium text-secondary mb-2 heading-subsection">
                     No schedule items yet
                   </h3>
                   <p className="text-sm text-muted">
@@ -664,7 +664,7 @@ export function GanttChart({
       {/* Hover tooltip */}
       {hoveredTask && !isDragging && (
         <div className="absolute bottom-4 right-4 bg-card rounded-lg shadow-lg border p-3 max-w-xs z-50">
-          <h4 className="font-medium text-foreground" className="heading-card">{hoveredTask.task_name}</h4>
+          <h4 className="font-medium text-foreground heading-card">{hoveredTask.task_name}</h4>
           <div className="mt-1 text-sm text-secondary space-y-1">
             <p>
               <span className="font-medium">Dates:</span>{' '}

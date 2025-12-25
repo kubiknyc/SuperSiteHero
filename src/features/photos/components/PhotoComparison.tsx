@@ -129,7 +129,7 @@ export function PhotoComparison({
     return (
       <div className="flex flex-col items-center justify-center h-full p-8 text-center">
         <ArrowLeftRight className="h-12 w-12 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-medium mb-2" className="heading-subsection">Select Photos to Compare</h3>
+        <h3 className="text-lg font-medium mb-2 heading-subsection">Select Photos to Compare</h3>
         <p className="text-sm text-muted-foreground">
           Choose a before and after photo to create a comparison
         </p>
@@ -142,7 +142,7 @@ export function PhotoComparison({
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
-          <h2 className="font-semibold" className="heading-section">
+          <h2 className="font-semibold heading-section">
             {comparison?.title || 'Photo Comparison'}
           </h2>
           {comparison?.comparisonType && (

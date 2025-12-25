@@ -54,7 +54,7 @@ export const photoEntityLinksApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -67,7 +67,7 @@ export const photoEntityLinksApi = {
       .delete()
       .eq('id', linkId);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 
   /**
@@ -98,7 +98,7 @@ export const photoEntityLinksApi = {
       .order('is_primary', { ascending: false })
       .order('linked_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return (data || []) as PhotoEntityLinkWithPhoto[];
   },
 
@@ -125,7 +125,7 @@ export const photoEntityLinksApi = {
       p_company_id: userData.company_id,
     });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data as number;
   },
 
@@ -152,7 +152,7 @@ export const photoEntityLinksApi = {
       .eq('entity_id', entityId)
       .eq('photo_id', photoId);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 
   /**
@@ -164,7 +164,7 @@ export const photoEntityLinksApi = {
       .update({ context_note: contextNote })
       .eq('id', linkId);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 
   /**
@@ -177,7 +177,7 @@ export const photoEntityLinksApi = {
       .eq('photo_id', photoId)
       .order('linked_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 };
@@ -258,7 +258,7 @@ export const photoHubApi = {
 
     const { data, error, count } = await query;
 
-    if (error) throw error;
+    if (error) {throw error;}
 
     // Transform the data to match PhotoWithEntities
     const photos: PhotoWithEntities[] = (data || []).map((photo: Record<string, unknown>) => ({
@@ -379,7 +379,7 @@ export const photoUploadBatchApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -407,7 +407,7 @@ export const photoUploadBatchApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -421,7 +421,7 @@ export const photoUploadBatchApi = {
       .eq('id', batchId)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -435,7 +435,7 @@ export const photoUploadBatchApi = {
       .eq('project_id', projectId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 };
@@ -465,7 +465,7 @@ export const photoDeduplicationApi = {
         file_hash: fileHash || null,
       });
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 
   /**
@@ -482,7 +482,7 @@ export const photoDeduplicationApi = {
       p_threshold: threshold,
     });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return (data || []) as DuplicatePhotoResult[];
   },
 
@@ -497,7 +497,7 @@ export const photoDeduplicationApi = {
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {throw error;}
     return data?.photo_id || null;
   },
 };

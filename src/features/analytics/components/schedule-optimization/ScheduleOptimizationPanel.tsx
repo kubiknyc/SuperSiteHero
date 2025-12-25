@@ -189,7 +189,7 @@ export function ScheduleOptimizationPanel({
 
         {/* Recommendations */}
         <div>
-          <h4 className="text-sm font-medium mb-2 flex items-center gap-2" className="heading-card">
+          <h4 className="text-sm font-medium mb-2 flex items-center gap-2 heading-card">
             <Brain className="w-4 h-4 text-primary" />
             Recommendations ({recommendations.length})
           </h4>

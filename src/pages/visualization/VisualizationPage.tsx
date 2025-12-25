@@ -95,8 +95,8 @@ interface ModelCardProps {
 
 function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProps) {
   const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024) {return `${bytes} B`;}
+    if (bytes < 1024 * 1024) {return `${(bytes / 1024).toFixed(1)} KB`;}
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
@@ -143,7 +143,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
         </div>
 
         <div className="flex-1 min-w-0">
-          <h3 className="font-medium truncate" className="heading-subsection">{model.name}</h3>
+          <h3 className="font-medium truncate heading-subsection">{model.name}</h3>
           <p className="text-sm text-muted-foreground truncate">
             {model.description || 'No description'}
           </p>
@@ -240,7 +240,7 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
       </div>
 
       <CardContent className="p-4">
-        <h3 className="font-medium truncate" className="heading-subsection">{model.name}</h3>
+        <h3 className="font-medium truncate heading-subsection">{model.name}</h3>
         <p className="text-sm text-muted-foreground truncate mt-1">
           {model.description || 'No description'}
         </p>
@@ -297,7 +297,7 @@ function EmptyState({ type, onUpload }: EmptyStateProps) {
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         <Icon className="h-8 w-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium mb-2" className="heading-subsection">{title}</h3>
+      <h3 className="text-lg font-medium mb-2 heading-subsection">{title}</h3>
       <p className="text-muted-foreground max-w-md mb-6">{description}</p>
       <Button onClick={onUpload}>
         <Plus className="h-4 w-4 mr-2" />
@@ -427,7 +427,7 @@ export function VisualizationPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">Site Visualization</h1>
+          <h1 className="text-2xl font-bold heading-page">Site Visualization</h1>
           <p className="text-muted-foreground">
             3D models, BIM data, and immersive VR/AR experiences
           </p>
@@ -652,7 +652,7 @@ export function VisualizationPage() {
                     <Glasses className="h-16 w-16 text-white/80" />
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-medium" className="heading-subsection">{tour.name}</h3>
+                    <h3 className="font-medium heading-subsection">{tour.name}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
                       {tour.description || 'No description'}
                     </p>
@@ -703,7 +703,7 @@ export function VisualizationPage() {
                     </Badge>
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-medium truncate" className="heading-subsection">{photo.name}</h3>
+                    <h3 className="font-medium truncate heading-subsection">{photo.name}</h3>
                     <div className="flex items-center gap-2 mt-2">
                       {photo.tags?.slice(0, 2).map((tag) => (
                         <Badge key={tag} variant="outline" className="text-xs">
@@ -810,7 +810,7 @@ export function VisualizationPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <Box className="h-10 w-10 text-success mb-3" />
-                <h3 className="font-medium" className="heading-subsection">3D Model</h3>
+                <h3 className="font-medium heading-subsection">3D Model</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   GLB, GLTF, OBJ, FBX
                 </p>
@@ -820,7 +820,7 @@ export function VisualizationPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <Building2 className="h-10 w-10 text-primary mb-3" />
-                <h3 className="font-medium" className="heading-subsection">BIM/IFC File</h3>
+                <h3 className="font-medium heading-subsection">BIM/IFC File</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   IFC, IFC4
                 </p>
@@ -830,7 +830,7 @@ export function VisualizationPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <Camera className="h-10 w-10 text-orange-600 mb-3" />
-                <h3 className="font-medium" className="heading-subsection">360 Photo</h3>
+                <h3 className="font-medium heading-subsection">360 Photo</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Equirectangular JPG, PNG
                 </p>
@@ -840,7 +840,7 @@ export function VisualizationPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
                 <FolderOpen className="h-10 w-10 text-purple-600 mb-3" />
-                <h3 className="font-medium" className="heading-subsection">Batch Upload</h3>
+                <h3 className="font-medium heading-subsection">Batch Upload</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Multiple files at once
                 </p>

@@ -213,7 +213,7 @@ export function PunchListItem({
                 #{item.number}
               </span>
             )}
-            <h3 className="font-medium text-foreground truncate" className="heading-subsection">{item.title}</h3>
+            <h3 className="font-medium text-foreground truncate heading-subsection">{item.title}</h3>
           </div>
 
           {/* Trade and Status */}

@@ -44,7 +44,7 @@ export function WorkflowsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold" className="heading-page">Workflows</h1>
+            <h1 className="text-3xl font-bold heading-page">Workflows</h1>
             <p className="text-secondary">Manage RFIs, Change Orders, and Submittals</p>
           </div>
         </div>

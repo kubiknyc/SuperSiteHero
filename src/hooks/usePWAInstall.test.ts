@@ -171,7 +171,7 @@ describe('usePWAInstall', () => {
   describe('dismissal handling', () => {
     it('should restore permanent dismissed state from localStorage', () => {
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-dismissed') return 'true';
+        if (key === 'jobsight-pwa-dismissed') {return 'true';}
         return null;
       });
 
@@ -183,7 +183,7 @@ describe('usePWAInstall', () => {
     it('should restore temporary dismissed state if not expired', () => {
       const dismissedTime = Date.now() - (3 * 24 * 60 * 60 * 1000); // 3 days ago
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-dismissed-at') return dismissedTime.toString();
+        if (key === 'jobsight-pwa-dismissed-at') {return dismissedTime.toString();}
         return null;
       });
 
@@ -195,7 +195,7 @@ describe('usePWAInstall', () => {
     it('should not be dismissed if expiry has passed', () => {
       const dismissedTime = Date.now() - (10 * 24 * 60 * 60 * 1000); // 10 days ago (past 7 day default)
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-dismissed-at') return dismissedTime.toString();
+        if (key === 'jobsight-pwa-dismissed-at') {return dismissedTime.toString();}
         return null;
       });
 
@@ -233,7 +233,7 @@ describe('usePWAInstall', () => {
 
     it('should reset dismissed state', () => {
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-dismissed') return 'true';
+        if (key === 'jobsight-pwa-dismissed') {return 'true';}
         return null;
       });
 
@@ -295,7 +295,7 @@ describe('usePWAInstall', () => {
 
     it('should not be installable when already installed', () => {
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-installed') return 'true';
+        if (key === 'jobsight-pwa-installed') {return 'true';}
         return null;
       });
       window.matchMedia = createMatchMediaMock(true); // Standalone mode
@@ -340,7 +340,7 @@ describe('usePWAInstall', () => {
       // Set first visit to 60 seconds ago
       const firstVisit = Date.now() - (60 * 1000);
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-first-visit') return firstVisit.toString();
+        if (key === 'jobsight-pwa-first-visit') {return firstVisit.toString();}
         return null;
       });
 
@@ -366,8 +366,8 @@ describe('usePWAInstall', () => {
 
       // Pre-set page views
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-page-views') return '5';
-        if (key === 'jobsight-pwa-first-visit') return Date.now().toString();
+        if (key === 'jobsight-pwa-page-views') {return '5';}
+        if (key === 'jobsight-pwa-first-visit') {return Date.now().toString();}
         return null;
       });
 
@@ -471,7 +471,7 @@ describe('usePWAInstall', () => {
 
     it('should return current page view count', () => {
       localStorageMock.getItem.mockImplementation((key: string) => {
-        if (key === 'jobsight-pwa-page-views') return '5';
+        if (key === 'jobsight-pwa-page-views') {return '5';}
         return null;
       });
 

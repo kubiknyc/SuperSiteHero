@@ -86,7 +86,7 @@ export default function SiteInstructionsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">Site Instructions</h1>
+          <h1 className="text-2xl font-bold heading-page">Site Instructions</h1>
           <p className="text-muted-foreground">
             Formal written instructions and directives to subcontractors
           </p>
@@ -119,7 +119,7 @@ export default function SiteInstructionsPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2" className="heading-subsection">Select a Project</h3>
+            <h3 className="text-lg font-medium mb-2 heading-subsection">Select a Project</h3>
             <p className="text-muted-foreground text-center max-w-md">
               Choose a project from the dropdown above to view and manage site instructions.
             </p>
@@ -203,7 +203,7 @@ export default function SiteInstructionsPage() {
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-                <h3 className="text-lg font-medium mb-2" className="heading-subsection">Error Loading Instructions</h3>
+                <h3 className="text-lg font-medium mb-2 heading-subsection">Error Loading Instructions</h3>
                 <p className="text-muted-foreground text-center">
                   {error instanceof Error ? error.message : 'An unexpected error occurred'}
                 </p>
@@ -213,7 +213,7 @@ export default function SiteInstructionsPage() {
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2" className="heading-subsection">No Site Instructions</h3>
+                <h3 className="text-lg font-medium mb-2 heading-subsection">No Site Instructions</h3>
                 <p className="text-muted-foreground text-center max-w-md mb-4">
                   {search || statusFilter !== 'all' || priorityFilter !== 'all'
                     ? 'No instructions match your current filters.'

@@ -361,17 +361,17 @@ export function useItemsDueSoon(projectId?: string, daysAhead: number = 7) {
 
 // Priority colors for UI
 export const OVERDUE_PRIORITY_COLORS = {
-  critical: { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300' },
+  critical: { bg: 'bg-error-light', text: 'text-red-800', border: 'border-red-300' },
   high: { bg: 'bg-orange-100', text: 'text-orange-800', border: 'border-orange-300' },
-  medium: { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-300' },
-  low: { bg: 'bg-gray-100', text: 'text-gray-800', border: 'border-gray-300' },
+  medium: { bg: 'bg-warning-light', text: 'text-yellow-800', border: 'border-yellow-300' },
+  low: { bg: 'bg-muted', text: 'text-foreground', border: 'border-input' },
 }
 
 // Type colors for UI
 export const OVERDUE_TYPE_COLORS = {
-  rfi: { bg: 'bg-blue-100', text: 'text-blue-800' },
+  rfi: { bg: 'bg-info-light', text: 'text-blue-800' },
   submittal: { bg: 'bg-purple-100', text: 'text-purple-800' },
-  punch_item: { bg: 'bg-green-100', text: 'text-green-800' },
+  punch_item: { bg: 'bg-success-light', text: 'text-green-800' },
   task: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
   inspection: { bg: 'bg-pink-100', text: 'text-pink-800' },
 }

@@ -44,7 +44,7 @@ export function ClientProjectDetail() {
   if (!project) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-xl font-semibold text-foreground" className="heading-section">Project Not Found</h2>
+        <h2 className="text-xl font-semibold text-foreground heading-section">Project Not Found</h2>
         <p className="text-muted mt-2">This project may not exist or you don't have access.</p>
         <Button asChild className="mt-4">
           <Link to="/client">Back to Dashboard</Link>
@@ -266,7 +266,7 @@ export function ClientProjectDetail() {
       {/* Available Sections */}
       {availableSections.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">Project Resources</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4 heading-section">Project Resources</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {availableSections.map((section) => {
               const Icon = section.icon
@@ -280,7 +280,7 @@ export function ClientProjectDetail() {
                             <Icon className="h-6 w-6" />
                           </div>
                           <div>
-                            <h3 className="font-medium text-foreground group-hover:text-primary transition-colors" className="heading-subsection">
+                            <h3 className="font-medium text-foreground group-hover:text-primary transition-colors heading-subsection">
                               {section.name}
                             </h3>
                             <p className="text-sm text-muted mt-1">

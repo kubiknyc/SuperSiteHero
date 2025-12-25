@@ -388,7 +388,7 @@ export function useQuickOutlookSync(entityType: OutlookEntityType, entityId: str
     entityType === 'schedule_activity'
 
   const sync = async () => {
-    if (!canSync || !connectionStatus?.connectionId) return
+    if (!canSync || !connectionStatus?.connectionId) {return}
 
     return syncEventMutation.mutateAsync({
       connectionId: connectionStatus.connectionId,
@@ -401,7 +401,7 @@ export function useQuickOutlookSync(entityType: OutlookEntityType, entityId: str
   }
 
   const unsync = async () => {
-    if (!connectionStatus?.connectionId || !mapping) return
+    if (!connectionStatus?.connectionId || !mapping) {return}
 
     return syncEventMutation.mutateAsync({
       connectionId: connectionStatus.connectionId,
@@ -445,7 +445,7 @@ export function useAutoOutlookSync(
     !connectionStatus?.isTokenExpired
 
   const triggerSync = async () => {
-    if (!shouldAutoSync || !connectionStatus?.connectionId || !entityId) return
+    if (!shouldAutoSync || !connectionStatus?.connectionId || !entityId) {return}
 
     try {
       await syncEventMutation.mutateAsync({

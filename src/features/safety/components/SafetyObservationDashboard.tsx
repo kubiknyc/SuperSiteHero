@@ -109,7 +109,7 @@ export function SafetyObservationDashboard({
       {onCreateObservation && (
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-foreground" className="heading-section">Safety Observations</h2>
+            <h2 className="text-2xl font-bold text-foreground heading-section">Safety Observations</h2>
             <p className="text-muted">Track and improve safety performance</p>
           </div>
           <Button onClick={onCreateObservation} size="lg" className="gap-2">

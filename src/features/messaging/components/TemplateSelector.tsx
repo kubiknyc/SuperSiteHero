@@ -66,7 +66,7 @@ function TemplateItem({
 }) {
   // Highlight search terms
   const highlightText = (text: string) => {
-    if (!searchQuery) return text
+    if (!searchQuery) {return text}
 
     const regex = new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
     const parts = text.split(regex)
@@ -98,7 +98,7 @@ function TemplateItem({
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-medium text-foreground dark:text-gray-100 truncate" className="heading-card">
+            <h4 className="font-medium text-foreground dark:text-gray-100 truncate heading-card">
               {highlightText(template.name)}
             </h4>
             {template.category && (
@@ -172,7 +172,7 @@ export function TemplateSelector({
 
   // Filter templates by search query
   const filteredTemplates = useMemo(() => {
-    if (!searchQuery) return templates
+    if (!searchQuery) {return templates}
 
     const query = searchQuery.toLowerCase()
     return templates.filter(

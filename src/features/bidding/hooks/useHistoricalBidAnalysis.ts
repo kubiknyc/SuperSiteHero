@@ -367,7 +367,7 @@ export function usePrefetchVendorHistory() {
   const { userProfile } = useAuth()
 
   return (vendorId: string, options?: { dateFrom?: string; dateTo?: string }) => {
-    if (!userProfile?.company_id) return
+    if (!userProfile?.company_id) {return}
 
     queryClient.prefetchQuery({
       queryKey: bidAnalysisKeys.vendorHistory(vendorId, options),

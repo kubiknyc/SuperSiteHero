@@ -3,10 +3,12 @@
 
 import * as pdfjs from 'pdfjs-dist'
 
-// Ensure PDF.js worker is configured
-// This should match the setup in the rest of the application
+// Ensure PDF.js worker is configured - use local copy from npm package
 if (typeof window !== 'undefined') {
-  pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+  ).toString()
 }
 
 /**

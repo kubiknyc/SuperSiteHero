@@ -256,7 +256,7 @@ function calculateStats(submittals: SubmittalWithDetails[]): AnalyticsStats {
   // Calculate overdue count
   const today = new Date()
   const overdue = pending.filter(s => {
-    if (!s.date_required) return false
+    if (!s.date_required) {return false}
     return parseISO(s.date_required) < today
   })
 
@@ -265,7 +265,7 @@ function calculateStats(submittals: SubmittalWithDetails[]): AnalyticsStats {
   completed.forEach(s => {
     if (s.date_submitted && s.date_returned) {
       const days = differenceInDays(parseISO(s.date_returned), parseISO(s.date_submitted))
-      if (days >= 0) leadTimes.push(days)
+      if (days >= 0) {leadTimes.push(days)}
     }
   })
 
@@ -281,7 +281,7 @@ function calculateStats(submittals: SubmittalWithDetails[]): AnalyticsStats {
   const monthlyData = new Map<string, { submitted: number; approved: number; rejected: number; leadTimes: number[] }>()
 
   submittals.forEach(s => {
-    if (!s.created_at) return
+    if (!s.created_at) {return}
     const date = parseISO(s.created_at)
     const key = format(date, 'yyyy-MM')
 
@@ -385,27 +385,27 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
 
   // Filter by date range
   const filteredSubmittals = useMemo(() => {
-    if (!submittals) return []
-    if (dateRange === 'all') return submittals
+    if (!submittals) {return []}
+    if (dateRange === 'all') {return submittals}
 
     const cutoffDate = new Date()
     cutoffDate.setDate(cutoffDate.getDate() - parseInt(dateRange))
 
     return submittals.filter(s => {
-      if (!s.created_at) return false
+      if (!s.created_at) {return false}
       return parseISO(s.created_at) >= cutoffDate
     })
   }, [submittals, dateRange])
 
   // Calculate stats
   const stats = useMemo(() => {
-    if (!filteredSubmittals.length) return null
+    if (!filteredSubmittals.length) {return null}
     return calculateStats(filteredSubmittals)
   }, [filteredSubmittals])
 
   // Prepare chart data
   const statusPieData = useMemo(() => {
-    if (!stats?.byStatus) return []
+    if (!stats?.byStatus) {return []}
     return Object.entries(stats.byStatus).map(([status, count]) => ({
       name: status.replace(/_/g, ' '),
       value: count,
@@ -414,7 +414,7 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
   }, [stats])
 
   const monthlyChartData = useMemo(() => {
-    if (!stats?.byMonth) return []
+    if (!stats?.byMonth) {return []}
     return stats.byMonth.map(m => ({
       name: `${m.month}/${m.year.toString().slice(-2)}`,
       submitted: m.submitted,
@@ -454,8 +454,8 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
 
   // Determine status based on average lead time
   const getLeadTimeStatus = (days: number): 'success' | 'warning' | 'danger' => {
-    if (days <= EXPECTED_LEAD_TIME_DAYS) return 'success'
-    if (days <= EXPECTED_LEAD_TIME_DAYS * 1.5) return 'warning'
+    if (days <= EXPECTED_LEAD_TIME_DAYS) {return 'success'}
+    if (days <= EXPECTED_LEAD_TIME_DAYS * 1.5) {return 'warning'}
     return 'danger'
   }
 
@@ -464,7 +464,7 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
       {/* Header with Date Range Filter */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground flex items-center gap-2" className="heading-section">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2 heading-section">
             <Timer className="h-6 w-6" />
             Lead Time Analytics
           </h2>
@@ -599,7 +599,7 @@ export function DedicatedSubmittalAnalytics({ projectId: propProjectId, classNam
               </div>
 
               <div className="mt-6 pt-4 border-t">
-                <h4 className="text-sm font-medium text-foreground mb-4" className="heading-card">Performance Summary</h4>
+                <h4 className="text-sm font-medium text-foreground mb-4 heading-card">Performance Summary</h4>
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-center justify-between mb-1">

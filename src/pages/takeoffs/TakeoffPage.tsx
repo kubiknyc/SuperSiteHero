@@ -264,7 +264,7 @@ export default function TakeoffPage() {
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-xl font-semibold" className="heading-page">Takeoff Measurements</h1>
+            <h1 className="text-xl font-semibold heading-page">Takeoff Measurements</h1>
             <p className="text-sm text-muted-foreground">
               Document ID: {documentId} • Page {pageNumber}
             </p>

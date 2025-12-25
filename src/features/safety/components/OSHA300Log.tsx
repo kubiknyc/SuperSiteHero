@@ -310,7 +310,7 @@ export function OSHA300Log({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold" className="heading-section">OSHA Form 300 - Log of Work-Related Injuries and Illnesses</h2>
+          <h2 className="text-lg font-semibold heading-section">OSHA Form 300 - Log of Work-Related Injuries and Illnesses</h2>
           {establishmentName && (
             <p className="text-sm text-muted">Establishment: {establishmentName}</p>
           )}

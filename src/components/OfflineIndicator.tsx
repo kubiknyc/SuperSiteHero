@@ -12,7 +12,7 @@ import {
   useOfflineStore,
 } from '@/stores/offline-store';
 import { OfflineClient } from '@/lib/api/offline-client';
-import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink } from 'lucide-react';
+import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -22,6 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from '@/components/ui/dialog';
 import { SyncStatusPanel } from '@/components/SyncStatusPanel';
 
@@ -181,7 +182,7 @@ export function OfflineIndicator() {
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-md">
-          <DialogHeader>
+          <DialogHeader className="relative">
             <DialogTitle className="flex items-center gap-2">
               <StatusIcon className={`h-5 w-5 ${status.color}`} />
               {status.label}
@@ -189,6 +190,16 @@ export function OfflineIndicator() {
             <DialogDescription>
               {isOnline ? 'Connected to server' : 'Working offline'}
             </DialogDescription>
+            <DialogClose asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-0 h-6 w-6"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogClose>
           </DialogHeader>
 
           <div className="space-y-4 py-4">

@@ -138,7 +138,7 @@ export function BulkActionToolbar({
 
   // Handle bulk clone
   const handleClone = useCallback(async () => {
-    if (!onBulkClone) return
+    if (!onBulkClone) {return}
 
     setOperationInProgress('clone')
     try {
@@ -153,7 +153,7 @@ export function BulkActionToolbar({
 
   // Handle export
   const handleExport = useCallback(async (format: 'json' | 'csv') => {
-    if (!onBulkExport) return
+    if (!onBulkExport) {return}
 
     setOperationInProgress('export')
     try {

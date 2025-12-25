@@ -510,7 +510,7 @@ export function ActivityFormDialog({
               <TabsContent value="dates" className="space-y-4 mt-4">
                 {/* Planned Dates */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium flex items-center gap-1" className="heading-card">
+                  <h4 className="text-sm font-medium flex items-center gap-1 heading-card">
                     <CalendarDays className="h-4 w-4" />
                     Planned Dates
                   </h4>
@@ -550,7 +550,7 @@ export function ActivityFormDialog({
                 {/* Actual Dates (edit mode only) */}
                 {isEditing && (
                   <div className="space-y-4">
-                    <h4 className="text-sm font-medium" className="heading-card">Actual Dates</h4>
+                    <h4 className="text-sm font-medium heading-card">Actual Dates</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="actual_start">Actual Start</Label>
@@ -595,7 +595,7 @@ export function ActivityFormDialog({
                 {/* Progress (edit mode only) */}
                 {isEditing && (
                   <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
-                    <h4 className="text-sm font-medium" className="heading-card">Progress</h4>
+                    <h4 className="text-sm font-medium heading-card">Progress</h4>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Status</Label>
@@ -710,7 +710,7 @@ export function ActivityFormDialog({
               <TabsContent value="advanced" className="space-y-4 mt-4">
                 {/* Constraints */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium flex items-center gap-1" className="heading-card">
+                  <h4 className="text-sm font-medium flex items-center gap-1 heading-card">
                     <AlertCircle className="h-4 w-4" />
                     Constraints
                   </h4>
@@ -748,7 +748,7 @@ export function ActivityFormDialog({
 
                 {/* Cost & Hours */}
                 <div className="space-y-4">
-                  <h4 className="text-sm font-medium flex items-center gap-1" className="heading-card">
+                  <h4 className="text-sm font-medium flex items-center gap-1 heading-card">
                     <DollarSign className="h-4 w-4" />
                     Budget
                   </h4>

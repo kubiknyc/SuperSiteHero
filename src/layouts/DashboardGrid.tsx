@@ -363,7 +363,7 @@ export function DashboardSection({
       {(title || description) && (
         <div className="px-4 tablet:px-6">
           {title && (
-            <h2 className="text-lg tablet:text-xl font-semibold text-foreground" className="heading-section">
+            <h2 className="text-lg tablet:text-xl font-semibold text-foreground heading-section">
               {title}
             </h2>
           )}

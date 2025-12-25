@@ -128,7 +128,7 @@ export function SafetyObservationCard({
       </div>
 
       {/* Title */}
-      <h3 className="mt-3 text-base font-semibold text-foreground line-clamp-2" className="heading-subsection">
+      <h3 className="mt-3 text-base font-semibold text-foreground line-clamp-2 heading-subsection">
         {observation.title}
       </h3>
 

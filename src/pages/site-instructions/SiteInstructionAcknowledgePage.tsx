@@ -56,7 +56,7 @@ export function SiteInstructionAcknowledgePage() {
               ) : (
                 <AlertCircle className="h-16 w-16 text-destructive mb-4" />
               )}
-              <h2 className="text-xl font-semibold mb-2" className="heading-section">
+              <h2 className="text-xl font-semibold mb-2 heading-section">
                 {isExpired ? 'QR Code Expired' : 'Invalid QR Code'}
               </h2>
               <p className="text-muted-foreground mb-6">

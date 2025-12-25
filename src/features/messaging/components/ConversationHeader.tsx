@@ -180,7 +180,7 @@ export function ConversationHeader({
 
       {/* Conversation info */}
       <div className="flex-1 min-w-0">
-        <h2 className="font-semibold truncate" className="heading-section">{getDisplayName()}</h2>
+        <h2 className="font-semibold truncate heading-section">{getDisplayName()}</h2>
         <p className={cn(
           'text-sm truncate',
           isOnline ? 'text-success' : 'text-muted-foreground'

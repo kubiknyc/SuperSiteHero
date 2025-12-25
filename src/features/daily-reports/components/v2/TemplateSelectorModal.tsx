@@ -170,7 +170,7 @@ export function TemplateSelectorModal({
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-medium text-foreground truncate" className="heading-card">
+                          <h4 className="font-medium text-foreground truncate heading-card">
                             {template.name}
                           </h4>
                           {template.is_default && (
@@ -240,7 +240,7 @@ export function TemplateSelectorModal({
         {/* Preview Section (when template is selected) */}
         {selectedTemplate && (
           <div className="border-t pt-4 mt-4">
-            <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">
+            <h4 className="text-sm font-medium text-secondary mb-2 heading-card">
               Template Preview: {selectedTemplate.name}
             </h4>
             <div className="grid grid-cols-2 gap-4 text-sm">

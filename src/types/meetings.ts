@@ -463,13 +463,13 @@ export function getMeetingStatusLabel(status: MeetingStatus | string): string {
  */
 export function getMeetingStatusColor(status: MeetingStatus | string): string {
   const colors: Record<string, string> = {
-    [MeetingStatus.SCHEDULED]: 'bg-blue-100 text-blue-800',
-    [MeetingStatus.IN_PROGRESS]: 'bg-yellow-100 text-yellow-800',
-    [MeetingStatus.COMPLETED]: 'bg-green-100 text-green-800',
-    [MeetingStatus.CANCELLED]: 'bg-red-100 text-red-800',
-    [MeetingStatus.POSTPONED]: 'bg-gray-100 text-gray-800',
+    [MeetingStatus.SCHEDULED]: 'bg-info-light text-blue-800',
+    [MeetingStatus.IN_PROGRESS]: 'bg-warning-light text-yellow-800',
+    [MeetingStatus.COMPLETED]: 'bg-success-light text-green-800',
+    [MeetingStatus.CANCELLED]: 'bg-error-light text-red-800',
+    [MeetingStatus.POSTPONED]: 'bg-muted text-foreground',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-muted text-foreground';
 }
 
 /**
@@ -490,12 +490,12 @@ export function getActionItemStatusLabel(status: ActionItemStatus | string): str
  */
 export function getActionItemStatusColor(status: ActionItemStatus | string): string {
   const colors: Record<string, string> = {
-    [ActionItemStatus.PENDING]: 'bg-gray-100 text-gray-800',
-    [ActionItemStatus.IN_PROGRESS]: 'bg-blue-100 text-blue-800',
-    [ActionItemStatus.COMPLETED]: 'bg-green-100 text-green-800',
-    [ActionItemStatus.CANCELLED]: 'bg-red-100 text-red-800',
+    [ActionItemStatus.PENDING]: 'bg-muted text-foreground',
+    [ActionItemStatus.IN_PROGRESS]: 'bg-info-light text-blue-800',
+    [ActionItemStatus.COMPLETED]: 'bg-success-light text-green-800',
+    [ActionItemStatus.CANCELLED]: 'bg-error-light text-red-800',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-muted text-foreground';
 }
 
 /**
@@ -516,12 +516,12 @@ export function getActionItemPriorityLabel(priority: ActionItemPriority | string
  */
 export function getActionItemPriorityColor(priority: ActionItemPriority | string): string {
   const colors: Record<string, string> = {
-    [ActionItemPriority.LOW]: 'bg-green-100 text-green-800',
-    [ActionItemPriority.MEDIUM]: 'bg-yellow-100 text-yellow-800',
+    [ActionItemPriority.LOW]: 'bg-success-light text-green-800',
+    [ActionItemPriority.MEDIUM]: 'bg-warning-light text-yellow-800',
     [ActionItemPriority.HIGH]: 'bg-orange-100 text-orange-800',
-    [ActionItemPriority.URGENT]: 'bg-red-100 text-red-800',
+    [ActionItemPriority.URGENT]: 'bg-error-light text-red-800',
   };
-  return colors[priority] || 'bg-gray-100 text-gray-800';
+  return colors[priority] || 'bg-muted text-foreground';
 }
 
 /**

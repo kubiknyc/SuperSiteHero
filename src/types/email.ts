@@ -350,7 +350,7 @@ export function formatParticipant(participant: EmailParticipant): string {
  * Format multiple participants
  */
 export function formatParticipants(participants: EmailParticipant[], maxDisplay = 3): string {
-  if (participants.length === 0) return ''
+  if (participants.length === 0) {return ''}
   if (participants.length <= maxDisplay) {
     return participants.map(formatParticipant).join(', ')
   }
@@ -376,9 +376,9 @@ export function getParticipantInitials(participant: EmailParticipant): string {
  * Format file size for display
  */
 export function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+  if (bytes < 1024) {return `${bytes} B`}
+  if (bytes < 1024 * 1024) {return `${(bytes / 1024).toFixed(1)} KB`}
+  if (bytes < 1024 * 1024 * 1024) {return `${(bytes / (1024 * 1024)).toFixed(1)} MB`}
   return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
 }
 
@@ -438,7 +438,7 @@ export function parseEmailAddresses(input: string): EmailParticipant[] {
 
   for (const part of parts) {
     const trimmed = part.trim()
-    if (!trimmed) continue
+    if (!trimmed) {continue}
 
     // Try to parse "Name <email>" format
     const match = trimmed.match(/^(.+?)\s*<(.+?)>$/)

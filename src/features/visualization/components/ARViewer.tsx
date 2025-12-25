@@ -308,7 +308,7 @@ function ARFallback({ onClose }: ARFallbackProps) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black text-white p-4">
       <AlertCircle className="h-16 w-16 text-warning mb-4" />
-      <h2 className="text-xl font-bold mb-2" className="heading-section">AR Not Supported</h2>
+      <h2 className="text-xl font-bold mb-2 heading-section">AR Not Supported</h2>
       <p className="text-disabled text-center mb-4 max-w-md">
         Your device or browser does not support WebXR AR. Try using:
       </p>
@@ -382,7 +382,7 @@ export function ARViewer({
 
   // Start camera for non-WebXR fallback
   const startCamera = useCallback(async () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {return;}
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -440,12 +440,12 @@ export function ARViewer({
   // Handle tap to place (simplified for camera fallback)
   const handleTapToPlace = useCallback(
     (event: React.MouseEvent | React.TouchEvent) => {
-      if (!isPlacing || !selectedModelUrl) return;
+      if (!isPlacing || !selectedModelUrl) {return;}
 
       // Get tap position and convert to 3D position
       // In real WebXR, this would use hit testing
       const rect = containerRef.current?.getBoundingClientRect();
-      if (!rect) return;
+      if (!rect) {return;}
 
       let clientX: number, clientY: number;
       if ('touches' in event) {
@@ -474,7 +474,7 @@ export function ARViewer({
 
   // Place the model
   const handlePlace = useCallback(async () => {
-    if (!previewPosition || !selectedModelUrl) return;
+    if (!previewPosition || !selectedModelUrl) {return;}
 
     const newModel: PlacedModel = {
       id: `model-${Date.now()}`,
@@ -589,7 +589,7 @@ export function ARViewer({
       {!isCameraActive && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
           <Smartphone className="h-16 w-16 mb-4 text-disabled" />
-          <h2 className="text-xl font-bold mb-2" className="heading-section">AR Viewer</h2>
+          <h2 className="text-xl font-bold mb-2 heading-section">AR Viewer</h2>
           <p className="text-disabled text-center mb-6 max-w-md px-4">
             Place 3D models in the real world using your device camera
           </p>

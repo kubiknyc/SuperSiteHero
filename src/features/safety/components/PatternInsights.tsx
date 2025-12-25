@@ -594,7 +594,7 @@ export function RecommendationsList({
                   </Badge>
                 </div>
 
-                <h4 className="font-medium text-sm mb-1" className="heading-card">{rec.title}</h4>
+                <h4 className="font-medium text-sm mb-1 heading-card">{rec.title}</h4>
                 <p className="text-sm text-muted-foreground mb-3">{rec.description}</p>
 
                 <div className="space-y-1.5">

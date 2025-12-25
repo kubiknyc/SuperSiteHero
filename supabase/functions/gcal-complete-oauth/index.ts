@@ -128,7 +128,7 @@ serve(async (req) => {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       connection = data
     } else {
       // Create new connection
@@ -150,7 +150,7 @@ serve(async (req) => {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       connection = data
     }
 

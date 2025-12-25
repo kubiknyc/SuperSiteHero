@@ -144,7 +144,7 @@ export function NearMissTrendDashboard({
       <Card className={className}>
         <CardContent className="py-8 text-center">
           <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-destructive" />
-          <h3 className="font-medium mb-2" className="heading-subsection">Failed to load analytics</h3>
+          <h3 className="font-medium mb-2 heading-subsection">Failed to load analytics</h3>
           <p className="text-muted-foreground text-sm mb-4">
             There was an error loading the near-miss analytics data.
           </p>
@@ -162,7 +162,7 @@ export function NearMissTrendDashboard({
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold" className="heading-section">Near-Miss Trend Analysis</h2>
+          <h2 className="text-2xl font-bold heading-section">Near-Miss Trend Analysis</h2>
           <p className="text-muted-foreground">
             Identify patterns before they become incidents
           </p>

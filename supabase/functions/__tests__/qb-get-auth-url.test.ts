@@ -68,7 +68,7 @@ Deno.test('qb-get-auth-url', async (t) => {
     assertEquals(request.method, 'POST')
     const body = await request.clone().json()
     assertEquals(body.companyId, 'company-123')
-    if (clientId) Deno.env.set('QB_CLIENT_ID', clientId)
+    if (clientId) {Deno.env.set('QB_CLIENT_ID', clientId)}
   })
 
   await t.step('should reject if QB_CLIENT_SECRET is missing', async () => {
@@ -76,7 +76,7 @@ Deno.test('qb-get-auth-url', async (t) => {
     Deno.env.delete('QB_CLIENT_SECRET')
     const request = createTestRequest('POST', { companyId: 'company-123' })
     assertEquals(request.method, 'POST')
-    if (clientSecret) Deno.env.set('QB_CLIENT_SECRET', clientSecret)
+    if (clientSecret) {Deno.env.set('QB_CLIENT_SECRET', clientSecret)}
   })
 
   await t.step('should reject if QB_REDIRECT_URI is missing', async () => {
@@ -84,7 +84,7 @@ Deno.test('qb-get-auth-url', async (t) => {
     Deno.env.delete('QB_REDIRECT_URI')
     const request = createTestRequest('POST', { companyId: 'company-123' })
     assertEquals(request.method, 'POST')
-    if (redirectUri) Deno.env.set('QB_REDIRECT_URI', redirectUri)
+    if (redirectUri) {Deno.env.set('QB_REDIRECT_URI', redirectUri)}
   })
 
   // Authentication Validation
@@ -306,7 +306,7 @@ Deno.test('qb-get-auth-url', async (t) => {
     Deno.env.delete('QB_CLIENT_ID')
     const request = createTestRequest('POST', { companyId: 'company-123' })
     assertEquals(request.method, 'POST')
-    if (clientId) Deno.env.set('QB_CLIENT_ID', clientId)
+    if (clientId) {Deno.env.set('QB_CLIENT_ID', clientId)}
   })
 
   // Multiple Request Handling

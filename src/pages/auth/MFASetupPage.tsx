@@ -112,7 +112,7 @@ Use these codes if you lose access to your authenticator app.
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
           <Shield className="mx-auto h-12 w-12 text-primary" />
-          <h2 className="mt-4 text-3xl font-bold text-foreground" className="heading-section">
+          <h2 className="mt-4 text-3xl font-bold text-foreground heading-section">
             Set Up Two-Factor Authentication
           </h2>
           <p className="mt-2 text-secondary">
@@ -126,7 +126,7 @@ Use these codes if you lose access to your authenticator app.
               <div className="flex items-start space-x-3">
                 <Smartphone className="h-5 w-5 text-primary mt-0.5" />
                 <div>
-                  <h3 className="font-semibold" className="heading-subsection">How it works</h3>
+                  <h3 className="font-semibold heading-subsection">How it works</h3>
                   <p className="text-sm text-secondary mt-1">
                     You'll use an authenticator app on your phone to generate
                     time-based verification codes when signing in.
@@ -167,7 +167,7 @@ Use these codes if you lose access to your authenticator app.
         {step === 'scan' && enrollmentData && (
           <Card className="p-6">
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg" className="heading-subsection">Scan QR Code</h3>
+              <h3 className="font-semibold text-lg heading-subsection">Scan QR Code</h3>
               <p className="text-sm text-secondary">
                 Open your authenticator app and scan this QR code to add your account.
               </p>
@@ -211,7 +211,7 @@ Use these codes if you lose access to your authenticator app.
         {step === 'verify' && (
           <Card className="p-6">
             <div className="space-y-4">
-              <h3 className="font-semibold text-lg" className="heading-subsection">Verify Setup</h3>
+              <h3 className="font-semibold text-lg heading-subsection">Verify Setup</h3>
               <p className="text-sm text-secondary">
                 Enter the 6-digit code from your authenticator app to verify setup.
               </p>
@@ -256,7 +256,7 @@ Use these codes if you lose access to your authenticator app.
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
                 <Shield className="h-5 w-5 text-success" />
-                <h3 className="font-semibold text-lg" className="heading-subsection">Save Backup Codes</h3>
+                <h3 className="font-semibold text-lg heading-subsection">Save Backup Codes</h3>
               </div>
 
               <Alert variant="warning">
@@ -310,7 +310,7 @@ Use these codes if you lose access to your authenticator app.
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg" className="heading-subsection">Setup Complete!</h3>
+                <h3 className="font-semibold text-lg heading-subsection">Setup Complete!</h3>
                 <p className="text-sm text-secondary mt-2">
                   Two-factor authentication is now enabled for your account.
                 </p>

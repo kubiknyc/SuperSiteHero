@@ -96,7 +96,7 @@ export function EVMDashboard({ projectId, companyId, projectName }: EVMDashboard
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2" className="heading-section">
+          <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2 heading-section">
             <Activity className="h-6 w-6 text-primary" />
             Earned Value Management
           </h2>

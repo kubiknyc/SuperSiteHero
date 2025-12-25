@@ -108,11 +108,11 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
             </div>
 
             {/* Title */}
-            <h1 className="text-4xl font-bold mb-4" className="heading-page">
+            <h1 className="text-4xl font-bold mb-4 heading-page">
               {pkg.coverSheetTitle || projectName || 'Project Name'}
             </h1>
             {pkg.coverSheetSubtitle && (
-              <h2 className="text-2xl text-secondary mb-8" className="heading-section">{pkg.coverSheetSubtitle}</h2>
+              <h2 className="text-2xl text-secondary mb-8 heading-section">{pkg.coverSheetSubtitle}</h2>
             )}
 
             {/* Package Name */}
@@ -172,7 +172,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
         {showTableOfContents && pkg.includeToc && (
           <div className="min-h-[11in] border border-input print:border-2 mb-8 print:mb-0 print:page-break-after-always">
             <div className="p-6 border-b border-input bg-surface">
-              <h2 className="text-2xl font-bold" className="heading-section">Table of Contents</h2>
+              <h2 className="text-2xl font-bold heading-section">Table of Contents</h2>
               <div className="text-sm text-muted mt-1">
                 {totalDrawings} Drawing{totalDrawings !== 1 ? 's' : ''} in Package
               </div>
@@ -181,7 +181,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
             <div className="p-6">
               {Object.entries(groupedItems).map(([section, items]) => (
                 <div key={section} className="mb-6">
-                  <h3 className="text-lg font-semibold text-secondary mb-3 pb-2 border-b border-border" className="heading-subsection">
+                  <h3 className="text-lg font-semibold text-secondary mb-3 pb-2 border-b border-border heading-subsection">
                     {section}
                   </h3>
                   <table className="w-full">
@@ -240,7 +240,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
         {showRevisionHistory && pkg.includeRevisionHistory && (
           <div className="min-h-[11in] border border-input print:border-2 print:page-break-after-always">
             <div className="p-6 border-b border-input bg-surface">
-              <h2 className="text-2xl font-bold" className="heading-section">Revision History</h2>
+              <h2 className="text-2xl font-bold heading-section">Revision History</h2>
               <div className="text-sm text-muted mt-1">
                 Document revision tracking
               </div>
@@ -276,7 +276,7 @@ export const PackageCoverSheet = forwardRef<HTMLDivElement, PackageCoverSheetPro
 
               {/* Drawing Revisions */}
               <div className="mt-8">
-                <h3 className="text-lg font-semibold text-secondary mb-4" className="heading-subsection">
+                <h3 className="text-lg font-semibold text-secondary mb-4 heading-subsection">
                   Drawing Revisions in Package
                 </h3>
                 <table className="w-full border-collapse">

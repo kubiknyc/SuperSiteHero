@@ -3,7 +3,9 @@
  * Tests for message entity integration and search functionality
  */
 
-import { describe, it, expect } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import {
   sanitizeSearchQuery,
   sanitizeDateRange,

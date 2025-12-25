@@ -182,7 +182,7 @@ async function syncGmailEmails(
         }
       )
 
-      if (!msgResponse.ok) continue
+      if (!msgResponse.ok) {continue}
 
       const message: GmailMessage = await msgResponse.json()
 
@@ -416,7 +416,7 @@ async function syncOutlookEmails(
 
 // Parse email recipients from header string
 function parseRecipients(header: string): Array<{ email: string; name: string }> {
-  if (!header) return []
+  if (!header) {return []}
 
   const recipients: Array<{ email: string; name: string }> = []
   const parts = header.split(',')

@@ -131,7 +131,7 @@ export function LookAheadSnapshotsPage() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
               <BarChart3 className="h-6 w-6" />
               PPC History
             </h1>
@@ -392,7 +392,7 @@ export function LookAheadSnapshotsPage() {
           ) : (
             <div className="text-center py-12">
               <Calendar className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h3 className="text-lg font-medium mb-2" className="heading-subsection">No snapshots yet</h3>
+              <h3 className="text-lg font-medium mb-2 heading-subsection">No snapshots yet</h3>
               <p className="text-muted-foreground mb-4">
                 Create your first weekly snapshot to start tracking PPC
               </p>

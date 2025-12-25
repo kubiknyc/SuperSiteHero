@@ -100,7 +100,7 @@ serve(async (req) => {
       .update(updateData)
       .eq('id', connectionId)
 
-    if (updateError) throw updateError
+    if (updateError) {throw updateError}
 
     console.log(`Token refreshed successfully for connection ${connectionId}`)
 

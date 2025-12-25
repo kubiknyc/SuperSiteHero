@@ -13,7 +13,9 @@
  * doesn't properly simulate Supabase's fluent query API.
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { historicalBidAnalysisApi } from './historical-bid-analysis'
 import { supabase } from '@/lib/supabase'
 import { format, subMonths } from 'date-fns'

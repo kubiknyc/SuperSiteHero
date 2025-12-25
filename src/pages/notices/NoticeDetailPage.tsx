@@ -72,7 +72,7 @@ export function NoticeDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertTriangle className="h-12 w-12 text-error mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 Notice Not Found
               </h3>
               <p className="text-secondary mb-6">
@@ -166,7 +166,7 @@ export function NoticeDetailPage() {
                 </div>
 
                 {/* Subject */}
-                <h1 className="text-2xl font-bold text-foreground mb-4" className="heading-page">
+                <h1 className="text-2xl font-bold text-foreground mb-4 heading-page">
                   {notice.subject}
                 </h1>
 

@@ -92,7 +92,7 @@ export function MorningBriefingCard({
           {/* Weather Section */}
           {data.weather && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
+              <h3 className="text-sm font-semibold flex items-center gap-2 heading-subsection">
                 {weatherIcon}
                 Weather
               </h3>
@@ -142,7 +142,7 @@ export function MorningBriefingCard({
           {/* Punch Items Section */}
           <section className="space-y-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
+              <h3 className="text-sm font-semibold flex items-center gap-2 heading-subsection">
                 <ClipboardCheck className="h-4 w-4" />
                 Punch Items
               </h3>
@@ -196,7 +196,7 @@ export function MorningBriefingCard({
           {/* Inspections Section */}
           {data.inspections.total > 0 && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
+              <h3 className="text-sm font-semibold flex items-center gap-2 heading-subsection">
                 <CheckCircle2 className="h-4 w-4" />
                 Scheduled Inspections ({data.inspections.total})
               </h3>
@@ -240,7 +240,7 @@ export function MorningBriefingCard({
           {/* Safety Alerts Section */}
           {data.safetyAlerts.total > 0 && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2 text-warning" className="heading-subsection">
+              <h3 className="text-sm font-semibold flex items-center gap-2 text-warning heading-subsection">
                 <HardHat className="h-4 w-4" />
                 Safety Alerts ({data.safetyAlerts.total})
               </h3>
@@ -275,7 +275,7 @@ export function MorningBriefingCard({
           {/* Schedule Milestones */}
           {data.schedule.milestones.length > 0 && (
             <section className="space-y-2">
-              <h3 className="text-sm font-semibold flex items-center gap-2" className="heading-subsection">
+              <h3 className="text-sm font-semibold flex items-center gap-2 heading-subsection">
                 <Calendar className="h-4 w-4" />
                 Upcoming Milestones
               </h3>

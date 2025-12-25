@@ -13,12 +13,12 @@ export default function Concept5BoldContrast() {
               <Zap className="w-8 h-8 text-cyan-400" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold" className="heading-page">JOBSIGHT</h1>
+              <h1 className="text-3xl font-bold heading-page">JOBSIGHT</h1>
               <p className="text-sm">CONCEPT 5: BOLD CONTRAST</p>
             </div>
           </div>
 
-          <h2 className="text-7xl font-bold mb-6 leading-none" className="heading-section">
+          <h2 className="text-7xl font-bold mb-6 leading-none heading-section">
             MAXIMUM<br/>CONTRAST
           </h2>
           <p className="text-xl mb-12 max-w-2xl leading-relaxed">
@@ -50,7 +50,7 @@ export default function Concept5BoldContrast() {
             <div className="bg-black text-white p-8 border-4 border-cyan-400">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="text-3xl font-bold mb-2" className="heading-subsection">DOWNTOWN TOWER</h3>
+                  <h3 className="text-3xl font-bold mb-2 heading-subsection">DOWNTOWN TOWER</h3>
                   <p className="text-cyan-400 font-bold">CONSTRUCTION PROJECT</p>
                 </div>
                 <div className="bg-cyan-400 text-black px-4 py-2 font-bold text-2xl">

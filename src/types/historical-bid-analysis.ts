@@ -536,9 +536,9 @@ export interface BidPerformanceReportResponse {
 export function getAccuracyRating(variancePercent: number): AccuracyRating {
   const absVariance = Math.abs(variancePercent)
 
-  if (absVariance <= 5) return 'excellent'
-  if (absVariance <= 10) return 'good'
-  if (absVariance <= 15) return 'fair'
+  if (absVariance <= 5) {return 'excellent'}
+  if (absVariance <= 10) {return 'good'}
+  if (absVariance <= 15) {return 'fair'}
   return 'poor'
 }
 
@@ -553,10 +553,10 @@ export function getAccuracyConfig(rating: AccuracyRating) {
  * Calculate reliability level from composite score
  */
 export function getReliabilityLevel(score: number): ReliabilityLevel {
-  if (score >= 95) return 'exceptional'
-  if (score >= 85) return 'high'
-  if (score >= 70) return 'moderate'
-  if (score >= 50) return 'low'
+  if (score >= 95) {return 'exceptional'}
+  if (score >= 85) {return 'high'}
+  if (score >= 70) {return 'moderate'}
+  if (score >= 50) {return 'low'}
   return 'poor'
 }
 
@@ -571,7 +571,7 @@ export function getReliabilityConfig(level: ReliabilityLevel) {
  * Determine trend direction from time series data
  */
 export function calculateTrendDirection(values: number[]): TrendDirection {
-  if (values.length < 2) return 'stable'
+  if (values.length < 2) {return 'stable'}
 
   // Simple linear regression slope
   const n = values.length
@@ -589,7 +589,7 @@ export function calculateTrendDirection(values: number[]): TrendDirection {
   const slope = numerator / denominator
   const threshold = yMean * 0.05 // 5% of mean
 
-  if (Math.abs(slope) < threshold) return 'stable'
+  if (Math.abs(slope) < threshold) {return 'stable'}
   return slope > 0 ? 'increasing' : 'decreasing'
 }
 
@@ -628,7 +628,7 @@ export function calculateReliabilityScore(metrics: {
  * Format currency for display
  */
 export function formatCurrency(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined) return '-'
+  if (amount === null || amount === undefined) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -641,7 +641,7 @@ export function formatCurrency(amount: number | null | undefined): string {
  * Format percentage for display
  */
 export function formatPercentage(value: number | null | undefined, decimals = 1): string {
-  if (value === null || value === undefined) return '-'
+  if (value === null || value === undefined) {return '-'}
   return `${value.toFixed(decimals)}%`
 }
 
@@ -665,7 +665,7 @@ export function getTrendColor(direction: TrendDirection): string {
  * Calculate win rate
  */
 export function calculateWinRate(wins: number, totalBids: number): number {
-  if (totalBids === 0) return 0
+  if (totalBids === 0) {return 0}
   return Math.round((wins / totalBids) * 1000) / 10 // Round to 1 decimal
 }
 
@@ -673,6 +673,6 @@ export function calculateWinRate(wins: number, totalBids: number): number {
  * Calculate variance percentage
  */
 export function calculateVariancePercentage(actual: number, estimated: number): number {
-  if (estimated === 0) return 0
+  if (estimated === 0) {return 0}
   return Math.round(((actual - estimated) / estimated) * 1000) / 10
 }

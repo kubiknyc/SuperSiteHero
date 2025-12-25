@@ -408,14 +408,14 @@ export function useModelLoader(
 
   // Get model statistics
   const getModelStats = useCallback(() => {
-    if (!state.model) return null;
+    if (!state.model) {return null;}
     return analyzeModel(state.model);
   }, [state.model]);
 
   // Animation controls
   const playAnimation = useCallback(
     (name: string) => {
-      if (!mixerRef.current || !state.model) return;
+      if (!mixerRef.current || !state.model) {return;}
 
       const clip = state.animations.find((a) => a.name === name);
       if (!clip) {

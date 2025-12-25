@@ -149,7 +149,7 @@ test.describe('PolishedVariant1Professional - Comprehensive Interactions', () =>
       // Tab to first link (back button)
       await page.keyboard.press('Tab');
 
-      let focused = page.locator(':focus');
+      const focused = page.locator(':focus');
       await expect(focused).toBeVisible();
 
       // Press Enter to activate

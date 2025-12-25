@@ -199,7 +199,7 @@ export function OSHA300LogPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2 heading-page">
               <ClipboardList className="h-7 w-7 text-error" />
               OSHA 300 Log
             </h1>
@@ -385,7 +385,7 @@ export function OSHA300LogPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <AlertTriangle className="h-12 w-12 mx-auto text-success mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No Recordable Incidents</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">No Recordable Incidents</h3>
               <p className="text-muted">
                 No OSHA recordable incidents for {selectedYear}
                 {selectedProjectId ? ' on this project' : ' company-wide'}.

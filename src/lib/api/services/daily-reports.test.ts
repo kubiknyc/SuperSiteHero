@@ -1,11 +1,20 @@
 /**
  * Daily Reports API Service Tests
+ *
+ * Comprehensive test suite covering:
+ * - CRUD operations with success and error cases
+ * - Query operations (by date, date range, project)
+ * - Status transitions (submit, approve, reject)
+ * - Input validation
+ * - Error handling and ApiErrorClass
+ * - Edge cases and data integrity
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { dailyReportsApi } from './daily-reports'
-import { apiClient } from '../client'
+import { vi } from 'vitest'
 
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
+
+// Mock the API client - factory function to avoid hoisting issues
 vi.mock('../client', () => ({
   apiClient: {
     select: vi.fn(),
@@ -15,6 +24,28 @@ vi.mock('../client', () => ({
     delete: vi.fn(),
   },
 }))
+
+// Mock validation schemas - factory function to avoid hoisting issues
+vi.mock('@/lib/validation', () => ({
+  dailyReportCreateSchema: {
+    safeParse: vi.fn(),
+  },
+  dailyReportUpdateSchema: {
+    safeParse: vi.fn(),
+  },
+}))
+
+// Mock Sentry (imported by client)
+vi.mock('@/lib/sentry', () => ({
+  captureException: vi.fn(),
+  addSentryBreadcrumb: vi.fn(),
+}))
+
+// Import after mocks are defined
+import { dailyReportsApi } from './daily-reports'
+import { apiClient } from '../client'
+import { ApiErrorClass } from '../errors'
+import { dailyReportCreateSchema, dailyReportUpdateSchema } from '@/lib/validation'
 
 describe('dailyReportsApi', () => {
   beforeEach(() => {
@@ -158,17 +189,18 @@ describe('dailyReportsApi', () => {
       updated_at: '2025-01-27T10:00:00Z',
     }
 
-    it('should create a new daily report', async () => {
+    it('should create a new daily report with valid data', async () => {
+      vi.mocked(dailyReportCreateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: createInput,
+      })
       vi.mocked(apiClient).insert.mockResolvedValue(createdReport)
 
       const result = await dailyReportsApi.createReport(createInput)
 
+      expect(dailyReportCreateSchema.safeParse).toHaveBeenCalledWith(createInput)
       expect(result.id).toBe('report-new')
-      expect(apiClient.insert).toHaveBeenCalledWith('daily_reports', expect.objectContaining({
-        project_id: createInput.project_id,
-        report_date: createInput.report_date,
-        reporter_id: createInput.reporter_id,
-      }))
+      expect(apiClient.insert).toHaveBeenCalledWith('daily_reports', createInput)
     })
 
     it('should validate input data before creating', async () => {
@@ -179,12 +211,54 @@ describe('dailyReportsApi', () => {
         status: 'draft' as const,
       }
 
-      await expect(dailyReportsApi.createReport(invalidInput as any)).rejects.toThrow()
+      vi.mocked(dailyReportCreateSchema.safeParse).mockReturnValue({
+        success: false,
+        error: {
+          issues: [
+            { path: ['project_id'], message: 'Project ID is required' },
+          ],
+        } as any,
+      })
+
+      await expect(dailyReportsApi.createReport(invalidInput as any)).rejects.toThrow(ApiErrorClass)
+      await expect(dailyReportsApi.createReport(invalidInput as any)).rejects.toMatchObject({
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid daily report data',
+      })
+      expect(apiClient.insert).not.toHaveBeenCalled()
+    })
+
+    it('should handle database constraint violations', async () => {
+      vi.mocked(dailyReportCreateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: createInput,
+      })
+      vi.mocked(apiClient).insert.mockRejectedValue(new Error('Unique constraint violation'))
+
+      await expect(dailyReportsApi.createReport(createInput)).rejects.toMatchObject({
+        code: 'CREATE_DAILY_REPORT_ERROR',
+        message: 'Failed to create daily report',
+      })
+    })
+
+    it('should preserve ApiErrorClass errors from client', async () => {
+      vi.mocked(dailyReportCreateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: createInput,
+      })
+      const apiError = new ApiErrorClass({
+        code: 'RLS_VIOLATION',
+        message: 'Permission denied',
+      })
+      vi.mocked(apiClient).insert.mockRejectedValue(apiError)
+
+      await expect(dailyReportsApi.createReport(createInput)).rejects.toThrow(apiError)
     })
   })
 
   describe('updateReport', () => {
-    it('should update a daily report', async () => {
+    it('should update a daily report with valid data', async () => {
+      const updateData = { weather_condition: 'cloudy' }
       const updatedReport = {
         id: 'report-1',
         project_id: 'proj-1',
@@ -193,32 +267,62 @@ describe('dailyReportsApi', () => {
         weather_condition: 'cloudy',
       }
 
+      vi.mocked(dailyReportUpdateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: updateData,
+      })
       vi.mocked(apiClient).update.mockResolvedValue(updatedReport)
 
-      const result = await dailyReportsApi.updateReport('report-1', {
-        weather_condition: 'cloudy',
-      })
+      const result = await dailyReportsApi.updateReport('report-1', updateData)
 
+      expect(dailyReportUpdateSchema.safeParse).toHaveBeenCalledWith(updateData)
       expect(result.weather_condition).toBe('cloudy')
-      expect(apiClient.update).toHaveBeenCalledWith('daily_reports', 'report-1', expect.objectContaining({
-        weather_condition: 'cloudy'
-      }))
+      expect(apiClient.update).toHaveBeenCalledWith('daily_reports', 'report-1', updateData)
     })
 
     it('should throw error for missing report ID', async () => {
-      await expect(dailyReportsApi.updateReport('', {})).rejects.toThrow(
-        'Report ID is required'
-      )
+      await expect(dailyReportsApi.updateReport('', {})).rejects.toThrow(ApiErrorClass)
+      await expect(dailyReportsApi.updateReport('', {})).rejects.toMatchObject({
+        code: 'REPORT_ID_REQUIRED',
+        message: 'Report ID is required',
+      })
     })
 
-    it('should validate update data', async () => {
+    it('should validate update data before updating', async () => {
       const invalidUpdate = {
         project_id: '',  // Invalid: can't update to empty project_id
       }
 
+      vi.mocked(dailyReportUpdateSchema.safeParse).mockReturnValue({
+        success: false,
+        error: {
+          issues: [{ path: ['project_id'], message: 'Invalid project ID' }],
+        } as any,
+      })
+
       await expect(
         dailyReportsApi.updateReport('report-1', invalidUpdate as any)
-      ).rejects.toThrow()
+      ).rejects.toThrow(ApiErrorClass)
+      await expect(
+        dailyReportsApi.updateReport('report-1', invalidUpdate as any)
+      ).rejects.toMatchObject({
+        code: 'VALIDATION_ERROR',
+        message: 'Invalid update data',
+      })
+      expect(apiClient.update).not.toHaveBeenCalled()
+    })
+
+    it('should handle concurrent update conflicts', async () => {
+      const updateData = { weather_condition: 'cloudy' }
+      vi.mocked(dailyReportUpdateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: updateData,
+      })
+      vi.mocked(apiClient).update.mockRejectedValue(new Error('Concurrent update conflict'))
+
+      await expect(dailyReportsApi.updateReport('report-1', updateData)).rejects.toMatchObject({
+        code: 'UPDATE_DAILY_REPORT_ERROR',
+      })
     })
   })
 
@@ -287,7 +391,7 @@ describe('dailyReportsApi', () => {
       const rejectedReport = {
         id: 'report-1',
         status: 'rejected',
-        rejection_reason: 'Incomplete weather data',
+        comments: 'Rejected: Incomplete weather data',
       }
 
       vi.mocked(apiClient).update.mockResolvedValue(rejectedReport)
@@ -295,13 +399,155 @@ describe('dailyReportsApi', () => {
       const result = await dailyReportsApi.rejectReport('report-1', 'Incomplete weather data')
 
       expect(result.status).toBe('rejected')
-      expect(result.rejection_reason).toBe('Incomplete weather data')
+      expect(result.comments).toContain('Rejected: Incomplete weather data')
       expect(apiClient.update).toHaveBeenCalledWith('daily_reports', 'report-1',
         expect.objectContaining({
           status: 'rejected',
-          rejection_reason: 'Incomplete weather data',
+          comments: 'Rejected: Incomplete weather data',
         })
       )
+    })
+
+    it('should prepend "Rejected:" to the reason', async () => {
+      const rejectedReport = {
+        id: 'report-1',
+        status: 'rejected',
+        comments: 'Rejected: Safety issues not addressed',
+      }
+      vi.mocked(apiClient).update.mockResolvedValue(rejectedReport)
+
+      await dailyReportsApi.rejectReport('report-1', 'Safety issues not addressed')
+
+      expect(apiClient.update).toHaveBeenCalledWith('daily_reports', 'report-1', {
+        status: 'rejected',
+        comments: 'Rejected: Safety issues not addressed',
+      })
+    })
+
+    it('should handle empty rejection reason', async () => {
+      const rejectedReport = {
+        id: 'report-1',
+        status: 'rejected',
+        comments: 'Rejected: ',
+      }
+      vi.mocked(apiClient).update.mockResolvedValue(rejectedReport)
+
+      await dailyReportsApi.rejectReport('report-1', '')
+
+      expect(apiClient.update).toHaveBeenCalledWith('daily_reports', 'report-1', {
+        status: 'rejected',
+        comments: 'Rejected: ',
+      })
+    })
+  })
+
+  describe('Edge Cases and Error Handling', () => {
+    it('should handle custom filters with null values', async () => {
+      vi.mocked(apiClient).select.mockResolvedValue([])
+
+      await dailyReportsApi.getProjectReports('proj-1', {
+        filters: [{ column: 'submitted_at', operator: 'eq', value: null }],
+      })
+
+      expect(apiClient.select).toHaveBeenCalled()
+    })
+
+    it('should handle empty arrays from database', async () => {
+      vi.mocked(apiClient).select.mockResolvedValue([])
+
+      const result = await dailyReportsApi.getProjectReports('proj-1')
+
+      expect(result).toEqual([])
+    })
+
+    it('should handle ApiErrorClass from API client', async () => {
+      const apiError = new ApiErrorClass({
+        code: 'RLS_VIOLATION',
+        message: 'Permission denied',
+        status: 403,
+      })
+      vi.mocked(apiClient).select.mockRejectedValue(apiError)
+
+      await expect(dailyReportsApi.getProjectReports('proj-1')).rejects.toThrow(apiError)
+      await expect(dailyReportsApi.getProjectReports('proj-1')).rejects.toMatchObject({
+        code: 'RLS_VIOLATION',
+        message: 'Permission denied',
+      })
+    })
+
+    it('should wrap generic errors in ApiErrorClass', async () => {
+      const genericError = new Error('Network timeout')
+      vi.mocked(apiClient).select.mockRejectedValue(genericError)
+
+      await expect(dailyReportsApi.getProjectReports('proj-1')).rejects.toThrow(ApiErrorClass)
+      await expect(dailyReportsApi.getProjectReports('proj-1')).rejects.toMatchObject({
+        code: 'FETCH_DAILY_REPORTS_ERROR',
+        message: 'Failed to fetch daily reports',
+      })
+    })
+
+    it('should handle special characters in text fields', async () => {
+      const dataWithSpecialChars = {
+        project_id: 'proj-1',
+        report_date: '2025-01-27',
+        work_performed: "O'Reilly's concrete work & steel installation (5-10%)",
+        safety_notes: 'Safety check: "All clear" - no issues',
+        created_by: 'user-789',
+      }
+
+      vi.mocked(dailyReportCreateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: dataWithSpecialChars,
+      })
+      vi.mocked(apiClient).insert.mockResolvedValue({ id: 'new', ...dataWithSpecialChars } as any)
+
+      await dailyReportsApi.createReport(dataWithSpecialChars)
+
+      expect(apiClient.insert).toHaveBeenCalledWith('daily_reports', dataWithSpecialChars)
+    })
+
+    it('should handle very long text content', async () => {
+      const longText = 'A'.repeat(10000)
+      const dataWithLongText = {
+        project_id: 'proj-1',
+        report_date: '2025-01-27',
+        work_performed: longText,
+        created_by: 'user-789',
+      }
+
+      vi.mocked(dailyReportCreateSchema.safeParse).mockReturnValue({
+        success: true,
+        data: dataWithLongText,
+      })
+      vi.mocked(apiClient).insert.mockResolvedValue({ id: 'new', ...dataWithLongText } as any)
+
+      await dailyReportsApi.createReport(dataWithLongText)
+
+      expect(apiClient.insert).toHaveBeenCalled()
+    })
+
+    it('should handle concurrent read operations', async () => {
+      const mockReport = { id: 'report-1', project_id: 'proj-1' }
+      vi.mocked(apiClient).selectOne.mockResolvedValue(mockReport)
+
+      const reads = await Promise.all([
+        dailyReportsApi.getReport('report-1'),
+        dailyReportsApi.getReport('report-1'),
+        dailyReportsApi.getReport('report-1'),
+      ])
+
+      expect(reads).toHaveLength(3)
+      expect(apiClient.selectOne).toHaveBeenCalledTimes(3)
+    })
+
+    it('should handle database foreign key violations on delete', async () => {
+      vi.mocked(apiClient).delete.mockRejectedValue(
+        new Error('Foreign key constraint violation')
+      )
+
+      await expect(dailyReportsApi.deleteReport('report-1')).rejects.toMatchObject({
+        code: 'DELETE_DAILY_REPORT_ERROR',
+      })
     })
   })
 })

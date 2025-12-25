@@ -192,7 +192,7 @@ function OverviewTab({
     return (
       <div className="text-center py-8">
         <span className="text-4xl">🤖</span>
-        <h3 className="text-lg font-medium mt-4" className="heading-subsection">AI Analysis Available</h3>
+        <h3 className="text-lg font-medium mt-4 heading-subsection">AI Analysis Available</h3>
         <p className="text-muted mt-2">
           Run AI analysis to extract text, detect category, and find similar documents.
         </p>
@@ -211,7 +211,7 @@ function OverviewTab({
     return (
       <div className="text-center py-8">
         <div className="inline-block animate-spin text-4xl">⚙️</div>
-        <h3 className="text-lg font-medium mt-4" className="heading-subsection">Processing...</h3>
+        <h3 className="text-lg font-medium mt-4 heading-subsection">Processing...</h3>
         <p className="text-muted mt-2">
           AI analysis is in progress. This may take a few moments.
         </p>

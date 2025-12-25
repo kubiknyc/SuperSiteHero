@@ -345,7 +345,7 @@ export function DailyReportsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="heading-page text-foreground dark:text-white" className="heading-page">Daily Reports</h1>
+            <h1 className="heading-page text-foreground dark:text-white heading-page">Daily Reports</h1>
             <p className="text-secondary mt-1">
               Track daily activities, weather, and workforce
             </p>
@@ -559,7 +559,7 @@ export function DailyReportsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <FileText className="h-12 w-12 text-disabled mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 No daily reports yet
               </h3>
               <p className="text-secondary mb-6">

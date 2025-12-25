@@ -20,7 +20,7 @@ export interface RfiAnsweredEmailData {
 
 export function generateRfiAnsweredEmail(data: RfiAnsweredEmailData): { html: string; text: string } {
   const content = `
-    <h1>RFI Answered</h1>
+    <h1 className="heading-page">RFI Answered</h1>
 
     <p>Hi ${data.recipientName},</p>
 

@@ -3,7 +3,9 @@
  * CRITICAL: These tests ensure budget adjustments are applied correctly when COs are approved
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { changeOrderBudgetIntegration } from './change-order-budget-integration'
 
 // Mock Supabase with chainable methods

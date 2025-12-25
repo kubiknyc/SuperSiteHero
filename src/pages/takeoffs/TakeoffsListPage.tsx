@@ -144,7 +144,7 @@ export default function TakeoffsListPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold" className="heading-page">Takeoffs</h1>
+          <h1 className="text-3xl font-bold heading-page">Takeoffs</h1>
           <p className="text-muted-foreground mt-1">
             {project?.name || 'Project'} - Measurement Management
           </p>

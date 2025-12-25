@@ -176,7 +176,7 @@ export function ExtractedMetadataCard({
         {/* Applied fields (read-only) */}
         {appliedFields.length > 0 && (
           <div>
-            <h4 className="text-xs font-medium text-muted mb-2" className="heading-card">Applied Fields</h4>
+            <h4 className="text-xs font-medium text-muted mb-2 heading-card">Applied Fields</h4>
             <div className="space-y-2">
               {appliedFields.map((field) => (
                 <MetadataFieldRow
@@ -193,7 +193,7 @@ export function ExtractedMetadataCard({
         {pendingFields.length > 0 && (
           <div>
             {appliedFields.length > 0 && (
-              <h4 className="text-xs font-medium text-muted mb-2" className="heading-card">Pending Fields</h4>
+              <h4 className="text-xs font-medium text-muted mb-2 heading-card">Pending Fields</h4>
             )}
             <div className="space-y-2">
               {pendingFields.map((field) => (

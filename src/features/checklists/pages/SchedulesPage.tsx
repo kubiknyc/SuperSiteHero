@@ -162,7 +162,7 @@ export function SchedulesPage() {
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3" className="heading-page">
+              <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3 heading-page">
                 <Repeat className="w-8 h-8 text-primary" />
                 Recurring Schedules
               </h1>
@@ -280,7 +280,7 @@ export function SchedulesPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <Repeat className="w-12 h-12 text-disabled mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                 {allSchedules.length === 0 ? 'No schedules yet' : 'No schedules match your filters'}
               </h3>
               <p className="text-secondary mb-4">
@@ -312,7 +312,7 @@ export function SchedulesPage() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-2">
-                          <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">{schedule.name}</h3>
+                          <h3 className="text-lg font-semibold text-foreground heading-subsection">{schedule.name}</h3>
                           <Badge className={getStatusColor(schedule.status)}>
                             {getStatusIcon(schedule.status)}
                             <span className="ml-1">{schedule.status}</span>

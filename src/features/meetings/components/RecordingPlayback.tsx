@@ -135,7 +135,7 @@ export function RecordingPlayback({
   };
 
   const toggleFullscreen = async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     if (!isFullscreen) {
       try {
@@ -163,7 +163,7 @@ export function RecordingPlayback({
   };
 
   const handleDownload = async () => {
-    if (!signedUrl) return;
+    if (!signedUrl) {return;}
 
     try {
       const response = await fetch(signedUrl);
@@ -183,7 +183,7 @@ export function RecordingPlayback({
 
   // Format time display
   const formatTime = (seconds: number): string => {
-    if (!isFinite(seconds)) return '0:00';
+    if (!isFinite(seconds)) {return '0:00';}
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);

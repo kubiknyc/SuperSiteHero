@@ -89,7 +89,7 @@ export function IncidentsListPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Safety Incidents</h1>
+            <h1 className="text-2xl font-bold text-foreground heading-page">Safety Incidents</h1>
             <p className="text-muted mt-1">
               Track and manage safety incidents across all projects
             </p>
@@ -172,7 +172,7 @@ export function IncidentsListPage() {
         {/* Severity Summary */}
         {stats && (
           <div className="bg-card rounded-lg border p-4 mb-6">
-            <h3 className="text-sm font-medium text-secondary mb-3" className="heading-subsection">By Severity</h3>
+            <h3 className="text-sm font-medium text-secondary mb-3 heading-subsection">By Severity</h3>
             <div className="flex flex-wrap gap-4">
               {Object.entries(SEVERITY_CONFIG).map(([severity, config]) => {
                 const count = stats.by_severity[severity as IncidentSeverity] || 0
@@ -269,7 +269,7 @@ export function IncidentsListPage() {
         ) : filteredIncidents.length === 0 ? (
           <div className="text-center py-12 bg-card rounded-lg border">
             <AlertTriangle className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">No incidents found</h3>
+            <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">No incidents found</h3>
             <p className="text-muted mt-2">
               {hasActiveFilters
                 ? 'Try adjusting your filters'

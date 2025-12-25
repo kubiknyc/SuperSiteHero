@@ -71,7 +71,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
             <div className="flex items-start justify-between">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2">
-                  <h3 className="font-semibold text-lg" className="heading-subsection">
+                  <h3 className="font-semibold text-lg heading-subsection">
                     {co.workflow_type?.prefix || 'CO'}-{String(co.number).padStart(3, '0')}
                   </h3>
                   <Badge className={getStatusColor(co.status)}>

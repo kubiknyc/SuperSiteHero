@@ -207,7 +207,7 @@ export function DedicatedSubmittalDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Submittal</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading Submittal</h3>
               <p className="text-secondary">{(error as Error)?.message || 'Submittal not found'}</p>
             </CardContent>
           </Card>
@@ -236,7 +236,7 @@ export function DedicatedSubmittalDetailPage() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold text-foreground" className="heading-page">{submittal.submittal_number}</h1>
+                  <h1 className="text-3xl font-bold text-foreground heading-page">{submittal.submittal_number}</h1>
                   {submittal.revision_number > 0 && (
                     <Badge variant="outline">Rev {submittal.revision_number}</Badge>
                   )}
@@ -379,7 +379,7 @@ export function DedicatedSubmittalDetailPage() {
                 {/* Add Review Form */}
                 {submittal.review_status !== 'not_submitted' && (
                   <div className="mt-6 pt-4 border-t space-y-4">
-                    <h4 className="font-medium text-foreground" className="heading-card">Add Review</h4>
+                    <h4 className="font-medium text-foreground heading-card">Add Review</h4>
                     <div>
                       <Label htmlFor="reviewStatus">Review Decision</Label>
                       <select

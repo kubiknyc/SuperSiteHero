@@ -118,7 +118,7 @@ export function SettingsPage() {
     <AppLayout>
       <div className="container max-w-4xl py-6 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">Settings</h1>
+          <h1 className="text-2xl font-bold heading-page">Settings</h1>
           <p className="text-muted-foreground">
             Manage your account settings and preferences
           </p>
@@ -126,7 +126,7 @@ export function SettingsPage() {
 
         {/* Appearance & App Settings */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold" className="heading-section">Appearance & App</h2>
+          <h2 className="text-lg font-semibold heading-section">Appearance & App</h2>
 
           {/* Theme Selector */}
           <Card>
@@ -159,7 +159,7 @@ export function SettingsPage() {
 
         {/* Settings Sections */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold" className="heading-section">Configuration</h2>
+          <h2 className="text-lg font-semibold heading-section">Configuration</h2>
           <div className="grid gap-4">
             {visibleSections.map((section) => {
               const Icon = section.icon

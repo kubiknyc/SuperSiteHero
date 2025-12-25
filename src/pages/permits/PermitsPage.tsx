@@ -131,7 +131,7 @@ export function PermitsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
               <FileCheck className="h-6 w-6" />
               Permits
             </h1>
@@ -300,7 +300,7 @@ export function PermitsPage() {
                           </div>
                           <div>
                             <div className="flex items-center gap-2">
-                              <h3 className="font-medium" className="heading-subsection">{permit.permit_name}</h3>
+                              <h3 className="font-medium heading-subsection">{permit.permit_name}</h3>
                               {permit.work_cannot_proceed_without && (
                                 <AlertCircle className="h-4 w-4 text-error" aria-label="Critical - Work cannot proceed without this permit" />
                               )}

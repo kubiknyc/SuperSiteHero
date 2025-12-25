@@ -36,13 +36,13 @@ export type NoticeType = typeof NOTICE_TYPES[number]['value']
 // =============================================
 
 export const NOTICE_STATUSES = [
-  { value: 'draft', label: 'Draft', color: 'bg-gray-100 text-gray-800' },
-  { value: 'sent', label: 'Sent', color: 'bg-blue-100 text-blue-800' },
+  { value: 'draft', label: 'Draft', color: 'bg-muted text-foreground' },
+  { value: 'sent', label: 'Sent', color: 'bg-info-light text-blue-800' },
   { value: 'received', label: 'Received', color: 'bg-indigo-100 text-indigo-800' },
   { value: 'acknowledged', label: 'Acknowledged', color: 'bg-purple-100 text-purple-800' },
-  { value: 'pending_response', label: 'Pending Response', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'responded', label: 'Responded', color: 'bg-green-100 text-green-800' },
-  { value: 'closed', label: 'Closed', color: 'bg-gray-100 text-gray-600' },
+  { value: 'pending_response', label: 'Pending Response', color: 'bg-warning-light text-yellow-800' },
+  { value: 'responded', label: 'Responded', color: 'bg-success-light text-green-800' },
+  { value: 'closed', label: 'Closed', color: 'bg-muted text-secondary' },
 ] as const
 
 export type NoticeStatus = typeof NOTICE_STATUSES[number]['value']
@@ -52,11 +52,11 @@ export type NoticeStatus = typeof NOTICE_STATUSES[number]['value']
 // =============================================
 
 export const RESPONSE_STATUSES = [
-  { value: 'pending', label: 'Pending', color: 'bg-yellow-100 text-yellow-800' },
-  { value: 'in_progress', label: 'In Progress', color: 'bg-blue-100 text-blue-800' },
+  { value: 'pending', label: 'Pending', color: 'bg-warning-light text-yellow-800' },
+  { value: 'in_progress', label: 'In Progress', color: 'bg-info-light text-blue-800' },
   { value: 'submitted', label: 'Submitted', color: 'bg-indigo-100 text-indigo-800' },
-  { value: 'accepted', label: 'Accepted', color: 'bg-green-100 text-green-800' },
-  { value: 'rejected', label: 'Rejected', color: 'bg-red-100 text-red-800' },
+  { value: 'accepted', label: 'Accepted', color: 'bg-success-light text-green-800' },
+  { value: 'rejected', label: 'Rejected', color: 'bg-error-light text-red-800' },
 ] as const
 
 export type ResponseStatus = typeof RESPONSE_STATUSES[number]['value']
@@ -145,7 +145,7 @@ export function getNoticeTypeLabel(type: string): string {
  */
 export function getNoticeStatusInfo(status: string): { label: string; color: string } {
   const found = NOTICE_STATUSES.find((s) => s.value === status)
-  return found || { label: status, color: 'bg-gray-100 text-gray-800' }
+  return found || { label: status, color: 'bg-muted text-foreground' }
 }
 
 /**
@@ -153,7 +153,7 @@ export function getNoticeStatusInfo(status: string): { label: string; color: str
  */
 export function getResponseStatusInfo(status: string): { label: string; color: string } {
   const found = RESPONSE_STATUSES.find((s) => s.value === status)
-  return found || { label: status, color: 'bg-gray-100 text-gray-800' }
+  return found || { label: status, color: 'bg-muted text-foreground' }
 }
 
 /**

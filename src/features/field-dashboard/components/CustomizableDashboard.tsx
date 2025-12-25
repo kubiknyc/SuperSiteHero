@@ -310,7 +310,7 @@ export function CustomizableDashboard({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <LayoutGrid className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-lg font-semibold" className="heading-section">Dashboard</h2>
+          <h2 className="text-lg font-semibold heading-section">Dashboard</h2>
           {hasUnsavedChanges && (
             <Badge variant="outline" className="text-warning">
               Unsaved
@@ -404,7 +404,7 @@ export function CustomizableDashboard({
         <Card className="py-12">
           <CardContent className="text-center">
             <LayoutGrid className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-medium mb-2" className="heading-subsection">No widgets yet</h3>
+            <h3 className="text-lg font-medium mb-2 heading-subsection">No widgets yet</h3>
             <p className="text-sm text-muted-foreground mb-4">
               Add widgets to customize your dashboard
             </p>

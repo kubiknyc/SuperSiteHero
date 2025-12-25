@@ -419,7 +419,7 @@ Industry Benchmarks (NAICS ${naicsCode}):
 
         {/* Formula Reference */}
         <div className="bg-surface rounded-lg p-4">
-          <h4 className="text-sm font-medium mb-3" className="heading-card">OSHA Rate Formulas</h4>
+          <h4 className="text-sm font-medium mb-3 heading-card">OSHA Rate Formulas</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
               <p className="font-medium">TRIR (Total Recordable Incident Rate)</p>

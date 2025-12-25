@@ -319,7 +319,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
       {/* Header with Date Range Filter */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-foreground flex items-center gap-2" className="heading-section">
+          <h2 className="text-xl font-bold text-foreground flex items-center gap-2 heading-section">
             <Timer className="h-6 w-6" />
             Lead Time Analytics
           </h2>
@@ -550,7 +550,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
                 </div>
 
                 <div className="pt-4 border-t">
-                  <h4 className="text-sm font-medium text-foreground mb-2" className="heading-card">Recommendations</h4>
+                  <h4 className="text-sm font-medium text-foreground mb-2 heading-card">Recommendations</h4>
                   <ul className="space-y-2 text-sm text-secondary">
                     {stats.averageSubmitToReviewDays > EXPECTED_TIMES.submitToReview && (
                       <li className="flex items-start gap-2">

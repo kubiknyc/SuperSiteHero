@@ -331,7 +331,7 @@ export function CloseoutDocumentList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold" className="heading-section">Closeout Documents</h2>
+          <h2 className="text-lg font-semibold heading-section">Closeout Documents</h2>
           <p className="text-sm text-muted">
             {filteredDocuments.length} document{filteredDocuments.length !== 1 ? 's' : ''}
           </p>

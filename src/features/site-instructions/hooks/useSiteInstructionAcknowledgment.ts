@@ -42,7 +42,7 @@ export function useAcknowledgmentsByInstruction(instructionId: string) {
         .eq('site_instruction_id', instructionId)
         .order('acknowledged_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch user info for each acknowledgment
       const results = await Promise.all(
@@ -93,7 +93,7 @@ export function useAcknowledgmentsByUser(userId: string) {
         .eq('acknowledged_by', userId)
         .order('acknowledged_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as (SiteInstructionAcknowledgment & {
         site_instruction: SiteInstructionWithQR
       })[]
@@ -115,11 +115,11 @@ export function usePendingAcknowledgments(userId: string) {
         .select('project_id')
         .eq('user_id', userId)
 
-      if (puError) throw puError
+      if (puError) {throw puError}
 
       const projectIds = (projectUsers || []).map((pu) => pu.project_id)
 
-      if (projectIds.length === 0) return []
+      if (projectIds.length === 0) {return []}
 
       // Get issued instructions that the user hasn't acknowledged
       const { data: instructions, error } = await supabase
@@ -134,7 +134,7 @@ export function usePendingAcknowledgments(userId: string) {
         .is('deleted_at', null)
         .order('due_date', { ascending: true, nullsFirst: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Filter out instructions the user has already acknowledged
       const results = await Promise.all(
@@ -146,7 +146,7 @@ export function usePendingAcknowledgments(userId: string) {
             .eq('acknowledged_by', userId)
             .single()
 
-          if (existingAck) return null
+          if (existingAck) {return null}
           return instruction
         })
       )
@@ -215,7 +215,7 @@ export function useCreateAcknowledgment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SiteInstructionAcknowledgment
     },
     onSuccess: (data, variables) => {
@@ -259,7 +259,7 @@ export function useGenerateQRCodeToken() {
         expires_in_days: expiresInDays,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data[0] as QRTokenResponse
     },
     onSuccess: (_, variables) => {
@@ -282,7 +282,7 @@ export function useInstructionByQRToken(token: string) {
         token,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       if (!data || data.length === 0) {
         throw new Error('Invalid or expired QR code')
       }
@@ -344,7 +344,7 @@ export function useUpdateQRExpiration() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, variables) => {
@@ -392,7 +392,7 @@ export function useSyncOfflineAcknowledgments() {
             .select()
             .single()
 
-          if (error) throw error
+          if (error) {throw error}
 
           offlineStore.markSynced(ack.id, data.id)
           results.success.push(ack.id)
@@ -424,7 +424,7 @@ export function useAcknowledgmentCount(instructionId: string) {
         .select('*', { count: 'exact', head: true })
         .eq('site_instruction_id', instructionId)
 
-      if (error) throw error
+      if (error) {throw error}
       return count || 0
     },
     enabled: !!instructionId,

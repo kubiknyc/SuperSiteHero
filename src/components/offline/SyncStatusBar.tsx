@@ -88,7 +88,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
   };
 
   const formatLastSync = () => {
-    if (!lastSyncTime) return 'Never';
+    if (!lastSyncTime) {return 'Never';}
 
     try {
       return formatDistanceToNow(lastSyncTime, { addSuffix: true });
@@ -98,14 +98,14 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
   };
 
   const handleManualSync = async () => {
-    if (!isOnline || isSyncing) return;
+    if (!isOnline || isSyncing) {return;}
     await SyncManager.forceSyncNow();
   };
 
   const getStatusColor = () => {
-    if (isSyncing) return 'bg-blue-500';
-    if (isOnline && pendingSyncs === 0) return 'bg-green-500';
-    if (isOnline && pendingSyncs > 0) return 'bg-warning';
+    if (isSyncing) {return 'bg-blue-500';}
+    if (isOnline && pendingSyncs === 0) {return 'bg-green-500';}
+    if (isOnline && pendingSyncs > 0) {return 'bg-warning';}
     return 'bg-red-500';
   };
 
@@ -117,8 +117,8 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
       return 'Syncing...';
     }
 
-    if (!isOnline) return 'Working offline';
-    if (pendingSyncs === 0) return 'All synced';
+    if (!isOnline) {return 'Working offline';}
+    if (pendingSyncs === 0) {return 'All synced';}
     return `${pendingSyncs} pending`;
   };
 
@@ -189,7 +189,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
         <div className="space-y-3">
           {/* Header */}
           <div>
-            <h4 className="font-medium text-sm" className="heading-card">Sync Status</h4>
+            <h4 className="font-medium text-sm heading-card">Sync Status</h4>
             <p className="text-xs text-muted-foreground">
               Network and synchronization information
             </p>

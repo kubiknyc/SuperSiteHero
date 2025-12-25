@@ -188,7 +188,7 @@ export function DedicatedRFIsPage() {
             </div>
 
             {/* Subject */}
-            <h3 className="font-medium text-foreground truncate" className="heading-subsection">{rfi.subject}</h3>
+            <h3 className="font-medium text-foreground truncate heading-subsection">{rfi.subject}</h3>
 
             {/* Question preview */}
             {rfi.question && (
@@ -255,7 +255,7 @@ export function DedicatedRFIsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Requests for Information</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Requests for Information</h1>
             <p className="text-secondary mt-1">Track RFIs with ball-in-court workflow and drawing references</p>
           </div>
           <div className="flex gap-2">
@@ -478,7 +478,7 @@ export function DedicatedRFIsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <FileQuestion className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">No Project Selected</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">No Project Selected</h3>
               <p className="text-secondary">Select a project above to view and manage RFIs</p>
             </CardContent>
           </Card>
@@ -493,7 +493,7 @@ export function DedicatedRFIsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading RFIs</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading RFIs</h3>
               <p className="text-secondary">{rfisError.message}</p>
             </CardContent>
           </Card>
@@ -591,7 +591,7 @@ export function DedicatedRFIsPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <FileQuestion className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 {rfis?.length === 0 ? 'No RFIs Yet' : 'No Matching RFIs'}
               </h3>
               <p className="text-secondary mb-4">

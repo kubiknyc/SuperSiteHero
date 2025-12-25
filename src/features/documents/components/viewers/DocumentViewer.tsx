@@ -103,7 +103,7 @@ export function DocumentViewer({
               <AlertCircle className="w-6 h-6 text-orange-500 absolute bottom-0 right-0" />
             </div>
           </div>
-          <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+          <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
             Unsupported file type
           </h3>
           <p className="text-sm text-secondary mb-2">

@@ -30,7 +30,7 @@ export function useMeetingRecordings(meetingId: string | undefined) {
   return useQuery({
     queryKey: recordingsKeys.list(meetingId || ''),
     queryFn: async () => {
-      if (!meetingId) throw new Error('Meeting ID required');
+      if (!meetingId) {throw new Error('Meeting ID required');}
 
       const { data, error } = await supabaseUntyped
         .from('meeting_recordings')
@@ -39,7 +39,7 @@ export function useMeetingRecordings(meetingId: string | undefined) {
         .is('deleted_at', null)
         .order('recorded_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MeetingRecording[];
     },
     enabled: !!meetingId,
@@ -53,7 +53,7 @@ export function useMeetingRecording(recordingId: string | undefined) {
   return useQuery({
     queryKey: recordingsKeys.detail(recordingId || ''),
     queryFn: async () => {
-      if (!recordingId) throw new Error('Recording ID required');
+      if (!recordingId) {throw new Error('Recording ID required');}
 
       const { data: recording, error: recordingError } = await supabaseUntyped
         .from('meeting_recordings')
@@ -61,7 +61,7 @@ export function useMeetingRecording(recordingId: string | undefined) {
         .eq('id', recordingId)
         .single();
 
-      if (recordingError) throw recordingError;
+      if (recordingError) {throw recordingError;}
 
       // Fetch segments if transcription is complete
       let segments: TranscriptionSegment[] = [];
@@ -93,7 +93,7 @@ export function useTranscriptionSegments(recordingId: string | undefined) {
   return useQuery({
     queryKey: recordingsKeys.segments(recordingId || ''),
     queryFn: async () => {
-      if (!recordingId) throw new Error('Recording ID required');
+      if (!recordingId) {throw new Error('Recording ID required');}
 
       const { data, error } = await supabaseUntyped
         .from('recording_transcription_segments')
@@ -101,7 +101,7 @@ export function useTranscriptionSegments(recordingId: string | undefined) {
         .eq('recording_id', recordingId)
         .order('segment_index', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TranscriptionSegment[];
     },
     enabled: !!recordingId,
@@ -136,8 +136,8 @@ export function useStartTranscription() {
         },
       });
 
-      if (error) throw error;
-      if (!data.success) throw new Error(data.error || 'Transcription failed');
+      if (error) {throw error;}
+      if (!data.success) {throw new Error(data.error || 'Transcription failed');}
 
       return data;
     },
@@ -163,7 +163,7 @@ export function useDeleteRecording() {
         .eq('id', recordingId)
         .single();
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {throw fetchError;}
 
       // Soft delete the record
       const { error } = await supabaseUntyped
@@ -171,7 +171,7 @@ export function useDeleteRecording() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', recordingId);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Optionally delete from storage
       if (recording.storage_path) {
@@ -195,14 +195,14 @@ export function useSearchTranscriptions(companyId: string | undefined, searchQue
   return useQuery({
     queryKey: recordingsKeys.search(companyId || '', searchQuery),
     queryFn: async () => {
-      if (!companyId || !searchQuery.trim()) return [];
+      if (!companyId || !searchQuery.trim()) {return [];}
 
       const { data, error } = await supabaseUntyped.rpc('search_recording_transcriptions', {
         p_company_id: companyId,
         p_search_query: searchQuery,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as TranscriptionSearchResult[];
     },
     enabled: !!companyId && searchQuery.trim().length >= 3,
@@ -216,13 +216,13 @@ export function useRecordingUrl(recording: MeetingRecording | undefined) {
   return useQuery({
     queryKey: ['recording-url', recording?.id],
     queryFn: async () => {
-      if (!recording) throw new Error('Recording required');
+      if (!recording) {throw new Error('Recording required');}
 
       const { data, error } = await supabase.storage
         .from(recording.storage_bucket)
         .createSignedUrl(recording.storage_path, 3600); // 1 hour expiry
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data.signedUrl;
     },
     enabled: !!recording?.storage_path,
@@ -251,7 +251,7 @@ export function useUpdateRecording() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as MeetingRecording;
     },
     onSuccess: (data) => {

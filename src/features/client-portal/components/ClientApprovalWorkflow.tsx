@@ -74,7 +74,7 @@ export function ClientApprovalWorkflow({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm() || !decision) return;
+    if (!validateForm() || !decision) {return;}
 
     const input: SubmitClientApprovalInput = {
       public_link_id: data.link.id,
@@ -95,10 +95,10 @@ export function ClientApprovalWorkflow({
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     setIsDrawing(true);
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     const rect = canvas.getBoundingClientRect();
     const x = 'touches' in e
@@ -113,13 +113,13 @@ export function ClientApprovalWorkflow({
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return;
+    if (!isDrawing) {return;}
 
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     const rect = canvas.getBoundingClientRect();
     const x = 'touches' in e
@@ -146,10 +146,10 @@ export function ClientApprovalWorkflow({
 
   const clearSignature = () => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {return;}
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {return;}
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     setSignatureData(null);
@@ -179,8 +179,8 @@ export function ClientApprovalWorkflow({
   };
 
   const DecisionIcon = ({ d }: { d: ClientDecision }) => {
-    if (d === 'approved') return <CheckCircle className="w-8 h-8" />;
-    if (d === 'rejected') return <XCircle className="w-8 h-8" />;
+    if (d === 'approved') {return <CheckCircle className="w-8 h-8" />;}
+    if (d === 'rejected') {return <XCircle className="w-8 h-8" />;}
     return <AlertCircle className="w-8 h-8" />;
   };
 
@@ -197,7 +197,7 @@ export function ClientApprovalWorkflow({
           )}>
             <DecisionIcon d={response.decision} />
           </div>
-          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
+          <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">
             Response Already Submitted
           </h2>
           <p className="text-secondary mb-4">
@@ -229,7 +229,7 @@ export function ClientApprovalWorkflow({
         <div className="flex items-start justify-between">
           <div>
             <p className="text-sm text-muted mb-1">{data.project.company_name}</p>
-            <h1 className="text-xl font-semibold text-foreground mb-2" className="heading-page">
+            <h1 className="text-xl font-semibold text-foreground mb-2 heading-page">
               {data.entity_details.name}
             </h1>
             <p className="text-sm text-secondary">
@@ -244,7 +244,7 @@ export function ClientApprovalWorkflow({
 
       {/* Entity Details */}
       <div className="bg-surface border-x px-6 py-4">
-        <h2 className="text-sm font-medium text-secondary mb-2" className="heading-section">Details</h2>
+        <h2 className="text-sm font-medium text-secondary mb-2 heading-section">Details</h2>
         <dl className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <dt className="text-muted">Type</dt>

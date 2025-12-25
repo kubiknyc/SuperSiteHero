@@ -162,7 +162,7 @@ export function ExecutionDetailPage() {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Checklist not found</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Checklist not found</h2>
           <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Checklists
@@ -203,7 +203,7 @@ export function ExecutionDetailPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{execution.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">{execution.name}</h1>
               {execution.description && (
                 <p className="text-secondary mb-3">{execution.description}</p>
               )}
@@ -360,7 +360,7 @@ export function ExecutionDetailPage() {
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <h3 className="font-medium text-foreground" className="heading-subsection">{templateItem.label}</h3>
+                          <h3 className="font-medium text-foreground heading-subsection">{templateItem.label}</h3>
                           <Badge variant="outline" className="text-xs">
                             {templateItem.item_type}
                           </Badge>

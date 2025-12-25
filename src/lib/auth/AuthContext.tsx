@@ -13,6 +13,7 @@ interface AuthContextType {
   user: User | null
   userProfile: UserProfile | null
   loading: boolean
+  isPending: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
 }
@@ -146,11 +147,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const isPending = userProfile?.approval_status === 'pending'
+
   const value = {
     session,
     user,
     userProfile,
     loading,
+    isPending,
     signIn,
     signOut,
   }

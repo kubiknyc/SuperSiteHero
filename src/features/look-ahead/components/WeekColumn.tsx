@@ -89,7 +89,7 @@ export function WeekColumn({
         week.weekNumber === 1 ? 'bg-info-light/50 border-blue-200' : 'bg-muted border-border'
       )}>
         <div className="flex items-center justify-between mb-1">
-          <h3 className="font-semibold text-foreground" className="heading-subsection">
+          <h3 className="font-semibold text-foreground heading-subsection">
             {getWeekLabel(week.weekNumber)}
           </h3>
           <Button

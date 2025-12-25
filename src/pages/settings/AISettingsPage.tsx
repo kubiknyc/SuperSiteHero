@@ -199,7 +199,7 @@ export default function AISettingsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
             <Bot className="w-6 h-6" />
             AI Settings
           </h1>
@@ -598,7 +598,7 @@ export default function AISettingsPage() {
 
               {/* Usage by Feature */}
               <div className="space-y-3">
-                <h4 className="font-medium" className="heading-card">Usage by Feature</h4>
+                <h4 className="font-medium heading-card">Usage by Feature</h4>
                 {usageStats?.byFeature.length === 0 ? (
                   <p className="text-sm text-muted-foreground">No usage data yet</p>
                 ) : (

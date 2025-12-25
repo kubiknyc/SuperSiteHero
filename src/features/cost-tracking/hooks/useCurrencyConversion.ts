@@ -49,7 +49,7 @@ export function useCurrencyConversion({
       fromCurrency: CurrencyCode,
       toCurrency: CurrencyCode
     ): Promise<ConversionResult | null> => {
-      if (!enabled) return null;
+      if (!enabled) {return null;}
 
       // Same currency - no conversion needed
       if (fromCurrency === toCurrency) {
@@ -112,7 +112,7 @@ export function useCurrencyConversion({
   // Get exchange rate
   const getRate = useCallback(
     async (fromCurrency: CurrencyCode, toCurrency: CurrencyCode) => {
-      if (!enabled) return null;
+      if (!enabled) {return null;}
 
       try {
         const rate = await getExchangeRate(fromCurrency, toCurrency);
@@ -128,7 +128,7 @@ export function useCurrencyConversion({
   // Create multi-currency amount
   const createMultiCurrencyAmount = useCallback(
     async (amount: number, currency: CurrencyCode) => {
-      if (!enabled) return null;
+      if (!enabled) {return null;}
 
       try {
         const multiAmount = await toMultiCurrencyAmount(amount, currency, baseCurrency);

@@ -276,7 +276,7 @@ function EmptyState({ filtered }: { filtered: boolean }) {
           <BellOff className="h-8 w-8 text-disabled" />
         )}
       </div>
-      <h3 className="text-sm font-medium text-foreground mb-1" className="heading-subsection">
+      <h3 className="text-sm font-medium text-foreground mb-1 heading-subsection">
         {filtered ? 'No matching notifications' : 'All caught up!'}
       </h3>
       <p className="text-xs text-muted">
@@ -370,7 +370,7 @@ export function NotificationCenter({
       <div className="flex items-center justify-between px-4 py-3 border-b border-border">
         <div className="flex items-center gap-2">
           <Bell className="h-5 w-5 text-secondary" />
-          <h3 className="font-semibold text-foreground" className="heading-subsection">Notifications</h3>
+          <h3 className="font-semibold text-foreground heading-subsection">Notifications</h3>
           {unreadCount > 0 && (
             <Badge variant="secondary" className="text-xs">
               {unreadCount} new

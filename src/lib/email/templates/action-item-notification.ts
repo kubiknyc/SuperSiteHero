@@ -108,7 +108,7 @@ export function generateActionItemAssignedEmail(
   const priorityColor = PRIORITY_COLORS[data.priority] || PRIORITY_COLORS.normal
 
   const content = `
-    <h1>New Action Item Assigned</h1>
+    <h1 className="heading-page">New Action Item Assigned</h1>
 
     <p>Hi ${data.recipientName},</p>
 
@@ -442,7 +442,7 @@ export function generateActionItemCarryoverEmail(
     : ''
 
   const content = `
-    <h1>Action Item Carried Forward</h1>
+    <h1 className="heading-page">Action Item Carried Forward</h1>
 
     <p>Hi ${data.recipientName},</p>
 

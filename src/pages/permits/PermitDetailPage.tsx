@@ -181,7 +181,7 @@ export function PermitDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold" className="heading-page">{permit.permit_name}</h1>
+                <h1 className="text-2xl font-bold heading-page">{permit.permit_name}</h1>
                 {permit.work_cannot_proceed_without && (
                   <AlertCircle className="h-5 w-5 text-error" aria-label="Critical permit" />
                 )}
@@ -514,7 +514,7 @@ export function PermitDetailPage() {
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-3" className="heading-card">Issuing Authority</h4>
+                <h4 className="font-medium mb-3 heading-card">Issuing Authority</h4>
                 <div className="space-y-3">
                   <div className="space-y-2">
                     <Label htmlFor="edit_issuing_agency">Agency</Label>
@@ -546,7 +546,7 @@ export function PermitDetailPage() {
               </div>
 
               <div className="border-t pt-4">
-                <h4 className="font-medium mb-3" className="heading-card">Dates</h4>
+                <h4 className="font-medium mb-3 heading-card">Dates</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="edit_application_date">Application Date</Label>

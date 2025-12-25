@@ -556,7 +556,7 @@ export function DocumentSignatureDialog({
                 {isDocuSignConnected ? (
                   <>
                     <div className="p-4 border rounded-lg bg-blue-50 border-blue-200">
-                      <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2" className="heading-card">
+                      <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2 heading-card">
                         <CheckCircle className="h-4 w-4" />
                         DocuSign Connected
                       </h4>
@@ -607,7 +607,7 @@ export function DocumentSignatureDialog({
                 ) : (
                   <div className="p-6 border rounded-lg bg-surface text-center">
                     <AlertTriangle className="h-10 w-10 mx-auto mb-3 text-warning" />
-                    <h4 className="font-medium text-foreground mb-2" className="heading-card">
+                    <h4 className="font-medium text-foreground mb-2 heading-card">
                       DocuSign Not Connected
                     </h4>
                     <p className="text-sm text-secondary mb-4">

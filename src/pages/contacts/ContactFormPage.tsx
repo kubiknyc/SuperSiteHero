@@ -117,7 +117,7 @@ export function ContactFormPage() {
       <div className="p-6 max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground" className="heading-page">
+          <h1 className="text-3xl font-bold text-foreground heading-page">
             {isEditMode ? 'Edit Contact' : 'Add New Contact'}
           </h1>
           <p className="text-secondary mt-1">

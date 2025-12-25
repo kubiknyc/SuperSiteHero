@@ -63,7 +63,7 @@ export function usePublicSharedReport(token: string | undefined) {
     enabled: !!token,
     // Don't retry on 404 errors
     retry: (failureCount, error: any) => {
-      if (error?.code === 'PGRST116') return false
+      if (error?.code === 'PGRST116') {return false}
       return failureCount < 2
     },
     // Cache public reports for 5 minutes
@@ -213,7 +213,7 @@ export function useRegenerateShareToken() {
  * Hook to get the share URL for a token
  */
 export function useShareUrl(token: string | undefined): string {
-  if (!token) return ''
+  if (!token) {return ''}
   return reportSharingApi.getShareUrl(token)
 }
 
@@ -221,7 +221,7 @@ export function useShareUrl(token: string | undefined): string {
  * Hook to get the embed code for a token
  */
 export function useEmbedCode(token: string | undefined, width?: string, height?: string): string {
-  if (!token) return ''
+  if (!token) {return ''}
   return reportSharingApi.getEmbedCode(token, width, height)
 }
 

@@ -41,7 +41,7 @@ export function generateCriticalObservationEmail(
   const severityColor = severityColors[data.severity.toLowerCase()] || '#6b7280'
 
   const content = `
-    <h1>Safety Observation Alert</h1>
+    <h1 className="heading-page">Safety Observation Alert</h1>
 
     <p>Hi ${data.recipientName},</p>
 
@@ -125,7 +125,7 @@ export function generateCorrectiveActionAssignedEmail(
   data: CorrectiveActionAssignedEmailData
 ): { html: string; text: string } {
   const content = `
-    <h1>Corrective Action Assigned</h1>
+    <h1 className="heading-page">Corrective Action Assigned</h1>
 
     <p>Hi ${data.recipientName},</p>
 
@@ -280,7 +280,7 @@ export function generateObservationResolvedEmail(
   data: ObservationResolvedEmailData
 ): { html: string; text: string } {
   const content = `
-    <h1>Observation Resolved</h1>
+    <h1 className="heading-page">Observation Resolved</h1>
 
     <p>Hi ${data.recipientName},</p>
 
@@ -390,7 +390,7 @@ export function generateWeeklySafetySummaryEmail(
       : '<tr><td colspan="3" style="padding: 16px; text-align: center; color: #16a34a;">No critical items this week!</td></tr>'
 
   const content = `
-    <h1>Weekly Safety Summary</h1>
+    <h1 className="heading-page">Weekly Safety Summary</h1>
 
     <p>Hi ${data.recipientName},</p>
 

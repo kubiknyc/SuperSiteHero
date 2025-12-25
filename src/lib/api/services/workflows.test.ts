@@ -1,7 +1,9 @@
 // File: /src/lib/api/services/workflows.test.ts
 // Test suite for workflows API service
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { workflowsApi } from './workflows'
 import * as apiClientModule from '../client'
 

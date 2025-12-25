@@ -80,7 +80,7 @@ export function VersionComparisonView({
         <CardHeader className="border-b sticky top-0 bg-card z-10">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold" className="heading-section">Version Comparison</h2>
+              <h2 className="text-2xl font-bold heading-section">Version Comparison</h2>
               <p className="text-sm text-secondary mt-1">
                 {olderVersion.name} - v{olderVersion.version} vs v{newerVersion.version}
               </p>
@@ -111,7 +111,7 @@ export function VersionComparisonView({
           {/* Metadata Comparison Table */}
           {showMetadata && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3" className="heading-subsection">Metadata Comparison</h3>
+              <h3 className="text-lg font-semibold mb-3 heading-subsection">Metadata Comparison</h3>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
                   <thead>
@@ -169,7 +169,7 @@ export function VersionComparisonView({
 
           {/* Side-by-Side File Viewers */}
           <div>
-            <h3 className="text-lg font-semibold mb-3" className="heading-subsection">Visual Comparison</h3>
+            <h3 className="text-lg font-semibold mb-3 heading-subsection">Visual Comparison</h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {/* Version 1 */}
               <div className="border rounded-lg overflow-hidden">
@@ -269,7 +269,7 @@ export function VersionComparisonView({
 
           {/* Summary */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-            <h4 className="font-semibold text-blue-900 mb-2" className="heading-card">Summary</h4>
+            <h4 className="font-semibold text-blue-900 mb-2 heading-card">Summary</h4>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>
                 • Time difference: {olderVersion.created_at ? formatDistanceToNow(new Date(olderVersion.created_at)) : 'Unknown'} → {newerVersion.created_at ? formatDistanceToNow(new Date(newerVersion.created_at)) : 'Unknown'}

@@ -123,7 +123,7 @@ export function PunchItemUpdate() {
   // Handle photo selection
   const handlePhotoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    if (files.length === 0) return
+    if (files.length === 0) {return}
 
     const newPhotos: PhotoPreview[] = []
 
@@ -174,7 +174,7 @@ export function PunchItemUpdate() {
 
   // Handle notes save
   const handleSaveNotes = async () => {
-    if (!id || !notes.trim()) return
+    if (!id || !notes.trim()) {return}
 
     try {
       await addNotes(id, notes.trim())
@@ -186,7 +186,7 @@ export function PunchItemUpdate() {
 
   // Handle completion request
   const handleRequestCompletion = async () => {
-    if (!id) return
+    if (!id) {return}
 
     // Require at least one photo
     if (photos.length === 0 && (!proofPhotos || proofPhotos.length === 0)) {
@@ -237,7 +237,7 @@ export function PunchItemUpdate() {
     return (
       <div className="flex flex-col items-center justify-center h-64 p-4 text-center">
         <AlertCircle className="h-12 w-12 text-error mb-4" />
-        <h2 className="text-lg font-semibold text-foreground mb-2" className="heading-section">Punch Item Not Found</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-2 heading-section">Punch Item Not Found</h2>
         <p className="text-sm text-muted mb-4">
           The punch item you're looking for doesn't exist or you don't have access.
         </p>
@@ -268,7 +268,7 @@ export function PunchItemUpdate() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-semibold text-foreground truncate" className="heading-page">
+            <h1 className="text-base font-semibold text-foreground truncate heading-page">
               {punchItem.title}
             </h1>
             <p className="text-xs text-muted">

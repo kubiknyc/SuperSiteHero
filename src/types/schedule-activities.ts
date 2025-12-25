@@ -616,11 +616,11 @@ export const ACTIVITY_STATUS_CONFIG: Record<
   ActivityStatus,
   { label: string; color: string; bgColor: string }
 > = {
-  not_started: { label: 'Not Started', color: 'text-gray-600', bgColor: 'bg-gray-100' },
-  in_progress: { label: 'In Progress', color: 'text-blue-600', bgColor: 'bg-blue-100' },
-  completed: { label: 'Completed', color: 'text-green-600', bgColor: 'bg-green-100' },
-  on_hold: { label: 'On Hold', color: 'text-amber-600', bgColor: 'bg-amber-100' },
-  cancelled: { label: 'Cancelled', color: 'text-red-600', bgColor: 'bg-red-100' },
+  not_started: { label: 'Not Started', color: 'text-secondary', bgColor: 'bg-muted' },
+  in_progress: { label: 'In Progress', color: 'text-primary', bgColor: 'bg-info-light' },
+  completed: { label: 'Completed', color: 'text-success', bgColor: 'bg-success-light' },
+  on_hold: { label: 'On Hold', color: 'text-warning', bgColor: 'bg-amber-100' },
+  cancelled: { label: 'Cancelled', color: 'text-error', bgColor: 'bg-error-light' },
 }
 
 /**

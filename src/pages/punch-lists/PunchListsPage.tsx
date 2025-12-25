@@ -164,7 +164,7 @@ export function PunchListsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Punch Lists</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Punch Lists</h1>
             <p className="text-secondary mt-1">Track and manage punch list items</p>
           </div>
           {activeProjectId && (
@@ -397,7 +397,7 @@ export function PunchListsPage() {
         {!isLoading && !error && (!filteredPunchItems || filteredPunchItems.length === 0) && (
           <Card>
             <CardContent className="p-12 text-center">
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 {punchItems && punchItems.length > 0 ? 'No matching punch items' : 'No punch items yet'}
               </h3>
               <p className="text-secondary mb-6">
@@ -445,7 +445,7 @@ export function PunchListsPage() {
                   <div className="space-y-3">
                     {/* Header */}
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-foreground flex-1" className="heading-subsection">{item.title}</h3>
+                      <h3 className="font-semibold text-foreground flex-1 heading-subsection">{item.title}</h3>
                       <div className="flex gap-1" onClick={(e) => e.stopPropagation()}>
                         <Button
                           variant="ghost"

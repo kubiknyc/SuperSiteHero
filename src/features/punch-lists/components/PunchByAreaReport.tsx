@@ -565,7 +565,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
         <Card>
           <CardContent className="p-12 text-center">
             <AlertTriangle className="h-12 w-12 text-error mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading Report</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading Report</h3>
             <p className="text-secondary mb-4">{error.message}</p>
             <Button onClick={() => refetch()}>Try Again</Button>
           </CardContent>
@@ -583,7 +583,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
               <BarChart3 className="h-6 w-6" />
               Punch by Area Report
             </h1>
@@ -758,7 +758,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
               {Object.entries(groupedAreas).map(([groupName, areas]) => (
                 <div key={groupName} className="mb-6">
                   {groupBy !== 'area' && (
-                    <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2" className="heading-subsection">
+                    <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2 heading-subsection">
                       <Building2 className="h-5 w-5 text-disabled" />
                       {groupName}
                       <Badge variant="secondary">{areas.length} areas</Badge>

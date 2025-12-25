@@ -53,7 +53,7 @@ export function generateChangeOrderStatusEmail(data: ChangeOrderStatusEmailData)
   const isNegativeChange = ['rejected', 'void'].includes(data.newStatus)
 
   const content = `
-    <h1>Change Order Status Update</h1>
+    <h1 className="heading-page">Change Order Status Update</h1>
 
     <p>Hi ${data.recipientName},</p>
 

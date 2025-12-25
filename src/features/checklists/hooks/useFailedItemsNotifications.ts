@@ -161,12 +161,12 @@ export function getFailureSeverity(failureRate: number): 'low' | 'medium' | 'hig
 export function getSeverityColor(severity: 'low' | 'medium' | 'high' | 'critical'): string {
   switch (severity) {
     case 'critical':
-      return 'text-red-700 bg-red-100 border-red-300'
+      return 'text-error-dark bg-error-light border-red-300'
     case 'high':
       return 'text-orange-700 bg-orange-100 border-orange-300'
     case 'medium':
-      return 'text-yellow-700 bg-yellow-100 border-yellow-300'
+      return 'text-yellow-700 bg-warning-light border-yellow-300'
     case 'low':
-      return 'text-blue-700 bg-blue-100 border-blue-300'
+      return 'text-primary-hover bg-info-light border-blue-300'
   }
 }

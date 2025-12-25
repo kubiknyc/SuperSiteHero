@@ -133,7 +133,7 @@ export function MarkupChangesList({
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="p-4 border-b bg-surface">
-        <h3 className="text-lg font-semibold mb-3" className="heading-subsection">Markup Changes</h3>
+        <h3 className="text-lg font-semibold mb-3 heading-subsection">Markup Changes</h3>
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-2 mb-4">

@@ -120,7 +120,7 @@ export function EnhancedConflictResolutionDialog({
     }
   }, [open, conflict]);
 
-  if (!conflict) return null;
+  if (!conflict) {return null;}
 
   const handleFieldSelection = (field: string, source: 'local' | 'server') => {
     const newSelections = new Map(fieldSelections);
@@ -200,8 +200,8 @@ export function EnhancedConflictResolutionDialog({
   };
 
   const formatValue = (value: unknown, compact = false): string => {
-    if (value === null || value === undefined) return 'Not set';
-    if (typeof value === 'boolean') return value ? 'Yes' : 'No';
+    if (value === null || value === undefined) {return 'Not set';}
+    if (typeof value === 'boolean') {return value ? 'Yes' : 'No';}
     if (typeof value === 'object') {
       const json = JSON.stringify(value, null, compact ? 0 : 2);
       return compact && json.length > 100 ? json.substring(0, 100) + '...' : json;
@@ -485,7 +485,7 @@ export function EnhancedConflictResolutionDialog({
                   {preview && (
                     <>
                       <div className="bg-muted/50 p-3 rounded-lg space-y-2">
-                        <h4 className="font-medium text-sm" className="heading-card">Merge Summary</h4>
+                        <h4 className="font-medium text-sm heading-card">Merge Summary</h4>
                         <div className="grid grid-cols-2 gap-3 text-sm">
                           <div>
                             <span className="text-muted-foreground">Strategy:</span>
@@ -506,7 +506,7 @@ export function EnhancedConflictResolutionDialog({
                         </div>
                       </div>
                       <div className="bg-card border rounded-lg p-4">
-                        <h4 className="font-medium text-sm mb-2" className="heading-card">Merged Result:</h4>
+                        <h4 className="font-medium text-sm mb-2 heading-card">Merged Result:</h4>
                         <pre className="text-xs whitespace-pre-wrap break-words font-mono">
                           {formatValue(preview.mergedData)}
                         </pre>

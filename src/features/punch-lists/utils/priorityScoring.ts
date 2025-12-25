@@ -94,8 +94,8 @@ export const DEFAULT_PRIORITY_CONFIG: PriorityScoringConfig = {
 
 export const PRIORITY_COLORS: Record<PriorityLevel, { color: string; bgColor: string; borderColor: string; label: string }> = {
   critical: {
-    color: 'text-red-700',
-    bgColor: 'bg-red-100',
+    color: 'text-error-dark',
+    bgColor: 'bg-error-light',
     borderColor: 'border-red-500',
     label: 'Critical',
   },
@@ -107,13 +107,13 @@ export const PRIORITY_COLORS: Record<PriorityLevel, { color: string; bgColor: st
   },
   medium: {
     color: 'text-yellow-700',
-    bgColor: 'bg-yellow-100',
-    borderColor: 'border-yellow-500',
+    bgColor: 'bg-warning-light',
+    borderColor: 'border-warning',
     label: 'Medium',
   },
   low: {
-    color: 'text-green-700',
-    bgColor: 'bg-green-100',
+    color: 'text-success-dark',
+    bgColor: 'bg-success-light',
     borderColor: 'border-green-500',
     label: 'Low',
   },

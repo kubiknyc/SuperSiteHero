@@ -41,7 +41,7 @@ interface StoredCredential {
  * Convert Base64URL to standard Base64
  */
 function base64UrlToBase64(base64Url: string): string {
-  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const padding = '='.repeat((4 - (base64.length % 4)) % 4);
   return base64 + padding;
 }

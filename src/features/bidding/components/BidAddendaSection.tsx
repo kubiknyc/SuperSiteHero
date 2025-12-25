@@ -64,7 +64,7 @@ function AddendumCard({ addendum }: AddendumCardProps) {
               </Badge>
             )}
           </div>
-          <h4 className="font-medium" className="heading-card">{addendum.title}</h4>
+          <h4 className="font-medium heading-card">{addendum.title}</h4>
           {addendum.description && (
             <p className="text-sm text-muted-foreground mt-1">{addendum.description}</p>
           )}

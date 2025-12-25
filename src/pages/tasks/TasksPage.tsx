@@ -122,7 +122,7 @@ export function TasksPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Tasks</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Tasks</h1>
             <p className="text-secondary mt-1">Manage and track project tasks</p>
           </div>
           {activeProjectId && (
@@ -288,7 +288,7 @@ export function TasksPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <Clock className="h-12 w-12 text-disabled mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">
                 {tasks && tasks.length > 0 ? 'No matching tasks' : 'No tasks yet'}
               </h3>
               <p className="text-secondary mb-6">
@@ -321,7 +321,7 @@ export function TasksPage() {
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
-                        <h3 className="font-semibold text-lg text-foreground" className="heading-subsection">{task.title}</h3>
+                        <h3 className="font-semibold text-lg text-foreground heading-subsection">{task.title}</h3>
                         <Badge variant={getStatusColor(task.status ?? 'pending')}>
                           {formatStatus(task.status ?? 'pending')}
                         </Badge>

@@ -194,7 +194,7 @@ export function DailyReportDetailPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-foreground" className="heading-page">
+              <h1 className="text-3xl font-bold text-foreground heading-page">
                 Daily Report - {report.report_date ? format(new Date(report.report_date), 'MMM d, yyyy') : 'N/A'}
               </h1>
               <div className="flex items-center gap-2 mt-2">

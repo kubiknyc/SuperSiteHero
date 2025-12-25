@@ -537,7 +537,7 @@ export function CategoryManager({
   }, [editingCategory, localCategories.length, onCategoryCreate, onCategoryUpdate])
 
   const handleConfirmDelete = useCallback(async () => {
-    if (!deletingCategory) return
+    if (!deletingCategory) {return}
 
     setIsSubmitting(true)
     try {
@@ -563,7 +563,7 @@ export function CategoryManager({
     <div className={cn('space-y-4', className)}>
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-medium" className="heading-subsection">Categories</h3>
+          <h3 className="text-lg font-medium heading-subsection">Categories</h3>
           <p className="text-sm text-muted">
             Organize your report templates into categories
           </p>

@@ -35,7 +35,7 @@ export function WeatherLogCard({ weatherLog, showProject = false, className = ''
               <WeatherConditionsIcon condition={weatherLog.conditions} className="w-8 h-8" />
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-lg" className="heading-subsection">
+                  <h3 className="font-semibold text-lg heading-subsection">
                     {getWeatherConditionLabel(weatherLog.conditions)}
                   </h3>
                   {weatherLog.work_stopped && (

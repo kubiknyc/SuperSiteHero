@@ -68,7 +68,7 @@ export function BudgetPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
               <DollarSign className="h-6 w-6" />
               Budget
             </h1>

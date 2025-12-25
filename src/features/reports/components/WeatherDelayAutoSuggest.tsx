@@ -171,7 +171,7 @@ function SuggestionCard({ suggestion, onSelect, disabled }: SuggestionCardProps)
               {suggestion.estimated_hours}h estimated
             </span>
           </div>
-          <h4 className="font-medium text-foreground" className="heading-card">{suggestion.title}</h4>
+          <h4 className="font-medium text-foreground heading-card">{suggestion.title}</h4>
           <p className="text-sm text-secondary mt-1">{suggestion.description}</p>
         </div>
         <button
@@ -286,7 +286,7 @@ function WeatherSummary({ weather, severity, compact }: WeatherSummaryProps) {
         <div className="flex items-center gap-3">
           <WeatherIcon condition={weather.condition.description} size={40} />
           <div>
-            <h3 className="font-semibold text-foreground" className="heading-subsection">{weather.condition.description}</h3>
+            <h3 className="font-semibold text-foreground heading-subsection">{weather.condition.description}</h3>
             <p className="text-sm text-muted">
               {new Date(weather.date).toLocaleDateString('en-US', {
                 weekday: 'long',
@@ -496,7 +496,7 @@ export function WeatherDelayAutoSuggest({
       {data.suggestions.length > 0 ? (
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-foreground flex items-center gap-2" className="heading-subsection">
+            <h3 className="font-medium text-foreground flex items-center gap-2 heading-subsection">
               <AlertTriangle className="w-4 h-4 text-orange-500" />
               Weather Delay Suggestions ({data.suggestions.length})
             </h3>

@@ -223,7 +223,7 @@ export function MarkupHistoryPanel({
         {/* Header with Search */}
         <div className="p-3 border-b bg-surface">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="font-medium text-sm" className="heading-card">Markup History</h4>
+            <h4 className="font-medium text-sm heading-card">Markup History</h4>
             <Badge variant="secondary" className="text-xs">
               {filteredMarkups.length} markup{filteredMarkups.length !== 1 ? 's' : ''}
             </Badge>

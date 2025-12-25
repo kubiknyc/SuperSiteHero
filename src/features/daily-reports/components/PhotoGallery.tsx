@@ -210,7 +210,7 @@ export function PhotoGallery({ photos, onRemove, onUpdateCaption, readOnly = fal
           >
             {/* Header */}
             <div className="p-4 border-b flex items-center justify-between">
-              <h3 className="font-semibold text-lg" className="heading-subsection">{selectedPhoto.metadata.filename}</h3>
+              <h3 className="font-semibold text-lg heading-subsection">{selectedPhoto.metadata.filename}</h3>
               <Button variant="ghost" size="sm" onClick={() => setSelectedPhoto(null)}>
                 <X className="h-5 w-5" />
               </Button>

@@ -74,7 +74,7 @@ export default function DrawingRegisterPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
             <FileText className="h-6 w-6" />
             Drawing Register
           </h1>
@@ -228,7 +228,7 @@ export default function DrawingRegisterPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium" className="heading-subsection">No drawings found</h3>
+            <h3 className="text-lg font-medium heading-subsection">No drawings found</h3>
             <p className="text-muted-foreground mb-4">
               {search || disciplineFilter !== 'all' || ifcFilter !== 'all'
                 ? 'Try adjusting your filters'

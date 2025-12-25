@@ -137,7 +137,7 @@ export function MFAVerifyPage() {
       <div className="max-w-md mx-auto">
         <div className="text-center mb-8">
           <Shield className="mx-auto h-12 w-12 text-primary" />
-          <h2 className="mt-4 text-3xl font-bold text-foreground" className="heading-section">
+          <h2 className="mt-4 text-3xl font-bold text-foreground heading-section">
             Two-Factor Authentication
           </h2>
           <p className="mt-2 text-secondary">

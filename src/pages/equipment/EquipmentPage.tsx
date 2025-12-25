@@ -57,7 +57,7 @@ export function EquipmentPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
               <Truck className="h-6 w-6" />
               Equipment
             </h1>
@@ -180,7 +180,7 @@ export function EquipmentPage() {
                         <Truck className="h-6 w-6 text-secondary" />
                       </div>
                       <div>
-                        <h3 className="font-medium" className="heading-subsection">{eq.name}</h3>
+                        <h3 className="font-medium heading-subsection">{eq.name}</h3>
                         <p className="text-sm text-muted">
                           {eq.equipment_id && `ID: ${eq.equipment_id}`}
                           {eq.equipment_id && eq.serial_number && ' | '}

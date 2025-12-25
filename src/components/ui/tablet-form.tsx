@@ -122,7 +122,7 @@ const TabletFormField = React.forwardRef<HTMLDivElement, TabletFormFieldProps>(
 
     // Determine column span class
     const colSpanClass = React.useMemo(() => {
-      if (fullWidth) return 'col-span-full';
+      if (fullWidth) {return 'col-span-full';}
       if (colSpan) {
         return {
           1: 'col-span-1',

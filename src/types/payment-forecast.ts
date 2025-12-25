@@ -47,13 +47,13 @@ export const PAYMENT_STATUSES: Array<{
   color: string;
   bgColor: string;
 }> = [
-  { value: 'scheduled', label: 'Scheduled', color: 'text-blue-700', bgColor: 'bg-blue-100' },
-  { value: 'pending_approval', label: 'Pending Approval', color: 'text-yellow-700', bgColor: 'bg-yellow-100' },
-  { value: 'approved', label: 'Approved', color: 'text-green-700', bgColor: 'bg-green-100' },
+  { value: 'scheduled', label: 'Scheduled', color: 'text-primary-hover', bgColor: 'bg-info-light' },
+  { value: 'pending_approval', label: 'Pending Approval', color: 'text-yellow-700', bgColor: 'bg-warning-light' },
+  { value: 'approved', label: 'Approved', color: 'text-success-dark', bgColor: 'bg-success-light' },
   { value: 'processing', label: 'Processing', color: 'text-indigo-700', bgColor: 'bg-indigo-100' },
   { value: 'completed', label: 'Completed', color: 'text-emerald-700', bgColor: 'bg-emerald-100' },
-  { value: 'overdue', label: 'Overdue', color: 'text-red-700', bgColor: 'bg-red-100' },
-  { value: 'cancelled', label: 'Cancelled', color: 'text-gray-700', bgColor: 'bg-gray-100' },
+  { value: 'overdue', label: 'Overdue', color: 'text-error-dark', bgColor: 'bg-error-light' },
+  { value: 'cancelled', label: 'Cancelled', color: 'text-secondary', bgColor: 'bg-muted' },
 ];
 
 export const PAYMENT_PRIORITIES: Array<{

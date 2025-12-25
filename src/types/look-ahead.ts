@@ -103,22 +103,22 @@ export const ACTIVITY_STATUS_CONFIG: Record<
 > = {
   planned: {
     label: 'Planned',
-    color: 'text-blue-700',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary-hover',
+    bgColor: 'bg-info-light',
     borderColor: 'border-blue-300',
     icon: 'calendar',
   },
   in_progress: {
     label: 'In Progress',
     color: 'text-yellow-700',
-    bgColor: 'bg-yellow-100',
+    bgColor: 'bg-warning-light',
     borderColor: 'border-yellow-300',
     icon: 'loader',
   },
   completed: {
     label: 'Completed',
-    color: 'text-green-700',
-    bgColor: 'bg-green-100',
+    color: 'text-success-dark',
+    bgColor: 'bg-success-light',
     borderColor: 'border-green-300',
     icon: 'check-circle',
   },
@@ -131,16 +131,16 @@ export const ACTIVITY_STATUS_CONFIG: Record<
   },
   blocked: {
     label: 'Blocked',
-    color: 'text-red-700',
-    bgColor: 'bg-red-100',
+    color: 'text-error-dark',
+    bgColor: 'bg-error-light',
     borderColor: 'border-red-300',
     icon: 'alert-triangle',
   },
   cancelled: {
     label: 'Cancelled',
-    color: 'text-gray-500',
-    bgColor: 'bg-gray-100',
-    borderColor: 'border-gray-300',
+    color: 'text-muted',
+    bgColor: 'bg-muted',
+    borderColor: 'border-input',
     icon: 'x-circle',
   },
 }
@@ -160,20 +160,20 @@ export const MAKE_READY_STATUS_CONFIG: Record<
   will_do: {
     label: 'Will Do',
     description: 'Committed for this week',
-    color: 'text-green-700',
-    bgColor: 'bg-green-100',
+    color: 'text-success-dark',
+    bgColor: 'bg-success-light',
   },
   should_do: {
     label: 'Should Do',
     description: 'Should be done but not yet committed',
-    color: 'text-blue-700',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary-hover',
+    bgColor: 'bg-info-light',
   },
   can_do: {
     label: 'Can Do',
     description: 'Ready to execute (constraints removed)',
     color: 'text-yellow-700',
-    bgColor: 'bg-yellow-100',
+    bgColor: 'bg-warning-light',
   },
   did_do: {
     label: 'Did Do',
@@ -718,15 +718,15 @@ export function getPPCStatusColor(ppc: number): {
   label: string
 } {
   if (ppc >= 80) {
-    return { color: 'text-green-700', bgColor: 'bg-green-100', label: 'Good' }
+    return { color: 'text-success-dark', bgColor: 'bg-success-light', label: 'Good' }
   }
   if (ppc >= 60) {
-    return { color: 'text-yellow-700', bgColor: 'bg-yellow-100', label: 'Fair' }
+    return { color: 'text-yellow-700', bgColor: 'bg-warning-light', label: 'Fair' }
   }
   if (ppc >= 40) {
     return { color: 'text-orange-700', bgColor: 'bg-orange-100', label: 'Poor' }
   }
-  return { color: 'text-red-700', bgColor: 'bg-red-100', label: 'Critical' }
+  return { color: 'text-error-dark', bgColor: 'bg-error-light', label: 'Critical' }
 }
 
 /**

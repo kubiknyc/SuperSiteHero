@@ -117,7 +117,7 @@ export function MyApprovalsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Approvals</h1>
+            <h1 className="text-2xl font-bold text-foreground heading-page">Approvals</h1>
             <p className="text-muted mt-1">
               {activeTab === 'pending'
                 ? 'Items waiting for your approval'
@@ -209,7 +209,7 @@ export function MyApprovalsPage() {
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            <h3 className="mt-2 text-sm font-medium text-foreground" className="heading-subsection">
+            <h3 className="mt-2 text-sm font-medium text-foreground heading-subsection">
               {activeTab === 'pending'
                 ? 'No pending approvals'
                 : 'No approval requests'}

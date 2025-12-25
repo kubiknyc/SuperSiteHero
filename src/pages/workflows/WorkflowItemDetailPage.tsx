@@ -98,7 +98,7 @@ export function WorkflowItemDetailPage() {
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold" className="heading-page">{item.title}</h1>
+            <h1 className="text-3xl font-bold heading-page">{item.title}</h1>
             {item.reference_number && (
               <p className="text-secondary">Ref: {item.reference_number}</p>
             )}

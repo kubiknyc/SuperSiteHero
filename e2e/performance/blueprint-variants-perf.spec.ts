@@ -261,7 +261,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
       const allElements = document.querySelectorAll('*');
       const depth = (element: Element, currentDepth = 0): number => {
         const children = Array.from(element.children);
-        if (children.length === 0) return currentDepth;
+        if (children.length === 0) {return currentDepth;}
         return Math.max(...children.map(child => depth(child, currentDepth + 1)));
       };
 
@@ -373,7 +373,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
         // Calculate by type
         const byType = resources.reduce((acc, r) => {
           const type = r.initiatorType;
-          if (!acc[type]) acc[type] = { count: 0, size: 0 };
+          if (!acc[type]) {acc[type] = { count: 0, size: 0 };}
           acc[type].count++;
           acc[type].size += r.transferSize || 0;
           return acc;

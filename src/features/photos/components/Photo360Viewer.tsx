@@ -77,7 +77,7 @@ export function Photo360Viewer({
 
   // Initialize viewer
   useEffect(() => {
-    if (!containerRef.current || !photoUrl) return;
+    if (!containerRef.current || !photoUrl) {return;}
 
     setIsLoading(true);
     setError(null);
@@ -157,7 +157,7 @@ export function Photo360Viewer({
 
   // Toggle fullscreen
   const toggleFullscreen = useCallback(async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     try {
       if (!document.fullscreenElement) {
@@ -172,7 +172,7 @@ export function Photo360Viewer({
 
   // Reset view to initial position
   const resetView = useCallback(() => {
-    if (!viewerRef.current) return;
+    if (!viewerRef.current) {return;}
 
     viewerRef.current.animate({
       yaw: (defaultHeading * Math.PI) / 180,
@@ -184,10 +184,10 @@ export function Photo360Viewer({
 
   // Toggle gyroscope
   const toggleGyroscope = useCallback(async () => {
-    if (!viewerRef.current) return;
+    if (!viewerRef.current) {return;}
 
     const gyroPlugin = viewerRef.current.getPlugin<GyroscopePlugin>(GyroscopePlugin);
-    if (!gyroPlugin) return;
+    if (!gyroPlugin) {return;}
 
     try {
       if (gyroscopeEnabled) {

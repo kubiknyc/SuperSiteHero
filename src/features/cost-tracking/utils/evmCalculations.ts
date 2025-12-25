@@ -114,7 +114,7 @@ export function calculateSV(ev: number, pv: number): number {
  * @returns Percentage variance
  */
 export function calculateCVPercent(cv: number, ev: number): number {
-  if (ev === 0) return 0;
+  if (ev === 0) {return 0;}
   return (cv / ev) * 100;
 }
 
@@ -127,7 +127,7 @@ export function calculateCVPercent(cv: number, ev: number): number {
  * @returns Percentage variance
  */
 export function calculateSVPercent(sv: number, pv: number): number {
-  if (pv === 0) return 0;
+  if (pv === 0) {return 0;}
   return (sv / pv) * 100;
 }
 
@@ -146,8 +146,8 @@ export function calculateSVPercent(sv: number, pv: number): number {
  * @returns Estimated final cost
  */
 export function calculateEAC(bac: number, cpi: number): number {
-  if (cpi === 0) return Infinity;
-  if (cpi === Infinity) return 0;
+  if (cpi === 0) {return Infinity;}
+  if (cpi === Infinity) {return 0;}
   return bac / cpi;
 }
 
@@ -170,8 +170,8 @@ export function calculateEACWithSPI(
   spi: number
 ): number {
   const csi = cpi * spi;
-  if (csi === 0) return Infinity;
-  if (csi === Infinity) return ac;
+  if (csi === 0) {return Infinity;}
+  if (csi === Infinity) {return ac;}
   return ac + (bac - ev) / csi;
 }
 
@@ -184,7 +184,7 @@ export function calculateEACWithSPI(
  * @returns Estimated remaining cost
  */
 export function calculateETC(eac: number, ac: number): number {
-  if (eac === Infinity) return Infinity;
+  if (eac === Infinity) {return Infinity;}
   return eac - ac;
 }
 
@@ -197,7 +197,7 @@ export function calculateETC(eac: number, ac: number): number {
  * @returns Expected variance at project end (positive = under budget)
  */
 export function calculateVAC(bac: number, eac: number): number {
-  if (eac === Infinity) return -Infinity;
+  if (eac === Infinity) {return -Infinity;}
   return bac - eac;
 }
 
@@ -210,8 +210,8 @@ export function calculateVAC(bac: number, eac: number): number {
  * @returns Percentage variance at completion
  */
 export function calculateVACPercent(vac: number, bac: number): number {
-  if (bac === 0) return 0;
-  if (vac === -Infinity) return -Infinity;
+  if (bac === 0) {return 0;}
+  if (vac === -Infinity) {return -Infinity;}
   return (vac / bac) * 100;
 }
 
@@ -291,8 +291,8 @@ export function calculateEstimatedDuration(
   plannedDuration: number,
   spi: number
 ): number {
-  if (spi === 0) return Infinity;
-  if (spi === Infinity) return 0;
+  if (spi === 0) {return Infinity;}
+  if (spi === Infinity) {return 0;}
   return plannedDuration / spi;
 }
 
@@ -305,7 +305,7 @@ export function calculateEstimatedDuration(
  * @returns Percentage of work that should be complete
  */
 export function calculatePercentCompletePlanned(pv: number, bac: number): number {
-  if (bac === 0) return 0;
+  if (bac === 0) {return 0;}
   return (pv / bac) * 100;
 }
 
@@ -318,7 +318,7 @@ export function calculatePercentCompletePlanned(pv: number, bac: number): number
  * @returns Percentage of work actually complete
  */
 export function calculatePercentCompleteActual(ev: number, bac: number): number {
-  if (bac === 0) return 0;
+  if (bac === 0) {return 0;}
   return (ev / bac) * 100;
 }
 
@@ -331,7 +331,7 @@ export function calculatePercentCompleteActual(ev: number, bac: number): number 
  * @returns Percentage of budget spent
  */
 export function calculatePercentSpent(ac: number, bac: number): number {
-  if (bac === 0) return 0;
+  if (bac === 0) {return 0;}
   return (ac / bac) * 100;
 }
 
@@ -353,14 +353,14 @@ export function getPerformanceStatus(
   type: 'cpi' | 'spi' = 'cpi'
 ): EVMPerformanceStatus {
   // Handle edge cases
-  if (index === Infinity) return 'excellent';
-  if (index === 0 || index === -Infinity || isNaN(index)) return 'critical';
+  if (index === Infinity) {return 'excellent';}
+  if (index === 0 || index === -Infinity || isNaN(index)) {return 'critical';}
 
   const prefix = type;
-  if (index >= thresholds[`${prefix}_excellent`]) return 'excellent';
-  if (index >= thresholds[`${prefix}_good`]) return 'good';
-  if (index >= thresholds[`${prefix}_fair`]) return 'fair';
-  if (index >= thresholds[`${prefix}_poor`]) return 'poor';
+  if (index >= thresholds[`${prefix}_excellent`]) {return 'excellent';}
+  if (index >= thresholds[`${prefix}_good`]) {return 'good';}
+  if (index >= thresholds[`${prefix}_fair`]) {return 'fair';}
+  if (index >= thresholds[`${prefix}_poor`]) {return 'poor';}
   return 'critical';
 }
 
@@ -527,8 +527,8 @@ export function validateEVMInputs(params: Partial<EVMBaseValues>): string[] {
  * Safe division helper that handles edge cases
  */
 export function safeDivide(numerator: number, denominator: number, defaultValue: number = 0): number {
-  if (denominator === 0) return defaultValue;
-  if (!isFinite(numerator) || !isFinite(denominator)) return defaultValue;
+  if (denominator === 0) {return defaultValue;}
+  if (!isFinite(numerator) || !isFinite(denominator)) {return defaultValue;}
   return numerator / denominator;
 }
 
@@ -536,7 +536,7 @@ export function safeDivide(numerator: number, denominator: number, defaultValue:
  * Round a number to specified decimal places
  */
 export function roundTo(value: number, decimals: number = 2): number {
-  if (!isFinite(value)) return value;
+  if (!isFinite(value)) {return value;}
   const factor = Math.pow(10, decimals);
   return Math.round(value * factor) / factor;
 }

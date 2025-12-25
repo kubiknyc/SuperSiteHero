@@ -401,17 +401,17 @@ export function getChangeOrderStatusLabel(status: ChangeOrderStatus | string): s
  */
 export function getChangeOrderStatusColor(status: ChangeOrderStatus | string): string {
   const colors: Record<string, string> = {
-    [ChangeOrderStatus.DRAFT]: 'bg-gray-100 text-gray-800',
-    [ChangeOrderStatus.PENDING_ESTIMATE]: 'bg-yellow-100 text-yellow-800',
-    [ChangeOrderStatus.ESTIMATE_COMPLETE]: 'bg-blue-100 text-blue-800',
+    [ChangeOrderStatus.DRAFT]: 'bg-muted text-foreground',
+    [ChangeOrderStatus.PENDING_ESTIMATE]: 'bg-warning-light text-yellow-800',
+    [ChangeOrderStatus.ESTIMATE_COMPLETE]: 'bg-info-light text-blue-800',
     [ChangeOrderStatus.PENDING_INTERNAL_APPROVAL]: 'bg-orange-100 text-orange-800',
     [ChangeOrderStatus.INTERNALLY_APPROVED]: 'bg-purple-100 text-purple-800',
     [ChangeOrderStatus.PENDING_OWNER_REVIEW]: 'bg-indigo-100 text-indigo-800',
-    [ChangeOrderStatus.APPROVED]: 'bg-green-100 text-green-800',
-    [ChangeOrderStatus.REJECTED]: 'bg-red-100 text-red-800',
-    [ChangeOrderStatus.VOID]: 'bg-gray-100 text-gray-500',
+    [ChangeOrderStatus.APPROVED]: 'bg-success-light text-green-800',
+    [ChangeOrderStatus.REJECTED]: 'bg-error-light text-red-800',
+    [ChangeOrderStatus.VOID]: 'bg-muted text-muted',
   };
-  return colors[status] || 'bg-gray-100 text-gray-800';
+  return colors[status] || 'bg-muted text-foreground';
 }
 
 /**

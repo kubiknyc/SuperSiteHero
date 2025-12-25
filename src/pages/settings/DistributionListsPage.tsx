@@ -190,7 +190,7 @@ export function DistributionListsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold" className="heading-page">Distribution Lists</h1>
+            <h1 className="text-2xl font-bold heading-page">Distribution Lists</h1>
             <p className="text-muted-foreground">
               Create reusable contact groups for RFIs, submittals, and other notifications
             </p>
@@ -299,7 +299,7 @@ export function DistributionListsPage() {
             ) : filteredLists.length === 0 ? (
               <div className="text-center py-12 border rounded-lg bg-surface">
                 <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="font-medium text-lg mb-1" className="heading-subsection">No distribution lists found</h3>
+                <h3 className="font-medium text-lg mb-1 heading-subsection">No distribution lists found</h3>
                 <p className="text-muted-foreground text-sm mb-4">
                   {searchQuery
                     ? 'Try adjusting your search criteria'

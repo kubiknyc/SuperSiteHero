@@ -624,7 +624,7 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight" className="heading-section">Payment Aging</h2>
+          <h2 className="text-2xl font-bold tracking-tight heading-section">Payment Aging</h2>
           <p className="text-muted-foreground">
             As of {format(parseISO(report.as_of_date), 'MMMM d, yyyy')}
           </p>

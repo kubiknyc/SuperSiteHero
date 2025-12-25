@@ -25,7 +25,7 @@ export function generateDocumentCommentEmail(data: DocumentCommentEmailData): { 
     : `${data.commentBy} commented on "${data.documentName}"`
 
   const content = `
-    <h1>${title}</h1>
+    <h1 className="heading-page">${title}</h1>
 
     <p>Hi ${data.recipientName},</p>
 

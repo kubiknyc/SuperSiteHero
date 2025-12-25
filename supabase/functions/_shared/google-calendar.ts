@@ -488,13 +488,13 @@ export async function listEvents(
 ): Promise<GCalEventList> {
   const query: Record<string, string> = {}
 
-  if (options?.timeMin) query.timeMin = options.timeMin
-  if (options?.timeMax) query.timeMax = options.timeMax
-  if (options?.maxResults) query.maxResults = String(options.maxResults)
-  if (options?.pageToken) query.pageToken = options.pageToken
-  if (options?.syncToken) query.syncToken = options.syncToken
-  if (options?.singleEvents !== undefined) query.singleEvents = String(options.singleEvents)
-  if (options?.orderBy) query.orderBy = options.orderBy
+  if (options?.timeMin) {query.timeMin = options.timeMin}
+  if (options?.timeMax) {query.timeMax = options.timeMax}
+  if (options?.maxResults) {query.maxResults = String(options.maxResults)}
+  if (options?.pageToken) {query.pageToken = options.pageToken}
+  if (options?.syncToken) {query.syncToken = options.syncToken}
+  if (options?.singleEvents !== undefined) {query.singleEvents = String(options.singleEvents)}
+  if (options?.orderBy) {query.orderBy = options.orderBy}
 
   return await gcalApiRequest<GCalEventList>(GCAL_URLS.api.events(calendarId), accessToken, { query })
 }
@@ -519,7 +519,7 @@ export async function createEvent(
   }
 ): Promise<GCalEvent> {
   const query: Record<string, string> = {}
-  if (options?.sendUpdates) query.sendUpdates = options.sendUpdates
+  if (options?.sendUpdates) {query.sendUpdates = options.sendUpdates}
   if (options?.conferenceDataVersion !== undefined) {
     query.conferenceDataVersion = String(options.conferenceDataVersion)
   }
@@ -544,7 +544,7 @@ export async function updateEvent(
   }
 ): Promise<GCalEvent> {
   const query: Record<string, string> = {}
-  if (options?.sendUpdates) query.sendUpdates = options.sendUpdates
+  if (options?.sendUpdates) {query.sendUpdates = options.sendUpdates}
 
   return await gcalApiRequest<GCalEvent>(GCAL_URLS.api.event(calendarId, eventId), accessToken, {
     method: 'PATCH',
@@ -565,7 +565,7 @@ export async function deleteEvent(
   }
 ): Promise<void> {
   const query: Record<string, string> = {}
-  if (options?.sendUpdates) query.sendUpdates = options.sendUpdates
+  if (options?.sendUpdates) {query.sendUpdates = options.sendUpdates}
 
   await gcalApiRequest<void>(GCAL_URLS.api.event(calendarId, eventId), accessToken, {
     method: 'DELETE',

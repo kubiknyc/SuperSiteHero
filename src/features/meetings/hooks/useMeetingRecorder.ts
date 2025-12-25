@@ -199,7 +199,7 @@ export function useMeetingRecorder({
 
   // Get MIME type for recording
   const getMimeType = useCallback((config: RecorderConfig): string => {
-    if (config.mimeType) return config.mimeType;
+    if (config.mimeType) {return config.mimeType;}
 
     if (config.type === 'audio') {
       // Prefer WebM for broader compatibility
@@ -305,7 +305,7 @@ export function useMeetingRecorder({
             upsert: true,
           });
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {throw uploadError;}
 
         setUploadProgress(100);
         return storagePath;
@@ -333,7 +333,7 @@ export function useMeetingRecorder({
             upsert: true,
           });
 
-        if (chunkError) throw chunkError;
+        if (chunkError) {throw chunkError;}
 
         uploadedChunkPaths.push(chunkPath);
         setUploadProgress(Math.round(((i + 1) / chunks.length) * 90));
@@ -354,7 +354,7 @@ export function useMeetingRecorder({
           upsert: true,
         });
 
-      if (finalError) throw finalError;
+      if (finalError) {throw finalError;}
 
       // Clean up chunk files
       for (const chunkPath of uploadedChunkPaths) {
@@ -369,7 +369,7 @@ export function useMeetingRecorder({
 
   // Stop recording and upload
   const stopRecording = useCallback(async (): Promise<MeetingRecording | null> => {
-    if (!recorderRef.current) return null;
+    if (!recorderRef.current) {return null;}
 
     try {
       setState('stopped');

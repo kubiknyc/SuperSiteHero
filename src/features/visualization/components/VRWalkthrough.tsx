@@ -491,7 +491,7 @@ export function VRWalkthrough({
 
   // Get current 360 image URL
   const currentImageUrl = useMemo(() => {
-    if (photo360Url) return photo360Url;
+    if (photo360Url) {return photo360Url;}
     if (tour && currentNodeId) {
       const node = tour.nodes.find((n) => n.id === currentNodeId);
       return node?.photo.url;
@@ -555,7 +555,7 @@ export function VRWalkthrough({
 
   // Fullscreen toggle
   const handleFullscreen = useCallback(async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     try {
       if (!document.fullscreenElement) {
@@ -682,7 +682,7 @@ export function VRWalkthrough({
       {/* Current location info */}
       {currentNode && (
         <div className="absolute top-4 left-4 bg-black/60 rounded-lg p-3 backdrop-blur-sm text-white max-w-xs">
-          <h3 className="font-medium text-sm" className="heading-subsection">{currentNode.photo.name}</h3>
+          <h3 className="font-medium text-sm heading-subsection">{currentNode.photo.name}</h3>
           {currentNode.photo.tags && (
             <div className="flex flex-wrap gap-1 mt-1">
               {currentNode.photo.tags.slice(0, 3).map((tag) => (

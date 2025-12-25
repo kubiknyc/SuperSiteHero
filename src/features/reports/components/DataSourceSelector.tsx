@@ -56,7 +56,7 @@ export function DataSourceSelector({ value, onChange, className }: DataSourceSel
   return (
     <div className={cn('space-y-4', className)}>
       <div>
-        <h3 className="text-lg font-medium text-foreground" className="heading-subsection">Select Data Source</h3>
+        <h3 className="text-lg font-medium text-foreground heading-subsection">Select Data Source</h3>
         <p className="text-sm text-muted mt-1">
           Choose which type of data you want to include in your report
         </p>

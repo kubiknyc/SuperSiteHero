@@ -110,7 +110,7 @@ export function CreateInspectionPage() {
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">
               Project Required
             </h3>
             <p className="text-muted mt-2">
@@ -140,7 +140,7 @@ export function CreateInspectionPage() {
             <ArrowLeft className="h-5 w-5 text-muted" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+            <h1 className="text-2xl font-bold text-foreground heading-page">
               {isEditMode ? 'Edit Inspection' : 'Schedule New Inspection'}
             </h1>
             <p className="text-muted mt-1">

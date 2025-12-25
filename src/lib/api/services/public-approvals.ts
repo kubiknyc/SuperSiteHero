@@ -244,7 +244,7 @@ async function getEntityDetails(
   let description: string | null = null;
   let referenceNumber: string | null = null;
   let amount: number | undefined;
-  let attachments: Array<{ id: string; name: string; url: string; type: string }> = [];
+  const attachments: Array<{ id: string; name: string; url: string; type: string }> = [];
 
   switch (entityType) {
     case 'document': {

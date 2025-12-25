@@ -58,7 +58,7 @@ export default function CreateSiteInstructionPage() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">New Site Instruction</h1>
+          <h1 className="text-2xl font-bold heading-page">New Site Instruction</h1>
           {project && (
             <p className="text-muted-foreground">Project: {project.name}</p>
           )}

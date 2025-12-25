@@ -132,7 +132,7 @@ export const historicalBidAnalysisApi = {
 
       const { data: submissions, error } = await query.order('submitted_at', { ascending: false })
 
-      if (error) throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')
+      if (error) {throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')}
       if (!submissions || submissions.length === 0) {
         throw new ApiErrorClass('No bid history found for vendor', 404, 'NOT_FOUND')
       }
@@ -321,7 +321,7 @@ export const historicalBidAnalysisApi = {
         },
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to fetch vendor bid history',
         500,
@@ -385,7 +385,7 @@ export const historicalBidAnalysisApi = {
         by_division: byDivision,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to fetch vendor win rate',
         500,
@@ -412,7 +412,7 @@ export const historicalBidAnalysisApi = {
         .eq('id', projectId)
         .single()
 
-      if (projectError) throw new ApiErrorClass(projectError.message, 500, 'DATABASE_ERROR')
+      if (projectError) {throw new ApiErrorClass(projectError.message, 500, 'DATABASE_ERROR')}
 
       // Get all awarded bid packages for this project
       const { data: packages, error: packagesError } = await db
@@ -432,7 +432,7 @@ export const historicalBidAnalysisApi = {
         .eq('project_id', projectId)
         .eq('bid_submissions.is_awarded', true)
 
-      if (packagesError) throw new ApiErrorClass(packagesError.message, 500, 'DATABASE_ERROR')
+      if (packagesError) {throw new ApiErrorClass(packagesError.message, 500, 'DATABASE_ERROR')}
       if (!packages || packages.length === 0) {
         throw new ApiErrorClass('No awarded bids found for project', 404, 'NOT_FOUND')
       }
@@ -453,7 +453,7 @@ export const historicalBidAnalysisApi = {
         `)
         .eq('project_id', projectId)
 
-      if (budgetsError) throw new ApiErrorClass(budgetsError.message, 500, 'DATABASE_ERROR')
+      if (budgetsError) {throw new ApiErrorClass(budgetsError.message, 500, 'DATABASE_ERROR')}
 
       // Group actual costs by division
       const actualCostsByDivision = (budgets || []).reduce((acc, budget: any) => {
@@ -547,7 +547,7 @@ export const historicalBidAnalysisApi = {
         },
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to analyze bid accuracy',
         500,
@@ -604,7 +604,7 @@ export const historicalBidAnalysisApi = {
         .lte('projects.actual_completion_date', dateTo)
         .not('actual_cost', 'is', null)
 
-      if (error) throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')
+      if (error) {throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')}
 
       if (!budgets || budgets.length === 0) {
         return {
@@ -650,7 +650,7 @@ export const historicalBidAnalysisApi = {
         projects_analyzed: uniqueProjects,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to analyze price variance',
         500,
@@ -695,7 +695,7 @@ export const historicalBidAnalysisApi = {
         .gte('submitted_at', dateRange.from)
         .lte('submitted_at', dateRange.to)
 
-      if (error) throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')
+      if (error) {throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')}
 
       const trendData: BidTrendData[] = months.map((month, index) => {
         const monthStart = startOfMonth(month)
@@ -790,7 +790,7 @@ export const historicalBidAnalysisApi = {
         },
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to analyze bid trends',
         500,
@@ -847,7 +847,7 @@ export const historicalBidAnalysisApi = {
 
       const { data: submissions, error } = await query
 
-      if (error) throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')
+      if (error) {throw new ApiErrorClass(error.message, 500, 'DATABASE_ERROR')}
 
       if (!submissions || submissions.length === 0) {
         return {
@@ -936,16 +936,16 @@ export const historicalBidAnalysisApi = {
         const reasons: string[] = []
         const concerns: string[] = []
 
-        if (winRate > 30) reasons.push(`Strong win rate of ${winRate.toFixed(1)}%`)
-        if (completionRate >= 90) reasons.push(`Excellent completion rate of ${completionRate.toFixed(1)}%`)
-        if (avgMarkup < 15) reasons.push(`Competitive pricing with ${avgMarkup.toFixed(1)}% average markup`)
-        if (similarProjects >= 3) reasons.push(`${similarProjects} similar projects completed`)
-        if (avgQualityScore && avgQualityScore >= 80) reasons.push(`High quality score of ${avgQualityScore.toFixed(1)}`)
+        if (winRate > 30) {reasons.push(`Strong win rate of ${winRate.toFixed(1)}%`)}
+        if (completionRate >= 90) {reasons.push(`Excellent completion rate of ${completionRate.toFixed(1)}%`)}
+        if (avgMarkup < 15) {reasons.push(`Competitive pricing with ${avgMarkup.toFixed(1)}% average markup`)}
+        if (similarProjects >= 3) {reasons.push(`${similarProjects} similar projects completed`)}
+        if (avgQualityScore && avgQualityScore >= 80) {reasons.push(`High quality score of ${avgQualityScore.toFixed(1)}`)}
 
-        if (totalBids < 5) concerns.push('Limited bid history')
-        if (winRate < 15) concerns.push('Low win rate may indicate pricing issues')
-        if (completionRate < 70) concerns.push('Below-average completion rate')
-        if (!recentActivity) concerns.push('No recent bidding activity')
+        if (totalBids < 5) {concerns.push('Limited bid history')}
+        if (winRate < 15) {concerns.push('Low win rate may indicate pricing issues')}
+        if (completionRate < 70) {concerns.push('Below-average completion rate')}
+        if (!recentActivity) {concerns.push('No recent bidding activity')}
 
         const vendorInfo = vendorSubs[0]
         const reliabilityLevel = getReliabilityLevel(totalScore)
@@ -995,7 +995,7 @@ export const historicalBidAnalysisApi = {
         },
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to generate vendor recommendations',
         500,
@@ -1032,12 +1032,12 @@ export const historicalBidAnalysisApi = {
         .gte('submitted_at', filters.date_from)
         .lte('submitted_at', filters.date_to)
 
-      if (subsError) throw new ApiErrorClass(subsError.message, 500, 'DATABASE_ERROR')
+      if (subsError) {throw new ApiErrorClass(subsError.message, 500, 'DATABASE_ERROR')}
 
       const uniqueVendors = new Set<string>()
       ;(submissions || []).forEach((s: any) => {
         const key = s.subcontractor_id || s.bidder_company_name
-        if (key) uniqueVendors.add(key)
+        if (key) {uniqueVendors.add(key)}
       })
 
       // Get vendor performance for top vendors
@@ -1123,7 +1123,7 @@ export const historicalBidAnalysisApi = {
         data: report,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
       throw new ApiErrorClass(
         error instanceof Error ? error.message : 'Failed to generate performance report',
         500,

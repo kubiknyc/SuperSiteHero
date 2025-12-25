@@ -1,7 +1,9 @@
 // File: /src/lib/api/services/document-access-log.test.ts
 // Tests for document access log API service
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { documentAccessLogApi, type AccessLogEntry } from './document-access-log'
 import { supabase } from '@/lib/supabase'
 

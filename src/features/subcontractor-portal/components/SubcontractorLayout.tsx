@@ -121,7 +121,7 @@ export function SubcontractorLayout() {
           <div className="flex items-center gap-2">
             <Building2 className="h-6 w-6 text-primary" />
             <div>
-              <h2 className="font-semibold text-sm" className="heading-section">Subcontractor Portal</h2>
+              <h2 className="font-semibold text-sm heading-section">Subcontractor Portal</h2>
               <p className="text-xs text-muted-foreground truncate">
                 {userProfile?.first_name} {userProfile?.last_name}
               </p>

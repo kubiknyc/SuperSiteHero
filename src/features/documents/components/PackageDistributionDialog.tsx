@@ -261,7 +261,7 @@ export function PackageDistributionDialog({
               {/* Add Recipient Form */}
               <div className="space-y-4 p-4 border rounded-lg bg-muted/30">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium" className="heading-subsection">Add Recipients</h3>
+                  <h3 className="text-sm font-medium heading-subsection">Add Recipients</h3>
                   <Button
                     variant="outline"
                     size="sm"
@@ -382,7 +382,7 @@ export function PackageDistributionDialog({
               {/* Recipient List */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium" className="heading-subsection">Pending Recipients</h3>
+                  <h3 className="text-sm font-medium heading-subsection">Pending Recipients</h3>
                   {pendingRecipients.length > 0 && (
                     <Button variant="ghost" size="sm" onClick={selectAllPending}>
                       Select All
@@ -452,7 +452,7 @@ export function PackageDistributionDialog({
 
               {/* Sent Recipients */}
               <div className="space-y-2">
-                <h3 className="text-sm font-medium" className="heading-subsection">Distribution History</h3>
+                <h3 className="text-sm font-medium heading-subsection">Distribution History</h3>
                 {sentRecipients.length === 0 ? (
                   <div className="p-8 text-center text-muted-foreground border rounded-lg">
                     No packages have been distributed yet.

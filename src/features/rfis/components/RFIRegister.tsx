@@ -246,7 +246,7 @@ export function RFIRegister({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold" className="heading-section">RFI Register</h2>
+          <h2 className="text-lg font-semibold heading-section">RFI Register</h2>
           <p className="text-sm text-muted">
             {stats.total} RFIs | {stats.open} open | {stats.overdue} overdue
             {stats.totalCost > 0 && ` | $${stats.totalCost.toLocaleString()} cost impact`}

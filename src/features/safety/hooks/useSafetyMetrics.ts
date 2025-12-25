@@ -525,13 +525,13 @@ export function useMetricStatus() {
   const getStatusColor = (status: 'good' | 'warning' | 'danger' | 'unknown') => {
     switch (status) {
       case 'good':
-        return { bg: 'bg-green-100', text: 'text-green-800', border: 'border-green-300' }
+        return { bg: 'bg-success-light', text: 'text-green-800', border: 'border-green-300' }
       case 'warning':
-        return { bg: 'bg-yellow-100', text: 'text-yellow-800', border: 'border-yellow-300' }
+        return { bg: 'bg-warning-light', text: 'text-yellow-800', border: 'border-yellow-300' }
       case 'danger':
-        return { bg: 'bg-red-100', text: 'text-red-800', border: 'border-red-300' }
+        return { bg: 'bg-error-light', text: 'text-red-800', border: 'border-red-300' }
       default:
-        return { bg: 'bg-gray-100', text: 'text-gray-600', border: 'border-gray-300' }
+        return { bg: 'bg-muted', text: 'text-secondary', border: 'border-input' }
     }
   }
 

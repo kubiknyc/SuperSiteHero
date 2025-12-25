@@ -104,7 +104,7 @@ export function OutlookCalendarConnect({
   }
 
   const handleDisconnect = async () => {
-    if (!connectionStatus?.connectionId) return
+    if (!connectionStatus?.connectionId) {return}
 
     try {
       await disconnectOutlook.mutateAsync(connectionStatus.connectionId)
@@ -116,7 +116,7 @@ export function OutlookCalendarConnect({
   }
 
   const handleRefreshToken = async () => {
-    if (!connectionStatus?.connectionId) return
+    if (!connectionStatus?.connectionId) {return}
 
     try {
       await refreshToken.mutateAsync(connectionStatus.connectionId)
@@ -127,7 +127,7 @@ export function OutlookCalendarConnect({
   }
 
   const handleUpdateSettings = async (updates: Record<string, unknown>) => {
-    if (!connectionStatus?.connectionId) return
+    if (!connectionStatus?.connectionId) {return}
 
     try {
       await updateConnection.mutateAsync({

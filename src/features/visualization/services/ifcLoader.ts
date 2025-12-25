@@ -564,7 +564,7 @@ export function formatIFCPropertyValue(property: IFCProperty): string {
  * Calculate bounding box for IFC elements
  */
 export function calculateIFCBoundingBox(elements: IFCElement[]): BoundingBox | null {
-  if (elements.length === 0) return null;
+  if (elements.length === 0) {return null;}
 
   let minX = Infinity,
     minY = Infinity,
@@ -584,7 +584,7 @@ export function calculateIFCBoundingBox(elements: IFCElement[]): BoundingBox | n
     }
   }
 
-  if (!isFinite(minX)) return null;
+  if (!isFinite(minX)) {return null;}
 
   return {
     min: { x: minX, y: minY, z: minZ },

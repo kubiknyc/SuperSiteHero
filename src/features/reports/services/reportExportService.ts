@@ -712,7 +712,7 @@ function addTableToPdf(
   // Calculate column widths based on field types
   const contentWidth = pageWidth - 2 * margin
   const columnWidths = fields.map(f => {
-    if (f.column_width) return f.column_width
+    if (f.column_width) {return f.column_width}
     switch (f.field_type) {
       case 'date':
         return 25
@@ -1259,7 +1259,7 @@ export async function exportToHtml(options: ReportExportOptions): Promise<Report
       </style>
     </head>
     <body>
-      <h1>${escapeHtml(title || 'Report')}</h1>
+      <h1 className="heading-page">${escapeHtml(title || 'Report')}</h1>
       <div class="meta">
         Generated: ${new Date().toLocaleString()} | Total Records: ${data.length}
       </div>

@@ -2,7 +2,9 @@
 // Tests for checklist time tracking service
 // Generated: 2025-12-15
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { supabase } from '@/lib/supabase'
 import {
   startChecklistExecution,

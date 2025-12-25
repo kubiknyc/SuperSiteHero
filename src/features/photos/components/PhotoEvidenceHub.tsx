@@ -89,7 +89,7 @@ export function PhotoEvidenceHub({
 
   // Apply search filter client-side for responsiveness
   const filteredPhotos = useMemo(() => {
-    if (!searchTerm) return photos;
+    if (!searchTerm) {return photos;}
     const term = searchTerm.toLowerCase();
     return photos.filter(
       (photo) =>
@@ -625,7 +625,7 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
 
           {/* Details */}
           <div className="md:w-1/3 p-4 overflow-y-auto max-h-[60vh]">
-            <h3 className="font-semibold text-lg mb-2" className="heading-subsection">
+            <h3 className="font-semibold text-lg mb-2 heading-subsection">
               {photo.caption || 'Untitled Photo'}
             </h3>
 
@@ -671,7 +671,7 @@ function PhotoDetailModal({ photo, onClose }: PhotoDetailModalProps) {
             {/* Linked Entities */}
             {photo.linkedEntities.length > 0 && (
               <div className="mt-6">
-                <h4 className="text-sm font-medium mb-2" className="heading-card">Linked To</h4>
+                <h4 className="text-sm font-medium mb-2 heading-card">Linked To</h4>
                 <div className="space-y-2">
                   {photo.linkedEntities.map((entity) => (
                     <div

@@ -80,16 +80,16 @@ export class BandwidthDetector {
    * Map connection type to our enum
    */
   private mapConnectionType(type: string | undefined): ConnectionType {
-    if (!type) return 'unknown';
+    if (!type) {return 'unknown';}
 
     const lowerType = type.toLowerCase();
 
-    if (lowerType.includes('wifi')) return 'wifi';
-    if (lowerType.includes('ethernet')) return 'ethernet';
+    if (lowerType.includes('wifi')) {return 'wifi';}
+    if (lowerType.includes('ethernet')) {return 'ethernet';}
     if (lowerType.includes('cellular') || lowerType.includes('4g') || lowerType.includes('3g')) {
       return 'cellular';
     }
-    if (lowerType.includes('bluetooth')) return 'bluetooth';
+    if (lowerType.includes('bluetooth')) {return 'bluetooth';}
 
     return 'unknown';
   }
@@ -278,7 +278,7 @@ export class BandwidthDetector {
    * Get average bandwidth from recent measurements
    */
   getAverageBandwidth(): BandwidthMeasurement | null {
-    if (this.measurements.length === 0) return null;
+    if (this.measurements.length === 0) {return null;}
 
     const sum = this.measurements.reduce(
       (acc, m) => ({
@@ -305,15 +305,15 @@ export class BandwidthDetector {
    * Categorize network speed
    */
   categorizeSpeed(bandwidth: BandwidthMeasurement | null): NetworkSpeed {
-    if (!navigator.onLine || !bandwidth) return 'offline';
+    if (!navigator.onLine || !bandwidth) {return 'offline';}
 
     const { uploadSpeed, latency } = bandwidth;
 
     // Fast: > 5 Mbps upload, < 100ms latency
-    if (uploadSpeed > 5 && latency < 100) return 'fast';
+    if (uploadSpeed > 5 && latency < 100) {return 'fast';}
 
     // Medium: 1-5 Mbps upload, 100-300ms latency
-    if (uploadSpeed > 1 && latency < 300) return 'medium';
+    if (uploadSpeed > 1 && latency < 300) {return 'medium';}
 
     // Slow: < 1 Mbps upload or > 300ms latency
     return 'slow';

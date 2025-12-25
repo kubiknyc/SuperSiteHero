@@ -174,7 +174,7 @@ export function TemplatesPage() {
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">Inspection Checklists</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">Inspection Checklists</h1>
               <p className="text-secondary">
                 Create and manage inspection checklist templates for your projects
               </p>
@@ -335,7 +335,7 @@ export function TemplatesPage() {
             <div className="text-disabled mb-4">
               <CheckSquare className="mx-auto h-12 w-12" />
             </div>
-            <h3 className="text-lg font-medium text-foreground mb-1" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mb-1 heading-subsection">
               {allTemplates.length === 0 ? 'No templates yet' : 'No templates match your filters'}
             </h3>
             <p className="text-secondary mb-4">

@@ -216,7 +216,7 @@ export function MobileAcknowledgmentForm({
         <CardContent className="py-12">
           <div className="flex flex-col items-center text-center">
             <CheckCircle2 className="h-16 w-16 text-success mb-4" />
-            <h2 className="text-2xl font-semibold mb-2" className="heading-section">Thank You!</h2>
+            <h2 className="text-2xl font-semibold mb-2 heading-section">Thank You!</h2>
             <p className="text-muted-foreground mb-6">
               Your acknowledgment has been {isOnline ? 'recorded' : 'saved'} successfully.
             </p>

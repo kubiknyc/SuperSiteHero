@@ -35,7 +35,7 @@ export function MFAQRCode({
           </div>
         </div>
 
-        <h3 className="text-lg font-semibold text-center mb-4" className="heading-subsection">
+        <h3 className="text-lg font-semibold text-center mb-4 heading-subsection">
           Scan with Authenticator App
         </h3>
 
@@ -60,7 +60,7 @@ export function MFAQRCode({
 
       {/* Manual Entry Option */}
       <Card className="p-4 bg-surface">
-        <h4 className="text-sm font-medium text-secondary mb-2" className="heading-card">
+        <h4 className="text-sm font-medium text-secondary mb-2 heading-card">
           Can't scan? Enter code manually:
         </h4>
 
@@ -105,7 +105,7 @@ export function MFAQRCode({
 
       {/* Instructions */}
       <div className="bg-blue-50 rounded-lg p-4 text-sm">
-        <h4 className="font-medium text-blue-900 mb-2" className="heading-card">Setup Instructions:</h4>
+        <h4 className="font-medium text-blue-900 mb-2 heading-card">Setup Instructions:</h4>
         <ol className="list-decimal list-inside space-y-1 text-blue-800">
           <li>Open your authenticator app</li>
           <li>Tap the + or Add Account button</li>

@@ -198,7 +198,7 @@ export function ComposeEmail({
 
   // Save draft
   const handleSaveDraft = async () => {
-    if (!selectedAccountId) return
+    if (!selectedAccountId) {return}
 
     const emailData: ComposeEmailDTO = {
       account_id: selectedAccountId,
@@ -231,7 +231,7 @@ export function ComposeEmail({
 
   const canSend = selectedAccountId && toRecipients.length > 0 && subject.trim() && body.trim()
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   // Minimized view
   if (isMinimized) {

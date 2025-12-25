@@ -245,7 +245,7 @@ export function ExecutionsPage() {
         <div className="mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">Active Checklists</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">Active Checklists</h1>
               <p className="text-secondary">
                 View and manage inspection checklist executions
               </p>
@@ -367,7 +367,7 @@ export function ExecutionsPage() {
           {/* Advanced Filters Panel */}
           {showAdvancedFilters && (
             <div className="mt-4 pt-4 border-t border-border space-y-4">
-              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2" className="heading-subsection">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2 heading-subsection">
                 <Filter className="w-4 h-4" />
                 Advanced Filters
               </h3>
@@ -556,7 +556,7 @@ export function ExecutionsPage() {
             <div className="text-disabled mb-4">
               <ClipboardList className="mx-auto h-12 w-12" />
             </div>
-            <h3 className="text-lg font-medium text-foreground mb-1" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mb-1 heading-subsection">
               {allExecutions.length === 0 ? 'No checklists yet' : 'No checklists match your filters'}
             </h3>
             <p className="text-secondary mb-4">

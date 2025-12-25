@@ -74,7 +74,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
   };
 
   const handleDisconnect = async () => {
-    if (!status?.connectionId) return;
+    if (!status?.connectionId) {return;}
     try {
       await disconnect.mutateAsync(status.connectionId);
       onConnectionChange?.();
@@ -84,7 +84,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
   };
 
   const handleSyncToggle = async (enabled: boolean) => {
-    if (!status?.connectionId) return;
+    if (!status?.connectionId) {return;}
     try {
       await updateConnection.mutateAsync({
         connectionId: status.connectionId,
@@ -96,7 +96,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
   };
 
   const handleSyncDirectionChange = async (direction: string) => {
-    if (!status?.connectionId) return;
+    if (!status?.connectionId) {return;}
     try {
       await updateConnection.mutateAsync({
         connectionId: status.connectionId,
@@ -108,7 +108,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
   };
 
   const handleRefreshToken = async () => {
-    if (!status?.connectionId) return;
+    if (!status?.connectionId) {return;}
     try {
       await refreshToken.mutateAsync(status.connectionId);
     } catch (error) {
@@ -155,7 +155,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <h4 className="font-medium text-blue-900 mb-2" className="heading-card">Features</h4>
+            <h4 className="font-medium text-blue-900 mb-2 heading-card">Features</h4>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>- Sync meetings to Google Calendar automatically</li>
               <li>- Import calendar events as meetings</li>

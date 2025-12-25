@@ -4,7 +4,9 @@
  * Tests for DocuSign OAuth, envelope creation, and signing flows.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { docuSignApi } from './docusign'
 import type {
   DSConnection,

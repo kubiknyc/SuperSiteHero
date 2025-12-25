@@ -69,7 +69,7 @@ export function ClientNotificationSettingsPage() {
       <Card className="bg-blue-50 border-blue-200">
         <CardContent className="py-6">
           <div className="space-y-3">
-            <h3 className="font-semibold text-blue-900 flex items-center gap-2" className="heading-subsection">
+            <h3 className="font-semibold text-blue-900 flex items-center gap-2 heading-subsection">
               <Settings className="h-5 w-5" />
               About Notification Preferences
             </h3>
@@ -107,7 +107,7 @@ export function ClientNotificationSettingsPage() {
       <Card className="border-border">
         <CardContent className="py-6">
           <div className="space-y-3">
-            <h3 className="font-semibold text-foreground" className="heading-subsection">Need Help?</h3>
+            <h3 className="font-semibold text-foreground heading-subsection">Need Help?</h3>
             <p className="text-sm text-secondary">
               If you're not receiving notifications as expected, please check:
             </p>

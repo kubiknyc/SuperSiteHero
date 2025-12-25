@@ -149,10 +149,10 @@ function inputSourceToController(
   referenceSpace: XRReferenceSpace
 ): VRController | null {
   const gripSpace = inputSource.gripSpace;
-  if (!gripSpace) return null;
+  if (!gripSpace) {return null;}
 
   const pose = frame.getPose(gripSpace, referenceSpace);
-  if (!pose) return null;
+  if (!pose) {return null;}
 
   const position = pose.transform.position;
   const orientation = pose.transform.orientation;
@@ -504,7 +504,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
   // Get teleport target for VR
   const getTeleportTarget = useCallback(
     (controller: VRController): VRTeleportTarget | null => {
-      if (!referenceSpace) return null;
+      if (!referenceSpace) {return null;}
 
       // Calculate ray from controller
       const forward = new THREE.Vector3(0, 0, -1);
@@ -548,7 +548,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
   // Trigger haptic feedback
   const triggerHaptic = useCallback(
     (controllerId: string, intensity: number = 1.0, duration: number = 100): void => {
-      if (!xrSessionRef.current) return;
+      if (!xrSessionRef.current) {return;}
 
       const inputSource = Array.from(xrSessionRef.current.inputSources).find(
         (source) => source.handedness === controllerId

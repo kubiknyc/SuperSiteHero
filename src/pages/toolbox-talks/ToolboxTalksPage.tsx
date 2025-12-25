@@ -104,7 +104,7 @@ export function ToolboxTalksPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <ClipboardList className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-            <h2 className="text-lg font-medium text-foreground" className="heading-section">No Project Selected</h2>
+            <h2 className="text-lg font-medium text-foreground heading-section">No Project Selected</h2>
             <p className="text-muted mt-1">
               Please select a project to view toolbox talks.
             </p>
@@ -120,7 +120,7 @@ export function ToolboxTalksPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Toolbox Talks</h1>
+            <h1 className="text-2xl font-bold text-foreground heading-page">Toolbox Talks</h1>
             <p className="text-muted mt-1">
               Safety briefings and attendance tracking
             </p>
@@ -301,7 +301,7 @@ export function ToolboxTalksPage() {
         ) : filteredTalks.length === 0 ? (
           <div className="text-center py-12">
             <ClipboardList className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-            <h2 className="text-lg font-medium text-foreground" className="heading-section">No Toolbox Talks Found</h2>
+            <h2 className="text-lg font-medium text-foreground heading-section">No Toolbox Talks Found</h2>
             <p className="text-muted mt-1">
               {hasActiveFilters || search
                 ? 'Try adjusting your filters or search terms.'

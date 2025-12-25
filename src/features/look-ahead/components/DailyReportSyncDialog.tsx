@@ -210,7 +210,7 @@ export function DailyReportSyncDialog({
 
         {/* Activities List */}
         <div className="space-y-2 max-h-[400px] overflow-y-auto">
-          <h3 className="font-medium text-sm text-muted" className="heading-subsection">Activities with Progress Data</h3>
+          <h3 className="font-medium text-sm text-muted heading-subsection">Activities with Progress Data</h3>
 
           {loadingSummaries ? (
             <div className="flex items-center justify-center py-8">
@@ -261,7 +261,7 @@ function ActivitySyncCard({
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium truncate" className="heading-card">{summary.activity_name}</h4>
+              <h4 className="font-medium truncate heading-card">{summary.activity_name}</h4>
               {summary.needs_sync && (
                 <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
                   Needs Sync

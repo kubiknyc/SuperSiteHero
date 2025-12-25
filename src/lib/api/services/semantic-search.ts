@@ -239,7 +239,7 @@ export function sanitizeSearchQuery(query: string): string {
   }
 
   // Remove potential SQL injection patterns
-  let sanitized = query
+  const sanitized = query
     // Remove SQL comments
     .replace(/--/g, '')
     .replace(/\/\*[\s\S]*?\*\//g, '')
@@ -263,7 +263,7 @@ export function sanitizeSearchQuery(query: string): string {
  * Validate and sanitize date range
  */
 export function sanitizeDateRange(dateRange?: DateRange): DateRange | undefined {
-  if (!dateRange) return undefined
+  if (!dateRange) {return undefined}
 
   const result: DateRange = {}
 

@@ -19,12 +19,12 @@ export default function Concept7SafetyHighVis() {
             <AlertTriangle className="w-10 h-10 text-black transform -rotate-45" />
           </div>
           <div>
-            <h1 className="text-4xl text-yellow-400 tracking-wider" className="heading-page">JOBSIGHT</h1>
+            <h1 className="text-4xl text-yellow-400 tracking-wider heading-page">JOBSIGHT</h1>
             <p className="text-yellow-400/60 text-sm tracking-widest">CONCEPT 7: SAFETY HIGH-VIS</p>
           </div>
         </div>
 
-        <h2 className="text-8xl text-yellow-400 mb-8 leading-none tracking-tight" className="heading-section">
+        <h2 className="text-8xl text-yellow-400 mb-8 leading-none tracking-tight heading-section">
           SAFETY<br/>FIRST
         </h2>
         <p className="text-2xl text-white mb-16 max-w-2xl leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -68,7 +68,7 @@ export default function Concept7SafetyHighVis() {
             <div className="relative">
               <div className="flex justify-between items-start mb-6">
                 <div>
-                  <h3 className="text-4xl font-bold mb-2" className="heading-subsection">DOWNTOWN TOWER</h3>
+                  <h3 className="text-4xl font-bold mb-2 heading-subsection">DOWNTOWN TOWER</h3>
                   <p className="text-xl">HIGH-PRIORITY PROJECT</p>
                 </div>
                 <div className="bg-black text-yellow-400 px-6 py-3 text-3xl font-bold">

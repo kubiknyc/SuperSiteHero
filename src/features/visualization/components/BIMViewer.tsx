@@ -126,7 +126,7 @@ function BIMScene({
   // Handle click for selection
   const handleClick = useCallback(
     (event: any) => {
-      if (!scene) return;
+      if (!scene) {return;}
 
       raycaster.setFromCamera(pointer, camera);
       const intersects = raycaster.intersectObjects(scene.children, true);
@@ -464,7 +464,7 @@ export function BIMViewer({
 
   // Load IFC file
   useEffect(() => {
-    if (!ifcUrl || !loaderRef.current) return;
+    if (!ifcUrl || !loaderRef.current) {return;}
 
     const loadIFC = async () => {
       setState((prev) => ({
@@ -508,7 +508,7 @@ export function BIMViewer({
   // Handle element selection
   const handleSelect = useCallback(
     async (expressID: number | null) => {
-      if (!enableSelection) return;
+      if (!enableSelection) {return;}
 
       if (expressID === null) {
         setState((prev) => ({
@@ -570,7 +570,7 @@ export function BIMViewer({
   const handleFileUpload = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
-      if (!file || !loaderRef.current) return;
+      if (!file || !loaderRef.current) {return;}
 
       setState((prev) => ({
         ...prev,
@@ -614,7 +614,7 @@ export function BIMViewer({
 
   // Fullscreen toggle
   const handleFullscreen = useCallback(async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {return;}
 
     try {
       if (!document.fullscreenElement) {

@@ -150,19 +150,19 @@ export class PriorityQueueManager {
       .filter((item) => item.status === 'pending')
       .filter((item) => {
         // Skip items with too many retries
-        if (item.retries >= 5) return false;
+        if (item.retries >= 5) {return false;}
 
         // Apply exponential backoff for failed items
         if (item.lastRetry) {
           const backoffDelay = Math.min(300000, Math.pow(2, item.retries) * 1000); // Max 5 minutes
           const timeSinceRetry = Date.now() - item.lastRetry;
-          if (timeSinceRetry < backoffDelay) return false;
+          if (timeSinceRetry < backoffDelay) {return false;}
         }
 
         return true;
       });
 
-    if (pendingItems.length === 0) return null;
+    if (pendingItems.length === 0) {return null;}
 
     const batch: PrioritySyncItem[] = [];
     let totalSize = 0;
@@ -173,19 +173,19 @@ export class PriorityQueueManager {
 
     // Add small items first
     for (const item of smallItems) {
-      if (batch.length >= maxItems || totalSize + item.size > maxSize) break;
+      if (batch.length >= maxItems || totalSize + item.size > maxSize) {break;}
       batch.push(item);
       totalSize += item.size;
     }
 
     // Fill remaining space with large items if there's room
     for (const item of largeItems) {
-      if (batch.length >= maxItems || totalSize + item.size > maxSize) break;
+      if (batch.length >= maxItems || totalSize + item.size > maxSize) {break;}
       batch.push(item);
       totalSize += item.size;
     }
 
-    if (batch.length === 0) return null;
+    if (batch.length === 0) {return null;}
 
     // Estimate duration (assume 1MB/sec upload speed)
     const estimatedDuration = (totalSize / 1000000) * 1000;
@@ -285,7 +285,7 @@ export class PriorityQueueManager {
    */
   private determinePriority(entityType: string, operation: string): SyncPriority {
     // Deletes are always high priority
-    if (operation === 'delete') return 'high';
+    if (operation === 'delete') {return 'high';}
 
     // Use entity type mapping
     return ENTITY_PRIORITY_MAP[entityType] || 'normal';
@@ -319,7 +319,7 @@ export class PriorityQueueManager {
     this.queue.sort((a, b) => {
       // First by priority
       const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
-      if (priorityDiff !== 0) return priorityDiff;
+      if (priorityDiff !== 0) {return priorityDiff;}
 
       // Then by timestamp (older first)
       return a.timestamp - b.timestamp;

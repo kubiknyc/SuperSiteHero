@@ -85,7 +85,7 @@ export function IncidentDetailPage() {
       <AppLayout>
         <div className="p-6 text-center">
           <AlertTriangle className="h-12 w-12 text-disabled mx-auto" />
-          <h2 className="text-lg font-medium text-foreground mt-4" className="heading-section">Incident not found</h2>
+          <h2 className="text-lg font-medium text-foreground mt-4 heading-section">Incident not found</h2>
           <p className="text-muted mt-2">The incident you're looking for doesn't exist.</p>
           <Link to="/safety" className="mt-4 inline-block">
             <Button>Back to Incidents</Button>
@@ -141,7 +141,7 @@ export function IncidentDetailPage() {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Cancel Edit
             </Button>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">Edit Incident</h1>
+            <h1 className="text-2xl font-bold text-foreground heading-page">Edit Incident</h1>
           </div>
           <div className="bg-card rounded-lg border p-6">
             <IncidentReportForm
@@ -170,7 +170,7 @@ export function IncidentDetailPage() {
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-2xl font-bold text-foreground" className="heading-page">{incident.incident_number}</h1>
+                <h1 className="text-2xl font-bold text-foreground heading-page">{incident.incident_number}</h1>
                 <SeverityBadge severity={incident.severity} />
                 <Badge className={cn('text-xs', statusConfig.color)}>
                   {statusConfig.label}
@@ -217,7 +217,7 @@ export function IncidentDetailPage() {
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-card rounded-lg p-6 max-w-md mx-4">
-              <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">Delete Incident?</h3>
+              <h3 className="text-lg font-semibold text-foreground heading-subsection">Delete Incident?</h3>
               <p className="text-muted mt-2">
                 This action cannot be undone. All data associated with this incident will be
                 permanently deleted.
@@ -240,7 +240,7 @@ export function IncidentDetailPage() {
 
         {/* Status Actions */}
         <div className="bg-card rounded-lg border p-4 mb-6">
-          <h3 className="text-sm font-medium text-secondary mb-3" className="heading-subsection">Update Status</h3>
+          <h3 className="text-sm font-medium text-secondary mb-3 heading-subsection">Update Status</h3>
           <div className="flex flex-wrap gap-2">
             {Object.entries(INCIDENT_STATUS_CONFIG).map(([status, config]) => (
               <Button
@@ -282,7 +282,7 @@ export function IncidentDetailPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Incident Information */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Incident Information</h3>
+                <h3 className="text-lg font-semibold mb-4 heading-subsection">Incident Information</h3>
                 <dl className="space-y-4">
                   <div>
                     <dt className="text-sm font-medium text-muted">Type</dt>
@@ -322,7 +322,7 @@ export function IncidentDetailPage() {
 
               {/* OSHA Information */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4" className="heading-subsection">OSHA Information</h3>
+                <h3 className="text-lg font-semibold mb-4 heading-subsection">OSHA Information</h3>
                 <dl className="space-y-4">
                   <div className="flex items-center justify-between">
                     <dt className="text-sm font-medium text-muted">OSHA Recordable</dt>
@@ -354,7 +354,7 @@ export function IncidentDetailPage() {
               {/* Project Information */}
               {incident.project && (
                 <div className="bg-card rounded-lg border p-6">
-                  <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Project</h3>
+                  <h3 className="text-lg font-semibold mb-4 heading-subsection">Project</h3>
                   <div className="flex items-center gap-3">
                     <div className="bg-info-light rounded-lg p-2">
                       <Building className="h-5 w-5 text-primary" />
@@ -368,7 +368,7 @@ export function IncidentDetailPage() {
 
               {/* Reporter Information */}
               <div className="bg-card rounded-lg border p-6">
-                <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Reported By</h3>
+                <h3 className="text-lg font-semibold mb-4 heading-subsection">Reported By</h3>
                 <div className="flex items-center gap-3">
                   <div className="bg-muted rounded-full p-2">
                     <User className="h-5 w-5 text-secondary" />
@@ -389,7 +389,7 @@ export function IncidentDetailPage() {
           {/* People Tab */}
           <TabsContent value="people">
             <div className="bg-card rounded-lg border p-6">
-              <h3 className="text-lg font-semibold mb-4" className="heading-subsection">People Involved</h3>
+              <h3 className="text-lg font-semibold mb-4 heading-subsection">People Involved</h3>
               {people.length === 0 ? (
                 <p className="text-muted text-center py-8">
                   No people have been added to this incident.
@@ -429,7 +429,7 @@ export function IncidentDetailPage() {
           {/* Photos Tab */}
           <TabsContent value="photos">
             <div className="bg-card rounded-lg border p-6">
-              <h3 className="text-lg font-semibold mb-4" className="heading-subsection">Photos & Evidence</h3>
+              <h3 className="text-lg font-semibold mb-4 heading-subsection">Photos & Evidence</h3>
               {photos.length === 0 ? (
                 <p className="text-muted text-center py-8">
                   No photos have been added to this incident.
@@ -459,7 +459,7 @@ export function IncidentDetailPage() {
           <TabsContent value="actions">
             <div className="bg-card rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold" className="heading-subsection">Corrective Actions</h3>
+                <h3 className="text-lg font-semibold heading-subsection">Corrective Actions</h3>
                 <Button size="sm" onClick={() => setShowAddAction(true)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Add Action
@@ -470,7 +470,7 @@ export function IncidentDetailPage() {
               {showAddAction && (
                 <div className="bg-surface rounded-lg p-4 mb-4">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-medium" className="heading-card">New Corrective Action</h4>
+                    <h4 className="font-medium heading-card">New Corrective Action</h4>
                     <Button
                       variant="ghost"
                       size="sm"

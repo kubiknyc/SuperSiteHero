@@ -130,7 +130,7 @@ export function BiometricSettings() {
         <CardContent>
           {/* Compatibility Checks */}
           <div className="border-b pb-4 mb-4">
-            <h4 className="text-sm font-medium text-secondary mb-3" className="heading-card">Device Compatibility</h4>
+            <h4 className="text-sm font-medium text-secondary mb-3 heading-card">Device Compatibility</h4>
             <CompatibilityItem
               label="WebAuthn API"
               supported={compatibility.webAuthn}
@@ -178,7 +178,7 @@ export function BiometricSettings() {
 
           {/* Browser Support Info */}
           <div className="bg-surface rounded-lg p-4">
-            <h4 className="text-sm font-medium text-secondary mb-2 flex items-center gap-2" className="heading-card">
+            <h4 className="text-sm font-medium text-secondary mb-2 flex items-center gap-2 heading-card">
               <Shield className="h-4 w-4" />
               Supported Browsers
             </h4>

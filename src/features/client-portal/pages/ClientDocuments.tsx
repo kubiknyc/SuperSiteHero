@@ -128,7 +128,7 @@ export function ClientDocuments() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Project Documents</h1>
+        <h1 className="text-2xl font-bold text-foreground heading-page">Project Documents</h1>
         <p className="text-secondary mt-1">
           Access and download project documents and files.
         </p>
@@ -262,7 +262,7 @@ export function ClientDocuments() {
         <Card>
           <CardContent className="py-12 text-center">
             <FolderOpen className="h-12 w-12 text-disabled mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Documents Available</h3>
+            <h3 className="text-lg font-medium text-foreground heading-subsection">No Documents Available</h3>
             <p className="text-muted mt-1">
               {searchTerm || categoryFilter !== 'all'
                 ? 'No documents match your filters. Try adjusting your search.'
@@ -287,7 +287,7 @@ export function ClientDocuments() {
       {/* Documents by Category (Alternative View) */}
       {Object.keys(documentsByCategory).length > 1 && categoryFilter === 'all' && (
         <div className="space-y-6 mt-8">
-          <h2 className="text-lg font-semibold text-foreground" className="heading-section">By Category</h2>
+          <h2 className="text-lg font-semibold text-foreground heading-section">By Category</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {Object.entries(documentsByCategory).map(([category, docs]) => (
               <Card key={category}>

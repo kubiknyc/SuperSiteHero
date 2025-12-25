@@ -226,7 +226,7 @@ export function ChangeOrdersPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+            <h1 className="text-3xl font-bold text-foreground flex items-center gap-2 heading-page">
               <FileEdit className="h-8 w-8 text-primary" />
               Change Orders
             </h1>
@@ -431,7 +431,7 @@ export function ChangeOrdersPage() {
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Change Orders</h3>
+              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Change Orders</h3>
               <p className="text-error">{error.message}</p>
             </CardContent>
           </Card>
@@ -442,7 +442,7 @@ export function ChangeOrdersPage() {
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
               <FileEdit className="h-12 w-12 mx-auto text-gray-300 mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                 {activeTab === 'pco'
                   ? 'No PCOs found'
                   : activeTab === 'co'

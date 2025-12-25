@@ -106,7 +106,7 @@ export function SubcontractorDailyReportsPage() {
         <Card>
           <CardContent className="p-12 text-center">
             <Lock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-semibold mb-2" className="heading-section">Access Restricted</h2>
+            <h2 className="text-xl font-semibold mb-2 heading-section">Access Restricted</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
               You don't have permission to view daily reports. Contact the project manager to
               request access.
@@ -121,7 +121,7 @@ export function SubcontractorDailyReportsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2" className="heading-page">
+        <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
           <FileText className="h-6 w-6" />
           Daily Reports
         </h1>

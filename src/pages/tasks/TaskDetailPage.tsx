@@ -135,7 +135,7 @@ export function TaskDetailPage() {
               </Button>
             </Link>
             <div>
-              <h1 className="text-3xl font-bold text-foreground" className="heading-page">{task.title}</h1>
+              <h1 className="text-3xl font-bold text-foreground heading-page">{task.title}</h1>
               <div className="flex items-center gap-2 mt-2">
                 <Badge variant={getStatusColor(task.status ?? 'pending')}>
                   {(task.status ?? 'pending').replace(/_/g, ' ')}

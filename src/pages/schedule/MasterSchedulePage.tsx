@@ -279,7 +279,7 @@ export function MasterSchedulePage() {
       <AppLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
+            <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">
               Project not found
             </h2>
             <p className="text-secondary mb-4">
@@ -311,7 +311,7 @@ export function MasterSchedulePage() {
             </Button>
             <div className="h-6 border-l border-input" />
             <div>
-              <h1 className="text-xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+              <h1 className="text-xl font-bold text-foreground flex items-center gap-2 heading-page">
                 <Calendar className="h-5 w-5" />
                 Master Schedule
               </h1>

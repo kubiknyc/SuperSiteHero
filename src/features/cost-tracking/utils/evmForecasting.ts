@@ -127,7 +127,7 @@ export function generatePlannedCurve(
   const end = parseISO(endDate);
   const totalDays = differenceInDays(end, start);
 
-  if (totalDays <= 0) return [];
+  if (totalDays <= 0) {return [];}
 
   const result: Array<{ date: string; PV: number }> = [];
   const intervals = Math.min(totalDays, 52); // Weekly intervals, max 52
@@ -209,7 +209,7 @@ export function analyzeTrend(trendData: EVMTrendDataPoint[]): EVMTrend {
  */
 export function calculateSlope(values: number[]): number {
   const n = values.length;
-  if (n < 2) return 0;
+  if (n < 2) {return 0;}
 
   // x = index (0, 1, 2, ...)
   // y = values
@@ -226,7 +226,7 @@ export function calculateSlope(values: number[]): number {
   }
 
   const denominator = n * sumX2 - sumX * sumX;
-  if (denominator === 0) return 0;
+  if (denominator === 0) {return 0;}
 
   return (n * sumXY - sumX * sumY) / denominator;
 }
@@ -426,8 +426,8 @@ export function calculateOnTimeCompletionProbability(
   // - SPI > 1 increases probability
   // - Higher completion % with good SPI = higher probability
 
-  if (SPI <= 0) return 0;
-  if (percentComplete >= 100) return 100;
+  if (SPI <= 0) {return 0;}
+  if (percentComplete >= 100) {return 100;}
 
   // Base probability from SPI
   // SPI of 0.8 = 30%, SPI of 1.0 = 50%, SPI of 1.2 = 70%
@@ -460,10 +460,10 @@ export function calculateDaysRemaining(
   EV: number,
   dailyEVRate: number
 ): number {
-  if (dailyEVRate <= 0) return Infinity;
+  if (dailyEVRate <= 0) {return Infinity;}
 
   const remainingWork = BAC - EV;
-  if (remainingWork <= 0) return 0;
+  if (remainingWork <= 0) {return 0;}
 
   return Math.ceil(remainingWork / dailyEVRate);
 }
@@ -475,13 +475,13 @@ export function calculateDaysRemaining(
  * @returns Average daily EV rate
  */
 export function calculateDailyEVRate(trendData: EVMTrendDataPoint[]): number {
-  if (trendData.length < 2) return 0;
+  if (trendData.length < 2) {return 0;}
 
   const first = trendData[0];
   const last = trendData[trendData.length - 1];
 
   const days = differenceInDays(parseISO(last.date), parseISO(first.date));
-  if (days <= 0) return 0;
+  if (days <= 0) {return 0;}
 
   const evGain = last.EV - first.EV;
   return evGain / days;

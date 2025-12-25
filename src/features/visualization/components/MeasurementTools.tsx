@@ -139,7 +139,7 @@ function MeasurementRenderer({
 
   // Calculate label position (midpoint for distance, centroid for area)
   const getLabelPosition = (): [number, number, number] => {
-    if (measurement.points.length === 0) return [0, 0, 0];
+    if (measurement.points.length === 0) {return [0, 0, 0];}
 
     const centroid = measurement.points.reduce(
       (acc, p) => ({
@@ -290,7 +290,7 @@ export function MeasurementScene({
 
   // Handle pointer move for preview point
   useFrame(({ pointer }) => {
-    if (!activeTool) return;
+    if (!activeTool) {return;}
 
     raycaster.setFromCamera(pointer, camera);
     const intersects = raycaster.intersectObjects(scene.children, true);
@@ -421,7 +421,7 @@ export function MeasurementTools({
     }
   }, [selectedMeasurementId, measurements, unitSystem]);
 
-  if (!showControls) return null;
+  if (!showControls) {return null;}
 
   return (
     <div className={cn('flex flex-col gap-2', className)}>
@@ -693,7 +693,7 @@ export function calculateDistance(p1: Vector3D, p2: Vector3D): number {
  * Calculate area of a polygon defined by points
  */
 export function calculatePolygonArea(points: Vector3D[]): number {
-  if (points.length < 3) return 0;
+  if (points.length < 3) {return 0;}
 
   // Use Shoelace formula for 2D projection (assuming points are roughly coplanar)
   // For 3D, we'd need to project onto the best-fit plane
@@ -742,9 +742,9 @@ export function createMeasurement(
   type: MeasurementType,
   points: Vector3D[]
 ): Measurement | null {
-  if (type === 'distance' && points.length !== 2) return null;
-  if (type === 'area' && points.length < 3) return null;
-  if (type === 'angle' && points.length !== 3) return null;
+  if (type === 'distance' && points.length !== 2) {return null;}
+  if (type === 'area' && points.length < 3) {return null;}
+  if (type === 'angle' && points.length !== 3) {return null;}
 
   let value: number;
   let unit: string;

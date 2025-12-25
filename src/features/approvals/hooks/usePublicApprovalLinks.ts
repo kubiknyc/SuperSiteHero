@@ -223,14 +223,14 @@ export function usePublicApprovalLinkManager(approvalRequestId: string | undefin
 
     // Operations
     createLink: async (input: Omit<CreatePublicLinkInput, 'approval_request_id'>) => {
-      if (!approvalRequestId) return;
+      if (!approvalRequestId) {return;}
       return createLink.mutateAsync({
         ...input,
         approval_request_id: approvalRequestId,
       });
     },
     revokeLink: async (linkId: string) => {
-      if (!approvalRequestId) return;
+      if (!approvalRequestId) {return;}
       return revokeLink.mutateAsync({ linkId, approvalRequestId });
     },
     sendEmail: async (linkId: string, email: string, message?: string) => {

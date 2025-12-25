@@ -43,7 +43,7 @@ export async function getEmailAccounts(): Promise<{
       .eq('is_active', true)
       .order('created_at', { ascending: false })
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -64,7 +64,7 @@ export async function getEmailAccount(accountId: string): Promise<{
       .eq('id', accountId)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -141,7 +141,7 @@ export async function connectEmailAccount(data: ConnectEmailAccountDTO): Promise
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { data: account, error: null }
     }
 
@@ -153,7 +153,7 @@ export async function connectEmailAccount(data: ConnectEmailAccountDTO): Promise
       },
     })
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: result.account, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -173,7 +173,7 @@ export async function disconnectEmailAccount(accountId: string): Promise<{
       .update({ is_active: false })
       .eq('id', accountId)
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: true, error: null }
   } catch (error) {
     return { data: false, error: error as Error }
@@ -195,7 +195,7 @@ export async function toggleEmailSync(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -214,7 +214,7 @@ export async function triggerEmailSync(accountId: string): Promise<{
       body: { accountId },
     })
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -236,7 +236,7 @@ export async function getEmailSyncLogs(
       .order('started_at', { ascending: false })
       .limit(limit)
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -294,7 +294,7 @@ export async function getEmailThreads(
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -318,7 +318,7 @@ export async function getEmailThread(threadId: string): Promise<{
       .eq('id', threadId)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -340,7 +340,7 @@ export async function updateEmailThread(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -360,7 +360,7 @@ export async function markThreadAsRead(
       .update({ is_read: isRead })
       .eq('thread_id', threadId)
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: true, error: null }
   } catch (error) {
     return { data: false, error: error as Error }
@@ -422,7 +422,7 @@ export async function getEmails(
 
     const { data, error } = await query
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -447,7 +447,7 @@ export async function getEmail(emailId: string): Promise<{
       .eq('id', emailId)
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -469,7 +469,7 @@ export async function markEmailAsRead(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -491,7 +491,7 @@ export async function starEmail(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -513,7 +513,7 @@ export async function moveEmailToFolder(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -528,7 +528,7 @@ export async function searchEmails(
 ): Promise<{ data: Email[] | null; error: Error | null }> {
   try {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) throw new Error('Not authenticated')
+    if (!user) {throw new Error('Not authenticated')}
 
     const { data, error } = await supabase.rpc('search_emails', {
       p_user_id: user.id,
@@ -537,7 +537,7 @@ export async function searchEmails(
       p_limit: params.limit || 50,
     })
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Map RPC result to Email type
     const emails: Email[] = (data || []).map((row: Record<string, unknown>) => ({
@@ -595,7 +595,7 @@ export async function sendEmail(data: ComposeEmailDTO): Promise<{
       body: data,
     })
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: result, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -629,7 +629,7 @@ export async function saveDraft(data: ComposeEmailDTO): Promise<{
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: result, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -662,7 +662,7 @@ export async function createEntityLink(
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: link, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -682,7 +682,7 @@ export async function removeEntityLink(linkId: string): Promise<{
       .delete()
       .eq('id', linkId)
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: true, error: null }
   } catch (error) {
     return { data: false, error: error as Error }
@@ -704,7 +704,7 @@ export async function getEntityEmails(
       p_limit: limit,
     })
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Map RPC result to Email type
     const emails: Email[] = (data || []).map((row: Record<string, unknown>) => ({
@@ -759,7 +759,7 @@ export async function getEmailEntityLinks(emailId: string): Promise<{
       .select('*')
       .eq('email_id', emailId)
 
-    if (error) throw error
+    if (error) {throw error}
     return { data, error: null }
   } catch (error) {
     return { data: null, error: error as Error }
@@ -779,13 +779,13 @@ export async function getUnreadEmailCount(): Promise<{
 }> {
   try {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) throw new Error('Not authenticated')
+    if (!user) {throw new Error('Not authenticated')}
 
     const { data, error } = await supabase.rpc('get_unread_email_count', {
       p_user_id: user.id,
     })
 
-    if (error) throw error
+    if (error) {throw error}
     return { data: data || 0, error: null }
   } catch (error) {
     return { data: 0, error: error as Error }
@@ -806,7 +806,7 @@ export async function getUnreadCountsByFolder(): Promise<{
       .gt('unread_count', 0)
       .not('is_archived', 'eq', true)
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Aggregate by folder
     const counts: Record<EmailFolder, number> = {

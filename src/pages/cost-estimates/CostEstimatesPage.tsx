@@ -148,7 +148,7 @@ export function CostEstimatesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold" className="heading-page">Cost Estimates</h1>
+          <h1 className="text-3xl font-bold heading-page">Cost Estimates</h1>
           <p className="text-muted-foreground">
             Create and manage cost estimates for your project
           </p>

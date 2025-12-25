@@ -284,7 +284,7 @@ serve(async (req) => {
       .eq('local_entity_id', entityId)
       .maybeSingle()
 
-    let accessToken = connection.access_token
+    const accessToken = connection.access_token
 
     try {
       // Handle delete action
@@ -485,11 +485,11 @@ serve(async (req) => {
 
     let httpStatus = 500
     if (isMSGraphError) {
-      if (error.errorType === 'validation') httpStatus = 400
-      else if (error.errorType === 'auth') httpStatus = 401
-      else if (error.errorType === 'forbidden') httpStatus = 403
-      else if (error.errorType === 'not_found') httpStatus = 404
-      else if (error.errorType === 'rate_limit') httpStatus = 429
+      if (error.errorType === 'validation') {httpStatus = 400}
+      else if (error.errorType === 'auth') {httpStatus = 401}
+      else if (error.errorType === 'forbidden') {httpStatus = 403}
+      else if (error.errorType === 'not_found') {httpStatus = 404}
+      else if (error.errorType === 'rate_limit') {httpStatus = 429}
     }
 
     return new Response(

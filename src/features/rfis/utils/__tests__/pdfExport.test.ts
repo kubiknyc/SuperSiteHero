@@ -53,10 +53,10 @@ vi.mock('jspdf-autotable', () => ({
 // Mock date-fns
 vi.mock('date-fns', () => ({
   format: vi.fn((date: Date | string, formatStr: string) => {
-    if (formatStr === 'MMMM d, yyyy') return 'January 15, 2025'
-    if (formatStr === 'MMM d, yyyy') return 'Jan 15, 2025'
-    if (formatStr === 'yyyy-MM-dd') return '2025-01-15'
-    if (formatStr.includes('h:mm a')) return 'Jan 15, 2025 2:30 PM'
+    if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2025'}
+    if (formatStr === 'MMM d, yyyy') {return 'Jan 15, 2025'}
+    if (formatStr === 'yyyy-MM-dd') {return '2025-01-15'}
+    if (formatStr.includes('h:mm a')) {return 'Jan 15, 2025 2:30 PM'}
     return '2025-01-15'
   }),
 }))

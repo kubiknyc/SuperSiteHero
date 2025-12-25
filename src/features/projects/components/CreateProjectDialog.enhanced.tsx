@@ -130,7 +130,7 @@ export function CreateProjectDialogEnhanced({
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Basic Information */}
           <div className="space-y-3">
-            <h3 className="font-semibold text-sm" className="heading-subsection">Basic Information</h3>
+            <h3 className="font-semibold text-sm heading-subsection">Basic Information</h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -172,7 +172,7 @@ export function CreateProjectDialogEnhanced({
 
           {/* Location */}
           <div className="space-y-3">
-            <h3 className="font-semibold text-sm" className="heading-subsection">Location</h3>
+            <h3 className="font-semibold text-sm heading-subsection">Location</h3>
 
             <div className="space-y-2">
               <Label htmlFor="address">Address</Label>
@@ -224,7 +224,7 @@ export function CreateProjectDialogEnhanced({
 
           {/* Timeline */}
           <div className="space-y-3">
-            <h3 className="font-semibold text-sm" className="heading-subsection">Timeline</h3>
+            <h3 className="font-semibold text-sm heading-subsection">Timeline</h3>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">

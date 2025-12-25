@@ -3,7 +3,9 @@
  * Tests for the natural language search with LLM query expansion.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import {
   sanitizeSearchQuery,
   sanitizeDateRange,

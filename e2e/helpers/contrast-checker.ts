@@ -125,8 +125,8 @@ export async function checkElementContrast(
       const className = await element.evaluate(el => el.className);
       const selector = await element.evaluate(el => {
         // Try to generate a useful selector
-        if (el.id) return `#${el.id}`;
-        if (el.className) return `.${el.className.split(' ')[0]}`;
+        if (el.id) {return `#${el.id}`;}
+        if (el.className) {return `.${el.className.split(' ')[0]}`;}
         return el.tagName.toLowerCase();
       });
 
@@ -167,7 +167,7 @@ export async function checkPageContrast(
     for (const element of elements) {
       // Check if element is visible
       const isVisible = await element.isVisible().catch(() => false);
-      if (!isVisible) continue;
+      if (!isVisible) {continue;}
 
       const violation = await checkElementContrast(element);
       if (violation) {

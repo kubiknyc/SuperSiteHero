@@ -2,7 +2,9 @@
  * Tests for Messaging System API Service
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import * as messagingService from './messaging'
 import { supabase } from '@/lib/supabase'
 

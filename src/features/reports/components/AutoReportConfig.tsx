@@ -171,7 +171,7 @@ export function AutoReportConfig({
   }
 
   const handlePreview = async () => {
-    if (!projectId) return
+    if (!projectId) {return}
 
     const today = new Date()
     let periodStart: string

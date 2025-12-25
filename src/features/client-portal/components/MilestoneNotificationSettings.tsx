@@ -218,7 +218,7 @@ export function MilestoneNotificationSettings({
   // Get preference or default
   const getPreference = (eventType: MilestoneEventType) => {
     const pref = localPreferences.get(eventType)
-    if (pref) return pref
+    if (pref) {return pref}
 
     // Return defaults
     const defaults = DEFAULT_MILESTONE_PREFERENCES[eventType]
@@ -277,7 +277,7 @@ export function MilestoneNotificationSettings({
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground" className="heading-section">Notification Preferences</h2>
+          <h2 className="text-2xl font-bold text-foreground heading-section">Notification Preferences</h2>
           <p className="text-secondary mt-1">
             Choose which milestone events you want to be notified about and how you'd like to receive them.
           </p>
@@ -308,7 +308,7 @@ export function MilestoneNotificationSettings({
             <AccordionTrigger className="px-6 hover:no-underline">
               <div className="flex items-center justify-between w-full pr-4">
                 <div className="flex-1 text-left">
-                  <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">{metadata.label}</h3>
+                  <h3 className="text-lg font-semibold text-foreground heading-subsection">{metadata.label}</h3>
                   <p className="text-sm text-muted mt-0.5">{metadata.description}</p>
                 </div>
                 <Badge variant="secondary" className="ml-4">
@@ -336,7 +336,7 @@ export function MilestoneNotificationSettings({
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <h4 className="font-medium text-foreground" className="heading-card">{eventMetadata.label}</h4>
+                            <h4 className="font-medium text-foreground heading-card">{eventMetadata.label}</h4>
                             {!enabled && <BellOff className="h-4 w-4 text-disabled" />}
                           </div>
                           <p className="text-sm text-muted mt-0.5">

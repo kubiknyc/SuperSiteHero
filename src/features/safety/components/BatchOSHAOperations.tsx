@@ -92,7 +92,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
           p_year: incidentYear,
         })
 
-        if (rpcError) throw rpcError
+        if (rpcError) {throw rpcError}
 
         updates.push({
           id: incident.id,
@@ -107,7 +107,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
           .update({ case_number: update.case_number })
           .eq('id', update.id)
 
-        if (updateError) throw updateError
+        if (updateError) {throw updateError}
       }
 
       setSuccess(true)
@@ -141,7 +141,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
         .update({ osha_recordable: recordabilityValue })
         .in('id', incidentIds)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       setSuccess(true)
       showToast({
@@ -174,7 +174,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
         .update({ is_privacy_case: privacyValue })
         .in('id', incidentIds)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       setSuccess(true)
       showToast({

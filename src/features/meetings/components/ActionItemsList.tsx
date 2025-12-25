@@ -190,7 +190,7 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="font-medium flex items-center gap-2" className="heading-subsection">
+        <h3 className="font-medium flex items-center gap-2 heading-subsection">
           <CheckCircle2 className="h-4 w-4" />
           Action Items
           {actionItems && actionItems.length > 0 && (

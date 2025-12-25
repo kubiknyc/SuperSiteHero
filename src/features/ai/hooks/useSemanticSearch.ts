@@ -320,15 +320,6 @@ export function useSemanticSearch(
     }
   }, [])
 
-  // Update filters when defaults change
-  useEffect(() => {
-    setEntityFilters(defaultEntities)
-  }, [defaultEntities])
-
-  useEffect(() => {
-    setProjectId(defaultProjectId)
-  }, [defaultProjectId])
-
   return {
     query,
     setQuery,

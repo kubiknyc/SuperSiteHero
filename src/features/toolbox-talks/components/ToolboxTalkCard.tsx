@@ -60,7 +60,7 @@ export function ToolboxTalkCard({
       </div>
 
       {/* Topic Title */}
-      <h3 className="mt-2 text-sm font-medium text-foreground line-clamp-2" className="heading-subsection">
+      <h3 className="mt-2 text-sm font-medium text-foreground line-clamp-2 heading-subsection">
         {topicTitle}
       </h3>
 

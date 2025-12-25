@@ -139,7 +139,7 @@ export function WorkflowsProjectView({
   if (error) {
     return (
       <div className="rounded-lg border border-red-200 bg-error-light p-4 text-red-800">
-        <h3 className="font-semibold" className="heading-subsection">Error loading {workflowTypeName}</h3>
+        <h3 className="font-semibold heading-subsection">Error loading {workflowTypeName}</h3>
         <p className="text-sm">{error instanceof Error ? error.message : 'Unknown error'}</p>
       </div>
     )
@@ -149,7 +149,7 @@ export function WorkflowsProjectView({
     <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold" className="heading-section">{workflowTypeName}</h2>
+        <h2 className="text-xl font-semibold heading-section">{workflowTypeName}</h2>
         <Button
           onClick={() => setCreateDialogOpen(true)}
           className="gap-2"

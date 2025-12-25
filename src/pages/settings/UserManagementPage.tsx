@@ -152,7 +152,7 @@ export function UserManagementPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold" className="heading-page">User Management</h1>
+            <h1 className="text-2xl font-bold heading-page">User Management</h1>
             <p className="text-muted-foreground">
               Manage team members and control access
             </p>

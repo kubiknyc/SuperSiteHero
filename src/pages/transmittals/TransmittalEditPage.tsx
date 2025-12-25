@@ -40,7 +40,7 @@ export function TransmittalEditPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <AlertCircle className="h-12 w-12 mx-auto text-destructive mb-4" />
-            <h3 className="text-lg font-medium mb-2" className="heading-subsection">Transmittal Not Found</h3>
+            <h3 className="text-lg font-medium mb-2 heading-subsection">Transmittal Not Found</h3>
             <p className="text-muted-foreground mb-4">
               The transmittal you're trying to edit doesn't exist or you don't have access.
             </p>
@@ -62,7 +62,7 @@ export function TransmittalEditPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <AlertCircle className="h-12 w-12 mx-auto text-warning mb-4" />
-            <h3 className="text-lg font-medium mb-2" className="heading-subsection">Cannot Edit Transmittal</h3>
+            <h3 className="text-lg font-medium mb-2 heading-subsection">Cannot Edit Transmittal</h3>
             <p className="text-muted-foreground mb-4">
               Only draft transmittals can be edited. This transmittal has already been sent.
             </p>
@@ -94,7 +94,7 @@ export function TransmittalEditPage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        <h1 className="text-2xl font-bold" className="heading-page">Edit {transmittal.transmittal_number}</h1>
+        <h1 className="text-2xl font-bold heading-page">Edit {transmittal.transmittal_number}</h1>
       </div>
 
       <TransmittalForm

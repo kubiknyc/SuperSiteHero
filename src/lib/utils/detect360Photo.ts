@@ -122,7 +122,7 @@ async function getImageDimensions(file: File): Promise<{ width: number; height: 
  * Check if camera make/model matches known 360 cameras
  */
 function isKnown360Camera(make?: string, model?: string): boolean {
-  if (!make && !model) return false;
+  if (!make && !model) {return false;}
 
   const combined = `${make || ''} ${model || ''}`.toUpperCase();
 
@@ -136,7 +136,7 @@ function isKnown360Camera(make?: string, model?: string): boolean {
  * Allows tolerance of 1.9 to 2.1
  */
 function is2to1AspectRatio(width: number, height: number): boolean {
-  if (height === 0) return false;
+  if (height === 0) {return false;}
   const ratio = width / height;
   return ratio >= 1.9 && ratio <= 2.1;
 }
@@ -287,7 +287,7 @@ export async function is360Photo(file: File): Promise<boolean> {
  */
 export async function get360Metadata(file: File): Promise<Detect360Result['metadata'] | null> {
   const result = await detect360Photo(file);
-  if (!result.is360) return null;
+  if (!result.is360) {return null;}
   return result.metadata ?? null;
 }
 

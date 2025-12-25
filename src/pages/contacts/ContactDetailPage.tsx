@@ -77,7 +77,7 @@ export function ContactDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Contact Not Found</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Contact Not Found</h3>
               <p className="text-secondary mb-4">{error?.message || 'The contact could not be loaded'}</p>
               <Button onClick={() => navigate('/contacts')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -104,7 +104,7 @@ export function ContactDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-3xl font-bold text-foreground" className="heading-page">{displayName}</h1>
+                <h1 className="text-3xl font-bold text-foreground heading-page">{displayName}</h1>
                 {contact.is_primary && (
                   <Star className="h-5 w-5 text-warning fill-yellow-500" aria-label="Primary Contact" />
                 )}

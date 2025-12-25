@@ -359,8 +359,8 @@ const TabletTableHead = React.forwardRef<HTMLTableCellElement, TabletTableHeadPr
     }
 
     // Hide columns based on viewport
-    if (hideOnPortrait && isTablet && isPortrait) return null;
-    if (hideOnMobile && !isTablet) return null;
+    if (hideOnPortrait && isTablet && isPortrait) {return null;}
+    if (hideOnMobile && !isTablet) {return null;}
 
     return (
       <th
@@ -447,8 +447,8 @@ const TabletTableCell = React.forwardRef<HTMLTableCellElement, TabletTableCellPr
     const { isTablet, isPortrait, isTouchDevice } = useTabletMode();
 
     // Hide columns based on viewport
-    if (hideOnPortrait && isTablet && isPortrait) return null;
-    if (hideOnMobile && !isTablet) return null;
+    if (hideOnPortrait && isTablet && isPortrait) {return null;}
+    if (hideOnMobile && !isTablet) {return null;}
 
     return (
       <td

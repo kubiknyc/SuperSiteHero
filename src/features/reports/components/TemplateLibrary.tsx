@@ -221,13 +221,13 @@ function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: Templ
         <div className="space-y-6 py-4">
           {/* Description */}
           <div>
-            <h4 className="font-medium mb-2" className="heading-card">Description</h4>
+            <h4 className="font-medium mb-2 heading-card">Description</h4>
             <p className="text-sm text-muted-foreground">{template.description}</p>
           </div>
 
           {/* Tags */}
           <div>
-            <h4 className="font-medium mb-2" className="heading-card">Tags</h4>
+            <h4 className="font-medium mb-2 heading-card">Tags</h4>
             <div className="flex flex-wrap gap-2">
               {template.tags.map(tag => (
                 <Badge key={tag} variant="outline">
@@ -240,7 +240,7 @@ function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: Templ
 
           {/* Fields */}
           <div>
-            <h4 className="font-medium mb-2" className="heading-card">Included Fields ({template.fields.length})</h4>
+            <h4 className="font-medium mb-2 heading-card">Included Fields ({template.fields.length})</h4>
             <div className="grid grid-cols-2 gap-2">
               {template.fields.map((field, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
@@ -255,21 +255,21 @@ function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: Templ
           {/* Configuration */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">Default Format</h4>
+              <h4 className="font-medium mb-2 heading-card">Default Format</h4>
               <Badge variant="secondary" className="uppercase">
                 {template.default_format}
               </Badge>
             </div>
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">Orientation</h4>
+              <h4 className="font-medium mb-2 heading-card">Orientation</h4>
               <span className="text-sm capitalize">{template.page_orientation}</span>
             </div>
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">Include Charts</h4>
+              <h4 className="font-medium mb-2 heading-card">Include Charts</h4>
               <span className="text-sm">{template.include_charts ? 'Yes' : 'No'}</span>
             </div>
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">Include Summary</h4>
+              <h4 className="font-medium mb-2 heading-card">Include Summary</h4>
               <span className="text-sm">{template.include_summary ? 'Yes' : 'No'}</span>
             </div>
           </div>
@@ -277,7 +277,7 @@ function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: Templ
           {/* Recommended Schedule */}
           {template.recommended_frequency && (
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">Recommended Schedule</h4>
+              <h4 className="font-medium mb-2 heading-card">Recommended Schedule</h4>
               <div className="flex items-center gap-2 text-sm">
                 <Clock className="h-4 w-4 text-muted-foreground" />
                 <span className="capitalize">{template.recommended_frequency}</span>
@@ -298,7 +298,7 @@ function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: Templ
           {/* Filters */}
           {template.filters.length > 0 && (
             <div>
-              <h4 className="font-medium mb-2" className="heading-card">Default Filters</h4>
+              <h4 className="font-medium mb-2 heading-card">Default Filters</h4>
               <div className="space-y-1">
                 {template.filters.map((filter, index) => (
                   <div key={index} className="text-sm text-muted-foreground flex items-center gap-2">
@@ -363,7 +363,7 @@ export function TemplateLibrary({ onSelectTemplate, selectedTemplateId }: Templa
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold" className="heading-section">Report Templates</h2>
+          <h2 className="text-2xl font-bold heading-section">Report Templates</h2>
           <p className="text-muted-foreground">
             Browse pre-built industry-standard report templates
           </p>
@@ -489,7 +489,7 @@ function TemplateGrid({ templates, onSelect, onPreview, selectedId }: TemplateGr
     return (
       <div className="text-center py-12">
         <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="text-lg font-medium" className="heading-subsection">No templates found</h3>
+        <h3 className="text-lg font-medium heading-subsection">No templates found</h3>
         <p className="text-muted-foreground">
           Try adjusting your search or filters
         </p>

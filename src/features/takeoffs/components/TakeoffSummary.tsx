@@ -87,7 +87,7 @@ export function TakeoffSummary({
 
         {/* By Type Breakdown */}
         <div className="space-y-2">
-          <h3 className="font-semibold text-sm" className="heading-subsection">Breakdown by Type</h3>
+          <h3 className="font-semibold text-sm heading-subsection">Breakdown by Type</h3>
           <div className="space-y-2">
             {Object.entries(summary.byType).map(([type, quantity]) => (
               <div
@@ -126,7 +126,7 @@ export function TakeoffSummary({
 
         {/* Export Buttons */}
         <div className="space-y-2 pt-4 border-t">
-          <h3 className="font-semibold text-sm mb-3" className="heading-subsection">Export Options</h3>
+          <h3 className="font-semibold text-sm mb-3 heading-subsection">Export Options</h3>
           <div className="grid grid-cols-2 gap-2">
             <Button
               variant="outline"

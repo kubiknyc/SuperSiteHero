@@ -329,7 +329,7 @@ function TrendChart({ data, metric, label, benchmark, isLoading }: TrendChartPro
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h4 className="text-sm font-medium" className="heading-card">{label} Trend</h4>
+        <h4 className="text-sm font-medium heading-card">{label} Trend</h4>
         {benchmark && (
           <span className="text-xs text-muted">
             Industry Avg: {benchmark.toFixed(2)}
@@ -579,7 +579,7 @@ export function SafetyMetricsDashboard({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold flex items-center gap-2" className="heading-section">
+          <h2 className="text-xl font-semibold flex items-center gap-2 heading-section">
             <Activity className="h-5 w-5 text-primary" />
             Safety Metrics Dashboard
           </h2>

@@ -98,7 +98,7 @@ export function QRCodeGenerator({
   }, [generateToken, instruction.id, expirationDays, showToast])
 
   const handleCopyLink = useCallback(async () => {
-    if (!acknowledgmentUrl) return
+    if (!acknowledgmentUrl) {return}
 
     try {
       await navigator.clipboard.writeText(acknowledgmentUrl)
@@ -117,15 +117,15 @@ export function QRCodeGenerator({
   }, [acknowledgmentUrl, showToast])
 
   const handleDownloadQRCode = useCallback(() => {
-    if (!qrRef.current) return
+    if (!qrRef.current) {return}
 
     const svg = qrRef.current.querySelector('svg')
-    if (!svg) return
+    if (!svg) {return}
 
     // Create canvas from SVG
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     const svgData = new XMLSerializer().serializeToString(svg)
     const img = new Image()
@@ -148,13 +148,13 @@ export function QRCodeGenerator({
   }, [instruction.reference_number, instruction.id])
 
   const handlePrint = useCallback(() => {
-    if (!qrRef.current) return
+    if (!qrRef.current) {return}
 
     const printWindow = window.open('', '_blank')
-    if (!printWindow) return
+    if (!printWindow) {return}
 
     const svg = qrRef.current.querySelector('svg')
-    if (!svg) return
+    if (!svg) {return}
 
     const svgData = new XMLSerializer().serializeToString(svg)
 
@@ -231,7 +231,7 @@ export function QRCodeGenerator({
   }, [instruction])
 
   const handleShare = useCallback(async () => {
-    if (!acknowledgmentUrl) return
+    if (!acknowledgmentUrl) {return}
 
     if (navigator.share) {
       try {

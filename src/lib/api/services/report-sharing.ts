@@ -57,7 +57,7 @@ export async function getReportShare(shareId: string): Promise<SharedReport | nu
     .single()
 
   if (error) {
-    if (error.code === 'PGRST116') return null
+    if (error.code === 'PGRST116') {return null}
     logger.error('[ReportSharing] Error fetching share:', error)
     throw error
   }
@@ -186,12 +186,12 @@ export async function updateReportShare(
 ): Promise<SharedReport> {
   const updates: Record<string, unknown> = {}
 
-  if (input.isPublic !== undefined) updates.is_public = input.isPublic
-  if (input.allowedUsers !== undefined) updates.allowed_users = input.allowedUsers
-  if (input.expiresAt !== undefined) updates.expires_at = input.expiresAt
-  if (input.allowExport !== undefined) updates.allow_export = input.allowExport
-  if (input.showBranding !== undefined) updates.show_branding = input.showBranding
-  if (input.customMessage !== undefined) updates.custom_message = input.customMessage
+  if (input.isPublic !== undefined) {updates.is_public = input.isPublic}
+  if (input.allowedUsers !== undefined) {updates.allowed_users = input.allowedUsers}
+  if (input.expiresAt !== undefined) {updates.expires_at = input.expiresAt}
+  if (input.allowExport !== undefined) {updates.allow_export = input.allowExport}
+  if (input.showBranding !== undefined) {updates.show_branding = input.showBranding}
+  if (input.customMessage !== undefined) {updates.custom_message = input.customMessage}
 
   const { data, error } = await supabaseUntyped
     .from('shared_reports')
@@ -268,7 +268,7 @@ export function getEmbedCode(token: string, width = '100%', height = '600px'): s
  * Check if a share is expired
  */
 export function isShareExpired(share: SharedReport): boolean {
-  if (!share.expires_at) return false
+  if (!share.expires_at) {return false}
   return new Date(share.expires_at) < new Date()
 }
 
@@ -277,10 +277,10 @@ export function isShareExpired(share: SharedReport): boolean {
  */
 export function userHasAccess(share: SharedReport, userId: string | null): boolean {
   // Public shares are accessible to everyone
-  if (share.is_public) return true
+  if (share.is_public) {return true}
 
   // Non-public shares require a valid user ID
-  if (!userId) return false
+  if (!userId) {return false}
 
   // Check if user is in the allowed users list
   return share.allowed_users?.includes(userId) ?? false

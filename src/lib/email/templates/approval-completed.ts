@@ -38,7 +38,7 @@ export function generateApprovalCompletedEmail(data: ApprovalCompletedEmailData)
   const statusConfig = STATUS_CONFIG[data.status] || STATUS_CONFIG.approved
 
   const content = `
-    <h1>${entityLabel} ${statusConfig.label}</h1>
+    <h1 className="heading-page">${entityLabel} ${statusConfig.label}</h1>
 
     <p>Hi ${data.recipientName},</p>
 

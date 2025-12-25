@@ -55,12 +55,12 @@ export function analyzeModel(object: THREE.Object3D): {
         materials.add(mat);
         // Collect textures from material
         if (mat instanceof THREE.MeshStandardMaterial) {
-          if (mat.map) textures.add(mat.map);
-          if (mat.normalMap) textures.add(mat.normalMap);
-          if (mat.roughnessMap) textures.add(mat.roughnessMap);
-          if (mat.metalnessMap) textures.add(mat.metalnessMap);
-          if (mat.aoMap) textures.add(mat.aoMap);
-          if (mat.emissiveMap) textures.add(mat.emissiveMap);
+          if (mat.map) {textures.add(mat.map);}
+          if (mat.normalMap) {textures.add(mat.normalMap);}
+          if (mat.roughnessMap) {textures.add(mat.roughnessMap);}
+          if (mat.metalnessMap) {textures.add(mat.metalnessMap);}
+          if (mat.aoMap) {textures.add(mat.aoMap);}
+          if (mat.emissiveMap) {textures.add(mat.emissiveMap);}
         }
       });
     }
@@ -356,10 +356,10 @@ export async function optimizeTextures(
 
       materials.forEach((mat) => {
         if (mat instanceof THREE.MeshStandardMaterial) {
-          if (mat.map) textures.add(mat.map);
-          if (mat.normalMap) textures.add(mat.normalMap);
-          if (mat.roughnessMap) textures.add(mat.roughnessMap);
-          if (mat.metalnessMap) textures.add(mat.metalnessMap);
+          if (mat.map) {textures.add(mat.map);}
+          if (mat.normalMap) {textures.add(mat.normalMap);}
+          if (mat.roughnessMap) {textures.add(mat.roughnessMap);}
+          if (mat.metalnessMap) {textures.add(mat.metalnessMap);}
         }
       });
     }
@@ -381,11 +381,11 @@ async function resizeTexture(
   maxSize: number
 ): Promise<void> {
   const image = texture.image;
-  if (!image) return;
+  if (!image) {return;}
 
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  if (!ctx) {return;}
 
   // Calculate new dimensions
   let width = image.width;

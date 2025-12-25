@@ -239,7 +239,7 @@ export function WarrantyList({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold" className="heading-section">Warranties</h2>
+          <h2 className="text-lg font-semibold heading-section">Warranties</h2>
           <p className="text-sm text-muted">
             {filteredWarranties.length} warrant{filteredWarranties.length !== 1 ? 'ies' : 'y'}
           </p>

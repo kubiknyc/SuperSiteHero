@@ -710,10 +710,10 @@ export const EVM_STATUS_CONFIG: Record<EVMPerformanceStatus, {
   icon: string;
 }> = {
   excellent: { label: 'Excellent', color: 'text-emerald-700', bgColor: 'bg-emerald-100', icon: 'TrendingUp' },
-  good: { label: 'Good', color: 'text-green-700', bgColor: 'bg-green-100', icon: 'CheckCircle' },
-  fair: { label: 'Fair', color: 'text-yellow-700', bgColor: 'bg-yellow-100', icon: 'AlertTriangle' },
+  good: { label: 'Good', color: 'text-success-dark', bgColor: 'bg-success-light', icon: 'CheckCircle' },
+  fair: { label: 'Fair', color: 'text-yellow-700', bgColor: 'bg-warning-light', icon: 'AlertTriangle' },
   poor: { label: 'Poor', color: 'text-orange-700', bgColor: 'bg-orange-100', icon: 'AlertCircle' },
-  critical: { label: 'Critical', color: 'text-red-700', bgColor: 'bg-red-100', icon: 'XCircle' },
+  critical: { label: 'Critical', color: 'text-error-dark', bgColor: 'bg-error-light', icon: 'XCircle' },
 };
 
 // =============================================
@@ -815,21 +815,21 @@ export const VARIANCE_ALERT_CONFIG: Record<BudgetVarianceAlertSeverity, {
 }> = {
   critical: {
     label: 'Critical',
-    color: 'text-red-700',
-    bgColor: 'bg-red-50',
+    color: 'text-error-dark',
+    bgColor: 'bg-error-light',
     borderColor: 'border-red-200',
     icon: 'AlertCircle',
   },
   warning: {
     label: 'Warning',
     color: 'text-amber-700',
-    bgColor: 'bg-amber-50',
+    bgColor: 'bg-warning-light',
     borderColor: 'border-amber-200',
     icon: 'AlertTriangle',
   },
   info: {
     label: 'Info',
-    color: 'text-blue-700',
+    color: 'text-primary-hover',
     bgColor: 'bg-blue-50',
     borderColor: 'border-blue-200',
     icon: 'Info',

@@ -152,7 +152,7 @@ export function LayerManager({
         <PopoverContent className="w-80 p-0" align="start">
           <div className="p-3 border-b bg-surface">
             <div className="flex items-center justify-between">
-              <h4 className="font-medium text-sm" className="heading-card">Markup Layers</h4>
+              <h4 className="font-medium text-sm heading-card">Markup Layers</h4>
               <Button
                 size="sm"
                 variant="ghost"

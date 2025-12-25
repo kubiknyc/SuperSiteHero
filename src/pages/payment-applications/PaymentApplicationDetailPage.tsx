@@ -276,7 +276,7 @@ export function PaymentApplicationDetailPage() {
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2" className="heading-subsection">Error Loading Application</h3>
+              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Application</h3>
               <p className="text-error">{error?.message || 'Application not found'}</p>
               <Button variant="outline" onClick={() => navigate('/payment-applications')} className="mt-4">
                 <ArrowLeft className="h-4 w-4 mr-2" />
@@ -306,7 +306,7 @@ export function PaymentApplicationDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-foreground" className="heading-page">{application.display_number}</h1>
+                <h1 className="text-2xl font-bold text-foreground heading-page">{application.display_number}</h1>
                 {getStatusBadge(application.status)}
               </div>
               <p className="text-secondary">
@@ -391,7 +391,7 @@ export function PaymentApplicationDetailPage() {
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-error mt-0.5" />
                 <div>
-                  <h4 className="font-medium text-red-800" className="heading-card">Application Rejected</h4>
+                  <h4 className="font-medium text-red-800 heading-card">Application Rejected</h4>
                   <p className="text-error-dark mt-1">{application.rejection_reason}</p>
                 </div>
               </div>
@@ -412,7 +412,7 @@ export function PaymentApplicationDetailPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Contract Sums */}
               <div className="space-y-3">
-                <h4 className="font-medium text-secondary border-b pb-2" className="heading-card">Contract Summary</h4>
+                <h4 className="font-medium text-secondary border-b pb-2 heading-card">Contract Summary</h4>
                 <div className="flex justify-between">
                   <span className="text-secondary">Original Contract Sum:</span>
                   <span className="font-medium">{formatCurrency(application.original_contract_sum)}</span>
@@ -431,7 +431,7 @@ export function PaymentApplicationDetailPage() {
 
               {/* Work Completed */}
               <div className="space-y-3">
-                <h4 className="font-medium text-secondary border-b pb-2" className="heading-card">Work Completed</h4>
+                <h4 className="font-medium text-secondary border-b pb-2 heading-card">Work Completed</h4>
                 <div className="flex justify-between">
                   <span className="text-secondary">Previous Applications:</span>
                   <span className="font-medium">{formatCurrency(application.total_completed_previous)}</span>
@@ -452,7 +452,7 @@ export function PaymentApplicationDetailPage() {
 
               {/* Payment Calculation */}
               <div className="space-y-3">
-                <h4 className="font-medium text-secondary border-b pb-2" className="heading-card">Payment Calculation</h4>
+                <h4 className="font-medium text-secondary border-b pb-2 heading-card">Payment Calculation</h4>
                 <div className="flex justify-between">
                   <span className="text-secondary">Retainage ({formatPercent(application.retainage_percent)}):</span>
                   <span className="font-medium text-error">-{formatCurrency(application.total_retainage)}</span>
@@ -620,7 +620,7 @@ export function PaymentApplicationDetailPage() {
               {/* Contractor Signature */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-secondary" className="heading-card">Contractor</h4>
+                  <h4 className="font-medium text-secondary heading-card">Contractor</h4>
                   {application.contractor_signature_url ? (
                     <Badge className="bg-success-light text-success-dark">
                       <CheckCircle className="h-3 w-3 mr-1" />
@@ -669,7 +669,7 @@ export function PaymentApplicationDetailPage() {
               {/* Architect Signature */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-secondary" className="heading-card">Architect</h4>
+                  <h4 className="font-medium text-secondary heading-card">Architect</h4>
                   {application.architect_signature_url ? (
                     <Badge className="bg-success-light text-success-dark">
                       <CheckCircle className="h-3 w-3 mr-1" />
@@ -718,7 +718,7 @@ export function PaymentApplicationDetailPage() {
               {/* Owner Signature */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="font-medium text-secondary" className="heading-card">Owner</h4>
+                  <h4 className="font-medium text-secondary heading-card">Owner</h4>
                   {application.owner_signature_url ? (
                     <Badge className="bg-success-light text-success-dark">
                       <CheckCircle className="h-3 w-3 mr-1" />

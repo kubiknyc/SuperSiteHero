@@ -74,7 +74,7 @@ export function ClientSchedule() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Project Schedule</h1>
+        <h1 className="text-2xl font-bold text-foreground heading-page">Project Schedule</h1>
         <p className="text-secondary mt-1">
           Track project timeline and milestones.
         </p>
@@ -104,7 +104,7 @@ export function ClientSchedule() {
       {/* Upcoming Milestones */}
       {upcomingMilestones.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2" className="heading-section">
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 heading-section">
             <Flag className="h-5 w-5 text-orange-500" />
             Upcoming Milestones
           </h2>
@@ -119,7 +119,7 @@ export function ClientSchedule() {
                         <Flag className="h-5 w-5 text-orange-600" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-medium text-foreground" className="heading-subsection">{milestone.task_name}</h3>
+                        <h3 className="font-medium text-foreground heading-subsection">{milestone.task_name}</h3>
                         <p className="text-sm text-muted mt-1">
                           {format(new Date(milestone.finish_date), 'MMM d, yyyy')}
                         </p>
@@ -142,7 +142,7 @@ export function ClientSchedule() {
       {/* All Milestones */}
       {milestones.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2" className="heading-section">
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 heading-section">
             <Flag className="h-5 w-5" />
             All Milestones ({milestones.length})
           </h2>
@@ -205,7 +205,7 @@ export function ClientSchedule() {
       {/* Tasks List */}
       {tasks.length > 0 && (
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2" className="heading-section">
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2 heading-section">
             <Calendar className="h-5 w-5" />
             Schedule Items ({tasks.length})
           </h2>
@@ -270,7 +270,7 @@ export function ClientSchedule() {
         <Card>
           <CardContent className="py-12 text-center">
             <Calendar className="h-12 w-12 text-disabled mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Schedule Available</h3>
+            <h3 className="text-lg font-medium text-foreground heading-subsection">No Schedule Available</h3>
             <p className="text-muted mt-1">
               Schedule information will appear here once it's added.
             </p>

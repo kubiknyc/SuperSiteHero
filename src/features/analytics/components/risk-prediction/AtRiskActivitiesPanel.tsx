@@ -195,7 +195,7 @@ export function AtRiskActivitiesPanel({
 
         {/* At Risk Activities */}
         <div>
-          <h4 className="text-sm font-medium mb-2" className="heading-card">
+          <h4 className="text-sm font-medium mb-2 heading-card">
             At-Risk Activities ({atRiskActivities.length})
           </h4>
 
@@ -230,7 +230,7 @@ export function AtRiskActivitiesPanel({
           <>
             <Separator />
             <div>
-              <h4 className="text-sm font-medium mb-2" className="heading-card">
+              <h4 className="text-sm font-medium mb-2 heading-card">
                 Active Alerts ({alerts.length})
               </h4>
               <ScrollArea className="h-[200px]">

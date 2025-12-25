@@ -164,7 +164,7 @@ function SimilarDocumentItem({ document, onClick }: SimilarDocumentItemProps) {
 
       {/* Document info */}
       <div className="flex-1 min-w-0">
-        <h4 className="font-medium text-sm text-foreground truncate" className="heading-card">
+        <h4 className="font-medium text-sm text-foreground truncate heading-card">
           {document.document_name}
         </h4>
         <div className="flex items-center gap-2 mt-1">

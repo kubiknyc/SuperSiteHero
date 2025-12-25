@@ -48,7 +48,7 @@ export const equipmentDailyStatusApi = {
       .eq('daily_report_id', dailyReportId)
       .order('created_at', { ascending: true });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return (data || []) as EquipmentDailyStatusWithEquipment[];
   },
 
@@ -76,7 +76,7 @@ export const equipmentDailyStatusApi = {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data as EquipmentDailyStatusWithEquipment;
   },
 
@@ -133,7 +133,7 @@ export const equipmentDailyStatusApi = {
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {throw error;}
     return (data || []) as EquipmentDailyStatusWithEquipment[];
   },
 
@@ -162,7 +162,7 @@ export const equipmentDailyStatusApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -177,7 +177,7 @@ export const equipmentDailyStatusApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -204,7 +204,7 @@ export const equipmentDailyStatusApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -217,7 +217,7 @@ export const equipmentDailyStatusApi = {
       .delete()
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 
   /**
@@ -228,7 +228,7 @@ export const equipmentDailyStatusApi = {
       p_daily_report_id: dailyReportId,
     });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data as EquipmentDailyStatusSummary;
   },
 
@@ -244,7 +244,7 @@ export const equipmentDailyStatusApi = {
       p_user_id: user?.user?.id,
     });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data as number;
   },
 
@@ -256,7 +256,7 @@ export const equipmentDailyStatusApi = {
       p_project_id: projectId,
     });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return (data || []) as EquipmentMaintenanceAlert[];
   },
 
@@ -292,7 +292,7 @@ export const equipmentDailyStatusApi = {
       .insert(entries)
       .select();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 };
@@ -313,7 +313,7 @@ export const equipmentChecklistTemplatesApi = {
       .order('is_default', { ascending: false })
       .order('name', { ascending: true });
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data || [];
   },
 
@@ -327,7 +327,7 @@ export const equipmentChecklistTemplatesApi = {
       .eq('id', id)
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -392,7 +392,7 @@ export const equipmentChecklistTemplatesApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -413,7 +413,7 @@ export const equipmentChecklistTemplatesApi = {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {throw error;}
     return data;
   },
 
@@ -426,7 +426,7 @@ export const equipmentChecklistTemplatesApi = {
       .update({ is_active: false })
       .eq('id', id);
 
-    if (error) throw error;
+    if (error) {throw error;}
   },
 };
 

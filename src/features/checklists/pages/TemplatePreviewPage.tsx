@@ -80,7 +80,7 @@ export function TemplatePreviewPage() {
     return (
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Template not found</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Template not found</h2>
           <Button variant="outline" onClick={() => navigate('/checklists/templates')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Templates
@@ -111,7 +111,7 @@ export function TemplatePreviewPage() {
 
           <div className="flex items-start justify-between">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-foreground mb-2" className="heading-page">{template.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">{template.name}</h1>
               {template.description && (
                 <p className="text-secondary mb-3">{template.description}</p>
               )}
@@ -170,7 +170,7 @@ export function TemplatePreviewPage() {
 
             {template.instructions && (
               <div className="mt-4 pt-4 border-t border-border">
-                <h3 className="font-medium text-foreground mb-2 flex items-center gap-2" className="heading-subsection">
+                <h3 className="font-medium text-foreground mb-2 flex items-center gap-2 heading-subsection">
                   <FileText className="w-4 h-4" />
                   Instructions
                 </h3>
@@ -197,7 +197,7 @@ export function TemplatePreviewPage() {
                       <div className="flex-shrink-0 mt-1">{getItemIcon(item.item_type)}</div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="font-medium text-foreground" className="heading-subsection">{item.label}</h3>
+                          <h3 className="font-medium text-foreground heading-subsection">{item.label}</h3>
                           <Badge variant="outline" className="text-xs">
                             {item.item_type}
                           </Badge>
@@ -242,7 +242,7 @@ export function TemplatePreviewPage() {
           <Card>
             <CardContent className="py-12 text-center">
               <FileText className="w-12 h-12 text-disabled mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">No items yet</h3>
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">No items yet</h3>
               <p className="text-secondary mb-4">
                 This template doesn't have any items configured yet.
               </p>

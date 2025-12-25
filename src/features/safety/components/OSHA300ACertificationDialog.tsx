@@ -93,10 +93,10 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
 
   const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     const rect = canvas.getBoundingClientRect()
     const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left
@@ -109,13 +109,13 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
   }
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
-    if (!isDrawing) return
+    if (!isDrawing) {return}
 
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     const rect = canvas.getBoundingClientRect()
     const x = 'touches' in e ? e.touches[0].clientX - rect.left : e.clientX - rect.left
@@ -130,7 +130,7 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
   }
 
   const stopDrawing = () => {
-    if (!isDrawing) return
+    if (!isDrawing) {return}
     setIsDrawing(false)
 
     const canvas = canvasRef.current
@@ -142,7 +142,7 @@ const SignatureCanvas: React.FC<SignatureCanvasProps> = ({
 
   const clearCanvas = () => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
     if (ctx) {
@@ -317,7 +317,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
           onConflict: 'company_id,calendar_year,project_id',
         })
 
-      if (dbError) throw dbError
+      if (dbError) {throw dbError}
 
       setSuccess(true)
       setTimeout(() => {
@@ -364,7 +364,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
             {/* Summary Stats */}
             <Card>
               <CardContent className="pt-6">
-                <h3 className="font-semibold mb-4" className="heading-subsection">Annual Summary for {summary.year}</h3>
+                <h3 className="font-semibold mb-4 heading-subsection">Annual Summary for {summary.year}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">Total Recordable Cases:</span>
@@ -426,7 +426,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
             {formData.total_hours_worked && formData.total_hours_worked > 0 && (
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="font-semibold mb-4" className="heading-subsection">Calculated Incident Rates</h3>
+                  <h3 className="font-semibold mb-4 heading-subsection">Calculated Incident Rates</h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-muted-foreground">
@@ -448,7 +448,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
 
             {/* Certifying Official Info */}
             <div className="space-y-4">
-              <h3 className="font-semibold" className="heading-subsection">Certifying Official Information</h3>
+              <h3 className="font-semibold heading-subsection">Certifying Official Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="official_name">Name *</Label>
@@ -517,7 +517,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
 
             {/* Signature */}
             <div className="space-y-4">
-              <h3 className="font-semibold" className="heading-subsection">Certification Signature *</h3>
+              <h3 className="font-semibold heading-subsection">Certification Signature *</h3>
               <RadioGroup
                 value={formData.signature_type}
                 onValueChange={(value: 'typed' | 'drawn') =>

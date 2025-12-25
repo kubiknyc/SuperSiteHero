@@ -92,7 +92,7 @@ export function FormSection({
   return (
     <div className={cn('space-y-4', className)}>
       <div>
-        <h3 className="text-lg font-semibold text-foreground" className="heading-subsection">{title}</h3>
+        <h3 className="text-lg font-semibold text-foreground heading-subsection">{title}</h3>
         {description && (
           <p className="text-sm text-secondary mt-1">{description}</p>
         )}

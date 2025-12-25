@@ -102,7 +102,7 @@ export function InsuranceExpirationAlerts({
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
           <Bell className="h-5 w-5 text-warning" />
-          <h3 className="font-semibold" className="heading-subsection">Insurance Alerts</h3>
+          <h3 className="font-semibold heading-subsection">Insurance Alerts</h3>
           <Badge variant={expiredCount > 0 ? 'destructive' : 'secondary'}>
             {expiringCertificates.length}
           </Badge>

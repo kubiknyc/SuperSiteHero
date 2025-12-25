@@ -114,7 +114,7 @@ export function MarkupVersionComparison({
   // Extract and filter change regions
   const allChangeRegions = comparisonResult?.changeRegions || []
   const filteredChangeRegions = useMemo(() => {
-    if (changeFilter === 'all') return allChangeRegions
+    if (changeFilter === 'all') {return allChangeRegions}
     return allChangeRegions.filter(region => region.changeType === changeFilter)
   }, [allChangeRegions, changeFilter])
 
@@ -127,7 +127,7 @@ export function MarkupVersionComparison({
     const numPages = version === 1 ? numPages1 : numPages2
     const setPage = version === 1 ? setCurrentPage1 : setCurrentPage2
 
-    if (!numPages) return
+    if (!numPages) {return}
 
     const newPage = direction === 'next'
       ? Math.min(currentPage + 1, numPages)
@@ -154,13 +154,13 @@ export function MarkupVersionComparison({
 
   // Pan handling
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button !== 0) return
+    if (e.button !== 0) {return}
     setIsPanning(true)
     lastPanPosition.current = { x: e.clientX, y: e.clientY }
   }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isPanning) return
+    if (!isPanning) {return}
     const dx = e.clientX - lastPanPosition.current.x
     const dy = e.clientY - lastPanPosition.current.y
     setPosition(prev => ({ x: prev.x + dx, y: prev.y + dy }))

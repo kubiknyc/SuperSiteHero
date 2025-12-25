@@ -1,7 +1,7 @@
 // File: /src/components/auth/ProtectedRoute.tsx
 // Protected route wrapper for authenticated pages
 
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { type ReactNode } from 'react'
 import { RouteLoadingFallback } from '@/components/loading/RouteLoadingFallback'
@@ -21,7 +21,8 @@ interface ProtectedRouteProps {
 }
 
 export function ProtectedRoute({ children, requiredRole, allowedRoles }: ProtectedRouteProps) {
-  const { user, userProfile, loading } = useAuth()
+  const { user, userProfile, loading, isPending } = useAuth()
+  const location = useLocation()
 
   if (loading) {
     return <RouteLoadingFallback />
@@ -37,6 +38,16 @@ export function ProtectedRoute({ children, requiredRole, allowedRoles }: Protect
   // This allows E2E tests to work even if profile fetch fails.
   if (!userProfile && import.meta.env.PROD) {
     return <Navigate to="/login" replace />
+  }
+
+  // Handle pending users - redirect them to pending approval page
+  // unless they're already on that page
+  if (isPending) {
+    if (location.pathname !== '/pending-approval') {
+      return <Navigate to="/pending-approval" replace />
+    }
+    // Allow access to pending approval page
+    return <>{children}</>
   }
 
   // Check role-based access

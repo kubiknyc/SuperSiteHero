@@ -27,7 +27,7 @@ export function AnalyticsPage() {
   if (!projectId) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl font-bold text-foreground mb-6" className="heading-page">
+        <h1 className="text-2xl font-bold text-foreground mb-6 heading-page">
           Predictive Analytics
         </h1>
 
@@ -35,7 +35,7 @@ export function AnalyticsPage() {
           <CardContent className="pt-6">
             <div className="text-center py-8">
               <span className="text-4xl">📊</span>
-              <h2 className="text-xl font-medium mt-4" className="heading-section">Select a Project</h2>
+              <h2 className="text-xl font-medium mt-4 heading-section">Select a Project</h2>
               <p className="text-muted mt-2">
                 Choose a project to view its predictive analytics dashboard
               </p>
@@ -48,7 +48,7 @@ export function AnalyticsPage() {
                       to={`/projects/${project.id}/analytics`}
                       className="p-4 border rounded-lg hover:bg-surface hover:border-blue-300 transition-colors text-left"
                     >
-                      <h3 className="font-medium text-foreground" className="heading-subsection">
+                      <h3 className="font-medium text-foreground heading-subsection">
                         {project.name}
                       </h3>
                       <p className="text-sm text-muted truncate">

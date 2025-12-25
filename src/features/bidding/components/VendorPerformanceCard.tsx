@@ -33,7 +33,7 @@ export function VendorPerformanceCard({ vendor, onClick }: VendorPerformanceCard
                 <Building2 className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h4 className="font-semibold text-lg" className="heading-card">{vendor.vendor_name}</h4>
+                <h4 className="font-semibold text-lg heading-card">{vendor.vendor_name}</h4>
                 <div className="flex items-center gap-2 mt-1">
                   <Badge variant="outline" className={`text-${reliabilityConfig?.color}-700 bg-${reliabilityConfig?.color}-50 border-${reliabilityConfig?.color}-200`}>
                     {reliabilityConfig?.label} Reliability

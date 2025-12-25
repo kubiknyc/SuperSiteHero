@@ -202,7 +202,7 @@ function SearchResultItem({ result, searchQuery, onClick }: SearchResultItemProp
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm text-foreground truncate" className="heading-card">
+          <h4 className="font-medium text-sm text-foreground truncate heading-card">
             {result.document_name}
           </h4>
           <div className="flex items-center gap-2 mt-1 flex-wrap">

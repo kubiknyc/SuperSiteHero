@@ -207,7 +207,7 @@ export function DailyReportListItem({
           {/* Date */}
           <div className="flex items-center gap-2 mb-1">
             <Calendar className="h-4 w-4 text-muted" />
-            <h3 className="font-semibold text-foreground" className="heading-subsection">
+            <h3 className="font-semibold text-foreground heading-subsection">
               {dateDisplay}
               {!isToday && !isYesterday && (
                 <span className="text-muted font-normal ml-2">

@@ -227,7 +227,7 @@ export function SwipeablePunchItem({
           {/* Header row */}
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-foreground truncate pr-2" className="heading-subsection">
+              <h3 className="font-medium text-foreground truncate pr-2 heading-subsection">
                 {punchItem.title}
               </h3>
               {punchItem.description && (

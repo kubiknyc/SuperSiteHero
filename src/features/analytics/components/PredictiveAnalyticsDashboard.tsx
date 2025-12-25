@@ -96,7 +96,7 @@ export function PredictiveAnalyticsDashboard({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-semibold text-foreground" className="heading-section">
+          <h2 className="text-xl font-semibold text-foreground heading-section">
             Predictive Analytics
           </h2>
           <p className="text-sm text-muted">

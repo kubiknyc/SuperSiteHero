@@ -149,7 +149,7 @@ export const modelsService = {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {return null;}
       console.error('Error fetching model:', error);
       throw error;
     }
@@ -351,7 +351,7 @@ export const vrToursService = {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {return null;}
       console.error('Error fetching tour:', error);
       throw error;
     }
@@ -681,7 +681,7 @@ async function calculateSessionDuration(sessionId: string): Promise<number> {
     .eq('id', sessionId)
     .single();
 
-  if (!data?.started_at) return 0;
+  if (!data?.started_at) {return 0;}
 
   const startTime = new Date(data.started_at).getTime();
   const endTime = Date.now();

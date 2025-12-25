@@ -60,7 +60,7 @@ function ErrorPage({
         <div className="w-16 h-16 mx-auto rounded-full bg-error-light flex items-center justify-center mb-4">
           <Icon className="w-8 h-8 text-error" />
         </div>
-        <h1 className="text-xl font-semibold text-foreground mb-2" className="heading-page">{title}</h1>
+        <h1 className="text-xl font-semibold text-foreground mb-2 heading-page">{title}</h1>
         <p className="text-secondary">{message}</p>
       </div>
     </div>
@@ -78,20 +78,20 @@ function SuccessPage({
   entityName: string;
 }) {
   const getIcon = () => {
-    if (decision === 'approved') return CheckCircle;
-    if (decision === 'rejected') return XCircle;
+    if (decision === 'approved') {return CheckCircle;}
+    if (decision === 'rejected') {return XCircle;}
     return Clock;
   };
 
   const getColor = () => {
-    if (decision === 'approved') return 'bg-success-light text-success';
-    if (decision === 'rejected') return 'bg-error-light text-error';
+    if (decision === 'approved') {return 'bg-success-light text-success';}
+    if (decision === 'rejected') {return 'bg-error-light text-error';}
     return 'bg-warning-light text-warning';
   };
 
   const getMessage = () => {
-    if (decision === 'approved') return 'Your approval has been recorded.';
-    if (decision === 'rejected') return 'Your rejection has been recorded.';
+    if (decision === 'approved') {return 'Your approval has been recorded.';}
+    if (decision === 'rejected') {return 'Your rejection has been recorded.';}
     return 'Your change request has been submitted.';
   };
 
@@ -103,7 +103,7 @@ function SuccessPage({
         <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${getColor()}`}>
           <Icon className="w-8 h-8" />
         </div>
-        <h1 className="text-xl font-semibold text-foreground mb-2" className="heading-page">
+        <h1 className="text-xl font-semibold text-foreground mb-2 heading-page">
           Response Submitted
         </h1>
         <p className="text-secondary mb-4">{getMessage()}</p>

@@ -106,7 +106,7 @@ export function MasterDetailLayout({
               <span className="sr-only">Back to list</span>
             </Button>
             {detailTitle && (
-              <h2 className="font-semibold text-lg flex-1 truncate" className="heading-section">{detailTitle}</h2>
+              <h2 className="font-semibold text-lg flex-1 truncate heading-section">{detailTitle}</h2>
             )}
             {detailActions}
           </div>
@@ -123,7 +123,7 @@ export function MasterDetailLayout({
         {/* Master Header */}
         {masterTitle && (
           <div className="flex items-center justify-between p-4 border-b bg-card sticky top-0 z-10">
-            <h2 className="font-semibold text-lg" className="heading-section">{masterTitle}</h2>
+            <h2 className="font-semibold text-lg heading-section">{masterTitle}</h2>
             {masterActions}
           </div>
         )}
@@ -147,7 +147,7 @@ export function MasterDetailLayout({
           {/* Master Header */}
           {masterTitle && (
             <div className="flex items-center justify-between p-4 border-b">
-              <h2 className="font-semibold text-lg" className="heading-section">{masterTitle}</h2>
+              <h2 className="font-semibold text-lg heading-section">{masterTitle}</h2>
               <div className="flex items-center gap-2">
                 {masterActions}
                 {collapsible && hasSelection && (
@@ -178,7 +178,7 @@ export function MasterDetailLayout({
             {/* Detail Header */}
             <div className="flex items-center justify-between p-4 border-b">
               {detailTitle && (
-                <h2 className="font-semibold text-lg flex-1 truncate" className="heading-section">{detailTitle}</h2>
+                <h2 className="font-semibold text-lg flex-1 truncate heading-section">{detailTitle}</h2>
               )}
               <div className="flex items-center gap-2">
                 {detailActions}
@@ -214,7 +214,7 @@ export function MasterDetailLayout({
         {/* Master Header */}
         {masterTitle && !isCollapsed && (
           <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="font-semibold text-lg" className="heading-section">{masterTitle}</h2>
+            <h2 className="font-semibold text-lg heading-section">{masterTitle}</h2>
             <div className="flex items-center gap-2">
               {masterActions}
               {collapsible && (
@@ -256,7 +256,7 @@ export function MasterDetailLayout({
         {(detailTitle || detailActions) && (
           <div className="flex items-center justify-between p-4 border-b bg-card">
             {detailTitle && (
-              <h2 className="font-semibold text-lg" className="heading-section">{detailTitle}</h2>
+              <h2 className="font-semibold text-lg heading-section">{detailTitle}</h2>
             )}
             {detailActions}
           </div>
@@ -383,7 +383,7 @@ export function CollapsibleSidebarLayout({
 
   // Handle click outside on mobile/portrait
   useEffect(() => {
-    if (!isMobileOrPortrait || !isOpen || !showOverlay) return;
+    if (!isMobileOrPortrait || !isOpen || !showOverlay) {return;}
 
     const handleClickOutside = (event: MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
@@ -477,16 +477,16 @@ export function SplitViewLayout({
   const effectiveDirection = isMobile ? 'vertical' : direction;
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!resizable) return;
+    if (!resizable) {return;}
     e.preventDefault();
     setIsDragging(true);
   }, [resizable]);
 
   useEffect(() => {
-    if (!isDragging) return;
+    if (!isDragging) {return;}
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
+      if (!containerRef.current) {return;}
 
       const rect = containerRef.current.getBoundingClientRect();
       const containerSize = effectiveDirection === 'horizontal' ? rect.width : rect.height;

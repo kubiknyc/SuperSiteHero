@@ -216,7 +216,7 @@ export function SubmittalRegister({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold" className="heading-section">Submittal Register</h2>
+          <h2 className="text-lg font-semibold heading-section">Submittal Register</h2>
           <p className="text-sm text-muted">
             {stats.total} submittals | {stats.approved} approved | {stats.pending} pending | {stats.overdue} overdue
           </p>

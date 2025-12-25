@@ -168,7 +168,7 @@ export function TemplateImportDialog({
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
-              <h4 className="font-medium text-foreground truncate" className="heading-card">{template.name}</h4>
+              <h4 className="font-medium text-foreground truncate heading-card">{template.name}</h4>
               <Badge variant="outline" className="flex items-center gap-1 text-xs">
                 <ScopeIcon className="h-3 w-3" />
                 {SCOPE_LABELS[template.scope]}
@@ -386,7 +386,7 @@ export function TemplateImportDialog({
           <>
             <Separator />
             <div className="bg-surface rounded-lg p-4">
-              <h4 className="text-sm font-medium text-secondary mb-3 flex items-center gap-2" className="heading-card">
+              <h4 className="text-sm font-medium text-secondary mb-3 flex items-center gap-2 heading-card">
                 <ChevronRight className="h-4 w-4" />
                 Template Preview: {selectedTemplate.name}
               </h4>

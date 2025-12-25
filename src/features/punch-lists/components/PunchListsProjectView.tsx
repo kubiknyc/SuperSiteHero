@@ -95,7 +95,7 @@ const PunchItemListItem = memo(function PunchItemListItem({
           <span className="text-sm font-medium text-muted">#{item.number}</span>
           <PunchItemStatusBadge status={item.status} priority={item.priority} />
         </div>
-        <h4 className="font-medium text-foreground truncate" className="heading-card">{item.title}</h4>
+        <h4 className="font-medium text-foreground truncate heading-card">{item.title}</h4>
         <p className="text-sm text-muted truncate">
           {[item.building, item.floor, item.room].filter(Boolean).join(' / ') || 'No location'}
         </p>
@@ -126,7 +126,7 @@ function PunchItemDetailPanel({ item, onClose, isTouchDevice }: PunchItemDetailP
       <div className="sticky top-0 bg-card border-b p-4 flex items-center justify-between">
         <div>
           <span className="text-sm text-muted">#{item.number}</span>
-          <h3 className="font-semibold text-lg" className="heading-subsection">{item.title}</h3>
+          <h3 className="font-semibold text-lg heading-subsection">{item.title}</h3>
         </div>
         {onClose && (
           <Button
@@ -283,7 +283,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b bg-surface">
               <div>
-                <h2 className="font-semibold" className="heading-section">Punch List</h2>
+                <h2 className="font-semibold heading-section">Punch List</h2>
                 <p className="text-sm text-muted">
                   {filtered.length} item{filtered.length !== 1 ? 's' : ''}
                 </p>

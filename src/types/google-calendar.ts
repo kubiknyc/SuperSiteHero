@@ -242,7 +242,7 @@ export interface CalendarSyncStats {
  * Check if connection needs token refresh
  */
 export function connectionNeedsRefresh(connection: GoogleCalendarConnection): boolean {
-  if (!connection.token_expires_at) return true;
+  if (!connection.token_expires_at) {return true;}
   const expiresAt = new Date(connection.token_expires_at);
   const bufferMs = 5 * 60 * 1000; // 5 minutes
   return Date.now() + bufferMs >= expiresAt.getTime();
@@ -272,12 +272,12 @@ export function getSyncDirectionLabel(direction: 'to_google' | 'from_google' | '
  */
 export function getSyncStatusColor(status: SyncStatus): string {
   const colors: Record<SyncStatus, string> = {
-    synced: 'text-green-600 bg-green-100',
-    pending: 'text-yellow-600 bg-yellow-100',
-    failed: 'text-red-600 bg-red-100',
+    synced: 'text-success bg-success-light',
+    pending: 'text-warning bg-warning-light',
+    failed: 'text-error bg-error-light',
     conflict: 'text-orange-600 bg-orange-100',
   };
-  return colors[status] || 'text-gray-600 bg-gray-100';
+  return colors[status] || 'text-secondary bg-muted';
 }
 
 /**

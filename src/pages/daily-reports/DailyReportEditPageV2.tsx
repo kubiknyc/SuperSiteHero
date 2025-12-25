@@ -144,7 +144,7 @@ export function DailyReportEditPageV2() {
             <div className="bg-muted rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
               <Lock className="h-8 w-8 text-muted" />
             </div>
-            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">Cannot Edit Report</h2>
+            <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Cannot Edit Report</h2>
             <p className="text-secondary mb-4">
               This report has been {statusLabels[report.status] || report.status} and cannot be
               edited.

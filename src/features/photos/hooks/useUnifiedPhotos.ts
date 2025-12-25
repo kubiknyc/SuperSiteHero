@@ -250,7 +250,7 @@ export function useUploadBatch(batchId: string | undefined) {
     enabled: !!batchId,
     refetchInterval: (data) => {
       // Auto-refetch while batch is processing
-      if (data?.status === 'processing') return 2000;
+      if (data?.status === 'processing') {return 2000;}
       return false;
     },
   });

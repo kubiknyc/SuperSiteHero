@@ -97,7 +97,7 @@ export function ColorPaletteDemo() {
       <header className="bg-card dark:bg-surface shadow-sm border-b border-border dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-foreground dark:text-white mb-4" className="heading-page">
+            <h1 className="text-4xl font-bold text-foreground dark:text-white mb-4 heading-page">
               Choose Your Color Palette
             </h1>
             <p className="text-xl text-secondary dark:text-disabled max-w-3xl mx-auto">
@@ -155,7 +155,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
           <span className="inline-block px-2 py-1 text-xs font-bold uppercase tracking-wider bg-card/20 text-white rounded mb-2">
             {palette.tag}
           </span>
-          <h2 className="text-2xl font-bold text-white" className="heading-section">
+          <h2 className="text-2xl font-bold text-white heading-section">
             {palette.id}. {palette.name}
           </h2>
         </div>
@@ -177,7 +177,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Color Swatches */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3 heading-subsection">
             Color Swatches
           </h3>
           <div className="flex gap-3">
@@ -191,7 +191,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Buttons */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3 heading-subsection">
             Button Styles
           </h3>
           <div className="flex flex-wrap gap-3">
@@ -220,7 +220,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Card */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3 heading-subsection">
             Sample Card
           </h3>
           <div className="rounded-xl border border-border dark:border-gray-700 p-4 hover:shadow-lg transition-shadow relative overflow-hidden group">
@@ -238,7 +238,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
                 <FileText className="w-5 h-5 text-white" />
               </div>
               <div className="flex-1">
-                <h4 className="font-bold text-foreground dark:text-white" className="heading-card">Daily Report</h4>
+                <h4 className="font-bold text-foreground dark:text-white heading-card">Daily Report</h4>
                 <p className="text-sm text-secondary dark:text-disabled mt-1">
                   Create today's field report
                 </p>
@@ -253,7 +253,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Stats */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3 heading-subsection">
             Sample Stats
           </h3>
           <div className="grid grid-cols-3 gap-3">
@@ -276,7 +276,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Sample Hero Preview */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3 heading-subsection">
             Hero Section Preview
           </h3>
           <div
@@ -318,7 +318,7 @@ function PaletteCard({ palette }: { palette: typeof palettes[0] }) {
 
         {/* Timeline Preview */}
         <div>
-          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3" className="heading-subsection">
+          <h3 className="text-sm font-semibold text-secondary dark:text-gray-300 uppercase tracking-wide mb-3 heading-subsection">
             Timeline Connector
           </h3>
           <div className="flex items-center gap-3">

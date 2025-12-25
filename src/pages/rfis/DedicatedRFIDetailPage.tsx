@@ -316,7 +316,7 @@ export function DedicatedRFIDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2" className="heading-subsection">Error Loading RFI</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading RFI</h3>
               <p className="text-secondary">{(error as Error)?.message || 'RFI not found'}</p>
             </CardContent>
           </Card>
@@ -343,7 +343,7 @@ export function DedicatedRFIDetailPage() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold text-foreground" className="heading-page">
+                  <h1 className="text-3xl font-bold text-foreground heading-page">
                     {formatRFINumber(rfi.rfi_number)}
                   </h1>
                   {rfi.priority && <PriorityBadge priority={rfi.priority} />}

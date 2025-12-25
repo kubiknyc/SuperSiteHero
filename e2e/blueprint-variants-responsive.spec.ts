@@ -291,7 +291,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       await page.goto(url);
       await page.waitForLoadState('networkidle');
 
-      let statsGrid = page.locator('.grid').first();
+      const statsGrid = page.locator('.grid').first();
       let gridClasses = await statsGrid.getAttribute('class');
       expect(gridClasses).toContain('grid-cols-1');
 

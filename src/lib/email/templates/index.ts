@@ -125,3 +125,13 @@ export type {
   ObservationResolvedEmailData,
   WeeklySafetySummaryEmailData,
 } from './safety-observation-notification'
+
+// User Registration Templates
+export { generateUserPendingApprovalEmail } from './user-pending-approval'
+export type { UserPendingApprovalData } from './user-pending-approval'
+
+export { generateUserApprovedEmail } from './user-approved'
+export type { UserApprovedData } from './user-approved'
+
+export { generateUserRejectedEmail } from './user-rejected'
+export type { UserRejectedData } from './user-rejected'

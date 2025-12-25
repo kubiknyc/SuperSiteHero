@@ -42,12 +42,12 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Error Code */}
-        <h1 className="heading-error-code text-orange-500 mb-4" className="heading-page">
+        <h1 className="heading-error-code text-orange-500 mb-4 heading-page">
           500
         </h1>
 
         {/* Error Title */}
-        <h2 className="heading-page text-foreground dark:text-white mb-4" className="heading-section">
+        <h2 className="heading-page text-foreground dark:text-white mb-4 heading-section">
           Something Went Wrong
         </h2>
 
@@ -108,7 +108,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* Help Section */}
         <div className="mt-12 p-6 bg-surface dark:bg-surface/50 border border-border dark:border-gray-700 rounded-lg">
-          <h3 className="heading-sub text-foreground dark:text-white mb-3" className="heading-subsection">
+          <h3 className="heading-sub text-foreground dark:text-white mb-3 heading-subsection">
             Still having issues?
           </h3>
           <p className="body-small text-secondary dark:text-disabled mb-4">
@@ -140,7 +140,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* What to Try */}
         <div className="mt-8 text-left">
-          <h4 className="text-label text-secondary dark:text-gray-300 mb-3" className="heading-card">
+          <h4 className="text-label text-secondary dark:text-gray-300 mb-3 heading-card">
             What you can try:
           </h4>
           <ul className="space-y-2 body-small text-secondary dark:text-disabled">

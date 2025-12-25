@@ -187,18 +187,18 @@ export function getPermitStatusLabel(status: PermitStatus | string | null): stri
  */
 export function getPermitStatusColor(status: PermitStatus | string | null): string {
   const colors: Record<string, string> = {
-    [PermitStatus.PENDING]: 'bg-gray-100 text-gray-800',
-    [PermitStatus.APPLIED]: 'bg-blue-100 text-blue-800',
-    [PermitStatus.UNDER_REVIEW]: 'bg-yellow-100 text-yellow-800',
-    [PermitStatus.APPROVED]: 'bg-green-100 text-green-800',
-    [PermitStatus.ISSUED]: 'bg-green-100 text-green-800',
-    [PermitStatus.ACTIVE]: 'bg-green-100 text-green-800',
-    [PermitStatus.EXPIRED]: 'bg-red-100 text-red-800',
+    [PermitStatus.PENDING]: 'bg-muted text-foreground',
+    [PermitStatus.APPLIED]: 'bg-info-light text-blue-800',
+    [PermitStatus.UNDER_REVIEW]: 'bg-warning-light text-yellow-800',
+    [PermitStatus.APPROVED]: 'bg-success-light text-green-800',
+    [PermitStatus.ISSUED]: 'bg-success-light text-green-800',
+    [PermitStatus.ACTIVE]: 'bg-success-light text-green-800',
+    [PermitStatus.EXPIRED]: 'bg-error-light text-red-800',
     [PermitStatus.RENEWED]: 'bg-purple-100 text-purple-800',
-    [PermitStatus.REVOKED]: 'bg-red-100 text-red-800',
-    [PermitStatus.CLOSED]: 'bg-gray-100 text-gray-500',
+    [PermitStatus.REVOKED]: 'bg-error-light text-red-800',
+    [PermitStatus.CLOSED]: 'bg-muted text-muted',
   };
-  return colors[status || ''] || 'bg-gray-100 text-gray-800';
+  return colors[status || ''] || 'bg-muted text-foreground';
 }
 
 /**

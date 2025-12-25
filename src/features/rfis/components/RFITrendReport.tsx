@@ -232,7 +232,7 @@ export function RFITrendReport({ projectId, className }: RFITrendReportProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-foreground" className="heading-section">RFI Trend Report</h2>
+          <h2 className="text-2xl font-bold text-foreground heading-section">RFI Trend Report</h2>
           <p className="text-sm text-secondary mt-1">
             Analysis generated on {format(new Date(analytics.generatedAt), 'MMMM d, yyyy')}
           </p>

@@ -117,7 +117,7 @@ export function ChecklistFailureTrendReport({
       {/* Header with filters */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold" className="heading-section">Checklist Failure Trend Analysis</h2>
+          <h2 className="text-2xl font-bold heading-section">Checklist Failure Trend Analysis</h2>
           <p className="text-secondary mt-1">
             Identify recurring quality issues and improvement opportunities
           </p>
@@ -429,7 +429,7 @@ function FailureClustersList({
             <div key={index} className="border rounded-lg p-4">
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1">
-                  <h4 className="font-medium mb-2" className="heading-card">Cluster #{index + 1}</h4>
+                  <h4 className="font-medium mb-2 heading-card">Cluster #{index + 1}</h4>
                   <div className="flex flex-wrap gap-2">
                     {cluster.items.map((item, i) => (
                       <Badge key={i} variant="secondary">

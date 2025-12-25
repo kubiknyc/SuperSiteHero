@@ -27,7 +27,7 @@ export function ScheduledReportFormPage() {
             </Link>
           </Button>
 
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2" className="heading-page">
+          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2 heading-page">
             <Calendar className="h-7 w-7 text-primary" />
             {isEditing ? 'Edit Scheduled Report' : 'Create Scheduled Report'}
           </h1>

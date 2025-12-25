@@ -110,7 +110,7 @@ export function LookAheadPrintView({
 
       return activities
         .filter((activity) => {
-          if (!activity.planned_start_date) return false
+          if (!activity.planned_start_date) {return false}
 
           const activityStart = parseISO(activity.planned_start_date)
           const activityEnd = activity.planned_end_date
@@ -181,7 +181,7 @@ export function LookAheadPrintView({
       {/* Controls (hidden when printing) */}
       <div className="no-print mb-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold" className="heading-section">4-Week Look-Ahead Schedule</h2>
+          <h2 className="text-2xl font-bold heading-section">4-Week Look-Ahead Schedule</h2>
           {onClose && (
             <Button variant="ghost" size="sm" onClick={onClose}>
               <X className="h-4 w-4" />
@@ -243,8 +243,8 @@ export function LookAheadPrintView({
       <div className="print-content">
         {/* Header (visible in print) */}
         <div className="print-only mb-8">
-          <h1 className="text-3xl font-bold" className="heading-page">{projectName}</h1>
-          <h2 className="text-xl text-secondary" className="heading-section">4-Week Look-Ahead Schedule</h2>
+          <h1 className="text-3xl font-bold heading-page">{projectName}</h1>
+          <h2 className="text-xl text-secondary heading-section">4-Week Look-Ahead Schedule</h2>
           <p className="mt-2 text-sm text-muted">
             {format(parseISO(startDate), 'MMMM d, yyyy')} -{' '}
             {format(parseISO(endDate), 'MMMM d, yyyy')}

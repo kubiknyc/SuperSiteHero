@@ -1,7 +1,9 @@
 // File: /src/lib/api/services/checklist-scoring.test.ts
 // Comprehensive tests for checklist scoring service
 
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { checklistScoringApi, calculateExecutionScore, getExecutionScore, getScoringReport } from './checklist-scoring'
 import { checklistsApi } from './checklists'
 import type { ScoringConfiguration, GradeThreshold } from '@/types/checklist-scoring'

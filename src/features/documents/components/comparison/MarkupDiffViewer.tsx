@@ -32,12 +32,12 @@ export function MarkupDiffViewer({
 
   // Load and draw the diff image
   useEffect(() => {
-    if (!diffImageDataUrl || !canvasRef.current) return
+    if (!diffImageDataUrl || !canvasRef.current) {return}
 
     setIsLoading(true)
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     // Load the image
     const img = new Image()
@@ -73,7 +73,7 @@ export function MarkupDiffViewer({
 
   // Draw change region highlights
   useEffect(() => {
-    if (!canvasRef.current || !imageLoaded || !imageRef.current) return
+    if (!canvasRef.current || !imageLoaded || !imageRef.current) {return}
     if (!showHighlights) {
       // Redraw base image without highlights
       const ctx = canvasRef.current.getContext('2d')
@@ -86,7 +86,7 @@ export function MarkupDiffViewer({
 
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-    if (!ctx || !imageRef.current) return
+    if (!ctx || !imageRef.current) {return}
 
     // Redraw base image
     ctx.clearRect(0, 0, canvas.width, canvas.height)

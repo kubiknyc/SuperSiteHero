@@ -43,7 +43,7 @@ export const outlookCalendarApi = {
         .eq('is_active', true)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
 
       if (!data) {
         return {
@@ -113,7 +113,7 @@ export const outlookCalendarApi = {
         .eq('is_active', true)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OutlookCalendarConnection | null
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -134,7 +134,7 @@ export const outlookCalendarApi = {
         body: { companyId },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data.authUrl
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -158,7 +158,7 @@ export const outlookCalendarApi = {
         body: dto,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return {
         connection: data.connection as OutlookCalendarConnection,
         calendars: data.calendars as OutlookCalendar[],
@@ -182,7 +182,7 @@ export const outlookCalendarApi = {
         body: { connectionId },
       })
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -211,7 +211,7 @@ export const outlookCalendarApi = {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OutlookCalendarConnection
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -239,7 +239,7 @@ export const outlookCalendarApi = {
         })
         .eq('id', connectionId)
 
-      if (error) throw error
+      if (error) {throw error}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -271,7 +271,7 @@ export const outlookCalendarApi = {
         .eq('local_entity_id', localEntityId)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OutlookEventMapping | null
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -319,7 +319,7 @@ export const outlookCalendarApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OutlookEventMapping[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -347,7 +347,7 @@ export const outlookCalendarApi = {
         body: { connectionId, ...dto },
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data.mapping as OutlookEventMapping
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -494,7 +494,7 @@ export const outlookCalendarApi = {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OutlookSyncLog[]
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -521,7 +521,7 @@ export const outlookCalendarApi = {
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
 
-      if (mappedError) throw mappedError
+      if (mappedError) {throw mappedError}
 
       // Get pending syncs count
       const { count: pendingCount, error: pendingError } = await supabaseUntyped
@@ -530,7 +530,7 @@ export const outlookCalendarApi = {
         .eq('user_id', userId)
         .eq('sync_status', 'pending')
 
-      if (pendingError) throw pendingError
+      if (pendingError) {throw pendingError}
 
       // Get failed syncs count
       const { count: failedCount, error: failedError } = await supabaseUntyped
@@ -539,7 +539,7 @@ export const outlookCalendarApi = {
         .eq('user_id', userId)
         .eq('sync_status', 'failed')
 
-      if (failedError) throw failedError
+      if (failedError) {throw failedError}
 
       // Get last sync time
       const { data: lastLog, error: logError } = await supabaseUntyped
@@ -551,7 +551,7 @@ export const outlookCalendarApi = {
         .limit(1)
         .maybeSingle()
 
-      if (logError) throw logError
+      if (logError) {throw logError}
 
       // Get counts by entity type
       const { data: entityCounts, error: entityError } = await supabaseUntyped
@@ -559,7 +559,7 @@ export const outlookCalendarApi = {
         .select('local_entity_type, sync_status')
         .eq('user_id', userId)
 
-      if (entityError) throw entityError
+      if (entityError) {throw entityError}
 
       // Aggregate by entity type
       const syncsByEntityType: OutlookSyncStats['syncsByEntityType'] = {

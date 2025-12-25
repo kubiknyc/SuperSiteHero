@@ -778,7 +778,7 @@ export function createEventWithLocalRef(
  */
 export function extractLocalEntityRef(event: MSGraphEvent): { type: string; id: string } | null {
   const prop = event.singleValueExtendedProperties?.find(p => p.id === LOCAL_ENTITY_PROPERTY_ID)
-  if (!prop?.value) return null
+  if (!prop?.value) {return null}
 
   try {
     return JSON.parse(prop.value)

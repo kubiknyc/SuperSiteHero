@@ -20,7 +20,7 @@ export interface BidSubmittedEmailData {
 
 export function generateBidSubmittedEmail(data: BidSubmittedEmailData): { html: string; text: string } {
   const content = `
-    <h1>Bid Submitted</h1>
+    <h1 className="heading-page">Bid Submitted</h1>
 
     <p>Hi ${data.recipientName},</p>
 

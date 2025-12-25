@@ -77,7 +77,7 @@ export function SubcontractorDashboardPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold" className="heading-page">
+        <h1 className="text-2xl font-bold heading-page">
           Welcome, {data.subcontractor.company_name}
         </h1>
         <p className="text-muted-foreground">
@@ -291,7 +291,7 @@ export function SubcontractorDashboardPage() {
                 >
                   <Card className="hover:bg-muted/50 transition-colors h-full">
                     <CardContent className="p-4">
-                      <h3 className="font-medium truncate" className="heading-subsection">{project.name}</h3>
+                      <h3 className="font-medium truncate heading-subsection">{project.name}</h3>
                       <p className="text-sm text-muted-foreground truncate">
                         {project.trade}
                       </p>

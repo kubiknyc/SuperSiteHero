@@ -405,7 +405,7 @@ function ConnectionEditor({
   const availableTargets = nodes.filter((n) => n.id !== connection?.sourceNodeId);
 
   const handleSave = () => {
-    if (!connection || !targetNodeId) return;
+    if (!connection || !targetNodeId) {return;}
 
     onSave({
       targetNodeId,
@@ -415,7 +415,7 @@ function ConnectionEditor({
     });
   };
 
-  if (!connection) return null;
+  if (!connection) {return null;}
 
   return (
     <Dialog open={!!connection} onOpenChange={() => onCancel()}>
@@ -517,7 +517,7 @@ function AnnotationEditor({
   const [pitch, setPitch] = useState(annotation?.pitch || 0);
 
   const handleSave = () => {
-    if (!annotation) return;
+    if (!annotation) {return;}
 
     onSave({
       id: `annotation-${Date.now()}`,
@@ -528,7 +528,7 @@ function AnnotationEditor({
     });
   };
 
-  if (!annotation) return null;
+  if (!annotation) {return null;}
 
   const typeIcons = {
     text: Info,
@@ -733,7 +733,7 @@ export function VRTourEditor({
 
   // Add connection
   const handleAddConnection = useCallback((connection: VRTourConnection) => {
-    if (!editingConnection) return;
+    if (!editingConnection) {return;}
 
     setConnections((prev) => {
       const updated = new Map(prev);
@@ -747,7 +747,7 @@ export function VRTourEditor({
 
   // Add annotation
   const handleAddAnnotation = useCallback((annotation: VRAnnotation) => {
-    if (!editingAnnotation) return;
+    if (!editingAnnotation) {return;}
 
     setNodes((prev) =>
       prev.map((node) =>
@@ -806,7 +806,7 @@ export function VRTourEditor({
         {/* Nodes List */}
         <ScrollArea className="flex-1 p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-medium text-sm" className="heading-subsection">Locations ({nodes.length})</h3>
+            <h3 className="font-medium text-sm heading-subsection">Locations ({nodes.length})</h3>
             <Button
               variant="outline"
               size="sm"
@@ -885,7 +885,7 @@ export function VRTourEditor({
             {/* Node Header */}
             <div className="p-4 border-b flex items-center justify-between">
               <div>
-                <h2 className="font-semibold" className="heading-section">{selectedNode.photo.name}</h2>
+                <h2 className="font-semibold heading-section">{selectedNode.photo.name}</h2>
                 <p className="text-sm text-muted-foreground">
                   {selectedNode.photo.tags?.join(', ') || 'No tags'}
                 </p>
@@ -1064,7 +1064,7 @@ export function VRTourEditor({
           <div className="flex-1 flex items-center justify-center text-center">
             <div>
               <Camera className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-              <h3 className="font-medium mb-2" className="heading-subsection">Select a Location</h3>
+              <h3 className="font-medium mb-2 heading-subsection">Select a Location</h3>
               <p className="text-sm text-muted-foreground max-w-md">
                 Select a location from the list to view and edit its connections
                 and annotations

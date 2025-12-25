@@ -253,7 +253,7 @@ export function ReportBuilderPage() {
               Back
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+              <h1 className="text-2xl font-bold text-foreground heading-page">
                 {isEditMode ? 'Edit Report Template' : 'New Report Template'}
               </h1>
               {dataSource && (

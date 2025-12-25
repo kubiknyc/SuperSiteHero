@@ -66,7 +66,7 @@ export function BidDetailPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold" className="heading-page">
+          <h1 className="text-2xl font-bold heading-page">
             {bid.workflow_item?.title || 'Change Order Bid'}
           </h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">

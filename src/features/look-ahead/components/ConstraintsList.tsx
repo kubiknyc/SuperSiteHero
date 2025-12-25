@@ -247,7 +247,7 @@ export function ConstraintsList({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Link2 className="h-5 w-5" />
-          <h3 className="font-medium" className="heading-subsection">Constraints</h3>
+          <h3 className="font-medium heading-subsection">Constraints</h3>
           {openConstraints.length > 0 && (
             <Badge variant="destructive" className="text-xs">
               {openConstraints.length} open
@@ -338,7 +338,7 @@ export function ConstraintsList({
       {/* Open Constraints */}
       {openConstraints.length > 0 && (
         <div className="mb-4">
-          <h4 className="text-sm font-medium text-error-dark mb-2 flex items-center gap-1" className="heading-card">
+          <h4 className="text-sm font-medium text-error-dark mb-2 flex items-center gap-1 heading-card">
             <AlertTriangle className="h-4 w-4" />
             Open Constraints ({openConstraints.length})
           </h4>
@@ -349,7 +349,7 @@ export function ConstraintsList({
       {/* Resolved Constraints */}
       {resolvedConstraints.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-success-dark mb-2 flex items-center gap-1" className="heading-card">
+          <h4 className="text-sm font-medium text-success-dark mb-2 flex items-center gap-1 heading-card">
             <CheckCircle className="h-4 w-4" />
             Resolved ({resolvedConstraints.length})
           </h4>

@@ -36,7 +36,7 @@ export const googleCalendarApi = {
         .eq('is_active', true)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       if (!data) {
         return {
@@ -95,7 +95,7 @@ export const googleCalendarApi = {
         .eq('is_active', true)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as GoogleCalendarConnection | null;
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -116,7 +116,7 @@ export const googleCalendarApi = {
         body: { companyId },
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data.authUrl;
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -140,7 +140,7 @@ export const googleCalendarApi = {
         body: { companyId, ...dto },
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return {
         connection: data.connection as GoogleCalendarConnection,
         calendars: data.calendars as GoogleCalendar[],
@@ -164,7 +164,7 @@ export const googleCalendarApi = {
         body: { connectionId },
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       if (data.requiresReconnect) {
         throw new ApiErrorClass({
@@ -200,7 +200,7 @@ export const googleCalendarApi = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as GoogleCalendarConnection;
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -227,7 +227,7 @@ export const googleCalendarApi = {
         })
         .eq('id', connectionId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -255,7 +255,7 @@ export const googleCalendarApi = {
         body: { connectionId, ...dto },
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return {
         success: data.success,
         googleEventId: data.googleEventId,
@@ -358,7 +358,7 @@ export const googleCalendarApi = {
         .eq('local_entity_id', meetingId)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as CalendarEventMapping | null;
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -402,7 +402,7 @@ export const googleCalendarApi = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as CalendarEventMapping[];
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -448,7 +448,7 @@ export const googleCalendarApi = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as CalendarSyncQueueItem[];
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -473,7 +473,7 @@ export const googleCalendarApi = {
         })
         .eq('id', syncId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
@@ -520,7 +520,7 @@ export const googleCalendarApi = {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as CalendarSyncLog[];
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -548,7 +548,7 @@ export const googleCalendarApi = {
         .eq('connection_id', connectionId)
         .eq('sync_status', 'synced');
 
-      if (syncedError) throw syncedError;
+      if (syncedError) {throw syncedError;}
 
       // Get pending syncs count
       const { count: pendingCount, error: pendingError } = await supabaseUntyped
@@ -557,7 +557,7 @@ export const googleCalendarApi = {
         .eq('connection_id', connectionId)
         .eq('status', 'pending');
 
-      if (pendingError) throw pendingError;
+      if (pendingError) {throw pendingError;}
 
       // Get failed syncs count
       const { count: failedCount, error: failedError } = await supabaseUntyped
@@ -566,7 +566,7 @@ export const googleCalendarApi = {
         .eq('connection_id', connectionId)
         .eq('sync_status', 'failed');
 
-      if (failedError) throw failedError;
+      if (failedError) {throw failedError;}
 
       // Get last sync time
       const { data: lastLog, error: logError } = await supabaseUntyped
@@ -578,7 +578,7 @@ export const googleCalendarApi = {
         .limit(1)
         .maybeSingle();
 
-      if (logError) throw logError;
+      if (logError) {throw logError;}
 
       // Get syncs by direction
       const { data: directionCounts, error: dirError } = await supabaseUntyped
@@ -587,7 +587,7 @@ export const googleCalendarApi = {
         .eq('connection_id', connectionId)
         .eq('status', 'success');
 
-      if (dirError) throw dirError;
+      if (dirError) {throw dirError;}
 
       const toGoogle = (directionCounts || []).filter(
         (d: { direction: string }) => d.direction === 'to_google'

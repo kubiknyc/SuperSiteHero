@@ -1,7 +1,7 @@
 // File: /src/lib/api/services/checklist-failure-analytics.ts
 // Analytics service for checklist failure trend analysis
 
-import { supabase } from '@/lib/supabase/client'
+import { supabase } from '@/lib/supabase'
 import type {
   ChecklistFailureFilters,
   ChecklistFailureAnalytics,
@@ -96,7 +96,7 @@ async function fetchFailedItems(filters: ChecklistFailureFilters) {
 
   const { data, error } = await query
 
-  if (error) throw error
+  if (error) {throw error}
   return data || []
 }
 
@@ -161,8 +161,8 @@ export async function getFailureFrequency(
       const secondHalfRate = secondHalf.length / (totalExecutions / 2)
       const change = ((secondHalfRate - firstHalfRate) / firstHalfRate) * 100
 
-      if (change > 10) trend = 'declining' // More failures = declining
-      else if (change < -10) trend = 'improving' // Fewer failures = improving
+      if (change > 10) {trend = 'declining'} // More failures = declining
+      else if (change < -10) {trend = 'improving'} // Fewer failures = improving
     }
 
     // Extract common notes
@@ -205,7 +205,7 @@ export async function getTemporalAnalysis(
   const monthMap = new Map<string, number>()
 
   failedItems.forEach((item: any) => {
-    if (!item.checklist?.completed_at) return
+    if (!item.checklist?.completed_at) {return}
 
     const date = new Date(item.checklist.completed_at)
     const hour = date.getHours()
@@ -254,7 +254,7 @@ export async function getFailureClusters(
   const clusterMap = new Map<string, { count: number; executions: string[] }>()
 
   for (const [checklistId, items] of executionMap.entries()) {
-    if (items.size < 2) continue
+    if (items.size < 2) {continue}
 
     const itemsArray = Array.from(items).sort()
     const clusterKey = itemsArray.join(' | ')
@@ -331,13 +331,13 @@ export async function getFailureTrends(
   }
 
   failedItems.forEach((item: any) => {
-    if (!item.checklist?.completed_at) return
+    if (!item.checklist?.completed_at) {return}
     const period = formatDate(new Date(item.checklist.completed_at))
     failureMap.set(period, (failureMap.get(period) || 0) + 1)
   })
 
   executionsData?.forEach((execution) => {
-    if (!execution.completed_at) return
+    if (!execution.completed_at) {return}
     const period = formatDate(new Date(execution.completed_at))
     executionMap.set(period, (executionMap.get(period) || 0) + 1)
   })
@@ -360,7 +360,7 @@ export async function getFailureTrends(
 
   // Calculate 3-period moving average
   const movingAverage = data.map((_, index) => {
-    if (index < 2) return data[index].count
+    if (index < 2) {return data[index].count}
     const sum = data[index - 2].count + data[index - 1].count + data[index].count
     return parseFloat((sum / 3).toFixed(2))
   })
@@ -423,7 +423,7 @@ function getWeekNumber(date: Date): number {
 }
 
 function calculateTrendDirection(data: number[]): TrendDirection {
-  if (data.length < 4) return 'stable'
+  if (data.length < 4) {return 'stable'}
 
   const quarterSize = Math.floor(data.length / 4)
   const firstQuarter = data.slice(0, quarterSize)
@@ -434,13 +434,13 @@ function calculateTrendDirection(data: number[]): TrendDirection {
 
   const change = ((lastAvg - firstAvg) / (firstAvg || 1)) * 100
 
-  if (change > 10) return 'declining' // More failures = declining
-  if (change < -10) return 'improving' // Fewer failures = improving
+  if (change > 10) {return 'declining'} // More failures = declining
+  if (change < -10) {return 'improving'} // Fewer failures = improving
   return 'stable'
 }
 
 function calculateChangePercentage(data: number[]): number {
-  if (data.length < 4) return 0
+  if (data.length < 4) {return 0}
 
   const quarterSize = Math.floor(data.length / 4)
   const firstQuarter = data.slice(0, quarterSize)

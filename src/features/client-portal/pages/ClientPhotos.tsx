@@ -118,7 +118,7 @@ export function ClientPhotos() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground" className="heading-page">Project Photos</h1>
+        <h1 className="text-2xl font-bold text-foreground heading-page">Project Photos</h1>
         <p className="text-secondary mt-1">
           Browse progress photos from the project.
         </p>
@@ -173,7 +173,7 @@ export function ClientPhotos() {
 
             return (
               <div key={dateKey}>
-                <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-subsection">
+                <h3 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-subsection">
                   <Calendar className="h-5 w-5 text-disabled" />
                   {displayDate}
                   <span className="text-sm font-normal text-muted">
@@ -222,7 +222,7 @@ export function ClientPhotos() {
         <Card>
           <CardContent className="py-12 text-center">
             <Image className="h-12 w-12 text-disabled mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-foreground" className="heading-subsection">No Photos Available</h3>
+            <h3 className="text-lg font-medium text-foreground heading-subsection">No Photos Available</h3>
             <p className="text-muted mt-1">
               {searchTerm || categoryFilter !== 'all'
                 ? 'No photos match your filters. Try adjusting your search.'

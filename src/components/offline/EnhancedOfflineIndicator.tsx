@@ -146,7 +146,7 @@ export function EnhancedOfflineIndicator({
           <PopoverContent align="end" className="w-80">
             <div className="space-y-3">
               <div>
-                <h4 className="font-semibold text-sm mb-1" className="heading-card">Connection Status</h4>
+                <h4 className="font-semibold text-sm mb-1 heading-card">Connection Status</h4>
                 <div className="flex items-center gap-2">
                   <Icon
                     className={cn(
@@ -169,7 +169,7 @@ export function EnhancedOfflineIndicator({
               {syncStatus && (
                 <>
                   <div className="border-t pt-3">
-                    <h4 className="font-semibold text-sm mb-2" className="heading-card">Sync Status</h4>
+                    <h4 className="font-semibold text-sm mb-2 heading-card">Sync Status</h4>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span className="text-muted-foreground">Pending Items</span>
@@ -192,7 +192,7 @@ export function EnhancedOfflineIndicator({
 
                   {syncStatus.syncProgress && syncStatus.syncProgress.total > 0 && (
                     <div className="border-t pt-3">
-                      <h4 className="font-semibold text-sm mb-2" className="heading-card">Sync Progress</h4>
+                      <h4 className="font-semibold text-sm mb-2 heading-card">Sync Progress</h4>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Progress</span>

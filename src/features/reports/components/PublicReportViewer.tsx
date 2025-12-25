@@ -48,7 +48,7 @@ export function PublicReportViewer() {
 
   // Handle export
   const handleExport = async (formatType: 'pdf' | 'excel' | 'csv') => {
-    if (!sharedReport?.allowExport) return
+    if (!sharedReport?.allowExport) {return}
 
     setExporting(formatType)
     try {
@@ -82,7 +82,7 @@ export function PublicReportViewer() {
         <Card className="max-w-md w-full mx-4">
           <CardContent className="pt-6 text-center">
             <AlertTriangle className="h-16 w-16 text-warning mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-foreground mb-2" className="heading-section">
+            <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">
               Report Not Available
             </h2>
             <p className="text-secondary mb-6">
@@ -121,7 +121,7 @@ export function PublicReportViewer() {
                 </div>
               )}
               <div>
-                <h1 className="font-semibold text-foreground" className="heading-page">
+                <h1 className="font-semibold text-foreground heading-page">
                   {sharedReport.company.name}
                 </h1>
                 <p className="text-sm text-muted">

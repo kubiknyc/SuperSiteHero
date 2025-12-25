@@ -134,7 +134,7 @@ export function AttendanceTracker({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-muted" />
-          <h3 className="font-medium text-foreground" className="heading-subsection">
+          <h3 className="font-medium text-foreground heading-subsection">
             Attendance ({presentAttendees.length}/{attendees.length})
           </h3>
         </div>

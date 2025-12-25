@@ -62,7 +62,7 @@ export function DistributionListCard({
           {/* Content */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-base truncate" className="heading-subsection">{list.name}</h3>
+              <h3 className="font-semibold text-base truncate heading-subsection">{list.name}</h3>
               {list.is_default && (
                 <Star className="h-4 w-4 text-warning fill-yellow-500 flex-shrink-0" />
               )}

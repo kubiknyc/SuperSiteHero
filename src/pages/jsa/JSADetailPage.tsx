@@ -335,7 +335,7 @@ export function JSADetailPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <AlertTriangle className="h-12 w-12 mx-auto text-red-400 mb-4" />
-            <h2 className="text-lg font-medium text-foreground" className="heading-section">JSA Not Found</h2>
+            <h2 className="text-lg font-medium text-foreground heading-section">JSA Not Found</h2>
             <p className="text-muted mt-1">
               The Job Safety Analysis you're looking for doesn't exist or has been deleted.
             </p>
@@ -411,7 +411,7 @@ export function JSADetailPage() {
               Back to JSAs
             </Link>
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-foreground" className="heading-page">{jsa.jsa_number}</h1>
+              <h1 className="text-2xl font-bold text-foreground heading-page">{jsa.jsa_number}</h1>
               <JSAStatusBadge status={jsa.status} size="md" />
               {overallRisk !== 'low' && (
                 <RiskBadge level={overallRisk} />
@@ -501,7 +501,7 @@ export function JSADetailPage() {
         {showDeleteConfirm && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="bg-card rounded-lg p-6 max-w-md mx-4">
-              <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+              <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                 Delete JSA?
               </h3>
               <p className="text-muted mb-4">
@@ -530,7 +530,7 @@ export function JSADetailPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* JSA Details */}
             <div className="bg-card rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                 <ClipboardList className="h-5 w-5 text-disabled" />
                 JSA Details
               </h2>
@@ -615,7 +615,7 @@ export function JSADetailPage() {
             {/* Required PPE Summary */}
             {requiredPPE.length > 0 && (
               <div className="bg-warning-light rounded-lg border border-yellow-200 p-4">
-                <h3 className="font-medium text-yellow-800 flex items-center gap-2 mb-3" className="heading-subsection">
+                <h3 className="font-medium text-yellow-800 flex items-center gap-2 mb-3 heading-subsection">
                   <HardHat className="h-5 w-5" />
                   Required PPE for This Task
                 </h3>
@@ -631,7 +631,7 @@ export function JSADetailPage() {
 
             {/* Hazards Section */}
             <div className="bg-card rounded-lg border p-6">
-              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2" className="heading-section">
+              <h2 className="text-lg font-medium text-foreground mb-4 flex items-center gap-2 heading-section">
                 <AlertTriangle className="h-5 w-5 text-warning" />
                 Job Steps & Hazards ({jsa.hazards?.length || 0})
               </h2>
@@ -661,7 +661,7 @@ export function JSADetailPage() {
             {/* Review Notes (for approved/completed) */}
             {jsa.review_notes && (
               <div className="bg-card rounded-lg border p-6">
-                <h2 className="text-lg font-medium text-foreground mb-4" className="heading-section">Review Notes</h2>
+                <h2 className="text-lg font-medium text-foreground mb-4 heading-section">Review Notes</h2>
                 <p className="text-sm text-secondary whitespace-pre-wrap">{jsa.review_notes}</p>
                 {jsa.reviewed_by_user && jsa.reviewed_at && (
                   <p className="text-xs text-muted mt-2">
@@ -675,7 +675,7 @@ export function JSADetailPage() {
             {/* Completion Notes */}
             {jsa.completion_notes && (
               <div className="bg-success-light rounded-lg border border-green-200 p-6">
-                <h2 className="text-lg font-medium text-green-800 mb-4 flex items-center gap-2" className="heading-section">
+                <h2 className="text-lg font-medium text-green-800 mb-4 flex items-center gap-2 heading-section">
                   <CheckCircle2 className="h-5 w-5" />
                   Completion Notes
                 </h2>
@@ -693,7 +693,7 @@ export function JSADetailPage() {
           <div className="space-y-6">
             <div className="bg-card rounded-lg border p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-medium text-foreground flex items-center gap-2" className="heading-section">
+                <h2 className="text-lg font-medium text-foreground flex items-center gap-2 heading-section">
                   <UserCheck className="h-5 w-5 text-disabled" />
                   Worker Sign-In
                 </h2>

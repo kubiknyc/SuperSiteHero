@@ -195,7 +195,7 @@ export function DrawingMarkupPage() {
       <div className="h-screen flex items-center justify-center bg-background">
         <div className="text-center max-w-md">
           <AlertCircle className="w-16 h-16 text-error mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-2" className="heading-section">Error Loading Drawing</h2>
+          <h2 className="text-2xl font-bold text-white mb-2 heading-section">Error Loading Drawing</h2>
           <p className="text-disabled mb-6">{error?.message || 'Document not found'}</p>
           <Button onClick={() => navigate('/documents')} variant="outline">
             Back to Documents
@@ -222,7 +222,7 @@ export function DrawingMarkupPage() {
           </Button>
           <div className="h-6 w-px bg-gray-600" />
           <div className="text-white">
-            <h1 className="font-semibold text-sm truncate max-w-xs lg:max-w-md" className="heading-page">
+            <h1 className="font-semibold text-sm truncate max-w-xs lg:max-w-md heading-page">
               {currentDocument.name}
             </h1>
             <p className="text-xs text-disabled">
@@ -292,7 +292,7 @@ export function DrawingMarkupPage() {
         {showLayerPanel && !comparisonMode && (
           <div className="w-64 bg-surface border-r border-gray-700 overflow-y-auto hidden md:block">
             <div className="p-3 border-b border-gray-700">
-              <h3 className="text-sm font-semibold text-white" className="heading-subsection">Layers</h3>
+              <h3 className="text-sm font-semibold text-white heading-subsection">Layers</h3>
             </div>
             <div className="p-2">
               <LayerManager
@@ -341,7 +341,7 @@ export function DrawingMarkupPage() {
         {showHistoryPanel && !comparisonMode && (
           <div className="w-80 bg-surface border-l border-gray-700 overflow-y-auto hidden lg:block">
             <div className="p-3 border-b border-gray-700">
-              <h3 className="text-sm font-semibold text-white" className="heading-subsection">Markup History</h3>
+              <h3 className="text-sm font-semibold text-white heading-subsection">Markup History</h3>
             </div>
             <div className="p-2">
               <MarkupHistoryPanel

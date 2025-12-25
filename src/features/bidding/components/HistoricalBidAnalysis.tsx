@@ -157,7 +157,7 @@ export function HistoricalBidAnalysis() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight" className="heading-page">Historical Bid Analysis</h1>
+          <h1 className="text-3xl font-bold tracking-tight heading-page">Historical Bid Analysis</h1>
           <p className="text-muted-foreground mt-1">
             Analyze past bid performance, vendor trends, and pricing accuracy
           </p>
@@ -443,7 +443,7 @@ export function HistoricalBidAnalysis() {
                       <div className="flex-1 space-y-2">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="font-semibold" className="heading-card">{vendor.vendor_name}</h4>
+                            <h4 className="font-semibold heading-card">{vendor.vendor_name}</h4>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge variant="outline" className="text-xs">
                                 Score: {vendor.score.toFixed(1)}

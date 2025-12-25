@@ -102,7 +102,7 @@ export function DocumentList({
         <CardContent className="p-6">
           <div className="text-center py-12">
             <DocumentTypeIcon type="general" className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium text-foreground mb-2" className="heading-subsection">
+            <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
               No documents found
             </h3>
             <p className="text-muted">

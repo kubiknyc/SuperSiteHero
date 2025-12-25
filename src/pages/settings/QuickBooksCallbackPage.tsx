@@ -125,7 +125,7 @@ export function QuickBooksCallbackPage() {
           {state === 'success' && (
             <>
               <div className="bg-success-light border border-green-200 rounded-lg p-4 text-sm">
-                <h4 className="font-medium text-green-800 mb-2" className="heading-card">What's Next?</h4>
+                <h4 className="font-medium text-green-800 mb-2 heading-card">What's Next?</h4>
                 <ul className="text-success-dark space-y-1">
                   <li>• Set up account mappings for cost codes</li>
                   <li>• Configure automatic sync settings</li>
@@ -143,7 +143,7 @@ export function QuickBooksCallbackPage() {
           {state === 'error' && (
             <>
               <div className="bg-error-light border border-red-200 rounded-lg p-4 text-sm">
-                <h4 className="font-medium text-red-800 mb-2" className="heading-card">Troubleshooting</h4>
+                <h4 className="font-medium text-red-800 mb-2 heading-card">Troubleshooting</h4>
                 <ul className="text-error-dark space-y-1">
                   <li>• Make sure you authorized the correct QuickBooks company</li>
                   <li>• Check that your QuickBooks subscription is active</li>

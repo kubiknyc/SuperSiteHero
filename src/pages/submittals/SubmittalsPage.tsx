@@ -64,7 +64,7 @@ export function SubmittalsPage() {
         {/* Header */}
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-foreground" className="heading-page">Submittals</h1>
+            <h1 className="text-3xl font-bold text-foreground heading-page">Submittals</h1>
             <p className="text-secondary mt-1">Manage project submittals and approvals</p>
           </div>
           <Button onClick={() => setState({ ...state, createOpen: true })}>

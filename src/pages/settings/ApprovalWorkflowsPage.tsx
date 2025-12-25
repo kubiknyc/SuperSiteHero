@@ -125,7 +125,7 @@ export function ApprovalWorkflowsPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground" className="heading-page">
+            <h1 className="text-2xl font-bold text-foreground heading-page">
               Approval Workflows
             </h1>
             <p className="text-muted mt-1">
@@ -155,7 +155,7 @@ export function ApprovalWorkflowsPage() {
 
         {viewMode === 'create' && (
           <div className="bg-card border rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
+            <h2 className="text-lg font-semibold text-foreground mb-4 heading-section">
               Create New Workflow
             </h2>
             <WorkflowBuilder
@@ -170,7 +170,7 @@ export function ApprovalWorkflowsPage() {
 
         {viewMode === 'edit' && editingWorkflow && (
           <div className="bg-card border rounded-lg p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-4" className="heading-section">
+            <h2 className="text-lg font-semibold text-foreground mb-4 heading-section">
               Edit Workflow
             </h2>
             <WorkflowBuilder

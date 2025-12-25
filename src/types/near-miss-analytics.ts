@@ -544,7 +544,7 @@ export const POTENTIAL_SEVERITY_CONFIG: Record<
   first_aid: {
     label: 'First Aid',
     color: '#22c55e',
-    bgColor: 'bg-green-100',
+    bgColor: 'bg-success-light',
   },
   medical_treatment: {
     label: 'Medical Treatment',
@@ -554,7 +554,7 @@ export const POTENTIAL_SEVERITY_CONFIG: Record<
   lost_time: {
     label: 'Lost Time',
     color: '#ef4444',
-    bgColor: 'bg-red-100',
+    bgColor: 'bg-error-light',
   },
   fatality: {
     label: 'Fatality',
@@ -587,7 +587,7 @@ export const ALERT_SEVERITY_CONFIG: Record<
   info: {
     label: 'Info',
     color: '#3b82f6',
-    bgColor: 'bg-blue-100',
+    bgColor: 'bg-info-light',
   },
   warning: {
     label: 'Warning',
@@ -597,6 +597,6 @@ export const ALERT_SEVERITY_CONFIG: Record<
   critical: {
     label: 'Critical',
     color: '#ef4444',
-    bgColor: 'bg-red-100',
+    bgColor: 'bg-error-light',
   },
 }

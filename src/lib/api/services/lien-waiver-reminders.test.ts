@@ -3,7 +3,9 @@
  * CRITICAL: These tests ensure automated reminders and escalations work correctly
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import {
   lienWaiverReminderService,
   DEFAULT_REMINDER_CONFIG,

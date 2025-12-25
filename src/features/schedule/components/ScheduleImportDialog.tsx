@@ -387,7 +387,7 @@ function ImportComplete({ results, onClose }: ImportCompleteProps) {
         ) : (
           <CheckCircle2 className="h-16 w-16 text-success mx-auto" />
         )}
-        <h3 className="text-lg font-semibold mt-4" className="heading-subsection">
+        <h3 className="text-lg font-semibold mt-4 heading-subsection">
           {hasErrors ? 'Import Completed with Errors' : 'Import Successful'}
         </h3>
         <p className="text-muted-foreground mt-1">

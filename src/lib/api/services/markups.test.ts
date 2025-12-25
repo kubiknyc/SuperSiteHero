@@ -1,7 +1,9 @@
 // File: /src/lib/api/services/markups.test.ts
 // Tests for document markups API service
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { vi } from 'vitest'
+
+// Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
 import { markupsApi } from './markups'
 import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
