@@ -39,6 +39,31 @@ if (typeof window !== 'undefined') {
   initWebVitals()
 }
 
+// Service Worker registration monitoring
+// VitePWA handles auto-registration, but we add logging for debugging
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.ready
+    .then((registration) => {
+      console.log('[SW] Service worker ready:', registration.scope)
+
+      // Listen for updates
+      registration.addEventListener('updatefound', () => {
+        const newWorker = registration.installing
+        console.log('[SW] New service worker installing...')
+
+        newWorker?.addEventListener('statechange', () => {
+          console.log('[SW] Service worker state:', newWorker.state)
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('[SW] New version available! Refresh to update.')
+          }
+        })
+      })
+    })
+    .catch((error) => {
+      console.error('[SW] Service worker registration failed:', error)
+    })
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
