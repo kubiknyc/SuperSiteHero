@@ -690,3 +690,206 @@ export function getRFIPriorityColor(priority: RFIPriority): string {
 export function getBallInCourtLabel(role: BallInCourtRole): string {
   return BALL_IN_COURT_ROLES.find((r) => r.value === role)?.label || role
 }
+
+// =============================================
+// Enhanced Attachment Hooks
+// =============================================
+
+/**
+ * Upload an attachment to an RFI
+ */
+export function useUploadRFIAttachment() {
+  const queryClient = useQueryClient()
+  const { user } = useAuth()
+
+  return useMutation({
+    mutationFn: async ({
+      rfiId,
+      file,
+      attachmentType = 'general',
+    }: {
+      rfiId: string
+      file: File
+      attachmentType?: 'question' | 'response' | 'general' | 'sketch' | 'photo'
+    }) => {
+      if (!user?.company_id) {throw new Error('User company not found')}
+
+      // Upload file to Supabase storage
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${crypto.randomUUID()}.${fileExt}`
+      const filePath = `rfi-attachments/${rfiId}/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file)
+
+      if (uploadError) {throw uploadError}
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath)
+
+      // Create attachment record
+      const { data, error } = await supabase
+        .from('rfi_attachments')
+        .insert({
+          rfi_id: rfiId,
+          file_url: urlData.publicUrl,
+          file_name: file.name,
+          file_type: file.type,
+          file_size: file.size,
+          attachment_type: attachmentType,
+          uploaded_by: user.id,
+        })
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-rfis', 'attachments', variables.rfiId] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-rfis', 'detail', variables.rfiId] })
+    },
+  })
+}
+
+/**
+ * Delete an RFI attachment
+ */
+export function useDeleteRFIAttachment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ attachmentId, rfiId }: { attachmentId: string; rfiId: string }) => {
+      // Get attachment to find file path
+      const { data: attachment, error: fetchError } = await supabase
+        .from('rfi_attachments')
+        .select('file_url')
+        .eq('id', attachmentId)
+        .single()
+
+      if (fetchError) {throw fetchError}
+
+      // Extract file path from URL and delete from storage
+      if (attachment?.file_url) {
+        const url = new URL(attachment.file_url)
+        const pathMatch = url.pathname.match(/\/documents\/(.+)$/)
+        if (pathMatch) {
+          await supabase.storage.from('documents').remove([pathMatch[1]])
+        }
+      }
+
+      // Delete attachment record
+      const { error } = await supabase
+        .from('rfi_attachments')
+        .delete()
+        .eq('id', attachmentId)
+
+      if (error) {throw error}
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-rfis', 'attachments', variables.rfiId] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-rfis', 'detail', variables.rfiId] })
+    },
+  })
+}
+
+// =============================================
+// Enhanced Response Hook
+// =============================================
+
+/**
+ * Submit an RFI response with response type
+ */
+export function useSubmitRFIResponse() {
+  const queryClient = useQueryClient()
+  const { user } = useAuth()
+
+  return useMutation({
+    mutationFn: async ({
+      rfiId,
+      response,
+      responseType = 'answered',
+      costImpact,
+      scheduleImpactDays,
+      drawingId,
+    }: {
+      rfiId: string
+      response: string
+      responseType?: 'answered' | 'see_drawings' | 'see_specs' | 'deferred' | 'partial_response' | 'request_clarification' | 'no_change_required'
+      costImpact?: number
+      scheduleImpactDays?: number
+      drawingId?: string
+    }) => {
+      const updates: Record<string, any> = {
+        response,
+        response_type: responseType,
+        status: responseType === 'request_clarification' ? 'pending_response' : 'responded',
+        date_responded: new Date().toISOString(),
+        responded_by: user?.id,
+      }
+
+      if (costImpact !== undefined) {
+        updates.cost_impact = costImpact
+      }
+
+      if (scheduleImpactDays !== undefined) {
+        updates.schedule_impact_days = scheduleImpactDays
+      }
+
+      if (drawingId) {
+        updates.drawing_id = drawingId
+      }
+
+      const { data, error } = await supabase
+        .from('rfis')
+        .update(updates)
+        .eq('id', rfiId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as RFI
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
+    },
+  })
+}
+
+/**
+ * Link a drawing to an RFI
+ */
+export function useLinkDrawingToRFI() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      rfiId,
+      drawingId,
+      drawingReference,
+    }: {
+      rfiId: string
+      drawingId: string | null
+      drawingReference?: string
+    }) => {
+      const { data, error } = await supabase
+        .from('rfis')
+        .update({
+          drawing_id: drawingId,
+          drawing_reference: drawingReference || null,
+        })
+        .eq('id', rfiId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as RFI
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-rfis', 'detail', variables.rfiId] })
+    },
+  })
+}

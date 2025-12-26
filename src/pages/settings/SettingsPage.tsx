@@ -6,6 +6,9 @@ import { useAuth } from '@/hooks/useAuth'
 import { ThemeSelector } from '@/components/ThemeToggle'
 import { PWAInstallButton } from '@/components/PWAInstallPrompt'
 import { GloveModeToggle } from '@/components/ui/glove-mode-toggle'
+import { OfflineSyncSettings } from '@/components/settings/OfflineSyncSettings'
+import { MFABackupCodes } from '@/components/settings/MFABackupCodes'
+import { SessionManagement } from '@/components/settings/SessionManagement'
 
 interface SettingsSection {
   title: string
@@ -155,6 +158,20 @@ export function SettingsPage() {
 
           {/* PWA Install */}
           <PWAInstallButton />
+
+          {/* Offline & Sync Settings */}
+          <OfflineSyncSettings />
+        </div>
+
+        {/* Security Settings */}
+        <div className="space-y-4">
+          <h2 className="text-lg font-semibold heading-section">Security</h2>
+
+          {/* MFA Backup Codes */}
+          <MFABackupCodes />
+
+          {/* Session Management */}
+          <SessionManagement />
         </div>
 
         {/* Settings Sections */}

@@ -39,6 +39,9 @@ import type {
   BidsFilter,
   InvitationValidation,
   SubcontractorBasic,
+  SubcontractorRFI,
+  SubcontractorDocument,
+  SubcontractorPayment,
 } from '@/types/subcontractor-portal'
 
 // Use 'any' type workaround for tables not in generated types
@@ -160,6 +163,262 @@ export const subcontractorPortalApi = {
             code: 'DASHBOARD_ERROR',
             message: 'Failed to fetch dashboard data',
           })
+    }
+  },
+
+  /**
+   * Get assignment counts for tabs (RFIs, Documents, Payments)
+   * Used by MyAssignments component to show tab counts
+   */
+  async getAssignmentCounts(userId: string): Promise<{
+    rfis: number
+    documents: number
+    payments: number
+  }> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      if (subcontractorIds.length === 0) {
+        return { rfis: 0, documents: 0, payments: 0 }
+      }
+
+      // Get project IDs for this subcontractor
+      const { data: subcontractorProjects } = await supabase
+        .from('subcontractors')
+        .select('project_id')
+        .in('id', subcontractorIds)
+        .is('deleted_at', null)
+
+      const projectIds = subcontractorProjects?.map(s => s.project_id) || []
+
+      // Count RFIs where ball_in_court_role is 'subcontractor' on subcontractor's projects
+      const { count: rfiCount } = await supabase
+        .from('rfis')
+        .select('id', { count: 'exact', head: true })
+        .in('project_id', projectIds)
+        .eq('ball_in_court_role', 'subcontractor')
+        .in('status', ['draft', 'submitted', 'pending', 'open'])
+        .is('deleted_at', null)
+
+      // Count shared documents for this user
+      const { count: docCount } = await db
+        .from('document_shares')
+        .select('id', { count: 'exact', head: true })
+        .eq('recipient_user_id', userId)
+
+      // Count pending payment applications for subcontractor's projects
+      const { count: paymentCount } = await db
+        .from('payment_applications')
+        .select('id', { count: 'exact', head: true })
+        .in('project_id', projectIds)
+        .in('status', ['draft', 'submitted', 'under_review'])
+        .is('deleted_at', null)
+
+      return {
+        rfis: rfiCount || 0,
+        documents: docCount || 0,
+        payments: paymentCount || 0,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch assignment counts:', error)
+      return { rfis: 0, documents: 0, payments: 0 }
+    }
+  },
+
+  // =============================================
+  // RFIs (For Subcontractor Response)
+  // =============================================
+
+  /**
+   * Get RFIs where ball is in subcontractor's court
+   */
+  async getSubcontractorRFIs(userId: string): Promise<SubcontractorRFI[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      if (subcontractorIds.length === 0) {return []}
+
+      // Get project IDs for this subcontractor
+      const { data: subcontractorProjects } = await supabase
+        .from('subcontractors')
+        .select('project_id')
+        .in('id', subcontractorIds)
+        .is('deleted_at', null)
+
+      const projectIds = subcontractorProjects?.map(s => s.project_id) || []
+
+      if (projectIds.length === 0) {return []}
+
+      const { data, error } = await supabase
+        .from('rfis')
+        .select(`
+          id,
+          rfi_number,
+          title,
+          description,
+          status,
+          priority,
+          ball_in_court_role,
+          due_date,
+          date_initiated,
+          project_id,
+          created_at,
+          project:projects(id, name)
+        `)
+        .in('project_id', projectIds)
+        .eq('ball_in_court_role', 'subcontractor')
+        .in('status', ['draft', 'submitted', 'pending', 'open'])
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || []).map((rfi: any) => ({
+        id: rfi.id,
+        rfi_number: rfi.rfi_number,
+        title: rfi.title,
+        description: rfi.description,
+        status: rfi.status,
+        priority: rfi.priority,
+        ball_in_court_role: rfi.ball_in_court_role,
+        due_date: rfi.due_date,
+        date_initiated: rfi.date_initiated,
+        project_id: rfi.project_id,
+        project_name: rfi.project?.name || 'Unknown Project',
+        created_at: rfi.created_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch RFIs:', error)
+      return []
+    }
+  },
+
+  // =============================================
+  // SHARED DOCUMENTS
+  // =============================================
+
+  /**
+   * Get documents shared with the subcontractor user
+   */
+  async getSubcontractorDocuments(userId: string): Promise<SubcontractorDocument[]> {
+    try {
+      const { data, error } = await db
+        .from('document_shares')
+        .select(`
+          id,
+          document_id,
+          shared_at,
+          can_download,
+          can_edit,
+          expires_at,
+          document:documents(
+            id,
+            name,
+            file_type,
+            file_size,
+            file_url,
+            category,
+            project_id,
+            project:projects(id, name)
+          )
+        `)
+        .eq('recipient_user_id', userId)
+        .order('shared_at', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || [])
+        .filter((share: any) => share.document)
+        .map((share: any) => ({
+          id: share.id,
+          document_id: share.document_id,
+          name: share.document.name,
+          file_type: share.document.file_type,
+          file_size: share.document.file_size,
+          file_url: share.document.file_url,
+          category: share.document.category,
+          project_id: share.document.project_id,
+          project_name: share.document.project?.name || 'Unknown Project',
+          shared_at: share.shared_at,
+          can_download: share.can_download,
+          can_edit: share.can_edit,
+          expires_at: share.expires_at,
+        }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch documents:', error)
+      return []
+    }
+  },
+
+  // =============================================
+  // PAYMENT APPLICATIONS
+  // =============================================
+
+  /**
+   * Get payment applications for the subcontractor's projects
+   */
+  async getSubcontractorPayments(userId: string): Promise<SubcontractorPayment[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      if (subcontractorIds.length === 0) {return []}
+
+      // Get project IDs for this subcontractor
+      const { data: subcontractorProjects } = await supabase
+        .from('subcontractors')
+        .select('project_id')
+        .in('id', subcontractorIds)
+        .is('deleted_at', null)
+
+      const projectIds = subcontractorProjects?.map(s => s.project_id) || []
+
+      if (projectIds.length === 0) {return []}
+
+      const { data, error } = await db
+        .from('payment_applications')
+        .select(`
+          id,
+          application_number,
+          period_from,
+          period_to,
+          status,
+          scheduled_value,
+          work_completed_this_period,
+          total_completed_to_date,
+          retainage_amount,
+          current_payment_due,
+          submitted_at,
+          approved_at,
+          project_id,
+          created_at,
+          project:projects(id, name)
+        `)
+        .in('project_id', projectIds)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || []).map((payment: any) => ({
+        id: payment.id,
+        application_number: payment.application_number,
+        period_from: payment.period_from,
+        period_to: payment.period_to,
+        status: payment.status,
+        scheduled_value: payment.scheduled_value,
+        work_completed_this_period: payment.work_completed_this_period,
+        total_completed_to_date: payment.total_completed_to_date,
+        retainage_amount: payment.retainage_amount,
+        current_payment_due: payment.current_payment_due,
+        submitted_at: payment.submitted_at,
+        approved_at: payment.approved_at,
+        project_id: payment.project_id,
+        project_name: payment.project?.name || 'Unknown Project',
+        created_at: payment.created_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch payments:', error)
+      return []
     }
   },
 
@@ -613,7 +872,32 @@ export const subcontractorPortalApi = {
 
       if (error) {throw error}
 
-      return (data || []) as any[]
+      // Get photo counts for each punch item
+      const punchItemIds = (data || []).map((item: any) => item.id)
+      const photoCountsMap: Record<string, number> = {}
+
+      if (punchItemIds.length > 0) {
+        const { data: photoCounts } = await supabase
+          .from('photos')
+          .select('punch_item_id')
+          .in('punch_item_id', punchItemIds)
+          .is('deleted_at', null)
+
+        // Count photos per punch item
+        if (photoCounts) {
+          photoCounts.forEach((photo: { punch_item_id: string }) => {
+            if (photo.punch_item_id) {
+              photoCountsMap[photo.punch_item_id] = (photoCountsMap[photo.punch_item_id] || 0) + 1
+            }
+          })
+        }
+      }
+
+      // Add photo_count to each punch item
+      return (data || []).map((item: any) => ({
+        ...item,
+        photo_count: photoCountsMap[item.id] || 0,
+      })) as any[]
     } catch (error) {
       throw new ApiErrorClass({
         code: 'PUNCH_ITEMS_ERROR',
@@ -1311,6 +1595,197 @@ export const subcontractorPortalApi = {
       return !error && data && data.length > 0
     } catch (error) {
       return false
+    }
+  },
+
+  // =============================================
+  // RFIS (FOR SUBCONTRACTOR RESPONSE)
+  // =============================================
+
+  /**
+   * Get RFIs assigned to the subcontractor (ball in their court)
+   */
+  async getRFIs(userId: string): Promise<SubcontractorRFI[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      // Get projects for these subcontractors
+      const { data: subs } = await supabase
+        .from('subcontractors')
+        .select('project_id')
+        .in('id', subcontractorIds)
+        .is('deleted_at', null)
+
+      if (!subs || subs.length === 0) {return []}
+
+      const projectIds = [...new Set(subs.map(s => s.project_id))]
+
+      // Get RFIs where ball_in_court_role is 'subcontractor' or assigned to user
+      const { data, error } = await db
+        .from('rfis')
+        .select(`
+          id,
+          rfi_number,
+          title,
+          description,
+          status,
+          priority,
+          due_date,
+          project_id,
+          ball_in_court_role,
+          ball_in_court_user_id,
+          assigned_to_user_id,
+          question,
+          created_at,
+          updated_at,
+          project:projects(name)
+        `)
+        .in('project_id', projectIds)
+        .or(`ball_in_court_role.eq.subcontractor,assigned_to_user_id.eq.${userId}`)
+        .in('status', ['open', 'responded'])
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || []).map((rfi: any) => ({
+        ...rfi,
+        project_name: rfi.project?.name || 'Unknown Project',
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch RFIs:', error)
+      throw new ApiErrorClass({
+        code: 'RFIS_ERROR',
+        message: 'Failed to fetch RFIs',
+      })
+    }
+  },
+
+  // =============================================
+  // SHARED DOCUMENTS
+  // =============================================
+
+  /**
+   * Get documents shared with the subcontractor
+   */
+  async getDocuments(userId: string): Promise<SubcontractorDocument[]> {
+    try {
+      // Query document_shares where recipient_user_id = userId
+      const { data, error } = await db
+        .from('document_shares')
+        .select(`
+          id,
+          document_id,
+          can_download,
+          can_edit,
+          expires_at,
+          created_at,
+          document:documents(
+            id,
+            name,
+            file_type,
+            file_size,
+            file_url,
+            category,
+            project_id,
+            project:projects(name)
+          ),
+          shared_by:users!shared_by(full_name)
+        `)
+        .eq('recipient_user_id', userId)
+        .is('revoked_at', null)
+        .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || []).map((share: any) => ({
+        id: share.id,
+        document_id: share.document_id,
+        name: share.document?.name || 'Unknown Document',
+        file_type: share.document?.file_type,
+        file_size: share.document?.file_size,
+        file_url: share.document?.file_url || '',
+        category: share.document?.category,
+        project_id: share.document?.project_id,
+        project_name: share.document?.project?.name || 'Unknown Project',
+        shared_at: share.created_at,
+        shared_by_name: share.shared_by?.full_name,
+        can_download: share.can_download ?? true,
+        can_edit: share.can_edit ?? false,
+        expires_at: share.expires_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch documents:', error)
+      throw new ApiErrorClass({
+        code: 'DOCUMENTS_ERROR',
+        message: 'Failed to fetch shared documents',
+      })
+    }
+  },
+
+  // =============================================
+  // PAYMENT APPLICATIONS
+  // =============================================
+
+  /**
+   * Get payment applications for the subcontractor
+   */
+  async getPayments(userId: string): Promise<SubcontractorPayment[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      // Get projects for these subcontractors
+      const { data: subs } = await supabase
+        .from('subcontractors')
+        .select('project_id')
+        .in('id', subcontractorIds)
+        .is('deleted_at', null)
+
+      if (!subs || subs.length === 0) {return []}
+
+      const projectIds = [...new Set(subs.map(s => s.project_id))]
+
+      // Fetch payment applications for these projects
+      const { data, error } = await db
+        .from('payment_applications')
+        .select(`
+          id,
+          application_number,
+          period_from,
+          period_to,
+          status,
+          scheduled_value,
+          work_completed_to_date,
+          previous_payments,
+          current_payment_due,
+          retainage_held,
+          project_id,
+          submitted_at,
+          approved_at,
+          paid_at,
+          created_at,
+          project:projects(name)
+        `)
+        .in('project_id', projectIds)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || []).map((payment: any) => ({
+        ...payment,
+        project_name: payment.project?.name || 'Unknown Project',
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch payments:', error)
+      throw new ApiErrorClass({
+        code: 'PAYMENTS_ERROR',
+        message: 'Failed to fetch payment applications',
+      })
     }
   },
 }

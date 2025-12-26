@@ -22,6 +22,12 @@ interface PDFViewerProps {
   height?: string
   enableMarkup?: boolean
   markupState?: ReturnType<typeof useEnhancedMarkupState>
+  /** External page number control - when provided, component uses this page */
+  pageNumber?: number
+  /** Callback when page changes internally (for syncing with external state) */
+  onPageChange?: (page: number) => void
+  /** Hide the internal page navigation UI (when parent controls navigation) */
+  hidePageNavigation?: boolean
 }
 
 /**
@@ -58,9 +64,23 @@ export function PDFViewer({
   height = 'h-screen',
   enableMarkup: initialEnableMarkup = false,
   markupState,
+  pageNumber: externalPageNumber,
+  onPageChange,
+  hidePageNavigation = false,
 }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [internalPage, setInternalPage] = useState(1)
+
+  // Use external page number if provided, otherwise use internal state
+  const currentPage = externalPageNumber ?? internalPage
+
+  // Wrapper to update page - notifies parent if callback provided
+  const setCurrentPage = (page: number) => {
+    if (externalPageNumber === undefined) {
+      setInternalPage(page)
+    }
+    onPageChange?.(page)
+  }
   const [zoom, setZoom] = useState(100)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -159,44 +179,46 @@ export function PDFViewer({
     <div className={cn('flex flex-col bg-background', height)}>
       {/* Toolbar */}
       <div className="bg-surface border-b border-gray-700 p-3 flex items-center justify-between flex-wrap gap-2">
-        {/* Left side - Navigation */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={goToPreviousPage}
-            disabled={currentPage <= 1}
-            title="Previous page (Left arrow)"
-            className="text-white hover:bg-gray-700"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </Button>
+        {/* Left side - Navigation (hidden when parent controls navigation) */}
+        {!hidePageNavigation && (
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={goToPreviousPage}
+              disabled={currentPage <= 1}
+              title="Previous page (Left arrow)"
+              className="text-white hover:bg-gray-700"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
 
-          <div className="flex items-center gap-1 px-2">
-            <input
-              type="number"
-              min="1"
-              max={numPages || 1}
-              value={currentPage}
-              onChange={handlePageInputChange}
-              className="w-12 text-center bg-gray-700 text-white text-sm rounded px-1 py-1 border-0"
-            />
-            <span className="text-gray-300 text-sm">
-              / {numPages || '?'}
-            </span>
+            <div className="flex items-center gap-1 px-2">
+              <input
+                type="number"
+                min="1"
+                max={numPages || 1}
+                value={currentPage}
+                onChange={handlePageInputChange}
+                className="w-12 text-center bg-gray-700 text-white text-sm rounded px-1 py-1 border-0"
+              />
+              <span className="text-gray-300 text-sm">
+                / {numPages || '?'}
+              </span>
+            </div>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={goToNextPage}
+              disabled={!numPages || currentPage >= numPages}
+              title="Next page (Right arrow)"
+              className="text-white hover:bg-gray-700"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
           </div>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={goToNextPage}
-            disabled={!numPages || currentPage >= numPages}
-            title="Next page (Right arrow)"
-            className="text-white hover:bg-gray-700"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </Button>
-        </div>
+        )}
 
         {/* Center - Filename */}
         <div className="text-gray-300 text-sm truncate flex-1 text-center px-2">

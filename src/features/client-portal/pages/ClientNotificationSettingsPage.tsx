@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ChevronRight, Settings, ArrowLeft } from 'lucide-react'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { MilestoneNotificationSettings } from '../components/MilestoneNotificationSettings'
 import { useAuth } from '@/contexts/AuthContext'

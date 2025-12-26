@@ -29,7 +29,9 @@ export function ProtectedRoute({ children, requiredRole, allowedRoles }: Protect
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />
+    // Preserve the intended destination in state so login can redirect back
+    const returnUrl = location.pathname + location.search + location.hash
+    return <Navigate to="/login" state={{ from: returnUrl }} replace />
   }
 
   // If user has a valid session but no database profile, allow access
@@ -37,7 +39,8 @@ export function ProtectedRoute({ children, requiredRole, allowedRoles }: Protect
   // In production, AuthContext will auto-logout users without profiles.
   // This allows E2E tests to work even if profile fetch fails.
   if (!userProfile && import.meta.env.PROD) {
-    return <Navigate to="/login" replace />
+    const returnUrl = location.pathname + location.search + location.hash
+    return <Navigate to="/login" state={{ from: returnUrl }} replace />
   }
 
   // Handle pending users - redirect them to pending approval page

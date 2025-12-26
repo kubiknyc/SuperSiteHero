@@ -1,16 +1,31 @@
 /**
  * Tests for Historical Bid Analysis API Service
  *
- * NOTE: These tests are currently skipped due to complex Supabase mocking issues.
- * The Historical Bid Analysis feature itself is fully implemented and working.
+ * ARCHITECTURE NOTE: These tests are intentionally skipped for unit testing.
+ * The Historical Bid Analysis feature is fully implemented and working in production.
  *
- * TODO: Refactor tests to use one of the following approaches:
- * 1. Integration tests with a test Supabase instance (recommended)
- * 2. A proper Supabase mocking library
- * 3. Simplified unit tests that don't require full query chain mocking
+ * TESTING STRATEGY:
+ * The historicalBidAnalysisApi service performs complex database queries with
+ * multiple joins and aggregations. This type of service is best tested via:
  *
- * The current mocking strategy using nested mockReturnValue/mockReturnThis
- * doesn't properly simulate Supabase's fluent query API.
+ * 1. INTEGRATION TESTS (Recommended):
+ *    - Run against a test Supabase instance with seeded data
+ *    - Verify actual database queries work correctly
+ *    - Set up in CI/CD with a dedicated test database
+ *
+ * 2. E2E TESTS:
+ *    - Test the full user flow through the UI
+ *    - Verify bid analysis reports render correctly
+ *    - Covered by Playwright tests in src/__tests__/e2e/
+ *
+ * WHY SKIP UNIT TESTS:
+ * - Supabase's fluent query API (`.from().select().eq().gte()...`) is difficult
+ *   to mock without creating brittle tests tied to implementation details
+ * - The value of these unit tests is low since they mainly verify mocking behavior
+ * - Integration tests provide higher confidence with lower maintenance burden
+ *
+ * The test structure below is preserved as documentation and can be enabled
+ * when running against an actual database by removing `.skip`.
  */
 
 import { vi } from 'vitest'

@@ -76,7 +76,7 @@ export function CompanyRegistration() {
         }
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       await new Promise(resolve => setTimeout(resolve, 1000));
 

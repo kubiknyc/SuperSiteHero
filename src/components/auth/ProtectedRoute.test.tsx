@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, act } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router-dom';
+import { MemoryRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ProtectedRoute } from './ProtectedRoute';
 import { AuthProvider } from '@/lib/auth/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -357,18 +357,27 @@ describe('ProtectedRoute', () => {
   });
 
   describe('Navigation Preservation', () => {
-    it('should preserve query parameters after login redirect', async () => {
+    it('should preserve query parameters in navigation state after login redirect', async () => {
+      let receivedState: { from?: string } | null = null;
+
+      // Login page that captures the navigation state
+      const LoginPageWithState = () => {
+        const location = useLocation();
+        receivedState = location.state as { from?: string } | null;
+        return <div>Login Page</div>;
+      };
+
       // Mock unauthenticated state
       vi.mocked(supabase.auth.getSession).mockResolvedValue({
         data: { session: null },
         error: null,
       });
 
-      const { container } = render(
+      render(
         <AuthProvider>
           <MemoryRouter initialEntries={['/protected?project=123&tab=overview']}>
             <Routes>
-              <Route path="/login" element={<LoginPage />} />
+              <Route path="/login" element={<LoginPageWithState />} />
               <Route
                 path="/protected"
                 element={
@@ -387,8 +396,52 @@ describe('ProtectedRoute', () => {
         expect(screen.getByText('Login Page')).toBeInTheDocument();
       });
 
-      // TODO: Check that return URL is preserved in state/localStorage
-      // This would depend on implementation details
+      // Verify the return URL was preserved in navigation state
+      expect(receivedState).toBeTruthy();
+      expect(receivedState?.from).toBe('/protected?project=123&tab=overview');
+    });
+
+    it('should preserve hash fragments in navigation state', async () => {
+      let receivedState: { from?: string } | null = null;
+
+      const LoginPageWithState = () => {
+        const location = useLocation();
+        receivedState = location.state as { from?: string } | null;
+        return <div>Login Page</div>;
+      };
+
+      // Mock unauthenticated state
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: null },
+        error: null,
+      });
+
+      render(
+        <AuthProvider>
+          <MemoryRouter initialEntries={['/protected?project=123#section-details']}>
+            <Routes>
+              <Route path="/login" element={<LoginPageWithState />} />
+              <Route
+                path="/protected"
+                element={
+                  <ProtectedRoute>
+                    <ProtectedPage />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </MemoryRouter>
+        </AuthProvider>
+      );
+
+      // Should redirect to login
+      await waitFor(() => {
+        expect(screen.getByText('Login Page')).toBeInTheDocument();
+      });
+
+      // Verify the return URL includes both query params and hash
+      expect(receivedState).toBeTruthy();
+      expect(receivedState?.from).toBe('/protected?project=123#section-details');
     });
   });
 

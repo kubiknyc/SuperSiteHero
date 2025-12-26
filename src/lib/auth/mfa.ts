@@ -188,26 +188,118 @@ export async function getMFAChallenge(): Promise<{
 
 /**
  * Generate backup codes using cryptographically secure random values
+ * Codes are stored securely (hashed with salt) in the database
+ * @returns Array of 10 backup codes in format XXXX-XXXX-XX
  */
 export async function generateBackupCodes(): Promise<string[]> {
-  // Note: Supabase doesn't have built-in backup codes yet
-  // This is a placeholder for future implementation
-  // Using crypto.getRandomValues for secure random generation
-  const codes: string[] = []
-  for (let i = 0; i < 10; i++) {
-    const array = new Uint8Array(5)
-    crypto.getRandomValues(array)
-    const code = Array.from(array)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('')
-      .toUpperCase()
-    codes.push(code)
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      throw new Error('No authenticated user')
+    }
+
+    // Generate 10 backup codes using crypto.getRandomValues
+    const codes: string[] = []
+    for (let i = 0; i < 10; i++) {
+      const array = new Uint8Array(5)
+      crypto.getRandomValues(array)
+      const code = Array.from(array)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('')
+        .toUpperCase()
+      // Format as XXXX-XXXX-XX for readability
+      codes.push(`${code.slice(0, 4)}-${code.slice(4, 8)}-${code.slice(8, 10)}`)
+    }
+
+    // Store hashed codes in database using secure function
+    const { data, error } = await supabase.rpc('store_backup_codes', {
+      p_user_id: user.id,
+      p_codes: codes.map(c => c.replace(/-/g, '')) // Remove dashes for storage
+    })
+
+    if (error) {
+      logger.error('Failed to store backup codes:', error)
+      throw new Error('Failed to store backup codes securely')
+    }
+
+    logger.log('Backup codes generated and stored', { batchId: data })
+
+    // Return plaintext codes to user (they should save these)
+    // These are NEVER stored in plaintext - only shown once
+    return codes
+  } catch (error) {
+    logger.error('Error generating backup codes:', error)
+    throw error
   }
+}
 
-  // TODO: Store these codes securely (hashed) in the database
-  // This would require a custom table for backup codes
+/**
+ * Verify a backup code during MFA recovery
+ * @param code The backup code to verify (with or without dashes)
+ * @returns true if code is valid and was marked as used
+ */
+export async function verifyBackupCode(code: string): Promise<boolean> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      throw new Error('No authenticated user')
+    }
 
-  return codes
+    // Remove any formatting (dashes, spaces)
+    const cleanCode = code.replace(/[-\s]/g, '').toUpperCase()
+
+    // Verify using secure database function
+    const { data, error } = await supabase.rpc('verify_mfa_backup_code', {
+      p_user_id: user.id,
+      p_code: cleanCode
+    })
+
+    if (error) {
+      logger.error('Error verifying backup code:', error)
+      return false
+    }
+
+    return data === true
+  } catch (error) {
+    logger.error('Error verifying backup code:', error)
+    return false
+  }
+}
+
+/**
+ * Get status of user's backup codes (remaining count, etc.)
+ */
+export async function getBackupCodeStatus(): Promise<{
+  totalCodes: number
+  usedCodes: number
+  remainingCodes: number
+  lastUsedAt: string | null
+} | null> {
+  try {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return null
+    }
+
+    const { data, error } = await supabase.rpc('get_backup_code_status', {
+      p_user_id: user.id
+    })
+
+    if (error || !data || data.length === 0) {
+      return null
+    }
+
+    const status = data[0]
+    return {
+      totalCodes: status.total_codes || 0,
+      usedCodes: status.used_codes || 0,
+      remainingCodes: status.remaining_codes || 0,
+      lastUsedAt: status.last_used_at || null
+    }
+  } catch (error) {
+    logger.error('Error getting backup code status:', error)
+    return null
+  }
 }
 
 /**
@@ -220,41 +312,50 @@ export async function isRoleMFARequired(role: string): Promise<boolean> {
 
 /**
  * Get user's MFA preferences from database
+ * Uses the user_preferences table created in migration 148
  */
 export async function getUserMFAPreferences(userId: string): Promise<{
   mfaEnabled: boolean
   mfaEnforcedAt?: string
   backupCodesGenerated?: boolean
+  backupCodesGeneratedAt?: string
 }> {
-  // TODO: Implement when user_preferences table is created in database
-  // Currently returning defaults as the table doesn't exist in the schema
+  try {
+    // Use untyped client since this table may not be in generated types yet
+    const { data, error } = await supabase
+      .from('user_preferences')
+      .select('mfa_enabled, mfa_enforced_at, backup_codes_generated, backup_codes_generated_at')
+      .eq('user_id', userId)
+      .single()
 
-  // try {
-  //   const { data, error } = await supabase
-  //     .from('user_preferences')
-  //     .select('mfa_enabled, mfa_enforced_at, backup_codes_generated')
-  //     .eq('user_id', userId)
-  //     .single()
+    if (error) {
+      // PGRST116 = no rows found, which is expected for new users
+      if (error.code === 'PGRST116') {
+        return { mfaEnabled: false }
+      }
+      logger.error('Error getting MFA preferences:', error)
+      return { mfaEnabled: false }
+    }
 
-  //   if (error || !data) {
-  //     return { mfaEnabled: false }
-  //   }
+    if (!data) {
+      return { mfaEnabled: false }
+    }
 
-  //   return {
-  //     mfaEnabled: data.mfa_enabled || false,
-  //     mfaEnforcedAt: data.mfa_enforced_at,
-  //     backupCodesGenerated: data.backup_codes_generated || false
-  //   }
-  // } catch (error) {
-  //   logger.error('Error getting MFA preferences:', error)
-  //   return { mfaEnabled: false }
-  // }
-
-  return { mfaEnabled: false }
+    return {
+      mfaEnabled: data.mfa_enabled || false,
+      mfaEnforcedAt: data.mfa_enforced_at || undefined,
+      backupCodesGenerated: data.backup_codes_generated || false,
+      backupCodesGeneratedAt: data.backup_codes_generated_at || undefined
+    }
+  } catch (error) {
+    logger.error('Error getting MFA preferences:', error)
+    return { mfaEnabled: false }
+  }
 }
 
 /**
- * Update user's MFA preferences
+ * Update user's MFA preferences in database
+ * Uses the user_preferences table created in migration 148
  */
 export async function updateUserMFAPreferences(
   userId: string,
@@ -264,27 +365,41 @@ export async function updateUserMFAPreferences(
     backupCodesGenerated?: boolean
   }
 ): Promise<boolean> {
-  // TODO: Implement when user_preferences table is created in database
-  // Currently no-op as the table doesn't exist in the schema
+  try {
+    const updateData: Record<string, unknown> = {
+      user_id: userId,
+    }
 
-  // try {
-  //   const { error } = await supabase
-  //     .from('user_preferences')
-  //     .upsert({
-  //       user_id: userId,
-  //       ...preferences,
-  //       updated_at: new Date().toISOString()
-  //     })
+    if (preferences.mfaEnabled !== undefined) {
+      updateData.mfa_enabled = preferences.mfaEnabled
+    }
+    if (preferences.mfaEnforcedAt !== undefined) {
+      updateData.mfa_enforced_at = preferences.mfaEnforcedAt
+    }
+    if (preferences.backupCodesGenerated !== undefined) {
+      updateData.backup_codes_generated = preferences.backupCodesGenerated
+      if (preferences.backupCodesGenerated) {
+        updateData.backup_codes_generated_at = new Date().toISOString()
+      }
+    }
 
-  //   if (error) throw error
-  //   return true
-  // } catch (error) {
-  //   logger.error('Error updating MFA preferences:', error)
-  //   return false
-  // }
+    // Use untyped client since this table may not be in generated types yet
+    const { error } = await supabase
+      .from('user_preferences')
+      .upsert(updateData, {
+        onConflict: 'user_id'
+      })
 
-  logger.log('MFA preferences update skipped - user_preferences table not implemented', { userId, preferences })
-  return true
+    if (error) {
+      logger.error('Error updating MFA preferences:', error)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    logger.error('Error updating MFA preferences:', error)
+    return false
+  }
 }
 
 /**

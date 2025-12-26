@@ -351,13 +351,63 @@ export function useSubmitPaymentApplication() {
 
 /**
  * Approve payment application
+ * Now includes insurance compliance check - will reject if subcontractor has payment hold
  */
 export function useApprovePaymentApplication() {
   const queryClient = useQueryClient()
   const { userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: async ({ id, ...input }: ApprovePaymentApplicationDTO & { id: string }) => {
+    mutationFn: async ({
+      id,
+      overrideHold = false,
+      overrideReason,
+      ...input
+    }: ApprovePaymentApplicationDTO & {
+      id: string
+      overrideHold?: boolean
+      overrideReason?: string
+    }) => {
+      // First get the payment application to check for subcontractor
+      const { data: app, error: appError } = await supabase
+        .from('payment_applications')
+        .select('project_id, subcontractor_id')
+        .eq('id', id)
+        .single()
+
+      if (appError) {throw appError}
+
+      // Check for payment holds if subcontractor is associated
+      if (app.subcontractor_id && !overrideHold) {
+        const { data: complianceStatus } = await supabase
+          .from('subcontractor_compliance_status')
+          .select('payment_hold, hold_reason')
+          .eq('subcontractor_id', app.subcontractor_id)
+          .eq('project_id', app.project_id)
+          .single()
+
+        if (complianceStatus?.payment_hold) {
+          throw new Error(
+            `Payment approval blocked: Subcontractor has an active payment hold. ` +
+            `Reason: ${complianceStatus.hold_reason || 'Insurance compliance issue'}. ` +
+            `Please resolve the compliance issue or use override if authorized.`
+          )
+        }
+      }
+
+      // If overriding, log the override
+      if (overrideHold && overrideReason) {
+        await supabase.from('payment_hold_overrides').insert({
+          payment_application_id: id,
+          subcontractor_id: app.subcontractor_id,
+          project_id: app.project_id,
+          company_id: userProfile?.company_id,
+          override_reason: overrideReason,
+          overridden_by: userProfile?.id,
+          overridden_at: new Date().toISOString(),
+        })
+      }
+
       const { data, error } = await supabase
         .from('payment_applications')
         .update({
@@ -365,6 +415,8 @@ export function useApprovePaymentApplication() {
           status: 'approved',
           approved_at: new Date().toISOString(),
           approved_by: userProfile?.id,
+          insurance_hold_overridden: overrideHold || undefined,
+          insurance_hold_override_reason: overrideReason || undefined,
         })
         .eq('id', id)
         .select()

@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import type { UserRole } from './auth';
+import type { UserRole } from '@/lib/api/services/company-users';
 
 export type NavigationCategory = 'main' | 'field' | 'management' | 'admin' | 'reports';
 

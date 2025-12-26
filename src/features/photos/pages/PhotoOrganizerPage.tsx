@@ -85,6 +85,7 @@ import type {
   CapturedPhoto,
 } from '@/types/photo-management'
 import { logger } from '../../../lib/utils/logger';
+import JSZip from 'jszip';
 
 
 // =============================================
@@ -452,7 +453,7 @@ export function PhotoOrganizerPage() {
   const handleFileSelect = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files
-      if (!files || files.length === 0 || !projectId) return
+      if (!files || files.length === 0 || !projectId) {return}
 
       try {
         const results = await uploadPhotos(Array.from(files))
@@ -520,7 +521,7 @@ export function PhotoOrganizerPage() {
 
   // Handle create collection
   const handleCreateCollection = useCallback(async () => {
-    if (!projectId || !newCollectionName.trim()) return
+    if (!projectId || !newCollectionName.trim()) {return}
 
     try {
       await createCollection.mutateAsync({
@@ -538,15 +539,15 @@ export function PhotoOrganizerPage() {
     }
   }, [projectId, newCollectionName, newCollectionDescription, createCollection])
 
-  // Handle bulk download
+  // Handle bulk download - creates a ZIP file for multiple photos
   const handleBulkDownload = useCallback(async () => {
-    if (selectedPhotoIds.size === 0 || !photos) return
+    if (selectedPhotoIds.size === 0 || !photos) {return}
 
     const selectedPhotos = photos.filter(p => selectedPhotoIds.has(p.id))
 
-    // For now, download each photo individually
-    // TODO: Implement zip download for multiple photos
-    for (const photo of selectedPhotos) {
+    // For single photo, download directly
+    if (selectedPhotos.length === 1) {
+      const photo = selectedPhotos[0]
       try {
         const response = await fetch(photo.fileUrl)
         const blob = await response.blob()
@@ -558,12 +559,87 @@ export function PhotoOrganizerPage() {
         a.click()
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
+        toast.success('Photo downloaded')
       } catch (error) {
         logger.error('Failed to download photo:', error)
+        toast.error('Failed to download photo')
       }
+      return
     }
 
-    toast.success(`Downloaded ${selectedPhotos.length} photo(s)`)
+    // For multiple photos, create a ZIP file
+    toast.info(`Preparing ${selectedPhotos.length} photos for download...`)
+
+    try {
+      const zip = new JSZip()
+      const folder = zip.folder('photos')
+
+      // Track filenames to avoid duplicates
+      const usedNames = new Set<string>()
+
+      // Fetch all photos in parallel
+      const fetchPromises = selectedPhotos.map(async (photo, index) => {
+        try {
+          const response = await fetch(photo.fileUrl)
+          if (!response.ok) {throw new Error(`HTTP ${response.status}`)}
+          const blob = await response.blob()
+
+          // Generate unique filename
+          const fileName = photo.fileName || `photo-${photo.id}.jpg`
+          const ext = fileName.includes('.') ? fileName.slice(fileName.lastIndexOf('.')) : '.jpg'
+          const baseName = fileName.includes('.') ? fileName.slice(0, fileName.lastIndexOf('.')) : fileName
+
+          // Handle duplicate names
+          let finalName = fileName
+          let counter = 1
+          while (usedNames.has(finalName)) {
+            finalName = `${baseName}_${counter}${ext}`
+            counter++
+          }
+          usedNames.add(finalName)
+
+          folder?.file(finalName, blob)
+          return { success: true, name: finalName }
+        } catch (error) {
+          logger.error(`Failed to fetch photo ${photo.id}:`, error)
+          return { success: false, name: photo.fileName || photo.id }
+        }
+      })
+
+      const results = await Promise.all(fetchPromises)
+      const successCount = results.filter(r => r.success).length
+      const failCount = results.filter(r => !r.success).length
+
+      if (successCount === 0) {
+        toast.error('Failed to download any photos')
+        return
+      }
+
+      // Generate and download ZIP
+      const zipBlob = await zip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 },
+      })
+
+      const url = URL.createObjectURL(zipBlob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `photos-${new Date().toISOString().split('T')[0]}.zip`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+
+      if (failCount > 0) {
+        toast.success(`Downloaded ${successCount} photos (${failCount} failed)`)
+      } else {
+        toast.success(`Downloaded ${successCount} photos as ZIP`)
+      }
+    } catch (error) {
+      logger.error('Failed to create ZIP:', error)
+      toast.error('Failed to create download package')
+    }
   }, [selectedPhotoIds, photos])
 
   // Handle bulk add tags (placeholder - shows toast for now)

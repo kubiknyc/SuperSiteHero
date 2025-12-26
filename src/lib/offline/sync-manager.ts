@@ -11,6 +11,21 @@ import { bandwidthDetector, type NetworkSpeed } from './bandwidth-detector';
 import { putInStore, STORES } from './indexeddb';
 
 /**
+ * Detect iOS Safari (limited SW/Background Sync support)
+ */
+function isIOS(): boolean {
+  if (typeof navigator === 'undefined') {return false;}
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+/**
+ * Exponential backoff delays (in milliseconds)
+ * 5s, 15s, 30s, 1min, 5min
+ */
+const RETRY_DELAYS = [5000, 15000, 30000, 60000, 300000];
+const MAX_RETRIES = 5;
+
+/**
  * Sync telemetry entry
  */
 export interface SyncTelemetry {
@@ -43,6 +58,8 @@ export class SyncManager {
   private static readonly MIN_SYNC_INTERVAL = 5000; // 5 seconds minimum between syncs
   private static currentBatch: SyncBatch | null = null;
   private static telemetry: Partial<SyncTelemetry> = {};
+  private static retryCount = 0; // Track retry attempts for exponential backoff
+  private static visibilityHandler: (() => void) | null = null; // iOS visibility change handler
 
   /**
    * Initialize background sync
@@ -54,14 +71,42 @@ export class SyncManager {
     // Listen for online event
     const handleOnline = () => {
       logger.log('[SyncManager] Network restored - triggering sync');
+      this.retryCount = 0; // Reset retry count on reconnection
       this.triggerSync();
     };
 
     window.addEventListener('online', handleOnline);
 
-    // Register service worker sync if available
-    if ('serviceWorker' in navigator && 'sync' in ServiceWorkerRegistration.prototype) {
+    // Register service worker sync if available (not on iOS)
+    if ('serviceWorker' in navigator && 'sync' in ServiceWorkerRegistration.prototype && !isIOS()) {
       this.registerBackgroundSync();
+    }
+
+    // iOS Safari fallback: Use visibilitychange instead of Background Sync
+    // iOS has limited Background Sync support, so we sync when app becomes visible
+    if (isIOS()) {
+      logger.log('[SyncManager] iOS detected - using visibility-based sync fallback');
+      this.visibilityHandler = () => {
+        if (document.visibilityState === 'visible' && navigator.onLine) {
+          const { pendingSyncs } = useOfflineStore.getState();
+          if (pendingSyncs > 0) {
+            logger.log('[SyncManager] iOS app became visible - triggering sync');
+            this.triggerSync();
+          }
+        }
+      };
+      document.addEventListener('visibilitychange', this.visibilityHandler);
+
+      // Also sync on pageshow (iOS Safari specific - handles bfcache restoration)
+      window.addEventListener('pageshow', (event) => {
+        if (event.persisted && navigator.onLine) {
+          const { pendingSyncs } = useOfflineStore.getState();
+          if (pendingSyncs > 0) {
+            logger.log('[SyncManager] iOS pageshow event - triggering sync');
+            this.triggerSync();
+          }
+        }
+      });
     }
 
     // Periodic sync check (every 30 seconds when online)
@@ -79,6 +124,10 @@ export class SyncManager {
       if (this.syncInterval) {
         clearInterval(this.syncInterval);
         this.syncInterval = null;
+      }
+      if (this.visibilityHandler) {
+        document.removeEventListener('visibilitychange', this.visibilityHandler);
+        this.visibilityHandler = null;
       }
     };
   }
@@ -245,11 +294,30 @@ export class SyncManager {
       }
     } catch (error) {
       logger.error('[SyncManager] Sync failed:', error);
-      this.showSyncNotification('Sync failed - will retry automatically', 'error');
 
-      // Schedule retry with exponential backoff
-      const retryDelay = Math.min(30000, this.MIN_SYNC_INTERVAL * 2); // Max 30 seconds
-      setTimeout(() => this.triggerSync(), retryDelay);
+      // Increment retry count and calculate delay with exponential backoff
+      this.retryCount++;
+
+      if (this.retryCount >= MAX_RETRIES) {
+        // Max retries exceeded - notify user and stop automatic retries
+        this.showSyncNotification(
+          `Sync failed after ${MAX_RETRIES} attempts. Please try manually or check your connection.`,
+          'error'
+        );
+        this.retryCount = 0; // Reset for future manual attempts
+      } else {
+        // Calculate delay with exponential backoff
+        const retryDelay = RETRY_DELAYS[Math.min(this.retryCount - 1, RETRY_DELAYS.length - 1)];
+        const delaySeconds = Math.round(retryDelay / 1000);
+
+        this.showSyncNotification(
+          `Sync failed - retrying in ${delaySeconds}s (attempt ${this.retryCount}/${MAX_RETRIES})`,
+          'warning'
+        );
+
+        logger.log(`[SyncManager] Scheduling retry ${this.retryCount}/${MAX_RETRIES} in ${delaySeconds}s`);
+        setTimeout(() => this.triggerSync(), retryDelay);
+      }
     } finally {
       this.syncInProgress = false;
     }
@@ -300,8 +368,9 @@ export class SyncManager {
    * Force sync now (for manual user trigger)
    */
   static async forceSyncNow(): Promise<void> {
-    // Reset rate limiting for manual sync
+    // Reset rate limiting and retry count for manual sync
     this.lastSyncAttempt = 0;
+    this.retryCount = 0;
     await this.triggerSync();
   }
 

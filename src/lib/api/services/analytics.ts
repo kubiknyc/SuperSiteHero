@@ -22,6 +22,7 @@ import type {
   AnalyticsDashboard,
   TrendDataPoint,
   RecommendationStats,
+  BaselineComparison,
 } from '@/types/analytics'
 import { getRiskLevel } from '@/types/analytics'
 
@@ -699,7 +700,7 @@ export const analyticsApi = {
         cost_trend: costTrend,
         pending_recommendations: recommendations,
         recommendation_stats: recommendationStats,
-        vs_baseline: null, // TODO: Implement baseline comparison
+        vs_baseline: this.calculateBaselineComparison(snapshots),
       }
     } catch (error) {
       throw error instanceof ApiErrorClass
@@ -708,6 +709,50 @@ export const analyticsApi = {
             code: 'FETCH_DASHBOARD_ERROR',
             message: 'Failed to fetch dashboard data',
           })
+    }
+  },
+
+  /**
+   * Calculate baseline comparison from snapshots
+   * Uses the earliest snapshot as baseline and compares to the latest
+   */
+  calculateBaselineComparison(snapshots: ProjectSnapshot[]): BaselineComparison | null {
+    if (snapshots.length < 2) {
+      return null
+    }
+
+    // Get baseline (earliest) and current (latest) snapshots
+    const baseline = snapshots[snapshots.length - 1] // Oldest after reverse()
+    const current = snapshots[0] // Most recent after reverse()
+
+    // Calculate budget variance
+    const baselineBudget = baseline.budget || baseline.contract_value || 0
+    const currentCost = current.cost_to_date || 0
+    const budgetVariance = baselineBudget > 0 ? currentCost - baselineBudget : 0
+    const budgetVariancePercentage = baselineBudget > 0
+      ? ((currentCost - baselineBudget) / baselineBudget) * 100
+      : 0
+
+    // Calculate schedule variance
+    // Use baseline_variance_days from current snapshot if available
+    // Otherwise, calculate from planned vs projected dates
+    let scheduleVarianceDays = current.baseline_variance_days || 0
+    if (!scheduleVarianceDays && current.planned_completion_date && current.projected_completion_date) {
+      const planned = new Date(current.planned_completion_date)
+      const projected = new Date(current.projected_completion_date)
+      scheduleVarianceDays = Math.round((projected.getTime() - planned.getTime()) / (1000 * 60 * 60 * 24))
+    }
+
+    // Calculate completion variance (current progress vs expected progress)
+    const currentProgress = current.overall_percent_complete || 0
+    const baselineProgress = baseline.overall_percent_complete || 0
+    const completionVariance = currentProgress - baselineProgress
+
+    return {
+      budget_variance: Math.round(budgetVariance * 100) / 100,
+      budget_variance_percentage: Math.round(budgetVariancePercentage * 100) / 100,
+      schedule_variance_days: scheduleVarianceDays,
+      completion_variance: Math.round(completionVariance * 100) / 100,
     }
   },
 }

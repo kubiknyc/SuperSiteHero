@@ -58,7 +58,7 @@ export function PendingUsersManager() {
   };
 
   const handleRejectConfirm = async () => {
-    if (!selectedUserId) return;
+    if (!selectedUserId) {return;}
 
     await rejectUser.mutateAsync({
       userId: selectedUserId,

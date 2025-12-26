@@ -18,6 +18,8 @@ import {
   AlertTriangle,
   Building2,
   Calendar,
+  ShieldCheck,
+  ShieldAlert,
 } from 'lucide-react'
 import { format } from 'date-fns'
 

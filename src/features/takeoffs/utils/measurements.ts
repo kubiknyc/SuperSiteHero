@@ -2,6 +2,11 @@
 // Core measurement calculations for all 9 takeoff measurement types
 // Handles unit conversions and geometric calculations
 
+import type { MeasurementUnit } from '@/features/documents/types/markup'
+
+// Re-export MeasurementUnit for convenience
+export type { MeasurementUnit }
+
 /**
  * Measurement types supported by the system
  */
@@ -59,6 +64,10 @@ export interface Coordinate {
 export interface ScaleFactor {
   pixelsPerUnit: number
   unit: LinearUnit
+  /** Original pixel distance used for calibration (for persistence) */
+  pixelDistance?: number
+  /** Original real-world distance used for calibration (for persistence) */
+  realWorldDistance?: number
 }
 
 // ============================================
@@ -100,6 +109,38 @@ const VOLUME_TO_CUBIC_INCHES: Record<VolumeUnit, number> = {
 // ============================================
 // UNIT CONVERSION FUNCTIONS
 // ============================================
+
+/**
+ * Convert MeasurementUnit (full name) to LinearUnit (abbreviation)
+ */
+export function measurementUnitToLinearUnit(unit: MeasurementUnit | string): LinearUnit {
+  const mapping: Record<string, LinearUnit> = {
+    feet: 'ft',
+    inches: 'in',
+    meters: 'm',
+    centimeters: 'cm',
+    millimeters: 'mm',
+    yards: 'yd',
+  }
+  return mapping[unit] || 'ft'
+}
+
+/**
+ * Convert LinearUnit (abbreviation) to MeasurementUnit (full name)
+ */
+export function linearUnitToMeasurementUnit(unit: LinearUnit): MeasurementUnit {
+  const mapping: Record<LinearUnit, MeasurementUnit> = {
+    ft: 'feet',
+    in: 'inches',
+    m: 'meters',
+    cm: 'centimeters',
+    mm: 'millimeters',
+    yd: 'yards',
+    mi: 'feet', // fallback
+    km: 'meters', // fallback
+  }
+  return mapping[unit] || 'feet'
+}
 
 /**
  * Convert length from one linear unit to another

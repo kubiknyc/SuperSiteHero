@@ -57,6 +57,7 @@ import {
   usePaymentAgingDashboard,
   usePaymentAgingReport,
   usePaymentAgingAlerts,
+  useDSOMetrics,
   getBucketColor,
 } from '../hooks/usePaymentAging'
 import { useProjects } from '@/features/projects/hooks/useProjects'
@@ -536,6 +537,7 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
 
   const { data: report, isLoading, error, refetch } = usePaymentAgingReport(selectedProject)
   const { data: alerts } = usePaymentAgingAlerts()
+  const { data: dsoMetrics } = useDSOMetrics()
   const { data: projects } = useProjects()
 
   // Sort receivables
@@ -657,8 +659,8 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
         totalRetainage={report.total_retainage}
         averageDays={report.average_days_outstanding}
         oldestDays={report.oldest_receivable_days}
-        currentDSO={45} // TODO: Get from DSO metrics
-        targetDSO={45}
+        currentDSO={dsoMetrics?.current_dso ?? 0}
+        targetDSO={dsoMetrics?.target_dso ?? 45}
       />
 
       {/* Aging Chart and Alerts */}

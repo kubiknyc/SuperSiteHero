@@ -38,5 +38,11 @@
   "statusLine": {
     "type": "command",
     "command": "python .claude/scripts/context-monitor.py"
-  }
+  },
+  "enabledMcpjsonServers": [
+    "filesystem",
+    "github",
+    "supabase"
+  ],
+  "enableAllProjectMcpServers": true
 }

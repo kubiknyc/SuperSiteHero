@@ -1,6 +1,6 @@
 // @ts-nocheck
 // File: /src/pages/rfis/DedicatedRFIDetailPage.tsx
-// Dedicated RFI detail page with ball-in-court tracking, drawing references, and impact flags
+// Dedicated RFI detail page with tabbed interface, workflow indicator, and ball-in-court tracking
 
 import { useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   ArrowLeft,
   AlertCircle,
@@ -41,6 +42,14 @@ import {
   FileDown,
 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import {
+  WorkflowProgressIndicator,
+  RFI_WORKFLOW_STEPS,
+  RFI_STATUS_STEP_MAP,
+  getStepFromStatus,
+} from '@/components/shared'
+import { RFIResponseForm } from '@/features/rfis/components/RFIResponseForm'
+import { RFIAttachmentUploader } from '@/features/rfis/components/RFIAttachmentUploader'
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
@@ -114,6 +123,9 @@ export function DedicatedRFIDetailPage() {
   const navigate = useNavigate()
 
   const { userProfile } = useAuth()
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState('details')
 
   const [responseText, setResponseText] = useState('')
   const [showResponseForm, setShowResponseForm] = useState(false)
@@ -393,8 +405,63 @@ export function DedicatedRFIDetailPage() {
               </div>
             )}
 
-            {/* Question Card */}
+            {/* Workflow Progress Indicator */}
             <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2">
+                  Workflow Status
+                  <RFIStatusBadge status={rfi.status} />
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <WorkflowProgressIndicator
+                  steps={RFI_WORKFLOW_STEPS}
+                  currentStep={getStepFromStatus(rfi.status, RFI_STATUS_STEP_MAP)}
+                  isError={rfi.status === 'void'}
+                  isVoided={rfi.status === 'void'}
+                  ballInCourt={rfi.ball_in_court_user ? {
+                    name: rfi.ball_in_court_user.full_name,
+                    role: rfi.ball_in_court_role || undefined,
+                  } : undefined}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Tabbed Content */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-4">
+                <TabsTrigger value="details">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Details
+                </TabsTrigger>
+                <TabsTrigger value="attachments">
+                  <Paperclip className="h-4 w-4 mr-2" />
+                  Attachments
+                  {attachments?.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {attachments.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="comments">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Comments
+                  {comments?.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {comments.length}
+                    </Badge>
+                  )}
+                </TabsTrigger>
+                <TabsTrigger value="history">
+                  <History className="h-4 w-4 mr-2" />
+                  History
+                </TabsTrigger>
+              </TabsList>
+
+              {/* Details Tab */}
+              <TabsContent value="details" className="space-y-6">
+                {/* Question Card */}
+                <Card>
               <CardHeader>
                 <CardTitle>Question</CardTitle>
               </CardHeader>
@@ -432,7 +499,14 @@ export function DedicatedRFIDetailPage() {
             {/* Response Card */}
             <Card>
               <CardHeader>
-                <CardTitle>Response</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  Response
+                  {rfi.response_type && (
+                    <Badge variant="outline" className="text-xs capitalize">
+                      {rfi.response_type.replace('_', ' ')}
+                    </Badge>
+                  )}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {rfi.response ? (
@@ -460,41 +534,11 @@ export function DedicatedRFIDetailPage() {
                         )}
                       </div>
                     ) : (
-                      <div className="space-y-4">
-                        <Textarea
-                          placeholder="Enter your response..."
-                          value={responseText}
-                          onChange={(e) => setResponseText(e.target.value)}
-                          rows={4}
-                        />
-                        <div className="flex justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            onClick={() => {
-                              setShowResponseForm(false)
-                              setResponseText('')
-                            }}
-                          >
-                            Cancel
-                          </Button>
-                          <Button
-                            onClick={handleSubmitResponse}
-                            disabled={!responseText.trim() || respondToRFI.isPending}
-                          >
-                            {respondToRFI.isPending ? (
-                              <>
-                                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                Submitting...
-                              </>
-                            ) : (
-                              <>
-                                <Send className="h-4 w-4 mr-2" />
-                                Submit Response
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </div>
+                      <RFIResponseForm
+                        rfiId={rfi.id}
+                        onSuccess={() => setShowResponseForm(false)}
+                        onCancel={() => setShowResponseForm(false)}
+                      />
                     )}
                   </>
                 )}
@@ -569,47 +613,27 @@ export function DedicatedRFIDetailPage() {
                 </CardContent>
               </Card>
             )}
+              </TabsContent>
 
-            {/* Attachments */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Paperclip className="h-5 w-5" />
-                  Attachments
-                </CardTitle>
-                <CardDescription>{attachments?.length || 0} files</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {attachments && attachments.length > 0 ? (
-                  <div className="space-y-2">
-                    {attachments.map((attachment: any) => (
-                      <div
-                        key={attachment.id}
-                        className="flex items-center justify-between p-3 bg-surface rounded-lg"
-                      >
-                        <div className="flex items-center gap-3">
-                          <FileText className="h-5 w-5 text-disabled" />
-                          <div>
-                            <p className="font-medium text-sm">
-                              {attachment.document?.name || 'Untitled'}
-                            </p>
-                            <p className="text-xs text-muted">
-                              {attachment.document?.file_type}
-                            </p>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          Download
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted text-center py-4">No attachments</p>
-                )}
-              </CardContent>
-            </Card>
+              {/* Attachments Tab */}
+              <TabsContent value="attachments" className="space-y-6">
+                <RFIAttachmentUploader
+                  rfiId={rfi.id}
+                  existingAttachments={attachments?.map((a: any) => ({
+                    id: a.id,
+                    file_name: a.file_name || a.document?.name || null,
+                    file_type: a.file_type || a.document?.file_type || null,
+                    file_size: a.file_size || null,
+                    file_url: a.file_url || a.document?.file_url || null,
+                    attachment_type: a.attachment_type || 'general',
+                    uploaded_by_user: a.uploaded_by_user,
+                    created_at: a.created_at,
+                  })) || []}
+                />
+              </TabsContent>
 
+              {/* Comments Tab */}
+              <TabsContent value="comments" className="space-y-6">
             {/* Comments */}
             <Card>
               <CardHeader>
@@ -681,19 +705,25 @@ export function DedicatedRFIDetailPage() {
                 </div>
               </CardContent>
             </Card>
+              </TabsContent>
 
+              {/* History Tab */}
+              <TabsContent value="history" className="space-y-6">
             {/* Change History */}
-            {history && history.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <History className="h-5 w-5" />
-                    History
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <History className="h-5 w-5" />
+                  Change History
+                </CardTitle>
+                <CardDescription>
+                  {history?.length || 0} changes recorded
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {history && history.length > 0 ? (
                   <div className="space-y-3">
-                    {history.slice(0, 10).map((entry: any) => (
+                    {history.map((entry: any) => (
                       <div key={entry.id} className="flex items-start gap-3 text-sm">
                         <div className="w-2 h-2 rounded-full bg-gray-300 mt-2" />
                         <div>
@@ -710,9 +740,13 @@ export function DedicatedRFIDetailPage() {
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <p className="text-sm text-muted text-center py-4">No history recorded yet</p>
+                )}
+              </CardContent>
+            </Card>
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* Sidebar */}

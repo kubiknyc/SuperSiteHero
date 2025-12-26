@@ -335,6 +335,9 @@ export interface SubcontractorPunchItem {
   verified_at: string | null;
   rejection_notes: string | null;
 
+  // Photos
+  photo_count?: number;
+
   // Audit
   created_at: string;
   created_by: string | null;
@@ -516,4 +519,71 @@ export interface InvitationValidation {
   subcontractor?: SubcontractorBasic;
   project?: ProjectBasic;
   error?: string;
+}
+
+// =============================================
+// ASSIGNMENT TYPES (For MyAssignments tabs)
+// =============================================
+
+/**
+ * RFI assigned to subcontractor (ball in their court)
+ */
+export interface SubcontractorRFI {
+  id: string;
+  rfi_number: string | null;
+  title: string;
+  description: string | null;
+  status: 'draft' | 'open' | 'responded' | 'closed';
+  priority: 'low' | 'normal' | 'high' | 'critical' | null;
+  due_date: string | null;
+  project_id: string;
+  project_name: string;
+  ball_in_court_role: string | null;
+  ball_in_court_user_id: string | null;
+  assigned_to_user_id: string | null;
+  question: string | null;
+  created_at: string;
+  updated_at: string | null;
+}
+
+/**
+ * Document shared with subcontractor
+ */
+export interface SubcontractorDocument {
+  id: string;
+  document_id: string;
+  name: string;
+  file_type: string | null;
+  file_size: number | null;
+  file_url: string;
+  category: string | null;
+  project_id: string;
+  project_name: string;
+  shared_at: string;
+  shared_by_name: string | null;
+  can_download: boolean;
+  can_edit: boolean;
+  expires_at: string | null;
+}
+
+/**
+ * Payment application for subcontractor
+ */
+export interface SubcontractorPayment {
+  id: string;
+  application_number: string | null;
+  period_from: string | null;
+  period_to: string | null;
+  status: 'draft' | 'submitted' | 'approved' | 'rejected' | 'paid';
+  scheduled_value: number | null;
+  work_completed_to_date: number | null;
+  previous_payments: number | null;
+  current_payment_due: number | null;
+  retainage_held: number | null;
+  project_id: string;
+  project_name: string;
+  submitted_at: string | null;
+  approved_at: string | null;
+  paid_at: string | null;
+  created_at: string;
 }

@@ -1,5 +1,5 @@
 // File: /src/main.tsx
-// Application entry point with Phase 2 Performance monitoring
+// Application entry point with Phase 2 Performance monitoring and offline support
 
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -11,6 +11,11 @@ import './index.css'
 import { initWebVitals } from './lib/performance/web-vitals'
 import { initSentry } from './lib/sentry'
 import { initializeTheme } from './lib/theme/darkMode'
+import {
+  registerServiceWorker,
+  requestPersistentStorage,
+  isServiceWorkerSupported,
+} from './lib/supabase'
 
 // Import email test utility for browser console access
 import './lib/email/test-email'
@@ -30,6 +35,13 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       retry: 1,
+      // Enable network-only mode when offline
+      networkMode: 'offlineFirst',
+    },
+    mutations: {
+      // Retry mutations when network is restored
+      networkMode: 'offlineFirst',
+      retry: 3,
     },
   },
 })
@@ -39,29 +51,41 @@ if (typeof window !== 'undefined') {
   initWebVitals()
 }
 
-// Service Worker registration monitoring
-// VitePWA handles auto-registration, but we add logging for debugging
-if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-  navigator.serviceWorker.ready
-    .then((registration) => {
-      console.log('[SW] Service worker ready:', registration.scope)
+// Initialize offline support and service worker
+async function initializeOfflineSupport(): Promise<void> {
+  if (!isServiceWorkerSupported()) {
+    console.warn('[Offline] Service workers not supported')
+    return
+  }
 
-      // Listen for updates
+  try {
+    // Register service worker and set up background sync
+    const registration = await registerServiceWorker()
+    if (registration) {
+      // Request persistent storage to prevent data loss
+      await requestPersistentStorage()
+
+      // Set up update detection
       registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing
-        console.log('[SW] New service worker installing...')
+        if (!newWorker) {return}
 
-        newWorker?.addEventListener('statechange', () => {
-          console.log('[SW] Service worker state:', newWorker.state)
+        newWorker.addEventListener('statechange', () => {
           if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-            console.log('[SW] New version available! Refresh to update.')
+            // Dispatch custom event for PWAUpdateNotification to handle
+            window.dispatchEvent(new CustomEvent('sw-update-available'))
           }
         })
       })
-    })
-    .catch((error) => {
-      console.error('[SW] Service worker registration failed:', error)
-    })
+    }
+  } catch (error) {
+    console.error('[Offline] Failed to initialize offline support:', error)
+  }
+}
+
+// Initialize offline support
+if (typeof window !== 'undefined') {
+  initializeOfflineSupport()
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

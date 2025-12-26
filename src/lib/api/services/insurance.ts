@@ -19,6 +19,12 @@ import type {
   ComplianceSummary,
   ExpiringCertificate,
   InsuranceDashboardStats,
+  SubcontractorComplianceStatus,
+  ComplianceDashboardData,
+  InsuranceAIExtraction,
+  CreateAIExtractionDTO,
+  ProjectInsuranceRequirement,
+  CreateProjectRequirementDTO,
 } from '@/types/insurance'
 
 export const insuranceApi = {
@@ -647,6 +653,460 @@ export const insuranceApi = {
         : new ApiErrorClass({
             code: 'UPLOAD_DOCUMENT_ERROR',
             message: 'Failed to upload certificate document',
+          })
+    }
+  },
+
+  // =============================================
+  // COMPLIANCE STATUS (Enhanced)
+  // =============================================
+
+  /**
+   * Get subcontractor compliance status
+   */
+  async getSubcontractorComplianceStatus(
+    subcontractorId: string,
+    projectId?: string
+  ): Promise<SubcontractorComplianceStatus | null> {
+    try {
+      let query = supabaseUntyped
+        .from('subcontractor_compliance_status')
+        .select('*')
+        .eq('subcontractor_id', subcontractorId)
+
+      if (projectId) {
+        query = query.eq('project_id', projectId)
+      } else {
+        query = query.is('project_id', null)
+      }
+
+      const { data, error } = await query.single()
+
+      if (error && error.code !== 'PGRST116') {throw error} // PGRST116 = not found
+      return data as SubcontractorComplianceStatus | null
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'FETCH_COMPLIANCE_STATUS_ERROR',
+            message: 'Failed to fetch compliance status',
+          })
+    }
+  },
+
+  /**
+   * Get all compliance statuses for a company
+   */
+  async getCompanyComplianceStatuses(
+    companyId: string,
+    options?: {
+      projectId?: string
+      onlyNonCompliant?: boolean
+      onlyWithHold?: boolean
+    }
+  ): Promise<SubcontractorComplianceStatus[]> {
+    try {
+      let query = supabaseUntyped
+        .from('subcontractor_compliance_status')
+        .select('*')
+        .eq('company_id', companyId)
+
+      if (options?.projectId) {
+        query = query.eq('project_id', options.projectId)
+      }
+      if (options?.onlyNonCompliant) {
+        query = query.eq('is_compliant', false)
+      }
+      if (options?.onlyWithHold) {
+        query = query.eq('payment_hold', true)
+      }
+
+      const { data, error } = await query.order('compliance_score', { ascending: true })
+
+      if (error) {throw error}
+      return data as SubcontractorComplianceStatus[]
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'FETCH_COMPLIANCE_STATUSES_ERROR',
+            message: 'Failed to fetch compliance statuses',
+          })
+    }
+  },
+
+  /**
+   * Recalculate compliance status for a subcontractor
+   */
+  async recalculateComplianceStatus(
+    subcontractorId: string,
+    projectId?: string,
+    companyId?: string
+  ): Promise<void> {
+    try {
+      const { error } = await supabaseUntyped.rpc('recalculate_compliance_status', {
+        p_subcontractor_id: subcontractorId,
+        p_project_id: projectId || null,
+        p_company_id: companyId || null,
+      })
+
+      if (error) {throw error}
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'RECALCULATE_COMPLIANCE_ERROR',
+            message: 'Failed to recalculate compliance status',
+          })
+    }
+  },
+
+  /**
+   * Apply payment hold for non-compliant subcontractor
+   */
+  async applyPaymentHold(
+    subcontractorId: string,
+    projectId: string,
+    reason?: string
+  ): Promise<boolean> {
+    try {
+      const { data, error } = await supabaseUntyped.rpc('apply_payment_hold', {
+        p_subcontractor_id: subcontractorId,
+        p_project_id: projectId,
+        p_reason: reason || 'Insurance compliance violation',
+      })
+
+      if (error) {throw error}
+      return data as boolean
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'APPLY_HOLD_ERROR',
+            message: 'Failed to apply payment hold',
+          })
+    }
+  },
+
+  /**
+   * Release payment hold
+   */
+  async releasePaymentHold(
+    subcontractorId: string,
+    projectId: string,
+    overrideReason?: string
+  ): Promise<boolean> {
+    try {
+      const { data, error } = await supabaseUntyped.rpc('release_payment_hold', {
+        p_subcontractor_id: subcontractorId,
+        p_project_id: projectId,
+        p_override_reason: overrideReason || null,
+      })
+
+      if (error) {throw error}
+      return data as boolean
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'RELEASE_HOLD_ERROR',
+            message: 'Failed to release payment hold',
+          })
+    }
+  },
+
+  /**
+   * Get compliance dashboard data
+   */
+  async getComplianceDashboard(
+    companyId: string,
+    projectId?: string
+  ): Promise<ComplianceDashboardData[]> {
+    try {
+      let query = supabaseUntyped
+        .from('insurance_compliance_dashboard')
+        .select('*')
+        .eq('company_id', companyId)
+
+      if (projectId) {
+        query = query.eq('project_id', projectId)
+      }
+
+      const { data, error } = await query
+
+      if (error) {throw error}
+      return data as ComplianceDashboardData[]
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'FETCH_DASHBOARD_ERROR',
+            message: 'Failed to fetch compliance dashboard',
+          })
+    }
+  },
+
+  // =============================================
+  // AI EXTRACTIONS
+  // =============================================
+
+  /**
+   * Create AI extraction record
+   */
+  async createAIExtraction(
+    extraction: CreateAIExtractionDTO
+  ): Promise<InsuranceAIExtraction> {
+    try {
+      const { data, error } = await supabaseUntyped
+        .from('insurance_ai_extractions')
+        .insert(extraction)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as InsuranceAIExtraction
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'CREATE_EXTRACTION_ERROR',
+            message: 'Failed to create AI extraction',
+          })
+    }
+  },
+
+  /**
+   * Get AI extraction for a certificate
+   */
+  async getAIExtraction(certificateId: string): Promise<InsuranceAIExtraction | null> {
+    try {
+      const { data, error } = await supabaseUntyped
+        .from('insurance_ai_extractions')
+        .select('*')
+        .eq('certificate_id', certificateId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+
+      if (error && error.code !== 'PGRST116') {throw error}
+      return data as InsuranceAIExtraction | null
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'FETCH_EXTRACTION_ERROR',
+            message: 'Failed to fetch AI extraction',
+          })
+    }
+  },
+
+  /**
+   * Get extractions needing review
+   */
+  async getExtractionsNeedingReview(
+    companyId: string
+  ): Promise<InsuranceAIExtraction[]> {
+    try {
+      const { data, error } = await supabaseUntyped
+        .from('insurance_ai_extractions')
+        .select('*')
+        .eq('company_id', companyId)
+        .eq('needs_review', true)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+      return data as InsuranceAIExtraction[]
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'FETCH_EXTRACTIONS_ERROR',
+            message: 'Failed to fetch extractions needing review',
+          })
+    }
+  },
+
+  /**
+   * Mark extraction as reviewed
+   */
+  async markExtractionReviewed(
+    extractionId: string,
+    notes?: string
+  ): Promise<InsuranceAIExtraction> {
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      const { data, error } = await supabaseUntyped
+        .from('insurance_ai_extractions')
+        .update({
+          needs_review: false,
+          reviewed_by: user?.id,
+          reviewed_at: new Date().toISOString(),
+          review_notes: notes,
+        })
+        .eq('id', extractionId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as InsuranceAIExtraction
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'REVIEW_EXTRACTION_ERROR',
+            message: 'Failed to mark extraction as reviewed',
+          })
+    }
+  },
+
+  /**
+   * Update extraction status
+   */
+  async updateExtractionStatus(
+    extractionId: string,
+    status: 'pending' | 'processing' | 'completed' | 'failed',
+    error?: string
+  ): Promise<InsuranceAIExtraction> {
+    try {
+      const updateData: Record<string, unknown> = {
+        processing_status: status,
+        updated_at: new Date().toISOString(),
+      }
+
+      if (status === 'completed') {
+        updateData.processed_at = new Date().toISOString()
+      }
+      if (status === 'failed' && error) {
+        updateData.processing_error = error
+      }
+
+      const { data, error: dbError } = await supabaseUntyped
+        .from('insurance_ai_extractions')
+        .update(updateData)
+        .eq('id', extractionId)
+        .select()
+        .single()
+
+      if (dbError) {throw dbError}
+      return data as InsuranceAIExtraction
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'UPDATE_EXTRACTION_ERROR',
+            message: 'Failed to update extraction status',
+          })
+    }
+  },
+
+  // =============================================
+  // PROJECT INSURANCE REQUIREMENTS
+  // =============================================
+
+  /**
+   * Get project-specific insurance requirements
+   */
+  async getProjectRequirements(projectId: string): Promise<ProjectInsuranceRequirement[]> {
+    try {
+      const { data, error } = await supabaseUntyped
+        .from('project_insurance_requirements')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('insurance_type', { ascending: true })
+
+      if (error) {throw error}
+      return data as ProjectInsuranceRequirement[]
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'FETCH_PROJECT_REQS_ERROR',
+            message: 'Failed to fetch project requirements',
+          })
+    }
+  },
+
+  /**
+   * Create or update project insurance requirement
+   */
+  async upsertProjectRequirement(
+    requirement: CreateProjectRequirementDTO
+  ): Promise<ProjectInsuranceRequirement> {
+    try {
+      const { data, error } = await supabaseUntyped
+        .from('project_insurance_requirements')
+        .upsert(requirement, {
+          onConflict: 'project_id,insurance_type',
+        })
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as ProjectInsuranceRequirement
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'UPSERT_PROJECT_REQ_ERROR',
+            message: 'Failed to save project requirement',
+          })
+    }
+  },
+
+  /**
+   * Delete project insurance requirement
+   */
+  async deleteProjectRequirement(requirementId: string): Promise<void> {
+    try {
+      const { error } = await supabaseUntyped
+        .from('project_insurance_requirements')
+        .delete()
+        .eq('id', requirementId)
+
+      if (error) {throw error}
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'DELETE_PROJECT_REQ_ERROR',
+            message: 'Failed to delete project requirement',
+          })
+    }
+  },
+
+  /**
+   * Bulk update project requirements
+   */
+  async bulkUpdateProjectRequirements(
+    projectId: string,
+    requirements: CreateProjectRequirementDTO[]
+  ): Promise<ProjectInsuranceRequirement[]> {
+    try {
+      // First delete all existing requirements for the project
+      const { error: deleteError } = await supabaseUntyped
+        .from('project_insurance_requirements')
+        .delete()
+        .eq('project_id', projectId)
+
+      if (deleteError) {throw deleteError}
+
+      // Then insert all new requirements
+      if (requirements.length === 0) {return []}
+
+      const { data, error } = await supabaseUntyped
+        .from('project_insurance_requirements')
+        .insert(requirements)
+        .select()
+
+      if (error) {throw error}
+      return data as ProjectInsuranceRequirement[]
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'BULK_UPDATE_REQS_ERROR',
+            message: 'Failed to bulk update project requirements',
           })
     }
   },

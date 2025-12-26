@@ -79,9 +79,13 @@ export function CalibrationDialog({
     const pixelsPerUnit = calculatePixelsPerUnit()
     if (!pixelsPerUnit) {return}
 
+    const length = parseFloat(knownLength)
     const scale: ScaleFactor = {
       pixelsPerUnit,
       unit,
+      // Include original values for database persistence
+      pixelDistance,
+      realWorldDistance: length,
     }
 
     onCalibrationComplete(scale)

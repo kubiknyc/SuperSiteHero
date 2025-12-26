@@ -20,6 +20,12 @@ import type {
   InsuranceCertificateHistory,
   CertificateStatus,
   InsuranceType,
+  SubcontractorComplianceStatus,
+  ComplianceDashboardData,
+  InsuranceAIExtraction,
+  CreateAIExtractionDTO,
+  ProjectInsuranceRequirement,
+  CreateProjectRequirementDTO,
 } from '@/types/insurance'
 
 // Query Keys
@@ -40,14 +46,26 @@ export const insuranceKeys = {
   requirements: () => [...insuranceKeys.all, 'requirements'] as const,
   requirementsList: (companyId: string, projectId?: string) =>
     [...insuranceKeys.requirements(), companyId, projectId] as const,
+  projectRequirements: (projectId: string) =>
+    [...insuranceKeys.requirements(), 'project', projectId] as const,
   compliance: () => [...insuranceKeys.all, 'compliance'] as const,
   complianceCheck: (subcontractorId: string, projectId?: string) =>
     [...insuranceKeys.compliance(), subcontractorId, projectId] as const,
   complianceSummary: (companyId: string) =>
     [...insuranceKeys.compliance(), 'summary', companyId] as const,
+  complianceStatus: (subcontractorId: string, projectId?: string) =>
+    [...insuranceKeys.compliance(), 'status', subcontractorId, projectId] as const,
+  complianceStatuses: (companyId: string, filters?: { projectId?: string; onlyNonCompliant?: boolean; onlyWithHold?: boolean }) =>
+    [...insuranceKeys.compliance(), 'statuses', companyId, filters] as const,
+  complianceDashboard: (companyId: string, projectId?: string) =>
+    [...insuranceKeys.compliance(), 'dashboard', companyId, projectId] as const,
   stats: (companyId: string) => [...insuranceKeys.all, 'stats', companyId] as const,
   subcontractor: (subcontractorId: string) =>
     [...insuranceKeys.certificates(), 'subcontractor', subcontractorId] as const,
+  aiExtraction: (certificateId: string) =>
+    [...insuranceKeys.all, 'aiExtraction', certificateId] as const,
+  aiExtractionsNeedingReview: (companyId: string) =>
+    [...insuranceKeys.all, 'aiExtractions', 'needsReview', companyId] as const,
 }
 
 // =============================================
@@ -415,6 +433,362 @@ export function useAcknowledgeAlert() {
       if (userProfile?.company_id) {
         queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
       }
+    },
+  })
+}
+
+// =============================================
+// ENHANCED COMPLIANCE STATUS HOOKS
+// =============================================
+
+/**
+ * Get subcontractor compliance status
+ */
+export function useSubcontractorComplianceStatus(
+  subcontractorId: string | undefined,
+  projectId?: string
+) {
+  return useQuery({
+    queryKey: insuranceKeys.complianceStatus(subcontractorId!, projectId),
+    queryFn: () => insuranceApi.getSubcontractorComplianceStatus(subcontractorId!, projectId),
+    enabled: !!subcontractorId,
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
+/**
+ * Get all compliance statuses for a company
+ */
+export function useCompanyComplianceStatuses(options?: {
+  projectId?: string
+  onlyNonCompliant?: boolean
+  onlyWithHold?: boolean
+}) {
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
+
+  return useQuery({
+    queryKey: insuranceKeys.complianceStatuses(companyId!, options),
+    queryFn: () => insuranceApi.getCompanyComplianceStatuses(companyId!, options),
+    enabled: !!companyId,
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
+/**
+ * Get compliance dashboard data
+ */
+export function useComplianceDashboard(projectId?: string) {
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
+
+  return useQuery({
+    queryKey: insuranceKeys.complianceDashboard(companyId!, projectId),
+    queryFn: () => insuranceApi.getComplianceDashboard(companyId!, projectId),
+    enabled: !!companyId,
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
+/**
+ * Recalculate compliance status for a subcontractor
+ */
+export function useRecalculateComplianceStatus() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: ({
+      subcontractorId,
+      projectId,
+    }: {
+      subcontractorId: string
+      projectId?: string
+    }) => insuranceApi.recalculateComplianceStatus(
+      subcontractorId,
+      projectId,
+      userProfile?.company_id
+    ),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: insuranceKeys.complianceStatus(variables.subcontractorId, variables.projectId),
+      })
+      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
+    },
+  })
+}
+
+/**
+ * Apply payment hold mutation
+ */
+export function useApplyPaymentHold() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: ({
+      subcontractorId,
+      projectId,
+      reason,
+    }: {
+      subcontractorId: string
+      projectId: string
+      reason?: string
+    }) => insuranceApi.applyPaymentHold(subcontractorId, projectId, reason),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: insuranceKeys.complianceStatus(variables.subcontractorId, variables.projectId),
+      })
+      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
+    },
+  })
+}
+
+/**
+ * Release payment hold mutation
+ */
+export function useReleasePaymentHold() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: ({
+      subcontractorId,
+      projectId,
+      overrideReason,
+    }: {
+      subcontractorId: string
+      projectId: string
+      overrideReason?: string
+    }) => insuranceApi.releasePaymentHold(subcontractorId, projectId, overrideReason),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: insuranceKeys.complianceStatus(variables.subcontractorId, variables.projectId),
+      })
+      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({ queryKey: insuranceKeys.stats(userProfile.company_id) })
+      }
+    },
+  })
+}
+
+// =============================================
+// AI EXTRACTION HOOKS
+// =============================================
+
+/**
+ * Get AI extraction for a certificate
+ */
+export function useAIExtraction(certificateId: string | undefined) {
+  return useQuery({
+    queryKey: insuranceKeys.aiExtraction(certificateId!),
+    queryFn: () => insuranceApi.getAIExtraction(certificateId!),
+    enabled: !!certificateId,
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
+/**
+ * Get extractions needing review
+ */
+export function useExtractionsNeedingReview() {
+  const { userProfile } = useAuth()
+  const companyId = userProfile?.company_id
+
+  return useQuery({
+    queryKey: insuranceKeys.aiExtractionsNeedingReview(companyId!),
+    queryFn: () => insuranceApi.getExtractionsNeedingReview(companyId!),
+    enabled: !!companyId,
+    staleTime: 1000 * 60 * 5,
+  })
+}
+
+/**
+ * Create AI extraction mutation
+ */
+export function useCreateAIExtraction() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: (data: Omit<CreateAIExtractionDTO, 'company_id'>) => {
+      if (!userProfile?.company_id) {
+        throw new Error('Company information not available')
+      }
+      return insuranceApi.createAIExtraction({
+        ...data,
+        company_id: userProfile.company_id,
+      })
+    },
+    onSuccess: (data) => {
+      if (data.certificate_id) {
+        queryClient.invalidateQueries({
+          queryKey: insuranceKeys.aiExtraction(data.certificate_id),
+        })
+      }
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({
+          queryKey: insuranceKeys.aiExtractionsNeedingReview(userProfile.company_id),
+        })
+      }
+    },
+  })
+}
+
+/**
+ * Mark extraction as reviewed mutation
+ */
+export function useMarkExtractionReviewed() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: ({ extractionId, notes }: { extractionId: string; notes?: string }) =>
+      insuranceApi.markExtractionReviewed(extractionId, notes),
+    onSuccess: (data) => {
+      if (data.certificate_id) {
+        queryClient.invalidateQueries({
+          queryKey: insuranceKeys.aiExtraction(data.certificate_id),
+        })
+      }
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({
+          queryKey: insuranceKeys.aiExtractionsNeedingReview(userProfile.company_id),
+        })
+      }
+    },
+  })
+}
+
+/**
+ * Update extraction status mutation
+ */
+export function useUpdateExtractionStatus() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: ({
+      extractionId,
+      status,
+      error,
+    }: {
+      extractionId: string
+      status: 'pending' | 'processing' | 'completed' | 'failed'
+      error?: string
+    }) => insuranceApi.updateExtractionStatus(extractionId, status, error),
+    onSuccess: (data) => {
+      if (data.certificate_id) {
+        queryClient.invalidateQueries({
+          queryKey: insuranceKeys.aiExtraction(data.certificate_id),
+        })
+      }
+      if (userProfile?.company_id) {
+        queryClient.invalidateQueries({
+          queryKey: insuranceKeys.aiExtractionsNeedingReview(userProfile.company_id),
+        })
+      }
+    },
+  })
+}
+
+// =============================================
+// PROJECT REQUIREMENTS HOOKS
+// =============================================
+
+/**
+ * Get project-specific insurance requirements
+ */
+export function useProjectInsuranceRequirements(projectId: string | undefined) {
+  return useQuery({
+    queryKey: insuranceKeys.projectRequirements(projectId!),
+    queryFn: () => insuranceApi.getProjectRequirements(projectId!),
+    enabled: !!projectId,
+    staleTime: 1000 * 60 * 10,
+  })
+}
+
+/**
+ * Upsert project insurance requirement mutation
+ */
+export function useUpsertProjectRequirement() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: (data: Omit<CreateProjectRequirementDTO, 'company_id'>) => {
+      if (!userProfile?.company_id) {
+        throw new Error('Company information not available')
+      }
+      return insuranceApi.upsertProjectRequirement({
+        ...data,
+        company_id: userProfile.company_id,
+      })
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: insuranceKeys.projectRequirements(data.project_id),
+      })
+      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
+    },
+  })
+}
+
+/**
+ * Delete project requirement mutation
+ */
+export function useDeleteProjectRequirement() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ requirementId, projectId }: { requirementId: string; projectId: string }) =>
+      insuranceApi.deleteProjectRequirement(requirementId),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: insuranceKeys.projectRequirements(variables.projectId),
+      })
+      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
+    },
+  })
+}
+
+/**
+ * Bulk update project requirements mutation
+ */
+export function useBulkUpdateProjectRequirements() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: ({
+      projectId,
+      requirements,
+    }: {
+      projectId: string
+      requirements: Omit<CreateProjectRequirementDTO, 'company_id' | 'project_id'>[]
+    }) => {
+      if (!userProfile?.company_id) {
+        throw new Error('Company information not available')
+      }
+      const fullRequirements = requirements.map((req) => ({
+        ...req,
+        company_id: userProfile.company_id!,
+        project_id: projectId,
+      }))
+      return insuranceApi.bulkUpdateProjectRequirements(projectId, fullRequirements)
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: insuranceKeys.projectRequirements(variables.projectId),
+      })
+      queryClient.invalidateQueries({ queryKey: insuranceKeys.compliance() })
     },
   })
 }

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select } from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/select'
 import {
   Dialog,
   DialogContent,
@@ -256,13 +256,13 @@ export function CreateProjectDialogEnhanced({
           {/* Status */}
           <div className="space-y-2">
             <Label htmlFor="status">Status</Label>
-            <Select name="status" value={formData.status || ''} onChange={handleChange}>
+            <NativeSelect name="status" value={formData.status || ''} onChange={handleChange}>
               <option value="planning">Planning</option>
               <option value="active">Active</option>
               <option value="on_hold">On Hold</option>
               <option value="completed">Completed</option>
               <option value="archived">Archived</option>
-            </Select>
+            </NativeSelect>
           </div>
 
           {/* Form Actions */}

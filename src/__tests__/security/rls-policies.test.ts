@@ -415,48 +415,209 @@ describe('Cross-Tenant Isolation Tests', () => {
 // Authenticated User RLS Tests
 // ============================================================================
 
-describe('RLS Policy Tests - Authenticated Users', () => {
+/**
+ * These tests require test credentials to be set up in environment variables.
+ *
+ * Required environment variables for authenticated tests:
+ * - VITE_TEST_USER_EMAIL: Email of a test user with company access
+ * - VITE_TEST_USER_PASSWORD: Password for the test user
+ * - VITE_TEST_USER_COMPANY_ID: Company ID the test user belongs to
+ * - VITE_TEST_USER_PROJECT_ID: A project ID the test user has access to
+ *
+ * Optional (for cross-tenant tests):
+ * - VITE_TEST_OTHER_COMPANY_ID: A company ID the test user does NOT have access to
+ * - VITE_TEST_OTHER_PROJECT_ID: A project ID the test user does NOT have access to
+ *
+ * To set up test users:
+ * 1. Create a test user in your Supabase dashboard or via the Auth API
+ * 2. Assign the user to a test company with appropriate role
+ * 3. Create test projects within that company
+ * 4. Set the environment variables in .env.test or CI/CD secrets
+ */
+
+const testUserEmail = import.meta.env.VITE_TEST_USER_EMAIL
+const testUserPassword = import.meta.env.VITE_TEST_USER_PASSWORD
+const testUserCompanyId = import.meta.env.VITE_TEST_USER_COMPANY_ID
+const testUserProjectId = import.meta.env.VITE_TEST_USER_PROJECT_ID
+const otherCompanyId = import.meta.env.VITE_TEST_OTHER_COMPANY_ID
+const otherProjectId = import.meta.env.VITE_TEST_OTHER_PROJECT_ID
+
+// Skip authenticated tests if credentials are not configured
+const hasTestCredentials = testUserEmail && testUserPassword
+
+describe.skipIf(!hasTestCredentials)('RLS Policy Tests - Authenticated Users', () => {
   let authenticatedClient: SupabaseClient<Database>
+  let testUserId: string
 
   beforeAll(async () => {
-    // Create an authenticated client
-    // Note: In a real test, you'd need to sign in with test credentials
+    // Create and authenticate the client
     authenticatedClient = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
-    // TODO: Implement actual authentication for integration tests
-    // const { data, error } = await authenticatedClient.auth.signInWithPassword({
-    //   email: 'test@example.com',
-    //   password: 'test-password',
-    // })
+    if (testUserEmail && testUserPassword) {
+      const { data, error } = await authenticatedClient.auth.signInWithPassword({
+        email: testUserEmail,
+        password: testUserPassword,
+      })
+
+      if (error) {
+        console.error('Failed to authenticate test user:', error.message)
+        throw new Error(`Test authentication failed: ${error.message}`)
+      }
+
+      testUserId = data.user?.id || ''
+    }
   })
 
-  // NOTE: These tests are placeholders and should be expanded based on your RLS policies
-
-  it('should allow authenticated users to read their own projects', async () => {
-    // This test would verify that users can read projects they have access to
-    // Implementation depends on your specific RLS policies
-    expect(true).toBe(true) // Placeholder
+  afterAll(async () => {
+    // Sign out after tests
+    await authenticatedClient.auth.signOut()
   })
 
-  it('should NOT allow users to read projects they do not have access to', async () => {
-    // This test would verify that users cannot read projects outside their company/team
-    // Implementation depends on your specific RLS policies
-    expect(true).toBe(true) // Placeholder
+  describe('Own Company/Project Access', () => {
+    it('should allow authenticated users to read their own projects', async () => {
+      const { data, error } = await authenticatedClient
+        .from('projects')
+        .select('id, name')
+        .eq('company_id', testUserCompanyId)
+        .limit(5)
+
+      // Should either get data or no error (empty is fine for new accounts)
+      if (error) {
+        // Only fail if it's an access error, not "no data"
+        expect(error.code).not.toBe('42501')
+      }
+      // Data should be an array (possibly empty)
+      expect(Array.isArray(data)).toBe(true)
+    })
+
+    it('should allow users to read daily reports for their projects', async () => {
+      if (!testUserProjectId) {
+        console.warn('Skipping: VITE_TEST_USER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('daily_reports')
+        .select('id, report_date, status')
+        .eq('project_id', testUserProjectId)
+        .limit(5)
+
+      if (error) {
+        expect(error.code).not.toBe('42501')
+      }
+      expect(Array.isArray(data)).toBe(true)
+    })
+
+    it('should allow users to read their company data', async () => {
+      if (!testUserCompanyId) {
+        console.warn('Skipping: VITE_TEST_USER_COMPANY_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('companies')
+        .select('id, name')
+        .eq('id', testUserCompanyId)
+        .single()
+
+      // Should be able to read own company
+      expect(error).toBeNull()
+      expect(data).toBeTruthy()
+      expect(data?.id).toBe(testUserCompanyId)
+    })
   })
 
-  it('should allow users to create daily reports for their projects', async () => {
-    // This test would verify that users can create reports for projects they have access to
-    expect(true).toBe(true) // Placeholder
+  describe('Cross-Tenant Isolation (Authenticated)', () => {
+    it('should NOT allow users to read projects from other companies', async () => {
+      if (!otherCompanyId) {
+        console.warn('Skipping: VITE_TEST_OTHER_COMPANY_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('projects')
+        .select('*')
+        .eq('company_id', otherCompanyId)
+        .limit(1)
+
+      // Should get empty results or error - never actual data
+      if (data) {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow users to read daily reports from other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('daily_reports')
+        .select('*')
+        .eq('project_id', otherProjectId)
+        .limit(1)
+
+      // Should get empty results - never actual data from other companies
+      if (data) {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow users to read other companies', async () => {
+      if (!otherCompanyId) {
+        console.warn('Skipping: VITE_TEST_OTHER_COMPANY_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('companies')
+        .select('*')
+        .eq('id', otherCompanyId)
+        .single()
+
+      // Should get error or null data
+      expect(data).toBeNull()
+    })
   })
 
-  it('should allow users to update their own daily reports', async () => {
-    // This test would verify that users can update reports they created
-    expect(true).toBe(true) // Placeholder
-  })
+  describe('Write Operations', () => {
+    it('should NOT allow users to insert into other companies', async () => {
+      if (!otherCompanyId) {
+        console.warn('Skipping: VITE_TEST_OTHER_COMPANY_ID not configured')
+        return
+      }
 
-  it('should NOT allow users to delete daily reports they did not create', async () => {
-    // This test would verify proper ownership checks
-    expect(true).toBe(true) // Placeholder
+      const { error } = await authenticatedClient
+        .from('projects')
+        .insert({
+          name: 'Cross-Tenant Attack Project',
+          company_id: otherCompanyId,
+        })
+
+      // Should be denied
+      expect(error).toBeTruthy()
+      expect(error?.code).toBe('42501')
+    })
+
+    it('should NOT allow users to update records in other companies', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { error, count } = await authenticatedClient
+        .from('projects')
+        .update({ name: 'Hacked Project Name' })
+        .eq('id', otherProjectId)
+
+      // Should fail or affect 0 rows
+      if (error) {
+        expect(error.code).toBe('42501')
+      } else {
+        expect(count).toBe(0)
+      }
+    })
   })
 })
 
@@ -469,15 +630,31 @@ describe('RLS Policy Tests - Authenticated Users', () => {
  * 1. Ensure your .env file has valid VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
  * 2. Run: npm run test src/__tests__/security/rls-policies.test.ts
  *
- * To expand these tests:
- * 1. Create test users with known credentials
- * 2. Create test data in your database
- * 3. Implement authenticated client tests
- * 4. Add specific tests for your RLS policies
+ * For anonymous user tests (always run):
+ * - These tests verify that unauthenticated users cannot access any data
+ * - They use the anon key and should always pass if RLS is properly configured
+ *
+ * For authenticated user tests (run when credentials are configured):
+ * 1. Create a test user in Supabase:
+ *    - Use the Supabase dashboard or auth.admin API
+ *    - Assign to a test company with appropriate role
+ *
+ * 2. Set up environment variables in .env.test:
+ *    VITE_TEST_USER_EMAIL=test@yourcompany.com
+ *    VITE_TEST_USER_PASSWORD=secure-test-password
+ *    VITE_TEST_USER_COMPANY_ID=uuid-of-test-company
+ *    VITE_TEST_USER_PROJECT_ID=uuid-of-test-project
+ *
+ * 3. For cross-tenant isolation tests (optional but recommended):
+ *    VITE_TEST_OTHER_COMPANY_ID=uuid-of-different-company
+ *    VITE_TEST_OTHER_PROJECT_ID=uuid-of-project-in-different-company
  *
  * Expected RLS Policies:
- * - Users can only read/write data for their company
- * - Users can only update/delete records they created
- * - Admin users have elevated permissions
- * - Anonymous users have no access to any tables
+ * - Anonymous users: NO access to any tables (read or write)
+ * - Authenticated users: Access ONLY to their company's data
+ * - Cross-tenant isolation: Users cannot see/modify other companies' data
+ * - Admin users: Elevated permissions within their company
+ *
+ * Note: If VITE_TEST_USER_EMAIL and VITE_TEST_USER_PASSWORD are not set,
+ * authenticated user tests will be automatically skipped.
  */

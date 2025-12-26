@@ -6,6 +6,8 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import { useDocumentLayers, useCreateLayer, useUpdateLayer, useDeleteLayer, useToggleLayerVisibility, useToggleLayerLock, useReorderLayer } from './useLayers'
 import { useScaleCalibration, useSaveScaleCalibration } from './useDocumentComparison'
 import { useMeasurements, useCreateMeasurement, useDeleteMeasurement, useClearMeasurements } from './useMeasurements'
+import { useUpdateMarkupSharing } from './useMarkups'
+import { useToast } from '@/components/ui/use-toast'
 import type {
   ExtendedAnnotationType,
   MarkupLayer,
@@ -30,6 +32,12 @@ interface EnhancedMarkupStateOptions {
 export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedMarkupStateOptions) {
   const { userProfile } = useAuth()
   const currentUserId = userProfile?.id || ''
+  const { toast } = useToast()
+
+  // ============================================================
+  // SHARING MUTATION
+  // ============================================================
+  const updateMarkupSharingMutation = useUpdateMarkupSharing()
 
   // ============================================================
   // TOOL STATE
@@ -233,11 +241,45 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
     setShareSettings(null)
   }, [])
 
-  const handleSaveShareSettings = useCallback((settings: MarkupShareSettings) => {
-    // This would be wired to actual update mutation
-    setShareSettings(settings)
-    setIsShareDialogOpen(false)
-  }, [])
+  const handleSaveShareSettings = useCallback(async (settings: MarkupShareSettings) => {
+    if (!shareMarkupId) {
+      toast({
+        title: 'Error',
+        description: 'No markup selected for sharing',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    try {
+      await updateMarkupSharingMutation.mutateAsync({
+        markupId: shareMarkupId,
+        settings: {
+          isShared: settings.isShared,
+          sharedWithRoles: settings.sharedWithRoles,
+          sharedWithUsers: settings.sharedWithUsers,
+          permissionLevel: settings.permissionLevel as 'view' | 'edit' | 'admin',
+        },
+      })
+
+      setShareSettings(settings)
+      setIsShareDialogOpen(false)
+      setShareMarkupId(null)
+
+      toast({
+        title: 'Sharing updated',
+        description: settings.isShared
+          ? 'Markup is now shared with selected users'
+          : 'Markup sharing has been disabled',
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update sharing settings',
+        variant: 'destructive',
+      })
+    }
+  }, [shareMarkupId, updateMarkupSharingMutation, toast])
 
   // ============================================================
   // ZOOM CONTROLS

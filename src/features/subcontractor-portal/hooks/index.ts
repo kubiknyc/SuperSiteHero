@@ -81,3 +81,17 @@ export {
   useAddSubcontractorNote,
   useSubcontractorPunchUpdates,
 } from './useSubcontractorPunchUpdates'
+
+// Assignment Counts (for MyAssignments tabs)
+export {
+  assignmentCountsKey,
+  useSubcontractorAssignmentCounts,
+} from './useSubcontractorAssignmentCounts'
+
+// Subcontractor Assignments: RFIs, Documents, Payments (Milestone 4.1)
+export {
+  subcontractorAssignmentKeys,
+  useSubcontractorRFIs,
+  useSubcontractorDocuments,
+  useSubcontractorPayments,
+} from './useSubcontractorAssignments'

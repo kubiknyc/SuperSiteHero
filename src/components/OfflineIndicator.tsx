@@ -12,7 +12,8 @@ import {
   useOfflineStore,
 } from '@/stores/offline-store';
 import { OfflineClient } from '@/lib/api/offline-client';
-import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink, X } from 'lucide-react';
+import { usePhotoQueue } from '@/hooks/usePhotoQueue';
+import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink, X, Image, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -70,6 +71,7 @@ export function OfflineIndicator() {
   const conflictCount = useConflictCount();
   const storageQuota = useStorageQuota();
   const [isSyncingManually, setIsSyncingManually] = useState(false);
+  const { stats: photoStats, hasPending: hasPhotoPending, hasFailed: hasPhotoFailed, formattedSize: photoSize, retryFailed: retryPhotos } = usePhotoQueue();
 
   // Update pending syncs count periodically (only when online)
   useEffect(() => {
@@ -177,6 +179,12 @@ export function OfflineIndicator() {
                 {conflictCount}
               </Badge>
             )}
+            {hasPhotoPending && (
+              <Badge variant="outline" className="h-5 px-1.5 text-xs gap-1">
+                <Image className="h-3 w-3" />
+                {photoStats.pending + photoStats.uploading}
+              </Badge>
+            )}
             {isSyncing && (
               <RefreshCw className="h-3 w-3 animate-spin text-warning" />
             )}
@@ -221,6 +229,56 @@ export function OfflineIndicator() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Conflicts</span>
                   <Badge variant="destructive">{conflictCount}</Badge>
+                </div>
+              )}
+
+              {/* Photo Queue Status */}
+              {(hasPhotoPending || hasPhotoFailed) && (
+                <div className="space-y-2 rounded-md border p-3 bg-muted/30">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium flex items-center gap-2">
+                      <Image className="h-4 w-4" />
+                      Photo Uploads
+                    </span>
+                    {hasPhotoFailed && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={retryPhotos}
+                        className="h-6 px-2 text-xs"
+                      >
+                        <RotateCcw className="h-3 w-3 mr-1" />
+                        Retry
+                      </Button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    {photoStats.pending > 0 && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Pending</span>
+                        <span>{photoStats.pending}</span>
+                      </div>
+                    )}
+                    {photoStats.uploading > 0 && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-muted-foreground">Uploading</span>
+                        <span className="flex items-center gap-1">
+                          {photoStats.uploading}
+                          <RefreshCw className="h-3 w-3 animate-spin" />
+                        </span>
+                      </div>
+                    )}
+                    {photoStats.failed > 0 && (
+                      <div className="flex items-center justify-between">
+                        <span className="text-error">Failed</span>
+                        <span className="text-error">{photoStats.failed}</span>
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between col-span-2">
+                      <span className="text-muted-foreground">Total size</span>
+                      <span>{photoSize}</span>
+                    </div>
+                  </div>
                 </div>
               )}
 

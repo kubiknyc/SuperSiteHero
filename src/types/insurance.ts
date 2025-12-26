@@ -414,3 +414,219 @@ export function getStatusFromExpiry(daysUntilExpiry: number): CertificateStatus 
   if (daysUntilExpiry <= 30) {return 'expiring_soon'}
   return 'active'
 }
+
+// =============================================
+// COMPLIANCE STATUS TYPES
+// =============================================
+
+/**
+ * Subcontractor Compliance Status
+ */
+export interface SubcontractorComplianceStatus {
+  id: string
+  company_id: string
+  subcontractor_id: string
+  project_id: string | null
+
+  // Compliance Status
+  is_compliant: boolean
+  compliance_score: number // 0-100 percentage
+
+  // Gap Analysis
+  missing_insurance_types: string[]
+  insufficient_coverage_types: string[]
+  missing_endorsements: string[]
+  expiring_soon_count: number
+  expired_count: number
+
+  // Payment Integration
+  payment_hold: boolean
+  hold_reason: string | null
+  hold_applied_at: string | null
+  hold_applied_by: string | null
+  hold_override_by: string | null
+  hold_override_at: string | null
+  hold_override_reason: string | null
+
+  // Tracking
+  last_checked_at: string
+  next_expiration_date: string | null
+
+  // Metadata
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Compliance Dashboard Data
+ */
+export interface ComplianceDashboardData {
+  company_id: string
+  project_id: string | null
+  project_name: string | null
+  total_subcontractors: number
+  compliant_count: number
+  non_compliant_count: number
+  on_hold_count: number
+  avg_compliance_score: number
+  total_expiring_soon: number
+  total_expired: number
+  next_expiration: string | null
+}
+
+// =============================================
+// AI EXTRACTION TYPES
+// =============================================
+
+/**
+ * Insurance AI Extraction
+ */
+export interface InsuranceAIExtraction {
+  id: string
+  certificate_id: string | null
+  document_id: string | null
+  company_id: string
+
+  // Raw Extraction
+  raw_text: string | null
+  extracted_data: Record<string, unknown>
+
+  // Parsed Fields
+  parsed_carrier_name: string | null
+  parsed_policy_number: string | null
+  parsed_effective_date: string | null
+  parsed_expiration_date: string | null
+  parsed_insurance_type: InsuranceType | null
+
+  // Parsed Limits
+  parsed_each_occurrence: number | null
+  parsed_general_aggregate: number | null
+  parsed_products_completed_ops: number | null
+  parsed_personal_adv_injury: number | null
+  parsed_damage_to_rented: number | null
+  parsed_medical_expense: number | null
+  parsed_combined_single_limit: number | null
+  parsed_umbrella_occurrence: number | null
+  parsed_umbrella_aggregate: number | null
+
+  // Parsed Endorsements
+  parsed_additional_insured: boolean | null
+  parsed_waiver_subrogation: boolean | null
+  parsed_primary_noncontrib: boolean | null
+
+  // Confidence & Review
+  overall_confidence: number // 0.0 to 1.0
+  field_confidences: Record<string, number>
+  needs_review: boolean
+  review_notes: string | null
+  reviewed_by: string | null
+  reviewed_at: string | null
+
+  // Processing Status
+  processing_status: 'pending' | 'processing' | 'completed' | 'failed'
+  processing_error: string | null
+  processed_at: string | null
+
+  // Validation
+  validation_errors: Array<{ field: string; error: string }>
+  is_valid: boolean
+
+  // Metadata
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Create AI Extraction DTO
+ */
+export interface CreateAIExtractionDTO {
+  certificate_id?: string | null
+  document_id?: string | null
+  company_id: string
+  raw_text?: string | null
+  extracted_data?: Record<string, unknown>
+  processing_status?: 'pending' | 'processing' | 'completed' | 'failed'
+}
+
+// =============================================
+// PROJECT INSURANCE REQUIREMENTS
+// =============================================
+
+/**
+ * Project Insurance Requirement
+ */
+export interface ProjectInsuranceRequirement {
+  id: string
+  company_id: string
+  project_id: string
+
+  // Requirement
+  insurance_type: InsuranceType
+  is_required: boolean
+
+  // Minimum Coverage
+  min_each_occurrence: number | null
+  min_aggregate: number | null
+  min_umbrella: number | null
+
+  // Endorsements
+  additional_insured_required: boolean
+  waiver_of_subrogation_required: boolean
+  primary_noncontributory_required: boolean
+
+  // Notes
+  notes: string | null
+
+  // Metadata
+  created_at: string
+  updated_at: string
+  created_by: string | null
+}
+
+/**
+ * Create Project Requirement DTO
+ */
+export interface CreateProjectRequirementDTO {
+  company_id: string
+  project_id: string
+  insurance_type: InsuranceType
+  is_required?: boolean
+  min_each_occurrence?: number | null
+  min_aggregate?: number | null
+  min_umbrella?: number | null
+  additional_insured_required?: boolean
+  waiver_of_subrogation_required?: boolean
+  primary_noncontributory_required?: boolean
+  notes?: string | null
+}
+
+/**
+ * Compliance Status Badge Colors
+ */
+export const COMPLIANCE_STATUS_COLORS = {
+  compliant: 'green',
+  nonCompliant: 'red',
+  expiringSoon: 'yellow',
+  onHold: 'orange',
+} as const
+
+/**
+ * Get compliance status label
+ */
+export function getComplianceStatusLabel(status: SubcontractorComplianceStatus): string {
+  if (status.payment_hold) {return 'On Hold'}
+  if (status.expired_count > 0) {return 'Expired Coverage'}
+  if (status.expiring_soon_count > 0) {return 'Expiring Soon'}
+  if (!status.is_compliant) {return 'Non-Compliant'}
+  return 'Compliant'
+}
+
+/**
+ * Get compliance status color
+ */
+export function getComplianceStatusColor(status: SubcontractorComplianceStatus): string {
+  if (status.payment_hold) {return COMPLIANCE_STATUS_COLORS.onHold}
+  if (status.expired_count > 0 || !status.is_compliant) {return COMPLIANCE_STATUS_COLORS.nonCompliant}
+  if (status.expiring_soon_count > 0) {return COMPLIANCE_STATUS_COLORS.expiringSoon}
+  return COMPLIANCE_STATUS_COLORS.compliant
+}

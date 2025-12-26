@@ -16,6 +16,7 @@ import {
   ComplianceDocumentCard,
   ComplianceUploadDialog,
   ExpirationBadge,
+  InsuranceUploadWidget,
 } from '@/features/subcontractor-portal/components'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -128,6 +129,17 @@ export function SubcontractorCompliancePage() {
             Please update them to maintain compliance.
           </AlertDescription>
         </Alert>
+      )}
+
+      {/* Insurance Certificate Upload Widget */}
+      {userProfile?.company_id && (
+        <InsuranceUploadWidget
+          subcontractorId={subcontractorId}
+          companyId={userProfile.company_id}
+          onUploadComplete={() => {
+            // Documents will be refetched automatically via React Query
+          }}
+        />
       )}
 
       {/* Stats Cards */}

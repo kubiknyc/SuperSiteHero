@@ -2,6 +2,7 @@
 // API service for checklist scoring and grading functionality
 
 import { supabase } from '@/lib/supabase'
+import { format } from 'date-fns'
 import type {
   ChecklistScore,
   ScoreBreakdown,
@@ -16,7 +17,7 @@ import type {
 } from '@/types/checklist-scoring'
 import type { ChecklistExecution, ChecklistResponse, ChecklistTemplateItem } from '@/types/checklists'
 import { checklistsApi } from './checklists'
-import { logger } from '../../utils/logger';
+import { logger } from '../../utils/logger'
 
 
 /**
@@ -431,48 +432,431 @@ function calculateReportSummary(
  */
 export async function exportScoringReport(
   filters: ScoringReportFilters,
-  format: 'pdf' | 'excel' | 'csv'
+  exportFormat: 'pdf' | 'excel' | 'csv'
 ): Promise<Blob> {
   const { executions, summary } = await getScoringReport(filters)
 
-  // TODO: Implement actual export logic
-  // For now, return a simple CSV
-  if (format === 'csv') {
-    const csv = generateCSV(executions)
-    return new Blob([csv], { type: 'text/csv' })
+  switch (exportFormat) {
+    case 'csv':
+      return generateCSVBlob(executions, summary)
+    case 'pdf':
+      return generatePDFBlob(executions, summary, filters)
+    case 'excel':
+      return generateExcelBlob(executions, summary, filters)
+    default:
+      throw new Error(`Export format ${exportFormat} not supported`)
   }
-
-  throw new Error(`Export format ${format} not yet implemented`)
 }
 
 /**
- * Generate CSV from executions
+ * Escape CSV value
  */
-function generateCSV(executions: ChecklistExecution[]): string {
-  const headers = [
-    'ID',
-    'Name',
-    'Category',
-    'Inspector',
-    'Score',
-    'Passed',
-    'Completed At',
+function escapeCSV(value: string | number | null | undefined): string {
+  if (value === null || value === undefined) {return ''}
+  const str = String(value)
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return `"${str.replace(/"/g, '""')}"`
+  }
+  return str
+}
+
+/**
+ * Generate CSV blob from executions
+ */
+function generateCSVBlob(
+  executions: ChecklistExecution[],
+  summary: ScoringReportSummary
+): Blob {
+  const lines: string[] = []
+
+  // Header section
+  lines.push('CHECKLIST SCORING REPORT')
+  lines.push(`Export Date: ${format(new Date(), 'MMMM d, yyyy')}`)
+  lines.push('')
+
+  // Summary section
+  lines.push('SUMMARY')
+  lines.push(`Total Inspections,${summary.total_executions}`)
+  lines.push(`Passed,${summary.passed_count}`)
+  lines.push(`Failed,${summary.failed_count}`)
+  lines.push(`Pass Rate,${summary.pass_rate}%`)
+  lines.push(`Average Score,${summary.average_score}%`)
+  lines.push(`Median Score,${summary.median_score}%`)
+  lines.push('')
+
+  // Grade distribution
+  lines.push('GRADE DISTRIBUTION')
+  lines.push('Grade,Count')
+  Object.entries(summary.grade_distribution).forEach(([grade, count]) => {
+    lines.push(`${escapeCSV(grade)},${count}`)
+  })
+  lines.push('')
+
+  // Execution data
+  lines.push('EXECUTION DETAILS')
+  lines.push('ID,Name,Category,Location,Inspector,Score,Grade,Result,Completed At')
+
+  executions.forEach((e) => {
+    const passed = (e.score_percentage || 0) >= 70
+    const grade = calculateGrade(e.score_percentage || 0, DEFAULT_GRADE_THRESHOLDS)
+    lines.push([
+      escapeCSV(e.id),
+      escapeCSV(e.name),
+      escapeCSV(e.category),
+      escapeCSV(e.location),
+      escapeCSV(e.inspector_name),
+      e.score_percentage ?? 0,
+      escapeCSV(grade),
+      passed ? 'Pass' : 'Fail',
+      e.completed_at ? format(new Date(e.completed_at), 'yyyy-MM-dd HH:mm') : '',
+    ].join(','))
+  })
+
+  return new Blob([lines.join('\n')], { type: 'text/csv' })
+}
+
+/**
+ * Generate PDF blob from executions
+ */
+async function generatePDFBlob(
+  executions: ChecklistExecution[],
+  summary: ScoringReportSummary,
+  filters: ScoringReportFilters
+): Promise<Blob> {
+  // Lazy load jsPDF
+  const { jsPDF } = await import('jspdf')
+  const autoTableModule = await import('jspdf-autotable')
+  const autoTable = autoTableModule.default
+
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'letter',
+  })
+
+  let yPosition = 20
+
+  // Title
+  doc.setFontSize(18)
+  doc.setFont('helvetica', 'bold')
+  doc.text('Checklist Scoring Report', 105, yPosition, { align: 'center' })
+  yPosition += 12
+
+  // Export info
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.text(`Export Date: ${format(new Date(), 'MMMM d, yyyy')}`, 20, yPosition)
+  yPosition += 6
+
+  if (filters.date_from || filters.date_to) {
+    const dateRange = [
+      filters.date_from ? format(new Date(filters.date_from), 'MMM d, yyyy') : 'Start',
+      filters.date_to ? format(new Date(filters.date_to), 'MMM d, yyyy') : 'Present',
+    ].join(' - ')
+    doc.text(`Date Range: ${dateRange}`, 20, yPosition)
+    yPosition += 10
+  } else {
+    yPosition += 4
+  }
+
+  // Summary Section Header
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.setFillColor(41, 128, 185)
+  doc.setTextColor(255, 255, 255)
+  doc.rect(20, yPosition - 5, 170, 8, 'F')
+  doc.text('Summary Statistics', 25, yPosition)
+  doc.setTextColor(0, 0, 0)
+  yPosition += 8
+
+  // Summary table
+  autoTable(doc, {
+    startY: yPosition,
+    head: [['Metric', 'Value']],
+    body: [
+      ['Total Inspections', summary.total_executions.toString()],
+      ['Passed', `${summary.passed_count} (${summary.pass_rate}%)`],
+      ['Failed', summary.failed_count.toString()],
+      ['Average Score', `${summary.average_score}%`],
+      ['Median Score', `${summary.median_score}%`],
+    ],
+    theme: 'striped',
+    headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 50, fontStyle: 'bold' },
+      1: { cellWidth: 40 },
+    },
+    margin: { left: 20, right: 20 },
+    styles: { fontSize: 10 },
+  })
+
+  yPosition = (doc as any).lastAutoTable.finalY + 12
+
+  // Grade Distribution
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.setFillColor(41, 128, 185)
+  doc.setTextColor(255, 255, 255)
+  doc.rect(20, yPosition - 5, 170, 8, 'F')
+  doc.text('Grade Distribution', 25, yPosition)
+  doc.setTextColor(0, 0, 0)
+  yPosition += 8
+
+  const gradeData = Object.entries(summary.grade_distribution)
+    .filter(([, count]) => count > 0)
+    .map(([grade, count]) => [grade, count.toString()])
+
+  if (gradeData.length > 0) {
+    autoTable(doc, {
+      startY: yPosition,
+      head: [['Grade', 'Count']],
+      body: gradeData,
+      theme: 'grid',
+      headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' },
+      columnStyles: {
+        0: { cellWidth: 30 },
+        1: { cellWidth: 30 },
+      },
+      margin: { left: 20, right: 20 },
+      styles: { fontSize: 10 },
+    })
+    yPosition = (doc as any).lastAutoTable.finalY + 12
+  }
+
+  // Execution Details
+  if (yPosition > 200) {
+    doc.addPage()
+    yPosition = 20
+  }
+
+  doc.setFontSize(14)
+  doc.setFont('helvetica', 'bold')
+  doc.setFillColor(41, 128, 185)
+  doc.setTextColor(255, 255, 255)
+  doc.rect(20, yPosition - 5, 170, 8, 'F')
+  doc.text('Execution Details', 25, yPosition)
+  doc.setTextColor(0, 0, 0)
+  yPosition += 8
+
+  const executionData = executions.slice(0, 50).map((e) => {
+    const passed = (e.score_percentage || 0) >= 70
+    const grade = calculateGrade(e.score_percentage || 0, DEFAULT_GRADE_THRESHOLDS)
+    return [
+      e.name.length > 25 ? e.name.substring(0, 22) + '...' : e.name,
+      e.inspector_name || '-',
+      `${e.score_percentage ?? 0}%`,
+      grade,
+      passed ? 'Pass' : 'Fail',
+      e.completed_at ? format(new Date(e.completed_at), 'MM/dd/yy') : '-',
+    ]
+  })
+
+  autoTable(doc, {
+    startY: yPosition,
+    head: [['Checklist', 'Inspector', 'Score', 'Grade', 'Result', 'Date']],
+    body: executionData,
+    theme: 'striped',
+    headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 50 },
+      1: { cellWidth: 30 },
+      2: { cellWidth: 20 },
+      3: { cellWidth: 20 },
+      4: { cellWidth: 20 },
+      5: { cellWidth: 25 },
+    },
+    margin: { left: 20, right: 20 },
+    styles: { fontSize: 9 },
+    didDrawCell: (data) => {
+      // Color code result column
+      if (data.section === 'body' && data.column.index === 4) {
+        const value = data.cell.text[0]
+        if (value === 'Pass') {
+          doc.setFillColor(212, 237, 218)
+          doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F')
+          doc.setTextColor(0, 0, 0)
+          doc.text(value, data.cell.x + 2, data.cell.y + data.cell.height / 2 + 1)
+        } else if (value === 'Fail') {
+          doc.setFillColor(248, 215, 218)
+          doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F')
+          doc.setTextColor(0, 0, 0)
+          doc.text(value, data.cell.x + 2, data.cell.y + data.cell.height / 2 + 1)
+        }
+      }
+    },
+  })
+
+  // Footer on all pages
+  const pageCount = doc.getNumberOfPages()
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.setFontSize(8)
+    doc.setTextColor(128, 128, 128)
+    doc.text(
+      `Page ${i} of ${pageCount} | Generated by JobSight`,
+      105,
+      doc.internal.pageSize.height - 10,
+      { align: 'center' }
+    )
+  }
+
+  // Return as blob
+  const pdfBlob = doc.output('blob')
+  return pdfBlob
+}
+
+/**
+ * Generate Excel blob from executions
+ */
+async function generateExcelBlob(
+  executions: ChecklistExecution[],
+  summary: ScoringReportSummary,
+  filters: ScoringReportFilters
+): Promise<Blob> {
+  // Lazy load ExcelJS
+  const ExcelJS = await import('exceljs')
+
+  const workbook = new ExcelJS.Workbook()
+  workbook.creator = 'JobSight'
+  workbook.created = new Date()
+
+  // Summary Sheet
+  const summarySheet = workbook.addWorksheet('Summary')
+
+  // Title
+  summarySheet.mergeCells('A1:D1')
+  const titleCell = summarySheet.getCell('A1')
+  titleCell.value = 'Checklist Scoring Report'
+  titleCell.font = { size: 16, bold: true }
+  titleCell.alignment = { horizontal: 'center' }
+
+  summarySheet.getCell('A2').value = 'Export Date:'
+  summarySheet.getCell('B2').value = format(new Date(), 'MMMM d, yyyy')
+  summarySheet.getCell('B2').font = { bold: true }
+
+  if (filters.date_from || filters.date_to) {
+    summarySheet.getCell('A3').value = 'Date Range:'
+    summarySheet.getCell('B3').value = [
+      filters.date_from ? format(new Date(filters.date_from), 'MMM d, yyyy') : 'Start',
+      filters.date_to ? format(new Date(filters.date_to), 'MMM d, yyyy') : 'Present',
+    ].join(' - ')
+  }
+
+  // Summary Stats
+  summarySheet.getCell('A5').value = 'Summary Statistics'
+  summarySheet.getCell('A5').font = { size: 12, bold: true }
+
+  summarySheet.getCell('A6').value = 'Metric'
+  summarySheet.getCell('B6').value = 'Value'
+  summarySheet.getRow(6).font = { bold: true }
+  summarySheet.getRow(6).fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFE0E0E0' },
+  }
+
+  const summaryData = [
+    ['Total Inspections', summary.total_executions],
+    ['Passed', summary.passed_count],
+    ['Failed', summary.failed_count],
+    ['Pass Rate', `${summary.pass_rate}%`],
+    ['Average Score', `${summary.average_score}%`],
+    ['Median Score', `${summary.median_score}%`],
   ]
 
-  const rows = executions.map((e) => [
-    e.id,
-    e.name,
-    e.category || '',
-    e.inspector_name || '',
-    e.score_percentage || 0,
-    (e.score_percentage || 0) >= 70 ? 'Yes' : 'No',
-    e.completed_at || '',
-  ])
+  summaryData.forEach((row, index) => {
+    summarySheet.getCell(`A${index + 7}`).value = row[0]
+    summarySheet.getCell(`B${index + 7}`).value = row[1]
+  })
 
-  return [
-    headers.join(','),
-    ...rows.map((row) => row.join(',')),
-  ].join('\n')
+  // Grade Distribution
+  const gradeStartRow = summaryData.length + 9
+  summarySheet.getCell(`A${gradeStartRow}`).value = 'Grade Distribution'
+  summarySheet.getCell(`A${gradeStartRow}`).font = { size: 12, bold: true }
+
+  summarySheet.getCell(`A${gradeStartRow + 1}`).value = 'Grade'
+  summarySheet.getCell(`B${gradeStartRow + 1}`).value = 'Count'
+  summarySheet.getRow(gradeStartRow + 1).font = { bold: true }
+
+  let gradeRow = gradeStartRow + 2
+  Object.entries(summary.grade_distribution).forEach(([grade, count]) => {
+    if (count > 0) {
+      summarySheet.getCell(`A${gradeRow}`).value = grade
+      summarySheet.getCell(`B${gradeRow}`).value = count
+      gradeRow++
+    }
+  })
+
+  summarySheet.columns = [
+    { width: 25 },
+    { width: 20 },
+    { width: 15 },
+    { width: 15 },
+  ]
+
+  // Executions Sheet
+  const executionsSheet = workbook.addWorksheet('Executions')
+
+  executionsSheet.columns = [
+    { header: 'ID', key: 'id', width: 36 },
+    { header: 'Name', key: 'name', width: 35 },
+    { header: 'Category', key: 'category', width: 20 },
+    { header: 'Location', key: 'location', width: 20 },
+    { header: 'Inspector', key: 'inspector', width: 20 },
+    { header: 'Score', key: 'score', width: 12 },
+    { header: 'Grade', key: 'grade', width: 10 },
+    { header: 'Result', key: 'result', width: 10 },
+    { header: 'Completed At', key: 'completed', width: 18 },
+  ]
+
+  // Style header row
+  const headerRow = executionsSheet.getRow(1)
+  headerRow.font = { bold: true }
+  headerRow.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FFE0E0E0' },
+  }
+
+  // Add data rows
+  executions.forEach((e) => {
+    const passed = (e.score_percentage || 0) >= 70
+    const grade = calculateGrade(e.score_percentage || 0, DEFAULT_GRADE_THRESHOLDS)
+
+    const dataRow = executionsSheet.addRow({
+      id: e.id,
+      name: e.name,
+      category: e.category || '',
+      location: e.location || '',
+      inspector: e.inspector_name || '',
+      score: `${e.score_percentage ?? 0}%`,
+      grade: grade,
+      result: passed ? 'Pass' : 'Fail',
+      completed: e.completed_at ? format(new Date(e.completed_at), 'yyyy-MM-dd HH:mm') : '',
+    })
+
+    // Color code result cell
+    const resultCell = dataRow.getCell('result')
+    if (passed) {
+      resultCell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFD4EDDA' },
+      }
+    } else {
+      resultCell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFF8D7DA' },
+      }
+    }
+  })
+
+  // Generate blob
+  const buffer = await workbook.xlsx.writeBuffer()
+  return new Blob([buffer], {
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  })
 }
 
 // Export API

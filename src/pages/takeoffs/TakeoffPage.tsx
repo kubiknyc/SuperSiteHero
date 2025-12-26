@@ -1,10 +1,10 @@
 // File: /src/pages/takeoffs/TakeoffPage.tsx
 // Main page for takeoff measurements on PDF drawings
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, FileText, Save, FolderOpen } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { ArrowLeft, FileText, Save, FolderOpen, ChevronLeft, ChevronRight } from 'lucide-react'
+import hotToast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { TakeoffCanvas, type TakeoffMeasurement } from '@/features/takeoffs/components/TakeoffCanvas'
 import { TakeoffToolbar } from '@/features/takeoffs/components/TakeoffToolbar'
@@ -26,12 +26,20 @@ import {
   useUpdateTakeoffItem,
   useDeleteTakeoffItem,
 } from '@/features/takeoffs/hooks/useTakeoffItems'
+import {
+  useScaleCalibration,
+  useSaveScaleCalibration,
+} from '@/features/documents/hooks/useDocumentComparison'
+import { useDocument } from '@/features/documents/hooks'
 import { useIncrementTemplateUsage } from '@/features/takeoffs/hooks/useTakeoffTemplates'
-import type { MeasurementType, ScaleFactor, Point } from '@/features/takeoffs/utils/measurements'
+import type { MeasurementType, ScaleFactor, Point, UnitSystem } from '@/features/takeoffs/utils/measurements'
+import { measurementUnitToLinearUnit, linearUnitToMeasurementUnit } from '@/features/takeoffs/utils/measurements'
 import type { TakeoffTemplate } from '@/types/database-extensions'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { compressPoints } from '@/features/takeoffs/utils/coordinateCompression'
 import { useToast } from '@/components/ui/use-toast'
+import { useDocumentOcr } from '@/features/documents/hooks/useDocumentAi'
+import { Input } from '@/components/ui/input'
 import { logger } from '../../lib/utils/logger';
 
 
@@ -58,8 +66,16 @@ export default function TakeoffPage() {
   const [showSummary, setShowSummary] = useState(false)
   const [calibrationPoints, setCalibrationPoints] = useState<Point[] | undefined>(undefined)
   const [isCalibrating, setIsCalibrating] = useState(false)
-  const [pageNumber] = useState(1) // TODO: Get from document viewer
+  const [pageNumber, setPageNumber] = useState(1)
   const [templateDialogMode, setTemplateDialogMode] = useState<'create' | 'browse' | null>(null)
+  const [unitSystem, setUnitSystem] = useState<UnitSystem>('imperial')
+
+  // Get page count from OCR results
+  const { data: ocrData } = useDocumentOcr(documentId)
+  const totalPages = ocrData?.page_count ?? 1
+
+  // Fetch document details for file URL
+  const { data: document } = useDocument(documentId)
 
   // Fetch measurements
   const { data: measurements = [], isLoading } = useTakeoffItemsByDocument(
@@ -67,11 +83,51 @@ export default function TakeoffPage() {
     pageNumber
   )
 
+  // Fetch saved scale calibration
+  const { data: savedCalibration, isLoading: isLoadingCalibration } = useScaleCalibration(
+    documentId,
+    pageNumber
+  )
+  const saveCalibrationMutation = useSaveScaleCalibration()
+
   // Mutations
   const createMutation = useCreateTakeoffItem()
   const updateMutation = useUpdateTakeoffItem()
   const deleteMutation = useDeleteTakeoffItem()
   const incrementTemplateUsageMutation = useIncrementTemplateUsage()
+
+  // Reset scale when page changes and reload from saved calibration
+  useEffect(() => {
+    if (savedCalibration) {
+      setScale({
+        pixelsPerUnit: savedCalibration.pixelDistance / savedCalibration.realWorldDistance,
+        unit: measurementUnitToLinearUnit(savedCalibration.unit),
+      })
+    } else if (!isLoadingCalibration) {
+      // No saved calibration for this page, reset scale
+      setScale(undefined)
+    }
+  }, [savedCalibration, isLoadingCalibration, pageNumber])
+
+  // Page navigation handlers
+  const goToNextPage = useCallback(() => {
+    if (pageNumber < totalPages) {
+      setPageNumber(pageNumber + 1)
+    }
+  }, [pageNumber, totalPages])
+
+  const goToPreviousPage = useCallback(() => {
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1)
+    }
+  }, [pageNumber])
+
+  const handlePageInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const page = parseInt(e.target.value, 10)
+    if (page >= 1 && page <= totalPages) {
+      setPageNumber(page)
+    }
+  }, [totalPages])
 
   // Convert database format to canvas format
   const canvasMeasurements: TakeoffMeasurement[] = measurements.map((m) => {
@@ -182,7 +238,7 @@ export default function TakeoffPage() {
   const handleCalibrate = useCallback(() => {
     setIsCalibrating(true)
     setCalibrationPoints(undefined)
-    toast('Draw a line on a known dimension to calibrate scale', { icon: '📏' })
+    hotToast('Draw a line on a known dimension to calibrate scale', { icon: '📏' })
   }, [])
 
   // Handle calibration line drawn from canvas
@@ -198,10 +254,34 @@ export default function TakeoffPage() {
     setCalibrationPoints(undefined)
   }, [])
 
-  const handleCalibrationComplete = useCallback((newScale: ScaleFactor) => {
+  const handleCalibrationComplete = useCallback(async (newScale: ScaleFactor) => {
     setScale(newScale)
     setCalibrationPoints(undefined)
-  }, [])
+
+    // Persist the calibration to database
+    if (documentId && newScale.pixelDistance && newScale.realWorldDistance) {
+      try {
+        await saveCalibrationMutation.mutateAsync({
+          documentId,
+          pageNumber,
+          pixelDistance: newScale.pixelDistance,
+          realWorldDistance: newScale.realWorldDistance,
+          unit: linearUnitToMeasurementUnit(newScale.unit),
+        })
+        toast({
+          title: 'Calibration saved',
+          description: 'Scale will be restored when you return to this document.',
+        })
+      } catch (error) {
+        logger.error('Failed to save calibration:', error)
+        toast({
+          title: 'Calibration applied',
+          description: 'Note: Failed to save calibration for future sessions.',
+          variant: 'destructive',
+        })
+      }
+    }
+  }, [documentId, pageNumber, saveCalibrationMutation, toast])
 
   // Handle export
   const handleExport = useCallback(() => {
@@ -284,9 +364,45 @@ export default function TakeoffPage() {
           <div className="flex-1">
             <h1 className="text-xl font-semibold heading-page">Takeoff Measurements</h1>
             <p className="text-sm text-muted-foreground">
-              Document ID: {documentId} • Page {pageNumber}
+              Document ID: {documentId}
             </p>
           </div>
+          {/* Page Navigation */}
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2 border rounded-md px-2 py-1 bg-surface">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={goToPreviousPage}
+                disabled={pageNumber <= 1}
+                title="Previous page"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <div className="flex items-center gap-1 min-w-[80px] justify-center">
+                <Input
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  value={pageNumber}
+                  onChange={handlePageInputChange}
+                  className="w-12 h-7 text-center text-sm p-0"
+                />
+                <span className="text-sm text-muted-foreground">/ {totalPages}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={goToNextPage}
+                disabled={pageNumber >= totalPages}
+                title="Next page"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
           {/* Template Actions */}
           <div className="flex gap-2">
             <Button
@@ -316,6 +432,10 @@ export default function TakeoffPage() {
           currentColor={currentColor}
           onColorChange={setCurrentColor}
           scale={scale}
+          isScaleSaved={!!savedCalibration}
+          isSavingScale={saveCalibrationMutation.isPending}
+          unitSystem={unitSystem}
+          onUnitSystemChange={setUnitSystem}
           onCalibrate={handleCalibrate}
           onShowList={() => setShowList(!showList)}
           onExport={handleExport}
@@ -337,7 +457,7 @@ export default function TakeoffPage() {
                 documentId={documentId}
                 projectId={projectId}
                 pageNumber={pageNumber}
-                // backgroundImageUrl={documentUrl} // TODO: Get from document
+                backgroundImageUrl={document?.file_url || undefined}
                 width={1200}
                 height={800}
                 measurements={canvasMeasurements}
@@ -394,9 +514,36 @@ export default function TakeoffPage() {
         open={showAssemblyPicker}
         onOpenChange={setShowAssemblyPicker}
         projectId={projectId}
-        onSelect={(assembly) => {
+        onSelect={async (assembly) => {
           logger.log('Selected assembly:', assembly)
-          // TODO: Apply assembly to selected measurements
+          // Apply assembly to selected measurement(s)
+          if (selectedMeasurementId) {
+            try {
+              await updateMutation.mutateAsync({
+                id: selectedMeasurementId,
+                assembly_id: assembly.id,
+                name: assembly.name,
+              })
+              toast({
+                title: 'Assembly Applied',
+                description: `Applied "${assembly.name}" to measurement`,
+              })
+              setShowAssemblyPicker(false)
+            } catch (error) {
+              logger.error('Failed to apply assembly:', error)
+              toast({
+                title: 'Failed to Apply Assembly',
+                description: 'Could not apply assembly to measurement',
+                variant: 'destructive',
+              })
+            }
+          } else {
+            toast({
+              title: 'No Measurement Selected',
+              description: 'Please select a measurement first to apply an assembly',
+              variant: 'destructive',
+            })
+          }
         }}
       />
 

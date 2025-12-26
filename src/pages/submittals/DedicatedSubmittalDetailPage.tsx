@@ -1,6 +1,6 @@
 // @ts-nocheck
 // File: /src/pages/submittals/DedicatedSubmittalDetailPage.tsx
-// Dedicated Submittal detail page with CSI spec sections and ball-in-court tracking
+// Dedicated Submittal detail page with tabbed interface, workflow indicator, and approval codes
 
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   ArrowLeft,
   AlertCircle,
@@ -29,7 +30,17 @@ import {
   Paperclip,
   Send,
   FileDown,
+  Package,
 } from 'lucide-react'
+import {
+  WorkflowProgressIndicator,
+  SUBMITTAL_WORKFLOW_STEPS,
+  SUBMITTAL_STATUS_STEP_MAP,
+  getStepFromStatus,
+} from '@/components/shared'
+import { SubmittalReviewForm } from '@/features/submittals/components/SubmittalReviewForm'
+import { SubmittalItemsEditor } from '@/features/submittals/components/SubmittalItemsEditor'
+import { CreateRevisionDialog } from '@/features/submittals/components/CreateRevisionDialog'
 import {
   useSubmittal,
   useUpdateSubmittal,
@@ -39,6 +50,7 @@ import {
   useSubmittalReviews,
   useSubmittalAttachments,
   useSubmittalHistory,
+  useSubmittalItems,
   REVIEW_STATUSES,
   SUBMITTAL_TYPES,
   BALL_IN_COURT_ENTITIES,
@@ -87,14 +99,17 @@ export function DedicatedSubmittalDetailPage() {
   const { submittalId } = useParams<{ submittalId: string }>()
   const navigate = useNavigate()
 
+  const [activeTab, setActiveTab] = useState('details')
   const [reviewComment, setReviewComment] = useState('')
   const [selectedReviewStatus, setSelectedReviewStatus] = useState<SubmittalReviewStatus | ''>('')
+  const [showRevisionDialog, setShowRevisionDialog] = useState(false)
 
   // Queries
   const { data: submittal, isLoading, error } = useSubmittal(submittalId)
   const { data: reviews } = useSubmittalReviews(submittalId)
   const { data: attachments } = useSubmittalAttachments(submittalId)
   const { data: history } = useSubmittalHistory(submittalId)
+  const { data: items } = useSubmittalItems(submittalId)
 
   // Mutations
   const updateSubmittal = useUpdateSubmittal()
@@ -291,209 +306,239 @@ export function DedicatedSubmittalDetailPage() {
               </div>
             )}
 
-            {/* Details Card */}
+            {/* Workflow Progress Indicator */}
             <Card>
-              <CardHeader>
-                <CardTitle>Submittal Details</CardTitle>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Workflow Progress</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {submittal.description && (
-                  <div>
-                    <Label className="text-secondary">Description</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-foreground">{submittal.description}</p>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-2 gap-4 py-4 border-t">
-                  <div>
-                    <Label className="text-secondary">Submittal Type</Label>
-                    <p className="mt-1 text-foreground">{typeInfo?.label || submittal.submittal_type}</p>
-                    {typeInfo?.description && (
-                      <p className="text-xs text-muted mt-1">{typeInfo.description}</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <Label className="text-secondary">Lead Time</Label>
-                    <p className="mt-1 text-foreground">
-                      {submittal.lead_time_days ? `${submittal.lead_time_days} days` : 'Not specified'}
-                    </p>
-                  </div>
-
-                  {submittal.drawing_reference && (
-                    <div>
-                      <Label className="text-secondary">Drawing Reference</Label>
-                      <p className="mt-1 text-foreground">{submittal.drawing_reference}</p>
+              <CardContent>
+                <WorkflowProgressIndicator
+                  steps={SUBMITTAL_WORKFLOW_STEPS}
+                  currentStep={getStepFromStatus(submittal.review_status, SUBMITTAL_STATUS_STEP_MAP)}
+                  isError={submittal.review_status === 'rejected'}
+                  isVoided={submittal.review_status === 'void'}
+                  errorMessage={submittal.review_status === 'rejected' ? 'Submittal was rejected' : undefined}
+                  voidedMessage={submittal.review_status === 'void' ? 'Submittal was voided' : undefined}
+                  ballInCourt={submittal.ball_in_court_entity ? {
+                    entity: BALL_IN_COURT_ENTITIES.find(e => e.value === submittal.ball_in_court_entity)?.label || submittal.ball_in_court_entity,
+                  } : undefined}
+                  size="md"
+                />
+                {/* Revise & Resubmit Action */}
+                {submittal.review_status === 'revise_resubmit' && (
+                  <div className="mt-4 pt-4 border-t">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-orange-700">Revision Required</p>
+                        <p className="text-sm text-muted">Create a new revision to address review comments</p>
+                      </div>
+                      <Button onClick={() => setShowRevisionDialog(true)}>
+                        Create Revision
+                      </Button>
                     </div>
-                  )}
-                </div>
-
-                {submittal.review_comments && (
-                  <div className="pt-4 border-t">
-                    <Label className="text-secondary">Latest Review Comments</Label>
-                    <p className="mt-1 whitespace-pre-wrap text-foreground bg-surface p-3 rounded">
-                      {submittal.review_comments}
-                    </p>
                   </div>
                 )}
               </CardContent>
             </Card>
 
-            {/* Review History */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
-                  Review History
-                </CardTitle>
-                <CardDescription>{reviews?.length || 0} reviews</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {reviews && reviews.length > 0 ? (
-                  <div className="space-y-4">
-                    {reviews.map((review) => (
-                      <div key={review.id} className="border-b pb-4 last:border-0">
-                        <div className="flex items-start justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <ReviewStatusBadge status={review.review_status} />
-                            <span className="text-sm text-muted">
-                              by {review.reviewer_name || 'Unknown'}
-                            </span>
-                          </div>
-                          <span className="text-xs text-muted">
-                            {review.reviewed_at
-                              ? format(new Date(review.reviewed_at), 'MMM d, yyyy h:mm a')
-                              : 'N/A'}
-                          </span>
-                        </div>
-                        {review.comments && (
-                          <p className="text-sm whitespace-pre-wrap text-secondary mt-2">
-                            {review.comments}
-                          </p>
+            {/* Tabbed Content */}
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="grid w-full grid-cols-5">
+                <TabsTrigger value="details">Details</TabsTrigger>
+                <TabsTrigger value="items">
+                  Items {items && items.length > 0 && `(${items.length})`}
+                </TabsTrigger>
+                <TabsTrigger value="attachments">
+                  Attachments {attachments && attachments.length > 0 && `(${attachments.length})`}
+                </TabsTrigger>
+                <TabsTrigger value="reviews">
+                  Reviews {reviews && reviews.length > 0 && `(${reviews.length})`}
+                </TabsTrigger>
+                <TabsTrigger value="history">History</TabsTrigger>
+              </TabsList>
+
+              {/* Details Tab */}
+              <TabsContent value="details" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Submittal Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {submittal.description && (
+                      <div>
+                        <Label className="text-secondary">Description</Label>
+                        <p className="mt-1 whitespace-pre-wrap text-foreground">{submittal.description}</p>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-4 py-4 border-t">
+                      <div>
+                        <Label className="text-secondary">Submittal Type</Label>
+                        <p className="mt-1 text-foreground">{typeInfo?.label || submittal.submittal_type}</p>
+                        {typeInfo?.description && (
+                          <p className="text-xs text-muted mt-1">{typeInfo.description}</p>
                         )}
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted text-center py-4">No reviews yet</p>
-                )}
 
-                {/* Add Review Form */}
-                {submittal.review_status !== 'not_submitted' && (
-                  <div className="mt-6 pt-4 border-t space-y-4">
-                    <h4 className="font-medium text-foreground heading-card">Add Review</h4>
-                    <div>
-                      <Label htmlFor="reviewStatus">Review Decision</Label>
-                      <select
-                        id="reviewStatus"
-                        className="w-full mt-2 border rounded-md px-3 py-2"
-                        value={selectedReviewStatus}
-                        onChange={(e) => setSelectedReviewStatus(e.target.value as SubmittalReviewStatus)}
-                      >
-                        <option value="">Select decision...</option>
-                        <option value="approved">Approved</option>
-                        <option value="approved_as_noted">Approved as Noted</option>
-                        <option value="revise_resubmit">Revise and Resubmit</option>
-                        <option value="rejected">Rejected</option>
-                      </select>
-                    </div>
-                    <div>
-                      <Label htmlFor="reviewComment">Comments</Label>
-                      <Textarea
-                        id="reviewComment"
-                        placeholder="Enter review comments..."
-                        value={reviewComment}
-                        onChange={(e) => setReviewComment(e.target.value)}
-                        rows={3}
-                        className="mt-2"
-                      />
-                    </div>
-                    <Button
-                      onClick={handleAddReview}
-                      disabled={!selectedReviewStatus || addReview.isPending}
-                    >
-                      {addReview.isPending ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Submitting...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="h-4 w-4 mr-2" />
-                          Submit Review
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Attachments */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Paperclip className="h-5 w-5" />
-                  Attachments
-                </CardTitle>
-                <CardDescription>{attachments?.length || 0} files</CardDescription>
-              </CardHeader>
-              <CardContent>
-                {attachments && attachments.length > 0 ? (
-                  <div className="space-y-2">
-                    {attachments.map((attachment) => (
-                      <div
-                        key={attachment.id}
-                        className="flex items-center justify-between p-3 bg-surface rounded-lg"
-                      >
-                        <div className="flex items-center gap-3">
-                          <FileText className="h-5 w-5 text-disabled" />
-                          <div>
-                            <p className="font-medium text-sm">{attachment.file_name}</p>
-                            <p className="text-xs text-muted">
-                              {attachment.file_type} • {attachment.uploaded_at && format(new Date(attachment.uploaded_at), 'MMM d, yyyy')}
-                            </p>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm">
-                          Download
-                        </Button>
+                      <div>
+                        <Label className="text-secondary">Lead Time</Label>
+                        <p className="mt-1 text-foreground">
+                          {submittal.lead_time_days ? `${submittal.lead_time_days} days` : 'Not specified'}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-muted text-center py-4">No attachments</p>
-                )}
-              </CardContent>
-            </Card>
 
-            {/* Change History */}
-            {history && history.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Change History</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {history.slice(0, 10).map((entry) => (
-                      <div key={entry.id} className="flex items-start gap-3 text-sm">
-                        <div className="w-2 h-2 rounded-full bg-gray-300 mt-2" />
+                      {submittal.drawing_reference && (
                         <div>
-                          <p className="text-secondary">
-                            <span className="font-medium">{entry.field_name}</span> changed
-                            {entry.old_value && ` from "${entry.old_value}"`}
-                            {entry.new_value && ` to "${entry.new_value}"`}
-                          </p>
-                          <p className="text-xs text-muted">
-                            {entry.changed_at && format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
-                          </p>
+                          <Label className="text-secondary">Drawing Reference</Label>
+                          <p className="mt-1 text-foreground">{submittal.drawing_reference}</p>
                         </div>
+                      )}
+                    </div>
+
+                    {submittal.review_comments && (
+                      <div className="pt-4 border-t">
+                        <Label className="text-secondary">Latest Review Comments</Label>
+                        <p className="mt-1 whitespace-pre-wrap text-foreground bg-surface p-3 rounded">
+                          {submittal.review_comments}
+                        </p>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Items Tab */}
+              <TabsContent value="items" className="mt-4">
+                <SubmittalItemsEditor submittalId={submittal.id} />
+              </TabsContent>
+
+              {/* Attachments Tab */}
+              <TabsContent value="attachments" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Paperclip className="h-5 w-5" />
+                      Attachments
+                    </CardTitle>
+                    <CardDescription>{attachments?.length || 0} files</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {attachments && attachments.length > 0 ? (
+                      <div className="space-y-2">
+                        {attachments.map((attachment) => (
+                          <div
+                            key={attachment.id}
+                            className="flex items-center justify-between p-3 bg-surface rounded-lg"
+                          >
+                            <div className="flex items-center gap-3">
+                              <FileText className="h-5 w-5 text-disabled" />
+                              <div>
+                                <p className="font-medium text-sm">{attachment.file_name}</p>
+                                <p className="text-xs text-muted">
+                                  {attachment.file_type} • {attachment.uploaded_at && format(new Date(attachment.uploaded_at), 'MMM d, yyyy')}
+                                </p>
+                              </div>
+                            </div>
+                            <Button variant="ghost" size="sm">
+                              Download
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted text-center py-4">No attachments</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Reviews Tab */}
+              <TabsContent value="reviews" className="mt-4 space-y-4">
+                {/* Review Form */}
+                {submittal.review_status !== 'not_submitted' && (
+                  <SubmittalReviewForm
+                    submittalId={submittal.id}
+                    onSuccess={() => {
+                      // Reviews will auto-refresh via React Query
+                    }}
+                  />
+                )}
+
+                {/* Review History */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <History className="h-5 w-5" />
+                      Review History
+                    </CardTitle>
+                    <CardDescription>{reviews?.length || 0} reviews</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    {reviews && reviews.length > 0 ? (
+                      <div className="space-y-4">
+                        {reviews.map((review) => (
+                          <div key={review.id} className="border-b pb-4 last:border-0">
+                            <div className="flex items-start justify-between mb-2">
+                              <div className="flex items-center gap-2">
+                                <ReviewStatusBadge status={review.review_status} />
+                                <span className="text-sm text-muted">
+                                  by {review.reviewer_name || 'Unknown'}
+                                </span>
+                              </div>
+                              <span className="text-xs text-muted">
+                                {review.reviewed_at
+                                  ? format(new Date(review.reviewed_at), 'MMM d, yyyy h:mm a')
+                                  : 'N/A'}
+                              </span>
+                            </div>
+                            {review.comments && (
+                              <p className="text-sm whitespace-pre-wrap text-secondary mt-2">
+                                {review.comments}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted text-center py-4">No reviews yet</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* History Tab */}
+              <TabsContent value="history" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Change History</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {history && history.length > 0 ? (
+                      <div className="space-y-3">
+                        {history.map((entry) => (
+                          <div key={entry.id} className="flex items-start gap-3 text-sm">
+                            <div className="w-2 h-2 rounded-full bg-gray-300 mt-2" />
+                            <div>
+                              <p className="text-secondary">
+                                <span className="font-medium">{entry.field_name}</span> changed
+                                {entry.old_value && ` from "${entry.old_value}"`}
+                                {entry.new_value && ` to "${entry.new_value}"`}
+                              </p>
+                              <p className="text-xs text-muted">
+                                {entry.changed_at && format(new Date(entry.changed_at), 'MMM d, yyyy h:mm a')}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted text-center py-4">No change history</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+
           </div>
 
           {/* Sidebar */}
@@ -650,6 +695,18 @@ export function DedicatedSubmittalDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Create Revision Dialog */}
+      <CreateRevisionDialog
+        submittalId={submittal.id}
+        currentRevision={submittal.revision_number}
+        open={showRevisionDialog}
+        onOpenChange={setShowRevisionDialog}
+        onSuccess={() => {
+          setShowRevisionDialog(false)
+          // Submittal data will auto-refresh via React Query
+        }}
+      />
     </AppLayout>
   )
 }

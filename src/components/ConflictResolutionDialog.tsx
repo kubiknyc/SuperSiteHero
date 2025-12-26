@@ -1,7 +1,7 @@
 // File: /src/components/ConflictResolutionDialog.tsx
 // Dialog component for resolving sync conflicts between local and server data
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -14,8 +14,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertCircle, ArrowLeftRight, Cloud, HardDrive } from 'lucide-react'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Label } from '@/components/ui/label'
+import { AlertCircle, ArrowLeftRight, Cloud, HardDrive, Check } from 'lucide-react'
 import { useOfflineStore, type SyncConflict } from '@/stores/offline-store'
+import { ConflictResolver, type FieldSelection } from '@/lib/offline/conflict-resolver'
 import { logger } from '@/lib/utils/logger'
 
 interface ConflictResolutionDialogProps {
@@ -36,7 +39,35 @@ export function ConflictResolutionDialog({
 }: ConflictResolutionDialogProps) {
   const [resolving, setResolving] = useState(false)
   const [selectedResolution, setSelectedResolution] = useState<'local' | 'server' | 'merge'>('server')
+  const [fieldSelections, setFieldSelections] = useState<Record<string, 'local' | 'server'>>({})
   const { resolveConflict } = useOfflineStore()
+
+  // Initialize field selections when merge is selected
+  const handleResolutionChange = useCallback((resolution: 'local' | 'server' | 'merge') => {
+    setSelectedResolution(resolution)
+    if (resolution === 'merge' && conflict) {
+      // Initialize all fields to server by default
+      const initialSelections: Record<string, 'local' | 'server'> = {}
+      const allKeys = new Set([
+        ...Object.keys(conflict.localData || {}),
+        ...Object.keys(conflict.serverData || {}),
+      ])
+      allKeys.forEach((key) => {
+        if (key !== 'id' && key !== 'created_at') {
+          initialSelections[key] = 'server'
+        }
+      })
+      setFieldSelections(initialSelections)
+    }
+  }, [conflict])
+
+  // Update field selection
+  const handleFieldSelection = useCallback((field: string, source: 'local' | 'server') => {
+    setFieldSelections((prev) => ({
+      ...prev,
+      [field]: source,
+    }))
+  }, [])
 
   if (!conflict) {return null}
 
@@ -53,10 +84,19 @@ export function ConflictResolutionDialog({
           resolvedData = conflict.serverData
           break
         case 'merge':
-          // For merge, user would need to manually edit - for now use server data
-          // In a full implementation, this would open a merge editor
-          resolvedData = conflict.serverData
-          logger.warn('[ConflictResolution] Manual merge not yet implemented, using server data')
+          // Apply manual field selections using ConflictResolver
+          const selections: FieldSelection[] = Object.entries(fieldSelections).map(
+            ([field, source]) => ({
+              field,
+              source,
+            })
+          )
+          resolvedData = ConflictResolver.applyManualSelections(
+            conflict.localData || {},
+            conflict.serverData || {},
+            selections
+          )
+          logger.info('[ConflictResolution] Manual merge applied with selections:', selections)
           break
       }
 
@@ -141,7 +181,7 @@ export function ConflictResolutionDialog({
           <div className="grid grid-cols-3 gap-2">
             <Button
               variant={selectedResolution === 'local' ? 'default' : 'outline'}
-              onClick={() => setSelectedResolution('local')}
+              onClick={() => handleResolutionChange('local')}
               className="flex items-center gap-2"
             >
               <HardDrive className="h-4 w-4" />
@@ -149,7 +189,7 @@ export function ConflictResolutionDialog({
             </Button>
             <Button
               variant={selectedResolution === 'server' ? 'default' : 'outline'}
-              onClick={() => setSelectedResolution('server')}
+              onClick={() => handleResolutionChange('server')}
               className="flex items-center gap-2"
             >
               <Cloud className="h-4 w-4" />
@@ -157,13 +197,12 @@ export function ConflictResolutionDialog({
             </Button>
             <Button
               variant={selectedResolution === 'merge' ? 'default' : 'outline'}
-              onClick={() => setSelectedResolution('merge')}
+              onClick={() => handleResolutionChange('merge')}
               className="flex items-center gap-2"
-              disabled
-              title="Manual merge coming soon"
+              title="Manually select which values to keep for each field"
             >
               <ArrowLeftRight className="h-4 w-4" />
-              Merge (Soon)
+              Manual Merge
             </Button>
           </div>
 
@@ -188,20 +227,70 @@ export function ConflictResolutionDialog({
                         </h4>
                         <div className="grid grid-cols-2 gap-4">
                           <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <HardDrive className="h-3 w-3" /> Local
-                            </p>
-                            <div className="bg-warning-light dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded p-2">
+                            <div className="flex items-center justify-between">
+                              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                <HardDrive className="h-3 w-3" /> Local
+                              </p>
+                              {selectedResolution === 'merge' && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleFieldSelection(diff.field, 'local')}
+                                  className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded transition-colors ${
+                                    fieldSelections[diff.field] === 'local'
+                                      ? 'bg-amber-500 text-white'
+                                      : 'bg-muted hover:bg-muted/80'
+                                  }`}
+                                >
+                                  {fieldSelections[diff.field] === 'local' && (
+                                    <Check className="h-3 w-3" />
+                                  )}
+                                  Use This
+                                </button>
+                              )}
+                            </div>
+                            <div
+                              className={`rounded p-2 ${
+                                selectedResolution === 'merge' &&
+                                fieldSelections[diff.field] === 'local'
+                                  ? 'bg-amber-100 dark:bg-amber-950/40 border-2 border-amber-500'
+                                  : 'bg-warning-light dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800'
+                              }`}
+                            >
                               <pre className="text-xs whitespace-pre-wrap break-words">
                                 {renderValue(diff.local)}
                               </pre>
                             </div>
                           </div>
                           <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground flex items-center gap-1">
-                              <Cloud className="h-3 w-3" /> Server
-                            </p>
-                            <div className="bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded p-2">
+                            <div className="flex items-center justify-between">
+                              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                                <Cloud className="h-3 w-3" /> Server
+                              </p>
+                              {selectedResolution === 'merge' && (
+                                <button
+                                  type="button"
+                                  onClick={() => handleFieldSelection(diff.field, 'server')}
+                                  className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded transition-colors ${
+                                    fieldSelections[diff.field] === 'server'
+                                      ? 'bg-blue-500 text-white'
+                                      : 'bg-muted hover:bg-muted/80'
+                                  }`}
+                                >
+                                  {fieldSelections[diff.field] === 'server' && (
+                                    <Check className="h-3 w-3" />
+                                  )}
+                                  Use This
+                                </button>
+                              )}
+                            </div>
+                            <div
+                              className={`rounded p-2 ${
+                                selectedResolution === 'merge' &&
+                                fieldSelections[diff.field] === 'server'
+                                  ? 'bg-blue-100 dark:bg-blue-950/40 border-2 border-blue-500'
+                                  : 'bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800'
+                              }`}
+                            >
                               <pre className="text-xs whitespace-pre-wrap break-words">
                                 {renderValue(diff.server)}
                               </pre>
@@ -213,6 +302,15 @@ export function ConflictResolutionDialog({
                   </div>
                 )}
               </ScrollArea>
+              {selectedResolution === 'merge' && differences.length > 0 && (
+                <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+                  <span>Click &quot;Use This&quot; to select which value to keep for each field</span>
+                  <span>
+                    {Object.values(fieldSelections).filter((v) => v === 'local').length} local,{' '}
+                    {Object.values(fieldSelections).filter((v) => v === 'server').length} server
+                  </span>
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="local">
@@ -242,7 +340,7 @@ export function ConflictResolutionDialog({
                 {selectedResolution === 'server' &&
                   'The server changes will be kept and applied locally, discarding local changes.'}
                 {selectedResolution === 'merge' &&
-                  'You will manually merge the changes (not yet implemented - using server version).'}
+                  'A custom merge will be created using your selected values for each field. Select "Use This" for each field in the Differences tab.'}
               </p>
             </div>
           )}

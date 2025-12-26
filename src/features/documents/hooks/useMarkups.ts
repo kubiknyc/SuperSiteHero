@@ -172,3 +172,37 @@ export function useBatchDeleteMarkups() {
     },
   })
 }
+
+/**
+ * Update sharing settings for a markup
+ */
+export function useUpdateMarkupSharing() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      markupId,
+      settings,
+    }: {
+      markupId: string
+      settings: {
+        isShared: boolean
+        sharedWithRoles?: string[]
+        sharedWithUsers?: string[]
+        permissionLevel?: 'view' | 'edit' | 'admin'
+      }
+    }) => {
+      return await markupsApi.updateMarkupSharing(markupId, settings)
+    },
+    onSuccess: (data) => {
+      // Invalidate markup queries
+      queryClient.invalidateQueries({
+        queryKey: ['markups', data.document_id],
+        exact: false
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['markups', data.id]
+      })
+    },
+  })
+}

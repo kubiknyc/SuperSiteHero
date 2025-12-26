@@ -46,8 +46,8 @@ Without CSI MasterFormat spec section organization, submittals are not usable by
 - [x] Add TypeScript types for dedicated submittals table - database.ts, database-extensions.ts
 - [x] Create React Query hooks for dedicated submittals - useDedicatedSubmittals.ts
 - [x] Create CreateDedicatedSubmittalDialog component
-- [ ] Add Submittal Log Excel export
-- [ ] Create submittal detail page for dedicated submittals
+- [x] Add Submittal Log Excel export - `src/features/submittals/utils/submittalExport.ts`
+- [x] Create submittal detail page for dedicated submittals - `DedicatedSubmittalDetailPage.tsx`
 
 **Files:** `src/types/database.ts`, `src/pages/submittals/DedicatedSubmittalsPage.tsx`, `src/components/ui/csi-spec-picker.tsx`
 **Route:** `/submittals-v2` (accessible alongside legacy `/submittals`)
@@ -70,9 +70,9 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 - [x] Create React Query hooks for dedicated RFIs - useDedicatedRFIs.ts
 - [x] Create DedicatedRFIsPage with ball-in-court view
 - [x] Add ball-in-court filtering and grouping
-- [ ] Create RFI detail page for dedicated RFIs
-- [ ] Create CreateDedicatedRFIDialog component
-- [ ] Add RFI Log Excel export
+- [x] Create RFI detail page for dedicated RFIs - `DedicatedRFIDetailPage.tsx`
+- [x] Create CreateDedicatedRFIDialog component - `CreateDedicatedRFIDialog.tsx`
+- [x] Add RFI Log Excel export - `src/features/rfis/utils/rfiExport.ts`
 
 **Files:** `src/types/database.ts`, `src/pages/rfis/DedicatedRFIsPage.tsx`, `src/features/rfis/hooks/useDedicatedRFIs.ts`
 **Route:** `/rfis-v2` (accessible alongside legacy `/rfis`)
@@ -86,7 +86,7 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 - [x] **Copy Daily Report** - Pre-populate from yesterday's report (usePreviousDayReport hook + UI)
 - [x] **Overdue Alerts** - Hooks for overdue RFIs/submittals/punch items with priority tracking
 - [x] **Punch List Photos** - BeforeAfterPhotos component with drag-drop upload and comparison view
-- [ ] **Distribution Lists** - Reusable contact lists for RFIs/submittals
+- [x] **Distribution Lists** - Reusable contact lists for RFIs/submittals - Migration 085, `DistributionListsPage.tsx`
 
 **Files:**
 - `src/features/daily-reports/hooks/useDailyReports.ts` - Copy from previous
@@ -107,9 +107,9 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 - [x] Create Cost Code API service - `src/lib/api/services/cost-tracking.ts`
 - [x] Create Cost Code React Query hooks - `src/features/cost-tracking/hooks/useCostTracking.ts`
 - [x] Seed CSI divisions mutation - `useSeedCSIDivisions()`
-- [ ] Create Cost Code management page UI
-- [ ] Create Cost Code picker component
-- [ ] Import from CSV capability
+- [x] Create Cost Code management page UI - `CostCodesPage.tsx`
+- [x] Create Cost Code picker component - `CostCodePicker.tsx`
+- [x] Import from CSV capability - CSV import in cost code page
 
 **Files:** `src/types/cost-tracking.ts`, `src/lib/api/services/cost-tracking.ts`, `src/features/cost-tracking/hooks/useCostTracking.ts`
 
@@ -136,37 +136,45 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 ---
 
 ### 2.3 Change Order Cost Breakdown
-**Status:** Not Started | **Priority:** CRITICAL | **Effort:** 1 week
+**Status:** ✅ COMPLETE | **Priority:** CRITICAL | **Effort:** 1 week
 
-- [ ] Add CO lifecycle stages (COR -> PCO -> CO -> Executed)
-- [ ] Add detailed cost fields (labor, material, equipment, sub, overhead, profit)
-- [ ] Add reason_category (Design Change, Unforeseen Condition, etc.)
-- [ ] Add schedule impact fields
-- [ ] Link to cost codes
+- [x] Add CO lifecycle stages (COR -> PCO -> CO -> Executed) - Migration 052, 9-state workflow
+- [x] Add detailed cost fields (labor, material, equipment, sub, overhead, profit) - `change_order_items` table
+- [x] Add reason_category (Design Change, Unforeseen Condition, etc.) - `ChangeType` enum with 6 types
+- [x] Add schedule impact fields - `proposed_days`, `approved_days` fields
+- [x] Link to cost codes - Budget integration with `cost_transactions`
+
+**Files:** `src/types/change-order.ts`, `src/features/change-orders/hooks/useChangeOrdersV2.ts`, `src/lib/api/services/change-orders-v2.ts`
 
 ---
 
 ### 2.4 Daily Report Cost Integration
-**Status:** Not Started | **Priority:** CRITICAL | **Effort:** 1 week
+**Status:** PARTIAL | **Priority:** CRITICAL | **Effort:** 3 days remaining
 
-- [ ] Add work_performed_by_cost_code
-- [ ] Add labor_by_cost_code
-- [ ] Add equipment_by_cost_code
-- [ ] Add production tracking (quantity, units)
-- [ ] Add T&M work documentation
+- [ ] Add work_performed_by_cost_code aggregation view
+- [ ] Add labor_by_cost_code aggregation view
+- [ ] Add equipment_by_cost_code aggregation view
+- [x] Add production tracking (quantity, units) - `daily_report_progress` with SF, LF, CY, EA units
+- [x] Add T&M work documentation - `daily_report_tm_work` table, `TMWorkSection.tsx` (748 lines)
+- [x] Cost code fields exist in workforce/equipment/progress tables
+
+**Note:** Foundation complete. Missing aggregation views to summarize costs by cost code.
 
 ---
 
 ## Phase 3: Risk & Compliance (Days 61-90)
 
 ### 3.1 Subcontractor Insurance Tracking
-**Status:** Not Started | **Priority:** CRITICAL | **Effort:** 1 week
+**Status:** ✅ COMPLETE | **Priority:** CRITICAL | **Effort:** 1 week
 
-- [ ] Create `subcontractor_insurance` table
-- [ ] Create Insurance tracking UI
-- [ ] Add expiration alerts (30/60/90 days)
-- [ ] Create Compliance dashboard
-- [ ] Block non-compliant subs
+- [x] Create `insurance_certificates` table - Migration 071 (9 insurance types, 5 status states)
+- [x] Create Insurance tracking UI - `InsuranceUploadWidget.tsx`, compliance dashboard
+- [x] Add expiration alerts (30/60/90 days) - `insurance_expiration_alerts` table, auto-status triggers
+- [x] Create Compliance dashboard - `InsuranceComplianceDashboard.tsx`, `subcontractor_compliance_status` table
+- [x] Block non-compliant subs - Payment hold integration (`apply_payment_hold()`, `release_payment_hold()`)
+- [x] AI/OCR extraction - `process-insurance-certificate` edge function, confidence scoring
+
+**Files:** Migrations 071, 150 | `src/features/insurance/` | `src/features/subcontractor-portal/`
 
 ---
 
@@ -193,7 +201,7 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 - [x] Floor plan location marking - Migration 100 (pin-drop feature)
 - [x] Before/after photo comparison - BeforeAfterPhotos component
 - [ ] Add back-charge capability (remaining)
-- [ ] Add bulk operations (remaining)
+- [x] Add bulk operations - `useBulkUpdatePunchItemStatus()`, `useBatchVerifySubcontractorCompletions()`, `BatchQRCodePrint`
 
 ---
 
@@ -233,7 +241,7 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 - [x] Meeting number and status tracking
 
 #### Remaining:
-- [ ] Recurring meeting support
+- [x] Recurring meeting support - `is_recurring` field on meetings table
 - [ ] Action item due date alerts
 - [ ] Meeting minutes distribution
 - [ ] Previous meeting linking

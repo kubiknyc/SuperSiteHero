@@ -16,6 +16,9 @@ import {
   Settings,
   Download,
   List,
+  CheckCircle2,
+  Loader2,
+  RefreshCw,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -26,7 +29,14 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
-import type { MeasurementType } from '../utils/measurements'
+import type { MeasurementType, UnitSystem, LinearUnit } from '../utils/measurements'
+import { convertLinearUnit } from '../utils/measurements'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 export interface TakeoffToolbarProps {
   currentTool: MeasurementType
@@ -37,6 +47,14 @@ export interface TakeoffToolbarProps {
     pixelsPerUnit: number
     unit: string
   }
+  /** Whether the scale has been persisted to the database */
+  isScaleSaved?: boolean
+  /** Whether the scale is currently being saved */
+  isSavingScale?: boolean
+  /** Current unit system (imperial or metric) */
+  unitSystem?: UnitSystem
+  /** Callback when unit system changes */
+  onUnitSystemChange?: (system: UnitSystem) => void
   onCalibrate?: () => void
   onShowList?: () => void
   onExport?: () => void
@@ -140,12 +158,41 @@ const PRESET_COLORS = [
  * - Measurement list toggle
  * - Export options
  */
+// Unit system display labels
+const UNIT_SYSTEM_LABELS: Record<UnitSystem, string> = {
+  imperial: 'Imperial (ft, in)',
+  metric: 'Metric (m, cm)',
+}
+
+// Get display unit for a unit system
+function getDisplayUnit(unit: string, targetSystem: UnitSystem): { value: number; unit: LinearUnit } {
+  const linearUnit = unit as LinearUnit
+
+  // Determine if current unit is metric or imperial
+  const metricUnits: LinearUnit[] = ['mm', 'cm', 'm', 'km']
+  const isMetric = metricUnits.includes(linearUnit)
+
+  if (targetSystem === 'metric' && !isMetric) {
+    // Convert imperial to metric (feet -> meters)
+    return { value: convertLinearUnit(1, linearUnit, 'm'), unit: 'm' }
+  } else if (targetSystem === 'imperial' && isMetric) {
+    // Convert metric to imperial (meters -> feet)
+    return { value: convertLinearUnit(1, linearUnit, 'ft'), unit: 'ft' }
+  }
+
+  return { value: 1, unit: linearUnit }
+}
+
 export function TakeoffToolbar({
   currentTool,
   onToolChange,
   currentColor = '#FF0000',
   onColorChange,
   scale,
+  isScaleSaved = false,
+  isSavingScale = false,
+  unitSystem = 'imperial',
+  onUnitSystemChange,
   onCalibrate,
   onShowList,
   onExport,
@@ -155,6 +202,15 @@ export function TakeoffToolbar({
   const [showColorPicker, setShowColorPicker] = useState(false)
 
   const currentToolData = MEASUREMENT_TOOLS.find((t) => t.type === currentTool)
+
+  // Convert scale display to current unit system
+  const displayScale = scale ? (() => {
+    const conversion = getDisplayUnit(scale.unit, unitSystem)
+    return {
+      pixelsPerUnit: scale.pixelsPerUnit / conversion.value,
+      unit: conversion.unit,
+    }
+  })() : null
 
   return (
     <div className="flex items-center gap-2 p-2 bg-card border-b shadow-sm">
@@ -226,15 +282,52 @@ export function TakeoffToolbar({
 
       {/* Scale Status & Calibration */}
       <div className="flex items-center gap-2">
-        {scale ? (
-          <Badge variant="outline" className="text-xs">
-            Scale: {scale.pixelsPerUnit.toFixed(2)} px/{scale.unit}
-          </Badge>
+        {displayScale ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="outline" className="text-xs flex items-center gap-1 cursor-help">
+                  {isSavingScale ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : isScaleSaved ? (
+                    <CheckCircle2 className="w-3 h-3 text-green-500" />
+                  ) : null}
+                  Scale: {displayScale.pixelsPerUnit.toFixed(2)} px/{displayScale.unit}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{isScaleSaved ? 'Scale saved for this page' : 'Scale not saved - will be lost on page change'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         ) : (
           <Badge variant="destructive" className="text-xs">
             No Scale
           </Badge>
         )}
+
+        {/* Unit System Toggle */}
+        {onUnitSystemChange && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onUnitSystemChange(unitSystem === 'imperial' ? 'metric' : 'imperial')}
+                  className="text-xs h-7 px-2"
+                >
+                  <RefreshCw className="w-3 h-3 mr-1" />
+                  {unitSystem === 'imperial' ? 'ft' : 'm'}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Switch to {unitSystem === 'imperial' ? 'metric' : 'imperial'} units</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+
         {onCalibrate && (
           <Button variant="outline" size="sm" onClick={onCalibrate}>
             <Settings className="w-4 h-4 mr-1" />

@@ -39,9 +39,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import { useSubcontractorPunchItems, useSubcontractorTasks } from '../hooks'
+import {
+  useSubcontractorPunchItems,
+  useSubcontractorTasks,
+  useSubcontractorAssignmentCounts,
+  useSubcontractorRFIs,
+  useSubcontractorDocuments,
+  useSubcontractorPayments,
+} from '../hooks'
 import { useSubcontractorPunchActions } from '@/features/punch-lists/hooks/useSubcontractorPunchActions'
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
 
 type TabType = 'punch' | 'rfis' | 'documents' | 'payments'
 type SortOption = 'newest' | 'oldest' | 'priority' | 'due_date'
@@ -211,6 +218,10 @@ export function MyAssignments() {
   // Fetch data
   const { data: punchItems, isLoading: loadingPunch, refetch: refetchPunch } = useSubcontractorPunchItems()
   const { data: tasks, isLoading: loadingTasks, refetch: refetchTasks } = useSubcontractorTasks()
+  const { data: assignmentCounts, refetch: refetchCounts } = useSubcontractorAssignmentCounts()
+  const { data: rfis, isLoading: loadingRFIs, refetch: refetchRFIs } = useSubcontractorRFIs()
+  const { data: documents, isLoading: loadingDocuments, refetch: refetchDocuments } = useSubcontractorDocuments()
+  const { data: payments, isLoading: loadingPayments, refetch: refetchPayments } = useSubcontractorPayments()
   const { requestStatusChange } = useSubcontractorPunchActions()
 
   // Tab configurations with counts
@@ -225,19 +236,19 @@ export function MyAssignments() {
       id: 'rfis',
       label: 'RFIs',
       icon: <MessageSquare className="h-4 w-4" />,
-      count: 0, // TODO: Implement RFI hook
+      count: assignmentCounts?.rfis || 0,
     },
     {
       id: 'documents',
       label: 'Documents',
       icon: <FileText className="h-4 w-4" />,
-      count: 0, // TODO: Implement documents hook
+      count: assignmentCounts?.documents || 0,
     },
     {
       id: 'payments',
       label: 'Payments',
       icon: <DollarSign className="h-4 w-4" />,
-      count: 0, // TODO: Implement payments hook
+      count: assignmentCounts?.payments || 0,
     },
   ]
 
@@ -246,8 +257,12 @@ export function MyAssignments() {
     await Promise.all([
       refetchPunch(),
       refetchTasks(),
+      refetchCounts(),
+      refetchRFIs(),
+      refetchDocuments(),
+      refetchPayments(),
     ])
-  }, [refetchPunch, refetchTasks])
+  }, [refetchPunch, refetchTasks, refetchCounts, refetchRFIs, refetchDocuments, refetchPayments])
 
   // Filter and sort punch items
   const filteredPunchItems = (punchItems || [])
@@ -300,7 +315,7 @@ export function MyAssignments() {
                 status={item.status}
                 priority={item.priority}
                 dueDate={item.due_date}
-                hasPhotos={false} // TODO: Check for photos
+                hasPhotos={(item.photo_count || 0) > 0}
                 onClick={() => navigate(`/portal/punch-items/${item.id}`)}
                 onComplete={() => handlePunchItemComplete(item.id)}
               />
@@ -308,11 +323,139 @@ export function MyAssignments() {
           </div>
         )
       case 'rfis':
-        return <EmptyState tab="rfis" />
+        if (loadingRFIs) {
+          return (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          )
+        }
+        if (!rfis?.length) {
+          return <EmptyState tab="rfis" />
+        }
+        return (
+          <div className="divide-y divide-gray-100">
+            {rfis.map(rfi => (
+              <AssignmentItem
+                key={rfi.id}
+                id={rfi.id}
+                title={`RFI #${rfi.rfi_number || 'N/A'}: ${rfi.title}`}
+                subtitle={rfi.project_name}
+                status={rfi.status}
+                priority={rfi.priority || undefined}
+                dueDate={rfi.due_date || undefined}
+                onClick={() => navigate(`/portal/rfis/${rfi.id}`)}
+              />
+            ))}
+          </div>
+        )
       case 'documents':
-        return <EmptyState tab="documents" />
+        if (loadingDocuments) {
+          return (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          )
+        }
+        if (!documents?.length) {
+          return <EmptyState tab="documents" />
+        }
+        return (
+          <div className="divide-y divide-gray-100">
+            {documents.map(doc => (
+              <div
+                key={doc.id}
+                className="flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface cursor-pointer"
+                onClick={() => window.open(doc.file_url, '_blank')}
+              >
+                <div className="flex-shrink-0">
+                  <FileText className="h-4 w-4 text-primary" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-medium text-foreground truncate heading-card">
+                    {doc.name}
+                  </h4>
+                  <p className="text-xs text-muted truncate mt-0.5">
+                    {doc.project_name} • {doc.category || 'Document'}
+                  </p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    {doc.file_size && (
+                      <span className="text-[10px] text-muted">
+                        {(doc.file_size / 1024 / 1024).toFixed(1)} MB
+                      </span>
+                    )}
+                    <span className="text-[10px] text-muted">
+                      Shared {formatDistanceToNow(new Date(doc.shared_at), { addSuffix: true })}
+                    </span>
+                    {doc.expires_at && (
+                      <span className="text-[10px] text-warning">
+                        Expires {formatDistanceToNow(new Date(doc.expires_at), { addSuffix: true })}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-disabled flex-shrink-0" />
+              </div>
+            ))}
+          </div>
+        )
       case 'payments':
-        return <EmptyState tab="payments" />
+        if (loadingPayments) {
+          return (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            </div>
+          )
+        }
+        if (!payments?.length) {
+          return <EmptyState tab="payments" />
+        }
+        return (
+          <div className="divide-y divide-gray-100">
+            {payments.map(payment => {
+              const statusColors: Record<string, string> = {
+                draft: 'bg-muted text-secondary',
+                submitted: 'bg-blue-100 text-blue-700',
+                approved: 'bg-green-100 text-green-700',
+                rejected: 'bg-red-100 text-red-700',
+                paid: 'bg-emerald-100 text-emerald-700',
+              }
+              return (
+                <div
+                  key={payment.id}
+                  className="flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface cursor-pointer"
+                  onClick={() => navigate(`/portal/payments/${payment.id}`)}
+                >
+                  <div className="flex-shrink-0">
+                    <DollarSign className="h-4 w-4 text-success" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-sm font-medium text-foreground truncate heading-card">
+                      Pay App #{payment.application_number || 'N/A'}
+                    </h4>
+                    <p className="text-xs text-muted truncate mt-0.5">
+                      {payment.project_name}
+                      {payment.period_from && payment.period_to && (
+                        <> • {format(new Date(payment.period_from), 'MMM d')} - {format(new Date(payment.period_to), 'MMM d, yyyy')}</>
+                      )}
+                    </p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <Badge variant="outline" className={cn('text-[10px] px-1.5 py-0', statusColors[payment.status] || '')}>
+                        {payment.status.replace('_', ' ')}
+                      </Badge>
+                      {payment.current_payment_due != null && (
+                        <span className="text-[10px] text-muted">
+                          ${payment.current_payment_due.toLocaleString()}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <ChevronRight className="h-4 w-4 text-disabled flex-shrink-0" />
+                </div>
+              )
+            })}
+          </div>
+        )
       default:
         return null
     }

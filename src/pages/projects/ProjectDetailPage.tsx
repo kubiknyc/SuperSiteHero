@@ -17,10 +17,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate } from 'lucide-react'
+import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate, Download, CheckCircle, WifiOff } from 'lucide-react'
 import { format } from 'date-fns'
 import { SaveAsTemplateDialog } from '@/features/project-templates/components'
 import { useAuth } from '@/hooks/useAuth'
+import { useDataPrefetch, formatRelativeTime } from '@/hooks/useDataPrefetch'
+import { Progress } from '@/components/ui/progress'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function ProjectDetailPage() {
   // Call all hooks at the top level, before any conditional returns
@@ -30,6 +33,16 @@ export function ProjectDetailPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [saveAsTemplateOpen, setSaveAsTemplateOpen] = useState(false)
   const { data: project, isLoading, error } = useProject(projectId || '')
+
+  // Offline prefetch hook
+  const {
+    isPrefetching,
+    progress,
+    isPrefetched,
+    prefetchedAt,
+    startPrefetch,
+    error: prefetchError,
+  } = useDataPrefetch(projectId || '')
 
   // Early return after all hooks are called
   if (!projectId) {
@@ -118,6 +131,42 @@ export function ProjectDetailPage() {
             )}
           </div>
           <div className="flex gap-2">
+            {/* Offline Prefetch Button */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={startPrefetch}
+                    disabled={isPrefetching || isPrefetched}
+                    className={isPrefetched ? 'text-success border-success/50' : ''}
+                  >
+                    {isPrefetching ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        {progress ? `${progress.entitiesCompleted}/${progress.totalEntities}` : 'Prefetching...'}
+                      </>
+                    ) : isPrefetched ? (
+                      <>
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Offline Ready
+                      </>
+                    ) : (
+                      <>
+                        <WifiOff className="h-4 w-4 mr-2" />
+                        Make Offline
+                      </>
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {isPrefetched
+                    ? `Available offline since ${formatRelativeTime(prefetchedAt)}`
+                    : 'Download project data for offline use'}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             <Button variant="outline" onClick={() => navigate(`/projects/${projectId}/schedule`)}>
               <Calendar className="h-4 w-4 mr-2" />
               Schedule

@@ -17,12 +17,17 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { AlertCircle, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth/AuthContext';
+import { usePermissionCheck } from '@/features/permissions/hooks';
+import { PERMISSION_CODES } from '@/types/permissions';
 
 export function DailyReportEditPageV2() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: report, isLoading, error } = useDailyReportV2(id);
   const { user } = useAuth();
+
+  // Check permissions for this project
+  const { hasPermission } = usePermissionCheck(report?.project_id);
 
   // Workflow mutations
   const submitMutation = useSubmitReportV2();
@@ -161,10 +166,9 @@ export function DailyReportEditPageV2() {
     );
   }
 
-  // Determine user permissions based on role
-  // For now, use a simple check - in production this would come from project team membership
+  // Determine user permissions based on role and project permissions
   const isAuthor = report.created_by === user?.id;
-  const isApprover = true; // TODO: Check project role for approval permissions
+  const isApprover = hasPermission(PERMISSION_CODES.DAILY_REPORTS_APPROVE);
   const canSubmit = isAuthor && (report.status === 'draft' || report.status === 'changes_requested');
   const canApprove = isApprover && (report.status === 'submitted' || report.status === 'in_review');
   const canRequestChanges = isApprover && (report.status === 'submitted' || report.status === 'in_review');

@@ -28,3 +28,6 @@ export { MyAssignments } from './MyAssignments'
 
 // Punch Item Updates (Milestone 4.2)
 export { PunchItemUpdate } from './PunchItemUpdate'
+
+// Insurance Upload Widget (Milestone 4.3)
+export { InsuranceUploadWidget } from './InsuranceUploadWidget'

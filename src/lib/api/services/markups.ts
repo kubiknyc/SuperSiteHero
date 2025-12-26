@@ -298,4 +298,40 @@ export const markupsApi = {
           })
     }
   },
+
+  /**
+   * Update sharing settings for a markup
+   */
+  async updateMarkupSharing(
+    markupId: string,
+    settings: {
+      isShared: boolean
+      sharedWithRoles?: string[]
+      sharedWithUsers?: string[]
+      permissionLevel?: 'view' | 'edit' | 'admin'
+    }
+  ): Promise<DocumentMarkup> {
+    try {
+      if (!markupId) {
+        throw new ApiErrorClass({
+          code: 'MARKUP_ID_REQUIRED',
+          message: 'Markup ID is required',
+        })
+      }
+
+      return await this.updateMarkup(markupId, {
+        is_shared: settings.isShared,
+        shared_with_roles: settings.sharedWithRoles || null,
+        shared_with_users: settings.sharedWithUsers || null,
+        permission_level: settings.permissionLevel || 'view',
+      })
+    } catch (error) {
+      throw error instanceof ApiErrorClass
+        ? error
+        : new ApiErrorClass({
+            code: 'UPDATE_MARKUP_SHARING_ERROR',
+            message: 'Failed to update markup sharing settings',
+          })
+    }
+  },
 }

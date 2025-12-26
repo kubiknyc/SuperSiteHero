@@ -41,7 +41,7 @@ export interface SelectProps
   htmlSize?: number
 }
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+const NativeSelect = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, selectSize, htmlSize, ...props }, ref) => {
     return (
       <select
@@ -55,12 +55,16 @@ const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
     )
   }
 )
-Select.displayName = 'Select'
+NativeSelect.displayName = 'NativeSelect'
 
 // ============================================================================
 // Radix UI Select Components (for advanced select functionality)
 // ============================================================================
 
+// Select is the Radix UI version (most common usage with onValueChange)
+const Select = SelectPrimitive.Root
+
+// Alias for backwards compatibility with code expecting RadixSelect
 const RadixSelect = SelectPrimitive.Root
 
 const SelectGroup = SelectPrimitive.Group
@@ -202,12 +206,9 @@ const SelectSeparator = React.forwardRef<
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
 export {
-  // Basic HTML Select (default - for backward compatibility)
+  // Radix UI Select (default - most common usage with onValueChange)
   Select,
-  Select as NativeSelect,
-  nativeSelectVariants,
-  // Radix UI Select components (for advanced use cases)
-  RadixSelect,
+  RadixSelect, // Alias for backwards compatibility
   SelectGroup,
   SelectValue,
   SelectTrigger,
@@ -217,4 +218,8 @@ export {
   SelectSeparator,
   SelectScrollUpButton,
   SelectScrollDownButton,
+  // Native HTML Select (for simple dropdowns needing onChange)
+  NativeSelect,
+  nativeSelectVariants,
+  type SelectProps as NativeSelectProps,
 }

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/select'
 import { useSubmittalWorkflowType, useSubmittals } from '../hooks'
 import { CreateSubmittalDialog } from './CreateSubmittalDialog'
 import { SubmittalStatusBadge } from './SubmittalStatusBadge'
@@ -141,7 +141,7 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
               onChange={handleSearchChange}
               className="flex-1"
             />
-            <Select value={statusFilter} onChange={handleStatusFilterChange}>
+            <NativeSelect value={statusFilter} onChange={handleStatusFilterChange}>
               <option value="">All Statuses</option>
               <option value="draft">Draft</option>
               <option value="submitted">Submitted</option>
@@ -149,7 +149,7 @@ export function SubmittalsList({ projectId }: SubmittalsListProps) {
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
               <option value="resubmit_required">Resubmit Required</option>
-            </Select>
+            </NativeSelect>
           </div>
 
           {/* Submittals Table */}

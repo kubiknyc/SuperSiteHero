@@ -50,7 +50,7 @@ export const userApprovalApi = {
 
       return data?.users || []
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
 
       logger.error('Error fetching pending users:', error)
       throw new ApiErrorClass({
@@ -93,7 +93,7 @@ export const userApprovalApi = {
 
       return data
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
 
       logger.error('Error approving user:', error)
       throw new ApiErrorClass({
@@ -136,7 +136,7 @@ export const userApprovalApi = {
 
       return data
     } catch (error) {
-      if (error instanceof ApiErrorClass) throw error
+      if (error instanceof ApiErrorClass) {throw error}
 
       logger.error('Error rejecting user:', error)
       throw new ApiErrorClass({

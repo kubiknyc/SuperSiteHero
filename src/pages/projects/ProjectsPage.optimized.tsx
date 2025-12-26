@@ -49,9 +49,9 @@ export function ProjectsPage() {
 
   // Memoize filtered projects - only recalculate when projects or searchQuery changes
   const filteredProjects = useMemo(() => {
-    if (!projects) return []
+    if (!projects) {return []}
 
-    if (!searchQuery) return projects
+    if (!searchQuery) {return projects}
 
     const query = searchQuery.toLowerCase()
     return projects.filter((project) =>

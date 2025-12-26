@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Maximize2, Minimize2, Loader2, AlertCircle, GitCompare, Layers, History, X } from 'lucide-react'
+import { ArrowLeft, Maximize2, Minimize2, Loader2, AlertCircle, GitCompare, Layers, History, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { PDFViewer } from '@/features/documents/components/viewers/PDFViewer'
 import { useDocument, useDocumentVersions } from '@/features/documents/hooks/useDocuments'
@@ -23,6 +23,8 @@ import { MobileLayerDrawer } from '@/features/documents/components/markup/Mobile
 // Hooks
 import { useEnhancedMarkupState } from '@/features/documents/hooks/useEnhancedMarkupState'
 import { useMobileTouchGestures } from '@/features/documents/hooks/useMobileTouchGestures'
+import { useDocumentOcr } from '@/features/documents/hooks/useDocumentAi'
+import { Input } from '@/components/ui/input'
 import type { Document } from '@/types/database'
 import type { MarkupLayer } from '@/features/documents/types/markup'
 
@@ -83,14 +85,39 @@ export function DrawingMarkupPage() {
   const [mobileLineWidth, setMobileLineWidth] = useState(4)
   const [mobileZoom, setMobileZoom] = useState(100)
 
+  // Page navigation state
+  const [pageNumber, setPageNumber] = useState(1)
+
   // Queries
   const { data: currentDocument, isLoading, error } = useDocument(documentId)
   const { data: versions = [] } = useDocumentVersions(documentId)
+  const { data: ocrData } = useDocumentOcr(documentId)
+  const totalPages = ocrData?.page_count ?? 1
+
+  // Page navigation handlers
+  const goToNextPage = useCallback(() => {
+    if (pageNumber < totalPages) {
+      setPageNumber(pageNumber + 1)
+    }
+  }, [pageNumber, totalPages])
+
+  const goToPreviousPage = useCallback(() => {
+    if (pageNumber > 1) {
+      setPageNumber(pageNumber - 1)
+    }
+  }, [pageNumber])
+
+  const handlePageInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const page = parseInt(e.target.value, 10)
+    if (page >= 1 && page <= totalPages) {
+      setPageNumber(page)
+    }
+  }, [totalPages])
 
   // Enhanced markup state - centralizes all markup-related state and handlers
   const markupState = useEnhancedMarkupState({
     documentId,
-    pageNumber: 1, // TODO: track current page if multi-page support needed
+    pageNumber,
   })
 
   // Destructure what we need for the UI
@@ -230,6 +257,41 @@ export function DrawingMarkupPage() {
               {currentDocument.version && ` • Version ${currentDocument.version}`}
             </p>
           </div>
+
+          {/* Page Navigation */}
+          {totalPages > 1 && (
+            <div className="flex items-center gap-2 border border-gray-600 rounded-md px-2 py-1 bg-gray-800 ml-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-white hover:bg-gray-700"
+                onClick={goToPreviousPage}
+                disabled={pageNumber <= 1}
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+              <div className="flex items-center gap-1 min-w-[80px] justify-center">
+                <Input
+                  type="number"
+                  min={1}
+                  max={totalPages}
+                  value={pageNumber}
+                  onChange={handlePageInputChange}
+                  className="w-12 h-6 text-center text-sm p-0 bg-gray-700 border-gray-600 text-white"
+                />
+                <span className="text-sm text-gray-400">/ {totalPages}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 text-white hover:bg-gray-700"
+                onClick={goToNextPage}
+                disabled={pageNumber >= totalPages}
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Right side - Panel toggles and fullscreen */}
@@ -333,6 +395,9 @@ export function DrawingMarkupPage() {
               enableMarkup={true}
               height="h-full"
               markupState={markupState}
+              pageNumber={pageNumber}
+              onPageChange={setPageNumber}
+              hidePageNavigation={totalPages > 1}
             />
           </div>
         </div>

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/select'
 import { useRFIs, useRFIWorkflowType } from '../hooks/useRFIs'
 import { useDeleteRFIWithNotification } from '../hooks/useRFIMutations'
 import { CreateRFIDialog } from './CreateRFIDialog'
@@ -179,7 +179,7 @@ export function RFIsList({ projectId }: RFIsListProps) {
               onChange={handleSearchChange}
               className="flex-1"
             />
-            <Select value={filterStatus} onChange={handleStatusFilterChange}>
+            <NativeSelect value={filterStatus} onChange={handleStatusFilterChange}>
               <option value="">All Statuses</option>
               <option value="draft">Draft</option>
               <option value="submitted">Submitted</option>
@@ -187,7 +187,7 @@ export function RFIsList({ projectId }: RFIsListProps) {
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
               <option value="closed">Closed</option>
-            </Select>
+            </NativeSelect>
           </div>
 
           {/* RFIs Table */}

@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { NativeSelect } from '@/components/ui/select'
 import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { useDocuments } from '../hooks/useDocuments'
 import { useDeleteDocumentWithNotification } from '../hooks/useDocumentMutations'
@@ -221,7 +221,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1"
             />
-            <Select value={filterType} onChange={(e) => setFilterType(e.target.value as DocumentType | '')}>
+            <NativeSelect value={filterType} onChange={(e) => setFilterType(e.target.value as DocumentType | '')}>
               <option value="">All Types</option>
               <option value="drawing">Drawing</option>
               <option value="specification">Specification</option>
@@ -231,7 +231,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
               <option value="general">General</option>
               <option value="photo">Photo</option>
               <option value="other">Other</option>
-            </Select>
+            </NativeSelect>
           </div>
 
           {/* Documents Table */}

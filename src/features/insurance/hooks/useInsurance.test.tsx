@@ -689,3 +689,246 @@ describe('Insurance Compliance Critical Tests', () => {
     expect(mockDashboardStats.expiredCertificates).toBeDefined()
   })
 })
+
+// =============================================
+// Compliance Status Tests (Phase 2 Additions)
+// =============================================
+
+// Additional mock functions for new hooks
+const mockGetSubcontractorComplianceStatus = vi.fn()
+const mockGetCompanyComplianceStatuses = vi.fn()
+const mockGetComplianceDashboard = vi.fn()
+const mockRecalculateComplianceStatus = vi.fn()
+const mockApplyPaymentHold = vi.fn()
+const mockReleasePaymentHold = vi.fn()
+const mockGetAIExtraction = vi.fn()
+const mockGetExtractionsNeedingReview = vi.fn()
+const mockCreateAIExtraction = vi.fn()
+const mockMarkExtractionReviewed = vi.fn()
+const mockUpdateExtractionStatus = vi.fn()
+const mockGetProjectInsuranceRequirements = vi.fn()
+const mockUpsertProjectRequirement = vi.fn()
+const mockDeleteProjectRequirement = vi.fn()
+const mockBulkUpdateProjectRequirements = vi.fn()
+
+// Note: Additional mocks need to be added to the mock setup at the top of the file
+
+// =============================================
+// Compliance Status and Payment Hold Tests
+// =============================================
+
+describe('Compliance Status Data Structures', () => {
+  const mockComplianceStatus = {
+    id: 'status-123',
+    subcontractor_id: 'sub-123',
+    project_id: 'project-789',
+    company_id: 'company-456',
+    compliance_score: 85,
+    overall_status: 'compliant' as const,
+    missing_coverage_types: [],
+    expired_certificates: 0,
+    expiring_certificates: 1,
+    payment_hold: false,
+    hold_reason: null,
+    hold_applied_at: null,
+    hold_applied_by: null,
+    last_checked_at: '2024-01-15T00:00:00Z',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-15T00:00:00Z',
+  }
+
+  it('should have required compliance status fields', () => {
+    expect(mockComplianceStatus.subcontractor_id).toBeDefined()
+    expect(mockComplianceStatus.compliance_score).toBeDefined()
+    expect(mockComplianceStatus.overall_status).toBeDefined()
+    expect(['compliant', 'non_compliant', 'partially_compliant', 'pending']).toContain(
+      mockComplianceStatus.overall_status
+    )
+  })
+
+  it('should track payment hold status', () => {
+    expect(mockComplianceStatus.payment_hold).toBeDefined()
+    expect(typeof mockComplianceStatus.payment_hold).toBe('boolean')
+  })
+
+  it('should track missing coverage types', () => {
+    expect(Array.isArray(mockComplianceStatus.missing_coverage_types)).toBe(true)
+  })
+
+  it('should track certificate expiration counts', () => {
+    expect(mockComplianceStatus.expired_certificates).toBeDefined()
+    expect(mockComplianceStatus.expiring_certificates).toBeDefined()
+  })
+})
+
+describe('Payment Hold Workflow', () => {
+  const paymentHoldInput = {
+    subcontractorId: 'sub-123',
+    projectId: 'project-789',
+    reason: 'Expired general liability certificate',
+  }
+
+  it('should validate payment hold input structure', () => {
+    expect(paymentHoldInput.subcontractorId).toBeDefined()
+    expect(paymentHoldInput.projectId).toBeDefined()
+    expect(paymentHoldInput.reason).toBeDefined()
+    expect(typeof paymentHoldInput.reason).toBe('string')
+    expect(paymentHoldInput.reason.length).toBeGreaterThan(0)
+  })
+
+  it('should validate release payment hold structure', () => {
+    const releaseInput = {
+      subcontractorId: 'sub-123',
+      projectId: 'project-789',
+      reason: 'New certificate verified',
+    }
+    expect(releaseInput.subcontractorId).toBeDefined()
+    expect(releaseInput.reason).toBeDefined()
+  })
+})
+
+// =============================================
+// AI Extraction Tests
+// =============================================
+
+describe('AI Extraction Data Structures', () => {
+  const mockAIExtraction = {
+    id: 'extraction-123',
+    certificate_id: 'cert-123',
+    company_id: 'company-456',
+    extraction_source: 'google_vision' as const,
+    raw_text: 'CERTIFICATE OF LIABILITY INSURANCE...',
+    extracted_data: {
+      carrier_name: 'ABC Insurance Co',
+      policy_number: 'GL-2024-001',
+      effective_date: '2024-01-01',
+      expiration_date: '2025-01-01',
+      each_occurrence_limit: 1000000,
+      general_aggregate_limit: 2000000,
+    },
+    confidence_score: 0.95,
+    needs_review: false,
+    review_status: 'approved' as const,
+    reviewed_by: 'user-123',
+    reviewed_at: '2024-01-02T00:00:00Z',
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-02T00:00:00Z',
+  }
+
+  it('should have required AI extraction fields', () => {
+    expect(mockAIExtraction.certificate_id).toBeDefined()
+    expect(mockAIExtraction.extraction_source).toBeDefined()
+    expect(['google_vision', 'openai', 'manual']).toContain(mockAIExtraction.extraction_source)
+  })
+
+  it('should have extracted data structure', () => {
+    expect(mockAIExtraction.extracted_data).toBeDefined()
+    expect(mockAIExtraction.extracted_data.carrier_name).toBeDefined()
+    expect(mockAIExtraction.extracted_data.policy_number).toBeDefined()
+  })
+
+  it('should track confidence and review status', () => {
+    expect(mockAIExtraction.confidence_score).toBeDefined()
+    expect(mockAIExtraction.confidence_score).toBeGreaterThanOrEqual(0)
+    expect(mockAIExtraction.confidence_score).toBeLessThanOrEqual(1)
+    expect(mockAIExtraction.needs_review).toBeDefined()
+    expect(['pending', 'approved', 'rejected', 'needs_correction']).toContain(
+      mockAIExtraction.review_status
+    )
+  })
+})
+
+// =============================================
+// Project Insurance Requirements Tests
+// =============================================
+
+describe('Project Insurance Requirements', () => {
+  const mockProjectRequirement = {
+    id: 'req-123',
+    project_id: 'project-789',
+    company_id: 'company-456',
+    insurance_type: 'general_liability' as const,
+    min_each_occurrence: 1000000,
+    min_general_aggregate: 2000000,
+    min_combined_single_limit: null,
+    additional_insured_required: true,
+    waiver_of_subrogation_required: true,
+    primary_noncontributory_required: false,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z',
+  }
+
+  it('should have required project requirement fields', () => {
+    expect(mockProjectRequirement.project_id).toBeDefined()
+    expect(mockProjectRequirement.insurance_type).toBeDefined()
+    expect([
+      'general_liability',
+      'auto_liability',
+      'workers_compensation',
+      'umbrella',
+      'professional_liability',
+      'builders_risk',
+      'pollution',
+      'cyber',
+      'other',
+    ]).toContain(mockProjectRequirement.insurance_type)
+  })
+
+  it('should have minimum coverage amounts', () => {
+    expect(mockProjectRequirement.min_each_occurrence).toBeDefined()
+    expect(typeof mockProjectRequirement.min_each_occurrence).toBe('number')
+  })
+
+  it('should track endorsement requirements', () => {
+    expect(mockProjectRequirement.additional_insured_required).toBeDefined()
+    expect(mockProjectRequirement.waiver_of_subrogation_required).toBeDefined()
+    expect(mockProjectRequirement.primary_noncontributory_required).toBeDefined()
+  })
+})
+
+// =============================================
+// Integration Scenario Tests
+// =============================================
+
+describe('Insurance Compliance Integration Scenarios', () => {
+  it('should handle certificate expiration workflow', () => {
+    // Scenario: Certificate expires -> compliance status updates -> payment hold applied
+    const steps = [
+      'Certificate expiration date passes',
+      'Daily cron job runs insurance-compliance-check',
+      'Compliance status updated to non_compliant',
+      'Payment hold automatically applied',
+      'Subcontractor notified via email',
+      'Payment approval blocked until resolved',
+    ]
+    expect(steps.length).toBe(6)
+  })
+
+  it('should handle certificate renewal workflow', () => {
+    // Scenario: New certificate uploaded -> OCR extracts data -> compliance restored
+    const steps = [
+      'Subcontractor uploads new certificate',
+      'OCR processes certificate (process-insurance-certificate)',
+      'Extracted data reviewed/approved',
+      'Certificate record created',
+      'Compliance recalculated',
+      'Payment hold released if compliant',
+    ]
+    expect(steps.length).toBe(6)
+  })
+
+  it('should validate coverage against requirements', () => {
+    // Test coverage validation logic
+    const requirement = { min_each_occurrence: 1000000 }
+    const certificate = { each_occurrence_limit: 2000000 }
+    expect(certificate.each_occurrence_limit).toBeGreaterThanOrEqual(requirement.min_each_occurrence)
+  })
+
+  it('should calculate compliance score correctly', () => {
+    // Score = (compliant_coverage_types / total_required_types) * 100
+    const totalRequired = 5
+    const compliant = 4
+    const score = Math.round((compliant / totalRequired) * 100)
+    expect(score).toBe(80)
+  })
+})

@@ -22,6 +22,7 @@ import toast from 'react-hot-toast'
 import { useLiveCursors } from '@/hooks/useLiveCursors'
 import { RelativeCursorsContainer, OnlineUsersIndicator } from '@/components/realtime/LiveCursor'
 import { logger } from '../../../../lib/utils/logger';
+import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
 
 
 type Tool = AnnotationType | 'select' | 'pan' | 'eraser'
@@ -152,6 +153,17 @@ export function UnifiedDrawingCanvas({
   // Auth hook
   const { user } = useAuth()
 
+  // Fetch project users for sharing dialog
+  const { data: projectUsers = [] } = useProjectUsers(projectId)
+  const shareableUsers = useMemo(() =>
+    projectUsers.map(pu => ({
+      id: pu.user_id,
+      name: pu.user ? `${pu.user.first_name || ''} ${pu.user.last_name || ''}`.trim() || pu.user.email : 'Unknown',
+      role: pu.project_role || undefined,
+    })).filter(u => u.id !== user?.id), // Exclude current user
+    [projectUsers, user?.id]
+  )
+
   // Live cursors for real-time collaboration
   const canvasContainerRef = useRef<HTMLDivElement>(null)
   const { cursors, setContainer, isConnected, broadcastCursorPosition } = useLiveCursors(
@@ -175,6 +187,14 @@ export function UnifiedDrawingCanvas({
     })
     return Array.from(uniqueCreators.values())
   }, [existingMarkups])
+
+  // Check if current user can share the selected markup (must own it)
+  const canShareSelectedMarkup = useMemo(() => {
+    if (!selectedShapeId || !existingMarkups || !user?.id) {return false}
+    const selectedMarkup = existingMarkups.find(m => m.id === selectedShapeId)
+    // User can share if they own the markup
+    return selectedMarkup?.created_by === user.id
+  }, [selectedShapeId, existingMarkups, user?.id])
 
   // Calculate markup counts by type for the filter panel
   const markupCounts = useMemo(() => {
@@ -992,7 +1012,7 @@ export function UnifiedDrawingCanvas({
                   markupState.onOpenShareDialog(selectedShapeId)
                 }
               }}
-              canShare={!!selectedShapeId && !!markupState}
+              canShare={canShareSelectedMarkup && !!markupState}
 
               disabled={false}
             />
@@ -1352,8 +1372,7 @@ export function UnifiedDrawingCanvas({
           markupId={markupState.shareMarkupId}
           currentSettings={markupState.shareSettings}
           onSave={markupState.onSaveShareSettings}
-          availableRoles={[]} // TODO: Load from project settings
-          availableUsers={[]} // TODO: Load project team members
+          availableUsers={shareableUsers}
         />
       )}
     </div>

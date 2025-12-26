@@ -55,6 +55,8 @@ import type {
   ChartConfiguration,
 } from '@/types/report-builder'
 import { OUTPUT_FORMAT_CONFIG, generateDefaultTemplateName } from '@/types/report-builder'
+import { generateReport, downloadReport } from '@/features/reports/services/reportExportService'
+import { useToast } from '@/components/ui/use-toast'
 import { logger } from '../../lib/utils/logger';
 
 
@@ -75,6 +77,7 @@ export function ReportBuilderPage() {
   const isEditMode = !!templateId
 
   const { userProfile } = useAuth()
+  const { toast } = useToast()
   const companyId = userProfile?.company_id
 
   // State
@@ -89,6 +92,7 @@ export function ReportBuilderPage() {
   const [chartConfig, setChartConfig] = useState<ChartConfiguration | null>(null)
   const [includeCharts, setIncludeCharts] = useState(true)
   const [includeSummary, setIncludeSummary] = useState(true)
+  const [isGenerating, setIsGenerating] = useState(false)
 
   // Queries
   const { data: existingTemplate, isLoading: templateLoading } = useReportTemplate(templateId)
@@ -226,10 +230,51 @@ export function ReportBuilderPage() {
     }
   }
 
-  // Run report
+  // Run report - generates and downloads the report
   const handleRun = async () => {
-    // TODO: Implement report generation
-    logger.log('Running report...')
+    if (!dataSource || selectedFields.length === 0) {
+      toast({
+        title: 'Cannot Generate Report',
+        description: 'Please select a data source and at least one field.',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    setIsGenerating(true)
+    try {
+      logger.log('Generating report...', { dataSource, outputFormat, fieldsCount: selectedFields.length })
+
+      const result = await generateReport(outputFormat, {
+        dataSource,
+        fields: selectedFields,
+        filters: filters.length > 0 ? filters : undefined,
+        title: templateName || 'Custom Report',
+        orientation: outputFormat === 'pdf' ? 'landscape' : undefined,
+        chartConfig: includeCharts ? chartConfig || undefined : undefined,
+        includeChart: includeCharts && !!chartConfig,
+        companyName: userProfile?.company_name || undefined,
+      })
+
+      // Download the generated report
+      downloadReport(result)
+
+      toast({
+        title: 'Report Generated',
+        description: `Successfully generated ${outputFormat.toUpperCase()} report with ${result.rowCount} records.`,
+      })
+
+      logger.log('Report generated successfully:', { rowCount: result.rowCount, filename: result.filename })
+    } catch (error) {
+      logger.error('Failed to generate report:', error)
+      toast({
+        title: 'Report Generation Failed',
+        description: error instanceof Error ? error.message : 'An unexpected error occurred.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   const isSaving = createTemplate.isPending || updateTemplate.isPending || saveConfig.isPending
@@ -267,10 +312,18 @@ export function ReportBuilderPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            {isRunMode && (
-              <Button variant="outline" onClick={handleRun}>
-                <Play className="h-4 w-4 mr-2" />
-                Run Now
+            {(isRunMode || selectedFields.length > 0) && (
+              <Button
+                variant="outline"
+                onClick={handleRun}
+                disabled={isGenerating || !dataSource || selectedFields.length === 0}
+              >
+                {isGenerating ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Play className="h-4 w-4 mr-2" />
+                )}
+                {isGenerating ? 'Generating...' : 'Run Now'}
               </Button>
             )}
             <Button onClick={handleSave} disabled={!canProceed() || isSaving}>

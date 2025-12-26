@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { useChecklistFailureAnalytics } from '../hooks/useChecklistFailureAnalytics'
 import { getDateRangeFromPreset } from '@/lib/api/services/checklist-failure-analytics'
 import type { DateRangePreset, FailureFrequency } from '@/types/checklist-failure-analytics'
+import { downloadFailureTrendAsCSV, downloadFailureTrendAsPDF } from '../utils/failureTrendExport'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Select,
@@ -13,6 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Table,
@@ -32,7 +39,6 @@ import {
   FileText,
   CheckCircle2,
   Download,
-  Clock,
   Calendar,
 } from 'lucide-react'
 import {
@@ -52,17 +58,22 @@ import { logger } from '../../../lib/utils/logger';
 
 interface ChecklistFailureTrendReportProps {
   projectId: string
+  projectName?: string
   templateId?: string
+  templateName?: string
   className?: string
 }
 
 export function ChecklistFailureTrendReport({
   projectId,
+  projectName = 'Project',
   templateId,
+  templateName,
   className,
 }: ChecklistFailureTrendReportProps) {
   const [dateRange, setDateRange] = useState<DateRangePreset>('last_90_days')
   const [selectedLocation, setSelectedLocation] = useState<string>()
+  const [isExporting, setIsExporting] = useState(false)
 
   const dateRangeValues = getDateRangeFromPreset(dateRange)
 
@@ -74,9 +85,21 @@ export function ChecklistFailureTrendReport({
     location: selectedLocation,
   })
 
-  const handleExport = () => {
-    // TODO: Implement CSV/PDF export
-    logger.log('Export functionality coming soon')
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    if (!data) {return}
+
+    setIsExporting(true)
+    try {
+      if (format === 'csv') {
+        downloadFailureTrendAsCSV(data, projectName, dateRange, templateName)
+      } else {
+        await downloadFailureTrendAsPDF(data, projectName, dateRange, templateName)
+      }
+    } catch (err) {
+      logger.error('Export failed:', err)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   if (isLoading) {
@@ -138,10 +161,24 @@ export function ChecklistFailureTrendReport({
               <SelectItem value="last_year">Last Year</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="mr-2 h-4 w-4" />
-            Export
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" disabled={isExporting || !data}>
+                <Download className="mr-2 h-4 w-4" />
+                {isExporting ? 'Exporting...' : 'Export'}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleExport('csv')}>
+                <FileText className="mr-2 h-4 w-4" />
+                Export as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                <FileText className="mr-2 h-4 w-4" />
+                Export as PDF
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

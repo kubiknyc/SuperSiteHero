@@ -40,7 +40,7 @@ export function PendingApproval() {
 
   // Auto-refresh to check approval status every 30 seconds
   useEffect(() => {
-    if (!userProfile) return;
+    if (!userProfile) {return;}
 
     const checkApprovalStatus = async () => {
       const { data } = await supabase

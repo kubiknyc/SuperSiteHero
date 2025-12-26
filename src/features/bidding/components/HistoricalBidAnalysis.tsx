@@ -132,9 +132,14 @@ export function HistoricalBidAnalysis() {
       }
     }
 
+    // Calculate average accuracy (win rate) from trends data
+    // Weight by bid count for more representative average
+    const totalWins = trends.data.reduce((sum, t) => sum + t.win_count, 0)
+    const avgAccuracy = totalBids > 0 ? Math.round((totalWins / totalBids) * 100) : 0
+
     return {
       totalBids,
-      avgAccuracy: 95, // TODO: Calculate from actual data
+      avgAccuracy,
       topVendors: recommendations.data?.length || 0,
       trendDirection,
     }

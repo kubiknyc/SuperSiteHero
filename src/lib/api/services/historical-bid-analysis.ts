@@ -969,7 +969,7 @@ export const historicalBidAnalysisApi = {
           same_trade_bids: sameTradeBids,
           recent_activity: recentActivity,
           reliability_level: reliabilityLevel,
-          on_time_delivery: Math.round((100 - 0) * 10) / 10, // TODO: Calculate from actual data
+          on_time_delivery: Math.round(completionRate * 10) / 10, // Use completion rate as proxy for on-time delivery
           confidence,
           reasons,
           concerns,
@@ -1020,25 +1020,141 @@ export const historicalBidAnalysisApi = {
         to: filters.date_to,
       })
 
-      // Get all unique vendors from submissions in date range
-      const { data: submissions, error: subsError } = await db
+      // Get all submissions with full details for analysis
+      const { data: allSubmissions, error: allSubsError } = await db
         .from('bid_submissions')
         .select(`
+          id,
           bidder_company_name,
           subcontractor_id,
-          bid_packages!inner (company_id)
+          base_bid_amount,
+          total_bid_amount,
+          is_awarded,
+          submitted_at,
+          bid_packages!inner (
+            id,
+            company_id,
+            division,
+            estimated_value,
+            projects (
+              id,
+              name,
+              project_number,
+              actual_completion_date,
+              scheduled_completion_date
+            )
+          )
         `)
         .eq('bid_packages.company_id', companyId)
         .gte('submitted_at', filters.date_from)
         .lte('submitted_at', filters.date_to)
 
-      if (subsError) {throw new ApiErrorClass(subsError.message, 500, 'DATABASE_ERROR')}
+      if (allSubsError) {throw new ApiErrorClass(allSubsError.message, 500, 'DATABASE_ERROR')}
 
+      const submissions = allSubmissions || []
+
+      // Calculate unique vendors
       const uniqueVendors = new Set<string>()
-      ;(submissions || []).forEach((s: any) => {
+      submissions.forEach((s: any) => {
         const key = s.subcontractor_id || s.bidder_company_name
         if (key) {uniqueVendors.add(key)}
       })
+
+      // Calculate unique bid packages
+      const uniquePackages = new Set<string>()
+      submissions.forEach((s: any) => {
+        if (s.bid_packages?.id) {uniquePackages.add(s.bid_packages.id)}
+      })
+      const totalPackages = uniquePackages.size
+
+      // Calculate average bids per package
+      const averageBidsPerPackage = totalPackages > 0 ? Math.round((submissions.length / totalPackages) * 10) / 10 : 0
+
+      // Calculate markup values for statistical analysis
+      const markupValues: number[] = []
+      const markupByTrade: Map<string, number[]> = new Map()
+
+      submissions.forEach((s: any) => {
+        const estimated = s.bid_packages?.estimated_value
+        if (estimated && estimated > 0) {
+          const markup = ((s.total_bid_amount - estimated) / estimated) * 100
+          markupValues.push(markup)
+
+          // Track by trade
+          const division = s.bid_packages?.division || 'Unknown'
+          if (!markupByTrade.has(division)) {
+            markupByTrade.set(division, [])
+          }
+          markupByTrade.get(division)!.push(markup)
+        }
+      })
+
+      // Calculate markup distribution statistics
+      const sortedMarkups = [...markupValues].sort((a, b) => a - b)
+      const n = sortedMarkups.length
+      const markupMean = n > 0 ? sortedMarkups.reduce((a, b) => a + b, 0) / n : 0
+      const markupMedian = n > 0 ? sortedMarkups[Math.floor(n / 2)] : 0
+      const markupMin = n > 0 ? sortedMarkups[0] : 0
+      const markupMax = n > 0 ? sortedMarkups[n - 1] : 0
+      const q1 = n > 3 ? sortedMarkups[Math.floor(n / 4)] : markupMin
+      const q3 = n > 3 ? sortedMarkups[Math.floor((3 * n) / 4)] : markupMax
+      const iqr = q3 - q1
+
+      // Calculate standard deviation
+      const variance = n > 0 ? sortedMarkups.reduce((sum, val) => sum + Math.pow(val - markupMean, 2), 0) / n : 0
+      const stdDev = Math.sqrt(variance)
+
+      // Calculate markup ranges
+      const ranges = [
+        { range: '<0%', min: -Infinity, max: 0 },
+        { range: '0-5%', min: 0, max: 5 },
+        { range: '5-10%', min: 5, max: 10 },
+        { range: '10-15%', min: 10, max: 15 },
+        { range: '15-20%', min: 15, max: 20 },
+        { range: '>20%', min: 20, max: Infinity },
+      ]
+      const markupRanges = ranges.map(r => {
+        const inRange = markupValues.filter(v => v > r.min && v <= r.max)
+        return {
+          range: r.range,
+          min: r.min === -Infinity ? markupMin : r.min,
+          max: r.max === Infinity ? markupMax : r.max,
+          count: inRange.length,
+          percentage: n > 0 ? Math.round((inRange.length / n) * 1000) / 10 : 0,
+          total_value: 0, // Would require full join to calculate
+        }
+      })
+
+      // Calculate by-trade markup stats
+      const byTradeMarkup = Array.from(markupByTrade.entries()).map(([division, values]) => {
+        const sorted = [...values].sort((a, b) => a - b)
+        const avg = values.reduce((a, b) => a + b, 0) / values.length
+        const med = sorted[Math.floor(sorted.length / 2)]
+        return {
+          division,
+          division_name: getDivisionName(division),
+          average_markup: Math.round(avg * 10) / 10,
+          median_markup: Math.round(med * 10) / 10,
+          sample_size: values.length,
+        }
+      })
+
+      // Calculate variance for completed projects (bid accuracy)
+      const completedProjectBids = submissions.filter(
+        (s: any) => s.is_awarded && s.bid_packages?.projects?.actual_completion_date
+      )
+      let totalVariance = 0
+      let varianceCount = 0
+      completedProjectBids.forEach((s: any) => {
+        const estimated = s.bid_packages?.estimated_value
+        if (estimated && estimated > 0) {
+          const variancePct = ((s.total_bid_amount - estimated) / estimated) * 100
+          totalVariance += Math.abs(variancePct)
+          varianceCount++
+        }
+      })
+      const avgVariance = varianceCount > 0 ? totalVariance / varianceCount : 0
+      const overallAccuracy = getAccuracyRating(avgVariance)
 
       // Get vendor performance for top vendors
       const vendorPerformance: VendorBidHistory[] = []
@@ -1067,17 +1183,113 @@ export const historicalBidAnalysisApi = {
         limit: 10,
       })
 
-      // Calculate executive summary
+      // Calculate executive summary from trends
       const totalBids = trendsResponse.data.reduce((sum, t) => sum + t.bid_count, 0)
       const totalBidValue = trendsResponse.data.reduce((sum, t) => sum + t.total_bid_value, 0)
       const totalWins = trendsResponse.data.reduce((sum, t) => sum + t.win_count, 0)
       const overallWinRate = calculateWinRate(totalWins, totalBids)
-      const avgMarkup = trendsResponse.data.reduce((sum, t) => sum + t.average_markup, 0) / trendsResponse.data.length
+
+      // Calculate price trends by trade
+      const priceTrends: PriceTrendByTrade[] = Array.from(markupByTrade.entries()).slice(0, 10).map(([division, values]) => {
+        const avgMarkup = values.reduce((a, b) => a + b, 0) / values.length
+        const stdDevTrade = Math.sqrt(values.reduce((sum, v) => sum + Math.pow(v - avgMarkup, 2), 0) / values.length)
+
+        return {
+          division,
+          division_name: getDivisionName(division),
+          data_points: [], // Would need time-series data
+          trend_direction: calculateTrendDirection(values),
+          price_change_6mo: null,
+          price_change_12mo: null,
+          volatility: Math.round(stdDevTrade * 10) / 10,
+          current_average_price: 0,
+          market_low: Math.min(...values),
+          market_high: Math.max(...values),
+        }
+      })
+
+      // Generate insights based on the data
+      const insights: BidAnalysisInsight[] = []
+
+      // Win rate insight
+      if (overallWinRate < 20) {
+        insights.push({
+          id: crypto.randomUUID(),
+          type: 'risk',
+          category: 'pricing',
+          title: 'Low Win Rate Detected',
+          description: `Overall win rate of ${overallWinRate}% is below the typical industry benchmark of 25-30%.`,
+          impact: 'high',
+          metric_value: overallWinRate,
+          metric_label: 'Win Rate',
+          action_items: [
+            'Review pricing strategies for competitiveness',
+            'Analyze winning bids for pricing patterns',
+            'Consider targeting different project types',
+          ],
+          created_at: new Date().toISOString(),
+        })
+      } else if (overallWinRate > 40) {
+        insights.push({
+          id: crypto.randomUUID(),
+          type: 'opportunity',
+          category: 'pricing',
+          title: 'Strong Win Rate Performance',
+          description: `Win rate of ${overallWinRate}% exceeds industry benchmarks - consider if pricing can be optimized.`,
+          impact: 'medium',
+          metric_value: overallWinRate,
+          metric_label: 'Win Rate',
+          action_items: [
+            'Evaluate if margins can be increased on future bids',
+            'Consider expanding to more competitive markets',
+          ],
+          created_at: new Date().toISOString(),
+        })
+      }
+
+      // Variance insight
+      if (avgVariance > 15) {
+        insights.push({
+          id: crypto.randomUUID(),
+          type: 'risk',
+          category: 'accuracy',
+          title: 'High Bid Variance',
+          description: `Average variance of ${Math.round(avgVariance)}% indicates estimating accuracy needs improvement.`,
+          impact: 'high',
+          metric_value: avgVariance,
+          metric_label: 'Average Variance',
+          action_items: [
+            'Review historical estimates vs actuals by trade',
+            'Update cost databases with recent pricing',
+            'Consider additional estimating reviews',
+          ],
+          created_at: new Date().toISOString(),
+        })
+      }
+
+      // Vendor concentration insight
+      if (uniqueVendors.size < 5) {
+        insights.push({
+          id: crypto.randomUUID(),
+          type: 'risk',
+          category: 'vendor',
+          title: 'Limited Vendor Pool',
+          description: `Only ${uniqueVendors.size} unique vendors in the analysis period may indicate supply chain risk.`,
+          impact: 'medium',
+          metric_value: uniqueVendors.size,
+          metric_label: 'Unique Vendors',
+          action_items: [
+            'Develop relationships with additional qualified vendors',
+            'Expand prequalification outreach',
+          ],
+          created_at: new Date().toISOString(),
+        })
+      }
 
       const report: BidPerformanceReport = {
         report_id: reportId,
         generated_at: new Date().toISOString(),
-        generated_by: null, // TODO: Get from auth context
+        generated_by: null, // Would be set by calling context with auth
         filters,
         date_range: {
           from: filters.date_from,
@@ -1087,35 +1299,35 @@ export const historicalBidAnalysisApi = {
         summary: {
           total_bids: totalBids,
           total_bid_value: totalBidValue,
-          total_packages: 0, // TODO: Calculate
+          total_packages: totalPackages,
           unique_vendors: uniqueVendors.size,
-          average_bids_per_package: 0, // TODO: Calculate
+          average_bids_per_package: averageBidsPerPackage,
           overall_win_rate: overallWinRate,
-          average_markup: Math.round(avgMarkup * 10) / 10,
-          total_variance: 0, // TODO: Calculate
-          overall_accuracy: 'good', // TODO: Calculate
+          average_markup: Math.round(markupMean * 10) / 10,
+          total_variance: Math.round(avgVariance * 10) / 10,
+          overall_accuracy: overallAccuracy,
         },
         vendor_performance: vendorPerformance,
         top_vendors: recommendationsResponse.data,
-        bid_accuracy: [], // TODO: Get from project analyses
-        average_accuracy_rating: 'good', // TODO: Calculate
+        bid_accuracy: [], // Would require per-project accuracy query
+        average_accuracy_rating: overallAccuracy,
         bid_trends: trendsResponse.data,
-        price_trends: [], // TODO: Implement
+        price_trends: priceTrends,
         markup_distribution: {
-          ranges: [],
-          mean: avgMarkup,
-          median: avgMarkup,
-          mode: null,
-          std_dev: 0,
-          min: 0,
-          max: 0,
-          q1: 0,
-          q2: avgMarkup,
-          q3: 0,
-          iqr: 0,
-          by_trade: [],
+          ranges: markupRanges,
+          mean: Math.round(markupMean * 10) / 10,
+          median: Math.round(markupMedian * 10) / 10,
+          mode: null, // Would require mode calculation
+          std_dev: Math.round(stdDev * 10) / 10,
+          min: Math.round(markupMin * 10) / 10,
+          max: Math.round(markupMax * 10) / 10,
+          q1: Math.round(q1 * 10) / 10,
+          q2: Math.round(markupMedian * 10) / 10,
+          q3: Math.round(q3 * 10) / 10,
+          iqr: Math.round(iqr * 10) / 10,
+          by_trade: byTradeMarkup,
         },
-        insights: [], // TODO: Generate AI insights
+        insights,
       }
 
       return {

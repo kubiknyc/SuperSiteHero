@@ -14,6 +14,7 @@ import { ToastContainer } from './components/notifications/ToastContainer'
 import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
 import { PWAInstallBanner } from './components/PWAInstallPrompt'
+import { PWAUpdateNotification } from './components/PWAUpdateNotification'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
@@ -112,6 +113,7 @@ const ProjectTemplatesPage = lazy(() => import('./pages/settings/ProjectTemplate
 const DistributionListsPage = lazy(() => import('./pages/settings/DistributionListsPage').then(m => ({ default: m.DistributionListsPage })))
 const RolesPermissionsPage = lazy(() => import('./pages/settings/RolesPermissionsPage').then(m => ({ default: m.RolesPermissionsPage })))
 const AISettingsPage = lazy(() => import('./pages/settings/AISettingsPage'))
+const CostCodesPage = lazy(() => import('./pages/settings/CostCodesPage').then(m => ({ default: m.CostCodesPage })))
 
 // Schedule / Gantt Charts feature
 const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
@@ -484,6 +486,7 @@ function App() {
                 <Route path="/settings/quickbooks/callback" element={<ProtectedRoute><QuickBooksCallbackPage /></ProtectedRoute>} />
                 <Route path="/settings/calendar" element={<ProtectedRoute><CalendarIntegrationsPage /></ProtectedRoute>} />
                 <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
+                <Route path="/settings/cost-codes" element={<ProtectedRoute><CostCodesPage /></ProtectedRoute>} />
 
                 {/* Schedule / Gantt Charts feature */}
                 <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><MasterSchedulePage /></ProtectedRoute>} />
@@ -684,6 +687,9 @@ function App() {
 
               {/* PWA Install Banner - prompts users to install the app */}
               <PWAInstallBanner />
+
+              {/* PWA Update Notification - shows toast when new version available */}
+              <PWAUpdateNotification />
             </AuthProvider>
           </ToastProvider>
         </BrowserRouter>

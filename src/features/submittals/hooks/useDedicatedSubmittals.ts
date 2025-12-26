@@ -577,6 +577,373 @@ export function useSubmittalStats(projectId: string | undefined) {
   }
 }
 
+// =============================================
+// Enhanced Attachment Hooks
+// =============================================
+
+/**
+ * Upload an attachment to a submittal
+ */
+export function useUploadSubmittalAttachment() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: async ({
+      submittalId,
+      file,
+      attachmentType = 'submittal',
+    }: {
+      submittalId: string
+      file: File
+      attachmentType?: 'submittal' | 'response' | 'markup' | 'supporting'
+    }) => {
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+
+      // Upload file to Supabase storage
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${crypto.randomUUID()}.${fileExt}`
+      const filePath = `submittal-attachments/${submittalId}/${fileName}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(filePath, file)
+
+      if (uploadError) {throw uploadError}
+
+      // Get public URL
+      const { data: urlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath)
+
+      // Create attachment record
+      const { data, error } = await supabase
+        .from('submittal_attachments')
+        .insert({
+          submittal_id: submittalId,
+          file_url: urlData.publicUrl,
+          file_name: file.name,
+          file_type: file.type,
+          file_size: file.size,
+          attachment_type: attachmentType,
+          uploaded_by: userProfile.id,
+        })
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', variables.submittalId, 'attachments'] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', variables.submittalId] })
+    },
+  })
+}
+
+/**
+ * Delete a submittal attachment
+ */
+export function useDeleteSubmittalAttachment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ attachmentId, submittalId }: { attachmentId: string; submittalId: string }) => {
+      // Get attachment to find file path
+      const { data: attachment, error: fetchError } = await supabase
+        .from('submittal_attachments')
+        .select('file_url')
+        .eq('id', attachmentId)
+        .single()
+
+      if (fetchError) {throw fetchError}
+
+      // Extract file path from URL and delete from storage
+      if (attachment?.file_url) {
+        const url = new URL(attachment.file_url)
+        const pathMatch = url.pathname.match(/\/documents\/(.+)$/)
+        if (pathMatch) {
+          await supabase.storage.from('documents').remove([pathMatch[1]])
+        }
+      }
+
+      // Delete attachment record
+      const { error } = await supabase
+        .from('submittal_attachments')
+        .delete()
+        .eq('id', attachmentId)
+
+      if (error) {throw error}
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', variables.submittalId, 'attachments'] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', variables.submittalId] })
+    },
+  })
+}
+
+// =============================================
+// Revision Hooks
+// =============================================
+
+/**
+ * Create a revision (resubmission) of a submittal
+ * This increments the revision number and resets the status
+ */
+export function useCreateSubmittalRevision() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: async ({
+      submittalId,
+      copyAttachments = true,
+    }: {
+      submittalId: string
+      copyAttachments?: boolean
+    }) => {
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+
+      // Get the current submittal
+      const { data: currentSubmittal, error: fetchError } = await supabase
+        .from('submittals')
+        .select('*')
+        .eq('id', submittalId)
+        .single()
+
+      if (fetchError) {throw fetchError}
+
+      // Update the submittal with incremented revision and reset status
+      const { data, error } = await supabase
+        .from('submittals')
+        .update({
+          revision_number: (currentSubmittal.revision_number || 0) + 1,
+          review_status: 'not_submitted',
+          date_submitted: null,
+          date_returned: null,
+          review_comments: null,
+          ball_in_court_entity: 'subcontractor',
+        })
+        .eq('id', submittalId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+
+      // Create a history entry for the revision
+      await supabase
+        .from('submittal_history')
+        .insert({
+          submittal_id: submittalId,
+          action: 'revision_created',
+          field_changed: 'revision_number',
+          old_value: String(currentSubmittal.revision_number || 0),
+          new_value: String((currentSubmittal.revision_number || 0) + 1),
+          changed_by: userProfile.id,
+        })
+
+      return data as Submittal
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals'] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', data.id] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', data.id, 'history'] })
+    },
+  })
+}
+
+/**
+ * Add a review with approval code (A/B/C/D)
+ */
+export function useSubmitReviewWithCode() {
+  const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
+
+  return useMutation({
+    mutationFn: async ({
+      submittalId,
+      approvalCode,
+      comments,
+    }: {
+      submittalId: string
+      approvalCode: 'A' | 'B' | 'C' | 'D'
+      comments?: string
+    }) => {
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
+
+      // Map approval codes to review statuses
+      const codeToStatus: Record<string, SubmittalReviewStatus> = {
+        'A': 'approved',
+        'B': 'approved_as_noted',
+        'C': 'revise_resubmit',
+        'D': 'rejected',
+      }
+
+      const reviewStatus = codeToStatus[approvalCode]
+
+      // Insert review record with approval code
+      const { error: reviewError } = await supabase
+        .from('submittal_reviews')
+        .insert({
+          submittal_id: submittalId,
+          review_status: reviewStatus,
+          approval_code: approvalCode,
+          comments,
+          reviewed_by: userProfile.id,
+          reviewer_name: userProfile.full_name || userProfile.email,
+        })
+
+      if (reviewError) {throw reviewError}
+
+      // Update submittal status
+      const updates: SubmittalUpdate = {
+        review_status: reviewStatus,
+        review_comments: comments,
+        approval_code: approvalCode,
+      }
+
+      // Set return date if approved or rejected
+      if (['A', 'B', 'D'].includes(approvalCode)) {
+        updates.date_returned = new Date().toISOString()
+      }
+
+      // Update ball-in-court based on approval code
+      if (approvalCode === 'C') {
+        updates.ball_in_court_entity = 'subcontractor' // Back to subcontractor for revision
+      }
+
+      const { data, error } = await supabase
+        .from('submittals')
+        .update(updates)
+        .eq('id', submittalId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as Submittal
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals'] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', data.id] })
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', data.id, 'reviews'] })
+    },
+  })
+}
+
+// =============================================
+// Submittal Items Hooks
+// =============================================
+
+/**
+ * Add an item to a submittal
+ */
+export function useAddSubmittalItem() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      submittalId,
+      description,
+      manufacturer,
+      model_number,
+      quantity,
+      unit,
+    }: {
+      submittalId: string
+      description: string
+      manufacturer?: string
+      model_number?: string
+      quantity?: number
+      unit?: string
+    }) => {
+      // Get the next item number
+      const { count } = await supabase
+        .from('submittal_items')
+        .select('*', { count: 'exact', head: true })
+        .eq('submittal_id', submittalId)
+
+      const nextItemNumber = (count || 0) + 1
+
+      const { data, error } = await supabase
+        .from('submittal_items')
+        .insert({
+          submittal_id: submittalId,
+          item_number: nextItemNumber,
+          description,
+          manufacturer,
+          model_number,
+          quantity,
+          unit,
+        })
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as SubmittalItem
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', variables.submittalId, 'items'] })
+    },
+  })
+}
+
+/**
+ * Update a submittal item
+ */
+export function useUpdateSubmittalItem() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      itemId,
+      submittalId,
+      ...updates
+    }: {
+      itemId: string
+      submittalId: string
+      description?: string
+      manufacturer?: string
+      model_number?: string
+      quantity?: number
+      unit?: string
+    }) => {
+      const { data, error } = await supabase
+        .from('submittal_items')
+        .update(updates)
+        .eq('id', itemId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as SubmittalItem
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', variables.submittalId, 'items'] })
+    },
+  })
+}
+
+/**
+ * Delete a submittal item
+ */
+export function useDeleteSubmittalItem() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({ itemId, submittalId }: { itemId: string; submittalId: string }) => {
+      const { error } = await supabase
+        .from('submittal_items')
+        .delete()
+        .eq('id', itemId)
+
+      if (error) {throw error}
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', variables.submittalId, 'items'] })
+    },
+  })
+}
+
 export default {
   useProjectSubmittals,
   useAllSubmittals,
@@ -595,6 +962,15 @@ export default {
   useSubmitForReview,
   useSubmittalStats,
   generateSubmittalNumber,
+  // New hooks
+  useUploadSubmittalAttachment,
+  useDeleteSubmittalAttachment,
+  useCreateSubmittalRevision,
+  useSubmitReviewWithCode,
+  useAddSubmittalItem,
+  useUpdateSubmittalItem,
+  useDeleteSubmittalItem,
+  // Constants
   SUBMITTAL_TYPES,
   REVIEW_STATUSES,
   BALL_IN_COURT_ENTITIES,

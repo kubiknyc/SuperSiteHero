@@ -25,9 +25,19 @@ import {
   CheckCircle,
   FileQuestion,
   ChevronRight,
+  Download,
+  FileSpreadsheet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { CreateRFIDialog } from '@/features/rfis/components/CreateRFIDialog'
+import { useProjectRFIs } from '@/features/rfis/hooks/useDedicatedRFIs'
+import { downloadRFIsAsExcel, downloadRFIsAsCSV } from '@/features/rfis/utils/rfiExport'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import type { WorkflowItem } from '@/types/database'
 
 type RFIStatusFilter = 'all' | 'draft' | 'submitted' | 'answered' | 'approved' | 'rejected' | 'closed' | 'overdue'
@@ -41,6 +51,8 @@ export function RFIsPage() {
   const [priorityFilter, setPriorityFilter] = useState<RFIPriorityFilter>('all')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
 
+  const [isExporting, setIsExporting] = useState(false)
+
   // Fetch projects and RFI workflow type
   const { data: projects, isLoading: projectsLoading } = useProjects()
   const { data: workflowType, isLoading: workflowTypeLoading } = useRFIWorkflowType()
@@ -48,6 +60,30 @@ export function RFIsPage() {
     selectedProjectId || undefined,
     workflowType?.id
   )
+
+  // Fetch dedicated RFIs for export (has ball-in-court tracking)
+  const { data: dedicatedRFIs } = useProjectRFIs(selectedProjectId || undefined)
+
+  // Get project name for export
+  const selectedProject = projects?.find((p) => p.id === selectedProjectId)
+
+  // Export handlers
+  const handleExportExcel = async () => {
+    if (!dedicatedRFIs || dedicatedRFIs.length === 0) {return}
+    setIsExporting(true)
+    try {
+      await downloadRFIsAsExcel(dedicatedRFIs, selectedProject?.name)
+    } catch (error) {
+      console.error('Failed to export RFIs:', error)
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const handleExportCSV = () => {
+    if (!dedicatedRFIs || dedicatedRFIs.length === 0) {return}
+    downloadRFIsAsCSV(dedicatedRFIs, selectedProject?.name)
+  }
 
   // Filter and search RFIs
   const filteredRFIs = useMemo(() => {
@@ -143,13 +179,41 @@ export function RFIsPage() {
             <h1 className="text-3xl font-bold text-foreground heading-page">Requests for Information</h1>
             <p className="text-secondary mt-1">Track and manage RFIs across your projects</p>
           </div>
-          <Button
-            onClick={() => setCreateDialogOpen(true)}
-            disabled={!selectedProjectId || !workflowType}
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            New RFI
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Export Dropdown */}
+            {selectedProjectId && (dedicatedRFIs?.length ?? 0) > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" disabled={isExporting}>
+                    {isExporting ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2" />
+                    )}
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleExportExcel}>
+                    <FileSpreadsheet className="h-4 w-4 mr-2" />
+                    Export to Excel (.xlsx)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleExportCSV}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export to CSV
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            <Button
+              onClick={() => setCreateDialogOpen(true)}
+              disabled={!selectedProjectId || !workflowType}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New RFI
+            </Button>
+          </div>
         </div>
 
         {/* Project Selector */}

@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   RadixSelect as Select,
   SelectContent,
@@ -26,12 +27,16 @@ import {
   LayoutDashboard,
   List,
   FileCheck,
+  Grid3X3,
+  TableProperties,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import {
   InsuranceComplianceDashboard,
   InsuranceCertificateCard,
   InsuranceCertificateForm,
+  CertificateList,
+  ComplianceMatrix,
 } from '@/features/insurance/components'
 import {
   useInsuranceCertificates,
@@ -46,7 +51,7 @@ import {
   CERTIFICATE_STATUS_LABELS,
 } from '@/types/insurance'
 
-type ViewMode = 'dashboard' | 'list'
+type ViewMode = 'dashboard' | 'list' | 'table' | 'matrix'
 type FilterStatus = CertificateStatus | 'all'
 type FilterType = InsuranceType | 'all'
 
@@ -149,6 +154,7 @@ export function InsurancePage() {
               variant={viewMode === 'dashboard' ? 'secondary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('dashboard')}
+              title="Dashboard View"
             >
               <LayoutDashboard className="h-4 w-4" />
             </Button>
@@ -156,8 +162,25 @@ export function InsurancePage() {
               variant={viewMode === 'list' ? 'secondary' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('list')}
+              title="Card View"
             >
               <List className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'table' ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('table')}
+              title="Table View"
+            >
+              <TableProperties className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'matrix' ? 'secondary' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('matrix')}
+              title="Compliance Matrix"
+            >
+              <Grid3X3 className="h-4 w-4" />
             </Button>
           </div>
 
@@ -177,8 +200,39 @@ export function InsurancePage() {
         <InsuranceComplianceDashboard
           onViewCertificate={handleViewCertificate}
           onViewSubcontractor={handleViewSubcontractor}
-          onViewAllAlerts={() => setViewMode('list')}
+          onViewAllAlerts={() => setViewMode('table')}
         />
+      )}
+
+      {/* Compliance Matrix View */}
+      {viewMode === 'matrix' && (
+        <ComplianceMatrix
+          projectId={projectId}
+          onViewSubcontractor={handleViewSubcontractor}
+          onViewCertificate={(cert) => {
+            setEditingCertificate(cert)
+            setShowFormDialog(true)
+          }}
+        />
+      )}
+
+      {/* Table View */}
+      {viewMode === 'table' && (
+        <Card>
+          <CardContent className="pt-6">
+            <CertificateList
+              projectId={projectId}
+              onEdit={handleEditCertificate}
+              onViewDocument={(cert) => {
+                if (cert.certificate_url) {
+                  window.open(cert.certificate_url, '_blank')
+                }
+              }}
+              showSubcontractor={true}
+              showProject={!projectId}
+            />
+          </CardContent>
+        </Card>
       )}
 
       {/* List View */}

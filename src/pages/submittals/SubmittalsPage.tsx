@@ -11,15 +11,25 @@ import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { CreateSubmittalDialog } from '@/features/submittals/components'
 import { SubmittalStatusBadge } from '@/features/submittals/components'
-import { Plus, AlertCircle, Loader2, FileText, Clock, CheckCircle2, XCircle } from 'lucide-react'
+import { Plus, AlertCircle, Loader2, FileText, Clock, CheckCircle2, XCircle, Download, FileSpreadsheet } from 'lucide-react'
 import { format } from 'date-fns'
+import { useProjectSubmittals } from '@/features/submittals/hooks/useDedicatedSubmittals'
+import { downloadSubmittalLog, downloadSubmittalLogCSV } from '@/features/submittals/utils/submittalExport'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import type { WorkflowItem } from '@/types/database'
+import type { SubmittalWithDetails } from '@/types/submittal'
 
 interface SubmittalsPageState {
   selectedProjectId: string
   searchTerm: string
   statusFilter: string
   createOpen: boolean
+  isExporting: boolean
 }
 
 export function SubmittalsPage() {
@@ -30,6 +40,7 @@ export function SubmittalsPage() {
     searchTerm: '',
     statusFilter: '',
     createOpen: false,
+    isExporting: false,
   })
 
   // Use selected project or first active project
@@ -37,6 +48,30 @@ export function SubmittalsPage() {
 
   const { data: workflowType } = useSubmittalWorkflowType()
   const { data: submittals, isLoading, error } = useSubmittals(projectId, workflowType?.id)
+
+  // Fetch dedicated submittals for export (has lead time, ball-in-court tracking)
+  const { data: dedicatedSubmittals } = useProjectSubmittals(projectId || undefined)
+
+  // Get project name for export
+  const selectedProject = projects?.find((p) => p.id === projectId)
+
+  // Export handlers
+  const handleExportExcel = async () => {
+    if (!dedicatedSubmittals || dedicatedSubmittals.length === 0) {return}
+    setState((s) => ({ ...s, isExporting: true }))
+    try {
+      await downloadSubmittalLog(dedicatedSubmittals as SubmittalWithDetails[], selectedProject?.name)
+    } catch (error) {
+      console.error('Failed to export submittals:', error)
+    } finally {
+      setState((s) => ({ ...s, isExporting: false }))
+    }
+  }
+
+  const handleExportCSV = () => {
+    if (!dedicatedSubmittals || dedicatedSubmittals.length === 0) {return}
+    downloadSubmittalLogCSV(dedicatedSubmittals as SubmittalWithDetails[], selectedProject?.name)
+  }
 
   // Filter submittals
   const filtered = (submittals || []).filter((item) => {
@@ -67,10 +102,38 @@ export function SubmittalsPage() {
             <h1 className="text-3xl font-bold text-foreground heading-page">Submittals</h1>
             <p className="text-secondary mt-1">Manage project submittals and approvals</p>
           </div>
-          <Button onClick={() => setState({ ...state, createOpen: true })}>
-            <Plus className="h-4 w-4 mr-2" />
-            New Submittal
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Export Dropdown */}
+            {projectId && (dedicatedSubmittals?.length ?? 0) > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" disabled={state.isExporting}>
+                    {state.isExporting ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4 mr-2" />
+                    )}
+                    Export
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={handleExportExcel}>
+                    <FileSpreadsheet className="h-4 w-4 mr-2" />
+                    Export to Excel (.xlsx)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleExportCSV}>
+                    <Download className="h-4 w-4 mr-2" />
+                    Export to CSV
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            <Button onClick={() => setState({ ...state, createOpen: true })}>
+              <Plus className="h-4 w-4 mr-2" />
+              New Submittal
+            </Button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
