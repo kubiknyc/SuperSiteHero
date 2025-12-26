@@ -8,7 +8,7 @@
  * - Template library management
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseUntyped } from '@/lib/supabase';
 import { ApiErrorClass } from '../errors';
 import type {
   DailyReportTemplate,
@@ -18,11 +18,58 @@ import type {
   TemplateFilters,
   TemplateWithStats,
   TemplateScope,
+  TemplateCategory,
   WorkforceEntryV2,
   EquipmentEntryV2,
-  DailyReportV2,
 } from '@/types/daily-reports-v2';
 import { logger } from '../../utils/logger';
+
+// =============================================
+// INTERNAL TYPE DEFINITIONS
+// =============================================
+
+/**
+ * User data retrieved from the users table
+ */
+interface UserCompanyData {
+  company_id: string | null;
+}
+
+/**
+ * Daily report data from the database
+ */
+interface DailyReportRow {
+  id: string;
+  project_id: string;
+  weather_condition?: string;
+  work_summary?: string;
+  work_planned_tomorrow?: string;
+  observations?: string;
+  shift_type?: string;
+  shift_start_time?: string;
+  shift_end_time?: string;
+  mode?: string;
+}
+
+/**
+ * Template data for import operations
+ */
+interface ImportedTemplateData {
+  name?: string;
+  description?: string;
+  category?: TemplateCategory;
+  tags?: string[];
+  workforce_template?: Partial<WorkforceEntryV2>[];
+  equipment_template?: Partial<EquipmentEntryV2>[];
+  template_data?: Record<string, unknown>;
+}
+
+/**
+ * Tags query result row
+ */
+interface TagsRow {
+  tags: string[];
+}
 
 
 // =============================================
@@ -36,7 +83,7 @@ export const dailyReportTemplatesApi = {
    */
   async getTemplates(filters?: TemplateFilters): Promise<DailyReportTemplate[]> {
     try {
-      let query = (supabase as any)
+      let query = supabaseUntyped
         .from('daily_report_templates')
         .select('*')
         .order('usage_count', { ascending: false })
@@ -76,12 +123,12 @@ export const dailyReportTemplatesApi = {
       const { data, error } = await query;
 
       if (error) {throw error;}
-      return (data || []) as DailyReportTemplate[];
-    } catch (error) {
+      return (data as DailyReportTemplate[] | null) ?? [];
+    } catch (error: unknown) {
       throw new ApiErrorClass({
         code: 'TEMPLATES_FETCH_ERROR',
         message: 'Failed to fetch templates',
-        details: error,
+        details: error instanceof Error ? error.message : String(error),
       });
     }
   },

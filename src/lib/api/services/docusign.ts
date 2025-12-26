@@ -5,13 +5,11 @@
  * Integrates with construction documents: payment applications, change orders, lien waivers.
  */
 
-import { supabase } from '@/lib/supabase'
+import { supabaseUntyped } from '@/lib/supabase'
 import type {
   DSConnection,
   DSEnvelope,
   DSEnvelopeRecipient,
-  DSEnvelopeDocument,
-  DSEnvelopeEvent,
   DSEnvelopeStatus,
   DSDocumentType,
   DSOAuthTokens,
@@ -39,7 +37,31 @@ import {
   buildDSApiUrl,
   DS_API_URLS,
 } from '@/types/docusign'
-import { logger } from '../../utils/logger';
+import type {
+  DocuSignOAuthStateRow,
+  DocuSignOAuthStateInsert,
+  DocuSignConnectionRow,
+  DocuSignConnectionInsert,
+  DocuSignConnectionUpdate,
+  DocuSignEnvelopeRow,
+  DocuSignEnvelopeInsert,
+  DocuSignEnvelopeUpdate,
+  DocuSignEnvelopeRecipientRow,
+  DocuSignEnvelopeRecipientInsert,
+  DocuSignEnvelopeRecipientUpdate,
+  DocuSignEnvelopeEventInsert,
+  DocuSignRecipientStatus,
+} from '@/types/database-extensions'
+import { logger } from '../../utils/logger'
+
+// Type-safe wrapper for Supabase queries on DocuSign tables
+const docuSignDb = {
+  connections: () => supabaseUntyped.from('docusign_connections'),
+  oauthStates: () => supabaseUntyped.from('docusign_oauth_states'),
+  envelopes: () => supabaseUntyped.from('docusign_envelopes'),
+  recipients: () => supabaseUntyped.from('docusign_envelope_recipients'),
+  events: () => supabaseUntyped.from('docusign_envelope_events'),
+}
 
 
 // ============================================================================
@@ -50,8 +72,7 @@ import { logger } from '../../utils/logger';
  * Get DocuSign connection for the current company
  */
 export async function getConnection(companyId: string): Promise<DSConnection | null> {
-  const { data, error } = await supabase
-    .from('docusign_connections' as any)
+  const { data, error } = await docuSignDb.connections()
     .select('*')
     .eq('company_id', companyId)
     .eq('is_active', true)
@@ -61,7 +82,7 @@ export async function getConnection(companyId: string): Promise<DSConnection | n
     throw new Error(`Failed to get DocuSign connection: ${error.message}`)
   }
 
-  return data as DSConnection | null
+  return (data as DocuSignConnectionRow | null) as DSConnection | null
 }
 
 /**

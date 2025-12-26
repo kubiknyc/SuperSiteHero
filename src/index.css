@@ -523,4 +523,39 @@
   html.dark [class*="bg-orange-600"] {
     color: white !important;
   }
+
+  /* WCAG AA fix: Override any orange-600 buttons with compliant colors */
+  /* Target pattern: button.bg-orange-600 with text that resolves to light text */
+  /* Dark mode button overrides */
+  html.dark button.bg-orange-600,
+  .dark button.bg-orange-600,
+  html.dark button[class*="bg-orange-600"],
+  .dark button[class*="bg-orange-600"],
+  html.dark [class*="bg-orange-6"] button,
+  .dark [class*="bg-orange-6"] button {
+    background-color: #c2410c !important; /* orange-700 for 4.83:1 contrast with white */
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Apply to all child elements within the button as well */
+  html.dark button.bg-orange-600 *,
+  .dark button.bg-orange-600 *,
+  html.dark button[class*="bg-orange-600"] *,
+  .dark button[class*="bg-orange-600"] *,
+  html.dark [class*="bg-orange-6"] button *,
+  .dark [class*="bg-orange-6"] button * {
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Light mode: ensure orange buttons also have proper contrast */
+  button.bg-orange-600,
+  button[class*="bg-orange-600"] {
+    background-color: #c2410c !important; /* orange-700 */
+    color: rgb(255, 255, 255) !important;
+  }
+
+  button.bg-orange-600 *,
+  button[class*="bg-orange-600"] * {
+    color: rgb(255, 255, 255) !important;
+  }
 }

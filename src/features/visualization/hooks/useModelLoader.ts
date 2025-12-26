@@ -6,6 +6,12 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
+import type * as THREE from 'three';
+import type { GLTF, GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import type { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import type { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
+import type { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import type { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import {
   loadThree,
   loadGLTFLoader,
@@ -18,12 +24,46 @@ import type {
   ModelViewerState,
   ModelLoadProgress,
   ModelOptimizationOptions,
+  BoundingBox,
+  Vector3D,
 } from '@/types/visualization';
 import {
   optimizeModel,
   analyzeModel,
 } from '@/lib/utils/modelProcessing';
 import { logger } from '../../../lib/utils/logger';
+
+// ============================================================================
+// Type Definitions for Model Loading
+// ============================================================================
+
+/** Result of loading a 3D model */
+interface ModelLoadResult {
+  model: THREE.Group;
+  animations: THREE.AnimationClip[];
+}
+
+/** Model analysis statistics */
+interface ModelStats {
+  triangleCount: number;
+  vertexCount: number;
+  materialCount: number;
+  textureCount: number;
+  boundingBox: BoundingBox;
+  center: Vector3D;
+  size: Vector3D;
+}
+
+/** Progress event from Three.js loaders */
+interface LoaderProgressEvent {
+  loaded: number;
+  total: number;
+}
+
+/** Materials loaded from MTL file */
+interface MTLMaterialCreator {
+  preload: () => void;
+}
 
 
 interface UseModelLoaderOptions {

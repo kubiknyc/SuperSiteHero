@@ -722,3 +722,511 @@ export interface CostEstimateItemUpdate {
   notes?: string | null
   updated_at?: string
 }
+
+// =============================================
+// DocuSign Integration Tables (Migration pending)
+// =============================================
+
+/** DocuSign OAuth state for CSRF protection */
+export interface DocuSignOAuthStateRow {
+  state: string
+  company_id: string
+  is_demo: boolean
+  return_url: string | null
+  expires_at: string
+  created_at: string
+}
+
+export interface DocuSignOAuthStateInsert {
+  state: string
+  company_id: string
+  is_demo?: boolean
+  return_url?: string | null
+  expires_at: string
+  created_at?: string
+}
+
+/** DocuSign connection/integration record */
+export interface DocuSignConnectionRow {
+  id: string
+  company_id: string
+  account_id: string
+  account_name: string | null
+  base_uri: string | null
+  access_token: string | null
+  refresh_token: string | null
+  token_expires_at: string | null
+  is_demo: boolean
+  is_active: boolean
+  last_connected_at: string | null
+  connection_error: string | null
+  webhook_uri: string | null
+  webhook_secret: string | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+}
+
+export interface DocuSignConnectionInsert {
+  id?: string
+  company_id: string
+  account_id: string
+  account_name?: string | null
+  base_uri?: string | null
+  access_token?: string | null
+  refresh_token?: string | null
+  token_expires_at?: string | null
+  is_demo?: boolean
+  is_active?: boolean
+  last_connected_at?: string | null
+  connection_error?: string | null
+  webhook_uri?: string | null
+  webhook_secret?: string | null
+  created_at?: string
+  updated_at?: string
+  created_by?: string | null
+}
+
+export interface DocuSignConnectionUpdate {
+  account_id?: string
+  account_name?: string | null
+  base_uri?: string | null
+  access_token?: string | null
+  refresh_token?: string | null
+  token_expires_at?: string | null
+  is_demo?: boolean
+  is_active?: boolean
+  last_connected_at?: string | null
+  connection_error?: string | null
+  webhook_uri?: string | null
+  webhook_secret?: string | null
+  updated_at?: string
+}
+
+/** DocuSign envelope status */
+export type DocuSignEnvelopeStatus =
+  | 'created'
+  | 'sent'
+  | 'delivered'
+  | 'signed'
+  | 'completed'
+  | 'declined'
+  | 'voided'
+  | 'deleted'
+
+/** DocuSign recipient status */
+export type DocuSignRecipientStatus =
+  | 'created'
+  | 'sent'
+  | 'delivered'
+  | 'signed'
+  | 'completed'
+  | 'declined'
+  | 'autoresponded'
+  | 'voided'
+
+/** DocuSign document type */
+export type DocuSignDocumentType =
+  | 'payment_application'
+  | 'change_order'
+  | 'lien_waiver'
+  | 'contract'
+  | 'subcontract'
+  | 'other'
+
+/** DocuSign recipient type */
+export type DocuSignRecipientType =
+  | 'signer'
+  | 'cc'
+  | 'certifiedDelivery'
+  | 'inPersonSigner'
+  | 'notary'
+  | 'witness'
+
+/** DocuSign envelope record */
+export interface DocuSignEnvelopeRow {
+  id: string
+  company_id: string
+  connection_id: string
+  envelope_id: string
+  document_type: DocuSignDocumentType
+  local_document_id: string
+  local_document_number: string | null
+  status: DocuSignEnvelopeStatus
+  subject: string | null
+  message: string | null
+  sent_at: string | null
+  completed_at: string | null
+  voided_at: string | null
+  void_reason: string | null
+  expires_at: string | null
+  signing_order_enabled: boolean
+  reminder_enabled: boolean
+  reminder_delay_days: number | null
+  reminder_frequency_days: number | null
+  created_at: string
+  updated_at: string
+  created_by: string | null
+}
+
+export interface DocuSignEnvelopeInsert {
+  id?: string
+  company_id: string
+  connection_id: string
+  envelope_id: string
+  document_type: DocuSignDocumentType
+  local_document_id: string
+  local_document_number?: string | null
+  status?: DocuSignEnvelopeStatus
+  subject?: string | null
+  message?: string | null
+  sent_at?: string | null
+  completed_at?: string | null
+  voided_at?: string | null
+  void_reason?: string | null
+  expires_at?: string | null
+  signing_order_enabled?: boolean
+  reminder_enabled?: boolean
+  reminder_delay_days?: number | null
+  reminder_frequency_days?: number | null
+  created_at?: string
+  updated_at?: string
+  created_by?: string | null
+}
+
+export interface DocuSignEnvelopeUpdate {
+  status?: DocuSignEnvelopeStatus
+  subject?: string | null
+  message?: string | null
+  sent_at?: string | null
+  completed_at?: string | null
+  voided_at?: string | null
+  void_reason?: string | null
+  expires_at?: string | null
+  signing_order_enabled?: boolean
+  reminder_enabled?: boolean
+  reminder_delay_days?: number | null
+  reminder_frequency_days?: number | null
+  updated_at?: string
+}
+
+/** DocuSign envelope recipient */
+export interface DocuSignEnvelopeRecipientRow {
+  id: string
+  envelope_db_id: string
+  recipient_id: string
+  recipient_type: DocuSignRecipientType
+  email: string
+  name: string
+  role_name: string | null
+  routing_order: number
+  status: DocuSignRecipientStatus
+  signed_at: string | null
+  declined_at: string | null
+  decline_reason: string | null
+  delivered_at: string | null
+  client_user_id: string | null
+  user_id: string | null
+  authentication_method: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface DocuSignEnvelopeRecipientInsert {
+  id?: string
+  envelope_db_id: string
+  recipient_id: string
+  recipient_type: DocuSignRecipientType
+  email: string
+  name: string
+  role_name?: string | null
+  routing_order: number
+  status?: DocuSignRecipientStatus
+  signed_at?: string | null
+  declined_at?: string | null
+  decline_reason?: string | null
+  delivered_at?: string | null
+  client_user_id?: string | null
+  user_id?: string | null
+  authentication_method?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+export interface DocuSignEnvelopeRecipientUpdate {
+  status?: DocuSignRecipientStatus
+  signed_at?: string | null
+  declined_at?: string | null
+  decline_reason?: string | null
+  delivered_at?: string | null
+  updated_at?: string
+}
+
+/** DocuSign envelope document */
+export interface DocuSignEnvelopeDocumentRow {
+  id: string
+  envelope_db_id: string
+  document_id: string
+  name: string
+  file_extension: string | null
+  uri: string | null
+  order: number
+  pages: number | null
+  created_at: string
+}
+
+/** DocuSign envelope event (audit log) */
+export interface DocuSignEnvelopeEventRow {
+  id: string
+  envelope_db_id: string
+  event_type: string
+  event_time: string
+  recipient_email: string | null
+  recipient_name: string | null
+  ip_address: string | null
+  user_agent: string | null
+  details: Record<string, unknown> | null
+  created_at: string
+}
+
+export interface DocuSignEnvelopeEventInsert {
+  id?: string
+  envelope_db_id: string
+  event_type: string
+  event_time: string
+  recipient_email?: string | null
+  recipient_name?: string | null
+  ip_address?: string | null
+  user_agent?: string | null
+  details?: Record<string, unknown> | null
+  created_at?: string
+}
+
+// =============================================
+// Lien Waiver Tables (Migration 069)
+// =============================================
+
+import type {
+  LienWaiverType,
+  LienWaiverStatus,
+  LienWaiver as LienWaiverEntity,
+  LienWaiverTemplate as LienWaiverTemplateEntity,
+  LienWaiverRequirement as LienWaiverRequirementEntity,
+  LienWaiverHistory as LienWaiverHistoryEntity,
+} from './lien-waiver'
+
+export interface LienWaiversTable {
+  Row: LienWaiverEntity
+  Insert: {
+    id?: string
+    company_id: string
+    project_id: string
+    waiver_number?: string
+    waiver_type: LienWaiverType
+    status?: LienWaiverStatus
+    payment_application_id?: string | null
+    subcontractor_id?: string | null
+    vendor_name?: string | null
+    template_id?: string | null
+    through_date: string
+    payment_amount: number
+    check_number?: string | null
+    check_date?: string | null
+    exceptions?: string | null
+    rendered_content?: string | null
+    claimant_name?: string | null
+    claimant_title?: string | null
+    claimant_company?: string | null
+    signature_url?: string | null
+    signature_date?: string | null
+    signed_at?: string | null
+    notarization_required?: boolean
+    notary_name?: string | null
+    notary_commission_number?: string | null
+    notary_commission_expiration?: string | null
+    notarized_at?: string | null
+    notarized_document_url?: string | null
+    document_url?: string | null
+    sent_at?: string | null
+    sent_to_email?: string | null
+    received_at?: string | null
+    reviewed_by?: string | null
+    reviewed_at?: string | null
+    review_notes?: string | null
+    approved_by?: string | null
+    approved_at?: string | null
+    rejection_reason?: string | null
+    due_date?: string | null
+    reminder_sent_at?: string | null
+    notes?: string | null
+    created_at?: string
+    updated_at?: string
+    created_by?: string | null
+    deleted_at?: string | null
+  }
+  Update: {
+    waiver_type?: LienWaiverType
+    status?: LienWaiverStatus
+    payment_application_id?: string | null
+    subcontractor_id?: string | null
+    vendor_name?: string | null
+    template_id?: string | null
+    through_date?: string
+    payment_amount?: number
+    check_number?: string | null
+    check_date?: string | null
+    exceptions?: string | null
+    rendered_content?: string | null
+    claimant_name?: string | null
+    claimant_title?: string | null
+    claimant_company?: string | null
+    signature_url?: string | null
+    signature_date?: string | null
+    signed_at?: string | null
+    notarization_required?: boolean
+    notary_name?: string | null
+    notary_commission_number?: string | null
+    notary_commission_expiration?: string | null
+    notarized_at?: string | null
+    notarized_document_url?: string | null
+    document_url?: string | null
+    sent_at?: string | null
+    sent_to_email?: string | null
+    received_at?: string | null
+    reviewed_by?: string | null
+    reviewed_at?: string | null
+    review_notes?: string | null
+    approved_by?: string | null
+    approved_at?: string | null
+    rejection_reason?: string | null
+    due_date?: string | null
+    reminder_sent_at?: string | null
+    notes?: string | null
+    updated_at?: string
+    deleted_at?: string | null
+  }
+  Relationships: []
+}
+
+export interface LienWaiverTemplatesTable {
+  Row: LienWaiverTemplateEntity
+  Insert: {
+    id?: string
+    company_id?: string | null
+    name: string
+    state_code: string
+    waiver_type: LienWaiverType
+    template_content: string
+    legal_language?: string | null
+    notarization_required?: boolean
+    placeholders?: string[]
+    is_default?: boolean
+    is_active?: boolean
+    version?: number
+    effective_date?: string | null
+    expiration_date?: string | null
+    statute_reference?: string | null
+    notes?: string | null
+    created_at?: string
+    updated_at?: string
+    created_by?: string | null
+  }
+  Update: {
+    name?: string
+    template_content?: string
+    legal_language?: string | null
+    notarization_required?: boolean
+    placeholders?: string[]
+    is_default?: boolean
+    is_active?: boolean
+    version?: number
+    effective_date?: string | null
+    expiration_date?: string | null
+    statute_reference?: string | null
+    notes?: string | null
+    updated_at?: string
+  }
+  Relationships: []
+}
+
+export interface LienWaiverRequirementsTable {
+  Row: LienWaiverRequirementEntity
+  Insert: {
+    id?: string
+    company_id: string
+    project_id?: string | null
+    name: string
+    description?: string | null
+    required_for_progress_payments?: boolean
+    required_for_final_payment?: boolean
+    min_payment_threshold?: number
+    requires_contractor_waiver?: boolean
+    requires_sub_waivers?: boolean
+    requires_supplier_waivers?: boolean
+    days_before_payment_due?: number
+    block_payment_without_waiver?: boolean
+    allow_conditional_for_progress?: boolean
+    require_unconditional_for_final?: boolean
+    is_active?: boolean
+    created_at?: string
+    updated_at?: string
+    created_by?: string | null
+  }
+  Update: {
+    name?: string
+    description?: string | null
+    required_for_progress_payments?: boolean
+    required_for_final_payment?: boolean
+    min_payment_threshold?: number
+    requires_contractor_waiver?: boolean
+    requires_sub_waivers?: boolean
+    requires_supplier_waivers?: boolean
+    days_before_payment_due?: number
+    block_payment_without_waiver?: boolean
+    allow_conditional_for_progress?: boolean
+    require_unconditional_for_final?: boolean
+    is_active?: boolean
+    updated_at?: string
+  }
+  Relationships: []
+}
+
+export interface LienWaiverHistoryTable {
+  Row: LienWaiverHistoryEntity
+  Insert: {
+    id?: string
+    lien_waiver_id: string
+    action: string
+    field_changed?: string | null
+    old_value?: string | null
+    new_value?: string | null
+    notes?: string | null
+    changed_at?: string
+    changed_by?: string | null
+  }
+  Update: {
+    action?: string
+    field_changed?: string | null
+    old_value?: string | null
+    new_value?: string | null
+    notes?: string | null
+  }
+  Relationships: []
+}
+
+// Extended table types for lien waivers
+export type LienWaiverRow = LienWaiversTable['Row']
+export type LienWaiverInsert = LienWaiversTable['Insert']
+export type LienWaiverDbUpdate = LienWaiversTable['Update']
+
+export type LienWaiverTemplateRow = LienWaiverTemplatesTable['Row']
+export type LienWaiverTemplateDbInsert = LienWaiverTemplatesTable['Insert']
+export type LienWaiverTemplateDbUpdate = LienWaiverTemplatesTable['Update']
+
+export type LienWaiverRequirementRow = LienWaiverRequirementsTable['Row']
+export type LienWaiverRequirementDbInsert = LienWaiverRequirementsTable['Insert']
+export type LienWaiverRequirementDbUpdate = LienWaiverRequirementsTable['Update']
+
+export type LienWaiverHistoryRow = LienWaiverHistoryTable['Row']
+export type LienWaiverHistoryDbInsert = LienWaiverHistoryTable['Insert']
+export type LienWaiverHistoryDbUpdate = LienWaiverHistoryTable['Update']

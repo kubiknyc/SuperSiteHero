@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Control, FieldPath, ControllerRenderProps, FieldValues, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format } from 'date-fns';
@@ -89,6 +89,17 @@ const deliveryFormSchema = z.object({
 });
 
 type DeliveryFormValues = z.infer<typeof deliveryFormSchema>;
+
+// Type alias for form control to simplify usage throughout the component
+type DeliveryFormControl = Control<DeliveryFormValues>;
+
+// Type for field names in the form
+type DeliveryFormFieldName = FieldPath<DeliveryFormValues>;
+
+// Helper type for render function field props
+type FormFieldRenderProps<TName extends DeliveryFormFieldName> = {
+  field: ControllerRenderProps<DeliveryFormValues, TName>;
+};
 
 interface DeliveryFormProps {
   projectId: string;

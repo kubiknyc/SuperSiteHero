@@ -55,41 +55,7 @@
       // gtag('config', 'G-XXXXXXXXXX'); // Uncomment and set ID when ready
     </script>
 
-    <!-- Fix third-party widgets and orange button contrast for WCAG AA compliance -->
-    <!-- Orange-600 (#ea580c) with white text gives 3.56:1 - requires darker bg for 4.5:1 -->
-    <!-- Solution: Use orange-700 (#c2410c) which gives 4.83:1 with white text -->
-    <style>
-      /* WCAG AA fix: Override any orange-600 buttons in dark mode with compliant colors */
-      /* Target pattern: button.bg-orange-600 with text-foreground that resolves to light text */
-      html.dark button.bg-orange-600,
-      .dark button.bg-orange-600,
-      html.dark button[class*="bg-orange-600"],
-      .dark button[class*="bg-orange-600"],
-      html.dark [class*="bg-orange-6"] button,
-      .dark [class*="bg-orange-6"] button {
-        background-color: #c2410c !important; /* orange-700 for 4.83:1 contrast with white */
-        color: rgb(255, 255, 255) !important;
-      }
-      /* Apply to all child elements within the button as well */
-      html.dark button.bg-orange-600 *,
-      .dark button.bg-orange-600 *,
-      html.dark button[class*="bg-orange-600"] *,
-      .dark button[class*="bg-orange-600"] *,
-      html.dark [class*="bg-orange-6"] button *,
-      .dark [class*="bg-orange-6"] button * {
-        color: rgb(255, 255, 255) !important;
-      }
-      /* Light mode: ensure orange buttons also have proper contrast */
-      button.bg-orange-600,
-      button[class*="bg-orange-600"] {
-        background-color: #c2410c !important; /* orange-700 */
-        color: rgb(255, 255, 255) !important;
-      }
-      button.bg-orange-600 *,
-      button[class*="bg-orange-600"] * {
-        color: rgb(255, 255, 255) !important;
-      }
-    </style>
+    <!-- WCAG AA button contrast fixes moved to src/index.css to avoid vite-plugin-pwa build issues -->
   </head>
   <body>
     <div id="root"></div>

@@ -3,7 +3,7 @@
  * Complete API for enhanced daily report system
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseUntyped } from '@/lib/supabase';
 import { ApiErrorClass } from '../errors';
 import type {
   DailyReportV2,
@@ -24,6 +24,63 @@ import type {
   RequestChangesRequest,
   CopyFromPreviousDayRequest,
 } from '@/types/daily-reports-v2';
+import type { PostgrestError } from '@supabase/supabase-js';
+
+// =============================================
+// TYPE HELPERS
+// =============================================
+
+/**
+ * Helper type for Supabase query result data
+ * Represents the data returned from a Supabase query
+ */
+type SupabaseQueryResult<T> = {
+  data: T | null;
+  error: PostgrestError | null;
+};
+
+/**
+ * Type for source report from copyFromPreviousDay
+ */
+interface SourceReportResult {
+  id: string;
+}
+
+/**
+ * Type for daily report with full related data
+ */
+interface DailyReportWithRelated extends DailyReportV2 {
+  workforce: WorkforceEntryV2[];
+  equipment: EquipmentEntryV2[];
+  delays: DelayEntry[];
+  safety_incidents: SafetyIncident[];
+  inspections: InspectionEntry[];
+  tm_work: TMWorkEntry[];
+  progress: ProgressEntry[];
+  deliveries: DeliveryEntryV2[];
+  visitors: VisitorEntryV2[];
+  photos: PhotoEntryV2[];
+}
+
+/**
+ * Type for workforce entry data from copy operation
+ * Omits fields that will be regenerated on insert
+ */
+type WorkforceEntryCopyData = Omit<WorkforceEntryV2, 'id' | 'daily_report_id' | 'created_at'> & {
+  id?: undefined;
+  daily_report_id?: undefined;
+  created_at?: undefined;
+};
+
+/**
+ * Type for equipment entry data from copy operation
+ * Omits fields that will be regenerated on insert
+ */
+type EquipmentEntryCopyData = Omit<EquipmentEntryV2, 'id' | 'daily_report_id' | 'created_at'> & {
+  id?: undefined;
+  daily_report_id?: undefined;
+  created_at?: undefined;
+};
 
 // =============================================
 // DAILY REPORTS CORE
@@ -43,8 +100,8 @@ export const dailyReportsV2Api = {
     }
   ): Promise<DailyReportV2[]> {
     try {
-      let query = (supabase
-        .from('daily_reports') as any)
+      let query = supabase
+        .from('daily_reports')
         .select(`
           *,
           project:projects(id, name)
@@ -66,7 +123,7 @@ export const dailyReportsV2Api = {
       const { data, error } = await query;
 
       if (error) {throw error;}
-      return data as DailyReportV2[];
+      return (data ?? []) as unknown as DailyReportV2[];
     } catch (error) {
       throw new ApiErrorClass({
         code: 'FETCH_REPORTS_ERROR',
@@ -79,22 +136,11 @@ export const dailyReportsV2Api = {
   /**
    * Fetch a single daily report with all related data
    */
-  async getReportWithRelated(reportId: string): Promise<DailyReportV2 & {
-    workforce: WorkforceEntryV2[];
-    equipment: EquipmentEntryV2[];
-    delays: DelayEntry[];
-    safety_incidents: SafetyIncident[];
-    inspections: InspectionEntry[];
-    tm_work: TMWorkEntry[];
-    progress: ProgressEntry[];
-    deliveries: DeliveryEntryV2[];
-    visitors: VisitorEntryV2[];
-    photos: PhotoEntryV2[];
-  }> {
+  async getReportWithRelated(reportId: string): Promise<DailyReportWithRelated> {
     try {
       // Fetch main report
-      const { data: report, error: reportError } = await (supabase
-        .from('daily_reports') as any)
+      const { data: report, error: reportError }: SupabaseQueryResult<DailyReportV2> = await supabase
+        .from('daily_reports')
         .select(`
           *,
           project:projects(id, name)
@@ -106,42 +152,44 @@ export const dailyReportsV2Api = {
 
       // Fetch all related data in parallel
       const [
-        { data: workforce },
-        { data: equipment },
-        { data: delays },
-        { data: safety_incidents },
-        { data: inspections },
-        { data: tm_work },
-        { data: progress },
-        { data: deliveries },
-        { data: visitors },
-        { data: photos },
+        workforceResult,
+        equipmentResult,
+        delaysResult,
+        safetyIncidentsResult,
+        inspectionsResult,
+        tmWorkResult,
+        progressResult,
+        deliveriesResult,
+        visitorsResult,
+        photosResult,
       ] = await Promise.all([
-        (supabase.from('daily_report_workforce') as any).select('*').eq('daily_report_id', reportId),
-        (supabase.from('daily_report_equipment') as any).select('*').eq('daily_report_id', reportId),
-        (supabase as any).from('daily_report_delays').select('*').eq('daily_report_id', reportId),
-        (supabase.from('daily_report_safety_incidents') as any).select('*').eq('daily_report_id', reportId),
-        (supabase as any).from('daily_report_inspections').select('*').eq('daily_report_id', reportId),
-        (supabase as any).from('daily_report_tm_work').select('*').eq('daily_report_id', reportId),
-        (supabase as any).from('daily_report_progress').select('*').eq('daily_report_id', reportId),
-        (supabase.from('daily_report_deliveries') as any).select('*').eq('daily_report_id', reportId),
-        (supabase.from('daily_report_visitors') as any).select('*').eq('daily_report_id', reportId),
-        (supabase as any).from('daily_report_photos').select('*').eq('daily_report_id', reportId),
+        supabaseUntyped.from('daily_report_workforce').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<WorkforceEntryV2[]>>,
+        supabaseUntyped.from('daily_report_equipment').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<EquipmentEntryV2[]>>,
+        supabaseUntyped.from('daily_report_delays').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<DelayEntry[]>>,
+        supabaseUntyped.from('daily_report_safety_incidents').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<SafetyIncident[]>>,
+        supabaseUntyped.from('daily_report_inspections').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<InspectionEntry[]>>,
+        supabaseUntyped.from('daily_report_tm_work').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<TMWorkEntry[]>>,
+        supabaseUntyped.from('daily_report_progress').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<ProgressEntry[]>>,
+        supabaseUntyped.from('daily_report_deliveries').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<DeliveryEntryV2[]>>,
+        supabaseUntyped.from('daily_report_visitors').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<VisitorEntryV2[]>>,
+        supabaseUntyped.from('daily_report_photos').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<PhotoEntryV2[]>>,
       ]);
 
-      return {
-        ...report,
-        workforce: workforce || [],
-        equipment: equipment || [],
-        delays: delays || [],
-        safety_incidents: safety_incidents || [],
-        inspections: inspections || [],
-        tm_work: tm_work || [],
-        progress: progress || [],
-        deliveries: deliveries || [],
-        visitors: visitors || [],
-        photos: photos || [],
-      } as any;
+      const result: DailyReportWithRelated = {
+        ...(report as DailyReportV2),
+        workforce: workforceResult.data ?? [],
+        equipment: equipmentResult.data ?? [],
+        delays: delaysResult.data ?? [],
+        safety_incidents: safetyIncidentsResult.data ?? [],
+        inspections: inspectionsResult.data ?? [],
+        tm_work: tmWorkResult.data ?? [],
+        progress: progressResult.data ?? [],
+        deliveries: deliveriesResult.data ?? [],
+        visitors: visitorsResult.data ?? [],
+        photos: photosResult.data ?? [],
+      };
+
+      return result;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'FETCH_REPORT_ERROR',
@@ -159,23 +207,23 @@ export const dailyReportsV2Api = {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) {throw new Error('Not authenticated');}
 
-      const { data, error } = await (supabase
-        .from('daily_reports') as any)
+      const { data, error } = await supabase
+        .from('daily_reports')
         .insert({
           project_id: request.project_id,
           report_date: request.report_date,
           reporter_id: user.user.id,
-          mode: request.mode || 'quick',
+          mode: request.mode ?? 'quick',
           shift_start_time: request.shift_start_time,
           shift_end_time: request.shift_end_time,
-          shift_type: request.shift_type || 'regular',
+          shift_type: request.shift_type ?? 'regular',
           status: 'draft',
         })
         .select()
         .single();
 
       if (error) {throw error;}
-      return data as DailyReportV2;
+      return data as unknown as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'CREATE_REPORT_ERROR',
@@ -193,15 +241,15 @@ export const dailyReportsV2Api = {
     updates: Partial<DailyReportV2>
   ): Promise<DailyReportV2> {
     try {
-      const { data, error } = await (supabase
-        .from('daily_reports') as any)
+      const { data, error } = await supabase
+        .from('daily_reports')
         .update(updates)
         .eq('id', reportId)
         .select()
         .single();
 
       if (error) {throw error;}
-      return data as DailyReportV2;
+      return data as unknown as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'UPDATE_REPORT_ERROR',
@@ -216,8 +264,8 @@ export const dailyReportsV2Api = {
    */
   async submitReport(request: SubmitReportRequest): Promise<DailyReportV2> {
     try {
-      const { data, error } = await (supabase
-        .from('daily_reports') as any)
+      const { data, error } = await supabase
+        .from('daily_reports')
         .update({
           status: 'submitted',
           submitted_at: new Date().toISOString(),
@@ -229,7 +277,7 @@ export const dailyReportsV2Api = {
         .single();
 
       if (error) {throw error;}
-      return data as DailyReportV2;
+      return data as unknown as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'SUBMIT_REPORT_ERROR',
@@ -246,8 +294,8 @@ export const dailyReportsV2Api = {
     try {
       const { data: user } = await supabase.auth.getUser();
 
-      const { data, error } = await (supabase
-        .from('daily_reports') as any)
+      const { data, error } = await supabase
+        .from('daily_reports')
         .update({
           status: 'approved',
           approved_at: new Date().toISOString(),
@@ -261,7 +309,7 @@ export const dailyReportsV2Api = {
         .single();
 
       if (error) {throw error;}
-      return data as DailyReportV2;
+      return data as unknown as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'APPROVE_REPORT_ERROR',
@@ -276,8 +324,8 @@ export const dailyReportsV2Api = {
    */
   async requestChanges(request: RequestChangesRequest): Promise<DailyReportV2> {
     try {
-      const { data, error } = await (supabase
-        .from('daily_reports') as any)
+      const { data, error } = await supabase
+        .from('daily_reports')
         .update({
           status: 'changes_requested',
           rejection_reason: request.reason,
@@ -287,7 +335,7 @@ export const dailyReportsV2Api = {
         .single();
 
       if (error) {throw error;}
-      return data as DailyReportV2;
+      return data as unknown as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'REQUEST_CHANGES_ERROR',
@@ -302,8 +350,8 @@ export const dailyReportsV2Api = {
    */
   async lockReport(reportId: string): Promise<DailyReportV2> {
     try {
-      const { data, error} = await (supabase
-        .from('daily_reports') as any)
+      const { data, error} = await supabase
+        .from('daily_reports')
         .update({
           status: 'locked',
           locked_at: new Date().toISOString(),
@@ -313,7 +361,7 @@ export const dailyReportsV2Api = {
         .single();
 
       if (error) {throw error;}
-      return data as DailyReportV2;
+      return data as unknown as DailyReportV2;
     } catch (error) {
       throw new ApiErrorClass({
         code: 'LOCK_REPORT_ERROR',
@@ -332,8 +380,8 @@ export const dailyReportsV2Api = {
   }> {
     try {
       // Find the source report
-      const { data: sourceReports, error: sourceError } = await (supabase
-        .from('daily_reports') as any)
+      const { data: sourceReports, error: sourceError }: SupabaseQueryResult<SourceReportResult[]> = await supabase
+        .from('daily_reports')
         .select('id')
         .eq('project_id', request.project_id)
         .eq('report_date', request.source_date)
@@ -353,35 +401,35 @@ export const dailyReportsV2Api = {
 
       // Copy workforce if requested
       if (request.copy_workforce !== false) {
-        const { data: workforce } = await (supabase
-          .from('daily_report_workforce') as any)
+        const { data: workforce }: SupabaseQueryResult<WorkforceEntryV2[]> = await supabaseUntyped
+          .from('daily_report_workforce')
           .select('*')
           .eq('daily_report_id', sourceReportId);
 
         if (workforce) {
-          results.workforce = workforce.map((w: any) => ({
+          results.workforce = workforce.map((w: WorkforceEntryV2): WorkforceEntryCopyData => ({
             ...w,
             id: undefined, // Will be generated on insert
             daily_report_id: undefined, // Will be set on insert
             created_at: undefined,
-          }));
+          })) as WorkforceEntryV2[];
         }
       }
 
       // Copy equipment if requested
       if (request.copy_equipment !== false) {
-        const { data: equipment } = await (supabase
-          .from('daily_report_equipment') as any)
+        const { data: equipment }: SupabaseQueryResult<EquipmentEntryV2[]> = await supabaseUntyped
+          .from('daily_report_equipment')
           .select('*')
           .eq('daily_report_id', sourceReportId);
 
         if (equipment) {
-          results.equipment = equipment.map((e: any) => ({
+          results.equipment = equipment.map((e: EquipmentEntryV2): EquipmentEntryCopyData => ({
             ...e,
             id: undefined,
             daily_report_id: undefined,
             created_at: undefined,
-          }));
+          })) as EquipmentEntryV2[];
         }
       }
 
@@ -400,8 +448,8 @@ export const dailyReportsV2Api = {
    */
   async deleteReport(reportId: string): Promise<void> {
     try {
-      const { error } = await (supabase
-        .from('daily_reports') as any)
+      const { error } = await supabase
+        .from('daily_reports')
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', reportId);
 
@@ -424,18 +472,18 @@ export const workforceApi = {
   async upsert(entries: WorkforceEntryV2[]): Promise<WorkforceEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase
-      .from('daily_report_workforce') as any)
+    const { data, error }: SupabaseQueryResult<WorkforceEntryV2[]> = await supabaseUntyped
+      .from('daily_report_workforce')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'WORKFORCE_UPSERT_ERROR', message: error.message });}
-    return data as WorkforceEntryV2[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase
-      .from('daily_report_workforce') as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+      .from('daily_report_workforce')
       .delete()
       .eq('id', id);
 
@@ -443,8 +491,8 @@ export const workforceApi = {
   },
 
   async deleteByReportId(reportId: string): Promise<void> {
-    const { error } = await (supabase
-      .from('daily_report_workforce') as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+      .from('daily_report_workforce')
       .delete()
       .eq('daily_report_id', reportId);
 
@@ -460,18 +508,18 @@ export const equipmentApi = {
   async upsert(entries: EquipmentEntryV2[]): Promise<EquipmentEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase
-      .from('daily_report_equipment') as any)
+    const { data, error }: SupabaseQueryResult<EquipmentEntryV2[]> = await supabaseUntyped
+      .from('daily_report_equipment')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'EQUIPMENT_UPSERT_ERROR', message: error.message });}
-    return data as EquipmentEntryV2[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase
-      .from('daily_report_equipment') as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+      .from('daily_report_equipment')
       .delete()
       .eq('id', id);
 
@@ -485,30 +533,30 @@ export const equipmentApi = {
 
 export const delaysApi = {
   async getByReportId(reportId: string): Promise<DelayEntry[]> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabaseUntyped
       .from('daily_report_delays')
       .select('*')
       .eq('daily_report_id', reportId)
       .order('created_at', { ascending: false });
 
     if (error) {throw new ApiErrorClass({ code: 'DELAYS_FETCH_ERROR', message: error.message });}
-    return data as DelayEntry[];
+    return data ?? [];
   },
 
   async upsert(entries: DelayEntry[]): Promise<DelayEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabaseUntyped
       .from('daily_report_delays')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'DELAYS_UPSERT_ERROR', message: error.message });}
-    return data as DelayEntry[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_delays')
       .delete()
       .eq('id', id);
@@ -524,7 +572,7 @@ export const delaysApi = {
     startDate: string,
     endDate: string
   ): Promise<DelayEntry[]> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabaseUntyped
       .from('daily_report_delays')
       .select(`
         *,
@@ -536,7 +584,7 @@ export const delaysApi = {
       .order('created_at', { ascending: false });
 
     if (error) {throw new ApiErrorClass({ code: 'PROJECT_DELAYS_ERROR', message: error.message });}
-    return data as DelayEntry[];
+    return data ?? [];
   },
 };
 
@@ -546,31 +594,31 @@ export const delaysApi = {
 
 export const safetyIncidentsApi = {
   async getByReportId(reportId: string): Promise<SafetyIncident[]> {
-    const { data, error } = await (supabase
-      .from('daily_report_safety_incidents') as any)
+    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabaseUntyped
+      .from('daily_report_safety_incidents')
       .select('*')
       .eq('daily_report_id', reportId)
       .order('incident_time', { ascending: true });
 
     if (error) {throw new ApiErrorClass({ code: 'SAFETY_FETCH_ERROR', message: error.message });}
-    return data as SafetyIncident[];
+    return data ?? [];
   },
 
   async upsert(entries: SafetyIncident[]): Promise<SafetyIncident[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase
-      .from('daily_report_safety_incidents') as any)
+    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabaseUntyped
+      .from('daily_report_safety_incidents')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'SAFETY_UPSERT_ERROR', message: error.message });}
-    return data as SafetyIncident[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase
-      .from('daily_report_safety_incidents') as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+      .from('daily_report_safety_incidents')
       .delete()
       .eq('id', id);
 
@@ -581,8 +629,8 @@ export const safetyIncidentsApi = {
    * Get OSHA-reportable incidents for a project
    */
   async getOshaIncidents(projectId: string): Promise<SafetyIncident[]> {
-    const { data, error } = await (supabase
-      .from('daily_report_safety_incidents') as any)
+    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabaseUntyped
+      .from('daily_report_safety_incidents')
       .select(`
         *,
         daily_report:daily_reports!inner(project_id, report_date)
@@ -592,7 +640,7 @@ export const safetyIncidentsApi = {
       .order('created_at', { ascending: false });
 
     if (error) {throw new ApiErrorClass({ code: 'OSHA_INCIDENTS_ERROR', message: error.message });}
-    return data as SafetyIncident[];
+    return data ?? [];
   },
 };
 
@@ -602,30 +650,30 @@ export const safetyIncidentsApi = {
 
 export const inspectionsApi = {
   async getByReportId(reportId: string): Promise<InspectionEntry[]> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<InspectionEntry[]> = await supabaseUntyped
       .from('daily_report_inspections')
       .select('*')
       .eq('daily_report_id', reportId)
       .order('inspection_time', { ascending: true });
 
     if (error) {throw new ApiErrorClass({ code: 'INSPECTIONS_FETCH_ERROR', message: error.message });}
-    return data as InspectionEntry[];
+    return data ?? [];
   },
 
   async upsert(entries: InspectionEntry[]): Promise<InspectionEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<InspectionEntry[]> = await supabaseUntyped
       .from('daily_report_inspections')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'INSPECTIONS_UPSERT_ERROR', message: error.message });}
-    return data as InspectionEntry[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_inspections')
       .delete()
       .eq('id', id);
@@ -640,30 +688,30 @@ export const inspectionsApi = {
 
 export const tmWorkApi = {
   async getByReportId(reportId: string): Promise<TMWorkEntry[]> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<TMWorkEntry[]> = await supabaseUntyped
       .from('daily_report_tm_work')
       .select('*')
       .eq('daily_report_id', reportId)
       .order('created_at', { ascending: false });
 
     if (error) {throw new ApiErrorClass({ code: 'TM_WORK_FETCH_ERROR', message: error.message });}
-    return data as TMWorkEntry[];
+    return data ?? [];
   },
 
   async upsert(entries: TMWorkEntry[]): Promise<TMWorkEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<TMWorkEntry[]> = await supabaseUntyped
       .from('daily_report_tm_work')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'TM_WORK_UPSERT_ERROR', message: error.message });}
-    return data as TMWorkEntry[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_tm_work')
       .delete()
       .eq('id', id);
@@ -678,30 +726,30 @@ export const tmWorkApi = {
 
 export const progressApi = {
   async getByReportId(reportId: string): Promise<ProgressEntry[]> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<ProgressEntry[]> = await supabaseUntyped
       .from('daily_report_progress')
       .select('*')
       .eq('daily_report_id', reportId)
       .order('activity_name', { ascending: true });
 
     if (error) {throw new ApiErrorClass({ code: 'PROGRESS_FETCH_ERROR', message: error.message });}
-    return data as ProgressEntry[];
+    return data ?? [];
   },
 
   async upsert(entries: ProgressEntry[]): Promise<ProgressEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<ProgressEntry[]> = await supabaseUntyped
       .from('daily_report_progress')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'PROGRESS_UPSERT_ERROR', message: error.message });}
-    return data as ProgressEntry[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_progress')
       .delete()
       .eq('id', id);
@@ -718,18 +766,18 @@ export const deliveriesApi = {
   async upsert(entries: DeliveryEntryV2[]): Promise<DeliveryEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase
-      .from('daily_report_deliveries') as any)
+    const { data, error }: SupabaseQueryResult<DeliveryEntryV2[]> = await supabaseUntyped
+      .from('daily_report_deliveries')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'DELIVERIES_UPSERT_ERROR', message: error.message });}
-    return data as DeliveryEntryV2[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase
-      .from('daily_report_deliveries') as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+      .from('daily_report_deliveries')
       .delete()
       .eq('id', id);
 
@@ -745,18 +793,18 @@ export const visitorsApi = {
   async upsert(entries: VisitorEntryV2[]): Promise<VisitorEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase
-      .from('daily_report_visitors') as any)
+    const { data, error }: SupabaseQueryResult<VisitorEntryV2[]> = await supabaseUntyped
+      .from('daily_report_visitors')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'VISITORS_UPSERT_ERROR', message: error.message });}
-    return data as VisitorEntryV2[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase
-      .from('daily_report_visitors') as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+      .from('daily_report_visitors')
       .delete()
       .eq('id', id);
 
@@ -770,30 +818,30 @@ export const visitorsApi = {
 
 export const photosApi = {
   async getByReportId(reportId: string): Promise<PhotoEntryV2[]> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<PhotoEntryV2[]> = await supabaseUntyped
       .from('daily_report_photos')
       .select('*')
       .eq('daily_report_id', reportId)
       .order('taken_at', { ascending: false });
 
     if (error) {throw new ApiErrorClass({ code: 'PHOTOS_FETCH_ERROR', message: error.message });}
-    return data as PhotoEntryV2[];
+    return data ?? [];
   },
 
   async upsert(entries: PhotoEntryV2[]): Promise<PhotoEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<PhotoEntryV2[]> = await supabaseUntyped
       .from('daily_report_photos')
       .upsert(entries, { onConflict: 'id' })
       .select();
 
     if (error) {throw new ApiErrorClass({ code: 'PHOTOS_UPSERT_ERROR', message: error.message });}
-    return data as PhotoEntryV2[];
+    return data ?? [];
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_photos')
       .delete()
       .eq('id', id);
@@ -802,7 +850,7 @@ export const photosApi = {
   },
 
   async updateStatus(id: string, status: PhotoEntryV2['upload_status']): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_photos')
       .update({ upload_status: status })
       .eq('id', id);
@@ -819,29 +867,30 @@ export const templatesApi = {
   async getForProject(projectId: string): Promise<DailyReportTemplate[]> {
     const { data: user } = await supabase.auth.getUser();
 
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<DailyReportTemplate[]> = await supabaseUntyped
       .from('daily_report_templates')
       .select('*')
       .or(`project_id.eq.${projectId},user_id.eq.${user.user?.id}`)
       .order('name', { ascending: true });
 
     if (error) {throw new ApiErrorClass({ code: 'TEMPLATES_FETCH_ERROR', message: error.message });}
-    return data as DailyReportTemplate[];
+    return data ?? [];
   },
 
   async create(template: Omit<DailyReportTemplate, 'id' | 'created_at' | 'updated_at'>): Promise<DailyReportTemplate> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<DailyReportTemplate> = await supabaseUntyped
       .from('daily_report_templates')
       .insert(template)
       .select()
       .single();
 
     if (error) {throw new ApiErrorClass({ code: 'TEMPLATE_CREATE_ERROR', message: error.message });}
-    return data as DailyReportTemplate;
+    if (!data) {throw new ApiErrorClass({ code: 'TEMPLATE_CREATE_ERROR', message: 'No data returned' });}
+    return data;
   },
 
   async update(id: string, updates: Partial<DailyReportTemplate>): Promise<DailyReportTemplate> {
-    const { data, error } = await (supabase as any)
+    const { data, error }: SupabaseQueryResult<DailyReportTemplate> = await supabaseUntyped
       .from('daily_report_templates')
       .update(updates)
       .eq('id', id)
@@ -849,11 +898,12 @@ export const templatesApi = {
       .single();
 
     if (error) {throw new ApiErrorClass({ code: 'TEMPLATE_UPDATE_ERROR', message: error.message });}
-    return data as DailyReportTemplate;
+    if (!data) {throw new ApiErrorClass({ code: 'TEMPLATE_UPDATE_ERROR', message: 'No data returned' });}
+    return data;
   },
 
   async delete(id: string): Promise<void> {
-    const { error } = await (supabase as any)
+    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
       .from('daily_report_templates')
       .delete()
       .eq('id', id);
@@ -866,6 +916,10 @@ export const templatesApi = {
 // BATCH SAVE (for form submission)
 // =============================================
 
+/**
+ * Save all report data at once
+ * Used for form submission to ensure all related data is saved atomically
+ */
 export async function saveReportWithAllData(
   reportId: string,
   data: {
