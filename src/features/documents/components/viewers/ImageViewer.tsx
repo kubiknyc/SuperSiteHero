@@ -6,6 +6,8 @@ import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { DrawingCanvas } from '../DrawingCanvas'
+import { logger } from '../../../../lib/utils/logger';
+
 
 interface ImageViewerProps {
   documentId: string
@@ -125,7 +127,7 @@ export function ImageViewer({
           setIsFullscreen(true)
         }
       } catch (error) {
-        console.error('Fullscreen request failed:', error)
+        logger.error('Fullscreen request failed:', error)
       }
     } else {
       if (document.fullscreenElement) {

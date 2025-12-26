@@ -367,7 +367,7 @@ async function testAdminApproval() {
       return false
     }
 
-    const pendingUsers = pendingResponse?.users || []
+    const pendingUsers = pendingResponse?.pendingUsers || []
     log(`✅ Found ${pendingUsers.length} pending user(s)`, 'green')
 
     // Find our test user

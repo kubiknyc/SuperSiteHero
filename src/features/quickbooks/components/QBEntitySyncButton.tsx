@@ -31,6 +31,8 @@ import {
 import { useQuickSync, useQBConnectionStatus } from '../hooks/useQuickBooks'
 import { formatDistanceToNow } from 'date-fns'
 import type { QBSyncStatus } from '@/types/quickbooks'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface QBEntitySyncButtonProps {
   entityType: string
@@ -107,7 +109,7 @@ export function QBEntitySyncButton({
     try {
       await sync()
     } catch (err) {
-      console.error('Sync failed:', err)
+      logger.error('Sync failed:', err)
     }
   }
 

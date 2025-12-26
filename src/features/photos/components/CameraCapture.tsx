@@ -39,6 +39,8 @@ import type {
   PhotoMetadata,
   GPSCoordinates,
 } from '@/types/photo-management'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // Types
@@ -256,7 +258,7 @@ export function CameraCapture({
         setIsGettingLocation(false)
       }
     } catch (err) {
-      console.error('Camera initialization error:', err)
+      logger.error('Camera initialization error:', err)
       setError(
         err instanceof Error
           ? err.message
@@ -356,7 +358,7 @@ export function CameraCapture({
       setCapturedPhotos((prev) => [...prev, capturedPhoto])
       setState('ready')
     } catch (err) {
-      console.error('Capture error:', err)
+      logger.error('Capture error:', err)
       setError(err instanceof Error ? err.message : 'Failed to capture photo')
       setState('ready')
     }

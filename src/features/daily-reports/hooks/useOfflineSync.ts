@@ -2,6 +2,8 @@
 import { useEffect, useCallback } from 'react'
 import { useOfflineReportStore, type ConflictInfo } from '@/features/daily-reports/store/offlineReportStore'
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../../lib/utils/logger';
+
 
 const MAX_RETRIES = 3
 const RETRY_DELAY_MS = 1000
@@ -329,7 +331,7 @@ export function useOfflineSync() {
       }
     } catch (error) {
       // Rollback: Delete any entries we inserted during this failed sync
-      console.error('Sync failed, rolling back inserted entries:', error)
+      logger.error('Sync failed, rolling back inserted entries:', error)
 
       if (insertedIds.workforce.length > 0) {
         await supabase

@@ -69,20 +69,20 @@ class ConsoleEmailProvider implements EmailProvider {
   async send(options: SendEmailOptions): Promise<EmailResult> {
     const recipients = Array.isArray(options.to) ? options.to : [options.to]
 
-    console.log('========================================')
-    console.log('[EMAIL] Sending email (console mode)')
-    console.log('========================================')
-    console.log('To:', recipients.map(r => `${r.name || ''} <${r.email}>`).join(', '))
-    console.log('Subject:', options.subject)
-    console.log('----------------------------------------')
-    console.log('HTML Content:')
-    console.log(options.html)
-    console.log('----------------------------------------')
+    logger.log('========================================')
+    logger.log('[EMAIL] Sending email (console mode)')
+    logger.log('========================================')
+    logger.log('To:', recipients.map(r => `${r.name || ''} <${r.email}>`).join(', '))
+    logger.log('Subject:', options.subject)
+    logger.log('----------------------------------------')
+    logger.log('HTML Content:')
+    logger.log(options.html)
+    logger.log('----------------------------------------')
     if (options.text) {
-      console.log('Text Content:')
-      console.log(options.text)
+      logger.log('Text Content:')
+      logger.log(options.text)
     }
-    console.log('========================================')
+    logger.log('========================================')
 
     return {
       success: true,
@@ -91,12 +91,12 @@ class ConsoleEmailProvider implements EmailProvider {
   }
 
   async sendTemplated(options: SendTemplatedEmailOptions): Promise<EmailResult> {
-    console.log('========================================')
-    console.log('[EMAIL] Sending templated email (console mode)')
-    console.log('========================================')
-    console.log('Template ID:', options.templateId)
-    console.log('Template Data:', JSON.stringify(options.templateData, null, 2))
-    console.log('========================================')
+    logger.log('========================================')
+    logger.log('[EMAIL] Sending templated email (console mode)')
+    logger.log('========================================')
+    logger.log('Template ID:', options.templateId)
+    logger.log('Template Data:', JSON.stringify(options.templateData, null, 2))
+    logger.log('========================================')
 
     return {
       success: true,

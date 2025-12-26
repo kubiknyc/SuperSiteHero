@@ -56,6 +56,8 @@ import { PRIORITY_COLORS, type PriorityLevel } from '../utils/priorityScoring'
 import type { PunchItemStatus } from '@/types/database'
 import { cn } from '@/lib/utils'
 import { useProject } from '@/features/projects/hooks/useProjects'
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -417,7 +419,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
       toast.success('Excel report exported successfully')
     } catch (err) {
-      console.error('Export error:', err)
+      logger.error('Export error:', err)
       toast.error('Failed to export report')
     } finally {
       setIsExporting(null)
@@ -530,7 +532,7 @@ export function PunchByAreaReport({ projectId: propProjectId }: PunchByAreaRepor
 
       toast.success('PDF report ready for printing')
     } catch (err) {
-      console.error('Export error:', err)
+      logger.error('Export error:', err)
       toast.error('Failed to generate PDF')
     } finally {
       setIsExporting(null)

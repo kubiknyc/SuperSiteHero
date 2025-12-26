@@ -16,6 +16,8 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
+import { logger } from '../../../../lib/utils/logger';
+
 
 interface WorkSummarySectionProps {
   expanded: boolean;
@@ -79,7 +81,7 @@ export function WorkSummarySection({ expanded, onToggle }: WorkSummarySectionPro
     };
 
     recognition.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
+      logger.error('Speech recognition error:', event.error);
       setIsListening(false);
       setActiveField(null);
     };

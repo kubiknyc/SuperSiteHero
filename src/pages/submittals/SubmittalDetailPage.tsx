@@ -18,6 +18,8 @@ import { SubmittalStatusBadge } from '@/features/submittals/components'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import { useCreateConversation } from '@/features/messaging/hooks'
+import { logger } from '../../lib/utils/logger';
+
 
 export function SubmittalDetailPage() {
   const { submittalId } = useParams<{ submittalId: string }>()
@@ -61,7 +63,7 @@ export function SubmittalDetailPage() {
         navigate(`/messages/${result.id}`)
       }
     } catch (error) {
-      console.error('Failed to create conversation:', error)
+      logger.error('Failed to create conversation:', error)
     }
   }
 

@@ -7,6 +7,8 @@ import { Input, Button } from '@/components/ui'
 import { useDocumentSearch } from '@/features/documents/hooks/useDocumentSearch'
 import { cn } from '@/lib/utils'
 import type { Document } from '@/types/database'
+import { logger } from '../../../../lib/utils/logger';
+
 
 interface DocumentSearchBarProps {
   projectId?: string
@@ -33,7 +35,7 @@ interface DocumentSearchBarProps {
  * ```tsx
  * <DocumentSearchBar
  *   projectId={projectId}
- *   onSearch={(term) => console.log('Search:', term)}
+ *   onSearch={(term) => logger.log('Search:', term)}
  *   onDocumentSelect={(doc) => navigate(`/documents/${doc.id}`)}
  *   showSuggestions
  * />

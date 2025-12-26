@@ -181,10 +181,20 @@ export async function searchFor(page: Page, searchTerm: string) {
 }
 
 /**
- * Wait for page to finish loading (generic loader detection)
+ * Wait for page to finish loading with browser-specific strategy
+ * Firefox uses 'domcontentloaded' for better performance, other browsers use 'networkidle'
  */
 export async function waitForPageLoad(page: Page) {
-  await page.waitForLoadState('networkidle');
+  const browserName = page.context().browser()?.browserType().name();
+
+  // Firefox performs better with domcontentloaded
+  if (browserName === 'firefox') {
+    await page.waitForLoadState('domcontentloaded');
+    // Add small delay for Firefox to ensure stability
+    await page.waitForTimeout(500);
+  } else {
+    await page.waitForLoadState('networkidle');
+  }
 
   // Wait for common loaders to disappear
   const loaders = page.locator('[data-testid="loader"], .loading, .spinner');
@@ -240,4 +250,24 @@ export async function takeScreenshot(page: Page, name: string) {
     path: `./test-results/screenshots/${name}-${Date.now()}.png`,
     fullPage: true
   });
+}
+
+/**
+ * Wait for element and click with retry logic
+ * Useful for elements that may take time to become interactive
+ */
+export async function waitAndClick(
+  page: Page,
+  selector: string,
+  options: { timeout?: number; force?: boolean } = {}
+): Promise<void> {
+  const element = page.locator(selector).first()
+  await element.waitFor({
+    state: 'visible',
+    timeout: options.timeout ?? 5000
+  })
+  await element.click({
+    force: options.force ?? false,
+    timeout: options.timeout ?? 3000
+  })
 }

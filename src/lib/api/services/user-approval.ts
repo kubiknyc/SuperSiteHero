@@ -6,6 +6,8 @@
 
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
+import { logger } from '../../utils/logger';
+
 
 export interface PendingUser {
   id: string
@@ -50,7 +52,7 @@ export const userApprovalApi = {
     } catch (error) {
       if (error instanceof ApiErrorClass) throw error
 
-      console.error('Error fetching pending users:', error)
+      logger.error('Error fetching pending users:', error)
       throw new ApiErrorClass({
         code: 'UNEXPECTED_ERROR',
         message: 'An unexpected error occurred while fetching pending users',
@@ -93,7 +95,7 @@ export const userApprovalApi = {
     } catch (error) {
       if (error instanceof ApiErrorClass) throw error
 
-      console.error('Error approving user:', error)
+      logger.error('Error approving user:', error)
       throw new ApiErrorClass({
         code: 'UNEXPECTED_ERROR',
         message: 'An unexpected error occurred while approving user',
@@ -136,7 +138,7 @@ export const userApprovalApi = {
     } catch (error) {
       if (error instanceof ApiErrorClass) throw error
 
-      console.error('Error rejecting user:', error)
+      logger.error('Error rejecting user:', error)
       throw new ApiErrorClass({
         code: 'UNEXPECTED_ERROR',
         message: 'An unexpected error occurred while rejecting user',

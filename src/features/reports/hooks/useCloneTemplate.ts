@@ -7,6 +7,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -152,7 +154,7 @@ async function cloneTemplate(options: CloneTemplateOptions): Promise<ClonedTempl
       .insert(sorting)
 
     if (sortingError) {
-      console.warn('Failed to clone template sorting:', sortingError)
+      logger.warn('Failed to clone template sorting:', sortingError)
       // Don't fail the whole operation for sorting
     }
   }
@@ -171,7 +173,7 @@ async function cloneTemplate(options: CloneTemplateOptions): Promise<ClonedTempl
       .insert(grouping)
 
     if (groupingError) {
-      console.warn('Failed to clone template grouping:', groupingError)
+      logger.warn('Failed to clone template grouping:', groupingError)
       // Don't fail the whole operation for grouping
     }
   }

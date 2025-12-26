@@ -20,6 +20,8 @@ import {
   BALL_IN_COURT_ENTITIES,
 } from '../hooks/useDedicatedSubmittals'
 import type { SubmittalType, BallInCourtEntity } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Simple hook to fetch subcontractors for a project
 function useProjectSubcontractors(projectId: string | undefined) {
@@ -80,7 +82,7 @@ export function CreateDedicatedSubmittalDialog({
           const number = await generateSubmittalNumber(projectId, specSection)
           setSubmittalNumber(number)
         } catch (error) {
-          console.error('Failed to generate submittal number:', error)
+          logger.error('Failed to generate submittal number:', error)
         }
       } else {
         setSubmittalNumber('')
@@ -148,7 +150,7 @@ export function CreateDedicatedSubmittalDialog({
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
-      console.error('Failed to create submittal:', error)
+      logger.error('Failed to create submittal:', error)
     }
   }
 

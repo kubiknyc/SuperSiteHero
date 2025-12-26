@@ -5,7 +5,7 @@
  * urgency alerts, and pipeline management.
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback, memo } from 'react'
 import {
   useProjectActionItems,
   useActionItemSummary,
@@ -107,6 +107,23 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
 
   const isLoading = summaryLoading || itemsLoading
 
+  // Memoized event handlers to prevent child re-renders
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }, [])
+
+  const handleStatusFilterChange = useCallback((v: string) => {
+    setStatusFilter(v as ActionItemStatus | 'all')
+  }, [])
+
+  const handleCategoryFilterChange = useCallback((v: string) => {
+    setCategoryFilter(v as ActionItemCategory | 'all')
+  }, [])
+
+  const handleTabChange = useCallback((v: string) => {
+    setActiveTab(v as typeof activeTab)
+  }, [])
+
   return (
     <div className="space-y-6">
       {/* Summary Cards */}
@@ -171,12 +188,12 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
                     <Input
                       placeholder="Search action items..."
                       value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onChange={handleSearchChange}
                       className="pl-9"
                     />
                   </div>
                 </div>
-                <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as ActionItemStatus | 'all')}>
+                <Select value={statusFilter} onValueChange={handleStatusFilterChange}>
                   <SelectTrigger className="w-[140px]">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
@@ -189,7 +206,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
                     ))}
                   </SelectContent>
                 </Select>
-                <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as ActionItemCategory | 'all')}>
+                <Select value={categoryFilter} onValueChange={handleCategoryFilterChange}>
                   <SelectTrigger className="w-[150px]">
                     <SelectValue placeholder="Category" />
                   </SelectTrigger>
@@ -207,7 +224,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
           </Card>
 
           {/* Tabs for different views */}
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
+          <Tabs value={activeTab} onValueChange={handleTabChange}>
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="all">
                 All ({allItems?.length || 0})
@@ -340,10 +357,10 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
 }
 
 // ============================================================================
-// Sub-components
+// Sub-components (memoized for performance)
 // ============================================================================
 
-function SummaryCard({
+const SummaryCard = memo(function SummaryCard({
   title,
   value,
   subtitle,
@@ -381,9 +398,9 @@ function SummaryCard({
       </CardContent>
     </Card>
   )
-}
+})
 
-function ActionItemRow({ item }: { item: ActionItemWithContext }) {
+const ActionItemRow = memo(function ActionItemRow({ item }: { item: ActionItemWithContext }) {
   const updateStatus = useUpdateActionItemStatus()
   const convertToTask = useConvertToTask()
 
@@ -542,6 +559,6 @@ function ActionItemRow({ item }: { item: ActionItemWithContext }) {
       </CardContent>
     </Card>
   )
-}
+})
 
 export default ActionItemsDashboard

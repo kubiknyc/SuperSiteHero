@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { SiteInstructionStatus, SiteInstructionPriority } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Query keys
 export const siteInstructionKeys = {
@@ -762,7 +764,7 @@ export function useDeleteSiteInstructionAttachment() {
         .remove([storagePath])
 
       if (storageError) {
-        console.warn('Failed to delete file from storage:', storageError)
+        logger.warn('Failed to delete file from storage:', storageError)
       }
 
       // Delete record

@@ -16,6 +16,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Upload } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface UploadDocumentVersionProps {
   documentId: string
@@ -87,7 +89,7 @@ export function UploadDocumentVersion({
       setVersionNotes('')
       setOpen(false)
     } catch (error) {
-      console.error('Upload error:', error)
+      logger.error('Upload error:', error)
       toast.error('Failed to upload new version')
     } finally {
       setUploading(false)

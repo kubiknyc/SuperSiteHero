@@ -23,6 +23,8 @@ import type {
   UpdateWorkflowInput,
   ApprovalWorkflow,
 } from '@/types/approval-workflow'
+import { logger } from '../../lib/utils/logger';
+
 
 type ViewMode = 'list' | 'create' | 'edit'
 
@@ -50,7 +52,7 @@ export function ApprovalWorkflowsPage() {
       await createMutation.mutateAsync({ ...input, company_id: companyId })
       setViewMode('list')
     } catch (error) {
-      console.error('Failed to create workflow:', error)
+      logger.error('Failed to create workflow:', error)
     }
   }
 
@@ -64,7 +66,7 @@ export function ApprovalWorkflowsPage() {
       setViewMode('list')
       setEditingWorkflowId(null)
     } catch (error) {
-      console.error('Failed to update workflow:', error)
+      logger.error('Failed to update workflow:', error)
     }
   }
 
@@ -80,7 +82,7 @@ export function ApprovalWorkflowsPage() {
     try {
       await deleteMutation.mutateAsync(workflow.id)
     } catch (error) {
-      console.error('Failed to delete workflow:', error)
+      logger.error('Failed to delete workflow:', error)
     }
   }
 
@@ -94,7 +96,7 @@ export function ApprovalWorkflowsPage() {
         newName: newName.trim(),
       })
     } catch (error) {
-      console.error('Failed to duplicate workflow:', error)
+      logger.error('Failed to duplicate workflow:', error)
     }
   }
 

@@ -32,6 +32,8 @@ import {
   SCHEDULE_FEATURES,
   DEFAULT_NORMALIZATION_PARAMS,
 } from '../utils/feature-engineering'
+import { logger } from '../../utils/logger';
+
 
 // Model version constant
 const CURRENT_MODEL_VERSION = 'v1.0.0-heuristic'
@@ -58,7 +60,7 @@ export class PredictionService {
       await this.loadModels()
       this.initialized = true
     } catch (error) {
-      console.warn('ML models not available, using heuristic predictions:', error)
+      logger.warn('ML models not available, using heuristic predictions:', error)
       this.initialized = true // Still mark as initialized to use fallback
     }
   }
@@ -80,19 +82,19 @@ export class PredictionService {
 
       try {
         this.budgetModel = await tf.loadLayersModel(budgetModelPath)
-        console.log('Budget model loaded from cache')
+        logger.log('Budget model loaded from cache')
       } catch {
-        console.log('Budget model not in cache, will use heuristics')
+        logger.log('Budget model not in cache, will use heuristics')
       }
 
       try {
         this.scheduleModel = await tf.loadLayersModel(scheduleModelPath)
-        console.log('Schedule model loaded from cache')
+        logger.log('Schedule model loaded from cache')
       } catch {
-        console.log('Schedule model not in cache, will use heuristics')
+        logger.log('Schedule model not in cache, will use heuristics')
       }
     } catch (error) {
-      console.warn('Error loading models:', error)
+      logger.warn('Error loading models:', error)
     }
   }
 

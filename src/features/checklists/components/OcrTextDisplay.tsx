@@ -25,6 +25,8 @@ import {
   downloadAsJsonFile,
 } from '../utils/ocrUtils'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface OcrTextDisplayProps {
   result: OcrResult
@@ -43,7 +45,7 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
       toast.success('Text copied to clipboard')
     } catch (error) {
       toast.error('Failed to copy text')
-      console.error(error)
+      logger.error(error)
     }
   }
 
@@ -54,7 +56,7 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
       toast.success('Text file downloaded')
     } catch (error) {
       toast.error('Failed to download text file')
-      console.error(error)
+      logger.error(error)
     }
   }
 
@@ -65,7 +67,7 @@ export function OcrTextDisplay({ result, onClose }: OcrTextDisplayProps) {
       toast.success('JSON file downloaded')
     } catch (error) {
       toast.error('Failed to download JSON file')
-      console.error(error)
+      logger.error(error)
     }
   }
 

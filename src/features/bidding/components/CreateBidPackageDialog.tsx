@@ -44,6 +44,8 @@ import { cn } from '@/lib/utils'
 import { useCreateBidPackage } from '../hooks/useBidding'
 import { BID_TYPES, CSI_DIVISIONS, type CreateBidPackageDTO } from '@/types/bidding'
 import { toast } from 'sonner'
+import { logger } from '../../../lib/utils/logger';
+
 
 const formSchema = z.object({
   package_number: z.string().min(1, 'Package number is required'),
@@ -133,7 +135,7 @@ export function CreateBidPackageDialog({
       setStep(1)
     } catch (error) {
       toast.error('Failed to create bid package')
-      console.error(error)
+      logger.error(error)
     }
   }
 

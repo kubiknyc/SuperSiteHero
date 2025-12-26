@@ -2,6 +2,8 @@
 // API service for document access logging
 
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../utils/logger';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
@@ -75,7 +77,7 @@ export const documentAccessLogApi = {
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      console.warn('Cannot log access: User not authenticated')
+      logger.warn('Cannot log access: User not authenticated')
       return null
     }
 
@@ -92,7 +94,7 @@ export const documentAccessLogApi = {
       .single()
 
     if (error) {
-      console.error('Error logging document access:', error)
+      logger.error('Error logging document access:', error)
       // Don't throw - access logging shouldn't break the app
       return null
     }
@@ -166,7 +168,7 @@ export const documentAccessLogApi = {
     const { data, error } = await query
 
     if (error) {
-      console.error('Error fetching access log:', error)
+      logger.error('Error fetching access log:', error)
       throw error
     }
 
@@ -199,7 +201,7 @@ export const documentAccessLogApi = {
       .order('created_at', { ascending: false })
 
     if (error) {
-      console.error('Error fetching access stats:', error)
+      logger.error('Error fetching access stats:', error)
       throw error
     }
 
@@ -246,7 +248,7 @@ export const documentAccessLogApi = {
       .limit(limit)
 
     if (error) {
-      console.error('Error fetching project activity:', error)
+      logger.error('Error fetching project activity:', error)
       throw error
     }
 

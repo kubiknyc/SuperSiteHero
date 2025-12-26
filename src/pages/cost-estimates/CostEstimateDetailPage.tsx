@@ -42,6 +42,8 @@ import type {
 import { downloadCostEstimatePDF } from '@/features/cost-estimates/utils/pdfExport'
 import { useProject } from '@/features/projects/hooks/useProjects'
 import { useToast } from '@/lib/notifications/ToastContext'
+import { logger } from '../../lib/utils/logger';
+
 
 export function CostEstimateDetailPage() {
   const { projectId, estimateId } = useParams<{ projectId: string; estimateId: string }>()
@@ -138,7 +140,7 @@ export function CostEstimateDetailPage() {
       })
       success('PDF exported', 'Cost estimate PDF has been downloaded.')
     } catch (error) {
-      console.error('Error exporting PDF:', error)
+      logger.error('Error exporting PDF:', error)
       showError('Export failed', 'Failed to export PDF. Please try again.')
     } finally {
       setIsExporting(false)

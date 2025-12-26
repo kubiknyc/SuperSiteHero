@@ -16,6 +16,8 @@ import type {
 } from '@/types/checklist-scoring'
 import type { ChecklistExecution, ChecklistResponse, ChecklistTemplateItem } from '@/types/checklists'
 import { checklistsApi } from './checklists'
+import { logger } from '../../utils/logger';
+
 
 /**
  * Calculate score for a checklist execution
@@ -232,7 +234,7 @@ async function updateExecutionScore(
       .update(updates)
       .eq('id', executionId)
   } catch (error) {
-    console.error('Failed to update execution score:', error)
+    logger.error('Failed to update execution score:', error)
     // Don't throw - score calculation succeeded even if update failed
   }
 }

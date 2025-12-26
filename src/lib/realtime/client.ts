@@ -9,6 +9,8 @@ import type {
   SubscriptionOptions,
   RealtimeTable,
 } from './types'
+import { logger } from '../utils/logger';
+
 
 type ConnectionChangeCallback = (state: ConnectionState) => void
 type ErrorCallback = (error: Error) => void
@@ -83,7 +85,7 @@ class RealtimeManager {
       try {
         await state.channel.subscribe()
       } catch (error) {
-        console.error(`Failed to reconnect channel ${key}:`, error)
+        logger.error(`Failed to reconnect channel ${key}:`, error)
       }
     }
 

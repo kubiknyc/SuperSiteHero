@@ -26,6 +26,8 @@ import type {
   CreateResourceAssignmentDTO,
   ScheduleActivityFilters,
 } from '@/types/schedule-activities'
+import { logger } from '../../utils/logger';
+
 
 // Use 'any' for tables not yet in generated types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -1171,7 +1173,7 @@ export const scheduleActivitiesApi = {
 
       if (error) {
         // Function may not exist yet, fall back to manual calculation
-        console.warn('calculate_schedule_variance function not found:', error.message)
+        logger.warn('calculate_schedule_variance function not found:', error.message)
         return null
       }
 

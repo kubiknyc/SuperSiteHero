@@ -13,6 +13,8 @@ import { useApplyTemplateToProject } from '@/features/project-templates/hooks'
 import { useAuth } from '@/hooks/useAuth'
 import type { ProjectStatus } from '@/types/database'
 import type { ProjectTemplate } from '@/types/project-template'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateProjectDialogProps {
   children: React.ReactNode
@@ -21,7 +23,7 @@ interface CreateProjectDialogProps {
 }
 
 export function CreateProjectDialog({ children, open, onOpenChange }: CreateProjectDialogProps) {
-  console.log('🟡 DIALOG RENDER - CreateProjectDialog rendered, open:', open)
+  logger.log('🟡 DIALOG RENDER - CreateProjectDialog rendered, open:', open)
 
   const { userProfile } = useAuth()
   const [selectedTemplate, setSelectedTemplate] = useState<ProjectTemplate | null>(null)
@@ -52,21 +54,21 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('🟢 FORM SUBMIT - Form onSubmit handler called!')
-    console.log('Form submission started')
+    logger.log('🟢 FORM SUBMIT - Form onSubmit handler called!')
+    logger.log('Form submission started')
 
     // Step 1: Validate client-side
     const validation = validate(formData)
-    console.log('Validation result:', validation)
+    logger.log('Validation result:', validation)
 
     if (!validation.success) {
-      console.log('Validation failed:', validation.errors)
+      logger.log('Validation failed:', validation.errors)
       return // Errors automatically shown in InputWithError components
     }
 
     // Step 2: Call API (with notifications handled by mutation hook)
     try {
-      console.log('Submitting project data...')
+      logger.log('Submitting project data...')
 
       // Type guard: validation.data is guaranteed to exist when success is true
       if (!validation.data) {return}
@@ -102,7 +104,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
         template_id: selectedTemplate?.id || null,
       } as any)
 
-      console.log('Project created successfully')
+      logger.log('Project created successfully')
 
       // Apply template if selected (creates folders, checklists, etc.)
       if (selectedTemplate && newProject?.id && userProfile?.id) {
@@ -112,9 +114,9 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
             projectId: newProject.id,
             userId: userProfile.id,
           })
-          console.log('Template applied successfully')
+          logger.log('Template applied successfully')
         } catch (templateError) {
-          console.error('Failed to apply template:', templateError)
+          logger.error('Failed to apply template:', templateError)
           // Project is created, but template application failed - don't block
         }
       }
@@ -137,7 +139,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
       onOpenChange?.(false)
     } catch (error) {
       // Error toast shown automatically by mutation hook
-      console.error('Failed to create project:', error)
+      logger.error('Failed to create project:', error)
     }
   }
 
@@ -358,7 +360,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
               type="submit"
               disabled={createProject.isPending || applyTemplate.isPending}
               onClick={(e) => {
-                console.log('🔵 BUTTON CLICKED - Submit button was clicked!')
+                logger.log('🔵 BUTTON CLICKED - Submit button was clicked!')
               }}
             >
               {createProject.isPending || applyTemplate.isPending ? 'Creating...' : 'Create Project'}

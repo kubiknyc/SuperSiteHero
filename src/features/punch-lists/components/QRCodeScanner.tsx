@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dialog'
 import { toast } from '@/lib/notifications/ToastContext'
 import { cn } from '@/lib/utils'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface QRCodeScannerProps {
   onScanSuccess?: (punchItemId: string) => void
@@ -104,7 +106,7 @@ export function QRCodeScanner({
   const handleScanError = useCallback((errorMessage: string) => {
     // Only log actual errors, not "no QR code found" messages
     if (!errorMessage.includes('No MultiFormat Readers')) {
-      console.warn('QR scan error:', errorMessage)
+      logger.warn('QR scan error:', errorMessage)
     }
   }, [])
 
@@ -139,7 +141,7 @@ export function QRCodeScanner({
         scannerRef.current = scanner
         setIsScanning(true)
       } catch (err) {
-        console.error('Scanner initialization error:', err)
+        logger.error('Scanner initialization error:', err)
         setError('Failed to initialize camera. Please ensure camera permissions are granted.')
       }
     }, 100)

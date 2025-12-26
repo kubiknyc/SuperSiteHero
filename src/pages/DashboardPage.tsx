@@ -1,7 +1,7 @@
 // File: /src/pages/DashboardPage.tsx
 // Professional Blueprint Dashboard - Polished, production-ready design
 
-import { useState } from 'react'
+import { useState, useCallback, useMemo, memo } from 'react'
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -91,31 +91,42 @@ export function DashboardPage() {
     }
   ]
 
-  // Helper function to render sparkline
-  const renderSparkline = (data: number[], color: string) => {
-    const max = Math.max(...data)
-    const points = data.map((val, i) => {
-      const x = (i / (data.length - 1)) * 100
-      const y = 100 - (val / max) * 100
-      return `${x},${y}`
-    }).join(' ')
+  // Memoized sparkline component to prevent unnecessary re-renders
+  const Sparkline = useMemo(() => {
+    return memo(function SparklineComponent({ data, color }: { data: number[]; color: string }) {
+      const max = Math.max(...data)
+      const points = data.map((val, i) => {
+        const x = (i / (data.length - 1)) * 100
+        const y = 100 - (val / max) * 100
+        return `${x},${y}`
+      }).join(' ')
 
-    return (
-      <svg width="80" height="24" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
-        <polyline
-          points={points}
-          fill="none"
-          stroke={color}
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          style={{
-            filter: `drop-shadow(0 0 2px ${color}40)`
-          }}
-        />
-      </svg>
-    )
-  }
+      return (
+        <svg width="80" height="24" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+          <polyline
+            points={points}
+            fill="none"
+            stroke={color}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{
+              filter: `drop-shadow(0 0 2px ${color}40)`
+            }}
+          />
+        </svg>
+      )
+    })
+  }, [])
+
+  // Memoized event handlers to prevent child re-renders
+  const handleCardFocus = useCallback((label: string) => {
+    setFocusedCard(label)
+  }, [])
+
+  const handleCardBlur = useCallback(() => {
+    setFocusedCard(null)
+  }, [])
 
   // Helper function for health indicator - Using design tokens
   const getHealthColor = (status?: string) => {
@@ -186,8 +197,8 @@ export function DashboardPage() {
                     role="article"
                     aria-label={stat.ariaLabel}
                     tabIndex={0}
-                    onFocus={() => setFocusedCard(stat.label)}
-                    onBlur={() => setFocusedCard(null)}
+                    onFocus={() => handleCardFocus(stat.label)}
+                    onBlur={handleCardBlur}
                     style={{
                       backgroundColor: '#FFFFFF',
                       border: `1px solid ${isFocused ? stat.color : '#E2E8F0'}`,
@@ -202,8 +213,8 @@ export function DashboardPage() {
                         : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                       transform: isFocused ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)'
                     }}
-                    onMouseEnter={() => setFocusedCard(stat.label)}
-                    onMouseLeave={() => setFocusedCard(null)}
+                    onMouseEnter={() => handleCardFocus(stat.label)}
+                    onMouseLeave={handleCardBlur}
                   >
                     {/* Top accent bar */}
                     <div style={{
@@ -266,7 +277,7 @@ export function DashboardPage() {
 
                       {/* Sparkline */}
                       <div style={{ marginBottom: '0.75rem' }}>
-                        {renderSparkline(stat.sparkline, stat.color)}
+                        <Sparkline data={stat.sparkline} color={stat.color} />
                       </div>
                     </div>
 

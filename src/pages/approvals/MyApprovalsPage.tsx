@@ -26,6 +26,8 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import type { ApprovalStatus, WorkflowEntityType } from '@/types/approval-workflow'
 import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
 import { cn } from '@/lib/utils'
+import { logger } from '../../lib/utils/logger';
+
 
 type FilterTab = 'pending' | 'all'
 
@@ -65,7 +67,7 @@ export function MyApprovalsPage() {
     try {
       await approveMutation.mutateAsync({ requestId, comment })
     } catch (error) {
-      console.error('Failed to approve:', error)
+      logger.error('Failed to approve:', error)
     }
   }
 
@@ -81,7 +83,7 @@ export function MyApprovalsPage() {
         comment,
       })
     } catch (error) {
-      console.error('Failed to approve with conditions:', error)
+      logger.error('Failed to approve with conditions:', error)
     }
   }
 
@@ -89,7 +91,7 @@ export function MyApprovalsPage() {
     try {
       await rejectMutation.mutateAsync({ requestId, comment })
     } catch (error) {
-      console.error('Failed to reject:', error)
+      logger.error('Failed to reject:', error)
     }
   }
 
@@ -97,7 +99,7 @@ export function MyApprovalsPage() {
     try {
       await cancelMutation.mutateAsync(requestId)
     } catch (error) {
-      console.error('Failed to cancel:', error)
+      logger.error('Failed to cancel:', error)
     }
   }
 

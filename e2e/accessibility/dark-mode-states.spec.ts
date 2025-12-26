@@ -1,4 +1,5 @@
 import { test, expect, Page } from '@playwright/test';
+import { waitForPageLoad } from '../helpers/test-helpers';
 
 /**
  * Enable dark mode on the page
@@ -15,12 +16,13 @@ async function enableDarkMode(page: Page): Promise<void> {
  */
 test.describe('Hover States - Dark Mode', () => {
   test('button hover states are visible', async ({ page }) => {
-    await page.goto('/');
+    // Navigate to login page for consistent button selection
+    await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
-    // Find primary button
-    const primaryButton = page.getByRole('button').first();
+    // Use specific button by role and name for stable selection across browsers
+    const primaryButton = page.getByRole('button', { name: 'Sign in', exact: true });
     if (await primaryButton.isVisible()) {
       // Default state
       await expect(primaryButton).toHaveScreenshot('button-primary-default-dark.png');
@@ -38,7 +40,7 @@ test.describe('Hover States - Dark Mode', () => {
   test('secondary button hover states', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const secondaryButton = page.getByRole('button', { name: /cancel|back|close/i }).first();
     if (await secondaryButton.isVisible()) {
@@ -53,7 +55,7 @@ test.describe('Hover States - Dark Mode', () => {
   test('link hover states are visible', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const link = page.getByRole('link').first();
     if (await link.isVisible()) {
@@ -78,7 +80,7 @@ test.describe('Hover States - Dark Mode', () => {
   test('card hover elevation in dark mode', async ({ page }) => {
     await page.goto('/projects');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const card = page.locator('[class*="card"]').first();
     if (await card.isVisible()) {
@@ -93,16 +95,16 @@ test.describe('Hover States - Dark Mode', () => {
   test('menu item hover highlights', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
-    // Try to open a menu
-    const menuTrigger = page.locator('[role="button"]').first();
-    if (await menuTrigger.isVisible()) {
-      await menuTrigger.click();
+    // Try to open a menu - use more specific selector that's not an overlay
+    const menuTrigger = page.locator('button[role="button"]:not([tabindex="-1"])').first();
+    if (await menuTrigger.isVisible({ timeout: 5000 })) {
+      await menuTrigger.click({ force: true });
       await page.waitForTimeout(200);
 
       const menuItem = page.locator('[role="menuitem"]').first();
-      if (await menuItem.isVisible()) {
+      if (await menuItem.isVisible({ timeout: 3000 })) {
         await expect(menuItem).toHaveScreenshot('menuitem-default-dark.png');
 
         await menuItem.hover();
@@ -115,7 +117,7 @@ test.describe('Hover States - Dark Mode', () => {
   test('table row hover in dark mode', async ({ page }) => {
     await page.goto('/daily-reports');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const tableRow = page.locator('tbody tr').first();
     if (await tableRow.isVisible()) {
@@ -133,11 +135,13 @@ test.describe('Hover States - Dark Mode', () => {
  */
 test.describe('Focus States - Dark Mode', () => {
   test('button focus indicators are visible', async ({ page }) => {
-    await page.goto('/');
+    // Navigate to login page for consistent button selection
+    await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
-    const button = page.getByRole('button').first();
+    // Use specific button by role and name for stable selection across browsers
+    const button = page.getByRole('button', { name: 'Sign in', exact: true });
     if (await button.isVisible()) {
       // Focus the button
       await button.focus();
@@ -149,19 +153,23 @@ test.describe('Focus States - Dark Mode', () => {
       // Verify focus outline exists and is visible
       const outline = await button.evaluate(el => {
         const style = window.getComputedStyle(el);
+        const hasOutline = style.outlineStyle !== 'none' &&
+                           parseFloat(style.outlineWidth) > 0;
+        const hasBoxShadow = style.boxShadow !== 'none' &&
+                             style.boxShadow.length > 4;
+
         return {
           outline: style.outline,
           outlineWidth: style.outlineWidth,
-          outlineColor: style.outlineColor,
-          outlineOffset: style.outlineOffset,
+          outlineStyle: style.outlineStyle,
           boxShadow: style.boxShadow,
+          hasOutline,
+          hasBoxShadow,
         };
       });
 
-      // Check that some form of focus indicator exists
-      const hasFocusIndicator =
-        (outline.outline !== 'none' && outline.outlineWidth !== '0px') ||
-        (outline.boxShadow !== 'none' && outline.boxShadow.includes('ring'));
+      // Check that some form of focus indicator exists (browser-agnostic)
+      const hasFocusIndicator = outline.hasOutline || outline.hasBoxShadow;
 
       expect(hasFocusIndicator, 'Button should have a visible focus indicator').toBe(true);
     }
@@ -170,7 +178,7 @@ test.describe('Focus States - Dark Mode', () => {
   test('input focus states', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const input = page.getByRole('textbox').first();
     if (await input.isVisible()) {
@@ -202,7 +210,7 @@ test.describe('Focus States - Dark Mode', () => {
   test('keyboard navigation focus order', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Tab through first 5 focusable elements
     const focusOrder: string[] = [];
@@ -228,7 +236,7 @@ test.describe('Focus States - Dark Mode', () => {
   test('skip link is visible on focus', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Tab to first element (skip link if it exists)
     await page.keyboard.press('Tab');
@@ -244,7 +252,7 @@ test.describe('Focus States - Dark Mode', () => {
   test('link focus indicators', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const link = page.getByRole('link').first();
     if (await link.isVisible()) {
@@ -269,27 +277,35 @@ test.describe('Focus States - Dark Mode', () => {
  */
 test.describe('Active States - Dark Mode', () => {
   test('button active/pressed state', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
-    const button = page.getByRole('button').first();
+    // Use specific button by role and name for stable selection
+    const button = page.getByRole('button', { name: 'Sign in', exact: true });
     if (await button.isVisible()) {
-      // Trigger active state with mousedown
-      await button.hover();
-      await page.mouse.down();
-      await page.waitForTimeout(100);
+      // Wait for button to be stable before interaction
+      await page.waitForTimeout(200);
 
-      await expect(button).toHaveScreenshot('button-active-dark.png');
+      // Get bounding box to ensure we click on the same element
+      const box = await button.boundingBox();
+      if (box) {
+        // Trigger active state with mousedown at specific coordinates
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.down();
+        await page.waitForTimeout(100);
 
-      await page.mouse.up();
+        await expect(button).toHaveScreenshot('button-active-dark.png');
+
+        await page.mouse.up();
+      }
     }
   });
 
   test('active navigation item is highlighted', async ({ page }) => {
     await page.goto('/projects');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Find navigation item for current page
     const activeNavItem = page.locator('nav a[aria-current="page"], nav a[class*="active"]').first();
@@ -310,7 +326,7 @@ test.describe('Active States - Dark Mode', () => {
   test('selected table row', async ({ page }) => {
     await page.goto('/daily-reports');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const firstRow = page.locator('tbody tr').first();
     if (await firstRow.isVisible()) {
@@ -325,7 +341,7 @@ test.describe('Active States - Dark Mode', () => {
   test('expanded accordion item', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Find collapsible/accordion trigger
     const accordionTrigger = page.locator('[data-state="closed"], [aria-expanded="false"]').first();
@@ -341,7 +357,7 @@ test.describe('Active States - Dark Mode', () => {
   test('checkbox checked state', async ({ page }) => {
     await page.goto('/daily-reports/new');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const checkbox = page.getByRole('checkbox').first();
     if (await checkbox.isVisible()) {
@@ -365,7 +381,7 @@ test.describe('Disabled States - Dark Mode', () => {
   test('disabled button appearance', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Submit button should be disabled initially
     const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
@@ -390,6 +406,7 @@ test.describe('Disabled States - Dark Mode', () => {
   test('disabled input fields', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
+    await waitForPageLoad(page);
 
     // Create a disabled input via JavaScript
     await page.evaluate(() => {
@@ -417,7 +434,7 @@ test.describe('Disabled States - Dark Mode', () => {
   test('disabled checkbox visibility', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Find a checkbox and disable it
     const checkbox = page.getByRole('checkbox').first();
@@ -434,6 +451,7 @@ test.describe('Disabled States - Dark Mode', () => {
   test('disabled state is not clickable', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
+    await waitForPageLoad(page);
 
     const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
     const isDisabled = await submitButton.isDisabled();
@@ -457,7 +475,7 @@ test.describe('Loading States - Dark Mode', () => {
   test('loading spinner visibility', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Check if loading indicator is present
     const spinner = page.locator('[class*="spinner"], [class*="loading"], [role="progressbar"]').first();
@@ -478,6 +496,7 @@ test.describe('Loading States - Dark Mode', () => {
   test('skeleton loader visibility', async ({ page }) => {
     await page.goto('/projects');
     await enableDarkMode(page);
+    await waitForPageLoad(page);
 
     // Skeleton loaders may appear briefly during initial load
     const skeleton = page.locator('[class*="skeleton"]').first();
@@ -490,7 +509,7 @@ test.describe('Loading States - Dark Mode', () => {
   test('progress bar visibility', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const progressBar = page.locator('[role="progressbar"]').first();
 
@@ -510,7 +529,7 @@ test.describe('Loading States - Dark Mode', () => {
   test('button loading state', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     const button = page.getByRole('button', { name: 'Sign in', exact: true });
 
@@ -544,7 +563,7 @@ test.describe('Error States - Dark Mode', () => {
   test('form field error styling', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Try to submit empty form to trigger errors
     const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
@@ -570,7 +589,7 @@ test.describe('Error States - Dark Mode', () => {
   test('error message visibility', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Trigger error
     const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
@@ -595,7 +614,7 @@ test.describe('Error States - Dark Mode', () => {
   test('error icon visibility', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Trigger error
     await page.getByRole('button', { name: 'Sign in', exact: true }).click();
@@ -612,7 +631,7 @@ test.describe('Error States - Dark Mode', () => {
   test('toast error notification', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await waitForPageLoad(page);
 
     // Trigger error that shows toast
     const emailInput = page.getByLabel(/email/i);

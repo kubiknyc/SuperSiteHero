@@ -74,6 +74,8 @@ import type {
   PhotoViewMode,
   CapturedPhoto,
 } from '@/types/photo-management'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // Stats Cards Component
@@ -401,7 +403,7 @@ export function PhotoOrganizerPage() {
 
           successCount++
         } catch (error) {
-          console.error('Failed to upload photo:', error)
+          logger.error('Failed to upload photo:', error)
           failCount++
         }
       }

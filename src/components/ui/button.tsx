@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 const buttonVariants = cva(
   // Base styles with touch-friendly defaults
   // Using min-h-[44px] for WCAG 2.1 compliant touch targets on mobile
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none touch-manipulation dark:ring-offset-gray-950',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none touch-manipulation dark:ring-offset-gray-950 dark:focus-visible:outline-primary',
   {
     variants: {
       variant: {

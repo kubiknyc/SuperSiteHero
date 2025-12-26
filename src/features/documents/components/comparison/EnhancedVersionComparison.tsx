@@ -41,11 +41,7 @@ import type { Document as DocumentType } from '@/types/database'
 import type { OverlaySettings, ChangeRegion } from '../../types/markup'
 import { useCompareVersions } from '../../hooks/useDocumentComparison'
 
-// Set up PDF.js worker - use local copy from npm package
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
+// PDF.js worker will be initialized lazily on component mount
 
 interface EnhancedVersionComparisonProps {
   version1: DocumentType
@@ -122,9 +118,24 @@ export function EnhancedVersionComparison({
   // Loading states
   const [loading1, setLoading1] = useState(true)
   const [loading2, setLoading2] = useState(true)
+  const [pdfWorkerReady, setPdfWorkerReady] = useState(false)
 
   // Container ref for pan calculations
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Initialize PDF.js worker lazily on component mount
+  useEffect(() => {
+    const initWorker = () => {
+      if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          'pdfjs-dist/build/pdf.worker.min.mjs',
+          import.meta.url
+        ).toString()
+      }
+      setPdfWorkerReady(true)
+    }
+    initWorker()
+  }, [])
 
   // Synchronized page navigation
   const handlePageChange = (version: 1 | 2, direction: 'prev' | 'next') => {

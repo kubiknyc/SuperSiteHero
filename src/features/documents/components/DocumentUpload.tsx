@@ -10,6 +10,8 @@ import { uploadFile } from '@/features/documents/utils/fileUtils'
 import { documentsApi } from '@/lib/api/services/documents'
 import toast from 'react-hot-toast'
 import type { Document, DocumentType } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface DocumentUploadProps {
   projectId: string
@@ -46,7 +48,7 @@ const DOCUMENT_TYPES: { value: DocumentType; label: string }[] = [
  * <DocumentUpload
  *   projectId={projectId}
  *   folderId={currentFolderId}
- *   onUploadSuccess={(doc) => console.log('Uploaded:', doc)}
+ *   onUploadSuccess={(doc) => logger.log('Uploaded:', doc)}
  * />
  * ```
  */
@@ -195,14 +197,14 @@ export function DocumentUpload({
           },
           onError: (error) => {
             toast.error('Failed to create document record')
-            console.error('Document creation error:', error)
+            logger.error('Document creation error:', error)
           },
         })
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload failed'
       toast.error(errorMessage)
-      console.error('Upload error:', error)
+      logger.error('Upload error:', error)
     } finally {
       setIsUploading(false)
     }

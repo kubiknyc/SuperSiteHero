@@ -1,0 +1,23 @@
+const { expect } = require('chai');
+
+describe('Dark Mode Contrast Accessibility Test', () => {
+    before(() => {
+        // Setup code to initialize the application in dark mode
+    });
+
+    after(() => {
+        // Teardown code to reset the application state
+    });
+
+    it('should have sufficient contrast ratio for text in dark mode', () => {
+        const textColor = getComputedStyle(document.querySelector('.text-element')).color;
+        const backgroundColor = getComputedStyle(document.body).backgroundColor;
+
+        const contrastRatio = calculateContrastRatio(textColor, backgroundColor);
+        expect(contrastRatio).to.be.greaterThan(4.5);
+    });
+});
+
+function calculateContrastRatio(color1, color2) {
+    // Function to calculate contrast ratio between two colors
+}

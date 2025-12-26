@@ -20,6 +20,8 @@ import type {
   RemediationFilters,
   RemediationStats,
 } from '@/types/remediation-tracking';
+import { logger } from '../../utils/logger';
+
 
 // =============================================================================
 // REMEDIATION TRACKING API
@@ -290,7 +292,7 @@ export const autoCreatePunchApi = {
         });
         punchIds.push(punchId);
       } catch (error) {
-        console.error(`Failed to create punch item for response ${item.responseId}:`, error);
+        logger.error(`Failed to create punch item for response ${item.responseId}:`, error);
       }
     }
 

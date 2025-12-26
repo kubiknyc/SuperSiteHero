@@ -37,6 +37,8 @@ import {
   CheckCircle2,
   Clock,
 } from 'lucide-react'
+import { logger } from '../../lib/utils/logger';
+
 
 export function CloseoutPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
@@ -224,9 +226,9 @@ export function CloseoutPage() {
                 <CloseoutDocumentList
                   documents={documents}
                   statistics={closeoutStats}
-                  onDocumentClick={(doc) => console.log('View document:', doc.id)}
-                  onCreateDocument={() => console.log('Create document')}
-                  onExport={() => console.log('Export documents')}
+                  onDocumentClick={(doc) => logger.log('View document:', doc.id)}
+                  onCreateDocument={() => logger.log('Create document')}
+                  onExport={() => logger.log('Export documents')}
                 />
               </TabsContent>
 
@@ -234,9 +236,9 @@ export function CloseoutPage() {
                 <WarrantyList
                   warranties={warranties}
                   statistics={warrantyStats}
-                  onWarrantyClick={(w) => console.log('View warranty:', w.id)}
-                  onCreateWarranty={() => console.log('Create warranty')}
-                  onExport={() => console.log('Export warranties')}
+                  onWarrantyClick={(w) => logger.log('View warranty:', w.id)}
+                  onCreateWarranty={() => logger.log('Create warranty')}
+                  onExport={() => logger.log('Export warranties')}
                 />
               </TabsContent>
             </Tabs>

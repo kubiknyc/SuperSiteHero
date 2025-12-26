@@ -5,6 +5,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { sendEmail } from '@/lib/email/email-service'
 import { generateDocumentCommentEmail } from '@/lib/email/templates'
+import { logger } from '../../../lib/utils/logger';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
@@ -88,7 +90,7 @@ async function notifyDocumentComment(
       tags: ['document', 'comment'],
     })
   } catch (error) {
-    console.error('[DocumentComment] Failed to send notification:', error)
+    logger.error('[DocumentComment] Failed to send notification:', error)
   }
 }
 
@@ -144,7 +146,7 @@ export function useDocumentComments(
         .order('created_at', { ascending: true })
 
       if (error) {
-        console.error('Error fetching comments:', error)
+        logger.error('Error fetching comments:', error)
         throw error
       }
 
@@ -202,13 +204,13 @@ export function useCreateComment(documentId: string, projectId: string) {
         .select()
 
       if (error) {
-        console.error('Error creating comment:', error)
+        logger.error('Error creating comment:', error)
         throw error
       }
 
       // Send email notification asynchronously (don't block the UI)
       if (data?.[0] && user?.id) {
-        notifyDocumentComment(documentId, payload.comment_text, user.id).catch(console.error)
+        notifyDocumentComment(documentId, payload.comment_text, user.id).catch((err) => logger.error('Email notification error:', err))
       }
 
       return data?.[0]
@@ -247,7 +249,7 @@ export function useUpdateComment(commentId: string, documentId: string) {
         .select()
 
       if (error) {
-        console.error('Error updating comment:', error)
+        logger.error('Error updating comment:', error)
         throw error
       }
 
@@ -284,7 +286,7 @@ export function useDeleteComment(commentId: string, documentId: string) {
         .eq('id', commentId)
 
       if (error) {
-        console.error('Error deleting comment:', error)
+        logger.error('Error deleting comment:', error)
         throw error
       }
     },

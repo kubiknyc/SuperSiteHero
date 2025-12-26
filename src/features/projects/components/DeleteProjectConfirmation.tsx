@@ -5,6 +5,8 @@ import { useDeleteProjectWithNotification } from '../hooks/useProjectsMutations'
 import { useToast } from '@/lib/notifications/ToastContext'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface DeleteProjectConfirmationProps {
   projectId: string
@@ -37,7 +39,7 @@ export function DeleteProjectConfirmation({
             onSuccess?.()
           } catch (error) {
             // Error toast shown automatically by mutation hook
-            console.error('Failed to delete project:', error)
+            logger.error('Failed to delete project:', error)
           }
         },
       },

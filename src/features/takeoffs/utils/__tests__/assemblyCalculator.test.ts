@@ -12,6 +12,8 @@ import {
   type AssemblyVariable,
 } from '../assemblyCalculator'
 import type { Database } from '@/types/database'
+import { logger } from '../../../../lib/utils/logger';
+
 
 type Assembly = Database['public']['Tables']['assemblies']['Row']
 
@@ -26,7 +28,7 @@ describe('assemblyCalculator', () => {
     it('should parse a complex formula', () => {
       const result = parseFormula('(qty * length * width) / 144')
       if (!result.valid) {
-        console.log('Parser error:', result.error)
+        logger.log('Parser error:', result.error)
       }
       expect(result.valid).toBe(true)
       expect(result.variables).toContain('qty')

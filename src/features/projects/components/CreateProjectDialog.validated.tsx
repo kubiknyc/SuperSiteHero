@@ -18,6 +18,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateProjectDialogValidatedProps {
   children: React.ReactNode
@@ -125,7 +127,7 @@ export function CreateProjectDialogValidated({
       onOpenChange?.(false)
     } catch (error) {
       // Error is handled by mutation hook's notification system
-      console.error('Failed to create project:', error)
+      logger.error('Failed to create project:', error)
     }
   }
 

@@ -15,6 +15,8 @@ import { useCreateRFIWithNotification } from '../hooks/useRFIMutations'
 import { cn } from '@/lib/utils'
 import { DistributionListPicker } from '@/components/distribution/DistributionListPicker'
 import type { DistributionSelection } from '@/types/distribution-list'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateRFIDialogProps {
   projectId: string | undefined
@@ -125,7 +127,7 @@ export function CreateRFIDialog({
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
-      console.error('Failed to create RFI:', error)
+      logger.error('Failed to create RFI:', error)
     }
   }
 

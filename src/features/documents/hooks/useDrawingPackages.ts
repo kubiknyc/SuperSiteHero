@@ -45,6 +45,8 @@ import type {
   DrawingPackageType,
   DrawingPackageStatus,
 } from '@/types/drawing';
+import { logger } from '../../../lib/utils/logger';
+
 
 // Query keys
 const PACKAGE_KEYS = {
@@ -444,7 +446,7 @@ export function useRecordPackageAccess() {
   return useMutation({
     mutationFn: (accessToken: string) => recordRecipientAccess(accessToken),
     onError: (error: Error) => {
-      console.error('Failed to record access:', error);
+      logger.error('Failed to record access:', error);
     },
   });
 }

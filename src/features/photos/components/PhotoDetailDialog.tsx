@@ -47,6 +47,8 @@ import { VideoPlayer } from './VideoPlayer'
 import type { Photo } from '@/types/photo-management'
 import { useUpdatePhoto } from '../hooks/usePhotos'
 import { formatVideoDuration } from '@/hooks/useVideoRecorder'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Extended Photo type with video fields
 interface PhotoWithVideo extends Photo {
@@ -206,7 +208,7 @@ export function PhotoDetailDialog({
                   title={photo.fileName}
                   className="w-full h-full max-h-[calc(90vh-120px)]"
                   enableDownload
-                  onError={(error) => console.error('Video playback error:', error)}
+                  onError={(error) => logger.error('Video playback error:', error)}
                 />
               </div>
             ) : photo.is360 ? (

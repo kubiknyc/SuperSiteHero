@@ -38,6 +38,8 @@ import {
 } from '@/components/ui/select';
 import { useMeetingRecorder } from '../hooks/useMeetingRecorder';
 import type { RecordingType, MeetingRecording } from '@/types/meeting-recordings';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface MeetingRecorderProps {
   meetingId: string;
@@ -84,7 +86,7 @@ export function MeetingRecorder({
       onRecordingComplete?.(recording);
     },
     onError: (err) => {
-      console.error('Recording error:', err);
+      logger.error('Recording error:', err);
     },
   });
 

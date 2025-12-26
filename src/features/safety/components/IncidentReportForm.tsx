@@ -162,7 +162,7 @@ export function IncidentReportForm({
         })
 
         if (error) {
-          console.error('Error fetching next case number:', error)
+          logger.error('Error fetching next case number:', error)
           return
         }
 
@@ -172,7 +172,7 @@ export function IncidentReportForm({
           setValue('case_number', data)
         }
       } catch (err) {
-        console.error('Error fetching next case number:', err)
+        logger.error('Error fetching next case number:', err)
       } finally {
         setFetchingCaseNumber(false)
       }

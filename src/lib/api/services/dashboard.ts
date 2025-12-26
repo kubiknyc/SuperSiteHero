@@ -15,6 +15,8 @@ import type {
   WidgetPosition,
   WidgetConfig,
 } from '@/types/dashboard'
+import { logger } from '../../utils/logger';
+
 
 /**
  * Get all dashboard layouts for a user
@@ -36,7 +38,7 @@ export async function getDashboardLayouts(
   const { data, error } = await query
 
   if (error) {
-    console.error('Error fetching dashboard layouts:', error)
+    logger.error('Error fetching dashboard layouts:', error)
     throw error
   }
 
@@ -54,7 +56,7 @@ export async function getSharedDashboardLayouts(): Promise<DashboardLayout[]> {
     .order('created_at', { ascending: false })
 
   if (error) {
-    console.error('Error fetching shared layouts:', error)
+    logger.error('Error fetching shared layouts:', error)
     throw error
   }
 
@@ -150,7 +152,7 @@ export async function createDashboardLayout(
     .single()
 
   if (error) {
-    console.error('Error creating dashboard layout:', error)
+    logger.error('Error creating dashboard layout:', error)
     throw error
   }
 
@@ -175,7 +177,7 @@ export async function updateDashboardLayout(
     .single()
 
   if (error) {
-    console.error('Error updating dashboard layout:', error)
+    logger.error('Error updating dashboard layout:', error)
     throw error
   }
 
@@ -192,7 +194,7 @@ export async function deleteDashboardLayout(layoutId: string): Promise<void> {
     .eq('id', layoutId)
 
   if (error) {
-    console.error('Error deleting dashboard layout:', error)
+    logger.error('Error deleting dashboard layout:', error)
     throw error
   }
 }
@@ -206,7 +208,7 @@ export async function setLayoutAsDefault(layoutId: string): Promise<boolean> {
   })
 
   if (error) {
-    console.error('Error setting default layout:', error)
+    logger.error('Error setting default layout:', error)
     throw error
   }
 
@@ -226,7 +228,7 @@ export async function cloneDashboardLayout(
   })
 
   if (error) {
-    console.error('Error cloning dashboard layout:', error)
+    logger.error('Error cloning dashboard layout:', error)
     throw error
   }
 
@@ -247,7 +249,7 @@ export async function getWidgetPreferences(
     .order('created_at', { ascending: true })
 
   if (error) {
-    console.error('Error fetching widget preferences:', error)
+    logger.error('Error fetching widget preferences:', error)
     throw error
   }
 
@@ -275,7 +277,7 @@ export async function saveWidgetPositions(
   // Check for errors
   const errors = results.filter((r) => r.error)
   if (errors.length > 0) {
-    console.error('Error saving widget positions:', errors)
+    logger.error('Error saving widget positions:', errors)
     throw new Error('Failed to save some widget positions')
   }
 }
@@ -298,7 +300,7 @@ export async function addWidget(request: AddWidgetRequest): Promise<WidgetPrefer
     .single()
 
   if (error) {
-    console.error('Error adding widget:', error)
+    logger.error('Error adding widget:', error)
     throw error
   }
 
@@ -315,7 +317,7 @@ export async function removeWidget(widgetId: string): Promise<void> {
     .eq('id', widgetId)
 
   if (error) {
-    console.error('Error removing widget:', error)
+    logger.error('Error removing widget:', error)
     throw error
   }
 }
@@ -338,7 +340,7 @@ export async function updateWidgetConfig(
     .single()
 
   if (error) {
-    console.error('Error updating widget config:', error)
+    logger.error('Error updating widget config:', error)
     throw error
   }
 
@@ -355,7 +357,7 @@ export async function hideWidget(widgetId: string): Promise<void> {
     .eq('id', widgetId)
 
   if (error) {
-    console.error('Error hiding widget:', error)
+    logger.error('Error hiding widget:', error)
     throw error
   }
 }
@@ -370,7 +372,7 @@ export async function showWidget(widgetId: string): Promise<void> {
     .eq('id', widgetId)
 
   if (error) {
-    console.error('Error showing widget:', error)
+    logger.error('Error showing widget:', error)
     throw error
   }
 }

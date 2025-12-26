@@ -32,6 +32,8 @@ import { useSaveDailyReportV2, useSubmitReportV2, useTemplates } from '../../hoo
 import { quickModeFormSchema } from '../../validation/dailyReportSchemaV2';
 import { copyFromPreviousDay, applyTemplate } from '../../services/templateService';
 import type { DailyReportV2, DailyReportTemplate } from '@/types/daily-reports-v2';
+import { logger } from '../../../../lib/utils/logger';
+
 
 interface QuickModeFormProps {
   projectId: string;
@@ -234,7 +236,7 @@ export function QuickModeForm({
         toast.info('No workforce entries found from yesterday');
       }
     } catch (error) {
-      console.error('Failed to copy from yesterday:', error);
+      logger.error('Failed to copy from yesterday:', error);
       toast.error('Failed to copy workforce from yesterday');
     } finally {
       setIsCopyingFromYesterday(false);
@@ -254,7 +256,7 @@ export function QuickModeForm({
         toast.info('No equipment entries found from yesterday');
       }
     } catch (error) {
-      console.error('Failed to copy from yesterday:', error);
+      logger.error('Failed to copy from yesterday:', error);
       toast.error('Failed to copy equipment from yesterday');
     } finally {
       setIsCopyingFromYesterday(false);

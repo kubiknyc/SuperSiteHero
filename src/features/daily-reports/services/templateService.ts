@@ -9,6 +9,8 @@ import type {
   WorkforceEntryV2,
   EquipmentEntryV2,
 } from '@/types/daily-reports-v2';
+import { logger } from '../../../lib/utils/logger';
+
 
 /**
  * Get all templates for a project
@@ -21,7 +23,7 @@ export async function getTemplatesForProject(projectId: string): Promise<DailyRe
     .order('name');
 
   if (error) {
-    console.error('Failed to fetch templates:', error);
+    logger.error('Failed to fetch templates:', error);
     throw error;
   }
 
@@ -39,7 +41,7 @@ export async function getTemplate(templateId: string): Promise<DailyReportTempla
     .single();
 
   if (error) {
-    console.error('Failed to fetch template:', error);
+    logger.error('Failed to fetch template:', error);
     return null;
   }
 
@@ -59,7 +61,7 @@ export async function createTemplate(
     .single();
 
   if (error) {
-    console.error('Failed to create template:', error);
+    logger.error('Failed to create template:', error);
     throw error;
   }
 
@@ -84,7 +86,7 @@ export async function updateTemplate(
     .single();
 
   if (error) {
-    console.error('Failed to update template:', error);
+    logger.error('Failed to update template:', error);
     throw error;
   }
 
@@ -101,7 +103,7 @@ export async function deleteTemplate(templateId: string): Promise<void> {
     .eq('id', templateId);
 
   if (error) {
-    console.error('Failed to delete template:', error);
+    logger.error('Failed to delete template:', error);
     throw error;
   }
 }
@@ -194,7 +196,7 @@ export async function getSuggestedTemplates(
     .limit(limit);
 
   if (error) {
-    console.error('Failed to fetch suggested templates:', error);
+    logger.error('Failed to fetch suggested templates:', error);
     return [];
   }
 

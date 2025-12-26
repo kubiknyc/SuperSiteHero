@@ -14,7 +14,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
-import * as THREE from 'three';
 import {
   Ruler,
   Square,

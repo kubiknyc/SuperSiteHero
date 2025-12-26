@@ -10,6 +10,8 @@
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
 import type { DocumentMarkup } from './markups'
+import { logger } from '../../utils/logger';
+
 
 // Dynamic import for JSZip (optional dependency)
 let JSZip: typeof import('jszip') | null = null
@@ -348,7 +350,7 @@ function renderMarkupToContext(
     }
 
     default:
-      console.warn(`Unknown markup type: ${markup.markup_type}`)
+      logger.warn(`Unknown markup type: ${markup.markup_type}`)
   }
 }
 
@@ -487,7 +489,7 @@ async function exportAsPngZip(
       const fileName = `${drawing.name.replace(/[^a-zA-Z0-9-_]/g, '_')}.png`
       zip.file(fileName, blob)
     } catch (error) {
-      console.error(`Failed to process drawing ${drawing.name}:`, error)
+      logger.error(`Failed to process drawing ${drawing.name}:`, error)
     }
   }
 
@@ -559,7 +561,7 @@ async function exportAsMergedPdf(
         </div>
       `)
     } catch (error) {
-      console.error(`Failed to process drawing ${drawing.name}:`, error)
+      logger.error(`Failed to process drawing ${drawing.name}:`, error)
     }
   }
 
@@ -703,7 +705,7 @@ async function exportAsPdfZip(
       const fileName = `${drawing.name.replace(/[^a-zA-Z0-9-_]/g, '_')}.html`
       zip.file(fileName, html)
     } catch (error) {
-      console.error(`Failed to process drawing ${drawing.name}:`, error)
+      logger.error(`Failed to process drawing ${drawing.name}:`, error)
     }
   }
 
@@ -848,7 +850,7 @@ export const markupExportService = {
           }
       }
     } catch (error) {
-      console.error('[MarkupExport] Export failed:', error)
+      logger.error('[MarkupExport] Export failed:', error)
       return {
         success: false,
         filename: '',

@@ -55,6 +55,8 @@ import type {
   ChartConfiguration,
 } from '@/types/report-builder'
 import { OUTPUT_FORMAT_CONFIG, generateDefaultTemplateName } from '@/types/report-builder'
+import { logger } from '../../lib/utils/logger';
+
 
 // Steps in the report builder wizard
 const STEPS = [
@@ -220,14 +222,14 @@ export function ReportBuilderPage() {
 
       navigate('/reports')
     } catch (error) {
-      console.error('Failed to save template:', error)
+      logger.error('Failed to save template:', error)
     }
   }
 
   // Run report
   const handleRun = async () => {
     // TODO: Implement report generation
-    console.log('Running report...')
+    logger.log('Running report...')
   }
 
   const isSaving = createTemplate.isPending || updateTemplate.isPending || saveConfig.isPending

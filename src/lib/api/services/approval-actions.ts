@@ -16,6 +16,8 @@ import type {
   ApprovalActionType,
   ApprovalRequest,
 } from '@/types/approval-workflow'
+import { logger } from '../../utils/logger';
+
 
 // Note: Using extended Database types from database-extensions.ts
 // Once migration 023 is applied to remote database, regenerate types and switch back to database.ts
@@ -473,7 +475,7 @@ export const approvalActionsApi = {
         }
       } catch (notifyError) {
         // Log but don't fail the action
-        console.error('[ApprovalActions] Failed to send notification:', notifyError)
+        logger.error('[ApprovalActions] Failed to send notification:', notifyError)
       }
 
       return updatedRequest as ApprovalRequest

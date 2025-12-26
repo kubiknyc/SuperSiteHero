@@ -11,6 +11,8 @@ import {
   formatFileSize,
   getFileExtension,
 } from '@/features/documents/utils/fileUtils'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // Type Definitions
@@ -232,7 +234,7 @@ export function useDeleteRFIAttachment() {
           await deleteFile(storagePath, STORAGE_BUCKET)
         } catch {
           // Log but don't fail - record is already deleted
-          console.warn('Failed to delete file from storage:', document.file_url)
+          logger.warn('Failed to delete file from storage:', document.file_url)
         }
       }
     },

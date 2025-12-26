@@ -5,6 +5,8 @@
 
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { isNative, isPluginAvailable } from './platform';
+import { logger } from '../utils/logger';
+
 
 export interface CapturedPhoto {
   dataUrl: string;
@@ -53,7 +55,7 @@ export async function requestCameraPermission(): Promise<boolean> {
     const permission = await Camera.requestPermissions({ permissions: ['camera', 'photos'] });
     return permission.camera === 'granted' || permission.camera === 'limited';
   } catch (error) {
-    console.error('Error requesting camera permission:', error);
+    logger.error('Error requesting camera permission:', error);
     return false;
   }
 }
@@ -104,7 +106,7 @@ async function takeNativePhoto(options: CameraOptions): Promise<CapturedPhoto | 
     if ((error as Error).message?.includes('cancelled')) {
       return null;
     }
-    console.error('Native camera error:', error);
+    logger.error('Native camera error:', error);
     throw error;
   }
 }

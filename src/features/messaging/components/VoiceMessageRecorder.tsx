@@ -18,6 +18,8 @@ import { uploadVoiceMessage } from '@/lib/storage/message-uploads'
 import { useSendMessage } from '../hooks'
 import { toast } from '@/lib/notifications/ToastContext'
 import type { MessageAttachment } from '@/types/messaging'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface VoiceMessageRecorderProps {
   conversationId: string
@@ -88,7 +90,7 @@ export function VoiceMessageRecorder({
       toast.success('Voice message sent')
       onSent?.()
     } catch (err) {
-      console.error('Failed to send voice message:', err)
+      logger.error('Failed to send voice message:', err)
       toast.error('Failed to send voice message')
     } finally {
       setIsUploading(false)

@@ -28,6 +28,8 @@ import {
 import { cn } from '@/lib/utils'
 import type { ChangeOrderItem, CreateChangeOrderItemDTO } from '@/types/change-order'
 import { calculateItemTotal } from '@/types/change-order'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface ChangeOrderItemsEditorProps {
   changeOrderId: string
@@ -192,7 +194,7 @@ export function ChangeOrderItemsEditor({
       }
       cancelEditing()
     } catch (e) {
-      console.error('Failed to save item:', e)
+      logger.error('Failed to save item:', e)
     }
   }
 
@@ -202,7 +204,7 @@ export function ChangeOrderItemsEditor({
     try {
       await deleteItem.mutateAsync({ id, changeOrderId })
     } catch (e) {
-      console.error('Failed to delete item:', e)
+      logger.error('Failed to delete item:', e)
     }
   }
 

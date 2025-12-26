@@ -24,6 +24,8 @@ import { useDocumentMarkups, useCreateMarkup, useUpdateMarkup, useDeleteMarkup }
 import type { DocumentMarkup } from '@/lib/api/services/markups'
 import toast from 'react-hot-toast'
 import { MarkupFilterPanel, type MarkupFilter, type MarkupType } from './MarkupFilterPanel'
+import { logger } from '../../../lib/utils/logger';
+
 
 type Tool = 'select' | 'arrow' | 'rectangle' | 'circle' | 'text' | 'freehand' | 'cloud' | 'eraser'
 
@@ -422,7 +424,7 @@ export function DrawingCanvas({
         shared_with_users: null,
       })
     } catch (error) {
-      console.error('Failed to save markup:', error)
+      logger.error('Failed to save markup:', error)
       toast.error('Failed to save annotation')
     }
   }
@@ -445,7 +447,7 @@ export function DrawingCanvas({
             },
           })
         } catch (error) {
-          console.error('Failed to update markup:', error)
+          logger.error('Failed to update markup:', error)
         }
       }
       pendingSaveRef.current = null
@@ -550,7 +552,7 @@ export function DrawingCanvas({
       try {
         await deleteMarkup.mutateAsync(markup.id)
       } catch (error) {
-        console.error('Failed to delete markup:', error)
+        logger.error('Failed to delete markup:', error)
         toast.error('Failed to delete annotation')
       }
     }
@@ -584,7 +586,7 @@ export function DrawingCanvas({
           await Promise.all(existingMarkups.map(m => deleteMarkup.mutateAsync(m.id)))
           toast.success('All annotations cleared')
         } catch (error) {
-          console.error('Failed to clear markups:', error)
+          logger.error('Failed to clear markups:', error)
           toast.error('Failed to clear annotations')
         }
       }

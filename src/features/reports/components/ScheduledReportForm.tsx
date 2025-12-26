@@ -56,6 +56,8 @@ import type {
   ReportScheduleFrequency,
   ReportOutputFormat,
 } from '@/types/report-builder'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Form schema
 const scheduleFormSchema = z.object({
@@ -260,7 +262,7 @@ export function ScheduledReportForm({ scheduleId, onSuccess, onCancel }: Schedul
         navigate('/reports')
       }
     } catch (error) {
-      console.error('Failed to save schedule:', error)
+      logger.error('Failed to save schedule:', error)
     }
   }
 

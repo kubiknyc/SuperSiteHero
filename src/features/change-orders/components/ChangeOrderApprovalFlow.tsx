@@ -39,6 +39,8 @@ import {
   getChangeOrderStatusLabel,
   getChangeOrderStatusColor,
 } from '@/types/change-order'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface ChangeOrderApprovalFlowProps {
   changeOrder: ChangeOrder
@@ -118,7 +120,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       })
       onStatusChange?.()
     } catch (e) {
-      console.error('Failed to submit estimate:', e)
+      logger.error('Failed to submit estimate:', e)
     }
   }
 
@@ -133,7 +135,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       resetForm()
       onStatusChange?.()
     } catch (e) {
-      console.error('Failed to process internal approval:', e)
+      logger.error('Failed to process internal approval:', e)
     }
   }
 
@@ -143,7 +145,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       await submitToOwner.mutateAsync(changeOrder.id)
       onStatusChange?.()
     } catch (e) {
-      console.error('Failed to submit to owner:', e)
+      logger.error('Failed to submit to owner:', e)
     }
   }
 
@@ -161,7 +163,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       resetForm()
       onStatusChange?.()
     } catch (e) {
-      console.error('Failed to process owner approval:', e)
+      logger.error('Failed to process owner approval:', e)
     }
   }
 
@@ -173,7 +175,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       resetForm()
       onStatusChange?.()
     } catch (e) {
-      console.error('Failed to void change order:', e)
+      logger.error('Failed to void change order:', e)
     }
   }
 

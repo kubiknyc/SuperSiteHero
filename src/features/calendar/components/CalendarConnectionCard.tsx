@@ -50,6 +50,8 @@ import {
 } from '../hooks/useGoogleCalendar';
 import { formatDistanceToNow } from 'date-fns';
 import { getSyncDirectionLabel } from '@/types/google-calendar';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CalendarConnectionCardProps {
   onConnectionChange?: () => void;
@@ -69,7 +71,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
       // Redirect to Google OAuth
       window.location.href = authUrl;
     } catch (error) {
-      console.error('Failed to initiate Google Calendar connection:', error);
+      logger.error('Failed to initiate Google Calendar connection:', error);
     }
   };
 
@@ -79,7 +81,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
       await disconnect.mutateAsync(status.connectionId);
       onConnectionChange?.();
     } catch (error) {
-      console.error('Failed to disconnect from Google Calendar:', error);
+      logger.error('Failed to disconnect from Google Calendar:', error);
     }
   };
 
@@ -91,7 +93,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         updates: { sync_enabled: enabled },
       });
     } catch (error) {
-      console.error('Failed to update sync setting:', error);
+      logger.error('Failed to update sync setting:', error);
     }
   };
 
@@ -103,7 +105,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         updates: { sync_direction: direction as 'to_google' | 'from_google' | 'bidirectional' },
       });
     } catch (error) {
-      console.error('Failed to update sync direction:', error);
+      logger.error('Failed to update sync direction:', error);
     }
   };
 
@@ -112,7 +114,7 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
     try {
       await refreshToken.mutateAsync(status.connectionId);
     } catch (error) {
-      console.error('Failed to refresh token:', error);
+      logger.error('Failed to refresh token:', error);
     }
   };
 

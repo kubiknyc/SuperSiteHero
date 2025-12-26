@@ -11,6 +11,8 @@ import { useSubmittalWorkflowType } from '../hooks/useSubmittals'
 import { useCreateSubmittalWithNotification } from '../hooks/useSubmittalMutations'
 import { DistributionListPicker } from '@/components/distribution/DistributionListPicker'
 import type { DistributionSelection } from '@/types/distribution-list'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateSubmittalDialogProps {
   projectId: string | undefined
@@ -78,7 +80,7 @@ export function CreateSubmittalDialog({
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
-      console.error('Failed to create submittal:', error)
+      logger.error('Failed to create submittal:', error)
     }
   }
 

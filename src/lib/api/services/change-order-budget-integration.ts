@@ -10,6 +10,8 @@ import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
 
 import type { ChangeOrderItem } from '@/types/change-order'
+import { logger } from '../../utils/logger';
+
 
 // Using extended Database types for tables not yet in generated types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -174,7 +176,7 @@ export const changeOrderBudgetIntegration = {
           .eq('id', existingBudget.id)
 
         if (updateError) {
-          console.error(`Failed to update budget ${existingBudget.id}:`, updateError)
+          logger.error(`Failed to update budget ${existingBudget.id}:`, updateError)
           continue
         }
 
@@ -197,7 +199,7 @@ export const changeOrderBudgetIntegration = {
           .single()
 
         if (createError) {
-          console.error(`Failed to create budget for cost code ${costCodeId}:`, createError)
+          logger.error(`Failed to create budget for cost code ${costCodeId}:`, createError)
           continue
         }
 
@@ -223,7 +225,7 @@ export const changeOrderBudgetIntegration = {
         .single()
 
       if (txError) {
-        console.error(`Failed to create transaction:`, txError)
+        logger.error(`Failed to create transaction:`, txError)
       }
 
       result.adjustments.push({

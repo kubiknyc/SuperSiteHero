@@ -46,6 +46,8 @@ import {
 import { downloadSubmittalPDF } from '@/features/submittals/utils/pdfExport'
 import { useCreateConversation } from '@/features/messaging/hooks'
 import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database'
+import { logger } from '../../lib/utils/logger';
+
 
 // Helper function for review status colors
 function getReviewStatusStyle(status: string): { bg: string; text: string } {
@@ -128,7 +130,7 @@ export function DedicatedSubmittalDetailPage() {
         navigate(`/messages/${result.id}`)
       }
     } catch (error) {
-      console.error('Failed to create conversation:', error)
+      logger.error('Failed to create conversation:', error)
     }
   }
 

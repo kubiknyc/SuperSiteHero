@@ -27,6 +27,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface Photo360ViewerProps {
   /** URL of the 360 photo to display */
@@ -166,7 +168,7 @@ export function Photo360Viewer({
         await document.exitFullscreen();
       }
     } catch (err) {
-      console.error('Fullscreen error:', err);
+      logger.error('Fullscreen error:', err);
     }
   }, []);
 
@@ -198,7 +200,7 @@ export function Photo360Viewer({
         setGyroscopeEnabled(true);
       }
     } catch (err) {
-      console.error('Gyroscope error:', err);
+      logger.error('Gyroscope error:', err);
       // Gyroscope may require user gesture or permission
       setGyroscopeSupported(false);
     }

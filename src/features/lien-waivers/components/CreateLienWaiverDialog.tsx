@@ -19,6 +19,8 @@ import { useCreateLienWaiver, useLienWaiverTemplates } from '../hooks/useLienWai
 import { Plus, FileCheck, Loader2 } from 'lucide-react';
 import type { LienWaiverType, CreateLienWaiverDTO } from '@/types/lien-waiver';
 import { LIEN_WAIVER_TYPES, US_STATES } from '@/types/lien-waiver';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateLienWaiverDialogProps {
   projectId: string;
@@ -98,7 +100,7 @@ export function CreateLienWaiverDialog({
         navigate(`/lien-waivers/${result.id}`);
       }
     } catch (error) {
-      console.error('Failed to create lien waiver:', error);
+      logger.error('Failed to create lien waiver:', error);
     }
   };
 

@@ -38,6 +38,8 @@ import {
   type SiteInstructionAttachment,
 } from '../hooks'
 import { cn } from '@/lib/utils'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface AttachmentsSectionProps {
   siteInstructionId: string
@@ -150,7 +152,7 @@ export function AttachmentsSection({ siteInstructionId, readOnly = false }: Atta
         successCount++
       } catch (error) {
         errorCount++
-        console.error('Failed to upload file:', file.name, error)
+        logger.error('Failed to upload file:', file.name, error)
       }
     }
 

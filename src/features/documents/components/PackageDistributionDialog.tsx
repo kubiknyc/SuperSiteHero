@@ -68,6 +68,8 @@ import type {
   DrawingPackageRecipient,
   DrawingPackageRecipientInsert,
 } from '@/types/drawing';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PackageDistributionDialogProps {
   open: boolean;
@@ -147,7 +149,7 @@ export function PackageDistributionDialog({
       });
       setFormData(initialFormData);
     } catch (error) {
-      console.error('Failed to add recipient:', error);
+      logger.error('Failed to add recipient:', error);
     }
   }, [pkg.id, formData, addRecipient]);
 
@@ -170,7 +172,7 @@ export function PackageDistributionDialog({
       });
       setBulkEmails('');
     } catch (error) {
-      console.error('Failed to add recipients:', error);
+      logger.error('Failed to add recipients:', error);
     }
   }, [pkg.id, bulkEmails, addMultipleRecipients]);
 
@@ -183,7 +185,7 @@ export function PackageDistributionDialog({
         });
         setSelectedRecipients((prev) => prev.filter((id) => id !== recipientId));
       } catch (error) {
-        console.error('Failed to remove recipient:', error);
+        logger.error('Failed to remove recipient:', error);
       }
     },
     [pkg.id, removeRecipient]
@@ -200,7 +202,7 @@ export function PackageDistributionDialog({
       setSelectedRecipients([]);
       onDistributeSuccess?.();
     } catch (error) {
-      console.error('Failed to distribute package:', error);
+      logger.error('Failed to distribute package:', error);
     }
   }, [pkg.id, selectedRecipients, distributePackage, onDistributeSuccess]);
 
@@ -213,7 +215,7 @@ export function PackageDistributionDialog({
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 3000);
     } catch (error) {
-      console.error('Failed to generate link:', error);
+      logger.error('Failed to generate link:', error);
     }
   }, [pkg.id, generateLink]);
 

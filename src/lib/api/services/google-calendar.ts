@@ -18,6 +18,8 @@ import type {
   connectionNeedsRefresh,
   connectionNeedsReconnect,
 } from '@/types/google-calendar';
+import { logger } from '../../utils/logger';
+
 
 export const googleCalendarApi = {
   // =============================================
@@ -287,7 +289,7 @@ export const googleCalendarApi = {
 
       return result.googleEventId || null;
     } catch (error) {
-      console.error('Error creating Google Calendar event:', error);
+      logger.error('Error creating Google Calendar event:', error);
       return null;
     }
   },
@@ -313,7 +315,7 @@ export const googleCalendarApi = {
 
       return result.success;
     } catch (error) {
-      console.error('Error updating Google Calendar event:', error);
+      logger.error('Error updating Google Calendar event:', error);
       return false;
     }
   },
@@ -337,7 +339,7 @@ export const googleCalendarApi = {
 
       return result.success;
     } catch (error) {
-      console.error('Error deleting Google Calendar event:', error);
+      logger.error('Error deleting Google Calendar event:', error);
       return false;
     }
   },

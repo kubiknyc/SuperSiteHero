@@ -15,9 +15,8 @@
  */
 
 import React, { useRef, useState, useCallback, useEffect, useMemo } from 'react';
-import { Canvas, useThree, useFrame } from '@react-three/fiber';
+import { Canvas, useThree, useFrame } from '@react-three/fiber'
 import { OrbitControls, Html, Environment } from '@react-three/drei';
-import * as THREE from 'three';
 import {
   Camera,
   Move,
@@ -58,6 +57,8 @@ import type {
   Vector3D,
   Model3DMetadata,
 } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -184,7 +185,7 @@ interface PlacedModelMeshProps {
 }
 
 function PlacedModelMesh({ model, isSelected, onSelect }: PlacedModelMeshProps) {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef<any>(null);
   const { model: loadedModel } = useModelLoader();
 
   // Selection highlight animation
@@ -397,7 +398,7 @@ export function ARViewer({
       await videoRef.current.play();
       setIsCameraActive(true);
     } catch (error) {
-      console.error('Camera error:', error);
+      logger.error('Camera error:', error);
       onError?.(error instanceof Error ? error : new Error('Camera access denied'));
     }
   }, [onError]);

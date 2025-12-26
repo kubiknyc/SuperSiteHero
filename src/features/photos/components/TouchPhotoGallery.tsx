@@ -29,6 +29,8 @@ import {
   Share2,
   RotateCw,
 } from 'lucide-react';
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface GalleryPhoto {
   id: string;
@@ -229,7 +231,7 @@ export function TouchPhotoGallery({
       URL.revokeObjectURL(url);
       triggerHapticFeedback('medium');
     } catch (error) {
-      console.error('Failed to download photo:', error);
+      logger.error('Failed to download photo:', error);
     }
   }, [currentPhoto]);
 
@@ -243,7 +245,7 @@ export function TouchPhotoGallery({
         url: currentPhoto.url,
       });
     } catch (error) {
-      console.error('Failed to share photo:', error);
+      logger.error('Failed to share photo:', error);
     }
   }, [currentPhoto]);
 

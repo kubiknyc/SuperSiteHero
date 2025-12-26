@@ -6,6 +6,8 @@
  */
 
 import exifr from 'exifr';
+import { logger } from './logger';
+
 
 /**
  * List of known 360 camera manufacturers and models
@@ -202,7 +204,7 @@ export async function detect360Photo(file: File): Promise<Detect360Result> {
       });
     } catch {
       // EXIF parsing failed, continue with other checks
-      console.debug('EXIF parsing failed for 360 detection, continuing with dimension check');
+      logger.debug('EXIF parsing failed for 360 detection, continuing with dimension check');
     }
 
     if (exifData) {
@@ -264,7 +266,7 @@ export async function detect360Photo(file: File): Promise<Detect360Result> {
 
     return result;
   } catch (error) {
-    console.error('Error detecting 360 photo:', error);
+    logger.error('Error detecting 360 photo:', error);
     return result;
   }
 }

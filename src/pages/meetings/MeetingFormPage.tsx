@@ -35,6 +35,8 @@ import {
   ListChecks,
   Calendar,
 } from 'lucide-react'
+import { logger } from '../../lib/utils/logger';
+
 
 interface FormData {
   project_id: string
@@ -255,7 +257,7 @@ export function MeetingFormPage() {
         navigate(`/meetings/${result.id}`)
       }
     } catch (err) {
-      console.error('Failed to save meeting:', err)
+      logger.error('Failed to save meeting:', err)
     } finally {
       setIsSaving(false)
     }

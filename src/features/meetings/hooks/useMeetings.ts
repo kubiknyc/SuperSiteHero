@@ -5,6 +5,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { googleCalendarApi } from '@/lib/api/services/google-calendar'
 import type { Database } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 type Meeting = Database['public']['Tables']['meetings']['Row']
 type MeetingInsert = Database['public']['Tables']['meetings']['Insert']
@@ -260,13 +262,13 @@ export function useCreateMeeting(options?: { autoSyncToCalendar?: boolean }) {
                 },
                 true
               ).catch((err) => {
-                console.warn('Auto-sync to Google Calendar failed:', err)
+                logger.warn('Auto-sync to Google Calendar failed:', err)
               })
             }
           }
         } catch (syncErr) {
           // Don't fail the create operation if calendar sync fails
-          console.warn('Google Calendar auto-sync check failed:', syncErr)
+          logger.warn('Google Calendar auto-sync check failed:', syncErr)
         }
       }
     },
@@ -319,12 +321,12 @@ export function useUpdateMeeting(options?: { autoSyncToCalendar?: boolean }) {
                 },
                 true
               ).catch((err) => {
-                console.warn('Auto-sync to Google Calendar failed:', err)
+                logger.warn('Auto-sync to Google Calendar failed:', err)
               })
             }
           }
         } catch (syncErr) {
-          console.warn('Google Calendar auto-sync check failed:', syncErr)
+          logger.warn('Google Calendar auto-sync check failed:', syncErr)
         }
       }
     },
@@ -370,12 +372,12 @@ export function useDeleteMeeting(options?: { deleteFromCalendar?: boolean }) {
                 result.googleEventId,
                 true
               ).catch((err) => {
-                console.warn('Failed to delete Google Calendar event:', err)
+                logger.warn('Failed to delete Google Calendar event:', err)
               })
             }
           }
         } catch (syncErr) {
-          console.warn('Google Calendar delete check failed:', syncErr)
+          logger.warn('Google Calendar delete check failed:', syncErr)
         }
       }
     },

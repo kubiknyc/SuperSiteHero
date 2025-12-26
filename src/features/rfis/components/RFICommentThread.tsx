@@ -9,6 +9,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Loader2, MessageSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { WorkflowItemComment, UserProfile } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface RFICommentThreadProps {
   rfiId: string
@@ -65,7 +67,7 @@ export function RFICommentThread({
       setNewComment('') // Clear input after successful submission
     } catch (error) {
       // Error handling done in parent component via toast
-      console.error('Comment submission error:', error)
+      logger.error('Comment submission error:', error)
     }
   }
 

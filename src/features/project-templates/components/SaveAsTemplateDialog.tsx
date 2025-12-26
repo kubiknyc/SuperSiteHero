@@ -46,6 +46,8 @@ import type {
   CreateTemplateFromProjectInput,
 } from '@/types/project-template'
 import { TEMPLATE_CATEGORIES } from '@/types/project-template'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface SaveAsTemplateDialogProps {
   open: boolean
@@ -113,7 +115,7 @@ export function SaveAsTemplateDialog({
       resetForm()
     } catch (error) {
       toast.error('Failed to create template')
-      console.error('Failed to create template:', error)
+      logger.error('Failed to create template:', error)
     }
   }
 

@@ -246,7 +246,7 @@ export async function getUserMFAPreferences(userId: string): Promise<{
   //     backupCodesGenerated: data.backup_codes_generated || false
   //   }
   // } catch (error) {
-  //   console.error('Error getting MFA preferences:', error)
+  //   logger.error('Error getting MFA preferences:', error)
   //   return { mfaEnabled: false }
   // }
 
@@ -279,7 +279,7 @@ export async function updateUserMFAPreferences(
   //   if (error) throw error
   //   return true
   // } catch (error) {
-  //   console.error('Error updating MFA preferences:', error)
+  //   logger.error('Error updating MFA preferences:', error)
   //   return false
   // }
 

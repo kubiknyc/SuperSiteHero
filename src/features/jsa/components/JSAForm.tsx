@@ -47,6 +47,8 @@ import type {
   JSATemplateWithDetails,
 } from '@/types/jsa';
 import { JSA_CATEGORIES } from '@/types/jsa';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface JSAFormProps {
   projectId: string;
@@ -219,7 +221,7 @@ export function JSAForm({
         }
       }
     } catch (error) {
-      console.error('Failed to save JSA:', error);
+      logger.error('Failed to save JSA:', error);
     }
   };
 

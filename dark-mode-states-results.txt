@@ -1,0 +1,1362 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+
+Running 145 tests using 6 workers
+
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ok   1 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (51.0s)
+  ok   4 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (50.8s)
+  ok   5 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (1.0m)
+  ok   2 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (1.1m)
+  ok   8 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (18.0s)
+Focus order: [
+  [32m'BUTTON.inline-flex'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'A.body-small'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'BUTTON.inline-flex'[39m
+]
+  ok   7 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (18.7s)
+  ok  10 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (5.6s)
+  ok   9 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (7.0s)
+  ok   6 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (1.2m)
+  ok  13 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:289:3 › Active States - Dark Mode › active navigation item is highlighted (10.7s)
+  ok  15 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:325:3 › Active States - Dark Mode › expanded accordion item (9.7s)
+  ok  14 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row (12.5s)
+  ok  12 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (14.9s)
+  ok   3 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (1.4m)
+  ok  11 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (15.2s)
+  ok  20 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:434:3 › Disabled States - Dark Mode › disabled state is not clickable (10.5s)
+  ok  17 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance (16.7s)
+  ok  19 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility (15.3s)
+  ok  21 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:457:3 › Loading States - Dark Mode › loading spinner visibility (15.2s)
+  ok  16 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:341:3 › Active States - Dark Mode › checkbox checked state (25.5s)
+  ok  22 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility (12.7s)
+  ok  24 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:510:3 › Loading States - Dark Mode › button loading state (8.4s)
+  ok  23 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility (9.1s)
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok  29 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:640:1 › interactive states summary (5ms)
+  ok  25 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:544:3 › Error States - Dark Mode › form field error styling (9.8s)
+  ok  26 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility (7.9s)
+  ok  18 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields (31.3s)
+  ok  27 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:595:3 › Error States - Dark Mode › error icon visibility (6.5s)
+  ok  28 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification (10.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  ok  30 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (22.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  ok  32 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (25.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  ok  34 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (33.3s)
+  ok  31 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (34.9s)
+Focus order: [
+  [32m'INPUT.flex'[39m,
+  [32m'A.body-small'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'BUTTON.inline-flex'[39m,
+  [32m'A.text-primary'[39m
+]
+  ok  38 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (40.1s)
+  ok  35 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (59.0s)
+  ok  33 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (57.1s)
+  ok  37 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (57.6s)
+  ok  39 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (49.3s)
+  ok  41 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (34.2s)
+  ok  44 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:325:3 › Active States - Dark Mode › expanded accordion item (28.4s)
+  ok  36 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (52.7s)
+  ok  40 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (42.0s)
+  ok  45 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:341:3 › Active States - Dark Mode › checkbox checked state (32.8s)
+  ok  42 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:289:3 › Active States - Dark Mode › active navigation item is highlighted (1.1m)
+  x   48 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility (19.8s)
+  x   47 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields (19.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ok  49 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:434:3 › Disabled States - Dark Mode › disabled state is not clickable (28.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ok  50 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:457:3 › Loading States - Dark Mode › loading spinner visibility (29.8s)
+  ok  51 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:510:3 › Loading States - Dark Mode › button loading state (24.5s)
+  x   43 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row (1.5m)
+  ok  54 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:544:3 › Error States - Dark Mode › form field error styling (42.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x   46 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance (1.5m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok  58 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:640:1 › interactive states summary (26ms)
+  x   53 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility (1.6m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   55 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility (1.6m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ok  59 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (23.6s)
+  ok  62 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (19.1s)
+  ok  60 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (20.1s)
+  ok  57 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:595:3 › Error States - Dark Mode › error icon visibility (1.3m)
+  x   61 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (34.7s)
+  x   52 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility (1.4m)
+  x   56 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification (1.8m)
+  ok  63 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (18.9s)
+  ok  64 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (18.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  ok  65 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (12.8s)
+Focus order: [ [32m'DIV.fixed'[39m, [32m'BUTTON.p-1'[39m, [32m'BODY'[39m, [32m'DIV.fixed'[39m, [32m'BUTTON.p-1'[39m ]
+  ok  70 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (21.2s)
+  ok  69 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (21.9s)
+  x   68 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (23.9s)
+  x   67 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (26.9s)
+  ok  71 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:289:3 › Active States - Dark Mode › active navigation item is highlighted (27.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  ok  72 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row (18.7s)
+  ok  73 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:325:3 › Active States - Dark Mode › expanded accordion item (24.1s)
+  ok  74 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields (20.6s)
+  ok  77 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility (17.9s)
+  ok  75 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:341:3 › Active States - Dark Mode › checkbox checked state (22.9s)
+  ok  76 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance (21.2s)
+  ok  78 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:434:3 › Disabled States - Dark Mode › disabled state is not clickable (22.5s)
+  x   66 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (1.3m)
+  ok  79 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:457:3 › Loading States - Dark Mode › loading spinner visibility (20.0s)
+  ok  81 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility (16.5s)
+  ok  80 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility (20.8s)
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok  86 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:640:1 › interactive states summary (5ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  ok  82 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:510:3 › Loading States - Dark Mode › button loading state (27.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  ok  83 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:544:3 › Error States - Dark Mode › form field error styling (23.0s)
+  ok  84 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:595:3 › Error States - Dark Mode › error icon visibility (29.1s)
+  ok  85 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification (27.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+  ok  87 [webkit] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility (29.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  ok  89 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (17.6s)
+  ok  91 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (8.3s)
+  ok  88 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (57.6s)
+Focus order: [
+  [32m'BUTTON.inline-flex'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'A.body-small'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'BUTTON.inline-flex'[39m
+]
+  ok  94 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (7.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ok  96 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (15.4s)
+  ok  97 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (20.4s)
+  x   90 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (26.0s)
+  ok  92 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (1.5m)
+  ok  95 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (1.3m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  ok 101 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:325:3 › Active States - Dark Mode › expanded accordion item (6.0s)
+  ok 103 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:341:3 › Active States - Dark Mode › checkbox checked state (45.7s)
+  ok 102 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:289:3 › Active States - Dark Mode › active navigation item is highlighted (51.6s)
+  x   93 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (1.5m)
+  x   98 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (55.9s)
+  x   99 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (1.8m)
+  ok 104 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance (55.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  x  100 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row (1.8m)
+  ok 106 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility (32.3s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  ok 107 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility (23.1s)
+  ok 108 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:434:3 › Disabled States - Dark Mode › disabled state is not clickable (24.7s)
+  ok 110 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:544:3 › Error States - Dark Mode › form field error styling (19.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  ok 111 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:457:3 › Loading States - Dark Mode › loading spinner visibility (36.9s)
+  ok 113 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:595:3 › Error States - Dark Mode › error icon visibility (36.4s)
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok 116 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:640:1 › interactive states summary (14ms)
+  x  105 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields (1.2m)
+  ok 109 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:510:3 › Loading States - Dark Mode › button loading state (1.3m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  ok 115 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification (43.8s)
+  ok 114 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility (1.2m)
+  ok 112 [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility (1.3m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  ok 117 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (13.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+  x  119 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (17.4s)
+  x  118 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (27.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  ok 120 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (21.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+Focus order: [ [32m'DIV.fixed'[39m, [32m'BUTTON.p-1'[39m, [32m'BODY'[39m, [32m'DIV.fixed'[39m, [32m'BUTTON.p-1'[39m ]
+  ok 122 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (17.6s)
+  ok 124 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (13.8s)
+  x  123 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (15.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x  121 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (26.1s)
+  ok 126 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (13.6s)
+  ok 125 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (13.5s)
+  ok 128 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (11.1s)
+  ok 129 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:325:3 › Active States - Dark Mode › expanded accordion item (10.5s)
+  ok 130 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:341:3 › Active States - Dark Mode › checkbox checked state (10.4s)
+  ok 131 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance (14.9s)
+  x  132 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields (23.6s)
+  ok 133 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility (22.9s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  ok 134 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:434:3 › Disabled States - Dark Mode › disabled state is not clickable (23.9s)
+  ok 135 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility (16.8s)
+  ok 137 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility (14.0s)
+  ok 136 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:457:3 › Loading States - Dark Mode › loading spinner visibility (15.9s)
+  x  127 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (1.3m)
+  ok 138 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:510:3 › Loading States - Dark Mode › button loading state (16.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  ok 140 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility (24.2s)
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok 143 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:640:1 › interactive states summary (8ms)
+  ok 139 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:544:3 › Error States - Dark Mode › form field error styling (27.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  ok 142 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:289:3 › Active States - Dark Mode › active navigation item is highlighted (11.7s)
+  ok 144 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row (8.5s)
+  ok 141 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification (36.7s)
+  ok 145 [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:595:3 › Error States - Dark Mode › error icon visibility (8.5s)
+
+
+  1) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: page.waitForLoadState: Test timeout of 90000ms exceeded.
+
+      311 |     await page.goto('/daily-reports');
+      312 |     await enableDarkMode(page);
+    > 313 |     await page.waitForLoadState('networkidle');
+          |                ^
+      314 |
+      315 |     const firstRow = page.locator('tbody tr').first();
+      316 |     if (await firstRow.isVisible()) {
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:313:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-dfa78-ark-Mode-selected-table-row-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-dfa78-ark-Mode-selected-table-row-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-dfa78-ark-Mode-selected-table-row-firefox\error-context.md
+
+  2) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: page.waitForLoadState: Test timeout of 90000ms exceeded.
+
+      366 |     await page.goto('/login');
+      367 |     await enableDarkMode(page);
+    > 368 |     await page.waitForLoadState('networkidle');
+          |                ^
+      369 |
+      370 |     // Submit button should be disabled initially
+      371 |     const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:368:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-0d44f--disabled-button-appearance-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-0d44f--disabled-button-appearance-firefox\error-context.md
+
+  3) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields 
+
+    Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+    Call log:
+    [2m  - navigating to "http://localhost:5173/login", waiting until "load"[22m
+
+
+      389 |
+      390 |   test('disabled input fields', async ({ page }) => {
+    > 391 |     await page.goto('/login');
+          |                ^
+      392 |     await enableDarkMode(page);
+      393 |
+      394 |     // Create a disabled input via JavaScript
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:391:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-firefox\error-context.md
+
+  4) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility 
+
+    Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+    Call log:
+    [2m  - navigating to "http://localhost:5173/", waiting until "load"[22m
+
+
+      416 |
+      417 |   test('disabled checkbox visibility', async ({ page }) => {
+    > 418 |     await page.goto('/');
+          |                ^
+      419 |     await enableDarkMode(page);
+      420 |     await page.waitForLoadState('networkidle');
+      421 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:418:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-71bee-isabled-checkbox-visibility-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-71bee-isabled-checkbox-visibility-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-71bee-isabled-checkbox-visibility-firefox\error-context.md
+
+  5) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility 
+
+    TimeoutError: page.goto: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - navigating to "http://localhost:5173/projects", waiting until "load"[22m
+
+
+      477 |
+      478 |   test('skeleton loader visibility', async ({ page }) => {
+    > 479 |     await page.goto('/projects');
+          |                ^
+      480 |     await enableDarkMode(page);
+      481 |
+      482 |     // Skeleton loaders may appear briefly during initial load
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:479:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-0be78--skeleton-loader-visibility-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-0be78--skeleton-loader-visibility-firefox\error-context.md
+
+  6) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: page.goto: Test timeout of 90000ms exceeded.
+    Call log:
+    [2m  - navigating to "http://localhost:5173/", waiting until "load"[22m
+
+
+      489 |
+      490 |   test('progress bar visibility', async ({ page }) => {
+    > 491 |     await page.goto('/');
+          |                ^
+      492 |     await enableDarkMode(page);
+      493 |     await page.waitForLoadState('networkidle');
+      494 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:491:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-534ab-ode-progress-bar-visibility-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  7) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: page.goto: Test timeout of 90000ms exceeded.
+    Call log:
+    [2m  - navigating to "http://localhost:5173/login", waiting until "load"[22m
+
+
+      569 |
+      570 |   test('error message visibility', async ({ page }) => {
+    > 571 |     await page.goto('/login');
+          |                ^
+      572 |     await enableDarkMode(page);
+      573 |     await page.waitForLoadState('networkidle');
+      574 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:571:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-315f9-de-error-message-visibility-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  8) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification 
+
+    TimeoutError: page.goto: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - navigating to "http://localhost:5173/login", waiting until "load"[22m
+
+
+      611 |
+      612 |   test('toast error notification', async ({ page }) => {
+    > 613 |     await page.goto('/login');
+          |                ^
+      614 |     await enableDarkMode(page);
+      615 |     await page.waitForLoadState('networkidle');
+      616 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:613:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-08bc7-de-toast-error-notification-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-08bc7-de-toast-error-notification-firefox\error-context.md
+
+  9) [webkit] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('button').first()
+      There are some read requests waitng on finished stream
+
+      Snapshot: button-primary-default-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(button-primary-default-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('button').first()[22m
+    [2m    - locator resolved to <div tabindex="0" role="button" class="fixed inset-0 h-screen w-screen pointer-events-none"></div>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - There are some read requests waitng on finished stream[22m
+
+
+      24 |     if (await primaryButton.isVisible()) {
+      25 |       // Default state
+    > 26 |       await expect(primaryButton).toHaveScreenshot('button-primary-default-dark.png');
+         |                                   ^
+      27 |
+      28 |       // Hover state
+      29 |       await primaryButton.hover();
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:26:35
+
+    attachment #1: button-primary-default-dark (image/png) ─────────────────────────────────────────
+    e2e\accessibility\dark-mode-states.spec.ts-snapshots\button-primary-default-dark-webkit-win32.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-8c1e0-on-hover-states-are-visible-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-8c1e0-on-hover-states-are-visible-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-8c1e0-on-hover-states-are-visible-webkit\error-context.md
+
+  10) [webkit] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible 
+
+    Error: Button should have a visible focus indicator
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      164 |         (outline.boxShadow !== 'none' && outline.boxShadow.includes('ring'));
+      165 |
+    > 166 |       expect(hasFocusIndicator, 'Button should have a visible focus indicator').toBe(true);
+          |                                                                                 ^
+      167 |     }
+      168 |   });
+      169 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:166:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-webkit\error-context.md
+
+  11) [webkit] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('textbox').first()
+      15316 pixels (ratio 0.97 of all image pixels) are different.
+
+      Snapshot: input-focused-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(input-focused-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('textbox').first()[22m
+    [2m    - locator resolved to <input value="" id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dark:bg-gray…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - 15316 pixels (ratio 0.97 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - waiting for getByRole('textbox').first()[22m
+    [2m    - locator resolved to <input value="" id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dark:bg-gray…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - 15316 pixels (ratio 0.97 of all image pixels) are different.[22m
+
+
+      178 |       await page.waitForTimeout(100);
+      179 |
+    > 180 |       await expect(input).toHaveScreenshot('input-focused-dark.png');
+          |                           ^
+      181 |
+      182 |       // Verify focus ring
+      183 |       const focusRing = await input.evaluate(el => {
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:180:27
+
+    attachment #1: input-focused-dark (image/png) ──────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\input-focused-dark-webkit-win32.png
+    Received: test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-webkit\input-focused-dark-actual.png
+    Diff:     test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-webkit\input-focused-dark-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-webkit\error-context.md
+
+  12) [webkit] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state 
+
+    TimeoutError: locator.hover: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button').first()[22m
+    [2m    - locator resolved to <div tabindex="0" role="button" class="fixed inset-0 h-screen w-screen pointer-events-none"></div>[22m
+    [2m  - attempting hover action[22m
+    [2m    2 × waiting for element to be visible and stable[22m
+    [2m      - element is visible and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex flex-col p-6 space-y-4">…</div> from <div id="root">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying hover action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible and stable[22m
+    [2m      - element is visible and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex flex-col p-6 space-y-4">…</div> from <div id="root">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying hover action[22m
+    [2m      - waiting 100ms[22m
+    [2m    20 × waiting for element to be visible and stable[22m
+    [2m       - element is visible and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="flex flex-col p-6 space-y-4">…</div> from <div id="root">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying hover action[22m
+    [2m       - waiting 500ms[22m
+    [2m    - waiting for element to be visible and stable[22m
+
+
+      277 |     if (await button.isVisible()) {
+      278 |       // Trigger active state with mousedown
+    > 279 |       await button.hover();
+          |                    ^
+      280 |       await page.mouse.down();
+      281 |       await page.waitForTimeout(100);
+      282 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:279:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-webkit\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-webkit\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-webkit\error-context.md
+
+  13) [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('[class*="card"]').first()
+    Timeout: 5000ms
+      Timeout 5000ms exceeded.
+
+      Snapshot: card-default-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(card-default-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for locator('[class*="card"]').first()[22m
+    [2m  - Timeout 5000ms exceeded.[22m
+
+
+      83 |     const card = page.locator('[class*="card"]').first();
+      84 |     if (await card.isVisible()) {
+    > 85 |       await expect(card).toHaveScreenshot('card-default-dark.png');
+         |                          ^
+      86 |
+      87 |       await card.hover();
+      88 |       await page.waitForTimeout(100);
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:85:26
+
+    attachment #1: card-default-dark (image/png) ───────────────────────────────────────────────────
+    e2e\accessibility\dark-mode-states.spec.ts-snapshots\card-default-dark-Mobile-Chrome-win32.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Chrome\error-context.md
+
+  14) [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('textbox').first()
+      Target page, context or browser has been closed
+
+      Snapshot: input-focused-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(input-focused-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('textbox').first()[22m
+    [2m    - locator resolved to <input value="" id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dark:bg-gray…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Target page, context or browser has been closed[22m
+
+
+      178 |       await page.waitForTimeout(100);
+      179 |
+    > 180 |       await expect(input).toHaveScreenshot('input-focused-dark.png');
+          |                           ^
+      181 |
+      182 |       // Verify focus ring
+      183 |       const focusRing = await input.evaluate(el => {
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:180:27
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: input-focused-dark (image/png) ──────────────────────────────────────────────────
+    e2e\accessibility\dark-mode-states.spec.ts-snapshots\input-focused-dark-Mobile-Chrome-win32.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Chrome\error-context.md
+
+  15) [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('link').first()
+      Expected an image 110px by 21px, received 110px by 44px. 2526 pixels (ratio 0.53 of all image pixels) are different.
+
+      Snapshot: link-focused-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(link-focused-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('link').first()[22m
+    [2m    - locator resolved to <a data-discover="true" href="/forgot-password" class="body-small text-primary hover:text-primary/90 dark:text-primary-400 dark:hover:text-primary-300 hover:underline">Forgot password?</a>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Expected an image 110px by 21px, received 110px by 44px. 2526 pixels (ratio 0.53 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - waiting for getByRole('link').first()[22m
+    [2m    - locator resolved to <a data-discover="true" href="/forgot-password" class="body-small text-primary hover:text-primary/90 dark:text-primary-400 dark:hover:text-primary-300 hover:underline">Forgot password?</a>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - Expected an image 110px by 21px, received 110px by 44px. 2526 pixels (ratio 0.53 of all image pixels) are different.[22m
+
+
+      252 |       await page.waitForTimeout(100);
+      253 |
+    > 254 |       await expect(link).toHaveScreenshot('link-focused-dark.png');
+          |                          ^
+      255 |
+      256 |       // Verify focus indicator
+      257 |       const hasOutline = await link.evaluate(el => {
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:254:26
+
+    attachment #1: link-focused-dark (image/png) ───────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\link-focused-dark-Mobile-Chrome-win32.png
+    Received: test-results\accessibility-dark-mode-st-00163--Mode-link-focus-indicators-Mobile-Chrome\link-focused-dark-actual.png
+    Diff:     test-results\accessibility-dark-mode-st-00163--Mode-link-focus-indicators-Mobile-Chrome\link-focused-dark-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-00163--Mode-link-focus-indicators-Mobile-Chrome\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-00163--Mode-link-focus-indicators-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-00163--Mode-link-focus-indicators-Mobile-Chrome\error-context.md
+
+  16) [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    Error: page.goto: Test timeout of 90000ms exceeded.
+    Call log:
+    [2m  - navigating to "http://localhost:5173/", waiting until "load"[22m
+
+
+      270 | test.describe('Active States - Dark Mode', () => {
+      271 |   test('button active/pressed state', async ({ page }) => {
+    > 272 |     await page.goto('/');
+          |                ^
+      273 |     await enableDarkMode(page);
+      274 |     await page.waitForLoadState('networkidle');
+      275 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:272:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  17) [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row 
+
+    [31mTest timeout of 90000ms exceeded.[39m
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-dfa78-ark-Mode-selected-table-row-Mobile-Chrome\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  18) [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('input:disabled').first()
+    Timeout: 5000ms
+      Timeout 5000ms exceeded.
+
+      Snapshot: input-disabled-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(input-disabled-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for locator('input:disabled').first()[22m
+    [2m    - locator resolved to <input value="" disabled id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dar…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Timeout 5000ms exceeded.[22m
+
+
+      404 |     const disabledInput = page.locator('input:disabled').first();
+      405 |     if (await disabledInput.isVisible()) {
+    > 406 |       await expect(disabledInput).toHaveScreenshot('input-disabled-dark.png');
+          |                                   ^
+      407 |
+      408 |       // Verify cursor
+      409 |       const cursor = await disabledInput.evaluate(el =>
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:406:35
+
+    attachment #1: input-disabled-dark (image/png) ─────────────────────────────────────────────────
+    e2e\accessibility\dark-mode-states.spec.ts-snapshots\input-disabled-dark-Mobile-Chrome-win32.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-Mobile-Chrome\error-context.md
+
+  19) [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('button').first()
+    Timeout: 5000ms
+      Timeout 5000ms exceeded.
+
+      Snapshot: button-primary-default-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(button-primary-default-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('button').first()[22m
+    [2m    - locator resolved to <div tabindex="0" role="button" class="fixed inset-0 h-screen w-screen pointer-events-none"></div>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Timeout 5000ms exceeded.[22m
+
+
+      24 |     if (await primaryButton.isVisible()) {
+      25 |       // Default state
+    > 26 |       await expect(primaryButton).toHaveScreenshot('button-primary-default-dark.png');
+         |                                   ^
+      27 |
+      28 |       // Hover state
+      29 |       await primaryButton.hover();
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:26:35
+
+    attachment #1: button-primary-default-dark (image/png) ─────────────────────────────────────────
+    e2e\accessibility\dark-mode-states.spec.ts-snapshots\button-primary-default-dark-Mobile-Safari-win32.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-8c1e0-on-hover-states-are-visible-Mobile-Safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-8c1e0-on-hover-states-are-visible-Mobile-Safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-8c1e0-on-hover-states-are-visible-Mobile-Safari\error-context.md
+
+  20) [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode 
+
+    Error: A snapshot doesn't exist at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts-snapshots\card-default-dark-Mobile-Safari-win32.png, writing actual.
+
+      83 |     const card = page.locator('[class*="card"]').first();
+      84 |     if (await card.isVisible()) {
+    > 85 |       await expect(card).toHaveScreenshot('card-default-dark.png');
+         |       ^
+      86 |
+      87 |       await card.hover();
+      88 |       await page.waitForTimeout(100);
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:85:7
+
+    Error: A snapshot doesn't exist at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts-snapshots\card-hover-dark-Mobile-Safari-win32.png, writing actual.
+
+      87 |       await card.hover();
+      88 |       await page.waitForTimeout(100);
+    > 89 |       await expect(card).toHaveScreenshot('card-hover-dark.png');
+         |       ^
+      90 |     }
+      91 |   });
+      92 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:89:7
+
+    attachment #1: card-default-dark (image/png) ───────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\card-default-dark-Mobile-Safari-win32.png
+    Received: test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Safari\card-default-dark-actual.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: card-hover-dark (image/png) ─────────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\card-hover-dark-Mobile-Safari-win32.png
+    Received: test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Safari\card-hover-dark-actual.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #4: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-28190-over-elevation-in-dark-mode-Mobile-Safari\error-context.md
+
+  21) [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('button').first()
+    Timeout: 5000ms
+      Timeout 5000ms exceeded.
+
+      Snapshot: button-focused-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(button-focused-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('button').first()[22m
+    [2m    - locator resolved to <div tabindex="0" role="button" class="fixed inset-0 h-screen w-screen pointer-events-none"></div>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Expected an image 308px by 44px, received 390px by 664px. 39647 pixels (ratio 0.16 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - waiting for getByRole('button').first()[22m
+    [2m    - locator resolved to <button type="submit" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none touch-manipulation dark:ring-offset-gray-950 text-white focus-visible:ring-primary active:bg-primary/80 dark:active:bg-primary/80 h-10 px-4 py-2 md:h-10 min-h-[44px] md:min-h-0 w-full bg-primary hover:bg-primary/90 dark:bg-prim…>Sign in</button>[22m
+    [2m  - Timeout 5000ms exceeded.[22m
+
+
+      145 |
+      146 |       // Take screenshot of focused button
+    > 147 |       await expect(button).toHaveScreenshot('button-focused-dark.png');
+          |                            ^
+      148 |
+      149 |       // Verify focus outline exists and is visible
+      150 |       const outline = await button.evaluate(el => {
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:147:28
+
+    attachment #1: button-focused-dark (image/png) ─────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\button-focused-dark-Mobile-Safari-win32.png
+    Received: test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-Mobile-Safari\button-focused-dark-actual.png
+    Diff:     test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-Mobile-Safari\button-focused-dark-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-Mobile-Safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-Mobile-Safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-Mobile-Safari\error-context.md
+
+  22) [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: getByRole('textbox').first()
+      Expected an image 308px by 44px, received 308px by 45px. 13003 pixels (ratio 0.94 of all image pixels) are different.
+
+      Snapshot: input-focused-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(input-focused-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for getByRole('textbox').first()[22m
+    [2m    - locator resolved to <input value="" id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dark:bg-gray…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Expected an image 308px by 44px, received 308px by 45px. 13003 pixels (ratio 0.94 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - waiting for getByRole('textbox').first()[22m
+    [2m    - locator resolved to <input value="" id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dark:bg-gray…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - captured a stable screenshot[22m
+    [2m  - Expected an image 308px by 44px, received 308px by 45px. 13003 pixels (ratio 0.94 of all image pixels) are different.[22m
+
+
+      178 |       await page.waitForTimeout(100);
+      179 |
+    > 180 |       await expect(input).toHaveScreenshot('input-focused-dark.png');
+          |                           ^
+      181 |
+      182 |       // Verify focus ring
+      183 |       const focusRing = await input.evaluate(el => {
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:180:27
+
+    attachment #1: input-focused-dark (image/png) ──────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\input-focused-dark-Mobile-Safari-win32.png
+    Received: test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Safari\input-focused-dark-actual.png
+    Diff:     test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Safari\input-focused-dark-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-Mobile-Safari\error-context.md
+
+  23) [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state 
+
+    TimeoutError: locator.hover: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for getByRole('button').first()[22m
+    [2m    - locator resolved to <div tabindex="0" role="button" class="fixed inset-0 h-screen w-screen pointer-events-none"></div>[22m
+    [2m  - attempting hover action[22m
+    [2m    2 × waiting for element to be visible and stable[22m
+    [2m      - element is visible and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex flex-col p-6 space-y-4">…</div> from <div id="root">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying hover action[22m
+    [2m    - waiting 20ms[22m
+    [2m    2 × waiting for element to be visible and stable[22m
+    [2m      - element is visible and stable[22m
+    [2m      - scrolling into view if needed[22m
+    [2m      - done scrolling[22m
+    [2m      - <div class="flex flex-col p-6 space-y-4">…</div> from <div id="root">…</div> subtree intercepts pointer events[22m
+    [2m    - retrying hover action[22m
+    [2m      - waiting 100ms[22m
+    [2m    16 × waiting for element to be visible and stable[22m
+    [2m       - element is visible and stable[22m
+    [2m       - scrolling into view if needed[22m
+    [2m       - done scrolling[22m
+    [2m       - <div class="flex flex-col p-6 space-y-4">…</div> from <div id="root">…</div> subtree intercepts pointer events[22m
+    [2m     - retrying hover action[22m
+    [2m       - waiting 500ms[22m
+    [2m    - waiting for element to be visible and stable[22m
+
+
+      277 |     if (await button.isVisible()) {
+      278 |       // Trigger active state with mousedown
+    > 279 |       await button.hover();
+          |                    ^
+      280 |       await page.mouse.down();
+      281 |       await page.waitForTimeout(100);
+      282 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:279:20
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-Mobile-Safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-Mobile-Safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-e0f79-button-active-pressed-state-Mobile-Safari\error-context.md
+
+  24) [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
+
+    Locator: locator('input:disabled').first()
+    Timeout: 5000ms
+      Timeout 5000ms exceeded.
+
+      Snapshot: input-disabled-dark.png
+
+    Call log:
+    [2m  - Expect "toHaveScreenshot(input-disabled-dark.png)" with timeout 5000ms[22m
+    [2m    - verifying given screenshot expectation[22m
+    [2m  - waiting for locator('input:disabled').first()[22m
+    [2m    - locator resolved to <input value="" disabled id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dar…/>[22m
+    [2m  - taking element screenshot[22m
+    [2m    - disabled all CSS animations[22m
+    [2m  - waiting for fonts to load...[22m
+    [2m  - fonts loaded[22m
+    [2m  - attempting scroll into view action[22m
+    [2m    - waiting for element to be stable[22m
+    [2m  - Expected an image 308px by 44px, received 308px by 45px. 13179 pixels (ratio 0.96 of all image pixels) are different.[22m
+    [2m  - waiting 100ms before taking screenshot[22m
+    [2m  - waiting for locator('input:disabled').first()[22m
+    [2m    - locator resolved to <input value="" disabled id="email" required="" type="email" name="email" placeholder="you@company.com" autocomplete="email webauthn" class="flex w-full rounded-md border border-input bg-card px-3 text-sm ring-offset-white file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation dark:border-gray-700 dar…/>[22m
+    [2m  - Timeout 5000ms exceeded.[22m
+
+
+      404 |     const disabledInput = page.locator('input:disabled').first();
+      405 |     if (await disabledInput.isVisible()) {
+    > 406 |       await expect(disabledInput).toHaveScreenshot('input-disabled-dark.png');
+          |                                   ^
+      407 |
+      408 |       // Verify cursor
+      409 |       const cursor = await disabledInput.evaluate(el =>
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:406:35
+
+    attachment #1: input-disabled-dark (image/png) ─────────────────────────────────────────────────
+    Expected: e2e\accessibility\dark-mode-states.spec.ts-snapshots\input-disabled-dark-Mobile-Safari-win32.png
+    Received: test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-Mobile-Safari\input-disabled-dark-actual.png
+    Diff:     test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-Mobile-Safari\input-disabled-dark-diff.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-Mobile-Safari\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #3: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-Mobile-Safari\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-Mobile-Safari\error-context.md
+
+  24 failed
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification 
+    [webkit] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible 
+    [webkit] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible 
+    [webkit] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+    [webkit] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state 
+    [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode 
+    [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+    [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators 
+    [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state 
+    [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row 
+    [Mobile Chrome] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields 
+    [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible 
+    [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode 
+    [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible 
+    [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+    [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state 
+    [Mobile Safari] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields 
+  121 passed (21.0m)

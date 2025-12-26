@@ -12,6 +12,8 @@ import { Wifi, WifiOff, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'
 import type { RealtimeChannel } from '@supabase/supabase-js'
+import { logger } from '../../../lib/utils/logger';
+
 
 type ConnectionState = 'connected' | 'connecting' | 'disconnected'
 
@@ -89,7 +91,7 @@ export function ConnectionStatus({
     channel.subscribe((status, error) => {
       handleStatusChange(status)
       if (error) {
-        console.warn('Realtime connection error:', error)
+        logger.warn('Realtime connection error:', error)
       }
     })
 

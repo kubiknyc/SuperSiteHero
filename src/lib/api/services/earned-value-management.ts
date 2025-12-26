@@ -26,6 +26,8 @@ import type {
   DEFAULT_EVM_THRESHOLDS,
   getPerformanceStatus,
 } from '@/types/cost-tracking'
+import { logger } from '../../utils/logger';
+
 
 // Using extended Database types for tables not yet in generated types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -514,7 +516,7 @@ export const evmApi = {
         await this.createSnapshot(project.id, companyId, today)
         count++
       } catch (e) {
-        console.error(`Failed to create snapshot for project ${project.id}:`, e)
+        logger.error(`Failed to create snapshot for project ${project.id}:`, e)
       }
     }
 

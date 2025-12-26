@@ -45,6 +45,8 @@ import {
   EQUIPMENT_DAILY_STATUS_COLORS,
   DEFAULT_EQUIPMENT_CHECKLIST_ITEMS,
 } from '@/types/equipment-daily-status';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface EquipmentReadyStateChecklistProps {
   equipmentStatus: EquipmentDailyStatusWithEquipment;
@@ -160,7 +162,7 @@ export function EquipmentReadyStateChecklist({
       });
       onComplete?.();
     } catch (error) {
-      console.error('Failed to complete checklist:', error);
+      logger.error('Failed to complete checklist:', error);
     }
   };
 

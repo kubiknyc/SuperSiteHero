@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Loader2 } from 'lucide-react'
 import type { WorkflowItem } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface RFIFormData {
   title: string
@@ -114,7 +116,7 @@ export function RFIForm({ initialData, onSubmit, isLoading, onCancel }: RFIFormP
       await onSubmit(formData)
     } catch (error) {
       // Error handling done in parent component via toast
-      console.error('Form submission error:', error)
+      logger.error('Form submission error:', error)
     }
   }
 

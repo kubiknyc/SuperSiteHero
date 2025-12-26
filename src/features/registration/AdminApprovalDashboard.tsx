@@ -13,7 +13,10 @@ import {
   Filter,
   Search,
   AlertTriangle,
-  Loader2
+  Loader2,
+  UserCheck,
+  TrendingUp,
+  Sparkles
 } from 'lucide-react';
 import {
   usePendingUsers,
@@ -112,255 +115,433 @@ export function AdminApprovalDashboard() {
   // Show loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0F1419] p-6 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-12 w-12 animate-spin text-[#FF6B35] mx-auto mb-4" />
-          <p className="text-[#95A5A6] text-lg">Loading pending users...</p>
+      <>
+        {/* Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+
+        <div className="min-h-screen bg-[#FAF5F0] p-6 flex items-center justify-center">
+          <div className="text-center">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#D4622A] to-[#B8541F] flex items-center justify-center mx-auto mb-6 shadow-xl shadow-[#D4622A]/30 animate-pulse">
+              <Loader2 className="h-10 w-10 text-white animate-spin" strokeWidth={2.5} />
+            </div>
+            <p
+              className="text-[#6B5D52] text-lg font-semibold"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              Loading pending users...
+            </p>
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#0F1419] p-6">
-      {/* Background elements */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(#2C3E50 1px, transparent 1px),
-            linear-gradient(90deg, #2C3E50 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }}
+    <>
+      {/* Google Fonts */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
       />
 
-      <div className="max-w-6xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF6B35] to-[#FFA500] flex items-center justify-center shadow-lg shadow-[#FF6B35]/20">
-              <User size={24} className="text-white" strokeWidth={2.5} />
-            </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-                User Approvals
-              </h1>
-              <p className="text-[#95A5A6]">Review and manage access requests</p>
-            </div>
-          </div>
+      <div className="min-h-screen bg-[#FAF5F0] p-6">
+        {/* Warm gradient backgrounds */}
+        <div className="fixed inset-0 bg-gradient-to-br from-[#D4622A]/5 via-transparent to-[#8B4513]/5 pointer-events-none" />
+        <div className="fixed top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-[#D4622A]/10 to-transparent blur-3xl pointer-events-none" />
 
-          {/* Stats bar */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-            <div className="bg-[#1A1A2E]/50 backdrop-blur-sm rounded-xl border border-[#2C3E50]/30 p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[#95A5A6] text-sm font-semibold uppercase tracking-wide mb-1">
-                    Pending Requests
-                  </p>
-                  <p className="text-3xl font-bold text-white">{pendingUsers.length}</p>
-                </div>
-                <div className="w-14 h-14 rounded-lg bg-[#FF6B35]/10 flex items-center justify-center">
-                  <Clock size={28} className="text-[#FF6B35]" />
-                </div>
+        {/* Floating decorative elements */}
+        <div className="fixed top-20 left-10 w-32 h-32 rounded-full bg-[#D4622A]/10 blur-2xl animate-float" />
+        <div className="fixed bottom-20 right-10 w-40 h-40 rounded-full bg-[#8B4513]/10 blur-2xl animate-float-delayed" />
+
+        <div className="max-w-6xl mx-auto relative z-10">
+          {/* Header */}
+          <div className="mb-10 animate-fade-in-up">
+            <div className="flex items-center gap-4 mb-6">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#D4622A] to-[#B8541F] flex items-center justify-center shadow-xl shadow-[#D4622A]/30">
+                <UserCheck size={32} className="text-white" strokeWidth={2.5} />
+              </div>
+              <div>
+                <h1
+                  className="text-4xl md:text-5xl font-bold text-[#2C2C2C] tracking-tight"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  User Approvals
+                </h1>
+                <p
+                  className="text-[#6B5D52] text-lg mt-1"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  Review and manage access requests
+                </p>
               </div>
             </div>
 
-            <div className="bg-[#1A1A2E]/50 backdrop-blur-sm rounded-xl border border-[#2C3E50]/30 p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[#95A5A6] text-sm font-semibold uppercase tracking-wide mb-1">
-                    Approved Today
-                  </p>
-                  <p className="text-3xl font-bold text-white">12</p>
-                </div>
-                <div className="w-14 h-14 rounded-lg bg-green-500/10 flex items-center justify-center">
-                  <CheckCircle2 size={28} className="text-green-500" />
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-[#1A1A2E]/50 backdrop-blur-sm rounded-xl border border-[#2C3E50]/30 p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[#95A5A6] text-sm font-semibold uppercase tracking-wide mb-1">
-                    Avg Response Time
-                  </p>
-                  <p className="text-3xl font-bold text-white">4.2h</p>
-                </div>
-                <div className="w-14 h-14 rounded-lg bg-[#2C3E50]/30 flex items-center justify-center">
-                  <Calendar size={28} className="text-[#95A5A6]" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filters and Search */}
-        <div className="bg-[#1A1A2E]/80 backdrop-blur-xl rounded-2xl border border-[#2C3E50]/50 p-6 mb-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#95A5A6]" size={20} />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by name, email, or role..."
-                className="w-full pl-12 pr-4 py-3 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-              />
-            </div>
-
-            {/* Filter */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setFilter('all')}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 ${
-                  filter === 'all'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'bg-[#2C3E50]/30 text-[#95A5A6] hover:bg-[#2C3E50]/50'
-                }`}
-              >
-                <Filter size={18} />
-                All
-              </button>
-              <button
-                onClick={() => setFilter('recent')}
-                className={`px-6 py-3 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2 ${
-                  filter === 'recent'
-                    ? 'bg-[#FF6B35] text-white'
-                    : 'bg-[#2C3E50]/30 text-[#95A5A6] hover:bg-[#2C3E50]/50'
-                }`}
-              >
-                Recent
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Pending Users List */}
-        <div className="space-y-4">
-          {filteredUsers.length === 0 ? (
-            <div className="bg-[#1A1A2E]/50 backdrop-blur-sm rounded-2xl border border-[#2C3E50]/30 p-12 text-center">
-              <div className="w-20 h-20 rounded-full bg-[#2C3E50]/20 flex items-center justify-center mx-auto mb-4">
-                <CheckCircle2 size={40} className="text-[#95A5A6]" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">All caught up!</h3>
-              <p className="text-[#95A5A6]">No pending approval requests at the moment.</p>
-            </div>
-          ) : (
-            filteredUsers.map((user, index) => (
+            {/* Stats bar */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
               <div
-                key={user.id}
-                className="bg-[#1A1A2E]/80 backdrop-blur-xl rounded-2xl border border-[#2C3E50]/50 overflow-hidden hover:border-[#FF6B35]/30 transition-all duration-300 animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="bg-white/95 backdrop-blur-xl rounded-2xl border border-[#D4622A]/10 p-6 shadow-lg shadow-[#D4622A]/5 animate-fade-in-up"
+                style={{ animationDelay: '0.1s' }}
               >
-                <div className="p-6">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    {/* User Info */}
-                    <div className="flex items-start gap-4 flex-1">
-                      {/* Avatar */}
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#2C3E50] to-[#95A5A6]/20 flex items-center justify-center flex-shrink-0 border-2 border-[#2C3E50]">
-                        <span className="text-white text-xl font-bold">
-                          {user.firstName[0]}{user.lastName[0]}
-                        </span>
-                      </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p
+                      className="text-[#6B5D52] text-sm font-bold uppercase tracking-wider mb-2"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Pending Requests
+                    </p>
+                    <p
+                      className="text-4xl font-bold text-[#2C2C2C]"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      {pendingUsers.length}
+                    </p>
+                  </div>
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4622A]/20 to-[#B8541F]/10 flex items-center justify-center">
+                    <Clock size={28} className="text-[#D4622A]" strokeWidth={2} />
+                  </div>
+                </div>
+              </div>
 
-                      {/* Details */}
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-xl font-bold text-white mb-1">
-                          {user.firstName} {user.lastName}
-                        </h3>
+              <div
+                className="bg-white/95 backdrop-blur-xl rounded-2xl border border-[#D4622A]/10 p-6 shadow-lg shadow-[#D4622A]/5 animate-fade-in-up"
+                style={{ animationDelay: '0.2s' }}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p
+                      className="text-[#6B5D52] text-sm font-bold uppercase tracking-wider mb-2"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Approved Today
+                    </p>
+                    <p
+                      className="text-4xl font-bold text-[#2C2C2C]"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      12
+                    </p>
+                  </div>
+                  <div className="w-14 h-14 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                    <CheckCircle2 size={28} className="text-emerald-600" strokeWidth={2} />
+                  </div>
+                </div>
+              </div>
 
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-[#95A5A6]">
-                            <Mail size={16} />
-                            <span className="text-sm truncate">{user.email}</span>
-                          </div>
+              <div
+                className="bg-white/95 backdrop-blur-xl rounded-2xl border border-[#D4622A]/10 p-6 shadow-lg shadow-[#D4622A]/5 animate-fade-in-up"
+                style={{ animationDelay: '0.3s' }}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p
+                      className="text-[#6B5D52] text-sm font-bold uppercase tracking-wider mb-2"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Avg Response Time
+                    </p>
+                    <p
+                      className="text-4xl font-bold text-[#2C2C2C]"
+                      style={{ fontFamily: "'Playfair Display', serif" }}
+                    >
+                      4.2h
+                    </p>
+                  </div>
+                  <div className="w-14 h-14 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                    <TrendingUp size={28} className="text-amber-600" strokeWidth={2} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                          <div className="flex items-center gap-2 text-[#95A5A6]">
-                            <Briefcase size={16} />
-                            <span className="text-sm">{user.role}</span>
-                          </div>
+          {/* Filters and Search */}
+          <div
+            className="bg-white/95 backdrop-blur-xl rounded-2xl border border-[#D4622A]/10 p-6 mb-8 shadow-lg shadow-[#D4622A]/5 animate-fade-in-up"
+            style={{ animationDelay: '0.4s' }}
+          >
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Search */}
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6B5D52]" size={20} strokeWidth={2.5} />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search by name, email, or role..."
+                  className="w-full pl-12 pr-4 py-3.5 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-xl text-[#2C2C2C] placeholder-[#6B5D52]/50 focus:border-[#D4622A] focus:outline-none transition-colors shadow-sm"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                />
+              </div>
 
-                          <div className="flex items-center gap-2">
-                            <Clock size={16} className="text-[#FF6B35]" />
-                            <span className="text-sm text-[#FF6B35] font-semibold">
-                              Requested {formatTimeAgo(user.requestedAt)}
-                            </span>
+              {/* Filter */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setFilter('all')}
+                  className={`px-6 py-3.5 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 shadow-sm ${
+                    filter === 'all'
+                      ? 'bg-gradient-to-r from-[#D4622A] to-[#B8541F] text-white shadow-lg shadow-[#D4622A]/30'
+                      : 'bg-white border-2 border-[#E0D5C7] text-[#6B5D52] hover:border-[#D4622A]/30'
+                  }`}
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  <Filter size={18} strokeWidth={2.5} />
+                  All
+                </button>
+                <button
+                  onClick={() => setFilter('recent')}
+                  className={`px-6 py-3.5 rounded-xl font-bold transition-all duration-300 flex items-center gap-2 shadow-sm ${
+                    filter === 'recent'
+                      ? 'bg-gradient-to-r from-[#D4622A] to-[#B8541F] text-white shadow-lg shadow-[#D4622A]/30'
+                      : 'bg-white border-2 border-[#E0D5C7] text-[#6B5D52] hover:border-[#D4622A]/30'
+                  }`}
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  <Sparkles size={18} strokeWidth={2.5} />
+                  Recent
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Pending Users List */}
+          <div className="space-y-5">
+            {filteredUsers.length === 0 ? (
+              <div
+                className="bg-white/95 backdrop-blur-xl rounded-2xl border border-[#D4622A]/10 p-16 text-center shadow-lg shadow-[#D4622A]/5 animate-fade-in-up"
+                style={{ animationDelay: '0.5s' }}
+              >
+                <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#D4622A]/10 to-[#B8541F]/5 flex items-center justify-center mx-auto mb-6 shadow-sm">
+                  <CheckCircle2 size={48} className="text-[#D4622A]" strokeWidth={2} />
+                </div>
+                <h3
+                  className="text-2xl font-bold text-[#2C2C2C] mb-3"
+                  style={{ fontFamily: "'Playfair Display', serif" }}
+                >
+                  All caught up!
+                </h3>
+                <p
+                  className="text-[#6B5D52] text-lg"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  No pending approval requests at the moment.
+                </p>
+              </div>
+            ) : (
+              filteredUsers.map((user, index) => (
+                <div
+                  key={user.id}
+                  className="bg-white/95 backdrop-blur-xl rounded-2xl border border-[#D4622A]/10 overflow-hidden hover:border-[#D4622A]/30 hover:shadow-xl hover:shadow-[#D4622A]/10 transition-all duration-300 animate-slide-up shadow-lg shadow-[#D4622A]/5"
+                  style={{ animationDelay: `${0.5 + index * 0.1}s` }}
+                >
+                  <div className="p-6 md:p-8">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                      {/* User Info */}
+                      <div className="flex items-start gap-5 flex-1">
+                        {/* Avatar */}
+                        <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#D4622A] to-[#B8541F] flex items-center justify-center flex-shrink-0 border-2 border-[#D4622A]/20 shadow-lg shadow-[#D4622A]/20">
+                          <span
+                            className="text-white text-xl font-bold"
+                            style={{ fontFamily: "'DM Sans', sans-serif" }}
+                          >
+                            {user.firstName[0]}{user.lastName[0]}
+                          </span>
+                        </div>
+
+                        {/* Details */}
+                        <div className="flex-1 min-w-0">
+                          <h3
+                            className="text-2xl font-bold text-[#2C2C2C] mb-3"
+                            style={{ fontFamily: "'Playfair Display', serif" }}
+                          >
+                            {user.firstName} {user.lastName}
+                          </h3>
+
+                          <div className="space-y-2.5">
+                            <div
+                              className="flex items-center gap-2.5 text-[#6B5D52]"
+                              style={{ fontFamily: "'DM Sans', sans-serif" }}
+                            >
+                              <Mail size={18} strokeWidth={2} />
+                              <span className="truncate">{user.email}</span>
+                            </div>
+
+                            <div
+                              className="flex items-center gap-2.5 text-[#6B5D52]"
+                              style={{ fontFamily: "'DM Sans', sans-serif" }}
+                            >
+                              <Briefcase size={18} strokeWidth={2} />
+                              <span>{user.role}</span>
+                            </div>
+
+                            <div
+                              className="flex items-center gap-2.5"
+                              style={{ fontFamily: "'DM Sans', sans-serif" }}
+                            >
+                              <Clock size={18} className="text-[#D4622A]" strokeWidth={2} />
+                              <span className="text-[#D4622A] font-bold">
+                                Requested {formatTimeAgo(user.requestedAt)}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-3">
-                      <button
-                        onClick={() => handleRejectClick(user.id)}
-                        disabled={approveUser.isPending || rejectUser.isPending}
-                        className="group px-6 py-3 bg-[#2C3E50]/30 hover:bg-red-500/10 border-2 border-[#2C3E50] hover:border-red-500/50 disabled:opacity-50 disabled:cursor-not-allowed text-[#95A5A6] hover:text-red-400 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold min-w-[140px]"
-                      >
-                        {rejectUser.isPending ? (
-                          <>
-                            <Loader2 size={18} className="animate-spin" />
-                            Rejecting...
-                          </>
-                        ) : (
-                          <>
-                            <XCircle size={18} />
-                            Reject
-                          </>
-                        )}
-                      </button>
+                      {/* Action Buttons */}
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <button
+                          onClick={() => handleRejectClick(user.id)}
+                          disabled={approveUser.isPending || rejectUser.isPending}
+                          className="group px-8 py-4 bg-white hover:bg-red-50 border-2 border-[#E0D5C7] hover:border-red-400 disabled:opacity-50 disabled:cursor-not-allowed text-[#6B5D52] hover:text-red-600 rounded-xl transition-all duration-300 flex items-center justify-center gap-2.5 font-bold min-w-[160px] shadow-sm hover:shadow-md"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        >
+                          {rejectUser.isPending ? (
+                            <>
+                              <Loader2 size={20} className="animate-spin" strokeWidth={2.5} />
+                              Rejecting...
+                            </>
+                          ) : (
+                            <>
+                              <XCircle size={20} strokeWidth={2.5} />
+                              Reject
+                            </>
+                          )}
+                        </button>
 
-                      <button
-                        onClick={() => handleApprove(user.id)}
-                        disabled={approveUser.isPending || rejectUser.isPending}
-                        className="px-6 py-3 bg-gradient-to-r from-[#FF6B35] to-[#FFA500] hover:from-[#FF6B35]/90 hover:to-[#FFA500]/90 disabled:from-[#2C3E50] disabled:to-[#2C3E50] disabled:cursor-not-allowed text-white rounded-xl transition-all duration-200 flex items-center justify-center gap-2 font-semibold shadow-lg shadow-[#FF6B35]/20 min-w-[140px]"
-                      >
-                        {approveUser.isPending ? (
-                          <>
-                            <Loader2 size={18} className="animate-spin" />
-                            Approving...
-                          </>
-                        ) : (
-                          <>
-                            <CheckCircle2 size={18} />
-                            Approve
-                          </>
-                        )}
-                      </button>
+                        <button
+                          onClick={() => handleApprove(user.id)}
+                          disabled={approveUser.isPending || rejectUser.isPending}
+                          className="px-8 py-4 bg-gradient-to-r from-[#D4622A] to-[#B8541F] hover:from-[#B8541F] hover:to-[#D4622A] disabled:from-[#E0D5C7] disabled:to-[#E0D5C7] disabled:cursor-not-allowed text-white rounded-xl transition-all duration-300 flex items-center justify-center gap-2.5 font-bold shadow-xl shadow-[#D4622A]/30 hover:shadow-2xl hover:shadow-[#D4622A]/40 min-w-[160px]"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        >
+                          {approveUser.isPending ? (
+                            <>
+                              <Loader2 size={20} className="animate-spin" strokeWidth={2.5} />
+                              Approving...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle2 size={20} strokeWidth={2.5} />
+                              Approve
+                            </>
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
+
+                  {/* Warning for old requests */}
+                  {new Date().getTime() - new Date(user.requestedAt).getTime() > 24 * 60 * 60 * 1000 && (
+                    <div className="bg-gradient-to-r from-amber-50 to-amber-100/50 border-t border-amber-200 px-6 md:px-8 py-4 flex items-center gap-3">
+                      <AlertTriangle size={18} className="text-amber-600" strokeWidth={2.5} />
+                      <span
+                        className="text-amber-700 font-bold"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      >
+                        This request has been pending for over 24 hours
+                      </span>
+                    </div>
+                  )}
                 </div>
-
-                {/* Warning for old requests */}
-                {new Date().getTime() - new Date(user.requestedAt).getTime() > 24 * 60 * 60 * 1000 && (
-                  <div className="bg-amber-500/10 border-t border-amber-500/20 px-6 py-3 flex items-center gap-2">
-                    <AlertTriangle size={16} className="text-amber-500" />
-                    <span className="text-sm text-amber-500 font-semibold">
-                      This request has been pending for over 24 hours
-                    </span>
-                  </div>
-                )}
-              </div>
-            ))
-          )}
+              ))
+            )}
+          </div>
         </div>
+
+        {/* CSS Animations */}
+        <style>{`
+          @keyframes fade-in-up {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes slide-up {
+            from {
+              opacity: 0;
+              transform: translateY(20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes float {
+            0%, 100% {
+              transform: translate(0, 0);
+            }
+            50% {
+              transform: translate(20px, -20px);
+            }
+          }
+
+          @keyframes float-delayed {
+            0%, 100% {
+              transform: translate(0, 0);
+            }
+            50% {
+              transform: translate(-20px, 20px);
+            }
+          }
+
+          .animate-fade-in-up {
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+
+          .animate-slide-up {
+            animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+            opacity: 0;
+          }
+
+          .animate-float {
+            animation: float 8s ease-in-out infinite;
+          }
+
+          .animate-float-delayed {
+            animation: float-delayed 8s ease-in-out infinite;
+            animation-delay: 2s;
+          }
+        `}</style>
       </div>
 
       {/* Reject User Dialog */}
       <Dialog open={rejectDialogOpen} onOpenChange={setRejectDialogOpen}>
-        <DialogContent className="bg-[#1A1A2E] border-[#2C3E50]">
+        <DialogContent className="bg-white border-[#E0D5C7] shadow-2xl shadow-[#D4622A]/20">
           <DialogHeader>
-            <DialogTitle className="text-white">Reject User Registration</DialogTitle>
-            <DialogDescription className="text-[#95A5A6]">
+            <DialogTitle
+              className="text-[#2C2C2C] text-2xl font-bold"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Reject User Registration
+            </DialogTitle>
+            <DialogDescription
+              className="text-[#6B5D52] text-base mt-2"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
               Are you sure you want to reject this user? You can optionally provide a
               reason that will be sent to the user via email.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <label htmlFor="rejection-reason" className="text-sm font-medium text-white">
+            <div className="space-y-3">
+              <label
+                htmlFor="rejection-reason"
+                className="text-sm font-bold text-[#2C2C2C]"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
                 Reason for rejection (optional)
               </label>
               <Textarea
@@ -369,21 +550,24 @@ export function AdminApprovalDashboard() {
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 rows={4}
-                className="bg-[#0F1419] border-[#2C3E50] text-white placeholder-[#95A5A6]/50"
+                className="bg-[#FAF5F0] border-2 border-[#E0D5C7] text-[#2C2C2C] placeholder-[#6B5D52]/50 focus:border-[#D4622A] rounded-xl"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
               />
             </div>
           </div>
           <DialogFooter>
             <button
               onClick={handleRejectCancel}
-              className="px-6 py-3 bg-[#2C3E50]/30 hover:bg-[#2C3E50]/50 text-[#95A5A6] hover:text-white rounded-xl transition-colors"
+              className="px-6 py-3 bg-white hover:bg-[#FAF5F0] border-2 border-[#E0D5C7] text-[#6B5D52] hover:text-[#2C2C2C] hover:border-[#D4622A]/30 rounded-xl transition-all duration-200 font-bold"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               Cancel
             </button>
             <button
               onClick={handleRejectConfirm}
               disabled={rejectUser.isPending}
-              className="px-6 py-3 bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center gap-2"
+              className="px-6 py-3 bg-red-500 hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex items-center gap-2 font-bold shadow-lg"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
             >
               {rejectUser.isPending ? (
                 <>
@@ -397,24 +581,6 @@ export function AdminApprovalDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <style>{`
-        @keyframes slide-up {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-slide-up {
-          animation: slide-up 0.5s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
-    </div>
+    </>
   );
 }

@@ -73,6 +73,8 @@ import {
 import { ModelViewer3D, BIMViewer, ARViewer, VRWalkthrough } from '@/features/visualization';
 import { cn } from '@/lib/utils';
 import type { Model3DMetadata, VRTour, Photo360Data } from '@/types/visualization';
+import { logger } from '../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -597,8 +599,8 @@ export function VisualizationPage() {
                   model={model}
                   viewMode={viewMode}
                   onView={() => handleViewModel(model, '3d')}
-                  onDelete={() => console.log('Delete', model.id)}
-                  onShare={() => console.log('Share', model.id)}
+                  onDelete={() => logger.log('Delete', model.id)}
+                  onShare={() => logger.log('Share', model.id)}
                 />
               ))}
             </div>
@@ -625,8 +627,8 @@ export function VisualizationPage() {
                     model={model}
                     viewMode={viewMode}
                     onView={() => handleViewModel(model, 'bim')}
-                    onDelete={() => console.log('Delete', model.id)}
-                    onShare={() => console.log('Share', model.id)}
+                    onDelete={() => logger.log('Delete', model.id)}
+                    onShare={() => logger.log('Share', model.id)}
                   />
                 ))}
             </div>

@@ -6,12 +6,14 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import * as THREE from 'three';
-import { GLTFLoader, type GLTF } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
+import {
+  loadThree,
+  loadGLTFLoader,
+  loadDRACOLoader,
+  loadOBJLoader,
+  loadFBXLoader,
+  loadMTLLoader,
+} from '../utils/threeLoader';
 import type {
   ModelViewerState,
   ModelLoadProgress,
@@ -21,6 +23,8 @@ import {
   optimizeModel,
   analyzeModel,
 } from '@/lib/utils/modelProcessing';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface UseModelLoaderOptions {
   /** Auto-optimize the model after loading */
@@ -42,7 +46,7 @@ interface UseModelLoaderOptions {
 }
 
 interface UseModelLoaderReturn extends ModelViewerState {
-  loadModel: (url: string, format?: string) => Promise<THREE.Group | null>;
+  loadModel: (url: string, format?: string) => Promise<any | null>;
   unloadModel: () => void;
   getModelStats: () => ReturnType<typeof analyzeModel> | null;
   playAnimation: (name: string) => void;
@@ -51,20 +55,22 @@ interface UseModelLoaderReturn extends ModelViewerState {
 }
 
 // Global cache for loaded models
-const modelCache = new Map<string, THREE.Group>();
+const modelCache = new Map<string, any>();
 
-// Singleton loaders
-let gltfLoader: GLTFLoader | null = null;
-let objLoader: OBJLoader | null = null;
-let fbxLoader: FBXLoader | null = null;
-let dracoLoader: DRACOLoader | null = null;
+// Singleton loaders (initialized lazily)
+let gltfLoader: any = null;
+let objLoader: any = null;
+let fbxLoader: any = null;
+let dracoLoader: any = null;
 
-function getGLTFLoader(dracoPath?: string): GLTFLoader {
+async function getGLTFLoader(dracoPath?: string): Promise<any> {
   if (!gltfLoader) {
+    const { GLTFLoader } = await loadGLTFLoader();
     gltfLoader = new GLTFLoader();
 
     // Initialize DRACO loader for compressed models
     if (!dracoLoader) {
+      const { DRACOLoader } = await loadDRACOLoader();
       dracoLoader = new DRACOLoader();
       dracoLoader.setDecoderPath(dracoPath || 'https://www.gstatic.com/draco/versioned/decoders/1.5.6/');
       dracoLoader.setDecoderConfig({ type: 'js' });
@@ -74,15 +80,17 @@ function getGLTFLoader(dracoPath?: string): GLTFLoader {
   return gltfLoader;
 }
 
-function getOBJLoader(): OBJLoader {
+async function getOBJLoader(): Promise<any> {
   if (!objLoader) {
+    const { OBJLoader } = await loadOBJLoader();
     objLoader = new OBJLoader();
   }
   return objLoader;
 }
 
-function getFBXLoader(): FBXLoader {
+async function getFBXLoader(): Promise<any> {
   if (!fbxLoader) {
+    const { FBXLoader } = await loadFBXLoader();
     fbxLoader = new FBXLoader();
   }
   return fbxLoader;
@@ -111,10 +119,10 @@ export function useModelLoader(
     boundingBox: null,
   });
 
-  const mixerRef = useRef<THREE.AnimationMixer | null>(null);
-  const currentActionRef = useRef<THREE.AnimationAction | null>(null);
+  const mixerRef = useRef<any | null>(null);
+  const currentActionRef = useRef<any | null>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const clockRef = useRef<THREE.Clock>(new THREE.Clock());
+  const clockRef = useRef<any>(null);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -161,22 +169,22 @@ export function useModelLoader(
 
   // Load glTF/GLB model
   const loadGLTF = useCallback(
-    async (url: string): Promise<{ model: THREE.Group; animations: THREE.AnimationClip[] }> => {
-      const loader = getGLTFLoader(dracoDecoderPath);
+    async (url: string): Promise<{ model: any; animations: any[] }> => {
+      const loader = await getGLTFLoader(dracoDecoderPath);
 
       return new Promise((resolve, reject) => {
         loader.load(
           url,
-          (gltf: GLTF) => {
+          (gltf: any) => {
             resolve({
               model: gltf.scene,
               animations: gltf.animations || [],
             });
           },
-          (progress) => {
+          (progress: any) => {
             updateProgress(progress.loaded, progress.total, 'downloading');
           },
-          (error) => {
+          (error: any) => {
             reject(new Error(`Failed to load glTF: ${error}`));
           }
         );
@@ -187,13 +195,14 @@ export function useModelLoader(
 
   // Load OBJ model
   const loadOBJ = useCallback(
-    async (url: string, mtlUrl?: string): Promise<{ model: THREE.Group; animations: THREE.AnimationClip[] }> => {
-      const loader = getOBJLoader();
+    async (url: string, mtlUrl?: string): Promise<{ model: any; animations: any[] }> => {
+      const loader = await getOBJLoader();
 
       // Load MTL if provided
       if (mtlUrl) {
+        const { MTLLoader } = await loadMTLLoader();
         const mtlLoader = new MTLLoader();
-        const materials = await new Promise<MTLLoader.MaterialCreator>((resolve, reject) => {
+        const materials = await new Promise<any>((resolve, reject) => {
           mtlLoader.load(
             mtlUrl,
             resolve,
@@ -208,16 +217,16 @@ export function useModelLoader(
       return new Promise((resolve, reject) => {
         loader.load(
           url,
-          (obj) => {
+          (obj: any) => {
             resolve({
-              model: obj as THREE.Group,
+              model: obj,
               animations: [],
             });
           },
-          (progress) => {
+          (progress: any) => {
             updateProgress(progress.loaded, progress.total, 'downloading');
           },
-          (error) => {
+          (error: any) => {
             reject(new Error(`Failed to load OBJ: ${error}`));
           }
         );
@@ -228,22 +237,22 @@ export function useModelLoader(
 
   // Load FBX model
   const loadFBX = useCallback(
-    async (url: string): Promise<{ model: THREE.Group; animations: THREE.AnimationClip[] }> => {
-      const loader = getFBXLoader();
+    async (url: string): Promise<{ model: any; animations: any[] }> => {
+      const loader = await getFBXLoader();
 
       return new Promise((resolve, reject) => {
         loader.load(
           url,
-          (fbx) => {
+          (fbx: any) => {
             resolve({
-              model: fbx as THREE.Group,
+              model: fbx,
               animations: fbx.animations || [],
             });
           },
-          (progress) => {
+          (progress: any) => {
             updateProgress(progress.loaded, progress.total, 'downloading');
           },
-          (error) => {
+          (error: any) => {
             reject(new Error(`Failed to load FBX: ${error}`));
           }
         );
@@ -254,7 +263,10 @@ export function useModelLoader(
 
   // Main load function
   const loadModel = useCallback(
-    async (url: string, format?: string): Promise<THREE.Group | null> => {
+    async (url: string, format?: string): Promise<any | null> => {
+      // Load THREE.js library
+      const THREE = await loadThree();
+
       // Check cache first
       if (enableCache && modelCache.has(url)) {
         const cachedModel = modelCache.get(url)!.clone(true);
@@ -281,7 +293,7 @@ export function useModelLoader(
 
       try {
         const detectedFormat = format || detectFormat(url);
-        let result: { model: THREE.Group; animations: THREE.AnimationClip[] };
+        let result: { model: any; animations: any[] };
 
         // Load based on format
         switch (detectedFormat) {
@@ -311,7 +323,7 @@ export function useModelLoader(
             ...optimizationOptions,
             compressTextures: true,
             maxTextureSize,
-          }) as THREE.Group;
+          });
         }
 
         // Calculate bounding box
@@ -368,16 +380,19 @@ export function useModelLoader(
   );
 
   // Unload model
-  const unloadModel = useCallback(() => {
+  const unloadModel = useCallback(async () => {
     if (state.model) {
+      // Load THREE for type checking
+      const THREE = await loadThree();
+
       // Dispose geometries and materials
-      state.model.traverse((child) => {
+      state.model.traverse((child: any) => {
         if (child instanceof THREE.Mesh) {
           child.geometry?.dispose();
           const materials = Array.isArray(child.material)
             ? child.material
             : [child.material];
-          materials.forEach((mat) => {
+          materials.forEach((mat: any) => {
             if (mat instanceof THREE.Material) {
               mat.dispose();
             }
@@ -414,13 +429,19 @@ export function useModelLoader(
 
   // Animation controls
   const playAnimation = useCallback(
-    (name: string) => {
+    async (name: string) => {
       if (!mixerRef.current || !state.model) {return;}
 
-      const clip = state.animations.find((a) => a.name === name);
+      const clip = state.animations.find((a: any) => a.name === name);
       if (!clip) {
-        console.warn(`Animation "${name}" not found`);
+        logger.warn(`Animation "${name}" not found`);
         return;
+      }
+
+      // Initialize clock if needed
+      if (!clockRef.current) {
+        const THREE = await loadThree();
+        clockRef.current = new THREE.Clock();
       }
 
       // Stop current animation
@@ -484,15 +505,16 @@ export function useModelLoader(
 }
 
 // Utility to clear the model cache
-export function clearModelCache(): void {
+export async function clearModelCache(): Promise<void> {
+  const THREE = await loadThree();
   modelCache.forEach((model) => {
-    model.traverse((child) => {
+    model.traverse((child: any) => {
       if (child instanceof THREE.Mesh) {
         child.geometry?.dispose();
         const materials = Array.isArray(child.material)
           ? child.material
           : [child.material];
-        materials.forEach((mat) => mat.dispose());
+        materials.forEach((mat: any) => mat.dispose());
       }
     });
   });
@@ -504,7 +526,7 @@ export async function preloadModels(
   urls: string[],
   options?: UseModelLoaderOptions
 ): Promise<void> {
-  const loader = getGLTFLoader(options?.dracoDecoderPath);
+  const loader = await getGLTFLoader(options?.dracoDecoderPath);
 
   await Promise.all(
     urls.map(
@@ -517,7 +539,7 @@ export async function preloadModels(
 
           loader.load(
             url,
-            (gltf) => {
+            (gltf: any) => {
               modelCache.set(url, gltf.scene);
               resolve();
             },

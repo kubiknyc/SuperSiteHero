@@ -20,6 +20,8 @@ import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import toast from 'react-hot-toast'
 import { useLiveCursors } from '@/hooks/useLiveCursors'
 import { RelativeCursorsContainer, OnlineUsersIndicator } from '@/components/realtime/LiveCursor'
+import { logger } from '../../../../lib/utils/logger';
+
 
 type Tool = AnnotationType | 'select' | 'pan' | 'eraser'
 
@@ -322,7 +324,7 @@ export function UnifiedDrawingCanvas({
             },
           })
         } catch (error) {
-          console.error('Failed to update markup:', error)
+          logger.error('Failed to update markup:', error)
         }
       }
       pendingSaveRef.current = null
@@ -729,7 +731,7 @@ export function UnifiedDrawingCanvas({
 
       onSave?.()
     } catch (error) {
-      console.error('Failed to save markup:', error)
+      logger.error('Failed to save markup:', error)
       toast.error('Failed to save annotation')
     }
   }
@@ -761,7 +763,7 @@ export function UnifiedDrawingCanvas({
       try {
         await deleteMarkup.mutateAsync(markup.id)
       } catch (error) {
-        console.error('Failed to delete markup:', error)
+        logger.error('Failed to delete markup:', error)
         toast.error('Failed to delete annotation')
       }
     }
@@ -795,7 +797,7 @@ export function UnifiedDrawingCanvas({
           await Promise.all(existingMarkups.map(m => deleteMarkup.mutateAsync(m.id)))
           toast.success('All annotations cleared')
         } catch (error) {
-          console.error('Failed to clear markups:', error)
+          logger.error('Failed to clear markups:', error)
           toast.error('Failed to clear annotations')
         }
       }
@@ -835,7 +837,7 @@ export function UnifiedDrawingCanvas({
           related_to_type: itemType,
         })
       } catch (error) {
-        console.error('Failed to link markup:', error)
+        logger.error('Failed to link markup:', error)
         throw error // Re-throw so dialog can show error
       }
     }
@@ -874,7 +876,7 @@ export function UnifiedDrawingCanvas({
           related_to_type: null,
         })
       } catch (error) {
-        console.error('Failed to unlink markup:', error)
+        logger.error('Failed to unlink markup:', error)
         throw error // Re-throw so dialog can show error
       }
     }

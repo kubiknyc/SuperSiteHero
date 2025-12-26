@@ -22,7 +22,6 @@ import {
   PerspectiveCamera,
   Html,
 } from '@react-three/drei';
-import * as THREE from 'three';
 import {
   Loader2,
   Maximize2,
@@ -68,6 +67,8 @@ import type {
   IFCTypeInfo,
   BIMViewerState,
 } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -625,7 +626,7 @@ export function BIMViewer({
         setIsFullscreen(false);
       }
     } catch (err) {
-      console.error('Fullscreen error:', err);
+      logger.error('Fullscreen error:', err);
     }
   }, []);
 

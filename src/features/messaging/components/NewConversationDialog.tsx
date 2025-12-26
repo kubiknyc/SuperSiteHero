@@ -24,6 +24,8 @@ import { useCreateConversation, useGetOrCreateDirectConversation, useProjectUser
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { ConversationType, CreateConversationDTO } from '@/types/messaging'
 import { cn } from '@/lib/utils'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface NewConversationDialogProps {
   open: boolean
@@ -170,7 +172,7 @@ export function NewConversationDialog({
         navigate(`/messages/${conversationId}`)
       }
     } catch (error) {
-      console.error('Failed to create conversation:', error)
+      logger.error('Failed to create conversation:', error)
     }
   }
 
@@ -194,7 +196,7 @@ export function NewConversationDialog({
         navigate(`/messages/${result.id}`)
       }
     } catch (error) {
-      console.error('Failed to create project chat:', error)
+      logger.error('Failed to create project chat:', error)
     }
   }
 

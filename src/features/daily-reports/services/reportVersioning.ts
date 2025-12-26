@@ -1,5 +1,7 @@
 // Report versioning and audit trail service
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface ReportVersion {
   id: string
@@ -63,7 +65,7 @@ export async function createReportVersion(
 
   if (error) {
     // Fall back to localStorage if table doesn't exist
-    console.warn('Version table not found, using localStorage:', error.message)
+    logger.warn('Version table not found, using localStorage:', error.message)
     saveVersionToLocalStorage(reportId, userId, changeType, changeSummary, nextVersion, previousData, newData)
   }
 }
@@ -115,7 +117,7 @@ export async function getReportVersionHistory(reportId: string): Promise<ReportV
     .order('version_number', { ascending: false })
 
   if (error) {
-    console.warn('Using localStorage versions:', error.message)
+    logger.warn('Using localStorage versions:', error.message)
     return getVersionsFromLocalStorage(reportId)
   }
 

@@ -19,6 +19,8 @@ import { useCreateExecution } from '../hooks/useExecutions'
 import { useBatchCreateResponses } from '../hooks/useResponses'
 import { useTemplateItems } from '../hooks/useTemplateItems'
 import type { CreateChecklistExecutionDTO, CreateChecklistResponseDTO } from '@/types/checklists'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface StartExecutionDialogProps {
   open: boolean
@@ -149,7 +151,7 @@ export function StartExecutionDialog({
       navigate(`/checklists/executions/${newExecution.id}/fill`)
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to start checklist:', error)
+      logger.error('Failed to start checklist:', error)
     }
   }
 

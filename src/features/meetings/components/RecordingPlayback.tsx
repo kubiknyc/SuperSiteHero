@@ -23,6 +23,8 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { useRecordingUrl } from '../hooks/useMeetingRecordings';
 import type { MeetingRecording } from '@/types/meeting-recordings';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface RecordingPlaybackProps {
   recording: MeetingRecording;
@@ -142,7 +144,7 @@ export function RecordingPlayback({
         await containerRef.current.requestFullscreen();
         setIsFullscreen(true);
       } catch (err) {
-        console.error('Fullscreen not supported');
+        logger.error('Fullscreen not supported');
       }
     } else {
       await document.exitFullscreen();
@@ -177,7 +179,7 @@ export function RecordingPlayback({
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('Download failed:', err);
+      logger.error('Download failed:', err);
     }
   };
 

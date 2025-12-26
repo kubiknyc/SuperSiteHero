@@ -5,6 +5,8 @@ import { useEffect, useState, useCallback, useRef } from 'react'
 import { presenceManager } from '@/lib/realtime'
 import type { PresenceUser, TypingState } from '@/lib/realtime'
 import { useAuth } from '@/hooks/useAuth'
+import { logger } from '../lib/utils/logger';
+
 
 interface UseRealtimePresenceOptions {
   roomId: string
@@ -65,7 +67,7 @@ export function useRealtimePresence(
         })
         hasJoined.current = true
       } catch (error) {
-        console.error('Failed to join presence room:', error)
+        logger.error('Failed to join presence room:', error)
       }
     }
 

@@ -20,6 +20,8 @@ import type {
   ApplyTemplateResult,
   TemplateFolderStructure,
 } from '@/types/project-template'
+import { logger } from '../../utils/logger';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
@@ -598,7 +600,7 @@ export const projectTemplatesApi = {
       if (error) {throw error}
     } catch (error) {
       // Non-critical error - don't throw, just log
-      console.error('Failed to increment template usage:', error)
+      logger.error('Failed to increment template usage:', error)
     }
   },
 
@@ -1012,7 +1014,7 @@ async function createFoldersFromStructure(
         .single()
 
       if (error) {
-        console.error('Error creating folder:', error)
+        logger.error('Error creating folder:', error)
         continue
       }
 
@@ -1028,7 +1030,7 @@ async function createFoldersFromStructure(
         )
       }
     } catch (error) {
-      console.error('Error creating folder:', error)
+      logger.error('Error creating folder:', error)
     }
   }
 

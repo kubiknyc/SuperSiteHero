@@ -44,6 +44,8 @@ import {
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { cn } from '@/lib/utils'
 import type { Document, Folder as FolderType, DocumentStatus, DocumentType } from '@/types/database'
+import { logger } from '../../lib/utils/logger';
+
 
 /**
  * DocumentLibraryPage Component
@@ -441,7 +443,7 @@ function DocumentLibraryPage() {
                   projectId={selectedProjectId}
                   folderId={currentFolderId}
                   onUploadSuccess={(doc) => {
-                    console.log('Document uploaded:', doc)
+                    logger.log('Document uploaded:', doc)
                   }}
                 />
 

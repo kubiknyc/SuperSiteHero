@@ -13,6 +13,8 @@ import {
   type MFAFactor
 } from './mfa'
 import { MFASession } from './mfaMiddleware'
+import { logger } from '../utils/logger';
+
 
 interface MFAState {
   enrolled: boolean
@@ -64,14 +66,14 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
         .single()
 
       if (error) {
-        console.error('Error fetching user profile:', error)
+        logger.error('Error fetching user profile:', error)
         return null
       }
 
       setUserProfile(data)
       return data
     } catch (error) {
-      console.error('Unexpected error fetching user profile:', error)
+      logger.error('Unexpected error fetching user profile:', error)
       return null
     }
   }
@@ -105,7 +107,7 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
         challenge: challenge || undefined
       })
     } catch (error) {
-      console.error('Error refreshing MFA status:', error)
+      logger.error('Error refreshing MFA status:', error)
     }
   }
 
@@ -137,7 +139,7 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
         setLoading(false)
       })
       .catch((error) => {
-        console.error('Error getting session:', error)
+        logger.error('Error getting session:', error)
         setSession(null)
         setUser(null)
         setUserProfile(null)

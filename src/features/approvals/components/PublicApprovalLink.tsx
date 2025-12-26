@@ -26,6 +26,8 @@ import type {
   CreatePublicLinkInput,
   PublicLinkType as LinkType,
 } from '@/types/approval-workflow';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PublicApprovalLinkProps {
   approvalRequest: ApprovalRequest;
@@ -80,7 +82,7 @@ export function PublicApprovalLink({
       setShowCreateForm(false);
       resetForm();
     } catch (error) {
-      console.error('Failed to create link:', error);
+      logger.error('Failed to create link:', error);
     } finally {
       setIsCreating(false);
     }
@@ -111,7 +113,7 @@ export function PublicApprovalLink({
     try {
       await onSendEmail(link, link.client_email);
     } catch (error) {
-      console.error('Failed to send email:', error);
+      logger.error('Failed to send email:', error);
     } finally {
       setSendingEmail(null);
     }

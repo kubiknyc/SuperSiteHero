@@ -50,6 +50,8 @@ import { useSubcontractorPunchActions } from '@/features/punch-lists/hooks/useSu
 import { compressImage } from '@/lib/utils/imageCompression'
 import { formatDistanceToNow, format } from 'date-fns'
 import type { PunchItemStatus } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PhotoPreview {
   id: string
@@ -143,7 +145,7 @@ export function PunchItemUpdate() {
           url: URL.createObjectURL(compressed),
         })
       } catch (err) {
-        console.error('Failed to compress image:', err)
+        logger.error('Failed to compress image:', err)
         // Use original file if compression fails
         newPhotos.push({
           id: crypto.randomUUID(),
@@ -180,7 +182,7 @@ export function PunchItemUpdate() {
       await addNotes(id, notes.trim())
       setNotes('')
     } catch (err) {
-      console.error('Failed to save notes:', err)
+      logger.error('Failed to save notes:', err)
     }
   }
 
@@ -217,7 +219,7 @@ export function PunchItemUpdate() {
       // Navigate back
       navigate(-1)
     } catch (err) {
-      console.error('Failed to request completion:', err)
+      logger.error('Failed to request completion:', err)
     } finally {
       setIsSubmitting(false)
     }

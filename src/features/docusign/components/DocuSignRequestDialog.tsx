@@ -53,6 +53,8 @@ import type {
   ChangeOrderSigningConfig,
   LienWaiverSigningConfig,
 } from '@/types/docusign'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================================================
 // Types
@@ -257,7 +259,7 @@ export function DocuSignRequestDialog({
       onOpenChange(false)
     } catch (error) {
       // Error handled by mutation
-      console.error('Failed to create envelope:', error)
+      logger.error('Failed to create envelope:', error)
     }
   }
 

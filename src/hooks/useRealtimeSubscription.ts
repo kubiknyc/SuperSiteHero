@@ -4,6 +4,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { realtimeManager } from '@/lib/realtime'
 import type { SubscriptionOptions } from '@/lib/realtime'
+import { logger } from '../lib/utils/logger';
+
 
 interface UseRealtimeSubscriptionOptions<T = Record<string, unknown>> {
   table: string
@@ -24,8 +26,8 @@ interface UseRealtimeSubscriptionOptions<T = Record<string, unknown>> {
  * useRealtimeSubscription({
  *   table: 'daily_reports',
  *   filter: `project_id=eq.${projectId}`,
- *   onInsert: (report) => console.log('New report:', report),
- *   onUpdate: (newReport) => console.log('Updated:', newReport),
+ *   onInsert: (report) => logger.log('New report:', report),
+ *   onUpdate: (newReport) => logger.log('Updated:', newReport),
  * })
  * ```
  */

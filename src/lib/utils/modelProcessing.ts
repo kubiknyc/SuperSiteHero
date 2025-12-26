@@ -5,7 +5,6 @@
  * for efficient rendering in web-based viewers.
  */
 
-import * as THREE from 'three';
 import type {
   ModelOptimizationOptions,
   LODLevel,
@@ -13,6 +12,8 @@ import type {
   Vector3D,
   PerformanceMetrics,
 } from '@/types/visualization';
+import { logger } from './logger';
+import { loadThree } from '@/features/visualization/utils/threeLoader';
 
 // ============================================================================
 // Model Analysis
@@ -21,7 +22,7 @@ import type {
 /**
  * Analyze a 3D model and return its statistics
  */
-export function analyzeModel(object: THREE.Object3D): {
+export async function analyzeModel(object: any): Promise<{
   triangleCount: number;
   vertexCount: number;
   materialCount: number;
@@ -29,14 +30,16 @@ export function analyzeModel(object: THREE.Object3D): {
   boundingBox: BoundingBox;
   center: Vector3D;
   size: Vector3D;
-} {
+}> {
+  const THREE = await loadThree();
+
   let triangleCount = 0;
   let vertexCount = 0;
-  const materials = new Set<THREE.Material>();
-  const textures = new Set<THREE.Texture>();
+  const materials = new Set<any>();
+  const textures = new Set<any>();
 
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
+  object.traverse((child: any) => {
+    if (child.isMesh) {
       const geometry = child.geometry;
       if (geometry.index) {
         triangleCount += geometry.index.count / 3;
@@ -51,10 +54,10 @@ export function analyzeModel(object: THREE.Object3D): {
       const meshMaterials = Array.isArray(child.material)
         ? child.material
         : [child.material];
-      meshMaterials.forEach((mat) => {
+      meshMaterials.forEach((mat: any) => {
         materials.add(mat);
         // Collect textures from material
-        if (mat instanceof THREE.MeshStandardMaterial) {
+        if (mat.isMeshStandardMaterial) {
           if (mat.map) {textures.add(mat.map);}
           if (mat.normalMap) {textures.add(mat.normalMap);}
           if (mat.roughnessMap) {textures.add(mat.roughnessMap);}
@@ -94,10 +97,10 @@ export function analyzeModel(object: THREE.Object3D): {
 /**
  * Optimize a 3D model for web rendering
  */
-export function optimizeModel(
-  object: THREE.Object3D,
+export async function optimizeModel(
+  object: any,
   options: ModelOptimizationOptions = {}
-): THREE.Object3D {
+): Promise<any> {
   const {
     mergeGeometries = true,
     simplifyMaterials = true,
@@ -112,27 +115,27 @@ export function optimizeModel(
 
   // Center the model
   if (centerModel) {
-    centerModelAtOrigin(optimized);
+    await centerModelAtOrigin(optimized);
   }
 
   // Normalize scale
   if (normalizeScale) {
-    normalizeModelScale(optimized, targetScale);
+    await normalizeModelScale(optimized, targetScale);
   }
 
   // Remove hidden/invisible geometry
   if (removeHiddenGeometry) {
-    removeInvisibleObjects(optimized);
+    await removeInvisibleObjects(optimized);
   }
 
   // Merge geometries where possible
   if (mergeGeometries) {
-    mergeModelGeometries(optimized);
+    await mergeModelGeometries(optimized);
   }
 
   // Simplify materials
   if (simplifyMaterials) {
-    simplifyModelMaterials(optimized);
+    await simplifyModelMaterials(optimized);
   }
 
   // Update matrix
@@ -144,13 +147,15 @@ export function optimizeModel(
 /**
  * Center model at origin
  */
-export function centerModelAtOrigin(object: THREE.Object3D): void {
+export async function centerModelAtOrigin(object: any): Promise<void> {
+  const THREE = await loadThree();
+
   const box = new THREE.Box3().setFromObject(object);
   const center = new THREE.Vector3();
   box.getCenter(center);
 
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
+  object.traverse((child: any) => {
+    if (child.isMesh) {
       child.position.sub(center);
     }
   });
@@ -159,10 +164,12 @@ export function centerModelAtOrigin(object: THREE.Object3D): void {
 /**
  * Normalize model scale to fit within target size
  */
-export function normalizeModelScale(
-  object: THREE.Object3D,
+export async function normalizeModelScale(
+  object: any,
   targetSize: number = 10
-): void {
+): Promise<void> {
+  const THREE = await loadThree();
+
   const box = new THREE.Box3().setFromObject(object);
   const size = new THREE.Vector3();
   box.getSize(size);
@@ -177,11 +184,11 @@ export function normalizeModelScale(
 /**
  * Remove invisible objects from the scene
  */
-export function removeInvisibleObjects(object: THREE.Object3D): void {
-  const toRemove: THREE.Object3D[] = [];
+export async function removeInvisibleObjects(object: any): Promise<void> {
+  const toRemove: any[] = [];
 
-  object.traverse((child) => {
-    if (!child.visible || (child instanceof THREE.Mesh && !child.geometry)) {
+  object.traverse((child: any) => {
+    if (!child.visible || (child.isMesh && !child.geometry)) {
       toRemove.push(child);
     }
   });
@@ -194,12 +201,12 @@ export function removeInvisibleObjects(object: THREE.Object3D): void {
 /**
  * Merge geometries with the same material
  */
-export function mergeModelGeometries(object: THREE.Object3D): void {
+export async function mergeModelGeometries(object: any): Promise<void> {
   // Group meshes by material
-  const meshesByMaterial = new Map<THREE.Material, THREE.Mesh[]>();
+  const meshesByMaterial = new Map<any, any[]>();
 
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh && !Array.isArray(child.material)) {
+  object.traverse((child: any) => {
+    if (child.isMesh && !Array.isArray(child.material)) {
       const existing = meshesByMaterial.get(child.material) || [];
       existing.push(child);
       meshesByMaterial.set(child.material, existing);
@@ -222,7 +229,7 @@ export function mergeModelGeometries(object: THREE.Object3D): void {
         // For now, skip actual merging as it requires the utils import
         // This is a placeholder for the merge operation
       } catch (error) {
-        console.warn('Failed to merge geometries:', error);
+        logger.warn('Failed to merge geometries:', error);
       }
     }
   });
@@ -231,15 +238,17 @@ export function mergeModelGeometries(object: THREE.Object3D): void {
 /**
  * Simplify materials to basic PBR
  */
-export function simplifyModelMaterials(object: THREE.Object3D): void {
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
+export async function simplifyModelMaterials(object: any): Promise<void> {
+  const THREE = await loadThree();
+
+  object.traverse((child: any) => {
+    if (child.isMesh) {
       const materials = Array.isArray(child.material)
         ? child.material
         : [child.material];
 
-      materials.forEach((mat) => {
-        if (mat instanceof THREE.MeshStandardMaterial) {
+      materials.forEach((mat: any) => {
+        if (mat.isMeshStandardMaterial) {
           // Reduce texture resolution if needed
           if (mat.map && mat.map.image) {
             const img = mat.map.image;
@@ -263,12 +272,12 @@ export function simplifyModelMaterials(object: THREE.Object3D): void {
 /**
  * Generate LOD levels for a model
  */
-export function generateLODLevels(
-  object: THREE.Object3D,
+export async function generateLODLevels(
+  object: any,
   levels: number[] = [0, 50, 100, 200]
-): LODLevel[] {
+): Promise<LODLevel[]> {
   const lodLevels: LODLevel[] = [];
-  const stats = analyzeModel(object);
+  const stats = await analyzeModel(object);
 
   // Level 0: Original
   lodLevels.push({
@@ -281,7 +290,7 @@ export function generateLODLevels(
   for (let i = 1; i < levels.length; i++) {
     const ratio = 1 - i * 0.25; // 75%, 50%, 25% of original
     const simplified = simplifyGeometry(object.clone(true), ratio);
-    const simplifiedStats = analyzeModel(simplified);
+    const simplifiedStats = await analyzeModel(simplified);
 
     lodLevels.push({
       distance: levels[i],
@@ -296,9 +305,9 @@ export function generateLODLevels(
 /**
  * Simplify geometry by reducing vertices
  */
-function simplifyGeometry(object: THREE.Object3D, ratio: number): THREE.Object3D {
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
+function simplifyGeometry(object: any, ratio: number): any {
+  object.traverse((child: any) => {
+    if (child.isMesh) {
       const geometry = child.geometry;
       // Basic simplification: skip every nth vertex
       // In production, use a proper simplification algorithm
@@ -324,7 +333,8 @@ function simplifyGeometry(object: THREE.Object3D, ratio: number): THREE.Object3D
 /**
  * Create a THREE.LOD object from LOD levels
  */
-export function createLODObject(levels: LODLevel[]): THREE.LOD {
+export async function createLODObject(levels: LODLevel[]): Promise<any> {
+  const THREE = await loadThree();
   const lod = new THREE.LOD();
 
   levels.forEach((level) => {
@@ -342,20 +352,20 @@ export function createLODObject(levels: LODLevel[]): THREE.LOD {
  * Compress/resize textures for mobile performance
  */
 export async function optimizeTextures(
-  object: THREE.Object3D,
+  object: any,
   maxSize: number = 1024
 ): Promise<void> {
-  const textures = new Set<THREE.Texture>();
+  const textures = new Set<any>();
 
   // Collect all textures
-  object.traverse((child) => {
-    if (child instanceof THREE.Mesh) {
+  object.traverse((child: any) => {
+    if (child.isMesh) {
       const materials = Array.isArray(child.material)
         ? child.material
         : [child.material];
 
-      materials.forEach((mat) => {
-        if (mat instanceof THREE.MeshStandardMaterial) {
+      materials.forEach((mat: any) => {
+        if (mat.isMeshStandardMaterial) {
           if (mat.map) {textures.add(mat.map);}
           if (mat.normalMap) {textures.add(mat.normalMap);}
           if (mat.roughnessMap) {textures.add(mat.roughnessMap);}
@@ -377,7 +387,7 @@ export async function optimizeTextures(
  * Resize a single texture
  */
 async function resizeTexture(
-  texture: THREE.Texture,
+  texture: any,
   maxSize: number
 ): Promise<void> {
   const image = texture.image;
@@ -417,7 +427,7 @@ async function resizeTexture(
  * Create a performance monitor for the renderer
  */
 export function createPerformanceMonitor(
-  renderer: THREE.WebGLRenderer
+  renderer: any
 ): {
   update: () => void;
   getMetrics: () => PerformanceMetrics;
@@ -471,10 +481,12 @@ export function createPerformanceMonitor(
 /**
  * Create a standard construction material
  */
-export function createConstructionMaterial(
+export async function createConstructionMaterial(
   type: 'concrete' | 'steel' | 'wood' | 'glass' | 'brick' | 'default'
-): THREE.MeshStandardMaterial {
-  const materials: Record<string, THREE.MeshStandardMaterialParameters> = {
+): Promise<any> {
+  const THREE = await loadThree();
+
+  const materials: Record<string, any> = {
     concrete: {
       color: 0x808080,
       roughness: 0.9,
@@ -515,10 +527,12 @@ export function createConstructionMaterial(
 /**
  * Create a highlight material for selection
  */
-export function createHighlightMaterial(
+export async function createHighlightMaterial(
   color: number = 0x00ff00,
   opacity: number = 0.5
-): THREE.MeshBasicMaterial {
+): Promise<any> {
+  const THREE = await loadThree();
+
   return new THREE.MeshBasicMaterial({
     color,
     transparent: true,
@@ -532,9 +546,11 @@ export function createHighlightMaterial(
 /**
  * Create a wireframe material
  */
-export function createWireframeMaterial(
+export async function createWireframeMaterial(
   color: number = 0x000000
-): THREE.LineBasicMaterial {
+): Promise<any> {
+  const THREE = await loadThree();
+
   return new THREE.LineBasicMaterial({
     color,
     linewidth: 1,
@@ -548,29 +564,32 @@ export function createWireframeMaterial(
 /**
  * Create a floor grid
  */
-export function createFloorGrid(
+export async function createFloorGrid(
   size: number = 100,
   divisions: number = 100,
   color1: number = 0x444444,
   color2: number = 0x888888
-): THREE.GridHelper {
+): Promise<any> {
+  const THREE = await loadThree();
   return new THREE.GridHelper(size, divisions, color1, color2);
 }
 
 /**
  * Create axes helper
  */
-export function createAxesHelper(size: number = 5): THREE.AxesHelper {
+export async function createAxesHelper(size: number = 5): Promise<any> {
+  const THREE = await loadThree();
   return new THREE.AxesHelper(size);
 }
 
 /**
  * Create a bounding box helper
  */
-export function createBoundingBoxHelper(
-  object: THREE.Object3D,
+export async function createBoundingBoxHelper(
+  object: any,
   color: number = 0xffff00
-): THREE.BoxHelper {
+): Promise<any> {
+  const THREE = await loadThree();
   return new THREE.BoxHelper(object, color);
 }
 
@@ -581,16 +600,18 @@ export function createBoundingBoxHelper(
 /**
  * Convert screen coordinates to world coordinates
  */
-export function screenToWorld(
+export async function screenToWorld(
   screenX: number,
   screenY: number,
-  camera: THREE.Camera,
+  camera: any,
   targetZ: number = 0
-): Vector3D {
+): Promise<Vector3D> {
+  const THREE = await loadThree();
+
   const vector = new THREE.Vector3(screenX, screenY, 0.5);
   vector.unproject(camera);
 
-  if (camera instanceof THREE.PerspectiveCamera) {
+  if (camera.isPerspectiveCamera) {
     const dir = vector.sub(camera.position).normalize();
     const distance = (targetZ - camera.position.z) / dir.z;
     const pos = camera.position.clone().add(dir.multiplyScalar(distance));
@@ -603,12 +624,14 @@ export function screenToWorld(
 /**
  * Convert world coordinates to screen coordinates
  */
-export function worldToScreen(
+export async function worldToScreen(
   worldPos: Vector3D,
-  camera: THREE.Camera,
+  camera: any,
   width: number,
   height: number
-): { x: number; y: number } {
+): Promise<{ x: number; y: number }> {
+  const THREE = await loadThree();
+
   const vector = new THREE.Vector3(worldPos.x, worldPos.y, worldPos.z);
   vector.project(camera);
 
@@ -625,13 +648,15 @@ export function worldToScreen(
 /**
  * Perform raycast from screen position
  */
-export function raycastFromScreen(
+export async function raycastFromScreen(
   screenX: number,
   screenY: number,
-  camera: THREE.Camera,
-  objects: THREE.Object3D[],
+  camera: any,
+  objects: any[],
   recursive: boolean = true
-): THREE.Intersection[] {
+): Promise<any[]> {
+  const THREE = await loadThree();
+
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2(screenX, screenY);
 
@@ -643,11 +668,11 @@ export function raycastFromScreen(
 /**
  * Get all visible meshes in a scene
  */
-export function getVisibleMeshes(scene: THREE.Scene): THREE.Mesh[] {
-  const meshes: THREE.Mesh[] = [];
+export function getVisibleMeshes(scene: any): any[] {
+  const meshes: any[] = [];
 
-  scene.traverse((child) => {
-    if (child instanceof THREE.Mesh && child.visible) {
+  scene.traverse((child: any) => {
+    if (child.isMesh && child.visible) {
       meshes.push(child);
     }
   });

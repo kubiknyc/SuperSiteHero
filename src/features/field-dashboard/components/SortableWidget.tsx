@@ -11,6 +11,8 @@ import { GripVertical, X, AlertCircle } from 'lucide-react'
 import { getWidget } from '../widgets/registry'
 import { cn } from '@/lib/utils'
 import type { DraggableWidget, WidgetProps } from '@/types/dashboard'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface SortableWidgetProps {
   widget: DraggableWidget
@@ -42,7 +44,7 @@ class WidgetErrorBoundary extends Component<WidgetErrorBoundaryProps, WidgetErro
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    console.error('Widget error:', error, errorInfo)
+    logger.error('Widget error:', error, errorInfo)
   }
 
   render(): ReactNode {

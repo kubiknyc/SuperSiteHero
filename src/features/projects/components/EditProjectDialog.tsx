@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError, SelectWithError } from '@/components/form/ValidationError'
 import type { ProjectStatus } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface EditProjectDialogProps {
   project: {
@@ -107,7 +109,7 @@ export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDi
       onOpenChange(false)
     } catch (error) {
       // Error toast shown automatically by mutation hook
-      console.error('Failed to update project:', error)
+      logger.error('Failed to update project:', error)
     }
   }
 

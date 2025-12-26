@@ -30,6 +30,8 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { isResponseOverdue } from '@/features/notices/types'
+import { logger } from '../../lib/utils/logger';
+
 
 export function NoticeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -49,7 +51,7 @@ export function NoticeDetailPage() {
         })
         navigate('/notices')
       } catch (error) {
-        console.error('Failed to delete notice:', error)
+        logger.error('Failed to delete notice:', error)
       }
     }
   }

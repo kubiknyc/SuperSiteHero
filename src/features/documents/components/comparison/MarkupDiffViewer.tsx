@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import type { ChangeRegion } from '../../types/markup'
 import { Loader2, ZoomIn } from 'lucide-react'
+import { logger } from '../../../../lib/utils/logger';
+
 
 interface MarkupDiffViewerProps {
   diffImageDataUrl?: string
@@ -57,7 +59,7 @@ export function MarkupDiffViewer({
     }
 
     img.onerror = () => {
-      console.error('Failed to load diff image')
+      logger.error('Failed to load diff image')
       setIsLoading(false)
     }
 

@@ -12,6 +12,8 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { logger } from '../lib/utils/logger';
+
 
 export interface VideoRecorderOptions {
   /** Maximum recording duration in seconds (default: 120) */
@@ -265,7 +267,7 @@ export function useVideoRecorder(
         if (isRecording && mediaRecorderRef.current) {
           // Note: Switching camera during recording is complex
           // For simplicity, we'll stop and restart
-          console.warn('Camera switch during recording may cause issues')
+          logger.warn('Camera switch during recording may cause issues')
         }
       } catch (err) {
         const errorMessage =

@@ -47,6 +47,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface ChecklistFailureTrendReportProps {
   projectId: string
@@ -74,7 +76,7 @@ export function ChecklistFailureTrendReport({
 
   const handleExport = () => {
     // TODO: Implement CSV/PDF export
-    console.log('Export functionality coming soon')
+    logger.log('Export functionality coming soon')
   }
 
   if (isLoading) {

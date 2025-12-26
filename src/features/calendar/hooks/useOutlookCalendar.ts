@@ -22,6 +22,8 @@ import type {
   OutlookEntityType,
   OutlookSyncStatus,
 } from '@/types/outlook-calendar'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Query Keys
 export const outlookCalendarKeys = {
@@ -458,7 +460,7 @@ export function useAutoOutlookSync(
         },
       })
     } catch (error) {
-      console.error('Auto-sync failed:', error)
+      logger.error('Auto-sync failed:', error)
     }
   }
 

@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { useUpdateChangeOrderWithNotification } from '../hooks/useChangeOrderMutations'
 import type { Database } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 type WorkflowItem = Database['public']['Tables']['workflow_items']['Row']
 
@@ -67,7 +69,7 @@ export function EditChangeOrderDialog({
 
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to update change order:', error)
+      logger.error('Failed to update change order:', error)
     }
   }
 

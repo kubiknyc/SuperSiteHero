@@ -38,6 +38,8 @@ import {
 import { usePublicSharedReport } from '../hooks/useReportSharing'
 import { ChartRenderer } from './ChartRenderer'
 import type { PublicSharedReportData } from '@/types/report-builder'
+import { logger } from '../../../lib/utils/logger';
+
 
 export function PublicReportViewer() {
   const { token } = useParams<{ token: string }>()
@@ -55,9 +57,9 @@ export function PublicReportViewer() {
       // TODO: Implement actual export using the reportExportService
       // For now, just show a placeholder
       await new Promise((resolve) => setTimeout(resolve, 1000))
-      console.log(`Exporting as ${formatType}...`)
+      logger.log(`Exporting as ${formatType}...`)
     } catch (err) {
-      console.error('Export failed:', err)
+      logger.error('Export failed:', err)
     } finally {
       setExporting(null)
     }

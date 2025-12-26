@@ -43,6 +43,8 @@ import {
 } from '@/components/ui/alert'
 import { formatLastSyncTime, OUTLOOK_SYNC_DIRECTIONS } from '@/types/outlook-calendar'
 import type { OutlookSyncDirection } from '@/types/outlook-calendar'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface OutlookCalendarConnectProps {
   onConnected?: () => void
@@ -99,7 +101,7 @@ export function OutlookCalendarConnect({
       // Redirect to Microsoft login
       window.location.href = authUrl
     } catch (error) {
-      console.error('Failed to initiate Outlook connection:', error)
+      logger.error('Failed to initiate Outlook connection:', error)
     }
   }
 
@@ -111,7 +113,7 @@ export function OutlookCalendarConnect({
       setShowDisconnectConfirm(false)
       onDisconnected?.()
     } catch (error) {
-      console.error('Failed to disconnect Outlook:', error)
+      logger.error('Failed to disconnect Outlook:', error)
     }
   }
 
@@ -122,7 +124,7 @@ export function OutlookCalendarConnect({
       await refreshToken.mutateAsync(connectionStatus.connectionId)
       refetchStatus()
     } catch (error) {
-      console.error('Failed to refresh token:', error)
+      logger.error('Failed to refresh token:', error)
     }
   }
 
@@ -135,7 +137,7 @@ export function OutlookCalendarConnect({
         updates,
       })
     } catch (error) {
-      console.error('Failed to update settings:', error)
+      logger.error('Failed to update settings:', error)
     }
   }
 

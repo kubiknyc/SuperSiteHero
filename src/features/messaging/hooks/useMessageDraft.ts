@@ -7,6 +7,8 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { logger } from '../../../lib/utils/logger';
+
 
 const DRAFT_PREFIX = 'message-draft-'
 const DEBOUNCE_MS = 500
@@ -89,7 +91,7 @@ export function useMessageDraft(conversationId: string | undefined) {
           }
         } catch (error) {
           // Handle quota exceeded or other localStorage errors
-          console.warn('Failed to save message draft:', error)
+          logger.warn('Failed to save message draft:', error)
         }
       }, DEBOUNCE_MS)
     },

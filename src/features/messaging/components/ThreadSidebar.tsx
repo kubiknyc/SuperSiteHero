@@ -24,6 +24,8 @@ import {
 import { useTypingIndicator } from '../hooks/useRealtimeMessaging'
 import type { Message } from '@/types/messaging'
 import { formatMentionsForDisplay } from '@/types/messaging'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface ThreadSidebarProps {
   /** ID of the parent message (thread root) */
@@ -179,7 +181,7 @@ export function ThreadSidebar({
       setReplyContent('')
       sendTyping(false)
     } catch (error) {
-      console.error('Failed to send reply:', error)
+      logger.error('Failed to send reply:', error)
     }
   }
 

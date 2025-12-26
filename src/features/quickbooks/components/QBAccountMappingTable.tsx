@@ -43,6 +43,8 @@ import {
   useQBConnectionStatus,
 } from '../hooks/useQuickBooks'
 import type { QBAccount, CreateQBAccountMappingDTO } from '@/types/quickbooks'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface QBAccountMappingTableProps {
   connectionId: string | null | undefined
@@ -85,7 +87,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
       setCostCodeInput('')
       setSearchQuery('')
     } catch (error) {
-      console.error('Failed to create mapping:', error)
+      logger.error('Failed to create mapping:', error)
     }
   }
 
@@ -93,7 +95,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
     try {
       await deleteMapping.mutateAsync(mappingId)
     } catch (error) {
-      console.error('Failed to delete mapping:', error)
+      logger.error('Failed to delete mapping:', error)
     }
   }
 
@@ -102,7 +104,7 @@ export function QBAccountMappingTable({ connectionId }: QBAccountMappingTablePro
     try {
       await setDefault.mutateAsync({ mappingId, connectionId })
     } catch (error) {
-      console.error('Failed to set default mapping:', error)
+      logger.error('Failed to set default mapping:', error)
     }
   }
 

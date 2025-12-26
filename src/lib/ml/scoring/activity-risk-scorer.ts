@@ -5,6 +5,8 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../utils/logger';
+
 
 // Use untyped supabase for tables not yet in generated types
 const supabaseAny = supabase as any
@@ -646,7 +648,7 @@ export const activityRiskScorer = {
       )
 
     if (error) {
-      console.error('Failed to save predictions:', error)
+      logger.error('Failed to save predictions:', error)
     }
   },
 
@@ -662,7 +664,7 @@ export const activityRiskScorer = {
       .insert(alerts)
 
     if (error && !error.message.includes('duplicate')) {
-      console.error('Failed to save alerts:', error)
+      logger.error('Failed to save alerts:', error)
     }
   },
 }

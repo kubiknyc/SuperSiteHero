@@ -16,6 +16,8 @@ import { SignatureTemplateManager } from './SignatureTemplateManager'
 import { uploadSignature, deleteSignature } from '../utils/storageUtils'
 import { PenTool, Save, X } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface SignatureCaptureDialogProps {
   open: boolean
@@ -69,7 +71,7 @@ export function SignatureCaptureDialog({
         try {
           await deleteSignature(currentSignature)
         } catch (error) {
-          console.warn('Failed to delete old signature:', error)
+          logger.warn('Failed to delete old signature:', error)
           // Continue anyway - old signature may already be deleted
         }
       }
@@ -83,7 +85,7 @@ export function SignatureCaptureDialog({
       toast.success('Signature saved successfully')
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to save signature:', error)
+      logger.error('Failed to save signature:', error)
       toast.error('Failed to save signature. Please try again.')
     } finally {
       setIsUploading(false)
@@ -105,7 +107,7 @@ export function SignatureCaptureDialog({
       toast.success('Signature removed successfully')
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to remove signature:', error)
+      logger.error('Failed to remove signature:', error)
       toast.error('Failed to remove signature. Please try again.')
     } finally {
       setIsUploading(false)

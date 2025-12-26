@@ -65,6 +65,8 @@ import {
   ITEM_ACTIONS,
   ITEM_FORMATS,
 } from '@/types/transmittal';
+import { logger } from '../../../lib/utils/logger';
+
 
 // Validation schema
 const transmittalItemSchema = z.object({
@@ -251,7 +253,7 @@ export function TransmittalForm({
         onSuccess?.(result);
       }
     } catch (error) {
-      console.error('Failed to save transmittal:', error);
+      logger.error('Failed to save transmittal:', error);
     }
   };
 

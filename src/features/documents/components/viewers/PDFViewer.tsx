@@ -11,12 +11,6 @@ import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
-// Set up PDF.js worker - use local copy from npm package
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
-
 interface PDFViewerProps {
   documentId: string
   projectId: string
@@ -73,8 +67,23 @@ export function PDFViewer({
   const [enableMarkup, setEnableMarkup] = useState(initialEnableMarkup)
   const [pageWidth, setPageWidth] = useState(800)
   const [pageHeight, setPageHeight] = useState(600)
+  const [pdfWorkerReady, setPdfWorkerReady] = useState(false)
 
   const pageContainerRef = useRef<HTMLDivElement>(null)
+
+  // Initialize PDF.js worker lazily on component mount
+  useEffect(() => {
+    const initWorker = () => {
+      if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          'pdfjs-dist/build/pdf.worker.min.mjs',
+          import.meta.url
+        ).toString()
+      }
+      setPdfWorkerReady(true)
+    }
+    initWorker()
+  }, [])
 
   // Handle PDF load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -263,7 +272,14 @@ export function PDFViewer({
 
       {/* PDF Viewer Area */}
       <div className="flex-1 overflow-auto bg-background p-4 flex items-center justify-center relative">
-        {isLoading && (
+        {!pdfWorkerReady && (
+          <div className="text-disabled text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
+            <p>Initializing PDF viewer...</p>
+          </div>
+        )}
+
+        {pdfWorkerReady && isLoading && (
           <div className="text-disabled text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
             <p>Loading PDF...</p>
@@ -277,7 +293,7 @@ export function PDFViewer({
           </div>
         )}
 
-        {!error && (
+        {pdfWorkerReady && !error && (
           <div ref={pageContainerRef} className="relative">
             <Document
               file={fileUrl}

@@ -31,6 +31,8 @@ import type { TakeoffTemplate } from '@/types/database-extensions'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { compressPoints } from '@/features/takeoffs/utils/coordinateCompression'
 import { useToast } from '@/components/ui/use-toast'
+import { logger } from '../../lib/utils/logger';
+
 
 /**
  * TakeoffPage Component
@@ -374,7 +376,7 @@ export default function TakeoffPage() {
         onOpenChange={setShowAssemblyPicker}
         projectId={projectId}
         onSelect={(assembly) => {
-          console.log('Selected assembly:', assembly)
+          logger.log('Selected assembly:', assembly)
           // TODO: Apply assembly to selected measurements
         }}
       />

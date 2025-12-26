@@ -25,6 +25,8 @@ import type {
 import exifr from 'exifr';
 import { generateVideoThumbnail, thumbnailToFile } from '@/lib/utils/generateVideoThumbnail';
 import { getVideoMetadata, getVideoCodec } from '@/lib/utils/videoCompression';
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // Types
@@ -246,7 +248,7 @@ async function extractExifData(file: File): Promise<ExifData> {
       orientation: exif.Orientation,
     };
   } catch {
-    console.debug('EXIF extraction failed');
+    logger.debug('EXIF extraction failed');
     return {};
   }
 }
@@ -424,7 +426,7 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
               });
               thumbnailBlob = videoThumbnail.blob;
             } catch (thumbError) {
-              console.warn('Failed to generate video thumbnail:', thumbError);
+              logger.warn('Failed to generate video thumbnail:', thumbError);
             }
           } else if (!is360) {
             thumbnailBlob = await generateThumbnail(file, 400);

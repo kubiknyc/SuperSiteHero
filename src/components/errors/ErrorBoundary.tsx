@@ -5,6 +5,8 @@ import { Component, ReactNode, ErrorInfo } from 'react'
 import { AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { captureException, addSentryBreadcrumb } from '@/lib/sentry'
+import { logger } from '../../lib/utils/logger';
+
 
 interface Props {
   children: ReactNode
@@ -35,7 +37,7 @@ export class ErrorBoundary extends Component<Props, State> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log error to console in development
     if (process.env.NODE_ENV === 'development') {
-      console.error('Error caught by boundary:', error, errorInfo)
+      logger.error('Error caught by boundary:', error, errorInfo)
     }
 
     // Add breadcrumb for component stack trace

@@ -49,6 +49,8 @@ import type {
   CreateProjectTemplateInput,
   UpdateProjectTemplateInput,
 } from '@/types/project-template'
+import { logger } from '../../lib/utils/logger';
+
 
 export function ProjectTemplatesPage() {
   const { userProfile, user } = useAuth()
@@ -96,7 +98,7 @@ export function ProjectTemplatesPage() {
       toast.success('Template duplicated successfully')
     } catch (error) {
       toast.error('Failed to duplicate template')
-      console.error('Failed to duplicate template:', error)
+      logger.error('Failed to duplicate template:', error)
     }
   }
 
@@ -115,7 +117,7 @@ export function ProjectTemplatesPage() {
       setTemplateToDelete(null)
     } catch (error) {
       toast.error('Failed to delete template')
-      console.error('Failed to delete template:', error)
+      logger.error('Failed to delete template:', error)
     }
   }
 
@@ -138,7 +140,7 @@ export function ProjectTemplatesPage() {
       setEditingTemplate(null)
     } catch (error) {
       toast.error(editingTemplate ? 'Failed to update template' : 'Failed to create template')
-      console.error('Failed to save template:', error)
+      logger.error('Failed to save template:', error)
     }
   }
 

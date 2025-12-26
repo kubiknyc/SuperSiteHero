@@ -4,6 +4,8 @@
 import { useState, useCallback, useRef } from 'react'
 import { z } from 'zod'
 import { useNotifications } from '@/lib/notifications/useNotifications'
+import { logger } from '../utils/logger';
+
 
 export interface FieldError {
   [key: string]: string[]
@@ -108,7 +110,7 @@ export function useFormValidation<T>(
           }
         } catch (error) {
           // If field validation fails, just skip it
-          console.debug('Field validation skipped:', fieldName)
+          logger.debug('Field validation skipped:', fieldName)
         }
 
         setIsValidating(false)

@@ -26,7 +26,6 @@ import {
   Sphere,
   PerspectiveCamera,
 } from '@react-three/drei';
-import * as THREE from 'three';
 import {
   Maximize2,
   Minimize2,
@@ -79,6 +78,8 @@ import type {
   VRWalkthroughSettings,
   Vector3D,
 } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -566,7 +567,7 @@ export function VRWalkthrough({
         setIsFullscreen(false);
       }
     } catch (err) {
-      console.error('Fullscreen error:', err);
+      logger.error('Fullscreen error:', err);
     }
   }, []);
 

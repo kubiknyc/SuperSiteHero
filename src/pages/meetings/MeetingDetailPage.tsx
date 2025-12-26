@@ -50,6 +50,8 @@ import { format, parseISO } from 'date-fns'
 import { MeetingActionItemExtractor } from '@/features/summaries/components/MeetingActionItemExtractor'
 import type { MeetingRecording } from '@/types/meeting-recordings'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { logger } from '../../lib/utils/logger';
+
 
 export function MeetingDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -77,7 +79,7 @@ export function MeetingDetailPage() {
       await deleteMeeting.mutateAsync(id)
       navigate('/meetings')
     } catch (err) {
-      console.error('Failed to delete meeting:', err)
+      logger.error('Failed to delete meeting:', err)
     }
   }
 

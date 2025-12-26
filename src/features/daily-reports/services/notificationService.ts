@@ -6,6 +6,8 @@
 import { supabase } from '@/lib/supabase';
 import type { DailyReportV2, ReportStatus } from '@/types/daily-reports-v2';
 import { workflowEngine, type NotificationType, type NotificationConfig } from './workflowEngine';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface NotificationRecipient {
   id: string;
@@ -56,13 +58,13 @@ async function createInAppNotification(
     });
 
     if (error) {
-      console.error('Failed to create in-app notification:', error);
+      logger.error('Failed to create in-app notification:', error);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error('Error creating in-app notification:', error);
+    logger.error('Error creating in-app notification:', error);
     return false;
   }
 }
@@ -137,13 +139,13 @@ async function sendNotification(
     });
 
     if (error) {
-      console.error('Notification Edge Function error:', error);
+      logger.error('Notification Edge Function error:', error);
       return { success: false, error: error.message };
     }
 
     return { success: data?.success ?? true };
   } catch (error: any) {
-    console.error('Failed to send notification:', error);
+    logger.error('Failed to send notification:', error);
     return { success: false, error: error.message };
   }
 }
@@ -228,7 +230,7 @@ async function getRecipients(
       .eq('project_id', projectId);
 
     if (error) {
-      console.error('Failed to fetch team members:', error);
+      logger.error('Failed to fetch team members:', error);
       return recipients;
     }
 
@@ -270,7 +272,7 @@ async function getRecipients(
       }
     }
   } catch (error) {
-    console.error('Error fetching recipients:', error);
+    logger.error('Error fetching recipients:', error);
   }
 
   return recipients;

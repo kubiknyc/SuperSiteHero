@@ -41,6 +41,8 @@ import { Badge } from '@/components/ui/badge'
 import { useSendBidInvitation, useBulkSendInvitations } from '../hooks/useBidding'
 import type { CreateBidInvitationDTO } from '@/types/bidding'
 import { toast } from 'sonner'
+import { logger } from '../../../lib/utils/logger';
+
 
 const formSchema = z.object({
   company_name: z.string().min(1, 'Company name is required'),
@@ -126,7 +128,7 @@ export function SendInvitationDialog({
       onOpenChange(false)
     } catch (error) {
       toast.error('Failed to send invitation')
-      console.error(error)
+      logger.error(error)
     }
   }
 
@@ -155,7 +157,7 @@ export function SendInvitationDialog({
       onOpenChange(false)
     } catch (error) {
       toast.error('Failed to send invitations')
-      console.error(error)
+      logger.error(error)
     }
   }
 

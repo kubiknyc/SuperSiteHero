@@ -33,6 +33,8 @@ import { RFIRoutingSuggestions } from './RFIRoutingSuggestions'
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { RFIPriority, BallInCourtRole } from '@/types/database-extensions'
+import { logger } from '../../../lib/utils/logger';
+
 
 // User interface for distribution list
 interface DistributionUser {
@@ -186,7 +188,7 @@ export function CreateDedicatedRFIDialog({
       onOpenChange(false)
       onSuccess?.()
     } catch (error) {
-      console.error('Failed to create RFI:', error)
+      logger.error('Failed to create RFI:', error)
     }
   }
 

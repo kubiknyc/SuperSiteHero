@@ -22,6 +22,8 @@ import type {
   EquipmentEntryV2,
   DailyReportV2,
 } from '@/types/daily-reports-v2';
+import { logger } from '../../utils/logger';
+
 
 // =============================================
 // TEMPLATE LIBRARY API
@@ -511,7 +513,7 @@ export const dailyReportTemplatesApi = {
       }
     } catch (error) {
       // Non-critical error, log but don't throw
-      console.warn('Failed to record template usage:', error);
+      logger.warn('Failed to record template usage:', error);
     }
   },
 

@@ -40,6 +40,8 @@ import { cn } from '@/lib/utils'
 import { useVideoRecorder, formatVideoDuration } from '@/hooks/useVideoRecorder'
 import { Capacitor } from '@capacitor/core'
 import { Media } from '@capacitor-community/media'
+import { logger } from '../../../lib/utils/logger';
+
 
 export type VideoQuality = 'low' | 'medium' | 'high'
 
@@ -209,7 +211,7 @@ export function VideoCapture({
         setRecordingComplete(true)
       }
     } catch (err) {
-      console.error('Native video capture failed:', err)
+      logger.error('Native video capture failed:', err)
       // Fall back to web capture
       setIsNativeCapture(false)
       if (autoStartPreview) {

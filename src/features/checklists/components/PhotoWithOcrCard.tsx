@@ -24,6 +24,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PhotoWithOcrCardProps {
   photoUrl: string
@@ -70,7 +72,7 @@ export function PhotoWithOcrCard({
       toast.success(`Extracted ${result.words.length} words from photo`)
       setShowOcrDialog(true)
     } catch (error) {
-      console.error('OCR extraction failed:', error)
+      logger.error('OCR extraction failed:', error)
 
       const errorData: PhotoOcrData = {
         status: 'failed',

@@ -36,6 +36,8 @@ import { formatDistanceToNow } from 'date-fns';
 import { getSyncStatusColor, getSyncStatusLabel } from '@/types/google-calendar';
 import type { MeetingWithDetails } from '../hooks/useMeetings';
 import { TouchWrapper } from '@/components/ui/touch-wrapper';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CalendarSyncBadgeProps {
   meeting: MeetingWithDetails;
@@ -89,7 +91,7 @@ export function CalendarSyncBadge({
       });
       setIsOpen(false);
     } catch (error) {
-      console.error('Sync failed:', error);
+      logger.error('Sync failed:', error);
     }
   };
 
@@ -107,7 +109,7 @@ export function CalendarSyncBadge({
       });
       setIsOpen(false);
     } catch (error) {
-      console.error('Delete failed:', error);
+      logger.error('Delete failed:', error);
     }
   };
 
@@ -293,7 +295,7 @@ export function QuickSyncButton({
         },
       });
     } catch (error) {
-      console.error('Sync failed:', error);
+      logger.error('Sync failed:', error);
     }
   };
 

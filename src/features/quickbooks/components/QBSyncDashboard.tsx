@@ -27,6 +27,8 @@ import { QBSyncLogTable } from './QBSyncLogTable'
 import { QBPendingSyncsList } from './QBPendingSyncsList'
 import { formatDistanceToNow } from 'date-fns'
 import type { QBEntityType } from '@/types/quickbooks'
+import { logger } from '../../../lib/utils/logger';
+
 
 const ENTITY_ICONS: Record<QBEntityType, React.ReactNode> = {
   vendor: <Users className="h-4 w-4" />,
@@ -64,7 +66,7 @@ export function QBSyncDashboard() {
       })
       refetch()
     } catch (error) {
-      console.error('Failed to sync all:', error)
+      logger.error('Failed to sync all:', error)
     }
   }
 

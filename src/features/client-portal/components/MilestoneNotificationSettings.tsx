@@ -33,6 +33,8 @@ import {
 import { cn } from '@/lib/utils'
 import { AlertCircle, CheckCircle2, RotateCcw, Bell, BellOff } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -125,7 +127,7 @@ export function MilestoneNotificationSettings({
     },
     onError: (error) => {
       toast.error('Failed to save preferences. Please try again.')
-      console.error('Failed to save preferences:', error)
+      logger.error('Failed to save preferences:', error)
     },
   })
 
@@ -139,7 +141,7 @@ export function MilestoneNotificationSettings({
     },
     onError: (error) => {
       toast.error('Failed to reset preferences. Please try again.')
-      console.error('Failed to reset preferences:', error)
+      logger.error('Failed to reset preferences:', error)
     },
   })
 

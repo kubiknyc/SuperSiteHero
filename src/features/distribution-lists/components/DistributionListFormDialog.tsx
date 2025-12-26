@@ -28,6 +28,7 @@ import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Separator } from '@/components/ui/separator'
+import { logger } from '@/lib/utils/logger'
 import {
   Loader2,
   Plus,
@@ -269,7 +270,7 @@ export function DistributionListFormDialog({
       onSuccess?.()
     } catch (error) {
       toast.error(isEditing ? 'Failed to update list' : 'Failed to create list')
-      console.error('Distribution list error:', error)
+      logger.error('Distribution list error:', error)
     }
   }
 

@@ -6,6 +6,8 @@
 import { supabase } from '@/lib/supabase'
 import type { LookAheadActivity, LookAheadActivityStatus } from '@/types/look-ahead'
 import type { ProgressEntry } from '@/types/daily-reports-v2'
+import { logger } from '../../utils/logger';
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const supabaseUntyped = supabase as any
@@ -88,7 +90,7 @@ export async function getLinkedProgressEntries(
   const { data, error } = await query
 
   if (error) {
-    console.error('Error fetching linked progress entries:', error)
+    logger.error('Error fetching linked progress entries:', error)
     throw error
   }
 
@@ -143,7 +145,7 @@ export async function calculateProgressSummaries(
     .is('deleted_at', null)
 
   if (error) {
-    console.error('Error fetching look-ahead activities:', error)
+    logger.error('Error fetching look-ahead activities:', error)
     throw error
   }
 
@@ -355,7 +357,7 @@ export async function linkProgressToActivity(
     .eq('id', progressEntryId)
 
   if (error) {
-    console.error('Error linking progress to activity:', error)
+    logger.error('Error linking progress to activity:', error)
     throw error
   }
 }
@@ -375,7 +377,7 @@ export async function unlinkProgressFromActivity(
     .eq('id', progressEntryId)
 
   if (error) {
-    console.error('Error unlinking progress from activity:', error)
+    logger.error('Error unlinking progress from activity:', error)
     throw error
   }
 }
@@ -413,7 +415,7 @@ export async function autoLinkProgressEntries(
   const { data: unlinkedEntries, error: entriesError } = await query
 
   if (entriesError) {
-    console.error('Error fetching unlinked entries:', entriesError)
+    logger.error('Error fetching unlinked entries:', entriesError)
     throw entriesError
   }
 
@@ -429,7 +431,7 @@ export async function autoLinkProgressEntries(
     .is('deleted_at', null)
 
   if (activitiesError) {
-    console.error('Error fetching activities:', activitiesError)
+    logger.error('Error fetching activities:', activitiesError)
     throw activitiesError
   }
 

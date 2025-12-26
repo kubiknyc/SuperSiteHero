@@ -13,6 +13,8 @@
  */
 
 import * as Sentry from '@sentry/react';
+import { logger } from './utils/logger';
+
 
 // Sentry configuration
 const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
@@ -26,7 +28,7 @@ const RELEASE = import.meta.env.VITE_APP_VERSION || '1.0.0';
 export function initSentry() {
   // Only initialize if DSN is provided
   if (!SENTRY_DSN) {
-    console.info('Sentry DSN not provided. Error tracking disabled.');
+    logger.info('Sentry DSN not provided. Error tracking disabled.');
     return;
   }
 
@@ -34,7 +36,7 @@ export function initSentry() {
   // Note: env vars are strings, so check for explicit 'true'
   const debugEnabled = import.meta.env.VITE_SENTRY_DEBUG === 'true';
   if (ENVIRONMENT === 'development' && !debugEnabled) {
-    console.info('Sentry disabled in development. Set VITE_SENTRY_DEBUG=true to enable.');
+    logger.info('Sentry disabled in development. Set VITE_SENTRY_DEBUG=true to enable.');
     return;
   }
 
@@ -105,7 +107,7 @@ export function initSentry() {
     ],
   });
 
-  console.info(`Sentry initialized for ${ENVIRONMENT} environment`);
+  logger.info(`Sentry initialized for ${ENVIRONMENT} environment`);
 }
 
 /**

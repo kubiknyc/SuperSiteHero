@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button'
 import { AlertCircle, AlertTriangle, Loader2, Download } from 'lucide-react'
 import { formatReportDate } from '@/lib/utils/pdfExport'
 import { subDays, format } from 'date-fns'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface SafetyIncidentReportProps {
   projectId: string | undefined
@@ -36,7 +38,7 @@ export function SafetyIncidentReport({ projectId }: SafetyIncidentReportProps) {
 
   const handleExport = () => {
     // Placeholder for export functionality
-    console.log('Export report:', { startDate, endDate })
+    logger.log('Export report:', { startDate, endDate })
   }
 
   return (

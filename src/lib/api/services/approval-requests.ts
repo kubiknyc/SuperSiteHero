@@ -16,6 +16,8 @@ import type {
   PendingApprovalsSummary,
   WorkflowEntityType,
 } from '@/types/approval-workflow'
+import { logger } from '../../utils/logger';
+
 
 // Note: Using extended Database types from database-extensions.ts
 // Once migration 023 is applied to remote database, regenerate types and switch back to database.ts
@@ -336,7 +338,7 @@ export const approvalRequestsApi = {
         }
       } catch (notifyError) {
         // Log but don't fail the request creation
-        console.error('[ApprovalRequests] Failed to send notification:', notifyError)
+        logger.error('[ApprovalRequests] Failed to send notification:', notifyError)
       }
 
       return fullRequest

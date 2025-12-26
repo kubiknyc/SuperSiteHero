@@ -19,12 +19,12 @@ export const colors = {
     700: '#1d4ed8',
     800: '#1e40af', // Main brand color
     900: '#1e3a8a',
-    DEFAULT: '#1e40af'
+    DEFAULT: '#1a3a99' // Darkened for WCAG AA contrast (4.5:1 with white)
   },
 
   // Semantic colors
   semantic: {
-    success: '#10B981',    // Approved Green
+    success: '#065e45',    // Approved Green - Darkened for WCAG AA contrast (4.5:1 with white)
     warning: '#FBBF24',    // Safety Yellow
     destructive: '#EF4444', // Caution Red
     info: '#06B6D4'        // Steel Cyan

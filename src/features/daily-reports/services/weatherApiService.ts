@@ -3,6 +3,8 @@
  * Uses OpenWeatherMap API (or similar) for weather data
  */
 
+import { logger } from '../../../lib/utils/logger';
+
 interface WeatherData {
   temperature: number; // Fahrenheit
   conditions: string;
@@ -165,7 +167,7 @@ export async function getWeatherForProject(projectId: string): Promise<WeatherDa
       .single();
 
     if (error || !project) {
-      console.error('Failed to fetch project location:', error);
+      logger.error('Failed to fetch project location:', error);
       return null;
     }
 
@@ -190,7 +192,7 @@ export async function getWeatherForProject(projectId: string): Promise<WeatherDa
 
     return null;
   } catch (error) {
-    console.error('Error fetching weather for project:', error);
+    logger.error('Error fetching weather for project:', error);
     return null;
   }
 }
@@ -224,7 +226,7 @@ async function geocodeAddress(address: string): Promise<GeoLocation | null> {
 
     return null;
   } catch (error) {
-    console.error('Geocoding error:', error);
+    logger.error('Geocoding error:', error);
     return null;
   }
 }

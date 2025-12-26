@@ -16,6 +16,8 @@ import type {
   UpdateGCalConnectionDTO,
   SyncEventDTO,
 } from '@/types/google-calendar';
+import { logger } from '../../../lib/utils/logger';
+
 
 // Query Keys
 export const googleCalendarKeys = {
@@ -458,7 +460,7 @@ export function useQuickGCalSync(meetingId: string | undefined) {
       });
       return true;
     } catch (error) {
-      console.error('Google Calendar sync failed:', error);
+      logger.error('Google Calendar sync failed:', error);
       return false;
     }
   };

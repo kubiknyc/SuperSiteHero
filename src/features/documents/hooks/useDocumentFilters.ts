@@ -4,6 +4,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { Document, DocumentType, DocumentStatus } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface DocumentFiltersInput {
   projectId: string
@@ -101,7 +103,7 @@ export function useDocumentFilters(
       const { data, error } = await query.order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Filter error:', error)
+        logger.error('Filter error:', error)
         throw error
       }
 

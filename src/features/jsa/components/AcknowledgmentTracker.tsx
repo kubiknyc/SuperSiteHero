@@ -50,6 +50,8 @@ import {
   useRemoveJSAAcknowledgment,
 } from '../hooks/useJSA';
 import type { JSAAcknowledgment, CreateJSAAcknowledgmentDTO } from '@/types/jsa';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface AcknowledgmentTrackerProps {
   jsaId: string;
@@ -77,7 +79,7 @@ export function AcknowledgmentTracker({
       });
       setShowAddDialog(false);
     } catch (error) {
-      console.error('Failed to add acknowledgment:', error);
+      logger.error('Failed to add acknowledgment:', error);
     }
   };
 
@@ -90,7 +92,7 @@ export function AcknowledgmentTracker({
         jsaId,
       });
     } catch (error) {
-      console.error('Failed to remove acknowledgment:', error);
+      logger.error('Failed to remove acknowledgment:', error);
     }
   };
 

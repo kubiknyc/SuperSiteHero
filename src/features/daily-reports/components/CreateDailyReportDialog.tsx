@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError, SelectWithError } from '@/components/form/ValidationError'
 import type { DailyReportCreateInput } from '@/lib/validation'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateDailyReportDialogProps {
   projectId: string
@@ -66,7 +68,7 @@ export function CreateDailyReportDialog({
     e.preventDefault()
 
     if (!userProfile?.id) {
-      console.error('User not authenticated')
+      logger.error('User not authenticated')
       return
     }
 
@@ -93,7 +95,7 @@ export function CreateDailyReportDialog({
       onOpenChange(false)
     } catch (error) {
       // Error toast shown automatically by mutation hook
-      console.error('Failed to create daily report:', error)
+      logger.error('Failed to create daily report:', error)
     }
   }
 

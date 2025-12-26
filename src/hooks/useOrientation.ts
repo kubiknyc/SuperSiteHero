@@ -12,6 +12,8 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
+import { logger } from '../lib/utils/logger';
+
 
 export type Orientation = 'portrait' | 'landscape';
 export type DeviceType = 'phone' | 'tablet' | 'desktop';
@@ -255,7 +257,7 @@ export async function lockOrientation(
       return true;
     }
   } catch (error) {
-    console.warn('Orientation lock not supported or denied:', error);
+    logger.warn('Orientation lock not supported or denied:', error);
   }
   return false;
 }
@@ -271,7 +273,7 @@ export function unlockOrientation(): void {
       window.screen.orientation.unlock();
     }
   } catch (error) {
-    console.warn('Orientation unlock failed:', error);
+    logger.warn('Orientation unlock failed:', error);
   }
 }
 

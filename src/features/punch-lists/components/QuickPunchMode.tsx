@@ -41,6 +41,8 @@ import type { Priority } from '@/types/database'
 import { useIsOnline } from '@/stores/offline-store'
 import { useOfflinePunchStore, type OfflinePhoto } from '../store/offlinePunchStore'
 import { usePunchItemSync } from '../hooks/usePunchItemSync'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface QuickPunchModeProps {
   projectId: string
@@ -214,7 +216,7 @@ export function QuickPunchMode({
         toast.success(`${localPhotos.length} photo(s) saved locally`)
       }
     } catch (error) {
-      console.error('Photo capture failed:', error)
+      logger.error('Photo capture failed:', error)
       toast.error('Failed to capture photo')
     } finally {
       setIsUploading(false)

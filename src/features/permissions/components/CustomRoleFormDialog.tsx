@@ -38,6 +38,8 @@ import {
 import { PermissionMatrix, PermissionMatrixSkeleton } from './PermissionMatrix';
 import type { CustomRole, DefaultRole } from '@/types/permissions';
 import { DEFAULT_ROLES } from '@/types/permissions';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CustomRoleFormDialogProps {
   open: boolean;
@@ -195,7 +197,7 @@ export function CustomRoleFormDialog({
       onSuccess?.();
     } catch (error) {
       toast.error(isEditing ? 'Failed to update role' : 'Failed to create role');
-      console.error('Role form error:', error);
+      logger.error('Role form error:', error);
     }
   };
 

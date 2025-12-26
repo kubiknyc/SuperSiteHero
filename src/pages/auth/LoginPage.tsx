@@ -19,6 +19,8 @@ import {
   verifyBiometricAuthentication,
   setLastBiometricAuthTime,
 } from '@/lib/auth/biometric'
+import { logger } from '../../lib/utils/logger';
+
 
 export function LoginPage() {
   const [email, setEmail] = useState('')
@@ -41,7 +43,7 @@ export function LoginPage() {
         const platformAvailable = await isPlatformAuthenticatorAvailable()
         setBiometricAvailable(webAuthnSupported && platformAvailable)
       } catch (err) {
-        console.error('Error checking biometric availability:', err)
+        logger.error('Error checking biometric availability:', err)
         setBiometricAvailable(false)
       } finally {
         setCheckingBiometric(false)

@@ -3,6 +3,8 @@
  * Client-side image compression for mobile photo uploads
  */
 
+import { logger } from './logger';
+
 export interface CompressionOptions {
   maxWidth?: number
   maxHeight?: number
@@ -136,7 +138,7 @@ export async function compressImages(
       results.push(compressed)
     } catch (error) {
       // If compression fails, use original file
-      console.warn(`Compression failed for ${file.name}, using original:`, error)
+      logger.warn(`Compression failed for ${file.name}, using original:`, error)
       results.push(file)
     }
 

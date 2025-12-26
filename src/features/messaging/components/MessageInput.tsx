@@ -29,6 +29,8 @@ import { cn } from '@/lib/utils'
 import { uploadMessageAttachments } from '@/lib/storage/message-uploads'
 import { toast } from '@/lib/notifications/ToastContext'
 import { useVoiceToText } from '@/hooks/useVoiceToText'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface MessageInputProps {
   conversationId: string
@@ -279,7 +281,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
       setAttachments((prev) => [...prev, ...uploadedAttachments])
       toast.success(`${uploadedAttachments.length} file(s) uploaded`)
     } catch (error) {
-      console.error('File upload failed:', error)
+      logger.error('File upload failed:', error)
       toast.error(error instanceof Error ? error.message : 'Failed to upload files')
     } finally {
       setIsUploading(false)
@@ -318,7 +320,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
       sendTyping(false)
       onSent?.()
     } catch (error) {
-      console.error('Failed to send message:', error)
+      logger.error('Failed to send message:', error)
     }
   }
 

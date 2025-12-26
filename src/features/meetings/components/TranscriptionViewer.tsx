@@ -33,6 +33,8 @@ import {
   useStartTranscription,
 } from '../hooks/useMeetingRecordings';
 import type { MeetingRecording, TranscriptionSegment } from '@/types/meeting-recordings';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface TranscriptionViewerProps {
   recording: MeetingRecording;
@@ -109,7 +111,7 @@ export function TranscriptionViewer({
         language: recording.transcription_language || 'en',
       });
     } catch (err) {
-      console.error('Transcription failed:', err);
+      logger.error('Transcription failed:', err);
     }
   };
 

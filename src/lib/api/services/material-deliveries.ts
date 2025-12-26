@@ -20,6 +20,8 @@ import type {
   ConditionStatus,
   MaterialCategory,
 } from '@/types/material-receiving';
+import { logger } from '../../utils/logger';
+
 
 // =====================================================
 // DELIVERIES - CRUD OPERATIONS
@@ -94,7 +96,7 @@ export async function getDeliveries(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching deliveries:', error);
+    logger.error('Error fetching deliveries:', error);
     return { data: null, error };
   }
 }
@@ -115,7 +117,7 @@ export async function getDelivery(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching delivery:', error);
+    logger.error('Error fetching delivery:', error);
     return { data: null, error };
   }
 }
@@ -157,7 +159,7 @@ export async function getDeliveryWithPhotos(
 
     return { data: result, error: null };
   } catch (error) {
-    console.error('Error fetching delivery with photos:', error);
+    logger.error('Error fetching delivery with photos:', error);
     return { data: null, error };
   }
 }
@@ -231,7 +233,7 @@ export async function getDeliveryWithRelations(
 
     return { data: result, error: null };
   } catch (error) {
-    console.error('Error fetching delivery with relations:', error);
+    logger.error('Error fetching delivery with relations:', error);
     return { data: null, error };
   }
 }
@@ -258,7 +260,7 @@ export async function createDelivery(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error creating delivery:', error);
+    logger.error('Error creating delivery:', error);
     return { data: null, error };
   }
 }
@@ -281,7 +283,7 @@ export async function updateDelivery(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error updating delivery:', error);
+    logger.error('Error updating delivery:', error);
     return { data: null, error };
   }
 }
@@ -302,7 +304,7 @@ export async function deleteDelivery(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error deleting delivery:', error);
+    logger.error('Error deleting delivery:', error);
     return { data: null, error };
   }
 }
@@ -326,7 +328,7 @@ export async function getDeliveryPhotos(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching delivery photos:', error);
+    logger.error('Error fetching delivery photos:', error);
     return { data: null, error };
   }
 }
@@ -346,7 +348,7 @@ export async function createDeliveryPhoto(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error creating delivery photo:', error);
+    logger.error('Error creating delivery photo:', error);
     return { data: null, error };
   }
 }
@@ -369,7 +371,7 @@ export async function updateDeliveryPhoto(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error updating delivery photo:', error);
+    logger.error('Error updating delivery photo:', error);
     return { data: null, error };
   }
 }
@@ -390,7 +392,7 @@ export async function deleteDeliveryPhoto(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error deleting delivery photo:', error);
+    logger.error('Error deleting delivery photo:', error);
     return { data: null, error };
   }
 }
@@ -415,7 +417,7 @@ export async function searchDeliveries(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error searching deliveries:', error);
+    logger.error('Error searching deliveries:', error);
     return { data: null, error };
   }
 }
@@ -438,7 +440,7 @@ export async function getDeliveriesByVendor(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching deliveries by vendor:', error);
+    logger.error('Error fetching deliveries by vendor:', error);
     return { data: null, error };
   }
 }
@@ -461,7 +463,7 @@ export async function getDeliveriesByCategory(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching deliveries by category:', error);
+    logger.error('Error fetching deliveries by category:', error);
     return { data: null, error };
   }
 }
@@ -484,7 +486,7 @@ export async function getDeliveriesByStorageLocation(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching deliveries by storage location:', error);
+    logger.error('Error fetching deliveries by storage location:', error);
     return { data: null, error };
   }
 }
@@ -506,7 +508,7 @@ export async function getDeliveriesWithIssues(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching deliveries with issues:', error);
+    logger.error('Error fetching deliveries with issues:', error);
     return { data: null, error };
   }
 }
@@ -531,7 +533,7 @@ export async function getDeliveryStatistics(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error fetching delivery statistics:', error);
+    logger.error('Error fetching delivery statistics:', error);
     return { data: null, error };
   }
 }
@@ -567,7 +569,7 @@ export async function getDeliveryCountByCategory(
 
     return { data: result, error: null };
   } catch (error) {
-    console.error('Error fetching delivery count by category:', error);
+    logger.error('Error fetching delivery count by category:', error);
     return { data: null, error };
   }
 }
@@ -595,7 +597,7 @@ export async function getUniqueVendors(
 
     return { data: uniqueVendors, error: null };
   } catch (error) {
-    console.error('Error fetching unique vendors:', error);
+    logger.error('Error fetching unique vendors:', error);
     return { data: null, error };
   }
 }
@@ -624,7 +626,7 @@ export async function getUniqueStorageLocations(
 
     return { data: uniqueLocations, error: null };
   } catch (error) {
-    console.error('Error fetching unique storage locations:', error);
+    logger.error('Error fetching unique storage locations:', error);
     return { data: null, error };
   }
 }
@@ -659,7 +661,7 @@ export async function uploadDeliveryPhotoFile(
 
     return { data: { url: urlData.publicUrl }, error: null };
   } catch (error) {
-    console.error('Error uploading delivery photo:', error);
+    logger.error('Error uploading delivery photo:', error);
     return { data: null, error };
   }
 }
@@ -685,7 +687,7 @@ export async function deleteDeliveryPhotoFile(
 
     return { data: data as any, error };
   } catch (error) {
-    console.error('Error deleting delivery photo file:', error);
+    logger.error('Error deleting delivery photo file:', error);
     return { data: null, error };
   }
 }

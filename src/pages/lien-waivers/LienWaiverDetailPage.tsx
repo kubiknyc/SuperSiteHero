@@ -61,6 +61,8 @@ import { cn } from '@/lib/utils';
 import { downloadLienWaiverPDF } from '@/features/lien-waivers/utils/pdfExport';
 import type { LienWaiverHistory } from '@/types/lien-waiver';
 import { formatWaiverAmount, getStateName, isWaiverOverdue } from '@/types/lien-waiver';
+import { logger } from '../../lib/utils/logger';
+
 
 export function LienWaiverDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -130,7 +132,7 @@ export function LienWaiverDetailPage() {
       setSendDialogOpen(false);
       setSendToEmail('');
     } catch (error) {
-      console.error('Failed to send waiver request:', error);
+      logger.error('Failed to send waiver request:', error);
     }
   };
 
@@ -138,7 +140,7 @@ export function LienWaiverDetailPage() {
     try {
       await markReceived.mutateAsync(waiver.id);
     } catch (error) {
-      console.error('Failed to mark waiver as received:', error);
+      logger.error('Failed to mark waiver as received:', error);
     }
   };
 
@@ -146,7 +148,7 @@ export function LienWaiverDetailPage() {
     try {
       await approveWaiver.mutateAsync({ id: waiver.id });
     } catch (error) {
-      console.error('Failed to approve waiver:', error);
+      logger.error('Failed to approve waiver:', error);
     }
   };
 
@@ -157,7 +159,7 @@ export function LienWaiverDetailPage() {
       setRejectDialogOpen(false);
       setRejectionReason('');
     } catch (error) {
-      console.error('Failed to reject waiver:', error);
+      logger.error('Failed to reject waiver:', error);
     }
   };
 
@@ -168,7 +170,7 @@ export function LienWaiverDetailPage() {
       setVoidDialogOpen(false);
       setVoidReason('');
     } catch (error) {
-      console.error('Failed to void waiver:', error);
+      logger.error('Failed to void waiver:', error);
     }
   };
 
@@ -180,7 +182,7 @@ export function LienWaiverDetailPage() {
         projectId: waiver.project_id
       });
     } catch (error) {
-      console.error('Failed to export PDF:', error);
+      logger.error('Failed to export PDF:', error);
     } finally {
       setIsExporting(false);
     }
@@ -199,7 +201,7 @@ export function LienWaiverDetailPage() {
       });
       setSignatureDialogOpen(false);
     } catch (error) {
-      console.error('Failed to sign waiver:', error);
+      logger.error('Failed to sign waiver:', error);
     }
   };
 
@@ -217,7 +219,7 @@ export function LienWaiverDetailPage() {
       });
       setSignatureDialogOpen(false);
     } catch (error) {
-      console.error('Failed to remove signature:', error);
+      logger.error('Failed to remove signature:', error);
     }
   };
 

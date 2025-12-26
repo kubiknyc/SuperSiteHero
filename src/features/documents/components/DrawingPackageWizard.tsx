@@ -50,6 +50,8 @@ import type {
   DrawingDiscipline,
 } from '@/types/drawing';
 import { DRAWING_PACKAGE_TYPES, DRAWING_DISCIPLINES } from '@/types/drawing';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface DrawingPackageWizardProps {
   open: boolean;
@@ -235,7 +237,7 @@ export function DrawingPackageWizard({
       onOpenChange(false);
       onSuccess?.(pkg);
     } catch (error) {
-      console.error('Failed to create package:', error);
+      logger.error('Failed to create package:', error);
     }
   }, [
     companyId,

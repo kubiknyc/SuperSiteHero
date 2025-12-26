@@ -15,6 +15,8 @@ import {
   downloadFile,
   type ExportSummary,
 } from '../utils/export'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface TakeoffSummaryProps {
   measurements: TakeoffMeasurement[]
@@ -55,7 +57,7 @@ export function TakeoffSummary({
       const filename = `takeoff-${documentName || 'export'}-${new Date().toISOString().slice(0, 10)}.xlsx`
       downloadFile(blob, filename)
     } catch (error) {
-      console.error('Error exporting to Excel:', error)
+      logger.error('Error exporting to Excel:', error)
       alert('Failed to export to Excel. Please try CSV export instead.')
     }
   }

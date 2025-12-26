@@ -25,6 +25,8 @@ import {
   DialogClose,
 } from '@/components/ui/dialog';
 import { SyncStatusPanel } from '@/components/SyncStatusPanel';
+import { logger } from '../lib/utils/logger';
+
 
 /**
  * Format bytes to human-readable string
@@ -95,9 +97,9 @@ export function OfflineIndicator() {
     setIsSyncingManually(true);
     try {
       const result = await OfflineClient.processSyncQueue();
-      console.log('[OfflineIndicator] Sync completed:', result);
+      logger.log('[OfflineIndicator] Sync completed:', result);
     } catch (error) {
-      console.error('[OfflineIndicator] Sync failed:', error);
+      logger.error('[OfflineIndicator] Sync failed:', error);
     } finally {
       setIsSyncingManually(false);
     }

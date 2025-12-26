@@ -19,6 +19,8 @@ import {
   Check,
   X,
 } from 'lucide-react'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface Annotation {
   id: string
@@ -186,7 +188,7 @@ export function PhotoAnnotationEditor({
       })
       onSave(dataUrl)
     } catch (error) {
-      console.error('Failed to save annotated image:', error)
+      logger.error('Failed to save annotated image:', error)
     }
   }
 

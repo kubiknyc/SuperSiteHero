@@ -1,24 +1,23 @@
 // Pending Approval Screen
 // Displays while user awaits admin approval to access the app
 
-import { Clock, Mail, Building2, LogOut } from 'lucide-react';
+import { Clock, Mail, Building2, LogOut, Sparkles } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/lib/auth/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
+import { logger } from '../../lib/utils/logger';
 
 export function PendingApproval() {
-  const [pulseScale, setPulseScale] = useState(1);
   const [companyName, setCompanyName] = useState<string>('');
+  const [fadeIn, setFadeIn] = useState(false);
   const { userProfile, signOut } = useAuth();
   const navigate = useNavigate();
 
-  // Pulse animation effect
+  // Fade-in effect on mount
   useEffect(() => {
-    const interval = setInterval(() => {
-      setPulseScale(s => s === 1 ? 1.1 : 1);
-    }, 2000);
-    return () => clearInterval(interval);
+    const timer = setTimeout(() => setFadeIn(true), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Fetch company name
@@ -70,169 +69,253 @@ export function PendingApproval() {
       await signOut();
       navigate('/login');
     } catch (error) {
-      console.error('Logout error:', error);
+      logger.error('Logout error:', error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#0F1419] relative overflow-hidden flex items-center justify-center p-6">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(#2C3E50 1px, transparent 1px),
-            linear-gradient(90deg, #2C3E50 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }}
+    <>
+      {/* Google Fonts */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
       />
 
-      {/* Radial gradient orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#FF6B35]/5 blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-[#2C3E50]/10 blur-3xl animate-float-delayed" />
+      <div className="min-h-screen bg-[#FAF5F0] relative overflow-hidden flex items-center justify-center p-6">
+        {/* Warm gradient backgrounds */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#D4622A]/5 via-transparent to-[#8B4513]/5 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-[#D4622A]/10 to-transparent blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-[#8B4513]/10 to-transparent blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-2xl w-full">
-        {/* Main Card */}
-        <div className="bg-[#1A1A2E]/80 backdrop-blur-xl rounded-2xl border border-[#2C3E50]/50 overflow-hidden shadow-2xl">
-          {/* Accent bar */}
-          <div className="h-2 bg-gradient-to-r from-[#FF6B35] via-[#FFA500] to-[#FF6B35] animate-shimmer" />
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#D4622A]/10 blur-2xl animate-float" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-[#8B4513]/10 blur-2xl animate-float-delayed" />
 
-          <div className="p-12 text-center">
-            {/* Animated clock icon */}
-            <div className="relative inline-flex items-center justify-center mb-8">
-              {/* Pulsing rings */}
-              <div
-                className="absolute w-32 h-32 rounded-full border-2 border-[#FF6B35]/20"
+        <div
+          className={`relative z-10 max-w-3xl w-full transition-all duration-1000 ${
+            fadeIn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+          style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
+        >
+          {/* Main Card */}
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-[#D4622A]/10 overflow-hidden border border-[#D4622A]/10">
+            {/* Elegant header accent */}
+            <div className="h-1.5 bg-gradient-to-r from-[#D4622A] via-[#B8541F] to-[#8B4513]" />
+
+            <div className="p-12 md:p-16 text-center">
+              {/* Animated clock icon */}
+              <div className="relative inline-flex items-center justify-center mb-10 animate-fade-in-scale">
+                {/* Soft pulsing ring */}
+                <div className="absolute w-40 h-40 rounded-full border-2 border-[#D4622A]/20 animate-pulse-soft" />
+
+                {/* Icon container with warm gradient */}
+                <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-[#D4622A] to-[#B8541F] flex items-center justify-center shadow-xl shadow-[#D4622A]/30">
+                  <Clock size={40} className="text-white" strokeWidth={2} />
+
+                  {/* Small sparkle accent */}
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-[#8B4513] flex items-center justify-center shadow-lg">
+                    <Sparkles size={16} className="text-white" strokeWidth={2.5} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Heading */}
+              <h1
+                className="text-5xl md:text-6xl font-bold text-[#2C2C2C] mb-6 tracking-tight animate-fade-in-up"
                 style={{
-                  transform: `scale(${pulseScale})`,
-                  transition: 'transform 2s ease-in-out'
+                  fontFamily: "'Playfair Display', serif",
+                  animationDelay: '0.1s'
                 }}
-              />
-              <div
-                className="absolute w-24 h-24 rounded-full border-2 border-[#FF6B35]/30"
+              >
+                Under Review
+              </h1>
+
+              <p
+                className="text-xl md:text-2xl text-[#6B5D52] mb-12 max-w-2xl mx-auto leading-relaxed animate-fade-in-up"
                 style={{
-                  transform: `scale(${pulseScale === 1 ? 1.1 : 1})`,
-                  transition: 'transform 2s ease-in-out'
+                  fontFamily: "'DM Sans', sans-serif",
+                  animationDelay: '0.2s'
                 }}
-              />
+              >
+                Your access request is being carefully reviewed by your company administrator.
+              </p>
 
-              {/* Icon container */}
-              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-[#FF6B35] to-[#FFA500] flex items-center justify-center shadow-lg shadow-[#FF6B35]/20">
-                <Clock size={36} className="text-white" strokeWidth={2.5} />
+              {/* Info cards */}
+              <div className="space-y-5 mb-12 max-w-2xl mx-auto">
+                <div
+                  className="flex items-start gap-5 p-6 rounded-2xl bg-gradient-to-br from-[#FAF5F0] to-[#F0E8DB] border border-[#E0D5C7] text-left shadow-sm animate-fade-in-up"
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4622A]/20 to-[#B8541F]/10 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <Building2 size={26} className="text-[#D4622A]" strokeWidth={2} />
+                  </div>
+                  <div className="flex-1">
+                    <h3
+                      className="text-[#2C2C2C] font-bold mb-2 text-lg"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      {companyName || 'Company Verification'}
+                    </h3>
+                    <p
+                      className="text-[#6B5D52] leading-relaxed"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      {companyName
+                        ? `Your request to join ${companyName} is being reviewed. A company administrator will evaluate your credentials and approve access shortly.`
+                        : 'Your company administrator has been notified and will review your access request shortly.'
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div
+                  className="flex items-start gap-5 p-6 rounded-2xl bg-gradient-to-br from-[#FAF5F0] to-[#F0E8DB] border border-[#E0D5C7] text-left shadow-sm animate-fade-in-up"
+                  style={{ animationDelay: '0.4s' }}
+                >
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#D4622A]/20 to-[#B8541F]/10 flex items-center justify-center flex-shrink-0 shadow-sm">
+                    <Mail size={26} className="text-[#D4622A]" strokeWidth={2} />
+                  </div>
+                  <div className="flex-1">
+                    <h3
+                      className="text-[#2C2C2C] font-bold mb-2 text-lg"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Email Notification
+                    </h3>
+                    <p
+                      className="text-[#6B5D52] leading-relaxed"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      You'll receive an email notification once your account has been approved and activated. Please check your inbox regularly.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Heading */}
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-              Approval Pending
-            </h1>
-
-            <p className="text-xl text-[#95A5A6] mb-8 max-w-md mx-auto leading-relaxed">
-              Your request to join is being reviewed by your company administrator.
-            </p>
-
-            {/* Info cards */}
-            <div className="space-y-4 mb-10">
-              <div className="flex items-start gap-4 p-5 rounded-xl bg-[#0F1419]/50 border border-[#2C3E50]/30 text-left">
-                <div className="w-12 h-12 rounded-lg bg-[#2C3E50]/30 flex items-center justify-center flex-shrink-0">
-                  <Building2 size={24} className="text-[#95A5A6]" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">
-                    {companyName || 'Company Verification'}
-                  </h3>
-                  <p className="text-[#95A5A6] text-sm leading-relaxed">
-                    {companyName
-                      ? `Your request to join ${companyName} is being reviewed by a company admin.`
-                      : 'Your company admin has been notified and will review your access request shortly.'
-                    }
-                  </p>
-                </div>
+              {/* Timeline estimate badge */}
+              <div
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-[#D4622A]/10 to-[#B8541F]/10 border border-[#D4622A]/20 mb-10 animate-fade-in-up shadow-sm"
+                style={{ animationDelay: '0.5s' }}
+              >
+                <div className="w-2.5 h-2.5 rounded-full bg-[#D4622A] animate-pulse-soft" />
+                <span
+                  className="text-[#D4622A] font-bold tracking-wide"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}
+                >
+                  Usually approved within 24 hours
+                </span>
               </div>
 
-              <div className="flex items-start gap-4 p-5 rounded-xl bg-[#0F1419]/50 border border-[#2C3E50]/30 text-left">
-                <div className="w-12 h-12 rounded-lg bg-[#2C3E50]/30 flex items-center justify-center flex-shrink-0">
-                  <Mail size={24} className="text-[#95A5A6]" />
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Email Notification</h3>
-                  <p className="text-[#95A5A6] text-sm leading-relaxed">
-                    You'll receive an email once your account has been approved and activated.
-                  </p>
-                </div>
-              </div>
+              {/* Logout button */}
+              <button
+                onClick={handleLogout}
+                className="group px-10 py-4 bg-white hover:bg-[#FAF5F0] border-2 border-[#E0D5C7] hover:border-[#D4622A]/30 text-[#6B5D52] hover:text-[#D4622A] rounded-2xl transition-all duration-300 flex items-center gap-3 mx-auto shadow-sm hover:shadow-md animate-fade-in-up"
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  animationDelay: '0.6s'
+                }}
+              >
+                <LogOut size={20} strokeWidth={2.5} />
+                <span className="font-bold">Sign Out</span>
+              </button>
             </div>
-
-            {/* Timeline estimate */}
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[#FF6B35]/10 border border-[#FF6B35]/20 mb-8">
-              <div className="w-2 h-2 rounded-full bg-[#FF6B35] animate-pulse" />
-              <span className="text-[#FF6B35] font-semibold text-sm tracking-wide">
-                Usually approved within 24 hours
-              </span>
-            </div>
-
-            {/* Logout button */}
-            <button
-              onClick={handleLogout}
-              className="group px-8 py-3 bg-[#2C3E50]/30 hover:bg-[#2C3E50]/50 border border-[#2C3E50] hover:border-[#95A5A6]/30 text-[#95A5A6] hover:text-white rounded-xl transition-all duration-200 flex items-center gap-2 mx-auto"
-            >
-              <LogOut size={18} />
-              <span className="font-semibold">Sign Out</span>
-            </button>
           </div>
+
+          {/* Support link */}
+          <p
+            className="text-center text-[#6B5D52] mt-8 animate-fade-in-up"
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              animationDelay: '0.7s'
+            }}
+          >
+            Need help?{' '}
+            <a
+              href="mailto:support@jobsight.com"
+              className="text-[#D4622A] hover:text-[#B8541F] underline decoration-2 underline-offset-4 font-semibold transition-colors duration-200"
+            >
+              Contact Support
+            </a>
+          </p>
         </div>
 
-        {/* Support link */}
-        <p className="text-center text-[#95A5A6] mt-6 text-sm">
-          Need help?{' '}
-          <a href="mailto:support@jobsight.com" className="text-[#FF6B35] hover:underline font-semibold">
-            Contact Support
-          </a>
-        </p>
+        {/* CSS Animations */}
+        <style>{`
+          @keyframes fade-in-up {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes fade-in-scale {
+            from {
+              opacity: 0;
+              transform: scale(0.9);
+            }
+            to {
+              opacity: 1;
+              transform: scale(1);
+            }
+          }
+
+          @keyframes pulse-soft {
+            0%, 100% {
+              opacity: 0.3;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 0.6;
+              transform: scale(1.05);
+            }
+          }
+
+          @keyframes float {
+            0%, 100% {
+              transform: translate(0, 0);
+            }
+            50% {
+              transform: translate(20px, -20px);
+            }
+          }
+
+          @keyframes float-delayed {
+            0%, 100% {
+              transform: translate(0, 0);
+            }
+            50% {
+              transform: translate(-20px, 20px);
+            }
+          }
+
+          .animate-fade-in-up {
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+
+          .animate-fade-in-scale {
+            animation: fade-in-scale 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+          }
+
+          .animate-pulse-soft {
+            animation: pulse-soft 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          }
+
+          .animate-float {
+            animation: float 8s ease-in-out infinite;
+          }
+
+          .animate-float-delayed {
+            animation: float-delayed 8s ease-in-out infinite;
+            animation-delay: 2s;
+          }
+        `}</style>
       </div>
-
-      <style>{`
-        @keyframes shimmer {
-          0% {
-            background-position: -200% center;
-          }
-          100% {
-            background-position: 200% center;
-          }
-        }
-
-        @keyframes float {
-          0%, 100% {
-            transform: translate(0, 0);
-          }
-          50% {
-            transform: translate(30px, -30px);
-          }
-        }
-
-        @keyframes float-delayed {
-          0%, 100% {
-            transform: translate(0, 0);
-          }
-          50% {
-            transform: translate(-30px, 30px);
-          }
-        }
-
-        .animate-shimmer {
-          background-size: 200% 100%;
-          animation: shimmer 3s linear infinite;
-        }
-
-        .animate-float {
-          animation: float 8s ease-in-out infinite;
-        }
-
-        .animate-float-delayed {
-          animation: float-delayed 8s ease-in-out infinite;
-          animation-delay: 2s;
-        }
-      `}</style>
-    </div>
+    </>
   );
 }

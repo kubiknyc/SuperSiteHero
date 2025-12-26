@@ -15,6 +15,8 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import type { ScheduleActivity } from '@/types/schedule-activities'
 import { exportLookAheadToPdf, exportLookAheadToExcel } from '../utils/lookAheadExport'
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // TYPES
@@ -158,7 +160,7 @@ export function LookAheadPrintView({
         activities: filteredActivities,
       })
     } catch (error) {
-      console.error('Failed to export PDF:', error)
+      logger.error('Failed to export PDF:', error)
     }
   }
 
@@ -172,7 +174,7 @@ export function LookAheadPrintView({
         activities: filteredActivities,
       })
     } catch (error) {
-      console.error('Failed to export Excel:', error)
+      logger.error('Failed to export Excel:', error)
     }
   }
 

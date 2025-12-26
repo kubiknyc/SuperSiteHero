@@ -18,6 +18,8 @@ import { cn } from '@/lib/utils'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import { useCreateConversation } from '@/features/messaging/hooks'
+import { logger } from '../../lib/utils/logger';
+
 
 export function RFIDetailPage() {
   const { rfiId } = useParams<{ rfiId: string }>()
@@ -64,7 +66,7 @@ export function RFIDetailPage() {
         navigate(`/messages/${result.id}`)
       }
     } catch (error) {
-      console.error('Failed to create conversation:', error)
+      logger.error('Failed to create conversation:', error)
     }
   }
 

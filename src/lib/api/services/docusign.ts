@@ -39,6 +39,8 @@ import {
   buildDSApiUrl,
   DS_API_URLS,
 } from '@/types/docusign'
+import { logger } from '../../utils/logger';
+
 
 // ============================================================================
 // Connection Management
@@ -495,7 +497,7 @@ async function generateDocumentPDF(
   }
 
   // Placeholder - in production, this would generate actual PDF content
-  console.warn(`PDF generation for ${documentType} ${localDocumentId} - using placeholder`)
+  logger.warn(`PDF generation for ${documentType} ${localDocumentId} - using placeholder`)
 
   return {
     base64: '', // Would be actual base64-encoded PDF content
@@ -689,7 +691,7 @@ export async function createEnvelope(
     envelopeStatus = (dto.send_immediately ? 'sent' : 'created') as DSEnvelopeStatus
   } catch (error) {
     // If API call fails, store envelope locally with pending status for retry
-    console.error('DocuSign API call failed, storing locally:', error)
+    logger.error('DocuSign API call failed, storing locally:', error)
     envelopeId = `pending_${crypto.randomUUID()}`
   }
 
@@ -794,7 +796,7 @@ export async function sendEnvelope(envelopeDbId: string): Promise<DSEnvelope> {
         }
       )
     } catch (error) {
-      console.error('Failed to send envelope via DocuSign API:', error)
+      logger.error('Failed to send envelope via DocuSign API:', error)
       throw new Error(`Failed to send envelope: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
@@ -857,7 +859,7 @@ export async function getSigningUrl(dto: RequestSigningUrlDTO): Promise<string> 
 
   // For pending envelopes, return placeholder URL
   if (envelope.envelope_id.startsWith('pending_')) {
-    console.warn('Attempting to get signing URL for pending envelope')
+    logger.warn('Attempting to get signing URL for pending envelope')
     return `${dto.return_url}?event=signing_pending&envelope_id=${dto.envelope_id}`
   }
 
@@ -884,7 +886,7 @@ export async function getSigningUrl(dto: RequestSigningUrlDTO): Promise<string> 
 
     return result.url
   } catch (error) {
-    console.error('Failed to get signing URL from DocuSign:', error)
+    logger.error('Failed to get signing URL from DocuSign:', error)
 
     // Fall back to console signing URL if embedded fails
     // This happens when the signer is not embedded (clientUserId not set)
@@ -929,7 +931,7 @@ export async function voidEnvelope(dto: VoidEnvelopeDTO): Promise<void> {
         }
       )
     } catch (error) {
-      console.error('Failed to void envelope via DocuSign API:', error)
+      logger.error('Failed to void envelope via DocuSign API:', error)
       throw new Error(`Failed to void envelope: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
@@ -1015,11 +1017,11 @@ export async function resendEnvelope(dto: ResendEnvelopeDTO): Promise<void> {
         },
       })
     } catch (error) {
-      console.error('Failed to resend envelope via DocuSign API:', error)
+      logger.error('Failed to resend envelope via DocuSign API:', error)
       throw new Error(`Failed to resend envelope: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   } else {
-    console.log('Resending pending envelope:', dto.envelope_id)
+    logger.log('Resending pending envelope:', dto.envelope_id)
   }
 }
 

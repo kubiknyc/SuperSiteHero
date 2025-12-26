@@ -1,6 +1,8 @@
 // Report template service - save and load common report configurations
 import { supabase } from '@/lib/supabase'
 import type { DraftReport, WorkforceEntry, EquipmentEntry } from '../store/offlineReportStore'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface ReportTemplate {
   id: string
@@ -57,7 +59,7 @@ export async function saveReportTemplate(
 
   if (error) {
     // If table doesn't exist, fall back to localStorage
-    console.warn('Template table not found, using localStorage:', error.message)
+    logger.warn('Template table not found, using localStorage:', error.message)
     return saveTemplateToLocalStorage(input, userId)
   }
 
@@ -109,7 +111,7 @@ export async function getProjectTemplates(projectId: string): Promise<ReportTemp
 
   if (error) {
     // Fall back to localStorage
-    console.warn('Using localStorage templates:', error.message)
+    logger.warn('Using localStorage templates:', error.message)
     return getTemplatesFromLocalStorage().filter((t) => t.project_id === projectId)
   }
 

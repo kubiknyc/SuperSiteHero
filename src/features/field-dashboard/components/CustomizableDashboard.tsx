@@ -39,6 +39,8 @@ import { SortableWidget } from './SortableWidget'
 import { cn } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import type { WidgetPosition, DraggableWidget } from '@/types/dashboard'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CustomizableDashboardProps {
   projectId: string
@@ -202,7 +204,7 @@ export function CustomizableDashboard({
         toast.success(`Added ${widgetDef.name} widget`)
       } catch (error) {
         toast.error('Failed to add widget')
-        console.error(error)
+        logger.error(error)
       }
     },
     [layout?.id, localWidgets.length, addWidgetMutation, refetchLayout]
@@ -235,7 +237,7 @@ export function CustomizableDashboard({
           setLocalWidgets((widgets) => [...widgets, widget])
         }
         toast.error('Failed to remove widget')
-        console.error(error)
+        logger.error(error)
       }
     },
     [layout?.id, localWidgets, removeWidgetMutation]
@@ -262,7 +264,7 @@ export function CustomizableDashboard({
       toast.success('Dashboard saved')
     } catch (error) {
       toast.error('Failed to save changes')
-      console.error(error)
+      logger.error(error)
     }
   }, [layout?.id, localWidgets, savePositionsMutation])
 

@@ -1,0 +1,856 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+
+Running 4910 tests using 6 workers
+
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  ok    4 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Punch Lists - headings meet WCAG AA contrast (48.8s)
+  ok    3 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Change Orders - headings meet WCAG AA contrast (49.1s)
+  ok    2 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Tasks - headings meet WCAG AA contrast (50.0s)
+  ok    1 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Dashboard - headings meet WCAG AA contrast (50.1s)
+  ok    5 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Daily Reports - headings meet WCAG AA contrast (49.6s)
+  ok    6 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Projects - headings meet WCAG AA contrast (48.9s)
+  ok    7 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Schedule - headings meet WCAG AA contrast (5.0s)
+  ok    8 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:42:5 › Heading Contrast - Dark Mode › Login - headings meet WCAG AA contrast (18.1s)
+
+⚠️  Projects Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+
+⚠️  Daily Reports Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   11 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Projects - body text meets WCAG AA contrast (32.4s)
+
+⚠️  Tasks Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   10 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Daily Reports - body text meets WCAG AA contrast (33.5s)
+
+⚠️  Dashboard Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   12 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Tasks - body text meets WCAG AA contrast (36.1s)
+  ok    9 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Dashboard - body text meets WCAG AA contrast (36.7s)
+
+⚠️  Change Orders Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   13 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Change Orders - body text meets WCAG AA contrast (36.8s)
+
+⚠️  Schedule Body Text Contrast Violations:
+❌ Found 3 contrast violation(s):
+
+1. P - "JobSight - Construction Field Management"
+   Location: text-caption text-disabled dark:text-secondary
+   Text Color: rgb(41, 49, 61)
+   Background: rgb(3, 7, 18)
+   Ratio: 1.53:1 (required: 4.5:1)
+   Deficit: 2.97:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+3. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+
+⚠️  Punch Lists Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+
+⚠️  Dashboard Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - "21st"
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-border/30 bg-foreground
+   Text Color: oklch(0.145 0 0)
+   Background: oklch(0.145 0 0)
+   Ratio: 1:1 (required: 4.5:1)
+   Deficit: 3.50:1
+
+
+  ok   14 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Punch Lists - body text meets WCAG AA contrast (35.1s)
+  ok   17 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:86:3 › Form Label Contrast - Dark Mode › Login form labels (17.0s)
+  ok   18 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:101:3 › Form Label Contrast - Dark Mode › Daily Report form labels (17.5s)
+
+⚠️  Login Body Text Contrast Violations:
+❌ Found 2 contrast violation(s):
+
+1. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-auto scale-100 opacity-100 blur-none
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+2. DIV - ""
+   Location: absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out pointer-events-none scale-95 opacity-0 blur-sm
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   15 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Schedule - body text meets WCAG AA contrast (21.8s)
+  ok   16 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:64:5 › Body Text Contrast - Dark Mode › Login - body text meets WCAG AA contrast (21.5s)
+  ok   19 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Dashboard - buttons and links meet contrast (17.3s)
+
+⚠️  Tasks Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - ""
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-orange-300 bg-orange-600
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   22 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Tasks - buttons and links meet contrast (12.3s)
+  ok   24 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Punch Lists - buttons and links meet contrast (11.9s)
+
+⚠️  Change Orders Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - ""
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-orange-300 bg-orange-600
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   23 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Change Orders - buttons and links meet contrast (13.8s)
+
+⚠️  Schedule Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - ""
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-orange-300 bg-orange-600
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   25 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Schedule - buttons and links meet contrast (12.1s)
+
+⚠️  Daily Reports Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - ""
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-orange-300 bg-orange-600
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   20 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Daily Reports - buttons and links meet contrast (20.8s)
+  ok   28 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:165:3 › Navigation Contrast - Dark Mode › mobile menu navigation (9.0s)
+
+⚠️  Login Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - ""
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-orange-300 bg-orange-600
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   27 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:144:3 › Navigation Contrast - Dark Mode › main navigation items (11.6s)
+  ok   29 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:192:3 › Status Indicators - Dark Mode › status badges on Projects page (9.0s)
+  ok   26 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Login - buttons and links meet contrast (13.1s)
+  ok   30 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:211:3 › Status Indicators - Dark Mode › priority indicators on Tasks page (10.7s)
+  ok   33 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:273:3 › UI Components - Dark Mode › table components (9.4s)
+  ok   32 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:252:3 › UI Components - Dark Mode › card components (11.2s)
+  ok   34 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:293:3 › UI Components - Dark Mode › modal dialogs (10.9s)
+Primary on surface-0: 4.82:1 (✅ PASS)
+Primary-400 on surface-0: 6.97:1 (✅ PASS)
+White on primary: 3.68:1 (❌ FAIL)
+  ok   35 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:313:3 › UI Components - Dark Mode › dropdown menus (7.6s)
+Success on surface-0: 7.78:1 (✅ PASS)
+White on success: 3.3:1 (❌ FAIL)
+  x    39 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:402:3 › Design System Color Pairs - Dark Mode › verify semantic color contrast (34ms)
+  ok   37 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:360:3 › Error and Alert Messages - Dark Mode › toast notifications (6.2s)
+
+╔════════════════════════════════════════════════════════════════╗
+║      Dark Mode Contrast Validation Test Summary                ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Tested Components:
+   • Headings (h1-h6)
+   • Body text (p, span, div, li)
+   • Form labels
+   • Interactive elements (buttons, links, inputs)
+   • Navigation items
+   • Status badges and indicators
+   • Cards and containers
+   • Tables
+   • Modal dialogs
+   • Dropdown menus
+   • Error and alert messages
+   • Toast notifications
+
+✅ Design System Colors:
+   • Primary color combinations
+   • Semantic colors (success, warning, error, info)
+   • Surface color combinations
+
+📊 WCAG 2.1 Level AA Standards:
+   • Normal text: 4.5:1 minimum
+   • Large text (18pt+ or 14pt bold+): 3.0:1 minimum
+
+All contrast validation tests completed!
+  
+  ok   40 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:460:1 › contrast validation summary (3ms)
+  ok   36 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:339:3 › Error and Alert Messages - Dark Mode › error messages visibility (7.7s)
+
+⚠️  Projects Interactive Element Contrast Violations:
+❌ Found 1 contrast violation(s):
+
+1. BUTTON - ""
+   Location: p-1 text-foreground hover:brightness-125 size-8 !w-8 !max-w-8 pointer-events-auto relative z-50 flex h-8 cursor-pointer items-center justify-center rounded-full border shadow-md backdrop-blur transition-all duration-300 ease-out border-orange-300 bg-orange-600
+   Text Color: oklch(0.145 0 0)
+   Background: rgb(234, 88, 12)
+   Ratio: 1.17:1 (required: 4.5:1)
+   Deficit: 3.33:1
+
+
+  ok   21 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:122:5 › Interactive Elements Contrast - Dark Mode › Projects - buttons and links meet contrast (45.0s)
+  ok   31 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:229:3 › Status Indicators - Dark Mode › approval status on Change Orders (21.2s)
+  x    38 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:386:3 › Design System Color Pairs - Dark Mode › verify primary color contrast (24ms)
+  ok   42 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (5.4s)
+  ok   43 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (6.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  ok   45 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (7.2s)
+zinc-100 on surface-0: 16.12:1 (✅ PASS)
+zinc-200 on surface-0: 13.96:1 (✅ PASS)
+zinc-300 on surface-0: 11.99:1 (✅ PASS)
+zinc-400 on surface-0: 6.91:1 (✅ PASS)
+zinc-500 on surface-0: 3.67:1 (✅ PASS)
+zinc-100 on surface-1: 13.55:1 (✅ PASS)
+zinc-200 on surface-1: 11.74:1 (✅ PASS)
+  ok   48 [chromium] › e2e\accessibility\dark-mode-contrast.spec.ts:429:3 › Design System Color Pairs - Dark Mode › verify text on surface colors (36ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  ok   41 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (16.9s)
+  ok   44 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (16.1s)
+Focus order: [
+  [32m'BUTTON.inline-flex'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'A.body-small'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'BUTTON.inline-flex'[39m
+]
+  ok   46 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (12.5s)
+  ok   49 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (6.7s)
+  ok   47 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (9.1s)
+  ok   51 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (5.1s)
+  ok   50 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (5.7s)
+  ok   52 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (4.4s)
+  ok   55 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:310:3 › Active States - Dark Mode › selected table row (4.0s)
+  ok   53 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:289:3 › Active States - Dark Mode › active navigation item is highlighted (4.6s)
+  ok   56 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:325:3 › Active States - Dark Mode › expanded accordion item (4.7s)
+  ok   57 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:341:3 › Active States - Dark Mode › checkbox checked state (4.8s)
+  ok   60 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:417:3 › Disabled States - Dark Mode › disabled checkbox visibility (3.3s)
+  ok   54 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (8.0s)
+  ok   61 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:434:3 › Disabled States - Dark Mode › disabled state is not clickable (2.7s)
+  ok   59 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:390:3 › Disabled States - Dark Mode › disabled input fields (4.0s)
+  ok   62 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:457:3 › Loading States - Dark Mode › loading spinner visibility (3.8s)
+  ok   58 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:365:3 › Disabled States - Dark Mode › disabled button appearance (8.6s)
+  ok   64 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:490:3 › Loading States - Dark Mode › progress bar visibility (3.5s)
+  ok   63 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:478:3 › Loading States - Dark Mode › skeleton loader visibility (5.0s)
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok   70 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:640:1 › interactive states summary (2ms)
+  ok   66 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:544:3 › Error States - Dark Mode › form field error styling (4.8s)
+  ok   65 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:510:3 › Loading States - Dark Mode › button loading state (6.4s)
+  ok   68 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:595:3 › Error States - Dark Mode › error icon visibility (4.5s)
+  ok   67 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:570:3 › Error States - Dark Mode › error message visibility (7.9s)
+  x    69 [chromium] › e2e\accessibility\dark-mode-states.spec.ts:612:3 › Error States - Dark Mode › toast error notification (10.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x    71 [chromium] › e2e\action-items.spec.ts:73:3 › Action Items - Setup & Navigation › should navigate to action items dashboard (25.1s)
+  -    77 [chromium] › e2e\action-items.spec.ts:161:3 › Action Items - CRUD Operations › should create new action item
+  -    78 [chromium] › e2e\action-items.spec.ts:176:3 › Action Items - CRUD Operations › should create action item with minimal data
+  -    79 [chromium] › e2e\action-items.spec.ts:189:3 › Action Items - CRUD Operations › should validate required fields on create
+  -    80 [chromium] › e2e\action-items.spec.ts:200:3 › Action Items - CRUD Operations › should view action item details
+  -    81 [chromium] › e2e\action-items.spec.ts:213:3 › Action Items - CRUD Operations › should edit action item
+  -    82 [chromium] › e2e\action-items.spec.ts:230:3 › Action Items - CRUD Operations › should delete action item
+  -    83 [chromium] › e2e\action-items.spec.ts:262:3 › Action Items - Status Management › should mark item as in progress
+  -    84 [chromium] › e2e\action-items.spec.ts:275:3 › Action Items - Status Management › should mark item as complete
+  -    85 [chromium] › e2e\action-items.spec.ts:288:3 › Action Items - Status Management › should defer item
+  -    86 [chromium] › e2e\action-items.spec.ts:303:3 › Action Items - Status Management › should resolve with notes
+  -    87 [chromium] › e2e\action-items.spec.ts:317:3 › Action Items - Status Management › should show status indicators
+  x    72 [chromium] › e2e\action-items.spec.ts:78:3 › Action Items - Setup & Navigation › should display dashboard page title (25.0s)
+  x    73 [chromium] › e2e\action-items.spec.ts:84:3 › Action Items - Setup & Navigation › should show summary statistics cards (25.4s)
+  x    75 [chromium] › e2e\action-items.spec.ts:117:3 › Action Items - Setup & Navigation › should access from meeting view (23.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x    74 [chromium] › e2e\action-items.spec.ts:92:3 › Action Items - Setup & Navigation › should access from project view (27.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x    76 [chromium] › e2e\action-items.spec.ts:136:3 › Action Items - Setup & Navigation › should show all navigation tabs (26.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x    89 [chromium] › e2e\action-items.spec.ts:353:3 › Action Items - Filtering & Search › should filter by priority (23.5s)
+  x    88 [chromium] › e2e\action-items.spec.ts:342:3 › Action Items - Filtering & Search › should filter by status (23.9s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x    90 [chromium] › e2e\action-items.spec.ts:362:3 › Action Items - Filtering & Search › should filter by category (24.4s)
+  x    91 [chromium] › e2e\action-items.spec.ts:371:3 › Action Items - Filtering & Search › should search by text (24.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  x    92 [chromium] › e2e\action-items.spec.ts:380:3 › Action Items - Filtering & Search › should clear search (25.1s)
+  -    98 [chromium] › e2e\action-items.spec.ts:461:3 › Action Items - Actions › should convert to task
+  -    99 [chromium] › e2e\action-items.spec.ts:474:3 › Action Items - Actions › should show task link after conversion
+  -   100 [chromium] › e2e\action-items.spec.ts:487:3 › Action Items - Actions › should link to RFI
+  -   101 [chromium] › e2e\action-items.spec.ts:502:3 › Action Items - Actions › should link to constraint
+  -   102 [chromium] › e2e\action-items.spec.ts:518:3 › Action Items - Actions › should link to change order
+  -   103 [chromium] › e2e\action-items.spec.ts:532:3 › Action Items - Actions › should carry over to next meeting
+  -   104 [chromium] › e2e\action-items.spec.ts:546:3 › Action Items - Actions › should show carryover count badge
+  -   105 [chromium] › e2e\action-items.spec.ts:560:3 › Action Items - Actions › should assign to team member
+  -   106 [chromium] › e2e\action-items.spec.ts:574:3 › Action Items - Actions › should show action menu options
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x    93 [chromium] › e2e\action-items.spec.ts:389:3 › Action Items - Filtering & Search › should view overdue items (26.2s)
+  x    94 [chromium] › e2e\action-items.spec.ts:405:3 › Action Items - Filtering & Search › should switch between tabs (24.8s)
+  x    95 [chromium] › e2e\action-items.spec.ts:397:3 › Action Items - Filtering & Search › should view escalated items (24.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x    96 [chromium] › e2e\action-items.spec.ts:421:3 › Action Items - Filtering & Search › should combine multiple filters (25.9s)
+  x    97 [chromium] › e2e\action-items.spec.ts:432:3 › Action Items - Filtering & Search › should persist filters on page navigation (28.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   107 [chromium] › e2e\action-items.spec.ts:605:3 › Action Items - Dashboard Features › should display summary statistics (25.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x   108 [chromium] › e2e\action-items.spec.ts:613:3 › Action Items - Dashboard Features › should show items by assignee (25.5s)
+  x   110 [chromium] › e2e\action-items.spec.ts:640:3 › Action Items - Dashboard Features › should sort items by clicking column headers (28.1s)
+  x   109 [chromium] › e2e\action-items.spec.ts:623:3 › Action Items - Dashboard Features › should filter by assignee when clicked (27.2s)
+  -   114 [chromium] › e2e\action-items.spec.ts:716:3 › Action Items - Error Handling › should handle network failures gracefully
+  -   115 [chromium] › e2e\action-items.spec.ts:735:3 › Action Items - Error Handling › should show validation errors
+  -   116 [chromium] › e2e\action-items.spec.ts:748:3 › Action Items - Error Handling › should handle permission errors
+  -   117 [chromium] › e2e\action-items.spec.ts:776:3 › Action Items - Error Handling › should handle empty state
+  -   118 [chromium] › e2e\action-items.spec.ts:786:3 › Action Items - Error Handling › should handle missing data gracefully
+  -   119 [chromium] › e2e\action-items.spec.ts:801:3 › Action Items - Error Handling › should show loading states
+  -   120 [chromium] › e2e\action-items.spec.ts:815:3 › Action Items - Error Handling › should handle concurrent updates
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  x   111 [chromium] › e2e\action-items.spec.ts:654:3 › Action Items - Dashboard Features › should show progress bar (26.3s)
+  x   112 [chromium] › e2e\action-items.spec.ts:663:3 › Action Items - Dashboard Features › should display completion rate (26.0s)
+  x   113 [chromium] › e2e\action-items.spec.ts:672:3 › Action Items - Dashboard Features › should highlight overdue items (27.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x   121 [chromium] › e2e\action-items.spec.ts:686:3 › Action Items - Dashboard Features › should show escalation levels (24.4s)
+  x   123 [chromium] › e2e\approvals.spec.ts:37:3 › Approvals Feature › should display my approvals page (22.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x   122 [chromium] › e2e\action-items.spec.ts:696:3 › Action Items - Dashboard Features › should display quick stats sidebar (26.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  x   124 [chromium] › e2e\approvals.spec.ts:49:3 › Approvals Feature › should filter approvals by status (17.9s)
+  x   125 [chromium] › e2e\approvals.spec.ts:75:3 › Approvals Feature › should search for approvals (19.4s)
+  x   126 [chromium] › e2e\approvals.spec.ts:94:3 › Approvals Feature › should open approval detail view (18.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  x   128 [chromium] › e2e\approvals.spec.ts:147:3 › Approvals Feature › should handle approval action with comments (18.7s)
+  x   127 [chromium] › e2e\approvals.spec.ts:122:3 › Approvals Feature › should display approve and reject buttons for pending approvals (19.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x   129 [chromium] › e2e\approvals.spec.ts:199:3 › Approvals Feature › should handle rejection with reason (19.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x   130 [chromium] › e2e\approvals.spec.ts:251:3 › Approvals Feature › should display approval history and timeline (18.3s)
+  x   131 [chromium] › e2e\approvals.spec.ts:275:3 › Approvals Feature › should show pending approval count badge (18.6s)
+  x   132 [chromium] › e2e\approvals.spec.ts:287:3 › Approvals Feature › should navigate between different approval types (18.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  x   134 [chromium] › e2e\approvals.spec.ts:304:3 › Approvals Feature › should display approval request metadata (18.7s)
+  x   137 [chromium] › e2e\auth-biometric.spec.ts:232:5 › Biometric Authentication › Browser Compatibility › should show setup UI when biometric is available (3.5s)
+  x   133 [chromium] › e2e\approvals.spec.ts:325:3 › Approvals Feature › should support bulk approval actions (19.9s)
+  x   138 [chromium] › e2e\auth-biometric.spec.ts:252:5 › Biometric Authentication › Biometric Setup Flow › should register a new device with default name (3.4s)
+  x   135 [chromium] › e2e\auth-biometric.spec.ts:201:5 › Biometric Authentication › Browser Compatibility › should show warning when WebAuthn is not supported (13.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  x   136 [chromium] › e2e\auth-biometric.spec.ts:218:5 › Biometric Authentication › Browser Compatibility › should show info when platform authenticator is not available (13.9s)
+  x   139 [chromium] › e2e\auth-biometric.spec.ts:264:5 › Biometric Authentication › Biometric Setup Flow › should register a new device with custom name (3.6s)
+  x   140 [chromium] › e2e\auth-biometric.spec.ts:276:5 › Biometric Authentication › Biometric Setup Flow › should display registered devices (3.7s)
+  x   141 [chromium] › e2e\auth-biometric.spec.ts:282:5 › Biometric Authentication › Biometric Setup Flow › should show device details including last used (3.6s)
+  x   143 [chromium] › e2e\auth-biometric.spec.ts:307:5 › Biometric Authentication › Device Management › should delete a registered device (3.3s)
+  x   142 [chromium] › e2e\auth-biometric.spec.ts:289:5 › Biometric Authentication › Biometric Setup Flow › should enable biometric authentication after first device (3.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x   144 [chromium] › e2e\auth-biometric.spec.ts:320:5 › Biometric Authentication › Device Management › should show confirmation dialog before deleting device (4.0s)
+  x   145 [chromium] › e2e\auth-biometric.spec.ts:335:5 › Biometric Authentication › Device Management › should disable toggle when all devices are removed (3.8s)
+  x   147 [chromium] › e2e\auth-biometric.spec.ts:363:5 › Biometric Authentication › Re-authentication Interval › should change re-auth interval (3.6s)
+  x   146 [chromium] › e2e\auth-biometric.spec.ts:355:5 › Biometric Authentication › Re-authentication Interval › should display re-auth interval options (5.9s)
+  ok  149 [chromium] › e2e\auth-biometric.spec.ts:381:5 › Biometric Authentication › Biometric Login Flow › should show biometric login option when available (3.3s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   148 [chromium] › e2e\auth-biometric.spec.ts:370:5 › Biometric Authentication › Re-authentication Interval › should highlight selected interval (3.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x   150 [chromium] › e2e\auth-biometric.spec.ts:447:5 › Biometric Authentication › Re-authentication Dialog › should show password fallback option (3.9s)
+  x   153 [chromium] › e2e\auth-biometric.spec.ts:425:5 › Biometric Authentication › Re-authentication Dialog › should show re-auth dialog for sensitive operations (4.7s)
+  x   152 [chromium] › e2e\auth-biometric.spec.ts:403:5 › Biometric Authentication › Biometric Login Flow › should fallback to password on biometric failure (6.1s)
+  x   154 [chromium] › e2e\auth-biometric.spec.ts:436:5 › Biometric Authentication › Re-authentication Dialog › should verify with biometrics in re-auth dialog (3.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   155 [chromium] › e2e\auth-biometric.spec.ts:455:5 › Biometric Authentication › Re-authentication Dialog › should fallback to password authentication (3.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x   156 [chromium] › e2e\auth-biometric.spec.ts:471:5 › Biometric Authentication › Re-authentication Dialog › should cancel re-authentication (3.6s)
+  x   151 [chromium] › e2e\auth-biometric.spec.ts:390:5 › Biometric Authentication › Biometric Login Flow › should login with biometrics (14.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+  x   157 [chromium] › e2e\auth-biometric.spec.ts:491:5 › Biometric Authentication › Security Information › should display security information (3.5s)
+  x   158 [chromium] › e2e\auth-biometric.spec.ts:507:5 › Biometric Authentication › Toggle Biometric › should enable biometric authentication (4.2s)
+  x   159 [chromium] › e2e\auth-biometric.spec.ts:516:5 › Biometric Authentication › Toggle Biometric › should disable biometric authentication (3.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x   160 [chromium] › e2e\auth-biometric.spec.ts:534:5 › Biometric Authentication › Error Handling › should handle device registration errors (3.2s)
+  -   163 [chromium] › e2e\auth-biometric.spec.ts:580:5 › Biometric Authentication › Cross-Browser Compatibility › should work in Firefox
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  -   165 [chromium] › e2e\auth-biometric.spec.ts:591:5 › Biometric Authentication › Cross-Browser Compatibility › should work in WebKit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ok  164 [chromium] › e2e\auth.spec.ts:54:3 › Authentication › should show error for invalid credentials (4.6s)
+  x   162 [chromium] › e2e\auth-biometric.spec.ts:549:5 › Biometric Authentication › Error Handling › should handle authentication errors (3.9s)
+  x   161 [chromium] › e2e\auth-biometric.spec.ts:569:5 › Biometric Authentication › Cross-Browser Compatibility › should work in Chromium (3.7s)
+  ok  166 [chromium] › e2e\auth.spec.ts:28:3 › Authentication › should display login page for unauthenticated users (4.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  ok  170 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:54:5 › PolishedVariant1Professional - Edge Cases › Long Text Handling › should handle extremely long project names without overflow (4.5s)
+  ok  171 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:21:5 › PolishedVariant1Professional - Edge Cases › Long Text Handling › should handle extremely long stat card labels without breaking layout (5.0s)
+  ok  173 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:79:5 › PolishedVariant1Professional - Edge Cases › Long Text Handling › should handle long activity descriptions gracefully (4.3s)
+  ok  172 [chromium] › e2e\auth.spec.ts:109:3 › Authentication › should redirect protected routes to login (5.2s)
+✓ 375px - no overflow with long text
+  ok  175 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:140:5 › PolishedVariant1Professional - Edge Cases › Missing Data Scenarios › should handle empty stat values gracefully (4.2s)
+✓ 768px - no overflow with long text
+  x   167 [chromium] › e2e\auth.spec.ts:69:3 › Authentication › should logout successfully (19.1s)
+  x   176 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:173:5 › PolishedVariant1Professional - Edge Cases › Missing Data Scenarios › should handle missing project images (5.5s)
+✓ 1024px - no overflow with long text
+  ok  177 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:195:5 › PolishedVariant1Professional - Edge Cases › Missing Data Scenarios › should handle zero values in stat cards (3.6s)
+  x   168 [chromium] › e2e\auth.spec.ts:36:3 › Authentication › should login successfully with valid credentials (19.4s)
+✓ 1536px - no overflow with long text
+  ok  174 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:110:5 › PolishedVariant1Professional - Edge Cases › Long Text Handling › should handle long text in all breakpoints (8.5s)
+  x   169 [chromium] › e2e\auth.spec.ts:92:3 › Authentication › should persist session after page refresh (20.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  ok  178 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:276:5 › PolishedVariant1Professional - Edge Cases › Extreme Values › should handle negative percentage changes (2.6s)
+✓ 4K viewport rendering verified
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  ok  179 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:338:5 › PolishedVariant1Professional - Edge Cases › Extreme Values › should handle very wide viewport (4K+ resolution) (3.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  ok  180 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:223:5 › PolishedVariant1Professional - Edge Cases › Missing Data Scenarios › should handle missing activity metadata (time, user) (3.2s)
+  ok  181 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:246:5 › PolishedVariant1Professional - Edge Cases › Extreme Values › should handle extremely large stat numbers (999+) (3.6s)
+✓ Layout stable during rapid theme switching
+  ok  182 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:385:5 › PolishedVariant1Professional - Edge Cases › Layout Stability Under Stress › should maintain layout during rapid theme switching (4.4s)
+  ok  184 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:298:5 › PolishedVariant1Professional - Edge Cases › Extreme Values › should handle hundreds of activity items (3.9s)
+✓ Very narrow viewport (280px) handled
+✓ Scroll position stable during interaction
+  ok  185 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:357:5 › PolishedVariant1Professional - Edge Cases › Extreme Values › should handle very narrow viewport (< 320px) (3.6s)
+  ok  187 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:459:5 › PolishedVariant1Professional - Edge Cases › Layout Stability Under Stress › should recover from scroll position changes during interaction (3.7s)
+✓ Handled concurrent interactions
+  x   183 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:410:5 › PolishedVariant1Professional - Edge Cases › Layout Stability Under Stress › should handle rapid viewport resizing (6.5s)
+  ok  186 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:435:5 › PolishedVariant1Professional - Edge Cases › Layout Stability Under Stress › should handle concurrent interactions (5.3s)
+✓ Content accessible without CSS
+  ok  188 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:483:5 › PolishedVariant1Professional - Edge Cases › Error Resilience › should handle missing CSS gracefully (4.7s)
+  x   189 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:506:5 › PolishedVariant1Professional - Edge Cases › Error Resilience › should handle JavaScript errors without breaking layout (3.6s)
+✓ Handled rapid DOM mutations
+  ok  190 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:534:5 › PolishedVariant1Professional - Edge Cases › Error Resilience › should handle rapid DOM mutations (3.2s)
+✓ 375px - no significant horizontal overflow
+  x   191 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:558:5 › PolishedVariant1Professional - Edge Cases › Error Resilience › should handle font loading failures (3.7s)
+✓ Vertical scrolling works correctly
+  ok  193 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:650:5 › PolishedVariant1Professional - Edge Cases › Overflow and Truncation › should handle content that exceeds viewport height (3.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   192 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:615:5 › PolishedVariant1Professional - Edge Cases › Overflow and Truncation › should prevent horizontal scroll on all breakpoints with extreme content (4.2s)
+✓ Keyboard navigation works with many elements
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  ok  194 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:702:5 › PolishedVariant1Professional - Edge Cases › Accessibility Under Edge Conditions › should maintain keyboard navigation with extreme content (3.6s)
+✓ Long text handled appropriately
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+✓ Stat card hover state verified
+  ok  195 [chromium] › e2e\blueprint-variants-interaction.spec.ts:27:5 › PolishedVariant1Professional - Comprehensive Interactions › Stat Card Interactions › should show hover state on stat cards (3.7s)
+  ok  196 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:581:5 › PolishedVariant1Professional - Edge Cases › Overflow and Truncation › should truncate long text with ellipsis where appropriate (3.1s)
+✓ ARIA labels preserved
+  ok  197 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:673:5 › PolishedVariant1Professional - Edge Cases › Accessibility Under Edge Conditions › should maintain ARIA labels with missing content (3.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+✓ Rapid clicks handled without errors
+✓ ARIA states correct on stat cards
+  ok  198 [chromium] › e2e\blueprint-variants-interaction.spec.ts:75:5 › PolishedVariant1Professional - Comprehensive Interactions › Stat Card Interactions › should handle rapid clicks on stat cards (4.8s)
+✓ Back button navigation ready
+  ok  200 [chromium] › e2e\blueprint-variants-interaction.spec.ts:92:5 › PolishedVariant1Professional - Comprehensive Interactions › Stat Card Interactions › should show correct aria-pressed state on stat cards (3.4s)
+✓ Focus visible in high contrast mode
+  ok  201 [chromium] › e2e\blueprint-variants-interaction.spec.ts:105:5 › PolishedVariant1Professional - Comprehensive Interactions › Link Navigation › should navigate back to variants page (3.9s)
+  ok  199 [chromium] › e2e\blueprint-variants-edge-cases.spec.ts:734:5 › PolishedVariant1Professional - Edge Cases › Accessibility Under Edge Conditions › should maintain focus visibility with high contrast text (4.1s)
+✓ View All button click handled
+  ok  202 [chromium] › e2e\blueprint-variants-interaction.spec.ts:115:5 › PolishedVariant1Professional - Comprehensive Interactions › Link Navigation › should handle "View All" button click (4.0s)
+✓ Active Projects click handled
+✓ Team Members click handled
+✓ Downtown Tower link ready for navigation
+✓ Pending Reports click handled
+✓ Open RFIs click handled
+✓ Keyboard link navigation works
+✓ Hover states verified for stat cards
+  ok  203 [chromium] › e2e\blueprint-variants-interaction.spec.ts:50:5 › PolishedVariant1Professional - Comprehensive Interactions › Stat Card Interactions › should handle stat card clicks (5.3s)
+  ok  205 [chromium] › e2e\blueprint-variants-interaction.spec.ts:148:5 › PolishedVariant1Professional - Comprehensive Interactions › Link Navigation › should handle keyboard navigation to links (5.1s)
+✓ Harbor Bridge link ready for navigation
+✓ Hover states verified for links
+  ok  206 [chromium] › e2e\blueprint-variants-interaction.spec.ts:164:5 › PolishedVariant1Professional - Comprehensive Interactions › Hover States › should show hover effects on all interactive elements (5.4s)
+✓ Smooth hover transitions configured
+  ok  208 [chromium] › e2e\blueprint-variants-interaction.spec.ts:220:5 › PolishedVariant1Professional - Comprehensive Interactions › Hover States › should animate hover transitions smoothly (4.2s)
+✓ Medical Center link ready for navigation
+  ok  204 [chromium] › e2e\blueprint-variants-interaction.spec.ts:128:5 › PolishedVariant1Professional - Comprehensive Interactions › Link Navigation › should navigate to project detail pages (8.3s)
+✓ Project card hover effects verified
+  ok  207 [chromium] › e2e\blueprint-variants-interaction.spec.ts:191:5 › PolishedVariant1Professional - Comprehensive Interactions › Hover States › should show project card hover effects (7.4s)
+✓ Focus indicators visible on all elements
+  ok  210 [chromium] › e2e\blueprint-variants-interaction.spec.ts:260:5 › PolishedVariant1Professional - Comprehensive Interactions › Focus Management › should show visible focus indicators on all elements (5.5s)
+✓ Backward navigation (Shift+Tab) works
+  ok  212 [chromium] › e2e\blueprint-variants-interaction.spec.ts:315:5 › PolishedVariant1Professional - Comprehensive Interactions › Focus Management › should handle shift+tab (backwards navigation) (4.0s)
+✓ Enter key activates buttons
+  ok  213 [chromium] › e2e\blueprint-variants-interaction.spec.ts:338:5 › PolishedVariant1Professional - Comprehensive Interactions › Keyboard Shortcuts › should activate buttons with Enter key (4.3s)
+✓ Links are keyboard accessible
+  ok  215 [chromium] › e2e\blueprint-variants-interaction.spec.ts:378:5 › PolishedVariant1Professional - Comprehensive Interactions › Keyboard Shortcuts › should navigate links with Enter key (3.4s)
+✓ Space key activates buttons
+  ok  214 [chromium] › e2e\blueprint-variants-interaction.spec.ts:358:5 › PolishedVariant1Professional - Comprehensive Interactions › Keyboard Shortcuts › should activate buttons with Space key (6.4s)
+✓ Hover transitions completed
+  ok  217 [chromium] › e2e\blueprint-variants-interaction.spec.ts:424:5 › PolishedVariant1Professional - Comprehensive Interactions › Animation Completion › should handle hover transition animations (3.7s)
+✓ Page load animations completed
+  ok  216 [chromium] › e2e\blueprint-variants-interaction.spec.ts:398:5 › PolishedVariant1Professional - Comprehensive Interactions › Animation Completion › should complete page load animations (5.3s)
+  x   218 [chromium] › e2e\blueprint-variants-interaction.spec.ts:444:5 › PolishedVariant1Professional - Comprehensive Interactions › Animation Completion › should handle dark mode transition animations (3.7s)
+  x   219 [chromium] › e2e\blueprint-variants-interaction.spec.ts:472:5 › PolishedVariant1Professional - Comprehensive Interactions › State Persistence › should maintain scroll position on interaction (3.2s)
+✓ Dark mode preference maintained
+✓ Rapid hover switching handled correctly
+  ok  220 [chromium] › e2e\blueprint-variants-interaction.spec.ts:492:5 › PolishedVariant1Professional - Comprehensive Interactions › State Persistence › should maintain dark mode preference (3.3s)
+  ok  221 [chromium] › e2e\blueprint-variants-interaction.spec.ts:520:5 › PolishedVariant1Professional - Comprehensive Interactions › Multi-Element Interactions › should handle multiple simultaneous hovers (rapid switching) (3.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  x   223 [chromium] › e2e\blueprint-variants-responsive.spec.ts:34:7 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › desktop - should render correctly in all browsers (3.0s)
+✓ Recovered from rapid interactions
+  ok  222 [chromium] › e2e\blueprint-variants-interaction.spec.ts:579:5 › PolishedVariant1Professional - Comprehensive Interactions › Error Resilience › should recover from rapid interaction patterns (4.3s)
+✓ Disabled element clicks handled gracefully
+✓ Sequential element interactions handled
+  ok  225 [chromium] › e2e\blueprint-variants-interaction.spec.ts:562:5 › PolishedVariant1Professional - Comprehensive Interactions › Error Resilience › should handle clicks on disabled elements gracefully (3.1s)
+  ok  224 [chromium] › e2e\blueprint-variants-interaction.spec.ts:538:5 › PolishedVariant1Professional - Comprehensive Interactions › Multi-Element Interactions › should handle clicking different elements in sequence (3.9s)
+✓ chromium - desktop keyboard navigation verified
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  ok  226 [chromium] › e2e\blueprint-variants-responsive.spec.ts:85:7 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › desktop - keyboard navigation works in all browsers (2.7s)
+  x   227 [chromium] › e2e\blueprint-variants-responsive.spec.ts:34:7 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › wide - should render correctly in all browsers (3.0s)
+✓ chromium - wide interactions verified
+  ok  228 [chromium] › e2e\blueprint-variants-responsive.spec.ts:60:7 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › wide - interactive elements work in all browsers (3.3s)
+✓ chromium - wide keyboard navigation verified
+  ok  230 [chromium] › e2e\blueprint-variants-responsive.spec.ts:85:7 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › wide - keyboard navigation works in all browsers (2.9s)
+✓ chromium - desktop interactions verified
+  ok  229 [chromium] › e2e\blueprint-variants-responsive.spec.ts:60:7 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › desktop - interactive elements work in all browsers (3.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x   231 [chromium] › e2e\blueprint-variants-responsive.spec.ts:141:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile-portrait - should render correctly on mobile browsers (2.9s)
+  x   232 [chromium] › e2e\blueprint-variants-responsive.spec.ts:159:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile-portrait - touch interactions work on mobile (2.2s)
+✓ Mobile - mobile-portrait touch targets verified (10 elements checked)
+  ok  233 [chromium] › e2e\blueprint-variants-responsive.spec.ts:178:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile-portrait - touch targets meet 44px minimum (2.3s)
+✓ chromium - dark mode verified
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  ok  234 [chromium] › e2e\blueprint-variants-responsive.spec.ts:111:5 › PolishedVariant1Professional - Cross-Browser Responsive › Desktop Browsers › desktop - dark mode works in all browsers (2.5s)
+✓ Mobile - mobile-landscape touch targets verified (10 elements checked)
+  ok  235 [chromium] › e2e\blueprint-variants-responsive.spec.ts:178:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile-landscape - touch targets meet 44px minimum (2.3s)
+  x   236 [chromium] › e2e\blueprint-variants-responsive.spec.ts:159:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile-landscape - touch interactions work on mobile (2.9s)
+  x   238 [chromium] › e2e\blueprint-variants-responsive.spec.ts:141:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › tablet - should render correctly on mobile browsers (3.1s)
+  x   239 [chromium] › e2e\blueprint-variants-responsive.spec.ts:159:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › tablet - touch interactions work on mobile (3.0s)
+  x   237 [chromium] › e2e\blueprint-variants-responsive.spec.ts:141:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile-landscape - should render correctly on mobile browsers (3.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+✓ Mobile - viewport meta tag verified
+⚠ Touch target too small (40px): Back to Blueprint Variants
+✓ Mobile - scroll behavior verified
+  -   243 [chromium] › e2e\blueprint-variants-responsive.spec.ts:246:5 › PolishedVariant1Professional - Cross-Browser Responsive › Browser-Specific Features › Safari - should handle webkit-specific styles
+⚠ Touch target too small (40px): View all projects
+⚠ Touch target too small (32px): unlabeled
+  ok  241 [chromium] › e2e\blueprint-variants-responsive.spec.ts:208:5 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile - scroll behavior works correctly (2.8s)
+  ok  242 [chromium] › e2e\blueprint-variants-responsive.spec.ts:228:5 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › mobile - viewport meta tag is set correctly (2.0s)
+  -   244 [chromium] › e2e\blueprint-variants-responsive.spec.ts:262:5 › PolishedVariant1Professional - Cross-Browser Responsive › Browser-Specific Features › Firefox - should handle moz-specific styles
+  x   240 [chromium] › e2e\blueprint-variants-responsive.spec.ts:178:7 › PolishedVariant1Professional - Cross-Browser Responsive › Mobile Browsers › tablet - touch targets meet 44px minimum (3.3s)
+✓ Chrome - chromium features verified
+  ok  245 [chromium] › e2e\blueprint-variants-responsive.spec.ts:274:5 › PolishedVariant1Professional - Cross-Browser Responsive › Browser-Specific Features › Chrome - should handle chrome-specific features (2.5s)
+✓ Responsive layout breakpoints verified
+  ok  246 [chromium] › e2e\blueprint-variants-responsive.spec.ts:288:5 › PolishedVariant1Professional - Cross-Browser Responsive › Responsive Layout Verification › should show correct layout at each breakpoint (2.9s)
+✓ Orientation changes handled correctly
+  ok  247 [chromium] › e2e\blueprint-variants-responsive.spec.ts:315:5 › PolishedVariant1Professional - Cross-Browser Responsive › Responsive Layout Verification › should handle orientation changes (3.3s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+✓ chromium - no layout shift detected
+  ok  248 [chromium] › e2e\blueprint-variants-responsive.spec.ts:348:5 › PolishedVariant1Professional - Cross-Browser Responsive › Performance Across Browsers › should render smoothly without layout shift (4.0s)
+✓ chromium - page loaded in 1994ms
+  ok  251 [chromium] › e2e\blueprint-variants-responsive.spec.ts:334:5 › PolishedVariant1Professional - Cross-Browser Responsive › Performance Across Browsers › should load within acceptable time in all browsers (2.6s)
+  x   249 [chromium] › e2e\change-orders.spec.ts:35:3 › Change Orders Management › should display change orders list page (17.6s)
+  x   250 [chromium] › e2e\change-orders.spec.ts:45:3 › Change Orders Management › should show change order status indicators (17.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  x   252 [chromium] › e2e\change-orders.spec.ts:57:3 › Change Orders Management › should navigate to create change order page (17.3s)
+  x   253 [chromium] › e2e\change-orders.spec.ts:70:3 › Change Orders Management › should create a new change order with basic information (17.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x   254 [chromium] › e2e\change-orders.spec.ts:108:3 › Change Orders Management › should validate required fields on create (17.5s)
+  x   255 [chromium] › e2e\change-orders.spec.ts:124:3 › Change Orders Management › should filter change orders by status (17.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x   256 [chromium] › e2e\change-orders.spec.ts:140:3 › Change Orders Management › should open change order detail view (17.7s)
+  x   257 [chromium] › e2e\change-orders.spec.ts:161:3 › Change Orders Management › should display cost breakdown in detail view (18.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x   259 [chromium] › e2e\change-orders.spec.ts:213:3 › Change Orders Management › should show approval status and workflow (17.5s)
+  x   258 [chromium] › e2e\change-orders.spec.ts:182:3 › Change Orders Management › should navigate to edit change order (17.8s)
+  x   209 [chromium] › e2e\blueprint-variants-interaction.spec.ts:236:5 › PolishedVariant1Professional - Comprehensive Interactions › Focus Management › should maintain focus order through all elements (1.7m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x   260 [chromium] › e2e\change-orders.spec.ts:234:3 › Change Orders Management › should search change orders (17.4s)
+  x   211 [chromium] › e2e\blueprint-variants-interaction.spec.ts:286:5 › PolishedVariant1Professional - Comprehensive Interactions › Focus Management › should not trap focus unintentionally (1.7m)
+  x   261 [chromium] › e2e\change-orders.spec.ts:250:3 › Change Orders Management › should sort change orders by column (17.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x   263 [chromium] › e2e\change-orders.spec.ts:267:3 › Change Orders Management › should display change order financial summary (18.6s)
+  x   262 [chromium] › e2e\checklists.spec.ts:36:3 › Checklists Management › should display checklists dashboard (18.7s)
+  x   264 [chromium] › e2e\checklists.spec.ts:42:3 › Checklists Management › should navigate to templates page (18.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x   265 [chromium] › e2e\checklists.spec.ts:57:3 › Checklists Management › should start a checklist execution (18.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x   266 [chromium] › e2e\checklists.spec.ts:75:3 › Checklists Management › should check off checklist items (21.4s)
+  x   267 [chromium] › e2e\checklists.spec.ts:102:3 › Checklists Management › should add notes to checklist item (21.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  ok  271 [chromium] › e2e\client-approval-workflows.spec.ts:47:5 › Public Approval Page › Unauthenticated Access › should show error for invalid token (5.3s)
+  ok  273 [chromium] › e2e\client-approval-workflows.spec.ts:61:5 › Public Approval Page › Unauthenticated Access › should display loading state initially (3.8s)
+  -   275 [chromium] › e2e\client-approval-workflows.spec.ts:91:10 › Public Approval Page › Approval Form UI › should display approval form with valid token
+  -   276 [chromium] › e2e\client-approval-workflows.spec.ts:102:10 › Public Approval Page › Approval Form UI › should validate required fields
+  -   277 [chromium] › e2e\client-approval-workflows.spec.ts:112:10 › Public Approval Page › Approval Form UI › should show different form fields based on decision
+  x   268 [chromium] › e2e\checklists.spec.ts:128:3 › Checklists Management › should complete a checklist (19.1s)
+  x   269 [chromium] › e2e\checklists.spec.ts:156:3 › Checklists Management › should view checklist executions history (18.5s)
+  -   279 [chromium] › e2e\client-approval-workflows.spec.ts:144:8 › Authenticated Approval Link Management › should create a public approval link
+  -   280 [chromium] › e2e\client-approval-workflows.spec.ts:165:8 › Authenticated Approval Link Management › should revoke an existing link
+  -   281 [chromium] › e2e\client-approval-workflows.spec.ts:182:8 › Authenticated Approval Link Management › should copy link to clipboard
+  -   282 [chromium] › e2e\client-approval-workflows.spec.ts:198:8 › Approval Flow Integration › should complete full approval flow
+  ok  274 [chromium] › e2e\client-approval-workflows.spec.ts:71:5 › Public Approval Page › Unauthenticated Access › should be accessible without authentication (6.4s)
+  -   283 [chromium] › e2e\client-approval-workflows.spec.ts:253:3 › Security Tests › should not allow XSS in client input fields
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  x   270 [chromium] › e2e\checklists.spec.ts:170:3 › Checklists Management › should filter checklists by status (17.9s)
+  ok  285 [chromium] › e2e\client-approval-workflows.spec.ts:246:3 › Security Tests › should not expose sensitive data in URL (2.8s)
+  x   272 [chromium] › e2e\client-approval-workflows.spec.ts:54:5 › Public Approval Page › Unauthenticated Access › should show error for missing token (14.8s)
+  -   287 [chromium] › e2e\client-approval-workflows.spec.ts:291:3 › Error Handling › should handle already-used single-use link
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  ok  288 [chromium] › e2e\client-approval-workflows.spec.ts:313:3 › Mobile Responsiveness › should display properly on mobile (2.0s)
+  -   290 [chromium] › e2e\client-approval-workflows.spec.ts:324:3 › Mobile Responsiveness › should handle signature drawing on touch devices
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  ok  291 [chromium] › e2e\client-approval-workflows.spec.ts:344:3 › Accessibility › should have proper heading structure (2.1s)
+  -   292 [chromium] › e2e\client-approval-workflows.spec.ts:301:3 › Error Handling › should handle expired link
+  -   293 [chromium] › e2e\client-approval-workflows.spec.ts:352:3 › Accessibility › should have proper form labels
+  -   294 [chromium] › e2e\client-approval-workflows.spec.ts:369:3 › Accessibility › should be keyboard navigable
+  x   284 [chromium] › e2e\client-approval-workflows.spec.ts:272:3 › Security Tests › should show security badge on public page (13.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x   289 [chromium] › e2e\client-approval-workflows.spec.ts:281:3 › Error Handling › should handle network errors gracefully (13.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  x   278 [chromium] › e2e\client-approval-workflows.spec.ts:130:3 › Authenticated Approval Link Management › should access approvals page (34.2s)
+  x   286 [chromium] › e2e\client-approval-workflows.spec.ts:137:3 › Authenticated Approval Link Management › should access approval workflows settings (33.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x   295 [chromium] › e2e\daily-reports-v2.spec.ts:59:3 › Daily Reports V2 - Quick Mode › should create a Quick Mode daily report (33.3s)
+  x   296 [chromium] › e2e\daily-reports-v2.spec.ts:86:3 › Daily Reports V2 - Quick Mode › should add workforce entries in Quick Mode (33.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x   297 [chromium] › e2e\daily-reports-v2.spec.ts:123:3 › Daily Reports V2 - Quick Mode › should add equipment entries in Quick Mode (34.0s)
+  x   298 [chromium] › e2e\daily-reports-v2.spec.ts:154:3 › Daily Reports V2 - Quick Mode › should show copy from yesterday option (34.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  x   299 [chromium] › e2e\daily-reports-v2.spec.ts:168:3 › Daily Reports V2 - Quick Mode › should show template picker option (33.8s)
+  x   300 [chromium] › e2e\daily-reports-v2.spec.ts:192:3 › Daily Reports V2 - Detailed Mode › should switch to Detailed Mode (34.3s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+  x   301 [chromium] › e2e\daily-reports-v2.spec.ts:210:3 › Daily Reports V2 - Detailed Mode › should show all detailed mode sections (33.7s)
+  x   302 [chromium] › e2e\daily-reports-v2.spec.ts:251:3 › Daily Reports V2 - Safety Incidents (OSHA) › should add a safety incident with OSHA fields (35.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x   303 [chromium] › e2e\daily-reports-v2.spec.ts:303:3 › Daily Reports V2 - Approval Workflow › should show submit button for draft reports (34.6s)
+  x   304 [chromium] › e2e\daily-reports-v2.spec.ts:314:3 › Daily Reports V2 - Approval Workflow › should require signature for submission (33.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x   305 [chromium] › e2e\daily-reports-v2.spec.ts:335:3 › Daily Reports V2 - Approval Workflow › should show approval workflow panel for submitted reports (33.5s)
+  x   306 [chromium] › e2e\daily-reports-v2.spec.ts:355:3 › Daily Reports V2 - Photo Upload › should show photo upload section (33.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x   307 [chromium] › e2e\daily-reports-v2.spec.ts:373:3 › Daily Reports V2 - Photo Upload › should show GPS toggle in photo section (35.8s)
+  x   308 [chromium] › e2e\daily-reports-v2.spec.ts:398:3 › Daily Reports V2 - Delays Documentation › should add a delay entry (35.9s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x   309 [chromium] › e2e\daily-reports-v2.spec.ts:430:3 › Daily Reports V2 - Offline Support › should show sync status indicator (33.4s)
+  x   310 [chromium] › e2e\daily-reports-v2.spec.ts:447:3 › Daily Reports V2 - Offline Support › should persist draft in local storage (34.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x   311 [chromium] › e2e\daily-reports.spec.ts:44:3 › Daily Reports › should navigate to daily reports from project (35.3s)
+  x   312 [chromium] › e2e\daily-reports.spec.ts:61:3 › Daily Reports › should open create daily report form (34.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x   313 [chromium] › e2e\daily-reports.spec.ts:80:3 › Daily Reports › should create a daily report with weather (33.3s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }

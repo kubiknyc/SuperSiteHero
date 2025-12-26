@@ -28,6 +28,8 @@ import { QBSyncStatusBadge } from './QBSyncStatusBadge'
 import { useRetrySync, useCancelPendingSync } from '../hooks/useQuickBooks'
 import { formatDistanceToNow } from 'date-fns'
 import type { QBPendingSync } from '@/types/quickbooks'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface QBPendingSyncsListProps {
   items: QBPendingSync[]
@@ -50,7 +52,7 @@ export function QBPendingSyncsList({ items, compact = false }: QBPendingSyncsLis
     try {
       await retrySync.mutateAsync(itemId)
     } catch (error) {
-      console.error('Failed to retry sync:', error)
+      logger.error('Failed to retry sync:', error)
     }
   }
 
@@ -58,7 +60,7 @@ export function QBPendingSyncsList({ items, compact = false }: QBPendingSyncsLis
     try {
       await cancelSync.mutateAsync(itemId)
     } catch (error) {
-      console.error('Failed to cancel sync:', error)
+      logger.error('Failed to cancel sync:', error)
     }
   }
 

@@ -12,6 +12,8 @@ import {
   toMultiCurrencyAmount,
   refreshExchangeRates,
 } from '@/lib/api/services/currency-exchange';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface UseCurrencyConversionProps {
   baseCurrency: CurrencyCode;
@@ -118,7 +120,7 @@ export function useCurrencyConversion({
         const rate = await getExchangeRate(fromCurrency, toCurrency);
         return rate;
       } catch (error) {
-        console.error('Failed to get exchange rate:', error);
+        logger.error('Failed to get exchange rate:', error);
         return null;
       }
     },
@@ -134,7 +136,7 @@ export function useCurrencyConversion({
         const multiAmount = await toMultiCurrencyAmount(amount, currency, baseCurrency);
         return multiAmount;
       } catch (error) {
-        console.error('Failed to create multi-currency amount:', error);
+        logger.error('Failed to create multi-currency amount:', error);
         return null;
       }
     },
@@ -278,7 +280,7 @@ export function useBatchConversion(baseCurrency: CurrencyCode) {
             });
           }
         } catch (error) {
-          console.error(`Failed to convert item ${item.id}:`, error);
+          logger.error(`Failed to convert item ${item.id}:`, error);
           results.set(item.id, {
             baseAmount: item.amount,
             rate: 1,

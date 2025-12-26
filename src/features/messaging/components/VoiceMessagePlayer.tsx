@@ -13,6 +13,8 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface VoiceMessagePlayerProps {
   /** URL of the audio file */
@@ -91,7 +93,7 @@ export function VoiceMessagePlayer({
       audioRef.current.pause()
     } else {
       audioRef.current.play().catch((err) => {
-        console.error('Playback failed:', err)
+        logger.error('Playback failed:', err)
         setError('Playback failed')
       })
     }

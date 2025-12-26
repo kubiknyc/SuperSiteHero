@@ -30,6 +30,8 @@ import {
 import { SignatureCapture } from '../SignatureCapture';
 import { workflowEngine, type ApprovalRole } from '../../services/workflowEngine';
 import type { ReportStatus, DailyReportV2 } from '@/types/daily-reports-v2';
+import { logger } from '../../../../lib/utils/logger';
+
 
 interface ApprovalWorkflowPanelProps {
   reportId: string;
@@ -183,7 +185,7 @@ export function ApprovalWorkflowPanel({
       setSignature(null);
       setSignerName('');
     } catch (error) {
-      console.error('Submit failed:', error);
+      logger.error('Submit failed:', error);
     } finally {
       setProcessing(false);
     }
@@ -200,7 +202,7 @@ export function ApprovalWorkflowPanel({
       setSignerName('');
       setApprovalComments('');
     } catch (error) {
-      console.error('Approve failed:', error);
+      logger.error('Approve failed:', error);
     } finally {
       setProcessing(false);
     }
@@ -215,7 +217,7 @@ export function ApprovalWorkflowPanel({
       setRejectDialogOpen(false);
       setRejectionReasonInput('');
     } catch (error) {
-      console.error('Request changes failed:', error);
+      logger.error('Request changes failed:', error);
     } finally {
       setProcessing(false);
     }
@@ -232,7 +234,7 @@ export function ApprovalWorkflowPanel({
     try {
       await onLock();
     } catch (error) {
-      console.error('Lock failed:', error);
+      logger.error('Lock failed:', error);
     } finally {
       setProcessing(false);
     }

@@ -5,6 +5,8 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import type { Document, Folder } from '@/types/database'
 import { supabase } from '@/lib/supabase'
 import { documentAiApi } from '@/lib/api/services/document-ai'
+import { logger } from '../../../lib/utils/logger';
+
 
 // File types that can be processed by AI
 const PROCESSABLE_FILE_TYPES = [
@@ -61,10 +63,10 @@ export function useCreateDocumentWithNotification() {
             document_id: data.id,
             priority: 100,
           })
-          console.log(`AI processing triggered for document ${data.id}`)
+          logger.log(`AI processing triggered for document ${data.id}`)
         } catch (error) {
           // Don't fail the upload if AI processing trigger fails
-          console.error('Failed to trigger AI processing:', error)
+          logger.error('Failed to trigger AI processing:', error)
         }
       }
     },

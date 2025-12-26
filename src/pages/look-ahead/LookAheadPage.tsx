@@ -83,6 +83,8 @@ import {
   filterActivities,
 } from '@/types/look-ahead'
 import { useProject } from '@/features/projects/hooks/useProjects'
+import { logger } from '../../lib/utils/logger';
+
 
 export function LookAheadPage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -162,7 +164,7 @@ export function LookAheadPage() {
       )
       toast.success('PDF exported successfully')
     } catch (error) {
-      console.error('PDF export error:', error)
+      logger.error('PDF export error:', error)
       toast.error('Failed to export PDF')
     } finally {
       setIsExporting(null)
@@ -184,7 +186,7 @@ export function LookAheadPage() {
       )
       toast.success('Excel file exported successfully')
     } catch (error) {
-      console.error('Excel export error:', error)
+      logger.error('Excel export error:', error)
       toast.error('Failed to export Excel file')
     } finally {
       setIsExporting(null)
@@ -206,7 +208,7 @@ export function LookAheadPage() {
       )
       toast.success('CSV exported successfully')
     } catch (error) {
-      console.error('CSV export error:', error)
+      logger.error('CSV export error:', error)
       toast.error('Failed to export CSV')
     } finally {
       setIsExporting(null)

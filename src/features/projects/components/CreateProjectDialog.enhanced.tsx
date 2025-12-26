@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/dialog'
 import { useNotifications } from '@/lib/notifications/useNotifications'
 import type { ProjectStatus } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateProjectDialogProps {
   children: React.ReactNode
@@ -112,7 +114,7 @@ export function CreateProjectDialogEnhanced({
       onOpenChange?.(false)
     } catch (error) {
       // Error notification is handled automatically by the mutation hook
-      console.error('Failed to create project:', error)
+      logger.error('Failed to create project:', error)
     }
   }
 

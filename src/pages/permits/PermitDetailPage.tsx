@@ -48,6 +48,8 @@ import {
   isPermitExpiringSoon,
   getNextPermitStatusOptions,
 } from '@/types/permits'
+import { logger } from '../../lib/utils/logger';
+
 
 export function PermitDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -113,7 +115,7 @@ export function PermitDetailPage() {
       })
       setShowEditDialog(false)
     } catch (error) {
-      console.error('Failed to update permit:', error)
+      logger.error('Failed to update permit:', error)
     }
   }
 
@@ -124,7 +126,7 @@ export function PermitDetailPage() {
       await updateStatus.mutateAsync({ id, status: newStatus })
       setShowStatusDialog(false)
     } catch (error) {
-      console.error('Failed to update status:', error)
+      logger.error('Failed to update status:', error)
     }
   }
 
@@ -135,7 +137,7 @@ export function PermitDetailPage() {
       await deletePermit.mutateAsync(id)
       navigate('/permits')
     } catch (error) {
-      console.error('Failed to delete permit:', error)
+      logger.error('Failed to delete permit:', error)
     }
   }
 

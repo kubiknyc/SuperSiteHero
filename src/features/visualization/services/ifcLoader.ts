@@ -8,7 +8,6 @@
  * Full IFC parsing requires the web-ifc library which needs WASM support.
  */
 
-import * as THREE from 'three';
 import type {
   IFCModel,
   IFCElement,
@@ -20,6 +19,8 @@ import type {
   ModelLoadProgress,
   BoundingBox,
 } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -150,7 +151,7 @@ export class IFCLoaderService {
   async init(): Promise<void> {
     // In production, this would initialize web-ifc
     // For now, we'll use a mock implementation
-    console.log('IFC Loader initialized');
+    logger.log('IFC Loader initialized');
   }
 
   /**

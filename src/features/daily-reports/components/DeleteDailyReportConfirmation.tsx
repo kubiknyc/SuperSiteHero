@@ -5,6 +5,8 @@ import { useDeleteDailyReportWithNotification } from '../hooks/useDailyReportsMu
 import { useToast } from '@/lib/notifications/ToastContext'
 import { Button } from '@/components/ui/button'
 import { Trash2 } from 'lucide-react'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface DeleteDailyReportConfirmationProps {
   reportId: string
@@ -37,7 +39,7 @@ export function DeleteDailyReportConfirmation({
             onSuccess?.()
           } catch (error) {
             // Error toast shown automatically by mutation hook
-            console.error('Failed to delete daily report:', error)
+            logger.error('Failed to delete daily report:', error)
           }
         },
       },

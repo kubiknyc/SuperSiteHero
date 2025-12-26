@@ -66,6 +66,8 @@ import { useCreateConversation } from '@/features/messaging/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
+import { logger } from '../../lib/utils/logger';
+
 
 // Hook to fetch distribution list users
 function useDistributionListUsers(userIds: string[] | undefined) {
@@ -184,7 +186,7 @@ export function DedicatedRFIDetailPage() {
         navigate(`/messages/${result.id}`)
       }
     } catch (error) {
-      console.error('Failed to create conversation:', error)
+      logger.error('Failed to create conversation:', error)
     }
   }
 

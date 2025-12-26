@@ -8,6 +8,8 @@
 
 import type jsPDF from 'jspdf';
 import { supabase } from '@/lib/supabase';
+import { logger } from './logger';
+
 
 // =====================================================
 // CONSTANTS
@@ -80,7 +82,7 @@ export async function addDocumentHeader(
       const format = getImageFormat(gcCompany.logoBase64);
       doc.addImage(gcCompany.logoBase64, format, MARGIN, yPos, 40, 15);
     } catch (error) {
-      console.warn('Failed to add company logo:', error);
+      logger.warn('Failed to add company logo:', error);
     }
   }
 
@@ -326,7 +328,7 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
       .single();
 
     if (projectError || !project) {
-      console.warn('Failed to fetch project:', projectError);
+      logger.warn('Failed to fetch project:', projectError);
       return await getDefaultCompanyInfo();
     }
 
@@ -338,7 +340,7 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
       .single();
 
     if (companyError || !company) {
-      console.warn('Failed to fetch company:', companyError);
+      logger.warn('Failed to fetch company:', companyError);
       return await getDefaultCompanyInfo();
     }
 
@@ -356,7 +358,7 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
       try {
         logoBase64 = await loadCompanyLogo(company.logo_url);
       } catch (error) {
-        console.warn('Failed to load company logo, using JobSight logo fallback:', error);
+        logger.warn('Failed to load company logo, using JobSight logo fallback:', error);
         logoBase64 = await loadJobSightLogo();
       }
     } else {
@@ -373,7 +375,7 @@ export async function getCompanyInfo(projectId: string): Promise<CompanyInfo> {
       logoBase64,
     };
   } catch (error) {
-    console.error('Error fetching company info:', error);
+    logger.error('Error fetching company info:', error);
     return await getDefaultCompanyInfo();
   }
 }

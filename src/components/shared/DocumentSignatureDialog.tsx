@@ -44,6 +44,8 @@ import {
   useCreateLienWaiverEnvelope,
 } from '@/features/docusign/hooks/useDocuSign'
 import type { DSDocumentType } from '@/types/docusign'
+import { logger } from '../../lib/utils/logger';
+
 
 // =============================================================================
 // Types
@@ -291,7 +293,7 @@ export function DocumentSignatureDialog({
       toast.success('Signature saved successfully')
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to save signature:', error)
+      logger.error('Failed to save signature:', error)
       toast.error('Failed to save signature. Please try again.')
     } finally {
       setIsLoading(false)
@@ -367,7 +369,7 @@ export function DocumentSignatureDialog({
       toast.success(`Signature request sent to ${signerEmail}`)
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to send DocuSign request:', error)
+      logger.error('Failed to send DocuSign request:', error)
       toast.error('Failed to send for signature')
     } finally {
       setIsLoading(false)
@@ -389,7 +391,7 @@ export function DocumentSignatureDialog({
       toast.success('Signature removed')
       onOpenChange(false)
     } catch (error) {
-      console.error('Failed to remove signature:', error)
+      logger.error('Failed to remove signature:', error)
       toast.error('Failed to remove signature')
     } finally {
       setIsLoading(false)

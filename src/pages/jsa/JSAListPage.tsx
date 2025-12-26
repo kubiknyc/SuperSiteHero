@@ -20,6 +20,8 @@ import { Calendar } from 'lucide-react';
 import { JSAList } from '@/features/jsa/components';
 import { useCreateJSA, useNextJSANumber } from '@/features/jsa/hooks/useJSA';
 import type { JobSafetyAnalysis } from '@/types/jsa';
+import { logger } from '../../lib/utils/logger';
+
 
 export function JSAListPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -52,7 +54,7 @@ export function JSAListPage() {
       setScheduledDate('');
       navigate(`/projects/${projectId}/jsa/${jsa.id}`);
     } catch (error) {
-      console.error('Failed to create JSA:', error);
+      logger.error('Failed to create JSA:', error);
     }
   };
 

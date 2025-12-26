@@ -12,6 +12,8 @@ import type {
   ScheduleFilters,
 } from '@/types/schedule'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // SCHEDULE ITEMS HOOKS
@@ -65,7 +67,7 @@ export function useCreateScheduleItem() {
       })
     },
     onError: (error: Error) => {
-      console.error('Failed to create schedule item:', error)
+      logger.error('Failed to create schedule item:', error)
     },
   })
 }
@@ -119,7 +121,7 @@ export function useUpdateScheduleItem() {
       })
     },
     onError: (error: Error) => {
-      console.error('Failed to update schedule item:', error)
+      logger.error('Failed to update schedule item:', error)
     },
   })
 }
@@ -174,7 +176,7 @@ export function useDeleteScheduleItem() {
       })
     },
     onError: (error: Error) => {
-      console.error('Failed to delete schedule item:', error)
+      logger.error('Failed to delete schedule item:', error)
     },
   })
 }
@@ -261,7 +263,7 @@ export function useCreateDependency() {
       })
     },
     onError: (error: Error) => {
-      console.error('Failed to create dependency:', error)
+      logger.error('Failed to create dependency:', error)
     },
   })
 }
@@ -303,7 +305,7 @@ export function useDeleteDependency() {
       })
     },
     onError: (error: Error) => {
-      console.error('Failed to delete dependency:', error)
+      logger.error('Failed to delete dependency:', error)
     },
   })
 }

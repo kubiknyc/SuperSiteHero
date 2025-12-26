@@ -12,6 +12,8 @@ import type {
   CostEstimateItemUpdate,
 } from '@/types/database-extensions'
 import { ApiErrorClass } from '../errors'
+import { logger } from '../../utils/logger';
+
 
 // ============================================================================
 // SECURITY: Server-side validation schemas
@@ -170,7 +172,7 @@ export const costEstimatesApi = {
 
       if (error) {
         // SECURITY: Sanitize error messages
-        console.error('[cost-estimates] Create estimate error:', error)
+        logger.error('[cost-estimates] Create estimate error:', error)
         throw new ApiErrorClass({
           code: 'CREATE_ESTIMATE_ERROR',
           message: 'Unable to create cost estimate. Please check your input and try again.',
@@ -213,7 +215,7 @@ export const costEstimatesApi = {
         .single()
 
       if (error) {
-        console.error('[cost-estimates] Update estimate error:', error)
+        logger.error('[cost-estimates] Update estimate error:', error)
         throw new ApiErrorClass({
           code: 'UPDATE_ESTIMATE_ERROR',
           message: 'Unable to update cost estimate. Please check your input and try again.',
@@ -307,7 +309,7 @@ export const costEstimatesApi = {
         .single()
 
       if (error) {
-        console.error('[cost-estimates] Add item error:', error)
+        logger.error('[cost-estimates] Add item error:', error)
         throw new ApiErrorClass({
           code: 'ADD_ESTIMATE_ITEM_ERROR',
           message: 'Unable to add line item. Please check your input and try again.',
@@ -350,7 +352,7 @@ export const costEstimatesApi = {
         .single()
 
       if (error) {
-        console.error('[cost-estimates] Update item error:', error)
+        logger.error('[cost-estimates] Update item error:', error)
         throw new ApiErrorClass({
           code: 'UPDATE_ESTIMATE_ITEM_ERROR',
           message: 'Unable to update line item. Please check your input and try again.',

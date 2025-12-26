@@ -14,6 +14,8 @@ import type {
 } from '@/types/checklist-schedules'
 import { calculateNextExecutionDate } from '@/types/checklist-schedules'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { logger } from '../../../lib/utils/logger';
+
 
 // LocalStorage key
 const SCHEDULES_STORAGE_KEY = 'checklist_schedules'
@@ -26,7 +28,7 @@ function getSchedulesFromStorage(): ChecklistSchedule[] {
     const stored = localStorage.getItem(SCHEDULES_STORAGE_KEY)
     return stored ? JSON.parse(stored) : []
   } catch (error) {
-    console.error('Failed to load schedules:', error)
+    logger.error('Failed to load schedules:', error)
     return []
   }
 }
@@ -38,7 +40,7 @@ function saveSchedulesToStorage(schedules: ChecklistSchedule[]): void {
   try {
     localStorage.setItem(SCHEDULES_STORAGE_KEY, JSON.stringify(schedules))
   } catch (error) {
-    console.error('Failed to save schedules:', error)
+    logger.error('Failed to save schedules:', error)
   }
 }
 

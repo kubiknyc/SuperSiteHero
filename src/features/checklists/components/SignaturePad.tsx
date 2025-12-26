@@ -6,6 +6,8 @@ import { useRef, useState, useEffect } from 'react'
 import { Stage, Layer, Line } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import Konva from 'konva'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface SignaturePadProps {
   onSignatureCapture: (dataUrl: string) => void
@@ -102,7 +104,7 @@ export function SignaturePad({
 
       onSignatureCapture(dataUrl)
     } catch (error) {
-      console.error('Failed to capture signature:', error)
+      logger.error('Failed to capture signature:', error)
     }
   }
 

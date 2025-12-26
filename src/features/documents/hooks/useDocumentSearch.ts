@@ -4,6 +4,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import type { Document } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface UseDocumentSearchOptions {
   enabled?: boolean
@@ -65,7 +67,7 @@ export function useDocumentSearch(
       const { data, error } = await query
 
       if (error) {
-        console.error('Search error:', error)
+        logger.error('Search error:', error)
         throw error
       }
 

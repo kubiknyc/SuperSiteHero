@@ -1,0 +1,175 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+
+Running 29 tests using 6 workers
+
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  ok  6 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:115:3 › Hover States - Dark Mode › table row hover in dark mode (1.1m)
+  ok  2 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:38:3 › Hover States - Dark Mode › secondary button hover states (1.1m)
+  ok  1 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:93:3 › Hover States - Dark Mode › menu item hover highlights (1.1m)
+  ok  5 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:53:3 › Hover States - Dark Mode › link hover states are visible (1.2m)
+  ok  4 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:17:3 › Hover States - Dark Mode › button hover states are visible (1.2m)
+  ok  3 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:78:3 › Hover States - Dark Mode › card hover elevation in dark mode (1.1m)
+Focus order: [
+  [32m'BUTTON.inline-flex'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'A.body-small'[39m,
+  [32m'INPUT.flex'[39m,
+  [32m'BUTTON.inline-flex'[39m
+]
+  ok 10 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:228:3 › Focus States - Dark Mode › skip link is visible on focus (24.3s)
+  ok 11 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:244:3 › Focus States - Dark Mode › link focus indicators (24.2s)
+  ok  9 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:202:3 › Focus States - Dark Mode › keyboard navigation focus order (25.3s)
+  ok 12 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:271:3 › Active States - Dark Mode › button active/pressed state (24.2s)
+  ok 15 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:326:3 › Active States - Dark Mode › expanded accordion item (16.5s)
+  ok 14 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:311:3 › Active States - Dark Mode › selected table row (16.6s)
+  ok 13 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:290:3 › Active States - Dark Mode › active navigation item is highlighted (17.3s)
+  ok 16 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:342:3 › Active States - Dark Mode › checkbox checked state (15.5s)
+  x   7 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible (16.7s)
+  x   8 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states (26.7s)
+  ok 20 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:435:3 › Disabled States - Dark Mode › disabled state is not clickable (12.9s)
+  ok 19 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:418:3 › Disabled States - Dark Mode › disabled checkbox visibility (13.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  ok 17 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:366:3 › Disabled States - Dark Mode › disabled button appearance (17.4s)
+  ok 21 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:491:3 › Loading States - Dark Mode › progress bar visibility (11.3s)
+  ok 22 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:511:3 › Loading States - Dark Mode › button loading state (14.4s)
+  ok 25 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:545:3 › Error States - Dark Mode › form field error styling (19.4s)
+  ok 26 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:571:3 › Error States - Dark Mode › error message visibility (18.0s)
+
+╔════════════════════════════════════════════════════════════════╗
+║       Interactive States Test Summary - Dark Mode              ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ Hover States Tested:
+   • Button hover (primary, secondary)
+   • Link hover
+   • Card hover elevation
+   • Menu item hover
+   • Table row hover
+
+✅ Focus States Tested:
+   • Button focus indicators
+   • Input focus rings
+   • Keyboard navigation order
+   • Skip link visibility
+   • Link focus indicators
+
+✅ Active States Tested:
+   • Button active/pressed
+   • Active navigation items
+   • Selected table rows
+   • Expanded accordion items
+   • Checkbox checked state
+
+✅ Disabled States Tested:
+   • Disabled buttons
+   • Disabled input fields
+   • Disabled checkboxes
+   • Non-clickable verification
+
+✅ Loading States Tested:
+   • Loading spinners
+   • Skeleton loaders
+   • Progress bars
+   • Button loading state
+
+✅ Error States Tested:
+   • Form field error styling
+   • Error message visibility
+   • Error icons
+   • Toast error notifications
+
+All interactive state tests completed!
+  
+  ok 29 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:641:1 › interactive states summary (10ms)
+  ok 24 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:458:3 › Loading States - Dark Mode › loading spinner visibility (24.6s)
+  ok 27 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:596:3 › Error States - Dark Mode › error icon visibility (23.7s)
+  x  18 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:391:3 › Disabled States - Dark Mode › disabled input fields (5.5s)
+  ok 28 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:613:3 › Error States - Dark Mode › toast error notification (21.8s)
+  ok 23 [firefox] › e2e\accessibility\dark-mode-states.spec.ts:479:3 › Loading States - Dark Mode › skeleton loader visibility (41.4s)
+
+
+  1) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible 
+
+    Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+    Call log:
+    [2m  - navigating to "http://localhost:5173/", waiting until "load"[22m
+
+
+      134 | test.describe('Focus States - Dark Mode', () => {
+      135 |   test('button focus indicators are visible', async ({ page }) => {
+    > 136 |     await page.goto('/');
+          |                ^
+      137 |     await enableDarkMode(page);
+      138 |     await page.waitForLoadState('domcontentloaded');
+      139 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:136:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-48953-ocus-indicators-are-visible-firefox\error-context.md
+
+  2) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+
+    Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+    Call log:
+    [2m  - navigating to "http://localhost:5173/login", waiting until "load"[22m
+
+
+      169 |
+      170 |   test('input focus states', async ({ page }) => {
+    > 171 |     await page.goto('/login');
+          |                ^
+      172 |     await enableDarkMode(page);
+      173 |     await page.waitForLoadState('domcontentloaded');
+      174 |
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:171:16
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-a826d-ark-Mode-input-focus-states-firefox\error-context.md
+
+  3) [firefox] › e2e\accessibility\dark-mode-states.spec.ts:391:3 › Disabled States - Dark Mode › disabled input fields 
+
+    Error: page.goto: NS_ERROR_CONNECTION_REFUSED
+    Call log:
+    [2m  - navigating to "http://localhost:5173/login", waiting until "load"[22m
+
+
+      390 |
+      391 |   test('disabled input fields', async ({ page }) => {
+    > 392 |     await page.goto('/login');
+          |                ^
+      393 |     await enableDarkMode(page);
+      394 |
+      395 |     // Create a disabled input via JavaScript
+        at c:\Users\Eli\Documents\git\e2e\accessibility\dark-mode-states.spec.ts:392:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-firefox\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-firefox\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\accessibility-dark-mode-st-ec772--Mode-disabled-input-fields-firefox\error-context.md
+
+  3 failed
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:135:3 › Focus States - Dark Mode › button focus indicators are visible 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:170:3 › Focus States - Dark Mode › input focus states 
+    [firefox] › e2e\accessibility\dark-mode-states.spec.ts:391:3 › Disabled States - Dark Mode › disabled input fields 
+  26 passed (3.3m)

@@ -1,10 +1,11 @@
 // JobSight Company Registration
-// Distinctive industrial-inspired design with blueprint aesthetics
+// Luxury Editorial Aesthetic - Warm, sophisticated, magazine-inspired
 
 import { useState, useEffect } from 'react';
-import { Check, Building2, Users, ArrowRight, Loader2 } from 'lucide-react';
+import { Check, Building2, Users, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useNavigate } from 'react-router-dom';
+import { logger } from '../../lib/utils/logger';
 
 interface Company {
   id: string;
@@ -57,13 +58,11 @@ export function CompanyRegistration() {
     setIsLoading(true);
 
     try {
-      // Determine company name for metadata
       const companyName = mode === 'new' ? newCompanyName : selectedCompany?.name;
       if (!companyName) {
         throw new Error('Company name is required');
       }
 
-      // Sign up with Supabase Auth
       const { data, error } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
@@ -79,10 +78,8 @@ export function CompanyRegistration() {
 
       if (error) throw error;
 
-      // Wait a moment for the trigger to create the user profile
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Fetch the user's profile to check approval status
       if (data.user) {
         const { data: profile, error: profileError } = await supabase
           .from('users')
@@ -91,13 +88,11 @@ export function CompanyRegistration() {
           .single();
 
         if (profileError) {
-          console.error('Error fetching profile:', profileError);
-          // Default to pending if we can't fetch the profile
+          logger.error('Error fetching profile:', profileError);
           navigate('/pending-approval');
           return;
         }
 
-        // Navigate based on approval status
         if (profile.approval_status === 'approved') {
           navigate('/dashboard');
         } else {
@@ -105,7 +100,7 @@ export function CompanyRegistration() {
         }
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      logger.error('Registration error:', error);
       alert(error instanceof Error ? error.message : 'Registration failed');
     } finally {
       setIsLoading(false);
@@ -113,364 +108,434 @@ export function CompanyRegistration() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0F1419] relative overflow-hidden">
-      {/* Blueprint grid background */}
-      <div className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(#2C3E50 1px, transparent 1px),
-            linear-gradient(90deg, #2C3E50 1px, transparent 1px)
-          `,
-          backgroundSize: '40px 40px'
-        }}
-      />
+    <>
+      {/* Google Fonts */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-      {/* Diagonal accent element */}
-      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-bl from-[#FF6B35]/5 to-transparent pointer-events-none" />
-      <div className="absolute -top-40 -right-40 w-96 h-96 rounded-full bg-[#FF6B35]/10 blur-3xl pointer-events-none" />
+      <div className="min-h-screen bg-[#FAF5F0] relative overflow-hidden">
+        {/* Warm gradient overlays */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#D4622A]/5 via-transparent to-[#8B4513]/5 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-bl from-[#D4622A]/10 to-transparent blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <div className="w-full max-w-5xl">
-          {/* Header */}
-          <div className="text-center mb-12 animate-fade-in">
-            <div className="inline-flex items-center gap-3 mb-4 px-4 py-2 rounded-full bg-[#2C3E50]/30 border border-[#2C3E50]/50">
-              <div className="w-2 h-2 rounded-full bg-[#FF6B35] animate-pulse" />
-              <span className="text-[#95A5A6] text-sm font-medium tracking-wide uppercase">Registration Portal</span>
+        {/* Decorative elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-[#D4622A]/10 blur-2xl" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 rounded-full bg-[#8B4513]/10 blur-2xl" />
+
+        <div className="relative z-10 min-h-screen flex items-center justify-center p-6 py-16">
+          <div className="w-full max-w-4xl">
+            {/* Header */}
+            <div className="text-center mb-16 animate-fade-in-up">
+              <div className="inline-flex items-center gap-2 mb-6 px-5 py-2 rounded-full bg-white/80 backdrop-blur-sm shadow-sm border border-[#D4622A]/10">
+                <Sparkles size={16} className="text-[#D4622A]" />
+                <span className="text-[#8B4513] text-sm font-medium tracking-wide">
+                  Registration Portal
+                </span>
+              </div>
+              <h1 className="text-6xl md:text-7xl font-bold text-[#2C2C2C] mb-6 tracking-tight"
+                style={{ fontFamily: "'Playfair Display', serif" }}>
+                Welcome to <span className="text-[#D4622A]">JobSight</span>
+              </h1>
+              <p className="text-[#6B5D52] text-xl max-w-2xl mx-auto leading-relaxed"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                Construction field management designed for teams that build extraordinary projects.
+              </p>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-              Join <span className="text-[#FF6B35]">JobSight</span>
-            </h1>
-            <p className="text-[#95A5A6] text-lg max-w-2xl mx-auto">
-              Construction field management platform designed for teams that build the future.
-            </p>
-          </div>
 
-          {/* Main Card */}
-          <div className="bg-[#1A1A2E]/80 backdrop-blur-xl rounded-2xl border border-[#2C3E50]/50 overflow-hidden shadow-2xl">
-            {/* Progress Steps */}
-            <div className="border-b border-[#2C3E50]/30 bg-[#0F1419]/50 px-8 py-6">
-              <div className="flex items-center justify-between max-w-md mx-auto">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
-                    step === 'company'
-                      ? 'bg-[#FF6B35] text-white scale-110'
-                      : 'bg-[#2C3E50] text-[#95A5A6]'
-                  }`}>
-                    {step === 'details' ? <Check size={20} /> : '1'}
+            {/* Main Card */}
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-[#D4622A]/10 overflow-hidden border border-[#D4622A]/10">
+              {/* Progress Steps */}
+              <div className="border-b border-[#F0E8DB] bg-gradient-to-r from-[#FAF5F0] to-white px-8 py-8">
+                <div className="flex items-center justify-center max-w-md mx-auto">
+                  <div className="flex items-center gap-4">
+                    <div className={`relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-700 ${
+                      step === 'company'
+                        ? 'bg-gradient-to-br from-[#D4622A] to-[#B8541F] text-white shadow-lg shadow-[#D4622A]/30 scale-110'
+                        : 'bg-white text-[#D4622A] border-2 border-[#D4622A]'
+                    }`} style={{ fontFamily: "'Playfair Display', serif" }}>
+                      {step === 'details' ? <Check size={24} strokeWidth={3} /> : <span className="text-lg font-bold">1</span>}
+                    </div>
+                    <span className={`font-semibold text-sm transition-colors ${
+                      step === 'company' ? 'text-[#2C2C2C]' : 'text-[#9B8B7E]'
+                    }`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      Company
+                    </span>
                   </div>
-                  <span className={`font-semibold transition-colors ${
-                    step === 'company' ? 'text-white' : 'text-[#95A5A6]'
-                  }`}>
-                    Company
-                  </span>
-                </div>
 
-                <div className="flex-1 h-0.5 mx-4 bg-[#2C3E50] relative overflow-hidden">
-                  <div
-                    className="absolute inset-y-0 left-0 bg-[#FF6B35] transition-all duration-700"
-                    style={{ width: step === 'details' ? '100%' : '0%' }}
-                  />
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
-                    step === 'details'
-                      ? 'bg-[#FF6B35] text-white scale-110'
-                      : 'bg-[#2C3E50] text-[#95A5A6]'
-                  }`}>
-                    2
+                  <div className="flex-1 h-1 mx-6 bg-[#F0E8DB] relative overflow-hidden rounded-full max-w-[100px]">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#D4622A] to-[#B8541F] transition-all duration-1000 ease-out rounded-full"
+                      style={{ width: step === 'details' ? '100%' : '0%' }}
+                    />
                   </div>
-                  <span className={`font-semibold transition-colors ${
-                    step === 'details' ? 'text-white' : 'text-[#95A5A6]'
-                  }`}>
-                    Your Details
-                  </span>
+
+                  <div className="flex items-center gap-4">
+                    <div className={`relative w-12 h-12 rounded-full flex items-center justify-center transition-all duration-700 ${
+                      step === 'details'
+                        ? 'bg-gradient-to-br from-[#D4622A] to-[#B8541F] text-white shadow-lg shadow-[#D4622A]/30 scale-110'
+                        : 'bg-[#F0E8DB] text-[#9B8B7E]'
+                    }`} style={{ fontFamily: "'Playfair Display', serif" }}>
+                      <span className="text-lg font-bold">2</span>
+                    </div>
+                    <span className={`font-semibold text-sm transition-colors ${
+                      step === 'details' ? 'text-[#2C2C2C]' : 'text-[#9B8B7E]'
+                    }`} style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                      Your Details
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Step 1: Company Selection */}
-            {step === 'company' && (
-              <div className="p-8 md:p-12 animate-slide-in">
-                <h2 className="text-3xl font-bold text-white mb-3">Choose your company</h2>
-                <p className="text-[#95A5A6] mb-8">Create a new company or join an existing one.</p>
+              {/* Step 1: Company Selection */}
+              {step === 'company' && (
+                <div className="p-10 md:p-14 animate-slide-in">
+                  <h2 className="text-4xl font-bold text-[#2C2C2C] mb-3"
+                    style={{ fontFamily: "'Playfair Display', serif" }}>
+                    Choose your company
+                  </h2>
+                  <p className="text-[#6B5D52] mb-10 text-lg"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    Create a new company or join an existing team.
+                  </p>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  {/* Create New Company */}
-                  <button
-                    onClick={() => setMode('new')}
-                    className={`group relative p-8 rounded-xl border-2 transition-all duration-300 text-left ${
-                      mode === 'new'
-                        ? 'border-[#FF6B35] bg-[#FF6B35]/5'
-                        : 'border-[#2C3E50] bg-[#1A1A2E]/50 hover:border-[#FF6B35]/50'
-                    }`}
-                  >
-                    <div className="absolute top-4 right-4">
-                      <div className={`w-6 h-6 rounded-full border-2 transition-all duration-300 flex items-center justify-center ${
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Create New Company */}
+                    <button
+                      onClick={() => setMode('new')}
+                      className={`group relative p-8 rounded-2xl border-2 transition-all duration-500 text-left ${
                         mode === 'new'
-                          ? 'border-[#FF6B35] bg-[#FF6B35]'
-                          : 'border-[#2C3E50] bg-transparent'
-                      }`}>
-                        {mode === 'new' && <Check size={14} className="text-white" />}
+                          ? 'border-[#D4622A] bg-gradient-to-br from-[#D4622A]/10 to-[#D4622A]/5 shadow-lg shadow-[#D4622A]/20'
+                          : 'border-[#F0E8DB] bg-white hover:border-[#D4622A]/40 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="absolute top-6 right-6">
+                        <div className={`w-7 h-7 rounded-full border-2 transition-all duration-500 flex items-center justify-center ${
+                          mode === 'new'
+                            ? 'border-[#D4622A] bg-[#D4622A]'
+                            : 'border-[#E0D5C7]'
+                        }`}>
+                          {mode === 'new' && <Check size={16} className="text-white" strokeWidth={3} />}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="w-14 h-14 rounded-xl bg-[#FF6B35]/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Building2 size={28} className="text-[#FF6B35]" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Create New Company</h3>
-                    <p className="text-[#95A5A6]">Start fresh as an admin with full access to set up your team.</p>
-                  </button>
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-500 ${
+                        mode === 'new'
+                          ? 'bg-gradient-to-br from-[#D4622A] to-[#B8541F] shadow-lg shadow-[#D4622A]/30'
+                          : 'bg-[#FAF5F0] group-hover:bg-[#D4622A]/10'
+                      }`}>
+                        <Building2 size={32} className={mode === 'new' ? 'text-white' : 'text-[#D4622A]'} strokeWidth={1.5} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-[#2C2C2C] mb-3"
+                        style={{ fontFamily: "'Playfair Display', serif" }}>
+                        Create New Company
+                      </h3>
+                      <p className="text-[#6B5D52] leading-relaxed"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Start fresh as an admin with full access to set up your team and projects.
+                      </p>
+                    </button>
 
-                  {/* Join Existing */}
-                  <button
-                    onClick={() => setMode('join')}
-                    className={`group relative p-8 rounded-xl border-2 transition-all duration-300 text-left ${
-                      mode === 'join'
-                        ? 'border-[#FF6B35] bg-[#FF6B35]/5'
-                        : 'border-[#2C3E50] bg-[#1A1A2E]/50 hover:border-[#FF6B35]/50'
-                    }`}
-                  >
-                    <div className="absolute top-4 right-4">
-                      <div className={`w-6 h-6 rounded-full border-2 transition-all duration-300 flex items-center justify-center ${
+                    {/* Join Existing */}
+                    <button
+                      onClick={() => setMode('join')}
+                      className={`group relative p-8 rounded-2xl border-2 transition-all duration-500 text-left ${
                         mode === 'join'
-                          ? 'border-[#FF6B35] bg-[#FF6B35]'
-                          : 'border-[#2C3E50] bg-transparent'
-                      }`}>
-                        {mode === 'join' && <Check size={14} className="text-white" />}
+                          ? 'border-[#D4622A] bg-gradient-to-br from-[#D4622A]/10 to-[#D4622A]/5 shadow-lg shadow-[#D4622A]/20'
+                          : 'border-[#F0E8DB] bg-white hover:border-[#D4622A]/40 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="absolute top-6 right-6">
+                        <div className={`w-7 h-7 rounded-full border-2 transition-all duration-500 flex items-center justify-center ${
+                          mode === 'join'
+                            ? 'border-[#D4622A] bg-[#D4622A]'
+                            : 'border-[#E0D5C7]'
+                        }`}>
+                          {mode === 'join' && <Check size={16} className="text-white" strokeWidth={3} />}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="w-14 h-14 rounded-xl bg-[#2C3E50]/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                      <Users size={28} className="text-[#95A5A6]" />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2">Join Existing Company</h3>
-                    <p className="text-[#95A5A6]">Request to join your team. Admin approval required.</p>
-                  </button>
-                </div>
-
-                {/* Company Input */}
-                {mode === 'new' && (
-                  <div className="mt-8 animate-fade-in">
-                    <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      value={newCompanyName}
-                      onChange={(e) => setNewCompanyName(e.target.value)}
-                      placeholder="Enter your company name..."
-                      className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                    />
+                      <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-5 transition-all duration-500 ${
+                        mode === 'join'
+                          ? 'bg-gradient-to-br from-[#8B4513] to-[#6B3410] shadow-lg shadow-[#8B4513]/30'
+                          : 'bg-[#FAF5F0] group-hover:bg-[#8B4513]/10'
+                      }`}>
+                        <Users size={32} className={mode === 'join' ? 'text-white' : 'text-[#8B4513]'} strokeWidth={1.5} />
+                      </div>
+                      <h3 className="text-2xl font-bold text-[#2C2C2C] mb-3"
+                        style={{ fontFamily: "'Playfair Display', serif" }}>
+                        Join Existing Company
+                      </h3>
+                      <p className="text-[#6B5D52] leading-relaxed"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Request to join your team. Admin approval required for access.
+                      </p>
+                    </button>
                   </div>
-                )}
 
-                {mode === 'join' && (
-                  <div className="mt-8 animate-fade-in space-y-4">
-                    <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                      Search Companies
-                    </label>
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Type to search..."
-                      className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                    />
+                  {/* Company Input */}
+                  {mode === 'new' && (
+                    <div className="mt-10 animate-fade-in">
+                      <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Company Name
+                      </label>
+                      <input
+                        type="text"
+                        value={newCompanyName}
+                        onChange={(e) => setNewCompanyName(e.target.value)}
+                        placeholder="Enter your company name..."
+                        className="w-full px-6 py-5 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all shadow-sm"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      />
+                    </div>
+                  )}
 
-                    {companies.length > 0 && (
-                      <div className="space-y-2 max-h-64 overflow-y-auto">
-                        {companies.map((company) => (
-                          <button
-                            key={company.id}
-                            onClick={() => setSelectedCompany(company)}
-                            className={`w-full p-4 rounded-lg border-2 transition-all duration-200 text-left ${
-                              selectedCompany?.id === company.id
-                                ? 'border-[#FF6B35] bg-[#FF6B35]/5'
-                                : 'border-[#2C3E50] bg-[#1A1A2E]/30 hover:border-[#FF6B35]/50'
-                            }`}
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="font-semibold text-white">{company.name}</p>
-                                {company.user_count && (
-                                  <p className="text-sm text-[#95A5A6]">{company.user_count} members</p>
+                  {mode === 'join' && (
+                    <div className="mt-10 animate-fade-in space-y-5">
+                      <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Search Companies
+                      </label>
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Type to search..."
+                        className="w-full px-6 py-5 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all shadow-sm"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      />
+
+                      {companies.length > 0 && (
+                        <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+                          {companies.map((company) => (
+                            <button
+                              key={company.id}
+                              onClick={() => setSelectedCompany(company)}
+                              className={`w-full p-5 rounded-2xl border-2 transition-all duration-300 text-left ${
+                                selectedCompany?.id === company.id
+                                  ? 'border-[#D4622A] bg-[#D4622A]/5 shadow-md'
+                                  : 'border-[#E0D5C7] bg-white hover:border-[#D4622A]/40'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <p className="font-semibold text-[#2C2C2C] text-lg"
+                                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                                    {company.name}
+                                  </p>
+                                  {company.user_count && (
+                                    <p className="text-sm text-[#9B8B7E] mt-1">
+                                      {company.user_count} members
+                                    </p>
+                                  )}
+                                </div>
+                                {selectedCompany?.id === company.id && (
+                                  <Check size={24} className="text-[#D4622A]" strokeWidth={3} />
                                 )}
                               </div>
-                              {selectedCompany?.id === company.id && (
-                                <Check size={20} className="text-[#FF6B35]" />
-                              )}
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* Continue Button */}
-                {((mode === 'new' && newCompanyName.trim()) || (mode === 'join' && selectedCompany)) && (
-                  <button
-                    onClick={handleCompanySelection}
-                    className="mt-8 w-full px-8 py-4 bg-[#FF6B35] hover:bg-[#FF6B35]/90 text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-2 group animate-fade-in"
-                  >
-                    Continue
-                    <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-                  </button>
-                )}
-              </div>
-            )}
-
-            {/* Step 2: User Details */}
-            {step === 'details' && (
-              <form onSubmit={handleRegistration} className="p-8 md:p-12 animate-slide-in">
-                <button
-                  type="button"
-                  onClick={() => setStep('company')}
-                  className="text-[#95A5A6] hover:text-white transition-colors mb-6 flex items-center gap-2"
-                >
-                  ← Back
-                </button>
-
-                <h2 className="text-3xl font-bold text-white mb-3">Your details</h2>
-                <p className="text-[#95A5A6] mb-8">
-                  {mode === 'new'
-                    ? `You'll be the admin of ${newCompanyName}`
-                    : `Requesting to join ${selectedCompany?.name}`
-                  }
-                </p>
-
-                <div className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                        First Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={userData.firstName}
-                        onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
-                        className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                      />
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                        Last Name
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={userData.lastName}
-                        onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
-                        className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={userData.email}
-                      onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                      className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      required
-                      value={userData.password}
-                      onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-                      className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-[#95A5A6] uppercase tracking-wide mb-3">
-                      Role / Title
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g., Project Manager, Superintendent..."
-                      value={userData.role}
-                      onChange={(e) => setUserData({ ...userData, role: e.target.value })}
-                      className="w-full px-6 py-4 bg-[#0F1419] border-2 border-[#2C3E50] rounded-xl text-white placeholder-[#95A5A6]/50 focus:border-[#FF6B35] focus:outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="mt-8 w-full px-8 py-4 bg-[#FF6B35] hover:bg-[#FF6B35]/90 disabled:bg-[#2C3E50] disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 size={20} className="animate-spin" />
-                      Creating Account...
-                    </>
-                  ) : (
-                    <>
-                      Complete Registration
-                      <ArrowRight size={20} />
-                    </>
                   )}
-                </button>
-              </form>
-            )}
+
+                  {/* Continue Button */}
+                  {((mode === 'new' && newCompanyName.trim()) || (mode === 'join' && selectedCompany)) && (
+                    <button
+                      onClick={handleCompanySelection}
+                      className="mt-10 w-full px-10 py-5 bg-gradient-to-r from-[#D4622A] to-[#B8541F] hover:from-[#B8541F] hover:to-[#D4622A] text-white font-bold rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 group animate-fade-in shadow-xl shadow-[#D4622A]/30 hover:shadow-2xl hover:shadow-[#D4622A]/40 text-lg"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                    >
+                      Continue to Next Step
+                      <ArrowRight size={22} className="group-hover:translate-x-2 transition-transform duration-300" strokeWidth={2.5} />
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Step 2: User Details */}
+              {step === 'details' && (
+                <form onSubmit={handleRegistration} className="p-10 md:p-14 animate-slide-in">
+                  <button
+                    type="button"
+                    onClick={() => setStep('company')}
+                    className="text-[#9B8B7E] hover:text-[#D4622A] transition-colors mb-8 flex items-center gap-2 font-medium"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    ← Back to company selection
+                  </button>
+
+                  <h2 className="text-4xl font-bold text-[#2C2C2C] mb-3"
+                    style={{ fontFamily: "'Playfair Display', serif" }}>
+                    Your details
+                  </h2>
+                  <p className="text-[#6B5D52] mb-10 text-lg"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {mode === 'new'
+                      ? `You'll be the admin of ${newCompanyName}`
+                      : `Requesting to join ${selectedCompany?.name}`
+                    }
+                  </p>
+
+                  <div className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                          First Name
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={userData.firstName}
+                          onChange={(e) => setUserData({ ...userData, firstName: e.target.value })}
+                          className="w-full px-6 py-4 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                          Last Name
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={userData.lastName}
+                          onChange={(e) => setUserData({ ...userData, lastName: e.target.value })}
+                          className="w-full px-6 py-4 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all"
+                          style={{ fontFamily: "'DM Sans', sans-serif" }}
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        required
+                        value={userData.email}
+                        onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                        className="w-full px-6 py-4 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Password
+                      </label>
+                      <input
+                        type="password"
+                        required
+                        value={userData.password}
+                        onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+                        className="w-full px-6 py-4 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-[#8B4513] uppercase tracking-wider mb-3"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        Role / Title
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g., Project Manager, Superintendent..."
+                        value={userData.role}
+                        onChange={(e) => setUserData({ ...userData, role: e.target.value })}
+                        className="w-full px-6 py-4 bg-[#FAF5F0] border-2 border-[#E0D5C7] rounded-2xl text-[#2C2C2C] placeholder-[#9B8B7E] focus:border-[#D4622A] focus:outline-none focus:bg-white transition-all"
+                        style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="mt-10 w-full px-10 py-5 bg-gradient-to-r from-[#D4622A] to-[#B8541F] hover:from-[#B8541F] hover:to-[#D4622A] disabled:from-[#E0D5C7] disabled:to-[#E0D5C7] disabled:cursor-not-allowed text-white font-bold rounded-2xl transition-all duration-500 flex items-center justify-center gap-3 shadow-xl shadow-[#D4622A]/30 hover:shadow-2xl hover:shadow-[#D4622A]/40 text-lg"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 size={22} className="animate-spin" strokeWidth={2.5} />
+                        Creating Your Account...
+                      </>
+                    ) : (
+                      <>
+                        Complete Registration
+                        <ArrowRight size={22} strokeWidth={2.5} />
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Footer */}
+            <p className="text-center text-[#6B5D52] mt-10 text-lg"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Already have an account?{' '}
+              <a href="/login" className="text-[#D4622A] hover:text-[#B8541F] font-semibold transition-colors underline decoration-2 underline-offset-4">
+                Sign in here
+              </a>
+            </p>
           </div>
-
-          {/* Footer */}
-          <p className="text-center text-[#95A5A6] mt-8">
-            Already have an account?{' '}
-            <a href="/login" className="text-[#FF6B35] hover:underline font-semibold">
-              Sign in
-            </a>
-          </p>
         </div>
+
+        <style>{`
+          @keyframes fade-in-up {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+
+          @keyframes slide-in {
+            from {
+              opacity: 0;
+              transform: translateX(-30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateX(0);
+            }
+          }
+
+          @keyframes fade-in {
+            from {
+              opacity: 0;
+            }
+            to {
+              opacity: 1;
+            }
+          }
+
+          .animate-fade-in-up {
+            animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+
+          .animate-slide-in {
+            animation: slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+
+          .animate-fade-in {
+            animation: fade-in 0.5s ease-out;
+          }
+        `}</style>
       </div>
-
-      <style>{`
-        @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(10px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slide-in {
-          from {
-            opacity: 0;
-            transform: translateX(-20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out;
-        }
-
-        .animate-slide-in {
-          animation: slide-in 0.4s ease-out;
-        }
-      `}</style>
-    </div>
+    </>
   );
 }

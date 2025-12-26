@@ -50,6 +50,8 @@ import {
   type BiometricSettings,
   type ReauthInterval,
 } from '@/lib/auth/biometric'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface BiometricSetupProps {
   onSetupComplete?: () => void
@@ -96,7 +98,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
       const biometricSettings = await getBiometricSettings(user.id)
       setSettings(biometricSettings)
     } catch (err) {
-      console.error('Error loading biometric settings:', err)
+      logger.error('Error loading biometric settings:', err)
     } finally {
       setIsLoading(false)
     }

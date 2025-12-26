@@ -31,6 +31,8 @@ import type { ChecklistScore } from '@/types/checklist-scoring'
 import { format } from 'date-fns'
 import { generateChecklistPDF } from '../utils/pdfExport'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 export function ExecutionDetailPage() {
   const { executionId } = useParams<{ executionId: string }>()
@@ -181,7 +183,7 @@ export function ExecutionDetailPage() {
       await generateChecklistPDF(execution, templateItems, score || null, execution.project_id)
       toast.success('PDF exported successfully')
     } catch (error) {
-      console.error('Failed to generate PDF:', error)
+      logger.error('Failed to generate PDF:', error)
       toast.error('Failed to generate PDF. Please try again.')
     }
   }

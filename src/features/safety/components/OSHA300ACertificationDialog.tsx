@@ -27,6 +27,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import type { OSHA300ASummary } from '@/types/safety-incidents'
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -325,7 +327,7 @@ export const OSHA300ACertificationDialog: React.FC<OSHA300ACertificationDialogPr
         onCertificationComplete?.()
       }, 1500)
     } catch (err) {
-      console.error('Error saving certification:', err)
+      logger.error('Error saving certification:', err)
       setError(err instanceof Error ? err.message : 'Failed to save certification')
     } finally {
       setLoading(false)

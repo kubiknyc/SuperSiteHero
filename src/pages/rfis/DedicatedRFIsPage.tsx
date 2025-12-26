@@ -46,6 +46,8 @@ import { CreateDedicatedRFIDialog } from '@/features/rfis/components/CreateDedic
 import { downloadRFIsAsExcel } from '@/features/rfis/utils/rfiExport'
 import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
 import type { RFIWithDetails } from '@/features/rfis/hooks/useDedicatedRFIs'
+import { logger } from '../../lib/utils/logger';
+
 
 type ViewMode = 'list' | 'ball-in-court'
 
@@ -132,7 +134,7 @@ export function DedicatedRFIsPage() {
     try {
       await downloadRFIsAsExcel(filteredRFIs, selectedProject?.name)
     } catch (error) {
-      console.error('Failed to export RFIs:', error)
+      logger.error('Failed to export RFIs:', error)
     } finally {
       setIsExporting(false)
     }

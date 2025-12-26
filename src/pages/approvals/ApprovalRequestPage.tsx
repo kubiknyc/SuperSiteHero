@@ -28,6 +28,8 @@ import {
 import { useAuth } from '@/lib/auth/AuthContext'
 import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
 import { cn } from '@/lib/utils'
+import { logger } from '../../lib/utils/logger';
+
 
 export function ApprovalRequestPage() {
   const { id } = useParams<{ id: string }>()
@@ -73,7 +75,7 @@ export function ApprovalRequestPage() {
     try {
       await approveMutation.mutateAsync({ requestId: id })
     } catch (error) {
-      console.error('Failed to approve:', error)
+      logger.error('Failed to approve:', error)
     }
   }
 
@@ -90,7 +92,7 @@ export function ApprovalRequestPage() {
       })
       setShowConditionsDialog(false)
     } catch (error) {
-      console.error('Failed to approve with conditions:', error)
+      logger.error('Failed to approve with conditions:', error)
     }
   }
 
@@ -104,7 +106,7 @@ export function ApprovalRequestPage() {
       setRejectComment('')
       setShowRejectInput(false)
     } catch (error) {
-      console.error('Failed to reject:', error)
+      logger.error('Failed to reject:', error)
     }
   }
 
@@ -114,7 +116,7 @@ export function ApprovalRequestPage() {
       await cancelMutation.mutateAsync(id)
       navigate('/approvals')
     } catch (error) {
-      console.error('Failed to cancel:', error)
+      logger.error('Failed to cancel:', error)
     }
   }
 
@@ -127,7 +129,7 @@ export function ApprovalRequestPage() {
       })
       setNewComment('')
     } catch (error) {
-      console.error('Failed to add comment:', error)
+      logger.error('Failed to add comment:', error)
     }
   }
 

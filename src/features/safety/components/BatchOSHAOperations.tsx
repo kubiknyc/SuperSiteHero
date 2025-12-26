@@ -26,6 +26,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { supabase } from '@/lib/supabase'
 import { useToast } from '@/lib/notifications/ToastContext'
 import type { SafetyIncident } from '@/types/safety-incidents'
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -122,7 +124,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
         onOperationComplete?.()
       }, 1500)
     } catch (err) {
-      console.error('Error assigning case numbers:', err)
+      logger.error('Error assigning case numbers:', err)
       setError(err instanceof Error ? err.message : 'Failed to assign case numbers')
     } finally {
       setLoading(false)
@@ -155,7 +157,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
         onOperationComplete?.()
       }, 1500)
     } catch (err) {
-      console.error('Error updating recordability:', err)
+      logger.error('Error updating recordability:', err)
       setError(err instanceof Error ? err.message : 'Failed to update recordability')
     } finally {
       setLoading(false)
@@ -188,7 +190,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
         onOperationComplete?.()
       }, 1500)
     } catch (err) {
-      console.error('Error updating privacy status:', err)
+      logger.error('Error updating privacy status:', err)
       setError(err instanceof Error ? err.message : 'Failed to update privacy status')
     } finally {
       setLoading(false)

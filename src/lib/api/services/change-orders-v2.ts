@@ -26,6 +26,8 @@ import type {
   InternalApprovalDTO,
   OwnerApprovalDTO,
 } from '../../../types/change-order';
+import { logger } from '../../utils/logger';
+
 
 // Type assertion helper for tables not yet in database types
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -334,7 +336,7 @@ export const changeOrdersApiV2 = {
           id,
           dto.approved_amount
         );
-        console.log(`Budget adjusted for CO-${data.co_number}:`, {
+        logger.log(`Budget adjusted for CO-${data.co_number}:`, {
           total: budgetResult.total_adjusted,
           costCodes: budgetResult.adjustments.length,
           created: budgetResult.created_budgets,
@@ -343,7 +345,7 @@ export const changeOrdersApiV2 = {
       }
     } catch (budgetError) {
       // Log but don't fail the approval if budget adjustment fails
-      console.error('Failed to apply budget adjustments:', budgetError);
+      logger.error('Failed to apply budget adjustments:', budgetError);
       // Could optionally notify admin or create an alert here
     }
 
@@ -399,13 +401,13 @@ export const changeOrdersApiV2 = {
         const hasProcessed = await changeOrderBudgetIntegration.hasBeenProcessed(id);
         if (hasProcessed) {
           const reverseResult = await changeOrderBudgetIntegration.reverseBudgetAdjustments(id);
-          console.log(`Budget reversed for voided CO-${existingCO.co_number}:`, {
+          logger.log(`Budget reversed for voided CO-${existingCO.co_number}:`, {
             total: Math.abs(reverseResult.total_adjusted),
             costCodes: reverseResult.adjustments.length,
           });
         }
       } catch (budgetError) {
-        console.error('Failed to reverse budget adjustments:', budgetError);
+        logger.error('Failed to reverse budget adjustments:', budgetError);
       }
     }
 

@@ -7,6 +7,8 @@ import { PhotoGallery } from './PhotoGallery'
 import type { DailyReportPhoto } from '../types/photo'
 import { compressImage, processPhoto, generateThumbnail } from '../utils/photoUtils'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PhotosSectionProps {
   expanded: boolean
@@ -65,7 +67,7 @@ export function PhotosSection({
 
           processedPhotos.push(photo)
         } catch (error) {
-          console.error(`Error processing ${file.name}:`, error)
+          logger.error(`Error processing ${file.name}:`, error)
           toast.error(`Failed to process ${file.name}`)
         }
       }
@@ -75,7 +77,7 @@ export function PhotosSection({
         toast.success(`Added ${processedPhotos.length} photo${processedPhotos.length > 1 ? 's' : ''}`)
       }
     } catch (error) {
-      console.error('Error processing photos:', error)
+      logger.error('Error processing photos:', error)
       toast.error('Failed to process photos')
     } finally {
       setIsProcessing(false)

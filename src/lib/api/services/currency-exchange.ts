@@ -17,6 +17,8 @@ import type {
   MultiCurrencyAmount,
 } from '@/types/currency';
 import { getExchangeRateKey, convertAmount, roundToCurrency } from '@/types/currency';
+import { logger } from '../../utils/logger';
+
 
 // =============================================
 // Configuration
@@ -56,7 +58,7 @@ function getCachedRates(): ExchangeRateCache | null {
 
     return null;
   } catch (error) {
-    console.error('Error reading exchange rate cache:', error);
+    logger.error('Error reading exchange rate cache:', error);
     return null;
   }
 }
@@ -68,7 +70,7 @@ function setCachedRates(cache: ExchangeRateCache): void {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
   } catch (error) {
-    console.error('Error saving exchange rate cache:', error);
+    logger.error('Error saving exchange rate cache:', error);
   }
 }
 
@@ -79,7 +81,7 @@ export function clearExchangeRateCache(): void {
   try {
     localStorage.removeItem(CACHE_KEY);
   } catch (error) {
-    console.error('Error clearing exchange rate cache:', error);
+    logger.error('Error clearing exchange rate cache:', error);
   }
 }
 
@@ -104,7 +106,7 @@ async function fetchExchangeRates(baseCurrency: CurrencyCode = 'USD'): Promise<E
     const data = await response.json();
     return data[baseCode];
   } catch (error) {
-    console.error('Failed to fetch exchange rates:', error);
+    logger.error('Failed to fetch exchange rates:', error);
     throw new Error('Unable to fetch exchange rates. Please check your internet connection.');
   }
 }
@@ -165,7 +167,7 @@ export async function refreshExchangeRates(baseCurrency: CurrencyCode = 'USD'): 
     setCachedRates(cache);
     return cache;
   } catch (error) {
-    console.error('Error refreshing exchange rates:', error);
+    logger.error('Error refreshing exchange rates:', error);
     throw error;
   }
 }
@@ -202,7 +204,7 @@ export async function getExchangeRate(
       const staleCache = localStorage.getItem(CACHE_KEY);
       if (staleCache) {
         cache = JSON.parse(staleCache);
-        console.warn('Using stale exchange rate cache due to API error');
+        logger.warn('Using stale exchange rate cache due to API error');
       } else {
         throw new Error('No exchange rate data available');
       }

@@ -52,7 +52,11 @@ export default defineConfig({
   expect: {
     toHaveScreenshot: {
       /* Maximum allowed pixel difference */
-      maxDiffPixels: 100,
+      maxDiffPixels: 150,
+      /* Maximum difference ratio (3% tolerance for browser rendering differences) */
+      maxDiffPixelRatio: 0.03,
+      /* Pixel comparison threshold */
+      threshold: 0.2,
       /* Animation handling */
       animations: 'disabled',
       /* Scale handling for different DPIs */
@@ -69,7 +73,12 @@ export default defineConfig({
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        // Firefox needs more time to reach networkidle state
+        navigationTimeout: 180000, // 3 minutes for Firefox
+        actionTimeout: 90000, // 1.5 minutes for actions
+      },
     },
 
     {

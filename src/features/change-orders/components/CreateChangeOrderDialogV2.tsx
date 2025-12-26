@@ -14,6 +14,8 @@ import { useCreateChangeOrderV2 } from '../hooks/useChangeOrdersV2'
 import { Plus, FileEdit, AlertTriangle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { CreateChangeOrderDTO, ChangeType, PricingMethod } from '@/types/change-order'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Change type options
 const CHANGE_TYPES: Array<{ value: ChangeType | string; label: string; description: string }> = [
@@ -98,7 +100,7 @@ export function CreateChangeOrderDialogV2({
         navigate(`/change-orders/${result.id}`)
       }
     } catch (error) {
-      console.error('Failed to create change order:', error)
+      logger.error('Failed to create change order:', error)
     }
   }
 

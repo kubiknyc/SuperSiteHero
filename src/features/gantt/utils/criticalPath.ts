@@ -10,6 +10,8 @@
 
 import { differenceInDays, addDays, parseISO, max, min } from 'date-fns'
 import type { GanttTask, TaskDependency, DependencyType } from '@/types/schedule'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface CriticalPathNode {
   taskId: string
@@ -154,7 +156,7 @@ function topologicalSort(
 
   // Check for cycles
   if (result.length !== tasks.length) {
-    console.warn('Circular dependency detected in schedule')
+    logger.warn('Circular dependency detected in schedule')
     // Return original order for tasks not in result
     const remaining = tasks.filter(t => !result.includes(t.id)).map(t => t.id)
     return [...result, ...remaining]

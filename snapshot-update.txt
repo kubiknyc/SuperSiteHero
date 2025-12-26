@@ -1,0 +1,4 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+Error: ENOTEMPTY: directory not empty, rmdir 'c:\Users\Eli\Documents\git\test-results'
+
+[1A[2K

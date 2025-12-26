@@ -9,6 +9,8 @@ import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError } from '@/components/form/ValidationError'
 import type { DailyReport } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface EditDailyReportDialogProps {
   report: DailyReport
@@ -94,7 +96,7 @@ export function EditDailyReportDialog({
       onOpenChange(false)
     } catch (error) {
       // Error toast shown automatically by mutation hook
-      console.error('Failed to update daily report:', error)
+      logger.error('Failed to update daily report:', error)
     }
   }
 

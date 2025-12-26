@@ -15,6 +15,8 @@ import {
   mapSpeechError,
   VOICE_ERROR_MESSAGES,
 } from '@/types/voice'
+import { logger } from '../lib/utils/logger';
+
 
 /**
  * Hook for voice-to-text input using Web Speech API
@@ -200,7 +202,7 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
       recognitionRef.current.start()
     } catch (err) {
       // Recognition might already be started
-      console.warn('Speech recognition start error:', err)
+      logger.warn('Speech recognition start error:', err)
     }
   }, [isSupported])
 

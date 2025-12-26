@@ -68,6 +68,8 @@ import {
   canApproveInternally,
   canSendToOwner,
 } from '@/types/change-order'
+import { logger } from '../../lib/utils/logger';
+
 
 export function ChangeOrderDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -136,7 +138,7 @@ export function ChangeOrderDetailPage() {
         proposed_days: changeOrder.proposed_days,
       })
     } catch (e) {
-      console.error('Failed to submit estimate:', e)
+      logger.error('Failed to submit estimate:', e)
     }
   }
 
@@ -151,7 +153,7 @@ export function ChangeOrderDetailPage() {
       setApprovalComments('')
       setShowApprovalDialog(false)
     } catch (e) {
-      console.error('Failed to process internal approval:', e)
+      logger.error('Failed to process internal approval:', e)
     }
   }
 
@@ -160,7 +162,7 @@ export function ChangeOrderDetailPage() {
     try {
       await submitToOwner.mutateAsync(changeOrder.id)
     } catch (e) {
-      console.error('Failed to submit to owner:', e)
+      logger.error('Failed to submit to owner:', e)
     }
   }
 
@@ -179,7 +181,7 @@ export function ChangeOrderDetailPage() {
       setOwnerApprovalDays('')
       setShowApprovalDialog(false)
     } catch (e) {
-      console.error('Failed to process owner approval:', e)
+      logger.error('Failed to process owner approval:', e)
     }
   }
 
@@ -188,7 +190,7 @@ export function ChangeOrderDetailPage() {
     try {
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: 'Voided by user' })
     } catch (e) {
-      console.error('Failed to void change order:', e)
+      logger.error('Failed to void change order:', e)
     }
   }
 
@@ -206,7 +208,7 @@ export function ChangeOrderDetailPage() {
       })
       toast.success('Change order PDF downloaded')
     } catch (e) {
-      console.error('Failed to download PDF:', e)
+      logger.error('Failed to download PDF:', e)
       toast.error('Failed to download PDF')
     }
   }

@@ -1,7 +1,7 @@
 // File: /src/features/documents/components/comparison/MarkupVersionComparison.tsx
 // Markup-focused version comparison with change visualization and markup tracking
 
-import { useState, useRef, useCallback, useMemo } from 'react'
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -41,11 +41,7 @@ import { useCompareVersions } from '../../hooks/useDocumentComparison'
 import { MarkupChangesList } from './MarkupChangesList'
 import { MarkupDiffViewer } from './MarkupDiffViewer'
 
-// Set up PDF.js worker - use local copy from npm package
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString()
+// PDF.js worker will be initialized lazily on component mount
 
 interface MarkupVersionComparisonProps {
   version1: DocumentType
@@ -120,6 +116,23 @@ export function MarkupVersionComparison({
 
   // Container ref
   const containerRef = useRef<HTMLDivElement>(null)
+
+  // Loading state for PDF worker
+  const [pdfWorkerReady, setPdfWorkerReady] = useState(false)
+
+  // Initialize PDF.js worker lazily on component mount
+  useEffect(() => {
+    const initWorker = () => {
+      if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
+        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          'pdfjs-dist/build/pdf.worker.min.mjs',
+          import.meta.url
+        ).toString()
+      }
+      setPdfWorkerReady(true)
+    }
+    initWorker()
+  }, [])
 
   // Page navigation handlers
   const handlePageChange = (version: 1 | 2, direction: 'prev' | 'next') => {

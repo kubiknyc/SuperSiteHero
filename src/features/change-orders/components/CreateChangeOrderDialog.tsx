@@ -10,6 +10,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { useCreateChangeOrderWithNotification } from '../hooks/useChangeOrderMutations'
 import { Plus } from 'lucide-react'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface CreateChangeOrderDialogProps {
   projectId: string
@@ -53,7 +55,7 @@ export function CreateChangeOrderDialog({ projectId, workflowTypeId }: CreateCha
       setScheduleImpact('')
       setOpen(false)
     } catch (error) {
-      console.error('Failed to create change order:', error)
+      logger.error('Failed to create change order:', error)
       // Error toast is shown automatically by the mutation hook
     }
   }

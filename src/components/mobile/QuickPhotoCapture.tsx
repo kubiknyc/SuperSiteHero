@@ -12,6 +12,8 @@ import {
   useHaptics,
   useGeolocation
 } from '@/lib/native'
+import { logger } from '../../lib/utils/logger';
+
 
 /**
  * Camera icon component
@@ -281,7 +283,7 @@ export function QuickPhotoCapture({
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 1500)
     } catch (err) {
-      console.error('Error capturing photo:', err)
+      logger.error('Error capturing photo:', err)
       // Error haptic feedback
       await notification('error')
     } finally {
@@ -335,7 +337,7 @@ export function QuickPhotoCapture({
 
             onPhotoCapture(capturedPhoto)
           } catch (err) {
-            console.error('Error processing photo:', err)
+            logger.error('Error processing photo:', err)
           }
         }
 

@@ -23,6 +23,8 @@ import {
   type BiometricCredential,
   type ReauthInterval,
 } from '@/lib/auth/biometric'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface UseBiometricAuthReturn {
   // State
@@ -85,7 +87,7 @@ export function useBiometricAuth(): UseBiometricAuthReturn {
       setSettings(biometricSettings)
     } catch (err) {
       setError('Failed to load biometric settings')
-      console.error('Error loading biometric settings:', err)
+      logger.error('Error loading biometric settings:', err)
     } finally {
       setIsLoading(false)
     }

@@ -9,11 +9,13 @@
 
 import { sendEmail } from './email-service'
 import { generatePortalInvitationEmail } from './templates'
+import { logger } from '../utils/logger';
+
 
 export async function testEmailSending(recipientEmail: string): Promise<void> {
-  console.log('[Email Test] Starting email test...')
-  console.log('[Email Test] Recipient:', recipientEmail)
-  console.log('[Email Test] Provider:', import.meta.env.VITE_EMAIL_PROVIDER || 'console')
+  logger.log('[Email Test] Starting email test...')
+  logger.log('[Email Test] Recipient:', recipientEmail)
+  logger.log('[Email Test] Provider:', import.meta.env.VITE_EMAIL_PROVIDER || 'console')
 
   try {
     // Generate test email content
@@ -28,8 +30,8 @@ export async function testEmailSending(recipientEmail: string): Promise<void> {
       invitationUrl: 'http://localhost:5173/portal/test',
     })
 
-    console.log('[Email Test] Generated email content')
-    console.log('[Email Test] Sending via Resend Edge Function...')
+    logger.log('[Email Test] Generated email content')
+    logger.log('[Email Test] Sending via Resend Edge Function...')
 
     const result = await sendEmail({
       to: { email: recipientEmail, name: 'Test User' },
@@ -39,16 +41,16 @@ export async function testEmailSending(recipientEmail: string): Promise<void> {
       tags: ['test', 'email-verification'],
     })
 
-    console.log('[Email Test] Result:', result)
+    logger.log('[Email Test] Result:', result)
 
     if (result.success) {
-      console.log('[Email Test] ✅ SUCCESS! Message ID:', result.messageId)
-      console.log('[Email Test] Check your inbox at:', recipientEmail)
+      logger.log('[Email Test] ✅ SUCCESS! Message ID:', result.messageId)
+      logger.log('[Email Test] Check your inbox at:', recipientEmail)
     } else {
-      console.error('[Email Test] ❌ FAILED:', result.error)
+      logger.error('[Email Test] ❌ FAILED:', result.error)
     }
   } catch (error) {
-    console.error('[Email Test] ❌ EXCEPTION:', error)
+    logger.error('[Email Test] ❌ EXCEPTION:', error)
   }
 }
 

@@ -15,6 +15,8 @@ import { TemplateLibrary } from '@/features/reports/components/TemplateLibrary'
 import { useCreateReportTemplate } from '@/features/reports/hooks/useReportBuilder'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { StandardTemplate } from '@/features/reports/services/standardTemplates'
+import { logger } from '../../../../lib/utils/logger';
+
 
 export default function ReportTemplatesPage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -59,7 +61,7 @@ export default function ReportTemplatesPage() {
         navigate(`/reports/builder/${newTemplate.id}`)
       }
     } catch (error) {
-      console.error('Failed to create template:', error)
+      logger.error('Failed to create template:', error)
     }
   }
 

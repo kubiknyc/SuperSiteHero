@@ -13,6 +13,8 @@ import type {
   EnhanceDocumentRequest,
   EnhanceDocumentResponse,
 } from '@/types/ai'
+import { logger } from '../../utils/logger';
+
 
 // Entity reference patterns
 const ENTITY_PATTERNS = {
@@ -269,7 +271,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
       )
       return data
     } catch (error) {
-      console.error('Metadata extraction failed:', error)
+      logger.error('Metadata extraction failed:', error)
       return {}
     }
   },
@@ -463,7 +465,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
       .upsert(result, { onConflict: 'document_id' })
 
     if (error) {
-      console.error('Failed to save LLM result:', error)
+      logger.error('Failed to save LLM result:', error)
     }
   },
 
@@ -514,7 +516,7 @@ Respond with JSON containing the extracted fields (use null for missing fields).
         processed++
         enhanced++
       } catch (error) {
-        console.error(`Failed to enhance document ${doc.id}:`, error)
+        logger.error(`Failed to enhance document ${doc.id}:`, error)
         errors++
       }
 

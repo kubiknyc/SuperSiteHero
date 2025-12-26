@@ -12,6 +12,8 @@ import {
 } from '../offline/indexeddb';
 import type { QueuedMutation } from '@/types/offline';
 import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../utils/logger';
+
 
 /**
  * Offline-first API client
@@ -37,7 +39,7 @@ export class OfflineClient {
     if (!isOnline) {
       const cached = await StorageManager.getCachedData<T[]>(cacheKey);
       if (cached) {
-        console.log(`[OfflineClient] Returning cached data for ${table}`);
+        logger.log(`[OfflineClient] Returning cached data for ${table}`);
         return cached;
       }
       throw new Error('No cached data available offline');
@@ -47,13 +49,13 @@ export class OfflineClient {
     if (!options?.forceRefresh) {
       const cached = await StorageManager.getCachedData<T[]>(cacheKey);
       if (cached) {
-        console.log(`[OfflineClient] Returning cached data for ${table}`);
+        logger.log(`[OfflineClient] Returning cached data for ${table}`);
         return cached;
       }
     }
 
     // Fetch from server
-    console.log(`[OfflineClient] Fetching from server: ${table}`);
+    logger.log(`[OfflineClient] Fetching from server: ${table}`);
     let query = supabase.from(table as any).select('*');
 
     // Apply filters
@@ -92,7 +94,7 @@ export class OfflineClient {
     if (!isOnline) {
       const cached = await StorageManager.getCachedData<T>(cacheKey);
       if (cached) {
-        console.log(`[OfflineClient] Returning cached record for ${table}:${id}`);
+        logger.log(`[OfflineClient] Returning cached record for ${table}:${id}`);
         return cached;
       }
       throw new Error('No cached data available offline');
@@ -102,13 +104,13 @@ export class OfflineClient {
     if (!options?.forceRefresh) {
       const cached = await StorageManager.getCachedData<T>(cacheKey);
       if (cached) {
-        console.log(`[OfflineClient] Returning cached record for ${table}:${id}`);
+        logger.log(`[OfflineClient] Returning cached record for ${table}:${id}`);
         return cached;
       }
     }
 
     // Fetch from server
-    console.log(`[OfflineClient] Fetching record from server: ${table}:${id}`);
+    logger.log(`[OfflineClient] Fetching record from server: ${table}:${id}`);
     const { data, error } = await supabase
       .from(table as any)
       .select('*')
@@ -143,7 +145,7 @@ export class OfflineClient {
 
     // If offline, queue the mutation
     if (!isOnline) {
-      console.log(`[OfflineClient] Queuing create for ${table}`);
+      logger.log(`[OfflineClient] Queuing create for ${table}`);
       const mutation: QueuedMutation = {
         id: uuidv4(),
         type: 'create',
@@ -168,7 +170,7 @@ export class OfflineClient {
     }
 
     // If online, create immediately
-    console.log(`[OfflineClient] Creating record: ${table}`);
+    logger.log(`[OfflineClient] Creating record: ${table}`);
     const { data: result, error } = await supabase
       .from(table as any)
       .insert(data as any)
@@ -205,7 +207,7 @@ export class OfflineClient {
 
     // If offline, queue the mutation
     if (!isOnline) {
-      console.log(`[OfflineClient] Queuing update for ${table}:${id}`);
+      logger.log(`[OfflineClient] Queuing update for ${table}:${id}`);
       const mutation: QueuedMutation = {
         id: uuidv4(),
         type: 'update',
@@ -234,7 +236,7 @@ export class OfflineClient {
     }
 
     // If online, update immediately
-    console.log(`[OfflineClient] Updating record: ${table}:${id}`);
+    logger.log(`[OfflineClient] Updating record: ${table}:${id}`);
     const { data: result, error } = await supabase
       .from(table as any)
       .update(data as any)
@@ -270,7 +272,7 @@ export class OfflineClient {
 
     // If offline, queue the mutation
     if (!isOnline) {
-      console.log(`[OfflineClient] Queuing delete for ${table}:${id}`);
+      logger.log(`[OfflineClient] Queuing delete for ${table}:${id}`);
       const mutation: QueuedMutation = {
         id: uuidv4(),
         type: 'delete',
@@ -293,7 +295,7 @@ export class OfflineClient {
     }
 
     // If online, delete immediately
-    console.log(`[OfflineClient] Deleting record: ${table}:${id}`);
+    logger.log(`[OfflineClient] Deleting record: ${table}:${id}`);
     const { error } = await supabase.from(table as any).delete().eq('id', id);
 
     if (error) {
@@ -315,7 +317,7 @@ export class OfflineClient {
     failed: number;
     remaining: number;
   }> {
-    console.log('[OfflineClient] Processing sync queue');
+    logger.log('[OfflineClient] Processing sync queue');
 
     const { setIsSyncing, updatePendingSyncs } = useOfflineStore.getState();
     setIsSyncing(true);
@@ -372,7 +374,7 @@ export class OfflineClient {
           await putInStore(STORES.SYNC_QUEUE, mutation);
           successCount++;
 
-          console.log(`[OfflineClient] Synced ${mutation.type} for ${mutation.table}`);
+          logger.log(`[OfflineClient] Synced ${mutation.type} for ${mutation.table}`);
         } catch (error) {
           // Mark as failed and increment retry count
           mutation.status = 'failed';
@@ -381,7 +383,7 @@ export class OfflineClient {
           await putInStore(STORES.SYNC_QUEUE, mutation);
           failedCount++;
 
-          console.error(
+          logger.error(
             `[OfflineClient] Failed to sync ${mutation.type} for ${mutation.table}:`,
             error
           );
@@ -405,7 +407,7 @@ export class OfflineClient {
    * Force refresh cache from server
    */
   static async refreshCache(table: string): Promise<void> {
-    console.log(`[OfflineClient] Refreshing cache for ${table}`);
+    logger.log(`[OfflineClient] Refreshing cache for ${table}`);
     await StorageManager.invalidateTable(table);
   }
 
@@ -413,7 +415,7 @@ export class OfflineClient {
    * Clear all offline data
    */
   static async clearAll(): Promise<void> {
-    console.log('[OfflineClient] Clearing all offline data');
+    logger.log('[OfflineClient] Clearing all offline data');
     await StorageManager.invalidateTable('');
   }
 }

@@ -18,6 +18,8 @@ import { DocumentTypeIcon } from './DocumentTypeIcon'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { highlightSearchTerm } from '../hooks/useDocumentSearch'
 import type { Document } from '@/types/database'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface DocumentListProps {
   documents: Document[]
@@ -49,9 +51,9 @@ interface DocumentListProps {
  * <DocumentList
  *   documents={documents}
  *   isLoading={false}
- *   onEdit={(doc) => console.log('Edit', doc)}
- *   onDelete={(doc) => console.log('Delete', doc)}
- *   onView={(doc) => console.log('View', doc)}
+ *   onEdit={(doc) => logger.log('Edit', doc)}
+ *   onDelete={(doc) => logger.log('Delete', doc)}
+ *   onView={(doc) => logger.log('View', doc)}
  * />
  * ```
  */

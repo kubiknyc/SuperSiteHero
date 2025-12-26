@@ -14,7 +14,6 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import * as THREE from 'three';
 import type {
   WebXRCapabilities,
   XRSessionOptions,
@@ -29,6 +28,8 @@ import type {
   Vector3D,
   Quaternion,
 } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -378,7 +379,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
               space: viewerSpace,
             });
           } catch {
-            console.warn('Hit test not available');
+            logger.warn('Hit test not available');
           }
         }
 
@@ -421,7 +422,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
       try {
         await xrSessionRef.current.end();
       } catch (error) {
-        console.error('Error ending session:', error);
+        logger.error('Error ending session:', error);
       }
     }
   }, []);
@@ -485,7 +486,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
 
         return null;
       } catch (error) {
-        console.error('Failed to create anchor:', error);
+        logger.error('Failed to create anchor:', error);
         return null;
       }
     },

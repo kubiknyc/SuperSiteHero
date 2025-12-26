@@ -16,6 +16,8 @@ import {
   deleteConversationKeys,
   type EncryptedMessage,
 } from '@/lib/crypto/message-encryption'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface UseMessageEncryptionOptions {
   /** Enable encryption for this conversation */
@@ -243,7 +245,7 @@ export function useEncryptionKeys(conversationId: string | undefined) {
       localStorage.removeItem(`ssh-encryption-${conversationId}`)
       setHasKeys(false)
     } catch (err) {
-      console.error('Failed to clear encryption keys:', err)
+      logger.error('Failed to clear encryption keys:', err)
     }
   }, [conversationId])
 

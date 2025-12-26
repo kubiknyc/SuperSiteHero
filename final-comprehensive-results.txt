@@ -1,0 +1,3 @@
+[dotenv@17.2.3] injecting env (3) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+Error: ENOTEMPTY: directory not empty, rmdir 'c:\Users\Eli\Documents\git\test-results'
+

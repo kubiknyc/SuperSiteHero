@@ -49,6 +49,8 @@ import {
   useUpdateInsuranceCertificate,
   useUploadCertificateDocument,
 } from '../hooks/useInsurance'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Form Schema
 const certificateFormSchema = z.object({
@@ -243,7 +245,7 @@ export function InsuranceCertificateForm({
 
       onClose()
     } catch (error) {
-      console.error('Failed to save certificate:', error)
+      logger.error('Failed to save certificate:', error)
     }
   }
 

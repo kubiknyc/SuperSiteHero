@@ -1,6 +1,8 @@
 // Hook to detect duplicate daily reports
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface DuplicateCheckResult {
   hasDuplicate: boolean
@@ -25,7 +27,7 @@ async function checkForDuplicateReport(
 
   if (error && error.code !== 'PGRST116') {
     // PGRST116 = no rows returned (which is fine)
-    console.error('Error checking for duplicate:', error)
+    logger.error('Error checking for duplicate:', error)
   }
 
   if (data) {

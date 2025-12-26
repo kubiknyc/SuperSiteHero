@@ -3,6 +3,8 @@
 // Enhanced with timed display, page view tracking, and analytics
 
 import { useCallback, useEffect, useState, useRef } from 'react';
+import { logger } from '../lib/utils/logger';
+
 
 const PWA_DISMISSED_KEY = 'jobsight-pwa-dismissed';
 const PWA_DISMISSED_TIMESTAMP_KEY = 'jobsight-pwa-dismissed-at';
@@ -316,7 +318,7 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
 
       return false;
     } catch (error) {
-      console.error('Error prompting install:', error);
+      logger.error('Error prompting install:', error);
       return false;
     }
   }, [installPromptEvent]);

@@ -26,6 +26,8 @@ import { extractPhotoMetadata, enrichMetadataWithDeviceGPS } from '../utils/exif
 import { usePhotoQueue } from '../hooks/usePhotoQueue'
 import type { PhotoOcrData } from '@/types/ocr'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PhotoCaptureDialogProps {
   open: boolean
@@ -218,7 +220,7 @@ export function PhotoCaptureDialog({
             toast.success('Photo uploaded successfully')
           }
         } catch (error) {
-          console.error('Photo upload failed:', error)
+          logger.error('Photo upload failed:', error)
           setUploadingFiles((prev) =>
             prev.map((uf) =>
               uf.file === file
@@ -273,7 +275,7 @@ export function PhotoCaptureDialog({
 
       toast.success('Photo deleted')
     } catch (error) {
-      console.error('Failed to delete photo:', error)
+      logger.error('Failed to delete photo:', error)
       toast.error('Failed to delete photo')
     }
   }

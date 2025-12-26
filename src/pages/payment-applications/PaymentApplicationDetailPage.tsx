@@ -60,6 +60,8 @@ import {
 } from '@/features/payment-applications/utils/pdfExport'
 import { WaiverChecklist } from '@/features/payment-applications/components'
 import type { PaymentApplicationStatus, BulkUpdateSOVItemDTO } from '@/types/payment-application'
+import { logger } from '../../lib/utils/logger';
+
 
 export function PaymentApplicationDetailPage() {
   const { applicationId } = useParams<{ applicationId: string }>()
@@ -233,7 +235,7 @@ export function PaymentApplicationDetailPage() {
     try {
       await downloadPaymentApplicationPDFs(application, sovItems)
     } catch (error) {
-      console.error('Failed to export PDFs:', error)
+      logger.error('Failed to export PDFs:', error)
     } finally {
       setIsExporting(false)
     }

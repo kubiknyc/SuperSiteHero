@@ -35,6 +35,8 @@ import { SignatureCapture } from '@/features/daily-reports/components/SignatureC
 import { DailyReportSummaryCard } from '@/features/summaries/components/DailyReportSummaryCard'
 import { format } from 'date-fns'
 import toast from 'react-hot-toast'
+import { logger } from '../../lib/utils/logger';
+
 
 // Helper component to isolate type issues with issues field
 function IssuesCard({ issuesText }: { issuesText: string | null }) {
@@ -130,7 +132,7 @@ export function DailyReportDetailPage() {
       })
       toast.success('PDF exported successfully')
     } catch (err) {
-      console.error('PDF export error:', err)
+      logger.error('PDF export error:', err)
       toast.error('Failed to export PDF')
     } finally {
       setIsExportingPDF(false)

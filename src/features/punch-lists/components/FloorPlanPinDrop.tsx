@@ -24,6 +24,8 @@ import {
 import { toast } from '@/lib/notifications/ToastContext'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Pin location data structure
 export interface PinLocation {
@@ -360,7 +362,7 @@ export function FloorPlanPinDrop({
           if (prev) {setSelectedFloorPlan(prev)}
         }
       } catch (err) {
-        console.error('Failed to fetch floor plans:', err)
+        logger.error('Failed to fetch floor plans:', err)
         toast.error('Failed to load floor plans')
       } finally {
         setLoading(false)

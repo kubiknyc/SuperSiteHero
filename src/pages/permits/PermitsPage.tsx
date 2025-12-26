@@ -42,6 +42,8 @@ import {
   isPermitExpired,
   isPermitExpiringSoon,
 } from '@/types/permits'
+import { logger } from '../../lib/utils/logger';
+
 
 export function PermitsPage() {
   const [searchParams] = useSearchParams()
@@ -108,7 +110,7 @@ export function PermitsPage() {
         notes: '',
       })
     } catch (error) {
-      console.error('Failed to create permit:', error)
+      logger.error('Failed to create permit:', error)
     }
   }
 

@@ -16,6 +16,8 @@ import type {
   Photo360Data,
   ModelLoadProgress,
 } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -131,7 +133,7 @@ export const modelsService = {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching models:', error);
+      logger.error('Error fetching models:', error);
       throw error;
     }
 
@@ -150,7 +152,7 @@ export const modelsService = {
 
     if (error) {
       if (error.code === 'PGRST116') {return null;}
-      console.error('Error fetching model:', error);
+      logger.error('Error fetching model:', error);
       throw error;
     }
 
@@ -189,7 +191,7 @@ export const modelsService = {
       });
 
     if (uploadError) {
-      console.error('Error uploading file:', uploadError);
+      logger.error('Error uploading file:', uploadError);
       throw uploadError;
     }
 
@@ -223,7 +225,7 @@ export const modelsService = {
     if (error) {
       // Clean up uploaded file
       await supabase.storage.from('models-3d').remove([filePath]);
-      console.error('Error creating model record:', error);
+      logger.error('Error creating model record:', error);
       throw error;
     }
 
@@ -256,7 +258,7 @@ export const modelsService = {
       .single();
 
     if (error) {
-      console.error('Error updating model:', error);
+      logger.error('Error updating model:', error);
       throw error;
     }
 
@@ -281,7 +283,7 @@ export const modelsService = {
       .eq('id', modelId);
 
     if (error) {
-      console.error('Error deleting model:', error);
+      logger.error('Error deleting model:', error);
       throw error;
     }
 
@@ -300,7 +302,7 @@ export const modelsService = {
       .createSignedUrl(filePath, 3600); // 1 hour expiry
 
     if (error) {
-      console.error('Error getting signed URL:', error);
+      logger.error('Error getting signed URL:', error);
       throw error;
     }
 
@@ -327,7 +329,7 @@ export const vrToursService = {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching VR tours:', error);
+      logger.error('Error fetching VR tours:', error);
       throw error;
     }
 
@@ -352,7 +354,7 @@ export const vrToursService = {
 
     if (error) {
       if (error.code === 'PGRST116') {return null;}
-      console.error('Error fetching tour:', error);
+      logger.error('Error fetching tour:', error);
       throw error;
     }
 
@@ -377,7 +379,7 @@ export const vrToursService = {
       .single();
 
     if (error) {
-      console.error('Error creating tour:', error);
+      logger.error('Error creating tour:', error);
       throw error;
     }
 
@@ -411,7 +413,7 @@ export const vrToursService = {
       .single();
 
     if (error) {
-      console.error('Error adding tour node:', error);
+      logger.error('Error adding tour node:', error);
       throw error;
     }
 
@@ -440,7 +442,7 @@ export const vrToursService = {
       });
 
     if (error) {
-      console.error('Error creating connection:', error);
+      logger.error('Error creating connection:', error);
       throw error;
     }
   },
@@ -468,7 +470,7 @@ export const vrToursService = {
       .single();
 
     if (error) {
-      console.error('Error adding annotation:', error);
+      logger.error('Error adding annotation:', error);
       throw error;
     }
 
@@ -492,7 +494,7 @@ export const vrToursService = {
       .eq('id', tourId);
 
     if (error) {
-      console.error('Error deleting tour:', error);
+      logger.error('Error deleting tour:', error);
       throw error;
     }
   },
@@ -519,7 +521,7 @@ export const vrToursService = {
       .eq('id', tourId);
 
     if (error) {
-      console.error('Error generating share link:', error);
+      logger.error('Error generating share link:', error);
       throw error;
     }
 
@@ -552,7 +554,7 @@ export const arSessionsService = {
       .single();
 
     if (error) {
-      console.error('Error starting AR session:', error);
+      logger.error('Error starting AR session:', error);
       throw error;
     }
 
@@ -572,7 +574,7 @@ export const arSessionsService = {
       .eq('id', sessionId);
 
     if (error) {
-      console.error('Error ending AR session:', error);
+      logger.error('Error ending AR session:', error);
       throw error;
     }
   },
@@ -603,7 +605,7 @@ export const arSessionsService = {
       });
 
     if (error) {
-      console.error('Error recording placed model:', error);
+      logger.error('Error recording placed model:', error);
       throw error;
     }
 

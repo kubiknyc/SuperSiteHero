@@ -5,6 +5,8 @@
 
 import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
+import { logger } from '../utils/logger';
+
 
 export type Platform = 'ios' | 'android' | 'web';
 
@@ -68,7 +70,7 @@ export async function getDeviceInfo() {
       languageCode: languageCode.value,
     };
   } catch (error) {
-    console.error('Error getting device info:', error);
+    logger.error('Error getting device info:', error);
     return null;
   }
 }

@@ -3,12 +3,22 @@
 
 import * as pdfjs from 'pdfjs-dist'
 
-// Ensure PDF.js worker is configured - use local copy from npm package
-if (typeof window !== 'undefined') {
+// Track worker initialization state
+let workerInitialized = false
+
+/**
+ * Lazily initialize the PDF.js worker.
+ * Only initializes once, on first use.
+ */
+function ensureWorkerInitialized(): void {
+  if (workerInitialized || typeof window === 'undefined') {
+    return
+  }
   pdfjs.GlobalWorkerOptions.workerSrc = new URL(
     'pdfjs-dist/build/pdf.worker.min.mjs',
     import.meta.url
   ).toString()
+  workerInitialized = true
 }
 
 /**
@@ -38,6 +48,9 @@ const pdfCache = new Map<string, pdfjs.PDFDocumentProxy>()
  * Load a PDF document from URL with caching
  */
 export async function loadPdfDocument(url: string): Promise<pdfjs.PDFDocumentProxy> {
+  // Ensure worker is initialized before first use
+  ensureWorkerInitialized()
+
   // Check cache first
   const cached = pdfCache.get(url)
   if (cached) {

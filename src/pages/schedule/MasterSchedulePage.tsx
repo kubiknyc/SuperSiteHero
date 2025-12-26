@@ -73,6 +73,8 @@ import {
 import { exportScheduleToPdf } from '@/features/schedule/utils/schedulePdfExport'
 import type { ScheduleItem } from '@/types/schedule'
 import type { ScheduleActivity, ScheduleBaseline, CreateScheduleActivityDTO, UpdateScheduleActivityDTO } from '@/types/schedule-activities'
+import { logger } from '../../lib/utils/logger';
+
 
 export function MasterSchedulePage() {
   const { projectId } = useParams<{ projectId: string }>()
@@ -170,7 +172,7 @@ export function MasterSchedulePage() {
           },
         })
       } catch (error) {
-        console.error('Failed to update activity:', error)
+        logger.error('Failed to update activity:', error)
       }
     },
     [updateActivity]

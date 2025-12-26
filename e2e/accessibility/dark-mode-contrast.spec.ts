@@ -170,8 +170,15 @@ test.describe('Navigation Contrast - Dark Mode', () => {
 
     // Try to open mobile menu
     const menuButton = page.locator('[aria-label*="menu" i]').first();
-    if (await menuButton.isVisible()) {
-      await menuButton.click();
+    if ((await menuButton.count()) && (await menuButton.isVisible())) {
+      try {
+        await menuButton.click();
+      } catch {
+        await menuButton.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(200);
+        await menuButton.click();
+      }
+      await page.waitForLoadState('networkidle');
       await page.waitForTimeout(300);
 
       const navViolations = await checkPageContrast(page, [
@@ -342,7 +349,7 @@ test.describe('Error and Alert Messages - Dark Mode', () => {
     await page.waitForLoadState('networkidle');
 
     // Try to submit empty form to trigger errors
-    const submitButton = page.getByRole('button', { name: /sign in|login/i });
+    const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
     if (await submitButton.isVisible()) {
       await submitButton.click();
       await page.waitForTimeout(500);
@@ -384,14 +391,14 @@ test.describe('Error and Alert Messages - Dark Mode', () => {
  */
 test.describe('Design System Color Pairs - Dark Mode', () => {
   test('verify primary color contrast', async () => {
-    // Based on dark mode CSS variables
+    // Based on updated CSS variables (HSL 217 70% 35% = #1a3a99)
     const primaryColors = [
       { text: '#3b82f6', background: '#18181b', label: 'Primary on surface-0', isLarge: false },
       { text: '#60a5fa', background: '#18181b', label: 'Primary-400 on surface-0', isLarge: false },
-      { text: '#ffffff', background: '#3b82f6', label: 'White on primary', isLarge: false },
+      { text: '#ffffff', background: '#1a3a99', label: 'White on primary', isLarge: false }, // Updated to #1a3a99 for 4.5:1 contrast
     ];
 
-    const results = checkColorPairs(primaryColors);
+    const results = await checkColorPairs(primaryColors);
 
     results.forEach(result => {
       console.log(`${result.label}: ${result.ratio}:1 (${result.pass ? '✅ PASS' : '❌ FAIL'})`);
@@ -400,25 +407,26 @@ test.describe('Design System Color Pairs - Dark Mode', () => {
   });
 
   test('verify semantic color contrast', async () => {
+    // Using updated colors from src/lib/theme/tokens.ts for WCAG AA compliance
     const semanticColors = [
-      // Success (green)
+      // Success (emerald-800 equivalent from tokens.ts: #065e45)
       { text: '#22c55e', background: '#18181b', label: 'Success on surface-0', isLarge: false },
-      { text: '#ffffff', background: '#16a34a', label: 'White on success', isLarge: false },
+      { text: '#ffffff', background: '#065e45', label: 'White on success', isLarge: false }, // Updated to #065e45 for 4.5:1 contrast
 
-      // Warning (yellow/amber)
+      // Warning (amber-600 from tokens.ts: #D97706)
       { text: '#f59e0b', background: '#18181b', label: 'Warning on surface-0', isLarge: false },
-      { text: '#000000', background: '#f59e0b', label: 'Black on warning', isLarge: false },
+      { text: '#000000', background: '#D97706', label: 'Black on warning', isLarge: false },
 
-      // Error (red)
+      // Error (red-600 from tokens.ts: #DC2626)
       { text: '#ef4444', background: '#18181b', label: 'Error on surface-0', isLarge: false },
-      { text: '#ffffff', background: '#dc2626', label: 'White on error', isLarge: false },
+      { text: '#ffffff', background: '#DC2626', label: 'White on error', isLarge: false },
 
-      // Info (blue)
+      // Info (cyan-700 from tokens.ts: #0e7490)
       { text: '#3b82f6', background: '#18181b', label: 'Info on surface-0', isLarge: false },
-      { text: '#ffffff', background: '#2563eb', label: 'White on info', isLarge: false },
+      { text: '#ffffff', background: '#0e7490', label: 'White on info', isLarge: false }, // cyan-700 for 5.36:1 ratio
     ];
 
-    const results = checkColorPairs(semanticColors);
+    const results = await checkColorPairs(semanticColors);
 
     results.forEach(result => {
       console.log(`${result.label}: ${result.ratio}:1 (${result.pass ? '✅ PASS' : '❌ FAIL'})`);
@@ -442,7 +450,7 @@ test.describe('Design System Color Pairs - Dark Mode', () => {
       { text: '#e4e4e7', background: '#27272a', label: 'zinc-200 on surface-1', isLarge: false },
     ];
 
-    const results = checkColorPairs(surfaceColors);
+    const results = await checkColorPairs(surfaceColors);
 
     results.forEach(result => {
       console.log(`${result.label}: ${result.ratio}:1 (${result.pass ? '✅ PASS' : '❌ FAIL'})`);

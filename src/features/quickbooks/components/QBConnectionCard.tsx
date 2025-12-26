@@ -37,6 +37,8 @@ import {
   useRefreshQBToken,
 } from '../hooks/useQuickBooks'
 import { formatDistanceToNow } from 'date-fns'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface QBConnectionCardProps {
   onConnectionChange?: () => void
@@ -56,7 +58,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
       // Redirect to QuickBooks OAuth
       window.location.href = authUrl
     } catch (error) {
-      console.error('Failed to initiate QuickBooks connection:', error)
+      logger.error('Failed to initiate QuickBooks connection:', error)
     }
   }
 
@@ -66,7 +68,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
       await disconnect.mutateAsync(status.connectionId)
       onConnectionChange?.()
     } catch (error) {
-      console.error('Failed to disconnect from QuickBooks:', error)
+      logger.error('Failed to disconnect from QuickBooks:', error)
     }
   }
 
@@ -78,7 +80,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
         updates: { auto_sync_enabled: enabled },
       })
     } catch (error) {
-      console.error('Failed to update auto-sync setting:', error)
+      logger.error('Failed to update auto-sync setting:', error)
     }
   }
 
@@ -90,7 +92,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
         updates: { sync_frequency_hours: parseInt(hours, 10) },
       })
     } catch (error) {
-      console.error('Failed to update sync frequency:', error)
+      logger.error('Failed to update sync frequency:', error)
     }
   }
 
@@ -99,7 +101,7 @@ export function QBConnectionCard({ onConnectionChange }: QBConnectionCardProps) 
     try {
       await refreshToken.mutateAsync(status.connectionId)
     } catch (error) {
-      console.error('Failed to refresh token:', error)
+      logger.error('Failed to refresh token:', error)
     }
   }
 

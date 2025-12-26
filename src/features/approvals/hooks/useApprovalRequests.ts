@@ -10,6 +10,8 @@ import type {
   CreateApprovalRequestInput,
   WorkflowEntityType,
 } from '@/types/approval-workflow'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // Query Hooks
@@ -26,7 +28,7 @@ export function useApprovalRequests(filters?: ApprovalRequestFilters) {
         return await approvalRequestsApi.getRequests(filters)
       } catch (error) {
         // Log the actual error for debugging
-        console.error('[useApprovalRequests] Query failed:', error)
+        logger.error('[useApprovalRequests] Query failed:', error)
         // Return empty array on error (DB tables may not exist)
         return []
       }

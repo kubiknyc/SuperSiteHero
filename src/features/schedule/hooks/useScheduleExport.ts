@@ -26,6 +26,8 @@ import type {
   ScheduleActivity,
   ScheduleDependency,
 } from '@/types/schedule-activities'
+import { logger } from '../../../lib/utils/logger';
+
 
 // =============================================
 // Types
@@ -206,7 +208,7 @@ export function useScheduleExport({ projectId, projectName, projectNumber }: Use
         })
       } catch (e) {
         // Log failure shouldn't block the export
-        console.error('Failed to log export:', e)
+        logger.error('Failed to log export:', e)
       }
     },
     [projectId, userProfile?.id]

@@ -22,6 +22,8 @@ import type {
 
 // Import values separately (not as types)
 import { MODEL_PRICING, DEFAULT_MODELS } from '@/types/ai'
+import { logger } from '../../utils/logger';
+
 
 // Re-export for convenience
 export { MODEL_PRICING, DEFAULT_MODELS }
@@ -539,7 +541,7 @@ export const aiUsageApi = {
     })
 
     if (error) {
-      console.error('Failed to log AI usage:', error)
+      logger.error('Failed to log AI usage:', error)
     }
   },
 

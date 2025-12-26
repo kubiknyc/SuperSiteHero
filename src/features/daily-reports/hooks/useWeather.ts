@@ -12,6 +12,8 @@ import {
 } from '../services/weatherService'
 import type { WeatherHistory } from '@/types/weather'
 import { getWeatherIcon } from '@/types/weather'
+import { logger } from '../../../lib/utils/logger';
+
 
 // Weather history record type for database operations
 interface WeatherHistoryRecord {
@@ -309,7 +311,7 @@ export function usePrefetchWeather() {
           // Rate limiting - wait 100ms between API calls
           await new Promise((resolve) => setTimeout(resolve, 100))
         } catch (error) {
-          console.error(`Failed to fetch weather for ${date}:`, error)
+          logger.error(`Failed to fetch weather for ${date}:`, error)
         }
       }
 

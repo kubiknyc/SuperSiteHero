@@ -18,6 +18,8 @@ import {
   type SignatureTemplate,
 } from '../utils/signatureTemplates'
 import toast from 'react-hot-toast'
+import { logger } from '../../../lib/utils/logger';
+
 
 interface SignatureTemplateManagerProps {
   currentSignature: string | null
@@ -64,7 +66,7 @@ export function SignatureTemplateManager({
       onSaveAsTemplate?.(newTemplateName.trim())
     } catch (error) {
       toast.error('Failed to save template')
-      console.error(error)
+      logger.error(error)
     }
   }
 
@@ -86,7 +88,7 @@ export function SignatureTemplateManager({
       toast.success('Template deleted')
     } catch (error) {
       toast.error('Failed to delete template')
-      console.error(error)
+      logger.error(error)
     }
   }
 
@@ -113,7 +115,7 @@ export function SignatureTemplateManager({
       toast.success('Template renamed')
     } catch (error) {
       toast.error('Failed to rename template')
-      console.error(error)
+      logger.error(error)
     }
   }
 

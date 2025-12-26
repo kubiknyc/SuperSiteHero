@@ -11,6 +11,8 @@ import { AlertTriangle, CheckCircle, Clock, Shield, XCircle } from 'lucide-react
 import { usePublicApprovalPage } from '@/features/approvals/hooks';
 import { ClientApprovalWorkflow } from '@/features/client-portal/components/ClientApprovalWorkflow';
 import type { SubmitClientApprovalInput } from '@/types/approval-workflow';
+import { logger } from '../../lib/utils/logger';
+
 
 // Loading skeleton component
 function LoadingSkeleton() {
@@ -141,7 +143,7 @@ export function PublicApprovalPage() {
       await submitResponse(input);
     } catch (err) {
       // Error is handled by the hook
-      console.error('Submit error:', err);
+      logger.error('Submit error:', err);
     }
   };
 

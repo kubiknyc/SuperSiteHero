@@ -913,7 +913,7 @@ export const subcontractorPortalApi = {
         })
       } catch (emailError) {
         // Log but don't fail - invitation was created successfully
-        console.error('[SubcontractorPortal] Failed to send invitation email:', emailError)
+        logger.error('[SubcontractorPortal] Failed to send invitation email:', emailError)
       }
 
       return invitation

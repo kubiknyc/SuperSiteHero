@@ -29,6 +29,8 @@ import {
   getFileExtension,
   type RFIAttachment,
 } from '../hooks/useRFIAttachments'
+import { logger } from '../../../lib/utils/logger';
+
 
 export interface RFIAttachmentsProps {
   rfiId: string
@@ -142,7 +144,7 @@ export function RFIAttachments({
         fileInputRef.current.value = ''
       }
     } catch (error) {
-      console.error('Upload failed:', error)
+      logger.error('Upload failed:', error)
     }
   }
 
@@ -162,7 +164,7 @@ export function RFIAttachments({
       const url = await getDownloadUrl.mutateAsync(attachment.id)
       window.open(url, '_blank')
     } catch (error) {
-      console.error('Failed to get download URL:', error)
+      logger.error('Failed to get download URL:', error)
     }
   }
 
@@ -176,7 +178,7 @@ export function RFIAttachments({
         rfiId,
       })
     } catch (error) {
-      console.error('Failed to delete attachment:', error)
+      logger.error('Failed to delete attachment:', error)
     }
   }
 

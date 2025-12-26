@@ -27,7 +27,6 @@ import {
   useProgress,
   Stats,
 } from '@react-three/drei';
-import * as THREE from 'three';
 import {
   Loader2,
   Maximize2,
@@ -63,6 +62,8 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useModelLoader } from '../hooks/useModelLoader';
 import type { ModelViewerSettings, CameraState } from '@/types/visualization';
+import { logger } from '../../../lib/utils/logger';
+
 
 // ============================================================================
 // Types
@@ -86,9 +87,9 @@ interface ModelViewer3DProps {
   /** Container className */
   className?: string;
   /** Callback when model is clicked */
-  onModelClick?: (event: THREE.Intersection) => void;
+  onModelClick?: (event: any) => void;
   /** Callback when model is loaded */
-  onModelLoad?: (model: THREE.Group) => void;
+  onModelLoad?: (model: any) => void;
   /** Callback on error */
   onError?: (error: Error) => void;
 }
@@ -135,21 +136,21 @@ function LoadingIndicator() {
 // ============================================================================
 
 interface SceneProps {
-  model: THREE.Group | null;
+  model: any | null;
   settings: ModelViewerSettings;
-  onModelClick?: (event: THREE.Intersection) => void;
+  onModelClick?: (event: any) => void;
 }
 
 function Scene({ model, settings, onModelClick }: SceneProps) {
   const { camera, gl, scene } = useThree();
   const controlsRef = useRef<any>(null);
-  const modelRef = useRef<THREE.Group | null>(null);
+  const modelRef = useRef<any>(null);
 
   // Apply wireframe mode
   useEffect(() => {
     if (model) {
-      model.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
+      model.traverse((child: any) => {
+        if (child.isMesh) {
           if (Array.isArray(child.material)) {
             child.material.forEach((mat) => {
               if ('wireframe' in mat) {
@@ -167,8 +168,8 @@ function Scene({ model, settings, onModelClick }: SceneProps) {
   // Apply shadow settings
   useEffect(() => {
     if (model) {
-      model.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
+      model.traverse((child: any) => {
+        if (child.isMesh) {
           child.castShadow = settings.enableShadows;
           child.receiveShadow = settings.enableShadows;
         }
@@ -286,7 +287,7 @@ interface ControlsToolbarProps {
   onScreenshot: () => void;
   onFullscreen: () => void;
   isFullscreen: boolean;
-  animations: THREE.AnimationClip[];
+  animations: any[];
   isPlaying: boolean;
   onPlayAnimation: (name: string) => void;
   onStopAnimation: () => void;
@@ -552,7 +553,7 @@ export function ModelViewer3D({
         setIsFullscreen(false);
       }
     } catch (err) {
-      console.error('Fullscreen error:', err);
+      logger.error('Fullscreen error:', err);
     }
   }, []);
 

@@ -38,6 +38,8 @@ import {
 import { useBulkLinkPhotos, useLinkPhotoToEntity } from '../hooks/useUnifiedPhotos';
 import type { PhotoEntityType } from '@/types/unified-photos';
 import { ENTITY_TYPE_LABELS } from '@/types/unified-photos';
+import { logger } from '../../../lib/utils/logger';
+
 
 interface PhotoLinkerProps {
   photoIds: string[];
@@ -159,7 +161,7 @@ export function PhotoLinker({
 
       onClose();
     } catch (error) {
-      console.error('Failed to link photos:', error);
+      logger.error('Failed to link photos:', error);
     }
   };
 

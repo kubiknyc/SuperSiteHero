@@ -1,7 +1,7 @@
 // File: /src/pages/daily-reports/DailyReportsPage.tsx
 // Daily reports list and management page
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useCallback, memo } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -237,8 +237,8 @@ export function DailyReportsPage() {
     return count
   }, [searchQuery, statusFilter, dateRange, weatherFilter, workerRange, createdByFilter])
 
-  // Clear all filters
-  const clearAllFilters = () => {
+  // Clear all filters - memoized to prevent re-renders
+  const clearAllFilters = useCallback(() => {
     setSearchQuery('')
     setStatusFilter([])
     setDateRange({ from: '', to: '' })
@@ -246,7 +246,44 @@ export function DailyReportsPage() {
     setWorkerRange({ min: '', max: '' })
     setCreatedByFilter('')
     setShowAdvancedFilters(false)
-  }
+  }, [])
+
+  // Memoized event handlers
+  const handleProjectChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProjectId(e.target.value)
+  }, [])
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value)
+  }, [])
+
+  const handleViewModeChange = useCallback((mode: 'list' | 'calendar') => {
+    setViewMode(mode)
+  }, [])
+
+  const handleToggleAdvancedFilters = useCallback(() => {
+    setShowAdvancedFilters(prev => !prev)
+  }, [])
+
+  const handleDateFromChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateRange(prev => ({ ...prev, from: e.target.value }))
+  }, [])
+
+  const handleDateToChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateRange(prev => ({ ...prev, to: e.target.value }))
+  }, [])
+
+  const handleWorkerMinChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setWorkerRange(prev => ({ ...prev, min: e.target.value }))
+  }, [])
+
+  const handleWorkerMaxChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setWorkerRange(prev => ({ ...prev, max: e.target.value }))
+  }, [])
+
+  const handleCreatedByChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCreatedByFilter(e.target.value)
+  }, [])
 
   const tableColumns = [
     {
@@ -356,7 +393,7 @@ export function DailyReportsPage() {
               <Button
                 variant={viewMode === 'list' ? 'secondary' : 'ghost'}
                 size="sm"
-                onClick={() => setViewMode('list')}
+                onClick={() => handleViewModeChange('list')}
                 title="List view"
               >
                 <List className="h-4 w-4" />
@@ -364,7 +401,7 @@ export function DailyReportsPage() {
               <Button
                 variant={viewMode === 'calendar' ? 'secondary' : 'ghost'}
                 size="sm"
-                onClick={() => setViewMode('calendar')}
+                onClick={() => handleViewModeChange('calendar')}
                 title="Calendar view"
               >
                 <CalendarDays className="h-4 w-4" />
@@ -398,7 +435,7 @@ export function DailyReportsPage() {
                 </label>
                 <Select
                   value={selectedProjectId}
-                  onChange={(e) => setSelectedProjectId(e.target.value)}
+                  onChange={handleProjectChange}
                 >
                   <option value="">All projects</option>
                   {projects.map((project) => (
@@ -417,7 +454,7 @@ export function DailyReportsPage() {
                 type="text"
                 placeholder="Search reports by number, work completed, issues..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={handleSearchChange}
                 className="flex-1"
               />
               {activeFilterCount > 0 && (
@@ -454,7 +491,7 @@ export function DailyReportsPage() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                onClick={handleToggleAdvancedFilters}
               >
                 <SlidersHorizontal className="h-4 w-4 mr-1" />
                 {showAdvancedFilters ? 'Hide' : 'Show'} Advanced
@@ -473,17 +510,13 @@ export function DailyReportsPage() {
                     <Input
                       type="date"
                       value={dateRange.from}
-                      onChange={(e) =>
-                        setDateRange((prev) => ({ ...prev, from: e.target.value }))
-                      }
+                      onChange={handleDateFromChange}
                       placeholder="From"
                     />
                     <Input
                       type="date"
                       value={dateRange.to}
-                      onChange={(e) =>
-                        setDateRange((prev) => ({ ...prev, to: e.target.value }))
-                      }
+                      onChange={handleDateToChange}
                       placeholder="To"
                     />
                   </div>
@@ -498,18 +531,14 @@ export function DailyReportsPage() {
                     <Input
                       type="number"
                       value={workerRange.min}
-                      onChange={(e) =>
-                        setWorkerRange((prev) => ({ ...prev, min: e.target.value }))
-                      }
+                      onChange={handleWorkerMinChange}
                       placeholder="Min"
                       min="0"
                     />
                     <Input
                       type="number"
                       value={workerRange.max}
-                      onChange={(e) =>
-                        setWorkerRange((prev) => ({ ...prev, max: e.target.value }))
-                      }
+                      onChange={handleWorkerMaxChange}
                       placeholder="Max"
                       min="0"
                     />
@@ -524,7 +553,7 @@ export function DailyReportsPage() {
                     </label>
                     <Select
                       value={createdByFilter}
-                      onChange={(e) => setCreatedByFilter(e.target.value)}
+                      onChange={handleCreatedByChange}
                     >
                       <option value="">All users</option>
                       {uniqueCreators.map((creator) => (
