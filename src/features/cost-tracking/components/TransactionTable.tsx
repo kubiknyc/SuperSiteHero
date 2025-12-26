@@ -3,7 +3,8 @@
  * Displays cost transactions with filtering and sorting
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
+import { useVirtualizer } from '@tanstack/react-virtual'
 import { format } from 'date-fns'
 import {
   Receipt,
@@ -192,6 +193,16 @@ export function TransactionTable({
 
   const totalAmount = transactions.reduce((sum, t) => sum + t.amount, 0)
 
+  // Virtualization setup
+  const parentRef = useRef<HTMLDivElement>(null)
+
+  const virtualizer = useVirtualizer({
+    count: sortedTransactions.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 65, // Estimated row height in pixels
+    overscan: 5, // Number of items to render outside visible area
+  })
+
   if (isLoading) {
     return (
       <div className="py-12 text-center text-muted">
@@ -233,7 +244,7 @@ export function TransactionTable({
 
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead>
+          <thead className="sticky top-0 bg-background z-10">
             <tr className="border-b">
               <SortHeader field="transaction_date" className="text-left">Date</SortHeader>
               <SortHeader field="cost_code" className="text-left">Cost Code</SortHeader>
@@ -245,78 +256,104 @@ export function TransactionTable({
               <th className="w-10" />
             </tr>
           </thead>
-          <tbody>
-            {sortedTransactions.map((transaction) => (
-              <tr
-                key={transaction.id}
-                className="border-b hover:bg-surface transition-colors"
-              >
-                <td className="py-3 px-3 text-sm">
-                  {format(new Date(transaction.transaction_date), 'MMM d, yyyy')}
-                </td>
-                <td className="py-3 px-3">
-                  <div className="flex flex-col">
-                    <span className="font-mono text-sm">{transaction.cost_code?.code}</span>
-                    <span className="text-xs text-muted truncate max-w-[150px]">
-                      {transaction.cost_code?.name}
-                    </span>
-                  </div>
-                </td>
-                <td className="py-3 px-3 text-sm max-w-[200px]">
-                  <p className="truncate">{transaction.description}</p>
-                  {(transaction.invoice_number || transaction.po_number) && (
-                    <p className="text-xs text-muted">
-                      {transaction.invoice_number && `Inv: ${transaction.invoice_number}`}
-                      {transaction.invoice_number && transaction.po_number && ' | '}
-                      {transaction.po_number && `PO: ${transaction.po_number}`}
-                    </p>
-                  )}
-                </td>
-                <td className="py-3 px-3">
-                  {getTransactionTypeBadge(transaction.transaction_type)}
-                </td>
-                <td className="py-3 px-3">
-                  {transaction.source_type && (
-                    <div className="flex items-center gap-1">
-                      {getSourceIcon(transaction.source_type)}
-                      <span className="text-xs text-secondary">
-                        {SOURCE_TYPES.find(s => s.value === transaction.source_type)?.label}
-                      </span>
-                    </div>
-                  )}
-                </td>
-                <td className="py-3 px-3 text-sm">
-                  {transaction.subcontractor?.name || transaction.vendor_name || '-'}
-                </td>
-                <td className="py-3 px-3 text-right font-mono text-sm font-medium">
-                  {formatCurrency(transaction.amount)}
-                </td>
-                <td className="py-3 px-3">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => onEdit(transaction)}>
-                        <Edit className="h-4 w-4 mr-2" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => setDeleteId(transaction.id)}
-                        className="text-error"
-                      >
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </td>
-              </tr>
-            ))}
-          </tbody>
         </table>
+
+        {/* Virtualized table body */}
+        <div
+          ref={parentRef}
+          className="overflow-auto"
+          style={{
+            height: '600px',
+            width: '100%',
+          }}
+        >
+          <table className="w-full">
+            <tbody
+              style={{
+                height: `${virtualizer.getTotalSize()}px`,
+                width: '100%',
+                position: 'relative',
+              }}
+            >
+              {virtualizer.getVirtualItems().map((virtualRow) => {
+                const transaction = sortedTransactions[virtualRow.index]
+                return (
+                  <tr
+                    key={transaction.id}
+                    className="border-b hover:bg-surface transition-colors absolute w-full"
+                    style={{
+                      height: `${virtualRow.size}px`,
+                      transform: `translateY(${virtualRow.start}px)`,
+                    }}
+                  >
+                    <td className="py-3 px-3 text-sm">
+                      {format(new Date(transaction.transaction_date), 'MMM d, yyyy')}
+                    </td>
+                    <td className="py-3 px-3">
+                      <div className="flex flex-col">
+                        <span className="font-mono text-sm">{transaction.cost_code?.code}</span>
+                        <span className="text-xs text-muted truncate max-w-[150px]">
+                          {transaction.cost_code?.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-3 text-sm max-w-[200px]">
+                      <p className="truncate">{transaction.description}</p>
+                      {(transaction.invoice_number || transaction.po_number) && (
+                        <p className="text-xs text-muted">
+                          {transaction.invoice_number && `Inv: ${transaction.invoice_number}`}
+                          {transaction.invoice_number && transaction.po_number && ' | '}
+                          {transaction.po_number && `PO: ${transaction.po_number}`}
+                        </p>
+                      )}
+                    </td>
+                    <td className="py-3 px-3">
+                      {getTransactionTypeBadge(transaction.transaction_type)}
+                    </td>
+                    <td className="py-3 px-3">
+                      {transaction.source_type && (
+                        <div className="flex items-center gap-1">
+                          {getSourceIcon(transaction.source_type)}
+                          <span className="text-xs text-secondary">
+                            {SOURCE_TYPES.find(s => s.value === transaction.source_type)?.label}
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                    <td className="py-3 px-3 text-sm">
+                      {transaction.subcontractor?.name || transaction.vendor_name || '-'}
+                    </td>
+                    <td className="py-3 px-3 text-right font-mono text-sm font-medium">
+                      {formatCurrency(transaction.amount)}
+                    </td>
+                    <td className="py-3 px-3">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => onEdit(transaction)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setDeleteId(transaction.id)}
+                            className="text-error"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
