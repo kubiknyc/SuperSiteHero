@@ -19,7 +19,7 @@ import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 import { VoiceInputButton } from '@/components/ui/voice-input'
-import { FloorPlanPinDrop, type PinLocation } from './FloorPlanPinDrop'
+import { LazyFloorPlanPinDrop, type PinLocation } from './LazyFloorPlanPinDrop'
 
 interface CreatePunchItemDialogProps {
   projectId: string
@@ -251,7 +251,7 @@ export function CreatePunchItemDialog({
           </div>
 
           {/* Floor Plan Pin Drop */}
-          <FloorPlanPinDrop
+          <LazyFloorPlanPinDrop
             projectId={projectId}
             value={floorPlanLocation}
             onChange={setFloorPlanLocation}

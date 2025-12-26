@@ -11,6 +11,7 @@ export { QuickPunchMode } from './QuickPunchMode'
 export { SwipeablePunchItem } from './SwipeablePunchItem'
 export { BeforeAfterPhotos } from './BeforeAfterPhotos'
 export { FloorPlanPinDrop } from './FloorPlanPinDrop'
+export { LazyFloorPlanPinDrop } from './LazyFloorPlanPinDrop'
 export { PunchItemQRCode } from './PunchItemQRCode'
 export { QRCodeScanner } from './QRCodeScanner'
 

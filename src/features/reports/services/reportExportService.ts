@@ -5,9 +5,6 @@
  * Supports various data sources and formatting options.
  */
 
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
-import ExcelJS from 'exceljs'
 import type {
   ReportDataSource,
   ReportOutputFormat,
@@ -19,6 +16,43 @@ import type {
 } from '@/types/report-builder'
 import { supabaseUntyped } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
+
+// ============================================================================
+// Lazy Loaders for Heavy Export Libraries
+// ============================================================================
+
+type JsPDFModule = typeof import('jspdf')
+type AutoTableModule = typeof import('jspdf-autotable')
+type ExcelJSModule = typeof import('exceljs')
+
+// Type alias for jsPDF document instance
+type JsPDFDocument = InstanceType<JsPDFModule['default']>
+type AutoTableFunction = AutoTableModule['default']
+
+let jsPDFCache: JsPDFModule | null = null
+let autoTableCache: AutoTableModule | null = null
+let excelJSCache: ExcelJSModule | null = null
+
+async function loadJsPDF(): Promise<JsPDFModule['default']> {
+  if (!jsPDFCache) {
+    jsPDFCache = await import('jspdf')
+  }
+  return jsPDFCache.default
+}
+
+async function loadAutoTable(): Promise<AutoTableModule['default']> {
+  if (!autoTableCache) {
+    autoTableCache = await import('jspdf-autotable')
+  }
+  return autoTableCache.default
+}
+
+async function loadExcelJS(): Promise<ExcelJSModule> {
+  if (!excelJSCache) {
+    excelJSCache = await import('exceljs')
+  }
+  return excelJSCache
+}
 
 // ============================================================================
 // Types
@@ -447,6 +481,7 @@ export async function exportToExcel(options: ReportExportOptions): Promise<Repor
   const data = await fetchReportData(options)
   const { fields, title, orientation = 'landscape' } = options
 
+  const ExcelJS = await loadExcelJS()
   const workbook = new ExcelJS.Workbook()
   workbook.creator = 'JobSight'
   workbook.created = new Date()
@@ -631,7 +666,7 @@ function formatValueForExcel(value: unknown, fieldType: ReportFieldType): unknow
  * Add company header with optional logo to PDF
  */
 function addCompanyHeader(
-  doc: jsPDF,
+  doc: JsPDFDocument,
   options: {
     companyName?: string
     companyLogo?: string
@@ -686,13 +721,14 @@ function addCompanyHeader(
  * Add a data table to the PDF with styling
  */
 function addTableToPdf(
-  doc: jsPDF,
+  doc: JsPDFDocument,
   data: Record<string, unknown>[],
   fields: ReportTemplateFieldInput[],
   startY: number,
   options: {
     orientation: 'portrait' | 'landscape'
-  }
+  },
+  autoTable: AutoTableFunction
 ): number {
   const { orientation } = options
   const pageWidth = orientation === 'landscape' ? 297 : 210
@@ -731,7 +767,7 @@ function addTableToPdf(
   })
 
   // Generate table using autoTable
-  autoTable(doc, {
+  autoTable(doc as Parameters<typeof autoTable>[0], {
     startY: startY,
     head: [headers],
     body: body,
@@ -788,7 +824,7 @@ function addTableToPdf(
  * Add a chart visualization to the PDF
  */
 function addChartToPdf(
-  doc: jsPDF,
+  doc: JsPDFDocument,
   chartData: { labels: string[]; values: number[] },
   chartConfig: ChartConfiguration,
   startY: number,
@@ -930,7 +966,7 @@ function addChartToPdf(
  * Add summary statistics section to PDF
  */
 function addSummarySection(
-  doc: jsPDF,
+  doc: JsPDFDocument,
   data: Record<string, unknown>[],
   fields: ReportTemplateFieldInput[],
   startY: number,
@@ -989,7 +1025,7 @@ function addSummarySection(
 /**
  * Add footer to all pages
  */
-function addPdfFooter(doc: jsPDF, options: { orientation: 'portrait' | 'landscape'; companyName?: string }): void {
+function addPdfFooter(doc: JsPDFDocument, options: { orientation: 'portrait' | 'landscape'; companyName?: string }): void {
   const { orientation, companyName } = options
   const pageWidth = orientation === 'landscape' ? 297 : 210
   const pageHeight = orientation === 'landscape' ? 210 : 297
@@ -1061,6 +1097,10 @@ export async function exportToPdf(options: ReportExportOptions): Promise<ReportE
     throw new Error('No fields specified for PDF export')
   }
 
+  // Load PDF libraries dynamically
+  const jsPDF = await loadJsPDF()
+  const autoTable = await loadAutoTable()
+
   // Create PDF document
   const doc = new jsPDF({
     orientation: orientation,
@@ -1077,7 +1117,7 @@ export async function exportToPdf(options: ReportExportOptions): Promise<ReportE
     })
 
     // Add data table
-    currentY = addTableToPdf(doc, data, fields, currentY, { orientation })
+    currentY = addTableToPdf(doc, data, fields, currentY, { orientation }, autoTable)
 
     // Add summary section
     currentY = addSummarySection(doc, data, fields, currentY, { orientation })

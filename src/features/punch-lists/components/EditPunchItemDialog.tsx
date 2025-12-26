@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { VoiceInputButton } from '@/components/ui/voice-input'
-import { FloorPlanPinDrop, type PinLocation } from './FloorPlanPinDrop'
+import { LazyFloorPlanPinDrop, type PinLocation } from './LazyFloorPlanPinDrop'
 
 interface EditPunchItemDialogProps {
   punchItem: PunchItem | null
@@ -264,7 +264,7 @@ export function EditPunchItemDialog({
 
           {/* Floor Plan Pin Drop */}
           {punchItem && (
-            <FloorPlanPinDrop
+            <LazyFloorPlanPinDrop
               projectId={punchItem.project_id}
               value={floorPlanLocation}
               onChange={setFloorPlanLocation}

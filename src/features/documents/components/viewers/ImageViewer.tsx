@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react'
 import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
-import { DrawingCanvas } from '../DrawingCanvas'
+import { LazyDrawingCanvas } from '../LazyDrawingCanvas'
 import { logger } from '../../../../lib/utils/logger';
 
 
@@ -304,7 +304,7 @@ export function ImageViewer({
                   transformOrigin: 'center',
                 }}
               >
-                <DrawingCanvas
+                <LazyDrawingCanvas
                   documentId={documentId}
                   projectId={projectId}
                   pageNumber={null}
