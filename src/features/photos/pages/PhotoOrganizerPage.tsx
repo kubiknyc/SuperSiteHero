@@ -10,7 +10,7 @@
  * - Bulk actions
  */
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   Camera,
@@ -53,6 +53,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Checkbox } from '@/components/ui/checkbox'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { CameraTrigger } from '../components/CameraCapture'
 import { PhotoGrid } from '../components/PhotoGrid'
@@ -65,7 +73,9 @@ import {
   useDeletePhoto,
   useBulkDeletePhotos,
   useCreatePhoto,
+  useCreateCollection,
 } from '../hooks/usePhotos'
+import { usePhotoUpload } from '../hooks/usePhotoUpload'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import type {
@@ -320,6 +330,14 @@ export function PhotoOrganizerPage() {
   const [selectedPhotoIds, setSelectedPhotoIds] = useState<Set<string>>(new Set())
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null)
 
+  // New collection dialog state
+  const [showNewCollectionDialog, setShowNewCollectionDialog] = useState(false)
+  const [newCollectionName, setNewCollectionName] = useState('')
+  const [newCollectionDescription, setNewCollectionDescription] = useState('')
+
+  // File input ref for uploads
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   // Queries
   const {
     data: photos,
@@ -338,13 +356,19 @@ export function PhotoOrganizerPage() {
   const createPhoto = useCreatePhoto()
   const deletePhoto = useDeletePhoto()
   const bulkDeletePhotos = useBulkDeletePhotos()
+  const createCollection = useCreateCollection()
+
+  // Photo upload hook
+  const { uploadPhotos, uploadProgress, isUploading } = usePhotoUpload({
+    projectId: projectId!,
+  })
 
   // Handle photo capture from camera
   const handlePhotoCapture = useCallback(
     async (capturedPhotos: CapturedPhoto[]) => {
       if (!projectId) {return}
 
-      const STORAGE_BUCKET = 'project-photos'
+      const STORAGE_BUCKET = 'project-files'
       let successCount = 0
       let failCount = 0
 
@@ -420,6 +444,41 @@ export function PhotoOrganizerPage() {
     [projectId, createPhoto]
   )
 
+  // Handle file upload from file picker
+  const handleFileUpload = useCallback(async () => {
+    fileInputRef.current?.click()
+  }, [])
+
+  const handleFileSelect = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files
+      if (!files || files.length === 0 || !projectId) return
+
+      try {
+        const results = await uploadPhotos(Array.from(files))
+        const successCount = results.filter(r => r !== null).length
+        const failCount = results.length - successCount
+
+        if (successCount > 0 && failCount === 0) {
+          toast.success(`${successCount} photo${successCount > 1 ? 's' : ''} uploaded successfully`)
+        } else if (successCount > 0 && failCount > 0) {
+          toast.warning(`${successCount} uploaded, ${failCount} failed`)
+        } else if (failCount > 0) {
+          toast.error(`Failed to upload ${failCount} photo${failCount > 1 ? 's' : ''}`)
+        }
+      } catch (error) {
+        logger.error('Upload failed:', error)
+        toast.error('Failed to upload photos')
+      }
+
+      // Reset the input so the same file can be selected again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    },
+    [projectId, uploadPhotos]
+  )
+
   // Handle selection
   const handleSelectPhoto = useCallback((photoId: string, selected: boolean) => {
     setSelectedPhotoIds((prev) => {
@@ -459,6 +518,64 @@ export function PhotoOrganizerPage() {
     setSelectedPhoto(photo)
   }, [])
 
+  // Handle create collection
+  const handleCreateCollection = useCallback(async () => {
+    if (!projectId || !newCollectionName.trim()) return
+
+    try {
+      await createCollection.mutateAsync({
+        projectId,
+        name: newCollectionName.trim(),
+        description: newCollectionDescription.trim() || undefined,
+      })
+      toast.success('Collection created successfully')
+      setShowNewCollectionDialog(false)
+      setNewCollectionName('')
+      setNewCollectionDescription('')
+    } catch (error) {
+      logger.error('Failed to create collection:', error)
+      toast.error('Failed to create collection')
+    }
+  }, [projectId, newCollectionName, newCollectionDescription, createCollection])
+
+  // Handle bulk download
+  const handleBulkDownload = useCallback(async () => {
+    if (selectedPhotoIds.size === 0 || !photos) return
+
+    const selectedPhotos = photos.filter(p => selectedPhotoIds.has(p.id))
+
+    // For now, download each photo individually
+    // TODO: Implement zip download for multiple photos
+    for (const photo of selectedPhotos) {
+      try {
+        const response = await fetch(photo.fileUrl)
+        const blob = await response.blob()
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = photo.fileName || `photo-${photo.id}.jpg`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      } catch (error) {
+        logger.error('Failed to download photo:', error)
+      }
+    }
+
+    toast.success(`Downloaded ${selectedPhotos.length} photo(s)`)
+  }, [selectedPhotoIds, photos])
+
+  // Handle bulk add tags (placeholder - shows toast for now)
+  const handleBulkAddTags = useCallback(() => {
+    toast.info('Tag management coming soon')
+  }, [])
+
+  // Handle bulk add to collection (placeholder - shows toast for now)
+  const handleBulkAddToCollection = useCallback(() => {
+    toast.info('Add to collection coming soon')
+  }, [])
+
   if (!projectId) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -469,6 +586,16 @@ export function PhotoOrganizerPage() {
 
   return (
     <div className="container mx-auto py-6 space-y-6">
+      {/* Hidden file input for uploads */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,video/*"
+        multiple
+        className="hidden"
+        onChange={handleFileSelect}
+      />
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -486,11 +613,11 @@ export function PhotoOrganizerPage() {
             <Camera className="h-4 w-4 mr-2" />
             Capture
           </CameraTrigger>
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleFileUpload} disabled={isUploading}>
             <Upload className="h-4 w-4 mr-2" />
-            Upload
+            {isUploading ? 'Uploading...' : 'Upload'}
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={() => setShowNewCollectionDialog(true)}>
             <FolderPlus className="h-4 w-4 mr-2" />
             New Collection
           </Button>
@@ -574,15 +701,15 @@ export function PhotoOrganizerPage() {
             {selectedPhotoIds.size} selected
           </span>
           <div className="flex-1" />
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleBulkAddTags}>
             <Tag className="h-4 w-4 mr-1" />
             Add Tags
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleBulkAddToCollection}>
             <FolderPlus className="h-4 w-4 mr-1" />
             Add to Collection
           </Button>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handleBulkDownload}>
             <Download className="h-4 w-4 mr-1" />
             Download
           </Button>
@@ -637,9 +764,9 @@ export function PhotoOrganizerPage() {
                 <Camera className="h-4 w-4 mr-2" />
                 Capture Photo
               </CameraTrigger>
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleFileUpload} disabled={isUploading}>
                 <Upload className="h-4 w-4 mr-2" />
-                Upload Photos
+                {isUploading ? 'Uploading...' : 'Upload Photos'}
               </Button>
             </div>
           </CardContent>
@@ -682,6 +809,46 @@ export function PhotoOrganizerPage() {
           }}
         />
       )}
+
+      {/* New Collection Dialog */}
+      <Dialog open={showNewCollectionDialog} onOpenChange={setShowNewCollectionDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Create New Collection</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="collection-name">Name</Label>
+              <Input
+                id="collection-name"
+                placeholder="Enter collection name..."
+                value={newCollectionName}
+                onChange={(e) => setNewCollectionName(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="collection-description">Description (optional)</Label>
+              <Input
+                id="collection-description"
+                placeholder="Enter description..."
+                value={newCollectionDescription}
+                onChange={(e) => setNewCollectionDescription(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowNewCollectionDialog(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateCollection}
+              disabled={!newCollectionName.trim() || createCollection.isPending}
+            >
+              {createCollection.isPending ? 'Creating...' : 'Create Collection'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
