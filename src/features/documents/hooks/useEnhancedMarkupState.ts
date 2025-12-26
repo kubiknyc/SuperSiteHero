@@ -17,6 +17,7 @@ import type {
   EnhancedShape,
   MarkupAuthor,
   LayerOrderAction,
+  MarkupShareSettings,
 } from '../types/markup'
 
 export type Tool = ExtendedAnnotationType | 'select' | 'pan' | 'eraser' | 'measure-distance' | 'measure-area' | 'calibrate'
@@ -205,6 +206,40 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   }, [])
 
   // ============================================================
+  // SHARING STATE
+  // ============================================================
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false)
+  const [shareMarkupId, setShareMarkupId] = useState<string | null>(null)
+  const [shareSettings, setShareSettings] = useState<MarkupShareSettings | null>(null)
+
+  const handleOpenShareDialog = useCallback((markupId: string) => {
+    setShareMarkupId(markupId)
+    // Initialize with default share settings
+    setShareSettings({
+      markupId,
+      isShared: false,
+      sharedWithTeam: false,
+      sharedWithSubcontractors: false,
+      sharedWithRoles: [],
+      sharedWithUsers: [],
+      permissionLevel: 'view',
+    })
+    setIsShareDialogOpen(true)
+  }, [])
+
+  const handleCloseShareDialog = useCallback(() => {
+    setIsShareDialogOpen(false)
+    setShareMarkupId(null)
+    setShareSettings(null)
+  }, [])
+
+  const handleSaveShareSettings = useCallback((settings: MarkupShareSettings) => {
+    // This would be wired to actual update mutation
+    setShareSettings(settings)
+    setIsShareDialogOpen(false)
+  }, [])
+
+  // ============================================================
   // ZOOM CONTROLS
   // ============================================================
   const handleZoomIn = useCallback(() => {
@@ -296,6 +331,14 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
     onZoomIn: handleZoomIn,
     onZoomOut: handleZoomOut,
     onResetView: handleResetView,
+
+    // Sharing state
+    isShareDialogOpen,
+    shareMarkupId,
+    shareSettings,
+    onOpenShareDialog: handleOpenShareDialog,
+    onCloseShareDialog: handleCloseShareDialog,
+    onSaveShareSettings: handleSaveShareSettings,
   }
 }
 

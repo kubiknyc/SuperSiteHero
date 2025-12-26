@@ -12,6 +12,7 @@ import { useDocumentMarkups, useCreateMarkup, useUpdateMarkup, useDeleteMarkup }
 import type { DocumentMarkup } from '@/lib/api/services/markups'
 import { MarkupToolbar } from './MarkupToolbar'
 import { EnhancedMarkupToolbar } from './EnhancedMarkupToolbar'
+import { MarkupSharingDialog } from './MarkupSharingDialog'
 import { MarkupFilterPanel, type MarkupFilter, type MarkupType } from '../MarkupFilterPanel'
 import { LinkMarkupDialog, type LinkableItemType } from '../LinkMarkupDialog'
 import type { AnnotationType } from '@/types/markup'
@@ -985,9 +986,13 @@ export function UnifiedDrawingCanvas({
               onResetView={markupState.onResetView}
               currentZoom={markupState.zoom}
 
-              // Sharing (optional)
-              onOpenShareDialog={() => {/* TODO: implement sharing */}}
-              canShare={false}
+              // Sharing
+              onOpenShareDialog={() => {
+                if (selectedShapeId && markupState) {
+                  markupState.onOpenShareDialog(selectedShapeId)
+                }
+              }}
+              canShare={!!selectedShapeId && !!markupState}
 
               disabled={false}
             />
@@ -1332,6 +1337,23 @@ export function UnifiedDrawingCanvas({
           }}
           onLink={handleLinkMarkup}
           onUnlink={handleUnlinkMarkup}
+        />
+      )}
+
+      {/* Markup Sharing Dialog */}
+      {markupState?.isShareDialogOpen && markupState.shareMarkupId && markupState.shareSettings && (
+        <MarkupSharingDialog
+          open={markupState.isShareDialogOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              markupState.onCloseShareDialog()
+            }
+          }}
+          markupId={markupState.shareMarkupId}
+          currentSettings={markupState.shareSettings}
+          onSave={markupState.onSaveShareSettings}
+          availableRoles={[]} // TODO: Load from project settings
+          availableUsers={[]} // TODO: Load project team members
         />
       )}
     </div>
