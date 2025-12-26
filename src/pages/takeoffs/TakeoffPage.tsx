@@ -4,6 +4,7 @@
 import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, FileText, Save, FolderOpen } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { Button } from '@/components/ui/button'
 import { TakeoffCanvas, type TakeoffMeasurement } from '@/features/takeoffs/components/TakeoffCanvas'
 import { TakeoffToolbar } from '@/features/takeoffs/components/TakeoffToolbar'
@@ -56,6 +57,7 @@ export default function TakeoffPage() {
   const [showAssemblyPicker, setShowAssemblyPicker] = useState(false)
   const [showSummary, setShowSummary] = useState(false)
   const [calibrationPoints, setCalibrationPoints] = useState<Point[] | undefined>(undefined)
+  const [isCalibrating, setIsCalibrating] = useState(false)
   const [pageNumber] = useState(1) // TODO: Get from document viewer
   const [templateDialogMode, setTemplateDialogMode] = useState<'create' | 'browse' | null>(null)
 
@@ -176,10 +178,24 @@ export default function TakeoffPage() {
     [deleteMutation, selectedMeasurementId]
   )
 
-  // Handle calibration
+  // Handle calibration - enter calibration mode
   const handleCalibrate = useCallback(() => {
-    // TODO: Switch to calibration mode where next line drawn sets calibration points
+    setIsCalibrating(true)
+    setCalibrationPoints(undefined)
+    toast('Draw a line on a known dimension to calibrate scale', { icon: '📏' })
+  }, [])
+
+  // Handle calibration line drawn from canvas
+  const handleCalibrationLineDrawn = useCallback((points: [Point, Point]) => {
+    setCalibrationPoints(points)
+    setIsCalibrating(false)
     setShowCalibration(true)
+  }, [])
+
+  // Handle cancel calibration mode
+  const handleCancelCalibration = useCallback(() => {
+    setIsCalibrating(false)
+    setCalibrationPoints(undefined)
   }, [])
 
   const handleCalibrationComplete = useCallback((newScale: ScaleFactor) => {
@@ -331,6 +347,9 @@ export default function TakeoffPage() {
                 onMeasurementUpdate={handleMeasurementUpdate}
                 onMeasurementSelect={setSelectedMeasurementId}
                 onMeasurementDelete={handleMeasurementDelete}
+                isCalibrating={isCalibrating}
+                onCalibrationLineDrawn={handleCalibrationLineDrawn}
+                onCancelCalibration={handleCancelCalibration}
               />
             </div>
           )}

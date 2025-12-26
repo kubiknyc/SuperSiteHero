@@ -3,7 +3,7 @@
 // Integrates all 9 shape components with drawing tools and spatial indexing
 
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { Stage, Layer } from 'react-konva'
+import { Stage, Layer, Line } from 'react-konva'
 import type Konva from 'konva'
 import {
   LinearShape,
@@ -59,6 +59,10 @@ export interface TakeoffCanvasProps {
   onMeasurementUpdate?: (id: string, updates: Partial<TakeoffMeasurement>) => void
   onMeasurementSelect?: (id: string | null) => void
   onMeasurementDelete?: (id: string) => void
+  // Calibration props
+  isCalibrating?: boolean
+  onCalibrationLineDrawn?: (points: [Point, Point]) => void
+  onCancelCalibration?: () => void
 }
 
 /**
@@ -87,6 +91,9 @@ export function TakeoffCanvas({
   onMeasurementUpdate,
   onMeasurementSelect,
   onMeasurementDelete,
+  isCalibrating = false,
+  onCalibrationLineDrawn,
+  onCancelCalibration,
 }: TakeoffCanvasProps) {
   // Refs
   const stageRef = useRef<Konva.Stage>(null)
@@ -99,6 +106,10 @@ export function TakeoffCanvas({
   const [currentPoints, setCurrentPoints] = useState<Point[]>([])
   const [hoveredMeasurementId, setHoveredMeasurementId] = useState<string | null>(null)
   const [viewport, setViewport] = useState({ x: 0, y: 0, width, height })
+
+  // Calibration line state
+  const [calibrationLinePoints, setCalibrationLinePoints] = useState<Point[]>([])
+  const [isDrawingCalibration, setIsDrawingCalibration] = useState(false)
 
   // Background image
   const [backgroundImage, setBackgroundImage] = useState<HTMLImageElement | null>(null)
@@ -125,6 +136,28 @@ export function TakeoffCanvas({
     })
   }, [measurements])
 
+  // Handle Escape key to cancel calibration
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isCalibrating) {
+        setCalibrationLinePoints([])
+        setIsDrawingCalibration(false)
+        onCancelCalibration?.()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isCalibrating, onCancelCalibration])
+
+  // Reset calibration line state when calibration mode is toggled off
+  useEffect(() => {
+    if (!isCalibrating) {
+      setCalibrationLinePoints([])
+      setIsDrawingCalibration(false)
+    }
+  }, [isCalibrating])
+
   // Get visible measurements using spatial index
   const visibleMeasurements = measurements.filter((m) => {
     const inViewport = spatialIndexRef.current.searchViewport(viewport)
@@ -143,6 +176,13 @@ export function TakeoffCanvas({
       if (!pos) {return}
 
       const point: Point = { x: pos.x, y: pos.y }
+
+      // If in calibration mode, start drawing calibration line
+      if (isCalibrating) {
+        setIsDrawingCalibration(true)
+        setCalibrationLinePoints([point])
+        return
+      }
 
       // If clicking on an existing measurement, select it
       const clickedMeasurement = measurements.find((m) => {
@@ -175,14 +215,12 @@ export function TakeoffCanvas({
         setCurrentPoints([point])
       }
     },
-    [readOnly, measurements, currentTool, onMeasurementCreate, onMeasurementSelect]
+    [readOnly, measurements, currentTool, onMeasurementCreate, onMeasurementSelect, isCalibrating]
   )
 
   // Handle mouse move - continue drawing
   const handleMouseMove = useCallback(
     (e: Konva.KonvaEventObject<MouseEvent>) => {
-      if (!isDrawing || readOnly) {return}
-
       const stage = e.target.getStage()
       if (!stage) {return}
 
@@ -190,6 +228,14 @@ export function TakeoffCanvas({
       if (!pos) {return}
 
       const point: Point = { x: pos.x, y: pos.y }
+
+      // Handle calibration line drawing
+      if (isDrawingCalibration && isCalibrating) {
+        setCalibrationLinePoints((prev) => (prev.length > 0 ? [prev[0], point] : [point]))
+        return
+      }
+
+      if (!isDrawing || readOnly) {return}
 
       // Update current points based on tool type
       if (currentTool === 'linear' || currentTool === 'linear_with_drop' || currentTool === 'pitched_linear') {
@@ -203,11 +249,20 @@ export function TakeoffCanvas({
         setCurrentPoints((prev) => [...prev, point])
       }
     },
-    [isDrawing, readOnly, currentTool]
+    [isDrawing, readOnly, currentTool, isDrawingCalibration, isCalibrating]
   )
 
   // Handle mouse up - finish drawing
   const handleMouseUp = useCallback(() => {
+    // Handle calibration line completion
+    if (isDrawingCalibration && isCalibrating && calibrationLinePoints.length >= 2) {
+      const [p1, p2] = calibrationLinePoints
+      setIsDrawingCalibration(false)
+      setCalibrationLinePoints([])
+      onCalibrationLineDrawn?.([p1, p2])
+      return
+    }
+
     if (!isDrawing || readOnly) {return}
 
     if (currentPoints.length < 2) {
@@ -250,7 +305,7 @@ export function TakeoffCanvas({
 
     setIsDrawing(false)
     setCurrentPoints([])
-  }, [isDrawing, readOnly, currentPoints, currentTool, onMeasurementCreate])
+  }, [isDrawing, readOnly, currentPoints, currentTool, onMeasurementCreate, isDrawingCalibration, isCalibrating, calibrationLinePoints, onCalibrationLineDrawn])
 
   // Handle double-click to close polygon
   const handleDoubleClick = useCallback(() => {
@@ -485,8 +540,23 @@ export function TakeoffCanvas({
     }
   }, [isDrawing, currentPoints, currentTool])
 
+  // Determine cursor style
+  const getCursorStyle = () => {
+    if (isCalibrating) {return 'crosshair'}
+    if (isDrawing) {return 'crosshair'}
+    return 'default'
+  }
+
   return (
     <div className="relative">
+      {/* Calibration mode indicator */}
+      {isCalibrating && (
+        <div className="absolute top-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-lg z-10 flex items-center gap-2">
+          <span className="text-sm font-medium">Calibration Mode</span>
+          <span className="text-xs opacity-80">Draw a line on a known dimension • Press ESC to cancel</span>
+        </div>
+      )}
+
       <Stage
         ref={stageRef}
         width={width}
@@ -495,7 +565,7 @@ export function TakeoffCanvas({
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onDblClick={handleDoubleClick}
-        style={{ cursor: isDrawing ? 'crosshair' : 'default' }}
+        style={{ cursor: getCursorStyle() }}
       >
         <Layer ref={layerRef}>
           {/* Background image */}
@@ -508,6 +578,17 @@ export function TakeoffCanvas({
 
           {/* Current drawing */}
           {renderCurrentDrawing()}
+
+          {/* Calibration line being drawn */}
+          {isCalibrating && calibrationLinePoints.length >= 1 && (
+            <Line
+              points={calibrationLinePoints.flatMap(p => [p.x, p.y])}
+              stroke="#3B82F6"
+              strokeWidth={3}
+              dash={[10, 5]}
+              lineCap="round"
+            />
+          )}
         </Layer>
       </Stage>
 
