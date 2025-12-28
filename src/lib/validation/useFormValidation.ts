@@ -108,7 +108,7 @@ export function useFormValidation<T>(
               return next
             })
           }
-        } catch (error) {
+        } catch (_error) {
           // If field validation fails, just skip it
           logger.debug('Field validation skipped:', fieldName)
         }
@@ -219,7 +219,7 @@ export function useFieldValidation<T>(schema: z.ZodSchema<T>) {
           })
           return []
         }
-      } catch (error) {
+      } catch (_error) {
         return []
       }
     },

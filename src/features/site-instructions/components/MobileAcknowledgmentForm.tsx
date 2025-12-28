@@ -199,7 +199,7 @@ export function MobileAcknowledgmentForm({
       })
 
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       showToast({
         title: 'Error',
         description: 'Failed to submit acknowledgment. Please try again.',

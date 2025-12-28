@@ -142,7 +142,7 @@ export function PhotoLocationFormPage() {
       }
 
       navigate(`/projects/${projectId}/photo-progress?tab=locations`);
-    } catch (error) {
+    } catch (_error) {
       // Error handled by mutation
     }
   };
@@ -154,8 +154,8 @@ export function PhotoLocationFormPage() {
           setLatitude(position.coords.latitude);
           setLongitude(position.coords.longitude);
         },
-        (error) => {
-          console.error('Error getting location:', error);
+        (_error) => {
+          console.error('Error getting location:', _error);
         }
       );
     }

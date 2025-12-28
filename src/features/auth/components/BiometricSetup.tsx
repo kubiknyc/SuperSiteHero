@@ -97,8 +97,8 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
     try {
       const biometricSettings = await getBiometricSettings(user.id)
       setSettings(biometricSettings)
-    } catch (err) {
-      logger.error('Error loading biometric settings:', err)
+    } catch (_err) {
+      logger.error('Error loading biometric settings:', _err)
     } finally {
       setIsLoading(false)
     }
@@ -116,7 +116,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
       await updateBiometricSettings(user.id, { enabled })
       setSettings({ ...settings, enabled })
       success('Settings Updated', `Biometric authentication ${enabled ? 'enabled' : 'disabled'}`)
-    } catch (err) {
+    } catch (_err) {
       showError('Error', 'Failed to update biometric settings')
     }
   }
@@ -129,7 +129,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
       await updateBiometricSettings(user.id, { reauthInterval: interval })
       setSettings({ ...settings, reauthInterval: interval })
       success('Settings Updated', `Re-authentication interval set to ${REAUTH_INTERVALS[interval].label}`)
-    } catch (err) {
+    } catch (_err) {
       showError('Error', 'Failed to update re-authentication interval')
     }
   }
@@ -174,7 +174,7 @@ export function BiometricSetup({ onSetupComplete, compact = false }: BiometricSe
       success('Device Removed', `${deviceToDelete.deviceName} has been removed`)
       setDeviceToDelete(null)
       await loadSettings()
-    } catch (err) {
+    } catch (_err) {
       showError('Error', 'Failed to remove device')
     }
   }

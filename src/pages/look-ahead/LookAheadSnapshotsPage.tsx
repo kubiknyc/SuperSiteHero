@@ -93,7 +93,7 @@ export function LookAheadSnapshotsPage() {
       setShowCreateDialog(false)
       setSnapshotNotes('')
       refetch()
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to create snapshot')
     }
   }

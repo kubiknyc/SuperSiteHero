@@ -207,7 +207,7 @@ export function SafetyObservationForm({
       })
 
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       // Error is handled by the mutation
     }
   }

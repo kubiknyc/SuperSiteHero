@@ -146,7 +146,7 @@ export function PhotoComparisonFormPage() {
       }
 
       navigate(`/projects/${projectId}/photo-progress?tab=comparisons`);
-    } catch (error) {
+    } catch (_error) {
       // Error handled by mutation
     }
   };

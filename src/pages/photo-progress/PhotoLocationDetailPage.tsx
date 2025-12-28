@@ -76,7 +76,7 @@ export function PhotoLocationDetailPage() {
     try {
       await deleteMutation.mutateAsync(locationId);
       navigate(`/projects/${projectId}/photo-progress?tab=locations`);
-    } catch (error) {
+    } catch (_error) {
       // Error handled by mutation
     }
   };

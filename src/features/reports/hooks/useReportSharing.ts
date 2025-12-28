@@ -240,7 +240,7 @@ export function useCopyToClipboard() {
         message: `${label} copied to clipboard`,
       })
       return true
-    } catch (error) {
+    } catch (_error) {
       showToast({
         type: 'error',
         title: 'Error',

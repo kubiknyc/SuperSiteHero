@@ -447,7 +447,7 @@ export function formatCurrency(
     }
 
     return formatted;
-  } catch (error) {
+  } catch (_error) {
     // Fallback formatting
     const formatted = amount.toFixed(decimals);
     if (opts.showSymbol) {

@@ -210,7 +210,7 @@ export function PhotoUploadPage() {
                 : f
             )
           );
-        } catch (error) {
+        } catch (_error) {
           // Update status to error
           setFiles((prev) =>
             prev.map((f) =>
@@ -231,8 +231,8 @@ export function PhotoUploadPage() {
       setTimeout(() => {
         navigate(`/projects/${projectId}/photo-progress?tab=photos`);
       }, 1500);
-    } catch (error) {
-      console.error('Upload error:', error);
+    } catch (_error) {
+      console.error('Upload error:', _error);
     } finally {
       setIsUploading(false);
     }

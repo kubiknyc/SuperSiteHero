@@ -338,7 +338,7 @@ export const scheduleActivitiesApi = {
             .eq('id', item.id)
         )
       )
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'BULK_UPDATE_ERROR',
         message: 'Failed to bulk update activities',
@@ -651,7 +651,7 @@ export const scheduleActivitiesApi = {
             .eq('id', ba.activity_id)
         }
       }
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'SET_BASELINE_ERROR',
         message: 'Failed to set active baseline',
@@ -678,7 +678,7 @@ export const scheduleActivitiesApi = {
           baseline_finish: null,
         })
         .eq('project_id', projectId)
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'CLEAR_BASELINE_ERROR',
         message: 'Failed to clear baseline',
@@ -1149,7 +1149,7 @@ export const scheduleActivitiesApi = {
         .from('schedule_import_logs')
         .update(results)
         .eq('id', logId)
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'UPDATE_IMPORT_LOG_ERROR',
         message: 'Failed to update import log',
@@ -1354,7 +1354,7 @@ export const scheduleActivitiesApi = {
       }
 
       return { imported, errors }
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'IMPORT_ERROR',
         message: 'Failed to import activities',
@@ -1447,7 +1447,7 @@ export const scheduleActivitiesApi = {
       }
 
       return { synced, skipped, errors }
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'SYNC_TO_LOOKAHEAD_ERROR',
         message: 'Failed to sync to look-ahead',

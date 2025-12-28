@@ -32,7 +32,7 @@ export function MFASetupPage() {
       const data = await enrollMFA(`${userProfile?.first_name}'s Device`)
       setEnrollmentData(data)
       setStep('scan')
-    } catch (error) {
+    } catch (_error) {
       showError('Enrollment Failed', 'Failed to start MFA enrollment. Please try again.')
     }
   }
@@ -62,7 +62,7 @@ export function MFASetupPage() {
       } else {
         showError('Invalid Code', 'The verification code is incorrect. Please try again.')
       }
-    } catch (error) {
+    } catch (_error) {
       showError('Verification Failed', 'Failed to verify the code. Please try again.')
     } finally {
       setIsVerifying(false)

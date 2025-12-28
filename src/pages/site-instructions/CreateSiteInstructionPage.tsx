@@ -25,7 +25,7 @@ export default function CreateSiteInstructionPage() {
       const result = await createMutation.mutateAsync(data)
       success('Success', 'Site instruction created successfully')
       navigate(`/site-instructions/${result.id}`)
-    } catch (err) {
+    } catch (_err) {
       error('Error', 'Failed to create site instruction')
     }
   }

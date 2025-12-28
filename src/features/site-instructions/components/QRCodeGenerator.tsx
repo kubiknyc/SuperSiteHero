@@ -88,7 +88,7 @@ export function QRCodeGenerator({
         description: 'A new QR code has been generated successfully.',
         type: 'success',
       })
-    } catch (error) {
+    } catch (_error) {
       showToast({
         title: 'Error',
         description: 'Failed to generate QR code. Please try again.',
@@ -107,7 +107,7 @@ export function QRCodeGenerator({
         description: 'The acknowledgment link has been copied to your clipboard.',
         type: 'success',
       })
-    } catch (error) {
+    } catch (_error) {
       showToast({
         title: 'Error',
         description: 'Failed to copy link. Please try manually.',

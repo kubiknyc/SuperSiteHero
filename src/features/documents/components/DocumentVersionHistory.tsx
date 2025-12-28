@@ -75,7 +75,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
       await revertVersion.mutateAsync(versionId)
       toast.success('Document reverted to selected version')
       setOpen(false)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to revert document version')
     }
   }

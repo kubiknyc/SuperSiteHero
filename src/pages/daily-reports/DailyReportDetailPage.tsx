@@ -147,7 +147,7 @@ export function DailyReportDetailPage() {
         approved_at: new Date().toISOString(),
       })
       toast.success('Report approved')
-    } catch (err) {
+    } catch (_err) {
       toast.error('Failed to approve report')
     }
   }
@@ -160,7 +160,7 @@ export function DailyReportDetailPage() {
       await deleteMutation.mutateAsync(report.id)
       toast.success('Report deleted')
       navigate('/daily-reports')
-    } catch (err) {
+    } catch (_err) {
       toast.error('Failed to delete report')
     }
   }
@@ -412,7 +412,7 @@ export function DailyReportDetailPage() {
                     })
                     setShowApprovalSignature(false)
                     toast.success('Report approved with signature')
-                  } catch (err) {
+                  } catch (_err) {
                     toast.error('Failed to approve report')
                   }
                 }}

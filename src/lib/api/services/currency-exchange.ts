@@ -57,8 +57,8 @@ function getCachedRates(): ExchangeRateCache | null {
     }
 
     return null;
-  } catch (error) {
-    logger.error('Error reading exchange rate cache:', error);
+  } catch (_error) {
+    logger.error('Error reading exchange rate cache:', _error);
     return null;
   }
 }
@@ -69,8 +69,8 @@ function getCachedRates(): ExchangeRateCache | null {
 function setCachedRates(cache: ExchangeRateCache): void {
   try {
     localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
-  } catch (error) {
-    logger.error('Error saving exchange rate cache:', error);
+  } catch (_error) {
+    logger.error('Error saving exchange rate cache:', _error);
   }
 }
 
@@ -80,8 +80,8 @@ function setCachedRates(cache: ExchangeRateCache): void {
 export function clearExchangeRateCache(): void {
   try {
     localStorage.removeItem(CACHE_KEY);
-  } catch (error) {
-    logger.error('Error clearing exchange rate cache:', error);
+  } catch (_error) {
+    logger.error('Error clearing exchange rate cache:', _error);
   }
 }
 
@@ -199,7 +199,7 @@ export async function getExchangeRate(
   if (!cache) {
     try {
       cache = await refreshExchangeRates(from);
-    } catch (error) {
+    } catch (_error) {
       // If refresh fails, try to use stale cache as fallback
       const staleCache = localStorage.getItem(CACHE_KEY);
       if (staleCache) {

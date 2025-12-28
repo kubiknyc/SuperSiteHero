@@ -179,7 +179,7 @@ export const useOfflineStore = create<OfflineStore & {
       try {
         const conflictCount = await countByIndex(STORES.CONFLICTS, 'resolved', false);
         set({ conflictCount });
-      } catch (indexError) {
+      } catch (_indexError) {
         // If the boolean index fails, try getting all and filtering manually
         // This is expected behavior - boolean indexes can be problematic in IndexedDB
         const allConflicts = await getAllFromStore<SyncConflict>(STORES.CONFLICTS);

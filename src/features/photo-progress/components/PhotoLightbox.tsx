@@ -87,7 +87,7 @@ export function PhotoLightbox({
 
   const handleDownload = async () => {
     if (!currentPhoto) return;
-    
+
     try {
       const response = await fetch(currentPhoto.photo_url);
       const blob = await response.blob();
@@ -99,7 +99,7 @@ export function PhotoLightbox({
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-    } catch (error) {
+    } catch (_error) {
       // Fallback: open in new tab
       window.open(currentPhoto.photo_url, '_blank');
     }

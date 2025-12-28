@@ -49,7 +49,7 @@ export function WeatherLogDetailPage() {
       await deleteMutation.mutateAsync(id)
       toast.success('Weather log deleted successfully', 'The weather log has been deleted.')
       navigate('/weather-logs')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete weather log', 'Please try again.')
     }
   }

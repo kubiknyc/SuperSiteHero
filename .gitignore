@@ -115,6 +115,17 @@ src/types/*-backup.ts
 
 # iOS build artifacts
 ios/App/App/public/
+ios/App/build/
+ios/App/*.ipa
+ios/App/*.dSYM.zip
+
+# Fastlane
+ios/App/fastlane/report.xml
+ios/App/fastlane/Preview.html
+ios/App/fastlane/screenshots/
+ios/App/fastlane/test_output/
+ios/App/fastlane/README.md
+ios/App/Gemfile.lock
 
 # Android build artifacts
 android/app/build/

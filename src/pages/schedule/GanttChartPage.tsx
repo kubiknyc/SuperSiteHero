@@ -63,7 +63,7 @@ export function GanttChartPage() {
           },
         })
         toast.success('Task Updated', 'Schedule has been updated')
-      } catch (error) {
+      } catch (_error) {
         toast.error('Update Failed', 'Failed to update task dates')
       }
     },
@@ -79,7 +79,7 @@ export function GanttChartPage() {
       await scheduleApi.saveBaseline(projectId, 'Baseline', 'Saved from Gantt chart')
       await refetch()
       toast.success('Baseline Saved', 'Current schedule has been saved as baseline')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Save Failed', 'Failed to save baseline')
     } finally {
       setIsSavingBaseline(false)
@@ -94,7 +94,7 @@ export function GanttChartPage() {
       await scheduleApi.clearBaseline(projectId)
       await refetch()
       toast.success('Baseline Cleared', 'Baseline has been removed')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Clear Failed', 'Failed to clear baseline')
     }
   }, [projectId, refetch, toast])
@@ -124,7 +124,7 @@ export function GanttChartPage() {
         // A more complete solution would map the imported task IDs to dependency references
 
         await refetch()
-      } catch (error) {
+      } catch (_error) {
         toast.error('Import Failed', 'Failed to import schedule')
       } finally {
         setIsImporting(false)

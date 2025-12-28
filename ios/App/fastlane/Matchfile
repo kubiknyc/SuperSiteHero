@@ -1,0 +1,26 @@
+# Matchfile for JobSight iOS App
+# Configure code signing certificate and profile management
+
+# Git repository URL for storing encrypted certificates and profiles
+# Create a PRIVATE repository for this (e.g., github.com/yourname/jobsight-certificates)
+git_url(ENV["MATCH_GIT_URL"] || "https://github.com/YOUR_USERNAME/jobsight-certificates.git")
+
+# Storage mode - git is recommended for teams
+storage_mode("git")
+
+# Type of provisioning profile to use
+# Options: appstore, adhoc, development, enterprise
+type("appstore")
+
+# App identifiers to manage certificates for
+app_identifier(["com.jobsightapp.app"])
+
+# Team ID (optional - will use value from Appfile if not set)
+# team_id("YOUR_TEAM_ID")
+
+# Username (Apple ID) - optional, will use value from Appfile if not set
+# username("your-apple-id@email.com")
+
+# For more information about Match and code signing:
+# https://docs.fastlane.tools/actions/match/
+# https://codesigning.guide/

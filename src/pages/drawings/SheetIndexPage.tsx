@@ -57,7 +57,7 @@ import {
   useCreateDrawingSet,
   useSetCurrentDrawingSet,
 } from '@/features/drawings/hooks/useDrawings';
-import { useCurrentProject } from '@/hooks/useCurrentProject';
+import { useProjectContext } from '@/lib/contexts/ProjectContext';
 import { ISSUE_PURPOSES, type DrawingSet, type DrawingSetStatus } from '@/types/drawing';
 import { toast } from 'sonner';
 
@@ -109,7 +109,7 @@ function CreateSetDialog({ open, onOpenChange, projectId, companyId }: CreateSet
       setSetNumber('');
       setDescription('');
       setIssuePurpose('For Construction');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to create sheet index');
     }
   };
@@ -299,7 +299,7 @@ function SheetIndexCard({ set, projectId, onSetCurrent, isSettingCurrent }: Shee
 
 export default function SheetIndexPage() {
   const { projectId } = useParams<{ projectId: string }>();
-  const { project } = useCurrentProject();
+  const { currentProject: project } = useProjectContext();
   const [search, setSearch] = useState('');
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
@@ -326,7 +326,7 @@ export default function SheetIndexPage() {
     try {
       await setCurrentMutation.mutateAsync({ setId, projectId });
       toast.success('Current sheet index updated');
-    } catch {
+    } catch (_error) {
       toast.error('Failed to update current sheet index');
     }
   };

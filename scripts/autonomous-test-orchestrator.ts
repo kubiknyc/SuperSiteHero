@@ -81,7 +81,7 @@ class AutonomousTestOrchestrator {
         result.total = testResults.numTotalTests || 0;
         result.failures = testResults.numFailedTests || 0;
         result.passed = result.failures === 0;
-      } catch (e) {
+      } catch (_e) {
         console.warn('Could not parse unit test results');
       }
 

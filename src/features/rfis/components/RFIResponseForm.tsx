@@ -76,7 +76,7 @@ export function RFIResponseForm({ rfiId, onSuccess, onCancel }: RFIResponseFormP
       setShowImpactFields(false)
 
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       // Error handling is done by React Query
     }
   }

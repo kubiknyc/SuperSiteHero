@@ -162,7 +162,7 @@ export function OSHA300LogPage() {
         message: 'OSHA 300 Log exported to Excel successfully.',
       })
       setShowExportDialog(false)
-    } catch (error) {
+    } catch (_error) {
       showToast({
         type: 'error',
         title: 'Export Failed',
@@ -184,7 +184,7 @@ export function OSHA300LogPage() {
         message: 'OSHA 300 Log exported to CSV successfully.',
       })
       setShowExportDialog(false)
-    } catch (error) {
+    } catch (_error) {
       showToast({
         type: 'error',
         title: 'Export Failed',

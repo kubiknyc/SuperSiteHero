@@ -159,7 +159,7 @@ export function BackChargeFormDialog({
       }
       onOpenChange(false)
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       showToast('error', `Failed to ${isEditing ? 'update' : 'create'} back-charge`)
     }
   }

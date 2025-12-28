@@ -97,7 +97,7 @@ export function MFAVerifyPage() {
       } else {
         throw new Error('Verification failed')
       }
-    } catch (error) {
+    } catch (_error) {
       if (attempts >= maxAttempts - 1) {
         showError('Too Many Attempts', 'Maximum verification attempts exceeded. Please try logging in again.')
         navigate('/login', { replace: true })

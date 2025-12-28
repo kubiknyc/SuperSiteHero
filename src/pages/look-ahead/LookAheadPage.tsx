@@ -253,7 +253,7 @@ export function LookAheadPage() {
       setShowActivityDialog(false)
       setSelectedActivity(null)
       setNewActivityWeek(null)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to save activity')
     }
   }
@@ -265,7 +265,7 @@ export function LookAheadPage() {
         status,
       })
       toast.success(`Activity marked as ${status.replace('_', ' ')}`)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to update status')
     }
   }
@@ -279,7 +279,7 @@ export function LookAheadPage() {
         projectId: projectId!,
       })
       toast.success('Activity deleted')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete activity')
     }
   }
@@ -292,7 +292,7 @@ export function LookAheadPage() {
         weekStartDate,
       })
       toast.success(`Activity moved to Week ${weekNumber}`)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to move activity')
     }
     setDraggedActivityId(null)
@@ -305,7 +305,7 @@ export function LookAheadPage() {
         projectId: projectId!,
       })
       toast.success('Constraint added')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to add constraint')
     }
   }
@@ -318,7 +318,7 @@ export function LookAheadPage() {
         activityId: selectedActivity!.id,
       })
       toast.success('Constraint resolved')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to resolve constraint')
     }
   }
@@ -330,7 +330,7 @@ export function LookAheadPage() {
         activityId: selectedActivity!.id,
       })
       toast.success('Constraint deleted')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete constraint')
     }
   }

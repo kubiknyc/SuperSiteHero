@@ -190,7 +190,7 @@ export function TakeoffTemplateDialog({
       }
 
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: mode === 'create' ? 'Failed to create template' : 'Failed to update template',
@@ -207,7 +207,7 @@ export function TakeoffTemplateDialog({
         title: 'Template Deleted',
         description: 'Template has been removed',
       })
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to delete template',

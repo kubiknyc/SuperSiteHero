@@ -113,7 +113,7 @@ export function SubmittalItemsEditor({
         })
       }
       handleCloseDialog()
-    } catch (error) {
+    } catch (_error) {
       // Error handled by React Query
     }
   }
@@ -126,7 +126,7 @@ export function SubmittalItemsEditor({
         itemId: item.id,
         submittalId,
       })
-    } catch (error) {
+    } catch (_error) {
       // Error handled by React Query
     }
   }

@@ -177,7 +177,7 @@ export function PhotoReportFormPage() {
       }
 
       navigate(`/projects/${projectId}/photo-progress?tab=reports`);
-    } catch (error) {
+    } catch (_error) {
       // Error handled by mutation
     }
   };

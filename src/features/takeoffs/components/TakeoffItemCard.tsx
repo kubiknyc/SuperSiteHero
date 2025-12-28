@@ -144,7 +144,7 @@ export function TakeoffItemCard({
         default:
           return 'Unknown type'
       }
-    } catch (error) {
+    } catch (_error) {
       return 'Error calculating'
     }
   }

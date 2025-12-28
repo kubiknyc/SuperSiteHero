@@ -148,7 +148,7 @@ export const analyticsApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_METRICS_ERROR',
         message: 'Failed to fetch snapshots with metrics',
@@ -525,7 +525,7 @@ export const analyticsApi = {
       }
 
       return stats
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_STATS_ERROR',
         message: 'Failed to fetch recommendation statistics',
@@ -599,7 +599,7 @@ export const analyticsApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_PERFORMANCE_ERROR',
         message: 'Failed to fetch model performance',

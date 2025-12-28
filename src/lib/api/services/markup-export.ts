@@ -21,7 +21,7 @@ async function getJSZip(): Promise<typeof import('jszip')> {
     try {
       const module = await import('jszip')
       JSZip = module.default || module
-    } catch {
+    } catch (_error) {
       throw new Error(
         'JSZip is required for bulk export. Please install it: npm install jszip'
       )
@@ -368,7 +368,7 @@ async function renderDrawingWithMarkups(
   let img: HTMLImageElement
   try {
     img = await loadImage(drawing.file_url)
-  } catch (error) {
+  } catch (_error) {
     throw new ApiErrorClass({
       code: 'LOAD_IMAGE_ERROR',
       message: `Failed to load drawing: ${drawing.name}`,

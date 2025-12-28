@@ -43,7 +43,7 @@ export function CreateRevisionDialog({
 
       setIsOpen(false)
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       // Error handled by React Query
     }
   }

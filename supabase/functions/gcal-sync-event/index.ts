@@ -137,7 +137,7 @@ serve(async (req) => {
           .eq('id', connectionId)
 
         accessToken = tokens.access_token
-      } catch (refreshError) {
+      } catch (_refreshError) {
         // Mark connection as needing re-auth
         await supabase
           .from('google_calendar_connections')
@@ -342,7 +342,7 @@ serve(async (req) => {
           })
         }
       }
-    } catch {
+    } catch (_error) {
       // Ignore logging errors
     }
 

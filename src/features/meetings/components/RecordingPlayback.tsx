@@ -147,7 +147,7 @@ export function RecordingPlayback({
       try {
         await containerRef.current.requestFullscreen();
         setIsFullscreen(true);
-      } catch (err) {
+      } catch (_err) {
         logger.error('Fullscreen not supported');
       }
     } else {

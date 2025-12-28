@@ -105,7 +105,7 @@ export default function BidPackagesPage() {
     try {
       await publishBidPackage.mutateAsync(id)
       toast.success('Bid package published')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to publish bid package')
     }
   }

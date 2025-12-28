@@ -74,7 +74,7 @@ export function TaskDetailPage() {
         completed_date: new Date().toISOString(),
       })
       toast.success('Task completed')
-    } catch (err) {
+    } catch (_err) {
       toast.error('Failed to complete task')
     }
   }
@@ -87,7 +87,7 @@ export function TaskDetailPage() {
       await deleteMutation.mutateAsync(task.id)
       toast.success('Task deleted')
       navigate('/tasks')
-    } catch (err) {
+    } catch (_err) {
       toast.error('Failed to delete task')
     }
   }

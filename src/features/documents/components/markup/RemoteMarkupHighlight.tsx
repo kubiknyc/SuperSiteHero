@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/refs */
 /**
  * RemoteMarkupHighlight Component
  * Visual indicator showing which markups are being edited by other collaborators

@@ -1168,7 +1168,7 @@ export const historicalBidAnalysisApi = {
             divisions: filters.divisions,
           })
           vendorPerformance.push(history.data)
-        } catch (err) {
+        } catch (_err) {
           // Skip vendors with errors
           continue
         }

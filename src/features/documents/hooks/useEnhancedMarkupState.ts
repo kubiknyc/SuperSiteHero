@@ -272,7 +272,7 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
           ? 'Markup is now shared with selected users'
           : 'Markup sharing has been disabled',
       })
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to update sharing settings',

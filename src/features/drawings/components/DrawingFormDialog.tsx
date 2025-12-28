@@ -167,7 +167,7 @@ export function DrawingFormDialog({
         success('Drawing created', `${data.drawingNumber} has been added to the register`);
       }
       onOpenChange(false);
-    } catch (err) {
+    } catch (_err) {
       showError('Error', isEditing ? 'Failed to update drawing' : 'Failed to create drawing');
     }
   };

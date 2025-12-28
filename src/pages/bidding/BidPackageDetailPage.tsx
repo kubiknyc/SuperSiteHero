@@ -131,7 +131,7 @@ export default function BidPackageDetailPage() {
       await publishBidPackage.mutateAsync(packageId!)
       toast.success('Bid package published successfully')
       setPublishDialogOpen(false)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to publish bid package')
     }
   }
@@ -153,7 +153,7 @@ export default function BidPackageDetailPage() {
       toast.success('Bid awarded successfully')
       setAwardDialogOpen(false)
       setSelectedSubmissionId(null)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to award bid')
     }
   }

@@ -152,7 +152,7 @@ export const documentAiApi = {
           last_error: null,
         })
         .eq('document_id', documentId)
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'REPROCESS_OCR_ERROR',
         message: 'Failed to reprocess OCR',
@@ -260,7 +260,7 @@ export const documentAiApi = {
       }
 
       return data?.suggested_categories || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_SUGGESTIONS_ERROR',
         message: 'Failed to fetch category suggestions',
@@ -478,7 +478,7 @@ export const documentAiApi = {
         document_id,
         duplicates: duplicates as SimilarDocument[],
       }))
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FIND_DUPLICATES_ERROR',
         message: 'Failed to find duplicate documents',
@@ -602,7 +602,7 @@ export const documentAiApi = {
         processing_progress: progress,
         error_message: queue?.last_error || null,
       }
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_STATUS_ERROR',
         message: 'Failed to fetch processing status',
@@ -626,7 +626,7 @@ export const documentAiApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_QUEUE_ERROR',
         message: 'Failed to fetch processing queue',
@@ -646,7 +646,7 @@ export const documentAiApi = {
         .in('status', ['pending', 'processing'])
 
       if (error) {throw error}
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'CANCEL_PROCESSING_ERROR',
         message: 'Failed to cancel processing',
@@ -680,7 +680,7 @@ export const documentAiApi = {
           avg_processing_time_ms: null,
         }
       )
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_STATS_ERROR',
         message: 'Failed to fetch processing statistics',
@@ -706,7 +706,7 @@ export const documentAiApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_AI_STATUS_ERROR',
         message: 'Failed to fetch AI status',
@@ -740,7 +740,7 @@ export const documentAiApi = {
           count,
         }))
         .sort((a, b) => b.count - a.count)
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'FETCH_DISTRIBUTION_ERROR',
         message: 'Failed to fetch category distribution',

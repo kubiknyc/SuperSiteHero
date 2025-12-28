@@ -509,7 +509,7 @@ export const subcontractorPortalApi = {
         expiring_documents: expiringCount || 0,
         overdue_items: (overduePunchCount || 0) + (overdueTaskCount || 0),
       }
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'STATS_ERROR',
         message: 'Failed to fetch subcontractor stats',
@@ -613,7 +613,7 @@ export const subcontractorPortalApi = {
       )
 
       return projects
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'PROJECTS_ERROR',
         message: 'Failed to fetch subcontractor projects',
@@ -660,7 +660,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'BIDS_ERROR',
         message: 'Failed to fetch pending bids',
@@ -784,7 +784,7 @@ export const subcontractorPortalApi = {
       }
 
       return bid
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'SUBMIT_BID_ERROR',
         message: 'Failed to submit bid',
@@ -812,7 +812,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return data
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'DECLINE_BID_ERROR',
         message: 'Failed to decline bid',
@@ -898,7 +898,7 @@ export const subcontractorPortalApi = {
         ...item,
         photo_count: photoCountsMap[item.id] || 0,
       })) as any[]
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'PUNCH_ITEMS_ERROR',
         message: 'Failed to fetch punch items',
@@ -935,7 +935,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return item as any
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'UPDATE_PUNCH_ITEM_ERROR',
         message: 'Failed to update punch item status',
@@ -993,7 +993,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return (data || []) as any[]
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'TASKS_ERROR',
         message: 'Failed to fetch tasks',
@@ -1029,7 +1029,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return task as any
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'UPDATE_TASK_ERROR',
         message: 'Failed to update task status',
@@ -1084,7 +1084,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'COMPLIANCE_DOCS_ERROR',
         message: 'Failed to fetch compliance documents',
@@ -1113,7 +1113,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return doc
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'UPLOAD_DOC_ERROR',
         message: 'Failed to upload compliance document',
@@ -1136,7 +1136,7 @@ export const subcontractorPortalApi = {
       return (data || []).filter((doc: ExpiringDocument) =>
         subcontractorIds.includes(doc.subcontractor_id)
       )
-    } catch (error) {
+    } catch (_error) {
       // Return empty array if function doesn't exist yet
       return []
     }
@@ -1201,7 +1201,7 @@ export const subcontractorPortalApi = {
       }
 
       return invitation
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'CREATE_INVITATION_ERROR',
         message: 'Failed to create invitation',
@@ -1239,7 +1239,7 @@ export const subcontractorPortalApi = {
         subcontractor: data.subcontractor,
         project: data.project,
       }
-    } catch (error) {
+    } catch (_error) {
       return {
         is_valid: false,
         error: 'Failed to validate invitation',
@@ -1323,7 +1323,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return data || []
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'PORTAL_ACCESS_ERROR',
         message: 'Failed to fetch portal access records',
@@ -1349,7 +1349,7 @@ export const subcontractorPortalApi = {
       if (error) {throw error}
 
       return access
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'UPDATE_ACCESS_ERROR',
         message: 'Failed to update portal access',
@@ -1368,7 +1368,7 @@ export const subcontractorPortalApi = {
         .eq('id', accessId)
 
       if (error) {throw error}
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'REVOKE_ACCESS_ERROR',
         message: 'Failed to revoke portal access',
@@ -1406,7 +1406,7 @@ export const subcontractorPortalApi = {
       if (error) {return null}
 
       return data
-    } catch (error) {
+    } catch (_error) {
       return null
     }
   },
@@ -1593,7 +1593,7 @@ export const subcontractorPortalApi = {
         .limit(1)
 
       return !error && data && data.length > 0
-    } catch (error) {
+    } catch (_error) {
       return false
     }
   },

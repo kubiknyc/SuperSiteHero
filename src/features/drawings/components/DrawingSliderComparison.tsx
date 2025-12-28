@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/set-state-in-effect, react-hooks/set-state-in-render */
+/* eslint-disable react-hooks/set-state-in-render */
 /**
  * Drawing Slider Comparison Component
  *

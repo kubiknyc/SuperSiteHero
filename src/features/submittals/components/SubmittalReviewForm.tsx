@@ -85,7 +85,7 @@ export function SubmittalReviewForm({
       setSelectedCode(null)
       setComments('')
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       // Error handling done by React Query
     }
   }

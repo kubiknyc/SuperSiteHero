@@ -1,0 +1,173 @@
+# Fastfile for JobSight iOS App
+# Automated builds and deployment to TestFlight/App Store
+
+default_platform(:ios)
+
+platform :ios do
+
+  before_all do
+    setup_ci if ENV['CI']
+  end
+
+  # ==========================================
+  # Certificate Management
+  # ==========================================
+
+  desc "Sync certificates and provisioning profiles using match"
+  lane :certificates do
+    # Set up App Store Connect API authentication
+    app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_API_ISSUER_ID"],
+      key_filepath: File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{ENV['APP_STORE_CONNECT_API_KEY_ID']}.p8"),
+      in_house: false
+    )
+
+    # Fetch or create certificates and profiles
+    # NOTE: Set readonly: false for first run to generate certificates
+    #       Change to readonly: true after first successful build
+    match(
+      type: "appstore",
+      app_identifier: "com.jobsightapp.app",
+      git_url: ENV["MATCH_GIT_URL"] || "https://github.com/YOUR_USERNAME/jobsight-certificates.git",
+      git_basic_authorization: Base64.strict_encode64(ENV["MATCH_GIT_BASIC_AUTH"] || ""),
+      readonly: ENV['MATCH_READONLY'] != 'false'  # Default to readonly, set MATCH_READONLY=false for first run
+    )
+  end
+
+  # ==========================================
+  # TestFlight (Beta) Builds
+  # ==========================================
+
+  desc "Build and upload to TestFlight for beta testing"
+  lane :beta do
+    # Get certificates and profiles
+    certificates
+
+    # Increment build number using timestamp for uniqueness
+    increment_build_number(
+      build_number: Time.now.strftime("%Y%m%d%H%M"),
+      xcodeproj: "App.xcodeproj"
+    )
+
+    # Build the app
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "App",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "JobSight.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          "com.jobsightapp.app" => "match AppStore com.jobsightapp.app"
+        }
+      }
+    )
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true,
+      distribute_external: false,
+      notify_external_testers: false
+    )
+
+    UI.success("Successfully uploaded to TestFlight!")
+  end
+
+  # ==========================================
+  # App Store Release Builds
+  # ==========================================
+
+  desc "Build and submit to App Store for review"
+  lane :release do
+    # Get certificates and profiles
+    certificates
+
+    # Increment build number
+    increment_build_number(
+      build_number: Time.now.strftime("%Y%m%d%H%M"),
+      xcodeproj: "App.xcodeproj"
+    )
+
+    # Build the app
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "App",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "JobSight.ipa",
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          "com.jobsightapp.app" => "match AppStore com.jobsightapp.app"
+        }
+      }
+    )
+
+    # Upload to App Store Connect (but don't submit for review yet)
+    upload_to_app_store(
+      skip_screenshots: true,
+      skip_metadata: true,
+      submit_for_review: false,
+      automatic_release: false,
+      force: true  # Skip HTML preview
+    )
+
+    UI.success("Successfully uploaded to App Store Connect!")
+    UI.important("Remember to submit for review manually in App Store Connect")
+  end
+
+  # ==========================================
+  # Utility Lanes
+  # ==========================================
+
+  desc "Build app locally without uploading (for testing)"
+  lane :build_only do
+    certificates
+
+    increment_build_number(
+      build_number: Time.now.strftime("%Y%m%d%H%M"),
+      xcodeproj: "App.xcodeproj"
+    )
+
+    build_app(
+      workspace: "App.xcworkspace",
+      scheme: "App",
+      export_method: "app-store",
+      output_directory: "./build",
+      output_name: "JobSight.ipa",
+      clean: true
+    )
+
+    UI.success("Build complete! IPA saved to ./build/JobSight.ipa")
+  end
+
+  desc "Register new devices for ad-hoc testing"
+  lane :register_device do |options|
+    device_name = options[:name] || UI.input("Enter device name: ")
+    device_udid = options[:udid] || UI.input("Enter device UDID: ")
+
+    register_devices(
+      devices: {
+        device_name => device_udid
+      }
+    )
+
+    # Regenerate provisioning profiles to include new device
+    match(
+      type: "adhoc",
+      app_identifier: "com.jobsightapp.app",
+      force_for_new_devices: true
+    )
+  end
+
+  # ==========================================
+  # Error Handling
+  # ==========================================
+
+  error do |lane, exception|
+    UI.error("Error in lane #{lane}: #{exception.message}")
+  end
+
+end

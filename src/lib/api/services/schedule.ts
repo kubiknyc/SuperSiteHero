@@ -284,7 +284,7 @@ export const scheduleApi = {
             .eq('id', item.id)
         )
       )
-    } catch (error) {
+    } catch (_error) {
       throw new ApiErrorClass({
         code: 'REORDER_ITEMS_ERROR',
         message: 'Failed to reorder schedule items',
@@ -635,7 +635,7 @@ export const scheduleApi = {
     try {
       const items = await this.getScheduleItems({ project_id: projectId })
       return items.some(item => item.baseline_start_date !== null)
-    } catch {
+    } catch (_error) {
       return false
     }
   },

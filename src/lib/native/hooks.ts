@@ -147,7 +147,7 @@ export function useShare() {
     try {
       await Share.share(data);
       return true;
-    } catch (error) {
+    } catch (_error) {
       // User cancelled
       return false;
     }

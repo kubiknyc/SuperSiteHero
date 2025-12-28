@@ -539,7 +539,7 @@ export const reportDataService = {
       try {
         const summary = await this.compileDailySummary(projectId, dateStr)
         dailySummaries.push(summary)
-      } catch (error) {
+      } catch (_error) {
         logger.warn('[ReportData] Error compiling daily summary for', dateStr)
       }
       current.setDate(current.getDate() + 1)

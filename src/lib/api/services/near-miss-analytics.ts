@@ -304,7 +304,7 @@ export const nearMissAnalyticsApi = {
       }
 
       return (data || []) as LocationHeatMapData[]
-    } catch (error) {
+    } catch (_error) {
       return this._getLocationHeatMapFallback(filters)
     }
   },
@@ -539,7 +539,7 @@ export const nearMissAnalyticsApi = {
       }
 
       return (data || []) as FrequencySpike[]
-    } catch (error) {
+    } catch (_error) {
       return this._detectFrequencySpikesFallback(companyId, projectId, lookbackDays, spikeThreshold)
     }
   },
@@ -627,7 +627,7 @@ export const nearMissAnalyticsApi = {
       }
 
       return (data || []) as LocationHotspot[]
-    } catch (error) {
+    } catch (_error) {
       return this._detectLocationHotspotsFallback(companyId, projectId, minIncidents, days)
     }
   },
@@ -690,7 +690,7 @@ export const nearMissAnalyticsApi = {
       }
 
       return data[0] as TrendCalculation
-    } catch (error) {
+    } catch (_error) {
       return this._calculateTrendFallback(companyId, projectId, periodDays)
     }
   },

@@ -150,9 +150,9 @@ export function AttachmentsSection({ siteInstructionId, readOnly = false }: Atta
           file,
         })
         successCount++
-      } catch (error) {
+      } catch (_error) {
         errorCount++
-        logger.error('Failed to upload file:', file.name, error)
+        logger.error('Failed to upload file:', file.name, _error)
       }
     }
 
@@ -181,7 +181,7 @@ export function AttachmentsSection({ siteInstructionId, readOnly = false }: Atta
         storagePath: attachmentToDelete.storage_path,
       })
       toast.success('Attachment deleted')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete attachment')
     }
 

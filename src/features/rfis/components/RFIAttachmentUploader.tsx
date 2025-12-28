@@ -119,7 +119,7 @@ export function RFIAttachmentUploader({
           file,
           attachmentType,
         })
-      } catch (error) {
+      } catch (_error) {
         // Error handled by React Query
       } finally {
         setUploadingFiles((prev) => {
@@ -140,7 +140,7 @@ export function RFIAttachmentUploader({
 
     try {
       await deleteAttachment.mutateAsync({ attachmentId, rfiId })
-    } catch (error) {
+    } catch (_error) {
       // Error handled by React Query
     }
   }

@@ -385,7 +385,7 @@ export function useNotificationSubscription(
                   window.location.href = notification.link
                 }
               }
-            } catch (err) {
+            } catch (_err) {
               // Browser notifications not supported or blocked
             }
           }

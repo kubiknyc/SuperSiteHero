@@ -90,7 +90,7 @@ export default function SiteInstructionDetailPage() {
     try {
       await issueMutation.mutateAsync(id!)
       addToast({ title: 'Success', description: 'Site instruction issued successfully', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to issue instruction', variant: 'destructive' })
     }
   }
@@ -100,7 +100,7 @@ export default function SiteInstructionDetailPage() {
       await acknowledgeMutation.mutateAsync({ id: id!, ...data })
       setShowAcknowledge(false)
       addToast({ title: 'Success', description: 'Acknowledgment recorded', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to record acknowledgment', variant: 'destructive' })
     }
   }
@@ -109,7 +109,7 @@ export default function SiteInstructionDetailPage() {
     try {
       await startMutation.mutateAsync(id!)
       addToast({ title: 'Success', description: 'Work started on instruction', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to start instruction', variant: 'destructive' })
     }
   }
@@ -119,7 +119,7 @@ export default function SiteInstructionDetailPage() {
       await completeMutation.mutateAsync({ id: id!, ...data })
       setShowComplete(false)
       addToast({ title: 'Success', description: 'Marked as complete', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to mark complete', variant: 'destructive' })
     }
   }
@@ -129,7 +129,7 @@ export default function SiteInstructionDetailPage() {
       await verifyMutation.mutateAsync({ id: id!, notes })
       setShowVerify(false)
       addToast({ title: 'Success', description: 'Completion verified', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to verify completion', variant: 'destructive' })
     }
   }
@@ -138,7 +138,7 @@ export default function SiteInstructionDetailPage() {
     try {
       await voidMutation.mutateAsync(id!)
       addToast({ title: 'Success', description: 'Instruction voided', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to void instruction', variant: 'destructive' })
     }
   }
@@ -148,7 +148,7 @@ export default function SiteInstructionDetailPage() {
       await deleteMutation.mutateAsync(id!)
       addToast({ title: 'Success', description: 'Instruction deleted', variant: 'success' })
       navigate('/site-instructions')
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to delete instruction', variant: 'destructive' })
     }
   }
@@ -162,7 +162,7 @@ export default function SiteInstructionDetailPage() {
       })
       setNewComment('')
       addToast({ title: 'Success', description: 'Comment added', variant: 'success' })
-    } catch (err) {
+    } catch (_err) {
       addToast({ title: 'Error', description: 'Failed to add comment', variant: 'destructive' })
     }
   }
