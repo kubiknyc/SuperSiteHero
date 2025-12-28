@@ -2,6 +2,16 @@
 // Daily report detail view
 
 import React, { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useDailyReport, useUpdateDailyReport, useDeleteDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
@@ -67,6 +77,7 @@ export function DailyReportDetailPage() {
   const [showPrintView, setShowPrintView] = useState(false)
   const [showVersionHistory, setShowVersionHistory] = useState(false)
   const [showApprovalSignature, setShowApprovalSignature] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   if (!id) {
     return (
@@ -153,15 +164,14 @@ export function DailyReportDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this report?')) {
-      return
-    }
     try {
       await deleteMutation.mutateAsync(report.id)
       toast.success('Report deleted')
       navigate('/daily-reports')
     } catch (_err) {
       toast.error('Failed to delete report')
+    } finally {
+      setShowDeleteDialog(false)
     }
   }
 
@@ -250,7 +260,7 @@ export function DailyReportDetailPage() {
             )}
             <Button
               variant="destructive"
-              onClick={handleDelete}
+              onClick={() => setShowDeleteDialog(true)}
               disabled={deleteMutation.isPending}
             >
               <Trash2 className="h-4 w-4 mr-2" />
@@ -443,6 +453,26 @@ export function DailyReportDetailPage() {
           onClose={() => setShowPrintView(false)}
         />
       )}
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Report</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this report? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   )
 }

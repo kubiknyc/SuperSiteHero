@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { DailyReportForm } from '@/features/daily-reports/components/DailyReportForm'

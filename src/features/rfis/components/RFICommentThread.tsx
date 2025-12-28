@@ -10,6 +10,7 @@ import { Loader2, MessageSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { WorkflowItemComment, UserProfile } from '@/types/database'
 import { logger } from '../../../lib/utils/logger';
+import { UserName } from '@/components/shared'
 
 
 export interface RFICommentThreadProps {
@@ -93,14 +94,13 @@ export function RFICommentThread({
     return userId.substring(0, 2).toUpperCase()
   }
 
-  // Get display name for user
-  const getDisplayName = (userId: string) => {
+  // Render display name for user
+  const renderDisplayName = (userId: string | null | undefined) => {
+    if (!userId) return <span>Unknown</span>
     if (userId === userProfile.id) {
-      return 'You'
+      return <span>You</span>
     }
-    // In production, fetch user profile and return full name
-    // For now, return truncated user ID
-    return userId.substring(0, 8)
+    return <UserName userId={userId} fallback="Unknown User" />
   }
 
   return (
@@ -140,7 +140,7 @@ export function RFICommentThread({
                         ? 'bg-blue-500 text-white'
                         : 'bg-muted text-secondary'
                     )}
-                    aria-label={`Avatar for ${getDisplayName(comment.created_by || '')}`}
+                    aria-label={`Avatar for user`}
                   >
                     {getInitials(comment.created_by || '')}
                   </div>
@@ -154,7 +154,7 @@ export function RFICommentThread({
                           isOwnComment ? 'text-primary' : 'text-foreground'
                         )}
                       >
-                        {getDisplayName(comment.created_by || '')}
+                        {renderDisplayName(comment.created_by)}
                       </span>
                       <span className="text-xs text-muted">
                         {comment.created_at ? formatDistanceToNow(new Date(comment.created_at), {

@@ -28,10 +28,10 @@ function getShapeBounds(
   markupId: string,
   layerRef: React.RefObject<Konva.Layer>
 ): HighlightBounds | null {
-  if (!layerRef.current) return null;
+  if (!layerRef.current) {return null;}
 
   const shape = layerRef.current.findOne(`#${markupId}`);
-  if (!shape) return null;
+  if (!shape) {return null;}
 
   const rect = shape.getClientRect();
   return {
@@ -118,7 +118,7 @@ export function RemoteMarkupHighlights({
     return highlights
       .map((highlight) => {
         const bounds = getShapeBounds(highlight.markupId, layerRef);
-        if (!bounds) return null;
+        if (!bounds) {return null;}
         return { highlight, bounds };
       })
       .filter((h): h is { highlight: RemoteEditHighlight; bounds: HighlightBounds } => h !== null);

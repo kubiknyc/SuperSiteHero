@@ -144,8 +144,8 @@ export function CollaboratorIndicator({
     return [...collaborators].sort((a, b) => {
       const aActive = a.currentAction !== 'idle';
       const bActive = b.currentAction !== 'idle';
-      if (aActive && !bActive) return -1;
-      if (!aActive && bActive) return 1;
+      if (aActive && !bActive) {return -1;}
+      if (!aActive && bActive) {return 1;}
       return a.name.localeCompare(b.name);
     });
   }, [collaborators]);

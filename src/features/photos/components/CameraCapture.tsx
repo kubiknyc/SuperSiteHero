@@ -13,7 +13,7 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Camera, X, Check, RotateCcw, MapPin, Image, Upload, Trash2, Settings, FlipHorizontal } from 'lucide-react'
+import { Camera, X, Check, RotateCcw, MapPin, FlipHorizontal } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -21,22 +21,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type {
   CameraCaptureOptions,
   CapturedPhoto,
-  PhotoMetadata,
   GPSCoordinates,
 } from '@/types/photo-management'
 import { logger } from '../../../lib/utils/logger';
@@ -169,9 +158,9 @@ export function CameraCapture({
   onClose,
   onCapture,
   options = {},
-  projectId,
-  entityType,
-  entityId,
+  projectId: _projectId,
+  entityType: _entityType,
+  entityId: _entityId,
 }: CameraCaptureProps) {
   const {
     facingMode = 'environment',

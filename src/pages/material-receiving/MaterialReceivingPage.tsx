@@ -5,7 +5,9 @@
 
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Plus, Filter, Download, Search, X } from 'lucide-react';
+import { Plus, Filter, Download, Search, X, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -57,6 +59,58 @@ import {
   MATERIAL_CATEGORIES,
 } from '@/types/material-receiving';
 
+/**
+ * Export deliveries to CSV format
+ */
+function exportDeliveriesToCSV(deliveries: { material_name: string; vendor_name: string; delivery_ticket_number?: string; material_category: string; delivery_status: string; condition_status: string; quantity_received: number; delivery_date: string; notes?: string }[]): void {
+  const headers = [
+    'Material',
+    'Vendor',
+    'Ticket Number',
+    'Category',
+    'Status',
+    'Condition',
+    'Quantity',
+    'Delivery Date',
+    'Notes',
+  ];
+
+  const rows = deliveries.map((d) => [
+    d.material_name,
+    d.vendor_name,
+    d.delivery_ticket_number || '',
+    MATERIAL_CATEGORIES.find((c) => c.value === d.material_category)?.label || d.material_category,
+    DELIVERY_STATUSES.find((s) => s.value === d.delivery_status)?.label || d.delivery_status,
+    CONDITION_STATUSES.find((s) => s.value === d.condition_status)?.label || d.condition_status,
+    String(d.quantity_received || 0),
+    d.delivery_date ? format(new Date(d.delivery_date), 'yyyy-MM-dd') : '',
+    d.notes || '',
+  ]);
+
+  const csvContent = [
+    headers.join(','),
+    ...rows.map((row) =>
+      row.map((cell) => {
+        const str = String(cell);
+        if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      }).join(',')
+    ),
+  ].join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `material_deliveries_${format(new Date(), 'yyyy-MM-dd')}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 export function MaterialReceivingPage() {
   const { projectId } = useParams<{ projectId: string }>();
   const [searchTerm, setSearchTerm] = useState('');
@@ -67,6 +121,7 @@ export function MaterialReceivingPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [editingDeliveryId, setEditingDeliveryId] = useState<string | null>(null);
   const [deletingDeliveryId, setDeletingDeliveryId] = useState<string | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Fetch deliveries with filters
   const filters = {
@@ -125,6 +180,22 @@ export function MaterialReceivingPage() {
     selectedDeliveryStatus !== 'all' ||
     selectedConditionStatus !== 'all' ||
     selectedCategory !== 'all';
+
+  const handleExport = () => {
+    if (filteredDeliveries.length === 0) {
+      toast.error('No deliveries to export');
+      return;
+    }
+    setIsExporting(true);
+    try {
+      exportDeliveriesToCSV(filteredDeliveries);
+      toast.success(`Exported ${filteredDeliveries.length} deliveries to CSV`);
+    } catch (error) {
+      toast.error('Failed to export deliveries');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   if (!projectId) {
     return (
@@ -240,9 +311,13 @@ export function MaterialReceivingPage() {
             )}
           </Button>
 
-          <Button variant="outline">
-            <Download className="h-4 w-4 mr-2" />
-            Export
+          <Button variant="outline" onClick={handleExport} disabled={isExporting || filteredDeliveries.length === 0}>
+            {isExporting ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 mr-2" />
+            )}
+            {isExporting ? 'Exporting...' : 'Export'}
           </Button>
         </div>
       </div>

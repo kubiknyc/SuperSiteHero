@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 import {
   FileText,
   Plus,
@@ -10,6 +11,7 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,8 +31,107 @@ import { DrawingDetailDialog } from '@/features/drawings/components/DrawingDetai
 import {
   useDrawings,
   useDrawingsByDisciplineSummary,
+  useCreateDrawing,
 } from '@/features/drawings/hooks/useDrawings';
+import { useProject } from '@/features/projects/hooks/useProjects';
 import { DRAWING_DISCIPLINES, type DrawingDiscipline, type Drawing } from '@/types/drawing';
+import { format } from 'date-fns';
+
+/**
+ * Export drawings to CSV format
+ */
+function exportDrawingsToCSV(drawings: Drawing[], projectName: string): void {
+  const headers = [
+    'Drawing Number',
+    'Title',
+    'Discipline',
+    'Revision',
+    'IFC Status',
+    'IFC Date',
+    'Date Added',
+    'Notes',
+  ];
+
+  const rows = drawings.map((d) => [
+    d.drawingNumber || '',
+    d.title || '',
+    DRAWING_DISCIPLINES.find((disc) => disc.value === d.discipline)?.label || d.discipline || '',
+    d.currentRevision || '',
+    d.isIssuedForConstruction ? 'Yes' : 'No',
+    d.ifcDate ? format(new Date(d.ifcDate), 'yyyy-MM-dd') : '',
+    d.createdAt ? format(new Date(d.createdAt), 'yyyy-MM-dd') : '',
+    d.notes || '',
+  ]);
+
+  const csvContent = [
+    headers.join(','),
+    ...rows.map((row) =>
+      row.map((cell) => {
+        const str = String(cell);
+        if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      }).join(',')
+    ),
+  ].join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${projectName.replace(/[^a-zA-Z0-9]/g, '_')}_drawings_${format(new Date(), 'yyyy-MM-dd')}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+/**
+ * Parse CSV content to drawing data
+ */
+function parseCSVToDrawings(csvContent: string): Partial<Drawing>[] {
+  const lines = csvContent.split('\n').filter((line) => line.trim());
+  if (lines.length < 2) {
+    throw new Error('CSV file must have a header row and at least one data row');
+  }
+
+  const headerLine = lines[0];
+  const headers = headerLine.split(',').map((h) => h.trim().toLowerCase());
+
+  const drawings: Partial<Drawing>[] = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const values = lines[i].split(',').map((v) => v.trim().replace(/^"|"$/g, ''));
+    const drawing: Partial<Drawing> = {};
+
+    headers.forEach((header, idx) => {
+      const value = values[idx] || '';
+      if (header.includes('number') || header === 'drawing number') {
+        drawing.drawingNumber = value;
+      } else if (header.includes('title')) {
+        drawing.title = value;
+      } else if (header.includes('discipline')) {
+        const discipline = DRAWING_DISCIPLINES.find(
+          (d) => d.label.toLowerCase() === value.toLowerCase() || d.value === value.toLowerCase()
+        );
+        drawing.discipline = discipline?.value as Drawing['discipline'];
+      } else if (header.includes('revision')) {
+        drawing.currentRevision = value;
+      } else if (header.includes('ifc') && header.includes('status')) {
+        drawing.isIssuedForConstruction = value.toLowerCase() === 'yes' || value === '1' || value.toLowerCase() === 'true';
+      } else if (header.includes('notes')) {
+        drawing.notes = value;
+      }
+    });
+
+    if (drawing.drawingNumber || drawing.title) {
+      drawings.push(drawing);
+    }
+  }
+
+  return drawings;
+}
 
 export default function DrawingRegisterPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -40,6 +141,12 @@ export default function DrawingRegisterPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedDrawing, setSelectedDrawing] = useState<Drawing | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { data: project } = useProject(projectId);
+  const createDrawing = useCreateDrawing();
 
   const filters = {
     discipline: disciplineFilter !== 'all' ? disciplineFilter : undefined,
@@ -69,6 +176,75 @@ export default function DrawingRegisterPage() {
     setIsFormOpen(true);
   };
 
+  const handleExport = () => {
+    if (!drawings || drawings.length === 0) {
+      toast.error('No drawings to export');
+      return;
+    }
+    setIsExporting(true);
+    try {
+      exportDrawingsToCSV(drawings, project?.name || 'Project');
+      toast.success(`Exported ${drawings.length} drawings to CSV`);
+    } catch (error) {
+      toast.error('Failed to export drawings');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !projectId) return;
+
+    setIsImporting(true);
+    try {
+      const text = await file.text();
+      const parsedDrawings = parseCSVToDrawings(text);
+
+      if (parsedDrawings.length === 0) {
+        toast.error('No valid drawings found in file');
+        return;
+      }
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const drawing of parsedDrawings) {
+        try {
+          await createDrawing.mutateAsync({
+            projectId,
+            drawingNumber: drawing.drawingNumber || `DWG-${Date.now()}`,
+            title: drawing.title || 'Untitled Drawing',
+            discipline: drawing.discipline || 'architectural',
+            currentRevision: drawing.currentRevision || 'A',
+            isIssuedForConstruction: drawing.isIssuedForConstruction || false,
+            notes: drawing.notes,
+          });
+          successCount++;
+        } catch {
+          errorCount++;
+        }
+      }
+
+      if (successCount > 0) {
+        toast.success(`Imported ${successCount} drawings${errorCount > 0 ? `, ${errorCount} failed` : ''}`);
+      } else {
+        toast.error('Failed to import drawings');
+      }
+    } catch (error) {
+      toast.error('Failed to parse CSV file');
+    } finally {
+      setIsImporting(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <div className="container mx-auto py-6 space-y-6">
       {/* Header */}
@@ -83,13 +259,28 @@ export default function DrawingRegisterPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Upload className="h-4 w-4 mr-2" />
-            Import
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept=".csv"
+            className="hidden"
+          />
+          <Button variant="outline" size="sm" onClick={handleImportClick} disabled={isImporting}>
+            {isImporting ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Upload className="h-4 w-4 mr-2" />
+            )}
+            {isImporting ? 'Importing...' : 'Import'}
           </Button>
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export
+          <Button variant="outline" size="sm" onClick={handleExport} disabled={isExporting || !drawings?.length}>
+            {isExporting ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4 mr-2" />
+            )}
+            {isExporting ? 'Exporting...' : 'Export'}
           </Button>
           <Button onClick={handleAddDrawing}>
             <Plus className="h-4 w-4 mr-2" />

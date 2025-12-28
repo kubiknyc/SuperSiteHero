@@ -218,9 +218,9 @@ export async function updateCursorPositionDirect(
       is_active: true,
     };
 
-    if (pageX !== undefined) updates.page_x = pageX;
-    if (pageY !== undefined) updates.page_y = pageY;
-    if (currentAction) updates.current_action = currentAction;
+    if (pageX !== undefined) {updates.page_x = pageX;}
+    if (pageY !== undefined) {updates.page_y = pageY;}
+    if (currentAction) {updates.current_action = currentAction;}
 
     const { error } = await supabase
       .from('collaboration_cursors')
@@ -378,7 +378,7 @@ export async function getCursorsForSessions(
 ): Promise<Map<string, PersistedCursor[]>> {
   const result = new Map<string, PersistedCursor[]>();
 
-  if (sessionIds.length === 0) return result;
+  if (sessionIds.length === 0) {return result;}
 
   try {
     let query = supabase

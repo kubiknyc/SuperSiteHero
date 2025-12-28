@@ -35,7 +35,7 @@ import {
   NOTIFICATION_TYPE_DESCRIPTIONS,
 } from '@/types/notification-preferences'
 import { toast } from 'sonner'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export function NotificationPreferencesPage() {
   const { data: preferences, isLoading, error } = useNotificationPreferences()
@@ -50,11 +50,13 @@ export function NotificationPreferencesPage() {
   const [quietHoursEnd, setQuietHoursEnd] = useState(preferences?.quietHours?.end ?? '07:00')
 
   // Update local state when preferences load
-  if (preferences?.quietHours && !quietHoursEnabled && preferences.quietHours.enabled) {
-    setQuietHoursEnabled(true)
-    setQuietHoursStart(preferences.quietHours.start)
-    setQuietHoursEnd(preferences.quietHours.end)
-  }
+  useEffect(() => {
+    if (preferences?.quietHours) {
+      setQuietHoursEnabled(preferences.quietHours.enabled)
+      setQuietHoursStart(preferences.quietHours.start)
+      setQuietHoursEnd(preferences.quietHours.end)
+    }
+  }, [preferences?.quietHours])
 
   const handleToggleEmailPreference = async (key: keyof EmailNotificationPreferences) => {
     if (!preferences) {return}

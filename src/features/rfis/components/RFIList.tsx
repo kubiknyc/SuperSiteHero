@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils'
 import { RFIStatusBadge } from './RFIStatusBadge'
 import { RFIPriorityBadge } from './RFIPriorityBadge'
 import type { WorkflowItem } from '@/types/database'
+import { UserName } from '@/components/shared'
 
 export interface RFIListProps {
   rfis: WorkflowItem[]
@@ -86,11 +87,18 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
     }
   }
 
-  // Get assignees display text
-  const getAssigneesText = (assignees: string[] | null): string => {
-    if (!assignees || assignees.length === 0) {return 'Unassigned'}
-    if (assignees.length === 1) {return assignees[0].substring(0, 8)}
-    return `${assignees[0].substring(0, 8)} +${assignees.length - 1}`
+  // Render assignees display
+  const renderAssignees = (assignees: string[] | null) => {
+    if (!assignees || assignees.length === 0) {return <span>Unassigned</span>}
+    if (assignees.length === 1) {
+      return <UserName userId={assignees[0]} fallback="Unknown User" />
+    }
+    return (
+      <span>
+        <UserName userId={assignees[0]} fallback="Unknown User" />
+        <span> +{assignees.length - 1}</span>
+      </span>
+    )
   }
 
   // Loading state
@@ -199,7 +207,7 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
 
                     {/* Assignees */}
                     <TableCell className="text-sm text-secondary">
-                      {getAssigneesText(rfi.assignees)}
+                      {renderAssignees(rfi.assignees)}
                     </TableCell>
 
                     {/* Due Date */}

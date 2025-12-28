@@ -9,6 +9,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -44,6 +54,9 @@ export function SyncStatusPanel() {
 
   const [selectedConflict, setSelectedConflict] = useState<string | null>(null)
   const [showConflictDialog, setShowConflictDialog] = useState(false)
+  const [showClearQueueDialog, setShowClearQueueDialog] = useState(false)
+  const [showRemoveItemDialog, setShowRemoveItemDialog] = useState(false)
+  const [itemToRemove, setItemToRemove] = useState<string | null>(null)
 
   const handleViewConflict = (conflictId: string) => {
     setSelectedConflict(conflictId)
@@ -51,19 +64,21 @@ export function SyncStatusPanel() {
   }
 
   const handleClearQueue = () => {
-    if (
-      window.confirm(
-        'Are you sure you want to clear all pending syncs? This will discard unsaved changes.'
-      )
-    ) {
-      clearSyncQueue()
-    }
+    clearSyncQueue()
+    setShowClearQueueDialog(false)
   }
 
-  const handleRemoveItem = (id: string) => {
-    if (window.confirm('Remove this item from the sync queue?')) {
-      removePendingSync(id)
+  const handleRemoveItem = () => {
+    if (itemToRemove) {
+      removePendingSync(itemToRemove)
+      setItemToRemove(null)
     }
+    setShowRemoveItemDialog(false)
+  }
+
+  const openRemoveItemDialog = (id: string) => {
+    setItemToRemove(id)
+    setShowRemoveItemDialog(true)
   }
 
   const formatTimestamp = (timestamp: number | null) => {
@@ -204,7 +219,7 @@ export function SyncStatusPanel() {
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={handleClearQueue}
+                    onClick={() => setShowClearQueueDialog(true)}
                     className="text-destructive"
                   >
                     <Trash2 className="h-3 w-3 mr-1" />
@@ -237,7 +252,7 @@ export function SyncStatusPanel() {
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() => handleRemoveItem(sync.id)}
+                          onClick={() => openRemoveItemDialog(sync.id)}
                           className="h-7 w-7 p-0"
                         >
                           <Trash2 className="h-3 w-3" />
@@ -271,6 +286,48 @@ export function SyncStatusPanel() {
             : null
         }
       />
+
+      {/* Clear Queue Confirmation Dialog */}
+      <AlertDialog open={showClearQueueDialog} onOpenChange={setShowClearQueueDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear Sync Queue</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to clear all pending syncs? This will discard unsaved changes.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleClearQueue}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Clear All
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Remove Item Confirmation Dialog */}
+      <AlertDialog open={showRemoveItemDialog} onOpenChange={setShowRemoveItemDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Remove this item from the sync queue?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleRemoveItem}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

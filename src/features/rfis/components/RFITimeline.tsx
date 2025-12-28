@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { formatDistanceToNow, format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { UserName } from '@/components/shared'
 import {
   History,
   MessageSquare,
@@ -132,12 +133,11 @@ export function RFITimeline({
     })
   }, [comments, history])
 
-  // Get display name for user
-  const getDisplayName = (userId: string | null | undefined) => {
-    if (!userId) {return 'System'}
-    if (userId === currentUserId) {return 'You'}
-    // In production, fetch user profile and return full name
-    return userId.substring(0, 8)
+  // Get display name for user - now uses UserName component for rendering
+  const renderUserName = (userId: string | null | undefined, isCurrentUser: boolean) => {
+    if (!userId) return <span>System</span>
+    if (isCurrentUser) return <span>You</span>
+    return <UserName userId={userId} fallback="Unknown User" />
   }
 
   // Get icon for event type
@@ -318,7 +318,7 @@ export function RFITimeline({
                             isCurrentUser ? 'text-primary' : 'text-foreground'
                           )}
                         >
-                          {getDisplayName(event.userId)}
+                          {renderUserName(event.userId, isCurrentUser)}
                         </span>
                       </div>
                       <span className="text-xs text-muted">

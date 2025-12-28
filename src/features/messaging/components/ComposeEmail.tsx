@@ -9,7 +9,7 @@
  * - Draft saving
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import {
   X,
   Send,
@@ -18,15 +18,12 @@ import {
   Trash2,
   Minimize2,
   Maximize2,
-  ChevronDown,
   Loader2,
   Bold,
   Italic,
   Underline,
   List,
   ListOrdered,
-  AlignLeft,
-  Image,
 } from 'lucide-react'
 import {
   Button,
@@ -48,33 +45,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { useEmailAccounts } from '../hooks/useEmailAccounts'
 import { useSendEmail, useSaveDraft } from '../hooks/useEmails'
-import { cn } from '@/lib/utils'
-import type {
-  Email,
-  EmailAccount,
-  EmailParticipant,
-  ComposeEmailDTO,
-  LinkableEntityType,
-} from '@/types/email'
 import {
-  isValidEmail,
   parseEmailAddresses,
-  formatParticipant,
   formatFileSize,
   LINKABLE_ENTITY_CONFIG,
+  type Email,
+  type EmailParticipant,
+  type ComposeEmailDTO,
+  type LinkableEntityType,
 } from '@/types/email'
 
 interface ComposeEmailProps {

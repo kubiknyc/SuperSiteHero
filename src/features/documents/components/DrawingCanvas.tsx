@@ -20,6 +20,16 @@ import {
   Smartphone,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useDocumentMarkups, useCreateMarkup, useUpdateMarkup, useDeleteMarkup } from '../hooks/useMarkups'
 import type { DocumentMarkup } from '@/lib/api/services/markups'
 import toast from 'react-hot-toast'
@@ -188,6 +198,9 @@ export function DrawingCanvas({
     dateRange: { start: null, end: null },
     hiddenLayers: [],
   })
+
+  // Clear all dialog state
+  const [showClearDialog, setShowClearDialog] = useState(false)
 
   // Refs
   const stageRef = useRef<Konva.Stage>(null)
@@ -576,21 +589,20 @@ export function DrawingCanvas({
 
   // Handle clear all
   const handleClearAll = async () => {
-    if (window.confirm('Are you sure you want to clear all annotations?')) {
-      setShapes([])
-      setHistory([[]])
-      setHistoryStep(0)
-      setSelectedShapeId(null)
+    setShapes([])
+    setHistory([[]])
+    setHistoryStep(0)
+    setSelectedShapeId(null)
+    setShowClearDialog(false)
 
-      // Delete all markups from database
-      if (existingMarkups && existingMarkups.length > 0) {
-        try {
-          await Promise.all(existingMarkups.map(m => deleteMarkup.mutateAsync(m.id)))
-          toast.success('All annotations cleared')
-        } catch (error) {
-          logger.error('Failed to clear markups:', error)
-          toast.error('Failed to clear annotations')
-        }
+    // Delete all markups from database
+    if (existingMarkups && existingMarkups.length > 0) {
+      try {
+        await Promise.all(existingMarkups.map(m => deleteMarkup.mutateAsync(m.id)))
+        toast.success('All annotations cleared')
+      } catch (error) {
+        logger.error('Failed to clear markups:', error)
+        toast.error('Failed to clear annotations')
       }
     }
   }
@@ -732,7 +744,7 @@ export function DrawingCanvas({
             <Button
               size="sm"
               variant="destructive"
-              onClick={handleClearAll}
+              onClick={() => setShowClearDialog(true)}
               title="Clear All"
             >
               <Trash2 className="w-4 h-4" />
@@ -990,6 +1002,24 @@ export function DrawingCanvas({
           )}
         </Layer>
       </Stage>
+
+      {/* Clear All Confirmation Dialog */}
+      <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear Annotations</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to clear all annotations? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleClearAll}>
+              Clear All
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

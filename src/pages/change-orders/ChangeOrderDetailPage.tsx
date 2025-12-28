@@ -138,7 +138,7 @@ export function ChangeOrderDetailPage() {
         proposed_amount: changeOrder.proposed_amount,
         proposed_days: changeOrder.proposed_days,
       })
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to submit estimate:', e)
     }
   }
@@ -153,7 +153,7 @@ export function ChangeOrderDetailPage() {
       })
       setApprovalComments('')
       setShowApprovalDialog(false)
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to process internal approval:', e)
     }
   }
@@ -162,7 +162,7 @@ export function ChangeOrderDetailPage() {
     if (!changeOrder) {return}
     try {
       await submitToOwner.mutateAsync(changeOrder.id)
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to submit to owner:', e)
     }
   }
@@ -181,7 +181,7 @@ export function ChangeOrderDetailPage() {
       setOwnerApprovalAmount('')
       setOwnerApprovalDays('')
       setShowApprovalDialog(false)
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to process owner approval:', e)
     }
   }
@@ -190,7 +190,7 @@ export function ChangeOrderDetailPage() {
     if (!changeOrder || !confirm('Are you sure you want to void this change order?')) {return}
     try {
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: 'Voided by user' })
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to void change order:', e)
     }
   }
@@ -208,7 +208,7 @@ export function ChangeOrderDetailPage() {
         } : undefined,
       })
       toast.success('Change order PDF downloaded')
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to download PDF:', e)
       toast.error('Failed to download PDF')
     }

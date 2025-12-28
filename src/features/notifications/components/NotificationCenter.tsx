@@ -11,6 +11,16 @@
  */
 
 import { useState, useCallback, useMemo } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
@@ -332,6 +342,7 @@ export function NotificationCenter({
   const [isOpen, setIsOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'all' | 'unread'>('all')
   const [typeFilter, setTypeFilter] = useState<NotificationType>('all')
+  const [showClearAllDialog, setShowClearAllDialog] = useState(false)
 
   const {
     notifications,
@@ -382,9 +393,15 @@ export function NotificationCenter({
   }, [markAllAsRead])
 
   // Handle clear all
+  const handleClearAllClick = useCallback(() => {
+    setShowClearAllDialog(true)
+  }, [])
+
   const handleClearAll = useCallback(async () => {
-    if (window.confirm('Are you sure you want to delete all notifications?')) {
+    try {
       await deleteAll()
+    } finally {
+      setShowClearAllDialog(false)
     }
   }, [deleteAll])
 
@@ -456,7 +473,7 @@ export function NotificationCenter({
               variant="ghost"
               size="icon"
               className="h-8 w-8"
-              onClick={handleClearAll}
+              onClick={handleClearAllClick}
               disabled={isDeletingAll}
               title="Clear all notifications"
             >
@@ -615,18 +632,41 @@ export function NotificationCenter({
   }
 
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
-        {trigger}
-      </PopoverTrigger>
-      <PopoverContent
-        className="w-[400px] p-0"
-        align="end"
-        sideOffset={8}
-      >
-        {content}
-      </PopoverContent>
-    </Popover>
+    <>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger asChild>
+          {trigger}
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-[400px] p-0"
+          align="end"
+          sideOffset={8}
+        >
+          {content}
+        </PopoverContent>
+      </Popover>
+
+      {/* Clear All Confirmation Dialog */}
+      <AlertDialog open={showClearAllDialog} onOpenChange={setShowClearAllDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear All Notifications</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete all notifications? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleClearAll}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete All
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }
 

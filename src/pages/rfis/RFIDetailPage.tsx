@@ -13,12 +13,23 @@ import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import { useCreateConversation } from '@/features/messaging/hooks'
 import { logger } from '../../lib/utils/logger';
+import { UserName } from '@/components/shared'
 
 
 export function RFIDetailPage() {
@@ -27,6 +38,7 @@ export function RFIDetailPage() {
 
   const [answerText, setAnswerText] = useState('')
   const [showAnswerForm, setShowAnswerForm] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const { data: rfi, isLoading, error } = useRFI(rfiId)
   const { data: comments } = useRFIComments(rfiId)
@@ -99,9 +111,13 @@ export function RFIDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) {return}
-    await deleteRFI.mutateAsync(rfi.id)
-    navigate(-1)
+    if (!rfi) return
+    try {
+      await deleteRFI.mutateAsync(rfi.id)
+      navigate(-1)
+    } finally {
+      setShowDeleteDialog(false)
+    }
   }
 
   if (!rfiId) {
@@ -283,7 +299,7 @@ export function RFIDetailPage() {
                       <div key={comment.id} className="border-b pb-4 last:border-0">
                         <div className="flex justify-between items-start mb-2">
                           <span className="font-semibold text-sm text-foreground">
-                            {comment.created_by?.substring(0, 8) || 'User'}
+                            <UserName userId={comment.created_by} fallback="User" />
                           </span>
                           <span className="text-xs text-muted">
                             {comment.created_at ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
@@ -389,7 +405,7 @@ export function RFIDetailPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteDialog(true)}
                   disabled={deleteRFI.isPending}
                   className="w-full mt-4"
                 >
@@ -400,6 +416,27 @@ export function RFIDetailPage() {
             </Card>
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete RFI</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this RFI? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deleteRFI.isPending ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AppLayout>
   )

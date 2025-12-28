@@ -1,12 +1,23 @@
 // File: /src/pages/tasks/TaskDetailPage.tsx
 // Task detail view
 
+import { useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useTask, useUpdateTask, useDeleteTask } from '@/features/tasks/hooks/useTasks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import {
   ArrowLeft,
   Calendar,
@@ -22,6 +33,7 @@ import toast from 'react-hot-toast'
 export function TaskDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const { data: task, isLoading, error } = useTask(id)
   const updateMutation = useUpdateTask()
   const deleteMutation = useDeleteTask()
@@ -80,15 +92,14 @@ export function TaskDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!window.confirm('Are you sure you want to delete this task?')) {
-      return
-    }
     try {
       await deleteMutation.mutateAsync(task.id)
       toast.success('Task deleted')
       navigate('/tasks')
     } catch (_err) {
       toast.error('Failed to delete task')
+    } finally {
+      setShowDeleteDialog(false)
     }
   }
 
@@ -169,7 +180,7 @@ export function TaskDetailPage() {
             )}
             <Button
               variant="destructive"
-              onClick={handleDelete}
+              onClick={() => setShowDeleteDialog(true)}
               disabled={deleteMutation.isPending}
             >
               <Trash2 className="h-4 w-4 mr-2" />
@@ -177,6 +188,27 @@ export function TaskDetailPage() {
             </Button>
           </div>
         </div>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Task</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this task? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deleteMutation.isPending ? 'Deleting...' : 'Delete'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Details */}
         <Card>

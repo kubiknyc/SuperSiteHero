@@ -10,12 +10,27 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import {
   CloseoutDocumentList,
   WarrantyList,
+  CloseoutDocumentFormDialog,
+  WarrantyFormDialog,
   useCloseoutDocuments,
   useWarranties,
   useCloseoutStatistics,
   useWarrantyStatistics,
+  useCreateCloseoutDocument,
+  useUpdateCloseoutDocument,
+  useCreateWarranty,
+  useUpdateWarranty,
 } from '@/features/closeout'
-import type { CloseoutDocumentWithDetails, WarrantyWithDetails } from '@/types/closeout'
+import { useContacts } from '@/features/contacts/hooks/useContacts'
+import type {
+  CloseoutDocumentWithDetails,
+  WarrantyWithDetails,
+  CreateCloseoutDocumentDTO,
+  UpdateCloseoutDocumentDTO,
+  CreateWarrantyDTO,
+  UpdateWarrantyDTO,
+} from '@/types/closeout'
+import { CLOSEOUT_DOCUMENT_TYPES, WARRANTY_TYPES } from '@/types/closeout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -37,13 +52,144 @@ import {
   CheckCircle2,
   Clock,
 } from 'lucide-react'
-import { logger } from '../../lib/utils/logger';
+import { toast } from 'sonner'
+import { format } from 'date-fns'
+
+/**
+ * Export closeout documents to CSV format
+ */
+function exportDocumentsToCSV(documents: CloseoutDocumentWithDetails[]): void {
+  const headers = [
+    'Document Type',
+    'Title',
+    'Status',
+    'Spec Section',
+    'Subcontractor',
+    'Responsible Party',
+    'Required',
+    'Required Date',
+    'Submitted Date',
+    'Approved Date',
+    'Notes',
+  ]
+
+  const rows = documents.map((doc) => [
+    CLOSEOUT_DOCUMENT_TYPES.find((t) => t.value === doc.document_type)?.label || doc.document_type,
+    doc.title,
+    doc.status,
+    doc.spec_section || '',
+    doc.subcontractor?.company_name || '',
+    doc.responsible_party || '',
+    doc.required ? 'Yes' : 'No',
+    doc.required_date ? format(new Date(doc.required_date), 'yyyy-MM-dd') : '',
+    doc.submitted_date ? format(new Date(doc.submitted_date), 'yyyy-MM-dd') : '',
+    doc.approved_date ? format(new Date(doc.approved_date), 'yyyy-MM-dd') : '',
+    doc.notes || '',
+  ])
+
+  const csvContent = [
+    headers.join(','),
+    ...rows.map((row) =>
+      row
+        .map((cell) => {
+          const str = String(cell)
+          if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+            return `"${str.replace(/"/g, '""')}"`
+          }
+          return str
+        })
+        .join(',')
+    ),
+  ].join('\n')
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `closeout_documents_${format(new Date(), 'yyyy-MM-dd')}.csv`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+/**
+ * Export warranties to CSV format
+ */
+function exportWarrantiesToCSV(warranties: WarrantyWithDetails[]): void {
+  const headers = [
+    'Title',
+    'Warranty Type',
+    'Status',
+    'Spec Section',
+    'Subcontractor',
+    'Manufacturer',
+    'Manufacturer Contact',
+    'Manufacturer Phone',
+    'Manufacturer Email',
+    'Start Date',
+    'End Date',
+    'Duration (Years)',
+    'Coverage Description',
+    'Notes',
+  ]
+
+  const rows = warranties.map((w) => [
+    w.title,
+    WARRANTY_TYPES.find((t) => t.value === w.warranty_type)?.label || w.warranty_type || '',
+    w.status,
+    w.spec_section || '',
+    w.subcontractor?.company_name || '',
+    w.manufacturer_name || '',
+    w.manufacturer_contact || '',
+    w.manufacturer_phone || '',
+    w.manufacturer_email || '',
+    w.start_date ? format(new Date(w.start_date), 'yyyy-MM-dd') : '',
+    w.end_date ? format(new Date(w.end_date), 'yyyy-MM-dd') : '',
+    w.duration_years?.toString() || '',
+    w.coverage_description || '',
+    w.notes || '',
+  ])
+
+  const csvContent = [
+    headers.join(','),
+    ...rows.map((row) =>
+      row
+        .map((cell) => {
+          const str = String(cell)
+          if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+            return `"${str.replace(/"/g, '""')}"`
+          }
+          return str
+        })
+        .join(',')
+    ),
+  ].join('\n')
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = `warranties_${format(new Date(), 'yyyy-MM-dd')}.csv`
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
 
 
 export function CloseoutPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [activeTab, setActiveTab] = useState('documents')
   const [currentTime] = useState(() => Date.now())
+
+  // Dialog state
+  const [showDocumentDialog, setShowDocumentDialog] = useState(false)
+  const [editingDocument, setEditingDocument] = useState<CloseoutDocumentWithDetails | null>(null)
+  const [showWarrantyDialog, setShowWarrantyDialog] = useState(false)
+  const [editingWarranty, setEditingWarranty] = useState<WarrantyWithDetails | null>(null)
+  const [isExportingDocuments, setIsExportingDocuments] = useState(false)
+  const [isExportingWarranties, setIsExportingWarranties] = useState(false)
 
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -62,6 +208,21 @@ export function CloseoutPage() {
   const { data: closeoutStats } = useCloseoutStatistics(selectedProjectId || undefined)
   const { data: warrantyStats } = useWarrantyStatistics(selectedProjectId || undefined)
 
+  // Fetch subcontractors for form dialogs
+  const { data: contacts = [] } = useContacts(selectedProjectId || undefined, {
+    contactType: 'subcontractor',
+  })
+  const subcontractors = contacts.map((c) => ({
+    id: c.id,
+    company_name: c.company_name || `${c.first_name} ${c.last_name}`,
+  }))
+
+  // Mutations
+  const createDocument = useCreateCloseoutDocument()
+  const updateDocument = useUpdateCloseoutDocument()
+  const createWarranty = useCreateWarranty()
+  const updateWarranty = useUpdateWarranty()
+
   // Calculate overview stats
   const totalDocuments = documents.length
   const receivedDocuments = documents.filter((d: CloseoutDocumentWithDetails) => d.status === 'approved' || d.status === 'submitted').length
@@ -78,6 +239,92 @@ export function CloseoutPage() {
   }).length
 
   const isLoading = documentsLoading || warrantiesLoading
+
+  // Document handlers
+  const handleDocumentClick = (doc: CloseoutDocumentWithDetails) => {
+    setEditingDocument(doc)
+    setShowDocumentDialog(true)
+  }
+
+  const handleCreateDocument = () => {
+    setEditingDocument(null)
+    setShowDocumentDialog(true)
+  }
+
+  const handleDocumentSubmit = async (data: CreateCloseoutDocumentDTO | UpdateCloseoutDocumentDTO) => {
+    try {
+      if (editingDocument) {
+        await updateDocument.mutateAsync({ id: editingDocument.id, ...data })
+        toast.success('Document updated successfully')
+      } else {
+        await createDocument.mutateAsync(data as CreateCloseoutDocumentDTO)
+        toast.success('Document created successfully')
+      }
+      setShowDocumentDialog(false)
+      setEditingDocument(null)
+    } catch (error) {
+      toast.error(editingDocument ? 'Failed to update document' : 'Failed to create document')
+    }
+  }
+
+  const handleExportDocuments = () => {
+    if (!documents || documents.length === 0) {
+      toast.error('No documents to export')
+      return
+    }
+    setIsExportingDocuments(true)
+    try {
+      exportDocumentsToCSV(documents)
+      toast.success(`Exported ${documents.length} documents to CSV`)
+    } catch (error) {
+      toast.error('Failed to export documents')
+    } finally {
+      setIsExportingDocuments(false)
+    }
+  }
+
+  // Warranty handlers
+  const handleWarrantyClick = (warranty: WarrantyWithDetails) => {
+    setEditingWarranty(warranty)
+    setShowWarrantyDialog(true)
+  }
+
+  const handleCreateWarranty = () => {
+    setEditingWarranty(null)
+    setShowWarrantyDialog(true)
+  }
+
+  const handleWarrantySubmit = async (data: CreateWarrantyDTO | UpdateWarrantyDTO) => {
+    try {
+      if (editingWarranty) {
+        await updateWarranty.mutateAsync({ id: editingWarranty.id, ...data })
+        toast.success('Warranty updated successfully')
+      } else {
+        await createWarranty.mutateAsync(data as CreateWarrantyDTO)
+        toast.success('Warranty created successfully')
+      }
+      setShowWarrantyDialog(false)
+      setEditingWarranty(null)
+    } catch (error) {
+      toast.error(editingWarranty ? 'Failed to update warranty' : 'Failed to create warranty')
+    }
+  }
+
+  const handleExportWarranties = () => {
+    if (!warranties || warranties.length === 0) {
+      toast.error('No warranties to export')
+      return
+    }
+    setIsExportingWarranties(true)
+    try {
+      exportWarrantiesToCSV(warranties)
+      toast.success(`Exported ${warranties.length} warranties to CSV`)
+    } catch (error) {
+      toast.error('Failed to export warranties')
+    } finally {
+      setIsExportingWarranties(false)
+    }
+  }
 
   return (
     <AppLayout>
@@ -227,9 +474,9 @@ export function CloseoutPage() {
                 <CloseoutDocumentList
                   documents={documents}
                   statistics={closeoutStats}
-                  onDocumentClick={(doc) => logger.log('View document:', doc.id)}
-                  onCreateDocument={() => logger.log('Create document')}
-                  onExport={() => logger.log('Export documents')}
+                  onDocumentClick={handleDocumentClick}
+                  onCreateDocument={handleCreateDocument}
+                  onExport={handleExportDocuments}
                 />
               </TabsContent>
 
@@ -237,14 +484,42 @@ export function CloseoutPage() {
                 <WarrantyList
                   warranties={warranties}
                   statistics={warrantyStats}
-                  onWarrantyClick={(w) => logger.log('View warranty:', w.id)}
-                  onCreateWarranty={() => logger.log('Create warranty')}
-                  onExport={() => logger.log('Export warranties')}
+                  onWarrantyClick={handleWarrantyClick}
+                  onCreateWarranty={handleCreateWarranty}
+                  onExport={handleExportWarranties}
                 />
               </TabsContent>
             </Tabs>
           </>
         )}
+
+        {/* Closeout Document Form Dialog */}
+        <CloseoutDocumentFormDialog
+          open={showDocumentDialog}
+          onOpenChange={(open) => {
+            setShowDocumentDialog(open)
+            if (!open) setEditingDocument(null)
+          }}
+          document={editingDocument}
+          projectId={selectedProjectId}
+          subcontractors={subcontractors}
+          onSubmit={handleDocumentSubmit}
+          isLoading={createDocument.isPending || updateDocument.isPending}
+        />
+
+        {/* Warranty Form Dialog */}
+        <WarrantyFormDialog
+          open={showWarrantyDialog}
+          onOpenChange={(open) => {
+            setShowWarrantyDialog(open)
+            if (!open) setEditingWarranty(null)
+          }}
+          warranty={editingWarranty}
+          projectId={selectedProjectId}
+          subcontractors={subcontractors}
+          onSubmit={handleWarrantySubmit}
+          isLoading={createWarranty.isPending || updateWarranty.isPending}
+        />
       </div>
     </AppLayout>
   )

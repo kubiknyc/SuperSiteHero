@@ -148,7 +148,7 @@ export function useMarkupCollaboration(
 
   // Connect to collaboration session
   const connect = useCallback(async () => {
-    if (!userProfile || !enabled) return;
+    if (!userProfile || !enabled) {return;}
 
     try {
       const session = await markupSyncManager.joinSession({

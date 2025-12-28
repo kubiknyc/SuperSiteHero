@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import type { CreateInspectionInput, InspectionType } from '../types'
+import type { CreateInspectionInput } from '../types'
 import { INSPECTION_TYPE_CONFIG } from '../types'
 
 interface InspectionFormProps {

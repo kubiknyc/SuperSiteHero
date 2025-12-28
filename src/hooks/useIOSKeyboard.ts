@@ -29,7 +29,7 @@ interface UseIOSKeyboardReturn {
  * Detect if we're on iOS
  */
 function isIOS(): boolean {
-  if (typeof navigator === 'undefined') return false
+  if (typeof navigator === 'undefined') {return false}
   return /iPhone|iPad|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
 }
@@ -38,7 +38,7 @@ function isIOS(): boolean {
  * Detect if we're in standalone PWA mode
  */
 function isStandalone(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === 'undefined') {return false}
   return window.matchMedia('(display-mode: standalone)').matches ||
     (window.navigator as Navigator & { standalone?: boolean }).standalone === true
 }
@@ -76,8 +76,8 @@ export function useIOSKeyboard(): UseIOSKeyboardReturn {
 
   // Handle viewport resize (keyboard show/hide)
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    if (!isIOS()) return
+    if (typeof window === 'undefined') {return}
+    if (!isIOS()) {return}
 
     const visualViewport = window.visualViewport
 
@@ -85,7 +85,7 @@ export function useIOSKeyboard(): UseIOSKeyboardReturn {
     initialHeight.current = window.innerHeight
 
     const handleResize = () => {
-      if (!visualViewport) return
+      if (!visualViewport) {return}
 
       const currentHeight = visualViewport.height
       const heightDiff = initialHeight.current - currentHeight
@@ -147,8 +147,8 @@ export function useIOSKeyboard(): UseIOSKeyboardReturn {
 
   // Handle focus events to detect keyboard
   useEffect(() => {
-    if (typeof window === 'undefined') return
-    if (!isIOS()) return
+    if (typeof window === 'undefined') {return}
+    if (!isIOS()) {return}
 
     const handleFocusIn = (e: FocusEvent) => {
       const target = e.target as HTMLElement
@@ -185,7 +185,7 @@ export function useIOSKeyboard(): UseIOSKeyboardReturn {
 
   // Scroll element into view above keyboard
   const scrollIntoView = useCallback((element: HTMLElement | null) => {
-    if (!element) return
+    if (!element) {return}
 
     // Wait for keyboard to fully appear
     setTimeout(() => {

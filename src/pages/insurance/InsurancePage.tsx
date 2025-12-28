@@ -29,8 +29,10 @@ import {
   FileCheck,
   Grid3X3,
   TableProperties,
+  Loader2,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { format } from 'date-fns'
 import {
   InsuranceComplianceDashboard,
   InsuranceCertificateCard,
@@ -55,6 +57,60 @@ type ViewMode = 'dashboard' | 'list' | 'table' | 'matrix'
 type FilterStatus = CertificateStatus | 'all'
 type FilterType = InsuranceType | 'all'
 
+/**
+ * Export insurance certificates to CSV format
+ */
+function exportCertificatesToCSV(certificates: InsuranceCertificateWithRelations[]): void {
+  const headers = [
+    'Certificate Number',
+    'Policy Number',
+    'Insurance Type',
+    'Status',
+    'Carrier Name',
+    'Subcontractor',
+    'Effective Date',
+    'Expiration Date',
+    'Coverage Amount',
+    'Deductible',
+  ];
+
+  const rows = certificates.map((cert) => [
+    cert.certificate_number,
+    cert.policy_number,
+    INSURANCE_TYPE_LABELS[cert.insurance_type] || cert.insurance_type,
+    CERTIFICATE_STATUS_LABELS[cert.status] || cert.status,
+    cert.carrier_name,
+    cert.subcontractor?.company_name || '',
+    cert.effective_date ? format(new Date(cert.effective_date), 'yyyy-MM-dd') : '',
+    cert.expiration_date ? format(new Date(cert.expiration_date), 'yyyy-MM-dd') : '',
+    String(cert.coverage_amount || 0),
+    String(cert.deductible_amount || 0),
+  ]);
+
+  const csvContent = [
+    headers.join(','),
+    ...rows.map((row) =>
+      row.map((cell) => {
+        const str = String(cell);
+        if (str.includes(',') || str.includes('\n') || str.includes('"')) {
+          return `"${str.replace(/"/g, '""')}"`;
+        }
+        return str;
+      }).join(',')
+    ),
+  ].join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `insurance_certificates_${format(new Date(), 'yyyy-MM-dd')}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
 export function InsurancePage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
@@ -66,6 +122,7 @@ export function InsurancePage() {
   const [typeFilter, setTypeFilter] = useState<FilterType>('all')
   const [showFormDialog, setShowFormDialog] = useState(false)
   const [editingCertificate, setEditingCertificate] = useState<InsuranceCertificateWithRelations | undefined>(undefined)
+  const [isExporting, setIsExporting] = useState(false)
 
   // Queries
   const {
@@ -130,6 +187,22 @@ export function InsurancePage() {
       refetch()
     } catch {
       toast.error('Failed to delete certificate')
+    }
+  }
+
+  const handleExport = () => {
+    if (!filteredCertificates || filteredCertificates.length === 0) {
+      toast.error('No certificates to export')
+      return
+    }
+    setIsExporting(true)
+    try {
+      exportCertificatesToCSV(filteredCertificates)
+      toast.success(`Exported ${filteredCertificates.length} certificates to CSV`)
+    } catch {
+      toast.error('Failed to export certificates')
+    } finally {
+      setIsExporting(false)
     }
   }
 
@@ -282,8 +355,18 @@ export function InsurancePage() {
                     </SelectContent>
                   </Select>
 
-                  <Button variant="outline" size="icon">
-                    <Download className="h-4 w-4" />
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleExport}
+                    disabled={isExporting || !filteredCertificates?.length}
+                    title="Export to CSV"
+                  >
+                    {isExporting ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Download className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>

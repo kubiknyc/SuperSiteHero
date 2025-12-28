@@ -10,6 +10,16 @@ import useImage from 'use-image'
 import { Button } from '@/components/ui/button'
 import { Trash2, Undo, Redo, Link2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useDocumentMarkups, useCreateMarkup, useUpdateMarkup, useDeleteMarkup } from '../../hooks/useMarkups'
 import type { DocumentMarkup } from '@/lib/api/services/markups'
 import { MarkupToolbar } from './MarkupToolbar'
@@ -186,7 +196,7 @@ export function UnifiedDrawingCanvas({
 
   // Markup collaboration for real-time sync
   const handleRemoteCreate = useCallback((operation: MarkupOperation) => {
-    if (!operation.data) return
+    if (!operation.data) {return}
     const data = operation.data as MarkupData
     const newShape: Shape = {
       id: data.id || operation.markupId,
@@ -210,7 +220,7 @@ export function UnifiedDrawingCanvas({
   }, [])
 
   const handleRemoteUpdate = useCallback((operation: MarkupOperation) => {
-    if (!operation.data) return
+    if (!operation.data) {return}
     const data = operation.data as Partial<MarkupData>
     setShapes(prev => prev.map(shape =>
       shape.id === operation.markupId
@@ -220,7 +230,7 @@ export function UnifiedDrawingCanvas({
   }, [])
 
   const handleRemoteTransform = useCallback((operation: MarkupOperation) => {
-    if (!operation.data) return
+    if (!operation.data) {return}
     const transform = operation.data as TransformData
     setShapes(prev => prev.map(shape =>
       shape.id === operation.markupId
@@ -270,6 +280,9 @@ export function UnifiedDrawingCanvas({
 
   // Link dialog state
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
+
+  // Clear all dialog state
+  const [showClearDialog, setShowClearDialog] = useState(false)
 
   // Extract unique creators from existing markups for layer visibility
   const creators = useMemo(() => {
@@ -979,21 +992,20 @@ export function UnifiedDrawingCanvas({
 
   // Handle clear all
   const handleClearAll = async () => {
-    if (window.confirm('Are you sure you want to clear all annotations?')) {
-      setShapes([])
-      setHistory([[]])
-      setHistoryStep(0)
-      setSelectedShapeId(null)
+    setShapes([])
+    setHistory([[]])
+    setHistoryStep(0)
+    setSelectedShapeId(null)
+    setShowClearDialog(false)
 
-      // Delete all markups from database
-      if (existingMarkups && existingMarkups.length > 0) {
-        try {
-          await Promise.all(existingMarkups.map(m => deleteMarkup.mutateAsync(m.id)))
-          toast.success('All annotations cleared')
-        } catch (error) {
-          logger.error('Failed to clear markups:', error)
-          toast.error('Failed to clear annotations')
-        }
+    // Delete all markups from database
+    if (existingMarkups && existingMarkups.length > 0) {
+      try {
+        await Promise.all(existingMarkups.map(m => deleteMarkup.mutateAsync(m.id)))
+        toast.success('All annotations cleared')
+      } catch (error) {
+        logger.error('Failed to clear markups:', error)
+        toast.error('Failed to clear annotations')
       }
     }
   }
@@ -1240,7 +1252,7 @@ export function UnifiedDrawingCanvas({
           <Button
             size="sm"
             variant="destructive"
-            onClick={handleClearAll}
+            onClick={() => setShowClearDialog(true)}
             title="Clear All"
           >
             <Trash2 className="w-4 h-4" />
@@ -1572,6 +1584,24 @@ export function UnifiedDrawingCanvas({
           availableUsers={shareableUsers}
         />
       )}
+
+      {/* Clear All Confirmation Dialog */}
+      <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Clear Annotations</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to clear all annotations? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleClearAll}>
+              Clear All
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

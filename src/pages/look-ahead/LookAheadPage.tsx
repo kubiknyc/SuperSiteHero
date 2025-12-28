@@ -5,6 +5,7 @@
 
 import { useState, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -355,22 +356,25 @@ export function LookAheadPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-10 w-32" />
+      <AppLayout>
+        <div className="p-6 space-y-6">
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-[600px]" />
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-3 gap-4">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-[600px]" />
-          ))}
-        </div>
-      </div>
+      </AppLayout>
     )
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <AppLayout>
+      <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-4">
@@ -595,7 +599,8 @@ export function LookAheadPage() {
         onDeleteConstraint={handleDeleteConstraint}
         isLoading={createActivity.isPending || updateActivity.isPending}
       />
-    </div>
+      </div>
+    </AppLayout>
   )
 }
 

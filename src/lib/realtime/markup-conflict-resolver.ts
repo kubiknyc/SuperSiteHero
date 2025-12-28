@@ -235,7 +235,7 @@ export function shouldApplyOperation(
   const latest = getLatestOperation(existingOperations, operation.markupId);
 
   // Always apply if no existing operations
-  if (!latest) return true;
+  if (!latest) {return true;}
 
   // Apply if this operation is newer
   return operation.timestamp > latest.timestamp;

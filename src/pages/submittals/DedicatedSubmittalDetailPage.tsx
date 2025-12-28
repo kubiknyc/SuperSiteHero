@@ -3,6 +3,16 @@
 // Dedicated Submittal detail page with tabbed interface, workflow indicator, and approval codes
 
 import { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format, differenceInDays } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -103,6 +113,7 @@ export function DedicatedSubmittalDetailPage() {
   const [reviewComment, setReviewComment] = useState('')
   const [selectedReviewStatus, setSelectedReviewStatus] = useState<SubmittalReviewStatus | ''>('')
   const [showRevisionDialog, setShowRevisionDialog] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   // Queries
   const { data: submittal, isLoading, error } = useSubmittal(submittalId)
@@ -180,9 +191,13 @@ export function DedicatedSubmittalDetailPage() {
 
   // Delete submittal
   const handleDelete = async () => {
-    if (!submittal || !window.confirm('Are you sure you want to delete this submittal?')) {return}
-    await deleteSubmittal.mutateAsync(submittal.id)
-    navigate(-1)
+    if (!submittal) {return}
+    try {
+      await deleteSubmittal.mutateAsync(submittal.id)
+      navigate(-1)
+    } finally {
+      setShowDeleteDialog(false)
+    }
   }
 
   // Loading state
@@ -683,7 +698,7 @@ export function DedicatedSubmittalDetailPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteDialog(true)}
                   disabled={deleteSubmittal.isPending}
                   className="w-full mt-4"
                 >
@@ -695,6 +710,27 @@ export function DedicatedSubmittalDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Submittal</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this submittal? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Create Revision Dialog */}
       <CreateRevisionDialog

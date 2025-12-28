@@ -1,7 +1,18 @@
 // File: /src/pages/notices/NoticeDetailPage.tsx
 // Notice detail view page
 
+import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useNotice, useDeleteNoticeWithNotification } from '@/features/notices/hooks'
@@ -36,6 +47,7 @@ import { logger } from '../../lib/utils/logger';
 export function NoticeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const { data: notice, isLoading, error } = useNotice(id)
   const deleteMutation = useDeleteNoticeWithNotification()
@@ -43,16 +55,16 @@ export function NoticeDetailPage() {
   const handleDelete = async () => {
     if (!notice) {return}
 
-    if (window.confirm('Are you sure you want to delete this notice?')) {
-      try {
-        await deleteMutation.mutateAsync({
-          id: notice.id,
-          projectId: notice.project_id,
-        })
-        navigate('/notices')
-      } catch (error) {
-        logger.error('Failed to delete notice:', error)
-      }
+    try {
+      await deleteMutation.mutateAsync({
+        id: notice.id,
+        projectId: notice.project_id,
+      })
+      navigate('/notices')
+    } catch (error) {
+      logger.error('Failed to delete notice:', error)
+    } finally {
+      setShowDeleteDialog(false)
     }
   }
 
@@ -113,7 +125,7 @@ export function NoticeDetailPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={handleDelete}
+              onClick={() => setShowDeleteDialog(true)}
               disabled={deleteMutation.isPending}
               className="text-error hover:text-error-dark"
             >
@@ -357,6 +369,26 @@ export function NoticeDetailPage() {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Notice</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this notice? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   )
 }

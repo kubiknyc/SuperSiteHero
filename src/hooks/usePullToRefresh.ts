@@ -43,7 +43,7 @@ interface UsePullToRefreshReturn {
  * Check if we're in a PWA standalone mode
  */
 function isStandalone(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === 'undefined') {return false}
   return window.matchMedia('(display-mode: standalone)').matches ||
     (window.navigator as Navigator & { standalone?: boolean }).standalone === true
 }
@@ -117,7 +117,7 @@ export function usePullToRefresh({
 
   // Handle refresh trigger
   const handleRefresh = useCallback(async () => {
-    if (isRefreshing) return
+    if (isRefreshing) {return}
 
     setIsRefreshing(true)
     triggerHaptic()
@@ -133,18 +133,18 @@ export function usePullToRefresh({
 
   // Touch event handlers
   useEffect(() => {
-    if (!enabled) return
-    if (typeof window === 'undefined') return
+    if (!enabled) {return}
+    if (typeof window === 'undefined') {return}
 
     // Only enable in PWA mode to avoid conflicts with browser's native pull-to-refresh
-    if (!isStandalone()) return
+    if (!isStandalone()) {return}
 
     const target = targetRef?.current || document.body
 
     const handleTouchStart = (e: TouchEvent) => {
       // Only track if at top of scroll
-      if (!isAtTop(targetRef?.current || null)) return
-      if (isRefreshing) return
+      if (!isAtTop(targetRef?.current || null)) {return}
+      if (isRefreshing) {return}
 
       startY.current = e.touches[0].clientY
       currentY.current = startY.current
@@ -152,8 +152,8 @@ export function usePullToRefresh({
     }
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isTracking.current) return
-      if (isRefreshing) return
+      if (!isTracking.current) {return}
+      if (isRefreshing) {return}
 
       currentY.current = e.touches[0].clientY
       const diff = currentY.current - startY.current
@@ -180,7 +180,7 @@ export function usePullToRefresh({
     }
 
     const handleTouchEnd = () => {
-      if (!isTracking.current) return
+      if (!isTracking.current) {return}
       isTracking.current = false
 
       if (pullDistance >= threshold && !isRefreshing) {

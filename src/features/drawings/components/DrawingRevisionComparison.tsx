@@ -176,14 +176,14 @@ export function DrawingRevisionComparison({
 
   // Pan handling
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button !== 0) return;
+    if (e.button !== 0) {return;}
     setIsPanning(true);
     lastPanPosition.current = { x: e.clientX, y: e.clientY };
   }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!isPanning) return;
+      if (!isPanning) {return;}
       const dx = e.clientX - lastPanPosition.current.x;
       const dy = e.clientY - lastPanPosition.current.y;
       setPosition((prev) => ({ x: prev.x + dx, y: prev.y + dy }));
@@ -206,7 +206,7 @@ export function DrawingRevisionComparison({
     }
   };
 
-  if (!open) return null;
+  if (!open) {return null;}
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>

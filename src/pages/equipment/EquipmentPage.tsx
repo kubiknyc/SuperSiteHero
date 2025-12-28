@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -27,7 +26,7 @@ import {
 
 export function EquipmentPage() {
   const [searchParams] = useSearchParams()
-  const projectId = searchParams.get('project') || undefined
+  const _projectId = searchParams.get('project') || undefined // Reserved for future project filtering
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('')
 
@@ -35,7 +34,6 @@ export function EquipmentPage() {
     status: statusFilter || undefined,
     search: search || undefined,
   })
-  const { data: projects } = useProjectsList()
   const { data: stats } = useEquipmentStatistics()
 
   // Filter equipment by search

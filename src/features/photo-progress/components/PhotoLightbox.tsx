@@ -86,7 +86,7 @@ export function PhotoLightbox({
   };
 
   const handleDownload = async () => {
-    if (!currentPhoto) return;
+    if (!currentPhoto) {return;}
 
     try {
       const response = await fetch(currentPhoto.photo_url);
@@ -107,7 +107,7 @@ export function PhotoLightbox({
 
   // Keyboard navigation
   useEffect(() => {
-    if (!open) return;
+    if (!open) {return;}
 
     const handleKeyDown = (e: KeyboardEvent) => {
       switch (e.key) {
@@ -140,7 +140,7 @@ export function PhotoLightbox({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [open, goToPrevious, goToNext, onOpenChange]);
 
-  if (!currentPhoto) return null;
+  if (!currentPhoto) {return null;}
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

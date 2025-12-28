@@ -4,6 +4,7 @@
  */
 
 import { useParams } from 'react-router-dom';
+import { AppLayout } from '@/components/layout/AppLayout';
 import { TransmittalDetail } from '@/features/transmittals/components';
 
 export function TransmittalDetailPage() {
@@ -13,16 +14,18 @@ export function TransmittalDetailPage() {
   }>();
 
   if (!projectId || !transmittalId) {
-    return <div>Project ID and Transmittal ID are required</div>;
+    return <AppLayout><div className="p-6">Project ID and Transmittal ID are required</div></AppLayout>;
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <TransmittalDetail
-        transmittalId={transmittalId}
-        projectId={projectId}
-      />
-    </div>
+    <AppLayout>
+      <div className="p-6 space-y-6">
+        <TransmittalDetail
+          transmittalId={transmittalId}
+          projectId={projectId}
+        />
+      </div>
+    </AppLayout>
   );
 }
 

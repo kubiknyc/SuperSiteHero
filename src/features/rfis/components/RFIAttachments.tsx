@@ -2,6 +2,16 @@
 // Component for managing RFI file attachments with upload and download
 
 import { useState, useRef, DragEvent, ChangeEvent } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -81,6 +91,8 @@ export function RFIAttachments({
   const [description, setDescription] = useState('')
   const [showUploadForm, setShowUploadForm] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [attachmentToDelete, setAttachmentToDelete] = useState<RFIAttachment | null>(null)
 
   // Queries and mutations
   const { data: attachments, isLoading: isLoadingAttachments } = useRFIAttachments(rfiId)
@@ -169,16 +181,24 @@ export function RFIAttachments({
   }
 
   // Delete handler
-  const handleDelete = async (attachment: RFIAttachment) => {
-    if (!window.confirm(`Delete "${attachment.file_name}"?`)) {return}
+  const handleDeleteClick = (attachment: RFIAttachment) => {
+    setAttachmentToDelete(attachment)
+    setShowDeleteDialog(true)
+  }
+
+  const handleDelete = async () => {
+    if (!attachmentToDelete) return
 
     try {
       await deleteAttachment.mutateAsync({
-        attachmentId: attachment.id,
+        attachmentId: attachmentToDelete.id,
         rfiId,
       })
     } catch (error) {
       logger.error('Failed to delete attachment:', error)
+    } finally {
+      setShowDeleteDialog(false)
+      setAttachmentToDelete(null)
     }
   }
 
@@ -350,7 +370,7 @@ export function RFIAttachments({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDelete(attachment)}
+                        onClick={() => handleDeleteClick(attachment)}
                         disabled={isDeleting}
                         title="Delete"
                         className="text-error hover:text-error-dark hover:bg-error-light"
@@ -373,6 +393,27 @@ export function RFIAttachments({
             <p className="text-sm text-muted">No attachments yet</p>
           </div>
         )}
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Attachment</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{attachmentToDelete?.file_name}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   )

@@ -85,7 +85,7 @@ export function useCursorPersistence(
    * Initialize session and restore cursors
    */
   const initializeSession = useCallback(async () => {
-    if (!user || !roomId || !enabled || isInitializedRef.current) return;
+    if (!user || !roomId || !enabled || isInitializedRef.current) {return;}
 
     try {
       // Get or create session
@@ -196,7 +196,7 @@ export function useCursorPersistence(
    */
   const persistCursor = useCallback(
     async (position: CursorPosition, action: CursorAction = 'idle') => {
-      if (!sessionId || !user || !enabled) return;
+      if (!sessionId || !user || !enabled) {return;}
 
       const now = Date.now();
 
@@ -250,7 +250,7 @@ export function useCursorPersistence(
    * Deactivate cursor when user leaves
    */
   const deactivateCursor = useCallback(async () => {
-    if (!sessionId || !user) return;
+    if (!sessionId || !user) {return;}
 
     try {
       await cursorPersistenceService.deactivateCursor(sessionId, user.id);
@@ -263,7 +263,7 @@ export function useCursorPersistence(
    * Manually refresh cursors
    */
   const refreshCursors = useCallback(async () => {
-    if (!sessionId || !user) return;
+    if (!sessionId || !user) {return;}
 
     try {
       const cursors = await cursorPersistenceService.getSessionCursors(
@@ -310,7 +310,7 @@ export function useCursorPersistence(
 
   // Periodic persistence of pending cursor
   useEffect(() => {
-    if (!enabled || !sessionId) return;
+    if (!enabled || !sessionId) {return;}
 
     persistIntervalRef.current = setInterval(() => {
       if (pendingCursorRef.current && sessionId && user) {

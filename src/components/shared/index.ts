@@ -21,3 +21,5 @@ export {
   type WorkflowStep,
   type WorkflowProgressIndicatorProps,
 } from './WorkflowProgressIndicator'
+
+export { UserName, type UserNameProps } from './UserName'

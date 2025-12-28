@@ -105,7 +105,7 @@ export function useLiveCursors(
 
   // Initialize persistence session and restore cursors
   useEffect(() => {
-    if (!enablePersistence || !user || !roomId || !enabled || isInitializedRef.current) return
+    if (!enablePersistence || !user || !roomId || !enabled || isInitializedRef.current) {return}
 
     const initPersistence = async () => {
       try {
@@ -117,7 +117,7 @@ export function useLiveCursors(
           resourceType
         )
 
-        if (!newSessionId) return
+        if (!newSessionId) {return}
 
         setSessionId(newSessionId)
         isInitializedRef.current = true
@@ -166,7 +166,7 @@ export function useLiveCursors(
 
   // Periodic persistence of cursor position
   useEffect(() => {
-    if (!enablePersistence || !sessionId || !user || !enabled) return
+    if (!enablePersistence || !sessionId || !user || !enabled) {return}
 
     persistIntervalRef.current = setInterval(async () => {
       if (pendingPositionRef.current && sessionId) {

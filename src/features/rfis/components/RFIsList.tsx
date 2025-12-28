@@ -2,6 +2,16 @@
 // RFIs list with filtering and actions
 
 import { useState, useCallback, useMemo, memo } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -14,6 +24,7 @@ import { CreateRFIDialog } from './CreateRFIDialog'
 import { Plus, AlertCircle, Trash2, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { WorkflowItem } from '@/types/database'
+import { UserName } from '@/components/shared'
 
 interface RFIsListProps {
   projectId: string | undefined
@@ -53,7 +64,7 @@ const RFIRow = memo(function RFIRow({ rfi, workflowTypePrefix, getStatusColor, o
         </Badge>
       </td>
       <td className="py-3 px-4 text-secondary text-sm">
-        {rfi.raised_by ? rfi.raised_by.substring(0, 8) : '-'}
+        {rfi.raised_by ? <UserName userId={rfi.raised_by} fallback="Unknown" /> : '-'}
       </td>
       <td className="py-3 px-4 text-secondary text-sm">
         {rfi.created_at ? format(new Date(rfi.created_at), 'MMM d, yyyy') : 'N/A'}
@@ -79,6 +90,8 @@ export function RFIsList({ projectId }: RFIsListProps) {
   const [createOpen, setCreateOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [rfiToDelete, setRfiToDelete] = useState<string | null>(null)
 
   const { data: workflowType } = useRFIWorkflowType()
   const { data: rfis, isLoading, error } = useRFIs(projectId, workflowType?.id)
@@ -107,11 +120,20 @@ export function RFIsList({ projectId }: RFIsListProps) {
     return colors[status] || 'bg-muted text-foreground'
   }
 
-  const handleDelete = useCallback(async (rfiId: string) => {
-    if (window.confirm('Are you sure you want to delete this RFI?')) {
-      await deleteRFI.mutateAsync(rfiId)
+  const handleDeleteClick = useCallback((rfiId: string) => {
+    setRfiToDelete(rfiId)
+    setShowDeleteDialog(true)
+  }, [])
+
+  const handleDelete = useCallback(async () => {
+    if (!rfiToDelete) return
+    try {
+      await deleteRFI.mutateAsync(rfiToDelete)
+    } finally {
+      setShowDeleteDialog(false)
+      setRfiToDelete(null)
     }
-  }, [deleteRFI])
+  }, [deleteRFI, rfiToDelete])
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
@@ -216,7 +238,7 @@ export function RFIsList({ projectId }: RFIsListProps) {
                       rfi={rfi}
                       workflowTypePrefix={workflowType?.prefix || 'RFI'}
                       getStatusColor={getStatusColor}
-                      onDelete={handleDelete}
+                      onDelete={handleDeleteClick}
                       isDeleting={deleteRFI.isPending}
                     />
                   ))}
@@ -234,6 +256,27 @@ export function RFIsList({ projectId }: RFIsListProps) {
         open={createOpen}
         onOpenChange={setCreateOpen}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete RFI</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this RFI? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

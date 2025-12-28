@@ -2,6 +2,16 @@
 // Submittal detail page with status management and procurement tracking
 
 import { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -18,12 +28,14 @@ import { SubmittalStatusBadge } from '@/features/submittals/components'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import { useCreateConversation } from '@/features/messaging/hooks'
+import { UserName } from '@/components/shared'
 import { logger } from '../../lib/utils/logger';
 
 
 export function SubmittalDetailPage() {
   const { submittalId } = useParams<{ submittalId: string }>()
   const navigate = useNavigate()
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const { data: submittal, isLoading, error } = useSubmittal(submittalId)
   const { data: comments } = useSubmittalComments(submittalId)
@@ -83,9 +95,13 @@ export function SubmittalDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!submittal || !window.confirm('Are you sure you want to delete this submittal?')) {return}
-    await deleteSubmittal.mutateAsync(submittal.id)
-    navigate(-1)
+    if (!submittal) {return}
+    try {
+      await deleteSubmittal.mutateAsync(submittal.id)
+      navigate(-1)
+    } finally {
+      setShowDeleteDialog(false)
+    }
   }
 
   if (!submittalId) {
@@ -256,7 +272,7 @@ export function SubmittalDetailPage() {
                       <div key={comment.id} className="border-b pb-4 last:border-0">
                         <div className="flex justify-between items-start mb-2">
                           <span className="font-semibold text-sm text-foreground">
-                            {comment.created_by?.substring(0, 8) || 'User'}
+                            <UserName userId={comment.created_by} fallback="User" />
                           </span>
                           <span className="text-xs text-muted">
                             {comment.created_at ? format(new Date(comment.created_at), 'MMM d, yyyy h:mm a') : 'N/A'}
@@ -360,7 +376,7 @@ export function SubmittalDetailPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteDialog(true)}
                   disabled={deleteSubmittal.isPending}
                   className="w-full mt-4"
                 >
@@ -372,6 +388,26 @@ export function SubmittalDetailPage() {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Submittal</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this submittal? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   )
 }

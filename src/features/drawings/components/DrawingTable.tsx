@@ -327,7 +327,7 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
           open={showRevisionSelect}
           onOpenChange={(open) => {
             setShowRevisionSelect(open);
-            if (!open) setCompareDrawing(null);
+            if (!open) {setCompareDrawing(null);}
           }}
           drawing={compareDrawing}
           onCompare={handleRevisionsSelected}

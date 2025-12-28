@@ -51,7 +51,7 @@ export function RevisionSelectDialog({
 
   // Sort revisions by date (newest first)
   const sortedRevisions = useMemo(() => {
-    if (!revisions) return [];
+    if (!revisions) {return [];}
     return [...revisions].sort((a, b) => {
       const dateA = a.revisionDate ? new Date(a.revisionDate).getTime() : 0;
       const dateB = b.revisionDate ? new Date(b.revisionDate).getTime() : 0;
@@ -75,13 +75,13 @@ export function RevisionSelectDialog({
 
   // Handle compare button click
   const handleCompare = () => {
-    if (selectedRevisions.length !== 2) return;
+    if (selectedRevisions.length !== 2) {return;}
 
     // Order by revision date (older first)
     const rev1 = sortedRevisions.find((r) => r.id === selectedRevisions[0]);
     const rev2 = sortedRevisions.find((r) => r.id === selectedRevisions[1]);
 
-    if (!rev1 || !rev2) return;
+    if (!rev1 || !rev2) {return;}
 
     const date1 = rev1.revisionDate ? new Date(rev1.revisionDate).getTime() : 0;
     const date2 = rev2.revisionDate ? new Date(rev2.revisionDate).getTime() : 0;
@@ -95,7 +95,7 @@ export function RevisionSelectDialog({
 
   // Get revision labels for selected items
   const getSelectedLabels = () => {
-    if (selectedRevisions.length === 0) return null;
+    if (selectedRevisions.length === 0) {return null;}
     if (selectedRevisions.length === 1) {
       const rev = sortedRevisions.find((r) => r.id === selectedRevisions[0]);
       return `Rev ${rev?.revision || '?'} selected - select one more`;

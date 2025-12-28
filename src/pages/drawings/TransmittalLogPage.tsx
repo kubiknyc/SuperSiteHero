@@ -218,7 +218,7 @@ export default function TransmittalLogPage() {
     const acknowledged = allTransmittals?.filter((t) => t.acknowledged).length || 0;
     const pending = total - acknowledged;
     const overdue = allTransmittals?.filter((t) => {
-      if (t.acknowledged) return false;
+      if (t.acknowledged) {return false;}
       return isAfter(new Date(), subDays(new Date(t.transmittalDate), -14));
     }).length || 0;
 
@@ -227,22 +227,22 @@ export default function TransmittalLogPage() {
 
   // Filter transmittals
   const filteredTransmittals = useMemo(() => {
-    if (!allTransmittals) return [];
+    if (!allTransmittals) {return [];}
 
     return allTransmittals.filter((t) => {
       // Status filter
-      if (statusFilter === 'acknowledged' && !t.acknowledged) return false;
-      if (statusFilter === 'pending' && t.acknowledged) return false;
+      if (statusFilter === 'acknowledged' && !t.acknowledged) {return false;}
+      if (statusFilter === 'pending' && t.acknowledged) {return false;}
       if (statusFilter === 'overdue') {
-        if (t.acknowledged) return false;
-        if (!isAfter(new Date(), subDays(new Date(t.transmittalDate), -14))) return false;
+        if (t.acknowledged) {return false;}
+        if (!isAfter(new Date(), subDays(new Date(t.transmittalDate), -14))) {return false;}
       }
 
       // Date range filter
       if (dateRange !== 'all') {
         const days = parseInt(dateRange);
         const cutoff = subDays(new Date(), days);
-        if (!isAfter(new Date(t.transmittalDate), cutoff)) return false;
+        if (!isAfter(new Date(t.transmittalDate), cutoff)) {return false;}
       }
 
       // Search filter
@@ -265,7 +265,7 @@ export default function TransmittalLogPage() {
     const groups: Record<string, AggregatedTransmittal[]> = {};
     filteredTransmittals.forEach((t) => {
       const company = t.recipientCompany || 'Unknown';
-      if (!groups[company]) groups[company] = [];
+      if (!groups[company]) {groups[company] = [];}
       groups[company].push(t);
     });
     return Object.entries(groups).sort((a, b) => b[1].length - a[1].length);

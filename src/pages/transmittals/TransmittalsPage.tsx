@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { AppLayout } from '@/components/layout/AppLayout';
 import {
   Dialog,
   DialogContent,
@@ -20,7 +21,7 @@ export function TransmittalsPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   if (!projectId) {
-    return <div>Project ID is required</div>;
+    return <AppLayout><div className="p-6">Project ID is required</div></AppLayout>;
   }
 
   const handleCreateSuccess = (transmittal: Transmittal) => {
@@ -29,25 +30,27 @@ export function TransmittalsPage() {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <TransmittalList
-        projectId={projectId}
-        onCreateNew={() => setShowCreateDialog(true)}
-      />
+    <AppLayout>
+      <div className="p-6 space-y-6">
+        <TransmittalList
+          projectId={projectId}
+          onCreateNew={() => setShowCreateDialog(true)}
+        />
 
-      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Create New Transmittal</DialogTitle>
-          </DialogHeader>
-          <TransmittalForm
-            projectId={projectId}
-            onSuccess={handleCreateSuccess}
-            onCancel={() => setShowCreateDialog(false)}
-          />
-        </DialogContent>
-      </Dialog>
-    </div>
+        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Create New Transmittal</DialogTitle>
+            </DialogHeader>
+            <TransmittalForm
+              projectId={projectId}
+              onSuccess={handleCreateSuccess}
+              onCancel={() => setShowCreateDialog(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
+    </AppLayout>
   );
 }
 

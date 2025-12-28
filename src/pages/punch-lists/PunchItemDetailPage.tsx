@@ -2,6 +2,16 @@
 // Detailed view of a single punch item with status management
 
 import { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -25,6 +35,7 @@ export function PunchItemDetailPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [rejectionNotes, setRejectionNotes] = useState('')
   const [showRejectionForm, setShowRejectionForm] = useState(false)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
   const { data: punchItem, isLoading, error } = usePunchItem(punchItemId)
   const updateStatus = useUpdatePunchItemStatus()
@@ -60,9 +71,13 @@ export function PunchItemDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!punchItem || !window.confirm(`Are you sure you want to delete "${punchItem.title}"?`)) {return}
-    await deletePunchItem.mutateAsync(punchItem.id)
-    navigate('/punch-lists')
+    if (!punchItem) {return}
+    try {
+      await deletePunchItem.mutateAsync(punchItem.id)
+      navigate('/punch-lists')
+    } finally {
+      setShowDeleteDialog(false)
+    }
   }
 
   if (!punchItemId) {
@@ -142,7 +157,7 @@ export function PunchItemDetailPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteDialog(true)}
                   disabled={deletePunchItem.isPending}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
@@ -404,6 +419,26 @@ export function PunchItemDetailPage() {
             onOpenChange={setEditDialogOpen}
           />
         )}
+
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Punch Item</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete "{punchItem?.title}"? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </AppLayout>
   )

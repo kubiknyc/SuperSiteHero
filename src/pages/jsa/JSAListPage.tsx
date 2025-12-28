@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { AppLayout } from '@/components/layout/AppLayout';
 import {
   Dialog,
   DialogContent,
@@ -59,13 +60,14 @@ export function JSAListPage() {
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <JSAList
-        projectId={projectId}
-        onCreateNew={() => setShowCreateDialog(true)}
-      />
+    <AppLayout>
+      <div className="p-6 space-y-6">
+        <JSAList
+          projectId={projectId}
+          onCreateNew={() => setShowCreateDialog(true)}
+        />
 
-      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Create New JSA</DialogTitle>
@@ -123,8 +125,9 @@ export function JSAListPage() {
             </Button>
           </div>
         </DialogContent>
-      </Dialog>
-    </div>
+        </Dialog>
+      </div>
+    </AppLayout>
   );
 }
 

@@ -16,37 +16,22 @@
  */
 
 import React, { useRef, useState, useCallback, useEffect, useMemo } from 'react';
-import { Canvas, useThree, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import {
   OrbitControls,
-  Environment,
-  Sky,
   Html,
   useTexture,
   Sphere,
-  PerspectiveCamera,
 } from '@react-three/drei';
 import {
   Maximize2,
   Minimize2,
-  Play,
-  Pause,
-  SkipForward,
-  SkipBack,
-  Volume2,
-  VolumeX,
   Settings,
   Glasses,
   Eye,
   ChevronLeft,
   ChevronRight,
-  MapPin,
-  Info,
-  Navigation,
-  Move,
   Loader2,
-  AlertCircle,
-  X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -55,7 +40,6 @@ import { Label } from '@/components/ui/label';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -63,10 +47,8 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { useWebXR, useWebXRSupport } from '../hooks/useWebXR';
@@ -76,7 +58,6 @@ import type {
   VRAnnotation,
   Photo360Data,
   VRWalkthroughSettings,
-  Vector3D,
 } from '@/types/visualization';
 import { logger } from '../../../lib/utils/logger';
 
@@ -455,7 +436,7 @@ export function VRWalkthrough({
   photo360Url,
   photos,
   showControls = true,
-  showMinimap = false,
+  _showMinimap = false,
   settings: initialSettings,
   className,
   onSessionStart,
@@ -477,7 +458,7 @@ export function VRWalkthrough({
   const [isLoading, setIsLoading] = useState(true);
 
   // WebXR support
-  const { supportsVR, isLoading: isCheckingVR } = useWebXRSupport();
+  const { supportsVR, isLoading: _isCheckingVR } = useWebXRSupport();
 
   // WebXR hook
   const {

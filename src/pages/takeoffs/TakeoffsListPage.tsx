@@ -3,6 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { AppLayout } from '@/components/layout/AppLayout'
 import {
   Ruler,
   FileText,
@@ -133,14 +134,17 @@ export default function TakeoffsListPage() {
 
   if (!projectId) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-muted-foreground">Project not found</p>
-      </div>
+      <AppLayout>
+        <div className="flex items-center justify-center h-screen">
+          <p className="text-muted-foreground">Project not found</p>
+        </div>
+      </AppLayout>
     )
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <AppLayout>
+      <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -349,6 +353,7 @@ export default function TakeoffsListPage() {
           currentUserId={user?.id || ''}
         />
       )}
-    </div>
+      </div>
+    </AppLayout>
   )
 }

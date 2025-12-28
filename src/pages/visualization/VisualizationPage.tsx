@@ -17,13 +17,8 @@ import {
   Building2,
   Camera,
   Eye,
-  Upload,
-  Play,
-  Grid3X3,
   Glasses,
-  Smartphone,
   Image,
-  FileBox,
   Plus,
   Search,
   Filter,
@@ -32,21 +27,15 @@ import {
   Download,
   Share2,
   Settings,
-  ChevronRight,
-  Loader2,
-  AlertCircle,
   FolderOpen,
   LayoutGrid,
   List,
-  Clock,
-  Tag,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
@@ -58,7 +47,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -68,7 +56,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { ModelViewer3D, BIMViewer, ARViewer, VRWalkthrough } from '@/features/visualization';
 import { cn } from '@/lib/utils';
@@ -323,7 +310,6 @@ export function VisualizationPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('gallery');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFormat, setSelectedFormat] = useState<string>('all');
-  const [isLoading, setIsLoading] = useState(false);
 
   // Dialog states
   const [viewerModel, setViewerModel] = useState<Model3DMetadata | null>(null);

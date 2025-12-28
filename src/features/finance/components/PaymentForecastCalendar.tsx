@@ -29,13 +29,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  RadixSelect as Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+// Select components reserved for future filter UI implementation
+// import {
+//   RadixSelect as Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -45,7 +46,6 @@ import {
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 import {
-  Calendar,
   ChevronLeft,
   ChevronRight,
   DollarSign,
@@ -59,7 +59,6 @@ import {
   Building,
   Truck,
   RefreshCw,
-  Filter,
   List,
   LayoutGrid,
   BarChart3,
@@ -68,23 +67,21 @@ import {
   CheckCircle,
   XCircle,
 } from 'lucide-react'
-import { format, addMonths, subMonths, startOfMonth, endOfMonth, parseISO, isSameMonth, isToday } from 'date-fns'
+import { format, addMonths, subMonths, parseISO, isSameMonth, isToday } from 'date-fns'
 import {
-  usePaymentForecastCalendar,
   usePaymentForecastDashboard,
-  useCashFlowForecast,
-  usePaymentTypeOptions,
-  usePaymentStatusOptions,
 } from '../hooks/usePaymentForecast'
-import type {
-  PaymentCalendarEvent,
-  PaymentType,
-  PaymentStatus,
-  CashFlowProjection,
-  DailyPaymentTotals,
-  CalendarView,
+import {
+  getPaymentTypeConfig,
+  getPaymentStatusConfig,
+  isIncomingPayment,
+  type PaymentCalendarEvent,
+  type PaymentType,
+  type PaymentStatus,
+  type CashFlowProjection,
+  type DailyPaymentTotals,
+  type CalendarView,
 } from '@/types/payment-forecast'
-import { getPaymentTypeConfig, getPaymentStatusConfig, isIncomingPayment } from '@/types/payment-forecast'
 
 // ============================================================================
 // Utility Functions
@@ -619,11 +616,12 @@ export function PaymentForecastCalendar({ projectId, className }: PaymentForecas
   'use no memo'
   const [currentDate, setCurrentDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>('month')
-  const [selectedPaymentTypes, setSelectedPaymentTypes] = useState<PaymentType[]>([])
-  const [selectedStatuses, setSelectedStatuses] = useState<PaymentStatus[]>([])
-
-  const paymentTypeOptions = usePaymentTypeOptions()
-  const paymentStatusOptions = usePaymentStatusOptions()
+  // Filter state - setters reserved for future filter UI implementation
+  const [selectedPaymentTypes, _setSelectedPaymentTypes] = useState<PaymentType[]>([])
+  const [selectedStatuses, _setSelectedStatuses] = useState<PaymentStatus[]>([])
+  // Suppress unused variable warnings for filter setters (will be used when filter UI is added)
+  void _setSelectedPaymentTypes
+  void _setSelectedStatuses
 
   // Fetch data
   const {

@@ -3,6 +3,16 @@
 // Dedicated RFI detail page with tabbed interface, workflow indicator, and ball-in-court tracking
 
 import { useState, useMemo } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format, differenceInDays } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
@@ -136,6 +146,9 @@ export function DedicatedRFIDetailPage() {
   const [selectedDistributionIds, setSelectedDistributionIds] = useState<string[]>([])
   const [distributionFilter, setDistributionFilter] = useState('')
 
+  // Delete confirmation dialog state
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
   // Queries
   const { data: rfi, isLoading, error } = useRFI(rfiId)
   const { data: comments } = useRFIComments(rfiId)
@@ -254,9 +267,13 @@ export function DedicatedRFIDetailPage() {
 
   // Delete RFI
   const handleDelete = async () => {
-    if (!rfi || !window.confirm('Are you sure you want to delete this RFI?')) {return}
-    await deleteRFI.mutateAsync(rfi.id)
-    navigate(-1)
+    if (!rfi) {return}
+    try {
+      await deleteRFI.mutateAsync(rfi.id)
+      navigate(-1)
+    } finally {
+      setShowDeleteDialog(false)
+    }
   }
 
   // Distribution list editing handlers
@@ -1083,7 +1100,7 @@ export function DedicatedRFIDetailPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteDialog(true)}
                   disabled={deleteRFI.isPending}
                   className="w-full mt-4"
                 >
@@ -1095,6 +1112,26 @@ export function DedicatedRFIDetailPage() {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete RFI</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this RFI? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   )
 }

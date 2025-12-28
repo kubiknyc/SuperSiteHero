@@ -14,6 +14,16 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -74,6 +84,8 @@ export function LayerManager({
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editingLayer, setEditingLayer] = useState<MarkupLayer | null>(null)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [layerToDelete, setLayerToDelete] = useState<MarkupLayer | null>(null)
 
   // Form state for create/edit
   const [formData, setFormData] = useState({
@@ -126,10 +138,17 @@ export function LayerManager({
     setIsEditDialogOpen(true)
   }
 
-  const handleDeleteLayer = (layer: MarkupLayer) => {
-    if (window.confirm(`Are you sure you want to delete layer "${layer.name}"? This will not delete the markups on this layer.`)) {
-      onDeleteLayer(layer.id)
+  const openDeleteDialog = (layer: MarkupLayer) => {
+    setLayerToDelete(layer)
+    setShowDeleteDialog(true)
+  }
+
+  const handleDeleteLayer = () => {
+    if (layerToDelete) {
+      onDeleteLayer(layerToDelete.id)
+      setLayerToDelete(null)
     }
+    setShowDeleteDialog(false)
   }
 
   const visibleLayersCount = layers.filter(l => l.visible).length
@@ -277,7 +296,7 @@ export function LayerManager({
                           {!layer.isDefault && (
                             <button
                               className="w-full flex items-center gap-2 px-2 py-1.5 text-sm text-error hover:bg-error-light rounded"
-                              onClick={() => handleDeleteLayer(layer)}
+                              onClick={() => openDeleteDialog(layer)}
                             >
                               <Trash2 className="w-3 h-3" />
                               Delete
@@ -443,6 +462,27 @@ export function LayerManager({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Layer Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Layer</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete layer "{layerToDelete?.name}"? This will not delete the markups on this layer.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteLayer}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

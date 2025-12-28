@@ -2,7 +2,7 @@
 // Daily reports list and management page
 /* eslint-disable react-hooks/preserve-manual-memoization */
 
-import { useState, useEffect, useMemo, useCallback, memo } from 'react'
+import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'

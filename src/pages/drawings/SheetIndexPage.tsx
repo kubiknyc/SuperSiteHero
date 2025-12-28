@@ -307,7 +307,7 @@ export default function SheetIndexPage() {
   const setCurrentMutation = useSetCurrentDrawingSet();
 
   const filteredSets = sets?.filter((set) => {
-    if (!search) return true;
+    if (!search) {return true;}
     const searchLower = search.toLowerCase();
     return (
       set.name.toLowerCase().includes(searchLower) ||
@@ -322,7 +322,7 @@ export default function SheetIndexPage() {
   const supersededSets = filteredSets?.filter((s) => s.status === 'superseded') || [];
 
   const handleSetCurrent = async (setId: string) => {
-    if (!projectId) return;
+    if (!projectId) {return;}
     try {
       await setCurrentMutation.mutateAsync({ setId, projectId });
       toast.success('Current sheet index updated');

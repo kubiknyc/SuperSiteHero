@@ -2,6 +2,16 @@
 // Documents list with filtering and actions
 
 import { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -35,6 +45,8 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
   const [uploadOpen, setUploadOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState<DocumentType | ''>('')
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [documentToDelete, setDocumentToDelete] = useState<string | null>(null)
 
   const { data: documents, isLoading, error } = useDocuments(projectId)
   const deleteDocument = useDeleteDocumentWithNotification()
@@ -52,9 +64,18 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
     return matchesSearch && matchesFolder && matchesType
   })
 
-  const handleDelete = async (documentId: string) => {
-    if (window.confirm('Are you sure you want to delete this document?')) {
-      await deleteDocument.mutateAsync(documentId)
+  const handleDeleteClick = (documentId: string) => {
+    setDocumentToDelete(documentId)
+    setShowDeleteDialog(true)
+  }
+
+  const handleDelete = async () => {
+    if (!documentToDelete) return
+    try {
+      await deleteDocument.mutateAsync(documentToDelete)
+    } finally {
+      setShowDeleteDialog(false)
+      setDocumentToDelete(null)
     }
   }
 
@@ -151,7 +172,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => handleDelete(doc.id)}
+            onClick={() => handleDeleteClick(doc.id)}
             disabled={deleteDocument.isPending}
             title="Delete"
           >
@@ -262,6 +283,27 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
           }}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Document</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this document? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

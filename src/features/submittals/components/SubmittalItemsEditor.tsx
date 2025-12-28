@@ -2,6 +2,16 @@
 // Component for managing submittal line items (CRUD operations)
 
 import { useState } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -59,6 +69,8 @@ export function SubmittalItemsEditor({
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingItem, setEditingItem] = useState<SubmittalItem | null>(null)
   const [formData, setFormData] = useState<ItemFormData>(defaultFormData)
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState<SubmittalItem | null>(null)
 
   const { data: items = [], isLoading } = useSubmittalItems(submittalId)
   const addItem = useAddSubmittalItem()
@@ -118,16 +130,24 @@ export function SubmittalItemsEditor({
     }
   }
 
-  const handleDelete = async (item: SubmittalItem) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) {return}
+  const handleDeleteClick = (item: SubmittalItem) => {
+    setItemToDelete(item)
+    setShowDeleteDialog(true)
+  }
+
+  const handleDelete = async () => {
+    if (!itemToDelete) return
 
     try {
       await deleteItem.mutateAsync({
-        itemId: item.id,
+        itemId: itemToDelete.id,
         submittalId,
       })
     } catch (_error) {
       // Error handled by React Query
+    } finally {
+      setShowDeleteDialog(false)
+      setItemToDelete(null)
     }
   }
 
@@ -217,7 +237,7 @@ export function SubmittalItemsEditor({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => handleDelete(item)}
+                            onClick={() => handleDeleteClick(item)}
                             disabled={deleteItem.isPending}
                             className="h-8 w-8 p-0 text-destructive hover:text-destructive"
                           >
@@ -340,6 +360,27 @@ export function SubmittalItemsEditor({
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Item</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this item? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   )

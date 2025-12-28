@@ -72,7 +72,7 @@ export function DrawingSliderComparison({
 
   // Filter revisions to only those with image files (not PDFs)
   const imageRevisions = useMemo(() => {
-    if (!revisions) return [];
+    if (!revisions) {return [];}
     return revisions.filter(
       (rev) =>
         rev.fileUrl &&

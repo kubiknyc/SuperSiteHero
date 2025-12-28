@@ -325,7 +325,7 @@ export class MarkupSyncSession {
    * Broadcast cursor position
    */
   broadcastCursor(x: number, y: number): void {
-    if (!this.channel || !this.state.isConnected) return;
+    if (!this.channel || !this.state.isConnected) {return;}
 
     this.channel.send({
       type: 'broadcast',
@@ -343,7 +343,7 @@ export class MarkupSyncSession {
    * Broadcast action start (drawing, selecting, etc.)
    */
   broadcastActionStart(action: CollaboratorAction, markupId?: string): void {
-    if (!this.channel || !this.state.isConnected) return;
+    if (!this.channel || !this.state.isConnected) {return;}
 
     this.channel.send({
       type: 'broadcast',
@@ -361,7 +361,7 @@ export class MarkupSyncSession {
    * Broadcast action end
    */
   broadcastActionEnd(): void {
-    if (!this.channel || !this.state.isConnected) return;
+    if (!this.channel || !this.state.isConnected) {return;}
 
     this.channel.send({
       type: 'broadcast',
@@ -441,8 +441,8 @@ export class MarkupSyncSession {
   }
 
   private flushOperations(): void {
-    if (!this.channel || !this.state.isConnected) return;
-    if (this.pendingOperations.length === 0) return;
+    if (!this.channel || !this.state.isConnected) {return;}
+    if (this.pendingOperations.length === 0) {return;}
 
     const operations = this.pendingOperations.map(p => p.operation);
     this.pendingOperations = [];
@@ -480,7 +480,7 @@ export class MarkupSyncSession {
   }
 
   private handlePresenceSync(): void {
-    if (!this.channel) return;
+    if (!this.channel) {return;}
 
     const presenceState = this.channel.presenceState();
     const collaborators: CollaboratorInfo[] = [];
@@ -545,7 +545,7 @@ export class MarkupSyncSession {
 
   private handleRemoteOperation(operation: MarkupOperation): void {
     // Ignore our own operations (shouldn't happen with self: false, but just in case)
-    if (operation.userId === this.options.user.id) return;
+    if (operation.userId === this.options.user.id) {return;}
 
     // Handle batch operations
     if (operation.type === 'BATCH' && operation.operations) {
@@ -561,7 +561,7 @@ export class MarkupSyncSession {
   }
 
   private handleCursorMove(cursor: CursorBroadcast): void {
-    if (cursor.userId === this.options.user.id) return;
+    if (cursor.userId === this.options.user.id) {return;}
 
     const collaborator = this.state.activeCollaborators.find(
       c => c.id === cursor.userId
@@ -574,7 +574,7 @@ export class MarkupSyncSession {
   }
 
   private handleActionStart(action: ActionBroadcast): void {
-    if (action.userId === this.options.user.id) return;
+    if (action.userId === this.options.user.id) {return;}
 
     const collaborator = this.state.activeCollaborators.find(
       c => c.id === action.userId
@@ -587,7 +587,7 @@ export class MarkupSyncSession {
   }
 
   private handleActionEnd(action: ActionBroadcast): void {
-    if (action.userId === this.options.user.id) return;
+    if (action.userId === this.options.user.id) {return;}
 
     const collaborator = this.state.activeCollaborators.find(
       c => c.id === action.userId

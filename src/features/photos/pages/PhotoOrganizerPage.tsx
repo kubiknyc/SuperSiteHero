@@ -11,32 +11,26 @@
  */
 
 import { useState, useMemo, useCallback, useRef } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   Camera,
   Grid3X3,
   Calendar,
   MapPin,
   Search,
-  Filter,
   Upload,
   FolderPlus,
-  MoreHorizontal,
   Trash2,
   Download,
   Tag,
-  ChevronDown,
   X,
   Image,
   Clock,
   HardDrive,
-  Eye,
-  Check,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   RadixSelect,
   SelectContent,
@@ -44,14 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
@@ -61,7 +48,6 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
-import { cn } from '@/lib/utils'
 import { CameraTrigger } from '../components/CameraCapture'
 import { PhotoGrid } from '../components/PhotoGrid'
 import { PhotoTimeline } from '../components/PhotoTimeline'
@@ -316,7 +302,6 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
 
 export function PhotoOrganizerPage() {
   const { projectId } = useParams<{ projectId: string }>()
-  const navigate = useNavigate()
 
   // View state
   const [viewMode, setViewMode] = useState<PhotoViewMode>('grid')
@@ -360,8 +345,8 @@ export function PhotoOrganizerPage() {
   const createCollection = useCreateCollection()
 
   // Photo upload hook
-  const { uploadPhotos, uploadProgress, isUploading } = usePhotoUpload({
-    projectId: projectId!,
+  const { uploadPhotos, uploadProgress: _uploadProgress, isUploading } = usePhotoUpload({
+    projectId: projectId ?? '',
   })
 
   // Handle photo capture from camera
@@ -578,7 +563,7 @@ export function PhotoOrganizerPage() {
       const usedNames = new Set<string>()
 
       // Fetch all photos in parallel
-      const fetchPromises = selectedPhotos.map(async (photo, index) => {
+      const fetchPromises = selectedPhotos.map(async (photo) => {
         try {
           const response = await fetch(photo.fileUrl)
           if (!response.ok) {throw new Error(`HTTP ${response.status}`)}
