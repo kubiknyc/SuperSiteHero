@@ -24,14 +24,16 @@ platform :ios do
     )
 
     # Fetch or create certificates and profiles
-    # NOTE: Set readonly: false for first run to generate certificates
-    #       Change to readonly: true after first successful build
+    # NOTE: Set MATCH_READONLY=false for first run to generate certificates
+    is_readonly = ENV['MATCH_READONLY'] != 'false'
+    UI.message("Match readonly mode: #{is_readonly} (MATCH_READONLY=#{ENV['MATCH_READONLY']})")
+
     match(
       type: "appstore",
       app_identifier: "com.jobsightapp.app",
       git_url: ENV["MATCH_GIT_URL"] || "https://github.com/kubiknyc/jobsight-certificates.git",
       git_basic_authorization: Base64.strict_encode64(ENV["MATCH_GIT_BASIC_AUTH"] || ""),
-      readonly: ENV['MATCH_READONLY'] != 'false'  # Default to readonly, set MATCH_READONLY=false for first run
+      readonly: is_readonly
     )
   end
 
@@ -144,7 +146,7 @@ platform :ios do
   end
 
   desc "Register new devices for ad-hoc testing"
-  lane :register_device do |options|
+  lane :add_device do |options|
     device_name = options[:name] || UI.input("Enter device name: ")
     device_udid = options[:udid] || UI.input("Enter device UDID: ")
 
