@@ -13,7 +13,6 @@ import {
   Check,
   CheckCheck,
   Trash2,
-  X,
   AlertCircle,
   FileText,
   ClipboardList,
@@ -53,7 +52,7 @@ interface Notification {
   read: boolean
   readAt?: string
   priority?: 'low' | 'normal' | 'high'
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 // ============================================================================
@@ -154,8 +153,8 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const data = await notificationService.getInAppNotifications(user.id)
       setNotifications(data)
       setUnreadCount(data.filter((n: Notification) => !n.read).length)
-    } catch (error) {
-      logger.error('[NotificationCenter] Failed to load notifications:', error)
+    } catch (_error) {
+      logger.error('[NotificationCenter] Failed to load notifications:', _error)
     } finally {
       setIsLoading(false)
     }
@@ -210,8 +209,8 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
         )
       )
       setUnreadCount((prev) => Math.max(0, prev - 1))
-    } catch (error) {
-      logger.error('[NotificationCenter] Failed to mark as read:', error)
+    } catch (_error) {
+      logger.error('[NotificationCenter] Failed to mark as read:', _error)
     }
   }
 
@@ -230,8 +229,8 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
         prev.map((n) => ({ ...n, read: true, readAt: new Date().toISOString() }))
       )
       setUnreadCount(0)
-    } catch (error) {
-      logger.error('[NotificationCenter] Failed to mark all as read:', error)
+    } catch (_error) {
+      logger.error('[NotificationCenter] Failed to mark all as read:', _error)
     }
   }
 
@@ -243,8 +242,8 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       await notificationService.clearAll(user.id)
       setNotifications([])
       setUnreadCount(0)
-    } catch (error) {
-      logger.error('[NotificationCenter] Failed to clear all:', error)
+    } catch (_error) {
+      logger.error('[NotificationCenter] Failed to clear all:', _error)
     }
   }
 

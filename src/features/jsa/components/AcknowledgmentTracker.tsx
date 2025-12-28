@@ -78,8 +78,8 @@ export function AcknowledgmentTracker({
         ...data,
       });
       setShowAddDialog(false);
-    } catch (error) {
-      logger.error('Failed to add acknowledgment:', error);
+    } catch (_error) {
+      logger.error('Failed to add acknowledgment:', _error);
     }
   };
 
@@ -91,8 +91,8 @@ export function AcknowledgmentTracker({
         acknowledgmentId,
         jsaId,
       });
-    } catch (error) {
-      logger.error('Failed to remove acknowledgment:', error);
+    } catch (_error) {
+      logger.error('Failed to remove acknowledgment:', _error);
     }
   };
 
@@ -330,15 +330,17 @@ function AddAcknowledgmentDialog({
   // Reset form when dialog opens/closes
   useEffect(() => {
     if (open) {
-      setWorkerName('');
-      setWorkerCompany('');
-      setWorkerTrade('');
-      setBadgeNumber('');
-      setUnderstandsHazards(true);
-      setHasQuestions(false);
-      setQuestionsNotes('');
-      setSignatureData(null);
-      setHasSignature(false);
+      setTimeout(() => {
+        setWorkerName('');
+        setWorkerCompany('');
+        setWorkerTrade('');
+        setBadgeNumber('');
+        setUnderstandsHazards(true);
+        setHasQuestions(false);
+        setQuestionsNotes('');
+        setSignatureData(null);
+        setHasSignature(false);
+      }, 0);
     }
   }, [open]);
 

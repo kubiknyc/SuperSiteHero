@@ -81,8 +81,8 @@ export function PublicApprovalLink({
       await onCreateLink(input);
       setShowCreateForm(false);
       resetForm();
-    } catch (error) {
-      logger.error('Failed to create link:', error);
+    } catch (_error) {
+      logger.error('Failed to create link:', _error);
     } finally {
       setIsCreating(false);
     }
@@ -112,8 +112,8 @@ export function PublicApprovalLink({
     setSendingEmail(link.id);
     try {
       await onSendEmail(link, link.client_email);
-    } catch (error) {
-      logger.error('Failed to send email:', error);
+    } catch (_error) {
+      logger.error('Failed to send email:', _error);
     } finally {
       setSendingEmail(null);
     }

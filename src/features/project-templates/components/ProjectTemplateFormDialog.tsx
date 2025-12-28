@@ -91,6 +91,20 @@ export function ProjectTemplateFormDialog({
   const [folderStructure, setFolderStructure] = React.useState<TemplateFolderStructure[]>([])
   const [phases, setPhases] = React.useState<CreateTemplatePhaseInput[]>([])
 
+  // Reset form helper - moved before useEffect to fix React Compiler error
+  const resetForm = React.useCallback(() => {
+    setCurrentStep('basics')
+    setName('')
+    setDescription('')
+    setCategory('commercial')
+    setTags([])
+    setTagInput('')
+    setVisibility('company')
+    setEnabledFeatures(DEFAULT_FEATURES.commercial)
+    setFolderStructure(DEFAULT_FOLDER_STRUCTURES.commercial)
+    setPhases(DEFAULT_PHASES.commercial)
+  }, [])
+
   // Initialize form when template changes
   React.useEffect(() => {
     if (template) {
@@ -105,20 +119,7 @@ export function ProjectTemplateFormDialog({
     } else {
       resetForm()
     }
-  }, [template, open])
-
-  const resetForm = () => {
-    setCurrentStep('basics')
-    setName('')
-    setDescription('')
-    setCategory('commercial')
-    setTags([])
-    setTagInput('')
-    setVisibility('company')
-    setEnabledFeatures(DEFAULT_FEATURES.commercial)
-    setFolderStructure(DEFAULT_FOLDER_STRUCTURES.commercial)
-    setPhases(DEFAULT_PHASES.commercial)
-  }
+  }, [template, open, resetForm])
 
   // Apply category defaults
   const handleCategoryChange = (newCategory: TemplateCategory) => {
@@ -490,7 +491,9 @@ export function ProjectTemplateFormDialog({
   )
 }
 
-// Helper component for folder tree display
+export default ProjectTemplateFormDialog
+
+// Helper component for folder tree display - moved outside to fix React Compiler "Cannot create components during render"
 function FolderItem({
   folder,
   depth,
@@ -512,5 +515,3 @@ function FolderItem({
     </>
   )
 }
-
-export default ProjectTemplateFormDialog

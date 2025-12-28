@@ -18,6 +18,16 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -28,7 +38,6 @@ import {
   X,
   Loader2,
   FileSignature,
-  Upload,
   Mail,
   CheckCircle,
   AlertTriangle,
@@ -130,8 +139,8 @@ export function DocumentSignatureDialog({
   const [signerTitle, setSignerTitle] = useState(defaultSignerTitle)
   const [signerCompany, setSignerCompany] = useState(defaultSignerCompany)
   const [signerEmail, setSignerEmail] = useState(defaultSignerEmail)
-  const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(null)
   const [hasDrawn, setHasDrawn] = useState(false)
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false)
 
   // Canvas refs
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -144,7 +153,6 @@ export function DocumentSignatureDialog({
       setSignerTitle(defaultSignerTitle)
       setSignerCompany(defaultSignerCompany)
       setSignerEmail(defaultSignerEmail)
-      setSignatureDataUrl(null)
       setHasDrawn(false)
       setActiveTab('draw')
     }
@@ -235,7 +243,6 @@ export function DocumentSignatureDialog({
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setHasDrawn(false)
-    setSignatureDataUrl(null)
   }, [])
 
   // Upload signature to Supabase storage
@@ -292,8 +299,8 @@ export function DocumentSignatureDialog({
 
       toast.success('Signature saved successfully')
       onOpenChange(false)
-    } catch (error) {
-      logger.error('Failed to save signature:', error)
+    } catch (_error) {
+      logger.error('Failed to save signature:', _error)
       toast.error('Failed to save signature. Please try again.')
     } finally {
       setIsLoading(false)
@@ -368,8 +375,8 @@ export function DocumentSignatureDialog({
 
       toast.success(`Signature request sent to ${signerEmail}`)
       onOpenChange(false)
-    } catch (error) {
-      logger.error('Failed to send DocuSign request:', error)
+    } catch (_error) {
+      logger.error('Failed to send DocuSign request:', _error)
       toast.error('Failed to send for signature')
     } finally {
       setIsLoading(false)
@@ -380,18 +387,15 @@ export function DocumentSignatureDialog({
   const handleRemoveSignature = async () => {
     if (!existingSignature || !onSignatureRemove) {return}
 
-    if (!confirm('Are you sure you want to remove this signature?')) {
-      return
-    }
-
     setIsLoading(true)
 
     try {
       await onSignatureRemove()
       toast.success('Signature removed')
       onOpenChange(false)
-    } catch (error) {
-      logger.error('Failed to remove signature:', error)
+      setShowRemoveDialog(false)
+    } catch (_error) {
+      logger.error('Failed to remove signature:', _error)
       toast.error('Failed to remove signature')
     } finally {
       setIsLoading(false)
@@ -447,7 +451,7 @@ export function DocumentSignatureDialog({
                 variant="outline"
                 size="sm"
                 className="mt-3 text-error border-red-200 hover:bg-error-light"
-                onClick={handleRemoveSignature}
+                onClick={() => setShowRemoveDialog(true)}
                 disabled={isLoading}
               >
                 <X className="h-4 w-4 mr-1" />
@@ -680,6 +684,27 @@ export function DocumentSignatureDialog({
           )}
         </DialogFooter>
       </DialogContent>
+
+      {/* Remove Signature Confirmation Dialog */}
+      <AlertDialog open={showRemoveDialog} onOpenChange={setShowRemoveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Signature?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove this signature? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleRemoveSignature}
+              className="bg-error hover:bg-error/90"
+            >
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

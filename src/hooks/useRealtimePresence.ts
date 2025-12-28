@@ -66,8 +66,8 @@ export function useRealtimePresence(
           },
         })
         hasJoined.current = true
-      } catch (error) {
-        logger.error('Failed to join presence room:', error)
+      } catch (_error) {
+        logger.error('Failed to join presence room:', _error)
       }
     }
 

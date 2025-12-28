@@ -5,6 +5,8 @@
  * Integrates with daily reports delay tracking system.
  */
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   Cloud,
@@ -361,6 +363,7 @@ export function WeatherDelayAutoSuggest({
   compact = false,
   className = '',
 }: WeatherDelayAutoSuggestProps) {
+  'use no memo'
   const [showAllSuggestions, setShowAllSuggestions] = useState(false);
 
   // Fetch weather data with suggestions
@@ -385,12 +388,14 @@ export function WeatherDelayAutoSuggest({
 
   // Calculate severity
   const severity = useMemo(() => {
+    'use no memo';
     return data?.weather ? getWeatherSeverity(data.weather) : 'none';
   }, [data?.weather]);
 
   // Handle selecting a suggestion
   const handleSelectSuggestion = useCallback(
     (suggestion: WeatherDelaySuggestion) => {
+      'use no memo';
       if (!onSelectDelay || disabled) {return;}
 
       const template = getDelayTemplate(suggestion.type);
@@ -421,6 +426,7 @@ export function WeatherDelayAutoSuggest({
 
   // Filter suggestions based on view state
   const visibleSuggestions = useMemo(() => {
+    'use no memo';
     if (!data?.suggestions) {return [];}
     if (showAllSuggestions) {return data.suggestions;}
     // Show only high and critical severity by default

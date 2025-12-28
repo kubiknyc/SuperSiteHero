@@ -25,6 +25,8 @@ import {
   Hammer,
   Briefcase,
   TrendingUp,
+  ClipboardCheck,
+  Camera,
 } from 'lucide-react';
 import type { NavItem, NavGroup } from '../types/navigation';
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge';
@@ -112,6 +114,12 @@ export const fieldWorkGroup: NavGroup = {
       path: '/weather-logs',
       category: 'field',
     },
+    {
+      label: 'Photo Progress',
+      icon: Camera,
+      path: '/photo-progress',
+      category: 'field',
+    },
   ],
 };
 
@@ -191,6 +199,12 @@ export const administrationGroup: NavGroup = {
       label: 'Safety',
       icon: Shield,
       path: '/safety',
+      category: 'admin',
+    },
+    {
+      label: 'Quality Control',
+      icon: ClipboardCheck,
+      path: '/quality-control',
       category: 'admin',
     },
     {

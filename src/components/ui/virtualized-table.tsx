@@ -34,6 +34,7 @@ export function VirtualizedTable<T>({
 }: VirtualizedTableProps<T>) {
   const parentRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: data.length,
     getScrollElement: () => parentRef.current,
@@ -143,6 +144,7 @@ export function VirtualizedList<T>({
 }: VirtualizedListProps<T>) {
   const parentRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/incompatible-library
   const virtualizer = useVirtualizer({
     count: data.length,
     getScrollElement: () => parentRef.current,

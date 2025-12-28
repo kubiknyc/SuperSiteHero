@@ -2,7 +2,7 @@
 // Dialog for creating new checklist execution from template
 // Phase: 3.1 - Checklist Execution UI
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,8 +37,8 @@ export function StartExecutionDialog({
 }: StartExecutionDialogProps) {
   const navigate = useNavigate()
 
-  // Form state
-  const [templateId, setTemplateId] = useState(preSelectedTemplateId || '')
+  // Form state - use lazy initializers to avoid impure functions during render
+  const [templateId, setTemplateId] = useState(() => preSelectedTemplateId || '')
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
@@ -52,55 +52,56 @@ export function StartExecutionDialog({
   const createExecution = useCreateExecution()
   const batchCreateResponses = useBatchCreateResponses()
 
-  // Reset form when dialog opens/closes
-  useEffect(() => {
-    if (open) {
-      if (preSelectedTemplateId) {
-        setTemplateId(preSelectedTemplateId)
+  // Helper function to generate date string
+  const getDateString = useMemo(() => {
+    return () => new Date().toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }, [])
 
-        // Find template and set defaults
-        const template = templates.find(t => t.id === preSelectedTemplateId)
-        if (template) {
-          const now = new Date()
-          const dateStr = now.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-          })
-          setName(`${template.name} - ${dateStr}`)
+  // Handle template selection change
+  const handleTemplateChange = (newTemplateId: string) => {
+    setTemplateId(newTemplateId)
+
+    const template = templates.find(t => t.id === newTemplateId)
+    if (template) {
+      setName(`${template.name} - ${getDateString()}`)
+      setDescription(template.description || '')
+      setCategory(template.category || '')
+    }
+  }
+
+  // Reset form when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setTimeout(() => {
+        setTemplateId(preSelectedTemplateId || '')
+        setName('')
+        setDescription('')
+        setCategory('')
+        setLocation('')
+        setWeather('')
+        setTemperature('')
+      }, 0)
+    }
+  }, [open, preSelectedTemplateId])
+
+  // Initialize form when dialog opens with preselected template - only run once per open
+  useEffect(() => {
+    if (open && preSelectedTemplateId && !name) {
+      const template = templates.find(t => t.id === preSelectedTemplateId)
+      if (template) {
+        setTimeout(() => {
+          setTemplateId(preSelectedTemplateId)
+          setName(`${template.name} - ${getDateString()}`)
           setDescription(template.description || '')
           setCategory(template.category || '')
-        }
-      }
-    } else {
-      // Reset form when closed
-      setTemplateId(preSelectedTemplateId || '')
-      setName('')
-      setDescription('')
-      setCategory('')
-      setLocation('')
-      setWeather('')
-      setTemperature('')
-    }
-  }, [open, preSelectedTemplateId, templates])
-
-  // Update defaults when template changes
-  useEffect(() => {
-    if (templateId && templates.length > 0) {
-      const template = templates.find(t => t.id === templateId)
-      if (template) {
-        const now = new Date()
-        const dateStr = now.toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric'
-        })
-        setName(`${template.name} - ${dateStr}`)
-        setDescription(template.description || '')
-        setCategory(template.category || '')
+        }, 0)
       }
     }
-  }, [templateId, templates])
+  }, [open, preSelectedTemplateId, name, templates, getDateString])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -176,7 +177,7 @@ export function StartExecutionDialog({
             <select
               id="template"
               value={templateId}
-              onChange={(e) => setTemplateId(e.target.value)}
+              onChange={(e) => handleTemplateChange(e.target.value)}
               required
               disabled={!!preSelectedTemplateId}
               className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent disabled:bg-muted disabled:cursor-not-allowed"

@@ -269,8 +269,8 @@ describe('ProtectedRoute', () => {
 
       render(<TestWrapper initialEntries={['/protected']} />);
 
-      // Should show loading initially
-      expect(screen.getByText('Loading...')).toBeInTheDocument();
+      // Should show loading initially (RouteLoadingFallback shows "Loading page...")
+      expect(screen.getByText('Loading page...')).toBeInTheDocument();
 
       // Simulate sign-in event occurring before initial session check completes
       await act(async () => {
@@ -358,12 +358,15 @@ describe('ProtectedRoute', () => {
 
   describe('Navigation Preservation', () => {
     it('should preserve query parameters in navigation state after login redirect', async () => {
-      let receivedState: { from?: string } | null = null;
+      let capturedState: { from?: string } | null = null;
 
       // Login page that captures the navigation state
       const LoginPageWithState = () => {
         const location = useLocation();
-        receivedState = location.state as { from?: string } | null;
+        // Capture state using useEffect to avoid mutation during render
+        React.useEffect(() => {
+          capturedState = location.state as { from?: string } | null;
+        }, [location.state]);
         return <div>Login Page</div>;
       };
 
@@ -397,16 +400,21 @@ describe('ProtectedRoute', () => {
       });
 
       // Verify the return URL was preserved in navigation state
-      expect(receivedState).toBeTruthy();
-      expect(receivedState?.from).toBe('/protected?project=123&tab=overview');
+      await waitFor(() => {
+        expect(capturedState).toBeTruthy();
+      });
+      expect(capturedState?.from).toBe('/protected?project=123&tab=overview');
     });
 
     it('should preserve hash fragments in navigation state', async () => {
-      let receivedState: { from?: string } | null = null;
+      let capturedState: { from?: string } | null = null;
 
       const LoginPageWithState = () => {
         const location = useLocation();
-        receivedState = location.state as { from?: string } | null;
+        // Capture state using useEffect to avoid mutation during render
+        React.useEffect(() => {
+          capturedState = location.state as { from?: string } | null;
+        }, [location.state]);
         return <div>Login Page</div>;
       };
 
@@ -440,8 +448,10 @@ describe('ProtectedRoute', () => {
       });
 
       // Verify the return URL includes both query params and hash
-      expect(receivedState).toBeTruthy();
-      expect(receivedState?.from).toBe('/protected?project=123#section-details');
+      await waitFor(() => {
+        expect(capturedState).toBeTruthy();
+      });
+      expect(capturedState?.from).toBe('/protected?project=123#section-details');
     });
   });
 

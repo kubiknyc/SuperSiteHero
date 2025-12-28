@@ -160,6 +160,91 @@ export function generateTestIncident() {
 }
 
 /**
+ * Generate test NCR (Non-Conformance Report) data
+ */
+export function generateTestNCR() {
+  const timestamp = Date.now();
+  return {
+    title: `Test NCR ${timestamp}`,
+    description: 'Non-conformance identified during automated testing',
+    category: 'workmanship',
+    severity: 'minor',
+    ncr_type: 'deficiency',
+    priority: 'medium',
+    building: 'Building A',
+    floor: 'Level 1',
+    area: 'Room 101',
+    spec_section: '03 30 00',
+    responsible_party_type: 'subcontractor',
+  };
+}
+
+/**
+ * Generate test QC Inspection data
+ */
+export function generateTestQCInspection() {
+  const timestamp = Date.now();
+  return {
+    title: `Test QC Inspection ${timestamp}`,
+    description: 'Quality control inspection for automated testing',
+    inspection_type: 'in_process',
+    category: 'structural',
+    location: 'Building A, Level 2, Grid C-5',
+    spec_section: '03 30 00 - Cast-in-Place Concrete',
+    drawing_reference: 'S-301',
+    inspection_date: new Date().toISOString().split('T')[0],
+  };
+}
+
+/**
+ * Generate test Photo Location data
+ */
+export function generateTestPhotoLocation() {
+  const timestamp = Date.now();
+  return {
+    name: `Photo Point ${timestamp}`,
+    location_code: `PP-${timestamp}`,
+    description: 'Test photo location for automated testing',
+    building: 'Building A',
+    floor: 'Level 1',
+    capture_frequency: 'daily',
+    camera_direction: 'north',
+    camera_height: 'eye_level',
+  };
+}
+
+/**
+ * Generate test Photo Comparison data
+ */
+export function generateTestPhotoComparison() {
+  const timestamp = Date.now();
+  return {
+    title: `Progress Comparison ${timestamp}`,
+    description: 'Before/after comparison for automated testing',
+    comparison_type: 'before_after',
+    is_public: false,
+  };
+}
+
+/**
+ * Generate test Photo Report data
+ */
+export function generateTestPhotoReport() {
+  const timestamp = Date.now();
+  const today = new Date();
+  const monthAgo = new Date();
+  monthAgo.setMonth(monthAgo.getMonth() - 1);
+
+  return {
+    title: `Photo Progress Report ${timestamp}`,
+    description: 'Monthly photo progress report for automated testing',
+    report_type: 'monthly',
+    period_start: monthAgo.toISOString().split('T')[0],
+    period_end: today.toISOString().split('T')[0],
+  };
+}
+
+/**
  * Common test data constants
  */
 export const TEST_DATA = {

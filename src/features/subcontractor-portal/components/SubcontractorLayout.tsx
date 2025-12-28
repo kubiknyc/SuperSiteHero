@@ -81,7 +81,9 @@ export function SubcontractorLayout() {
 
   // Close mobile menu on route change
   useEffect(() => {
-    setMobileMenuOpen(false)
+    setTimeout(() => {
+      setMobileMenuOpen(false)
+    }, 0)
   }, [location.pathname])
 
   // Collapse header on scroll down (mobile only)
@@ -102,11 +104,13 @@ export function SubcontractorLayout() {
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
+    setTimeout(() => {
+      if (mobileMenuOpen) {
+        document.body.style.overflow = 'hidden'
+      } else {
+        document.body.style.overflow = ''
+      }
+    }, 0)
     return () => {
       document.body.style.overflow = ''
     }

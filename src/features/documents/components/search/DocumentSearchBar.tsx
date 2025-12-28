@@ -88,7 +88,9 @@ export function DocumentSearchBar({
   useEffect(() => {
     const stored = localStorage.getItem('documentSearchHistory')
     if (stored) {
-      setRecentSearches(JSON.parse(stored))
+      setTimeout(() => {
+        setRecentSearches(JSON.parse(stored))
+      }, 0)
     }
   }, [])
 

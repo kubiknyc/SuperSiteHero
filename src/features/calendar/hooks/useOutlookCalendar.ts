@@ -459,8 +459,8 @@ export function useAutoOutlookSync(
           action: 'update',
         },
       })
-    } catch (error) {
-      logger.error('Auto-sync failed:', error)
+    } catch (_error) {
+      logger.error('Auto-sync failed:', _error)
     }
   }
 

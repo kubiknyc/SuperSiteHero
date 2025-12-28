@@ -54,8 +54,10 @@ export function useDetectConflicts() {
 
         // If server timestamp is newer than local timestamp, we have a conflict
         if (serverTimestamp > localTimestamp) {
+          const now = Date.now();
+          const randomId = Math.random().toString(36).substr(2, 9);
           const conflict: SyncConflict = {
-            id: `conflict-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            id: `conflict-${now}-${randomId}`,
             entityType,
             entityId,
             localData,
@@ -63,8 +65,8 @@ export function useDetectConflicts() {
             localTimestamp,
             serverTimestamp,
             resolved: false,
-            createdAt: Date.now(),
-            detectedAt: Date.now(),
+            createdAt: now,
+            detectedAt: now,
           };
 
           // Add to store
@@ -81,8 +83,8 @@ export function useDetectConflicts() {
         }
 
         return { hasConflict: false, conflict: null };
-      } catch (error) {
-        logger.error('[useDetectConflicts] Error detecting conflict:', error);
+      } catch (_error) {
+        logger.error('[useDetectConflicts] Error detecting conflict:', _error);
         return { hasConflict: false, conflict: null };
       }
     },
@@ -176,8 +178,10 @@ export function useConflictHistory(entityType?: string, entityId?: string) {
   const [history, setHistory] = useState<ConflictHistoryEntry[]>([]);
 
   useEffect(() => {
-    const entries = ConflictResolver.getHistory(entityType, entityId);
-    setHistory(entries);
+    setTimeout(() => {
+      const entries = ConflictResolver.getHistory(entityType, entityId);
+      setHistory(entries);
+    }, 0);
   }, [entityType, entityId]);
 
   const clearHistory = useCallback(() => {
@@ -211,13 +215,13 @@ export function useProactiveConflictDetection(
     }
 
     const checkForConflict = async () => {
+      const localTimestamp = Date.now();
       setChecking(true);
       try {
-        const localTimestamp = Date.now();
         const result = await detectConflict(entityType, entityId, localData, localTimestamp);
         setConflict(result.conflict);
-      } catch (error) {
-        logger.error('[useProactiveConflictDetection] Error checking for conflicts:', error);
+      } catch (_error) {
+        logger.error('[useProactiveConflictDetection] Error checking for conflicts:', _error);
       } finally {
         setChecking(false);
       }
@@ -277,8 +281,8 @@ export function useAutoResolveConflicts(autoResolveEnabled = false) {
               conflictId: conflict.id,
               strategy,
             });
-          } catch (error) {
-            logger.error('[useAutoResolveConflicts] Failed to auto-resolve:', error);
+          } catch (_error) {
+            logger.error('[useAutoResolveConflicts] Failed to auto-resolve:', _error);
           }
         }
       }

@@ -15,7 +15,6 @@ import type {
 } from '@/types/ai'
 
 // Type assertion helper for tables not yet in Supabase types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const supabaseAny = supabase as any
 
 // System prompts for different summary types

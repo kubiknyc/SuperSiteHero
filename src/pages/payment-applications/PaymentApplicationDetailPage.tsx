@@ -59,6 +59,7 @@ import {
   downloadPaymentApplicationPDFs,
 } from '@/features/payment-applications/utils/pdfExport'
 import { WaiverChecklist } from '@/features/payment-applications/components'
+import { SendViaDocuSignButton, DocuSignEnvelopeStatusBadge } from '@/features/docusign/components'
 import type { PaymentApplicationStatus, BulkUpdateSOVItemDTO } from '@/types/payment-application'
 import { logger } from '../../lib/utils/logger';
 
@@ -332,6 +333,16 @@ export function PaymentApplicationDetailPage() {
               )}
               Export PDF
             </Button>
+
+            {/* DocuSign Button */}
+            {applicationId && (application.status === 'submitted' || application.status === 'under_review' || application.status === 'approved') && (
+              <SendViaDocuSignButton
+                documentType="payment_application"
+                documentId={applicationId}
+                documentName={application.display_number}
+                documentNumber={application.display_number}
+              />
+            )}
 
             {canEdit && !isEditing && (
               <Button variant="outline" onClick={() => setIsEditing(true)} className="gap-2">

@@ -28,8 +28,8 @@ export async function compressImage(
       type: compressedFile.type,
       lastModified: Date.now(),
     })
-  } catch (error) {
-    logger.error('Error compressing image:', error)
+  } catch (_error) {
+    logger.error('Error compressing image:', _error)
     // Return original file if compression fails
     return file
   }
@@ -51,8 +51,8 @@ export async function extractGPSData(file: File): Promise<GPSCoordinates | null>
       longitude: gpsData.longitude,
       altitude: (gpsData as any).altitude,
     }
-  } catch (error) {
-    logger.error('Error extracting GPS data:', error)
+  } catch (_error) {
+    logger.error('Error extracting GPS data:', _error)
     return null
   }
 }
@@ -92,8 +92,8 @@ export async function extractEXIFData(file: File): Promise<EXIFData | null> {
       focalLength: exif.FocalLength,
       flash: exif.Flash,
     }
-  } catch (error) {
-    logger.error('Error extracting EXIF data:', error)
+  } catch (_error) {
+    logger.error('Error extracting EXIF data:', _error)
     return null
   }
 }

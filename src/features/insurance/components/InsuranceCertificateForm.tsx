@@ -244,8 +244,8 @@ export function InsuranceCertificateForm({
       }
 
       onClose()
-    } catch (error) {
-      logger.error('Failed to save certificate:', error)
+    } catch (_error) {
+      logger.error('Failed to save certificate:', _error)
     }
   }
 

@@ -81,8 +81,10 @@ export function Photo360Viewer({
   useEffect(() => {
     if (!containerRef.current || !photoUrl) {return;}
 
-    setIsLoading(true);
-    setError(null);
+    setTimeout(() => {
+      setIsLoading(true);
+      setError(null);
+    }, 0);
 
     let viewer: Viewer | null = null;
 
@@ -114,24 +116,28 @@ export function Photo360Viewer({
 
         // Handle ready event
         viewer.addEventListener('ready', () => {
-          setIsLoading(false);
-          const gyroPlugin = viewer?.getPlugin<GyroscopePlugin>(GyroscopePlugin);
-          setGyroscopeSupported(gyroPlugin?.isSupported() ?? false);
-          onReady?.();
+          setTimeout(() => {
+            setIsLoading(false);
+            const gyroPlugin = viewer?.getPlugin<GyroscopePlugin>(GyroscopePlugin);
+            setGyroscopeSupported(gyroPlugin?.isSupported() ?? false);
+            onReady?.();
 
-          // Enable auto-rotate if specified
-          if (autoRotate && viewer) {
-            // Use type assertion for the autoRotate method which may vary by version
-            (viewer as unknown as { startAutoRotate?: (opts: { speed: string }) => void })
-              .startAutoRotate?.({ speed: autoRotateSpeed });
-          }
+            // Enable auto-rotate if specified
+            if (autoRotate && viewer) {
+              // Use type assertion for the autoRotate method which may vary by version
+              (viewer as unknown as { startAutoRotate?: (opts: { speed: string }) => void })
+                .startAutoRotate?.({ speed: autoRotateSpeed });
+            }
+          }, 0);
         });
 
         viewerRef.current = viewer;
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to load panorama';
-        setError(errorMessage);
-        setIsLoading(false);
+        setTimeout(() => {
+          setError(errorMessage);
+          setIsLoading(false);
+        }, 0);
         onError?.(err instanceof Error ? err : new Error(errorMessage));
       }
     };
@@ -150,7 +156,9 @@ export function Photo360Viewer({
   // Handle fullscreen change
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setTimeout(() => {
+        setIsFullscreen(!!document.fullscreenElement);
+      }, 0);
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);

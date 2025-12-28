@@ -397,9 +397,9 @@ export function ARViewer({
       videoRef.current.srcObject = stream;
       await videoRef.current.play();
       setIsCameraActive(true);
-    } catch (error) {
-      logger.error('Camera error:', error);
-      onError?.(error instanceof Error ? error : new Error('Camera access denied'));
+    } catch (_error) {
+      logger.error('Camera error:', _error);
+      onError?.(_error instanceof Error ? _error : new Error('Camera access denied'));
     }
   }, [onError]);
 

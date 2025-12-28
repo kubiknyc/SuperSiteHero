@@ -44,7 +44,9 @@ export function MessagesPage() {
   // Auto-select first project if none selected
   useEffect(() => {
     if (projects.length > 0 && !selectedProjectId) {
-      setSelectedProjectId(projects[0].id)
+      setTimeout(() => {
+        setSelectedProjectId(projects[0].id)
+      }, 0)
     }
   }, [projects, selectedProjectId])
 

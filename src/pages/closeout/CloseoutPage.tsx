@@ -43,6 +43,7 @@ import { logger } from '../../lib/utils/logger';
 export function CloseoutPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [activeTab, setActiveTab] = useState('documents')
+  const [currentTime] = useState(() => Date.now())
 
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -71,7 +72,7 @@ export function CloseoutPage() {
   const activeWarranties = warranties.filter((w: WarrantyWithDetails) => w.status === 'active').length
   const expiringWarranties = warranties.filter((w: WarrantyWithDetails) => {
     const daysUntil = Math.ceil(
-      (new Date(w.end_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+      (new Date(w.end_date).getTime() - currentTime) / (1000 * 60 * 60 * 24)
     )
     return w.status === 'active' && daysUntil <= 90 && daysUntil > 0
   }).length

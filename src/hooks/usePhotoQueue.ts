@@ -38,8 +38,8 @@ export function usePhotoQueue() {
     try {
       const queueStats = await getQueueStats();
       setStats(queueStats);
-    } catch (error) {
-      logger.error('[usePhotoQueue] Failed to get queue stats:', error);
+    } catch (_error) {
+      logger.error('[usePhotoQueue] Failed to get queue stats:', _error);
       // Keep existing stats on error
     } finally {
       setIsLoading(false);
@@ -52,8 +52,8 @@ export function usePhotoQueue() {
       await retryFailedPhotos();
       await refreshStats();
       logger.log('[usePhotoQueue] Retried failed photos');
-    } catch (error) {
-      logger.error('[usePhotoQueue] Failed to retry photos:', error);
+    } catch (_error) {
+      logger.error('[usePhotoQueue] Failed to retry photos:', _error);
     }
   }, [refreshStats]);
 
@@ -64,8 +64,8 @@ export function usePhotoQueue() {
       await refreshStats();
       logger.log(`[usePhotoQueue] Cleared ${count} completed uploads`);
       return count;
-    } catch (error) {
-      logger.error('[usePhotoQueue] Failed to clear completed:', error);
+    } catch (_error) {
+      logger.error('[usePhotoQueue] Failed to clear completed:', _error);
       return 0;
     }
   }, [refreshStats]);

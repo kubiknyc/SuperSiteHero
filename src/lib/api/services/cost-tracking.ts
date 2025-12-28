@@ -34,7 +34,6 @@ import type {
 
 // Using extended Database types for tables not yet in generated types
 // The explicit `: any` type annotation fully bypasses TypeScript type checking for db operations
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db: any = supabase
 
 // Internal types for callback parameters

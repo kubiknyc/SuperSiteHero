@@ -63,7 +63,7 @@ async function createInAppNotification(
     }
 
     return true;
-  } catch (error) {
+  } catch (_error) {
     logger.error('Error creating in-app notification:', error);
     return false;
   }
@@ -271,7 +271,7 @@ async function getRecipients(
         });
       }
     }
-  } catch (error) {
+  } catch (_error) {
     logger.error('Error fetching recipients:', error);
   }
 

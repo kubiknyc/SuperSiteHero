@@ -72,7 +72,9 @@ export function CreateRFIDialog({
     if (open) {
       // Set default due date to 7 days from now (common contract requirement)
       const defaultDueDate = addDays(new Date(), 7)
-      setDueDate(format(defaultDueDate, 'yyyy-MM-dd'))
+      const formattedDate = format(defaultDueDate, 'yyyy-MM-dd')
+      // Use setTimeout to avoid synchronous state update in effect
+      setTimeout(() => setDueDate(formattedDate), 0)
     }
   }, [open])
 

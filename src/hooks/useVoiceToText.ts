@@ -92,13 +92,17 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
   // Initialize recognition
   useEffect(() => {
     if (!isSupported) {
-      setStatus('not_supported')
+      setTimeout(() => {
+        setStatus('not_supported')
+      }, 0)
       return
     }
 
     const SpeechRecognition = getSpeechRecognition()
     if (!SpeechRecognition) {
-      setStatus('not_supported')
+      setTimeout(() => {
+        setStatus('not_supported')
+      }, 0)
       return
     }
 
@@ -108,22 +112,28 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
     recognition.interimResults = interimResults
 
     recognition.onstart = () => {
-      setIsListening(true)
-      setStatus('listening')
-      setError(null)
-      setErrorMessage(null)
+      setTimeout(() => {
+        setIsListening(true)
+        setStatus('listening')
+        setError(null)
+        setErrorMessage(null)
+      }, 0)
       onStartRef.current?.()
     }
 
     recognition.onend = () => {
-      setIsListening(false)
-      setStatus('idle')
+      setTimeout(() => {
+        setIsListening(false)
+        setStatus('idle')
+      }, 0)
       clearSilenceTimeout()
       onEndRef.current?.()
     }
 
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-      setStatus('processing')
+      setTimeout(() => {
+        setStatus('processing')
+      }, 0)
       resetSilenceTimeout()
 
       let interimTranscript = ''
@@ -141,30 +151,40 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
       }
 
       if (finalText) {
-        setFinalTranscript((prev) => prev + finalText)
+        setTimeout(() => {
+          setFinalTranscript((prev) => prev + finalText)
+        }, 0)
         onTranscriptRef.current?.(finalText, true)
       }
 
       const fullTranscript = finalTranscript + finalText + interimTranscript
-      setTranscript(fullTranscript)
+      setTimeout(() => {
+        setTranscript(fullTranscript)
+      }, 0)
 
       if (interimTranscript) {
         onTranscriptRef.current?.(interimTranscript, false)
       }
 
-      setStatus('listening')
+      setTimeout(() => {
+        setStatus('listening')
+      }, 0)
     }
 
     recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       const mappedError = mapSpeechError(event.error)
-      setError(mappedError)
-      setErrorMessage(VOICE_ERROR_MESSAGES[mappedError])
-      setStatus('error')
+      setTimeout(() => {
+        setError(mappedError)
+        setErrorMessage(VOICE_ERROR_MESSAGES[mappedError])
+        setStatus('error')
+      }, 0)
       onErrorRef.current?.(mappedError, VOICE_ERROR_MESSAGES[mappedError])
 
       // Don't stop on no-speech - user might just be pausing
       if (event.error !== 'no-speech') {
-        setIsListening(false)
+        setTimeout(() => {
+          setIsListening(false)
+        }, 0)
       }
     }
 
@@ -185,18 +205,22 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
   // Start listening
   const startListening = useCallback(() => {
     if (!isSupported) {
-      setError('not_supported')
-      setErrorMessage(VOICE_ERROR_MESSAGES.not_supported)
+      setTimeout(() => {
+        setError('not_supported')
+        setErrorMessage(VOICE_ERROR_MESSAGES.not_supported)
+      }, 0)
       return
     }
 
     if (!recognitionRef.current) {return}
 
     // Clear previous transcript if starting fresh
-    setTranscript('')
-    setFinalTranscript('')
-    setError(null)
-    setErrorMessage(null)
+    setTimeout(() => {
+      setTranscript('')
+      setFinalTranscript('')
+      setError(null)
+      setErrorMessage(null)
+    }, 0)
 
     try {
       recognitionRef.current.start()
@@ -230,17 +254,21 @@ export function useVoiceToText(options: UseVoiceToTextOptions = {}): UseVoiceToT
 
   // Clear transcript
   const clearTranscript = useCallback(() => {
-    setTranscript('')
-    setFinalTranscript('')
+    setTimeout(() => {
+      setTranscript('')
+      setFinalTranscript('')
+    }, 0)
   }, [])
 
   // Reset error state
   const resetError = useCallback(() => {
-    setError(null)
-    setErrorMessage(null)
-    if (status === 'error') {
-      setStatus('idle')
-    }
+    setTimeout(() => {
+      setError(null)
+      setErrorMessage(null)
+      if (status === 'error') {
+        setStatus('idle')
+      }
+    }, 0)
   }, [status])
 
   return {

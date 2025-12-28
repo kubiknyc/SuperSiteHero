@@ -33,6 +33,28 @@ interface CompatibilityStatus {
   checking: boolean
 }
 
+interface CompatibilityItemProps {
+  label: string
+  supported: boolean
+  description: string
+}
+
+function CompatibilityItem({ label, supported, description }: CompatibilityItemProps) {
+  return (
+    <div className="flex items-start gap-3 py-2">
+      <div className={`mt-0.5 ${supported ? 'text-success' : 'text-disabled'}`}>
+        {supported ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
+      </div>
+      <div>
+        <p className={`font-medium ${supported ? 'text-foreground' : 'text-muted'}`}>
+          {label}
+        </p>
+        <p className="text-sm text-muted">{description}</p>
+      </div>
+    </div>
+  )
+}
+
 export function BiometricSettings() {
   const [compatibility, setCompatibility] = useState<CompatibilityStatus>({
     webAuthn: false,
@@ -58,29 +80,6 @@ export function BiometricSettings() {
 
     checkCompatibility()
   }, [])
-
-  // Render compatibility item
-  const CompatibilityItem = ({
-    label,
-    supported,
-    description,
-  }: {
-    label: string
-    supported: boolean
-    description: string
-  }) => (
-    <div className="flex items-start gap-3 py-2">
-      <div className={`mt-0.5 ${supported ? 'text-success' : 'text-disabled'}`}>
-        {supported ? <Check className="h-5 w-5" /> : <X className="h-5 w-5" />}
-      </div>
-      <div>
-        <p className={`font-medium ${supported ? 'text-foreground' : 'text-muted'}`}>
-          {label}
-        </p>
-        <p className="text-sm text-muted">{description}</p>
-      </div>
-    </div>
-  )
 
   if (compatibility.checking) {
     return (

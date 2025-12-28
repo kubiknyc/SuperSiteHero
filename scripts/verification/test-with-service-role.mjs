@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Test project creation using service role key (bypasses RLS for testing)
  */

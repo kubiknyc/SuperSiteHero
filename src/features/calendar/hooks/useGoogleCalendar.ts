@@ -459,8 +459,8 @@ export function useQuickGCalSync(meetingId: string | undefined) {
         },
       });
       return true;
-    } catch (error) {
-      logger.error('Google Calendar sync failed:', error);
+    } catch (_error) {
+      logger.error('Google Calendar sync failed:', _error);
       return false;
     }
   };

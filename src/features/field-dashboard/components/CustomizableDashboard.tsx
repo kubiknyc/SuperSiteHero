@@ -3,7 +3,7 @@
  * Main dashboard with drag-drop widget support
  */
 
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import {
   DndContext,
   closestCenter,
@@ -58,6 +58,7 @@ export function CustomizableDashboard({
   const [activeId, setActiveId] = useState<string | null>(null)
   const [localWidgets, setLocalWidgets] = useState<DraggableWidget[]>([])
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
+  const initializedRef = useRef(false)
 
   // Fetch default layout
   const {
@@ -91,28 +92,38 @@ export function CustomizableDashboard({
 
   // Convert widget preferences to draggable widgets
   useEffect(() => {
+    if (initializedRef.current) {
+      return
+    }
+
     if (layout?.widgets) {
-      const widgets: DraggableWidget[] = layout.widgets.map((w) => ({
-        id: w.id,
-        widgetType: w.widget_type,
-        position: w.position as WidgetPosition,
-        config: w.widget_config,
-        isVisible: w.is_visible,
-        refreshInterval: w.refresh_interval,
-      }))
-      setLocalWidgets(widgets)
-      setHasUnsavedChanges(false)
+      queueMicrotask(() => {
+        const widgets: DraggableWidget[] = layout.widgets.map((w) => ({
+          id: w.id,
+          widgetType: w.widget_type,
+          position: w.position as WidgetPosition,
+          config: w.widget_config,
+          isVisible: w.is_visible,
+          refreshInterval: w.refresh_interval,
+        }))
+        setLocalWidgets(widgets)
+        setHasUnsavedChanges(false)
+      })
+      initializedRef.current = true
     } else if (!layout && !layoutLoading) {
-      // Create default widgets if no layout exists
-      const defaultWidgets = getDefaultWidgetLayout().map((w, idx) => ({
-        id: `temp-${idx}`,
-        widgetType: w.widgetType,
-        position: w.position,
-        config: {},
-        isVisible: true,
-        refreshInterval: null,
-      }))
-      setLocalWidgets(defaultWidgets)
+      queueMicrotask(() => {
+        // Create default widgets if no layout exists
+        const defaultWidgets = getDefaultWidgetLayout().map((w, idx) => ({
+          id: `temp-${idx}`,
+          widgetType: w.widgetType,
+          position: w.position,
+          config: {},
+          isVisible: true,
+          refreshInterval: null,
+        }))
+        setLocalWidgets(defaultWidgets)
+      })
+      initializedRef.current = true
     }
   }, [layout, layoutLoading])
 
@@ -164,21 +175,22 @@ export function CustomizableDashboard({
         const widgetDef = getWidget(widgetType)
         if (!widgetDef) {return}
 
-        const newWidget: DraggableWidget = {
-          id: `temp-${Date.now()}`,
-          widgetType,
-          position: {
-            x: 0,
-            y: localWidgets.length * 4,
-            w: widgetDef.defaultSize.w,
-            h: widgetDef.defaultSize.h,
-          },
-          config: widgetDef.defaultConfig,
-          isVisible: true,
-          refreshInterval: null,
-        }
-
-        setLocalWidgets((widgets) => [...widgets, newWidget])
+        setLocalWidgets((widgets) => {
+          const newWidget: DraggableWidget = {
+            id: `temp-${Date.now()}`,
+            widgetType,
+            position: {
+              x: 0,
+              y: widgets.length * 4,
+              w: widgetDef.defaultSize.w,
+              h: widgetDef.defaultSize.h,
+            },
+            config: widgetDef.defaultConfig,
+            isVisible: true,
+            refreshInterval: null,
+          }
+          return [...widgets, newWidget]
+        })
         setHasUnsavedChanges(true)
         toast.success(`Added ${widgetDef.name} widget`)
         return
@@ -188,12 +200,19 @@ export function CustomizableDashboard({
         const widgetDef = getWidget(widgetType)
         if (!widgetDef) {return}
 
+        // Get current widget count to calculate position
+        let yPosition = 0
+        setLocalWidgets((currentWidgets) => {
+          yPosition = currentWidgets.length * 4
+          return currentWidgets
+        })
+
         await addWidgetMutation.mutateAsync({
           layout_id: layout.id,
           widget_type: widgetType,
           position: {
             x: 0,
-            y: localWidgets.length * 4,
+            y: yPosition,
             w: widgetDef.defaultSize.w,
             h: widgetDef.defaultSize.h,
           },
@@ -207,7 +226,7 @@ export function CustomizableDashboard({
         logger.error(error)
       }
     },
-    [layout?.id, localWidgets.length, addWidgetMutation, refetchLayout]
+    [layout, addWidgetMutation, refetchLayout]
   )
 
   // Handle removing a widget
@@ -240,7 +259,7 @@ export function CustomizableDashboard({
         logger.error(error)
       }
     },
-    [layout?.id, localWidgets, removeWidgetMutation]
+    [layout, localWidgets, removeWidgetMutation]
   )
 
   // Save changes
@@ -266,7 +285,7 @@ export function CustomizableDashboard({
       toast.error('Failed to save changes')
       logger.error(error)
     }
-  }, [layout?.id, localWidgets, savePositionsMutation])
+  }, [layout, localWidgets, savePositionsMutation])
 
   // Reset changes
   const handleResetChanges = useCallback(() => {
@@ -283,7 +302,7 @@ export function CustomizableDashboard({
       setHasUnsavedChanges(false)
       toast.success('Changes reset')
     }
-  }, [layout?.widgets])
+  }, [layout])
 
   // Get active widget for drag overlay
   const activeWidget = activeId

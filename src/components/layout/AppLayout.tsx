@@ -53,9 +53,8 @@ export function AppLayout({ children }: AppLayoutProps) {
   }, [location.pathname, isTablet, isPortrait, closeSidebar])
 
   // Determine layout mode
-  const showPersistentSidebar = !isTablet || isLandscape
+  const _showPersistentSidebar = !isTablet || isLandscape
   const showDrawerSidebar = isTablet && isPortrait
-  const showMobileNav = !isTablet && !showPersistentSidebar
 
   return (
     <div className={cn(
@@ -279,9 +278,11 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </aside>
 
-      {/* Main content - responsive margins */}
+      {/* Main content - responsive margins with iOS safe areas */}
       <main className={cn(
         "min-h-screen",
+        // iOS safe area support for notch/home indicator
+        "safe-area-top safe-area-left safe-area-right",
         // Desktop: offset for sidebar
         !isTablet && "md:ml-64 pb-20 md:pb-0",
         // Tablet landscape: offset for persistent sidebar

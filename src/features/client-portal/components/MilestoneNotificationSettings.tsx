@@ -81,15 +81,19 @@ export function MilestoneNotificationSettings({
       preferences.forEach((pref) => {
         prefMap.set(pref.event_type, pref)
       })
-      setLocalPreferences(prefMap)
-      setHasChanges(false)
+      setTimeout(() => {
+        setLocalPreferences(prefMap)
+        setHasChanges(false)
+      }, 0)
     } else if (!isLoading) {
       // Initialize with defaults
       const defaultMap = new Map<MilestoneEventType, MilestoneNotificationPreference | null>()
       Object.keys(MILESTONE_EVENT_METADATA).forEach((eventType) => {
         defaultMap.set(eventType as MilestoneEventType, null)
       })
-      setLocalPreferences(defaultMap)
+      setTimeout(() => {
+        setLocalPreferences(defaultMap)
+      }, 0)
     }
   }, [preferences, isLoading])
 

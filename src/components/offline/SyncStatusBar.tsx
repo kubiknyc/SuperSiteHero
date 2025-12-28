@@ -46,18 +46,20 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
 
   // Update sync progress
   useEffect(() => {
-    if (isSyncing) {
-      const stats = SyncManager.getStatus();
-      if (stats.currentBatch) {
-        const completed = stats.currentBatch.items.filter(i => i.status === 'completed').length;
-        setSyncProgress({
-          current: completed,
-          total: stats.currentBatch.items.length,
-        });
+    setTimeout(() => {
+      if (isSyncing) {
+        const stats = SyncManager.getStatus();
+        if (stats.currentBatch) {
+          const completed = stats.currentBatch.items.filter(i => i.status === 'completed').length;
+          setSyncProgress({
+            current: completed,
+            total: stats.currentBatch.items.length,
+          });
+        }
+      } else {
+        setSyncProgress(null);
       }
-    } else {
-      setSyncProgress(null);
-    }
+    }, 0);
   }, [isSyncing]);
 
   const getNetworkBadge = () => {

@@ -136,13 +136,14 @@ export function calculateMarkupBounds(markups: DocumentMarkup[]): MarkupBounds {
         markupMaxY = y + (data.height || 0)
         break
 
-      case 'circle':
+      case 'circle': {
         const radius = data.radius || 0
         minX = Math.min(minX, x - radius)
         minY = Math.min(minY, y - radius)
         markupMaxX = x + radius
         markupMaxY = y + radius
         break
+      }
 
       case 'arrow':
       case 'freehand':
@@ -158,13 +159,14 @@ export function calculateMarkupBounds(markups: DocumentMarkup[]): MarkupBounds {
         }
         break
 
-      case 'text':
+      case 'text': {
         // Approximate text bounds
         const textWidth = (data.text?.length || 0) * 8 // Rough estimate
         const textHeight = 16
         markupMaxX = x + textWidth
         markupMaxY = y + textHeight
         break
+      }
     }
 
     minX = Math.min(minX, x)

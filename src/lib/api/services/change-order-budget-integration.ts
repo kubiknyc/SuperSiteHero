@@ -14,7 +14,6 @@ import { logger } from '../../utils/logger';
 
 
 // Using extended Database types for tables not yet in generated types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db: any = supabase
 
 // ============================================================================

@@ -21,7 +21,6 @@ import { logger } from '../../utils/logger';
 
 // Note: Using extended Database types from database-extensions.ts
 // Once migration 023 is applied to remote database, regenerate types and switch back to database.ts
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 export const approvalRequestsApi = {

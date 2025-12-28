@@ -100,8 +100,8 @@ export function OutlookCalendarConnect({
       const authUrl = await initiateConnection.mutateAsync()
       // Redirect to Microsoft login
       window.location.href = authUrl
-    } catch (error) {
-      logger.error('Failed to initiate Outlook connection:', error)
+    } catch (_error) {
+      logger.error('Failed to initiate Outlook connection:', _error)
     }
   }
 
@@ -112,8 +112,8 @@ export function OutlookCalendarConnect({
       await disconnectOutlook.mutateAsync(connectionStatus.connectionId)
       setShowDisconnectConfirm(false)
       onDisconnected?.()
-    } catch (error) {
-      logger.error('Failed to disconnect Outlook:', error)
+    } catch (_error) {
+      logger.error('Failed to disconnect Outlook:', _error)
     }
   }
 
@@ -123,8 +123,8 @@ export function OutlookCalendarConnect({
     try {
       await refreshToken.mutateAsync(connectionStatus.connectionId)
       refetchStatus()
-    } catch (error) {
-      logger.error('Failed to refresh token:', error)
+    } catch (_error) {
+      logger.error('Failed to refresh token:', _error)
     }
   }
 
@@ -136,8 +136,8 @@ export function OutlookCalendarConnect({
         connectionId: connectionStatus.connectionId,
         updates,
       })
-    } catch (error) {
-      logger.error('Failed to update settings:', error)
+    } catch (_error) {
+      logger.error('Failed to update settings:', _error)
     }
   }
 

@@ -253,9 +253,11 @@ export function DrawingCanvas({
         strokeWidth: markup.markup_data.strokeWidth || strokeWidth,
         createdBy: markup.created_by || undefined,
       }))
-      setShapes(loadedShapes)
-      setHistory([loadedShapes])
-      setHistoryStep(0)
+      setTimeout(() => {
+        setShapes(loadedShapes)
+        setHistory([loadedShapes])
+        setHistoryStep(0)
+      }, 0)
     }
   }, [existingMarkups])
 

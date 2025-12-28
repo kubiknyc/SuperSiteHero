@@ -114,32 +114,7 @@ export function AutoReportConfig({
   const updateReport = useUpdateScheduledReport()
   const previewReport = usePreviewReportData()
 
-  // Initialize form when editing
-  useEffect(() => {
-    if (report) {
-      setName(report.name)
-      setDescription(report.description || '')
-      setReportType(report.report_type)
-      setFrequency(report.frequency)
-      setDayOfWeek(report.day_of_week ?? 1)
-      setDayOfMonth(report.day_of_month ?? 1)
-      setTimeOfDay(report.time_of_day)
-      setTimezone(report.timezone)
-      setSelectedSections(report.content_config.sections || [])
-      setIncludeCharts(report.content_config.include_charts ?? true)
-      setIncludePhotos(report.content_config.include_photos ?? true)
-      setMaxPhotos(report.content_config.max_photos ?? 10)
-      setRecipientEmails((report.recipient_emails || []).join(', '))
-      setEmailSubject(report.email_subject_template || '')
-      setEmailBody(report.email_body_template || '')
-      setIncludePdfAttachment(report.include_pdf_attachment)
-      setOutputFormat(report.output_format)
-      setIsActive(report.is_active)
-    } else {
-      resetForm()
-    }
-  }, [report, open])
-
+  // Define resetForm before using it in useEffect
   const resetForm = () => {
     setName('')
     setDescription('')
@@ -162,6 +137,34 @@ export function AutoReportConfig({
     setPreviewData(null)
   }
 
+  // Initialize form when editing
+  useEffect(() => {
+    setTimeout(() => {
+      if (report) {
+        setName(report.name)
+        setDescription(report.description || '')
+        setReportType(report.report_type)
+        setFrequency(report.frequency)
+        setDayOfWeek(report.day_of_week ?? 1)
+        setDayOfMonth(report.day_of_month ?? 1)
+        setTimeOfDay(report.time_of_day)
+        setTimezone(report.timezone)
+        setSelectedSections(report.content_config.sections || [])
+        setIncludeCharts(report.content_config.include_charts ?? true)
+        setIncludePhotos(report.content_config.include_photos ?? true)
+        setMaxPhotos(report.content_config.max_photos ?? 10)
+        setRecipientEmails((report.recipient_emails || []).join(', '))
+        setEmailSubject(report.email_subject_template || '')
+        setEmailBody(report.email_body_template || '')
+        setIncludePdfAttachment(report.include_pdf_attachment)
+        setOutputFormat(report.output_format)
+        setIsActive(report.is_active)
+      } else {
+        resetForm()
+      }
+    }, 0)
+  }, [report, open])
+
   const toggleSection = (section: ReportSection) => {
     setSelectedSections((prev) =>
       prev.includes(section)
@@ -182,17 +185,19 @@ export function AutoReportConfig({
         periodStart = periodEnd = today.toISOString().split('T')[0]
         break
       case 'weekly':
-      case 'biweekly':
+      case 'biweekly': {
         const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000)
         periodStart = weekAgo.toISOString().split('T')[0]
         periodEnd = today.toISOString().split('T')[0]
         break
-      case 'monthly':
+      }
+      case 'monthly': {
         const monthAgo = new Date(today)
         monthAgo.setMonth(monthAgo.getMonth() - 1)
         periodStart = monthAgo.toISOString().split('T')[0]
         periodEnd = today.toISOString().split('T')[0]
         break
+      }
       default:
         periodStart = periodEnd = today.toISOString().split('T')[0]
     }

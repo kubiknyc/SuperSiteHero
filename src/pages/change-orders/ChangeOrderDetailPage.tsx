@@ -54,6 +54,7 @@ import {
 } from 'lucide-react'
 import { DocumentSignatureDialog, type SignatureData } from '@/components/shared'
 import { downloadChangeOrderPDF } from '@/features/change-orders/utils/pdfExport'
+import { SendViaDocuSignButton } from '@/features/docusign/components'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import type { ChangeOrder, ChangeOrderItem, ChangeOrderHistory as COHistory } from '@/types/change-order'
@@ -137,7 +138,7 @@ export function ChangeOrderDetailPage() {
         proposed_amount: changeOrder.proposed_amount,
         proposed_days: changeOrder.proposed_days,
       })
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to submit estimate:', e)
     }
   }
@@ -152,7 +153,7 @@ export function ChangeOrderDetailPage() {
       })
       setApprovalComments('')
       setShowApprovalDialog(false)
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to process internal approval:', e)
     }
   }
@@ -161,7 +162,7 @@ export function ChangeOrderDetailPage() {
     if (!changeOrder) {return}
     try {
       await submitToOwner.mutateAsync(changeOrder.id)
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to submit to owner:', e)
     }
   }
@@ -180,7 +181,7 @@ export function ChangeOrderDetailPage() {
       setOwnerApprovalAmount('')
       setOwnerApprovalDays('')
       setShowApprovalDialog(false)
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to process owner approval:', e)
     }
   }
@@ -189,7 +190,7 @@ export function ChangeOrderDetailPage() {
     if (!changeOrder || !confirm('Are you sure you want to void this change order?')) {return}
     try {
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: 'Voided by user' })
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to void change order:', e)
     }
   }
@@ -207,7 +208,7 @@ export function ChangeOrderDetailPage() {
         } : undefined,
       })
       toast.success('Change order PDF downloaded')
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to download PDF:', e)
       toast.error('Failed to download PDF')
     }
@@ -316,6 +317,15 @@ export function ChangeOrderDetailPage() {
               <Download className="w-4 h-4 mr-2" />
               Download PDF
             </Button>
+            {/* DocuSign Button - show when pending owner review or approved */}
+            {id && (changeOrder.status === 'pending_owner_review' || changeOrder.status === 'approved') && (
+              <SendViaDocuSignButton
+                documentType="change_order"
+                documentId={id}
+                documentName={displayNumber}
+                documentNumber={displayNumber}
+              />
+            )}
             {isEditable && (
               <Button variant="outline" size="sm" onClick={() => navigate(`/change-orders/${id}/edit`)}>
                 <FileEdit className="w-4 h-4 mr-2" />

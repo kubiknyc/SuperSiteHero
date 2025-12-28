@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { WifiOff, Wifi, CloudOff, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { WifiOff, CloudOff, RefreshCw, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { cn } from '@/lib/utils';
 
@@ -29,10 +29,23 @@ export function SyncStatusBanner({
   const [dismissed, setDismissed] = useState(false);
   const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
 
+  // Use state to track current time to avoid calling Date.now() during render
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
+
+  // Update current time periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now());
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Track when sync completes
   useEffect(() => {
     if (!isSyncing && pendingSyncs === 0 && isOnline) {
-      setLastSyncTime(new Date());
+      setTimeout(() => {
+        setLastSyncTime(new Date());
+      }, 0);
     }
   }, [isSyncing, pendingSyncs, isOnline]);
 
@@ -50,7 +63,9 @@ export function SyncStatusBanner({
   // Reset dismissed state when going offline or having pending syncs
   useEffect(() => {
     if (!isOnline || pendingSyncs > 0) {
-      setDismissed(false);
+      setTimeout(() => {
+        setDismissed(false);
+      }, 0);
     }
   }, [isOnline, pendingSyncs]);
 
@@ -201,7 +216,7 @@ export function SyncStatusBanner({
 
   // Sync success (recent)
   if (lastSyncTime && !dismissed) {
-    const timeAgo = Math.floor((Date.now() - lastSyncTime.getTime()) / 1000);
+    const timeAgo = Math.floor((currentTime - lastSyncTime.getTime()) / 1000);
     if (timeAgo < 60) {
       return (
         <div className={cn(

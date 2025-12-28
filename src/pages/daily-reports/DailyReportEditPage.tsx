@@ -26,7 +26,12 @@ export function DailyReportEditPage() {
   useEffect(() => {
     if (report && !initialDataHash) {
       // Create a simple hash of the initial data
-      setInitialDataHash(JSON.stringify(report))
+      const hash = JSON.stringify(report)
+      // Use a timeout to defer the state update to avoid synchronous setState in effect
+      const timeoutId = setTimeout(() => {
+        setInitialDataHash(hash)
+      }, 0)
+      return () => clearTimeout(timeoutId)
     }
   }, [report, initialDataHash])
 
@@ -34,7 +39,12 @@ export function DailyReportEditPage() {
     if (store.draftReport && initialDataHash) {
       // Compare current state with initial state
       const currentHash = JSON.stringify(store.draftReport)
-      setHasUnsavedChanges(currentHash !== initialDataHash)
+      const hasChanges = currentHash !== initialDataHash
+      // Use a timeout to defer the state update to avoid synchronous setState in effect
+      const timeoutId = setTimeout(() => {
+        setHasUnsavedChanges(hasChanges)
+      }, 0)
+      return () => clearTimeout(timeoutId)
     }
   }, [store.draftReport, initialDataHash])
 

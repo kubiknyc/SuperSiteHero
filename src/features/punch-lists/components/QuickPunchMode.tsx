@@ -507,7 +507,11 @@ export function QuickPunchMode({
                   size="default"
                   onClick={() => {
                     triggerHaptic(10)
-                    isListening ? stopListening() : startListening()
+                    if (isListening) {
+                      stopListening()
+                    } else {
+                      startListening()
+                    }
                   }}
                   className={cn(
                     'min-w-[88px] min-h-[44px] touch-manipulation',

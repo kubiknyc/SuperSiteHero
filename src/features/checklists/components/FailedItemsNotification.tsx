@@ -43,9 +43,11 @@ export function FailedItemsNotification({
 
   // Don't show if no failed items or dismissed
   useEffect(() => {
-    if (failedItems.length === 0) {
-      setIsDismissed(true)
-    }
+    setTimeout(() => {
+      if (failedItems.length === 0) {
+        setIsDismissed(true)
+      }
+    }, 0);
   }, [failedItems.length])
 
   if (failedItems.length === 0 || isDismissed) {

@@ -274,10 +274,11 @@ export function MyAssignments() {
       switch (sortBy) {
         case 'oldest':
           return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        case 'priority':
+        case 'priority': {
           const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
           return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) -
                  (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
+        }
         case 'due_date':
           if (!a.due_date) {return 1}
           if (!b.due_date) {return -1}

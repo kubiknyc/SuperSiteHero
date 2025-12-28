@@ -97,6 +97,11 @@ export function MeetingRecorder({
     }
   }, [previewStream]);
 
+  // Pre-generate random heights for audio visualization bars
+  const [audioBarHeights] = useState(() =>
+    Array.from({ length: 5 }, () => 20 + Math.random() * 30)
+  );
+
   const handleStartRecording = async () => {
     setShowDialog(true);
     await startRecording({ type: selectedType });
@@ -255,14 +260,14 @@ export function MeetingRecorder({
             {selectedType === 'audio' && isRecordingActive && (
               <div className="bg-background rounded-lg p-8 flex items-center justify-center">
                 <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
+                  {audioBarHeights.map((height, i) => (
                     <div
                       key={i}
                       className={`w-2 bg-blue-500 rounded-full transition-all duration-150 ${
                         state === 'recording' ? 'animate-pulse' : ''
                       }`}
                       style={{
-                        height: state === 'recording' ? `${20 + Math.random() * 30}px` : '20px',
+                        height: state === 'recording' ? `${height}px` : '20px',
                         animationDelay: `${i * 100}ms`,
                       }}
                     />

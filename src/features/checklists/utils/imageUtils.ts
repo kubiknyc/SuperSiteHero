@@ -70,8 +70,8 @@ export async function compressImage(
     })
 
     return finalFile
-  } catch (error) {
-    logger.error('Image compression failed:', error)
+  } catch (_error) {
+    logger.error('Image compression failed:', _error)
     throw new Error('Failed to compress image. Please try a different image.')
   }
 }
@@ -121,8 +121,8 @@ export async function generateThumbnail(file: File, maxSize: number = 200): Prom
     })
 
     return await imageCompression.getDataUrlFromFile(thumbnailFile)
-  } catch (error) {
-    logger.error('Thumbnail generation failed:', error)
+  } catch (_error) {
+    logger.error('Thumbnail generation failed:', _error)
     // Fallback to original file data URL
     return await imageCompression.getDataUrlFromFile(file)
   }

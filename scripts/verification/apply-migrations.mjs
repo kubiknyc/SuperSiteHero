@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 
@@ -48,7 +49,7 @@ CREATE POLICY "Authenticated users can delete project_users"
   `;
 
   try {
-    const { data, error } = await supabase.rpc('exec_sql', { sql_string: sql });
+    const { data: _data, error } = await supabase.rpc('exec_sql', { sql_string: sql });
 
     if (error) {
       // Try alternative approach - split into individual statements

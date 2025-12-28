@@ -39,7 +39,7 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
       if (reports.length === 0) {
         toast.error('No reports found for the selected date range')
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to fetch reports')
     } finally {
       setIsLoading(false)
@@ -56,7 +56,7 @@ export function BatchExportDialog({ projectId, projectName, onClose }: BatchExpo
     try {
       await exportReportsToCSV(projectId, startDate, endDate, projectName)
       toast.success('CSV files downloaded successfully')
-    } catch (error) {
+    } catch (_error) {
       const message = error instanceof Error ? error.message : 'Export failed'
       toast.error(message)
     } finally {

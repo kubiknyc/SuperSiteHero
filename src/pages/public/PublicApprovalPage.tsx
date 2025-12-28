@@ -6,7 +6,7 @@
  */
 
 import * as React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AlertTriangle, CheckCircle, Clock, Shield, XCircle } from 'lucide-react';
 import { usePublicApprovalPage } from '@/features/approvals/hooks';
 import { ClientApprovalWorkflow } from '@/features/client-portal/components/ClientApprovalWorkflow';
@@ -79,12 +79,6 @@ function SuccessPage({
   projectName: string;
   entityName: string;
 }) {
-  const getIcon = () => {
-    if (decision === 'approved') {return CheckCircle;}
-    if (decision === 'rejected') {return XCircle;}
-    return Clock;
-  };
-
   const getColor = () => {
     if (decision === 'approved') {return 'bg-success-light text-success';}
     if (decision === 'rejected') {return 'bg-error-light text-error';}
@@ -97,13 +91,13 @@ function SuccessPage({
     return 'Your change request has been submitted.';
   };
 
-  const Icon = getIcon();
-
   return (
     <div className="min-h-screen bg-muted flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full bg-card rounded-lg shadow-sm border p-8 text-center">
         <div className={`w-16 h-16 mx-auto rounded-full flex items-center justify-center mb-4 ${getColor()}`}>
-          <Icon className="w-8 h-8" />
+          {decision === 'approved' && <CheckCircle className="w-8 h-8" />}
+          {decision === 'rejected' && <XCircle className="w-8 h-8" />}
+          {decision !== 'approved' && decision !== 'rejected' && <Clock className="w-8 h-8" />}
         </div>
         <h1 className="text-xl font-semibold text-foreground mb-2 heading-page">
           Response Submitted

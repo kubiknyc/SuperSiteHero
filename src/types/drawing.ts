@@ -136,6 +136,7 @@ export interface DrawingRevision {
   filePath?: string;
   fileUrl?: string;
   fileName?: string;
+  fileType?: string;
   fileSize?: number;
   thumbnailUrl?: string;
 
@@ -174,6 +175,7 @@ export interface DrawingRevisionInsert {
   filePath?: string;
   fileUrl?: string;
   fileName?: string;
+  fileType?: string;
   fileSize?: number;
   thumbnailUrl?: string;
   isCurrent?: boolean;
@@ -187,6 +189,7 @@ export interface DrawingRevisionUpdate {
   filePath?: string | null;
   fileUrl?: string | null;
   fileName?: string | null;
+  fileType?: string | null;
   fileSize?: number | null;
   thumbnailUrl?: string | null;
   isCurrent?: boolean;
@@ -789,3 +792,100 @@ export const DRAWING_PACKAGE_STATUSES: { value: DrawingPackageStatus; label: str
   { value: 'superseded', label: 'Superseded', color: 'orange' },
   { value: 'archived', label: 'Archived', color: 'red' },
 ];
+
+// ============================================================================
+// DRAWING REVISION COMPARISON TYPES
+// ============================================================================
+
+export type ComparisonViewMode = 'side-by-side' | 'overlay' | 'diff' | 'slider';
+
+export type ChangeType = 'added' | 'removed' | 'modified';
+
+export interface ChangeRegion {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  changeType: ChangeType;
+  confidence: number; // 0-1
+  description?: string;
+  pageNumber?: number;
+}
+
+export interface DrawingComparisonResult {
+  revision1Id: string;
+  revision2Id: string;
+  revision1: DrawingRevision;
+  revision2: DrawingRevision;
+  changeRegions: ChangeRegion[];
+  overallChangePercentage: number;
+  analyzedAt: string;
+  summary: string;
+  diffImageDataUrl?: string;
+  page1Count: number;
+  page2Count: number;
+}
+
+export interface DrawingComparisonOptions {
+  pageNumber?: number;
+  dpi?: number;
+  threshold?: number;
+}
+
+export interface OverlaySettings {
+  opacity1: number; // 0-100
+  opacity2: number; // 0-100
+  blendMode: 'normal' | 'difference' | 'multiply' | 'overlay';
+  showChangeHighlights: boolean;
+  changeHighlightColor: string;
+}
+
+export interface RevisionComparisonSelection {
+  revision1Id: string | null;
+  revision2Id: string | null;
+}
+
+// ============================================================================
+// COMPARISON CONSTANTS
+// ============================================================================
+
+export const COMPARISON_VIEW_MODES: { value: ComparisonViewMode; label: string; icon: string }[] = [
+  { value: 'side-by-side', label: 'Side by Side', icon: 'Columns' },
+  { value: 'overlay', label: 'Overlay', icon: 'Layers' },
+  { value: 'diff', label: 'Difference', icon: 'Diff' },
+  { value: 'slider', label: 'Slider', icon: 'SlidersHorizontal' },
+];
+
+export const CHANGE_TYPE_COLORS: Record<ChangeType, { border: string; bg: string; text: string }> = {
+  added: {
+    border: 'border-green-500',
+    bg: 'bg-green-500/20',
+    text: 'text-green-600',
+  },
+  removed: {
+    border: 'border-red-500',
+    bg: 'bg-red-500/20',
+    text: 'text-red-600',
+  },
+  modified: {
+    border: 'border-yellow-400',
+    bg: 'bg-yellow-400/20',
+    text: 'text-yellow-600',
+  },
+};
+
+export const BLEND_MODES: { value: OverlaySettings['blendMode']; label: string }[] = [
+  { value: 'normal', label: 'Normal' },
+  { value: 'difference', label: 'Difference' },
+  { value: 'multiply', label: 'Multiply' },
+  { value: 'overlay', label: 'Overlay' },
+];
+
+export const DEFAULT_OVERLAY_SETTINGS: OverlaySettings = {
+  opacity1: 50,
+  opacity2: 50,
+  blendMode: 'normal',
+  showChangeHighlights: true,
+  changeHighlightColor: '#ffff00',
+};

@@ -28,6 +28,8 @@ interface PDFViewerProps {
   onPageChange?: (page: number) => void
   /** Hide the internal page navigation UI (when parent controls navigation) */
   hidePageNavigation?: boolean
+  /** Enable real-time collaborative markup with other users */
+  collaborative?: boolean
 }
 
 /**
@@ -67,6 +69,7 @@ export function PDFViewer({
   pageNumber: externalPageNumber,
   onPageChange,
   hidePageNavigation = false,
+  collaborative = false,
 }: PDFViewerProps) {
   const [numPages, setNumPages] = useState<number | null>(null)
   const [internalPage, setInternalPage] = useState(1)
@@ -352,6 +355,7 @@ export function PDFViewer({
                   height={pageHeight}
                   readOnly={false}
                   markupState={markupState}
+                  collaborative={collaborative}
                 />
               </div>
             )}

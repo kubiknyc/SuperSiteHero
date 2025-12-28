@@ -146,7 +146,7 @@ function Scene({ model, settings, onModelClick }: SceneProps) {
   const controlsRef = useRef<any>(null);
   const modelRef = useRef<any>(null);
 
-  // Apply wireframe mode
+  // Apply wireframe mode - Three.js requires direct mutation of scene objects
   useEffect(() => {
     if (model) {
       model.traverse((child: any) => {
@@ -165,7 +165,7 @@ function Scene({ model, settings, onModelClick }: SceneProps) {
     }
   }, [model, settings.wireframeEnabled]);
 
-  // Apply shadow settings
+  // Apply shadow settings - Three.js requires direct mutation of scene objects
   useEffect(() => {
     if (model) {
       model.traverse((child: any) => {
@@ -175,7 +175,10 @@ function Scene({ model, settings, onModelClick }: SceneProps) {
         }
       });
     }
-    gl.shadowMap.enabled = settings.enableShadows;
+    // Three.js requires direct mutation of renderer settings
+    if (gl.shadowMap) {
+      gl.shadowMap.enabled = settings.enableShadows;
+    }
   }, [model, settings.enableShadows, gl]);
 
   // Handle click on model

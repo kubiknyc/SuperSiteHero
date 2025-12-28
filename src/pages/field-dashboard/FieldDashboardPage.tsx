@@ -23,11 +23,11 @@ import {
 export default function FieldDashboardPage() {
   const { currentProject, isLoading } = useProjectContext()
   const navigate = useNavigate()
-  const [syncStatus] = useState({
+  const [syncStatus] = useState(() => ({
     isSyncing: false,
     pendingCount: 0,
     lastSyncAt: Date.now(),
-  })
+  }))
 
   if (isLoading) {
     return (

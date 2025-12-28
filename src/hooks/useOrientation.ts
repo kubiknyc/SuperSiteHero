@@ -256,8 +256,8 @@ export async function lockOrientation(
       await window.screen.orientation.lock(orientation);
       return true;
     }
-  } catch (error) {
-    logger.warn('Orientation lock not supported or denied:', error);
+  } catch (_error) {
+    logger.warn('Orientation lock not supported or denied:', _error);
   }
   return false;
 }
@@ -272,8 +272,8 @@ export function unlockOrientation(): void {
     if (window.screen?.orientation?.unlock) {
       window.screen.orientation.unlock();
     }
-  } catch (error) {
-    logger.warn('Orientation unlock failed:', error);
+  } catch (_error) {
+    logger.warn('Orientation unlock failed:', _error);
   }
 }
 

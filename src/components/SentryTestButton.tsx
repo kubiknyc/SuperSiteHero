@@ -35,8 +35,8 @@ export function SentryTestButton() {
 
     try {
       throw new Error('Test error from JobSight construction platform')
-    } catch (error) {
-      captureException(error as Error, {
+    } catch (_error) {
+      captureException(_error as Error, {
         module: 'testing',
         feature: 'sentry-integration',
         environment: import.meta.env.MODE,
@@ -103,8 +103,8 @@ export function useSentryTest() {
   const testError = () => {
     try {
       throw new Error('Programmatic test error')
-    } catch (error) {
-      captureException(error as Error, { source: 'hook' })
+    } catch (_error) {
+      captureException(_error as Error, { source: 'hook' })
     }
   }
 

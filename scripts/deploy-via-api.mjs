@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Final autonomous deployment using Supabase Management API
@@ -49,7 +50,7 @@ const req = https.request(options, (res) => {
       try {
         const parsed = JSON.parse(data);
         console.log('Response:', JSON.stringify(parsed, null, 2));
-      } catch (e) {
+      } catch (_e) {
         console.log('Response:', data.substring(0, 500));
       }
 

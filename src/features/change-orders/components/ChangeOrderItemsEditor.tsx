@@ -193,7 +193,7 @@ export function ChangeOrderItemsEditor({
         await addItem.mutateAsync({ changeOrderId, ...itemData })
       }
       cancelEditing()
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to save item:', e)
     }
   }
@@ -203,7 +203,7 @@ export function ChangeOrderItemsEditor({
     if (!confirm('Are you sure you want to delete this item?')) {return}
     try {
       await deleteItem.mutateAsync({ id, changeOrderId })
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to delete item:', e)
     }
   }

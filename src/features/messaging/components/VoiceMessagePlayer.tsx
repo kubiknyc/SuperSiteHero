@@ -208,18 +208,22 @@ export function VoiceMessagePlayer({
         >
           {/* Fake waveform bars */}
           <div className="absolute inset-0 flex items-center justify-center gap-0.5 px-1">
-            {[...Array(30)].map((_, i) => (
-              <div
-                key={i}
-                className={cn(
-                  'w-1 rounded-sm transition-colors',
-                  (i / 30) * 100 <= progress ? 'bg-blue-500' : 'bg-gray-300'
-                )}
-                style={{
-                  height: `${Math.random() * 60 + 20}%`,
-                }}
-              />
-            ))}
+            {[...Array(30)].map((_, i) => {
+              // Generate deterministic height based on index to avoid calling Math.random() during render
+              const height = ((i * 17 + 13) % 60) + 20
+              return (
+                <div
+                  key={i}
+                  className={cn(
+                    'w-1 rounded-sm transition-colors',
+                    (i / 30) * 100 <= progress ? 'bg-blue-500' : 'bg-gray-300'
+                  )}
+                  style={{
+                    height: `${height}%`,
+                  }}
+                />
+              )
+            })}
           </div>
 
           {/* Progress overlay */}

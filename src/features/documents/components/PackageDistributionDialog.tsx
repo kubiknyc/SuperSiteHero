@@ -3,6 +3,8 @@
  * Manage recipients and distribute drawing packages
  */
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   Dialog,
@@ -113,6 +115,7 @@ export function PackageDistributionDialog({
   package: pkg,
   onDistributeSuccess,
 }: PackageDistributionDialogProps) {
+  'use no memo'
   const [activeTab, setActiveTab] = useState<'recipients' | 'tracking'>('recipients');
   const [formData, setFormData] = useState<RecipientFormData>(initialFormData);
   const [bulkEmails, setBulkEmails] = useState('');

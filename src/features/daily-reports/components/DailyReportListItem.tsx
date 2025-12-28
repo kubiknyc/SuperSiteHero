@@ -179,11 +179,13 @@ export function DailyReportListItem({
 
   const status = statusConfig[report.status];
   const reportDate = new Date(report.report_date);
+  const [today] = React.useState(() => new Date());
   const isToday =
-    format(reportDate, 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd');
+    format(reportDate, 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd');
+  const [yesterday] = React.useState(() => new Date(Date.now() - 86400000));
   const isYesterday =
     format(reportDate, 'yyyy-MM-dd') ===
-    format(new Date(Date.now() - 86400000), 'yyyy-MM-dd');
+    format(yesterday, 'yyyy-MM-dd');
 
   const dateDisplay = isToday
     ? 'Today'

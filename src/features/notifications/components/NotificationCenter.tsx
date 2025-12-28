@@ -155,6 +155,31 @@ const notificationTypeConfig: Record<string, {
     icon: Calendar,
     color: 'text-info bg-cyan-100',
   },
+  action_item_due: {
+    label: 'Action Item Due',
+    icon: Clock,
+    color: 'text-warning bg-warning-light',
+  },
+  action_item_overdue: {
+    label: 'Action Item Overdue',
+    icon: AlertCircle,
+    color: 'text-error bg-error-light',
+  },
+  action_item_escalated: {
+    label: 'Action Item Escalated',
+    icon: AlertCircle,
+    color: 'text-error bg-red-100',
+  },
+  meeting_scheduled: {
+    label: 'Meeting',
+    icon: Calendar,
+    color: 'text-primary bg-info-light',
+  },
+  meeting_minutes: {
+    label: 'Meeting Minutes',
+    icon: FileText,
+    color: 'text-indigo-600 bg-indigo-100',
+  },
   default: {
     label: 'Notification',
     icon: Bell,

@@ -25,7 +25,6 @@ import { extractMentionedUserIds } from '@/types/messaging'
 import { sendMentionNotifications } from '@/features/messaging/utils/mention-notifications'
 
 // Using extended Database types for tables not yet in generated types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 // =====================================================

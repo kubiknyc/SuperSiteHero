@@ -16,7 +16,6 @@ import { logger } from '@/lib/utils/logger'
 import type { LienWaiver, LienWaiverStatus, LIEN_WAIVER_TYPES } from '@/types/lien-waiver'
 
 // Using extended Database types for tables not yet in generated types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db: any = supabase
 
 // ============================================================================

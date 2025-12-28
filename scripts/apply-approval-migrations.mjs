@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
@@ -59,7 +60,7 @@ async function applyMigrations() {
     // Verify the migration was applied
     console.log('\n🔍 Verifying schema changes...');
 
-    const { data: enumData, error: enumError } = await supabase
+    const { data: _enumData, error: enumError } = await supabase
       .from('pg_type')
       .select('typname')
       .eq('typname', 'approval_status')

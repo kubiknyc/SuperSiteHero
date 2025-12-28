@@ -3,7 +3,7 @@
  * Shows sync status badges for individual list items
  */
 
-import { Cloud, CloudOff, RefreshCw, AlertTriangle, Check } from 'lucide-react';
+import { CloudOff, RefreshCw, AlertTriangle, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export type SyncBadgeStatus = 'synced' | 'pending' | 'syncing' | 'error' | 'conflict';
@@ -109,7 +109,7 @@ export interface SyncBadgeListProps {
 /**
  * Helper component to show sync badges in a list
  */
-export function SyncBadgeList({ items, onItemClick }: SyncBadgeListProps) {
+export function SyncBadgeList({ items }: SyncBadgeListProps) {
   const pendingCount = items.filter(i => i.syncStatus === 'pending').length;
   const errorCount = items.filter(i => i.syncStatus === 'error').length;
   const conflictCount = items.filter(i => i.syncStatus === 'conflict').length;

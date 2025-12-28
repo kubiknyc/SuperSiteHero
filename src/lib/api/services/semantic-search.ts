@@ -349,7 +349,7 @@ export async function expandSearchQuery(userQuery: string): Promise<string[]> {
       } else {
         // Fallback: split by commas or newlines
         terms = result.content
-          .replace(/[\[\]"]/g, '')
+          .replace(/[[\]"]/g, '')
           .split(/[,\n]/)
           .map(t => t.trim())
           .filter(t => t.length > 0)

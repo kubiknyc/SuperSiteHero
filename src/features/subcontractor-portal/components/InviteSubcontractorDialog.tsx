@@ -79,8 +79,11 @@ export function InviteSubcontractorDialog({
   // Reset form when dialog closes
   useEffect(() => {
     if (!open) {
-      setSelectedSubcontractorId('')
-      setEmail('')
+      // Use setTimeout to avoid synchronous state update in effect
+      setTimeout(() => {
+        setSelectedSubcontractorId('')
+        setEmail('')
+      }, 0)
     }
   }, [open])
 
@@ -89,7 +92,8 @@ export function InviteSubcontractorDialog({
     if (selectedSubcontractorId) {
       const sub = subcontractors.find((s) => s.id === selectedSubcontractorId)
       if (sub?.contact?.email) {
-        setEmail(sub.contact.email)
+        // Use setTimeout to avoid synchronous state update in effect
+        setTimeout(() => setEmail(sub.contact.email), 0)
       }
     }
   }, [selectedSubcontractorId, subcontractors])

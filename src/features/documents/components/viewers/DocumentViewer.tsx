@@ -14,6 +14,8 @@ interface DocumentViewerProps {
   onMarkupCreate?: (markup: any) => void
   height?: string
   enableMarkup?: boolean
+  /** Enable real-time collaborative markup with other users */
+  collaborative?: boolean
 }
 
 /**
@@ -47,6 +49,7 @@ export function DocumentViewer({
   onMarkupCreate,
   height = 'h-screen',
   enableMarkup = false,
+  collaborative = false,
 }: DocumentViewerProps) {
   const fileType = document.file_type?.toLowerCase() || ''
   const fileName = document.file_name || document.name || 'document'
@@ -70,6 +73,7 @@ export function DocumentViewer({
         onMarkupCreate={onMarkupCreate}
         height={height}
         enableMarkup={enableMarkup}
+        collaborative={collaborative}
       />
     )
   }
@@ -88,6 +92,7 @@ export function DocumentViewer({
         onMarkupCreate={onMarkupCreate}
         height={height}
         enableMarkup={enableMarkup}
+        collaborative={collaborative}
       />
     )
   }

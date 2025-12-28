@@ -2,7 +2,7 @@
 // Modal dialog for editing a workflow item
 
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useUpdateWorkflowItem } from '../hooks/useWorkflowItems'
 import { useProjectUsers } from '../hooks/useWorkflowItemAssignees'
 import type { WorkflowItem } from '@/types/database'
@@ -46,20 +46,27 @@ export function EditWorkflowItemDialog({
   const [resolution, setResolution] = useState('')
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([])
 
+  const prevOpenRef = useRef(open)
+
   // Initialize form when dialog opens
   useEffect(() => {
-    if (open && workflowItem) {
-      setTitle(workflowItem.title || '')
-      setDescription(workflowItem.description || '')
-      setReferenceNumber(workflowItem.reference_number || '')
-      setDiscipline(workflowItem.discipline || '')
-      setPriority(workflowItem.priority || 'normal')
-      setStatus(workflowItem.status || 'open')
-      setDueDate(workflowItem.due_date ? workflowItem.due_date.split('T')[0] : '')
-      setCostImpact(workflowItem.cost_impact?.toString() || '')
-      setScheduleImpact(workflowItem.schedule_impact?.toString() || '')
-      setResolution(workflowItem.resolution || '')
-      setSelectedAssignees(workflowItem.assignees || [])
+    const isOpening = open && !prevOpenRef.current
+    prevOpenRef.current = open
+
+    if (isOpening && workflowItem) {
+      setTimeout(() => {
+        setTitle(workflowItem.title || '')
+        setDescription(workflowItem.description || '')
+        setReferenceNumber(workflowItem.reference_number || '')
+        setDiscipline(workflowItem.discipline || '')
+        setPriority(workflowItem.priority || 'normal')
+        setStatus(workflowItem.status || 'open')
+        setDueDate(workflowItem.due_date ? workflowItem.due_date.split('T')[0] : '')
+        setCostImpact(workflowItem.cost_impact?.toString() || '')
+        setScheduleImpact(workflowItem.schedule_impact?.toString() || '')
+        setResolution(workflowItem.resolution || '')
+        setSelectedAssignees(workflowItem.assignees || [])
+      }, 0)
     }
   }, [open, workflowItem])
 

@@ -1,8 +1,10 @@
-// File: /src/features/takeoffs/components/CalibrationDialog.tsx
-// Dialog for calibrating scale on PDF drawings
+/**
+ * CalibrationDialog Component
+ * Dialog for calibrating scale on PDF drawings with database persistence
+ */
 
-import { useState } from 'react'
-import { Ruler, Check, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Ruler, Check, X, Copy, History, CheckCircle2, Loader2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -22,14 +24,32 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { toast } from 'sonner'
 import type { Point, ScaleFactor, LinearUnit } from '../utils/measurements'
 import { distanceBetweenPoints } from '../utils/measurements'
+import {
+  useCalibration,
+  useDocumentCalibrations,
+  useSaveCalibration,
+  useCopyCalibration,
+  calibrationToScaleFactor,
+  type TakeoffCalibration,
+} from '../hooks/useTakeoffCalibration'
 
 export interface CalibrationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   calibrationPoints?: Point[]
   onCalibrationComplete: (scale: ScaleFactor) => void
+  /** Document ID for persistence */
+  documentId?: string
+  /** Current page number (1-indexed) */
+  pageNumber?: number
+  /** Total number of pages in the document */
+  totalPages?: number
+  /** Callback when history is requested */
+  onShowHistory?: (calibrationId: string) => void
 }
 
 const COMMON_UNITS: Array<{ value: LinearUnit; label: string }> = [
@@ -48,22 +68,63 @@ const COMMON_UNITS: Array<{ value: LinearUnit; label: string }> = [
  * 2. Entering the known real-world length
  * 3. Selecting the unit
  *
- * Calculates pixels-per-unit ratio for accurate measurements.
+ * Features:
+ * - Persists calibration to database per document page
+ * - Shows existing calibration status
+ * - Copy calibration from other pages
+ * - View calibration history
  */
 export function CalibrationDialog({
   open,
   onOpenChange,
   calibrationPoints,
   onCalibrationComplete,
+  documentId,
+  pageNumber = 1,
+  totalPages = 1,
+  onShowHistory,
 }: CalibrationDialogProps) {
   const [knownLength, setKnownLength] = useState('')
   const [unit, setUnit] = useState<LinearUnit>('ft')
+  const [copyFromPage, setCopyFromPage] = useState<string>('')
+
+  // Fetch existing calibration for this page
+  const { data: existingCalibration, isLoading: isLoadingCalibration } = useCalibration(
+    documentId,
+    pageNumber
+  )
+
+  // Fetch calibrations from other pages for copy feature
+  const { data: allCalibrations } = useDocumentCalibrations(documentId)
+
+  // Mutations
+  const saveCalibration = useSaveCalibration()
+  const copyCalibration = useCopyCalibration()
+
+  // Filter to get other pages with calibrations
+  const otherPageCalibrations = allCalibrations?.filter(
+    (cal) => cal.page_number !== pageNumber
+  ) || []
 
   // Calculate pixel distance from calibration points
   const pixelDistance =
     calibrationPoints && calibrationPoints.length === 2
       ? distanceBetweenPoints(calibrationPoints[0], calibrationPoints[1])
       : 0
+
+  // Pre-fill from existing calibration when dialog opens
+  useEffect(() => {
+    if (open && existingCalibration && pixelDistance === 0) {
+      // If there's an existing calibration and no new line drawn,
+      // show the existing values
+      setTimeout(() => {
+        if (existingCalibration.real_world_distance) {
+          setKnownLength(existingCalibration.real_world_distance.toString())
+        }
+        setUnit(existingCalibration.unit as LinearUnit)
+      }, 0)
+    }
+  }, [open, existingCalibration, pixelDistance])
 
   // Calculate pixels per unit
   const calculatePixelsPerUnit = (): number | null => {
@@ -74,8 +135,16 @@ export function CalibrationDialog({
     return pixelDistance / length
   }
 
+  // Determine accuracy level
+  const getAccuracyLevel = (): 'high' | 'medium' | 'low' | null => {
+    if (pixelDistance === 0) {return null}
+    if (pixelDistance > 200) {return 'high'}
+    if (pixelDistance > 100) {return 'medium'}
+    return 'low'
+  }
+
   // Handle calibration
-  const handleCalibrate = () => {
+  const handleCalibrate = async () => {
     const pixelsPerUnit = calculatePixelsPerUnit()
     if (!pixelsPerUnit) {return}
 
@@ -83,9 +152,30 @@ export function CalibrationDialog({
     const scale: ScaleFactor = {
       pixelsPerUnit,
       unit,
-      // Include original values for database persistence
       pixelDistance,
       realWorldDistance: length,
+    }
+
+    // Save to database if documentId is provided
+    if (documentId) {
+      try {
+        await saveCalibration.mutateAsync({
+          documentId,
+          pageNumber,
+          scaleFactor: scale,
+          calibrationLine: calibrationPoints?.length === 2 ? {
+            start: calibrationPoints[0],
+            end: calibrationPoints[1],
+          } : undefined,
+          accuracy: getAccuracyLevel() || undefined,
+        })
+        toast.success('Calibration saved', {
+          description: `Scale saved for page ${pageNumber}`,
+        })
+      } catch (error) {
+        console.error('Failed to save calibration:', error)
+        toast.error('Failed to save calibration')
+      }
     }
 
     onCalibrationComplete(scale)
@@ -96,34 +186,63 @@ export function CalibrationDialog({
     setUnit('ft')
   }
 
+  // Handle copy from another page
+  const handleCopyFromPage = async () => {
+    if (!documentId || !copyFromPage) {return}
+
+    const sourcePageNumber = parseInt(copyFromPage, 10)
+
+    try {
+      await copyCalibration.mutateAsync({
+        sourceDocumentId: documentId,
+        sourcePageNumber,
+        targetDocumentId: documentId,
+        targetPageNumber: pageNumber,
+      })
+
+      // Get the source calibration to apply locally
+      const sourceCal = otherPageCalibrations.find(
+        (cal) => cal.page_number === sourcePageNumber
+      )
+      if (sourceCal) {
+        const scale = calibrationToScaleFactor(sourceCal)
+        if (scale) {
+          onCalibrationComplete(scale)
+        }
+      }
+
+      toast.success('Calibration copied', {
+        description: `Calibration copied from page ${sourcePageNumber} to page ${pageNumber}`,
+      })
+      onOpenChange(false)
+    } catch (error) {
+      console.error('Failed to copy calibration:', error)
+      toast.error('Failed to copy calibration')
+    }
+  }
+
   // Get accuracy indicator
   const getAccuracyBadge = () => {
-    if (pixelDistance === 0) {return null}
+    const accuracy = getAccuracyLevel()
+    if (!accuracy) {return null}
 
     const pixelsPerUnit = calculatePixelsPerUnit()
     if (!pixelsPerUnit) {return null}
 
-    // Typical drawing scales:
-    // 1/4" = 1' (1:48) → 0.25 in/ft → 3 px/in at 72 DPI → 144 px/ft
-    // 1/8" = 1' (1:96) → 0.125 in/ft → 72 px/ft
-    // 1" = 10' (1:120) → 0.1 in/ft → 60 px/ft
-    // 1" = 20' (1:240) → 0.05 in/ft → 30 px/ft
-
-    if (unit === 'ft') {
-      if (pixelsPerUnit > 100) {
-        return <Badge variant="default">High accuracy (large scale)</Badge>
-      } else if (pixelsPerUnit > 50) {
+    switch (accuracy) {
+      case 'high':
+        return <Badge variant="default">High accuracy</Badge>
+      case 'medium':
         return <Badge variant="secondary">Medium accuracy</Badge>
-      } else {
-        return <Badge variant="outline">Low accuracy (small scale)</Badge>
-      }
+      case 'low':
+        return <Badge variant="outline">Low accuracy</Badge>
     }
-
-    return <Badge variant="secondary">Ready to calibrate</Badge>
   }
 
   const pixelsPerUnit = calculatePixelsPerUnit()
   const canCalibrate = pixelsPerUnit !== null && pixelDistance > 0
+  const hasExistingCalibration = !!existingCalibration
+  const isSaving = saveCalibration.isPending || copyCalibration.isPending
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -132,6 +251,11 @@ export function CalibrationDialog({
           <DialogTitle className="flex items-center gap-2">
             <Ruler className="w-5 h-5" />
             Scale Calibration
+            {pageNumber > 0 && (
+              <Badge variant="outline" className="ml-2">
+                Page {pageNumber}
+              </Badge>
+            )}
           </DialogTitle>
           <DialogDescription>
             Draw a line on a known dimension in the drawing, then enter the actual length below.
@@ -139,6 +263,44 @@ export function CalibrationDialog({
         </DialogHeader>
 
         <div className="space-y-4 py-4">
+          {/* Existing Calibration Status */}
+          {isLoadingCalibration ? (
+            <div className="p-4 bg-muted rounded-lg flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span className="text-sm text-muted-foreground">Loading calibration...</span>
+            </div>
+          ) : hasExistingCalibration && existingCalibration ? (
+            <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-700 dark:text-green-400">
+                    Page is calibrated
+                  </span>
+                </div>
+                {onShowHistory && existingCalibration.id && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onShowHistory(existingCalibration.id)}
+                  >
+                    <History className="w-4 h-4 mr-1" />
+                    History
+                  </Button>
+                )}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Current scale: {existingCalibration.pixels_per_unit.toFixed(4)} px/{existingCalibration.unit}
+                {existingCalibration.real_world_distance && (
+                  <> ({existingCalibration.real_world_distance} {existingCalibration.unit})</>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                Draw a new calibration line to update, or copy from another page below.
+              </div>
+            </div>
+          ) : null}
+
           {/* Calibration Line Info */}
           <div className="p-4 bg-muted rounded-lg space-y-2">
             <div className="text-sm font-medium">Calibration Line</div>
@@ -206,6 +368,44 @@ export function CalibrationDialog({
             </div>
           )}
 
+          {/* Copy from another page */}
+          {otherPageCalibrations.length > 0 && (
+            <>
+              <Separator />
+              <div className="space-y-2">
+                <Label>Copy from another page</Label>
+                <div className="flex gap-2">
+                  <RadixSelect
+                    value={copyFromPage}
+                    onValueChange={setCopyFromPage}
+                  >
+                    <SelectTrigger className="flex-1">
+                      <SelectValue placeholder="Select a page" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {otherPageCalibrations.map((cal) => (
+                        <SelectItem
+                          key={cal.page_number}
+                          value={cal.page_number.toString()}
+                        >
+                          Page {cal.page_number} ({cal.pixels_per_unit.toFixed(2)} px/{cal.unit})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </RadixSelect>
+                  <Button
+                    variant="outline"
+                    onClick={handleCopyFromPage}
+                    disabled={!copyFromPage || isSaving}
+                  >
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
+
           {/* Instructions */}
           <div className="text-xs text-muted-foreground space-y-1">
             <p className="font-medium">Tips for accurate calibration:</p>
@@ -223,9 +423,16 @@ export function CalibrationDialog({
             <X className="w-4 h-4 mr-2" />
             Cancel
           </Button>
-          <Button onClick={handleCalibrate} disabled={!canCalibrate}>
-            <Check className="w-4 h-4 mr-2" />
-            Apply Calibration
+          <Button
+            onClick={handleCalibrate}
+            disabled={!canCalibrate || isSaving}
+          >
+            {isSaving ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Check className="w-4 h-4 mr-2" />
+            )}
+            {hasExistingCalibration ? 'Update Calibration' : 'Apply Calibration'}
           </Button>
         </DialogFooter>
       </DialogContent>

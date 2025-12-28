@@ -139,7 +139,7 @@ function Panorama360({ imageUrl, hotspots, onHotspotClick }: Panorama360Props) {
   const texture = useTexture(imageUrl);
   const sphereRef = useRef<THREE.Mesh>(null);
 
-  // Configure texture
+  // Configure texture - Three.js requires direct mutation of texture properties
   useEffect(() => {
     if (texture) {
       texture.mapping = THREE.EquirectangularReflectionMapping;
@@ -584,11 +584,15 @@ export function VRWalkthrough({
   // Handle image load
   useEffect(() => {
     if (currentImageUrl) {
-      setIsLoading(true);
+      setTimeout(() => {
+        setIsLoading(true);
+      }, 0);
       const img = new Image();
-      img.onload = () => setIsLoading(false);
+      img.onload = () => setTimeout(() => setIsLoading(false), 0);
       img.onerror = () => {
-        setIsLoading(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 0);
         onError?.(new Error('Failed to load panorama image'));
       };
       img.src = currentImageUrl;

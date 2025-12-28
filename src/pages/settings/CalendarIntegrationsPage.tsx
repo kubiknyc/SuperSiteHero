@@ -41,8 +41,10 @@ export function CalendarIntegrationsPage() {
 
         if (stateData.nonce && stateData.companyId && stateData.userId) {
           // This is a Google Calendar OAuth callback
-          setOauthStatus('processing');
-          setActiveTab('google');
+          setTimeout(() => {
+            setOauthStatus('processing');
+            setActiveTab('google');
+          }, 0);
 
           // Clean URL
           window.history.replaceState({}, '', window.location.pathname);

@@ -177,7 +177,7 @@ function calculateNextRun(
       }
       break
 
-    case 'weekly':
+    case 'weekly': {
       // dayOfWeek: 0 = Sunday, 6 = Saturday
       const currentDay = now.getDay()
       const targetDay = dayOfWeek ?? 1 // Default Monday
@@ -187,8 +187,9 @@ function calculateNextRun(
       }
       nextRun.setDate(now.getDate() + daysUntil)
       break
+    }
 
-    case 'biweekly':
+    case 'biweekly': {
       const currentDayBi = now.getDay()
       const targetDayBi = dayOfWeek ?? 1
       let daysUntilBi = targetDayBi - currentDayBi
@@ -197,16 +198,18 @@ function calculateNextRun(
       }
       nextRun.setDate(now.getDate() + daysUntilBi)
       break
+    }
 
-    case 'monthly':
+    case 'monthly': {
       const targetDate = dayOfMonth ?? 1
       nextRun.setDate(targetDate)
       if (nextRun <= now) {
         nextRun.setMonth(nextRun.getMonth() + 1)
       }
       break
+    }
 
-    case 'quarterly':
+    case 'quarterly': {
       const currentMonth = now.getMonth()
       const quarterStart = Math.floor(currentMonth / 3) * 3
       const nextQuarterStart = quarterStart + 3
@@ -216,6 +219,7 @@ function calculateNextRun(
         nextRun.setMonth(nextRun.getMonth() + 3)
       }
       break
+    }
   }
 
   return nextRun
@@ -239,7 +243,7 @@ async function generateReportData(
   let rowCount = 0
 
   switch (dataSource) {
-    case 'daily_reports':
+    case 'daily_reports': {
       const { data: dailyReports } = await supabase
         .from('daily_reports')
         .select('*')
@@ -249,8 +253,9 @@ async function generateReportData(
       data = dailyReports || []
       rowCount = data.length
       break
+    }
 
-    case 'rfis':
+    case 'rfis': {
       const { data: rfis } = await supabase
         .from('rfis')
         .select('*')
@@ -260,8 +265,9 @@ async function generateReportData(
       data = rfis || []
       rowCount = data.length
       break
+    }
 
-    case 'submittals':
+    case 'submittals': {
       const { data: submittals } = await supabase
         .from('submittals')
         .select('*')
@@ -271,8 +277,9 @@ async function generateReportData(
       data = submittals || []
       rowCount = data.length
       break
+    }
 
-    case 'change_orders':
+    case 'change_orders': {
       const { data: cos } = await supabase
         .from('change_orders')
         .select('*')
@@ -282,8 +289,9 @@ async function generateReportData(
       data = cos || []
       rowCount = data.length
       break
+    }
 
-    case 'safety_incidents':
+    case 'safety_incidents': {
       const { data: incidents } = await supabase
         .from('safety_incidents')
         .select('*')
@@ -293,8 +301,9 @@ async function generateReportData(
       data = incidents || []
       rowCount = data.length
       break
+    }
 
-    case 'punch_list':
+    case 'punch_list': {
       const { data: punchItems } = await supabase
         .from('punch_list_items')
         .select('*')
@@ -304,6 +313,7 @@ async function generateReportData(
       data = punchItems || []
       rowCount = data.length
       break
+    }
 
     default:
       // Generic query

@@ -148,6 +148,8 @@ export function MaintenanceScheduleDialog({
   const createSchedule = useCreateMaintenanceSchedule()
   const updateSchedule = useUpdateMaintenanceSchedule()
 
+  const prevScheduleIdRef = useRef(schedule?.id)
+
   const form = useForm<ScheduleFormData>({
     resolver: zodResolver(scheduleFormSchema),
     defaultValues: {
@@ -168,50 +170,55 @@ export function MaintenanceScheduleDialog({
 
   // Reset form when schedule changes
   useEffect(() => {
-    if (schedule) {
-      const maintenanceType = MAINTENANCE_TYPES.find(
-        (t) => t.value === schedule.maintenance_type
-      )
-        ? schedule.maintenance_type
-        : 'custom'
+    const scheduleChanged = schedule?.id !== prevScheduleIdRef.current
+    prevScheduleIdRef.current = schedule?.id
 
-      let frequencyType: 'hours' | 'days' | 'both' = 'hours'
-      if (schedule.frequency_hours && schedule.frequency_days) {
-        frequencyType = 'both'
-      } else if (schedule.frequency_days) {
-        frequencyType = 'days'
+    if (scheduleChanged) {
+      if (schedule) {
+        const maintenanceType = MAINTENANCE_TYPES.find(
+          (t) => t.value === schedule.maintenance_type
+        )
+          ? schedule.maintenance_type
+          : 'custom'
+
+        let frequencyType: 'hours' | 'days' | 'both' = 'hours'
+        if (schedule.frequency_hours && schedule.frequency_days) {
+          frequencyType = 'both'
+        } else if (schedule.frequency_days) {
+          frequencyType = 'days'
+        }
+
+        form.reset({
+          maintenance_type: maintenanceType,
+          custom_type:
+            maintenanceType === 'custom' ? schedule.maintenance_type : '',
+          description: schedule.description || '',
+          frequency_type: frequencyType,
+          frequency_hours: schedule.frequency_hours,
+          frequency_days: schedule.frequency_days,
+          warning_threshold_hours: schedule.warning_threshold_hours,
+          warning_threshold_days: schedule.warning_threshold_days,
+          block_usage_when_overdue: schedule.block_usage_when_overdue,
+          service_provider: schedule.service_provider || '',
+          notify_on_due: schedule.notify_on_due,
+          notify_on_overdue: schedule.notify_on_overdue,
+        })
+      } else {
+        form.reset({
+          maintenance_type: '',
+          custom_type: '',
+          description: '',
+          frequency_type: 'hours',
+          frequency_hours: null,
+          frequency_days: null,
+          warning_threshold_hours: 50,
+          warning_threshold_days: 7,
+          block_usage_when_overdue: false,
+          service_provider: '',
+          notify_on_due: true,
+          notify_on_overdue: true,
+        })
       }
-
-      form.reset({
-        maintenance_type: maintenanceType,
-        custom_type:
-          maintenanceType === 'custom' ? schedule.maintenance_type : '',
-        description: schedule.description || '',
-        frequency_type: frequencyType,
-        frequency_hours: schedule.frequency_hours,
-        frequency_days: schedule.frequency_days,
-        warning_threshold_hours: schedule.warning_threshold_hours,
-        warning_threshold_days: schedule.warning_threshold_days,
-        block_usage_when_overdue: schedule.block_usage_when_overdue,
-        service_provider: schedule.service_provider || '',
-        notify_on_due: schedule.notify_on_due,
-        notify_on_overdue: schedule.notify_on_overdue,
-      })
-    } else {
-      form.reset({
-        maintenance_type: '',
-        custom_type: '',
-        description: '',
-        frequency_type: 'hours',
-        frequency_hours: null,
-        frequency_days: null,
-        warning_threshold_hours: 50,
-        warning_threshold_days: 7,
-        block_usage_when_overdue: false,
-        service_provider: '',
-        notify_on_due: true,
-        notify_on_overdue: true,
-      })
     }
   }, [schedule, form])
 

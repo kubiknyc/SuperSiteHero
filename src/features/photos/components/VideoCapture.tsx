@@ -158,14 +158,20 @@ export function VideoCapture({
   // Check if we should use native capture
   useEffect(() => {
     if (isNativePlatform && preferNativeCapture) {
-      setIsNativeCapture(true)
+      setTimeout(() => {
+        setIsNativeCapture(true)
+      }, 0)
     }
   }, [isNativePlatform, preferNativeCapture])
 
   // Attach preview stream to video element
   useEffect(() => {
     if (videoRef.current && previewStream) {
-      videoRef.current.srcObject = previewStream
+      setTimeout(() => {
+        if (videoRef.current) {
+          videoRef.current.srcObject = previewStream
+        }
+      }, 0)
     }
   }, [previewStream])
 
@@ -202,13 +208,17 @@ export function VideoCapture({
 
         await new Promise<void>((resolve) => {
           video.onloadedmetadata = () => {
-            setRecordedDuration(Math.round(video.duration))
+            setTimeout(() => {
+              setRecordedDuration(Math.round(video.duration))
+            }, 0)
             resolve()
           }
         })
 
-        setRecordedBlob(blob)
-        setRecordingComplete(true)
+        setTimeout(() => {
+          setRecordedBlob(blob)
+          setRecordingComplete(true)
+        }, 0)
       }
     } catch (err) {
       logger.error('Native video capture failed:', err)

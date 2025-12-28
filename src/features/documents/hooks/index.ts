@@ -60,6 +60,13 @@ export {
 // Enhanced markup state hook
 export { useEnhancedMarkupState, type Tool } from './useEnhancedMarkupState'
 
+// Markup collaboration hooks
+export {
+  useMarkupCollaboration,
+  useCollaboratorColor,
+  useDebouncedTransformBroadcast,
+} from './useMarkupCollaboration'
+
 // Bulk markup export hook
 export { useBulkMarkupExport, type BulkMarkupExportHook, type BulkMarkupExportState } from './useBulkMarkupExport'
 

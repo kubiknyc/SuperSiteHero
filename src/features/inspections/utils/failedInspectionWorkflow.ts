@@ -60,8 +60,8 @@ export async function createTaskFromInspection(
     }
 
     return data
-  } catch (error) {
-    logger.error('Error creating task from inspection:', error)
+  } catch (_error) {
+    logger.error('Error creating task from inspection:', _error)
     return null
   }
 }
@@ -97,8 +97,8 @@ export async function createPunchItemFromInspection(
     }
 
     return data
-  } catch (error) {
-    logger.error('Error creating punch item from inspection:', error)
+  } catch (_error) {
+    logger.error('Error creating punch item from inspection:', _error)
     return null
   }
 }

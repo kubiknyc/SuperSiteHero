@@ -8,7 +8,7 @@
  * - Search and filters
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import {
   Inbox,
@@ -112,9 +112,9 @@ export function EmailInbox({
   const markAsRead = useMarkThreadAsRead()
 
   // Auto-select first account
-  useMemo(() => {
+  useEffect(() => {
     if (!selectedAccountId && accounts && accounts.length > 0) {
-      setSelectedAccountId(accounts[0].id)
+      setTimeout(() => setSelectedAccountId(accounts[0].id), 0)
     }
   }, [accounts, selectedAccountId])
 

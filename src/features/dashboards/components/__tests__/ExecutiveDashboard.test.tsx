@@ -169,9 +169,12 @@ describe('ExecutiveDashboard', () => {
 
       // Should show up/down trends
       const trendElements = screen.getAllByText(/(up|down|increase|decrease)/i)
-      expect(trendElements.length).toBeGreaterThan(0) ||
-      // Or check for arrow icons
-      expect(document.querySelectorAll('svg').length).toBeGreaterThan(0)
+      if (trendElements.length === 0) {
+        // Or check for arrow icons
+        expect(document.querySelectorAll('svg').length).toBeGreaterThan(0)
+      } else {
+        expect(trendElements.length).toBeGreaterThan(0)
+      }
     })
   })
 
@@ -251,9 +254,12 @@ describe('ExecutiveDashboard', () => {
 
       // Should have clear headings and labels
       const labels = screen.getAllByText(/:/i)
-      expect(labels.length).toBeGreaterThan(0) ||
-      // Or use card-based layout
-      expect(document.querySelectorAll('[class*="card"]').length).toBeGreaterThan(0)
+      if (labels.length === 0) {
+        // Or use card-based layout
+        expect(document.querySelectorAll('[class*="card"]').length).toBeGreaterThan(0)
+      } else {
+        expect(labels.length).toBeGreaterThan(0)
+      }
     })
 
     it('should prioritize critical metrics', () => {

@@ -52,28 +52,30 @@ export function BudgetLineForm({
 
   // Initialize form with budget data
   useEffect(() => {
-    if (budget) {
-      setFormData({
-        cost_code_id: budget.cost_code_id,
-        original_budget: budget.original_budget.toString(),
-        approved_changes: budget.approved_changes.toString(),
-        committed_cost: budget.committed_cost.toString(),
-        actual_cost: budget.actual_cost.toString(),
-        estimated_cost_at_completion: budget.estimated_cost_at_completion?.toString() || '',
-        notes: budget.notes || '',
-      })
-    } else {
-      setFormData({
-        cost_code_id: '',
-        original_budget: '',
-        approved_changes: '0',
-        committed_cost: '0',
-        actual_cost: '0',
-        estimated_cost_at_completion: '',
-        notes: '',
-      })
-      setSelectedCostCode(null)
-    }
+    setTimeout(() => {
+      if (budget) {
+        setFormData({
+          cost_code_id: budget.cost_code_id,
+          original_budget: budget.original_budget.toString(),
+          approved_changes: budget.approved_changes.toString(),
+          committed_cost: budget.committed_cost.toString(),
+          actual_cost: budget.actual_cost.toString(),
+          estimated_cost_at_completion: budget.estimated_cost_at_completion?.toString() || '',
+          notes: budget.notes || '',
+        })
+      } else {
+        setFormData({
+          cost_code_id: '',
+          original_budget: '',
+          approved_changes: '0',
+          committed_cost: '0',
+          actual_cost: '0',
+          estimated_cost_at_completion: '',
+          notes: '',
+        })
+        setSelectedCostCode(null)
+      }
+    }, 0)
   }, [budget, open])
 
   const handleCostCodeChange = (costCodeId: string, costCode: CostCode) => {

@@ -206,7 +206,7 @@ export function useScheduleExport({ projectId, projectName, projectNumber }: Use
           errors: errorMessage ? [errorMessage] : null,
           imported_by: userProfile?.id,
         })
-      } catch (e) {
+      } catch (_e) {
         // Log failure shouldn't block the export
         logger.error('Failed to log export:', e)
       }

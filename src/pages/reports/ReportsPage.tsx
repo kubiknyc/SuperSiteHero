@@ -36,6 +36,12 @@ import {
   Loader2,
   AlertCircle,
   BarChart3,
+  CheckCircle2,
+  Clock,
+  Pause,
+  Play,
+  Settings,
+  Mail,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
@@ -53,11 +59,13 @@ import { ReportShareDialog } from '@/features/reports/components/ReportShareDial
 import { DataSourceBadge } from '@/features/reports/components/DataSourceSelector'
 import { format } from 'date-fns'
 import type { ReportTemplate, ReportDataSource } from '@/types/report-builder'
-import { DATA_SOURCE_CONFIG, getOutputFormatLabel, formatFileSize } from '@/types/report-builder'
+import { DATA_SOURCE_CONFIG, getOutputFormatLabel, formatFileSize, getScheduleFrequencyLabel } from '@/types/report-builder'
+import { Badge } from '@/components/ui/badge'
 
 export function ReportsPage() {
   const navigate = useNavigate()
   const { userProfile } = useAuth()
+  const [currentTime] = useState(() => Date.now())
   const companyId = userProfile?.company_id
 
   // State
@@ -187,7 +195,7 @@ export function ReportsPage() {
                 {generatedReports?.filter(
                   (r) =>
                     new Date(r.created_at) >
-                    new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+                    new Date(currentTime - 7 * 24 * 60 * 60 * 1000)
                 ).length || 0}
               </p>
               <p className="text-sm text-muted">Reports This Week</p>
@@ -320,28 +328,78 @@ export function ReportsPage() {
             ) : (
               <div className="space-y-3">
                 {scheduledReports?.map((schedule) => (
-                  <Card key={schedule.id}>
+                  <Card key={schedule.id} className="hover:shadow-sm transition-shadow">
                     <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-medium heading-subsection">{schedule.name}</h3>
-                          <p className="text-sm text-muted">
-                            {schedule.frequency} &bull; {schedule.recipients.length} recipients
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <span
-                            className={`text-sm ${
-                              schedule.is_active ? 'text-success' : 'text-disabled'
-                            }`}
-                          >
-                            {schedule.is_active ? 'Active' : 'Paused'}
-                          </span>
-                          {schedule.next_run_at && (
-                            <p className="text-xs text-muted">
-                              Next: {format(new Date(schedule.next_run_at), 'MMM d, h:mm a')}
-                            </p>
+                      <div className="flex items-start justify-between gap-4">
+                        {/* Left: Schedule Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="font-medium heading-subsection truncate">{schedule.name}</h3>
+                            <Badge variant={schedule.is_active ? 'default' : 'secondary'} className="shrink-0">
+                              {schedule.is_active ? (
+                                <>
+                                  <Play className="h-3 w-3 mr-1" />
+                                  Active
+                                </>
+                              ) : (
+                                <>
+                                  <Pause className="h-3 w-3 mr-1" />
+                                  Paused
+                                </>
+                              )}
+                            </Badge>
+                          </div>
+
+                          {/* Template & Frequency */}
+                          <div className="flex flex-wrap items-center gap-3 text-sm text-muted mb-2">
+                            {schedule.template && (
+                              <span className="flex items-center gap-1">
+                                <FileText className="h-3.5 w-3.5" />
+                                {schedule.template.name}
+                              </span>
+                            )}
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3.5 w-3.5" />
+                              {getScheduleFrequencyLabel(schedule.frequency)}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Mail className="h-3.5 w-3.5" />
+                              {schedule.recipients.length} recipient{schedule.recipients.length !== 1 ? 's' : ''}
+                            </span>
+                          </div>
+
+                          {/* Last Run Status */}
+                          {schedule.last_run_at && (
+                            <div className="flex items-center gap-2 text-xs">
+                              <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+                              <span className="text-success">Last run:</span>
+                              <span className="text-muted">
+                                {format(new Date(schedule.last_run_at), 'MMM d, yyyy h:mm a')}
+                              </span>
+                            </div>
                           )}
+                        </div>
+
+                        {/* Right: Next Run & Actions */}
+                        <div className="text-right shrink-0">
+                          {schedule.next_run_at && schedule.is_active && (
+                            <div className="mb-2">
+                              <p className="text-xs text-muted uppercase tracking-wide">Next Run</p>
+                              <p className="text-sm font-medium text-foreground">
+                                {format(new Date(schedule.next_run_at), 'MMM d')}
+                              </p>
+                              <p className="text-xs text-muted">
+                                {format(new Date(schedule.next_run_at), 'h:mm a')}
+                              </p>
+                            </div>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => navigate(`/reports/schedules/${schedule.id}`)}
+                          >
+                            <Settings className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
                     </CardContent>

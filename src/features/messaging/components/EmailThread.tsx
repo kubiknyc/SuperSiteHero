@@ -440,14 +440,34 @@ function AttachmentItem({ attachment }: { attachment: EmailAttachment }) {
   )
 }
 
+// Entity icon component that renders the appropriate icon based on entity type
+interface EntityIconProps {
+  entityType: string
+  className?: string
+}
+
+function EntityIcon({ entityType, className }: EntityIconProps) {
+  switch (entityType) {
+    case 'project':
+      return <Building className={className} />
+    case 'rfi':
+      return <HelpCircle className={className} />
+    case 'submittal':
+      return <FileCheck className={className} />
+    case 'change_order':
+      return <FileEdit className={className} />
+    default:
+      return <Link2 className={className} />
+  }
+}
+
 // Entity link badge component
 function EntityLinkBadge({ link }: { link: EmailEntityLink }) {
   const config = LINKABLE_ENTITY_CONFIG[link.entity_type]
-  const IconComponent = getEntityIcon(link.entity_type)
 
   return (
     <Badge variant="secondary" className="flex items-center gap-1">
-      <IconComponent className="h-3 w-3" />
+      <EntityIcon entityType={link.entity_type} className="h-3 w-3" />
       <span>{config.label}</span>
       {link.entity?.name && <span>: {link.entity.name}</span>}
       {link.link_type === 'ai_suggested' && (
@@ -455,22 +475,6 @@ function EntityLinkBadge({ link }: { link: EmailEntityLink }) {
       )}
     </Badge>
   )
-}
-
-// Helper to get icon for entity type
-function getEntityIcon(entityType: string) {
-  switch (entityType) {
-    case 'project':
-      return Building
-    case 'rfi':
-      return HelpCircle
-    case 'submittal':
-      return FileCheck
-    case 'change_order':
-      return FileEdit
-    default:
-      return Link2
-  }
 }
 
 export default EmailThreadView

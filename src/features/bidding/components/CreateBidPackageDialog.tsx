@@ -133,9 +133,9 @@ export function CreateBidPackageDialog({
       onOpenChange(false)
       form.reset()
       setStep(1)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to create bid package')
-      logger.error(error)
+      logger.error(_error)
     }
   }
 

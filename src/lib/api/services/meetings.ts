@@ -85,13 +85,65 @@ export const meetingsApi = {
       .select(`
         *,
         project:projects(id, name, project_number),
-        created_by_user:users!meetings_created_by_fkey(id, full_name, email)
+        created_by_user:users!meetings_created_by_fkey(id, full_name, email),
+        previous_meeting:meetings!meetings_previous_meeting_id_fkey(id, title, meeting_date, meeting_type)
       `)
       .eq('id', id)
       .single()
 
     if (error) {throw error}
     return data as Meeting
+  },
+
+  /**
+   * Get the next meeting that references this meeting as its previous meeting
+   */
+  async getNextMeeting(id: string): Promise<Meeting | null> {
+    const { data, error } = await supabase
+      .from('meetings')
+      .select(`
+        id, title, meeting_date, meeting_type,
+        project:projects(id, name)
+      `)
+      .eq('previous_meeting_id', id)
+      .is('deleted_at', null)
+      .single()
+
+    if (error && error.code !== 'PGRST116') {throw error} // PGRST116 = no rows
+    return data as Meeting | null
+  },
+
+  /**
+   * Get available previous meetings for linking (same project, completed/finished, before a date)
+   */
+  async getAvailablePreviousMeetings(
+    projectId: string,
+    meetingType?: string,
+    beforeDate?: string
+  ): Promise<Meeting[]> {
+    let query = supabase
+      .from('meetings')
+      .select(`
+        id, title, meeting_date, meeting_type, status
+      `)
+      .eq('project_id', projectId)
+      .is('deleted_at', null)
+      .in('status', ['completed', 'minutes_distributed', 'cancelled'])
+      .order('meeting_date', { ascending: false })
+      .limit(20)
+
+    if (meetingType) {
+      query = query.eq('meeting_type', meetingType)
+    }
+
+    if (beforeDate) {
+      query = query.lt('meeting_date', beforeDate)
+    }
+
+    const { data, error } = await query
+
+    if (error) {throw error}
+    return (data || []) as Meeting[]
   },
 
   /**
@@ -186,6 +238,135 @@ export const meetingsApi = {
     return this.updateMeeting(id, {
       minutes_published: true,
     })
+  },
+
+  /**
+   * Distribute meeting minutes to all attendees
+   */
+  async distributeMinutes(id: string): Promise<{
+    success: boolean
+    recipientCount: number
+    distributedAt: string
+  }> {
+    const { data: user } = await supabase.auth.getUser()
+    if (!user?.user?.id) {
+      throw new Error('Not authenticated')
+    }
+
+    // Get meeting with all details
+    const meeting = await this.getMeetingWithDetails(id)
+
+    // Get attendees with email addresses
+    const attendees = meeting.attendeesList?.filter(a => a.email) || []
+    if (attendees.length === 0) {
+      throw new Error('No attendees with email addresses to distribute to')
+    }
+
+    // Get project details for the email
+    const { data: project, error: projectError } = await supabase
+      .from('projects')
+      .select('id, name, project_number')
+      .eq('id', meeting.project_id)
+      .single()
+
+    if (projectError) {throw projectError}
+
+    // Get the distributing user's name
+    const { data: distributingUser, error: userError } = await supabase
+      .from('users')
+      .select('full_name, email')
+      .eq('id', user.user.id)
+      .single()
+
+    if (userError) {throw userError}
+
+    // Prepare distribution data for each attendee
+    const distributionPromises = attendees.map(async (attendee) => {
+      // Get action items assigned to this attendee
+      const assigneeActionItems = meeting.actionItems?.filter(
+        ai => ai.assignee_id === attendee.user_id ||
+              ai.assignee_name?.toLowerCase() === attendee.name?.toLowerCase()
+      ) || []
+
+      // Call the send-email edge function
+      const { error } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: attendee.email,
+          template: 'meeting-minutes',
+          data: {
+            recipientName: attendee.name || attendee.email?.split('@')[0],
+            meetingTitle: meeting.title,
+            meetingType: meeting.meeting_type,
+            meetingDate: meeting.meeting_date,
+            meetingTime: meeting.start_time,
+            projectName: project.name,
+            location: meeting.location,
+            attendees: meeting.attendeesList?.map(a => ({
+              name: a.name,
+              company: a.company,
+              role: a.role,
+              attended: a.attended || a.attendance_status === 'attended',
+            })) || [],
+            absentees: meeting.attendeesList?.filter(a =>
+              a.attendance_status === 'absent' || a.attended === false
+            ).map(a => ({
+              name: a.name,
+              company: a.company,
+            })) || [],
+            minutesText: meeting.minutes_text || '',
+            actionItems: meeting.actionItems?.map(ai => ({
+              description: ai.description,
+              assignee: ai.assignee?.full_name || ai.assignee_name || 'Unassigned',
+              dueDate: ai.due_date,
+              priority: ai.priority || 'normal',
+              status: ai.status,
+            })) || [],
+            notes: meeting.notes?.map(n => ({
+              sectionTitle: n.section_title,
+              content: n.content,
+            })) || [],
+            distributedBy: distributingUser.full_name || distributingUser.email,
+            viewUrl: `${import.meta.env.VITE_APP_URL || ''}/meetings/${id}`,
+          },
+        },
+      })
+
+      if (error) {
+        console.error(`Failed to send minutes to ${attendee.email}:`, error)
+        return false
+      }
+
+      // Create in-app notification
+      await supabase.from('notifications').insert({
+        user_id: attendee.user_id,
+        type: 'meeting_minutes_distributed',
+        title: 'Meeting Minutes Distributed',
+        message: `Minutes from "${meeting.title}" have been distributed`,
+        data: {
+          meeting_id: id,
+          project_id: meeting.project_id,
+          action_item_count: assigneeActionItems.length,
+        },
+        read: false,
+      })
+
+      return true
+    })
+
+    await Promise.all(distributionPromises)
+
+    // Update meeting with distribution timestamp and status
+    const distributedAt = new Date().toISOString()
+    await this.updateMeeting(id, {
+      minutes_distributed_at: distributedAt,
+      status: 'minutes_distributed',
+    })
+
+    return {
+      success: true,
+      recipientCount: attendees.length,
+      distributedAt,
+    }
   },
 
   /**

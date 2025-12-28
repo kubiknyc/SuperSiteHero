@@ -8,6 +8,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import {
   useMeeting,
+  useMeetings,
   useCreateMeeting,
   useUpdateMeeting,
   MEETING_TYPES,
@@ -34,6 +35,8 @@ import {
   Users,
   ListChecks,
   Calendar,
+  Link2,
+  Copy,
 } from 'lucide-react'
 import { logger } from '../../lib/utils/logger';
 
@@ -53,6 +56,7 @@ interface FormData {
   decisions: string
   attendees: MeetingAttendee[]
   action_items: MeetingActionItem[]
+  previous_meeting_id: string
 }
 
 const initialFormData: FormData = {
@@ -70,6 +74,7 @@ const initialFormData: FormData = {
   decisions: '',
   attendees: [],
   action_items: [],
+  previous_meeting_id: '',
 }
 
 export function MeetingFormPage() {
@@ -86,6 +91,14 @@ export function MeetingFormPage() {
   const [formData, setFormData] = useState<FormData>(initialFormData)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isSaving, setIsSaving] = useState(false)
+  const [showCarryover, setShowCarryover] = useState(false)
+  const [carryoverItems, setCarryoverItems] = useState<string[]>([])
+
+  // Get previous meetings for linking (only for selected project)
+  const { data: previousMeetings } = useMeetings(formData.project_id || undefined)
+
+  // Get details of the selected previous meeting for action item carryover
+  const { data: previousMeetingDetails } = useMeeting(formData.previous_meeting_id || undefined)
 
   // Load existing meeting data
   useEffect(() => {
@@ -103,6 +116,7 @@ export function MeetingFormPage() {
         decisions: existingMeeting.decisions || '',
         attendees: (existingMeeting.attendees as MeetingAttendee[]) || [],
         action_items: (existingMeeting.action_items as MeetingActionItem[]) || [],
+        previous_meeting_id: existingMeeting.previous_meeting_id || '',
       })
     }
   }, [existingMeeting])
@@ -207,6 +221,43 @@ export function MeetingFormPage() {
     }))
   }
 
+  // Get uncompleted action items from previous meeting for carryover
+  const uncompletedPreviousItems = previousMeetingDetails?.action_items?.filter(
+    (item: MeetingActionItem) => item.status !== 'completed' && item.status !== 'cancelled'
+  ) || []
+
+  // Handle carryover toggle
+  const toggleCarryoverItem = (itemId: string) => {
+    setCarryoverItems(prev =>
+      prev.includes(itemId) ? prev.filter(id => id !== itemId) : [...prev, itemId]
+    )
+  }
+
+  // Carry over selected action items from previous meeting
+  const handleCarryoverItems = () => {
+    if (!previousMeetingDetails?.action_items) {return}
+
+    const itemsToCarry = previousMeetingDetails.action_items.filter(
+      (item: MeetingActionItem) => carryoverItems.includes(item.id)
+    )
+
+    const newItems = itemsToCarry.map((item: MeetingActionItem) => ({
+      ...item,
+      id: crypto.randomUUID(),
+      created_at: new Date().toISOString(),
+      status: 'open' as const,
+      carryover_from_meeting_id: formData.previous_meeting_id,
+    }))
+
+    setFormData(prev => ({
+      ...prev,
+      action_items: [...prev.action_items, ...newItems],
+    }))
+
+    setShowCarryover(false)
+    setCarryoverItems([])
+  }
+
   // Validate form
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
@@ -246,6 +297,7 @@ export function MeetingFormPage() {
         decisions: formData.decisions || null,
         attendees: formData.attendees.length > 0 ? (formData.attendees as unknown as Json) : null,
         action_items: formData.action_items.length > 0 ? (formData.action_items as unknown as Json) : null,
+        previous_meeting_id: formData.previous_meeting_id || null,
         created_by: user?.id,
       }
 
@@ -446,6 +498,119 @@ export function MeetingFormPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Previous Meeting Link */}
+            {!isEditing && formData.project_id && previousMeetings && previousMeetings.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Link2 className="h-5 w-5" />
+                    Link to Previous Meeting
+                  </CardTitle>
+                  <CardDescription>
+                    Link this meeting to a previous meeting and carry over open action items
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label htmlFor="previous_meeting_id">Previous Meeting</Label>
+                    <Select
+                      id="previous_meeting_id"
+                      name="previous_meeting_id"
+                      value={formData.previous_meeting_id}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select previous meeting (optional)...</option>
+                      {previousMeetings
+                        .filter(m => m.id !== id) // Exclude current meeting if editing
+                        .sort((a, b) => new Date(b.meeting_date).getTime() - new Date(a.meeting_date).getTime())
+                        .map((meeting) => (
+                          <option key={meeting.id} value={meeting.id}>
+                            {meeting.meeting_date} - {meeting.meeting_name || MEETING_TYPES.find(t => t.value === meeting.meeting_type)?.label || meeting.meeting_type}
+                          </option>
+                        ))}
+                    </Select>
+                  </div>
+
+                  {/* Action Item Carryover */}
+                  {formData.previous_meeting_id && uncompletedPreviousItems.length > 0 && (
+                    <div className="border rounded-lg p-4 bg-muted/30">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <Copy className="h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium">Open Action Items</span>
+                          <span className="text-sm text-muted-foreground">
+                            ({uncompletedPreviousItems.length} items)
+                          </span>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowCarryover(!showCarryover)}
+                        >
+                          {showCarryover ? 'Hide' : 'Carry Over'}
+                        </Button>
+                      </div>
+
+                      {showCarryover && (
+                        <div className="space-y-2">
+                          <p className="text-sm text-muted-foreground mb-2">
+                            Select action items to carry over to this meeting:
+                          </p>
+                          {uncompletedPreviousItems.map((item: MeetingActionItem) => (
+                            <label
+                              key={item.id}
+                              className="flex items-start gap-2 p-2 rounded border bg-background cursor-pointer hover:bg-muted/50"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={carryoverItems.includes(item.id)}
+                                onChange={() => toggleCarryoverItem(item.id)}
+                                className="mt-1 rounded"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium">{item.description}</p>
+                                <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                                  {item.assignee && <span>Assigned: {item.assignee}</span>}
+                                  {item.dueDate && <span>Due: {item.dueDate}</span>}
+                                  {item.priority && (
+                                    <span className={`px-1.5 py-0.5 rounded ${
+                                      item.priority === 'high' ? 'bg-red-100 text-red-800' :
+                                      item.priority === 'low' ? 'bg-green-100 text-green-800' :
+                                      'bg-yellow-100 text-yellow-800'
+                                    }`}>
+                                      {item.priority}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </label>
+                          ))}
+                          {carryoverItems.length > 0 && (
+                            <Button
+                              type="button"
+                              size="sm"
+                              onClick={handleCarryoverItems}
+                              className="mt-2"
+                            >
+                              <Plus className="h-4 w-4 mr-1" />
+                              Add {carryoverItems.length} Item{carryoverItems.length !== 1 ? 's' : ''} to This Meeting
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {formData.previous_meeting_id && uncompletedPreviousItems.length === 0 && (
+                    <p className="text-sm text-muted-foreground italic">
+                      No open action items to carry over from the selected meeting.
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            )}
 
             {/* Agenda & Minutes */}
             <Card>

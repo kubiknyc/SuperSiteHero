@@ -78,8 +78,8 @@ export function MFABackupCodes() {
     try {
       const codeStatus = await getBackupCodeStatus()
       setStatus(codeStatus)
-    } catch (error) {
-      logger.error('[MFABackupCodes] Failed to load status:', error)
+    } catch (_error) {
+      logger.error('[MFABackupCodes] Failed to load status:', _error)
     } finally {
       setIsLoading(false)
     }
@@ -100,8 +100,8 @@ export function MFABackupCodes() {
         title: 'Backup codes generated',
         description: 'Save these codes in a secure location. They will only be shown once.',
       })
-    } catch (error) {
-      logger.error('[MFABackupCodes] Failed to generate codes:', error)
+    } catch (_error) {
+      logger.error('[MFABackupCodes] Failed to generate codes:', _error)
       toast({
         title: 'Failed to generate codes',
         description: 'Please try again later.',

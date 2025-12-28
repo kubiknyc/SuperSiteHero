@@ -30,6 +30,7 @@ export function PhotoGallery({
 }: PhotoGalleryProps) {
   const [previewPhoto, setPreviewPhoto] = useState<string | null>(null)
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null)
+  const [downloadTimestamp] = useState(() => Date.now())
 
   const handleDelete = (url: string, index: number) => {
     // Prevent deletion if it would go below minimum
@@ -163,7 +164,7 @@ export function PhotoGallery({
             {previewPhoto && (
               <a
                 href={previewPhoto}
-                download={`photo-${Date.now()}.jpg`}
+                download={`photo-${downloadTimestamp}.jpg`}
                 target="_blank"
                 rel="noopener noreferrer"
               >

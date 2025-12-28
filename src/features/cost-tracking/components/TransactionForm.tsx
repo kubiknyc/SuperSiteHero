@@ -72,35 +72,37 @@ export function TransactionForm({
 
   // Initialize form with transaction data
   useEffect(() => {
-    if (transaction) {
-      setFormData({
-        cost_code_id: transaction.cost_code_id,
-        transaction_date: transaction.transaction_date,
-        description: transaction.description,
-        transaction_type: transaction.transaction_type,
-        source_type: transaction.source_type || '',
-        amount: transaction.amount.toString(),
-        vendor_name: transaction.vendor_name || '',
-        subcontractor_id: transaction.subcontractor_id || '',
-        invoice_number: transaction.invoice_number || '',
-        po_number: transaction.po_number || '',
-        notes: transaction.notes || '',
-      })
-    } else {
-      setFormData({
-        cost_code_id: '',
-        transaction_date: format(new Date(), 'yyyy-MM-dd'),
-        description: '',
-        transaction_type: 'actual',
-        source_type: '',
-        amount: '',
-        vendor_name: '',
-        subcontractor_id: '',
-        invoice_number: '',
-        po_number: '',
-        notes: '',
-      })
-    }
+    setTimeout(() => {
+      if (transaction) {
+        setFormData({
+          cost_code_id: transaction.cost_code_id,
+          transaction_date: transaction.transaction_date,
+          description: transaction.description,
+          transaction_type: transaction.transaction_type,
+          source_type: transaction.source_type || '',
+          amount: transaction.amount.toString(),
+          vendor_name: transaction.vendor_name || '',
+          subcontractor_id: transaction.subcontractor_id || '',
+          invoice_number: transaction.invoice_number || '',
+          po_number: transaction.po_number || '',
+          notes: transaction.notes || '',
+        })
+      } else {
+        setFormData({
+          cost_code_id: '',
+          transaction_date: format(new Date(), 'yyyy-MM-dd'),
+          description: '',
+          transaction_type: 'actual',
+          source_type: '',
+          amount: '',
+          vendor_name: '',
+          subcontractor_id: '',
+          invoice_number: '',
+          po_number: '',
+          notes: '',
+        })
+      }
+    }, 0);
   }, [transaction, open])
 
   const handleCostCodeChange = (costCodeId: string, costCode: CostCode) => {

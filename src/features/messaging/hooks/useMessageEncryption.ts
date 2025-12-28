@@ -64,7 +64,9 @@ export function useMessageEncryption(
     if (conversationId && isSupported) {
       const stored = localStorage.getItem(`ssh-encryption-${conversationId}`)
       if (stored === 'true') {
-        setIsEnabled(true)
+        setTimeout(() => {
+          setIsEnabled(true)
+        }, 0)
       }
     }
   }, [conversationId, isSupported])
@@ -227,13 +229,17 @@ export function useEncryptionKeys(conversationId: string | undefined) {
   // Check if keys exist for conversation
   useEffect(() => {
     if (!conversationId || !isEncryptionSupported()) {
-      setHasKeys(false)
+      setTimeout(() => {
+        setHasKeys(false)
+      }, 0)
       return
     }
 
     // Check localStorage for encryption preference as proxy for key existence
     const stored = localStorage.getItem(`ssh-encryption-${conversationId}`)
-    setHasKeys(stored === 'true')
+    setTimeout(() => {
+      setHasKeys(stored === 'true')
+    }, 0)
   }, [conversationId])
 
   // Clear keys for conversation

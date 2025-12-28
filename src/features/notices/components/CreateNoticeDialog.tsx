@@ -97,7 +97,7 @@ export function CreateNoticeDialog({
       resetForm()
       setOpen(false)
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       logger.error('Failed to create notice:', error)
     }
   }

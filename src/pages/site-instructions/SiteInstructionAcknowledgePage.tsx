@@ -2,6 +2,7 @@
 // Mobile-optimized page for acknowledging site instructions via QR code
 // Milestone 1.2: Site Instructions QR Code Workflow
 
+import { useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -14,6 +15,7 @@ import { format, parseISO, isPast } from 'date-fns'
 export function SiteInstructionAcknowledgePage() {
   const { token } = useParams<{ token: string }>()
   const { user, isLoading: authLoading } = useAuth()
+  const [currentTime] = useState(() => Date.now())
 
   const {
     data: instruction,
@@ -21,6 +23,14 @@ export function SiteInstructionAcknowledgePage() {
     error,
     isError,
   } = useInstructionByQRToken(token || '')
+
+  // Check if QR code is about to expire (within 24 hours)
+  const expiresAt = instruction?.qr_code_expires_at
+    ? parseISO(instruction.qr_code_expires_at)
+    : null
+  const isExpiringSoon = useMemo(() => {
+    return expiresAt && !isPast(expiresAt) && expiresAt.getTime() - currentTime < 24 * 60 * 60 * 1000
+  }, [expiresAt, currentTime])
 
   // Determine if user is anonymous (via QR code without login)
   const isAnonymous = !authLoading && !user
@@ -89,13 +99,6 @@ export function SiteInstructionAcknowledgePage() {
       </div>
     )
   }
-
-  // Check if QR code is about to expire (within 24 hours)
-  const expiresAt = instruction.qr_code_expires_at
-    ? parseISO(instruction.qr_code_expires_at)
-    : null
-  const isExpiringSoon =
-    expiresAt && !isPast(expiresAt) && expiresAt.getTime() - Date.now() < 24 * 60 * 60 * 1000
 
   const handleSuccess = () => {
     // Could navigate to a success page or just show success state in form

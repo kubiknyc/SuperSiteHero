@@ -114,6 +114,8 @@ const DistributionListsPage = lazy(() => import('./pages/settings/DistributionLi
 const RolesPermissionsPage = lazy(() => import('./pages/settings/RolesPermissionsPage').then(m => ({ default: m.RolesPermissionsPage })))
 const AISettingsPage = lazy(() => import('./pages/settings/AISettingsPage'))
 const CostCodesPage = lazy(() => import('./pages/settings/CostCodesPage').then(m => ({ default: m.CostCodesPage })))
+const DocuSignIntegrationPage = lazy(() => import('./pages/settings/DocuSignIntegrationPage').then(m => ({ default: m.DocuSignIntegrationPage })))
+const DocuSignCallbackPage = lazy(() => import('./pages/auth/DocuSignCallbackPage').then(m => ({ default: m.DocuSignCallbackPage })))
 
 // Schedule / Gantt Charts feature
 const GanttChartPage = lazy(() => import('./pages/schedule/GanttChartPage').then(m => ({ default: m.GanttChartPage })))
@@ -127,6 +129,19 @@ const IncidentsListPage = lazy(() => import('./features/safety/pages/IncidentsLi
 const IncidentDetailPage = lazy(() => import('./features/safety/pages/IncidentDetailPage').then(m => ({ default: m.IncidentDetailPage })))
 const CreateIncidentPage = lazy(() => import('./features/safety/pages/CreateIncidentPage').then(m => ({ default: m.CreateIncidentPage })))
 const OSHA300LogPage = lazy(() => import('./features/safety/pages/OSHA300LogPage').then(m => ({ default: m.OSHA300LogPage })))
+
+// Quality Control feature
+const QualityControlPage = lazy(() => import('./pages/quality-control/QualityControlPage').then(m => ({ default: m.QualityControlPage })))
+const NCRDetailPage = lazy(() => import('./pages/quality-control/NCRDetailPage').then(m => ({ default: m.NCRDetailPage })))
+const QCInspectionDetailPage = lazy(() => import('./pages/quality-control/QCInspectionDetailPage').then(m => ({ default: m.QCInspectionDetailPage })))
+
+// Photo Progress feature
+const PhotoProgressPage = lazy(() => import('./pages/photo-progress/PhotoProgressPage').then(m => ({ default: m.PhotoProgressPage })))
+const PhotoLocationFormPage = lazy(() => import('./pages/photo-progress/PhotoLocationFormPage').then(m => ({ default: m.PhotoLocationFormPage })))
+const PhotoLocationDetailPage = lazy(() => import('./pages/photo-progress/PhotoLocationDetailPage').then(m => ({ default: m.PhotoLocationDetailPage })))
+const PhotoUploadPage = lazy(() => import('./pages/photo-progress/PhotoUploadPage').then(m => ({ default: m.PhotoUploadPage })))
+const PhotoComparisonFormPage = lazy(() => import('./pages/photo-progress/PhotoComparisonFormPage').then(m => ({ default: m.PhotoComparisonFormPage })))
+const PhotoReportFormPage = lazy(() => import('./pages/photo-progress/PhotoReportFormPage').then(m => ({ default: m.PhotoReportFormPage })))
 
 // Inspections feature
 const InspectionsPage = lazy(() => import('./pages/inspections/InspectionsPage').then(m => ({ default: m.InspectionsPage })))
@@ -270,6 +285,7 @@ const FieldDashboardPage = lazy(() => import('./pages/field-dashboard/FieldDashb
 
 // Public Pages (no authentication required)
 const PublicApprovalPage = lazy(() => import('./pages/public/PublicApprovalPage').then(m => ({ default: m.PublicApprovalPage })))
+const PublicComparisonPage = lazy(() => import('./pages/photo-progress/PublicComparisonPage').then(m => ({ default: m.PublicComparisonPage })))
 
 // Error Pages - Branded 404 and 500 pages
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
@@ -344,8 +360,8 @@ function App() {
         logger.log('[App] Initializing background sync manager...')
         cleanupSync = initSyncManager()
         logger.log('[App] Background sync manager initialized')
-      } catch (error) {
-        logger.error('[App] Failed to initialize offline database:', error)
+      } catch (_error) {
+        logger.error('[App] Failed to initialize offline database:', _error)
         // Don't block app startup on IndexedDB failure
       }
     }
@@ -393,6 +409,8 @@ function App() {
                 <Route path="/invite/:token" element={<AcceptInvitationPage />} />
                 {/* Public approval page - No auth required */}
                 <Route path="/approve/:token" element={<PublicApprovalPage />} />
+                {/* Public photo comparison - No auth required */}
+                <Route path="/share/comparison/:token" element={<PublicComparisonPage />} />
 
                 {/* Protected routes - lazy loaded for code splitting */}
                 <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
@@ -487,6 +505,8 @@ function App() {
                 <Route path="/settings/calendar" element={<ProtectedRoute><CalendarIntegrationsPage /></ProtectedRoute>} />
                 <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
                 <Route path="/settings/cost-codes" element={<ProtectedRoute><CostCodesPage /></ProtectedRoute>} />
+                <Route path="/settings/docusign" element={<ProtectedRoute><DocuSignIntegrationPage /></ProtectedRoute>} />
+                <Route path="/auth/docusign/callback" element={<DocuSignCallbackPage />} />
 
                 {/* Schedule / Gantt Charts feature */}
                 <Route path="/projects/:projectId/schedule" element={<ProtectedRoute><MasterSchedulePage /></ProtectedRoute>} />
@@ -501,6 +521,24 @@ function App() {
                 <Route path="/safety/new" element={<ProtectedRoute><CreateIncidentPage /></ProtectedRoute>} />
                 <Route path="/safety/:id" element={<ProtectedRoute><IncidentDetailPage /></ProtectedRoute>} />
                 <Route path="/safety/osha-300" element={<ProtectedRoute><OSHA300LogPage /></ProtectedRoute>} />
+
+                {/* Quality Control feature */}
+                <Route path="/quality-control" element={<ProtectedRoute><QualityControlPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/quality-control" element={<ProtectedRoute><QualityControlPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/quality-control/ncr/:ncrId" element={<ProtectedRoute><NCRDetailPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/quality-control/inspection/:inspectionId" element={<ProtectedRoute><QCInspectionDetailPage /></ProtectedRoute>} />
+
+                {/* Photo Progress feature */}
+                <Route path="/photo-progress" element={<ProtectedRoute><PhotoProgressPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress" element={<ProtectedRoute><PhotoProgressPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/location/new" element={<ProtectedRoute><PhotoLocationFormPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/location/:locationId" element={<ProtectedRoute><PhotoLocationDetailPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/location/:locationId/edit" element={<ProtectedRoute><PhotoLocationFormPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/upload" element={<ProtectedRoute><PhotoUploadPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/comparison/new" element={<ProtectedRoute><PhotoComparisonFormPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/comparison/:comparisonId/edit" element={<ProtectedRoute><PhotoComparisonFormPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/report/new" element={<ProtectedRoute><PhotoReportFormPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/photo-progress/report/:reportId/edit" element={<ProtectedRoute><PhotoReportFormPage /></ProtectedRoute>} />
 
                 {/* Inspections feature */}
                 <Route path="/inspections" element={<ProtectedRoute><InspectionsPage /></ProtectedRoute>} />

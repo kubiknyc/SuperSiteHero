@@ -83,7 +83,7 @@ export function ConflictResolutionDialog({
         case 'server':
           resolvedData = conflict.serverData
           break
-        case 'merge':
+        case 'merge': {
           // Apply manual field selections using ConflictResolver
           const selections: FieldSelection[] = Object.entries(fieldSelections).map(
             ([field, source]) => ({
@@ -98,12 +98,13 @@ export function ConflictResolutionDialog({
           )
           logger.info('[ConflictResolution] Manual merge applied with selections:', selections)
           break
+        }
       }
 
       resolveConflict(conflict.id, resolvedData)
       onOpenChange(false)
-    } catch (error) {
-      logger.error('[ConflictResolution] Failed to resolve conflict:', error)
+    } catch (_error) {
+      logger.error('[ConflictResolution] Failed to resolve conflict:', _error)
     } finally {
       setResolving(false)
     }

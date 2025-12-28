@@ -46,7 +46,7 @@ export function CreateProjectDialogValidated({
   })
 
   // Validation hook
-  const { errors, validate, getFieldError, clearFieldError } = useFormValidation(
+  const { validate, getFieldError, clearFieldError } = useFormValidation(
     projectCreateSchema
   )
 
@@ -94,7 +94,7 @@ export function CreateProjectDialogValidated({
         start_date: validation.data.start_date,
         end_date: validation.data.end_date,
         status: validation.data.status,
-        weather_units: 'imperial',
+        weather_units: 'imperial' as const,
         features_enabled: {
           daily_reports: true,
           documents: true,
@@ -108,7 +108,7 @@ export function CreateProjectDialogValidated({
           photos: true,
           takeoff: true,
         },
-      } as any)
+      })
 
       // Reset form on success
       setFormData({

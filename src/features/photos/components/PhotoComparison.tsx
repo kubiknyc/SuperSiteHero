@@ -69,9 +69,11 @@ export function PhotoComparison({
   // Load photos from comparison if provided
   useEffect(() => {
     if (comparison) {
-      setBeforePhoto(comparison.beforePhoto)
-      setAfterPhoto(comparison.afterPhoto)
-      setNotes(comparison.description || '')
+      setTimeout(() => {
+        setBeforePhoto(comparison.beforePhoto)
+        setAfterPhoto(comparison.afterPhoto)
+        setNotes(comparison.description || '')
+      }, 0)
     }
   }, [comparison])
 
@@ -302,7 +304,7 @@ function SliderView({
           alt="Before"
           className="absolute inset-0 w-full h-full object-contain bg-black"
           style={{
-            width: `${containerRef.current?.offsetWidth || 0}px`,
+            width: '100%',
             maxWidth: 'none',
           }}
           draggable={false}

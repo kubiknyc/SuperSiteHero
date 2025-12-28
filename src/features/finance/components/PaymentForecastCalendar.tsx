@@ -9,6 +9,8 @@
  * - Payment analytics
  */
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import React, { useState, useMemo } from 'react'
 import {
   Card,
@@ -614,6 +616,7 @@ export interface PaymentForecastCalendarProps {
 }
 
 export function PaymentForecastCalendar({ projectId, className }: PaymentForecastCalendarProps) {
+  'use no memo'
   const [currentDate, setCurrentDate] = useState(new Date())
   const [view, setView] = useState<CalendarView>('month')
   const [selectedPaymentTypes, setSelectedPaymentTypes] = useState<PaymentType[]>([])

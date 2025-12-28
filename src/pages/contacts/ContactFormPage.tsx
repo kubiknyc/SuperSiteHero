@@ -47,26 +47,29 @@ export function ContactFormPage() {
   // Load contact data in edit mode
   useEffect(() => {
     if (contact) {
-      setFormData({
-        project_id: contact.project_id || '',
-        contact_type: contact.contact_type,
-        first_name: contact.first_name || '',
-        last_name: contact.last_name || '',
-        company_name: contact.company_name || '',
-        title: contact.title || '',
-        trade: contact.trade || '',
-        email: contact.email || '',
-        phone_mobile: contact.phone_mobile || '',
-        phone_office: contact.phone_office || '',
-        phone_fax: contact.phone_fax || '',
-        address: contact.address || '',
-        city: contact.city || '',
-        state: contact.state || '',
-        zip: contact.zip || '',
-        notes: contact.notes || '',
-        is_primary: contact.is_primary || false,
-        is_emergency_contact: contact.is_emergency_contact || false,
-      })
+      // Use setTimeout to avoid calling setState synchronously within effect
+      setTimeout(() => {
+        setFormData({
+          project_id: contact.project_id || '',
+          contact_type: contact.contact_type,
+          first_name: contact.first_name || '',
+          last_name: contact.last_name || '',
+          company_name: contact.company_name || '',
+          title: contact.title || '',
+          trade: contact.trade || '',
+          email: contact.email || '',
+          phone_mobile: contact.phone_mobile || '',
+          phone_office: contact.phone_office || '',
+          phone_fax: contact.phone_fax || '',
+          address: contact.address || '',
+          city: contact.city || '',
+          state: contact.state || '',
+          zip: contact.zip || '',
+          notes: contact.notes || '',
+          is_primary: contact.is_primary || false,
+          is_emergency_contact: contact.is_emergency_contact || false,
+        })
+      }, 0)
     }
   }, [contact])
 

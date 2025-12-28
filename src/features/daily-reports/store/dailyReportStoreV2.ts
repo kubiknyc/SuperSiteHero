@@ -867,7 +867,7 @@ export const useDailyReportStoreV2 = create<DailyReportStoreV2>()(
                   (item) => item.reportId !== state.conflict?.reportId
                 ),
               };
-            case 'merge':
+            case 'merge': {
               const merged = { ...state.conflict.serverData } as DraftReportV2;
               if (state.draftReport) {
                 Object.keys(state.draftReport).forEach((key) => {
@@ -882,6 +882,7 @@ export const useDailyReportStoreV2 = create<DailyReportStoreV2>()(
                 conflict: null,
                 syncStatus: 'idle',
               };
+            }
             default:
               return state;
           }

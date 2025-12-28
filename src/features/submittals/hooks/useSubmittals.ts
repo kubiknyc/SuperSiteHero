@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { submittalsApi } from '@/lib/api/services/submittals'
-import type { WorkflowItem, WorkflowType, SubmittalProcurement } from '@/types/database'
+import type { WorkflowItem, SubmittalProcurement } from '@/types/database'
 
 /**
  * Fetch Submittal workflow type for the current company

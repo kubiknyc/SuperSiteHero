@@ -119,7 +119,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
         proposed_days: changeOrder.proposed_days,
       })
       onStatusChange?.()
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to submit estimate:', e)
     }
   }
@@ -134,7 +134,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       })
       resetForm()
       onStatusChange?.()
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to process internal approval:', e)
     }
   }
@@ -144,7 +144,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
     try {
       await submitToOwner.mutateAsync(changeOrder.id)
       onStatusChange?.()
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to submit to owner:', e)
     }
   }
@@ -162,7 +162,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       })
       resetForm()
       onStatusChange?.()
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to process owner approval:', e)
     }
   }
@@ -174,7 +174,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: comments || 'Voided by user' })
       resetForm()
       onStatusChange?.()
-    } catch (e) {
+    } catch (_e) {
       logger.error('Failed to void change order:', e)
     }
   }

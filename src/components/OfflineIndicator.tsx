@@ -13,7 +13,7 @@ import {
 } from '@/stores/offline-store';
 import { OfflineClient } from '@/lib/api/offline-client';
 import { usePhotoQueue } from '@/hooks/usePhotoQueue';
-import { WifiOff, Wifi, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink, X, Image, RotateCcw } from 'lucide-react';
+import { WifiOff, Cloud, CloudOff, AlertTriangle, RefreshCw, Info, ExternalLink, X, Image, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -100,8 +100,8 @@ export function OfflineIndicator() {
     try {
       const result = await OfflineClient.processSyncQueue();
       logger.log('[OfflineIndicator] Sync completed:', result);
-    } catch (error) {
-      logger.error('[OfflineIndicator] Sync failed:', error);
+    } catch (_error) {
+      logger.error('[OfflineIndicator] Sync failed:', _error);
     } finally {
       setIsSyncingManually(false);
     }

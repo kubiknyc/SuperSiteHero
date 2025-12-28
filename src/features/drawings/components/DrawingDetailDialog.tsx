@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { format } from 'date-fns';
 import {
   CheckCircle,
@@ -9,6 +10,7 @@ import {
   Calendar,
   MapPin,
   Hash,
+  GitCompare,
 } from 'lucide-react';
 import {
   Dialog,
@@ -22,11 +24,13 @@ import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   useDrawingRevisions,
   useDrawingTransmittals,
 } from '@/features/drawings/hooks/useDrawings';
-import { DRAWING_DISCIPLINES, REVISION_TYPES, type Drawing } from '@/types/drawing';
+import { DRAWING_DISCIPLINES, REVISION_TYPES, type Drawing, type DrawingRevision } from '@/types/drawing';
+import { DrawingRevisionComparison } from './DrawingRevisionComparison';
 
 interface DrawingDetailDialogProps {
   open: boolean;
@@ -47,6 +51,35 @@ export function DrawingDetailDialog({
   const { data: transmittals, isLoading: transmittalsLoading } = useDrawingTransmittals(
     drawing?.id
   );
+
+  // Comparison state
+  const [selectedRevisions, setSelectedRevisions] = useState<string[]>([]);
+  const [showComparison, setShowComparison] = useState(false);
+
+  // Handle revision selection for comparison
+  const handleRevisionToggle = (revisionId: string) => {
+    setSelectedRevisions((prev) => {
+      if (prev.includes(revisionId)) {
+        return prev.filter((id) => id !== revisionId);
+      }
+      if (prev.length >= 2) {
+        return [prev[1], revisionId];
+      }
+      return [...prev, revisionId];
+    });
+  };
+
+  // Handle opening comparison
+  const handleCompareSelected = () => {
+    if (selectedRevisions.length === 2) {
+      setShowComparison(true);
+    }
+  };
+
+  // Handle closing comparison
+  const handleCloseComparison = () => {
+    setShowComparison(false);
+  };
 
   if (!drawing) {return null;}
 
@@ -152,6 +185,38 @@ export function DrawingDetailDialog({
             </TabsList>
 
             <TabsContent value="revisions" className="mt-4">
+              {/* Compare Button */}
+              {revisions && revisions.length >= 2 && (
+                <div className="flex items-center justify-between mb-3 p-2 bg-muted rounded-lg">
+                  <span className="text-sm text-muted-foreground">
+                    {selectedRevisions.length === 0
+                      ? 'Select two revisions to compare'
+                      : selectedRevisions.length === 1
+                        ? '1 revision selected - select one more'
+                        : '2 revisions selected'}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    {selectedRevisions.length > 0 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedRevisions([])}
+                      >
+                        Clear
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      onClick={handleCompareSelected}
+                      disabled={selectedRevisions.length !== 2}
+                    >
+                      <GitCompare className="h-4 w-4 mr-1" />
+                      Compare
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {revisionsLoading ? (
                 <div className="space-y-2">
                   <Skeleton className="h-16 w-full" />
@@ -163,11 +228,27 @@ export function DrawingDetailDialog({
                     const revisionTypeInfo = REVISION_TYPES.find(
                       (t) => t.value === revision.revisionType
                     );
+                    const isSelected = selectedRevisions.includes(revision.id);
+                    const hasFile = !!revision.fileUrl;
                     return (
-                      <Card key={revision.id}>
+                      <Card
+                        key={revision.id}
+                        className={isSelected ? 'ring-2 ring-primary' : ''}
+                      >
                         <CardContent className="py-3">
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-3">
+                              {/* Checkbox for comparison selection */}
+                              {revisions.length >= 2 && (
+                                <Checkbox
+                                  checked={isSelected}
+                                  disabled={!hasFile}
+                                  onCheckedChange={() =>
+                                    hasFile && handleRevisionToggle(revision.id)
+                                  }
+                                  aria-label={`Select revision ${revision.revision}`}
+                                />
+                              )}
                               <div className="text-center">
                                 <p className="text-lg font-mono font-bold">
                                   {revision.revision}
@@ -287,6 +368,17 @@ export function DrawingDetailDialog({
           </Tabs>
         </div>
       </DialogContent>
+
+      {/* Revision Comparison Dialog */}
+      {showComparison && selectedRevisions.length === 2 && (
+        <DrawingRevisionComparison
+          revision1Id={selectedRevisions[0]}
+          revision2Id={selectedRevisions[1]}
+          open={showComparison}
+          onClose={handleCloseComparison}
+          drawingNumber={drawing.drawingNumber}
+        />
+      )}
     </Dialog>
   );
 }

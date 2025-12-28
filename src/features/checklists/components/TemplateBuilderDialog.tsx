@@ -2,7 +2,7 @@
 // Dialog for creating and editing checklist templates
 // Phase: 2.2 - Template Builder Dialog
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -52,41 +52,29 @@ export function TemplateBuilderDialog({
   onSave,
   isLoading = false,
 }: TemplateBuilderDialogProps) {
-  // Form state
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [category, setCategory] = useState('')
-  const [templateLevel, setTemplateLevel] = useState<TemplateLevel>('company')
-  const [tags, setTags] = useState<string[]>([])
-  const [tagInput, setTagInput] = useState('')
-  const [instructions, setInstructions] = useState('')
-  const [estimatedDuration, setEstimatedDuration] = useState('')
-  const [scoringEnabled, setScoringEnabled] = useState(true)
+  // Create a key that changes when template changes to force state reset
+  const formKey = useMemo(() => template?.id || 'new', [template?.id])
 
-  // Initialize form when template changes
-  useEffect(() => {
-    if (template) {
-      setName(template.name)
-      setDescription(template.description || '')
-      setCategory(template.category || '')
-      setTemplateLevel(template.template_level)
-      setTags(template.tags || [])
-      setInstructions(template.instructions || '')
-      setEstimatedDuration(template.estimated_duration_minutes?.toString() || '')
-      setScoringEnabled(template.scoring_enabled)
-    } else {
-      // Reset form for new template
-      setName('')
-      setDescription('')
-      setCategory('')
-      setTemplateLevel('company')
-      setTags([])
-      setTagInput('')
-      setInstructions('')
-      setEstimatedDuration('')
-      setScoringEnabled(true)
-    }
-  }, [template, open])
+  // Derive initial values from template
+  const initialName = template?.name || ''
+  const initialDescription = template?.description || ''
+  const initialCategory = template?.category || ''
+  const initialTemplateLevel = (template?.template_level || 'company') as TemplateLevel
+  const initialTags = useMemo(() => template?.tags || [], [template?.tags])
+  const initialInstructions = template?.instructions || ''
+  const initialEstimatedDuration = template?.estimated_duration_minutes?.toString() || ''
+  const initialScoringEnabled = template?.scoring_enabled ?? true
+
+  // Form state
+  const [name, setName] = useState(initialName)
+  const [description, setDescription] = useState(initialDescription)
+  const [category, setCategory] = useState(initialCategory)
+  const [templateLevel, setTemplateLevel] = useState<TemplateLevel>(initialTemplateLevel)
+  const [tags, setTags] = useState<string[]>(initialTags)
+  const [tagInput, setTagInput] = useState('')
+  const [instructions, setInstructions] = useState(initialInstructions)
+  const [estimatedDuration, setEstimatedDuration] = useState(initialEstimatedDuration)
+  const [scoringEnabled, setScoringEnabled] = useState(initialScoringEnabled)
 
   const handleAddTag = () => {
     const trimmedTag = tagInput.trim()
@@ -129,7 +117,7 @@ export function TemplateBuilderDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" key={formKey}>
         <DialogHeader>
           <DialogTitle>
             {template ? 'Edit Template' : 'Create New Template'}

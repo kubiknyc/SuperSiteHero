@@ -182,8 +182,8 @@ export function EnhancedConflictResolutionDialog({
         strategy,
         fieldSelections: fieldSelections.size,
       });
-    } catch (error) {
-      logger.error('[ConflictResolution] Failed to resolve conflict:', error);
+    } catch (_error) {
+      logger.error('[ConflictResolution] Failed to resolve conflict:', _error);
     } finally {
       setResolving(false);
     }

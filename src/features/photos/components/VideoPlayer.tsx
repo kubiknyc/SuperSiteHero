@@ -147,39 +147,53 @@ export function VideoPlayer({
 
     // Event listeners
     player.on('play', () => {
-      setIsPlaying(true)
+      setTimeout(() => {
+        setIsPlaying(true)
+      }, 0)
       onPlay?.()
     })
 
     player.on('pause', () => {
-      setIsPlaying(false)
+      setTimeout(() => {
+        setIsPlaying(false)
+      }, 0)
       onPause?.()
     })
 
     player.on('ended', () => {
-      setIsPlaying(false)
+      setTimeout(() => {
+        setIsPlaying(false)
+      }, 0)
       onEnded?.()
     })
 
     player.on('timeupdate', () => {
       const current = player.currentTime() || 0
       const dur = player.duration() || 0
-      setCurrentTime(current)
-      setDuration(dur)
+      setTimeout(() => {
+        setCurrentTime(current)
+        setDuration(dur)
+      }, 0)
       onTimeUpdate?.(current, dur)
     })
 
     player.on('loadedmetadata', () => {
-      setDuration(player.duration() || 0)
-      setIsLoading(false)
+      setTimeout(() => {
+        setDuration(player.duration() || 0)
+        setIsLoading(false)
+      }, 0)
     })
 
     player.on('waiting', () => {
-      setIsLoading(true)
+      setTimeout(() => {
+        setIsLoading(true)
+      }, 0)
     })
 
     player.on('playing', () => {
-      setIsLoading(false)
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 0)
     })
 
     player.on('error', () => {
@@ -188,17 +202,23 @@ export function VideoPlayer({
     })
 
     player.on('volumechange', () => {
-      setVolume(player.volume() || 0)
-      setIsMuted(player.muted() || false)
+      setTimeout(() => {
+        setVolume(player.volume() || 0)
+        setIsMuted(player.muted() || false)
+      }, 0)
     })
 
     player.on('ratechange', () => {
-      setPlaybackRate(player.playbackRate() || 1)
+      setTimeout(() => {
+        setPlaybackRate(player.playbackRate() || 1)
+      }, 0)
     })
 
     // Fullscreen change
     player.on('fullscreenchange', () => {
-      setIsFullscreen(player.isFullscreen() || false)
+      setTimeout(() => {
+        setIsFullscreen(player.isFullscreen() || false)
+      }, 0)
     })
 
     return () => {
@@ -212,7 +232,11 @@ export function VideoPlayer({
   // Update source when src changes
   useEffect(() => {
     if (playerRef.current) {
-      playerRef.current.src({ src, type })
+      setTimeout(() => {
+        if (playerRef.current) {
+          playerRef.current.src({ src, type })
+        }
+      }, 0)
     }
   }, [src, type])
 
@@ -221,7 +245,9 @@ export function VideoPlayer({
     if (hideControlsTimeout.current) {
       clearTimeout(hideControlsTimeout.current)
     }
-    setShowControls(true)
+    setTimeout(() => {
+      setShowControls(true)
+    }, 0)
 
     if (isPlaying) {
       hideControlsTimeout.current = setTimeout(() => {

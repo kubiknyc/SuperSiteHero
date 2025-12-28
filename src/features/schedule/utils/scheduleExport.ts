@@ -72,7 +72,8 @@ export function sanitizeForXml(text: string | null | undefined): string {
   if (text === null || text === undefined) {
     return ''
   }
-  // Remove control characters except tab, newline, carriage return
+  // Remove control characters except tab (0x09), newline (0x0A), carriage return (0x0D)
+  // eslint-disable-next-line no-control-regex
   return String(text).replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
 }
 

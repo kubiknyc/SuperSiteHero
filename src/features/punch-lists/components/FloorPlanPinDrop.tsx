@@ -131,7 +131,9 @@ function FloorPlanCanvas({
       newWidth = containerHeight * imageAspect
     }
 
-    setDimensions({ width: newWidth, height: newHeight })
+    setTimeout(() => {
+      setDimensions({ width: newWidth, height: newHeight })
+    }, 0)
   }, [image])
 
   // Handle canvas click to place pin

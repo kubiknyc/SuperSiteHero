@@ -469,3 +469,78 @@ export function useUpdateActionItem() {
     },
   })
 }
+
+// Distribute meeting minutes to all attendees
+export function useDistributeMinutes() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (meetingId: string) => {
+      // Import the meetings API service
+      const { meetingsApi } = await import('@/lib/api/services/meetings')
+      return meetingsApi.distributeMinutes(meetingId)
+    },
+    onSuccess: (result, meetingId) => {
+      queryClient.invalidateQueries({ queryKey: ['meetings', 'detail', meetingId] })
+      queryClient.invalidateQueries({ queryKey: ['meetings'] })
+    },
+  })
+}
+
+// Publish meeting minutes (mark as published without distributing)
+export function usePublishMinutes() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (meetingId: string) => {
+      const { data, error } = await supabase
+        .from('meetings')
+        .update({
+          minutes_published: true,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', meetingId)
+        .select()
+        .single()
+
+      if (error) {throw error}
+      return data as MeetingWithDetails
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['meetings', 'detail', data.id] })
+      queryClient.invalidateQueries({ queryKey: ['meetings'] })
+    },
+  })
+}
+
+// Fetch available previous meetings for linking
+export function useAvailablePreviousMeetings(
+  projectId: string | undefined,
+  meetingType?: string,
+  beforeDate?: string
+) {
+  return useQuery({
+    queryKey: ['meetings', 'available-previous', projectId, meetingType, beforeDate],
+    queryFn: async () => {
+      if (!projectId) {throw new Error('Project ID required')}
+
+      const { meetingsApi } = await import('@/lib/api/services/meetings')
+      return meetingsApi.getAvailablePreviousMeetings(projectId, meetingType, beforeDate)
+    },
+    enabled: !!projectId,
+  })
+}
+
+// Fetch the next meeting that references this meeting
+export function useNextMeeting(meetingId: string | undefined) {
+  return useQuery({
+    queryKey: ['meetings', 'next', meetingId],
+    queryFn: async () => {
+      if (!meetingId) {return null}
+
+      const { meetingsApi } = await import('@/lib/api/services/meetings')
+      return meetingsApi.getNextMeeting(meetingId)
+    },
+    enabled: !!meetingId,
+  })
+}

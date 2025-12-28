@@ -64,7 +64,7 @@ export function RecordResponseDialog({
 
       setOpen(false)
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       logger.error('Failed to record response:', error)
     }
   }

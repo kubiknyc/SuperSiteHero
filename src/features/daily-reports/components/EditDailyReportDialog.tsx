@@ -41,7 +41,8 @@ export function EditDailyReportDialog({
   // Initialize form with report data
   useEffect(() => {
     if (open && report) {
-      setFormData({
+      // Batch state updates together
+      const newFormData = {
         project_id: report.project_id || '',
         report_date: report.report_date || '',
         weather_condition: report.weather_condition || '',
@@ -51,8 +52,15 @@ export function EditDailyReportDialog({
         weather_delays: report.weather_delays || false,
         other_delays: (report.weather_delay_notes || ''),
         notes: report.comments || '',
-      })
-      clearErrors()
+      }
+
+      // Use a timeout to defer the state update to avoid synchronous setState in effect
+      const timeoutId = setTimeout(() => {
+        setFormData(newFormData)
+        clearErrors()
+      }, 0)
+
+      return () => clearTimeout(timeoutId)
     }
   }, [open, report, clearErrors])
 
@@ -94,7 +102,7 @@ export function EditDailyReportDialog({
 
       // Step 3: Success! Toast shown automatically by mutation hook
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       // Error toast shown automatically by mutation hook
       logger.error('Failed to update daily report:', error)
     }

@@ -137,7 +137,9 @@ export function DetailedModeForm({
   // Update validation errors when form changes
   useEffect(() => {
     const errors = validateForm();
-    setValidationErrors(errors);
+    setTimeout(() => {
+      setValidationErrors(errors);
+    }, 0);
   }, [validateForm]);
 
   // Handle save
@@ -164,10 +166,10 @@ export function DetailedModeForm({
       });
       setSyncStatus('success');
       toast.success('Report saved successfully');
-    } catch (error) {
+    } catch (_error) {
       setSyncStatus('error');
       toast.error('Failed to save report');
-      throw error;
+      throw _error;
     }
   }, [
     draftReport,

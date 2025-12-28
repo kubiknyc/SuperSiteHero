@@ -1,7 +1,7 @@
 // File: /src/features/change-orders/components/EditChangeOrderDialog.tsx
 // Dialog for editing an existing change order
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -34,16 +34,22 @@ export function EditChangeOrderDialog({
   const [status, setStatus] = useState('draft')
 
   const updateChangeOrder = useUpdateChangeOrderWithNotification()
+  const prevOpenRef = useRef(open)
 
   // Initialize form with change order data
   useEffect(() => {
-    if (open && changeOrder) {
-      setTitle(changeOrder.title || '')
-      setDescription(changeOrder.description || '')
-      setPriority((changeOrder.priority as 'low' | 'normal' | 'high') || 'normal')
-      setCostImpact(changeOrder.cost_impact?.toString() || '')
-      setScheduleImpact(changeOrder.schedule_impact?.toString() || '')
-      setStatus(changeOrder.status || 'draft')
+    const isOpening = open && !prevOpenRef.current
+    prevOpenRef.current = open
+
+    if (isOpening && changeOrder) {
+      setTimeout(() => {
+        setTitle(changeOrder.title || '')
+        setDescription(changeOrder.description || '')
+        setPriority((changeOrder.priority as 'low' | 'normal' | 'high') || 'normal')
+        setCostImpact(changeOrder.cost_impact?.toString() || '')
+        setScheduleImpact(changeOrder.schedule_impact?.toString() || '')
+        setStatus(changeOrder.status || 'draft')
+      }, 0)
     }
   }, [open, changeOrder])
 

@@ -104,7 +104,8 @@ export function useWeatherForDate(
       }
 
       // If not cached and we have coordinates, fetch from API
-      if (!coordinates) {
+      let finalCoordinates = coordinates
+      if (!finalCoordinates) {
         // Try to get project coordinates
         const { data: project } = await supabase
           .from('projects')
@@ -113,7 +114,7 @@ export function useWeatherForDate(
           .single()
 
         if (project?.latitude && project?.longitude) {
-          coordinates = {
+          finalCoordinates = {
             latitude: project.latitude,
             longitude: project.longitude,
           }
@@ -121,7 +122,7 @@ export function useWeatherForDate(
           // Try to get user's current location
           try {
             const location = await getCurrentLocation()
-            coordinates = {
+            finalCoordinates = {
               latitude: location.lat,
               longitude: location.lon,
             }
@@ -133,8 +134,8 @@ export function useWeatherForDate(
 
       // Fetch from API
       const apiData = await fetchWeatherData(
-        coordinates.latitude,
-        coordinates.longitude,
+        finalCoordinates.latitude,
+        finalCoordinates.longitude,
         date!
       )
 
@@ -143,8 +144,8 @@ export function useWeatherForDate(
         project_id: projectId,
         company_id: userProfile?.company_id,
         weather_date: date,
-        latitude: coordinates.latitude,
-        longitude: coordinates.longitude,
+        latitude: finalCoordinates.latitude,
+        longitude: finalCoordinates.longitude,
         weather_code: null, // API doesn't return code in current format
         weather_condition: apiData.weather_condition,
         temperature_high: apiData.temperature_high,
@@ -310,8 +311,8 @@ export function usePrefetchWeather() {
 
           // Rate limiting - wait 100ms between API calls
           await new Promise((resolve) => setTimeout(resolve, 100))
-        } catch (error) {
-          logger.error(`Failed to fetch weather for ${date}:`, error)
+        } catch (_error) {
+          logger.error(`Failed to fetch weather for ${date}:`, _error)
         }
       }
 

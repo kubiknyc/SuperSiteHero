@@ -110,7 +110,6 @@ export const takeoffTemplatesApi = {
       if (projectId) {
         // Get both company-wide and project templates
         // Note: 'takeoff_templates' table exists in DB but not in generated types yet
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data, error } = await (supabase as any)
           .from('takeoff_templates')
           .select('*')
@@ -279,7 +278,6 @@ export const takeoffTemplatesApi = {
 
       // Call the database function
       // Note: 'increment_template_usage' function exists in DB but not in generated types yet
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const { error } = await (supabase as any).rpc('increment_template_usage', {
         template_id: templateId,
       })
@@ -326,7 +324,6 @@ export const takeoffTemplatesApi = {
       if (projectId) {
         // Search in both company-wide and project templates
         // Note: 'takeoff_templates' table exists in DB but not in generated types yet
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const { data, error } = await (supabase as any)
           .from('takeoff_templates')
           .select('*')

@@ -82,18 +82,20 @@ export function ToolboxTalkFormPage() {
   // Populate form when editing
   useEffect(() => {
     if (existingTalk) {
-      setFormData({
-        topic_id: existingTalk.topic_id || '',
-        custom_topic_title: existingTalk.custom_topic_title || '',
-        custom_topic_description: existingTalk.custom_topic_description || '',
-        category: existingTalk.category,
-        scheduled_date: existingTalk.scheduled_date,
-        scheduled_time: existingTalk.scheduled_time || '07:00',
-        location: existingTalk.location || '',
-        presenter_name: existingTalk.presenter_name || '',
-        presenter_title: existingTalk.presenter_title || '',
-      })
-      setUseCustomTopic(!existingTalk.topic_id)
+      setTimeout(() => {
+        setFormData({
+          topic_id: existingTalk.topic_id || '',
+          custom_topic_title: existingTalk.custom_topic_title || '',
+          custom_topic_description: existingTalk.custom_topic_description || '',
+          category: existingTalk.category,
+          scheduled_date: existingTalk.scheduled_date,
+          scheduled_time: existingTalk.scheduled_time || '07:00',
+          location: existingTalk.location || '',
+          presenter_name: existingTalk.presenter_name || '',
+          presenter_title: existingTalk.presenter_title || '',
+        })
+        setUseCustomTopic(!existingTalk.topic_id)
+      }, 0)
     }
   }, [existingTalk])
 

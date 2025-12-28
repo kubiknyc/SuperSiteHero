@@ -30,7 +30,6 @@ import { logger } from '../../utils/logger';
 
 
 // Using extended Database types for tables not yet in generated types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db: any = supabase
 
 // ============================================================================
@@ -515,7 +514,7 @@ export const evmApi = {
       try {
         await this.createSnapshot(project.id, companyId, today)
         count++
-      } catch (e) {
+      } catch (_e) {
         logger.error(`Failed to create snapshot for project ${project.id}:`, e)
       }
     }

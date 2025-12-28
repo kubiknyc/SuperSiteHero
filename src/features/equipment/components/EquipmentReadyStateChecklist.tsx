@@ -161,8 +161,8 @@ export function EquipmentReadyStateChecklist({
         },
       });
       onComplete?.();
-    } catch (error) {
-      logger.error('Failed to complete checklist:', error);
+    } catch (_error) {
+      logger.error('Failed to complete checklist:', _error);
     }
   };
 

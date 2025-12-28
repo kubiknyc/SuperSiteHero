@@ -37,7 +37,7 @@ export function DeleteDailyReportConfirmation({
             await deleteReport.mutateAsync(reportId)
             // Success toast shown automatically by mutation hook
             onSuccess?.()
-          } catch (error) {
+          } catch (_error) {
             // Error toast shown automatically by mutation hook
             logger.error('Failed to delete daily report:', error)
           }

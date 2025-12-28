@@ -4,7 +4,6 @@
  * Simplified layout for client portal with read-only navigation.
  */
 
-import { type ReactNode } from 'react'
 import { Link, useLocation, useParams, Outlet } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { useClientProjects, useClientProject } from '@/features/client-portal/hooks/useClientPortal'

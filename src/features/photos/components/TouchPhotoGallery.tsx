@@ -86,10 +86,12 @@ export function TouchPhotoGallery({
   // Reset state when opening
   useEffect(() => {
     if (isOpen) {
-      setCurrentIndex(initialIndex);
-      setScale(1);
-      setPosition({ x: 0, y: 0 });
-      setIsZoomed(false);
+      setTimeout(() => {
+        setCurrentIndex(initialIndex);
+        setScale(1);
+        setPosition({ x: 0, y: 0 });
+        setIsZoomed(false);
+      }, 0);
     }
   }, [isOpen, initialIndex]);
 
@@ -283,11 +285,13 @@ export function TouchPhotoGallery({
 
   // Prevent body scroll when gallery is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    setTimeout(() => {
+      if (isOpen) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }, 0);
     return () => {
       document.body.style.overflow = '';
     };

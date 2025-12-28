@@ -2,7 +2,7 @@
 // Main Konva canvas component for takeoff measurements
 // Integrates all 9 shape components with drawing tools and spatial indexing
 
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import { Stage, Layer, Line } from 'react-konva'
 import type Konva from 'konva'
 import {
@@ -117,12 +117,12 @@ export function TakeoffCanvas({
   // Load background image
   useEffect(() => {
     if (!backgroundImageUrl) {
-      setBackgroundImage(null)
+      setTimeout(() => setBackgroundImage(null), 0)
       return
     }
 
     const img = new window.Image()
-    img.onload = () => setBackgroundImage(img)
+    img.onload = () => setTimeout(() => setBackgroundImage(img), 0)
     img.src = backgroundImageUrl
   }, [backgroundImageUrl])
 
@@ -140,8 +140,10 @@ export function TakeoffCanvas({
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isCalibrating) {
-        setCalibrationLinePoints([])
-        setIsDrawingCalibration(false)
+        setTimeout(() => {
+          setCalibrationLinePoints([])
+          setIsDrawingCalibration(false)
+        }, 0)
         onCancelCalibration?.()
       }
     }
@@ -153,16 +155,23 @@ export function TakeoffCanvas({
   // Reset calibration line state when calibration mode is toggled off
   useEffect(() => {
     if (!isCalibrating) {
-      setCalibrationLinePoints([])
-      setIsDrawingCalibration(false)
+      setTimeout(() => {
+        setCalibrationLinePoints([])
+        setIsDrawingCalibration(false)
+      }, 0)
     }
   }, [isCalibrating])
 
   // Get visible measurements using spatial index
-  const visibleMeasurements = measurements.filter((m) => {
-    const inViewport = spatialIndexRef.current.searchViewport(viewport)
-    return inViewport.some((indexed) => indexed.id === m.id)
-  })
+  const [visibleMeasurements, setVisibleMeasurements] = useState<TakeoffMeasurement[]>([])
+
+  useEffect(() => {
+    const filtered = measurements.filter((m) => {
+      const inViewport = spatialIndexRef.current.searchViewport(viewport)
+      return inViewport.some((indexed) => indexed.id === m.id)
+    })
+    setTimeout(() => setVisibleMeasurements(filtered), 0)
+  }, [measurements, viewport])
 
   // Handle mouse down - start drawing
   const handleMouseDown = useCallback(

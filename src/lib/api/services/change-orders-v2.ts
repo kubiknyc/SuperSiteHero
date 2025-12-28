@@ -30,7 +30,6 @@ import { logger } from '../../utils/logger';
 
 
 // Type assertion helper for tables not yet in database types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;
 
 // =============================================================================

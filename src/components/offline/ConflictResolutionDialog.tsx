@@ -35,6 +35,41 @@ interface ConflictResolutionDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
+// Render field comparison (moved outside component to avoid creating components during render)
+function FieldComparison({
+  field,
+  localValue,
+  serverValue,
+}: {
+  field: string
+  localValue: unknown
+  serverValue: unknown
+}) {
+  const isConflicting = JSON.stringify(localValue) !== JSON.stringify(serverValue)
+
+  return (
+    <div
+      className={cn(
+        'grid grid-cols-3 gap-4 py-2 border-b last:border-0',
+        isConflicting && 'bg-warning/5'
+      )}
+    >
+      <div className="font-medium text-sm capitalize">
+        {field.replace(/_/g, ' ')}
+        {isConflicting && (
+          <AlertTriangle className="h-3 w-3 inline ml-1 text-warning" />
+        )}
+      </div>
+      <div className="text-sm text-muted-foreground truncate">
+        {String(localValue ?? '—')}
+      </div>
+      <div className="text-sm text-muted-foreground truncate">
+        {String(serverValue ?? '—')}
+      </div>
+    </div>
+  )
+}
+
 /**
  * Conflict Resolution Dialog
  *
@@ -77,8 +112,8 @@ export function ConflictResolutionDialog({
         setSelectedConflict(null)
         onOpenChange(false)
       }
-    } catch (error) {
-      logger.error('[ConflictResolution] Failed to resolve:', error)
+    } catch (_error) {
+      logger.error('[ConflictResolution] Failed to resolve:', _error)
       toast({
         title: 'Failed to resolve conflict',
         description: 'Please try again.',
@@ -103,8 +138,8 @@ export function ConflictResolutionDialog({
       })
 
       onOpenChange(false)
-    } catch (error) {
-      logger.error('[ConflictResolution] Failed to resolve all:', error)
+    } catch (_error) {
+      logger.error('[ConflictResolution] Failed to resolve all:', _error)
       toast({
         title: 'Failed to resolve conflicts',
         description: 'Some conflicts may not have been resolved.',
@@ -134,38 +169,6 @@ export function ConflictResolutionDialog({
       inspection: 'Inspection',
     }
     return labels[type] || type
-  }
-
-  // Render field comparison
-  const renderFieldComparison = (
-    field: string,
-    localValue: unknown,
-    serverValue: unknown
-  ) => {
-    const isConflicting = JSON.stringify(localValue) !== JSON.stringify(serverValue)
-
-    return (
-      <div
-        key={field}
-        className={cn(
-          'grid grid-cols-3 gap-4 py-2 border-b last:border-0',
-          isConflicting && 'bg-warning/5'
-        )}
-      >
-        <div className="font-medium text-sm capitalize">
-          {field.replace(/_/g, ' ')}
-          {isConflicting && (
-            <AlertTriangle className="h-3 w-3 inline ml-1 text-warning" />
-          )}
-        </div>
-        <div className="text-sm text-muted-foreground truncate">
-          {String(localValue ?? '—')}
-        </div>
-        <div className="text-sm text-muted-foreground truncate">
-          {String(serverValue ?? '—')}
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -262,13 +265,14 @@ export function ConflictResolutionDialog({
                         </div>
                       </div>
                       <ScrollArea className="h-[200px]">
-                        {Object.keys(selectedConflict.localData).map((field) =>
-                          renderFieldComparison(
-                            field,
-                            selectedConflict.localData[field],
-                            selectedConflict.serverData[field]
-                          )
-                        )}
+                        {Object.keys(selectedConflict.localData).map((field) => (
+                          <FieldComparison
+                            key={field}
+                            field={field}
+                            localValue={selectedConflict.localData[field]}
+                            serverValue={selectedConflict.serverData[field]}
+                          />
+                        ))}
                       </ScrollArea>
                     </TabsContent>
 

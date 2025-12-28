@@ -47,12 +47,14 @@ export function CreateDailyReportDialog({
   useEffect(() => {
     if (open) {
       const today = new Date().toISOString().split('T')[0]
-      setFormData((prev) => ({
-        ...prev,
-        project_id: projectId,
-        report_date: today,
-      }))
-      clearErrors()
+      setTimeout(() => {
+        setFormData((prev) => ({
+          ...prev,
+          project_id: projectId,
+          report_date: today,
+        }))
+        clearErrors()
+      }, 0)
     }
   }, [open, projectId, clearErrors])
 
@@ -93,7 +95,7 @@ export function CreateDailyReportDialog({
       // Step 3: Success! Toast shown automatically by mutation hook
       onSuccess?.()
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       // Error toast shown automatically by mutation hook
       logger.error('Failed to create daily report:', error)
     }

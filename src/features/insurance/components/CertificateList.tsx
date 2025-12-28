@@ -84,6 +84,21 @@ const statusConfig: Record<CertificateStatus, { icon: typeof CheckCircle; color:
   void: { icon: XCircle, color: 'text-muted-foreground' },
 }
 
+interface CertificateSortIconProps {
+  field: SortField
+  sortField: SortField
+  sortDirection: SortDirection
+}
+
+function CertificateSortIcon({ field, sortField, sortDirection }: CertificateSortIconProps) {
+  if (sortField !== field) {return null}
+  return sortDirection === 'asc' ? (
+    <SortAsc className="h-4 w-4 ml-1" />
+  ) : (
+    <SortDesc className="h-4 w-4 ml-1" />
+  )
+}
+
 export function CertificateList({
   projectId,
   subcontractorId,
@@ -164,7 +179,7 @@ export function CertificateList({
     try {
       await deleteMutation.mutateAsync(cert.id)
       toast({ title: 'Certificate deleted', description: 'The certificate has been removed.' })
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to delete certificate.',
@@ -179,7 +194,7 @@ export function CertificateList({
     try {
       await voidMutation.mutateAsync({ certificateId: cert.id, reason })
       toast({ title: 'Certificate voided', description: 'The certificate has been marked as void.' })
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: 'Error',
         description: 'Failed to void certificate.',
@@ -194,15 +209,6 @@ export function CertificateList({
       month: 'short',
       day: 'numeric',
     })
-  }
-
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) {return null}
-    return sortDirection === 'asc' ? (
-      <SortAsc className="h-4 w-4 ml-1" />
-    ) : (
-      <SortDesc className="h-4 w-4 ml-1" />
-    )
   }
 
   if (isLoading) {
@@ -281,7 +287,7 @@ export function CertificateList({
               >
                 <div className="flex items-center">
                   Type
-                  <SortIcon field="insurance_type" />
+                  <CertificateSortIcon field="insurance_type" sortField={sortField} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead
@@ -290,7 +296,7 @@ export function CertificateList({
               >
                 <div className="flex items-center">
                   Carrier
-                  <SortIcon field="carrier_name" />
+                  <CertificateSortIcon field="carrier_name" sortField={sortField} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               {showSubcontractor && <TableHead>Subcontractor</TableHead>}
@@ -303,7 +309,7 @@ export function CertificateList({
               >
                 <div className="flex items-center">
                   Expiration
-                  <SortIcon field="expiration_date" />
+                  <CertificateSortIcon field="expiration_date" sortField={sortField} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead
@@ -312,7 +318,7 @@ export function CertificateList({
               >
                 <div className="flex items-center">
                   Status
-                  <SortIcon field="status" />
+                  <CertificateSortIcon field="status" sortField={sortField} sortDirection={sortDirection} />
                 </div>
               </TableHead>
               <TableHead className="w-[60px]"></TableHead>

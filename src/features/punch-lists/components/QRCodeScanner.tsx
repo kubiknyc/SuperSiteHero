@@ -114,8 +114,10 @@ export function QRCodeScanner({
   useEffect(() => {
     if (!dialogOpen || !containerRef.current) {return}
 
-    setError(null)
-    setLastScan(null)
+    setTimeout(() => {
+      setError(null)
+      setLastScan(null)
+    }, 0)
 
     // Small delay to ensure DOM is ready
     const timeoutId = setTimeout(() => {
@@ -139,10 +141,14 @@ export function QRCodeScanner({
 
         scanner.render(handleScanSuccess, handleScanError)
         scannerRef.current = scanner
-        setIsScanning(true)
+        setTimeout(() => {
+          setIsScanning(true)
+        }, 0)
       } catch (err) {
         logger.error('Scanner initialization error:', err)
-        setError('Failed to initialize camera. Please ensure camera permissions are granted.')
+        setTimeout(() => {
+          setError('Failed to initialize camera. Please ensure camera permissions are granted.')
+        }, 0)
       }
     }, 100)
 

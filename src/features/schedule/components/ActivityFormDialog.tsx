@@ -198,6 +198,8 @@ export function ActivityFormDialog({
   const [showCalendarDialog, setShowCalendarDialog] = React.useState(false)
   const createCalendarMutation = useCreateCalendar()
 
+  const prevOpenRef = React.useRef(open)
+
   const form = useForm<ActivityFormValues>({
     resolver: zodResolver(activitySchema),
     defaultValues: {
@@ -230,7 +232,10 @@ export function ActivityFormDialog({
 
   // Reset form when activity changes
   React.useEffect(() => {
-    if (open) {
+    const isOpening = open && !prevOpenRef.current
+    prevOpenRef.current = open
+
+    if (isOpening) {
       form.reset({
         activity_id: activity?.activity_id || suggestedActivityId || '',
         name: activity?.name || '',

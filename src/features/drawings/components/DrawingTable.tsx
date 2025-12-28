@@ -10,6 +10,7 @@ import {
   ExternalLink,
   FileText,
   History,
+  GitCompare,
 } from 'lucide-react';
 import {
   Table,
@@ -46,6 +47,8 @@ import {
   useBulkMarkIFC,
 } from '@/features/drawings/hooks/useDrawings';
 import { DRAWING_DISCIPLINES, type Drawing, type DrawingDiscipline } from '@/types/drawing';
+import { RevisionSelectDialog } from './RevisionSelectDialog';
+import { DrawingRevisionComparison } from './DrawingRevisionComparison';
 
 interface DrawingTableProps {
   drawings: Drawing[];
@@ -57,6 +60,14 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
   const { success, error: showError } = useToast();
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [deleteDrawing, setDeleteDrawing] = useState<Drawing | null>(null);
+
+  // Comparison dialog state
+  const [compareDrawing, setCompareDrawing] = useState<Drawing | null>(null);
+  const [showRevisionSelect, setShowRevisionSelect] = useState(false);
+  const [comparisonRevisions, setComparisonRevisions] = useState<{
+    revision1Id: string;
+    revision2Id: string;
+  } | null>(null);
 
   const deleteDrawingMutation = useDeleteDrawing();
   const markIFCMutation = useMarkDrawingIFC();
@@ -90,7 +101,7 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
       await deleteDrawingMutation.mutateAsync(deleteDrawing.id);
       success('Drawing deleted', `${deleteDrawing.drawingNumber} has been deleted`);
       setDeleteDrawing(null);
-    } catch (err) {
+    } catch (_err) {
       showError('Error', 'Failed to delete drawing');
     }
   };
@@ -99,7 +110,7 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
     try {
       await markIFCMutation.mutateAsync({ id: drawing.id });
       success('Drawing marked IFC', `${drawing.drawingNumber} is now Issued for Construction`);
-    } catch (err) {
+    } catch (_err) {
       showError('Error', 'Failed to mark drawing as IFC');
     }
   };
@@ -110,13 +121,31 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
       await bulkMarkIFCMutation.mutateAsync({ drawingIds: Array.from(selectedIds) });
       success('Drawings marked IFC', `${selectedIds.size} drawings are now Issued for Construction`);
       setSelectedIds(new Set());
-    } catch (err) {
+    } catch (_err) {
       showError('Error', 'Failed to mark drawings as IFC');
     }
   };
 
   const allSelected = drawings.length > 0 && selectedIds.size === drawings.length;
   const someSelected = selectedIds.size > 0 && selectedIds.size < drawings.length;
+
+  // Handle opening compare revisions dialog
+  const handleCompareRevisions = (drawing: Drawing) => {
+    setCompareDrawing(drawing);
+    setShowRevisionSelect(true);
+  };
+
+  // Handle when revisions are selected for comparison
+  const handleRevisionsSelected = (revision1Id: string, revision2Id: string) => {
+    setShowRevisionSelect(false);
+    setComparisonRevisions({ revision1Id, revision2Id });
+  };
+
+  // Handle closing comparison dialog
+  const handleCloseComparison = () => {
+    setComparisonRevisions(null);
+    setCompareDrawing(null);
+  };
 
   return (
     <>
@@ -235,6 +264,10 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
                           <History className="h-4 w-4 mr-2" />
                           Revision History
                         </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleCompareRevisions(drawing)}>
+                          <GitCompare className="h-4 w-4 mr-2" />
+                          Compare Revisions
+                        </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Copy className="h-4 w-4 mr-2" />
                           Duplicate
@@ -287,6 +320,30 @@ export function DrawingTable({ drawings, onDrawingClick, onEditClick }: DrawingT
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Revision Select Dialog */}
+      {compareDrawing && (
+        <RevisionSelectDialog
+          open={showRevisionSelect}
+          onOpenChange={(open) => {
+            setShowRevisionSelect(open);
+            if (!open) setCompareDrawing(null);
+          }}
+          drawing={compareDrawing}
+          onCompare={handleRevisionsSelected}
+        />
+      )}
+
+      {/* Revision Comparison Dialog */}
+      {comparisonRevisions && compareDrawing && (
+        <DrawingRevisionComparison
+          revision1Id={comparisonRevisions.revision1Id}
+          revision2Id={comparisonRevisions.revision2Id}
+          open={true}
+          onClose={handleCloseComparison}
+          drawingNumber={compareDrawing.drawingNumber}
+        />
+      )}
     </>
   );
 }

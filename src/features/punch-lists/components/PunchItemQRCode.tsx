@@ -1,7 +1,7 @@
 // File: /src/features/punch-lists/components/PunchItemQRCode.tsx
 // QR Code generation and display for punch items
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
 import { QrCode, Download, Copy, Check, Printer, Share2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { toast } from '@/lib/notifications/ToastContext'
-import { cn } from '@/lib/utils'
 import type { PunchItem } from '@/types/database'
 
 interface PunchItemQRCodeProps {
@@ -50,6 +49,93 @@ function getShortId(punchItem: PunchItem): string {
   return punchItem.id.slice(0, 8).toUpperCase()
 }
 
+// QR code display component
+const QRCodeDisplay = ({
+  punchItem,
+  qrUrl,
+  qrSize,
+  shortId,
+  showActions = false,
+  handleCopy,
+  handleDownload,
+  handlePrint,
+  handleShare,
+  copied,
+}: {
+  punchItem: PunchItem;
+  qrUrl: string;
+  qrSize: number;
+  shortId: string;
+  showActions?: boolean;
+  handleCopy: () => void;
+  handleDownload: () => void;
+  handlePrint: () => void;
+  handleShare: () => void;
+  copied: boolean;
+}) => (
+  <div className="flex flex-col items-center">
+    <div className="bg-card p-4 rounded-lg border shadow-sm">
+      <QRCodeSVG
+        id={`qr-${punchItem.id}`}
+        value={qrUrl}
+        size={showActions ? QR_SIZES.lg : qrSize}
+        level="H"
+        includeMargin={false}
+        bgColor="#ffffff"
+        fgColor="#000000"
+      />
+    </div>
+
+    <div className="mt-3 text-center">
+      <p className="font-mono text-sm font-semibold text-secondary">{shortId}</p>
+      <p className="text-xs text-muted mt-1 max-w-[200px] truncate">{punchItem.title}</p>
+    </div>
+
+    {showActions && (
+      <div className="flex gap-2 mt-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleCopy}
+          className="gap-1"
+        >
+          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          {copied ? 'Copied!' : 'Copy Link'}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleDownload}
+          className="gap-1"
+        >
+          <Download className="h-4 w-4" />
+          Download
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handlePrint}
+          className="gap-1"
+        >
+          <Printer className="h-4 w-4" />
+          Print
+        </Button>
+        {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleShare}
+            className="gap-1"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </Button>
+        )}
+      </div>
+    )}
+  </div>
+);
+
 export function PunchItemQRCode({
   punchItem,
   size = 'md',
@@ -58,8 +144,9 @@ export function PunchItemQRCode({
   const [copied, setCopied] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const qrUrl = getPunchItemUrl(punchItem.id)
-  const shortId = getShortId(punchItem)
+  // Memoize to avoid calling impure function during render
+  const qrUrl = useMemo(() => getPunchItemUrl(punchItem.id), [punchItem.id])
+  const shortId = useMemo(() => getShortId(punchItem), [punchItem])
   const qrSize = QR_SIZES[size]
 
   // Copy URL to clipboard
@@ -69,7 +156,7 @@ export function PunchItemQRCode({
       setCopied(true)
       toast.success('Link copied to clipboard')
       setTimeout(() => setCopied(false), 2000)
-    } catch (err) {
+    } catch {
       toast.error('Failed to copy link')
     }
   }
@@ -196,72 +283,21 @@ export function PunchItemQRCode({
     }
   }
 
-  const QRCodeDisplay = ({ showActions = false }: { showActions?: boolean }) => (
-    <div className="flex flex-col items-center">
-      <div className="bg-card p-4 rounded-lg border shadow-sm">
-        <QRCodeSVG
-          id={`qr-${punchItem.id}`}
-          value={qrUrl}
-          size={showActions ? QR_SIZES.lg : qrSize}
-          level="H"
-          includeMargin={false}
-          bgColor="#ffffff"
-          fgColor="#000000"
-        />
-      </div>
-
-      <div className="mt-3 text-center">
-        <p className="font-mono text-sm font-semibold text-secondary">{shortId}</p>
-        <p className="text-xs text-muted mt-1 max-w-[200px] truncate">{punchItem.title}</p>
-      </div>
-
-      {showActions && (
-        <div className="flex gap-2 mt-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleCopy}
-            className="gap-1"
-          >
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            {copied ? 'Copied!' : 'Copy Link'}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDownload}
-            className="gap-1"
-          >
-            <Download className="h-4 w-4" />
-            Download
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePrint}
-            className="gap-1"
-          >
-            <Printer className="h-4 w-4" />
-            Print
-          </Button>
-          {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              className="gap-1"
-            >
-              <Share2 className="h-4 w-4" />
-              Share
-            </Button>
-          )}
-        </div>
-      )}
-    </div>
-  )
-
   if (!showButton) {
-    return <QRCodeDisplay />
+    return (
+      <QRCodeDisplay
+        punchItem={punchItem}
+        qrUrl={qrUrl}
+        qrSize={qrSize}
+        shortId={shortId}
+        showActions={false}
+        handleCopy={handleCopy}
+        handleDownload={handleDownload}
+        handlePrint={handlePrint}
+        handleShare={handleShare}
+        copied={copied}
+      />
+    )
   }
 
   return (
@@ -280,7 +316,18 @@ export function PunchItemQRCode({
           </DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <QRCodeDisplay showActions />
+          <QRCodeDisplay
+            punchItem={punchItem}
+            qrUrl={qrUrl}
+            qrSize={qrSize}
+            shortId={shortId}
+            showActions={true}
+            handleCopy={handleCopy}
+            handleDownload={handleDownload}
+            handlePrint={handlePrint}
+            handleShare={handleShare}
+            copied={copied}
+          />
         </div>
         <div className="text-xs text-muted text-center">
           Scan this code to quickly access this punch item on any device

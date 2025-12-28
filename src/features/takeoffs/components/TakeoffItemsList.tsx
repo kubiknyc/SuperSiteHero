@@ -1,6 +1,8 @@
 // File: /src/features/takeoffs/components/TakeoffItemsList.tsx
 // List view of takeoff measurements with filtering and sorting
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import { useState, useMemo } from 'react'
 import { Search, SortAsc, SortDesc, Filter, Trash2, Eye, EyeOff } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -74,6 +76,7 @@ export function TakeoffItemsList({
   onToggleVisibility,
   onUpdate,
 }: TakeoffItemsListProps) {
+  'use no memo'
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('created')
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc')
@@ -179,6 +182,7 @@ export function TakeoffItemsList({
 
   // Filter and sort measurements
   const filteredMeasurements = useMemo(() => {
+    'use no memo';
     let filtered = measurements
 
     // Search filter

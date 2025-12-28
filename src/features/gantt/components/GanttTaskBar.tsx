@@ -1,7 +1,7 @@
 // File: src/features/gantt/components/GanttTaskBar.tsx
 // Task bar component for Gantt chart with drag-and-drop and baseline support
 
-import { useMemo, useState, useCallback, useRef } from 'react'
+import { useMemo, useState, useCallback, useRef, useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
 import { Diamond, AlertTriangle, GripVertical } from 'lucide-react'
 import type { ScheduleItem, GanttZoomLevel, ScheduleItemStatus, GanttConfig } from '@/types/schedule'
@@ -71,6 +71,8 @@ export function GanttTaskBar({
   const [dragResult, setDragResult] = useState<DragResult | null>(null)
   const dragStateRef = useRef<DragState | null>(null)
   const barRef = useRef<SVGRectElement>(null)
+  const handleMouseMoveRef = useRef<((e: MouseEvent) => void) | null>(null)
+  const handleMouseUpRef = useRef<((e: MouseEvent) => void) | null>(null)
 
   // Calculate position for main task bar
   const position = useMemo(() => {
@@ -153,34 +155,7 @@ export function GanttTaskBar({
     return lines.join('\n')
   }, [task, isCritical, isOverdue, variance])
 
-  // Drag handlers
-  const handleMouseDown = useCallback(
-    (e: React.MouseEvent<SVGRectElement>) => {
-      if (!config.allow_drag && !config.allow_resize) {return}
-      if (task.is_milestone) {return} // Milestones can't be dragged
-
-      const rect = barRef.current?.getBoundingClientRect()
-      if (!rect) {return}
-
-      const mode = getDragMode(e.clientX, rect.left, rect.width)
-
-      // Check permissions
-      if (mode === 'move' && !config.allow_drag) {return}
-      if ((mode === 'resize-start' || mode === 'resize-end') && !config.allow_resize) {return}
-
-      dragStateRef.current = startDrag(task, mode, e.clientX, e.clientY)
-      setDragMode(mode)
-
-      // Add global mouse listeners
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-
-      e.preventDefault()
-      e.stopPropagation()
-    },
-    [config.allow_drag, config.allow_resize, task]
-  )
-
+  // Declare handleMouseMove and handleMouseUp before handleMouseDown that uses them
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       if (!dragStateRef.current) {return}
@@ -204,8 +179,12 @@ export function GanttTaskBar({
 
   const handleMouseUp = useCallback(
     (e: MouseEvent) => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
+      if (handleMouseMoveRef.current) {
+        document.removeEventListener('mousemove', handleMouseMoveRef.current)
+      }
+      if (handleMouseUpRef.current) {
+        document.removeEventListener('mouseup', handleMouseUpRef.current)
+      }
 
       if (isDragging && dragResult) {
         onDragEnd?.(task, dragResult)
@@ -216,7 +195,45 @@ export function GanttTaskBar({
       setDragResult(null)
       dragStateRef.current = null
     },
-    [isDragging, dragResult, task, onDragEnd, handleMouseMove]
+    [isDragging, dragResult, task, onDragEnd]
+  )
+
+  // Store latest callback references in useEffect to avoid ref access during render
+  useEffect(() => {
+    handleMouseMoveRef.current = handleMouseMove
+    handleMouseUpRef.current = handleMouseUp
+  }, [handleMouseMove, handleMouseUp])
+
+  // Drag handlers
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent<SVGRectElement>) => {
+      if (!config.allow_drag && !config.allow_resize) {return}
+      if (task.is_milestone) {return} // Milestones can't be dragged
+
+      const rect = barRef.current?.getBoundingClientRect()
+      if (!rect) {return}
+
+      const mode = getDragMode(e.clientX, rect.left, rect.width)
+
+      // Check permissions
+      if (mode === 'move' && !config.allow_drag) {return}
+      if ((mode === 'resize-start' || mode === 'resize-end') && !config.allow_resize) {return}
+
+      dragStateRef.current = startDrag(task, mode, e.clientX, e.clientY)
+      setDragMode(mode)
+
+      // Add global mouse listeners using refs
+      if (handleMouseMoveRef.current) {
+        document.addEventListener('mousemove', handleMouseMoveRef.current)
+      }
+      if (handleMouseUpRef.current) {
+        document.addEventListener('mouseup', handleMouseUpRef.current)
+      }
+
+      e.preventDefault()
+      e.stopPropagation()
+    },
+    [config.allow_drag, config.allow_resize, task]
   )
 
   // Cursor based on hover position

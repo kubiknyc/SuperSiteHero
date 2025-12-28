@@ -90,6 +90,16 @@ export function CustomRoleFormDialog({
   const updateMutation = useUpdateCustomRole();
   const updatePermsMutation = useUpdateRolePermissions();
 
+  const resetForm = React.useCallback(() => {
+    setName('');
+    setCode('');
+    setDescription('');
+    setColor('#6B7280');
+    setInheritsFrom('');
+    setGrantedPermissions(new Set());
+    setActiveTab('details');
+  }, []);
+
   // Initialize form when role changes
   React.useEffect(() => {
     if (role && roleData) {
@@ -110,17 +120,7 @@ export function CustomRoleFormDialog({
     } else if (!role) {
       resetForm();
     }
-  }, [role, roleData, open]);
-
-  const resetForm = () => {
-    setName('');
-    setCode('');
-    setDescription('');
-    setColor('#6B7280');
-    setInheritsFrom('');
-    setGrantedPermissions(new Set());
-    setActiveTab('details');
-  };
+  }, [role, roleData, open, resetForm]);
 
   // Auto-generate code from name
   const handleNameChange = (value: string) => {
@@ -195,7 +195,7 @@ export function CustomRoleFormDialog({
       onOpenChange(false);
       resetForm();
       onSuccess?.();
-    } catch (error) {
+    } catch (_error) {
       toast.error(isEditing ? 'Failed to update role' : 'Failed to create role');
       logger.error('Role form error:', error);
     }

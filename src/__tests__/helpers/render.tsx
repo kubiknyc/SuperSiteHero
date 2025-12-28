@@ -39,7 +39,7 @@ export interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   // Router options
   route?: string;
   routes?: string[];
-  useMemoryRouter?: boolean;
+  memoryRouter?: boolean;
 
   // Query client options
   queryClient?: QueryClient;
@@ -131,7 +131,7 @@ interface AllProvidersProps {
   session: MockSession | null;
   authLoading: boolean;
   route: string;
-  useMemoryRouter: boolean;
+  memoryRouter: boolean;
   routes: string[];
 }
 
@@ -142,11 +142,11 @@ function AllProviders({
   session,
   authLoading,
   route,
-  useMemoryRouter,
+  memoryRouter,
   routes,
 }: AllProvidersProps) {
-  const RouterWrapper = useMemoryRouter ? MemoryRouter : BrowserRouter;
-  const routerProps = useMemoryRouter
+  const RouterWrapper = memoryRouter ? MemoryRouter : BrowserRouter;
+  const routerProps = memoryRouter
     ? { initialEntries: routes.length > 0 ? routes : [route], initialIndex: routes.indexOf(route) >= 0 ? routes.indexOf(route) : 0 }
     : {};
 
@@ -186,7 +186,7 @@ function AllProviders({
  * // Render with specific route
  * const { getByText } = customRender(<MyComponent />, {
  *   route: '/projects/123',
- *   useMemoryRouter: true,
+ *   memoryRouter: true,
  * });
  */
 export function customRender(
@@ -199,7 +199,7 @@ export function customRender(
     isAuthenticated = false,
     route = '/',
     routes = [],
-    useMemoryRouter = false,
+    memoryRouter = false,
     queryClient = createTestQueryClient(),
     ...renderOptions
   } = options;
@@ -209,7 +209,7 @@ export function customRender(
   const finalSession = isAuthenticated && !session ? createMockSession() : session;
 
   // Set window location for non-memory router
-  if (!useMemoryRouter && route !== '/') {
+  if (!memoryRouter && route !== '/') {
     window.history.pushState({}, 'Test page', route);
   }
 
@@ -221,7 +221,7 @@ export function customRender(
         session={finalSession}
         authLoading={false}
         route={route}
-        useMemoryRouter={useMemoryRouter}
+        memoryRouter={memoryRouter}
         routes={routes}
       >
         {children}

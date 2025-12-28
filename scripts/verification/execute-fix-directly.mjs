@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Execute the project_users RLS fix by running each SQL statement individually
  */

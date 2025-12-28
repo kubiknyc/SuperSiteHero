@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Verify User Approval System Schema
@@ -73,7 +74,7 @@ const req = https.request(options, (res) => {
         console.log('✅ Verification Results:\n');
         console.log(JSON.stringify(parsed, null, 2));
         console.log('\n🎉 Schema verification completed successfully!\n');
-      } catch (e) {
+      } catch (_e) {
         console.log('Response:', data);
       }
     } else {

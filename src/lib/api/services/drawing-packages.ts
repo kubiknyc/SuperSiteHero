@@ -20,17 +20,14 @@ import type {
   DrawingPackageType,
 } from '../../../types/drawing';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnySupabaseQuery = any;
 
 // Helper to access tables that may not be in the generated types yet
 function fromTable(tableName: string): AnySupabaseQuery {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (supabase as any).from(tableName);
 }
 
 function callRpc(fnName: string, params?: Record<string, unknown>): AnySupabaseQuery {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (supabase as any).rpc(fnName, params);
 }
 

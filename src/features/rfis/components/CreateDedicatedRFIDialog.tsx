@@ -103,6 +103,9 @@ export function CreateDedicatedRFIDialog({
 
   const createRFI = useCreateRFI()
 
+  // Memoize today's date to avoid calling format(new Date()) during render
+  const minDate = useMemo(() => format(new Date(), 'yyyy-MM-dd'), [])
+
   // Fetch project users for distribution list
   const { data: projectUsers = [], isLoading: isLoadingUsers } = useProjectUsers(projectId)
 
@@ -125,11 +128,13 @@ export function CreateDedicatedRFIDialog({
   // Reset form when dialog opens
   useEffect(() => {
     if (open) {
-      // Set default due date to 7 days from now (common contract requirement)
-      const defaultDueDate = addDays(new Date(), 7)
-      setDateRequired(format(defaultDueDate, 'yyyy-MM-dd'))
-      // Default ball-in-court to Architect
-      setBallInCourtRole('architect')
+      setTimeout(() => {
+        // Set default due date to 7 days from now (common contract requirement)
+        const defaultDueDate = addDays(new Date(), 7)
+        setDateRequired(format(defaultDueDate, 'yyyy-MM-dd'))
+        // Default ball-in-court to Architect
+        setBallInCourtRole('architect')
+      }, 0)
     }
   }, [open])
 
@@ -312,7 +317,7 @@ export function CreateDedicatedRFIDialog({
                 value={dateRequired}
                 onChange={(e) => setDateRequired(e.target.value)}
                 disabled={createRFI.isPending}
-                min={format(new Date(), 'yyyy-MM-dd')}
+                min={minDate}
               />
               <p className="text-xs text-muted">
                 Default is 7 days. Check your contract for required response times.

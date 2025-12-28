@@ -125,8 +125,10 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
     // Get initial session
     supabase.auth.getSession()
       .then(async ({ data: { session } }) => {
-        setSession(session)
-        setUser(session?.user ?? null)
+        setTimeout(() => {
+          setSession(session)
+          setUser(session?.user ?? null)
+        }, 0)
 
         // Fetch user profile and MFA status
         if (session?.user) {
@@ -136,20 +138,26 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
           }
         }
 
-        setLoading(false)
+        setTimeout(() => {
+          setLoading(false)
+        }, 0)
       })
       .catch((error) => {
         logger.error('Error getting session:', error)
-        setSession(null)
-        setUser(null)
-        setUserProfile(null)
-        setLoading(false)
+        setTimeout(() => {
+          setSession(null)
+          setUser(null)
+          setUserProfile(null)
+          setLoading(false)
+        }, 0)
       })
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session)
-      setUser(session?.user ?? null)
+      setTimeout(() => {
+        setSession(session)
+        setUser(session?.user ?? null)
+      }, 0)
 
       // Fetch/clear user profile and MFA status
       if (session?.user) {
@@ -158,13 +166,15 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
           await refreshMFAStatus()
         }
       } else {
-        setUserProfile(null)
-        setMFA({
-          enrolled: false,
-          required: false,
-          factors: [],
-          verified: false
-        })
+        setTimeout(() => {
+          setUserProfile(null)
+          setMFA({
+            enrolled: false,
+            required: false,
+            factors: [],
+            verified: false
+          })
+        }, 0)
       }
     })
 
@@ -174,7 +184,9 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
   // Refresh MFA status when userProfile changes
   useEffect(() => {
     if (userProfile) {
-      refreshMFAStatus()
+      setTimeout(() => {
+        refreshMFAStatus()
+      }, 0)
     }
   }, [userProfile])
 

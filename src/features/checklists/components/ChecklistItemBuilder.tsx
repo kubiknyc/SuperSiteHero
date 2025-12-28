@@ -139,7 +139,7 @@ export function ChecklistItemBuilder({
 
   const renderItemConfig = (item: ChecklistTemplateItem) => {
     switch (item.item_type) {
-      case 'checkbox':
+      case 'checkbox': {
         const checkboxConfig = item.config as CheckboxItemConfig
         return (
           <div className="space-y-2">
@@ -157,8 +157,9 @@ export function ChecklistItemBuilder({
             </div>
           </div>
         )
+      }
 
-      case 'text':
+      case 'text': {
         const textConfig = item.config as TextItemConfig
         return (
           <div className="space-y-2">
@@ -206,8 +207,9 @@ export function ChecklistItemBuilder({
             </div>
           </div>
         )
+      }
 
-      case 'number':
+      case 'number': {
         const numberConfig = item.config as NumberItemConfig
         return (
           <div className="space-y-2">
@@ -281,8 +283,9 @@ export function ChecklistItemBuilder({
             </div>
           </div>
         )
+      }
 
-      case 'photo':
+      case 'photo': {
         const photoConfig = item.config as PhotoItemConfig
         return (
           <div className="space-y-2">
@@ -336,8 +339,9 @@ export function ChecklistItemBuilder({
             </div>
           </div>
         )
+      }
 
-      case 'signature':
+      case 'signature': {
         const signatureConfig = item.config as SignatureItemConfig
         return (
           <div className="space-y-2">
@@ -356,6 +360,7 @@ export function ChecklistItemBuilder({
             </div>
           </div>
         )
+      }
 
       default:
         return null

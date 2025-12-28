@@ -7,7 +7,6 @@ import { sendEmail } from '@/lib/email/email-service'
 import { generateDocumentCommentEmail } from '@/lib/email/templates'
 import { logger } from '../../../lib/utils/logger';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 // Helper to get user details for notifications

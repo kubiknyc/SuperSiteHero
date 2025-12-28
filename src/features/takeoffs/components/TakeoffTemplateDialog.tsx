@@ -112,19 +112,21 @@ export function TakeoffTemplateDialog({
 
   // Initialize form for edit mode
   useEffect(() => {
-    if (mode === 'edit' && existingTemplate) {
-      setName(existingTemplate.name)
-      setDescription(existingTemplate.description || '')
-      setMeasurementType(existingTemplate.measurement_type)
-      setScope(existingTemplate.project_id ? 'project' : 'company')
-      setTags(existingTemplate.tags || [])
-    } else if (mode === 'create') {
-      setName('')
-      setDescription('')
-      setMeasurementType(currentMeasurementType || 'linear')
-      setScope('project')
-      setTags([])
-    }
+    setTimeout(() => {
+      if (mode === 'edit' && existingTemplate) {
+        setName(existingTemplate.name)
+        setDescription(existingTemplate.description || '')
+        setMeasurementType(existingTemplate.measurement_type)
+        setScope(existingTemplate.project_id ? 'project' : 'company')
+        setTags(existingTemplate.tags || [])
+      } else if (mode === 'create') {
+        setName('')
+        setDescription('')
+        setMeasurementType(currentMeasurementType || 'linear')
+        setScope('project')
+        setTags([])
+      }
+    }, 0)
   }, [mode, existingTemplate, currentMeasurementType])
 
   // Handle tag addition

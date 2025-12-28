@@ -113,7 +113,7 @@ export function useOfflineSyncV2(options: UseOfflineSyncV2Options = {}) {
       }
 
       return { hasConflict: false };
-    } catch {
+    } catch (_error) {
       return { hasConflict: false };
     }
   }, []);

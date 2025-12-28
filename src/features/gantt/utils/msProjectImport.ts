@@ -266,8 +266,8 @@ export function parseMSProjectXML(xmlContent: string): ParsedSchedule {
     }
 
     return { tasks, dependencies, errors, warnings }
-  } catch (error) {
-    errors.push(`Failed to parse XML: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  } catch (_error) {
+    errors.push(`Failed to parse XML: ${_error instanceof Error ? _error.message : 'Unknown error'}`)
     return { tasks, dependencies, errors, warnings }
   }
 }

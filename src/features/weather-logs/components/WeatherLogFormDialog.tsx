@@ -128,7 +128,8 @@ export function WeatherLogFormDialog({
   // Reset form when dialog opens/closes
   useEffect(() => {
     if (!open) {
-      setErrors({})
+      // Use setTimeout to avoid synchronous state update in effect
+      setTimeout(() => setErrors({}), 0)
     }
   }, [open])
 
@@ -220,7 +221,7 @@ export function WeatherLogFormDialog({
         toast.success('Weather log created successfully', 'The weather log has been created.')
       }
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       toast.error(`Failed to ${isEditing ? 'update' : 'create'} weather log`, 'Please try again.')
     }
   }

@@ -51,6 +51,10 @@ export function RecordingPlayback({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [playbackRate, setPlaybackRate] = useState(1);
+  // Generate stable random heights for audio visualization bars
+  const [audioBarHeights] = useState(() =>
+    Array.from({ length: 12 }, () => 15 + Math.random() * 25)
+  );
 
   const { data: signedUrl, isLoading: isLoadingUrl, error: urlError } = useRecordingUrl(recording);
 
@@ -61,8 +65,8 @@ export function RecordingPlayback({
     if (seekToTime !== null && seekToTime !== undefined && mediaRef.current) {
       mediaRef.current.currentTime = seekToTime / 1000; // Convert ms to seconds
       if (!isPlaying) {
+        // Let the media element's onPlay handler update the state
         mediaRef.current.play();
-        setIsPlaying(true);
       }
     }
   }, [seekToTime, isPlaying]);
@@ -199,7 +203,9 @@ export function RecordingPlayback({
   // Listen for fullscreen changes
   useEffect(() => {
     const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      setTimeout(() => {
+        setIsFullscreen(!!document.fullscreenElement);
+      }, 0);
     };
 
     document.addEventListener('fullscreenchange', handleFullscreenChange);
@@ -281,14 +287,14 @@ export function RecordingPlayback({
               />
               {/* Audio visualization placeholder */}
               <div className="flex items-center gap-1">
-                {[...Array(12)].map((_, i) => (
+                {audioBarHeights.map((height, i) => (
                   <div
                     key={i}
                     className={`w-2 bg-blue-500 rounded-full transition-all duration-150 ${
                       isPlaying ? 'animate-pulse' : ''
                     }`}
                     style={{
-                      height: isPlaying ? `${15 + Math.random() * 25}px` : '15px',
+                      height: isPlaying ? `${height}px` : '15px',
                       animationDelay: `${i * 80}ms`,
                     }}
                   />

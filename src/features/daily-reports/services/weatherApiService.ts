@@ -191,8 +191,8 @@ export async function getWeatherForProject(projectId: string): Promise<WeatherDa
     }
 
     return null;
-  } catch (error) {
-    logger.error('Error fetching weather for project:', error);
+  } catch (_error) {
+    logger.error('Error fetching weather for project:', _error);
     return null;
   }
 }
@@ -225,8 +225,8 @@ async function geocodeAddress(address: string): Promise<GeoLocation | null> {
     }
 
     return null;
-  } catch (error) {
-    logger.error('Geocoding error:', error);
+  } catch (_error) {
+    logger.error('Geocoding error:', _error);
     return null;
   }
 }

@@ -14,12 +14,13 @@ export function MobileOfflineIndicator({
   className,
   showWhenOnline = false,
 }: MobileOfflineIndicatorProps) {
-  const [isOnline, setIsOnline] = useState(true)
+  const [isOnline, setIsOnline] = useState(() =>
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  )
   const [isReconnecting, setIsReconnecting] = useState(false)
   const [showSyncMessage, setShowSyncMessage] = useState(false)
 
   useEffect(() => {
-    setIsOnline(navigator.onLine)
 
     const handleOnline = () => {
       setIsOnline(true)
@@ -126,11 +127,12 @@ export function MobileOfflineIndicator({
 
 // Floating offline banner for use at top of pages
 export function MobileOfflineBanner() {
-  const [isOnline, setIsOnline] = useState(true)
+  const [isOnline, setIsOnline] = useState(() =>
+    typeof navigator !== 'undefined' ? navigator.onLine : true
+  )
   const [dismissed, setDismissed] = useState(false)
 
   useEffect(() => {
-    setIsOnline(navigator.onLine)
 
     const handleOnline = () => {
       setIsOnline(true)

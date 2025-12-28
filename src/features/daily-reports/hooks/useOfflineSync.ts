@@ -329,9 +329,9 @@ export function useOfflineSync() {
           .eq('daily_report_id', reportId)
           .not('id', 'in', `(${insertedIds.visitors.join(',')})`)
       }
-    } catch (error) {
+    } catch (_error) {
       // Rollback: Delete any entries we inserted during this failed sync
-      logger.error('Sync failed, rolling back inserted entries:', error)
+      logger.error('Sync failed, rolling back inserted entries:', _error)
 
       if (insertedIds.workforce.length > 0) {
         await supabase

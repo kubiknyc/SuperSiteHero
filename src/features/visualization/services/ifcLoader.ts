@@ -174,7 +174,7 @@ export class IFCLoaderService {
 
       const arrayBuffer = await response.arrayBuffer();
       return this.loadFromBuffer(arrayBuffer);
-    } catch (error) {
+    } catch (_error) {
       const message = error instanceof Error ? error.message : 'Failed to load IFC file';
       return {
         model: this.createEmptyModel(),
@@ -198,7 +198,7 @@ export class IFCLoaderService {
     try {
       const arrayBuffer = await file.arrayBuffer();
       return this.loadFromBuffer(arrayBuffer);
-    } catch (error) {
+    } catch (_error) {
       const message = error instanceof Error ? error.message : 'Failed to load IFC file';
       return {
         model: this.createEmptyModel(),
@@ -552,10 +552,11 @@ export function formatIFCPropertyValue(property: IFCProperty): string {
   switch (property.type) {
     case 'boolean':
       return property.value ? 'Yes' : 'No';
-    case 'number':
+    case 'number': {
       const num = typeof property.value === 'number' ? property.value : parseFloat(String(property.value));
       const formatted = Number.isInteger(num) ? num.toString() : num.toFixed(3);
       return property.unit ? `${formatted} ${property.unit}` : formatted;
+    }
     default:
       return String(property.value);
   }

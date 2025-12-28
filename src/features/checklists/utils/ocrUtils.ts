@@ -137,8 +137,8 @@ export async function extractTextBatch(
       results.push(result)
       completed++
       onBatchProgress?.(completed, files.length)
-    } catch (error) {
-      logger.error('Failed to extract text from image:', error)
+    } catch (_error) {
+      logger.error('Failed to extract text from image:', _error)
       // Continue with other images
       completed++
       onBatchProgress?.(completed, files.length)

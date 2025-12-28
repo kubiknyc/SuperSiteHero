@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Complete Database Wipe Script
  * Deletes all users from authentication and all data from the database
@@ -202,7 +203,7 @@ async function verifyDeletion() {
   console.log('\n📊 Step 5: Verifying deletion...\n');
 
   // Check auth users
-  const { data: { users }, error: authError } = await supabase.auth.admin.listUsers();
+  const { data: { users }, error: _authError } = await supabase.auth.admin.listUsers();
   console.log(`   Auth users remaining: ${users?.length || 0}`);
 
   // Check public.users

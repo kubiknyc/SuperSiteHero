@@ -146,6 +146,26 @@ function SearchResultSkeleton() {
 }
 
 /**
+ * Helper function to highlight matched terms - moved outside component to fix React Compiler "Cannot call impure function during render"
+ */
+function highlightText(text: string, highlightTerms: string[]) {
+  if (!highlightTerms.length) {return text}
+
+  const regex = new RegExp(`(${highlightTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
+  const parts = text.split(regex)
+
+  return parts.map((part, i) =>
+    highlightTerms.some(t => part.toLowerCase() === t.toLowerCase()) ? (
+      <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
+        {part}
+      </mark>
+    ) : (
+      part
+    )
+  )
+}
+
+/**
  * Single search result item
  */
 function SearchResultItem({
@@ -160,24 +180,6 @@ function SearchResultItem({
   highlightTerms: string[]
 }) {
   const Icon = ENTITY_TYPE_ICONS[result.entityType]
-
-  // Highlight matched terms in title
-  const highlightText = (text: string) => {
-    if (!highlightTerms.length) {return text}
-
-    const regex = new RegExp(`(${highlightTerms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi')
-    const parts = text.split(regex)
-
-    return parts.map((part, i) =>
-      highlightTerms.some(t => part.toLowerCase() === t.toLowerCase()) ? (
-        <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">
-          {part}
-        </mark>
-      ) : (
-        part
-      )
-    )
-  }
 
   return (
     <button
@@ -209,11 +211,11 @@ function SearchResultItem({
             )}
           </div>
           <h4 className="font-medium text-foreground dark:text-gray-100 truncate heading-card">
-            {highlightText(result.title)}
+            {highlightText(result.title, highlightTerms)}
           </h4>
           {result.description && (
             <p className="text-sm text-muted dark:text-disabled line-clamp-1 mt-0.5">
-              {highlightText(result.description)}
+              {highlightText(result.description, highlightTerms)}
             </p>
           )}
           <div className="flex items-center gap-2 mt-1 text-xs text-disabled dark:text-muted">
@@ -341,6 +343,21 @@ export function GlobalSearchBar({
     minQueryLength: 2,
   })
 
+  // Handle result selection - moved before handleKeyDown that uses it
+  const handleResultSelect = useCallback(
+    (result: SearchResult) => {
+      if (onResultSelect) {
+        onResultSelect(result)
+      } else {
+        navigate(result.url)
+      }
+      setIsOpen(false)
+      clearResults()
+      setQuery('')
+    },
+    [navigate, onResultSelect, clearResults, setQuery]
+  )
+
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
@@ -367,22 +384,7 @@ export function GlobalSearchBar({
         }
       }
     },
-    [selectedIndex, results, query, search, hasSearched, clearResults, setQuery]
-  )
-
-  // Handle result selection
-  const handleResultSelect = useCallback(
-    (result: SearchResult) => {
-      if (onResultSelect) {
-        onResultSelect(result)
-      } else {
-        navigate(result.url)
-      }
-      setIsOpen(false)
-      clearResults()
-      setQuery('')
-    },
-    [navigate, onResultSelect, clearResults, setQuery]
+    [selectedIndex, results, query, search, hasSearched, clearResults, setQuery, handleResultSelect]
   )
 
   // Toggle entity filter
@@ -428,7 +430,10 @@ export function GlobalSearchBar({
 
   // Reset selection when results change
   useEffect(() => {
-    setSelectedIndex(-1)
+    const timer = setTimeout(() => {
+      setSelectedIndex(-1)
+    }, 0)
+    return () => clearTimeout(timer)
   }, [results])
 
   // Scroll selected item into view

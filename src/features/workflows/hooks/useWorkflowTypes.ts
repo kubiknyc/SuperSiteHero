@@ -40,7 +40,7 @@ export function getWorkflowTypeIcon(workflowType: WorkflowType): string {
       return '💰'
     case 'daily':
       return '📅'
-    default:
+    default: {
       // Fallback based on name
       const name = workflowType.name_singular?.toLowerCase() || ''
       if (name.includes('rfi') || name.includes('request')) {return '📋'}
@@ -49,5 +49,6 @@ export function getWorkflowTypeIcon(workflowType: WorkflowType): string {
       if (name.includes('punch')) {return '✅'}
       if (name.includes('safety')) {return '🦺'}
       return '📄'
+    }
   }
 }

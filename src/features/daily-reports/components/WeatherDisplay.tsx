@@ -3,6 +3,7 @@
  * Shows weather conditions for daily reports
  */
 
+import { useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -85,12 +86,16 @@ export function WeatherBadge({
   weather: ExtendedWeatherData
   className?: string
 }) {
-  const IconComponent = getWeatherIconComponent(weather.condition)
   const iconColor = getWeatherIconColor(weather.condition)
+
+  const renderIcon = () => {
+    const IconComponent = getWeatherIconComponent(weather.condition)
+    return <IconComponent className={cn('h-3 w-3', iconColor)} />
+  }
 
   return (
     <Badge variant="outline" className={cn('gap-1', className)}>
-      <IconComponent className={cn('h-3 w-3', iconColor)} />
+      {renderIcon()}
       {weather.condition}
       {weather.temperatureHigh && (
         <span className="ml-1">
@@ -111,8 +116,12 @@ export function WeatherSummaryRow({
   weather: ExtendedWeatherData
   showDate?: boolean
 }) {
-  const IconComponent = getWeatherIconComponent(weather.condition)
   const iconColor = getWeatherIconColor(weather.condition)
+
+  const renderIcon = () => {
+    const IconComponent = getWeatherIconComponent(weather.condition)
+    return <IconComponent className={cn('h-4 w-4', iconColor)} />
+  }
 
   return (
     <div className="flex items-center gap-4 text-sm">
@@ -125,7 +134,7 @@ export function WeatherSummaryRow({
         </span>
       )}
       <div className="flex items-center gap-2 min-w-[120px]">
-        <IconComponent className={cn('h-4 w-4', iconColor)} />
+        {renderIcon()}
         <span>{weather.condition}</span>
       </div>
       <div className="flex items-center gap-1">
@@ -171,9 +180,11 @@ export function WeatherDisplay({
   } = useWeatherForDate(projectId, date, coordinates)
 
   // Notify parent when weather loads
-  if (weather && onWeatherLoad) {
-    onWeatherLoad(weather)
-  }
+  useEffect(() => {
+    if (weather && onWeatherLoad) {
+      onWeatherLoad(weather)
+    }
+  }, [weather, onWeatherLoad])
 
   if (isLoading) {
     return (
@@ -217,7 +228,6 @@ export function WeatherDisplay({
     return null
   }
 
-  const IconComponent = getWeatherIconComponent(weather.condition)
   const iconColor = getWeatherIconColor(weather.condition)
   const workability = isWorkableWeather({
     date: weather.date,
@@ -236,10 +246,15 @@ export function WeatherDisplay({
     sunset: null,
   })
 
+  const renderIcon = (size: string) => {
+    const IconComponent = getWeatherIconComponent(weather.condition)
+    return <IconComponent className={cn(size, iconColor)} />
+  }
+
   if (compact) {
     return (
       <div className={cn('flex items-center gap-3 p-3 bg-muted/50 rounded-lg', className)}>
-        <IconComponent className={cn('h-8 w-8', iconColor)} />
+        {renderIcon('h-8 w-8')}
         <div>
           <p className="font-medium text-sm">{weather.condition}</p>
           <p className="text-xs text-muted-foreground">
@@ -307,7 +322,7 @@ export function WeatherDisplay({
                     : 'bg-muted'
             )}
           >
-            <IconComponent className={cn('h-10 w-10', iconColor)} />
+            {renderIcon('h-10 w-10')}
           </div>
           <div>
             <p className="text-2xl font-bold">{weather.condition}</p>

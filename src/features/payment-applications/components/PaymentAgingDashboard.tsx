@@ -355,19 +355,22 @@ interface ReceivablesTableProps {
   sortDirection?: 'asc' | 'desc'
 }
 
-function ReceivablesTable({
-  receivables,
+interface ReceivablesSortHeaderProps {
+  column: string
+  children: React.ReactNode
+  onSort?: (column: string) => void
+  sortColumn?: string
+  sortDirection?: 'asc' | 'desc'
+}
+
+function ReceivablesSortHeader({
+  column,
+  children,
   onSort,
   sortColumn,
   sortDirection,
-}: ReceivablesTableProps) {
-  const SortHeader = ({
-    column,
-    children,
-  }: {
-    column: string
-    children: React.ReactNode
-  }) => (
+}: ReceivablesSortHeaderProps) {
+  return (
     <TableHead
       className={cn(onSort && 'cursor-pointer hover:bg-muted/50')}
       onClick={() => onSort?.(column)}
@@ -383,6 +386,14 @@ function ReceivablesTable({
       </div>
     </TableHead>
   )
+}
+
+function ReceivablesTable({
+  receivables,
+  onSort,
+  sortColumn,
+  sortDirection,
+}: ReceivablesTableProps) {
 
   return (
     <Card>
@@ -394,11 +405,11 @@ function ReceivablesTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <SortHeader column="project_name">Project</SortHeader>
-              <SortHeader column="application_number">Application</SortHeader>
-              <SortHeader column="period_to">Period End</SortHeader>
-              <SortHeader column="amount_outstanding">Outstanding</SortHeader>
-              <SortHeader column="days_outstanding">Days</SortHeader>
+              <ReceivablesSortHeader column="project_name" onSort={onSort} sortColumn={sortColumn} sortDirection={sortDirection}>Project</ReceivablesSortHeader>
+              <ReceivablesSortHeader column="application_number" onSort={onSort} sortColumn={sortColumn} sortDirection={sortDirection}>Application</ReceivablesSortHeader>
+              <ReceivablesSortHeader column="period_to" onSort={onSort} sortColumn={sortColumn} sortDirection={sortDirection}>Period End</ReceivablesSortHeader>
+              <ReceivablesSortHeader column="amount_outstanding" onSort={onSort} sortColumn={sortColumn} sortDirection={sortDirection}>Outstanding</ReceivablesSortHeader>
+              <ReceivablesSortHeader column="days_outstanding" onSort={onSort} sortColumn={sortColumn} sortDirection={sortDirection}>Days</ReceivablesSortHeader>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -541,10 +552,11 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
   const { data: projects } = useProjects()
 
   // Sort receivables
+  const receivables = report?.receivables
   const sortedReceivables = useMemo(() => {
-    if (!report?.receivables) {return []}
+    if (!receivables) {return []}
 
-    return [...report.receivables].sort((a, b) => {
+    return [...receivables].sort((a, b) => {
       let comparison = 0
 
       switch (sortColumn) {
@@ -569,7 +581,7 @@ export function PaymentAgingDashboard({ className }: PaymentAgingDashboardProps)
 
       return sortDirection === 'asc' ? comparison : -comparison
     })
-  }, [report?.receivables, sortColumn, sortDirection])
+  }, [receivables, sortColumn, sortDirection])
 
   const handleSort = (column: string) => {
     if (column === sortColumn) {

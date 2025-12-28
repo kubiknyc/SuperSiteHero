@@ -32,9 +32,11 @@ export function TemplateItemsPage() {
 
   // Sync local items with fetched data
   useEffect(() => {
-    if (template?.template_items) {
-      setLocalItems(template.template_items)
-    }
+    setTimeout(() => {
+      if (template?.template_items) {
+        setLocalItems(template.template_items)
+      }
+    }, 0);
   }, [template])
 
   const handleAddItem = async (
@@ -55,7 +57,7 @@ export function TemplateItemsPage() {
 
       setLocalItems([...localItems, newItem])
       toast.success('Item added successfully')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to add item')
     }
   }
@@ -67,7 +69,7 @@ export function TemplateItemsPage() {
       setLocalItems(
         localItems.map((item) => (item.id === itemId ? { ...item, ...updates } : item))
       )
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to update item')
     }
   }
@@ -80,7 +82,7 @@ export function TemplateItemsPage() {
       await deleteItem.mutateAsync({ itemId, templateId })
       setLocalItems(localItems.filter((item) => item.id !== itemId))
       toast.success('Item deleted successfully')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete item')
     }
   }
@@ -97,7 +99,7 @@ export function TemplateItemsPage() {
         })),
       })
       toast.success('Items reordered successfully')
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to reorder items')
     }
   }

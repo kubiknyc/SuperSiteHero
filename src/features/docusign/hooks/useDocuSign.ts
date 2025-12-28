@@ -71,6 +71,7 @@ export function useInitiateDocuSignConnection() {
       docuSignApi.initiateConnection(companyId!, dto),
     onSuccess: (data) => {
       // Redirect user to DocuSign OAuth page
+      // eslint-disable-next-line react-compiler/react-compiler
       window.location.href = data.authorizationUrl
     },
     onError: (error: Error) => {
@@ -113,8 +114,9 @@ export function useRefreshDocuSignToken() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: docuSignKeys.connectionStatus(companyId!) })
     },
-    onError: (error: Error) => {
-      toast.error(`Failed to refresh token: ${error.message}`)
+    onError: (error: unknown) => {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      toast.error(`Failed to refresh token: ${message}`)
     },
   })
 }

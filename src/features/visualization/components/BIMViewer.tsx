@@ -625,8 +625,8 @@ export function BIMViewer({
         await document.exitFullscreen();
         setIsFullscreen(false);
       }
-    } catch (err) {
-      logger.error('Fullscreen error:', err);
+    } catch (_err) {
+      logger.error('Fullscreen error:', _err);
     }
   }, []);
 

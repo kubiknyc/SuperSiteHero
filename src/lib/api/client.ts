@@ -78,7 +78,6 @@ class ApiClient {
    * @private
    */
   private applyFilters(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query: any,
     filters: QueryFilter[]
   ) {
@@ -147,7 +146,6 @@ class ApiClient {
    * @private
    */
   private applyOrdering(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query: any,
     orderBy: { column: string; ascending?: boolean }
   ) {
@@ -162,7 +160,6 @@ class ApiClient {
    * @private
    */
   private applyPagination(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     query: any,
     pagination: { page?: number; limit?: number; offset?: number }
   ) {
@@ -186,7 +183,6 @@ class ApiClient {
     const selectParam = options?.select || '*'
     const countParam = options?.count ? { count: 'exact' as const } : undefined
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let query = supabase.from(table as any).select(selectParam, countParam)
 
     // Apply filters
@@ -267,7 +263,6 @@ class ApiClient {
   ): Promise<T> {
     try {
       const { data, error } = await supabase
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
         .select(options?.select || '*')
         .eq('id', id)
@@ -289,9 +284,7 @@ class ApiClient {
   async insert<T>(table: string, record: Partial<T>): Promise<T> {
     try {
       const { data, error } = await supabase
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .insert(record as any)
         .select()
         .single()
@@ -316,9 +309,7 @@ class ApiClient {
       }
 
       const { data, error } = await supabase
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .insert(records as any[])
         .select()
 
@@ -343,9 +334,7 @@ class ApiClient {
   ): Promise<T> {
     try {
       const { data, error } = await supabase
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .update(updates as any)
         .eq('id', id)
         .select()
@@ -366,7 +355,6 @@ class ApiClient {
   async delete(table: string, id: string): Promise<void> {
     try {
       const { error } = await supabase
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .from(table as any)
         .delete()
         .eq('id', id)
@@ -406,11 +394,9 @@ class ApiClient {
    */
   async query<T>(
     table: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     callback: (query: any) => any
   ): Promise<T[]> {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const query = supabase.from(table as any)
       const result = callback(query)
       const { data, error } = await result

@@ -147,24 +147,33 @@ export function useVoiceRecorder(
     }
   }, [isSupported, onError])
 
-  // Analyze audio level for visualization
-  const analyzeAudioLevel = useCallback(() => {
-    if (!analyserRef.current) {return}
+  // Analyze audio level for visualization - use ref to avoid circular dependency
+  const analyzeAudioLevelRef = useRef<() => void>()
 
-    const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
-    analyserRef.current.getByteFrequencyData(dataArray)
+  useEffect(() => {
+    analyzeAudioLevelRef.current = () => {
+      if (!analyserRef.current) {return}
 
-    // Calculate average level
-    const sum = dataArray.reduce((acc, val) => acc + val, 0)
-    const average = sum / dataArray.length / 255 // Normalize to 0-1
+      const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
+      analyserRef.current.getByteFrequencyData(dataArray)
 
-    setAudioLevel(average)
-    onAudioLevel?.(average)
+      // Calculate average level
+      const sum = dataArray.reduce((acc, val) => acc + val, 0)
+      const average = sum / dataArray.length / 255 // Normalize to 0-1
 
-    if (isRecording) {
-      animationFrameRef.current = requestAnimationFrame(analyzeAudioLevel)
+      setAudioLevel(average)
+      onAudioLevel?.(average)
+
+      animationFrameRef.current = requestAnimationFrame(() => analyzeAudioLevelRef.current?.())
     }
-  }, [isRecording, onAudioLevel])
+  }, [onAudioLevel])
+
+  // Stop recording
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop()
+    }
+  }, [])
 
   // Start recording
   const startRecording = useCallback(async () => {
@@ -225,7 +234,7 @@ export function useVoiceRecorder(
         setAudioLevel(0)
       }
 
-      recorder.onerror = (event) => {
+      recorder.onerror = (_event) => {
         const errorMessage = 'Recording error occurred'
         setError(errorMessage)
         onError?.(new Error(errorMessage))
@@ -250,7 +259,7 @@ export function useVoiceRecorder(
       }, 1000)
 
       // Start audio level analysis
-      animationFrameRef.current = requestAnimationFrame(analyzeAudioLevel)
+      animationFrameRef.current = requestAnimationFrame(() => analyzeAudioLevelRef.current?.())
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : 'Failed to start recording'
@@ -266,15 +275,8 @@ export function useVoiceRecorder(
     onRecordingComplete,
     onError,
     cleanup,
-    analyzeAudioLevel,
+    stopRecording,
   ])
-
-  // Stop recording
-  const stopRecording = useCallback(() => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop()
-    }
-  }, [isRecording])
 
   // Cancel recording without saving
   const cancelRecording = useCallback(() => {

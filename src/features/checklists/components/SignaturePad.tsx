@@ -2,7 +2,7 @@
 // Canvas-based signature capture component using Konva
 // Phase: 3.2 - Photo & Signature Capture
 
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useState, useEffect, useCallback } from 'react'
 import { Stage, Layer, Line } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import Konva from 'konva'
@@ -40,6 +40,21 @@ export function SignaturePad({
   // Track if signature has been modified
   const [hasSignature, setHasSignature] = useState(false)
 
+  const captureSignature = useCallback(() => {
+    if (!stageRef.current) {return}
+
+    try {
+      // Export to data URL
+      const dataUrl = stageRef.current.toDataURL({
+        pixelRatio: 2, // Higher resolution
+      })
+
+      onSignatureCapture(dataUrl)
+    } catch (error) {
+      logger.error('Failed to capture signature:', error)
+    }
+  }, [onSignatureCapture])
+
   // Auto-capture signature when drawing stops
   useEffect(() => {
     if (hasSignature && !isDrawing && lines.length > 0) {
@@ -49,7 +64,7 @@ export function SignaturePad({
 
       return () => clearTimeout(timer)
     }
-  }, [hasSignature, isDrawing, lines])
+  }, [hasSignature, isDrawing, lines, captureSignature])
 
   const handleMouseDown = (e: KonvaEventObject<MouseEvent | TouchEvent>) => {
     if (disabled) {return}
@@ -81,31 +96,19 @@ export function SignaturePad({
     const lastLine = lines[lines.length - 1]
     if (!lastLine) {return}
 
-    // Add point to the current line
-    lastLine.points = lastLine.points.concat([pos.x, pos.y])
+    // Add point to the current line - create a new line object instead of mutating
+    const updatedLine = {
+      ...lastLine,
+      points: lastLine.points.concat([pos.x, pos.y])
+    }
 
     // Replace the last line with updated points
-    setLines(lines.slice(0, -1).concat([lastLine]))
+    setLines(lines.slice(0, -1).concat([updatedLine]))
   }
 
   const handleMouseUp = () => {
     if (disabled) {return}
     setIsDrawing(false)
-  }
-
-  const captureSignature = () => {
-    if (!stageRef.current) {return}
-
-    try {
-      // Export to data URL
-      const dataUrl = stageRef.current.toDataURL({
-        pixelRatio: 2, // Higher resolution
-      })
-
-      onSignatureCapture(dataUrl)
-    } catch (error) {
-      logger.error('Failed to capture signature:', error)
-    }
   }
 
   const handleClear = () => {

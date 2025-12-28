@@ -44,15 +44,6 @@ export function useGloveMode() {
     localStorage.setItem(GLOVE_MODE_KEY, String(isGloveModeEnabled))
   }, [isGloveModeEnabled])
 
-  // Initialize on mount (check if class should be applied)
-  useEffect(() => {
-    const stored = localStorage.getItem(GLOVE_MODE_KEY)
-    if (stored === 'true') {
-      document.documentElement.classList.add('glove-mode')
-      setIsGloveModeEnabled(true)
-    }
-  }, [])
-
   const enableGloveMode = useCallback(() => {
     setIsGloveModeEnabled(true)
   }, [])

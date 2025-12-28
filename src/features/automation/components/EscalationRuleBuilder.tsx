@@ -139,31 +139,6 @@ export function EscalationRuleBuilder({
   const updateRule = useUpdateEscalationRule()
   const testCondition = useTestRuleCondition()
 
-  // Initialize form when editing
-  useEffect(() => {
-    if (rule) {
-      setName(rule.name)
-      setDescription(rule.description || '')
-      setSourceType(rule.source_type)
-      setActionType(rule.action_type)
-      setActionConfig(rule.action_config as Record<string, unknown>)
-      setIsActive(rule.is_active)
-      setDelayMinutes(rule.execution_delay_minutes)
-
-      // Parse conditions
-      const cond = rule.trigger_condition as TriggerCondition
-      if ('and' in cond && cond.and) {
-        setConditions(cond.and.filter((c): c is SimpleCondition => 'field' in c))
-      } else if ('field' in cond) {
-        setConditions([cond as SimpleCondition])
-      } else {
-        setConditions([])
-      }
-    } else {
-      resetForm()
-    }
-  }, [rule, open])
-
   const resetForm = () => {
     setName('')
     setDescription('')
@@ -176,6 +151,35 @@ export function EscalationRuleBuilder({
     setTestData({})
     setTestResult(null)
   }
+
+  // Initialize form when editing
+  useEffect(() => {
+    if (rule) {
+      setTimeout(() => {
+        setName(rule.name)
+        setDescription(rule.description || '')
+        setSourceType(rule.source_type)
+        setActionType(rule.action_type)
+        setActionConfig(rule.action_config as Record<string, unknown>)
+        setIsActive(rule.is_active)
+        setDelayMinutes(rule.execution_delay_minutes)
+
+        // Parse conditions
+        const cond = rule.trigger_condition as TriggerCondition
+        if ('and' in cond && cond.and) {
+          setConditions(cond.and.filter((c): c is SimpleCondition => 'field' in c))
+        } else if ('field' in cond) {
+          setConditions([cond as SimpleCondition])
+        } else {
+          setConditions([])
+        }
+      }, 0)
+    } else {
+      setTimeout(() => {
+        resetForm()
+      }, 0)
+    }
+  }, [rule, open])
 
   const addCondition = () => {
     const fields = SOURCE_FIELDS[sourceType]

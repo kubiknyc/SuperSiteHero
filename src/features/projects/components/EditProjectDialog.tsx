@@ -52,19 +52,21 @@ export function EditProjectDialog({ project, open, onOpenChange }: EditProjectDi
   // Initialize form with project data
   useEffect(() => {
     if (open && project) {
-      setFormData({
-        name: project.name || '',
-        project_number: project.project_number || '',
-        description: project.description || '',
-        address: project.address || '',
-        city: project.city || '',
-        state: project.state || '',
-        zip: project.zip || '',
-        start_date: project.start_date || '',
-        end_date: project.end_date || '',
-        status: (project.status as ProjectStatus) || 'planning',
-      })
-      clearErrors()
+      setTimeout(() => {
+        setFormData({
+          name: project.name || '',
+          project_number: project.project_number || '',
+          description: project.description || '',
+          address: project.address || '',
+          city: project.city || '',
+          state: project.state || '',
+          zip: project.zip || '',
+          start_date: project.start_date || '',
+          end_date: project.end_date || '',
+          status: (project.status as ProjectStatus) || 'planning',
+        })
+        clearErrors()
+      }, 0)
     }
   }, [open, project, clearErrors])
 

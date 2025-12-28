@@ -97,7 +97,7 @@ describe('Markups API Service', () => {
       // Mock order to return chainable object that also resolves
       const chainable = {
         ...mockSupabaseChain,
-        then: (resolve: Function) => resolve({ data: mockMarkups, error: null }),
+        then: (resolve: (value: unknown) => void) => resolve({ data: mockMarkups, error: null }),
       }
       mockSupabaseChain.order.mockReturnValue(chainable)
 

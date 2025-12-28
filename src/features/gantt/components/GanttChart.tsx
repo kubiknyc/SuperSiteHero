@@ -3,22 +3,22 @@
 // Enhanced with tablet optimizations for better landscape/portrait viewing
 
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
-import { format, differenceInDays, addDays } from 'date-fns'
-import type {
-  ScheduleItem,
-  TaskDependency,
-  GanttZoomLevel,
-  GanttConfig,
-  GanttTask,
+import { format } from 'date-fns'
+import {
+  DEFAULT_GANTT_CONFIG,
+  TODAY_LINE_COLOR,
+  type ScheduleItem,
+  type TaskDependency,
+  type GanttZoomLevel,
+  type GanttConfig,
+  type GanttTask,
 } from '@/types/schedule'
-import { DEFAULT_GANTT_CONFIG, TODAY_LINE_COLOR } from '@/types/schedule'
 import { GanttToolbar } from './GanttToolbar'
 import { GanttTimeline } from './GanttTimeline'
 import { GanttTaskBar } from './GanttTaskBar'
 import {
   getColumnWidth,
   calculateOptimalDateRange,
-  getOptimalZoomLevel,
   calculateTimelineWidth,
   getDatePosition,
 } from '../utils/dateUtils'
@@ -67,23 +67,26 @@ export function GanttChart({
   hasBaseline = false,
   config: customConfig,
 }: GanttChartProps) {
+  'use no memo'
   const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
 
   // Tablet/responsive layout hooks
   const layout = useResponsiveLayout()
-  const { isTouchDevice, isTablet, isTabletLandscape, isTabletPortrait, orientation } = useOrientation()
+  const { isTouchDevice, isTablet, isTabletLandscape, isTabletPortrait } = useOrientation()
 
   // Sidebar collapse state for tablets
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
 
   // Auto-collapse sidebar on tablet portrait
   useEffect(() => {
-    if (isTabletPortrait) {
-      setIsSidebarCollapsed(true)
-    } else if (isTabletLandscape) {
-      setIsSidebarCollapsed(false)
-    }
+    setTimeout(() => {
+      if (isTabletPortrait) {
+        setIsSidebarCollapsed(true)
+      } else if (isTabletLandscape) {
+        setIsSidebarCollapsed(false)
+      }
+    }, 0)
   }, [isTabletPortrait, isTabletLandscape])
 
   // Calculate responsive sidebar width based on device
@@ -115,9 +118,8 @@ export function GanttChart({
   )
 
   // State
-  const [zoomLevel, setZoomLevel] = useState<GanttZoomLevel>('week')
+  const [zoomLevel, setZoomLevel] = useState<GanttZoomLevel>(customConfig?.zoom_level || 'week')
   const [scrollX, setScrollX] = useState(0)
-  const [scrollY, setScrollY] = useState(0)
   const [hoveredTask, setHoveredTask] = useState<ScheduleItem | null>(null)
   const [showCriticalPath, setShowCriticalPath] = useState(config.show_critical_path)
   const [showDependencies, setShowDependencies] = useState(config.show_dependencies)
@@ -128,20 +130,12 @@ export function GanttChart({
 
   // Calculate date range
   const { startDate, endDate } = useMemo(() => {
-    const range = calculateOptimalDateRange(
+    return calculateOptimalDateRange(
       dateRange?.earliest_start || null,
       dateRange?.latest_finish || null,
       14 // 2 weeks padding
     )
-
-    // Auto-select optimal zoom level based on date range
-    const optimalZoom = getOptimalZoomLevel(range.startDate, range.endDate)
-    if (optimalZoom !== zoomLevel && !customConfig?.zoom_level) {
-      setZoomLevel(optimalZoom)
-    }
-
-    return range
-  }, [dateRange, customConfig?.zoom_level])
+  }, [dateRange?.earliest_start, dateRange?.latest_finish])
 
   // Calculate critical path
   const criticalPathResult = useMemo((): CriticalPathResult | null => {
@@ -213,7 +207,6 @@ export function GanttChart({
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLDivElement
     setScrollX(target.scrollLeft)
-    setScrollY(target.scrollTop)
   }, [])
 
   // Scroll to today
@@ -241,15 +234,15 @@ export function GanttChart({
   // Initial scroll to today
   useEffect(() => {
     scrollToToday()
-  }, []) // Only on mount
+  }, [scrollToToday]) // Only on mount
 
   // Drag handlers
-  const handleDragStart = useCallback((task: ScheduleItem, mode: DragMode) => {
+  const handleDragStart = useCallback((task: ScheduleItem, _mode: DragMode) => {
     setIsDragging(true)
     setDraggedTaskId(task.id)
   }, [])
 
-  const handleDragMove = useCallback((task: ScheduleItem, result: DragResult) => {
+  const handleDragMove = useCallback((_task: ScheduleItem, _result: DragResult) => {
     // Could show preview or update UI during drag
   }, [])
 
@@ -501,7 +494,7 @@ export function GanttChart({
                 </button>
               </div>
             )}
-            {visibleItems.map((task, index) => {
+            {visibleItems.map((task) => {
               const floatInfo = getFloatInfo(task.id)
               return (
                 <div
@@ -701,10 +694,10 @@ export function GanttChart({
             {hoveredTask.is_critical && (
               <p className="text-error font-medium">⚠️ Critical Path</p>
             )}
-            {hoveredTask.baseline_start_date && (
+            {hoveredTask.baseline_start_date && hoveredTask.baseline_finish_date && (
               <p className="text-muted text-xs mt-2 pt-2 border-t">
                 Baseline: {format(new Date(hoveredTask.baseline_start_date), 'MMM d')} -{' '}
-                {format(new Date(hoveredTask.baseline_finish_date!), 'MMM d')}
+                {format(new Date(hoveredTask.baseline_finish_date), 'MMM d')}
               </p>
             )}
           </div>

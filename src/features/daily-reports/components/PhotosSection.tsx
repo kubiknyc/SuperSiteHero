@@ -66,7 +66,7 @@ export function PhotosSection({
           }
 
           processedPhotos.push(photo)
-        } catch (error) {
+        } catch (_error) {
           logger.error(`Error processing ${file.name}:`, error)
           toast.error(`Failed to process ${file.name}`)
         }
@@ -76,7 +76,7 @@ export function PhotosSection({
         onAddPhotos(processedPhotos)
         toast.success(`Added ${processedPhotos.length} photo${processedPhotos.length > 1 ? 's' : ''}`)
       }
-    } catch (error) {
+    } catch (_error) {
       logger.error('Error processing photos:', error)
       toast.error('Failed to process photos')
     } finally {

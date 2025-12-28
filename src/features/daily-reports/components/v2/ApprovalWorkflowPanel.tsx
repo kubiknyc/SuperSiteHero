@@ -184,8 +184,8 @@ export function ApprovalWorkflowPanel({
       setSubmitDialogOpen(false);
       setSignature(null);
       setSignerName('');
-    } catch (error) {
-      logger.error('Submit failed:', error);
+    } catch (_error) {
+      logger.error('Submit failed:', _error);
     } finally {
       setProcessing(false);
     }
@@ -201,8 +201,8 @@ export function ApprovalWorkflowPanel({
       setSignature(null);
       setSignerName('');
       setApprovalComments('');
-    } catch (error) {
-      logger.error('Approve failed:', error);
+    } catch (_error) {
+      logger.error('Approve failed:', _error);
     } finally {
       setProcessing(false);
     }
@@ -216,8 +216,8 @@ export function ApprovalWorkflowPanel({
       await onRequestChanges(rejectionReasonInput);
       setRejectDialogOpen(false);
       setRejectionReasonInput('');
-    } catch (error) {
-      logger.error('Request changes failed:', error);
+    } catch (_error) {
+      logger.error('Request changes failed:', _error);
     } finally {
       setProcessing(false);
     }
@@ -233,8 +233,8 @@ export function ApprovalWorkflowPanel({
     setProcessing(true);
     try {
       await onLock();
-    } catch (error) {
-      logger.error('Lock failed:', error);
+    } catch (_error) {
+      logger.error('Lock failed:', _error);
     } finally {
       setProcessing(false);
     }

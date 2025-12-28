@@ -76,6 +76,112 @@ const SCOPE_LABELS: Record<TemplateScope, string> = {
   company: 'Company',
 };
 
+// Template list item component - moved outside to fix React Compiler "Cannot create components during render"
+interface TemplateListItemProps {
+  template: DailyReportTemplate;
+  isSelected: boolean;
+  onClick: () => void;
+}
+
+function TemplateListItem({ template, isSelected, onClick }: TemplateListItemProps) {
+  const ScopeIcon = SCOPE_ICONS[template.scope];
+  const workforceCount = template.workforce_template?.length || 0;
+  const equipmentCount = template.equipment_template?.length || 0;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+        isSelected
+          ? 'border-blue-500 bg-blue-50'
+          : 'border-border hover:border-input hover:bg-surface'
+      }`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2">
+            <h4 className="font-medium text-foreground truncate heading-card">{template.name}</h4>
+            <Badge variant="outline" className="flex items-center gap-1 text-xs">
+              <ScopeIcon className="h-3 w-3" />
+              {SCOPE_LABELS[template.scope]}
+            </Badge>
+            {template.is_default && (
+              <Badge variant="secondary" className="flex items-center gap-1">
+                <Star className="h-3 w-3" />
+                Default
+              </Badge>
+            )}
+          </div>
+          {template.description && (
+            <p className="text-sm text-muted mt-1 line-clamp-2">{template.description}</p>
+          )}
+
+          {/* Template Stats */}
+          <div className="flex items-center gap-4 mt-3">
+            {workforceCount > 0 && (
+              <div className="flex items-center gap-1 text-xs text-secondary">
+                <Users className="h-3.5 w-3.5" />
+                <span>
+                  {workforceCount} crew{workforceCount !== 1 ? 's' : ''}
+                </span>
+              </div>
+            )}
+            {equipmentCount > 0 && (
+              <div className="flex items-center gap-1 text-xs text-secondary">
+                <Truck className="h-3.5 w-3.5" />
+                <span>{equipmentCount} equipment</span>
+              </div>
+            )}
+            {template.usage_count > 0 && (
+              <div className="flex items-center gap-1 text-xs text-disabled">
+                <TrendingUp className="h-3.5 w-3.5" />
+                <span>Used {template.usage_count}x</span>
+              </div>
+            )}
+          </div>
+
+          {/* Tags */}
+          {template.tags && template.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1 mt-2">
+              {template.tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="outline" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+              {template.tags.length > 3 && (
+                <Badge variant="outline" className="text-xs">
+                  +{template.tags.length - 3}
+                </Badge>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Selection indicator */}
+        <div className={`flex-shrink-0 ml-4 ${isSelected ? 'text-primary' : 'text-gray-300'}`}>
+          <CheckCircle className={`h-6 w-6 ${isSelected ? 'fill-blue-100' : ''}`} />
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// Empty state component - moved outside to fix React Compiler "Cannot create components during render"
+interface EmptyStateProps {
+  message: string;
+  icon: React.ElementType;
+}
+
+function EmptyState({ message, icon: Icon }: EmptyStateProps) {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-muted">
+      <Icon className="h-12 w-12 mb-4 opacity-50" />
+      <p className="text-sm font-medium">{message}</p>
+    </div>
+  );
+}
+
 export function TemplateImportDialog({
   open,
   onOpenChange,
@@ -136,111 +242,10 @@ export function TemplateImportDialog({
       const result = await applyTemplate.mutateAsync(selectedTemplateId);
       onApplyTemplate(result);
       onOpenChange(false);
-    } catch (error) {
+    } catch (_error) {
       // Error is handled by the mutation
     }
   }, [selectedTemplateId, applyTemplate, onApplyTemplate, onOpenChange]);
-
-  // Template list item component
-  const TemplateListItem = ({
-    template,
-    isSelected,
-    onClick,
-  }: {
-    template: DailyReportTemplate;
-    isSelected: boolean;
-    onClick: () => void;
-  }) => {
-    const ScopeIcon = SCOPE_ICONS[template.scope];
-    const workforceCount = template.workforce_template?.length || 0;
-    const equipmentCount = template.equipment_template?.length || 0;
-
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-          isSelected
-            ? 'border-blue-500 bg-blue-50'
-            : 'border-border hover:border-input hover:bg-surface'
-        }`}
-      >
-        <div className="flex items-start justify-between">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <h4 className="font-medium text-foreground truncate heading-card">{template.name}</h4>
-              <Badge variant="outline" className="flex items-center gap-1 text-xs">
-                <ScopeIcon className="h-3 w-3" />
-                {SCOPE_LABELS[template.scope]}
-              </Badge>
-              {template.is_default && (
-                <Badge variant="secondary" className="flex items-center gap-1">
-                  <Star className="h-3 w-3" />
-                  Default
-                </Badge>
-              )}
-            </div>
-            {template.description && (
-              <p className="text-sm text-muted mt-1 line-clamp-2">{template.description}</p>
-            )}
-
-            {/* Template Stats */}
-            <div className="flex items-center gap-4 mt-3">
-              {workforceCount > 0 && (
-                <div className="flex items-center gap-1 text-xs text-secondary">
-                  <Users className="h-3.5 w-3.5" />
-                  <span>
-                    {workforceCount} crew{workforceCount !== 1 ? 's' : ''}
-                  </span>
-                </div>
-              )}
-              {equipmentCount > 0 && (
-                <div className="flex items-center gap-1 text-xs text-secondary">
-                  <Truck className="h-3.5 w-3.5" />
-                  <span>{equipmentCount} equipment</span>
-                </div>
-              )}
-              {template.usage_count > 0 && (
-                <div className="flex items-center gap-1 text-xs text-disabled">
-                  <TrendingUp className="h-3.5 w-3.5" />
-                  <span>Used {template.usage_count}x</span>
-                </div>
-              )}
-            </div>
-
-            {/* Tags */}
-            {template.tags && template.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
-                {template.tags.slice(0, 3).map((tag) => (
-                  <Badge key={tag} variant="outline" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
-                {template.tags.length > 3 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{template.tags.length - 3}
-                  </Badge>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Selection indicator */}
-          <div className={`flex-shrink-0 ml-4 ${isSelected ? 'text-primary' : 'text-gray-300'}`}>
-            <CheckCircle className={`h-6 w-6 ${isSelected ? 'fill-blue-100' : ''}`} />
-          </div>
-        </div>
-      </button>
-    );
-  };
-
-  // Empty state component
-  const EmptyState = ({ message, icon: Icon }: { message: string; icon: React.ElementType }) => (
-    <div className="flex flex-col items-center justify-center py-12 text-muted">
-      <Icon className="h-12 w-12 mb-4 opacity-50" />
-      <p className="text-sm font-medium">{message}</p>
-    </div>
-  );
 
   // Loading state
   const isLoading = isLoadingProject || isLoadingPopular || isLoadingRecent;

@@ -20,7 +20,6 @@ import {
   Smartphone,
   Tablet,
   Globe,
-  MapPin,
   Clock,
   Trash2,
   RefreshCw,
@@ -145,8 +144,8 @@ export function SessionManagement() {
       ];
 
       setSessions(mockSessions);
-    } catch (error) {
-      logger.error('[SessionManagement] Failed to fetch sessions:', error);
+    } catch (_error) {
+      logger.error('[SessionManagement] Failed to fetch sessions:', _error);
       toast.error('Failed to load sessions');
     } finally {
       setIsLoading(false);
@@ -180,8 +179,8 @@ export function SessionManagement() {
       }
 
       setSessions((prev) => prev.filter((s) => s.id !== sessionToRevoke));
-    } catch (error) {
-      logger.error('[SessionManagement] Failed to revoke session:', error);
+    } catch (_error) {
+      logger.error('[SessionManagement] Failed to revoke session:', _error);
       toast.error('Failed to terminate session');
     } finally {
       setSessionToRevoke(null);
@@ -194,8 +193,8 @@ export function SessionManagement() {
       // Sign out from all devices
       await supabase.auth.signOut({ scope: 'global' });
       toast.success('Signed out from all devices');
-    } catch (error) {
-      logger.error('[SessionManagement] Failed to revoke all sessions:', error);
+    } catch (_error) {
+      logger.error('[SessionManagement] Failed to revoke all sessions:', _error);
       toast.error('Failed to sign out from all devices');
     } finally {
       setShowRevokeAllDialog(false);

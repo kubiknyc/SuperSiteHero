@@ -49,6 +49,16 @@ export function EnhancedOfflineIndicator({
 }: EnhancedOfflineIndicatorProps) {
   const { isOnline, networkQuality, lastOnlineAt, lastOfflineAt } = useOnlineStatus()
   const [isOpen, setIsOpen] = useState(false)
+  const [currentTime, setCurrentTime] = useState(() => Date.now())
+
+  // Update current time every minute to refresh relative timestamps
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(Date.now())
+    }, 60000) // Update every minute
+
+    return () => clearInterval(interval)
+  }, [])
 
   const status = useMemo(() => {
     if (!isOnline) {
@@ -98,14 +108,14 @@ export function EnhancedOfflineIndicator({
   const lastSyncFormatted = useMemo(() => {
     if (!syncStatus?.lastSyncAt) {return 'Never'}
 
-    const diff = Date.now() - syncStatus.lastSyncAt
+    const diff = currentTime - syncStatus.lastSyncAt
     const minutes = Math.floor(diff / 60000)
     const hours = Math.floor(minutes / 60)
 
     if (hours > 0) {return `${hours}h ago`}
     if (minutes > 0) {return `${minutes}m ago`}
     return 'Just now'
-  }, [syncStatus?.lastSyncAt])
+  }, [syncStatus, currentTime])
 
   const positionClasses = {
     'top-right': 'fixed top-4 right-4 z-50',

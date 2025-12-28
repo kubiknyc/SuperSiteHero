@@ -70,8 +70,8 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
       const authUrl = await initiateConnection.mutateAsync();
       // Redirect to Google OAuth
       window.location.href = authUrl;
-    } catch (error) {
-      logger.error('Failed to initiate Google Calendar connection:', error);
+    } catch (_error) {
+      logger.error('Failed to initiate Google Calendar connection:', _error);
     }
   };
 
@@ -80,8 +80,8 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
     try {
       await disconnect.mutateAsync(status.connectionId);
       onConnectionChange?.();
-    } catch (error) {
-      logger.error('Failed to disconnect from Google Calendar:', error);
+    } catch (_error) {
+      logger.error('Failed to disconnect from Google Calendar:', _error);
     }
   };
 
@@ -92,8 +92,8 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         connectionId: status.connectionId,
         updates: { sync_enabled: enabled },
       });
-    } catch (error) {
-      logger.error('Failed to update sync setting:', error);
+    } catch (_error) {
+      logger.error('Failed to update sync setting:', _error);
     }
   };
 
@@ -104,8 +104,8 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
         connectionId: status.connectionId,
         updates: { sync_direction: direction as 'to_google' | 'from_google' | 'bidirectional' },
       });
-    } catch (error) {
-      logger.error('Failed to update sync direction:', error);
+    } catch (_error) {
+      logger.error('Failed to update sync direction:', _error);
     }
   };
 
@@ -113,8 +113,8 @@ export function CalendarConnectionCard({ onConnectionChange }: CalendarConnectio
     if (!status?.connectionId) {return;}
     try {
       await refreshToken.mutateAsync(status.connectionId);
-    } catch (error) {
-      logger.error('Failed to refresh token:', error);
+    } catch (_error) {
+      logger.error('Failed to refresh token:', _error);
     }
   };
 

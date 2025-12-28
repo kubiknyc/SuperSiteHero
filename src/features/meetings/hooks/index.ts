@@ -11,6 +11,10 @@ export {
   useDeleteMeeting,
   useAddActionItem,
   useUpdateActionItem,
+  useDistributeMinutes,
+  usePublishMinutes,
+  useAvailablePreviousMeetings,
+  useNextMeeting,
 
   // Constants
   MEETING_TYPES,

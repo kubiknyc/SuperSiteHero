@@ -30,7 +30,6 @@ import {
   Trash2,
   Check,
   X,
-  Palette,
   Loader2,
   FolderOpen,
   Calendar,
@@ -140,10 +139,42 @@ function getColorClass(color: string): string {
   return found?.class || 'bg-gray-500'
 }
 
-function getIconComponent(iconName: string): React.ComponentType<{ className?: string }> {
-  const found = CATEGORY_ICONS.find(i => i.value === iconName)
-  return found?.Icon || FolderOpen
+// ============================================================================
+// Category Icon Component - renders icon by name using a switch statement
+// to avoid dynamic component creation during render
+// ============================================================================
+
+interface CategoryIconProps {
+  iconName: string
+  className?: string
 }
+
+const CategoryIcon = React.memo(({ iconName, className }: CategoryIconProps) => {
+  switch (iconName) {
+    case 'Calendar':
+      return <Calendar className={className} />
+    case 'CalendarDays':
+      return <CalendarDays className={className} />
+    case 'CalendarRange':
+      return <CalendarRange className={className} />
+    case 'Settings':
+      return <Settings className={className} />
+    case 'FileText':
+      return <FileText className={className} />
+    case 'BarChart2':
+      return <BarChart2 className={className} />
+    case 'Shield':
+      return <Shield className={className} />
+    case 'AlertTriangle':
+      return <AlertTriangle className={className} />
+    case 'Truck':
+      return <Truck className={className} />
+    case 'FolderOpen':
+    default:
+      return <FolderOpen className={className} />
+  }
+})
+CategoryIcon.displayName = 'CategoryIcon'
 
 // ============================================================================
 // Sortable Category Item Component
@@ -175,8 +206,6 @@ function SortableCategoryItem({
     transition,
   }
 
-  const IconComponent = getIconComponent(category.icon)
-
   return (
     <div
       ref={setNodeRef}
@@ -201,7 +230,7 @@ function SortableCategoryItem({
           getColorClass(category.color)
         )}
       >
-        <IconComponent className="h-4 w-4 text-white" />
+        <CategoryIcon iconName={category.icon} className="h-4 w-4 text-white" />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -278,17 +307,19 @@ function CategoryFormDialog({
   const isEditing = !!category
 
   useEffect(() => {
-    if (category) {
-      setName(category.name)
-      setDescription(category.description)
-      setColor(category.color)
-      setIcon(category.icon)
-    } else {
-      setName('')
-      setDescription('')
-      setColor('blue')
-      setIcon('Calendar')
-    }
+    setTimeout(() => {
+      if (category) {
+        setName(category.name)
+        setDescription(category.description)
+        setColor(category.color)
+        setIcon(category.icon)
+      } else {
+        setName('')
+        setDescription('')
+        setColor('blue')
+        setIcon('Calendar')
+      }
+    }, 0)
   }, [category, open])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -299,8 +330,6 @@ function CategoryFormDialog({
     }
     await onSubmit({ name: name.trim(), description: description.trim(), color, icon })
   }
-
-  const IconComponent = getIconComponent(icon)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -371,7 +400,7 @@ function CategoryFormDialog({
                   <SelectTrigger>
                     <SelectValue>
                       <div className="flex items-center gap-2">
-                        <IconComponent className="h-4 w-4" />
+                        <CategoryIcon iconName={icon} className="h-4 w-4" />
                         {CATEGORY_ICONS.find(i => i.value === icon)?.label}
                       </div>
                     </SelectValue>
@@ -399,7 +428,7 @@ function CategoryFormDialog({
                     getColorClass(color)
                   )}
                 >
-                  <IconComponent className="h-5 w-5 text-white" />
+                  <CategoryIcon iconName={icon} className="h-5 w-5 text-white" />
                 </div>
                 <div>
                   <p className="font-medium">{name || 'Category Name'}</p>

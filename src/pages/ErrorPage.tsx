@@ -7,10 +7,20 @@ import { useNavigate, useRouteError } from 'react-router-dom';
 import { Logo } from '@/components/brand/Logo';
 import { Button } from '@/components/ui/button';
 import { Home, RefreshCw, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 interface ErrorPageProps {
   error?: Error;
   resetError?: () => void;
+}
+
+function ErrorId() {
+  const [errorId] = useState(() => Date.now().toString(36).toUpperCase());
+  return (
+    <p className="text-caption text-disabled dark:text-secondary mt-1">
+      Error ID: {errorId}
+    </p>
+  );
 }
 
 export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
@@ -168,9 +178,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
           <p className="text-caption text-disabled dark:text-secondary">
             <span className="font-semibold text-primary dark:text-primary-400">JobSight</span> - Construction Field Management
           </p>
-          <p className="text-caption text-disabled dark:text-secondary mt-1">
-            Error ID: {Date.now().toString(36).toUpperCase()}
-          </p>
+          <ErrorId />
         </div>
       </div>
     </div>

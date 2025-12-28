@@ -109,12 +109,16 @@ export function ConnectionStatus({
   // Listen for online/offline events
   useEffect(() => {
     const handleOnline = () => {
-      setStatus('connecting')
-      // Supabase will auto-reconnect
+      setTimeout(() => {
+        setStatus('connecting')
+        // Supabase will auto-reconnect
+      }, 0);
     }
 
     const handleOffline = () => {
-      setStatus('disconnected')
+      setTimeout(() => {
+        setStatus('disconnected')
+      }, 0);
     }
 
     window.addEventListener('online', handleOnline)
@@ -122,7 +126,9 @@ export function ConnectionStatus({
 
     // Check initial state
     if (!navigator.onLine) {
-      setStatus('disconnected')
+      setTimeout(() => {
+        setStatus('disconnected')
+      }, 0);
     }
 
     return () => {
@@ -221,14 +227,24 @@ export function useConnectionStatus(conversationId?: string): ConnectionState {
 
   // Also listen for browser online/offline
   useEffect(() => {
-    const handleOnline = () => setStatus('connecting')
-    const handleOffline = () => setStatus('disconnected')
+    const handleOnline = () => {
+      setTimeout(() => {
+        setStatus('connecting')
+      }, 0);
+    }
+    const handleOffline = () => {
+      setTimeout(() => {
+        setStatus('disconnected')
+      }, 0);
+    }
 
     window.addEventListener('online', handleOnline)
     window.addEventListener('offline', handleOffline)
 
     if (!navigator.onLine) {
-      setStatus('disconnected')
+      setTimeout(() => {
+        setStatus('disconnected')
+      }, 0);
     }
 
     return () => {

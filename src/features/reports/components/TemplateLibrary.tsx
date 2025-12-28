@@ -62,36 +62,63 @@ import type { ReportDataSource } from '@/types/report-builder'
 import { getDataSourceLabel } from '@/types/report-builder'
 
 // ============================================================================
-// Icon Mapping
+// Template Icon Component - renders icon by name using switch statement
+// to avoid dynamic component creation during render
 // ============================================================================
 
-const iconMap: Record<string, React.ElementType> = {
-  Calendar,
-  CalendarDays,
-  CalendarRange,
-  HelpCircle,
-  FileCheck,
-  RefreshCw,
-  DollarSign,
-  AlertTriangle,
-  ClipboardCheck,
-  CheckSquare,
-  CheckCircle,
-  Users,
-  File,
-  FileText,
-  Truck,
-  Shield,
-  MessageSquare,
-  TrendingUp,
-  Activity,
-  BarChart2,
-  Settings,
+interface TemplateIconProps {
+  iconName: string
+  className?: string
 }
 
-function getIcon(iconName: string): React.ElementType {
-  return iconMap[iconName] || FileText
-}
+const TemplateIcon = React.memo(({ iconName, className }: TemplateIconProps) => {
+  switch (iconName) {
+    case 'Calendar':
+      return <Calendar className={className} />
+    case 'CalendarDays':
+      return <CalendarDays className={className} />
+    case 'CalendarRange':
+      return <CalendarRange className={className} />
+    case 'HelpCircle':
+      return <HelpCircle className={className} />
+    case 'FileCheck':
+      return <FileCheck className={className} />
+    case 'RefreshCw':
+      return <RefreshCw className={className} />
+    case 'DollarSign':
+      return <DollarSign className={className} />
+    case 'AlertTriangle':
+      return <AlertTriangle className={className} />
+    case 'ClipboardCheck':
+      return <ClipboardCheck className={className} />
+    case 'CheckSquare':
+      return <CheckSquare className={className} />
+    case 'CheckCircle':
+      return <CheckCircle className={className} />
+    case 'Users':
+      return <Users className={className} />
+    case 'File':
+      return <File className={className} />
+    case 'Truck':
+      return <Truck className={className} />
+    case 'Shield':
+      return <Shield className={className} />
+    case 'MessageSquare':
+      return <MessageSquare className={className} />
+    case 'TrendingUp':
+      return <TrendingUp className={className} />
+    case 'Activity':
+      return <Activity className={className} />
+    case 'BarChart2':
+      return <BarChart2 className={className} />
+    case 'Settings':
+      return <Settings className={className} />
+    case 'FileText':
+    default:
+      return <FileText className={className} />
+  }
+})
+TemplateIcon.displayName = 'TemplateIcon'
 
 // ============================================================================
 // Category Badge Colors
@@ -116,8 +143,6 @@ interface TemplateCardProps {
 }
 
 function TemplateCard({ template, onSelect, onPreview, isSelected }: TemplateCardProps) {
-  const Icon = getIcon(template.icon)
-
   return (
     <Card
       className={`cursor-pointer transition-all hover:shadow-md ${
@@ -129,7 +154,7 @@ function TemplateCard({ template, onSelect, onPreview, isSelected }: TemplateCar
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-muted">
-              <Icon className="h-5 w-5 text-secondary" />
+              <TemplateIcon iconName={template.icon} className="h-5 w-5 text-secondary" />
             </div>
             <div>
               <CardTitle className="text-base">{template.name}</CardTitle>
@@ -196,15 +221,13 @@ interface TemplatePreviewDialogProps {
 function TemplatePreviewDialog({ template, open, onClose, onUseTemplate }: TemplatePreviewDialogProps) {
   if (!template) {return null}
 
-  const Icon = getIcon(template.icon)
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-3">
             <div className="p-3 rounded-lg bg-muted">
-              <Icon className="h-6 w-6 text-secondary" />
+              <TemplateIcon iconName={template.icon} className="h-6 w-6 text-secondary" />
             </div>
             <div>
               <DialogTitle>{template.name}</DialogTitle>

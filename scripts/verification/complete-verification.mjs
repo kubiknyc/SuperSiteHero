@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Complete end-to-end verification of the app
  */
@@ -43,7 +44,7 @@ function testDatabaseConnection() {
   console.log('2️⃣ Testing database connection...');
   tests.total++;
 
-  const SUPABASE_URL = 'https://nxlznnrocrffnbzjaaae.supabase.co';
+const _SUPABASE_URL = 'https://nxlznnrocrffnbzjaaae.supabase.co';
   const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54bHpubnJvY3JmZm5iemphYWFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM2Nzg2MDUsImV4cCI6MjA3OTI1NDYwNX0.McyD3pPW6e0jhgQmCdDgJO3PhKikV-71q7rwHaNCCro';
 
   const options = {

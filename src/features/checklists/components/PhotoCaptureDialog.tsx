@@ -91,11 +91,13 @@ export function PhotoCaptureDialog({
       .map((p) => p.uploadedUrl!)
 
     if (uploadedUrls.length > 0) {
-      setLocalPhotos((prev) => {
-        const combined = [...prev, ...uploadedUrls]
-        // Remove duplicates
-        return Array.from(new Set(combined))
-      })
+      setTimeout(() => {
+        setLocalPhotos((prev) => {
+          const combined = [...prev, ...uploadedUrls]
+          // Remove duplicates
+          return Array.from(new Set(combined))
+        })
+      }, 0)
     }
   }, [responsePhotos])
 

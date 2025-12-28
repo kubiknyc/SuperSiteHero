@@ -90,7 +90,7 @@ export function useCurrencyConversion({
         });
 
         return result;
-      } catch (error) {
+      } catch (_error) {
         const errorMessage = error instanceof Error ? error.message : 'Conversion failed';
         setConversionState((prev) => ({
           ...prev,
@@ -119,7 +119,7 @@ export function useCurrencyConversion({
       try {
         const rate = await getExchangeRate(fromCurrency, toCurrency);
         return rate;
-      } catch (error) {
+      } catch (_error) {
         logger.error('Failed to get exchange rate:', error);
         return null;
       }
@@ -135,7 +135,7 @@ export function useCurrencyConversion({
       try {
         const multiAmount = await toMultiCurrencyAmount(amount, currency, baseCurrency);
         return multiAmount;
-      } catch (error) {
+      } catch (_error) {
         logger.error('Failed to create multi-currency amount:', error);
         return null;
       }
@@ -279,7 +279,7 @@ export function useBatchConversion(baseCurrency: CurrencyCode) {
               rate: result.exchange_rate,
             });
           }
-        } catch (error) {
+        } catch (_error) {
           logger.error(`Failed to convert item ${item.id}:`, error);
           results.set(item.id, {
             baseAmount: item.amount,

@@ -135,3 +135,13 @@ export type { UserApprovedData } from './user-approved'
 
 export { generateUserRejectedEmail } from './user-rejected'
 export type { UserRejectedData } from './user-rejected'
+
+// Meeting Minutes Templates
+export { generateMeetingMinutesEmail, generateMinutesReminderEmail } from './meeting-minutes'
+export type {
+  MeetingMinutesEmailData,
+  MinutesReminderEmailData,
+  AttendeeInfo,
+  ActionItemInfo,
+  NoteInfo,
+} from './meeting-minutes'

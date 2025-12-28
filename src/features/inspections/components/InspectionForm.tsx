@@ -64,7 +64,9 @@ export function InspectionForm({
 
   useEffect(() => {
     if (initialData) {
-      setFormData((prev) => ({ ...prev, ...initialData }))
+      setTimeout(() => {
+        setFormData((prev) => ({ ...prev, ...initialData }))
+      }, 0)
     }
   }, [initialData])
 

@@ -103,7 +103,7 @@ export function NoticeDocumentUpload({
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
-    } catch (error) {
+    } catch (_error) {
       logger.error('Upload error:', error)
     }
   }

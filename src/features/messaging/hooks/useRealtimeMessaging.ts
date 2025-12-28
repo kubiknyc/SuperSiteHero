@@ -27,12 +27,13 @@ export function useRealtimeMessages(conversationId: string | undefined) {
   const queryClient = useQueryClient()
   const { userProfile } = useAuth()
   const channelRef = useRef<RealtimeChannel | null>(null)
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null)
 
   useEffect(() => {
     if (!conversationId || !userProfile?.id) {return}
 
     // Create a unique realtime channel for this conversation
-    const channel = supabase
+    const newChannel = supabase
       .channel(`messages:${conversationId}`)
       .on(
         'postgres_changes',
@@ -92,17 +93,19 @@ export function useRealtimeMessages(conversationId: string | undefined) {
       )
       .subscribe()
 
-    channelRef.current = channel
+    channelRef.current = newChannel
+    setTimeout(() => setChannel(newChannel), 0)
 
     return () => {
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current)
         channelRef.current = null
+        setTimeout(() => setChannel(null), 0)
       }
     }
   }, [conversationId, userProfile?.id, queryClient])
 
-  return channelRef.current
+  return channel
 }
 
 // =====================================================
@@ -389,12 +392,13 @@ export function useRealtimeConversations() {
   const queryClient = useQueryClient()
   const { userProfile } = useAuth()
   const channelRef = useRef<RealtimeChannel | null>(null)
+  const [channel, setChannel] = useState<RealtimeChannel | null>(null)
 
   useEffect(() => {
     if (!userProfile?.id) {return}
 
     // Subscribe to conversation changes for the current user
-    const channel = supabase
+    const newChannel = supabase
       .channel('conversations-list')
       .on(
         'postgres_changes',
@@ -429,17 +433,19 @@ export function useRealtimeConversations() {
       )
       .subscribe()
 
-    channelRef.current = channel
+    channelRef.current = newChannel
+    setTimeout(() => setChannel(newChannel), 0)
 
     return () => {
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current)
         channelRef.current = null
+        setTimeout(() => setChannel(null), 0)
       }
     }
   }, [userProfile?.id, queryClient])
 
-  return channelRef.current
+  return channel
 }
 
 // =====================================================

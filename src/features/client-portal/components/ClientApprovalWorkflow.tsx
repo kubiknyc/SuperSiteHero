@@ -23,6 +23,12 @@ interface ClientApprovalWorkflowProps {
   className?: string;
 }
 
+const DecisionIcon = ({ d }: { d: ClientDecision }) => {
+  if (d === 'approved') {return <CheckCircle className="w-8 h-8" />;}
+  if (d === 'rejected') {return <XCircle className="w-8 h-8" />;}
+  return <AlertCircle className="w-8 h-8" />;
+};
+
 export function ClientApprovalWorkflow({
   data,
   onSubmit,
@@ -176,12 +182,6 @@ export function ClientApprovalWorkflow({
       ? 'border-warning bg-warning-light text-yellow-700'
       : 'border-border hover:border-yellow-300 hover:bg-warning-light/50'
     );
-  };
-
-  const DecisionIcon = ({ d }: { d: ClientDecision }) => {
-    if (d === 'approved') {return <CheckCircle className="w-8 h-8" />;}
-    if (d === 'rejected') {return <XCircle className="w-8 h-8" />;}
-    return <AlertCircle className="w-8 h-8" />;
   };
 
   // If already responded, show the response

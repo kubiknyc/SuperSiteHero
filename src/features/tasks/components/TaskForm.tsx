@@ -60,11 +60,14 @@ export function TaskForm({
 
   // Keep formData in sync with assignee changes
   useEffect(() => {
-    setFormData((prev) => ({
-      ...prev,
-      assigned_to_subcontractor_id: assignee?.type === 'subcontractor' ? assignee.id : null,
-      assigned_to_user_id: assignee?.type === 'user' ? assignee.id : null,
-    }))
+    // Use setTimeout to avoid synchronous state update in effect
+    setTimeout(() => {
+      setFormData((prev) => ({
+        ...prev,
+        assigned_to_subcontractor_id: assignee?.type === 'subcontractor' ? assignee.id : null,
+        assigned_to_user_id: assignee?.type === 'user' ? assignee.id : null,
+      }))
+    }, 0)
   }, [assignee])
 
   const handleSubmit = async (e: React.FormEvent) => {

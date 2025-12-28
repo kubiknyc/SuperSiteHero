@@ -126,9 +126,9 @@ export function SendInvitationDialog({
       form.reset()
       onSuccess?.()
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to send invitation')
-      logger.error(error)
+      logger.error(_error)
     }
   }
 
@@ -155,9 +155,9 @@ export function SendInvitationDialog({
       setSelectedSubs([])
       onSuccess?.()
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to send invitations')
-      logger.error(error)
+      logger.error(_error)
     }
   }
 

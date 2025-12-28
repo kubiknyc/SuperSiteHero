@@ -58,8 +58,8 @@ export function ImportScheduleDialog({
     try {
       const result = await importFromFile(selectedFile)
       setParsedData(result)
-    } catch (error) {
-      setParseError(error instanceof Error ? error.message : 'Failed to parse file')
+    } catch (_error) {
+      setParseError(_error instanceof Error ? _error.message : 'Failed to parse file')
     } finally {
       setIsParsing(false)
     }

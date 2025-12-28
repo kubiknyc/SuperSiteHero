@@ -42,9 +42,10 @@ function formatResponseValue(response: any, itemType: string): string {
     case 'number':
       return data?.value ? `${data.value} ${data.units || ''}`.trim() : 'No response'
 
-    case 'photo':
+    case 'photo': {
       const photoUrls = response.photo_urls || []
       return photoUrls.length > 0 ? `${photoUrls.length} photo(s)` : 'No photos'
+    }
 
     case 'signature':
       return response.signature_url ? 'Signed' : 'Not signed'

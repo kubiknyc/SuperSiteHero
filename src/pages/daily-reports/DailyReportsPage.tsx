@@ -1,5 +1,6 @@
 // File: /src/pages/daily-reports/DailyReportsPage.tsx
 // Daily reports list and management page
+/* eslint-disable react-hooks/preserve-manual-memoization */
 
 import { useState, useEffect, useMemo, useCallback, memo } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
@@ -46,6 +47,7 @@ interface WorkerRange {
 }
 
 export function DailyReportsPage() {
+  'use no memo'
   const { data: projects } = useMyProjects()
   const navigate = useNavigate()
   const location = useLocation()

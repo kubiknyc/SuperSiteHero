@@ -67,14 +67,12 @@ export function WeatherWidget({
     )
   }
 
-  const WeatherIcon = getWeatherIcon(weather.condition || 'Unknown')
-
   return (
     <Card className={cn('h-full', className)}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-medium flex items-center gap-2">
-            <WeatherIcon className="h-4 w-4" />
+            <WeatherIcon condition={weather.condition || 'Unknown'} className="h-4 w-4" />
             Weather
           </CardTitle>
           {hasWeatherAlert && (
@@ -85,7 +83,7 @@ export function WeatherWidget({
       <CardContent className="space-y-3">
         {/* Main condition */}
         <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-          <WeatherIcon className="h-10 w-10 text-muted-foreground" />
+          <WeatherIcon condition={weather.condition || 'Unknown'} className="h-10 w-10 text-muted-foreground" />
           <div>
             <p className="text-lg font-semibold">
               {weather.condition || 'Unknown'}
@@ -143,21 +141,24 @@ export function WeatherWidget({
   )
 }
 
-function getWeatherIcon(condition: string) {
+/**
+ * WeatherIcon component - renders appropriate weather icon
+ */
+function WeatherIcon({ condition, className }: { condition: string; className?: string }) {
   const lower = condition.toLowerCase()
 
   if (lower.includes('rain') || lower.includes('drizzle') || lower.includes('shower')) {
-    return CloudRain
+    return <CloudRain className={className} />
   }
   if (lower.includes('snow') || lower.includes('sleet') || lower.includes('ice')) {
-    return Snowflake
+    return <Snowflake className={className} />
   }
   if (lower.includes('cloud') || lower.includes('overcast')) {
-    return Cloud
+    return <Cloud className={className} />
   }
   if (lower.includes('clear') || lower.includes('sunny')) {
-    return Sun
+    return <Sun className={className} />
   }
 
-  return Cloud
+  return <Cloud className={className} />
 }

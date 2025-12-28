@@ -252,8 +252,8 @@ export function TransmittalForm({
         const result = await createMutation.mutateAsync(createData);
         onSuccess?.(result);
       }
-    } catch (error) {
-      logger.error('Failed to save transmittal:', error);
+    } catch (_error) {
+      logger.error('Failed to save transmittal:', _error);
     }
   };
 

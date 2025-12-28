@@ -118,18 +118,20 @@ export function DocuSignRequestDialog({
   // Initialize signers based on document type
   useEffect(() => {
     if (open) {
-      if (defaultSigners.length > 0) {
-        setSigners(defaultSigners)
-      } else {
-        // Set default signers based on document type
-        const defaults = getDefaultSigners(documentType)
-        setSigners(defaults)
-      }
+      setTimeout(() => {
+        if (defaultSigners.length > 0) {
+          setSigners(defaultSigners)
+        } else {
+          // Set default signers based on document type
+          const defaults = getDefaultSigners(documentType)
+          setSigners(defaults)
+        }
 
-      // Set default subject
-      const docTypeLabel = getDocumentTypeLabel(documentType)
-      setSubject(`${docTypeLabel} ${documentNumber || ''} - Signature Request`.trim())
-      setMessage(getDefaultMessage(documentType))
+        // Set default subject
+        const docTypeLabel = getDocumentTypeLabel(documentType)
+        setSubject(`${docTypeLabel} ${documentNumber || ''} - Signature Request`.trim())
+        setMessage(getDefaultMessage(documentType))
+      }, 0)
     }
   }, [open, documentType, documentNumber, defaultSigners])
 
@@ -257,9 +259,9 @@ export function DocuSignRequestDialog({
         onSuccess(envelopeId)
       }
       onOpenChange(false)
-    } catch (error) {
+    } catch (_error) {
       // Error handled by mutation
-      logger.error('Failed to create envelope:', error)
+      logger.error('Failed to create envelope:', _error)
     }
   }
 

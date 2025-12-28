@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ChevronDown, ChevronRight, type LucideIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -33,6 +33,7 @@ export function NavigationGroup({
   onItemClick,
 }: NavigationGroupProps) {
   const location = useLocation();
+  const hasAutoExpandedRef = useRef(false);
 
   // Load expanded state from localStorage
   const [isExpanded, setIsExpanded] = useState(() => {
@@ -49,8 +50,12 @@ export function NavigationGroup({
       (item) => location.pathname === item.path
     );
 
-    if (isCurrentRouteInGroup && !isExpanded) {
-      setIsExpanded(true);
+    if (isCurrentRouteInGroup && !isExpanded && !hasAutoExpandedRef.current) {
+      hasAutoExpandedRef.current = true;
+      // Defer state update to avoid synchronous setState in effect
+      setTimeout(() => {
+        setIsExpanded(true);
+      }, 0);
     }
   }, [location.pathname, items, isExpanded]);
 

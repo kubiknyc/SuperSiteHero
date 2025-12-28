@@ -50,14 +50,17 @@ export function CompanyProfilePage() {
   // Initialize form from company data
   useEffect(() => {
     if (company) {
-      setName(company.name || '')
-      setEmail(company.email || '')
-      setPhone(company.phone || '')
-      setAddress(company.address || '')
-      setCity(company.city || '')
-      setState(company.state || '')
-      setZip(company.zip || '')
-      setPrimaryColor(company.primary_color || '#3b82f6')
+      // Use setTimeout to avoid calling setState synchronously within effect
+      setTimeout(() => {
+        setName(company.name || '')
+        setEmail(company.email || '')
+        setPhone(company.phone || '')
+        setAddress(company.address || '')
+        setCity(company.city || '')
+        setState(company.state || '')
+        setZip(company.zip || '')
+        setPrimaryColor(company.primary_color || '#3b82f6')
+      }, 0)
     }
   }, [company])
 

@@ -96,11 +96,13 @@ export function NewConversationDialog({
   // Reset state when dialog opens
   useEffect(() => {
     if (open) {
-      setStep(defaultType ? 'users' : 'type')
-      setConversationType(defaultType || 'direct')
-      setSelectedUsers([])
-      setGroupName('')
-      setFilterText('')
+      setTimeout(() => {
+        setStep(() => defaultType ? 'users' : 'type')
+        setConversationType(() => defaultType || 'direct')
+        setSelectedUsers(() => [])
+        setGroupName(() => '')
+        setFilterText(() => '')
+      }, 0)
     }
   }, [open, defaultType])
 

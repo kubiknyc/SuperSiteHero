@@ -9,6 +9,8 @@ import {
   useDeleteMeeting,
   useUpdateActionItem,
   useMeetingRecordings,
+  useDistributeMinutes,
+  useNextMeeting,
   MEETING_TYPES,
   MEETING_STATUSES,
   ACTION_ITEM_PRIORITIES,
@@ -45,12 +47,18 @@ import {
   Send,
   Video,
   Mic,
+  Loader2,
+  CheckCheck,
+  Link2,
+  ChevronRight,
+  ChevronLeft,
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { MeetingActionItemExtractor } from '@/features/summaries/components/MeetingActionItemExtractor'
 import type { MeetingRecording } from '@/types/meeting-recordings'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { logger } from '../../lib/utils/logger';
+import { toast } from 'sonner'
 
 
 export function MeetingDetailPage() {
@@ -59,10 +67,13 @@ export function MeetingDetailPage() {
   const { userProfile } = useAuth()
   const { data: meeting, isLoading, error } = useMeeting(id)
   const { data: recordings, refetch: refetchRecordings } = useMeetingRecordings(id)
+  const { data: nextMeeting } = useNextMeeting(id)
   const deleteMeeting = useDeleteMeeting()
   const updateActionItem = useUpdateActionItem()
+  const distributeMinutes = useDistributeMinutes()
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [isDistributing, setIsDistributing] = useState(false)
   const [selectedRecording, setSelectedRecording] = useState<MeetingRecording | null>(null)
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState<number>(0)
   const [seekToTime, setSeekToTime] = useState<number | null>(null)
@@ -80,6 +91,32 @@ export function MeetingDetailPage() {
       navigate('/meetings')
     } catch (err) {
       logger.error('Failed to delete meeting:', err)
+    }
+  }
+
+  // Handle distribute minutes
+  const handleDistributeMinutes = async () => {
+    if (!id || !meeting) {return}
+
+    // Check if we have attendees with emails
+    const attendeesWithEmails = (meeting.attendees as MeetingAttendee[] | null)?.filter(
+      (a) => a.email && a.email.trim() !== ''
+    ) || []
+
+    if (attendeesWithEmails.length === 0) {
+      toast.error('No attendees with email addresses found. Add attendee emails to distribute minutes.')
+      return
+    }
+
+    setIsDistributing(true)
+    try {
+      await distributeMinutes.mutateAsync(id)
+      toast.success(`Meeting minutes distributed to ${attendeesWithEmails.length} attendee(s)`)
+    } catch (err) {
+      logger.error('Failed to distribute minutes:', err)
+      toast.error('Failed to distribute meeting minutes')
+    } finally {
+      setIsDistributing(false)
     }
   }
 
@@ -171,9 +208,20 @@ export function MeetingDetailPage() {
               <Download className="h-4 w-4 mr-1" />
               Export PDF
             </Button>
-            <Button variant="outline" size="sm">
-              <Send className="h-4 w-4 mr-1" />
-              Distribute
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDistributeMinutes}
+              disabled={isDistributing}
+            >
+              {isDistributing ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : meeting.minutes_distributed_at ? (
+                <CheckCheck className="h-4 w-4 mr-1" />
+              ) : (
+                <Send className="h-4 w-4 mr-1" />
+              )}
+              {isDistributing ? 'Sending...' : meeting.minutes_distributed_at ? 'Re-distribute' : 'Distribute'}
             </Button>
             <Link to={`/meetings/${id}/edit`}>
               <Button variant="outline" size="sm">
@@ -547,6 +595,59 @@ export function MeetingDetailPage() {
               <MeetingActionItemExtractor meetingId={meeting.id} />
             )}
 
+            {/* Linked Meetings */}
+            {(meeting.previous_meeting_id || nextMeeting) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Link2 className="h-5 w-5" />
+                    Linked Meetings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {/* Previous Meeting */}
+                  {meeting.previous_meeting_id && (meeting as any).previous_meeting && (
+                    <Link
+                      to={`/meetings/${meeting.previous_meeting_id}`}
+                      className="flex items-center gap-3 p-3 border rounded-lg hover:bg-surface transition-colors"
+                    >
+                      <ChevronLeft className="h-4 w-4 text-muted-foreground" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wide">Previous Meeting</p>
+                        <p className="font-medium text-sm truncate">
+                          {(meeting as any).previous_meeting.title ||
+                            MEETING_TYPES.find(t => t.value === (meeting as any).previous_meeting.meeting_type)?.label}
+                        </p>
+                        <p className="text-xs text-muted">
+                          {format(parseISO((meeting as any).previous_meeting.meeting_date), 'MMM d, yyyy')}
+                        </p>
+                      </div>
+                    </Link>
+                  )}
+
+                  {/* Next Meeting */}
+                  {nextMeeting && (
+                    <Link
+                      to={`/meetings/${nextMeeting.id}`}
+                      className="flex items-center gap-3 p-3 border rounded-lg hover:bg-surface transition-colors"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs text-muted-foreground uppercase tracking-wide">Next Meeting</p>
+                        <p className="font-medium text-sm truncate">
+                          {nextMeeting.title ||
+                            MEETING_TYPES.find(t => t.value === nextMeeting.meeting_type)?.label}
+                        </p>
+                        <p className="text-xs text-muted">
+                          {format(parseISO(nextMeeting.meeting_date), 'MMM d, yyyy')}
+                        </p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                    </Link>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Attendees */}
             <Card>
               <CardHeader>
@@ -647,6 +748,15 @@ export function MeetingDetailPage() {
                     <p className="text-muted">Last Updated</p>
                     <p className="text-foreground">
                       {format(parseISO(meeting.updated_at), 'MMM d, yyyy h:mm a')}
+                    </p>
+                  </div>
+                )}
+                {meeting.minutes_distributed_at && (
+                  <div>
+                    <p className="text-muted">Minutes Distributed</p>
+                    <p className="text-foreground flex items-center gap-1">
+                      <CheckCheck className="h-4 w-4 text-success" />
+                      {format(parseISO(meeting.minutes_distributed_at), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
                 )}

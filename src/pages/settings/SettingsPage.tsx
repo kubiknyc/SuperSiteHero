@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar } from 'lucide-react'
+import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { ThemeSelector } from '@/components/ThemeToggle'
 import { PWAInstallButton } from '@/components/PWAInstallPrompt'
@@ -96,6 +96,14 @@ const settingsSections: SettingsSection[] = [
     icon: Receipt,
     iconBgColor: 'bg-success-light',
     iconColor: 'text-success',
+  },
+  {
+    title: 'DocuSign Integration',
+    description: 'Enable electronic signatures for payment applications, change orders, and lien waivers',
+    href: '/settings/docusign',
+    icon: FileSignature,
+    iconBgColor: 'bg-blue-100',
+    iconColor: 'text-blue-600',
   },
   {
     title: 'AI Settings',

@@ -244,9 +244,10 @@ export function formatDateForZoom(date: Date, zoomLevel: GanttZoomLevel): string
       return format(date, 'MMM d, yyyy')
     case 'month':
       return format(date, 'MMMM yyyy')
-    case 'quarter':
+    case 'quarter': {
       const quarter = Math.floor(date.getMonth() / 3) + 1
       return `Q${quarter} ${format(date, 'yyyy')}`
+    }
     default:
       return format(date, 'MMM d, yyyy')
   }
@@ -263,10 +264,11 @@ export function snapDateToUnit(date: Date, zoomLevel: GanttZoomLevel): Date {
       return startOfWeek(date)
     case 'month':
       return startOfMonth(date)
-    case 'quarter':
+    case 'quarter': {
       const month = date.getMonth()
       const quarterStartMonth = Math.floor(month / 3) * 3
       return new Date(date.getFullYear(), quarterStartMonth, 1)
+    }
     default:
       return startOfDay(date)
   }

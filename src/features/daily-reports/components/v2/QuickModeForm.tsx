@@ -235,8 +235,8 @@ export function QuickModeForm({
       } else {
         toast.info('No workforce entries found from yesterday');
       }
-    } catch (error) {
-      logger.error('Failed to copy from yesterday:', error);
+    } catch (_error) {
+      logger.error('Failed to copy from yesterday:', _error);
       toast.error('Failed to copy workforce from yesterday');
     } finally {
       setIsCopyingFromYesterday(false);
@@ -255,8 +255,8 @@ export function QuickModeForm({
       } else {
         toast.info('No equipment entries found from yesterday');
       }
-    } catch (error) {
-      logger.error('Failed to copy from yesterday:', error);
+    } catch (_error) {
+      logger.error('Failed to copy from yesterday:', _error);
       toast.error('Failed to copy equipment from yesterday');
     } finally {
       setIsCopyingFromYesterday(false);

@@ -211,25 +211,33 @@ export function CalendarConfigDialog({
   }, [open, calendar, form])
 
   // Calculate total weekly hours
+  // Extract watched values to simple variables for React Compiler
+  const sundayHours = form.watch('sunday_hours')
+  const mondayHours = form.watch('monday_hours')
+  const tuesdayHours = form.watch('tuesday_hours')
+  const wednesdayHours = form.watch('wednesday_hours')
+  const thursdayHours = form.watch('thursday_hours')
+  const fridayHours = form.watch('friday_hours')
+  const saturdayHours = form.watch('saturday_hours')
+
   const totalHours = React.useMemo(() => {
-    const values = form.watch()
     return (
-      (values.sunday_hours || 0) +
-      (values.monday_hours || 0) +
-      (values.tuesday_hours || 0) +
-      (values.wednesday_hours || 0) +
-      (values.thursday_hours || 0) +
-      (values.friday_hours || 0) +
-      (values.saturday_hours || 0)
+      (sundayHours || 0) +
+      (mondayHours || 0) +
+      (tuesdayHours || 0) +
+      (wednesdayHours || 0) +
+      (thursdayHours || 0) +
+      (fridayHours || 0) +
+      (saturdayHours || 0)
     )
   }, [
-    form.watch('sunday_hours'),
-    form.watch('monday_hours'),
-    form.watch('tuesday_hours'),
-    form.watch('wednesday_hours'),
-    form.watch('thursday_hours'),
-    form.watch('friday_hours'),
-    form.watch('saturday_hours'),
+    sundayHours,
+    mondayHours,
+    tuesdayHours,
+    wednesdayHours,
+    thursdayHours,
+    fridayHours,
+    saturdayHours,
   ])
 
   // Apply preset template

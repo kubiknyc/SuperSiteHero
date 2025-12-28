@@ -153,7 +153,7 @@ export async function getTemplates(
     }
 
     return data || []
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in getTemplates:', error)
     throw error
   }
@@ -180,7 +180,7 @@ export async function getTemplate(id: string): Promise<MessageTemplate | null> {
     }
 
     return data
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in getTemplate:', error)
     throw error
   }
@@ -220,7 +220,7 @@ export async function searchTemplates(
     }
 
     return data || []
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in searchTemplates:', error)
     throw error
   }
@@ -259,7 +259,7 @@ export async function createTemplate(
 
     logger.log('[MessageTemplates] Template created:', data.id)
     return data
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in createTemplate:', error)
     throw error
   }
@@ -294,7 +294,7 @@ export async function updateTemplate(
 
     logger.log('[MessageTemplates] Template updated:', id)
     return data
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in updateTemplate:', error)
     throw error
   }
@@ -316,7 +316,7 @@ export async function deleteTemplate(id: string): Promise<void> {
     }
 
     logger.log('[MessageTemplates] Template deleted:', id)
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in deleteTemplate:', error)
     throw error
   }
@@ -337,7 +337,7 @@ export async function incrementTemplateUsage(id: string): Promise<void> {
     }
 
     logger.log('[MessageTemplates] Template usage incremented:', id)
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in incrementTemplateUsage:', error)
     throw error
   }
@@ -373,7 +373,7 @@ export async function applyTemplate(
     )
 
     return content
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in applyTemplate:', error)
     throw error
   }
@@ -404,7 +404,7 @@ export async function getTemplateCategories(companyId: string): Promise<string[]
     })
 
     return Array.from(categories).sort()
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in getTemplateCategories:', error)
     throw error
   }
@@ -429,7 +429,7 @@ export async function seedDefaultTemplates(
     }
 
     logger.log('[MessageTemplates] Default templates seeded for company:', companyId)
-  } catch (error) {
+  } catch (_error) {
     logger.error('[MessageTemplates] Exception in seedDefaultTemplates:', error)
     throw error
   }

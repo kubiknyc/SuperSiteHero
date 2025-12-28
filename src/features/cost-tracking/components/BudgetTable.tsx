@@ -45,6 +45,37 @@ interface BudgetTableProps {
 type SortField = 'cost_code' | 'original_budget' | 'revised_budget' | 'actual_cost' | 'variance' | 'percent_spent'
 type SortDirection = 'asc' | 'desc'
 
+/**
+ * SortHeader component for sortable table columns
+ */
+interface SortHeaderProps {
+  field: SortField
+  children: React.ReactNode
+  sortField: SortField
+  sortDirection: SortDirection
+  onSort: (field: SortField) => void
+}
+
+function SortHeader({ field, children, sortField, sortDirection, onSort }: SortHeaderProps) {
+  return (
+    <th
+      className="text-left py-3 px-3 font-medium text-muted cursor-pointer hover:bg-surface select-none"
+      onClick={() => onSort(field)}
+    >
+      <div className="flex items-center gap-1">
+        {children}
+        {sortField === field && (
+          sortDirection === 'asc' ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )
+        )}
+      </div>
+    </th>
+  )
+}
+
 export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTableProps) {
   const [sortField, setSortField] = useState<SortField>('cost_code')
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
@@ -114,24 +145,6 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
     }
   }
 
-  const SortHeader = ({ field, children }: { field: SortField; children: React.ReactNode }) => (
-    <th
-      className="text-left py-3 px-3 font-medium text-muted cursor-pointer hover:bg-surface select-none"
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        {sortField === field && (
-          sortDirection === 'asc' ? (
-            <ChevronUp className="h-4 w-4" />
-          ) : (
-            <ChevronDown className="h-4 w-4" />
-          )
-        )}
-      </div>
-    </th>
-  )
-
   const handleConfirmDelete = () => {
     if (deleteId) {
       onDelete(deleteId)
@@ -180,23 +193,25 @@ export function BudgetTable({ budgets, isLoading, onEdit, onDelete }: BudgetTabl
         <table className="w-full">
           <thead>
             <tr className="border-b">
-              <SortHeader field="cost_code">Cost Code</SortHeader>
+              <SortHeader field="cost_code" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>
+                Cost Code
+              </SortHeader>
               <th className="text-left py-3 px-3 font-medium text-muted">Description</th>
-              <SortHeader field="original_budget">
+              <SortHeader field="original_budget" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>
                 <span className="text-right w-full">Original</span>
               </SortHeader>
               <th className="text-right py-3 px-3 font-medium text-muted">Changes</th>
-              <SortHeader field="revised_budget">
+              <SortHeader field="revised_budget" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>
                 <span className="text-right w-full">Revised</span>
               </SortHeader>
               <th className="text-right py-3 px-3 font-medium text-muted">Committed</th>
-              <SortHeader field="actual_cost">
+              <SortHeader field="actual_cost" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>
                 <span className="text-right w-full">Actual</span>
               </SortHeader>
-              <SortHeader field="variance">
+              <SortHeader field="variance" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>
                 <span className="text-right w-full">Variance</span>
               </SortHeader>
-              <SortHeader field="percent_spent">
+              <SortHeader field="percent_spent" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>
                 <span className="text-right w-full">% Spent</span>
               </SortHeader>
               <th className="w-10" />

@@ -120,22 +120,26 @@ export function ComposeEmail({
 
   // Initialize form based on reply/forward/default
   useEffect(() => {
-    if (replyTo) {
-      setSubject(`Re: ${replyTo.subject}`)
-      setToRecipients([{ email: replyTo.from_address, name: replyTo.from_name || '' }])
-      setBody(`\n\n---\nOn ${new Date(replyTo.date_sent).toLocaleString()}, ${replyTo.from_name || replyTo.from_address} wrote:\n${replyTo.body_text || ''}`)
-    } else if (forwardEmail) {
-      setSubject(`Fwd: ${forwardEmail.subject}`)
-      setBody(`\n\n---\nForwarded message:\nFrom: ${forwardEmail.from_name || forwardEmail.from_address}\nDate: ${new Date(forwardEmail.date_sent).toLocaleString()}\nSubject: ${forwardEmail.subject}\n\n${forwardEmail.body_text || ''}`)
-    } else if (defaultRecipient) {
-      setToRecipients([defaultRecipient])
-    }
+    setTimeout(() => {
+      if (replyTo) {
+        setSubject(`Re: ${replyTo.subject}`)
+        setToRecipients([{ email: replyTo.from_address, name: replyTo.from_name || '' }])
+        setBody(`\n\n---\nOn ${new Date(replyTo.date_sent).toLocaleString()}, ${replyTo.from_name || replyTo.from_address} wrote:\n${replyTo.body_text || ''}`)
+      } else if (forwardEmail) {
+        setSubject(`Fwd: ${forwardEmail.subject}`)
+        setBody(`\n\n---\nForwarded message:\nFrom: ${forwardEmail.from_name || forwardEmail.from_address}\nDate: ${new Date(forwardEmail.date_sent).toLocaleString()}\nSubject: ${forwardEmail.subject}\n\n${forwardEmail.body_text || ''}`)
+      } else if (defaultRecipient) {
+        setToRecipients([defaultRecipient])
+      }
+    }, 0)
   }, [replyTo, forwardEmail, defaultRecipient])
 
   // Auto-select first account
   useEffect(() => {
     if (!selectedAccountId && accounts && accounts.length > 0) {
-      setSelectedAccountId(accounts[0].id)
+      setTimeout(() => {
+        setSelectedAccountId(accounts[0].id)
+      }, 0)
     }
   }, [accounts, selectedAccountId])
 

@@ -117,30 +117,7 @@ export function CertificateExtractor({
     onOpenChange(newOpen)
   }
 
-  // Handle file drop
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) {return}
-
-    const file = acceptedFiles[0]
-    setSelectedFile(file)
-    setError(null)
-
-    // Start extraction process
-    await processFile(file)
-  }, [])
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'application/pdf': ['.pdf'],
-      'image/png': ['.png'],
-      'image/jpeg': ['.jpg', '.jpeg'],
-    },
-    maxFiles: 1,
-    maxSize: 10 * 1024 * 1024, // 10MB
-  })
-
-  // Process file with OCR
+  // Process file with OCR - moved before onDrop that uses it
   const processFile = async (file: File) => {
     setStatus('uploading')
     setProgress(10)
@@ -207,6 +184,29 @@ export function CertificateExtractor({
       setStatus('error')
     }
   }
+
+  // Handle file drop
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (acceptedFiles.length === 0) {return}
+
+    const file = acceptedFiles[0]
+    setSelectedFile(file)
+    setError(null)
+
+    // Start extraction process
+    await processFile(file)
+  }, [])
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: {
+      'application/pdf': ['.pdf'],
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg', '.jpeg'],
+    },
+    maxFiles: 1,
+    maxSize: 10 * 1024 * 1024, // 10MB
+  })
 
   // Update edited field
   const updateField = (field: string, value: unknown) => {

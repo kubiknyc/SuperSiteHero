@@ -138,9 +138,10 @@ function formatDisplayValue(value: unknown, type: string): string {
       return value ? 'Yes' : 'No'
     case 'status':
       return String(value).replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-    default:
+    default: {
       const strValue = String(value)
       return strValue.length > 100 ? strValue.substring(0, 97) + '...' : strValue
+    }
   }
 }
 

@@ -85,7 +85,7 @@ export async function extractPhotoMetadata(file: File): Promise<PhotoMetadata> {
 
     logger.log('Extracted EXIF metadata:', metadata)
     return metadata
-  } catch (error) {
+  } catch (_error) {
     logger.error('Failed to extract EXIF metadata:', error)
     return {}
   }
@@ -132,7 +132,7 @@ export async function extractGPSCoordinates(
       longitude: gps.longitude,
       altitude,
     }
-  } catch (error) {
+  } catch (_error) {
     logger.error('Failed to extract GPS coordinates:', error)
     return null
   }
@@ -158,7 +158,7 @@ export async function extractPhotoTimestamp(file: File): Promise<Date | null> {
     }
 
     return null
-  } catch (error) {
+  } catch (_error) {
     logger.error('Failed to extract photo timestamp:', error)
     return null
   }

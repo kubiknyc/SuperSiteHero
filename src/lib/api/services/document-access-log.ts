@@ -4,7 +4,6 @@
 import { supabase } from '@/lib/supabase'
 import { logger } from '../../utils/logger';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 // Define types locally since document_access_log table may not be in generated types yet

@@ -66,29 +66,33 @@ export function SyncProgressBar({
           estimatedTimeRemaining = Math.round(avgTimePerItem * remaining);
         }
 
-        setSyncState(prev => ({
-          current: completed,
-          total,
-          percentage,
-          estimatedTimeRemaining,
-          startTime: prev.startTime || Date.now(),
-          paused: prev.paused,
-        }));
+        setTimeout(() => {
+          setSyncState(prev => ({
+            current: completed,
+            total,
+            percentage,
+            estimatedTimeRemaining,
+            startTime: prev.startTime || Date.now(),
+            paused: prev.paused,
+          }));
+        }, 0);
       } else if (syncState.total > 0) {
         // Batch completed, reset
-        setSyncState({
-          current: 0,
-          total: 0,
-          percentage: 0,
-          estimatedTimeRemaining: null,
-          startTime: null,
-          paused: false,
-        });
+        setTimeout(() => {
+          setSyncState({
+            current: 0,
+            total: 0,
+            percentage: 0,
+            estimatedTimeRemaining: null,
+            startTime: null,
+            paused: false,
+          });
+        }, 0);
       }
     }, 500);
 
     return () => clearInterval(interval);
-  }, [syncState.startTime]);
+  }, [syncState.startTime, syncState.total]);
 
   const handlePauseResume = () => {
     // This would require implementing pause/resume in SyncManager

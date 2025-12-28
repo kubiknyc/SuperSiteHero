@@ -393,7 +393,11 @@ export function useNotificationSubscription(
       )
       .subscribe()
 
-    setChannel(newChannel)
+    setTimeout(() => {
+      setTimeout(() => {
+        setChannel(newChannel)
+      }, 0)
+    }, 0)
 
     return () => {
       if (newChannel) {

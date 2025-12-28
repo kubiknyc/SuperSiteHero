@@ -39,6 +39,12 @@ export interface EmailNotificationPreferences {
 
   /** Receive daily digest email summarizing activity */
   dailyDigest: boolean
+
+  /** Receive emails for action item due date alerts (7, 3, 1 days before and overdue) */
+  actionItemAlerts: boolean
+
+  /** Receive emails when meeting minutes are distributed */
+  meetingMinutes: boolean
 }
 
 // ============================================================================
@@ -101,6 +107,8 @@ export const DEFAULT_EMAIL_PREFERENCES: EmailNotificationPreferences = {
   punchItemAssigned: true,
   documentComments: true,
   dailyDigest: false,
+  actionItemAlerts: true,
+  meetingMinutes: true,
 }
 
 export const DEFAULT_INAPP_PREFERENCES: InAppNotificationPreferences = {
@@ -204,6 +212,8 @@ export const NOTIFICATION_TYPE_LABELS: Record<keyof EmailNotificationPreferences
   punchItemAssigned: 'Punch Item Assignments',
   documentComments: 'Document Comments',
   dailyDigest: 'Daily Digest',
+  actionItemAlerts: 'Action Item Alerts',
+  meetingMinutes: 'Meeting Minutes',
 }
 
 export const NOTIFICATION_TYPE_DESCRIPTIONS: Record<keyof EmailNotificationPreferences, string> = {
@@ -217,4 +227,6 @@ export const NOTIFICATION_TYPE_DESCRIPTIONS: Record<keyof EmailNotificationPrefe
   punchItemAssigned: 'Get notified when a punch item is assigned to you',
   documentComments: 'Get notified when someone comments on your documents',
   dailyDigest: 'Receive a daily summary of all activity',
+  actionItemAlerts: 'Get alerts when action items are due soon or overdue (7, 3, 1 days before)',
+  meetingMinutes: 'Get notified when meeting minutes are distributed to you',
 }

@@ -106,8 +106,10 @@ export function MessageSearchDialog({
     if (open) {
       setTimeout(() => inputRef.current?.focus(), 100)
     } else {
-      setQuery('')
-      setDebouncedQuery('')
+      setTimeout(() => {
+        setQuery(() => '')
+        setDebouncedQuery(() => '')
+      }, 0)
     }
   }, [open])
 

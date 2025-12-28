@@ -240,7 +240,9 @@ export function useTabletMode(options: UseTabletModeOptions = {}): TabletModeSta
     if (typeof window === 'undefined') {return;}
 
     // Initial check
-    handleResize();
+    setTimeout(() => {
+      handleResize();
+    }, 0);
 
     // Listen to resize and orientation change events
     window.addEventListener('resize', handleResize);
@@ -342,9 +344,11 @@ export function useTabletSidebar(initialState?: boolean): {
 
   // Auto-adjust sidebar when orientation changes
   useEffect(() => {
-    if (isTablet) {
-      setIsOpen(!shouldCollapseSidebar);
-    }
+    setTimeout(() => {
+      if (isTablet) {
+        setIsOpen(!shouldCollapseSidebar);
+      }
+    }, 0);
   }, [isTablet, shouldCollapseSidebar, orientation]);
 
   const toggle = useCallback(() => setIsOpen((prev) => !prev), []);

@@ -105,19 +105,7 @@ export function DistributionListFormDialog({
   const addMemberMutation = useAddDistributionListMember()
   const removeMemberMutation = useRemoveDistributionListMember()
 
-  // Initialize form when list changes
-  React.useEffect(() => {
-    if (list) {
-      setName(list.name)
-      setDescription(list.description || '')
-      setListType(list.list_type as DistributionListType)
-      setIsDefault(list.is_default)
-      setActiveTab('details')
-    } else {
-      resetForm()
-    }
-  }, [list, open])
-
+  // Define resetForm before using it in useEffect
   const resetForm = () => {
     setName('')
     setDescription('')
@@ -130,6 +118,19 @@ export function DistributionListFormDialog({
     setNewMemberRole('cc')
     setActiveTab('details')
   }
+
+  // Initialize form when list changes
+  React.useEffect(() => {
+    if (list) {
+      setName(list.name)
+      setDescription(list.description || '')
+      setListType(list.list_type as DistributionListType)
+      setIsDefault(list.is_default)
+      setActiveTab('details')
+    } else {
+      resetForm()
+    }
+  }, [list, open])
 
   // Filter users not already members
   const availableUsers = React.useMemo(() => {
@@ -268,9 +269,9 @@ export function DistributionListFormDialog({
       onOpenChange(false)
       resetForm()
       onSuccess?.()
-    } catch (error) {
+    } catch (_error) {
       toast.error(isEditing ? 'Failed to update list' : 'Failed to create list')
-      logger.error('Distribution list error:', error)
+      logger.error('Distribution list error:', _error)
     }
   }
 

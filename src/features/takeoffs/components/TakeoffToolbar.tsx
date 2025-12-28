@@ -19,6 +19,11 @@ import {
   CheckCircle2,
   Loader2,
   RefreshCw,
+  Copy,
+  History,
+  Trash2,
+  ChevronDown,
+  AlertCircle,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -27,6 +32,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuLabel,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
 import type { MeasurementType, UnitSystem, LinearUnit } from '../utils/measurements'
@@ -37,6 +46,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import type { TakeoffCalibration } from '../hooks/useTakeoffCalibration'
 
 export interface TakeoffToolbarProps {
   currentTool: MeasurementType
@@ -60,6 +70,22 @@ export interface TakeoffToolbarProps {
   onExport?: () => void
   measurementCount?: number
   readOnly?: boolean
+  /** Current page number (1-indexed) */
+  pageNumber?: number
+  /** Total pages in the document */
+  totalPages?: number
+  /** Calibrations from other pages (for copy feature) */
+  otherPageCalibrations?: TakeoffCalibration[]
+  /** Callback when user wants to copy calibration from another page */
+  onCopyFromPage?: (sourcePageNumber: number) => void
+  /** Callback when user wants to view calibration history */
+  onShowHistory?: () => void
+  /** Callback when user wants to clear/delete calibration */
+  onClearCalibration?: () => void
+  /** Whether a calibration action is in progress */
+  isCalibrationPending?: boolean
+  /** Current calibration ID (for history access) */
+  calibrationId?: string
 }
 
 const MEASUREMENT_TOOLS: Array<{
@@ -198,10 +224,21 @@ export function TakeoffToolbar({
   onExport,
   measurementCount = 0,
   readOnly = false,
+  pageNumber = 1,
+  totalPages = 1,
+  otherPageCalibrations = [],
+  onCopyFromPage,
+  onShowHistory,
+  onClearCalibration,
+  isCalibrationPending = false,
+  calibrationId,
 }: TakeoffToolbarProps) {
   const [showColorPicker, setShowColorPicker] = useState(false)
 
   const currentToolData = MEASUREMENT_TOOLS.find((t) => t.type === currentTool)
+  const hasCalibration = !!scale
+  const canCopyFromOtherPages = otherPageCalibrations.length > 0
+  const canShowHistory = !!calibrationId && !!onShowHistory
 
   // Convert scale display to current unit system
   const displayScale = scale ? (() => {
@@ -328,11 +365,104 @@ export function TakeoffToolbar({
           </TooltipProvider>
         )}
 
+        {/* Calibration Menu */}
         {onCalibrate && (
-          <Button variant="outline" size="sm" onClick={onCalibrate}>
-            <Settings className="w-4 h-4 mr-1" />
-            Calibrate
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={isCalibrationPending}
+                className="gap-1"
+              >
+                {isCalibrationPending ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Settings className="w-4 h-4" />
+                )}
+                Calibrate
+                <ChevronDown className="w-3 h-3 ml-1" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel className="flex items-center gap-2">
+                <Ruler className="w-4 h-4" />
+                Page {pageNumber} Calibration
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+
+              {/* Draw calibration line */}
+              <DropdownMenuItem onClick={onCalibrate}>
+                <Ruler className="w-4 h-4 mr-2" />
+                {hasCalibration ? 'Recalibrate Page' : 'Calibrate Page'}
+              </DropdownMenuItem>
+
+              {/* Copy from another page */}
+              {canCopyFromOtherPages && onCopyFromPage && (
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy from Page
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {otherPageCalibrations.map((cal) => (
+                      <DropdownMenuItem
+                        key={cal.page_number}
+                        onClick={() => onCopyFromPage(cal.page_number)}
+                      >
+                        Page {cal.page_number}
+                        <span className="ml-auto text-xs text-muted-foreground">
+                          {cal.pixels_per_unit.toFixed(1)} px/{cal.unit}
+                        </span>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+              )}
+
+              {/* View history */}
+              {canShowHistory && (
+                <DropdownMenuItem onClick={onShowHistory}>
+                  <History className="w-4 h-4 mr-2" />
+                  View History
+                </DropdownMenuItem>
+              )}
+
+              {/* Clear calibration */}
+              {hasCalibration && onClearCalibration && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={onClearCalibration}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Clear Calibration
+                  </DropdownMenuItem>
+                </>
+              )}
+
+              {/* Status info */}
+              {hasCalibration && (
+                <>
+                  <DropdownMenuSeparator />
+                  <div className="px-2 py-1.5 text-xs text-muted-foreground">
+                    {isScaleSaved ? (
+                      <span className="flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-green-500" />
+                        Calibration saved
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-1">
+                        <AlertCircle className="w-3 h-3 text-yellow-500" />
+                        Not saved to database
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
 

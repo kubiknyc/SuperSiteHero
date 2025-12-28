@@ -45,8 +45,8 @@ export function WeatherSection({ expanded, onToggle, draft, onUpdate, reportDate
         wind_speed: weatherData.wind_speed,
       })
       toast.success('Weather data filled from your location')
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to fetch weather'
+    } catch (_error) {
+      const message = _error instanceof Error ? _error.message : 'Failed to fetch weather'
       toast.error(message)
     } finally {
       setIsLoadingWeather(false)

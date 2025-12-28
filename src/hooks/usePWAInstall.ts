@@ -204,7 +204,11 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
   } = options;
 
   const analyticsCallbackRef = useRef(onAnalyticsEvent);
-  analyticsCallbackRef.current = onAnalyticsEvent;
+
+  // Update ref in effect to avoid accessing during render
+  useEffect(() => {
+    analyticsCallbackRef.current = onAnalyticsEvent;
+  }, [onAnalyticsEvent]);
 
   const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(() => {
@@ -240,14 +244,18 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
   useEffect(() => {
     // Increment page views on mount
     const newCount = incrementPageViews();
-    setPageViewCount(newCount);
+    setTimeout(() => {
+      setPageViewCount(newCount);
+    }, 0);
 
     // Set up timer for showing banner
     const firstVisit = getFirstVisitTime();
     const elapsed = (Date.now() - firstVisit) / 1000;
 
     if (elapsed >= showAfterSeconds) {
-      setTimeElapsed(true);
+      setTimeout(() => {
+        setTimeElapsed(true);
+      }, 0);
     } else {
       const remainingTime = (showAfterSeconds - elapsed) * 1000;
       const timer = setTimeout(() => {
@@ -280,7 +288,9 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
 
     // Check if already in standalone mode
     if (detectStandalone()) {
-      setIsInstalled(true);
+      setTimeout(() => {
+        setIsInstalled(true);
+      }, 0);
       localStorage.setItem(PWA_INSTALLED_KEY, 'true');
     }
 
@@ -317,8 +327,8 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
       }
 
       return false;
-    } catch (error) {
-      logger.error('Error prompting install:', error);
+    } catch (_error) {
+      logger.error('Error prompting install:', _error);
       return false;
     }
   }, [installPromptEvent]);
@@ -350,7 +360,7 @@ export function usePWAInstall(options: UsePWAInstallOptions = {}): UsePWAInstall
         pageViews: pageViewCount,
       });
     }
-  }, [hasTrackedPromptShown, isIOS, isAndroid]);
+  }, [hasTrackedPromptShown, isIOS, isAndroid, pageViewCount]);
 
   // Determine if installable
   // On iOS, we show manual instructions instead

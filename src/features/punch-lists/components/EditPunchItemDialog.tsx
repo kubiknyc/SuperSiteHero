@@ -2,7 +2,7 @@
 // Modal dialog for editing an existing punch item
 
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useUpdatePunchItemWithNotification } from '../hooks/usePunchItemsMutations'
 import type { PunchItem, PunchItemStatus, Priority } from '@/types/database'
 import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
@@ -49,41 +49,48 @@ export function EditPunchItemDialog({
   const [assignee, setAssignee] = useState<Assignee | null>(null)
   const [floorPlanLocation, setFloorPlanLocation] = useState<PinLocation | null>(null)
 
+  const prevOpenRef = useRef(open)
+
   // Load punch item data when dialog opens
   useEffect(() => {
-    if (punchItem && open) {
-      setTitle(punchItem.title || '')
-      setTrade(punchItem.trade || '')
-      setDescription(punchItem.description || '')
-      setBuilding(punchItem.building || '')
-      setFloor(punchItem.floor || '')
-      setRoom(punchItem.room || '')
-      setArea(punchItem.area || '')
-      setLocationNotes(punchItem.location_notes || '')
-      setPriority(punchItem.priority || 'medium')
-      setStatus(punchItem.status || 'open')
-      setDueDate(punchItem.due_date || '')
-      // Initialize assignee from existing data
-      if (punchItem.subcontractor_id) {
-        setAssignee({
-          type: 'subcontractor',
-          id: punchItem.subcontractor_id,
-        })
-      } else if (punchItem.assigned_to) {
-        setAssignee({
-          type: 'user',
-          id: punchItem.assigned_to,
-        })
-      } else {
-        setAssignee(null)
-      }
-      // Load floor plan location if exists
-      const existingLocation = (punchItem as any).floor_plan_location
-      if (existingLocation) {
-        setFloorPlanLocation(existingLocation as PinLocation)
-      } else {
-        setFloorPlanLocation(null)
-      }
+    const isOpening = open && !prevOpenRef.current
+    prevOpenRef.current = open
+
+    if (punchItem && isOpening) {
+      setTimeout(() => {
+        setTitle(punchItem.title || '')
+        setTrade(punchItem.trade || '')
+        setDescription(punchItem.description || '')
+        setBuilding(punchItem.building || '')
+        setFloor(punchItem.floor || '')
+        setRoom(punchItem.room || '')
+        setArea(punchItem.area || '')
+        setLocationNotes(punchItem.location_notes || '')
+        setPriority(punchItem.priority || 'medium')
+        setStatus(punchItem.status || 'open')
+        setDueDate(punchItem.due_date || '')
+        // Initialize assignee from existing data
+        if (punchItem.subcontractor_id) {
+          setAssignee({
+            type: 'subcontractor',
+            id: punchItem.subcontractor_id,
+          })
+        } else if (punchItem.assigned_to) {
+          setAssignee({
+            type: 'user',
+            id: punchItem.assigned_to,
+          })
+        } else {
+          setAssignee(null)
+        }
+        // Load floor plan location if exists
+        const existingLocation = (punchItem as any).floor_plan_location
+        if (existingLocation) {
+          setFloorPlanLocation(existingLocation as PinLocation)
+        } else {
+          setFloorPlanLocation(null)
+        }
+      }, 0)
     }
   }, [punchItem, open])
 

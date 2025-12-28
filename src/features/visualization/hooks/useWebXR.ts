@@ -311,7 +311,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
 
         onSessionStart?.(session);
         return true;
-      } catch (error) {
+      } catch (_error) {
         const err = error instanceof Error ? error : new Error('Failed to start VR session');
         onError?.(err);
         return false;
@@ -407,7 +407,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
 
         onSessionStart?.(session);
         return true;
-      } catch (error) {
+      } catch (_error) {
         const err = error instanceof Error ? error : new Error('Failed to start AR session');
         onError?.(err);
         return false;
@@ -421,7 +421,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
     if (xrSessionRef.current) {
       try {
         await xrSessionRef.current.end();
-      } catch (error) {
+      } catch (_error) {
         logger.error('Error ending session:', error);
       }
     }
@@ -485,7 +485,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
         }
 
         return null;
-      } catch (error) {
+      } catch (_error) {
         logger.error('Failed to create anchor:', error);
         return null;
       }
@@ -627,7 +627,9 @@ export function useVRControllers(
 
   useEffect(() => {
     if (!session || !referenceSpace) {
-      setControllers([]);
+      setTimeout(() => {
+        setControllers([]);
+      }, 0);
       return;
     }
 

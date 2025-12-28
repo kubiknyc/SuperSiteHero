@@ -72,22 +72,24 @@ export function ScheduleDialog({
   // Populate form if editing
   useEffect(() => {
     if (schedule) {
-      setFormData({
-        project_id: schedule.project_id,
-        checklist_template_id: schedule.checklist_template_id,
-        name: schedule.name,
-        description: schedule.description || '',
-        frequency: schedule.frequency,
-        interval: schedule.interval,
-        start_date: format(new Date(schedule.start_date), 'yyyy-MM-dd'),
-        end_date: schedule.end_date ? format(new Date(schedule.end_date), 'yyyy-MM-dd') : null,
-        days_of_week: schedule.days_of_week,
-        day_of_month: schedule.day_of_month,
-        time_of_day: schedule.time_of_day,
-        assigned_user_id: schedule.assigned_user_id,
-        reminder_enabled: schedule.reminder_enabled,
-        reminder_hours_before: schedule.reminder_hours_before,
-      })
+      setTimeout(() => {
+        setFormData({
+          project_id: schedule.project_id,
+          checklist_template_id: schedule.checklist_template_id,
+          name: schedule.name,
+          description: schedule.description || '',
+          frequency: schedule.frequency,
+          interval: schedule.interval,
+          start_date: format(new Date(schedule.start_date), 'yyyy-MM-dd'),
+          end_date: schedule.end_date ? format(new Date(schedule.end_date), 'yyyy-MM-dd') : null,
+          days_of_week: schedule.days_of_week,
+          day_of_month: schedule.day_of_month,
+          time_of_day: schedule.time_of_day,
+          assigned_user_id: schedule.assigned_user_id,
+          reminder_enabled: schedule.reminder_enabled,
+          reminder_hours_before: schedule.reminder_hours_before,
+        })
+      }, 0)
     }
   }, [schedule])
 

@@ -76,7 +76,9 @@ export function MasterDetailLayout({
   // Auto-show detail panel when selection changes on mobile
   useEffect(() => {
     if (isMobile && hasSelection) {
-      setShowDetailOnMobile(true);
+      setTimeout(() => {
+        setShowDetailOnMobile(true);
+      }, 0);
     }
   }, [isMobile, hasSelection]);
 

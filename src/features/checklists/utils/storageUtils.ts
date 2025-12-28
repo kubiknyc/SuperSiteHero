@@ -183,8 +183,8 @@ function extractPathFromUrl(url: string, bucket: string): string | null {
     }
 
     return url.substring(index + bucketSegment.length)
-  } catch (error) {
-    logger.error('Extract path from URL failed:', error)
+  } catch (_error) {
+    logger.error('Extract path from URL failed:', _error)
     return null
   }
 }

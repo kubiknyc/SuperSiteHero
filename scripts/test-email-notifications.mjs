@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Email Notification Testing Script
@@ -295,7 +296,7 @@ async function main() {
 
     // Set a temporary password for the admin user
     const tempPassword = 'TempTestPassword123!'
-    const { data: updateData, error: updateError } = await serviceClient.auth.admin.updateUserById(
+    const { data: _updateData, error: updateError } = await serviceClient.auth.admin.updateUserById(
       adminUser.id,
       { password: tempPassword }
     )

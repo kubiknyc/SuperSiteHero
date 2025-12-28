@@ -3,7 +3,7 @@
  * Page for subcontractors to accept portal invitations
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { useValidateInvitation, useAcceptInvitation } from '@/features/subcontractor-portal/hooks'
@@ -45,14 +45,7 @@ export function AcceptInvitationPage() {
   const { data: validation, isLoading: validating, isError } = useValidateInvitation(token)
   const acceptInvitation = useAcceptInvitation()
 
-  // Auto-accept if user is logged in and invitation is valid
-  useEffect(() => {
-    if (user && validation?.is_valid && token && !accepted) {
-      handleAccept()
-    }
-  }, [user, validation, token, accepted])
-
-  const handleAccept = async () => {
+  const handleAccept = useCallback(async () => {
     if (!token || !user?.id) {return}
 
     acceptInvitation.mutate(
@@ -67,7 +60,17 @@ export function AcceptInvitationPage() {
         },
       }
     )
-  }
+  }, [token, user, acceptInvitation, navigate])
+
+  // Auto-accept if user is logged in and invitation is valid
+  useEffect(() => {
+    if (user && validation?.is_valid && token && !accepted) {
+      // Use setTimeout to avoid calling setState synchronously within effect
+      setTimeout(() => {
+        handleAccept()
+      }, 0)
+    }
+  }, [user, validation, token, accepted, handleAccept])
 
   // Show loading state
   if (authLoading || validating) {

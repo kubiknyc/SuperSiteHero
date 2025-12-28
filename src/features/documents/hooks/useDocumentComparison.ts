@@ -13,7 +13,6 @@ import { compareCanvasImages, analyzeChangeTypes, type DiffResult } from '../ser
 import { renderDocumentToCanvas, getPdfInfo, type RenderPdfOptions } from '../utils/pdf-to-canvas'
 
 // Type assertion helper for new tables not yet in database.ts
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 /**
@@ -316,7 +315,6 @@ export function useTransferMarkups() {
       if (targetError) {throw targetError}
 
       // Create copies of the markups for the new document
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const newMarkups = sourceMarkups.map((markup: any) => ({
         document_id: toDocumentId,
         project_id: targetDoc.project_id,

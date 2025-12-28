@@ -10,6 +10,7 @@ import { useUpdatePunchItemStatus } from '@/features/punch-lists/hooks/usePunchI
 import { useDeletePunchItemWithNotification } from '@/features/punch-lists/hooks/usePunchItemsMutations'
 import { EditPunchItemDialog } from '@/features/punch-lists/components/EditPunchItemDialog'
 import { PunchItemStatusBadge } from '@/features/punch-lists/components/PunchItemStatusBadge'
+import { BackChargesList } from '@/features/punch-lists/components/BackChargesList'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -270,6 +271,14 @@ export function PunchItemDetailPage() {
                 </CardContent>
               </Card>
             )}
+
+            {/* Back-Charges */}
+            <BackChargesList
+              punchItemId={punchItem.id}
+              projectId={punchItem.project_id}
+              subcontractorId={punchItem.subcontractor_id}
+              subcontractorName={(punchItem as any).subcontractor_name}
+            />
 
             {/* Quick Actions for Status Change */}
             {punchItem.status !== 'verified' && (

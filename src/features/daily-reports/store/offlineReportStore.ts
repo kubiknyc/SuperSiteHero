@@ -443,7 +443,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
                   (item) => item.reportId !== state.conflict?.reportId
                 ),
               }
-            case 'merge':
+            case 'merge': {
               // Merge: local values take precedence for non-null fields
               // Server values used for fields that are null/undefined locally
               const merged = { ...state.conflict.serverData }
@@ -460,6 +460,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
                 conflict: null,
                 syncStatus: 'idle',
               }
+            }
             default:
               return state
           }

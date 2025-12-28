@@ -26,9 +26,9 @@ export function useApprovalRequests(filters?: ApprovalRequestFilters) {
     queryFn: async () => {
       try {
         return await approvalRequestsApi.getRequests(filters)
-      } catch (error) {
+      } catch (_error) {
         // Log the actual error for debugging
-        logger.error('[useApprovalRequests] Query failed:', error)
+        logger.error('[useApprovalRequests] Query failed:', _error)
         // Return empty array on error (DB tables may not exist)
         return []
       }

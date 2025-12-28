@@ -26,8 +26,7 @@ export function MobileNavDrawer({ isOpen, onClose }: MobileNavDrawerProps) {
     if (isOpen) {
       onClose()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname])
+  }, [location.pathname, isOpen, onClose])
 
   // Prevent body scroll when drawer is open
   useEffect(() => {

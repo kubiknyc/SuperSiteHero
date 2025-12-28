@@ -15,7 +15,6 @@ import type {
 } from '@/types/schedule'
 
 // Use 'any' for tables not in generated types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 export const scheduleApi = {

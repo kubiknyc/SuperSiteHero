@@ -56,15 +56,24 @@ export function useMessageDraft(conversationId: string | undefined) {
   // Load draft when conversation changes
   useEffect(() => {
     if (!storageKey) {
-      setDraft('')
+      setTimeout(() => {
+        setDraft('')
+      }, 0)
       return
     }
 
     try {
       const savedDraft = localStorage.getItem(storageKey)
-      setDraft(savedDraft || '')
+      setTimeout(() => {
+        setDraft((prevDraft) => {
+          // Only update if different to avoid unnecessary re-renders
+          return savedDraft === null ? '' : savedDraft !== prevDraft ? savedDraft : prevDraft
+        })
+      }, 0)
     } catch {
-      setDraft('')
+      setTimeout(() => {
+        setDraft('')
+      }, 0)
     }
   }, [storageKey])
 

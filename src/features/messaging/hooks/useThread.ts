@@ -16,7 +16,6 @@ import type { Message, SendMessageDTO } from '@/types/messaging'
 import { toast } from '@/lib/notifications/ToastContext'
 
 // Using extended Database types for tables not yet in generated types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 // Query keys for threads

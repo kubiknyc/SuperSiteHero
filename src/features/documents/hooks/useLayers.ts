@@ -28,7 +28,6 @@ interface DbMarkupLayer {
 }
 
 // Type assertion helper for new tables not yet in database.ts
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any
 
 // Convert DB layer to MarkupLayer type

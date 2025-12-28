@@ -110,7 +110,7 @@ export function BulkActionToolbar({
       setDeleteDialogOpen(false)
       onClearSelection()
       toast.success(`Deleted ${selectedCount} template${selectedCount > 1 ? 's' : ''}`)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to delete templates')
     } finally {
       setOperationInProgress(null)
@@ -129,7 +129,7 @@ export function BulkActionToolbar({
           ? `Moved ${selectedCount} template${selectedCount > 1 ? 's' : ''} to category`
           : `Removed ${selectedCount} template${selectedCount > 1 ? 's' : ''} from category`
       )
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to change category')
     } finally {
       setOperationInProgress(null)
@@ -144,7 +144,7 @@ export function BulkActionToolbar({
     try {
       await onBulkClone(selectedIds)
       onClearSelection()
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to clone templates')
     } finally {
       setOperationInProgress(null)
@@ -159,7 +159,7 @@ export function BulkActionToolbar({
     try {
       await onBulkExport(selectedIds, format)
       toast.success(`Exported ${selectedCount} template${selectedCount > 1 ? 's' : ''} as ${format.toUpperCase()}`)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to export templates')
     } finally {
       setOperationInProgress(null)

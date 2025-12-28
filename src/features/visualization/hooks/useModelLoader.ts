@@ -392,7 +392,7 @@ export function useModelLoader(
 
         onLoad?.(model);
         return model;
-      } catch (error) {
+      } catch (_error) {
         const errorMessage = error instanceof Error ? error.message : 'Failed to load model';
         setState((prev) => ({
           ...prev,

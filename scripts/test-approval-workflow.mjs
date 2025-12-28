@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Test Approval Workflow Logic
@@ -131,8 +132,8 @@ async function runTest(test, index) {
           try {
             const parsed = JSON.parse(data);
             resolve({ test, result: parsed, success: true });
-          } catch (e) {
-            reject({ test, error: e.message });
+          } catch (parseError) {
+            reject({ test, error: parseError.message });
           }
         } else {
           reject({ test, error: data });

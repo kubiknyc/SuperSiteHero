@@ -123,6 +123,21 @@ function BidBar({ submission, maxBid, lowBid, estimatedValue }: BidBarProps) {
   )
 }
 
+interface BidSortIconProps {
+  field: SortField
+  sortField: SortField
+  sortDirection: SortDirection
+}
+
+function BidSortIcon({ field, sortField, sortDirection }: BidSortIconProps) {
+  if (sortField !== field) {return <Minus className="w-3 h-3 opacity-30" />}
+  return sortDirection === 'asc' ? (
+    <ArrowUp className="w-3 h-3" />
+  ) : (
+    <ArrowDown className="w-3 h-3" />
+  )
+}
+
 export function BidComparisonView({
   packageId,
   estimatedValue,
@@ -200,15 +215,6 @@ export function BidComparisonView({
       setSortField(field)
       setSortDirection('asc')
     }
-  }
-
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortField !== field) {return <Minus className="w-3 h-3 opacity-30" />}
-    return sortDirection === 'asc' ? (
-      <ArrowUp className="w-3 h-3" />
-    ) : (
-      <ArrowDown className="w-3 h-3" />
-    )
   }
 
   if (isLoading) {
@@ -358,7 +364,7 @@ export function BidComparisonView({
                 >
                   <div className="flex items-center gap-1">
                     Rank
-                    <SortIcon field="rank" />
+                    <BidSortIcon field="rank" sortField={sortField} sortDirection={sortDirection} />
                   </div>
                 </TableHead>
                 <TableHead
@@ -367,7 +373,7 @@ export function BidComparisonView({
                 >
                   <div className="flex items-center gap-1">
                     Bidder
-                    <SortIcon field="company" />
+                    <BidSortIcon field="company" sortField={sortField} sortDirection={sortDirection} />
                   </div>
                 </TableHead>
                 <TableHead
@@ -376,7 +382,7 @@ export function BidComparisonView({
                 >
                   <div className="flex items-center justify-end gap-1">
                     Base Bid
-                    <SortIcon field="amount" />
+                    <BidSortIcon field="amount" sortField={sortField} sortDirection={sortDirection} />
                   </div>
                 </TableHead>
                 <TableHead className="text-right">Alternates</TableHead>
@@ -387,7 +393,7 @@ export function BidComparisonView({
                 >
                   <div className="flex items-center justify-end gap-1">
                     vs Low
-                    <SortIcon field="variance" />
+                    <BidSortIcon field="variance" sortField={sortField} sortDirection={sortDirection} />
                   </div>
                 </TableHead>
                 {estimatedValue && <TableHead className="text-right">vs Estimate</TableHead>}

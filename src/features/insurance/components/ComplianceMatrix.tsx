@@ -230,7 +230,7 @@ export function ComplianceMatrix({
       setHoldDialogOpen(false)
       setHoldReason('')
       setSelectedSub(null)
-    } catch (error) {
+    } catch (_error) {
       toast({ title: 'Error', description: 'Failed to apply payment hold', variant: 'destructive' })
     }
   }
@@ -247,7 +247,7 @@ export function ComplianceMatrix({
       setReleaseDialogOpen(false)
       setOverrideReason('')
       setSelectedSub(null)
-    } catch (error) {
+    } catch (_error) {
       toast({ title: 'Error', description: 'Failed to release payment hold', variant: 'destructive' })
     }
   }
@@ -259,7 +259,7 @@ export function ComplianceMatrix({
         projectId,
       })
       toast({ title: 'Recalculated', description: `Compliance status updated for ${sub.name}` })
-    } catch (error) {
+    } catch (_error) {
       toast({ title: 'Error', description: 'Failed to recalculate compliance', variant: 'destructive' })
     }
   }

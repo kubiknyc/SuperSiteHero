@@ -26,7 +26,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Cloud, Trash2, WifiOff, Smartphone, Image, Bell, HardDrive } from 'lucide-react';
-import { clearStore, STORES, getStorageEstimate } from '@/lib/offline/indexeddb';
+import { clearStore, STORES } from '@/lib/offline/indexeddb';
 import { logger } from '@/lib/utils/logger';
 
 /**
@@ -104,8 +104,8 @@ export function OfflineSyncSettings() {
 
       // Reset success message after 3 seconds
       setTimeout(() => setClearSuccess(false), 3000);
-    } catch (error) {
-      logger.error('[OfflineSyncSettings] Failed to clear cache:', error);
+    } catch (_error) {
+      logger.error('[OfflineSyncSettings] Failed to clear cache:', _error);
     } finally {
       setIsClearing(false);
     }

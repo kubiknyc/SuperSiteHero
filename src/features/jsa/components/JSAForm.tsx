@@ -220,8 +220,8 @@ export function JSAForm({
           navigate(`/projects/${projectId}/jsa/${created.id}`);
         }
       }
-    } catch (error) {
-      logger.error('Failed to save JSA:', error);
+    } catch (_error) {
+      logger.error('Failed to save JSA:', _error);
     }
   };
 

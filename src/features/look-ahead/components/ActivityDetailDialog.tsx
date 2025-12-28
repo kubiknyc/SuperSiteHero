@@ -94,39 +94,42 @@ export function ActivityDetailDialog({
 
   // Reset form when activity changes
   useEffect(() => {
-    if (activity) {
-      setFormData({
-        project_id: activity.project_id,
-        activity_name: activity.activity_name,
-        description: activity.description || '',
-        location: activity.location || '',
-        trade: activity.trade || '',
-        subcontractor_id: activity.subcontractor_id || '',
-        planned_start_date: activity.planned_start_date,
-        planned_end_date: activity.planned_end_date,
-        status: activity.status,
-        percent_complete: activity.percent_complete,
-        estimated_labor_hours: activity.estimated_labor_hours || undefined,
-        estimated_crew_size: activity.estimated_crew_size || undefined,
-        priority: activity.priority,
-        notes: activity.notes || '',
-      })
-    } else {
-      setFormData({
-        project_id: projectId,
-        activity_name: '',
-        description: '',
-        location: '',
-        trade: '',
-        subcontractor_id: '',
-        planned_start_date: weekStartDate || new Date().toISOString().split('T')[0],
-        planned_end_date: weekStartDate || new Date().toISOString().split('T')[0],
-        status: 'planned',
-        percent_complete: 0,
-        priority: 50,
-        notes: '',
-      })
-    }
+    // Use setTimeout to avoid synchronous state update in effect
+    setTimeout(() => {
+      if (activity) {
+        setFormData({
+          project_id: activity.project_id,
+          activity_name: activity.activity_name,
+          description: activity.description || '',
+          location: activity.location || '',
+          trade: activity.trade || '',
+          subcontractor_id: activity.subcontractor_id || '',
+          planned_start_date: activity.planned_start_date,
+          planned_end_date: activity.planned_end_date,
+          status: activity.status,
+          percent_complete: activity.percent_complete,
+          estimated_labor_hours: activity.estimated_labor_hours || undefined,
+          estimated_crew_size: activity.estimated_crew_size || undefined,
+          priority: activity.priority,
+          notes: activity.notes || '',
+        })
+      } else {
+        setFormData({
+          project_id: projectId,
+          activity_name: '',
+          description: '',
+          location: '',
+          trade: '',
+          subcontractor_id: '',
+          planned_start_date: weekStartDate || new Date().toISOString().split('T')[0],
+          planned_end_date: weekStartDate || new Date().toISOString().split('T')[0],
+          status: 'planned',
+          percent_complete: 0,
+          priority: 50,
+          notes: '',
+        })
+      }
+    }, 0)
   }, [activity, projectId, weekStartDate])
 
   const handleChange = (field: keyof CreateLookAheadActivityDTO, value: string | number | undefined) => {

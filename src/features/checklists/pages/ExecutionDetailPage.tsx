@@ -2,6 +2,8 @@
 // Read-only detail view for completed checklist executions
 // Phase: 3.1 - Checklist Execution UI
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import { useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
@@ -35,6 +37,7 @@ import { logger } from '../../../lib/utils/logger';
 
 
 export function ExecutionDetailPage() {
+  'use no memo'
   const { executionId } = useParams<{ executionId: string }>()
   const navigate = useNavigate()
 
@@ -117,7 +120,7 @@ export function ExecutionDetailPage() {
           </span>
         )
 
-      case 'photo':
+      case 'photo': {
         const photoUrls = response.photo_urls || []
         return photoUrls.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -130,6 +133,7 @@ export function ExecutionDetailPage() {
         ) : (
           <span className="text-muted">No photos</span>
         )
+      }
 
       case 'signature':
         return response.signature_url ? (

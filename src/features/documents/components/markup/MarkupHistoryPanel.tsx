@@ -160,7 +160,7 @@ export function MarkupHistoryPanel({
       let groupKey: string
 
       switch (groupBy) {
-        case 'date':
+        case 'date': {
           const date = new Date(markup.createdAt)
           if (isToday(date)) {
             groupKey = 'Today'
@@ -170,6 +170,7 @@ export function MarkupHistoryPanel({
             groupKey = format(date, 'MMM d, yyyy')
           }
           break
+        }
         case 'author':
           groupKey = markup.createdByName || 'Unknown'
           break

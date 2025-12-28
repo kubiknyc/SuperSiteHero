@@ -47,9 +47,10 @@ interface SuperintendentDashboardProps {
 
 export function SuperintendentDashboard({ project, projectId }: SuperintendentDashboardProps) {
   // Mock data - replace with actual queries
+  const [baseTime] = React.useState(() => Date.now())
   const dailyReportStatus = {
     submitted: false,
-    lastSubmitted: new Date(Date.now() - 86400000),
+    lastSubmitted: new Date(baseTime - 86400000),
   }
 
   const workforceMetrics = {

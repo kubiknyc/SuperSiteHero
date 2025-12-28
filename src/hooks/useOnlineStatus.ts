@@ -28,10 +28,10 @@ export function useOnlineStatus(): UseOnlineStatusReturn {
   const [networkQuality, setNetworkQuality] = useState<NetworkQuality>({
     type: navigator.onLine ? 'online' : 'offline',
   });
-  const [lastOnlineAt, setLastOnlineAt] = useState<number | null>(
+  const [lastOnlineAt, setLastOnlineAt] = useState<number | null>(() =>
     navigator.onLine ? Date.now() : null
   );
-  const [lastOfflineAt, setLastOfflineAt] = useState<number | null>(
+  const [lastOfflineAt, setLastOfflineAt] = useState<number | null>(() =>
     !navigator.onLine ? Date.now() : null
   );
 
@@ -84,7 +84,9 @@ export function useOnlineStatus(): UseOnlineStatusReturn {
     };
 
     // Set initial state
-    updateNetworkQuality();
+    setTimeout(() => {
+      updateNetworkQuality();
+    }, 0);
 
     // Listen for online/offline events
     window.addEventListener('online', handleOnline);

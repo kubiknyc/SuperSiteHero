@@ -59,6 +59,7 @@ import {
 import { DocumentSignatureDialog, type SignatureData } from '@/components/shared';
 import { cn } from '@/lib/utils';
 import { downloadLienWaiverPDF } from '@/features/lien-waivers/utils/pdfExport';
+import { SendViaDocuSignButton } from '@/features/docusign/components';
 import type { LienWaiverHistory } from '@/types/lien-waiver';
 import { formatWaiverAmount, getStateName, isWaiverOverdue } from '@/types/lien-waiver';
 import { logger } from '../../lib/utils/logger';
@@ -241,6 +242,19 @@ export function LienWaiverDetailPage() {
         Export PDF
       </Button>
     );
+
+    // DocuSign button - show when sent, received, or under review
+    if (id && ['sent', 'received', 'under_review'].includes(waiver.status)) {
+      actions.push(
+        <SendViaDocuSignButton
+          key="docusign"
+          documentType="lien_waiver"
+          documentId={id}
+          documentName={`Lien Waiver - ${waiver.subcontractor?.company_name || 'Unknown'}`}
+          documentNumber={waiver.waiver_number || undefined}
+        />
+      );
+    }
 
     switch (waiver.status) {
       case 'pending':

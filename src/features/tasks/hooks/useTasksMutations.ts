@@ -98,8 +98,8 @@ export function useCreateTaskWithNotification() {
               }
             )
           }
-        } catch (error) {
-          logger.error('[Tasks] Failed to send task assignment notification:', error)
+        } catch (_error) {
+          logger.error('[Tasks] Failed to send task assignment notification:', _error)
         }
       }
     },

@@ -36,7 +36,6 @@ export function MarkupDiffViewer({
   useEffect(() => {
     if (!diffImageDataUrl || !canvasRef.current) {return}
 
-    setIsLoading(true)
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     if (!ctx) {return}

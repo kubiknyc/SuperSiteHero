@@ -6,6 +6,7 @@ import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { LazyDrawingCanvas } from '../LazyDrawingCanvas'
+import { UnifiedDrawingCanvas } from '../markup/UnifiedDrawingCanvas'
 import { logger } from '../../../../lib/utils/logger';
 
 
@@ -20,6 +21,8 @@ interface ImageViewerProps {
   onMarkupCreate?: (markup: any) => void
   height?: string
   enableMarkup?: boolean
+  /** Enable real-time collaborative markup with other users */
+  collaborative?: boolean
 }
 
 /**
@@ -56,6 +59,7 @@ export function ImageViewer({
   onMarkupCreate,
   height = 'h-screen',
   enableMarkup: initialEnableMarkup = false,
+  collaborative = false,
 }: ImageViewerProps) {
   const [zoom, setZoom] = useState(100)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -304,14 +308,26 @@ export function ImageViewer({
                   transformOrigin: 'center',
                 }}
               >
-                <LazyDrawingCanvas
-                  documentId={documentId}
-                  projectId={projectId}
-                  pageNumber={null}
-                  width={imageWidth}
-                  height={imageHeight}
-                  readOnly={false}
-                />
+                {collaborative ? (
+                  <UnifiedDrawingCanvas
+                    documentId={documentId}
+                    projectId={projectId}
+                    pageNumber={null}
+                    width={imageWidth}
+                    height={imageHeight}
+                    readOnly={false}
+                    collaborative={collaborative}
+                  />
+                ) : (
+                  <LazyDrawingCanvas
+                    documentId={documentId}
+                    projectId={projectId}
+                    pageNumber={null}
+                    width={imageWidth}
+                    height={imageHeight}
+                    readOnly={false}
+                  />
+                )}
               </div>
             )}
           </div>

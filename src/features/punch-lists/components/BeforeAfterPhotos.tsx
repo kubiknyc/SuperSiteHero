@@ -3,7 +3,7 @@
 // Prompts users to document the issue (before) and the fix (after)
 
 import { useState, useRef } from 'react'
-import { Camera, X, ImagePlus, Check, AlertCircle } from 'lucide-react'
+import { Camera, X, ImagePlus, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 
@@ -25,6 +25,94 @@ interface BeforeAfterPhotosProps {
   requireBeforePhoto?: boolean
   status?: string
   compact?: boolean
+}
+
+// Photo grid helper component
+function PhotoGrid({
+  photos,
+  type,
+  onRemove,
+}: {
+  photos: PunchPhoto[]
+  type: 'before' | 'after'
+  onRemove: (photoId: string, type: 'before' | 'after') => void
+}) {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {photos.map((photo) => (
+        <div key={photo.id} className="relative group aspect-square">
+          <img
+            src={photo.url}
+            alt={`${type} photo`}
+            className="w-full h-full object-cover rounded-lg"
+          />
+          <button
+            type="button"
+            onClick={() => onRemove(photo.id, type)}
+            className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <X className="h-3 w-3" />
+          </button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// Upload zone helper component
+function UploadZone({
+  type,
+  inputRef,
+  compact,
+  dragOver,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  onFileSelect,
+}: {
+  type: 'before' | 'after'
+  inputRef: React.RefObject<HTMLInputElement>
+  compact: boolean
+  dragOver: 'before' | 'after' | null
+  onDragOver: (e: React.DragEvent, type: 'before' | 'after') => void
+  onDragLeave: () => void
+  onDrop: (e: React.DragEvent, type: 'before' | 'after') => void
+  onFileSelect: (files: FileList | null, type: 'before' | 'after') => void
+}) {
+  return (
+    <div
+      onDragOver={(e) => onDragOver(e, type)}
+      onDragLeave={onDragLeave}
+      onDrop={(e) => onDrop(e, type)}
+      className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
+        dragOver === type
+          ? 'border-blue-500 bg-blue-50'
+          : 'border-input hover:border-gray-400'
+      }`}
+      onClick={() => inputRef.current?.click()}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={(e) => onFileSelect(e.target.files, type)}
+      />
+      <div className="flex flex-col items-center gap-2">
+        {compact ? (
+          <Camera className="h-6 w-6 text-disabled" />
+        ) : (
+          <>
+            <ImagePlus className="h-8 w-8 text-disabled" />
+            <span className="text-sm text-muted">
+              Click or drag photos here
+            </span>
+          </>
+        )}
+      </div>
+    </div>
+  )
 }
 
 export function BeforeAfterPhotos({
@@ -100,74 +188,6 @@ export function BeforeAfterPhotos({
     handleFileSelect(e.dataTransfer.files, type)
   }
 
-  const PhotoGrid = ({
-    photos,
-    type,
-  }: {
-    photos: PunchPhoto[]
-    type: 'before' | 'after'
-  }) => (
-    <div className="grid grid-cols-3 gap-2">
-      {photos.map((photo) => (
-        <div key={photo.id} className="relative group aspect-square">
-          <img
-            src={photo.url}
-            alt={`${type} photo`}
-            className="w-full h-full object-cover rounded-lg"
-          />
-          <button
-            type="button"
-            onClick={() => handleRemovePhoto(photo.id, type)}
-            className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </div>
-      ))}
-    </div>
-  )
-
-  const UploadZone = ({
-    type,
-    inputRef,
-  }: {
-    type: 'before' | 'after'
-    inputRef: React.RefObject<HTMLInputElement>
-  }) => (
-    <div
-      onDragOver={(e) => handleDragOver(e, type)}
-      onDragLeave={handleDragLeave}
-      onDrop={(e) => handleDrop(e, type)}
-      className={`border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors ${
-        dragOver === type
-          ? 'border-blue-500 bg-blue-50'
-          : 'border-input hover:border-gray-400'
-      }`}
-      onClick={() => inputRef.current?.click()}
-    >
-      <input
-        ref={inputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        className="hidden"
-        onChange={(e) => handleFileSelect(e.target.files, type)}
-      />
-      <div className="flex flex-col items-center gap-2">
-        {compact ? (
-          <Camera className="h-6 w-6 text-disabled" />
-        ) : (
-          <>
-            <ImagePlus className="h-8 w-8 text-disabled" />
-            <span className="text-sm text-muted">
-              Click or drag photos here
-            </span>
-          </>
-        )}
-      </div>
-    </div>
-  )
-
   return (
     <div className="space-y-4">
       {/* Before Photos Section */}
@@ -190,9 +210,24 @@ export function BeforeAfterPhotos({
           Document the issue before work begins
         </p>
 
-        {beforePhotos.length > 0 && <PhotoGrid photos={beforePhotos} type="before" />}
+        {beforePhotos.length > 0 && (
+          <PhotoGrid
+            photos={beforePhotos}
+            type="before"
+            onRemove={handleRemovePhoto}
+          />
+        )}
 
-        <UploadZone type="before" inputRef={beforeInputRef} />
+        <UploadZone
+          type="before"
+          inputRef={beforeInputRef}
+          compact={compact}
+          dragOver={dragOver}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onFileSelect={handleFileSelect}
+        />
       </div>
 
       {/* After Photos Section */}
@@ -212,9 +247,24 @@ export function BeforeAfterPhotos({
             Document the completed work for verification
           </p>
 
-          {afterPhotos.length > 0 && <PhotoGrid photos={afterPhotos} type="after" />}
+          {afterPhotos.length > 0 && (
+            <PhotoGrid
+              photos={afterPhotos}
+              type="after"
+              onRemove={handleRemovePhoto}
+            />
+          )}
 
-          <UploadZone type="after" inputRef={afterInputRef} />
+          <UploadZone
+            type="after"
+            inputRef={afterInputRef}
+            compact={compact}
+            dragOver={dragOver}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            onFileSelect={handleFileSelect}
+          />
         </div>
       )}
 

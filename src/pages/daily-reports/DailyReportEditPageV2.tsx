@@ -53,7 +53,7 @@ export function DailyReportEditPageV2() {
         submitted_by_name: name,
       });
     },
-    [report?.id, submitMutation]
+    [report, submitMutation]
   );
 
   const handleApprove = useCallback(
@@ -66,7 +66,7 @@ export function DailyReportEditPageV2() {
         approval_comments: comments,
       });
     },
-    [report?.id, approveMutation]
+    [report, approveMutation]
   );
 
   const handleRequestChanges = useCallback(
@@ -77,13 +77,13 @@ export function DailyReportEditPageV2() {
         reason,
       });
     },
-    [report?.id, requestChangesMutation]
+    [report, requestChangesMutation]
   );
 
   const handleLock = useCallback(async () => {
     if (!report?.id) {return;}
     await lockMutation.mutateAsync(report.id);
-  }, [report?.id, lockMutation]);
+  }, [report, lockMutation]);
 
   if (!id) {
     return (

@@ -67,14 +67,18 @@ export function LocationProgressTimeline({
   // Auto-select first template if none selected
   useEffect(() => {
     if (!selectedTemplateId && templates && templates.length > 0) {
-      setSelectedTemplateId(templates[0].id);
+      setTimeout(() => {
+        setSelectedTemplateId(templates[0].id);
+      }, 0);
     }
   }, [templates, selectedTemplateId]);
 
   // Reset index when template changes
   useEffect(() => {
-    setCurrentIndex(0);
-    setIsPlaying(false);
+    setTimeout(() => {
+      setCurrentIndex(0);
+      setIsPlaying(false);
+    }, 0);
   }, [selectedTemplateId]);
 
   // Auto-play logic

@@ -399,7 +399,7 @@ test.describe('Status Colors in Dark Mode', () => {
 /**
  * Summary test to log results
  */
-test('dark mode visual regression summary', async ({}, testInfo) => {
+test('dark mode visual regression summary', async (_context, testInfo) => {
   const totalTests = tier1Pages.length * viewports.length * 2 +
                      tier2Pages.length * viewports.length * 2;
 

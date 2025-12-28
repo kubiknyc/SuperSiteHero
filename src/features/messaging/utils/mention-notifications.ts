@@ -74,7 +74,7 @@ export async function sendMentionNotifications(data: MentionNotificationData): P
           sender_id: senderId,
         },
       })
-    } catch (error) {
+    } catch (_error) {
       logger.error(`Failed to send mention notification to ${user.full_name}:`, error)
     }
   })

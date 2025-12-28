@@ -1,6 +1,8 @@
 // File: /src/features/documents/components/markup/UnifiedDrawingCanvas.tsx
 // Unified Konva-based drawing canvas combining best features from both implementations
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { Stage, Layer, Line, Arrow, Rect, Circle, Text as KonvaText, Transformer, Image as KonvaImage, Group } from 'react-konva'
 import type Konva from 'konva'
@@ -23,6 +25,10 @@ import { useLiveCursors } from '@/hooks/useLiveCursors'
 import { RelativeCursorsContainer, OnlineUsersIndicator } from '@/components/realtime/LiveCursor'
 import { logger } from '../../../../lib/utils/logger';
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
+import { useMarkupCollaboration, useDebouncedTransformBroadcast } from '../../hooks/useMarkupCollaboration'
+import { CollaboratorIndicator } from './CollaboratorIndicator'
+import { RemoteMarkupHighlights } from './RemoteMarkupHighlight'
+import type { MarkupOperation, MarkupData, TransformData } from '@/lib/realtime/markup-sync-types'
 
 
 type Tool = AnnotationType | 'select' | 'pan' | 'eraser'
@@ -42,6 +48,8 @@ interface UnifiedDrawingCanvasProps {
   selectedColor?: string
   selectedLineWidth?: number
   markupState?: ReturnType<typeof useEnhancedMarkupState>
+  // Real-time collaboration props
+  collaborative?: boolean
 }
 
 interface Shape {
@@ -95,7 +103,9 @@ export function UnifiedDrawingCanvas({
   selectedColor: propColor,
   selectedLineWidth: propLineWidth,
   markupState,
+  collaborative = false,
 }: UnifiedDrawingCanvasProps) {
+  'use no memo'
   // Tool state
   const [tool, setTool] = useState<Tool>('select')
   const [color, setColor] = useState(propColor || '#FF0000')
@@ -103,11 +113,15 @@ export function UnifiedDrawingCanvas({
 
   // Sync color/lineWidth from props when they change
   useEffect(() => {
-    if (propColor) {setColor(propColor)}
+    if (propColor) {
+      setTimeout(() => setColor(propColor), 0)
+    }
   }, [propColor])
 
   useEffect(() => {
-    if (propLineWidth) {setStrokeWidth(propLineWidth)}
+    if (propLineWidth) {
+      setTimeout(() => setStrokeWidth(propLineWidth), 0)
+    }
   }, [propLineWidth])
 
   // Filter state for layer visibility
@@ -169,6 +183,90 @@ export function UnifiedDrawingCanvas({
   const { cursors, setContainer, isConnected, broadcastCursorPosition } = useLiveCursors(
     `canvas-${documentId}-${pageNumber || 0}`
   )
+
+  // Markup collaboration for real-time sync
+  const handleRemoteCreate = useCallback((operation: MarkupOperation) => {
+    if (!operation.data) return
+    const data = operation.data as MarkupData
+    const newShape: Shape = {
+      id: data.id || operation.markupId,
+      type: data.type as AnnotationType,
+      x: data.x,
+      y: data.y,
+      width: data.width,
+      height: data.height,
+      points: data.points,
+      text: data.text,
+      fill: data.fill,
+      stroke: data.color || '#FF0000',
+      strokeWidth: data.strokeWidth || 3,
+      rotation: data.rotation,
+      scaleX: data.scaleX,
+      scaleY: data.scaleY,
+      layerId: data.layerId,
+      visible: data.visible,
+    }
+    setShapes(prev => [...prev, newShape])
+  }, [])
+
+  const handleRemoteUpdate = useCallback((operation: MarkupOperation) => {
+    if (!operation.data) return
+    const data = operation.data as Partial<MarkupData>
+    setShapes(prev => prev.map(shape =>
+      shape.id === operation.markupId
+        ? { ...shape, ...data }
+        : shape
+    ))
+  }, [])
+
+  const handleRemoteTransform = useCallback((operation: MarkupOperation) => {
+    if (!operation.data) return
+    const transform = operation.data as TransformData
+    setShapes(prev => prev.map(shape =>
+      shape.id === operation.markupId
+        ? {
+            ...shape,
+            x: transform.x ?? shape.x,
+            y: transform.y ?? shape.y,
+            width: transform.width ?? shape.width,
+            height: transform.height ?? shape.height,
+            scaleX: transform.scaleX ?? shape.scaleX,
+            scaleY: transform.scaleY ?? shape.scaleY,
+            rotation: transform.rotation ?? shape.rotation,
+            points: transform.points ?? shape.points,
+          }
+        : shape
+    ))
+  }, [])
+
+  const handleRemoteDelete = useCallback((operation: MarkupOperation) => {
+    setShapes(prev => prev.filter(shape => shape.id !== operation.markupId))
+  }, [])
+
+  const {
+    isConnected: isCollaborationConnected,
+    isCollaborating,
+    collaborators,
+    collaboratorCount,
+    remoteEditHighlights,
+    broadcastCreate,
+    broadcastUpdate,
+    broadcastTransform,
+    broadcastDelete,
+    broadcastActionStart,
+    broadcastActionEnd,
+  } = useMarkupCollaboration({
+    documentId,
+    pageNumber: pageNumber || 1,
+    enabled: collaborative,
+    onRemoteCreate: handleRemoteCreate,
+    onRemoteUpdate: handleRemoteUpdate,
+    onRemoteTransform: handleRemoteTransform,
+    onRemoteDelete: handleRemoteDelete,
+  })
+
+  // Debounced transform broadcasting for smooth updates
+  const { debouncedBroadcast: debouncedTransformBroadcast, flush: flushTransformBroadcast } = useDebouncedTransformBroadcast(broadcastTransform)
 
   // Link dialog state
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
@@ -244,9 +342,11 @@ export function UnifiedDrawingCanvas({
         layerId: markup.layer_id || undefined,
         visible: markup.visible ?? true,
       }))
-      setShapes(loadedShapes)
-      setHistory([loadedShapes])
-      setHistoryStep(0)
+      setTimeout(() => {
+        setShapes(loadedShapes)
+        setHistory([loadedShapes])
+        setHistoryStep(0)
+      }, 0)
     }
   }, [existingMarkups])
 
@@ -278,6 +378,49 @@ export function UnifiedDrawingCanvas({
       }
     }
   }, [selectedShapeId])
+
+  // Handle delete shape - moved before keyboard shortcuts that use it
+  const handleDeleteShape = async (shapeId: string) => {
+    const newShapes = shapes.filter(s => s.id !== shapeId)
+    setShapes(newShapes)
+    setSelectedShapeId(null)
+
+    // Add to history
+    const newHistory = history.slice(0, historyStep + 1)
+    newHistory.push(newShapes)
+    setHistory(newHistory)
+    setHistoryStep(newHistory.length - 1)
+
+    // Broadcast delete to collaborators
+    if (collaborative) {
+      broadcastDelete(shapeId)
+    }
+
+    // Delete from database if it's a persisted markup
+    const markup = existingMarkups?.find(m => m.id === shapeId)
+    if (markup) {
+      try {
+        await deleteMarkup.mutateAsync(markup.id)
+      } catch (error) {
+        logger.error('Failed to delete markup:', error)
+        toast.error('Failed to delete annotation')
+      }
+    }
+  }
+
+  // Handle undo - moved before keyboard shortcuts
+  const handleUndo = () => {
+    if (historyStep === 0) {return}
+    setHistoryStep(historyStep - 1)
+    setShapes(history[historyStep - 1])
+  }
+
+  // Handle redo - moved before keyboard shortcuts
+  const handleRedo = () => {
+    if (historyStep === history.length - 1) {return}
+    setHistoryStep(historyStep + 1)
+    setShapes(history[historyStep + 1])
+  }
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -366,12 +509,22 @@ export function UnifiedDrawingCanvas({
       )
     )
 
+    // Broadcast transform to collaborators (final position)
+    if (collaborative) {
+      flushTransformBroadcast() // Flush any pending debounced updates
+      broadcastTransform(id, {
+        x: node.x(),
+        y: node.y(),
+      })
+      broadcastActionEnd()
+    }
+
     // Debounced save to database
     debouncedUpdateShape(id, {
       x: node.x(),
       y: node.y(),
     })
-  }, [debouncedUpdateShape])
+  }, [debouncedUpdateShape, collaborative, broadcastTransform, flushTransformBroadcast, broadcastActionEnd])
 
   // Handle transform end - save scale, rotation changes
   const handleTransformEnd = useCallback((e: Konva.KonvaEventObject<Event>) => {
@@ -383,35 +536,61 @@ export function UnifiedDrawingCanvas({
     const scaleY = node.scaleY()
     const rotation = node.rotation()
 
+    // Find the shape to get its current dimensions
+    const shape = shapes.find(s => s.id === id)
+
     // Update local state
     setShapes(prevShapes =>
-      prevShapes.map(shape =>
-        shape.id === id
+      prevShapes.map(s =>
+        s.id === id
           ? {
-              ...shape,
+              ...s,
               x: node.x(),
               y: node.y(),
               scaleX,
               scaleY,
               rotation,
               // For rectangles and circles, also update width/height/radius
-              ...(shape.type === 'rectangle' && shape.width
-                ? { width: Math.max(5, shape.width * scaleX) }
+              ...(s.type === 'rectangle' && s.width
+                ? { width: Math.max(5, s.width * scaleX) }
                 : {}),
-              ...(shape.type === 'rectangle' && shape.height
-                ? { height: Math.max(5, shape.height * scaleY) }
+              ...(s.type === 'rectangle' && s.height
+                ? { height: Math.max(5, s.height * scaleY) }
                 : {}),
-              ...(shape.type === 'circle' && shape.radius
-                ? { radius: Math.max(5, shape.radius * scaleX) }
+              ...(s.type === 'circle' && s.radius
+                ? { radius: Math.max(5, s.radius * scaleX) }
                 : {}),
             }
-          : shape
+          : s
       )
     )
 
     // Reset scale to 1 after absorbing it into width/height/radius
     node.scaleX(1)
     node.scaleY(1)
+
+    // Broadcast transform to collaborators (final transform)
+    if (collaborative) {
+      flushTransformBroadcast() // Flush any pending debounced updates
+      broadcastTransform(id, {
+        x: node.x(),
+        y: node.y(),
+        rotation,
+        scaleX,
+        scaleY,
+        // Include computed dimensions for rectangles/circles
+        ...(shape?.type === 'rectangle' && shape.width
+          ? { width: Math.max(5, shape.width * scaleX) }
+          : {}),
+        ...(shape?.type === 'rectangle' && shape.height
+          ? { height: Math.max(5, shape.height * scaleY) }
+          : {}),
+        ...(shape?.type === 'circle' && shape.radius
+          ? { width: Math.max(5, shape.radius * scaleX) * 2 } // radius * 2 for diameter
+          : {}),
+      })
+      broadcastActionEnd()
+    }
 
     // Debounced save to database
     debouncedUpdateShape(id, {
@@ -421,11 +600,80 @@ export function UnifiedDrawingCanvas({
       scaleX,
       scaleY,
     })
-  }, [debouncedUpdateShape])
+  }, [debouncedUpdateShape, shapes, collaborative, broadcastTransform, flushTransformBroadcast, broadcastActionEnd])
 
   // ============================================================
   // MEASUREMENT & STAMP HANDLERS
   // ============================================================
+
+  // Save a shape to the database - moved here before handleStampPlacement
+  const saveShapeToDatabase = async (shape: Shape) => {
+    try {
+      const markupData: DocumentMarkup['markup_data'] = {
+        x: shape.x,
+        y: shape.y,
+        stroke: shape.stroke,
+        strokeWidth: shape.strokeWidth,
+      }
+
+      if (shape.width !== undefined) {markupData.width = shape.width}
+      if (shape.height !== undefined) {markupData.height = shape.height}
+      if (shape.radius !== undefined) {markupData.radius = shape.radius}
+      if (shape.points) {markupData.points = shape.points}
+      if (shape.text) {markupData.text = shape.text}
+      if (shape.fill) {markupData.fill = shape.fill}
+      if (shape.rotation) {markupData.rotation = shape.rotation}
+      if (shape.scaleX) {markupData.scaleX = shape.scaleX}
+      if (shape.scaleY) {markupData.scaleY = shape.scaleY}
+      if (shape.pointerLength) {markupData.pointerLength = shape.pointerLength}
+      if (shape.pointerWidth) {markupData.pointerWidth = shape.pointerWidth}
+
+      await createMarkup.mutateAsync({
+        document_id: documentId,
+        project_id: projectId,
+        page_number: pageNumber,
+        markup_type: shape.type,
+        markup_data: markupData,
+        is_shared: true,
+        shared_with_roles: null,
+        related_to_id: null,
+        related_to_type: null,
+        layer_id: shape.layerId || markupState?.selectedLayerId || null,
+        color: shape.stroke || markupState?.selectedColor || color,
+        visible: true,
+        author_name: null,
+        permission_level: null,
+        shared_with_users: null,
+      })
+
+      // Broadcast create operation to collaborators
+      if (collaborative) {
+        broadcastCreate({
+          id: shape.id,
+          type: shape.type,
+          x: shape.x,
+          y: shape.y,
+          width: shape.width,
+          height: shape.height,
+          points: shape.points,
+          text: shape.text,
+          color: shape.stroke,
+          strokeWidth: shape.strokeWidth,
+          fill: shape.fill,
+          rotation: shape.rotation,
+          scaleX: shape.scaleX,
+          scaleY: shape.scaleY,
+          layerId: shape.layerId || undefined,
+          visible: shape.visible,
+        })
+      }
+
+      onSave?.()
+    } catch (error) {
+      logger.error('Failed to save markup:', error)
+      toast.error('Failed to save annotation')
+    }
+  }
 
   // Handle stamp placement
   const handleStampPlacement = useCallback((pos: { x: number; y: number }) => {
@@ -474,13 +722,13 @@ export function UnifiedDrawingCanvas({
     setHistory(newHistory)
     setHistoryStep(newHistory.length - 1)
 
-    // Save stamp to database (will be called after definition)
-    setTimeout(() => saveShapeToDatabase(stampShape), 0)
+    // Save stamp to database
+    saveShapeToDatabase(stampShape)
 
     // Auto-deselect stamp after placing
     markupState.onStampSelect(null)
     markupState.setSelectedTool('select')
-  }, [markupState, shapes, history, historyStep])
+  }, [markupState, shapes, history, historyStep, saveShapeToDatabase])
 
   // Handle calibration start
   const handleCalibrationStart = useCallback((pos: { x: number; y: number }) => {
@@ -556,6 +804,11 @@ export function UnifiedDrawingCanvas({
 
     // Drawing mode
     setIsDrawing(true)
+
+    // Broadcast action start to collaborators
+    if (collaborative) {
+      broadcastActionStart('drawing')
+    }
 
     const newShape: Shape = {
       id: `shape-${Date.now()}`,
@@ -663,6 +916,11 @@ export function UnifiedDrawingCanvas({
 
     setIsDrawing(false)
 
+    // Broadcast action end to collaborators
+    if (collaborative) {
+      broadcastActionEnd()
+    }
+
     // Add shape to shapes array
     const newShapes = [...shapes, currentShape]
     setShapes(newShapes)
@@ -675,7 +933,7 @@ export function UnifiedDrawingCanvas({
 
     setCurrentShape(null)
 
-    // Auto-save to database
+    // Auto-save to database (this also broadcasts the create operation)
     saveShapeToDatabase(currentShape)
   }
 
@@ -710,53 +968,6 @@ export function UnifiedDrawingCanvas({
     })
   }
 
-  // Save a shape to the database
-  const saveShapeToDatabase = async (shape: Shape) => {
-    try {
-      const markupData: DocumentMarkup['markup_data'] = {
-        x: shape.x,
-        y: shape.y,
-        stroke: shape.stroke,
-        strokeWidth: shape.strokeWidth,
-      }
-
-      if (shape.width !== undefined) {markupData.width = shape.width}
-      if (shape.height !== undefined) {markupData.height = shape.height}
-      if (shape.radius !== undefined) {markupData.radius = shape.radius}
-      if (shape.points) {markupData.points = shape.points}
-      if (shape.text) {markupData.text = shape.text}
-      if (shape.fill) {markupData.fill = shape.fill}
-      if (shape.rotation) {markupData.rotation = shape.rotation}
-      if (shape.scaleX) {markupData.scaleX = shape.scaleX}
-      if (shape.scaleY) {markupData.scaleY = shape.scaleY}
-      if (shape.pointerLength) {markupData.pointerLength = shape.pointerLength}
-      if (shape.pointerWidth) {markupData.pointerWidth = shape.pointerWidth}
-
-      await createMarkup.mutateAsync({
-        document_id: documentId,
-        project_id: projectId,
-        page_number: pageNumber,
-        markup_type: shape.type,
-        markup_data: markupData,
-        is_shared: true,
-        shared_with_roles: null,
-        related_to_id: null,
-        related_to_type: null,
-        layer_id: shape.layerId || markupState?.selectedLayerId || null,
-        color: shape.stroke || markupState?.selectedColor || color,
-        visible: true,
-        author_name: null,
-        permission_level: null,
-        shared_with_users: null,
-      })
-
-      onSave?.()
-    } catch (error) {
-      logger.error('Failed to save markup:', error)
-      toast.error('Failed to save annotation')
-    }
-  }
-
   // Handle shape selection
   const handleShapeClick = (shapeId: string) => {
     if (tool === 'select') {
@@ -764,44 +975,6 @@ export function UnifiedDrawingCanvas({
     } else if (tool === 'eraser') {
       handleDeleteShape(shapeId)
     }
-  }
-
-  // Handle delete shape
-  const handleDeleteShape = async (shapeId: string) => {
-    const newShapes = shapes.filter(s => s.id !== shapeId)
-    setShapes(newShapes)
-    setSelectedShapeId(null)
-
-    // Add to history
-    const newHistory = history.slice(0, historyStep + 1)
-    newHistory.push(newShapes)
-    setHistory(newHistory)
-    setHistoryStep(newHistory.length - 1)
-
-    // Delete from database if it's a persisted markup
-    const markup = existingMarkups?.find(m => m.id === shapeId)
-    if (markup) {
-      try {
-        await deleteMarkup.mutateAsync(markup.id)
-      } catch (error) {
-        logger.error('Failed to delete markup:', error)
-        toast.error('Failed to delete annotation')
-      }
-    }
-  }
-
-  // Handle undo
-  const handleUndo = () => {
-    if (historyStep === 0) {return}
-    setHistoryStep(historyStep - 1)
-    setShapes(history[historyStep - 1])
-  }
-
-  // Handle redo
-  const handleRedo = () => {
-    if (historyStep === history.length - 1) {return}
-    setHistoryStep(historyStep + 1)
-    setShapes(history[historyStep + 1])
   }
 
   // Handle clear all
@@ -933,6 +1106,16 @@ export function UnifiedDrawingCanvas({
       {cursors.length > 0 && (
         <div className="absolute top-2 right-2 z-20">
           <OnlineUsersIndicator cursors={cursors} />
+        </div>
+      )}
+
+      {/* Markup Collaboration Indicator */}
+      {collaborative && isCollaborating && collaboratorCount > 0 && (
+        <div className="absolute top-2 right-32 z-20">
+          <CollaboratorIndicator
+            collaborators={collaborators}
+            compact={true}
+          />
         </div>
       )}
 
@@ -1329,6 +1512,14 @@ export function UnifiedDrawingCanvas({
                 onTransformEnd={handleTransformEnd}
               />
             )}
+
+            {/* Remote edit highlights for collaboration */}
+            {collaborative && remoteEditHighlights.length > 0 && (
+              <RemoteMarkupHighlights
+                highlights={remoteEditHighlights}
+                shapes={shapes}
+              />
+            )}
           </Layer>
         </Stage>
       </div>
@@ -1339,6 +1530,12 @@ export function UnifiedDrawingCanvas({
           <span>Zoom: {Math.round(scale * 100)}%</span>
           <span>Tool: {tool}</span>
           {pageNumber && <span>Page: {pageNumber}</span>}
+          {collaborative && (
+            <span className={isCollaborationConnected ? 'text-green-600' : 'text-yellow-600'}>
+              {isCollaborationConnected ? '● Synced' : '○ Connecting...'}
+              {collaboratorCount > 0 && ` (${collaboratorCount} collaborator${collaboratorCount > 1 ? 's' : ''})`}
+            </span>
+          )}
         </div>
         <div>
           {shapes.length} annotation(s)

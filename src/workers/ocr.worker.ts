@@ -175,11 +175,11 @@ self.addEventListener('message', async (event: MessageEvent<OcrWorkerMessage>) =
       }
 
       self.postMessage(response)
-    } catch (error) {
+    } catch (_error) {
       const response: OcrWorkerResponse = {
         type: 'error',
         id,
-        error: error instanceof Error ? error.message : 'OCR extraction failed',
+        error: _error instanceof Error ? _error.message : 'OCR extraction failed',
       }
 
       self.postMessage(response)

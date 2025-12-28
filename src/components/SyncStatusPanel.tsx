@@ -23,7 +23,6 @@ import {
 } from 'lucide-react'
 import { useOfflineStore } from '@/stores/offline-store'
 import { ConflictResolutionDialog } from '@/components/ConflictResolutionDialog'
-import { logger } from '@/lib/utils/logger'
 
 /**
  * Panel showing sync queue status, pending operations, and conflicts

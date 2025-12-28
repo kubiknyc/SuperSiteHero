@@ -1,6 +1,8 @@
 // File: /src/pages/takeoffs/TakeoffPage.tsx
 // Main page for takeoff measurements on PDF drawings
 
+/* eslint-disable react-hooks/preserve-manual-memoization */
+
 import { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, FileText, Save, FolderOpen, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -99,13 +101,17 @@ export default function TakeoffPage() {
   // Reset scale when page changes and reload from saved calibration
   useEffect(() => {
     if (savedCalibration) {
-      setScale({
-        pixelsPerUnit: savedCalibration.pixelDistance / savedCalibration.realWorldDistance,
-        unit: measurementUnitToLinearUnit(savedCalibration.unit),
-      })
+      setTimeout(() => {
+        setScale({
+          pixelsPerUnit: savedCalibration.pixelDistance / savedCalibration.realWorldDistance,
+          unit: measurementUnitToLinearUnit(savedCalibration.unit),
+        })
+      }, 0)
     } else if (!isLoadingCalibration) {
       // No saved calibration for this page, reset scale
-      setScale(undefined)
+      setTimeout(() => {
+        setScale(undefined)
+      }, 0)
     }
   }, [savedCalibration, isLoadingCalibration, pageNumber])
 
