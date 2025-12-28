@@ -83,9 +83,15 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTH: ${{ secrets.MATCH_GIT_BASIC_AUTH }}
           MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
-          MATCH_READONLY: ${{ github.event.inputs.generate_certs == 'true' && 'false' || 'true' }}
           FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
-        run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
+        run: |
+          if [ "${{ github.event.inputs.generate_certs }}" = "true" ]; then
+            export MATCH_READONLY=false
+          else
+            export MATCH_READONLY=true
+          fi
+          echo "MATCH_READONLY=$MATCH_READONLY"
+          bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
