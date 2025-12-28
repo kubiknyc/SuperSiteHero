@@ -24,9 +24,10 @@ platform :ios do
     )
 
     # Fetch or create certificates and profiles
-    # NOTE: Set MATCH_READONLY=false for first run to generate certificates
-    is_readonly = ENV['MATCH_READONLY'] != 'false'
-    UI.message("Match readonly mode: #{is_readonly} (MATCH_READONLY=#{ENV['MATCH_READONLY']})")
+    # NOTE: Set GENERATE_CERTS=true for first run to generate certificates
+    # We use GENERATE_CERTS instead of MATCH_READONLY because setup_ci overrides MATCH_READONLY
+    is_readonly = ENV['GENERATE_CERTS'] != 'true'
+    UI.message("Match readonly mode: #{is_readonly} (GENERATE_CERTS=#{ENV['GENERATE_CERTS']})")
 
     match(
       type: "appstore",

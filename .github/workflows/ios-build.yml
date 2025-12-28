@@ -86,11 +86,11 @@ jobs:
           FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
         run: |
           if [ "${{ github.event.inputs.generate_certs }}" = "true" ]; then
-            export MATCH_READONLY=false
+            export GENERATE_CERTS=true
           else
-            export MATCH_READONLY=true
+            export GENERATE_CERTS=false
           fi
-          echo "MATCH_READONLY=$MATCH_READONLY"
+          echo "GENERATE_CERTS=$GENERATE_CERTS"
           bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
 
       - name: Upload IPA artifact
