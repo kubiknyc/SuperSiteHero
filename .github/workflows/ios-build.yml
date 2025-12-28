@@ -18,6 +18,11 @@ on:
         options:
           - beta
           - release
+      generate_certs:
+        description: 'Generate new certificates (first run only)'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build-ios:
@@ -76,6 +81,8 @@ jobs:
           APP_STORE_CONNECT_API_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_GIT_BASIC_AUTH: ${{ secrets.MATCH_GIT_BASIC_AUTH }}
+          MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
+          MATCH_READONLY: ${{ github.event.inputs.generate_certs == 'true' && 'false' || 'true' }}
           FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 120
         run: bundle exec fastlane ${{ github.event.inputs.lane || 'beta' }}
 
