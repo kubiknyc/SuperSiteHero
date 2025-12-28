@@ -64,6 +64,8 @@ const DrawingMarkupPage = lazy(() => import('./pages/documents/DrawingMarkupPage
 
 // Drawing Register feature
 const DrawingRegisterPage = lazy(() => import('./pages/drawings/DrawingRegisterPage'))
+const SheetIndexPage = lazy(() => import('./pages/drawings/SheetIndexPage'))
+const TransmittalLogPage = lazy(() => import('./pages/drawings/TransmittalLogPage'))
 
 // RFIs feature
 const RFIsPage = lazy(() => import('./pages/rfis/RFIsPage').then(m => ({ default: m.RFIsPage })))
@@ -450,6 +452,8 @@ function App() {
 
                 {/* Drawing Register feature */}
                 <Route path="/projects/:projectId/drawings" element={<ProtectedRoute><DrawingRegisterPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/drawings/sheet-index" element={<ProtectedRoute><SheetIndexPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/drawings/transmittal-log" element={<ProtectedRoute><TransmittalLogPage /></ProtectedRoute>} />
 
                 {/* Takeoffs feature */}
                 <Route path="/projects/:projectId/takeoffs" element={<ProtectedRoute><TakeoffsListPage /></ProtectedRoute>} />

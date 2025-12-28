@@ -27,6 +27,8 @@ import {
   TrendingUp,
   ClipboardCheck,
   Camera,
+  FileStack,
+  Send,
 } from 'lucide-react';
 import type { NavItem, NavGroup } from '../types/navigation';
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge';
