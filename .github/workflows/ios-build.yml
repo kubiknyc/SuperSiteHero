@@ -46,6 +46,7 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          NODE_OPTIONS: '--max-old-space-size=8192'
         run: npm run build
 
       - name: Sync Capacitor iOS
