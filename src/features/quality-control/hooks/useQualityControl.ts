@@ -549,18 +549,18 @@ export function useCompleteInspection() {
       notes,
     }: {
       id: string;
-      result: 'pass' | 'fail' | 'conditional_pass';
+      result: 'pass' | 'fail' | 'conditional';
       notes?: string;
     }) => qualityControlApi.inspections.completeInspection(id, result, notes),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: qualityControlKeys.inspections() });
       queryClient.invalidateQueries({ queryKey: qualityControlKeys.stats() });
 
-      const resultText = data.result === 'pass' ? 'passed' : data.result === 'fail' ? 'failed' : 'conditionally passed';
+      const resultText = data.overall_result === 'pass' ? 'passed' : data.overall_result === 'fail' ? 'failed' : 'conditionally passed';
       toast({
         title: 'Inspection completed',
         description: `${data.title} has ${resultText}.`,
-        variant: data.result === 'fail' ? 'destructive' : 'default',
+        variant: data.overall_result === 'fail' ? 'destructive' : 'default',
       });
     },
     onError: (error: Error) => {
@@ -623,6 +623,7 @@ export function useUpdateChecklistItem() {
     }) => qualityControlApi.inspections.updateChecklistItem(id, status, notes),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: qualityControlKeys.checklistItems(data.inspection_id) });
+      queryClient.invalidateQueries({ queryKey: qualityControlKeys.inspections() });
     },
   });
 }

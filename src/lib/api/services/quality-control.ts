@@ -289,6 +289,13 @@ export const qualityControlApi = {
     },
 
     /**
+     * Start investigation on NCR (alias for startReview)
+     */
+    async startInvestigation(id: string): Promise<NonConformanceReport> {
+      return this.transitionStatus(id, 'under_review');
+    },
+
+    /**
      * Mark corrective action in progress
      */
     async startCorrectiveAction(id: string, action: string): Promise<NonConformanceReport> {
@@ -324,6 +331,32 @@ export const qualityControlApi = {
      */
     async resolveNCR(id: string, notes?: string): Promise<NonConformanceReport> {
       return this.transitionStatus(id, 'resolved', notes);
+    },
+
+    /**
+     * Verify and close NCR (marks as resolved/verified)
+     */
+    async verifyAndClose(id: string, notes?: string): Promise<NonConformanceReport> {
+      const { data: user } = await supabase.auth.getUser();
+
+      const { data, error } = await db
+        .from('non_conformance_reports')
+        .update({
+          status: 'resolved',
+          verified_by: user?.user?.id || null,
+          verified_at: new Date().toISOString(),
+          verification_notes: notes || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        throw new ApiErrorClass(error.message, 'UPDATE_ERROR');
+      }
+
+      return data;
     },
 
     /**
@@ -713,6 +746,28 @@ export const qualityControlApi = {
       return data;
     },
 
+    /**
+     * Cancel an inspection
+     */
+    async cancelInspection(id: string, reason?: string): Promise<QCInspection> {
+      const { data, error } = await db
+        .from('qc_inspections')
+        .update({
+          status: 'cancelled',
+          notes: reason || null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) {
+        throw new ApiErrorClass(error.message, 'UPDATE_ERROR');
+      }
+
+      return data;
+    },
+
     // ============================================================================
     // CHECKLIST ITEMS
     // ============================================================================
@@ -722,13 +777,13 @@ export const qualityControlApi = {
      */
     async updateChecklistItem(
       id: string,
-      status: 'pending' | 'pass' | 'fail' | 'na',
+      result: 'pending' | 'pass' | 'fail' | 'na',
       notes?: string
     ): Promise<QCChecklistItem> {
       const { data, error } = await db
         .from('qc_checklist_items')
         .update({
-          status,
+          result,
           notes: notes || null,
           updated_at: new Date().toISOString(),
         })

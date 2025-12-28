@@ -42,6 +42,7 @@ import {
   useInspectionChecklistItems,
   useStartInspection,
   useCompleteInspection,
+  useCancelInspection,
   useUpdateChecklistItem,
   useDeleteInspection,
 } from '@/features/quality-control/hooks';
@@ -103,12 +104,21 @@ export function QCInspectionDetailPage() {
   // Mutations
   const startInspection = useStartInspection();
   const completeInspection = useCompleteInspection();
+  const cancelInspection = useCancelInspection();
   const updateChecklistItem = useUpdateChecklistItem();
   const deleteInspection = useDeleteInspection();
 
   const handleStart = async () => {
     if (!inspection) {return;}
     await startInspection.mutateAsync(inspection.id);
+  };
+
+  const handleCancel = async () => {
+    if (!inspection) {return;}
+    await cancelInspection.mutateAsync({
+      id: inspection.id,
+      reason: 'Inspection cancelled',
+    });
   };
 
   const handleComplete = async () => {
@@ -698,6 +708,23 @@ export function QCInspectionDetailPage() {
                       <Play className="h-4 w-4 mr-2" />
                     )}
                     Start Inspection
+                  </Button>
+                )}
+
+                {/* Cancel Inspection Button */}
+                {isInProgress && (
+                  <Button
+                    variant="outline"
+                    onClick={handleCancel}
+                    disabled={cancelInspection.isPending}
+                    className="w-full text-destructive"
+                  >
+                    {cancelInspection.isPending ? (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    ) : (
+                      <XCircle className="h-4 w-4 mr-2" />
+                    )}
+                    Cancel Inspection
                   </Button>
                 )}
 

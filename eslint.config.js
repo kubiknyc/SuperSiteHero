@@ -247,6 +247,8 @@ export default tseslint.config(
       '**/**/PhotoComparisonFormPage.tsx',
       '**/**/PhotoReportFormPage.tsx',
       '**/**/PhotoLightbox.tsx',
+      '**/**/RemoteMarkupHighlight.tsx',
+      '**/**/DrawingSliderComparison.tsx',
     ],
     plugins: {
       'react-compiler': reactCompiler,

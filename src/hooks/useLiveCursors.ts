@@ -3,13 +3,17 @@
  *
  * Real-time cursor position tracking for collaborative document editing.
  * Broadcasts local cursor position and receives cursor positions from other users.
+ *
+ * Now includes optional persistence layer for cursor position restoration on reconnect.
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { realtimeManager } from '@/lib/realtime/client'
 import { getUserColor } from '@/lib/realtime/types'
+import { cursorPersistenceService } from '@/lib/api/services/cursor-persistence'
 import type { RealtimeChannel } from '@supabase/supabase-js'
+import type { RoomType, PersistedCursor } from '@/types/collaboration'
 
 export interface CursorPosition {
   x: number
@@ -24,6 +28,7 @@ export interface UserCursor {
   color: string
   position: CursorPosition
   lastUpdate: number
+  avatarUrl?: string
 }
 
 interface UserPresenceWithCursor {
@@ -34,29 +39,169 @@ interface UserPresenceWithCursor {
   online_at: string
 }
 
+export interface LiveCursorOptions {
+  /** Whether to enable cursor persistence for recovery on reconnect */
+  enablePersistence?: boolean
+  /** Room type for persistence (default: 'document') */
+  roomType?: RoomType
+  /** Resource ID for persistence context */
+  resourceId?: string
+  /** Resource type for persistence context */
+  resourceType?: string
+  /** Page number for document-based cursors */
+  pageNumber?: number
+  /** How often to persist cursor position in ms (default: 500) */
+  persistInterval?: number
+}
+
 // Throttle cursor broadcasts to 60fps (approximately 16ms)
 const CURSOR_THROTTLE_MS = 16
 // Remove stale cursors after 3 seconds of inactivity
 const CURSOR_STALE_THRESHOLD_MS = 3000
 // Cleanup interval for checking stale cursors
 const CLEANUP_INTERVAL_MS = 1000
+// Default persistence interval
+const DEFAULT_PERSIST_INTERVAL_MS = 500
+// Stale threshold for persisted cursors
+const PERSISTED_CURSOR_STALE_MS = 30000
 
 /**
  * Hook for live cursor tracking in collaborative editing
  *
  * @param roomId - Unique identifier for the collaborative room (e.g., "document:123")
  * @param enabled - Whether cursor tracking is enabled (default: true)
+ * @param options - Additional options including persistence settings
  * @returns Object with cursors array, setContainer function, and isConnected status
  */
-export function useLiveCursors(roomId: string, enabled: boolean = true) {
+export function useLiveCursors(
+  roomId: string,
+  enabled: boolean = true,
+  options: LiveCursorOptions = {}
+) {
+  const {
+    enablePersistence = false,
+    roomType = 'document',
+    resourceId,
+    resourceType,
+    pageNumber = 1,
+    persistInterval = DEFAULT_PERSIST_INTERVAL_MS,
+  } = options
+
   const { user } = useAuth()
   const [cursors, setCursors] = useState<Map<string, UserCursor>>(new Map())
   const [isConnected, setIsConnected] = useState(false)
+  const [sessionId, setSessionId] = useState<string | null>(null)
 
   const channelRef = useRef<RealtimeChannel | null>(null)
   const containerRef = useRef<HTMLElement | null>(null)
   const lastBroadcastRef = useRef<number>(0)
   const cleanupIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const persistIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const pendingPositionRef = useRef<CursorPosition | null>(null)
+  const isInitializedRef = useRef(false)
+
+  const userName = user?.user_metadata?.full_name || user?.email || 'Anonymous'
+  const userColor = user ? getUserColor(user.id) : '#888888'
+
+  // Initialize persistence session and restore cursors
+  useEffect(() => {
+    if (!enablePersistence || !user || !roomId || !enabled || isInitializedRef.current) return
+
+    const initPersistence = async () => {
+      try {
+        // Get or create session
+        const newSessionId = await cursorPersistenceService.getOrCreateSession(
+          roomId,
+          roomType,
+          resourceId,
+          resourceType
+        )
+
+        if (!newSessionId) return
+
+        setSessionId(newSessionId)
+        isInitializedRef.current = true
+
+        // Restore existing cursors
+        const existingCursors = await cursorPersistenceService.getSessionCursors(
+          newSessionId,
+          user.id
+        )
+
+        // Filter stale and add to state
+        const now = Date.now()
+        existingCursors.forEach((cursor: PersistedCursor) => {
+          const lastSeen = new Date(cursor.last_seen_at).getTime()
+          if (now - lastSeen < PERSISTED_CURSOR_STALE_MS) {
+            setCursors((prev) => {
+              const updated = new Map(prev)
+              updated.set(cursor.user_id, {
+                userId: cursor.user_id,
+                userName: cursor.user_name,
+                color: cursor.user_color,
+                position: {
+                  x: cursor.position_x,
+                  y: cursor.position_y,
+                  pageX: cursor.page_x ?? undefined,
+                  pageY: cursor.page_y ?? undefined,
+                },
+                lastUpdate: lastSeen,
+                avatarUrl: cursor.avatar_url ?? undefined,
+              })
+              return updated
+            })
+          }
+        })
+      } catch {
+        // Silently fail - persistence is optional
+      }
+    }
+
+    initPersistence()
+
+    return () => {
+      isInitializedRef.current = false
+    }
+  }, [enablePersistence, user, roomId, roomType, resourceId, resourceType, enabled])
+
+  // Periodic persistence of cursor position
+  useEffect(() => {
+    if (!enablePersistence || !sessionId || !user || !enabled) return
+
+    persistIntervalRef.current = setInterval(async () => {
+      if (pendingPositionRef.current && sessionId) {
+        const position = pendingPositionRef.current
+        try {
+          await cursorPersistenceService.updateCursorPositionDirect(
+            sessionId,
+            user.id,
+            position.x,
+            position.y,
+            position.pageX,
+            position.pageY
+          )
+        } catch {
+          // Silently fail
+        }
+      }
+    }, persistInterval)
+
+    return () => {
+      if (persistIntervalRef.current) {
+        clearInterval(persistIntervalRef.current)
+        persistIntervalRef.current = null
+      }
+    }
+  }, [enablePersistence, sessionId, user, enabled, persistInterval])
+
+  // Cleanup: Deactivate cursor on unmount
+  useEffect(() => {
+    return () => {
+      if (enablePersistence && sessionId && user) {
+        cursorPersistenceService.deactivateCursor(sessionId, user.id)
+      }
+    }
+  }, [enablePersistence, sessionId, user])
 
   // Cleanup stale cursors periodically
   useEffect(() => {
@@ -95,8 +240,8 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
 
     const currentUserPresence: UserPresenceWithCursor = {
       user_id: user.id,
-      user_name: user.user_metadata?.full_name || user.email || 'Anonymous',
-      user_color: getUserColor(user.id),
+      user_name: userName,
+      user_color: userColor,
       online_at: new Date().toISOString(),
     }
 
@@ -160,6 +305,26 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
       if (status === 'SUBSCRIBED') {
         await channel.track(currentUserPresence)
         setIsConnected(true)
+
+        // If persistence enabled, create initial cursor record
+        if (enablePersistence && sessionId && user) {
+          try {
+            await cursorPersistenceService.upsertCursorPosition({
+              session_id: sessionId,
+              user_id: user.id,
+              user_name: userName,
+              user_email: user.email,
+              user_color: userColor,
+              avatar_url: user.user_metadata?.avatar_url,
+              position_x: 0,
+              position_y: 0,
+              page_number: pageNumber,
+              current_action: 'idle',
+            })
+          } catch {
+            // Silently fail
+          }
+        }
       } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
         setIsConnected(false)
       }
@@ -171,7 +336,7 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
       channelRef.current = null
       setIsConnected(false)
     }
-  }, [user, roomId, enabled])
+  }, [user, roomId, enabled, userName, userColor, enablePersistence, sessionId, pageNumber])
 
   // Broadcast cursor position (throttled to 60fps)
   const broadcastCursorPosition = useCallback(
@@ -184,15 +349,20 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
       }
       lastBroadcastRef.current = now
 
+      // Store pending position for persistence
+      if (enablePersistence) {
+        pendingPositionRef.current = position
+      }
+
       channelRef.current.track({
         user_id: user.id,
-        user_name: user.user_metadata?.full_name || user.email || 'Anonymous',
-        user_color: getUserColor(user.id),
+        user_name: userName,
+        user_color: userColor,
         cursor: position,
         online_at: new Date().toISOString(),
       })
     },
-    [user]
+    [user, userName, userColor, enablePersistence]
   )
 
   // Handle mouse move within container
@@ -219,12 +389,17 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
 
     channelRef.current.track({
       user_id: user.id,
-      user_name: user.user_metadata?.full_name || user.email || 'Anonymous',
-      user_color: getUserColor(user.id),
+      user_name: userName,
+      user_color: userColor,
       cursor: undefined,
       online_at: new Date().toISOString(),
     })
-  }, [user])
+
+    // Clear pending position
+    if (enablePersistence) {
+      pendingPositionRef.current = null
+    }
+  }, [user, userName, userColor, enablePersistence])
 
   // Set container element for cursor tracking
   const setContainer = useCallback(
@@ -277,6 +452,11 @@ export function useLiveCursors(roomId: string, enabled: boolean = true) {
      * Manually broadcast cursor position (useful for non-mouse inputs)
      */
     broadcastCursorPosition,
+
+    /**
+     * Session ID for persistence (if enabled)
+     */
+    sessionId,
   }
 }
 

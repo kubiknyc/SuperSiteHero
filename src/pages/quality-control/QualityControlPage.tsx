@@ -305,6 +305,7 @@ export function QualityControlPage() {
                       <SelectItem value="passed">Passed</SelectItem>
                       <SelectItem value="failed">Failed</SelectItem>
                       <SelectItem value="conditional">Conditional</SelectItem>
+                      <SelectItem value="cancelled">Cancelled</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

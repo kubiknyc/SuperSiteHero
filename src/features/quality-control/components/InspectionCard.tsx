@@ -46,8 +46,8 @@ export function InspectionCard({ inspection, projectId }: InspectionCardProps) {
             </div>
             <div className="flex flex-col gap-1 items-end">
               <InspectionStatusBadge status={inspection.status} />
-              {inspection.result && inspection.result !== 'pending' && (
-                <InspectionResultBadge result={inspection.result} />
+              {inspection.overall_result && inspection.overall_result !== 'pending' && (
+                <InspectionResultBadge result={inspection.overall_result} />
               )}
             </div>
           </div>

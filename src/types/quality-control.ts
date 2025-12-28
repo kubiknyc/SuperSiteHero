@@ -88,6 +88,7 @@ export enum InspectionStatus {
   PASSED = 'passed',
   FAILED = 'failed',
   CONDITIONAL = 'conditional',
+  CANCELLED = 'cancelled',
 }
 
 export enum ChecklistItemResult {
@@ -233,8 +234,20 @@ export interface NCRHistory {
   previous_values: Record<string, unknown> | null;
   new_values: Record<string, unknown> | null;
   notes: string | null;
-  performed_by: string | null;
-  performed_at: string;
+  // API returns changed_by and changed_at
+  changed_by: string | null;
+  changed_at: string;
+  changed_by_user?: {
+    id: string;
+    full_name: string;
+    email?: string;
+  };
+  // Mapped fields from service layer
+  changed_by_name?: string;
+  changed_by_email?: string;
+  // Legacy field names for compatibility
+  performed_by?: string | null;
+  performed_at?: string;
   performed_by_user?: {
     id: string;
     full_name: string;
@@ -720,6 +733,11 @@ export const INSPECTION_STATUS_CONFIG: Record<InspectionStatus, {
     label: 'Conditional',
     color: 'text-yellow-700',
     bgColor: 'bg-yellow-100',
+  },
+  [InspectionStatus.CANCELLED]: {
+    label: 'Cancelled',
+    color: 'text-gray-500',
+    bgColor: 'bg-gray-50',
   },
 };
 

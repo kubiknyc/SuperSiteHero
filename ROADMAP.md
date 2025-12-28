@@ -451,11 +451,12 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 ### In Progress
 | Feature | Started | Target | Status |
 |---------|---------|--------|--------|
-| Real-time Collaboration | Dec 7, 2025 | Dec 21, 2025 | 95% Complete (live cursors implemented, missing persistence) |
+| (No features currently in progress) | - | - | All features complete |
 
-### Completed Since Last Update (Dec 27, 2025)
+### Completed Since Last Update (Dec 28, 2025)
 | Feature | Status |
 |---------|--------|
+| **Real-time Collaboration Persistence** | ✅ COMPLETE (Migration 157, cursor persistence, session management, useLiveCursors with enablePersistence option) |
 | Daily Report Cost Aggregation | ✅ Complete (Migration 153, CostDashboard component) |
 | Punch List Back-Charges | ✅ Complete (Migration 154, form dialog, list, status badge) |
 | Quality Control Module | ✅ Complete (Migration 155, NCR + QC Inspections, routes, navigation) |
@@ -482,7 +483,7 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 | Industry Compliance | 60% | **99.8%** | 100% | 100% | 100% |
 | Competitor Parity | 65% | **99.8%** | 100% | 100% | 100% |
 
-*Current metrics updated Dec 27, 2025 after comprehensive frontend implementation session*
+*Current metrics updated Dec 28, 2025 after comprehensive frontend implementation session*
 *Completed this session: Photo Progress full module (6 pages, nested routes), DocuSign FULL integration (OAuth callback, status badges, SendViaDocuSign buttons on Payment Apps/Change Orders/Lien Waivers), iOS PWA polish (startup images, safe areas, standalone mode optimizations), Back-charge UI, Daily Report Cost Dashboard, Quality Control navigation*
 
 ---

@@ -271,7 +271,7 @@ export function NCRDetailPage() {
                   <span className="text-sm text-muted">Identified Date</span>
                   <p className="font-medium flex items-center gap-1">
                     <Calendar className="h-4 w-4" />
-                    {ncr.identified_date ? format(new Date(ncr.identified_date), 'MMM d, yyyy') : 'N/A'}
+                    {ncr.date_identified ? format(new Date(ncr.date_identified), 'MMM d, yyyy') : 'N/A'}
                   </p>
                 </div>
                 {ncr.due_date && (
@@ -283,44 +283,42 @@ export function NCRDetailPage() {
                     </p>
                   </div>
                 )}
-                {ncr.spec_section && (
-                  <div>
-                    <span className="text-sm text-muted">Spec Section</span>
-                    <p className="font-medium">{ncr.spec_section}</p>
-                  </div>
-                )}
               </CardContent>
             </Card>
 
             {/* Location Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5" />
-                  Location
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-3 gap-4">
-                <div>
-                  <span className="text-sm text-muted">Building</span>
-                  <p className="font-medium">{ncr.building || '-'}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted">Floor</span>
-                  <p className="font-medium">{ncr.floor || '-'}</p>
-                </div>
-                <div>
-                  <span className="text-sm text-muted">Area/Room</span>
-                  <p className="font-medium">{ncr.area || '-'}</p>
-                </div>
-                {ncr.location_details && (
-                  <div className="col-span-3">
-                    <span className="text-sm text-muted">Additional Details</span>
-                    <p className="font-medium">{ncr.location_details}</p>
+            {(ncr.location || ncr.spec_section || ncr.drawing_reference) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    Location & References
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {ncr.location && (
+                    <div>
+                      <span className="text-sm text-muted">Location</span>
+                      <p className="font-medium">{ncr.location}</p>
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-4">
+                    {ncr.spec_section && (
+                      <div>
+                        <span className="text-sm text-muted">Spec Section</span>
+                        <p className="font-medium">{ncr.spec_section}</p>
+                      </div>
+                    )}
+                    {ncr.drawing_reference && (
+                      <div>
+                        <span className="text-sm text-muted">Drawing Reference</span>
+                        <p className="font-medium">{ncr.drawing_reference}</p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Responsibility Card */}
             <Card>
@@ -336,12 +334,12 @@ export function NCRDetailPage() {
                     <span className="text-sm text-muted">Responsible Party Type</span>
                     <p className="font-medium capitalize">{ncr.responsible_party_type?.replace(/_/g, ' ') || '-'}</p>
                   </div>
-                  {ncr.subcontractor_name && (
+                  {ncr.responsible_party_name && (
                     <div>
-                      <span className="text-sm text-muted">Subcontractor</span>
+                      <span className="text-sm text-muted">Responsible Party</span>
                       <p className="font-medium flex items-center gap-1">
                         <Building2 className="h-4 w-4" />
-                        {ncr.subcontractor_name}
+                        {ncr.responsible_party_name}
                       </p>
                     </div>
                   )}
@@ -349,12 +347,12 @@ export function NCRDetailPage() {
                 <Separator />
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <span className="text-sm text-muted">Identified By</span>
-                    <p className="font-medium">{ncr.identified_by_name || ncr.identified_by || '-'}</p>
+                    <span className="text-sm text-muted">Created By</span>
+                    <p className="font-medium">{ncr.created_by_name || '-'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-muted">Assigned To</span>
-                    <p className="font-medium">{ncr.assigned_to_name || ncr.assigned_to || '-'}</p>
+                    <p className="font-medium">{ncr.assigned_to_name || '-'}</p>
                   </div>
                 </div>
               </CardContent>
@@ -375,8 +373,8 @@ export function NCRDetailPage() {
                     <div>
                       <span className="text-sm text-muted">Cost Impact</span>
                       <p className="font-medium">{ncr.cost_impact ? 'Yes' : 'No'}</p>
-                      {ncr.estimated_cost && (
-                        <p className="text-sm text-muted">${ncr.estimated_cost.toLocaleString()}</p>
+                      {ncr.cost_impact_amount && (
+                        <p className="text-sm text-muted">${ncr.cost_impact_amount.toLocaleString()}</p>
                       )}
                     </div>
                   </div>
@@ -565,16 +563,16 @@ export function NCRDetailPage() {
                   <span className="text-muted">Last Updated</span>
                   <span>{format(new Date(ncr.updated_at), 'MMM d, yyyy')}</span>
                 </div>
-                {ncr.resolved_at && (
+                {ncr.verified_at && (
                   <div className="flex justify-between">
-                    <span className="text-muted">Resolved</span>
-                    <span>{format(new Date(ncr.resolved_at), 'MMM d, yyyy')}</span>
+                    <span className="text-muted">Verified</span>
+                    <span>{format(new Date(ncr.verified_at), 'MMM d, yyyy')}</span>
                   </div>
                 )}
-                {ncr.closed_at && (
+                {ncr.date_closed && (
                   <div className="flex justify-between">
                     <span className="text-muted">Closed</span>
-                    <span>{format(new Date(ncr.closed_at), 'MMM d, yyyy')}</span>
+                    <span>{format(new Date(ncr.date_closed), 'MMM d, yyyy')}</span>
                   </div>
                 )}
               </CardContent>
