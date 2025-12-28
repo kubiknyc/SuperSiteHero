@@ -29,7 +29,7 @@ platform :ios do
     match(
       type: "appstore",
       app_identifier: "com.jobsightapp.app",
-      git_url: ENV["MATCH_GIT_URL"] || "https://github.com/YOUR_USERNAME/jobsight-certificates.git",
+      git_url: ENV["MATCH_GIT_URL"] || "https://github.com/kubiknyc/jobsight-certificates.git",
       git_basic_authorization: Base64.strict_encode64(ENV["MATCH_GIT_BASIC_AUTH"] || ""),
       readonly: ENV['MATCH_READONLY'] != 'false'  # Default to readonly, set MATCH_READONLY=false for first run
     )

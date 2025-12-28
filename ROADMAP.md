@@ -344,7 +344,7 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 - [x] **Material Procurement** - Partial: `submittal_procurement` + `material_received` tables, delivery tracking
 - [x] **Quality Control** - See 7.1 below (Migration 155, fully architected)
 - [x] **Photo Progress Reports** - See 7.2 below (Migration 156, fully architected)
-- [ ] **Advanced Reporting** - Report builder, scheduled delivery
+- [x] **Advanced Reporting** - Report builder, scheduled delivery (see 7.5 below)
 - [x] **Drawing Management** - Sheet index, transmittal log, comparison tool (see 7.4 below)
 
 ### 7.1 Quality Control Module
@@ -424,6 +424,29 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 
 **Files:** Migrations 091, 113 | `src/pages/drawings/` | `src/features/drawings/`
 
+### 7.5 Advanced Reporting
+**Status:** ✅ COMPLETE | **Priority:** MEDIUM
+
+- [x] Custom Report Builder wizard (5-step: Data Source → Fields → Filters → Visualization → Options)
+- [x] 15+ data sources (RFIs, Submittals, Daily Reports, Change Orders, Payment Applications, Safety Incidents, Inspections, Punch List, Tasks, Meetings, Documents, Equipment, Lien Waivers, Insurance Certificates, Toolbox Talks)
+- [x] Drag-and-drop field picker with column ordering
+- [x] Advanced filter builder (15+ operators including date ranges, relative dates)
+- [x] Chart configuration (Bar, Line, Pie, Area charts with aggregations)
+- [x] Template saving and sharing
+- [x] Scheduled report delivery (daily, weekly, biweekly, monthly, quarterly)
+- [x] Email delivery with PDF/Excel/CSV attachments
+- [x] Timezone-aware scheduling
+- [x] Report execution history tracking
+- [x] Public report sharing with tokens and expiration
+- [x] Template duplication/cloning
+- [x] TypeScript types - `src/types/report-builder.ts`
+- [x] API service - `src/lib/api/services/report-builder.ts`
+- [x] React Query hooks - `src/features/reports/hooks/useReportBuilder.ts`
+- [x] Export service - `src/features/reports/services/reportExportService.ts`
+- [x] Edge function - `supabase/functions/process-scheduled-reports/`
+
+**Files:** `src/pages/reports/` | `src/features/reports/` | `src/types/report-builder.ts`
+
 ---
 
 ## Progress Summary
@@ -490,6 +513,7 @@ RFIs are not actionable without drawing/spec references and clear responsibility
 | Safety Incidents | ✅ Complete (`src/features/safety/`) |
 | Takeoff Measurement | ✅ Complete (9 measurement types) |
 | Permits & Inspections | ✅ Complete |
+| **Advanced Reporting** | ✅ COMPLETE (Report Builder, Scheduled Delivery, 15+ data sources, PDF/Excel/CSV export) |
 
 ---
 

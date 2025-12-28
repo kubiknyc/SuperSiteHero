@@ -3,7 +3,7 @@
 
 # Git repository URL for storing encrypted certificates and profiles
 # Create a PRIVATE repository for this (e.g., github.com/yourname/jobsight-certificates)
-git_url(ENV["MATCH_GIT_URL"] || "https://github.com/YOUR_USERNAME/jobsight-certificates.git")
+git_url(ENV["MATCH_GIT_URL"] || "https://github.com/kubiknyc/jobsight-certificates.git")
 
 # Storage mode - git is recommended for teams
 storage_mode("git")
@@ -16,10 +16,10 @@ type("appstore")
 app_identifier(["com.jobsightapp.app"])
 
 # Team ID (optional - will use value from Appfile if not set)
-# team_id("YOUR_TEAM_ID")
+team_id("KMUN96UMW4")
 
 # Username (Apple ID) - optional, will use value from Appfile if not set
-# username("your-apple-id@email.com")
+username("alfabetikhacks@gmail.com")
 
 # For more information about Match and code signing:
 # https://docs.fastlane.tools/actions/match/

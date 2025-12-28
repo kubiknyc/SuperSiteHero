@@ -6,15 +6,15 @@ app_identifier("com.jobsightapp.app")
 
 # Your Apple ID email address
 # Replace with your actual Apple ID
-apple_id(ENV["APPLE_ID"] || "your-apple-id@email.com")
+apple_id(ENV["APPLE_ID"] || "alfabetikhacks@gmail.com")
 
 # Team ID from Apple Developer Portal
 # Find this at: https://developer.apple.com/account -> Membership -> Team ID
-team_id(ENV["TEAM_ID"] || "YOUR_TEAM_ID")
+team_id(ENV["TEAM_ID"] || "KMUN96UMW4")
 
 # App Store Connect Team ID (usually same as team_id for individual accounts)
 # For organization accounts, find at: App Store Connect -> Users and Access
-itc_team_id(ENV["ITC_TEAM_ID"] || "YOUR_TEAM_ID")
+itc_team_id(ENV["ITC_TEAM_ID"] || "KMUN96UMW4")
 
 # For more information about the Appfile, see:
 # https://docs.fastlane.tools/advanced/#appfile
