@@ -8,8 +8,6 @@ import { rfiRoutingAiApi } from '@/lib/api/services/rfi-routing-ai'
 import type {
   GenerateRoutingSuggestionDTO,
   SubmitRoutingFeedbackDTO,
-  RFIRoutingSuggestion,
-  RoutingSuggestionResponse,
   BallInCourtRole,
 } from '@/types/ai'
 import { toast } from 'sonner'

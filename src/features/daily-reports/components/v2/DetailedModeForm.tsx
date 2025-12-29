@@ -4,7 +4,7 @@
  * for comprehensive documentation, OSHA compliance, and claims defense
  */
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -42,7 +42,6 @@ import { PenTool } from 'lucide-react';
 // Store and hooks
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
 import { useSaveDailyReportV2, useSubmitReportV2 } from '../../hooks/useDailyReportsV2';
-import { detailedModeFormSchema } from '../../validation/dailyReportSchemaV2';
 import type { DailyReportV2 } from '@/types/daily-reports-v2';
 
 interface DetailedModeFormProps {

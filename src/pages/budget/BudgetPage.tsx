@@ -223,7 +223,9 @@ export function BudgetPage() {
 
   // Export budget data as CSV
   const handleExport = () => {
-    if (!filteredBudgets.length) return
+    if (!filteredBudgets.length) {
+      return
+    }
 
     const headers = [
       'Cost Code',

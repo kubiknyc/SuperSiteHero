@@ -95,8 +95,8 @@ export function BatchUploadProgress({
     return 'bg-blue-50 border-blue-200';
   };
 
-  // Get progress bar color
-  const getProgressColor = () => {
+  // Get progress bar color (available for future use)
+  const _getProgressColor = () => {
     if (stats.failed > 0) {return 'bg-warning';}
     if (stats.isComplete) {return 'bg-green-500';}
     return 'bg-blue-500';

@@ -2,7 +2,7 @@
 // Photo annotation editor with drawing tools using Konva
 
 import { useState, useRef, useEffect } from 'react'
-import { Stage, Layer, Line, Image as KonvaImage, Arrow, Circle, Rect, Text } from 'react-konva'
+import { Stage, Layer, Line, Image as KonvaImage, Arrow, Circle, Rect } from 'react-konva'
 import type { KonvaEventObject } from 'konva/lib/Node'
 import Konva from 'konva'
 import { Button } from '@/components/ui/button'

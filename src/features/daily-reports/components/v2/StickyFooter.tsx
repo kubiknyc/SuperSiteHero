@@ -13,7 +13,6 @@ import {
   Check,
   AlertCircle,
   Cloud,
-  CloudOff,
   Wifi,
   WifiOff,
 } from 'lucide-react';

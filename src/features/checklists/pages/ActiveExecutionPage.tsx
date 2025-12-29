@@ -12,7 +12,6 @@ import {
   ArrowLeft,
   Save,
   Send,
-  Clock,
   MapPin,
   Cloud,
   Thermometer,

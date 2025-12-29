@@ -7,7 +7,6 @@ import { checklistsApi } from '@/lib/api/services/checklists'
 import type {
   ChecklistResponse,
   CreateChecklistResponseDTO,
-  ChecklistScoreSummary,
 } from '@/types/checklists'
 import toast from 'react-hot-toast'
 

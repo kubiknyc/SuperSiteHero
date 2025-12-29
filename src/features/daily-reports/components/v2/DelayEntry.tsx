@@ -12,7 +12,6 @@ import {
   Clock,
   ChevronDown,
   ChevronUp,
-  Plus,
   Trash2,
   AlertTriangle,
   CloudRain,
@@ -53,7 +52,7 @@ export function DelayEntrySection({ expanded, onToggle }: DelayEntrySectionProps
   const updateDelayEntry = useDailyReportStoreV2((state) => state.updateDelayEntry);
   const removeDelayEntry = useDailyReportStoreV2((state) => state.removeDelayEntry);
 
-  const [showQuickAdd, setShowQuickAdd] = useState(false);
+  const [_showQuickAdd, setShowQuickAdd] = useState(false);
 
   const totalDelayHours = delays.reduce((sum, d) => sum + (d.duration_hours || 0), 0);
 

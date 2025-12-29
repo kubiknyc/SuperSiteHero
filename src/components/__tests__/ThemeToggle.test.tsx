@@ -25,6 +25,19 @@ vi.mock('@/hooks/useDarkMode', () => ({
   useDarkMode: mockUseDarkMode,
 }))
 
+// Mock the Switch component to properly handle onCheckedChange
+vi.mock('@/components/ui/switch', () => ({
+  Switch: ({ checked, onCheckedChange, ...props }: any) => (
+    <input
+      type="checkbox"
+      role="switch"
+      checked={checked}
+      onChange={(e) => onCheckedChange?.(e.target.checked)}
+      {...props}
+    />
+  ),
+}))
+
 // Import after mocks are set up
 import {
   ThemeToggle,
@@ -76,9 +89,10 @@ describe('ThemeToggle', () => {
       const button = screen.getByRole('button', { name: /light/i })
       await user.click(button)
 
-      expect(screen.getByText('Light')).toBeInTheDocument()
-      expect(screen.getByText('Dark')).toBeInTheDocument()
-      expect(screen.getByText('System')).toBeInTheDocument()
+      // Use menuitem role to find the dropdown options specifically
+      expect(screen.getByRole('menuitem', { name: /light/i })).toBeInTheDocument()
+      expect(screen.getByRole('menuitem', { name: /dark/i })).toBeInTheDocument()
+      expect(screen.getByRole('menuitem', { name: /system/i })).toBeInTheDocument()
     })
 
     it('calls setTheme when light option is clicked', async () => {
@@ -280,6 +294,11 @@ describe('ThemeToggle', () => {
 describe('ThemeSwitch', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Set default mock return value for ThemeSwitch tests
+    mockUseDarkMode.mockReturnValue({
+      isDarkMode: false,
+      toggleTheme: mockToggleTheme,
+    })
   })
 
   describe('Basic Rendering', () => {

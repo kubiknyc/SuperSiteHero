@@ -59,7 +59,7 @@ const STORAGE_BUCKET = 'documents'
  * Usage:
  * const { data: attachments, isLoading } = useRFIAttachments(rfiId, projectId)
  */
-export function useRFIAttachments(rfiId: string | undefined, projectId?: string) {
+export function useRFIAttachments(rfiId: string | undefined, _projectId?: string) {
   return useQuery({
     queryKey: ['rfis', rfiId, 'attachments'],
     queryFn: async () => {
@@ -191,7 +191,7 @@ export function useDeleteRFIAttachment() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ attachmentId, rfiId }: { attachmentId: string; rfiId: string }) => {
+    mutationFn: async ({ attachmentId, rfiId: _rfiId }: { attachmentId: string; rfiId: string }) => {
       if (!attachmentId) {throw new Error('Attachment ID is required')}
 
       // Get document to find file URL

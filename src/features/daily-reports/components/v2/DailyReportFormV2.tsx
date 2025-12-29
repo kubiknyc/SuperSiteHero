@@ -11,14 +11,12 @@
 
 import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   Zap,
   FileText,
   ChevronLeft,
 } from 'lucide-react';
 import { QuickModeForm } from './QuickModeForm';
-import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
 import { useResponsiveLayout, useOrientation } from '@/hooks/useOrientation';
 import { cn } from '@/lib/utils';
 import type { DailyReportV2, FormMode } from '@/types/daily-reports-v2';
@@ -54,7 +52,7 @@ export function DailyReportFormV2({
   }, []);
 
   // Determine layout configurations based on device
-  const isTabletLandscape = layout === 'tablet-landscape';
+  const _isTabletLandscape = layout === 'tablet-landscape';
   const isTabletOrDesktop = layout === 'tablet-portrait' || layout === 'tablet-landscape' || layout === 'desktop';
 
   return (
@@ -168,9 +166,9 @@ export function DailyReportFormV2({
 // Placeholder for detailed mode - will be implemented in Phase 2
 // Now with tablet-optimized layout
 function DetailedModeForm({
-  projectId,
-  reportDate,
-  existingReport,
+  projectId: _projectId,
+  reportDate: _reportDate,
+  existingReport: _existingReport,
   onSwitchToQuick,
 }: {
   projectId: string;
@@ -181,7 +179,7 @@ function DetailedModeForm({
   const layout = useResponsiveLayout();
   const { isTablet, isTouchDevice } = useOrientation();
 
-  const isTabletLandscape = layout === 'tablet-landscape';
+  const _isTabletLandscape = layout === 'tablet-landscape';
   const isTabletOrDesktop = layout === 'tablet-portrait' || layout === 'tablet-landscape' || layout === 'desktop';
 
   return (

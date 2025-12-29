@@ -4,9 +4,8 @@
  * All sections are collapsible accordion-style
  */
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { format } from 'date-fns';
 import { toast } from 'sonner';
 import { HeaderBar } from './HeaderBar';
 import { WorkSummarySection } from './WorkSummarySection';

@@ -12,7 +12,6 @@ import {
   Search,
   Grid3x3,
   List,
-  Filter,
   X,
   CheckSquare,
   BarChart3,
@@ -22,7 +21,6 @@ import { TemplateCard } from '../components/TemplateCard'
 import { TemplateBuilderDialog } from '../components/TemplateBuilderDialog'
 import { useTemplates, useDeleteTemplate, useDuplicateTemplate, useCreateTemplate, useUpdateTemplate } from '../hooks/useTemplates'
 import type { ChecklistTemplate, TemplateFilters, CreateChecklistTemplateDTO } from '@/types/checklists'
-import { useAuth } from '@/lib/auth/AuthContext'
 
 type ViewMode = 'grid' | 'list'
 type CategoryFilter = 'all' | 'Pre-Pour' | 'Framing' | 'MEP' | 'Finishes' | 'Safety' | 'QA/QC'

@@ -40,7 +40,6 @@ import {
   BarChart3,
   Building,
   CalendarClock,
-  Eye,
   Filter,
   History,
   RefreshCw,
@@ -53,7 +52,6 @@ import {
   useUpcomingMaintenance,
 } from '@/features/equipment/hooks/useEquipment'
 import {
-  getEquipmentStatusColor,
   getEquipmentStatusLabel,
   getEquipmentTypeLabel,
   type Equipment,
@@ -247,7 +245,9 @@ interface EquipmentCardProps {
 }
 
 function EquipmentCard({ equipment, onScheduleMaintenance, onViewPhotos }: EquipmentCardProps) {
-  const hoursThisMonth = equipment.hours_this_month ?? Math.round(Math.random() * 80 + 20)
+  // Use a stable fallback based on equipment ID hash for demo purposes
+  const idHash = equipment.id ? equipment.id.charCodeAt(0) + equipment.id.charCodeAt(1) : 50
+  const hoursThisMonth = equipment.hours_this_month ?? (idHash % 80) + 20
   const depreciationPercent = equipment.purchase_price && equipment.purchase_date
     ? Math.min(100, Math.round(differenceInDays(new Date(), parseISO(equipment.purchase_date)) / 365 / 7 * 100))
     : null
@@ -577,7 +577,9 @@ export function EquipmentPage() {
 
   // Calculate equipment due for inspection (mock - would be based on actual inspection schedules)
   const equipmentDueForInspection = useMemo(() => {
-    if (!equipment) return []
+    if (!equipment) {
+      return []
+    }
     return equipment.filter(eq => {
       // Mock: equipment is due for inspection if last inspection was > 30 days ago
       // In production, this would check actual inspection records
@@ -590,7 +592,9 @@ export function EquipmentPage() {
 
   // Filter equipment
   const filteredEquipment = useMemo(() => {
-    if (!equipment) return []
+    if (!equipment) {
+      return []
+    }
 
     let result = equipment
 

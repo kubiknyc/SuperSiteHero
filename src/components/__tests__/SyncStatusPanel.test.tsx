@@ -619,19 +619,19 @@ describe('SyncStatusPanel', () => {
 
       const { container } = render(<SyncStatusPanel />);
 
-      // Find the remove button (trash icon button within queue item)
-      const removeButtons = container.querySelectorAll('button[data-size="sm"]');
-      const removeButton = Array.from(removeButtons).find(
-        (btn) => btn.querySelector('[data-testid="icon-trash"]')
+      // Find the remove button (small button with trash icon in queue item)
+      // The button has class "h-7 w-7 p-0" in the component
+      const trashButtons = container.querySelectorAll('button');
+      const removeButton = Array.from(trashButtons).find(
+        (btn) => btn.querySelector('[data-testid="icon-trash"]') && btn.classList.contains('h-7')
       );
 
-      if (removeButton) {
-        await user.click(removeButton as HTMLElement);
+      expect(removeButton).toBeTruthy();
+      await user.click(removeButton as HTMLElement);
 
-        // Check that the AlertDialog is shown with the correct message
-        expect(screen.getByTestId('alert-dialog')).toBeInTheDocument();
-        expect(screen.getByText('Remove this item from the sync queue?')).toBeInTheDocument();
-      }
+      // Check that the AlertDialog is shown with the correct message
+      expect(screen.getByTestId('alert-dialog')).toBeInTheDocument();
+      expect(screen.getByText('Remove this item from the sync queue?')).toBeInTheDocument();
     });
 
     it('calls removePendingSync with correct id when confirmed', async () => {
@@ -645,20 +645,20 @@ describe('SyncStatusPanel', () => {
 
       const { container } = render(<SyncStatusPanel />);
 
-      const removeButtons = container.querySelectorAll('button[data-size="sm"]');
-      const removeButton = Array.from(removeButtons).find(
-        (btn) => btn.querySelector('[data-testid="icon-trash"]')
+      // Find the remove button (small button with trash icon in queue item)
+      const trashButtons = container.querySelectorAll('button');
+      const removeButton = Array.from(trashButtons).find(
+        (btn) => btn.querySelector('[data-testid="icon-trash"]') && btn.classList.contains('h-7')
       );
 
-      if (removeButton) {
-        await user.click(removeButton as HTMLElement);
+      expect(removeButton).toBeTruthy();
+      await user.click(removeButton as HTMLElement);
 
-        // Click the "Remove" button in the dialog to confirm
-        const confirmButton = screen.getByRole('button', { name: 'Remove' });
-        await user.click(confirmButton);
+      // Click the "Remove" button in the dialog to confirm
+      const confirmButton = screen.getByRole('button', { name: 'Remove' });
+      await user.click(confirmButton);
 
-        expect(mockRemovePendingSync).toHaveBeenCalledWith('item-123');
-      }
+      expect(mockRemovePendingSync).toHaveBeenCalledWith('item-123');
     });
 
     it('does not call removePendingSync when cancelled', async () => {

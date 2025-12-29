@@ -38,7 +38,6 @@ import {
 import { useExecutions } from '../hooks/useExecutions'
 import { useTemplates } from '../hooks/useTemplates'
 import { format, subDays, parseISO, startOfDay, endOfDay, isWithinInterval } from 'date-fns'
-import type { ChecklistExecution } from '@/types/checklists'
 
 export function ChecklistsDashboardPage() {
   const navigate = useNavigate()

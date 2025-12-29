@@ -25,7 +25,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import DailyPhotoChecklist from '@/features/photos/components/DailyPhotoChecklist';
 import { useDailyPhotoChecklist } from '@/features/photos/hooks/usePhotoTemplates';
-import { useProject } from '@/hooks/useProjects';
+import { useProject } from '@/features/projects/hooks/useProjects';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { cn } from '@/lib/utils';
 

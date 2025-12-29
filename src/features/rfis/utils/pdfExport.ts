@@ -13,13 +13,9 @@ import {
   type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
 import type {
-  RFI,
   RFIWithDetails,
-  RFIAttachment,
-  RFICommentWithUser,
   RFIStatus,
   RFIPriority,
-  RFIResponseType,
 } from '@/types/rfi'
 import { formatRFINumber, getRFIResponseTypeLabel } from '@/types/rfi'
 
@@ -618,7 +614,7 @@ export async function generateRFIPDF(data: RFIPDFData): Promise<Blob> {
   y = drawResponse(doc, data, y)
   y = drawDistributionList(doc, data, y)
   y = drawAttachments(doc, data, y)
-  y = drawComments(doc, data, y)
+  drawComments(doc, data, y)
 
   // Add JobSight footer to all pages with "Powered by JobSightApp.com"
   addFootersToAllPages(doc)

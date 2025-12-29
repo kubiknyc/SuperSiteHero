@@ -6,8 +6,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import {
   Plus,
   Trash2,
@@ -99,7 +98,7 @@ export function EquipmentGrid({
     [updateEquipmentEntry]
   );
 
-  const getOwnerTypeBadge = (ownerType: string | undefined) => {
+  const _getOwnerTypeBadge = (ownerType: string | undefined) => {
     const typeOption = OWNER_TYPE_OPTIONS.find((o) => o.value === ownerType);
     if (!typeOption) {return null;}
     return (

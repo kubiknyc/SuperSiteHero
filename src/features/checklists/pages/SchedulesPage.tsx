@@ -36,7 +36,7 @@ import {
 } from '../hooks/useSchedules'
 import { useTemplates } from '../hooks/useTemplates'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
-import type { ChecklistSchedule, ScheduleStatus, RecurrenceFrequency } from '@/types/checklist-schedules'
+import type { ChecklistSchedule, ScheduleStatus } from '@/types/checklist-schedules'
 import { getFrequencyLabel, getDayOfWeekLabel, isScheduleDue } from '@/types/checklist-schedules'
 import { format, formatDistanceToNow } from 'date-fns'
 import type { CreateChecklistScheduleDTO } from '@/types/checklist-schedules'

@@ -13,7 +13,6 @@ import {
   Grid3x3,
   List,
   X,
-  CheckSquare,
   ClipboardList,
   Filter,
   Calendar,
@@ -29,7 +28,7 @@ import { useExecutions, useDeleteExecution } from '../hooks/useExecutions'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useFailedItemsNotifications } from '../hooks/useFailedItemsNotifications'
 import type { ChecklistExecution, ChecklistFilters } from '@/types/checklists'
-import { format, subDays, startOfDay, endOfDay } from 'date-fns'
+import { subDays, startOfDay, endOfDay } from 'date-fns'
 
 type ViewMode = 'grid' | 'list'
 type StatusFilter = 'all' | 'draft' | 'in_progress' | 'submitted' | 'approved' | 'rejected'

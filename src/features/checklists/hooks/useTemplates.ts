@@ -6,7 +6,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { checklistsApi } from '@/lib/api/services/checklists'
 import type {
   ChecklistTemplate,
-  ChecklistTemplateWithItems,
   CreateChecklistTemplateDTO,
   TemplateFilters,
 } from '@/types/checklists'

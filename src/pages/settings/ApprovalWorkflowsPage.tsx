@@ -26,7 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { WorkflowBuilder, WorkflowList } from '@/features/approvals/components'
+import { WorkflowList } from '@/features/approvals/components'
 import {
   useApprovalWorkflows,
   useApprovalWorkflow,
@@ -37,14 +37,14 @@ import {
 } from '@/features/approvals/hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { cn } from '@/lib/utils'
-import type {
-  WorkflowEntityType,
-  CreateWorkflowInput,
-  UpdateWorkflowInput,
-  ApprovalWorkflow,
-  CreateStepInput,
+import {
+  WORKFLOW_ENTITY_CONFIG,
+  type WorkflowEntityType,
+  type CreateWorkflowInput,
+  type UpdateWorkflowInput,
+  type ApprovalWorkflow,
+  type CreateStepInput,
 } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
 import { logger } from '../../lib/utils/logger'
 
 type ViewMode = 'list' | 'create' | 'edit'
