@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import {
   Copy,
-  Download,
   FileText,
   FileJson,
   AlertCircle,

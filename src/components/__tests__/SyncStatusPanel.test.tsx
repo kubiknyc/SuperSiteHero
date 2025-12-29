@@ -629,7 +629,7 @@ describe('SyncStatusPanel', () => {
 
         // Check that the AlertDialog is shown with the correct message
         expect(screen.getByTestId('alert-dialog')).toBeInTheDocument();
-        expect(screen.getByTestId('alert-dialog-description')).toHaveTextContent('Remove this item from the sync queue?');
+        expect(screen.getByText('Remove this item from the sync queue?')).toBeInTheDocument();
       }
     });
 
@@ -652,8 +652,8 @@ describe('SyncStatusPanel', () => {
       if (removeButton) {
         await user.click(removeButton as HTMLElement);
 
-        // Click the action button in the AlertDialog to confirm
-        const confirmButton = screen.getByTestId('alert-dialog-action');
+        // Click the "Remove" button in the dialog to confirm
+        const confirmButton = screen.getByRole('button', { name: 'Remove' });
         await user.click(confirmButton);
 
         expect(mockRemovePendingSync).toHaveBeenCalledWith('item-123');

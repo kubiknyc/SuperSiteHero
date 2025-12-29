@@ -72,7 +72,7 @@ export function ChecklistFailureTrendReport({
   className,
 }: ChecklistFailureTrendReportProps) {
   const [dateRange, setDateRange] = useState<DateRangePreset>('last_90_days')
-  const [selectedLocation, setSelectedLocation] = useState<string>()
+  const [selectedLocation, _setSelectedLocation] = useState<string>()
   const [isExporting, setIsExporting] = useState(false)
 
   const dateRangeValues = getDateRangeFromPreset(dateRange)

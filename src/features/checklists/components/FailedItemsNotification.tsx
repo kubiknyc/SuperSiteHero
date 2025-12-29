@@ -30,7 +30,7 @@ export function FailedItemsNotification({
   execution,
   responses,
   onDismiss,
-  autoShow = true,
+  autoShow: _autoShow = true,
 }: FailedItemsNotificationProps) {
   const navigate = useNavigate()
   const [isExpanded, setIsExpanded] = useState(false)

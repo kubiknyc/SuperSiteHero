@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+// AlertCircle, Plus, Filter removed - not used in this file
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,14 +64,12 @@ import {
   User,
   TrendingUp,
   Loader2,
-  Plus,
   MoreVertical,
   Edit,
   Trash2,
   Copy,
   Download,
   Upload,
-  Filter,
   X,
   Tag,
   RefreshCw,

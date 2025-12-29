@@ -382,7 +382,7 @@ export function useCreateRFI() {
       if (error) {throw error}
       return data as RFI
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
     },
   })
@@ -406,7 +406,7 @@ export function useUpdateRFI() {
       if (error) {throw error}
       return data as RFI
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
     },
   })
@@ -759,7 +759,7 @@ export function useDeleteRFIAttachment() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ attachmentId, rfiId }: { attachmentId: string; rfiId: string }) => {
+    mutationFn: async ({ attachmentId, rfiId: _rfiId }: { attachmentId: string; rfiId: string }) => {
       // Get attachment to find file path
       const { data: attachment, error: fetchError } = await supabase
         .from('rfi_attachments')

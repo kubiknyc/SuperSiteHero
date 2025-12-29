@@ -20,10 +20,8 @@ import {
   Eye,
   PlayCircle,
   Trash2,
-  Clock,
   MapPin,
   User,
-  Award,
 } from 'lucide-react'
 import type { ChecklistExecution } from '@/types/checklists'
 import { formatDistanceToNow } from 'date-fns'
