@@ -10,12 +10,10 @@ import {
   ChevronRight,
   MapPin,
   Calendar,
-  User,
-  Camera,
 } from 'lucide-react'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 import { cn } from '@/lib/utils'
-import type { PunchItem, PunchItemStatus } from '@/types/database'
+import type { PunchItem } from '@/types/database'
 
 interface SwipeablePunchItemProps {
   punchItem: PunchItem
@@ -94,7 +92,7 @@ export function SwipeablePunchItem({
   }, [disabled, onReject, punchItem.id])
 
   // Swipe gesture hook
-  const { state, handlers, reset } = useSwipeGesture({
+  const { state, handlers } = useSwipeGesture({
     threshold: 100,
     maxSwipeTime: 500,
     hapticFeedback: true,

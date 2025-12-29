@@ -13,19 +13,13 @@ import {
   type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
 import type {
-  Submittal,
   SubmittalWithDetails,
-  SubmittalItem,
-  SubmittalAttachment,
-  SubmittalReviewWithUser,
   SubmittalReviewStatus,
-  SubmittalType,
   SubmittalApprovalCode,
 } from '@/types/submittal'
 import {
   formatSubmittalNumber,
   getSubmittalTypeLabel,
-  getApprovalCodeLabel,
 } from '@/types/submittal'
 
 // Page dimensions (Letter size)
@@ -595,7 +589,7 @@ export async function generateSubmittalPDF(data: SubmittalPDFData): Promise<Blob
   y = drawItemsTable(doc, options, y)
   y = drawReviewComments(doc, options, y)
   y = drawReviewHistory(doc, options, y)
-  y = drawAttachments(doc, options, y)
+  const _y = drawAttachments(doc, options, y)
 
   // Add JobSight footer to all pages with "Powered by JobSightApp.com"
   addFootersToAllPages(doc)

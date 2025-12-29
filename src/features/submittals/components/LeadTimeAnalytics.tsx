@@ -7,10 +7,7 @@
 
 import { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -217,7 +214,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
   // For now, we'll need the workflow type ID passed in or fetched separately
   const workflowTypeId = propWorkflowTypeId
 
-  const [filters, setFilters] = useState<LeadTimeFilters>({})
+  const [filters, _setFilters] = useState<LeadTimeFilters>({})
   const [dateRange, setDateRange] = useState<'30' | '90' | '180' | 'all'>('90')
 
   // Calculate date range filter
@@ -484,7 +481,7 @@ export function LeadTimeAnalytics({ projectId: propProjectId, workflowTypeId: pr
                         outerRadius={100}
                         paddingAngle={2}
                         dataKey="value"
-                        label={({ name, value }) => `${value}`}
+                        label={({ value }) => `${value}`}
                         labelLine={false}
                       >
                         {statusPieData.map((entry, index) => (

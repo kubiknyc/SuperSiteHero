@@ -6,7 +6,6 @@ import { useState, useCallback, useMemo, memo } from 'react'
 import { format } from 'date-fns'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Select } from '@/components/ui/select'
 import { usePunchItems } from '../hooks/usePunchItems'
@@ -190,7 +189,7 @@ export function PunchListsProjectView({ projectId }: PunchListsProjectViewProps)
 
   // Responsive layout hooks
   const layout = useResponsiveLayout()
-  const { isTouchDevice, isTablet } = useOrientation()
+  const { isTouchDevice } = useOrientation()
 
   // Determine if we should use master-detail layout (tablets in landscape)
   const useMasterDetailLayout = layout === 'tablet-landscape' || layout === 'desktop'

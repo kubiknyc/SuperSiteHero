@@ -40,12 +40,10 @@ import {
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTransmittals, useTransmittalStats } from '../hooks/useTransmittals';
-import type {
-  TransmittalWithDetails,
-  TransmittalStatus,
-  TransmittalFilters,
-} from '@/types/transmittal';
 import {
+  type TransmittalWithDetails,
+  type TransmittalStatus,
+  type TransmittalFilters,
   TRANSMITTAL_STATUSES,
   getTransmittalStatusColor,
   getTransmittalStatusLabel,

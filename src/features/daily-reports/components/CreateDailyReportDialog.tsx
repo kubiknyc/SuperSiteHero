@@ -8,8 +8,7 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { InputWithError, TextareaWithError, SelectWithError } from '@/components/form/ValidationError'
-import type { DailyReportCreateInput } from '@/lib/validation'
+import { InputWithError, TextareaWithError } from '@/components/form/ValidationError'
 import { logger } from '../../../lib/utils/logger';
 
 

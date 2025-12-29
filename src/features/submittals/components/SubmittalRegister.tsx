@@ -3,7 +3,6 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -15,7 +14,7 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import type { SubmittalReviewStatus, SubmittalApprovalCode } from '@/types/submittal'
-import { SUBMITTAL_REVIEW_STATUSES, SUBMITTAL_APPROVAL_CODES, formatSubmittalNumber, getSubmittalStatusColor } from '@/types/submittal'
+import { SUBMITTAL_REVIEW_STATUSES, getSubmittalStatusColor } from '@/types/submittal'
 import { ApprovalCodeBadge } from './ApprovalCodeBadge'
 
 // =============================================

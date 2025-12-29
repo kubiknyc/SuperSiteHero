@@ -24,7 +24,6 @@ import { format } from 'date-fns'
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
 import type {
   ResponseTimeTrends,
   ResponseTimeTrendPoint,
@@ -79,20 +78,6 @@ function formatChartDate(dateStr: string, granularity: 'day' | 'week' | 'month')
       return format(date, 'MMM yyyy')
     default:
       return format(date, 'MMM d')
-  }
-}
-
-/**
- * Get trend indicator icon
- */
-function getTrendIcon(trend: TrendDirection): React.ReactNode {
-  switch (trend) {
-    case 'improving':
-      return <TrendingDown className="w-4 h-4 text-success" />
-    case 'declining':
-      return <TrendingUp className="w-4 h-4 text-error" />
-    case 'stable':
-      return <Minus className="w-4 h-4 text-secondary" />
   }
 }
 

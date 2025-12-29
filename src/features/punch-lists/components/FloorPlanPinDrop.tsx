@@ -2,9 +2,9 @@
 // Floor plan pin-drop component for marking punch item locations
 
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { Stage, Layer, Circle, Image as KonvaImage, Group, Text as KonvaText } from 'react-konva'
+import { Stage, Layer, Circle, Image as KonvaImage, Group } from 'react-konva'
 import useImage from 'use-image'
-import { MapPin, ZoomIn, ZoomOut, RotateCcw, Move, Upload, X, Check, Loader2 } from 'lucide-react'
+import { MapPin, ZoomIn, ZoomOut, RotateCcw, Move, X, Check, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import {
@@ -14,13 +14,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { toast } from '@/lib/notifications/ToastContext'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'

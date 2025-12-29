@@ -14,7 +14,6 @@ import {
   ChevronDown,
   ChevronUp,
   Link,
-  AlertCircle,
   ThumbsUp,
   ThumbsDown,
 } from 'lucide-react'
@@ -87,7 +86,7 @@ export function RFIRoutingSuggestions({
   const {
     latestSuggestion,
     hasPendingSuggestion,
-    isLoading,
+    isLoading: _isLoading,
     isGenerating,
     generateSuggestion,
     acceptSuggestion,

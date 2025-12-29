@@ -55,7 +55,7 @@ export function CreateDedicatedSubmittalDialog({
   onOpenChange,
   onSuccess,
 }: CreateDedicatedSubmittalDialogProps) {
-  const { userProfile } = useAuth()
+  const { userProfile: _userProfile } = useAuth()
 
   // Form state
   const [title, setTitle] = useState('')

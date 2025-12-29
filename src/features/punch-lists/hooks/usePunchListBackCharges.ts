@@ -230,7 +230,7 @@ export function useMarkEstimated() {
 
   return useMutation({
     mutationFn: (id: string) => punchListBackChargesApi.markEstimated(id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: backChargeKeys.all });
 
       toast({
@@ -257,7 +257,7 @@ export function useSubmitForApproval() {
 
   return useMutation({
     mutationFn: (id: string) => punchListBackChargesApi.submitForApproval(id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: backChargeKeys.all });
 
       toast({
@@ -312,7 +312,7 @@ export function useSendToSubcontractor() {
 
   return useMutation({
     mutationFn: (id: string) => punchListBackChargesApi.sendToSubcontractor(id),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: backChargeKeys.all });
 
       toast({
@@ -340,7 +340,7 @@ export function useDisputeBackCharge() {
   return useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: DisputeBackChargeDTO }) =>
       punchListBackChargesApi.disputeBackCharge(id, dto),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: backChargeKeys.all });
 
       toast({
@@ -369,7 +369,7 @@ export function useResolveDispute() {
   return useMutation({
     mutationFn: ({ id, dto }: { id: string; dto: ResolveDisputeDTO }) =>
       punchListBackChargesApi.resolveDispute(id, dto),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: backChargeKeys.all });
 
       toast({

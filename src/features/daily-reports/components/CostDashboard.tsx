@@ -26,7 +26,6 @@ import {
   AlertCircle,
   ChevronRight,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 interface CostDashboardProps {
   projectId: string
@@ -87,7 +86,7 @@ export function CostDashboard({ projectId, onViewCostCode }: CostDashboardProps)
   } = useDailyReportCostSummaryByDivision(dateFilters)
 
   const {
-    data: stats,
+    data: _stats,
     isLoading: statsLoading,
   } = useProjectCostStats(projectId, dateFilters.startDate, dateFilters.endDate)
 

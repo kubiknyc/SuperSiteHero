@@ -3,7 +3,6 @@
  * Displays detailed view of a single transmittal
  */
 
-import { useState } from 'react';
 import { format } from 'date-fns';
 import {
   FileText,
@@ -15,7 +14,6 @@ import {
   User,
   Mail,
   Phone,
-  Calendar,
   Package,
   Download,
   Edit,
@@ -56,8 +54,8 @@ import {
   useVoidTransmittal,
   useDeleteTransmittal,
 } from '../hooks/useTransmittals';
-import type { TransmittalStatus } from '@/types/transmittal';
 import {
+  type TransmittalStatus,
   getTransmittalStatusColor,
   getTransmittalStatusLabel,
   getItemTypeLabel,

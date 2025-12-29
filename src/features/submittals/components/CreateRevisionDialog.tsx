@@ -18,7 +18,6 @@ import { Badge } from '@/components/ui/badge'
 import { RefreshCw, Loader2, AlertTriangle, CheckCircle } from 'lucide-react'
 import { useCreateSubmittalRevision } from '../hooks/useDedicatedSubmittals'
 import type { Submittal } from '@/types/database'
-import { cn } from '@/lib/utils'
 
 interface CreateRevisionDialogProps {
   submittal: Submittal

@@ -88,7 +88,7 @@ export interface LeadTimeFilters {
 // Constants
 // ============================================================================
 
-const STATUS_ORDER = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'resubmit_required']
+const _STATUS_ORDER = ['draft', 'submitted', 'under_review', 'approved', 'rejected', 'resubmit_required']
 
 const EXPECTED_LEAD_TIMES = {
   submitToReview: 3,       // 3 days to start review

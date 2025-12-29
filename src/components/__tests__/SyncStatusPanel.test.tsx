@@ -71,6 +71,17 @@ vi.mock('@/components/ui/separator', () => ({
   Separator: () => <hr data-testid="separator" />,
 }));
 
+vi.mock('@/components/ui/alert-dialog', () => ({
+  AlertDialog: ({ children, open }: any) => (open ? <div data-testid="alert-dialog">{children}</div> : null),
+  AlertDialogContent: ({ children }: any) => <div data-testid="alert-dialog-content">{children}</div>,
+  AlertDialogHeader: ({ children }: any) => <div>{children}</div>,
+  AlertDialogTitle: ({ children }: any) => <h2>{children}</h2>,
+  AlertDialogDescription: ({ children }: any) => <p>{children}</p>,
+  AlertDialogFooter: ({ children }: any) => <div>{children}</div>,
+  AlertDialogAction: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
+  AlertDialogCancel: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
+}));
+
 // Mock ConflictResolutionDialog
 vi.mock('@/components/ConflictResolutionDialog', () => ({
   ConflictResolutionDialog: ({ open, onOpenChange, conflict }: any) =>
@@ -232,9 +243,8 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows date for sync older than a day', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
       const oldDate = new Date('2024-01-15');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         lastSyncTime: oldDate.getTime(),
       });
@@ -273,9 +283,8 @@ describe('SyncStatusPanel', () => {
     });
 
     it('displays conflict entity type and timestamp', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
       const detectedAt = Date.now() - 300000; // 5 minutes ago
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'inspection', detectedAt, localData: {}, serverData: {} },
@@ -480,9 +489,8 @@ describe('SyncStatusPanel', () => {
     });
 
     it('displays retry count when greater than zero', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
       const timestamp = Date.now() - 300000; // 5 minutes ago
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp, retryCount: 3 },
@@ -547,16 +555,14 @@ describe('SyncStatusPanel', () => {
         ],
       });
 
-      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-
       render(<SyncStatusPanel />);
 
       const clearButton = screen.getByRole('button', { name: /clear all/i });
       await user.click(clearButton);
 
-      expect(confirmSpy).toHaveBeenCalledWith(
-        'Are you sure you want to clear all pending syncs? This will discard unsaved changes.'
-      );
+      // Check that the AlertDialog is shown with the correct message
+      expect(screen.getByTestId('alert-dialog')).toBeInTheDocument();
+      expect(screen.getByText('Are you sure you want to clear all pending syncs? This will discard unsaved changes.')).toBeInTheDocument();
     });
 
     it('calls clearSyncQueue when confirmed', async () => {
@@ -568,12 +574,14 @@ describe('SyncStatusPanel', () => {
         ],
       });
 
-      vi.spyOn(window, 'confirm').mockReturnValue(true);
-
       render(<SyncStatusPanel />);
 
       const clearButton = screen.getByRole('button', { name: /clear all/i });
       await user.click(clearButton);
+
+      // Click the action button in the AlertDialog to confirm
+      const confirmButton = screen.getByTestId('alert-dialog-action');
+      await user.click(confirmButton);
 
       expect(mockClearSyncQueue).toHaveBeenCalledTimes(1);
     });
@@ -608,8 +616,6 @@ describe('SyncStatusPanel', () => {
         ],
       });
 
-      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
-
       const { container } = render(<SyncStatusPanel />);
 
       // Find the remove button (trash icon button within queue item)
@@ -621,7 +627,9 @@ describe('SyncStatusPanel', () => {
       if (removeButton) {
         await user.click(removeButton as HTMLElement);
 
-        expect(confirmSpy).toHaveBeenCalledWith('Remove this item from the sync queue?');
+        // Check that the AlertDialog is shown with the correct message
+        expect(screen.getByTestId('alert-dialog')).toBeInTheDocument();
+        expect(screen.getByTestId('alert-dialog-description')).toHaveTextContent('Remove this item from the sync queue?');
       }
     });
 
@@ -634,8 +642,6 @@ describe('SyncStatusPanel', () => {
         ],
       });
 
-      vi.spyOn(window, 'confirm').mockReturnValue(true);
-
       const { container } = render(<SyncStatusPanel />);
 
       const removeButtons = container.querySelectorAll('button[data-size="sm"]');
@@ -645,6 +651,10 @@ describe('SyncStatusPanel', () => {
 
       if (removeButton) {
         await user.click(removeButton as HTMLElement);
+
+        // Click the action button in the AlertDialog to confirm
+        const confirmButton = screen.getByTestId('alert-dialog-action');
+        await user.click(confirmButton);
 
         expect(mockRemovePendingSync).toHaveBeenCalledWith('item-123');
       }

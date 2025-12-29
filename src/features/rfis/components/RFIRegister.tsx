@@ -3,7 +3,6 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,7 +20,6 @@ import {
   BALL_IN_COURT_ROLES,
   formatRFINumber,
   getRFIStatusColor,
-  getRFIPriorityColor,
 } from '@/types/rfi'
 import { ResponseTypeBadge } from './ResponseTypeBadge'
 

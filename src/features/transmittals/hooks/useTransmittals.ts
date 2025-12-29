@@ -9,7 +9,6 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import type {
   Transmittal,
   TransmittalWithDetails,
-  TransmittalWithItems,
   TransmittalItem,
   TransmittalAttachment,
   CreateTransmittalDTO,
@@ -503,7 +502,7 @@ export function useUpdateTransmittalItem() {
   return useMutation({
     mutationFn: async ({
       id,
-      transmittal_id,
+      transmittal_id: _transmittal_id,
       ...dto
     }: UpdateTransmittalItemDTO & { id: string; transmittal_id: string }): Promise<TransmittalItem> => {
       const { data, error } = await db
@@ -530,7 +529,7 @@ export function useRemoveTransmittalItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ itemId, transmittalId }: { itemId: string; transmittalId: string }): Promise<void> => {
+    mutationFn: async ({ itemId, transmittalId: _transmittalId }: { itemId: string; transmittalId: string }): Promise<void> => {
       const { error } = await db
         .from('transmittal_items')
         .delete()
@@ -605,7 +604,7 @@ export function useDeleteTransmittalAttachment() {
   return useMutation({
     mutationFn: async ({
       attachmentId,
-      transmittalId,
+      transmittalId: _transmittalId,
       filePath,
     }: {
       attachmentId: string;

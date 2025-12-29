@@ -181,7 +181,6 @@ export function usePunchItemSync() {
   const {
     syncQueue,
     markSynced,
-    markSyncError,
     incrementAttempt,
     removeFromSyncQueue,
   } = useOfflinePunchStore()

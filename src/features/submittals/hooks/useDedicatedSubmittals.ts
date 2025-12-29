@@ -648,7 +648,7 @@ export function useDeleteSubmittalAttachment() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ attachmentId, submittalId }: { attachmentId: string; submittalId: string }) => {
+    mutationFn: async ({ attachmentId, submittalId: _submittalId }: { attachmentId: string; submittalId: string }) => {
       // Get attachment to find file path
       const { data: attachment, error: fetchError } = await supabase
         .from('submittal_attachments')
@@ -697,7 +697,7 @@ export function useCreateSubmittalRevision() {
   return useMutation({
     mutationFn: async ({
       submittalId,
-      copyAttachments = true,
+      copyAttachments: _copyAttachments = true,
     }: {
       submittalId: string
       copyAttachments?: boolean
@@ -896,7 +896,7 @@ export function useUpdateSubmittalItem() {
   return useMutation({
     mutationFn: async ({
       itemId,
-      submittalId,
+      submittalId: _submittalId,
       ...updates
     }: {
       itemId: string
@@ -930,7 +930,7 @@ export function useDeleteSubmittalItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async ({ itemId, submittalId }: { itemId: string; submittalId: string }) => {
+    mutationFn: async ({ itemId, submittalId: _submittalId }: { itemId: string; submittalId: string }) => {
       const { error } = await supabase
         .from('submittal_items')
         .delete()

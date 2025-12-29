@@ -4,7 +4,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Html5QrcodeScanner, Html5QrcodeScanType, Html5QrcodeSupportedFormats } from 'html5-qrcode'
-import { Camera, X, ScanLine, AlertCircle, RefreshCw } from 'lucide-react'
+import { Camera, ScanLine, AlertCircle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
