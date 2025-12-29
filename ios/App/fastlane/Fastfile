@@ -47,6 +47,16 @@ platform :ios do
     # Get certificates and profiles
     certificates
 
+    # Configure code signing settings
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "App.xcodeproj",
+      team_id: "KMUN96UMW4",
+      bundle_identifier: "com.jobsightapp.app",
+      profile_name: "match AppStore com.jobsightapp.app",
+      code_sign_identity: "Apple Distribution"
+    )
+
     # Increment build number using timestamp for uniqueness
     increment_build_number(
       build_number: Time.now.strftime("%Y%m%d%H%M"),
@@ -64,7 +74,9 @@ platform :ios do
       export_options: {
         provisioningProfiles: {
           "com.jobsightapp.app" => "match AppStore com.jobsightapp.app"
-        }
+        },
+        signingStyle: "manual",
+        teamID: "KMUN96UMW4"
       }
     )
 
@@ -87,6 +99,16 @@ platform :ios do
     # Get certificates and profiles
     certificates
 
+    # Configure code signing settings
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "App.xcodeproj",
+      team_id: "KMUN96UMW4",
+      bundle_identifier: "com.jobsightapp.app",
+      profile_name: "match AppStore com.jobsightapp.app",
+      code_sign_identity: "Apple Distribution"
+    )
+
     # Increment build number
     increment_build_number(
       build_number: Time.now.strftime("%Y%m%d%H%M"),
@@ -104,7 +126,9 @@ platform :ios do
       export_options: {
         provisioningProfiles: {
           "com.jobsightapp.app" => "match AppStore com.jobsightapp.app"
-        }
+        },
+        signingStyle: "manual",
+        teamID: "KMUN96UMW4"
       }
     )
 
@@ -129,6 +153,16 @@ platform :ios do
   lane :build_only do
     certificates
 
+    # Configure code signing settings
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "App.xcodeproj",
+      team_id: "KMUN96UMW4",
+      bundle_identifier: "com.jobsightapp.app",
+      profile_name: "match AppStore com.jobsightapp.app",
+      code_sign_identity: "Apple Distribution"
+    )
+
     increment_build_number(
       build_number: Time.now.strftime("%Y%m%d%H%M"),
       xcodeproj: "App.xcodeproj"
@@ -140,7 +174,14 @@ platform :ios do
       export_method: "app-store",
       output_directory: "./build",
       output_name: "JobSight.ipa",
-      clean: true
+      clean: true,
+      export_options: {
+        provisioningProfiles: {
+          "com.jobsightapp.app" => "match AppStore com.jobsightapp.app"
+        },
+        signingStyle: "manual",
+        teamID: "KMUN96UMW4"
+      }
     )
 
     UI.success("Build complete! IPA saved to ./build/JobSight.ipa")
