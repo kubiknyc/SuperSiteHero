@@ -303,7 +303,7 @@ export function useDeleteAnnotation() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ id, photoId }: { id: string; photoId: string }) =>
+    mutationFn: ({ id, photoId: _photoId }: { id: string; photoId: string }) =>
       photoApi.deleteAnnotation(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: photoKeys.annotations(variables.photoId) })
