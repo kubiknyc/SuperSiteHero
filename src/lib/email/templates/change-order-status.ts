@@ -49,7 +49,7 @@ export function generateChangeOrderStatusEmail(data: ChangeOrderStatusEmailData)
   const statusLabel = STATUS_LABELS[data.newStatus] || data.newStatus.replace(/_/g, ' ')
   const previousStatusLabel = STATUS_LABELS[data.previousStatus] || data.previousStatus.replace(/_/g, ' ')
 
-  const isPositiveChange = ['approved', 'internally_approved', 'estimate_complete'].includes(data.newStatus)
+  const _isPositiveChange = ['approved', 'internally_approved', 'estimate_complete'].includes(data.newStatus)
   const isNegativeChange = ['rejected', 'void'].includes(data.newStatus)
 
   const content = `

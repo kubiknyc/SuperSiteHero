@@ -21,7 +21,7 @@ export async function checkMFARequirement(userProfile: UserProfile | null): Prom
   const roleRequiresMFA = await isRoleMFARequired(userProfile.role)
 
   // Check current MFA enrollment status
-  const { enrolled, factors } = await checkMFAStatus()
+  const { enrolled, factors: _factors } = await checkMFAStatus()
 
   // Check user preferences for MFA enforcement
   if (!userProfile.id) {

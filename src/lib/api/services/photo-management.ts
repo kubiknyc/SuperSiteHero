@@ -15,7 +15,6 @@ import { logger } from '@/lib/utils/logger'
 import type {
   Photo,
   PhotoCollection,
-  PhotoCollectionItem,
   PhotoComparison,
   PhotoAnnotation,
   PhotoAccessLog,

@@ -13,7 +13,7 @@ import {
   generateLienWaiverOverdueEmail,
 } from '@/lib/email/templates'
 import { logger } from '@/lib/utils/logger'
-import type { LienWaiver, LienWaiverStatus, LIEN_WAIVER_TYPES } from '@/types/lien-waiver'
+import type { LienWaiver } from '@/types/lien-waiver'
 
 // Using extended Database types for tables not yet in generated types
 const db: any = supabase
@@ -512,7 +512,7 @@ export const lienWaiverReminderService = {
     overdue: number
     oldestOverdueDays: number
   }> {
-    const today = new Date().toISOString().split('T')[0]
+    const _today = new Date().toISOString().split('T')[0]
     const in1Day = new Date()
     in1Day.setDate(in1Day.getDate() + 1)
     const in3Days = new Date()

@@ -524,7 +524,7 @@ export const costEstimatesApi = {
       }
 
       // Create new estimate (without id, created_at, updated_at)
-      const { id, created_at, updated_at, ...estimateData } = original
+      const { id: _id, created_at: _created_at, updated_at: _updated_at, ...estimateData } = original
       const newEstimate = await this.createEstimate({
         ...estimateData,
         name: newName,
@@ -533,7 +533,7 @@ export const costEstimatesApi = {
 
       // Duplicate items
       const newItems: CostEstimateItemInsert[] = original.items.map((item) => {
-        const { id, estimate_id, created_at, updated_at, ...itemData } = item
+        const { id: _itemId, estimate_id: _estimateId, created_at: _itemCreatedAt, updated_at: _itemUpdatedAt, ...itemData } = item
         return {
           ...itemData,
           estimate_id: newEstimate.id,

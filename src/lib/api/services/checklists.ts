@@ -2,7 +2,6 @@
 // Comprehensive Checklists API service for templates, items, executions, and responses
 
 import { supabase } from '@/lib/supabase'
-import type { Database } from '@/types/database'
 import type {
   ChecklistTemplate,
   ChecklistTemplateItem,

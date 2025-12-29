@@ -2,7 +2,7 @@
 // Multi-Factor Authentication utility functions
 
 import { supabase } from '@/lib/supabase'
-import type { AuthMFAEnrollResponse, AuthMFAUnenrollResponse, AuthMFAVerifyResponse } from '@supabase/supabase-js'
+import type { AuthMFAVerifyResponse } from '@supabase/supabase-js'
 import { logger } from '@/lib/utils/logger'
 
 /**

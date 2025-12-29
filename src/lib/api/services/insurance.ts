@@ -1,7 +1,6 @@
 // File: /src/lib/api/services/insurance.ts
 // Insurance Certificate Tracking API service
 
-import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
 import { supabase, supabaseUntyped } from '@/lib/supabase'
 import type { QueryOptions } from '../types'

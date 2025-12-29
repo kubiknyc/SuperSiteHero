@@ -1,7 +1,7 @@
 // File: /src/lib/auth/biometric.ts
 // Web Authentication API (WebAuthn) integration for biometric authentication
 
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabaseUntyped } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 
 /**
@@ -41,7 +41,7 @@ export const REAUTH_INTERVALS: Record<ReauthInterval, { label: string; ms: numbe
 /**
  * Registration result from WebAuthn
  */
-interface RegistrationResult {
+interface _RegistrationResult {
   credentialId: string
   publicKey: string
   transports: AuthenticatorTransport[]

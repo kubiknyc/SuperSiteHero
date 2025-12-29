@@ -5,7 +5,7 @@
  * and generated reports.
  */
 
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabaseUntyped } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 import type {
   ReportTemplate,

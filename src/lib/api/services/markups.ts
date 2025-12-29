@@ -3,7 +3,6 @@
 
 import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
-import type { QueryOptions } from '../types'
 import type { AnnotationType } from '@/types/markup'
 import { supabase } from '@/lib/supabase'
 

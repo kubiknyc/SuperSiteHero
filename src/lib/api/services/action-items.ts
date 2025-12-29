@@ -662,9 +662,9 @@ export function calculateEscalationLevel(
  */
 export async function escalateActionItem(
   id: string,
-  escalatedBy: string,
+  _escalatedBy: string,
   escalatedTo?: string,
-  reason?: string
+  _reason?: string
 ): Promise<ActionItem> {
   // Get current item
   const item = await getActionItem(id)

@@ -13,7 +13,6 @@ import type {
   CompletionResult,
   JSONExtractionOptions,
   TokenCount,
-  AIUsageLog,
   AIUsageStats,
   FeatureUsage,
   DailyUsage,

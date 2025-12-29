@@ -233,7 +233,7 @@ export const meetingsApi = {
    * Publish meeting minutes
    */
   async publishMinutes(id: string): Promise<Meeting> {
-    const { data: user } = await supabase.auth.getUser()
+    const { data: _user } = await supabase.auth.getUser()
 
     return this.updateMeeting(id, {
       minutes_published: true,

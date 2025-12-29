@@ -11,7 +11,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
-import { addDays, differenceInDays, format, subDays } from 'date-fns'
+import { addDays, format } from 'date-fns'
 
 import type {
   EarnedValueMetrics,
@@ -23,8 +23,6 @@ import type {
   EVMAlert,
   EVMPerformanceStatus,
   EVMTrend,
-  DEFAULT_EVM_THRESHOLDS,
-  getPerformanceStatus,
 } from '@/types/cost-tracking'
 import { logger } from '../../utils/logger';
 
@@ -225,7 +223,7 @@ export const evmApi = {
     includeForecasts: boolean = true
   ): Promise<EVMSCurveData[]> {
     // Get project date range
-    const { data: project, error: projectError } = await db
+    const { data: _project, error: projectError } = await db
       .from('projects')
       .select('start_date, end_date')
       .eq('id', projectId)

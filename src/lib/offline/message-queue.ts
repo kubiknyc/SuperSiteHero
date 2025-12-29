@@ -186,7 +186,7 @@ async function sendQueuedMessage(message: QueuedMessage): Promise<boolean> {
   try {
     await updateMessageStatus(message.id, 'processing')
 
-    const { data, error } = await db.from('messages').insert({
+    const { data: _data, error } = await db.from('messages').insert({
       conversation_id: message.conversation_id,
       sender_id: message.sender_id,
       content: message.content,

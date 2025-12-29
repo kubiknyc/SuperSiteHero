@@ -26,7 +26,7 @@ const ENTITY_PATTERNS = {
 }
 
 // CSI Division mapping
-const CSI_DIVISIONS: Record<string, string> = {
+const _CSI_DIVISIONS: Record<string, string> = {
   '01': 'General Requirements',
   '02': 'Existing Conditions',
   '03': 'Concrete',

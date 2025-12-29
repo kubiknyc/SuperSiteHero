@@ -647,7 +647,7 @@ export async function uploadDeliveryPhotoFile(
     const fileExt = file.name.split('.').pop();
     const fileName = `${companyId}/${deliveryId}/${Date.now()}.${fileExt}`;
 
-    const { data, error } = await supabase.storage
+    const { data: _uploadData, error } = await supabase.storage
       .from('material-delivery-photos')
       .upload(fileName, file);
 

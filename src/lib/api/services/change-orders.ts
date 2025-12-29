@@ -2,7 +2,6 @@
 // Change Orders API service
 
 import { supabase } from '@/lib/supabase'
-import { apiClient } from '../client'
 import { ApiErrorClass } from '../errors'
 import type { Database } from '@/types/database'
 

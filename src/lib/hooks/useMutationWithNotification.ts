@@ -3,7 +3,6 @@
 
 import { useMutation, UseMutationOptions } from '@tanstack/react-query'
 import { useNotifications } from '@/lib/notifications/useNotifications'
-import { ApiErrorClass } from '@/lib/api/errors'
 
 export interface MutationWithNotificationOptions<TData, TError, TVariables>
   extends Omit<UseMutationOptions<TData, TError, TVariables>, 'onError' | 'onSuccess'> {
@@ -23,7 +22,7 @@ export function useMutationWithNotification<TData, TError = Error, TVariables = 
 
   const mutation = useMutation<TData, TError, TVariables>({
     ...options,
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, variables, _context) => {
       if (options.successMessage) {
         const message = typeof options.successMessage === 'function'
           ? options.successMessage(data)
@@ -33,7 +32,7 @@ export function useMutationWithNotification<TData, TError = Error, TVariables = 
 
       options.onSuccess?.(data, variables)
     },
-    onError: (error, variables, context) => {
+    onError: (error, variables, _context) => {
       const message = options.errorMessage
         ? typeof options.errorMessage === 'function'
           ? options.errorMessage(error as Error)

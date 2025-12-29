@@ -51,7 +51,7 @@ export const takeoffTemplatesApi = {
   async getProjectTemplates(
     projectId: string,
     companyId: string,
-    options?: QueryOptions
+    _options?: QueryOptions
   ): Promise<TakeoffTemplate[]> {
     try {
       if (!projectId || !companyId) {

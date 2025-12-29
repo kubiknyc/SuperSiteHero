@@ -3,8 +3,8 @@
 
 import { useMemo } from 'react'
 import { format } from 'date-fns'
-import type { GanttZoomLevel, TimelineColumn } from '@/types/schedule'
-import { generateTimelineColumns, getColumnWidth } from '../utils/dateUtils'
+import type { GanttZoomLevel } from '@/types/schedule'
+import { generateTimelineColumns } from '../utils/dateUtils'
 
 interface GanttTimelineProps {
   startDate: Date
@@ -28,8 +28,6 @@ export function GanttTimeline({
     [startDate, endDate, zoomLevel]
   )
 
-  const columnWidth = getColumnWidth(zoomLevel)
-
   // Group columns by month for secondary header row
   const monthGroups = useMemo(() => {
     if (zoomLevel === 'month' || zoomLevel === 'quarter') {return []}
@@ -38,7 +36,7 @@ export function GanttTimeline({
     let currentMonth = ''
     let currentOffset = 0
 
-    columns.forEach((col, index) => {
+    columns.forEach((col, _index) => {
       const monthYear = format(col.date, 'MMMM yyyy')
 
       if (monthYear !== currentMonth) {

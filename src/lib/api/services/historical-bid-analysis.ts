@@ -29,22 +29,16 @@ import type {
   BidTrendData,
   PriceTrendByTrade,
   VendorRecommendation,
-  MarkupDistribution,
   BidPerformanceReport,
   BidAnalysisInsight,
-  SeasonalBidPattern,
-  BidAnalysisByProjectSize,
   BidAnalysisFilters,
   VendorRecommendationOptions,
-  ExportBidAnalysisRequest,
   VendorBidHistoryResponse,
   BidAccuracyResponse,
   BidTrendResponse,
   VendorRecommendationsResponse,
   BidPerformanceReportResponse,
-  AccuracyRating,
   TrendDirection,
-  ReliabilityLevel,
   getAccuracyRating,
   getReliabilityLevel,
   calculateTrendDirection,
@@ -52,8 +46,6 @@ import type {
   calculateWinRate,
   calculateVariancePercentage,
 } from '@/types/historical-bid-analysis'
-
-import type { CSIDivision } from '@/types/cost-tracking'
 
 // Using extended Database types for tables not yet in generated types
 const db = supabase as any
@@ -398,7 +390,7 @@ export const historicalBidAnalysisApi = {
    */
   async getBidAccuracyAnalysis(
     projectId: string,
-    options?: {
+    _options?: {
       companyId?: string
       includeIncomplete?: boolean
     }
@@ -874,7 +866,7 @@ export const historicalBidAnalysisApi = {
       // Score each vendor
       const recommendations: VendorRecommendation[] = []
 
-      for (const [vendorKey, vendorSubs] of vendorMap.entries()) {
+      for (const [_vendorKey, vendorSubs] of vendorMap.entries()) {
         const totalBids = vendorSubs.length
         const wins = vendorSubs.filter(s => s.is_awarded).length
         const winRate = calculateWinRate(wins, totalBids)

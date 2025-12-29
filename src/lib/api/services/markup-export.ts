@@ -284,7 +284,7 @@ function renderMarkupToContext(
         // Draw arrowhead
         const angle = Math.atan2(endY - startY, endX - startX)
         const headLength = (data.pointerLength || 10) * scale
-        const headWidth = (data.pointerWidth || 10) * scale
+        const _headWidth = (data.pointerWidth || 10) * scale
 
         ctx.beginPath()
         ctx.moveTo(endX, endY)

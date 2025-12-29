@@ -3,7 +3,6 @@
 
 import { ApiErrorClass } from '../errors'
 import { supabase, supabaseUntyped } from '@/lib/supabase'
-import type { QueryOptions } from '../types'
 import {
   connectionNeedsRefresh,
   connectionNeedsReauth,

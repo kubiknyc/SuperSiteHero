@@ -162,7 +162,7 @@ class ResendEdgeFunctionProvider implements EmailProvider {
   }
 
   // Resend doesn't use external templates - we generate HTML locally
-  async sendTemplated(options: SendTemplatedEmailOptions): Promise<EmailResult> {
+  async sendTemplated(_options: SendTemplatedEmailOptions): Promise<EmailResult> {
     logger.warn('[Resend] Template emails should use local HTML generation, not external templates')
     return {
       success: false,

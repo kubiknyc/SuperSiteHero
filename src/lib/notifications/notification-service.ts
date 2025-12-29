@@ -8,7 +8,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
-import { sendEmail, type EmailRecipient } from '@/lib/email/email-service'
+import { sendEmail } from '@/lib/email/email-service'
 import { showPushNotification, isPushSupported, type PushNotificationPayload } from './pushService'
 import {
   generateApprovalRequestEmail,
@@ -626,7 +626,7 @@ export const notificationService = {
   async notifyPortalInvitation(
     recipientEmail: string,
     data: Omit<PortalInvitationEmailData, 'recipientName' | 'recipientEmail'>,
-    options: NotificationOptions = DEFAULT_OPTIONS
+    _options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
     const emailData: PortalInvitationEmailData = {
       ...data,

@@ -604,7 +604,7 @@ export const outlookCalendarApi = {
   /**
    * Get full dashboard data
    */
-  async getDashboard(userId: string, companyId: string): Promise<OutlookSyncDashboard> {
+  async getDashboard(userId: string, _companyId: string): Promise<OutlookSyncDashboard> {
     try {
       const [connection, stats, recentLogs, mappings] = await Promise.all([
         this.getConnectionStatus(userId),

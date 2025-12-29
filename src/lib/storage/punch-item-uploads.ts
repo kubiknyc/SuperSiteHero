@@ -45,7 +45,7 @@ export async function uploadPunchItemPhoto(
   const filePath = `${projectId}/punch-items/${punchItemId}/${fileName}`
 
   // Upload to Supabase Storage
-  const { data, error } = await supabase.storage
+  const { data: _uploadData, error } = await supabase.storage
     .from('project-files')
     .upload(filePath, file, {
       cacheControl: '3600',

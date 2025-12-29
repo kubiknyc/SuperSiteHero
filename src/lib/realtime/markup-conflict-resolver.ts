@@ -259,7 +259,7 @@ export function compressOperations(
 
   const compressed: MarkupOperation[] = [];
 
-  for (const [markupId, ops] of Array.from(byMarkup.entries())) {
+  for (const [_markupId, ops] of Array.from(byMarkup.entries())) {
     if (ops.length === 1) {
       compressed.push(ops[0]);
       continue;

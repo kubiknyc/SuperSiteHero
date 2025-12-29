@@ -3,9 +3,8 @@
 
 import { useMemo, useState, useCallback, useRef, useEffect } from 'react'
 import { format, parseISO } from 'date-fns'
-import { Diamond, AlertTriangle, GripVertical } from 'lucide-react'
-import type { ScheduleItem, GanttZoomLevel, ScheduleItemStatus, GanttConfig } from '@/types/schedule'
-import { TASK_BAR_COLORS, CRITICAL_PATH_COLOR, MILESTONE_COLOR, BASELINE_COLOR } from '@/types/schedule'
+import { Diamond, AlertTriangle } from 'lucide-react'
+import { TASK_BAR_COLORS, CRITICAL_PATH_COLOR, MILESTONE_COLOR, BASELINE_COLOR, type ScheduleItem, type GanttZoomLevel, type ScheduleItemStatus, type GanttConfig } from '@/types/schedule'
 import { getDatePosition, getTaskBarWidth, getColumnWidth } from '../utils/dateUtils'
 import {
   type DragMode,
@@ -18,7 +17,6 @@ import {
   getActiveDragCursor,
   hasDragStarted,
   formatDragFeedback,
-  DRAG_THRESHOLD,
 } from '../utils/dragUtils'
 
 interface GanttTaskBarProps {
@@ -178,7 +176,7 @@ export function GanttTaskBar({
   )
 
   const handleMouseUp = useCallback(
-    (e: MouseEvent) => {
+    (_e: MouseEvent) => {
       if (handleMouseMoveRef.current) {
         document.removeEventListener('mousemove', handleMouseMoveRef.current)
       }

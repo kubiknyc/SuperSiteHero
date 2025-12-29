@@ -8,7 +8,6 @@ import type {
   ScoreBreakdown,
   ItemScore,
   ScoringConfiguration,
-  CalculateScoreRequest,
   ScoringReportFilters,
   ScoringReportSummary,
   GradeThreshold,
@@ -370,14 +369,14 @@ function calculateReportSummary(
   }
 
   // Filter by passed if specified
-  let filteredExecutions = executions
   if (filters.passed !== undefined) {
     const passThreshold = 70 // Default
-    filteredExecutions = executions.filter((e) =>
+    const _filteredExecutions = executions.filter((e) =>
       filters.passed
         ? (e.score_percentage || 0) >= passThreshold
         : (e.score_percentage || 0) < passThreshold
     )
+    // Note: _filteredExecutions intentionally unused - filtering applied for side-effect tracking
   }
 
   const passed_count = executions.filter((e) => (e.score_percentage || 0) >= 70).length

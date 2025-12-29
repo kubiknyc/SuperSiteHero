@@ -701,7 +701,7 @@ export const qualityControlApi = {
         conditional: 'conditional',
       };
 
-      const { data: user } = await supabase.auth.getUser();
+      const { data: _user } = await supabase.auth.getUser();
       const { data, error } = await db
         .from('qc_inspections')
         .update({

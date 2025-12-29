@@ -15,7 +15,6 @@ async function getTensorFlow(): Promise<TensorFlowModule> {
 
 import type {
   ProjectSnapshot,
-  AnalyticsPrediction,
   RiskAssessment,
   BudgetPrediction,
   SchedulePrediction,
@@ -27,9 +26,6 @@ import {
   prepareBudgetInput,
   prepareScheduleInput,
   calculateHeuristicRiskScore,
-  generateFeatureImportance,
-  BUDGET_FEATURES,
-  SCHEDULE_FEATURES,
   DEFAULT_NORMALIZATION_PARAMS,
 } from '../utils/feature-engineering'
 import { logger } from '../../utils/logger';

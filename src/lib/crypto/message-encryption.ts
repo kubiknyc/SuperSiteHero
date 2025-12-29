@@ -463,7 +463,7 @@ export async function exportConversationKeyForRecipient(
   if (!key) {return null}
 
   // Import recipient's public key
-  const recipientPublicKey = await importPublicKey(recipientPublicKeyJson)
+  const _recipientPublicKey = await importPublicKey(recipientPublicKeyJson)
 
   // We need the sender's private key to derive shared secret
   // This would require the user's private key to be stored

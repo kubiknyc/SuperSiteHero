@@ -4,8 +4,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { scheduleApi } from '@/lib/api/services/schedule'
 import type {
-  ScheduleItem,
-  TaskDependency,
   CreateScheduleItemDTO,
   UpdateScheduleItemDTO,
   CreateDependencyDTO,

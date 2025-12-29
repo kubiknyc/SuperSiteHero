@@ -31,14 +31,14 @@ import { logger } from '../../utils/logger';
 /**
  * User data retrieved from the users table
  */
-interface UserCompanyData {
+interface _UserCompanyData {
   company_id: string | null;
 }
 
 /**
  * Daily report data from the database
  */
-interface DailyReportRow {
+interface _DailyReportRow {
   id: string;
   project_id: string;
   weather_condition?: string;
@@ -54,7 +54,7 @@ interface DailyReportRow {
 /**
  * Template data for import operations
  */
-interface ImportedTemplateData {
+interface _ImportedTemplateData {
   name?: string;
   description?: string;
   category?: TemplateCategory;
@@ -67,7 +67,7 @@ interface ImportedTemplateData {
 /**
  * Tags query result row
  */
-interface TagsRow {
+interface _TagsRow {
   tags: string[];
 }
 

@@ -40,7 +40,7 @@ export async function uploadMessageAttachment(
   const filePath = `${conversationId}/${userId}/${fileName}`
 
   // Upload to Supabase Storage
-  const { data, error } = await supabase.storage
+  const { data: _data, error } = await supabase.storage
     .from('message-attachments')
     .upload(filePath, file, {
       cacheControl: '3600',
@@ -159,7 +159,7 @@ export async function uploadVoiceMessage(
   const filePath = `${conversationId}/${user.id}/voice/${fileName}`
 
   // Upload to Supabase Storage
-  const { data, error } = await supabase.storage
+  const { data: _uploadData, error } = await supabase.storage
     .from('message-attachments')
     .upload(filePath, audioBlob, {
       contentType: audioBlob.type,

@@ -8,7 +8,7 @@
  * 4. Critical path: Tasks with zero float
  */
 
-import { differenceInDays, addDays, parseISO, max, min } from 'date-fns'
+import { differenceInDays, addDays, parseISO } from 'date-fns'
 import type { GanttTask, TaskDependency, DependencyType } from '@/types/schedule'
 import { logger } from '../../../lib/utils/logger';
 

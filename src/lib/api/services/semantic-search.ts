@@ -4,8 +4,8 @@
  * Uses the existing AI service for query expansion, NOT vector embeddings.
  */
 
-import { supabase, supabaseUntyped } from '@/lib/supabase'
-import { aiService, aiUsageApi } from './ai-provider'
+import { supabaseUntyped } from '@/lib/supabase'
+import { aiService } from './ai-provider'
 import { logger } from '@/lib/utils/logger'
 
 // ============================================================================

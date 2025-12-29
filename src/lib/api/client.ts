@@ -175,7 +175,7 @@ class ApiClient {
    * Build a Supabase query with all options applied
    * @private
    */
-  private buildQuery<T>(
+  private buildQuery(
     table: string,
     options?: QueryOptions & { select?: string; count?: boolean }
   ) {

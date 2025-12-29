@@ -514,7 +514,7 @@ export async function duplicateTemplate(
   const original = await getPhotoTemplate(templateId);
   if (!original) {throw new Error('Template not found');}
 
-  const { id, createdAt, updatedAt, createdBy, deletedAt, ...rest } = original;
+  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, createdBy: _createdBy, deletedAt: _deletedAt, ...rest } = original;
 
   return createPhotoTemplate({
     ...rest,

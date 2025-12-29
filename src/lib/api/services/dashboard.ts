@@ -13,7 +13,6 @@ import type {
   AddWidgetRequest,
   UpdateWidgetRequest,
   WidgetPosition,
-  WidgetConfig,
 } from '@/types/dashboard'
 import { logger } from '../../utils/logger';
 

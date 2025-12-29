@@ -30,7 +30,6 @@ import type {
   LienWaiverSigningConfig,
 } from '@/types/docusign'
 import {
-  connectionNeedsRefresh,
   getDSAuthorizeUrl,
   getDSTokenUrl,
   getDSUserInfoUrl,
@@ -38,19 +37,7 @@ import {
   DS_API_URLS,
 } from '@/types/docusign'
 import type {
-  DocuSignOAuthStateRow,
-  DocuSignOAuthStateInsert,
   DocuSignConnectionRow,
-  DocuSignConnectionInsert,
-  DocuSignConnectionUpdate,
-  DocuSignEnvelopeRow,
-  DocuSignEnvelopeInsert,
-  DocuSignEnvelopeUpdate,
-  DocuSignEnvelopeRecipientRow,
-  DocuSignEnvelopeRecipientInsert,
-  DocuSignEnvelopeRecipientUpdate,
-  DocuSignEnvelopeEventInsert,
-  DocuSignRecipientStatus,
 } from '@/types/database-extensions'
 import { logger } from '../../utils/logger'
 

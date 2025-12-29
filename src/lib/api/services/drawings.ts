@@ -562,7 +562,7 @@ export async function duplicateDrawing(drawingId: string, newNumber: string): Pr
   const original = await getDrawing(drawingId);
   if (!original) {throw new Error('Drawing not found');}
 
-  const { id, createdAt, updatedAt, createdBy, deletedAt, currentRevision, currentRevisionId, currentRevisionDate, ...rest } = original;
+  const { id: _id, createdAt: _createdAt, updatedAt: _updatedAt, createdBy: _createdBy, deletedAt: _deletedAt, currentRevision: _currentRevision, currentRevisionId: _currentRevisionId, currentRevisionDate: _currentRevisionDate, ...rest } = original;
 
   return createDrawing({
     ...rest,

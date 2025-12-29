@@ -214,11 +214,11 @@ export async function mergeModelGeometries(object: any): Promise<void> {
   });
 
   // Merge groups with more than one mesh
-  meshesByMaterial.forEach((meshes, material) => {
+  meshesByMaterial.forEach((meshes, _material) => {
     if (meshes.length > 1 && meshes.length < 100) {
       // Limit to prevent huge merges
       try {
-        const geometries = meshes.map((mesh) => {
+        const _geometries = meshes.map((mesh) => {
           const geometry = mesh.geometry.clone();
           mesh.updateMatrixWorld();
           geometry.applyMatrix4(mesh.matrixWorld);

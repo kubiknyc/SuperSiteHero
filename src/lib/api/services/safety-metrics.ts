@@ -17,7 +17,6 @@ import type {
   SafetyMetrics,
   SafetyMetricsSnapshot,
   SafetyMetricsTrendPoint,
-  SafetyScorecard,
   IndustrySafetyBenchmark,
   EMRRecord,
   EMRRecordInput,

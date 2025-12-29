@@ -2,7 +2,7 @@
 // Custom hook for handling API calls with error handling and notifications
 
 import { useCallback } from 'react'
-import { ApiErrorClass, getErrorMessage } from '@/lib/api/errors'
+import { ApiErrorClass } from '@/lib/api/errors'
 import { useToast } from '@/lib/notifications/ToastContext'
 
 /**

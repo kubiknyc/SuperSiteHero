@@ -218,7 +218,7 @@ export const maintenanceSchedulesApi = {
    * Record that maintenance was performed
    */
   async recordMaintenance(input: RecordMaintenanceInput): Promise<void> {
-    const { schedule_id, performed_at, performed_hours, notes } = input
+    const { schedule_id, performed_at, performed_hours, notes: _notes } = input
 
     // Get the schedule to calculate next due
     const schedule = await this.getSchedule(schedule_id)

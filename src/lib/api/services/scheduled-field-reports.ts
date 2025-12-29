@@ -17,7 +17,6 @@ import type {
   GeneratedFieldReportWithDetails,
   CreateScheduledFieldReportInput,
   UpdateScheduledFieldReportInput,
-  GenerateReportInput,
   DailySummaryData,
   WeeklyProgressData,
   FieldReportType,

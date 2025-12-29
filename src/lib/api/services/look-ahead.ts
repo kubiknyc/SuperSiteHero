@@ -19,7 +19,6 @@ import type {
   LookAheadActivityFilters,
   PPCMetrics,
   WeekRange,
-  VarianceReason,
 } from '@/types/look-ahead'
 import { calculateWeekRanges } from '@/types/look-ahead'
 
@@ -51,7 +50,7 @@ type DbLookAheadSnapshot = {
   blocked_activities?: number
   [key: string]: unknown
 }
-type DbLookAheadTemplate = {
+type _DbLookAheadTemplate = {
   id: string
   template_name: string
   description?: string
@@ -755,7 +754,7 @@ export async function createLookAheadSnapshot(
   }
 
   // Get constraint counts
-  const activityIds = (activities || []).map(() => null) // We need actual IDs
+  const _activityIds = (activities || []).map(() => null) // We need actual IDs
   const { data: activityData } = await supabaseUntyped
     .from('look_ahead_activities')
     .select('id')

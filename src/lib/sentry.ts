@@ -70,7 +70,7 @@ export function initSentry() {
     replaysOnErrorSampleRate: 1.0, // Always capture replay on error
 
     // Filter out sensitive data
-    beforeSend(event, hint) {
+    beforeSend(event, _hint) {
       // Don't send events in development unless explicitly enabled
       if (ENVIRONMENT === 'development' && !import.meta.env.VITE_SENTRY_DEBUG) {
         return null;

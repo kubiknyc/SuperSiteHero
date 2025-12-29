@@ -19,7 +19,6 @@ import type {
   SendMessageDTO,
   ConversationFilters,
   MessageFilters,
-  ConversationType,
 } from '@/types/messaging'
 import { extractMentionedUserIds } from '@/types/messaging'
 import { sendMentionNotifications } from '@/features/messaging/utils/mention-notifications'

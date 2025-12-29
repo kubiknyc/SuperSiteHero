@@ -389,7 +389,7 @@ export class ConflictResolver {
   static getRecommendedStrategy(
     localData: Record<string, unknown>,
     serverData: Record<string, unknown>,
-    metadata: ConflictMetadata
+    _metadata: ConflictMetadata
   ): ResolutionStrategy {
     const diffs = this.detectFieldDiffs(localData, serverData);
     const conflicts = diffs.filter((d) => !d.canAutoMerge);

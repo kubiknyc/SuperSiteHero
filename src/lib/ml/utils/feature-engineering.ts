@@ -130,7 +130,7 @@ export function extractBudgetFeatures(
   projectDurationDays: number = 365
 ): Record<string, number> {
   const budget = snapshot.budget || 1 // Avoid division by zero
-  const contractValue = snapshot.contract_value || budget
+  const _contractValue = snapshot.contract_value || budget
 
   // Calculate days since start
   const startDate = snapshot.planned_start_date
@@ -163,7 +163,7 @@ export function extractScheduleFeatures(
   snapshot: ProjectSnapshot,
   _projectDurationDays: number = 365
 ): Record<string, number> {
-  const totalScheduleItems = snapshot.schedule_items_total || 1
+  const _totalScheduleItems = snapshot.schedule_items_total || 1
   const totalRfis = (snapshot.open_rfis || 0) + (snapshot.overdue_rfis || 0) + 10 // Estimate closed
 
   return {

@@ -15,8 +15,6 @@ import type {
   CompleteGCalConnectionDTO,
   UpdateGCalConnectionDTO,
   SyncEventDTO,
-  connectionNeedsRefresh,
-  connectionNeedsReconnect,
 } from '@/types/google-calendar';
 import { logger } from '../../utils/logger';
 

@@ -193,7 +193,7 @@ export async function compressVideo(
         const canvasStream = canvas.captureStream(30)
 
         // Try to get audio track from original video
-        const audioTrack: MediaStreamTrack | null = null
+        const _audioTrack: MediaStreamTrack | null = null
 
         // Note: Getting audio from video element is complex in browsers
         // For full audio support, consider Web Audio API or server-side processing
@@ -218,7 +218,7 @@ export async function compressVideo(
           resolve(blob)
         }
 
-        recorder.onerror = (e) => {
+        recorder.onerror = (_e) => {
           URL.revokeObjectURL(video.src)
           reject(new Error('Recording failed'))
         }

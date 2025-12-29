@@ -230,16 +230,12 @@ export function snapToDay(date: Date): Date {
 export function validateDragResult(
   result: DragResult,
   task: GanttTask,
-  config: GanttConfig
+  _config: GanttConfig
 ): { valid: boolean; error?: string } {
   // Check minimum duration
   if (result.newDuration < 1) {
     return { valid: false, error: 'Duration must be at least 1 day' }
   }
-
-  // Check date range constraints if configured
-  const newStart = parseISO(result.newStartDate)
-  const newFinish = parseISO(result.newFinishDate)
 
   // Milestones should have 0 duration
   if (task.is_milestone && result.newDuration !== 0) {

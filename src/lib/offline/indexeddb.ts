@@ -86,7 +86,7 @@ export async function initDatabase(): Promise<OfflineDB> {
 
   try {
     dbInstance = await openDB<any>(DB_NAME, DB_VERSION, {
-      upgrade(db, oldVersion, newVersion, transaction) {
+      upgrade(db, oldVersion, newVersion, _transaction) {
         logger.log(`Upgrading database from version ${oldVersion} to ${newVersion}`);
 
         // Create cachedData store

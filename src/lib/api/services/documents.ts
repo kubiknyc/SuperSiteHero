@@ -423,7 +423,7 @@ export const documentsApi = {
       }
 
       // Get all versions to find current latest
-      const versionDoc = await apiClient.selectOne<Document>('documents', versionId)
+      const _versionDoc = await apiClient.selectOne<Document>('documents', versionId)
       const allVersions = await this.getDocumentVersions(versionId)
 
       // Mark current latest as superseded

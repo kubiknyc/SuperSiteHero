@@ -13,16 +13,16 @@ import { SubmittalsList } from '@/features/submittals/components'
 import { SubcontractorPortalAccessList } from '@/features/subcontractor-portal/components'
 import { Button } from '@/components/ui/button'
 import { PunchListsProjectView } from '@/features/punch-lists/components'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
+
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate, Download, CheckCircle, WifiOff } from 'lucide-react'
+import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate, CheckCircle, WifiOff } from 'lucide-react'
 import { format } from 'date-fns'
 import { SaveAsTemplateDialog } from '@/features/project-templates/components'
 import { useAuth } from '@/hooks/useAuth'
 import { useDataPrefetch, formatRelativeTime } from '@/hooks/useDataPrefetch'
-import { Progress } from '@/components/ui/progress'
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export function ProjectDetailPage() {
@@ -41,7 +41,7 @@ export function ProjectDetailPage() {
     isPrefetched,
     prefetchedAt,
     startPrefetch,
-    error: prefetchError,
+    error: _prefetchError,
   } = useDataPrefetch(projectId || '')
 
   // Early return after all hooks are called

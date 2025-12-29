@@ -17,7 +17,6 @@ import type {
   DrawingPackageActivity,
   DrawingPackageStatistics,
   DrawingPackageFilters,
-  DrawingPackageType,
 } from '../../../types/drawing';
 
 type AnySupabaseQuery = any;

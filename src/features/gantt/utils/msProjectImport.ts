@@ -6,7 +6,7 @@
  */
 
 import { format, parseISO, differenceInDays } from 'date-fns'
-import type { CreateScheduleItemDTO, DependencyType, CreateDependencyDTO } from '@/types/schedule'
+import type { CreateScheduleItemDTO, DependencyType } from '@/types/schedule'
 
 export interface MSProjectTask {
   UID: string
@@ -208,7 +208,7 @@ export function parseMSProjectXML(xmlContent: string): ParsedSchedule {
     })
 
     // Second pass: convert to our format and resolve dependencies
-    taskData.forEach((msTask, index) => {
+    taskData.forEach((msTask, _index) => {
       // Skip summary tasks (they're just groupings)
       if (msTask.Summary) {
         warnings.push(`Skipped summary task: ${msTask.Name}`)

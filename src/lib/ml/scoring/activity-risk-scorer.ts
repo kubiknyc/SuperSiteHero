@@ -15,7 +15,6 @@ import type {
   ActivityRiskPrediction,
   RiskFactor,
   RiskAlert,
-  RiskAlertType,
   RiskAlertSeverity,
   RiskAnalysisRequest,
   RiskAnalysisResponse,
@@ -358,7 +357,7 @@ export const activityRiskScorer = {
   /**
    * Calculate predecessor completion score
    */
-  async calculatePredecessorScore(activity: any): Promise<number> {
+  async calculatePredecessorScore(_activity: any): Promise<number> {
     // Would query predecessor activities and check their status
     // For now, return 0 (no predecessor risk)
     return 0

@@ -202,7 +202,7 @@ function mmToInches(mm: number): number {
 }
 
 // Convert m/s to mph
-function msToMph(ms: number): number {
+function _msToMph(ms: number): number {
   return Math.round(ms * 2.237);
 }
 

@@ -18,7 +18,6 @@ import type {
   SafetyBenchmark,
   DailyTrendPoint,
   LocationHeatMapData,
-  TimePatternData,
   RootCauseParetoData,
   FrequencySpike,
   LocationHotspot,
@@ -638,8 +637,8 @@ export const nearMissAnalyticsApi = {
   async _detectLocationHotspotsFallback(
     companyId: string,
     projectId?: string,
-    minIncidents = 3,
-    days = 30
+    _minIncidents = 3,
+    _days = 30
   ): Promise<LocationHotspot[]> {
     const heatMapData = await this.getLocationHeatMap({
       company_id: companyId,
