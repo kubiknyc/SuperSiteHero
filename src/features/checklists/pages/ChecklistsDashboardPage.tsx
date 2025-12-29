@@ -199,7 +199,7 @@ export function ChecklistsDashboardPage() {
       }
     })
     const templateUsage = Array.from(templateCounts.entries())
-      .map(([id, { name, count }]) => ({ name, count }))
+      .map(([_id, { name, count }]) => ({ name, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10)
 

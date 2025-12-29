@@ -111,7 +111,7 @@ export function useCreateDailyReportV2() {
   return useMutation({
     mutationFn: (request: CreateDailyReportV2Request) =>
       dailyReportsV2Api.createReport(request),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: dailyReportV2Keys.lists() });
       toast.success('Daily report created');
     },

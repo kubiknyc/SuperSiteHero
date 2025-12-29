@@ -7,7 +7,6 @@ import { checklistsApi } from '@/lib/api/services/checklists'
 import { useChecklistEscalation } from './useChecklistEscalation'
 import type {
   ChecklistExecution,
-  ChecklistExecutionWithResponses,
   CreateChecklistExecutionDTO,
   ChecklistFilters,
 } from '@/types/checklists'
@@ -159,7 +158,8 @@ export function useSubmitExecutionWithEscalation() {
         const failurePercentage = execution.score_total > 0
           ? (execution.score_fail / execution.score_total) * 100
           : 0
-        const severity = calculateSeverityLevel(failurePercentage)
+        // Calculate severity for potential future use (currently unused)
+        const _severity = calculateSeverityLevel(failurePercentage)
 
         // Trigger escalation
         try {

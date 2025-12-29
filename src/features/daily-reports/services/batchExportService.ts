@@ -104,7 +104,7 @@ export async function fetchRelatedDataForReports(reportIds: string[]): Promise<R
 // Export to CSV format
 export function exportToCSV(
   reports: ReportData[],
-  relatedData: RelatedData
+  _relatedData: RelatedData
 ): string {
   const headers = [
     'Report Date',

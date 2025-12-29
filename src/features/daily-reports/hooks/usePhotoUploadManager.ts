@@ -166,7 +166,7 @@ export function usePhotoUploadManager(): UsePhotoUploadManagerReturn {
         const storagePath = `${projectId}/${reportDate}/${reportId}/${id}.${extension}`;
 
         // Upload main image
-        const { data, error } = await supabase.storage
+        const { data: _data, error } = await supabase.storage
           .from(BUCKET_NAME)
           .upload(storagePath, fileToUpload, {
             cacheControl: '3600',

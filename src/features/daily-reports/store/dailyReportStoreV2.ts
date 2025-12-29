@@ -10,7 +10,6 @@ import type {
   DailyReportV2,
   FormMode,
   ShiftType,
-  ReportStatus,
   WorkforceEntryV2,
   EquipmentEntryV2,
   DelayEntry,

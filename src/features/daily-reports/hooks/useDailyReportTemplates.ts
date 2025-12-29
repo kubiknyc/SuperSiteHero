@@ -18,7 +18,6 @@ import type {
   CopyTemplateRequest,
   TemplateFilters,
   TemplateScope,
-  TemplateWithStats,
 } from '@/types/daily-reports-v2';
 
 // =============================================

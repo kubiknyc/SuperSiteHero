@@ -10,7 +10,6 @@ import {
   fetchWeatherData,
   getCurrentLocation,
 } from '../services/weatherService'
-import type { WeatherHistory } from '@/types/weather'
 import { getWeatherIcon } from '@/types/weather'
 import { logger } from '../../../lib/utils/logger';
 
@@ -72,7 +71,7 @@ export function useWeatherForDate(
   coordinates?: { latitude: number; longitude: number }
 ) {
   const { user, userProfile } = useAuth()
-  const queryClient = useQueryClient()
+  const _queryClient = useQueryClient()
 
   return useQuery({
     queryKey: weatherKeys.date(projectId!, date!),

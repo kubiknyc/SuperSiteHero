@@ -13,7 +13,6 @@ import { Label } from '@/components/ui/label';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -34,7 +33,6 @@ import {
   Users,
   Package,
   Truck,
-  FileText,
   Calculator,
 } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';

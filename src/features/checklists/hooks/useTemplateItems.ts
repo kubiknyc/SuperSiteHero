@@ -88,7 +88,7 @@ export function useDeleteTemplateItem() {
   return useMutation({
     mutationFn: ({
       itemId,
-      templateId,
+      templateId: _templateId,
     }: {
       itemId: string
       templateId: string
@@ -121,7 +121,7 @@ export function useReorderTemplateItems() {
   return useMutation({
     mutationFn: ({
       items,
-      templateId,
+      templateId: _templateId,
     }: {
       items: { id: string; sort_order: number }[]
       templateId: string

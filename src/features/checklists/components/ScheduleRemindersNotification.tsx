@@ -173,7 +173,7 @@ export function ScheduleRemindersNotification({
             {/* Upcoming schedules */}
             {upcoming.map((schedule) => {
               const dueDate = new Date(schedule.next_execution_date || schedule.start_date)
-              const hoursUntil = getHoursUntilDue(dueDate)
+              const _hoursUntil = getHoursUntilDue(dueDate)
 
               return (
                 <div

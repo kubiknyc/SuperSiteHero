@@ -16,7 +16,7 @@ import {
   retryFailedPhotos,
 } from '@/lib/offline/photo-queue'
 import { uploadChecklistPhoto } from '../utils/storageUtils'
-import type { QueuedPhoto, PhotoMetadata } from '@/types/offline'
+import type { PhotoMetadata } from '@/types/offline'
 import toast from 'react-hot-toast'
 import { logger } from '@/lib/utils/logger'
 
@@ -24,7 +24,7 @@ import { logger } from '@/lib/utils/logger'
  * Hook to manage photo upload queue with automatic sync
  */
 export function usePhotoQueue(responseId?: string) {
-  const queryClient = useQueryClient()
+  const _queryClient = useQueryClient()
   const [isOnline, setIsOnline] = useState(navigator.onLine)
   const [isProcessing, setIsProcessing] = useState(false)
 

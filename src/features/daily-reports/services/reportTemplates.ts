@@ -177,8 +177,8 @@ export function createTemplateFromReport(
     weather_defaults: {
       weather_condition: draft.weather_condition,
     },
-    workforce_entries: workforce.map(({ id, ...entry }) => entry),
-    equipment_entries: equipment.map(({ id, ...entry }) => entry),
+    workforce_entries: workforce.map(({ id: _id, ...entry }) => entry),
+    equipment_entries: equipment.map(({ id: _id, ...entry }) => entry),
     default_notes: {
       work_planned: draft.work_planned,
       observations: draft.observations,

@@ -38,8 +38,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { useVideoRecorder, formatVideoDuration } from '@/hooks/useVideoRecorder'
-import { Capacitor } from '@capacitor/core'
-import { Media } from '@capacitor-community/media'
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -117,10 +115,8 @@ export function VideoCapture({
   const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null)
   const [recordedDuration, setRecordedDuration] = useState(0)
   const [quality, setQuality] = useState<VideoQuality>(defaultQuality)
-  const [isNativeCapture, setIsNativeCapture] = useState(false)
 
   const qualitySettings = QUALITY_PRESETS[quality]
-  const isNativePlatform = Capacitor.isNativePlatform()
 
   const {
     isRecording,
@@ -155,15 +151,6 @@ export function VideoCapture({
     onError,
   })
 
-  // Check if we should use native capture
-  useEffect(() => {
-    if (isNativePlatform && preferNativeCapture) {
-      setTimeout(() => {
-        setIsNativeCapture(true)
-      }, 0)
-    }
-  }, [isNativePlatform, preferNativeCapture])
-
   // Attach preview stream to video element
   useEffect(() => {
     if (videoRef.current && previewStream) {
@@ -175,72 +162,23 @@ export function VideoCapture({
     }
   }, [previewStream])
 
-  // Auto-start preview on mount (only for web)
+  // Auto-start preview on mount
   useEffect(() => {
-    if (autoStartPreview && !previewStream && !isInitializing && !isNativeCapture) {
+    if (autoStartPreview && !previewStream && !isInitializing) {
       initializePreview()
     }
 
     return () => {
-      if (!isNativeCapture) {
-        stopPreview()
-      }
+      stopPreview()
     }
-  }, [autoStartPreview, isNativeCapture])
-
-  // Handle native video capture (iOS/Android)
-  const handleNativeCapture = useCallback(async () => {
-    try {
-      // Use Capacitor Media plugin for native video capture
-      const result = await Media.createMedia({
-        type: 'video',
-      })
-
-      if (result.path) {
-        // Fetch the video file and convert to blob
-        const response = await fetch(result.path)
-        const blob = await response.blob()
-
-        // Get duration from video
-        const video = document.createElement('video')
-        video.preload = 'metadata'
-        video.src = result.path
-
-        await new Promise<void>((resolve) => {
-          video.onloadedmetadata = () => {
-            setTimeout(() => {
-              setRecordedDuration(Math.round(video.duration))
-            }, 0)
-            resolve()
-          }
-        })
-
-        setTimeout(() => {
-          setRecordedBlob(blob)
-          setRecordingComplete(true)
-        }, 0)
-      }
-    } catch (err) {
-      logger.error('Native video capture failed:', err)
-      // Fall back to web capture
-      setIsNativeCapture(false)
-      if (autoStartPreview) {
-        initializePreview()
-      }
-      onError?.(err instanceof Error ? err : new Error('Native video capture failed'))
-    }
-  }, [autoStartPreview, initializePreview, onError])
+  }, [autoStartPreview])
 
   const handleStartRecording = useCallback(async () => {
-    if (isNativeCapture) {
-      await handleNativeCapture()
-    } else {
-      if (!previewStream) {
-        await initializePreview()
-      }
-      startRecording()
+    if (!previewStream) {
+      await initializePreview()
     }
-  }, [isNativeCapture, previewStream, initializePreview, startRecording, handleNativeCapture])
+    startRecording()
+  }, [previewStream, initializePreview, startRecording])
 
   const handleStopRecording = useCallback(() => {
     stopRecording()
@@ -256,32 +194,28 @@ export function VideoCapture({
     setRecordingComplete(false)
     setRecordedBlob(null)
     setRecordedDuration(0)
-    if (!isNativeCapture) {
-      initializePreview()
-    }
-  }, [initializePreview, isNativeCapture])
+    initializePreview()
+  }, [initializePreview])
 
   const handleCancel = useCallback(() => {
     cancelRecording()
-    if (!isNativeCapture) {
-      stopPreview()
-    }
+    stopPreview()
     onCancel?.()
-  }, [cancelRecording, stopPreview, onCancel, isNativeCapture])
+  }, [cancelRecording, stopPreview, onCancel])
 
   const handleQualityChange = useCallback((newQuality: VideoQuality) => {
     if (!isRecording) {
       setQuality(newQuality)
       // Reinitialize preview with new quality
-      if (previewStream && !isNativeCapture) {
+      if (previewStream) {
         stopPreview()
         setTimeout(() => initializePreview(), 100)
       }
     }
-  }, [isRecording, previewStream, isNativeCapture, stopPreview, initializePreview])
+  }, [isRecording, previewStream, stopPreview, initializePreview])
 
   // Not supported message
-  if (!isSupported && !isNativeCapture) {
+  if (!isSupported) {
     return (
       <div className={cn('flex flex-col items-center justify-center p-8', className)}>
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
@@ -294,8 +228,8 @@ export function VideoCapture({
     )
   }
 
-  // Permission request screen (web only)
-  if (!isNativeCapture && hasPermission === false) {
+  // Permission request screen
+  if (hasPermission === false) {
     return (
       <div className={cn('flex flex-col items-center justify-center p-8', className)}>
         <Camera className="h-12 w-12 text-muted-foreground mb-4" />
@@ -356,81 +290,6 @@ export function VideoCapture({
             )}
           </p>
         </div>
-      </div>
-    )
-  }
-
-  // Native capture mode - show capture button
-  if (isNativeCapture && !recordingComplete) {
-    return (
-      <div className={cn('relative bg-black rounded-lg overflow-hidden flex flex-col items-center justify-center min-h-[400px]', className)}>
-        <Video className="h-16 w-16 text-white/60 mb-6" />
-        <h3 className="text-white text-lg font-semibold mb-2 heading-subsection">Record Video</h3>
-        <p className="text-white/60 text-center mb-6 px-4">
-          Tap the button below to open your camera and record a video
-        </p>
-
-        {/* Quality selector for native */}
-        {showQualitySelector && (
-          <div className="mb-6">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="bg-card/10 border-white/20 text-white hover:bg-card/20">
-                  <Settings className="h-4 w-4 mr-2" />
-                  {QUALITY_PRESETS[quality].label}
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuLabel>Video Quality</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {(Object.keys(QUALITY_PRESETS) as VideoQuality[]).map((q) => (
-                  <DropdownMenuItem
-                    key={q}
-                    onClick={() => handleQualityChange(q)}
-                    className={cn(quality === q && 'bg-accent')}
-                  >
-                    {QUALITY_PRESETS[q].label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
-
-        <button
-          onClick={handleStartRecording}
-          className="w-20 h-20 rounded-full bg-red-500 hover:bg-error flex items-center justify-center border-4 border-white transition-colors"
-        >
-          <Video className="h-8 w-8 text-white" />
-        </button>
-
-        <p className="text-white/50 text-sm mt-4">
-          Max duration: {formatVideoDuration(maxDuration)}
-        </p>
-
-        {/* Cancel button */}
-        {showCancel && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCancel}
-            className="absolute top-4 right-4 text-white hover:bg-card/20"
-          >
-            <X className="h-6 w-6" />
-          </Button>
-        )}
-
-        {/* Switch to web capture */}
-        <Button
-          variant="link"
-          className="text-white/50 hover:text-white mt-4"
-          onClick={() => {
-            setIsNativeCapture(false)
-            initializePreview()
-          }}
-        >
-          Use in-browser recording instead
-        </Button>
       </div>
     )
   }

@@ -24,7 +24,7 @@ export const STORAGE_BUCKETS = {
 export function getChecklistStoragePath(
   checklistId: string,
   responseId: string,
-  type: 'photo' | 'signature'
+  _type: 'photo' | 'signature'
 ): string {
   return `${checklistId}/${responseId}`
 }

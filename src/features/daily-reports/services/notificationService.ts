@@ -5,7 +5,7 @@
 
 import { supabase } from '@/lib/supabase';
 import type { DailyReportV2, ReportStatus } from '@/types/daily-reports-v2';
-import { workflowEngine, type NotificationType, type NotificationConfig } from './workflowEngine';
+import { workflowEngine, type NotificationType } from './workflowEngine';
 import { logger } from '../../../lib/utils/logger';
 
 

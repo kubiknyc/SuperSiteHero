@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   Plus,
   Search,
@@ -51,8 +51,8 @@ export function SchedulesPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all')
   const [showScheduleDialog, setShowScheduleDialog] = useState(false)
   const [editingSchedule, setEditingSchedule] = useState<ChecklistSchedule | null>(null)
-  const [selectedTemplateId, setSelectedTemplateId] = useState('')
-  const [selectedProjectId, setSelectedProjectId] = useState('')
+  const [selectedTemplateId, _setSelectedTemplateId] = useState('')
+  const [selectedProjectId, _setSelectedProjectId] = useState('')
 
   // Data hooks
   const { data: allSchedules = [], isLoading } = useSchedules()

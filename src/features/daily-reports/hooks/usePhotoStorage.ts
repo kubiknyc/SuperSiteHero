@@ -2,7 +2,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { DailyReportPhoto } from '../types/photo'
 
 const STORAGE_BUCKET = 'daily-report-photos'
 
@@ -26,7 +25,7 @@ export function useUploadPhoto() {
     mutationFn: async ({
       file,
       reportId,
-      onProgress,
+      onProgress: _onProgress,
     }: {
       file: File
       reportId: string

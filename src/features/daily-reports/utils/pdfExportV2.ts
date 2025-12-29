@@ -88,7 +88,7 @@ function addSectionHeader(doc: jsPDF, title: string, yPos: number, color: [numbe
   return yPos + 12;
 }
 
-function addSubsectionHeader(doc: jsPDF, title: string, yPos: number): number {
+function _addSubsectionHeader(doc: jsPDF, title: string, yPos: number): number {
   yPos = checkPageBreak(doc, yPos, 12);
 
   doc.setFontSize(10);

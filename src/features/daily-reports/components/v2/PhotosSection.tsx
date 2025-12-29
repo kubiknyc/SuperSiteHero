@@ -29,14 +29,12 @@ import {
   Camera,
   ChevronDown,
   ChevronUp,
-  Plus,
   Trash2,
   Pencil,
   Image,
   Upload,
   MapPin,
   Tag,
-  X,
   Loader2,
   AlertCircle,
   CheckCircle2,
@@ -92,7 +90,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   } = useGeolocation();
 
   // Track pending processed photos (before actual upload)
-  const [pendingPhotos, setPendingPhotos] = useState<Map<string, ProcessedPhoto>>(new Map());
+  const [_pendingPhotos, setPendingPhotos] = useState<Map<string, ProcessedPhoto>>(new Map());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);

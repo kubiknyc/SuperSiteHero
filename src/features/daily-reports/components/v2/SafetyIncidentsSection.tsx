@@ -1100,7 +1100,7 @@ export function SafetyIncidentsSection({ expanded, onToggle }: SafetyIncidentsSe
               { key: 'injury', label: 'Injury Details', icon: User },
               { key: 'investigation', label: 'Investigation', icon: FileText },
               { key: 'notifications', label: 'Notifications', icon: Bell },
-            ].map((stage, index) => (
+            ].map((stage, _index) => (
               <button
                 key={stage.key}
                 type="button"

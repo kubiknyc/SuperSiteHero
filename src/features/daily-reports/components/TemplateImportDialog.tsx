@@ -37,7 +37,6 @@ import {
   User,
   TrendingUp,
   Loader2,
-  AlertCircle,
   ChevronRight,
 } from 'lucide-react';
 import {

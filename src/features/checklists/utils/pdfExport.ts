@@ -15,7 +15,7 @@ interface ScoreSummary {
   pass_percentage: number
 }
 
-interface ChecklistPDFData {
+interface _ChecklistPDFData {
   execution: ChecklistExecutionWithResponses
   templateItems: ChecklistTemplateItem[]
   score: ScoreSummary | null
@@ -154,7 +154,7 @@ export async function generateChecklistPDF(
 
   // Render each section
   const sections = Array.from(sectionMap.entries())
-  sections.forEach(([sectionName, items], sectionIndex) => {
+  sections.forEach(([sectionName, items], _sectionIndex) => {
     // Check if we need a new page
     if (yPosition > 250) {
       doc.addPage()

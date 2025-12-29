@@ -38,7 +38,6 @@ type CategoryFilter = 'all' | 'Pre-Pour' | 'Framing' | 'MEP' | 'Finishes' | 'Saf
  */
 export function TemplatesPage() {
   const navigate = useNavigate()
-  const { user } = useAuth()
 
   // State management
   const [viewMode, setViewMode] = useState<ViewMode>('grid')

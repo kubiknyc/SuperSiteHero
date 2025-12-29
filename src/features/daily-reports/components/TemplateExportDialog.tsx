@@ -31,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   FileText,
   Users,
@@ -96,7 +95,7 @@ export function TemplateExportDialog({
   open,
   onOpenChange,
   reportId,
-  projectId,
+  projectId: _projectId,
   projectName,
   workforceCount = 0,
   equipmentCount = 0,

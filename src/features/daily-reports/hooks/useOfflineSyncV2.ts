@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useCallback, useRef } from 'react';
-import { useDailyReportStoreV2, type SyncStatus, type ConflictInfo } from '../store/dailyReportStoreV2';
+import { useDailyReportStoreV2, type ConflictInfo } from '../store/dailyReportStoreV2';
 import { saveReportWithAllData } from '@/lib/api/services/daily-reports-v2';
 import { supabase } from '@/lib/supabase';
 

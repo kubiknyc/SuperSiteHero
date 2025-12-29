@@ -50,7 +50,7 @@ export function ExecutionsPage() {
   const { data: projects } = useMyProjects()
 
   // Selected project
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const [selectedProjectId, _setSelectedProjectId] = useState<string>('')
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
 
   // State management
