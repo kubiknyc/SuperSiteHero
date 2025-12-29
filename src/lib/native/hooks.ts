@@ -6,12 +6,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Network, ConnectionStatus } from '@capacitor/network';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
-import { Share } from '@capacitor/share';
 import { App } from '@capacitor/app';
-import { StatusBar, Style } from '@capacitor/status-bar';
 import { Keyboard } from '@capacitor/keyboard';
 import { Geolocation, Position } from '@capacitor/geolocation';
-import { isNative, isPluginAvailable, getPlatform } from './platform';
+import { isNative, isPluginAvailable } from './platform';
 import { takePhoto, pickPhotos, CapturedPhoto, CameraOptions } from './camera';
 
 /**
@@ -124,10 +122,10 @@ export function useHaptics() {
 }
 
 /**
- * Hook for sharing content
+ * Hook for sharing content (uses Web Share API only)
  */
 export function useShare() {
-  const isAvailable = isPluginAvailable('Share');
+  const isAvailable = typeof navigator !== 'undefined' && 'share' in navigator;
 
   const share = useCallback(async (data: {
     title?: string;
@@ -135,23 +133,18 @@ export function useShare() {
     url?: string;
     dialogTitle?: string;
   }) => {
-    if (!isAvailable) {
-      // Fallback to Web Share API
-      if (navigator.share) {
+    // Use Web Share API
+    if (navigator.share) {
+      try {
         await navigator.share(data);
         return true;
+      } catch (_error) {
+        // User cancelled or error
+        return false;
       }
-      return false;
     }
-
-    try {
-      await Share.share(data);
-      return true;
-    } catch (_error) {
-      // User cancelled
-      return false;
-    }
-  }, [isAvailable]);
+    return false;
+  }, []);
 
   return { share, isAvailable };
 }
@@ -273,34 +266,27 @@ export function useAppState() {
 }
 
 /**
- * Hook for status bar customization
+ * Hook for status bar customization (no-op when plugin not available)
  */
 export function useStatusBar() {
-  const isAvailable = isNative() && isPluginAvailable('StatusBar');
+  // Status bar plugin removed - these are now no-ops
+  const isAvailable = false;
 
-  const setStyle = useCallback(async (style: 'light' | 'dark') => {
-    if (!isAvailable) {return;}
+  const setStyle = useCallback(async (_style: 'light' | 'dark') => {
+    // No-op without native plugin
+  }, []);
 
-    await StatusBar.setStyle({
-      style: style === 'light' ? Style.Light : Style.Dark,
-    });
-  }, [isAvailable]);
-
-  const setBackgroundColor = useCallback(async (color: string) => {
-    if (!isAvailable || getPlatform() !== 'android') {return;}
-
-    await StatusBar.setBackgroundColor({ color });
-  }, [isAvailable]);
+  const setBackgroundColor = useCallback(async (_color: string) => {
+    // No-op without native plugin
+  }, []);
 
   const hide = useCallback(async () => {
-    if (!isAvailable) {return;}
-    await StatusBar.hide();
-  }, [isAvailable]);
+    // No-op without native plugin
+  }, []);
 
   const show = useCallback(async () => {
-    if (!isAvailable) {return;}
-    await StatusBar.show();
-  }, [isAvailable]);
+    // No-op without native plugin
+  }, []);
 
   return { setStyle, setBackgroundColor, hide, show, isAvailable };
 }
