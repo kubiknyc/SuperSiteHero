@@ -6,12 +6,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { subcontractorPortalApi } from '@/lib/api/services/subcontractor-portal'
 import type {
-  SubcontractorInvitation,
-  InvitationWithRelations,
   CreateInvitationDTO,
-  SubcontractorPortalAccessWithRelations,
   UpdatePortalAccessDTO,
-  InvitationValidation,
 } from '@/types/subcontractor-portal'
 import toast from 'react-hot-toast'
 
@@ -65,7 +61,7 @@ export function useUpdatePortalAccess() {
   return useMutation({
     mutationFn: ({
       accessId,
-      projectId,
+      projectId: _projectId,
       data,
     }: {
       accessId: string
@@ -93,7 +89,7 @@ export function useRevokePortalAccess() {
   return useMutation({
     mutationFn: ({
       accessId,
-      projectId,
+      projectId: _projectId,
     }: {
       accessId: string
       projectId: string

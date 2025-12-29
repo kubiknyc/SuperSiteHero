@@ -1,0 +1,610 @@
+
+> jobsight@0.1.0 test
+> vitest --run
+
+
+[1m[46m RUN [49m[22m [36mv4.0.16 [39m[90mC:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero[39m
+
+ [32m✓[39m src/features/cost-tracking/utils/__tests__/evmByDivision.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/cost-tracking-variance.test.ts [2m([22m[2m159 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+ [32m✓[39m src/features/cost-tracking/utils/__tests__/evmCalculations.test.ts [2m([22m[2m114 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m src/features/bidding/utils/__tests__/bidEvaluation.test.ts [2m([22m[2m55 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [31m❯[39m src/lib/api/services/action-items.test.ts [2m([22m[2m65 tests[22m[2m | [22m[31m27 failed[39m[2m)[22m[32m 102[2mms[22m[39m
+[31m       [31m×[31m should get action items with default ordering[39m[32m 19[2mms[22m[39m
+[31m       [31m×[31m should filter by project_id[39m[32m 3[2mms[22m[39m
+[31m       [31m×[31m should filter by meeting_id[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should filter by single status[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by multiple statuses[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by priority[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by category[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by assigned_to[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by assigned_company[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by urgency_status[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter items with tasks[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter items without tasks[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter overdue_only items[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter escalated_only items[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should support search by title and description[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should support pagination with limit[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should support pagination with offset[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle database errors[39m[32m 5[2mms[22m[39m
+       [32m✓[39m should return empty array when no data[32m 1[2mms[22m[39m
+       [32m✓[39m should get a single action item by ID[32m 1[2mms[22m[39m
+       [32m✓[39m should return null when item not found (PGRST116)[32m 1[2mms[22m[39m
+       [32m✓[39m should throw on other database errors[32m 2[2mms[22m[39m
+[31m       [31m×[31m should create action item with required fields[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should create action item with all optional fields[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle creation errors[39m[32m 4[2mms[22m[39m
+[31m       [31m×[31m should update action item fields[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle update errors[39m[32m 2[2mms[22m[39m
+       [32m✓[39m should delete action item[32m 1[2mms[22m[39m
+       [32m✓[39m should handle deletion errors[32m 1[2mms[22m[39m
+       [32m✓[39m should update status to in_progress[32m 1[2mms[22m[39m
+       [32m✓[39m should auto-set resolution when completing[32m 1[2mms[22m[39m
+       [32m✓[39m should handle status update errors[32m 1[2mms[22m[39m
+       [32m✓[39m should resolve item as completed[32m 1[2mms[22m[39m
+       [32m✓[39m should resolve item as deferred[32m 0[2mms[22m[39m
+       [32m✓[39m should handle resolution errors[32m 1[2mms[22m[39m
+       [32m✓[39m should link to task[32m 1[2mms[22m[39m
+       [32m✓[39m should link to RFI[32m 0[2mms[22m[39m
+       [32m✓[39m should link to constraint[32m 0[2mms[22m[39m
+       [32m✓[39m should link to change order[32m 0[2mms[22m[39m
+       [32m✓[39m should handle linking errors[32m 1[2mms[22m[39m
+       [32m✓[39m should unlink task[32m 0[2mms[22m[39m
+       [32m✓[39m should unlink RFI[32m 0[2mms[22m[39m
+       [32m✓[39m should convert action item to task via RPC[32m 1[2mms[22m[39m
+       [32m✓[39m should handle conversion errors[32m 1[2mms[22m[39m
+       [32m✓[39m should carryover all items from source meeting[32m 1[2mms[22m[39m
+       [32m✓[39m should carryover specific items[32m 0[2mms[22m[39m
+       [32m✓[39m should handle carryover errors[32m 1[2mms[22m[39m
+       [32m✓[39m should get project action item summary[32m 1[2mms[22m[39m
+       [32m✓[39m should return null when no summary found[32m 0[2mms[22m[39m
+       [32m✓[39m should get items grouped by assignee[32m 1[2mms[22m[39m
+       [32m✓[39m should get overdue items[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter overdue by project[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get items due today or soon[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get escalated items[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should count items by status[32m 1[2mms[22m[39m
+       [32m✓[39m should handle empty project[32m 0[2mms[22m[39m
+       [32m✓[39m should return level 0 for items not overdue[32m 0[2mms[22m[39m
+       [32m✓[39m should return level 1 for 3+ days overdue[32m 0[2mms[22m[39m
+       [32m✓[39m should return level 2 for 7+ days overdue[32m 0[2mms[22m[39m
+       [32m✓[39m should return level 3 for 14+ days overdue[32m 0[2mms[22m[39m
+       [32m✓[39m should use custom config[32m 0[2mms[22m[39m
+[31m       [31m×[31m should escalate item to next level[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle not found item[39m[32m 2[2mms[22m[39m
+       [32m✓[39m should calculate escalation statistics[32m 1[2mms[22m[39m
+       [32m✓[39m should query all projects when no projectId[32m 2[2mms[22m[39m
+ [31m❯[39m src/lib/api/services/equipment.test.ts [2m([22m[2m48 tests[22m[2m | [22m[31m28 failed[39m[2m)[22m[32m 112[2mms[22m[39m
+       [32m✓[39m should get all equipment for a company[32m 6[2mms[22m[39m
+[31m       [31m×[31m should filter by equipment_type (single)[39m[32m 11[2mms[22m[39m
+[31m       [31m×[31m should filter by equipment_type (multiple)[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by category[39m[32m 8[2mms[22m[39m
+[31m       [31m×[31m should filter by status[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by ownership_type[39m[32m 3[2mms[22m[39m
+[31m       [31m×[31m should filter by current_project_id[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should search equipment by multiple fields[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should handle database errors[32m 5[2mms[22m[39m
+       [32m✓[39m should return empty array when no data[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get equipment with all details[39m[32m 2[2mms[22m[39m
+       [32m✓[39m should handle not found error[32m 1[2mms[22m[39m
+       [32m✓[39m should create equipment with required fields[32m 2[2mms[22m[39m
+       [32m✓[39m should create equipment with all optional fields[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle user company not found[39m[32m 13[2mms[22m[39m
+[31m       [31m×[31m should handle creation errors[39m[32m 5[2mms[22m[39m
+       [32m✓[39m should update equipment fields[32m 1[2mms[22m[39m
+       [32m✓[39m should update equipment status[32m 1[2mms[22m[39m
+       [32m✓[39m should soft delete equipment[32m 1[2mms[22m[39m
+       [32m✓[39m should handle deletion errors[32m 1[2mms[22m[39m
+       [32m✓[39m should calculate comprehensive statistics[32m 11[2mms[22m[39m
+       [32m✓[39m should calculate utilization rate[32m 3[2mms[22m[39m
+       [32m✓[39m should return default stats when no equipment[32m 3[2mms[22m[39m
+       [32m✓[39m should get only available equipment[32m 1[2mms[22m[39m
+       [32m✓[39m should get assignments for equipment[32m 1[2mms[22m[39m
+       [32m✓[39m should get active equipment for project[32m 1[2mms[22m[39m
+[31m       [31m×[31m should assign equipment to project[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should assign with optional fields[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should update assignment[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should complete assignment and update equipment status[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should use current date if not provided[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get logs with filters[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by date range[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should create log entry[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should calculate total hours for date range[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should return 0 when no logs[32m 0[2mms[22m[39m
+       [32m✓[39m should post equipment cost via RPC[32m 1[2mms[22m[39m
+[31m       [31m×[31m should batch post costs and return results[39m[32m 5[2mms[22m[39m
+[31m       [31m×[31m should get maintenance records with filters[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should schedule maintenance[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should complete maintenance with details[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should use current date if not provided[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should cancel maintenance[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should get maintenance scheduled in next 30 days[32m 1[2mms[22m[39m
+       [32m✓[39m should get inspections for equipment[32m 1[2mms[22m[39m
+[31m       [31m×[31m should create inspection[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get most recent inspection[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should return null when no inspections exist[39m[32m 1[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/checklists.test.ts [2m([22m[2m66 tests[22m[2m)[22m[32m 130[2mms[22m[39m
+ [32m✓[39m src/features/lien-waivers/hooks/useLienWaivers.test.tsx [2m([22m[2m42 tests[22m[2m)[22m[33m 638[2mms[22m[39m
+ [32m✓[39m src/features/safety/hooks/useIncidents.test.tsx [2m([22m[2m50 tests[22m[2m)[22m[33m 1521[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/messaging.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+ [32m✓[39m src/features/docusign/hooks/__tests__/useDocuSign.test.tsx [2m([22m[2m45 tests[22m[2m)[22m[33m 2771[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/SyncStatusPanel.test.tsx [2m([22m[2m53 tests[22m[2m)[22m[33m 2368[2mms[22m[39m
+       [33m[2m✓[22m[39m renders Resolve button for each conflict [33m 464[2mms[22m[39m
+       [33m[2m✓[22m[39m calls clearSyncQueue when confirmed [33m 303[2mms[22m[39m
+ [32m✓[39m src/features/rfis/hooks/useRFIResponseAnalytics.test.ts [2m([22m[2m35 tests[22m[2m)[22m[33m 4719[2mms[22m[39m
+     [33m[2m✓[22m[39m should handle errors [33m 3089[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/ConflictResolutionDialog.test.tsx [2m([22m[2m59 tests[22m[2m)[22m[33m 4837[2mms[22m[39m
+       [33m[2m✓[22m[39m renders three resolution buttons [33m 729[2mms[22m[39m
+       [33m[2m✓[22m[39m changes selection when Keep Server is clicked [33m 362[2mms[22m[39m
+       [33m[2m✓[22m[39m calls resolveConflict with local data when Keep Local is selected [33m 407[2mms[22m[39m
+ [32m✓[39m src/features/insurance/hooks/useInsurance.test.tsx [2m([22m[2m48 tests[22m[2m)[22m[33m 883[2mms[22m[39m
+ [31m❯[39m src/lib/api/services/meetings.test.ts [2m([22m[2m45 tests[22m[2m | [22m[31m22 failed[39m[2m)[22m[32m 79[2mms[22m[39m
+       [32m✓[39m should get all meetings with default filters[32m 8[2mms[22m[39m
+       [32m✓[39m should filter meetings by project_id[32m 1[2mms[22m[39m
+       [32m✓[39m should filter meetings by meeting_type[32m 1[2mms[22m[39m
+       [32m✓[39m should filter meetings by status[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter meetings by date range[39m[32m 10[2mms[22m[39m
+[31m       [31m×[31m should search meetings by title and description[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should handle database errors[32m 3[2mms[22m[39m
+       [32m✓[39m should return empty array when no data[32m 1[2mms[22m[39m
+       [32m✓[39m should get a single meeting by ID[32m 1[2mms[22m[39m
+       [32m✓[39m should handle not found error[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get meeting with all related data[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should create a new meeting with required fields[32m 1[2mms[22m[39m
+       [32m✓[39m should create meeting with all optional fields[32m 1[2mms[22m[39m
+       [32m✓[39m should handle creation errors[32m 1[2mms[22m[39m
+       [32m✓[39m should update meeting fields[32m 1[2mms[22m[39m
+       [32m✓[39m should update timestamp[32m 1[2mms[22m[39m
+       [32m✓[39m should publish meeting minutes[32m 0[2mms[22m[39m
+       [32m✓[39m should soft delete meeting[32m 1[2mms[22m[39m
+       [32m✓[39m should handle deletion errors[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get upcoming meetings with default limit[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should filter by project_id[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should only include future meetings[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should get notes for a meeting[32m 1[2mms[22m[39m
+[31m       [31m×[31m should create a note with required fields[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should create note with all fields[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should update note content[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should delete a note[32m 0[2mms[22m[39m
+       [32m✓[39m should reorder notes[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get action items for a meeting[39m[32m 9[2mms[22m[39m
+[31m       [31m×[31m should create action item with defaults[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should complete action item and set completion date[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should convert action item to task[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should get attendees ordered by required then name[39m[32m 3[2mms[22m[39m
+[31m       [31m×[31m should add attendee with default status[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should mark attendee as attended[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should mark attendee as absent[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should delete attendee[32m 1[2mms[22m[39m
+[31m       [31m×[31m should add all project users as attendees[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should return empty array if no project users[39m[32m 3[2mms[22m[39m
+       [32m✓[39m should get attachments ordered by created_at desc[32m 1[2mms[22m[39m
+[31m       [31m×[31m should add attachment with default type[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should delete attachment[32m 0[2mms[22m[39m
+[31m       [31m×[31m should upload file and create attachment record[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should handle upload errors[39m[32m 3[2mms[22m[39m
+       [32m✓[39m should require authentication[32m 1[2mms[22m[39m
+ [32m✓[39m src/features/toolbox-talks/hooks/useToolboxTalks.test.tsx [2m([22m[2m55 tests[22m[2m)[22m[33m 1612[2mms[22m[39m
+ [32m✓[39m src/features/bidding/utils/__tests__/bidComparison.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/reports.test.ts [2m([22m[2m44 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/payment-forecast.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/features/schedule/hooks/useScheduleActivities.test.tsx [2m([22m[2m46 tests[22m[2m)[22m[33m 1035[2mms[22m[39m
+ [32m✓[39m src/features/cost-tracking/utils/__tests__/evmForecasting.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32m✓[39m src/features/schedule/utils/__tests__/scheduleExport.test.ts [2m([22m[2m96 tests[22m[2m)[22m[33m 321[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/documents.test.ts [2m([22m[2m51 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m src/features/drawings/hooks/useDrawings.test.tsx [2m([22m[2m52 tests[22m[2m)[22m[33m 1524[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/schedule.test.ts [2m([22m[2m54 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [2m[90m↓[39m[22m src/lib/api/services/historical-bid-analysis.test.ts [2m([22m[2m14 tests[22m[2m | [22m[33m14 skipped[39m[2m)[22m
+ [32m✓[39m src/features/quickbooks/hooks/useQuickBooks.test.tsx [2m([22m[2m49 tests[22m[2m)[22m[33m 1522[2mms[22m[39m
+ [32m✓[39m src/features/checklists/utils/__tests__/pdfExport.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m src/features/daily-reports/utils/__tests__/pdfExport.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m src/features/lien-waivers/utils/__tests__/pdfExport.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m src/features/payment-applications/utils/__tests__/pdfExport.test.ts [2m([22m[2m39 tests[22m[2m)[22m[33m 738[2mms[22m[39m
+     [33m[2m✓[22m[39m should handle complete workflow from draft to approved [33m 335[2mms[22m[39m
+ [31m❯[39m src/features/submittals/hooks/__tests__/useSubmittals.test.tsx [2m([22m[2m32 tests[22m[2m | [22m[31m18 failed[39m[2m)[22m[33m 6042[2mms[22m[39m
+[31m     [31m×[31m should fetch submittal workflow type for company[39m[33m 1074[2mms[22m[39m
+[31m     [31m×[31m should handle error when workflow type not found[39m[33m 1028[2mms[22m[39m
+     [32m✓[39m should not fetch when company_id is missing[32m 19[2mms[22m[39m
+[31m     [31m×[31m should cache workflow type for 1 hour[39m[33m 1023[2mms[22m[39m
+     [32m✓[39m should fetch submittals for a project[32m 81[2mms[22m[39m
+     [32m✓[39m should not fetch when projectId or workflowTypeId is missing[32m 4[2mms[22m[39m
+     [32m✓[39m should handle fetch error[32m 70[2mms[22m[39m
+     [32m✓[39m should order submittals by created_at descending[32m 81[2mms[22m[39m
+     [32m✓[39m should fetch single submittal by id[32m 77[2mms[22m[39m
+     [32m✓[39m should not fetch when submittalId is undefined[32m 4[2mms[22m[39m
+     [32m✓[39m should handle error when submittal not found[32m 79[2mms[22m[39m
+[31m     [31m×[31m should fetch submittals assigned to current user[39m[33m 1023[2mms[22m[39m
+[31m     [31m×[31m should filter by projectId when provided[39m[33m 1025[2mms[22m[39m
+     [32m✓[39m should fetch submittals filtered by status[32m 74[2mms[22m[39m
+     [32m✓[39m should fetch all submittals when status is undefined[32m 75[2mms[22m[39m
+     [32m✓[39m should fetch comments for a submittal[32m 91[2mms[22m[39m
+     [32m✓[39m should not fetch when submittalId is undefined[32m 3[2mms[22m[39m
+     [32m✓[39m should fetch procurement records for a submittal[32m 81[2mms[22m[39m
+     [32m✓[39m should order procurement by created_at descending[32m 67[2mms[22m[39m
+[31m     [31m×[31m should create submittal with user id[39m[32m 11[2mms[22m[39m
+[31m     [31m×[31m should invalidate queries after successful creation[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m should handle creation error[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should update submittal[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should invalidate queries after successful update[39m[32m 4[2mms[22m[39m
+[31m     [31m×[31m should update submittal status[39m[32m 6[2mms[22m[39m
+[31m     [31m×[31m should handle status transition from draft to submitted[39m[32m 4[2mms[22m[39m
+[31m     [31m×[31m should handle status transition from under_review to approved[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should update procurement status[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should handle procurement status transitions[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should delete submittal[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m should invalidate queries after successful deletion[39m[32m 4[2mms[22m[39m
+[31m     [31m×[31m should handle deletion error[39m[32m 3[2mms[22m[39m
+ [32m✓[39m src/features/daily-reports/store/__tests__/dailyReportStoreV2.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 199[2mms[22m[39m
+ [32m✓[39m src/features/rfis/utils/__tests__/pdfExport.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32m✓[39m src/features/daily-reports/services/__tests__/workflowEngine.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/__tests__/email-integration.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m src/features/daily-reports/services/__tests__/templateService.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [31m❯[39m src/features/schedule/utils/__tests__/schedulePdfExport.test.ts [2m([22m[2m22 tests[22m[2m | [22m[31m22 failed[39m[2m)[22m[32m 45[2mms[22m[39m
+[31m       [31m×[31m should generate basic schedule PDF[39m[32m 11[2mms[22m[39m
+[31m       [31m×[31m should fetch company info when not provided[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should use provided company info[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should add document header with project name[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should include project number in document title when provided[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should render summary statistics when provided[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should not render statistics when not provided[39m[32m 3[2mms[22m[39m
+[31m       [31m×[31m should render milestones table when includeMilestones is true[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should not render milestones table when includeMilestones is false[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should include baseline columns when includeBaseline is true[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should exclude baseline columns when includeBaseline is false[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should truncate long milestone names to 40 characters[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should render all activities table when includeAllActivities is true[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should not render activities table when includeAllActivities is false[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should mark critical activities with "Yes" indicator[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should format dates correctly in tables[39m[32m 4[2mms[22m[39m
+[31m       [31m×[31m should add footers to all pages[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should use landscape orientation by default[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should use portrait orientation when specified[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should call save with sanitized filename[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should sanitize special characters in project name[39m[32m 1[2mms[22m[39m
+[31m       [31m×[31m should include current date in filename[39m[32m 1[2mms[22m[39m
+ [32m✓[39m src/features/submittals/utils/__tests__/pdfExport.test.ts [2m([22m[2m32 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/earned-value-management.test.ts [2m([22m[2m83 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m src/features/jsa/hooks/useJSA.test.tsx [2m([22m[2m46 tests[22m[2m)[22m[33m 1058[2mms[22m[39m
+ [32m✓[39m src/features/approvals/hooks/useApprovals.test.tsx [2m([22m[2m42 tests[22m[2m)[22m[33m 1402[2mms[22m[39m
+ [32m✓[39m src/types/cost-tracking.test.ts [2m([22m[2m81 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m src/features/reports/hooks/useReportBuilder.test.tsx [2m([22m[2m35 tests[22m[2m)[22m[33m 873[2mms[22m[39m
+ [32m✓[39m src/features/rfis/hooks/useRFIs.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 851[2mms[22m[39m
+ [32m✓[39m src/features/look-ahead/hooks/useLookAhead.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 1736[2mms[22m[39m
+ [32m✓[39m src/__tests__/security/data-isolation.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/features/approvals/hooks/usePublicApprovalLinks.test.tsx [2m([22m[2m27 tests[22m[2m)[22m[33m 1381[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/LoadingScreen.test.tsx [2m([22m[2m88 tests[22m[2m)[22m[33m 1159[2mms[22m[39m
+       [33m[2m✓[22m[39m renders the loading screen [33m 316[2mms[22m[39m
+ [31m❯[39m src/lib/auth/AuthContextWithMFA.test.tsx [2m([22m[2m18 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 2442[2mms[22m[39m
+[31m       [31m×[31m should load session with MFA status on mount[39m[32m 130[2mms[22m[39m
+       [32m✓[39m should handle no initial session[32m 69[2mms[22m[39m
+       [32m✓[39m should sign in without MFA when not required[32m 84[2mms[22m[39m
+       [32m✓[39m should require MFA verification for enrolled superintendent[32m 76[2mms[22m[39m
+       [32m✓[39m should handle sign in error[32m 77[2mms[22m[39m
+       [32m✓[39m should clear MFA verification on sign out[32m 73[2mms[22m[39m
+       [32m✓[39m should clear MFA state on sign out[32m 76[2mms[22m[39m
+       [32m✓[39m should refresh MFA status[32m 79[2mms[22m[39m
+       [32m✓[39m should check if MFA is required[32m 76[2mms[22m[39m
+       [32m✓[39m should return false when no user profile[32m 85[2mms[22m[39m
+       [32m✓[39m should mark MFA as verified[32m 72[2mms[22m[39m
+       [32m✓[39m should clear MFA verification[32m 69[2mms[22m[39m
+[31m       [31m×[31m should refresh MFA status on auth state change[39m[33m 1090[2mms[22m[39m
+       [32m✓[39m should clear MFA state on sign out event[32m 79[2mms[22m[39m
+       [32m✓[39m should throw error when used outside provider[32m 10[2mms[22m[39m
+       [32m✓[39m should handle MFA status fetch errors gracefully[32m 73[2mms[22m[39m
+       [32m✓[39m should not expose MFA verification status to unauthenticated users[32m 72[2mms[22m[39m
+       [32m✓[39m should handle profile fetch failure during sign in[32m 129[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/lien-waiver-reminders.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m src/features/cost-tracking/hooks/useCostTracking.test.tsx [2m([22m[2m46 tests[22m[2m)[22m[33m 819[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/checklist-scoring.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/features/payment-applications/hooks/usePaymentApplications.test.tsx [2m([22m[2m35 tests[22m[2m)[22m[33m 549[2mms[22m[39m
+ [32m✓[39m src/features/punch-lists/store/offlinePunchStore.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/types/closeout.test.ts [2m([22m[2m39 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/analytics.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/features/bidding/hooks/useBidding.test.tsx [2m([22m[2m32 tests[22m[2m)[22m[33m 1553[2mms[22m[39m
+ [32m✓[39m src/features/site-instructions/hooks/useSiteInstructions.test.tsx [2m([22m[2m34 tests[22m[2m)[22m[33m 869[2mms[22m[39m
+ [31m❯[39m src/__tests__/security/rls-policies.test.ts [2m([22m[2m34 tests[22m[2m | [22m[33m34 skipped[39m[2m)[22m[32m 9[2mms[22m[39m
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read projects
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create projects
+       [2m[90m↓[39m[22m should NOT allow anonymous users to update projects
+       [2m[90m↓[39m[22m should NOT allow anonymous users to delete projects
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read daily reports
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create daily reports
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read workflow items
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create workflow items
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read documents
+       [2m[90m↓[39m[22m should NOT allow anonymous users to upload documents
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read user data
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create users
+       [2m[90m↓[39m[22m should NOT allow anonymous users to modify other users
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read companies
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create companies
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read safety incidents
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create safety incidents
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read tasks
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create tasks
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read punch items
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create punch items
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read checklists
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read messages
+       [2m[90m↓[39m[22m should NOT allow anonymous users to send messages
+       [2m[90m↓[39m[22m should NOT allow anonymous users to read contacts
+       [2m[90m↓[39m[22m should NOT allow anonymous users to create contacts
+       [2m[90m↓[39m[22m should allow authenticated users to read their own projects
+       [2m[90m↓[39m[22m should allow users to read daily reports for their projects
+       [2m[90m↓[39m[22m should allow users to read their company data
+       [2m[90m↓[39m[22m should NOT allow users to read projects from other companies
+       [2m[90m↓[39m[22m should NOT allow users to read daily reports from other projects
+       [2m[90m↓[39m[22m should NOT allow users to read other companies
+       [2m[90m↓[39m[22m should NOT allow users to insert into other companies
+       [2m[90m↓[39m[22m should NOT allow users to update records in other companies
+ [32m✓[39m src/features/cost-estimates/hooks/useCostEstimates.test.tsx [2m([22m[2m41 tests[22m[2m)[22m[33m 1703[2mms[22m[39m
+ [32m✓[39m src/features/daily-reports/store/offlineReportStore.test.ts [2m([22m[2m41 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [31m❯[39m src/features/ai/hooks/__tests__/useSemanticSearch.test.tsx [2m([22m[2m26 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 25320[2mms[22m[39m
+       [32m✓[39m should initialize with empty query[32m 54[2mms[22m[39m
+       [32m✓[39m should initialize with empty results[32m 6[2mms[22m[39m
+       [32m✓[39m should initialize with default entity filters[32m 5[2mms[22m[39m
+       [32m✓[39m should initialize with expansion enabled by default[32m 4[2mms[22m[39m
+       [32m✓[39m should initialize with hasSearched as false[32m 4[2mms[22m[39m
+       [32m✓[39m should not be loading initially[32m 3[2mms[22m[39m
+       [32m✓[39m should update query when setQuery is called[32m 6[2mms[22m[39m
+       [32m✓[39m should clear query when clearResults is called[32m 5[2mms[22m[39m
+       [32m✓[39m should update entity filters[32m 4[2mms[22m[39m
+       [32m✓[39m should update date range[32m 4[2mms[22m[39m
+       [32m✓[39m should update project ID[32m 4[2mms[22m[39m
+       [32m✓[39m should toggle expansion enabled[32m 3[2mms[22m[39m
+       [32m✓[39m should execute search when search() is called[32m 15[2mms[22m[39m
+       [32m✓[39m should not search if query is too short[32m 6[2mms[22m[39m
+       [32m✓[39m should use simple search when expansion is disabled[32m 76[2mms[22m[39m
+[31m       [31m×[31m should auto-search when enabled and query changes[39m[33m 5020[2mms[22m[39m
+[31m       [31m×[31m should debounce rapid query changes[39m[33m 5020[2mms[22m[39m
+       [32m✓[39m should load recent searches from localStorage[32m 3[2mms[22m[39m
+       [32m✓[39m should clear recent searches[32m 4[2mms[22m[39m
+       [32m✓[39m should handle invalid localStorage data[32m 3[2mms[22m[39m
+[31m       [31m×[31m should fetch rate limit info[39m[33m 5012[2mms[22m[39m
+[31m       [31m×[31m should set error state on search failure[39m[33m 5021[2mms[22m[39m
+[31m       [31m×[31m should clear error on new search[39m[33m 5018[2mms[22m[39m
+       [32m✓[39m should respect defaultProjectId option[32m 7[2mms[22m[39m
+       [32m✓[39m should respect defaultEntities option[32m 3[2mms[22m[39m
+       [32m✓[39m should respect enableExpansion option[32m 4[2mms[22m[39m
+ [32m✓[39m src/types/quickbooks.test.ts [2m([22m[2m62 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/types/lien-waiver.test.ts [2m([22m[2m48 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m src/features/transmittals/hooks/useTransmittals.test.tsx [2m([22m[2m37 tests[22m[2m)[22m[33m 2091[2mms[22m[39m
+ [32m✓[39m src/types/drawing.test.ts [2m([22m[2m48 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/lib/auth/rbac.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/ThemeToggle.test.tsx [2m([22m[2m66 tests[22m[2m)[22m[33m 4694[2mms[22m[39m
+       [33m[2m✓[22m[39m shows dropdown trigger button [33m 334[2mms[22m[39m
+       [33m[2m✓[22m[39m shows theme options when dropdown is opened [33m 678[2mms[22m[39m
+       [33m[2m✓[22m[39m calls setTheme when light option is clicked [33m 534[2mms[22m[39m
+       [33m[2m✓[22m[39m calls setTheme when dark option is clicked [33m 406[2mms[22m[39m
+       [33m[2m✓[22m[39m calls setTheme when system option is clicked [33m 479[2mms[22m[39m
+       [33m[2m✓[22m[39m shows dropdown menu in compact mode [33m 412[2mms[22m[39m
+ [32m✓[39m src/features/closeout/hooks/useCloseout.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 1368[2mms[22m[39m
+ [32m✓[39m src/types/schedule.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/features/cost-tracking/hooks/useEVM.test.tsx [2m([22m[2m39 tests[22m[2m)[22m[33m 1396[2mms[22m[39m
+ [32m✓[39m src/lib/offline/message-queue.test.ts [2m([22m[2m29 tests[22m[2m)[22m[33m 456[2mms[22m[39m
+ [32m✓[39m src/features/summaries/hooks/useSmartSummaries.test.tsx [2m([22m[2m34 tests[22m[2m)[22m[33m 2316[2mms[22m[39m
+     [33m[2m✓[22m[39m should handle API error in query [33m 1071[2mms[22m[39m
+ [32m✓[39m src/types/meeting-minutes.test.ts [2m([22m[2m38 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/features/documents/hooks/useDocuments.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 818[2mms[22m[39m
+ [32m✓[39m src/lib/validation/schemas.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [31m❯[39m src/lib/api/services/__tests__/toolbox-talks.test.ts [2m([22m[2m27 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[32m 58[2mms[22m[39m
+       [32m✓[39m should fetch topics with filters[32m 5[2mms[22m[39m
+[31m       [31m×[31m should filter by category[39m[32m 10[2mms[22m[39m
+       [32m✓[39m should fetch single topic[32m 1[2mms[22m[39m
+       [32m✓[39m should throw error when topic not found[32m 3[2mms[22m[39m
+       [32m✓[39m should create new topic[32m 1[2mms[22m[39m
+       [32m✓[39m should update topic[32m 2[2mms[22m[39m
+       [32m✓[39m should fetch talks with filters[32m 1[2mms[22m[39m
+       [32m✓[39m should fetch single talk[32m 1[2mms[22m[39m
+       [32m✓[39m should fetch talk with attendees[32m 2[2mms[22m[39m
+       [32m✓[39m should create new talk[32m 3[2mms[22m[39m
+       [32m✓[39m should start talk and set status to in_progress[32m 2[2mms[22m[39m
+       [32m✓[39m should complete talk[32m 1[2mms[22m[39m
+       [32m✓[39m should fetch upcoming talks[32m 2[2mms[22m[39m
+       [32m✓[39m should fetch attendees for talk[32m 1[2mms[22m[39m
+       [32m✓[39m should add attendee to talk[32m 1[2mms[22m[39m
+       [32m✓[39m should add multiple attendees[32m 1[2mms[22m[39m
+       [32m✓[39m should sign in attendee[32m 1[2mms[22m[39m
+       [32m✓[39m should mark attendee as absent[32m 1[2mms[22m[39m
+       [32m✓[39m should sign in all expected attendees[32m 1[2mms[22m[39m
+[31m       [31m×[31m should fetch certifications with status calculation[39m[32m 7[2mms[22m[39m
+[31m       [31m×[31m should fetch certifications for specific worker[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should fetch certifications expiring within days[39m[32m 1[2mms[22m[39m
+       [32m✓[39m should fetch project statistics[32m 1[2mms[22m[39m
+       [32m✓[39m should return default stats when no data[32m 1[2mms[22m[39m
+       [32m✓[39m should calculate compliance summary[32m 2[2mms[22m[39m
+       [32m✓[39m should calculate attendance rate[32m 2[2mms[22m[39m
+       [32m✓[39m should return 100 when no talks[32m 1[2mms[22m[39m
+ [32m✓[39m src/__tests__/integration/submittal-workflow.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 3130[2mms[22m[39m
+       [33m[2m✓[22m[39m should complete full submittal lifecycle: Create → Submit → Approve → Track Procurement [33m 1072[2mms[22m[39m
+       [33m[2m✓[22m[39m should track procurement status transitions [33m 471[2mms[22m[39m
+       [33m[2m✓[22m[39m should create procurement record with vendor details [33m 307[2mms[22m[39m
+ [31m❯[39m src/components/__tests__/PWAInstallPrompt.test.tsx [2m([22m[2m88 tests[22m[2m | [22m[31m31 failed[39m[2m)[22m[33m 116670[2mms[22m[39m
+       [32m✓[39m renders SVG with correct attributes[32m 65[2mms[22m[39m
+       [32m✓[39m applies custom className[32m 12[2mms[22m[39m
+       [32m✓[39m includes default h-4 w-4 classes[32m 26[2mms[22m[39m
+       [32m✓[39m renders share icon path elements[32m 27[2mms[22m[39m
+         [32m✓[39m renders all three instruction steps[32m 65[2mms[22m[39m
+         [32m✓[39m renders numbered step indicators[32m 15[2mms[22m[39m
+         [32m✓[39m renders Safari requirement info box[32m 18[2mms[22m[39m
+         [32m✓[39m applies custom className[32m 26[2mms[22m[39m
+         [32m✓[39m shows header when onClose is provided[32m 15[2mms[22m[39m
+         [32m✓[39m does not show header when onClose is not provided[32m 20[2mms[22m[39m
+[31m         [31m×[31m calls onClose when close button is clicked[39m[33m 5015[2mms[22m[39m
+         [32m✓[39m renders close button with X icon[32m 53[2mms[22m[39m
+         [32m✓[39m applies smaller text classes in compact mode[32m 9[2mms[22m[39m
+         [32m✓[39m uses regular text classes in non-compact mode[32m 7[2mms[22m[39m
+         [32m✓[39m renders smaller step indicators in compact mode[32m 8[2mms[22m[39m
+         [32m✓[39m renders larger step indicators in non-compact mode[32m 8[2mms[22m[39m
+         [32m✓[39m shows "don't show again" checkbox by default[32m 53[2mms[22m[39m
+         [32m✓[39m hides "don't show again" when showDontShowAgain is false[32m 6[2mms[22m[39m
+[31m         [31m×[31m updates checkbox state when clicked[39m[33m 5005[2mms[22m[39m
+[31m         [31m×[31m calls onDontShowAgain when checkbox is checked and Close is clicked[39m[33m 5068[2mms[22m[39m
+[31m         [31m×[31m does not call onDontShowAgain when checkbox is unchecked and Close is clicked[39m[32m 55[2mms[22m[39m
+[31m         [31m×[31m shows Close button when onClose is provided[39m[32m 55[2mms[22m[39m
+         [32m✓[39m renders ShareIcon in step 1[32m 8[2mms[22m[39m
+         [32m✓[39m renders Plus icon in step 2[32m 11[2mms[22m[39m
+         [32m✓[39m applies dark mode classes to step indicators[32m 8[2mms[22m[39m
+         [32m✓[39m applies primary colors to info box[32m 9[2mms[22m[39m
+         [32m✓[39m uses ordered list for steps[32m 10[2mms[22m[39m
+         [32m✓[39m provides accessible close button label[32m 45[2mms[22m[39m
+         [32m✓[39m associates label with checkbox using htmlFor[32m 43[2mms[22m[39m
+         [32m✓[39m does not render when shouldShowBanner is false[32m 4[2mms[22m[39m
+         [32m✓[39m renders when shouldShowBanner is true[32m 10[2mms[22m[39m
+         [32m✓[39m calls trackPromptShown after delay when showing[32m 8[2mms[22m[39m
+         [32m✓[39m applies bottom position by default[32m 7[2mms[22m[39m
+         [32m✓[39m applies top position when position="top"[32m 8[2mms[22m[39m
+         [32m✓[39m applies custom className[32m 7[2mms[22m[39m
+         [32m✓[39m renders logo icon[32m 7[2mms[22m[39m
+         [32m✓[39m renders "Install JobSight" title[32m 10[2mms[22m[39m
+         [32m✓[39m renders description with benefits[32m 7[2mms[22m[39m
+         [32m✓[39m renders Install App button with download icon[32m 80[2mms[22m[39m
+         [32m✓[39m renders "Not now" dismiss button[32m 77[2mms[22m[39m
+         [32m✓[39m renders dismiss X button[32m 52[2mms[22m[39m
+         [32m✓[39m renders "don't show again" checkbox[32m 50[2mms[22m[39m
+[31m         [31m×[31m calls promptInstall when Install App is clicked on non-iOS[39m[33m 5014[2mms[22m[39m
+[31m         [31m×[31m does not show iOS instructions on non-iOS[39m[33m 5008[2mms[22m[39m
+[31m         [31m×[31m shows iOS instructions when Install App is clicked on iOS[39m[33m 5018[2mms[22m[39m
+[31m         [31m×[31m calls analytics callback when iOS instructions are shown[39m[33m 5011[2mms[22m[39m
+[31m         [31m×[31m does not call promptInstall on iOS[39m[33m 5007[2mms[22m[39m
+[31m         [31m×[31m calls dismissPrompt when "Not now" is clicked[39m[33m 5012[2mms[22m[39m
+[31m         [31m×[31m calls dismissPrompt when X button is clicked[39m[33m 5017[2mms[22m[39m
+[31m         [31m×[31m dismisses permanently when "don't show again" is checked[39m[33m 5078[2mms[22m[39m
+         [32m✓[39m applies dark mode classes to card[32m 8[2mms[22m[39m
+         [32m✓[39m provides aria-label for dismiss button[32m 65[2mms[22m[39m
+[31m         [31m×[31m shows installed state when isInstalled is true[39m[32m 15[2mms[22m[39m
+[31m         [31m×[31m shows installed state when isStandalone is true[39m[32m 6[2mms[22m[39m
+[31m         [31m×[31m renders CheckCircle icon in installed state[39m[32m 5[2mms[22m[39m
+[31m         [31m×[31m shows running in standalone mode status[39m[32m 3[2mms[22m[39m
+[31m         [31m×[31m shows app version[39m[32m 3[2mms[22m[39m
+[31m         [31m×[31m applies green border in installed state[39m[32m 3[2mms[22m[39m
+[31m         [31m×[31m shows iOS instructions when clicked on iOS device[39m[33m 5015[2mms[22m[39m
+[31m         [31m×[31m calls analytics callback when iOS instructions are shown[39m[33m 5005[2mms[22m[39m
+[31m         [31m×[31m does not show "don't show again" in iOS instructions[39m[33m 5005[2mms[22m[39m
+         [32m✓[39m shows not installable state when not installable and not iOS[32m 6[2mms[22m[39m
+         [32m✓[39m shows "Show Install Prompt" button in not installable state[32m 39[2mms[22m[39m
+[31m         [31m×[31m calls resetDismissed when "Show Install Prompt" is clicked[39m[33m 5003[2mms[22m[39m
+         [32m✓[39m shows supported browsers info[32m 6[2mms[22m[39m
+         [32m✓[39m renders Monitor icon in not installable state[32m 4[2mms[22m[39m
+         [32m✓[39m shows install button when installable on non-iOS[32m 33[2mms[22m[39m
+         [32m✓[39m shows "How to Install" button on iOS[32m 36[2mms[22m[39m
+[31m         [31m×[31m calls promptInstall when Install App is clicked on non-iOS[39m[33m 5005[2mms[22m[39m
+         [32m✓[39m renders logo icon on non-iOS[32m 6[2mms[22m[39m
+         [32m✓[39m renders smartphone icon on iOS[32m 5[2mms[22m[39m
+         [32m✓[39m shows benefits description[32m 5[2mms[22m[39m
+         [32m✓[39m applies custom className[32m 4[2mms[22m[39m
+         [32m✓[39m applies primary border in installable state[32m 3[2mms[22m[39m
+         [32m✓[39m does not render when not installable[32m 2[2mms[22m[39m
+         [32m✓[39m does not render when dismissed[32m 2[2mms[22m[39m
+         [32m✓[39m renders when installable and not dismissed[32m 19[2mms[22m[39m
+         [32m✓[39m renders download icon[32m 4[2mms[22m[39m
+         [32m✓[39m renders pulse indicator dot[32m 4[2mms[22m[39m
+         [32m✓[39m applies custom className[32m 3[2mms[22m[39m
+[31m         [31m×[31m calls promptInstall when clicked on non-iOS[39m[33m 5006[2mms[22m[39m
+[31m         [31m×[31m does not show tooltip on non-iOS[39m[33m 5006[2mms[22m[39m
+[31m         [31m×[31m shows iOS instructions tooltip when clicked on iOS[39m[33m 5006[2mms[22m[39m
+[31m         [31m×[31m calls analytics callback when iOS tooltip is shown[39m[33m 5004[2mms[22m[39m
+[31m         [31m×[31m does not call promptInstall on iOS[39m[33m 5004[2mms[22m[39m
+[31m         [31m×[31m renders compact iOS instructions in tooltip[39m[33m 5003[2mms[22m[39m
+[31m         [31m×[31m allows dismissing iOS tooltip permanently[39m[33m 5034[2mms[22m[39m
+         [32m✓[39m provides aria-label for install button[32m 16[2mms[22m[39m
+ [31m❯[39m src/features/action-items/components/__tests__/ActionItemRow.test.tsx [2m([22m[2m52 tests[22m[2m | [22m[31m52 failed[39m[2m)[22m[33m 520399[2mms[22m[39m
+[31m       [31m×[31m should render action item with title[39m[33m 10019[2mms[22m[39m
+[31m       [31m×[31m should display assignee information[39m[33m 10006[2mms[22m[39m
+[31m       [31m×[31m should display meeting context[39m[33m 10013[2mms[22m[39m
+[31m       [31m×[31m should display due date[39m[33m 10002[2mms[22m[39m
+[31m       [31m×[31m should display category badge when category is present[39m[33m 10007[2mms[22m[39m
+[31m       [31m×[31m should not display category badge when category is null[39m[33m 10005[2mms[22m[39m
+[31m       [31m×[31m should show open status indicator (circle)[39m[33m 10015[2mms[22m[39m
+[31m       [31m×[31m should show in-progress status indicator (filled circle)[39m[33m 10007[2mms[22m[39m
+[31m       [31m×[31m should show completed status with checkmark[39m[33m 10001[2mms[22m[39m
+[31m       [31m×[31m should show strikethrough text when completed[39m[33m 10001[2mms[22m[39m
+[31m       [31m×[31m should display overdue badge in red[39m[33m 10008[2mms[22m[39m
+[31m       [31m×[31m should display due today badge in orange[39m[33m 10014[2mms[22m[39m
+[31m       [31m×[31m should display due soon badge in yellow[39m[33m 10005[2mms[22m[39m
+[31m       [31m×[31m should display on track badge in green[39m[33m 10006[2mms[22m[39m
+[31m       [31m×[31m should not show urgency badge when status is completed[39m[33m 10009[2mms[22m[39m
+[31m       [31m×[31m should not show urgency badge when no due date[39m[33m 10004[2mms[22m[39m
+[31m       [31m×[31m should display high priority badge[39m[33m 10008[2mms[22m[39m
+[31m       [31m×[31m should display critical priority badge[39m[33m 10015[2mms[22m[39m
+[31m       [31m×[31m should display low priority badge[39m[33m 10009[2mms[22m[39m
+[31m       [31m×[31m should not display badge for normal priority[39m[33m 10016[2mms[22m[39m
+[31m       [31m×[31m should not display badge when priority is null[39m[33m 10009[2mms[22m[39m
+[31m       [31m×[31m should display escalation level 1 badge[39m[33m 10004[2mms[22m[39m
+[31m       [31m×[31m should display escalation level 2 badge[39m[33m 10015[2mms[22m[39m
+[31m       [31m×[31m should display escalation level 3 badge[39m[33m 10007[2mms[22m[39m
+[31m       [31m×[31m should not display escalation badge when level is 0[39m[33m 10008[2mms[22m[39m
+[31m       [31m×[31m should apply orange border when escalated[39m[33m 10003[2mms[22m[39m
+[31m       [31m×[31m should display carryover count badge[39m[33m 10011[2mms[22m[39m
+[31m       [31m×[31m should display carryover count for chronic items (3+)[39m[33m 10012[2mms[22m[39m
+[31m       [31m×[31m should not display carryover badge when count is 0[39m[33m 10008[2mms[22m[39m
+[31m       [31m×[31m should display task linked indicator[39m[33m 10014[2mms[22m[39m
+[31m       [31m×[31m should not display task linked indicator when no task[39m[33m 10002[2mms[22m[39m
+[31m       [31m×[31m should apply blue text color to task linked indicator[39m[33m 10007[2mms[22m[39m
+[31m       [31m×[31m should apply red background when overdue[39m[33m 10010[2mms[22m[39m
+[31m       [31m×[31m should apply combined styles for overdue and escalated[39m[33m 10001[2mms[22m[39m
+[31m       [31m×[31m should not apply special background for on-track items[39m[33m 10002[2mms[22m[39m
+[31m       [31m×[31m should show actions dropdown menu button[39m[33m 10008[2mms[22m[39m
+[31m       [31m×[31m should show "Start Progress" option for open items[39m[33m 10010[2mms[22m[39m
+[31m       [31m×[31m should not show "Start Progress" for in-progress items[39m[33m 10005[2mms[22m[39m
+[31m       [31m×[31m should show "Mark Complete" for open items[39m[33m 10006[2mms[22m[39m
+[31m       [31m×[31m should show "Mark Complete" for in-progress items[39m[33m 10007[2mms[22m[39m
+[31m       [31m×[31m should not show "Mark Complete" for completed items[39m[33m 10005[2mms[22m[39m
+[31m       [31m×[31m should show "Convert to Task" when no task is linked[39m[33m 10001[2mms[22m[39m
+[31m       [31m×[31m should not show "Convert to Task" when task is already linked[39m[33m 10007[2mms[22m[39m
+[31m       [31m×[31m should call updateStatus when clicking "Start Progress"[39m[33m 10008[2mms[22m[39m
+[31m       [31m×[31m should call updateStatus when clicking "Mark Complete"[39m[33m 10006[2mms[22m[39m
+[31m       [31m×[31m should call convertToTask when clicking "Convert to Task"[39m[33m 10004[2mms[22m[39m
+[31m       [31m×[31m should handle item with no assignee[39m[33m 10006[2mms[22m[39m
+[31m       [31m×[31m should handle item with no meeting title[39m[33m 10010[2mms[22m[39m
+[31m       [31m×[31m should handle item with no due date[39m[33m 10003[2mms[22m[39m
+[31m       [31m×[31m should handle item with all optional fields null[39m[33m 10010[2mms[22m[39m
+[31m       [31m×[31m should handle very long titles gracefully[39m[33m 10005[2mms[22m[39m
+[31m       [31m×[31m should handle multiple simultaneous badges[39m[33m 10009[2mms[22m[39m
+ [32m✓[39m src/types/permissions.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/safety-incidents.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [31m❯[39m src/stores/__tests__/offline-store.test.ts [2m([22m[2m36 tests[22m[2m | [22m[31m12 failed[39m[2m)[22m[32m 292[2mms[22m[39m
+       [32m✓[39m should track online status[32m 19[2mms[22m[39m
+       [32m✓[39m should update state when going offline[32m 4[2mms[22m[39m
+       [32m✓[39m should update state when going online[32m 3[2mms[22m[39m
+       [32m✓[39m should trigger pending syncs update when coming online[32m 120[2mms[22m[39m
+[31m       [31m×[31m should load sync queue from IndexedDB[39m[32m 14[2mms[22m[39m
+[31m       [31m×[31m should filter only pending items when loading sync queue[39m[32m 5[2mms[22m[39m
+[31m       [31m×[31m should update pending syncs count[39m[32m 4[2mms[22m[39m
+[31m       [31m×[31m should handle empty sync queue[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should remove item from sync queue[39m[32m 4[2mms[22m[39m
+       [32m✓[39m should clear entire sync queue[32m 5[2mms[22m[39m
+       [32m✓[39m should handle large sync queue (100+ items)[32m 39[2mms[22m[39m
+       [32m✓[39m should load conflicts from IndexedDB[32m 18[2mms[22m[39m
+[31m       [31m×[31m should only load unresolved conflicts[39m[32m 5[2mms[22m[39m
+       [32m✓[39m should add conflict to store[32m 1[2mms[22m[39m
+       [32m✓[39m should not add duplicate conflicts[32m 1[2mms[22m[39m
+[31m       [31m×[31m should resolve conflict with local strategy[39m[32m 2[2mms[22m[39m
+[31m       [31m×[31m should resolve conflict with server strategy[39m[32m 3[2mms[22m[39m
+[31m       [31m×[31m should resolve conflict with merge strategy[39m[32m 3[2mms[22m[39m
+[31m       [31m×[31m should update conflict count correctly[39m[32m 2[2mms[22m[39m
+       [32m✓[39m should set sync progress[32m 2[2mms[22m[39m
+       [32m✓[39m should clear sync progress[32m 1[2mms[22m[39m
+       [32m✓[39m should track syncing state[32m 1[2mms[22m[39m
+       [32m✓[39m should track last sync time[32m 1[2mms[22m[39m
+       [32m✓[39m should set network quality[32m 1[2mms[22m[39m
+       [32m✓[39m should clear network quality[32m 1[2mms[22m[39m
+       [32m✓[39m should have default sync preferences[32m 1[2mms[22m[39m
+       [32m✓[39m should update sync preferences[32m 2[2mms[22m[39m
+       [32m✓[39m should update max batch size[32m 2[2mms[22m[39m
+[31m       [31m×[31m should update storage quota[39m[32m 3[2mms[22m[39m
+       [32m✓[39m should initialize offline listeners[32m 1[2mms[22m[39m
+       [32m✓[39m should handle online event[32m 4[2mms[22m[39m
+       [32m✓[39m should handle offline event[32m 2[2mms[22m[39m
+       [32m✓[39m should cleanup event listeners[32m 1[2mms[22m[39m
+[31m       [31m×[31m should handle IndexedDB not available[39m[32m 3[2mms[22m[39m
+       [32m✓[39m should handle concurrent sync queue operations[32m 5[2mms[22m[39m
+       [32m✓[39m should handle missing conflict during resolution[32m 2[2mms[22m[39m
+ [32m✓[39m src/types/equipment.test.ts [2m([22m[2m50 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/features/distribution-lists/hooks/useDistributionLists.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 1567[2mms[22m[39m
+ [32m✓[39m src/features/ai/hooks/useAIConfiguration.test.tsx [2m([22m[2m34 tests[22m[2m)[22m[33m 1385[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/daily-reports.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/lib/offline/__tests__/conflict-resolver.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/types/approval-workflow.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/lib/api/services/document-ai.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 19[2mms[22m[39m

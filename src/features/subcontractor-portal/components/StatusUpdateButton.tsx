@@ -40,7 +40,7 @@ interface StatusBadgeProps {
   type: 'punch-item' | 'task'
 }
 
-export function StatusBadge({ status, type }: StatusBadgeProps) {
+export function StatusBadge({ status, type: _type }: StatusBadgeProps) {
   const statusColors: Record<string, string> = {
     open: 'bg-muted text-foreground border-border',
     pending: 'bg-muted text-foreground border-border',

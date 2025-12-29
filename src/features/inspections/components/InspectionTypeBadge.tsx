@@ -5,8 +5,7 @@
  */
 
 import { cn } from '@/lib/utils'
-import type { InspectionType } from '../types'
-import { INSPECTION_TYPE_CONFIG } from '../types'
+import { INSPECTION_TYPE_CONFIG, type InspectionType } from '../types'
 
 interface InspectionTypeBadgeProps {
   type: InspectionType | string | null

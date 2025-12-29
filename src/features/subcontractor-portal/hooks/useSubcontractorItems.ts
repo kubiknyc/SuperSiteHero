@@ -11,7 +11,6 @@ import type {
   SubcontractorPunchItem,
   SubcontractorTask,
   SubcontractorItemsFilter,
-  UpdateItemStatusDTO,
   PunchItemStatus,
   TaskStatus,
 } from '@/types/subcontractor-portal'

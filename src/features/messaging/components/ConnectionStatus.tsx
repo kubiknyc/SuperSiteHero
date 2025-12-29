@@ -7,7 +7,7 @@
  * - Disconnected (red): No connection, auto-reconnecting
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Wifi, WifiOff, Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { cn } from '@/lib/utils'

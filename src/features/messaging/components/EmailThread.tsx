@@ -15,7 +15,6 @@ import DOMPurify from 'dompurify'
 import {
   ArrowLeft,
   Reply,
-  ReplyAll,
   Forward,
   Star,
   Archive,
@@ -25,11 +24,9 @@ import {
   ChevronDown,
   ChevronUp,
   Download,
-  ExternalLink,
   MoreHorizontal,
   Loader2,
   Mail,
-  MailOpen,
   Building,
   HelpCircle,
   FileCheck,
@@ -40,7 +37,6 @@ import {
   Badge,
   Card,
   CardContent,
-  CardHeader,
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -57,14 +53,12 @@ import {
   useEmailThread,
   useUpdateEmailThread,
   useMarkEmailAsRead,
-  useStarEmail,
   useMoveEmailToFolder,
   useEmailEntityLinks,
 } from '../hooks/useEmails'
 import { cn } from '@/lib/utils'
-import type { Email, EmailThread as EmailThreadType, EmailEntityLink, EmailAttachment } from '@/types/email'
+import type { Email, EmailEntityLink, EmailAttachment } from '@/types/email'
 import {
-  formatEmailDate,
   formatParticipants,
   formatFileSize,
   getParticipantInitials,
@@ -96,7 +90,6 @@ export function EmailThreadView({
   // Mutations
   const updateThread = useUpdateEmailThread()
   const markAsRead = useMarkEmailAsRead()
-  const starEmail = useStarEmail()
   const moveToFolder = useMoveEmailToFolder()
 
   // Toggle email expansion
@@ -293,7 +286,7 @@ interface EmailMessageProps {
 function EmailMessage({
   email,
   isExpanded,
-  isLatest,
+  isLatest: _isLatest,
   onToggleExpand,
   onReply,
   onForward,

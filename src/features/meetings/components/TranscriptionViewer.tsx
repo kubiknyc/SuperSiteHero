@@ -32,7 +32,7 @@ import {
   useTranscriptionSegments,
   useStartTranscription,
 } from '../hooks/useMeetingRecordings';
-import type { MeetingRecording, TranscriptionSegment } from '@/types/meeting-recordings';
+import type { MeetingRecording } from '@/types/meeting-recordings';
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -334,7 +334,7 @@ export function TranscriptionViewer({
                 ) : filteredSegments.length > 0 ? (
                   <ScrollArea className="h-80" ref={scrollContainerRef}>
                     <div className="space-y-2 pr-4">
-                      {filteredSegments.map((segment, index) => {
+                      {filteredSegments.map((segment) => {
                         const isActive =
                           !searchQuery &&
                           currentTimeMs >= segment.start_time_ms &&

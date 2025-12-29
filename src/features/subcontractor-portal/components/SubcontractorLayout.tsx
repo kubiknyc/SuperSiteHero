@@ -20,7 +20,6 @@ import {
   Menu,
   X,
   Bell,
-  ChevronDown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'

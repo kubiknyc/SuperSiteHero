@@ -2,7 +2,7 @@
 // Konva shape component for surface area measurements (Type 7)
 // Renders perimeter with 3D extrusion indicator
 
-import { Group, Line, Rect } from 'react-konva'
+import { Group, Line } from 'react-konva'
 import type { Point } from '../../utils/measurements'
 
 export interface SurfaceAreaShapeProps {
@@ -27,7 +27,7 @@ export interface SurfaceAreaShapeProps {
 export function SurfaceAreaShape({
   id,
   points,
-  height,
+  height: _height,
   stroke = '#8B4513',
   strokeWidth = 2,
   fill = '#8B4513',

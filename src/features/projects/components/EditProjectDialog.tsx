@@ -4,7 +4,6 @@
 import { useEffect, useState } from 'react'
 import { useUpdateProjectWithNotification } from '../hooks/useProjectsMutations'
 import { useFormValidation, projectUpdateSchema } from '@/lib/validation'
-import { useNotifications } from '@/lib/notifications/useNotifications'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'

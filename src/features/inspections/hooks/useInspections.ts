@@ -9,13 +9,10 @@ import { inspectionsApi } from '@/lib/api'
 import { getErrorMessage } from '@/lib/api/errors'
 import { logger } from '@/lib/utils/logger'
 import type {
-  Inspection,
   InspectionFilters,
   CreateInspectionInput,
   UpdateInspectionInput,
   RecordInspectionResultInput,
-  InspectionWithRelations,
-  InspectionStats,
 } from '../types'
 
 // Query key factory
@@ -160,7 +157,7 @@ export function useDeleteInspection() {
       await inspectionsApi.deleteInspection(id)
       return { id, projectId }
     },
-    onSuccess: ({ projectId }) => {
+    onSuccess: ({ projectId: _projectId }) => {
       // Invalidate all inspection queries
       queryClient.invalidateQueries({
         queryKey: inspectionKeys.all,

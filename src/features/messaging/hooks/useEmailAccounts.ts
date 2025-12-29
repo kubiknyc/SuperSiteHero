@@ -11,8 +11,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 import * as emailApi from '@/lib/api/services/email-integration'
 import type {
-  EmailAccount,
-  EmailSyncLog,
   ConnectEmailAccountDTO,
   EmailProvider,
 } from '@/types/email'

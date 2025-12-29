@@ -5,10 +5,10 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth/AuthContext'
-import { subcontractorPortalApi } from '@/lib/api/services/subcontractor-portal'
-import type {
-  SubcontractorDailyReport,
-  SubcontractorDailyReportDetail,
+import {
+  subcontractorPortalApi,
+  type SubcontractorDailyReport,
+  type SubcontractorDailyReportDetail,
 } from '@/lib/api/services/subcontractor-portal'
 
 // Query keys

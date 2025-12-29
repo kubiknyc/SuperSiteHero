@@ -185,7 +185,7 @@ const PRESET_COLORS = [
  * - Export options
  */
 // Unit system display labels
-const UNIT_SYSTEM_LABELS: Record<UnitSystem, string> = {
+const _UNIT_SYSTEM_LABELS: Record<UnitSystem, string> = {
   imperial: 'Imperial (ft, in)',
   metric: 'Metric (m, cm)',
 }
@@ -225,7 +225,7 @@ export function TakeoffToolbar({
   measurementCount = 0,
   readOnly = false,
   pageNumber = 1,
-  totalPages = 1,
+  totalPages: _totalPages = 1,
   otherPageCalibrations = [],
   onCopyFromPage,
   onShowHistory,

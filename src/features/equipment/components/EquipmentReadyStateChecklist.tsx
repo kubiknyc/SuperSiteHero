@@ -24,7 +24,6 @@ import {
   AlertTriangle,
   Truck,
   ClipboardCheck,
-  Wrench,
   RefreshCw,
   ChevronDown,
   ChevronUp,
@@ -33,17 +32,15 @@ import {
   useEquipmentChecklistTemplateForType,
   useCompleteEquipmentChecklist,
 } from '../hooks/useEquipmentDailyStatus';
-import type {
-  EquipmentDailyStatusWithEquipment,
-  EquipmentChecklistResponse,
-  EquipmentDailyStatusType,
-  IssueSeverity,
-  EquipmentChecklistItem,
-} from '@/types/equipment-daily-status';
 import {
   EQUIPMENT_DAILY_STATUS_LABELS,
   EQUIPMENT_DAILY_STATUS_COLORS,
   DEFAULT_EQUIPMENT_CHECKLIST_ITEMS,
+  type EquipmentDailyStatusWithEquipment,
+  type EquipmentChecklistResponse,
+  type EquipmentDailyStatusType,
+  type IssueSeverity,
+  type EquipmentChecklistItem,
 } from '@/types/equipment-daily-status';
 import { logger } from '../../../lib/utils/logger';
 

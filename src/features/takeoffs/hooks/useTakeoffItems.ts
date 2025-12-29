@@ -6,7 +6,6 @@ import { takeoffsApi } from '@/lib/api/services/takeoffs'
 import type { Database } from '@/types/database'
 
 type TakeoffItem = Database['public']['Tables']['takeoff_items']['Row']
-type TakeoffItemInsert = Database['public']['Tables']['takeoff_items']['Insert']
 type TakeoffItemUpdate = Database['public']['Tables']['takeoff_items']['Update']
 
 // Fetch all takeoff items for a project

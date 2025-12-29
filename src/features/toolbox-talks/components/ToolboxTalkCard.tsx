@@ -8,8 +8,7 @@ import { Link } from 'react-router-dom'
 import { formatDistanceToNow, format } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { TalkStatusBadge } from './StatusBadge'
-import type { ToolboxTalk } from '@/types/toolbox-talks'
-import { TOPIC_CATEGORY_LABELS } from '@/types/toolbox-talks'
+import { TOPIC_CATEGORY_LABELS, type ToolboxTalk } from '@/types/toolbox-talks'
 import {
   ClipboardList,
   Calendar,

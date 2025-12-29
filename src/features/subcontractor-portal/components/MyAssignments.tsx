@@ -16,7 +16,6 @@ import {
   ArrowUpDown,
   ChevronRight,
   Clock,
-  AlertCircle,
   CheckCircle2,
   Circle,
   Camera,
@@ -74,7 +73,7 @@ interface AssignmentItemProps {
 }
 
 function AssignmentItem({
-  id,
+  id: _id,
   title,
   subtitle,
   status,
@@ -217,7 +216,7 @@ export function MyAssignments() {
 
   // Fetch data
   const { data: punchItems, isLoading: loadingPunch, refetch: refetchPunch } = useSubcontractorPunchItems()
-  const { data: tasks, isLoading: loadingTasks, refetch: refetchTasks } = useSubcontractorTasks()
+  const { refetch: refetchTasks } = useSubcontractorTasks()
   const { data: assignmentCounts, refetch: refetchCounts } = useSubcontractorAssignmentCounts()
   const { data: rfis, isLoading: loadingRFIs, refetch: refetchRFIs } = useSubcontractorRFIs()
   const { data: documents, isLoading: loadingDocuments, refetch: refetchDocuments } = useSubcontractorDocuments()

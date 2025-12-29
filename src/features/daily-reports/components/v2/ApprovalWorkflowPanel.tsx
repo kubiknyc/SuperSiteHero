@@ -17,6 +17,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   CheckCircle2,
   Clock,
   FileEdit,
@@ -129,6 +139,7 @@ export function ApprovalWorkflowPanel({
   const [submitDialogOpen, setSubmitDialogOpen] = useState(false);
   const [approveDialogOpen, setApproveDialogOpen] = useState(false);
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [lockDialogOpen, setLockDialogOpen] = useState(false);
 
   const [signature, setSignature] = useState<string | null>(null);
   const [signerName, setSignerName] = useState('');

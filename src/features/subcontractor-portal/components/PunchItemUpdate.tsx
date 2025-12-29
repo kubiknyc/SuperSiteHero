@@ -20,7 +20,6 @@ import {
   MapPin,
   Calendar,
   User,
-  ChevronRight,
   Image,
   FileText,
   Send,
@@ -38,18 +37,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
 import { usePunchItem, useProofOfCompletionPhotos } from '@/features/punch-lists/hooks/usePunchItems'
 import { useSubcontractorPunchActions } from '@/features/punch-lists/hooks/useSubcontractorPunchActions'
 import { compressImage } from '@/lib/utils/imageCompression'
 import { formatDistanceToNow, format } from 'date-fns'
-import type { PunchItemStatus } from '@/types/database'
 import { logger } from '../../../lib/utils/logger';
 
 

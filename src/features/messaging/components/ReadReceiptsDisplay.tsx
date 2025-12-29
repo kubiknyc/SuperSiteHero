@@ -17,8 +17,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
-import type { ReadReceipt } from '../hooks/useReadReceipts'
-import { formatReadReceipts } from '../hooks/useReadReceipts'
+import { formatReadReceipts, type ReadReceipt } from '../hooks/useReadReceipts'
 
 interface ReadReceiptsDisplayProps {
   /** Read receipts for the message */

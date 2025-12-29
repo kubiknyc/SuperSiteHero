@@ -14,7 +14,6 @@ import {
   stringifyEncryptedMessage,
   isEncryptionSupported,
   deleteConversationKeys,
-  type EncryptedMessage,
 } from '@/lib/crypto/message-encryption'
 import { logger } from '../../../lib/utils/logger';
 

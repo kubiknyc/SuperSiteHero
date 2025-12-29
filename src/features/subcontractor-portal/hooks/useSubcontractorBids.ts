@@ -69,7 +69,7 @@ export function useSubmitBid() {
       if (!userProfile?.id) {throw new Error('User not authenticated')}
       return subcontractorPortalApi.submitBid(bidId, userProfile.id, data)
     },
-    onSuccess: (_, { bidId }) => {
+    onSuccess: () => {
       // Invalidate bid queries
       queryClient.invalidateQueries({ queryKey: bidKeys.all })
       queryClient.invalidateQueries({ queryKey: ['subcontractor', 'stats'] })

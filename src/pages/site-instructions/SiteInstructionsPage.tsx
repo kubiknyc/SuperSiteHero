@@ -515,9 +515,10 @@ function SubcontractorCompliancePanel({
 }
 
 // Distribution history panel component
-function DistributionHistoryPanel({ instructionId }: { instructionId: string }) {
+function DistributionHistoryPanel({ instructionId: _instructionId }: { instructionId: string }) {
   // Mock distribution history - would come from API
-  const mockHistory: DistributionRecord[] = [
+  // Using useMemo to avoid impure Date calls during render
+  const mockHistory: DistributionRecord[] = useMemo(() => [
     {
       id: '1',
       action: 'Instruction issued',
@@ -536,7 +537,7 @@ function DistributionHistoryPanel({ instructionId }: { instructionId: string }) 
       method: 'app',
       status: 'opened',
     },
-  ]
+  ], [])
 
   return (
     <div className="space-y-3">

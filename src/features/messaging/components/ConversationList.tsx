@@ -30,7 +30,7 @@ import {
 import { useConversations, useTotalUnreadCount, useRealtimeConversations } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { Conversation, ConversationType } from '@/types/messaging'
-import { CONVERSATION_TYPE_CONFIG, formatMessageTime } from '@/types/messaging'
+import { formatMessageTime } from '@/types/messaging'
 import { cn } from '@/lib/utils'
 
 interface ConversationListProps {

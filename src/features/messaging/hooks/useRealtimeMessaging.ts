@@ -8,7 +8,7 @@
  * - Conversation updates
  */
 
-import { useEffect, useRef, useCallback, useState, useMemo } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -43,7 +43,7 @@ export function useRealtimeMessages(conversationId: string | undefined) {
           table: 'messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload: RealtimePostgresChangesPayload<Message>) => {
+        (_payload: RealtimePostgresChangesPayload<Message>) => {
           // Invalidate queries to refetch messages
           queryClient.invalidateQueries({
             queryKey: messagingKeys.messagesList(conversationId),
@@ -65,7 +65,7 @@ export function useRealtimeMessages(conversationId: string | undefined) {
           table: 'messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload: RealtimePostgresChangesPayload<Message>) => {
+        (_payload: RealtimePostgresChangesPayload<Message>) => {
           queryClient.invalidateQueries({
             queryKey: messagingKeys.messagesList(conversationId),
           })

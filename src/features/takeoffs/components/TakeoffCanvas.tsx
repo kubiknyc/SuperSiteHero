@@ -2,7 +2,7 @@
 // Main Konva canvas component for takeoff measurements
 // Integrates all 9 shape components with drawing tools and spatial indexing
 
-import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { Stage, Layer, Line } from 'react-konva'
 import type Konva from 'konva'
 import {
@@ -77,9 +77,9 @@ export interface TakeoffCanvasProps {
  * - Viewport culling
  */
 export function TakeoffCanvas({
-  documentId,
-  projectId,
-  pageNumber,
+  documentId: _documentId,
+  projectId: _projectId,
+  pageNumber: _pageNumber,
   backgroundImageUrl,
   width = 1200,
   height = 800,
@@ -88,9 +88,9 @@ export function TakeoffCanvas({
   currentTool = 'linear',
   readOnly = false,
   onMeasurementCreate,
-  onMeasurementUpdate,
+  onMeasurementUpdate: _onMeasurementUpdate,
   onMeasurementSelect,
-  onMeasurementDelete,
+  onMeasurementDelete: _onMeasurementDelete,
   isCalibrating = false,
   onCalibrationLineDrawn,
   onCancelCalibration,
@@ -105,7 +105,7 @@ export function TakeoffCanvas({
   const [isDrawing, setIsDrawing] = useState(false)
   const [currentPoints, setCurrentPoints] = useState<Point[]>([])
   const [hoveredMeasurementId, setHoveredMeasurementId] = useState<string | null>(null)
-  const [viewport, setViewport] = useState({ x: 0, y: 0, width, height })
+  const [viewport, _setViewport] = useState({ x: 0, y: 0, width, height })
 
   // Calibration line state
   const [calibrationLinePoints, setCalibrationLinePoints] = useState<Point[]>([])
@@ -399,7 +399,7 @@ export function TakeoffCanvas({
   const renderMeasurement = useCallback(
     (measurement: TakeoffMeasurement) => {
       const isSelected = measurement.id === selectedMeasurementId
-      const isHovered = measurement.id === hoveredMeasurementId
+      const _isHovered = measurement.id === hoveredMeasurementId
 
       const sharedProps = {
         id: measurement.id,

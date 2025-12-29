@@ -3,10 +3,9 @@
  * React Query hooks for dashboard, stats, and projects
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { subcontractorPortalApi } from '@/lib/api/services/subcontractor-portal'
-import { useToast } from '@/components/ui/use-toast'
 import type {
   SubcontractorDashboardData,
   SubcontractorStats,

@@ -13,7 +13,6 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import { toast } from 'react-hot-toast'
 import * as messagingApi from '@/lib/api/services/messaging'
 import type {
-  Conversation,
   Message,
   ConversationFilters,
   MessageFilters,

@@ -18,7 +18,6 @@ import {
   ChevronRight,
   Filter,
   MapPin,
-  Users,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -41,13 +40,15 @@ import {
 } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useJSAs, useJSAStatistics } from '../hooks/useJSA';
-import type { JSAWithDetails, JSAStatus, JSAFilters } from '@/types/jsa';
 import {
   JSA_STATUSES,
   getJSAStatusColor,
   getJSAStatusLabel,
   calculateOverallRisk,
   getRiskLevelColor,
+  type JSAWithDetails,
+  type JSAStatus,
+  type JSAFilters,
 } from '@/types/jsa';
 
 interface JSAListProps {

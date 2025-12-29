@@ -16,7 +16,7 @@ import {
   useUpdateActionItemStatus,
   useConvertToTask,
 } from '../hooks/useActionItems'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -42,7 +42,6 @@ import {
   Clock,
   AlertTriangle,
   Search,
-  Filter,
   MoreVertical,
   ArrowRight,
   ListTodo,
@@ -54,19 +53,15 @@ import {
   Check,
   Loader2,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatDate } from '@/lib/utils'
-import type {
-  ActionItemWithContext,
-  ActionItemStatus,
-  ActionItemCategory,
-  UrgencyStatus,
-} from '@/types/action-items'
+import { cn, formatDate } from '@/lib/utils'
 import {
   ACTION_ITEM_STATUSES,
   ACTION_ITEM_CATEGORIES,
   getUrgencyStatusConfig,
   getActionItemPriorityConfig,
+  type ActionItemWithContext,
+  type ActionItemStatus,
+  type ActionItemCategory,
 } from '@/types/action-items'
 
 interface ActionItemsDashboardProps {

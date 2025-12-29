@@ -5,7 +5,6 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import {
   Dialog,
   DialogContent,
@@ -22,7 +21,6 @@ import {
   User,
   Calendar,
   ArrowRight,
-  AlertCircle,
   Clock,
   CheckCircle2,
   Circle,
@@ -31,8 +29,6 @@ import { meetingActionItemsApi } from '@/lib/api/services/meetings'
 import {
   ActionItemStatus,
   ActionItemPriority,
-  getActionItemStatusLabel,
-  getActionItemStatusColor,
   getActionItemPriorityLabel,
   getActionItemPriorityColor,
   isActionItemOverdue,

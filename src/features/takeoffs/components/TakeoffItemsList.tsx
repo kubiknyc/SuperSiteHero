@@ -74,7 +74,7 @@ export function TakeoffItemsList({
   onSelect,
   onDelete,
   onToggleVisibility,
-  onUpdate,
+  onUpdate: _onUpdate,
 }: TakeoffItemsListProps) {
   'use no memo'
   const [searchQuery, setSearchQuery] = useState('')

@@ -16,7 +16,6 @@ import {
   ArrowLeft,
   Edit,
   Trash2,
-  Calendar,
   ThermometerSun,
   Droplets,
   Wind,
@@ -24,12 +23,10 @@ import {
   AlertTriangle,
   Shield,
   MapPin,
-  User,
   Image as ImageIcon,
   Loader2,
 } from 'lucide-react'
 import { format } from 'date-fns'
-import { cn } from '@/lib/utils'
 
 export function WeatherLogDetailPage() {
   const { id } = useParams<{ id: string }>()

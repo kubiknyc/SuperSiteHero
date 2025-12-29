@@ -23,7 +23,6 @@ import type {
   JSAFilters,
   JSATemplateFilters,
   JSAStatistics,
-  JSAStatus,
 } from '@/types/jsa';
 
 // Use any type workaround for tables not in generated types yet
@@ -602,7 +601,7 @@ export function useUpdateJSAHazard() {
   return useMutation({
     mutationFn: async ({
       id,
-      jsa_id,
+      jsa_id: _jsa_id,
       ...dto
     }: UpdateJSAHazardDTO & { id: string; jsa_id: string }): Promise<JSAHazard> => {
       const { data, error } = await db
@@ -632,7 +631,7 @@ export function useVerifyHazardControls() {
   return useMutation({
     mutationFn: async ({
       hazardId,
-      jsaId,
+      jsaId: _jsaId,
     }: {
       hazardId: string;
       jsaId: string;
@@ -667,7 +666,7 @@ export function useRemoveJSAHazard() {
   return useMutation({
     mutationFn: async ({
       hazardId,
-      jsaId,
+      jsaId: _jsaId,
     }: {
       hazardId: string;
       jsaId: string;
@@ -730,7 +729,7 @@ export function useRemoveJSAAcknowledgment() {
   return useMutation({
     mutationFn: async ({
       acknowledgmentId,
-      jsaId,
+      jsaId: _jsaId,
     }: {
       acknowledgmentId: string;
       jsaId: string;
@@ -848,7 +847,7 @@ export function useDeleteJSAAttachment() {
   return useMutation({
     mutationFn: async ({
       attachmentId,
-      jsaId,
+      jsaId: _jsaId,
       filePath,
     }: {
       attachmentId: string;

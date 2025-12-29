@@ -28,8 +28,7 @@ import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useMessageTemplates } from '../hooks/useMessageTemplates'
-import { extractTemplateVariables } from '../services/messageTemplates'
-import type { MessageTemplate, CreateTemplateInput } from '../services/messageTemplates'
+import { extractTemplateVariables, type MessageTemplate, type CreateTemplateInput } from '../services/messageTemplates'
 
 // ============================================================================
 // Types

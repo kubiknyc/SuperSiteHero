@@ -235,8 +235,6 @@ export function RecordingPlayback({
     );
   }
 
-  const MediaElement = isVideo ? 'video' : 'audio';
-
   return (
     <Card className={className}>
       <CardHeader className="pb-2">

@@ -31,18 +31,16 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import type {
-  CreateJSAHazardDTO,
-  RiskLevel,
-  HazardType,
-  Probability,
-  Severity,
-} from '@/types/jsa';
 import {
   RISK_LEVELS,
   HAZARD_TYPES,
   COMMON_PPE,
   getRiskLevelColor,
+  type CreateJSAHazardDTO,
+  type RiskLevel,
+  type HazardType,
+  type Probability,
+  type Severity,
 } from '@/types/jsa';
 
 interface HazardEditorProps {

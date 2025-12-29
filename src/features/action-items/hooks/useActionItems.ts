@@ -325,7 +325,7 @@ export function useCarryoverActionItems() {
   return useMutation({
     mutationFn: (dto: CarryoverActionItemsDTO) =>
       actionItemsApi.carryoverActionItems(dto),
-    onSuccess: (count, dto) => {
+    onSuccess: (count, _dto) => {
       queryClient.invalidateQueries({ queryKey: actionItemKeys.lists() })
       queryClient.invalidateQueries({ queryKey: ['meetings'] })
       toast.success(`${count} action item${count !== 1 ? 's' : ''} carried over`)

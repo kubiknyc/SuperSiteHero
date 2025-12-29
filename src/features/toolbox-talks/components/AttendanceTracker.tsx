@@ -7,7 +7,6 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
-import { AttendanceStatusBadge } from './StatusBadge'
 import {
   useToolboxAttendees,
   useAddAttendee,
@@ -17,17 +16,13 @@ import {
   useRemoveAttendee,
   useBulkSignIn,
 } from '../hooks/useToolboxTalks'
-import type {
-  ToolboxTalkAttendee,
-  ToolboxAttendanceStatus,
-} from '@/types/toolbox-talks'
+import type { ToolboxTalkAttendee } from '@/types/toolbox-talks'
 import {
   UserPlus,
   CheckCircle2,
   XCircle,
   Clock,
   Users,
-  Trash2,
   MoreVertical,
   Building2,
   Wrench,

@@ -256,7 +256,7 @@ export function TakeoffTemplateDialog({
     [filteredTemplates, favoriteTemplates]
   )
 
-  const regularList = useMemo(
+  const _regularList = useMemo(
     () => filteredTemplates.filter((t) => !favoriteTemplates.has(t.id)),
     [filteredTemplates, favoriteTemplates]
   )

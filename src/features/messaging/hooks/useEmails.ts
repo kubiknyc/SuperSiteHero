@@ -14,8 +14,6 @@ import { toast } from 'react-hot-toast'
 import * as emailApi from '@/lib/api/services/email-integration'
 import type {
   EmailThread,
-  Email,
-  EmailEntityLink,
   EmailThreadFilters,
   EmailFilters,
   EmailSearchParams,

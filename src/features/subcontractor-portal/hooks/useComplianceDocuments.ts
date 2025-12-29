@@ -13,7 +13,6 @@ import type {
   ComplianceDocumentWithRelations,
   CreateComplianceDocumentDTO,
   ComplianceDocumentsFilter,
-  ExpiringDocument,
 } from '@/types/subcontractor-portal'
 
 // Query keys

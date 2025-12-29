@@ -9,13 +9,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { equipmentMaintenanceScheduleApi } from '@/lib/api/services/equipment-maintenance-schedules'
 import { useToast } from '@/components/ui/use-toast'
 import type {
-  EquipmentMaintenanceSchedule,
-  EquipmentMaintenanceAlert,
   CreateMaintenanceScheduleInput,
   UpdateMaintenanceScheduleInput,
   RecordMaintenanceInput,
-  MaintenanceStatus,
-  MaintenanceAlertType,
 } from '@/types/workflow-automation'
 
 // ============================================================================

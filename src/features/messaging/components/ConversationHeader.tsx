@@ -16,10 +16,8 @@ import {
   UserPlus,
   LogOut,
   Search,
-  Settings,
   Bell,
   BellOff,
-  Trash2,
 } from 'lucide-react'
 import { Button, Badge } from '@/components/ui'
 import {
@@ -31,7 +29,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useConversation, useLeaveConversation, usePresence } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { Conversation } from '@/types/messaging'
 import { cn } from '@/lib/utils'
 
 interface ConversationHeaderProps {
@@ -132,9 +129,6 @@ export function ConversationHeader({
   // Check if user is admin
   const isAdmin = () => {
     if (!conversation) {return false}
-    const myParticipant = conversation.participants?.find(
-      (p) => p.user_id === userProfile?.id
-    )
     // Role isn't exposed in participant type, so assume creator is admin
     return conversation.created_by === userProfile?.id
   }

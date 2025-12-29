@@ -9,7 +9,6 @@
  */
 
 import { useState, useEffect } from 'react'
-import { format } from 'date-fns'
 import {
   Inbox,
   Send,
@@ -20,9 +19,7 @@ import {
   Search,
   RefreshCw,
   Mail,
-  MailOpen,
   Paperclip,
-  ChevronRight,
   Loader2,
   Filter,
   Plus,
@@ -31,10 +28,6 @@ import {
   Button,
   Input,
   Badge,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
 } from '@/components/ui'
 import {
   Select,
@@ -58,7 +51,7 @@ import {
   useUnreadCountsByFolder,
 } from '../hooks/useEmails'
 import { cn } from '@/lib/utils'
-import type { EmailThread, EmailFolder, EmailAccount } from '@/types/email'
+import type { EmailThread, EmailFolder } from '@/types/email'
 import {
   EMAIL_FOLDER_CONFIG,
   formatEmailDate,
@@ -317,7 +310,7 @@ interface ThreadItemProps {
   onArchive: (e: React.MouseEvent) => void
 }
 
-function ThreadItem({ thread, isSelected, onClick, onStar, onArchive }: ThreadItemProps) {
+function ThreadItem({ thread, isSelected, onClick, onStar, onArchive: _onArchive }: ThreadItemProps) {
   const isUnread = thread.unread_count > 0
   const firstParticipant = thread.participants[0]
 

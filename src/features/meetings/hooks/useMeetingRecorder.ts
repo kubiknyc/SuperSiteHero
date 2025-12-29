@@ -4,16 +4,14 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
-import RecordRTC, { RecordRTCPromisesHandler } from 'recordrtc';
+import { RecordRTCPromisesHandler } from 'recordrtc';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/lib/auth/AuthContext';
 import type {
-  RecordingType,
   RecorderState,
   RecorderConfig,
   RecorderStats,
   MeetingRecording,
-  ChunkedUploadSession,
 } from '@/types/meeting-recordings';
 
 const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB chunks for upload

@@ -5,17 +5,15 @@
  */
 
 import { cn } from '@/lib/utils'
-import type {
-  ToolboxTalkStatus,
-  ToolboxAttendanceStatus,
-  CertificationStatus,
-} from '@/types/toolbox-talks'
 import {
   TALK_STATUS_LABELS,
   TALK_STATUS_COLORS,
   ATTENDANCE_STATUS_LABELS,
   ATTENDANCE_STATUS_COLORS,
   CERTIFICATION_STATUS_COLORS,
+  type ToolboxTalkStatus,
+  type ToolboxAttendanceStatus,
+  type CertificationStatus,
 } from '@/types/toolbox-talks'
 
 interface TalkStatusBadgeProps {

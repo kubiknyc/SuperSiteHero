@@ -9,10 +9,9 @@
  */
 
 import { useState, useRef, useCallback, useEffect, KeyboardEvent } from 'react'
-import { Send, Paperclip, Smile, X, AtSign, Loader2, Zap, AlertTriangle, AlertCircle, Mic, MicOff } from 'lucide-react'
+import { Send, Paperclip, X, Loader2, Zap, AlertTriangle, AlertCircle, Mic, MicOff } from 'lucide-react'
 import {
   Button,
-  Input,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -20,11 +19,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui'
-import { useSendMessage, useTypingIndicator, useMessageDraft } from '../hooks'
-import { useConversation } from '../hooks'
+import { useSendMessage, useTypingIndicator, useMessageDraft, useConversation } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { SendMessageDTO, MessageAttachment, ConversationParticipant, MessagePriority } from '@/types/messaging'
 import { createMention, isValidMessageContent, MESSAGE_PRIORITY_CONFIG } from '@/types/messaging'
+
+// Note: setContent is from the useMessageDraft hook and is stable, but we include it in deps for completeness
 import { cn } from '@/lib/utils'
 import { uploadMessageAttachments } from '@/lib/storage/message-uploads'
 import { toast } from '@/lib/notifications/ToastContext'
@@ -174,7 +174,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
         sendTyping(true)
       }
     },
-    [showMentions, sendTyping]
+    [showMentions, sendTyping, setContent]
   )
 
   // Insert mention
@@ -192,7 +192,7 @@ export function MessageInput({ conversationId, className, onSent }: MessageInput
       setMentionSearch('')
       inputRef.current?.focus()
     },
-    [content]
+    [content, setContent]
   )
 
   // Handle keyboard navigation in mentions

@@ -10,14 +10,13 @@
  */
 
 import { useState, useCallback } from 'react'
-import { Mic, MicOff, Send, X, Square, Loader2 } from 'lucide-react'
+import { Mic, Send, X, Square, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { useVoiceRecorder, formatRecordingDuration } from '@/hooks/useVoiceRecorder'
 import { uploadVoiceMessage } from '@/lib/storage/message-uploads'
 import { useSendMessage } from '../hooks'
 import { toast } from '@/lib/notifications/ToastContext'
-import type { MessageAttachment } from '@/types/messaging'
 import { logger } from '../../../lib/utils/logger';
 
 

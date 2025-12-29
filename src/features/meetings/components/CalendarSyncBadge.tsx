@@ -54,7 +54,7 @@ export function CalendarSyncBadge({
 }: CalendarSyncBadgeProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: connectionStatus } = useGCalConnectionStatus();
-  const { isSynced, syncStatus, googleEventId, lastSyncedAt, lastError, isLoading } =
+  const { syncStatus, googleEventId, lastSyncedAt, lastError, isLoading } =
     useIsMeetingSynced(meeting.id);
   const syncMutation = useSyncMeetingToGCal();
 

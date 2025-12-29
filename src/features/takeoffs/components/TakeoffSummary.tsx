@@ -2,7 +2,7 @@
 // Summary component showing takeoff totals and statistics
 
 import { useMemo } from 'react'
-import { Download, FileText, FileSpreadsheet } from 'lucide-react'
+import { FileText, FileSpreadsheet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'

@@ -7,7 +7,7 @@
  * - Click to open thread sidebar
  */
 
-import { useMemo } from 'react'
+import React from 'react'
 import { MessageSquare } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useReplyCount, useLatestReply } from '../hooks/useThread'

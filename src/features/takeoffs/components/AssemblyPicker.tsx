@@ -41,7 +41,7 @@ export interface AssemblyPickerProps {
 export function AssemblyPicker({
   open,
   onOpenChange,
-  projectId,
+  projectId: _projectId,
   onSelect,
   onCreateNew,
 }: AssemblyPickerProps) {

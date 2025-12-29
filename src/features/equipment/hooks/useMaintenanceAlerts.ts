@@ -593,7 +593,7 @@ export function useGenerateMaintenanceAlerts() {
   const { toast } = useToast()
 
   return useMutation({
-    mutationFn: async (companyId: string) => {
+    mutationFn: async (_companyId: string) => {
       // Call the database function to generate alerts
       const { data, error } = await supabase.rpc('generate_maintenance_alerts')
 

@@ -8,23 +8,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { equipmentApiService } from '@/lib/api/services/equipment'
 import { useToast } from '@/components/ui/use-toast'
-import type {
-  EquipmentFilters,
-  EquipmentLogFilters,
-  EquipmentMaintenanceFilters,
-  CreateEquipmentDTO,
-  UpdateEquipmentDTO,
-  CreateEquipmentAssignmentDTO,
-  UpdateEquipmentAssignmentDTO,
-  CreateEquipmentLogDTO,
-  UpdateEquipmentLogDTO,
-  CreateEquipmentMaintenanceDTO,
-  UpdateEquipmentMaintenanceDTO,
-  CreateEquipmentInspectionDTO,
-  EquipmentStatus,
-  EquipmentMaintenance,
+import {
+  formatEquipmentName,
+  type EquipmentFilters,
+  type EquipmentLogFilters,
+  type EquipmentMaintenanceFilters,
+  type CreateEquipmentDTO,
+  type UpdateEquipmentDTO,
+  type CreateEquipmentAssignmentDTO,
+  type UpdateEquipmentAssignmentDTO,
+  type CreateEquipmentLogDTO,
+  type UpdateEquipmentLogDTO,
+  type CreateEquipmentMaintenanceDTO,
+  type UpdateEquipmentMaintenanceDTO,
+  type CreateEquipmentInspectionDTO,
+  type EquipmentStatus,
+  type EquipmentMaintenance,
 } from '@/types/equipment'
-import { formatEquipmentName } from '@/types/equipment'
 
 // ============================================================================
 // QUERY KEYS
@@ -279,7 +279,7 @@ export function useUpdateEquipmentAssignment() {
   const { toast } = useToast()
 
   return useMutation({
-    mutationFn: ({ id, equipmentId, dto }: { id: string; equipmentId: string; dto: UpdateEquipmentAssignmentDTO }) =>
+    mutationFn: ({ id, dto }: { id: string; equipmentId: string; dto: UpdateEquipmentAssignmentDTO }) =>
       equipmentApiService.assignments.updateAssignment(id, dto),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: equipmentKeys.assignments(variables.equipmentId) })
@@ -661,7 +661,7 @@ export function usePostEquipmentCost() {
       // postCostToTransaction returns the transaction ID directly, throws on error
       return await equipmentApiService.logs.postCostToTransaction(logId)
     },
-    onSuccess: (_, logId) => {
+    onSuccess: (_) => {
       queryClient.invalidateQueries({ queryKey: equipmentKeys.logs() })
       toast({
         title: 'Cost posted',

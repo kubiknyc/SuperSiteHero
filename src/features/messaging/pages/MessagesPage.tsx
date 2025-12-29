@@ -35,8 +35,8 @@ export function MessagesPage() {
   const [showNewDialog, setShowNewDialog] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
 
-  // Get total unread for badge
-  const { data: totalUnread = 0 } = useTotalUnreadCount()
+  // Get total unread for badge (used in UI via the hook)
+  useTotalUnreadCount()
 
   // Get user's projects for the selector
   const { data: projects = [], isLoading: isLoadingProjects } = useMyProjects()

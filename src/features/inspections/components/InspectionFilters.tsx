@@ -16,11 +16,14 @@ import {
 } from '@/components/ui/select'
 import { Search, X, Filter } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { InspectionFilters as InspectionFiltersType, InspectionStatus, InspectionResult, InspectionType } from '../types'
 import {
   INSPECTION_STATUS_CONFIG,
   INSPECTION_RESULT_CONFIG,
   INSPECTION_TYPE_CONFIG,
+  type InspectionFilters as InspectionFiltersType,
+  type InspectionStatus,
+  type InspectionResult,
+  type InspectionType,
 } from '../types'
 
 interface InspectionFiltersProps {

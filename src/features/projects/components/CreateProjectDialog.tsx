@@ -359,7 +359,7 @@ export function CreateProjectDialog({ children, open, onOpenChange }: CreateProj
             <Button
               type="submit"
               disabled={createProject.isPending || applyTemplate.isPending}
-              onClick={(e) => {
+              onClick={(_e) => {
                 logger.log('🔵 BUTTON CLICKED - Submit button was clicked!')
               }}
             >

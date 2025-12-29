@@ -206,7 +206,7 @@ export function calculateSummary(
 export function exportToCSV(
   measurements: TakeoffMeasurement[],
   scale?: ScaleFactor,
-  projectName?: string
+  _projectName?: string
 ): string {
   const rows = measurementsToRows(measurements, scale)
 

@@ -8,7 +8,6 @@ import {
   Search,
   FileText,
   Star,
-  ChevronDown,
   Sparkles,
   X,
 } from 'lucide-react'
@@ -31,7 +30,7 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { useMessageTemplates } from '../hooks/useMessageTemplates'
-import type { MessageTemplate, TemplateSubstitution } from '../services/messageTemplates'
+import type { MessageTemplate } from '../services/messageTemplates'
 
 // ============================================================================
 // Types

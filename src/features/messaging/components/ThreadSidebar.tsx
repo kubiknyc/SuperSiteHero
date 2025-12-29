@@ -9,10 +9,10 @@
  */
 
 import { useState, useRef, useEffect } from 'react'
-import { X, MessageSquare, Send, Paperclip, Loader2 } from 'lucide-react'
+import { X, MessageSquare, Send, Loader2 } from 'lucide-react'
 import { format } from 'date-fns'
 import DOMPurify from 'dompurify'
-import { Button, Input } from '@/components/ui'
+import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
@@ -22,7 +22,6 @@ import {
   useSendReply,
 } from '../hooks/useThread'
 import { useTypingIndicator } from '../hooks/useRealtimeMessaging'
-import type { Message } from '@/types/messaging'
 import { formatMentionsForDisplay } from '@/types/messaging'
 import { logger } from '../../../lib/utils/logger';
 

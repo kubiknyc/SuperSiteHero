@@ -11,7 +11,6 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   Dialog,
   DialogContent,
@@ -40,8 +39,6 @@ import {
   AlertTriangle,
   XCircle,
   Eye,
-  Edit,
-  RefreshCw,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
@@ -83,7 +80,7 @@ type UploadStatus = 'idle' | 'uploading' | 'processing' | 'review' | 'complete' 
 
 export function InsuranceUploadWidget({
   subcontractorId,
-  subcontractorName,
+  subcontractorName: _subcontractorName,
   projectId,
   companyId,
   onUploadComplete,
@@ -120,7 +117,7 @@ export function InsuranceUploadWidget({
 
       setUploadProgress(20)
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('documents')
         .upload(filePath, file, {
           cacheControl: '3600',
@@ -254,15 +251,6 @@ export function InsuranceUploadWidget({
       console.error('Save error:', err)
       toast.error('Failed to save certificate')
     }
-  }
-
-  const formatDate = (date: string | null) => {
-    if (!date) {return '-'}
-    return new Date(date).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
   }
 
   return (

@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import type { RecordInspectionResultInput, InspectionResult } from '../types'
-import { INSPECTION_RESULT_CONFIG } from '../types'
 import { CheckCircle, XCircle, AlertCircle } from 'lucide-react'
 
 interface InspectionResultDialogProps {

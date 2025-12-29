@@ -6,8 +6,12 @@
  */
 
 import { cn } from '@/lib/utils'
-import type { InspectionStatus, InspectionResult } from '../types'
-import { INSPECTION_STATUS_CONFIG, INSPECTION_RESULT_CONFIG } from '../types'
+import {
+  INSPECTION_STATUS_CONFIG,
+  INSPECTION_RESULT_CONFIG,
+  type InspectionStatus,
+  type InspectionResult,
+} from '../types'
 
 interface InspectionStatusBadgeProps {
   status: InspectionStatus | string | null

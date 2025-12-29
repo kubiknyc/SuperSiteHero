@@ -14,13 +14,6 @@ import {
   toolboxStatsApi,
 } from '@/lib/api/services/toolbox-talks'
 import type {
-  ToolboxTalkTopic,
-  ToolboxTalk,
-  ToolboxTalkWithDetails,
-  ToolboxTalkAttendee,
-  CertificationWithStatus,
-  ToolboxTalkStats,
-  ComplianceSummary,
   CreateToolboxTopicDTO,
   UpdateToolboxTopicDTO,
   CreateToolboxTalkDTO,
@@ -29,7 +22,6 @@ import type {
   CompleteToolboxTalkDTO,
   CreateToolboxAttendeeDTO,
   SignInAttendeeDTO,
-  UpdateToolboxAttendeeDTO,
   BulkAddAttendeesDTO,
   ToolboxTalkFilters,
   ToolboxTopicFilters,
@@ -561,7 +553,7 @@ export function useQuickSignIn() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ attendeeId, talkId }: { attendeeId: string; talkId: string }) =>
+    mutationFn: ({ attendeeId, talkId: _talkId }: { attendeeId: string; talkId: string }) =>
       toolboxAttendeesApi.quickSignIn(attendeeId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: toolboxKeys.attendees(variables.talkId) })
@@ -583,7 +575,7 @@ export function useMarkAbsent() {
     mutationFn: ({
       attendeeId,
       notes,
-      talkId,
+      talkId: _talkId,
     }: {
       attendeeId: string
       notes?: string
@@ -621,7 +613,7 @@ export function useMarkExcused() {
     mutationFn: ({
       attendeeId,
       notes,
-      talkId,
+      talkId: _talkId,
     }: {
       attendeeId: string
       notes?: string
@@ -656,7 +648,7 @@ export function useRemoveAttendee() {
   const { showToast } = useToast()
 
   return useMutation({
-    mutationFn: ({ attendeeId, talkId }: { attendeeId: string; talkId: string }) =>
+    mutationFn: ({ attendeeId, talkId: _talkId }: { attendeeId: string; talkId: string }) =>
       toolboxAttendeesApi.removeAttendee(attendeeId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: toolboxKeys.attendees(variables.talkId) })

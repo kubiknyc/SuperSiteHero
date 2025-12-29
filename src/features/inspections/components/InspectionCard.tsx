@@ -16,7 +16,6 @@ import {
   Clock,
   User,
   Building,
-  Phone,
   AlertTriangle,
 } from 'lucide-react'
 
@@ -29,7 +28,7 @@ interface InspectionCardProps {
 export function InspectionCard({
   inspection,
   className,
-  showProject = false,
+  showProject: _showProject = false,
 }: InspectionCardProps) {
   const scheduledDate = inspection.scheduled_date
     ? new Date(inspection.scheduled_date)

@@ -6,7 +6,6 @@ import { assembliesApi, type AssemblyFilters } from '@/lib/api/services/assembli
 import type { Database } from '@/types/database'
 import toast from 'react-hot-toast'
 
-type Assembly = Database['public']['Tables']['assemblies']['Row']
 type AssemblyInsert = Database['public']['Tables']['assemblies']['Insert']
 type AssemblyUpdate = Database['public']['Tables']['assemblies']['Update']
 

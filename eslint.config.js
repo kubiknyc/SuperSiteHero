@@ -233,7 +233,7 @@ export default tseslint.config(
     },
   },
 
-  // Files that require React Hooks Compiler rules exemption (Three.js, form reset patterns)
+  // Files that require React Hooks Compiler rules exemption (Three.js, form reset patterns, mock data with Date)
   {
     files: [
       '**/**/ModelViewer3D.tsx',
@@ -249,6 +249,7 @@ export default tseslint.config(
       '**/**/PhotoLightbox.tsx',
       '**/**/RemoteMarkupHighlight.tsx',
       '**/**/DrawingSliderComparison.tsx',
+      '**/**/SiteInstructionsPage.tsx',
     ],
     plugins: {
       'react-compiler': reactCompiler,

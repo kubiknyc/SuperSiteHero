@@ -34,7 +34,6 @@ import {
   useSaveCalibration,
   useCopyCalibration,
   calibrationToScaleFactor,
-  type TakeoffCalibration,
 } from '../hooks/useTakeoffCalibration'
 
 export interface CalibrationDialogProps {
@@ -81,7 +80,7 @@ export function CalibrationDialog({
   onCalibrationComplete,
   documentId,
   pageNumber = 1,
-  totalPages = 1,
+  totalPages: _totalPages = 1,
   onShowHistory,
 }: CalibrationDialogProps) {
   const [knownLength, setKnownLength] = useState('')

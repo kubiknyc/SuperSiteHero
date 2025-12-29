@@ -10,7 +10,7 @@ import {
 import { supabase } from '@/lib/supabase';
 import { createWrapper } from '@/__tests__/utils/TestProviders';
 import { faker } from '@faker-js/faker';
-import type { Task, CreateInput } from '@/types/database';
+import type { Task } from '@/types/database';
 
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({

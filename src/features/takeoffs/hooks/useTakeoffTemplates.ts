@@ -3,7 +3,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { takeoffTemplatesApi } from '@/lib/api/services/takeoff-templates'
-import type { TakeoffTemplate, TakeoffTemplateInsert, TakeoffTemplateUpdate } from '@/types/database-extensions'
+import type { TakeoffTemplateInsert, TakeoffTemplateUpdate } from '@/types/database-extensions'
 
 /**
  * Fetch company-wide templates
