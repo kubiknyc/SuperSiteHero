@@ -34,7 +34,7 @@ import {
 } from 'lucide-react';
 import { JSAList } from '@/features/jsa/components';
 import { useCreateJSA, useNextJSANumber, useJSAStatistics } from '@/features/jsa/hooks/useJSA';
-import { useProject } from '@/hooks/useProjects';
+import { useProject } from '@/features/projects/hooks/useProjects';
 import { cn } from '@/lib/utils';
 import { logger } from '../../lib/utils/logger';
 
