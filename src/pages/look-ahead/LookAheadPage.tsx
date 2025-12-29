@@ -26,7 +26,6 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   ArrowLeft,
-  Plus,
   Search,
   Filter,
   RefreshCw,
@@ -100,7 +99,7 @@ export function LookAheadPage() {
   const [filters, setFilters] = useState<LookAheadActivityFilters>({})
   const [searchQuery, setSearchQuery] = useState('')
   const [isExporting, setIsExporting] = useState<'pdf' | 'excel' | 'csv' | null>(null)
-  const [isPrintMode, setIsPrintMode] = useState(false)
+  const [_isPrintMode, setIsPrintMode] = useState(false)
 
   // Queries
   const {

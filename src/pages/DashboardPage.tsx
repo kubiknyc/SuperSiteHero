@@ -13,14 +13,10 @@ import {
   AlertCircle,
   ListChecks,
   Shield,
-  FileText,
   TrendingUp,
-  Users,
   Calendar,
   Clock,
   Building2,
-  CheckCircle2,
-  Activity,
   TrendingDown,
   BarChart3
 } from 'lucide-react'
@@ -32,7 +28,7 @@ export function DashboardPage() {
   const { data: projects } = useMyProjects()
   const { userProfile } = useAuth()
   const dashboardView = useDashboardView()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const [selectedProjectId, _setSelectedProjectId] = useState<string>('')
   const [focusedCard, setFocusedCard] = useState<string | null>(null)
 
   // Get the selected project or the first active project

@@ -36,15 +36,6 @@ interface SendEmailRequest {
   }
 }
 
-interface EmailAccount {
-  id: string
-  email_address: string
-  provider: 'gmail' | 'outlook' | 'imap'
-  access_token: string
-  refresh_token: string
-  token_expires_at: string
-}
-
 // Refresh Google token
 async function refreshGoogleToken(refreshToken: string): Promise<{ access_token: string; expires_in: number }> {
   const clientId = Deno.env.get('GOOGLE_CLIENT_ID')

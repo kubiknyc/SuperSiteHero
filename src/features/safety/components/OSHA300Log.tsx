@@ -23,7 +23,6 @@ import type {
 import {
   OSHA_INJURY_ILLNESS_TYPES,
   SEVERITY_CONFIG,
-  getOSHAInjuryIllnessTypeLabel,
   calculateOSHAIncidentRate,
   calculateDARTRate,
 } from '@/types/safety-incidents'

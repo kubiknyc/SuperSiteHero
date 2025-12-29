@@ -1,6 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+
+// Use vi.hoisted() for mocks to ensure they're available during vi.mock() execution
+const { mockUseDarkMode, mockSetTheme, mockToggleTheme } = vi.hoisted(() => {
+  const setTheme = vi.fn()
+  const toggleTheme = vi.fn()
+  const useDarkMode = vi.fn()
+  return {
+    mockUseDarkMode: useDarkMode,
+    mockSetTheme: setTheme,
+    mockToggleTheme: toggleTheme,
+  }
+})
+
+const defaultDarkModeValues = {
+  theme: 'light',
+  isDarkMode: false,
+  setTheme: mockSetTheme,
+  toggleTheme: mockToggleTheme,
+}
+
+vi.mock('@/hooks/useDarkMode', () => ({
+  useDarkMode: mockUseDarkMode,
+}))
+
+// Import after mocks are set up
 import {
   ThemeToggle,
   ThemeSwitch,
@@ -10,22 +35,11 @@ import {
   MonitorIcon,
 } from '../ThemeToggle'
 
-// Mock useDarkMode hook
-const mockSetTheme = vi.fn()
-const mockToggleTheme = vi.fn()
-
-vi.mock('@/hooks/useDarkMode', () => ({
-  useDarkMode: vi.fn(() => ({
-    theme: 'light',
-    isDarkMode: false,
-    setTheme: mockSetTheme,
-    toggleTheme: mockToggleTheme,
-  })),
-}))
-
 describe('ThemeToggle', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Set default mock return value
+    mockUseDarkMode.mockReturnValue(defaultDarkModeValues)
   })
 
   describe('Default Mode', () => {
@@ -180,8 +194,7 @@ describe('ThemeToggle', () => {
 
   describe('Theme States', () => {
     it('displays correct icon for light theme', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'light',
         isDarkMode: false,
         setTheme: mockSetTheme,
@@ -195,8 +208,7 @@ describe('ThemeToggle', () => {
     })
 
     it('displays correct icon for dark theme', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'dark',
         isDarkMode: true,
         setTheme: mockSetTheme,
@@ -210,8 +222,7 @@ describe('ThemeToggle', () => {
     })
 
     it('displays correct icon for system theme', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'system',
         isDarkMode: false,
         setTheme: mockSetTheme,
@@ -225,8 +236,7 @@ describe('ThemeToggle', () => {
     })
 
     it('displays correct label for dark theme', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'dark',
         isDarkMode: true,
         setTheme: mockSetTheme,
@@ -238,8 +248,7 @@ describe('ThemeToggle', () => {
     })
 
     it('displays correct label for system theme', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'system',
         isDarkMode: false,
         setTheme: mockSetTheme,
@@ -288,8 +297,7 @@ describe('ThemeSwitch', () => {
     })
 
     it('displays status text when enabled', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: true,
         toggleTheme: mockToggleTheme,
       })
@@ -300,8 +308,7 @@ describe('ThemeSwitch', () => {
     })
 
     it('displays status text when disabled', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: false,
         toggleTheme: mockToggleTheme,
       })
@@ -314,8 +321,7 @@ describe('ThemeSwitch', () => {
 
   describe('Icon Display', () => {
     it('shows sun icon when light mode', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: false,
         toggleTheme: mockToggleTheme,
       })
@@ -327,8 +333,7 @@ describe('ThemeSwitch', () => {
     })
 
     it('shows moon icon when dark mode', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: true,
         toggleTheme: mockToggleTheme,
       })
@@ -340,8 +345,7 @@ describe('ThemeSwitch', () => {
     })
 
     it('moon icon has blue color in dark mode', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: true,
         toggleTheme: mockToggleTheme,
       })
@@ -353,8 +357,7 @@ describe('ThemeSwitch', () => {
     })
 
     it('sun icon has warning color in light mode', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: false,
         toggleTheme: mockToggleTheme,
       })
@@ -368,8 +371,7 @@ describe('ThemeSwitch', () => {
 
   describe('Switch Interaction', () => {
     it('switch is checked when dark mode is enabled', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: true,
         toggleTheme: mockToggleTheme,
       })
@@ -381,8 +383,7 @@ describe('ThemeSwitch', () => {
     })
 
     it('switch is unchecked when dark mode is disabled', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         isDarkMode: false,
         toggleTheme: mockToggleTheme,
       })
@@ -472,8 +473,7 @@ describe('ThemeSelector', () => {
 
   describe('Theme Selection', () => {
     it('highlights active theme button', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'light',
         setTheme: mockSetTheme,
       })
@@ -485,8 +485,7 @@ describe('ThemeSelector', () => {
     })
 
     it('does not highlight inactive buttons', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'light',
         setTheme: mockSetTheme,
       })
@@ -528,8 +527,7 @@ describe('ThemeSelector', () => {
     })
 
     it('highlights dark theme when active', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'dark',
         setTheme: mockSetTheme,
       })
@@ -541,8 +539,7 @@ describe('ThemeSelector', () => {
     })
 
     it('highlights system theme when active', () => {
-      const { useDarkMode } = require('@/hooks/useDarkMode')
-      useDarkMode.mockReturnValue({
+      mockUseDarkMode.mockReturnValue({
         theme: 'system',
         setTheme: mockSetTheme,
       })

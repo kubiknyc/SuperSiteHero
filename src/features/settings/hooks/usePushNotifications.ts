@@ -11,7 +11,6 @@ import { logger } from '@/lib/utils/logger'
 import {
   pushService,
   type PushPermissionState,
-  type PushSubscriptionData,
 } from '@/lib/notifications/pushService'
 import {
   type PushNotificationPreferences,

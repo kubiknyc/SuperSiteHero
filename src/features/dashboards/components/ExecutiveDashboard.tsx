@@ -15,24 +15,17 @@ import { format } from 'date-fns'
 import {
   DollarSign,
   TrendingUp,
-  TrendingDown,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
   BarChart2,
-  PieChart,
   Building2,
   Users,
-  Shield,
   Target,
   ChevronRight,
   ArrowUpRight,
   ArrowDownRight,
   Briefcase,
   Activity,
-  Gauge,
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -41,7 +34,7 @@ interface ExecutiveDashboardProps {
   companyId?: string
 }
 
-export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
+export function ExecutiveDashboard({ companyId: _companyId }: ExecutiveDashboardProps) {
   // Mock data - replace with actual queries
   const portfolioMetrics = {
     totalProjects: 8,
@@ -152,7 +145,7 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
     }).format(value)
   }
 
-  const formatCurrencyFull = (value: number) => {
+  const _formatCurrencyFull = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',

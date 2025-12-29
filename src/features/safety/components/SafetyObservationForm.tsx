@@ -104,7 +104,7 @@ export function SafetyObservationForm({
   onCancel,
   className,
 }: SafetyObservationFormProps) {
-  const [photos, setPhotos] = useState<File[]>([])
+  const [_photos, setPhotos] = useState<File[]>([])
   const [photoUrls, setPhotoUrls] = useState<string[]>([])
   const [isGettingLocation, setIsGettingLocation] = useState(false)
   const [locationCoordinates, setLocationCoordinates] = useState<{ lat: number; lng: number } | null>(null)

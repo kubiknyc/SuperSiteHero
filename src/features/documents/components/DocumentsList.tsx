@@ -70,7 +70,7 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
   }
 
   const handleDelete = async () => {
-    if (!documentToDelete) return
+    if (!documentToDelete) {return}
     try {
       await deleteDocument.mutateAsync(documentToDelete)
     } finally {

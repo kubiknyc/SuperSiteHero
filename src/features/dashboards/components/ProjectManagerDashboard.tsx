@@ -20,21 +20,16 @@ import {
   HelpCircle,
   FileCheck,
   RefreshCw,
-  AlertTriangle,
-  CheckCircle,
-  Clock,
   TrendingUp,
-  TrendingDown,
   Users,
   BarChart2,
-  Target,
   Briefcase,
   ChevronRight,
   ArrowUpRight,
   ArrowDownRight,
   CircleDot,
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -45,7 +40,7 @@ interface ProjectManagerDashboardProps {
   projectId?: string
 }
 
-export function ProjectManagerDashboard({ project, projectId }: ProjectManagerDashboardProps) {
+export function ProjectManagerDashboard({ project: _project, projectId }: ProjectManagerDashboardProps) {
   // Mock data - replace with actual queries
   const budgetMetrics = {
     contractValue: 12500000,

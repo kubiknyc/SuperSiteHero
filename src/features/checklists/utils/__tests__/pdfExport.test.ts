@@ -6,47 +6,78 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { jsPDF } from 'jspdf'
 
-// Mock jsPDF
-const mockSetFontSize = vi.fn()
-const mockSetFont = vi.fn()
-const mockSetTextColor = vi.fn()
-const mockText = vi.fn()
-const mockAddPage = vi.fn()
-const mockSave = vi.fn()
+// Use vi.hoisted() for all mocks to ensure proper hoisting
+const {
+  mockSetFontSize,
+  mockSetFont,
+  mockSetTextColor,
+  mockText,
+  mockAddPage,
+  mockSave,
+  mockJsPDF,
+  mockAutoTable,
+  mockFormat,
+  mockGetCompanyInfo,
+  mockAddDocumentHeader,
+  mockAddFootersToAllPages,
+} = vi.hoisted(() => {
+  const setFontSize = vi.fn()
+  const setFont = vi.fn()
+  const setTextColor = vi.fn()
+  const text = vi.fn()
+  const addPage = vi.fn()
+  const save = vi.fn()
 
-const mockJsPDF = {
-  setFontSize: mockSetFontSize,
-  setFont: mockSetFont,
-  setTextColor: mockSetTextColor,
-  text: mockText,
-  addPage: mockAddPage,
-  save: mockSave,
-  lastAutoTable: { finalY: 100 },
-} as unknown as jsPDF
+  const jsPDFInstance = {
+    setFontSize,
+    setFont,
+    setTextColor,
+    text,
+    addPage,
+    save,
+    lastAutoTable: { finalY: 100 },
+  }
 
+  return {
+    mockSetFontSize: setFontSize,
+    mockSetFont: setFont,
+    mockSetTextColor: setTextColor,
+    mockText: text,
+    mockAddPage: addPage,
+    mockSave: save,
+    mockJsPDF: jsPDFInstance,
+    mockAutoTable: vi.fn(),
+    mockFormat: vi.fn((date: Date, formatStr: string) => {
+      if (formatStr === 'PPP p') {return 'January 15, 2024 at 10:30 AM'}
+      if (formatStr === 'yyyy-MM-dd') {return '2024-01-15'}
+      return '2024-01-15'
+    }),
+    mockGetCompanyInfo: vi.fn(),
+    mockAddDocumentHeader: vi.fn(async () => 40),
+    mockAddFootersToAllPages: vi.fn(),
+  }
+})
+
+// IMPORTANT: Use regular function (not arrow) so it can be used with 'new' keyword
 vi.mock('jspdf', () => ({
-  default: vi.fn(() => mockJsPDF),
+  default: vi.fn(function() { return mockJsPDF }),
 }))
 
-// Mock autoTable - use vi.fn() directly in factory
+// Mock autoTable with hoisted mock
 vi.mock('jspdf-autotable', () => ({
-  default: vi.fn(),
+  default: mockAutoTable,
 }))
 
-// Mock date-fns - use vi.fn() directly in factory
+// Mock date-fns with hoisted mock
 vi.mock('date-fns', () => ({
-  format: vi.fn((date: Date, formatStr: string) => {
-    if (formatStr === 'PPP p') {return 'January 15, 2024 at 10:30 AM'}
-    if (formatStr === 'yyyy-MM-dd') {return '2024-01-15'}
-    return '2024-01-15'
-  }),
+  format: mockFormat,
 }))
 
-// Mock pdfBranding utilities - use vi.fn() directly in factory
+// Mock pdfBranding utilities with hoisted mocks
 vi.mock('@/lib/utils/pdfBranding', () => ({
-  getCompanyInfo: vi.fn(),
-  addDocumentHeader: vi.fn(async () => 40),
-  addFootersToAllPages: vi.fn(),
+  getCompanyInfo: mockGetCompanyInfo,
+  addDocumentHeader: mockAddDocumentHeader,
+  addFootersToAllPages: mockAddFootersToAllPages,
 }))
 
 // Import functions after mocking

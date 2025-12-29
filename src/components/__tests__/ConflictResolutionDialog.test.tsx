@@ -5,17 +5,29 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ConflictResolutionDialog } from '../ConflictResolutionDialog';
 import type { SyncConflict } from '@/stores/offline-store';
 
-// Mock offline store
-const mockResolveConflict = vi.fn();
+// Use vi.hoisted() for mocks to ensure they're available during vi.mock() execution
+const { mockResolveConflict, mockUseOfflineStore, mockLogger } = vi.hoisted(() => {
+  const resolveConflict = vi.fn();
+  const useOfflineStore = vi.fn();
+  const logger = {
+    error: vi.fn(),
+    warn: vi.fn(),
+  };
+  return {
+    mockResolveConflict: resolveConflict,
+    mockUseOfflineStore: useOfflineStore,
+    mockLogger: logger,
+  };
+});
 
 vi.mock('@/stores/offline-store', () => ({
-  useOfflineStore: vi.fn(() => ({
-    resolveConflict: mockResolveConflict,
-  })),
+  useOfflineStore: mockUseOfflineStore,
 }));
+
+// Import after mocks are set up
+import { ConflictResolutionDialog } from '../ConflictResolutionDialog';
 
 // Mock UI components
 vi.mock('@/components/ui/dialog', () => ({
@@ -105,12 +117,9 @@ vi.mock('lucide-react', () => ({
   ),
 }));
 
-// Mock logger
+// Mock logger with hoisted mock
 vi.mock('@/lib/utils/logger', () => ({
-  logger: {
-    error: vi.fn(),
-    warn: vi.fn(),
-  },
+  logger: mockLogger,
 }));
 
 describe('ConflictResolutionDialog', () => {
@@ -140,6 +149,10 @@ describe('ConflictResolutionDialog', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Set default mock return value
+    mockUseOfflineStore.mockReturnValue({
+      resolveConflict: mockResolveConflict,
+    });
   });
 
   describe('Visibility and Rendering', () => {
@@ -748,7 +761,6 @@ describe('ConflictResolutionDialog', () => {
       const user = userEvent.setup();
       const conflict = createMockConflict();
       const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-      const { logger } = require('@/lib/utils/logger');
 
       mockResolveConflict.mockRejectedValue(new Error('Resolution failed'));
 
@@ -760,7 +772,7 @@ describe('ConflictResolutionDialog', () => {
       await user.click(resolveButton);
 
       await waitFor(() => {
-        expect(logger.error).toHaveBeenCalledWith(
+        expect(mockLogger.error).toHaveBeenCalledWith(
           '[ConflictResolution] Failed to resolve conflict:',
           expect.any(Error)
         );
@@ -770,14 +782,10 @@ describe('ConflictResolutionDialog', () => {
     });
 
     it('logs warning when merge is selected', async () => {
-      const user = userEvent.setup();
-      const conflict = createMockConflict();
-      const { logger } = require('@/lib/utils/logger');
-
       // Manually trigger merge resolution (button is disabled in UI)
       // We'll need to test the internal logic
       // For now, verify the warning exists in the code
-      expect(logger.warn).toBeDefined();
+      expect(mockLogger.warn).toBeDefined();
     });
   });
 

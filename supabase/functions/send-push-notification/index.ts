@@ -234,7 +234,7 @@ async function encryptPayload(
 
   // Derive encryption key using HKDF
   // PRK = HKDF-Extract(auth, sharedSecret)
-  const prkKey = await crypto.subtle.importKey(
+  const _prkKey = await crypto.subtle.importKey(
     'raw',
     authKeyBytes,
     { name: 'HKDF' },

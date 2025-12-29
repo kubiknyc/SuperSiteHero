@@ -19,7 +19,6 @@ import {
   Calculator,
   Info,
   RefreshCw,
-  Download,
   Copy,
   CheckCircle,
 } from 'lucide-react'
@@ -30,10 +29,8 @@ import {
   calculateSeverityRate,
   getRateStatus,
   getStatusColors,
-  formatRate,
   getDefaultBenchmark,
 } from '../utils/safetyCalculations'
-import type { RateStatus } from '@/types/safety-metrics'
 
 // ============================================================================
 // Props
@@ -77,7 +74,7 @@ interface RateDisplayProps {
   description: string
 }
 
-function RateDisplay({ label, shortLabel, value, benchmark, formula, description }: RateDisplayProps) {
+function RateDisplay({ label, shortLabel, value, benchmark, formula, _description }: RateDisplayProps) {
   const status = getRateStatus(shortLabel.toLowerCase() as any, value, benchmark)
   const colors = getStatusColors(status)
 

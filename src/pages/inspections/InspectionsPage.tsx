@@ -19,7 +19,6 @@ import {
 import {
   InspectionCard,
   InspectionFilters,
-  InspectionStatusBadge,
 } from '@/features/inspections/components'
 import {
   useInspections,
@@ -33,7 +32,6 @@ import {
   ClipboardCheck,
   Calendar,
   CheckCircle,
-  XCircle,
   AlertTriangle,
   Clock,
 } from 'lucide-react'

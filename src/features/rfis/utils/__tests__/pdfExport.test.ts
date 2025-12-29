@@ -6,79 +6,130 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { jsPDF } from 'jspdf'
 
-// Mock jsPDF
-const mockAddPage = vi.fn()
-const mockSetFillColor = vi.fn()
-const mockRect = vi.fn()
-const mockSetTextColor = vi.fn()
-const mockSetFontSize = vi.fn()
-const mockSetFont = vi.fn()
-const mockText = vi.fn()
-const mockSetDrawColor = vi.fn()
-const mockSetLineWidth = vi.fn()
-const mockGetTextWidth = vi.fn(() => 20)
-const mockSplitTextToSize = vi.fn((text: string) => [text])
-const mockOutput = vi.fn(() => new Blob())
-const mockGetNumberOfPages = vi.fn(() => 1)
-const mockSetPage = vi.fn()
+// Use vi.hoisted() for all mocks to ensure proper hoisting
+const {
+  mockAddPage,
+  mockSetFillColor,
+  mockRect,
+  mockSetTextColor,
+  mockSetFontSize,
+  mockSetFont,
+  mockText,
+  mockSetDrawColor,
+  mockSetLineWidth,
+  mockGetTextWidth,
+  mockSplitTextToSize,
+  mockOutput,
+  mockGetNumberOfPages,
+  mockSetPage,
+  mockJsPDF,
+  mockAutoTable,
+  mockFormat,
+  mockGetCompanyInfo,
+  mockAddDocumentHeader,
+  mockAddFootersToAllPages,
+  mockFormatRFINumber,
+  mockGetRFIResponseTypeLabel,
+} = vi.hoisted(() => {
+  const addPage = vi.fn()
+  const setFillColor = vi.fn()
+  const rect = vi.fn()
+  const setTextColor = vi.fn()
+  const setFontSize = vi.fn()
+  const setFont = vi.fn()
+  const text = vi.fn()
+  const setDrawColor = vi.fn()
+  const setLineWidth = vi.fn()
+  const getTextWidth = vi.fn(() => 20)
+  const splitTextToSize = vi.fn((t: string) => [t])
+  const output = vi.fn(() => new Blob())
+  const getNumberOfPages = vi.fn(() => 1)
+  const setPage = vi.fn()
 
-const mockJsPDF = {
-  addPage: mockAddPage,
-  setFillColor: mockSetFillColor,
-  rect: mockRect,
-  setTextColor: mockSetTextColor,
-  setFontSize: mockSetFontSize,
-  setFont: mockSetFont,
-  text: mockText,
-  setDrawColor: mockSetDrawColor,
-  setLineWidth: mockSetLineWidth,
-  getTextWidth: mockGetTextWidth,
-  splitTextToSize: mockSplitTextToSize,
-  output: mockOutput,
-  getNumberOfPages: mockGetNumberOfPages,
-  setPage: mockSetPage,
-  lastAutoTable: { finalY: 100 },
-} as unknown as jsPDF
+  const jsPDFInstance = {
+    addPage,
+    setFillColor,
+    rect,
+    setTextColor,
+    setFontSize,
+    setFont,
+    text,
+    setDrawColor,
+    setLineWidth,
+    getTextWidth,
+    splitTextToSize,
+    output,
+    getNumberOfPages,
+    setPage,
+    lastAutoTable: { finalY: 100 },
+  }
+
+  return {
+    mockAddPage: addPage,
+    mockSetFillColor: setFillColor,
+    mockRect: rect,
+    mockSetTextColor: setTextColor,
+    mockSetFontSize: setFontSize,
+    mockSetFont: setFont,
+    mockText: text,
+    mockSetDrawColor: setDrawColor,
+    mockSetLineWidth: setLineWidth,
+    mockGetTextWidth: getTextWidth,
+    mockSplitTextToSize: splitTextToSize,
+    mockOutput: output,
+    mockGetNumberOfPages: getNumberOfPages,
+    mockSetPage: setPage,
+    mockJsPDF: jsPDFInstance,
+    mockAutoTable: vi.fn(),
+    mockFormat: vi.fn((date: Date | string, formatStr: string) => {
+      if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2025'}
+      if (formatStr === 'MMM d, yyyy') {return 'Jan 15, 2025'}
+      if (formatStr === 'yyyy-MM-dd') {return '2025-01-15'}
+      if (formatStr.includes('h:mm a')) {return 'Jan 15, 2025 2:30 PM'}
+      return '2025-01-15'
+    }),
+    mockGetCompanyInfo: vi.fn(),
+    mockAddDocumentHeader: vi.fn(async () => 40),
+    mockAddFootersToAllPages: vi.fn(),
+    mockFormatRFINumber: vi.fn((num: number) => `RFI-${String(num).padStart(3, '0')}`),
+    mockGetRFIResponseTypeLabel: vi.fn((type: string) => {
+      const labels: Record<string, string> = {
+        clarification: 'Clarification',
+        approval: 'Approval',
+        instruction: 'Instruction',
+      }
+      return labels[type] || type
+    }),
+  }
+})
 
 // Mock jsPDF constructor
+// IMPORTANT: Use regular function (not arrow) so it can be used with 'new' keyword
 vi.mock('jspdf', () => ({
-  default: vi.fn(() => mockJsPDF),
+  default: vi.fn(function() { return mockJsPDF }),
 }))
 
-// Mock autoTable
+// Mock autoTable with hoisted mock
 vi.mock('jspdf-autotable', () => ({
-  default: vi.fn(),
+  default: mockAutoTable,
 }))
 
-// Mock date-fns
+// Mock date-fns with hoisted mock
 vi.mock('date-fns', () => ({
-  format: vi.fn((date: Date | string, formatStr: string) => {
-    if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2025'}
-    if (formatStr === 'MMM d, yyyy') {return 'Jan 15, 2025'}
-    if (formatStr === 'yyyy-MM-dd') {return '2025-01-15'}
-    if (formatStr.includes('h:mm a')) {return 'Jan 15, 2025 2:30 PM'}
-    return '2025-01-15'
-  }),
+  format: mockFormat,
 }))
 
-// Mock pdfBranding utilities
+// Mock pdfBranding utilities with hoisted mocks
 vi.mock('@/lib/utils/pdfBranding', () => ({
-  getCompanyInfo: vi.fn(),
-  addDocumentHeader: vi.fn(async () => 40),
-  addFootersToAllPages: vi.fn(),
+  getCompanyInfo: mockGetCompanyInfo,
+  addDocumentHeader: mockAddDocumentHeader,
+  addFootersToAllPages: mockAddFootersToAllPages,
 }))
 
-// Mock RFI type utilities
+// Mock RFI type utilities with hoisted mocks
 vi.mock('@/types/rfi', () => ({
-  formatRFINumber: vi.fn((num: number) => `RFI-${String(num).padStart(3, '0')}`),
-  getRFIResponseTypeLabel: vi.fn((type: string) => {
-    const labels: Record<string, string> = {
-      clarification: 'Clarification',
-      approval: 'Approval',
-      instruction: 'Instruction',
-    }
-    return labels[type] || type
-  }),
+  formatRFINumber: mockFormatRFINumber,
+  getRFIResponseTypeLabel: mockGetRFIResponseTypeLabel,
 }))
 
 // Import functions after mocking

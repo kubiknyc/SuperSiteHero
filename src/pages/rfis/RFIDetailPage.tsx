@@ -111,7 +111,7 @@ export function RFIDetailPage() {
   }
 
   const handleDelete = async () => {
-    if (!rfi) return
+    if (!rfi) {return}
     try {
       await deleteRFI.mutateAsync(rfi.id)
       navigate(-1)

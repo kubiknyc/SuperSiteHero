@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -18,7 +17,6 @@ import { useContacts } from '@/features/contacts/hooks/useContacts'
 import type { SiteInstructionStatus, SiteInstructionPriority } from '@/types/database'
 
 export default function SiteInstructionsPage() {
-  const { userProfile } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
 
   // Get project from URL or default

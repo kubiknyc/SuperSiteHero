@@ -96,7 +96,7 @@ export function RFICommentThread({
 
   // Render display name for user
   const renderDisplayName = (userId: string | null | undefined) => {
-    if (!userId) return <span>Unknown</span>
+    if (!userId) {return <span>Unknown</span>}
     if (userId === userProfile.id) {
       return <span>You</span>
     }

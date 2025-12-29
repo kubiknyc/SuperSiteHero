@@ -187,7 +187,7 @@ export function RFIAttachments({
   }
 
   const handleDelete = async () => {
-    if (!attachmentToDelete) return
+    if (!attachmentToDelete) {return}
 
     try {
       await deleteAttachment.mutateAsync({

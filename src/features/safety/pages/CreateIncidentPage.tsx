@@ -4,17 +4,14 @@
  * Page for reporting new safety incidents using the OSHA-compliant form.
  */
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { IncidentReportForm } from '../components'
-import { useCreateIncident } from '../hooks/useIncidents'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
 
 export function CreateIncidentPage() {
   const navigate = useNavigate()
-  const createIncident = useCreateIncident()
 
   const handleSuccess = (incidentId: string) => {
     navigate(`/safety/${incidentId}`)

@@ -23,8 +23,8 @@ import type {
   DeviceType,
 } from '@/types/photo-management';
 import exifr from 'exifr';
-import { generateVideoThumbnail, thumbnailToFile } from '@/lib/utils/generateVideoThumbnail';
-import { getVideoMetadata, getVideoCodec } from '@/lib/utils/videoCompression';
+import { generateVideoThumbnail } from '@/lib/utils/generateVideoThumbnail';
+import { getVideoCodec } from '@/lib/utils/videoCompression';
 import { logger } from '../../../lib/utils/logger';
 
 

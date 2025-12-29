@@ -136,7 +136,7 @@ export function SubmittalItemsEditor({
   }
 
   const handleDelete = async () => {
-    if (!itemToDelete) return
+    if (!itemToDelete) {return}
 
     try {
       await deleteItem.mutateAsync({

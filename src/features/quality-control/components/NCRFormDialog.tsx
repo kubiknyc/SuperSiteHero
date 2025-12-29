@@ -31,7 +31,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2, AlertTriangle, FileWarning, DollarSign, Clock, MapPin } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/lib/auth/AuthContext';
 import { useCreateNCR, useUpdateNCR } from '../hooks/useQualityControl';
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers';
 import {
@@ -144,7 +143,6 @@ export function NCRFormDialog({
   ncr,
   onSuccess,
 }: NCRFormDialogProps) {
-  const { userProfile } = useAuth();
   const isEditMode = !!ncr;
 
   // Form state - Basic Info

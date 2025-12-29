@@ -6,7 +6,7 @@ import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
-import { useAllMeetings, useMeetings, MEETING_TYPES, MEETING_STATUSES } from '@/features/meetings/hooks'
+import { useAllMeetings, useMeetings, MEETING_TYPES } from '@/features/meetings/hooks'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -95,26 +95,6 @@ export function MeetingsPage() {
   // Get meeting type label
   const getMeetingTypeLabel = (type: string) => {
     return MEETING_TYPES.find((t) => t.value === type)?.label || type
-  }
-
-  // Get meeting status label and variant
-  const getMeetingStatusLabel = (status: string) => {
-    return MEETING_STATUSES.find((s) => s.value === status)?.label || status
-  }
-
-  const getMeetingStatusVariant = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'success'
-      case 'in_progress':
-        return 'default'
-      case 'cancelled':
-        return 'destructive'
-      case 'postponed':
-        return 'secondary'
-      default:
-        return 'outline'
-    }
   }
 
   // Get badge variant based on date

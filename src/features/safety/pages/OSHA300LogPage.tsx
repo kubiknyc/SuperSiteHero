@@ -256,7 +256,6 @@ export function OSHA300LogPage() {
           if (isPreviousYearData && (isPostingPeriod || isJanuaryBeforePosting)) {
             const isOverdue = currentMonth > 4 // After April 30
             const isActive = currentMonth >= 2 && currentMonth <= 4 // Feb 1 - Apr 30
-            const isUpcoming = currentMonth === 1 // Before Feb 1
 
             return (
               <Alert className={isOverdue ? "border-red-500 bg-error-light" : isActive ? "border-orange-500 bg-orange-50" : "border-warning bg-warning-light"}>

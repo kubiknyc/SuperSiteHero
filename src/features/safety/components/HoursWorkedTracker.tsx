@@ -10,7 +10,6 @@
  */
 
 import * as React from 'react'
-import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -38,9 +37,7 @@ import {
   Edit2,
   Trash2,
   Users,
-  Calendar,
   AlertCircle,
-  Upload,
   Calculator,
 } from 'lucide-react'
 import {
@@ -396,7 +393,7 @@ interface HoursRecordCardProps {
   onDelete: () => void
 }
 
-function HoursRecordCard({ record, onEdit, onDelete }: HoursRecordCardProps) {
+function HoursRecordCard({ record, onEdit, _onDelete }: HoursRecordCardProps) {
   const deleteHours = useDeleteHoursWorked()
 
   const getPeriodLabel = () => {

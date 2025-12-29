@@ -87,7 +87,7 @@ interface MetricCardProps {
 }
 
 function MetricCard({
-  title,
+  _title,
   shortTitle,
   value,
   previousValue,

@@ -72,7 +72,7 @@ function generateReportEmail(
   frequency: string,
   customBody: string | null,
   appUrl: string,
-  reportId: string
+  _reportId: string
 ): { html: string; text: string } {
   const html = `
     <!DOCTYPE html>
@@ -161,7 +161,7 @@ function calculateNextRun(
   dayOfWeek: number | null,
   dayOfMonth: number | null,
   timeOfDay: string,
-  timezone: string
+  _timezone: string
 ): Date {
   // Parse time
   const [hours, minutes] = timeOfDay.split(':').map(Number)

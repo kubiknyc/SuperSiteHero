@@ -7,7 +7,6 @@ import { useOfflineSync } from '@/features/daily-reports/hooks/useOfflineSync'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { FormError } from '@/components/ui/form-error'
 import {
   Cloud,
   CloudOff,
@@ -59,9 +58,9 @@ export function DailyReportForm({
   reportDate,
   onSave,
   onCancel,
-  onSubmit,
-  isLoading,
-  initialData,
+  onSubmit: _onSubmit,
+  isLoading: _isLoading,
+  initialData: _initialData,
 }: DailyReportFormProps) {
   const store = useOfflineReportStore()
   const { syncStatus, isOnline, hasPendingSync, hasConflict, conflict, resolveConflict } = useOfflineSync()
@@ -82,10 +81,9 @@ export function DailyReportForm({
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   // Initialize React Hook Form with Zod validation
-  const {
-    formState: { errors, isValid },
-    trigger,
-  } = useForm<ValidatedFormData>({
+  // Note: Form state management is handled via useOfflineReportStore,
+  // but we keep useForm initialized for potential future form integration
+  useForm<ValidatedFormData>({
     resolver: zodResolver(dailyReportSchema),
     mode: 'onBlur',
   })

@@ -25,7 +25,6 @@ import {
   OBSERVATION_TYPE_CONFIG,
   CATEGORY_CONFIG,
   SafetyObservationType,
-  SafetyObservationCategory,
 } from '@/types/safety-observations'
 import {
   ThumbsUp,
@@ -344,7 +343,7 @@ export function SafetyObservationDashboard({
               </CardHeader>
               <CardContent>
                 <div className="h-48 flex items-end gap-1">
-                  {stats?.trends.map((day, index) => {
+                  {stats?.trends.map((day, _index) => {
                     const maxCount = Math.max(...(stats?.trends.map((d) => d.count) || [1]))
                     const height = maxCount > 0 ? (day.count / maxCount) * 100 : 0
 

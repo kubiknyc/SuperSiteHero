@@ -5,11 +5,18 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SyncStatusPanel } from '../SyncStatusPanel';
 
-// Mock offline store
-const mockClearSyncQueue = vi.fn();
-const mockRemovePendingSync = vi.fn();
+// Use vi.hoisted() for mocks to ensure they're available during vi.mock() execution
+const { mockUseOfflineStore, mockClearSyncQueue, mockRemovePendingSync } = vi.hoisted(() => {
+  const clearSyncQueue = vi.fn();
+  const removePendingSync = vi.fn();
+  const useOfflineStore = vi.fn();
+  return {
+    mockUseOfflineStore: useOfflineStore,
+    mockClearSyncQueue: clearSyncQueue,
+    mockRemovePendingSync: removePendingSync,
+  };
+});
 
 const defaultStoreValues = {
   isSyncing: false,
@@ -21,8 +28,11 @@ const defaultStoreValues = {
 };
 
 vi.mock('@/stores/offline-store', () => ({
-  useOfflineStore: vi.fn(() => defaultStoreValues),
+  useOfflineStore: mockUseOfflineStore,
 }));
+
+// Import after mocks are set up
+import { SyncStatusPanel } from '../SyncStatusPanel';
 
 // Mock UI components
 vi.mock('@/components/ui/card', () => ({
@@ -95,12 +105,13 @@ describe('SyncStatusPanel', () => {
     vi.clearAllMocks();
     // Reset window.confirm mock
     global.confirm = vi.fn(() => true);
+    // Set default mock return value
+    mockUseOfflineStore.mockReturnValue(defaultStoreValues);
   });
 
   describe('Empty State', () => {
     it('renders empty state when no pending operations or conflicts', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [],
         conflicts: [],
@@ -114,8 +125,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows "All changes synced" in description when empty', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [],
         conflicts: [],
@@ -127,8 +137,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows "Never" for last sync when no sync has occurred', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         lastSyncTime: null,
       });
@@ -147,8 +156,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows syncing badge when isSyncing is true', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         isSyncing: true,
       });
@@ -161,8 +169,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('does not show syncing badge when isSyncing is false', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         isSyncing: false,
       });
@@ -173,8 +180,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows pending operations and conflicts count in description', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -193,8 +199,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Last Sync Time', () => {
     it('shows "Just now" for recent sync', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         lastSyncTime: Date.now() - 30000, // 30 seconds ago
       });
@@ -205,8 +210,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows minutes for sync within last hour', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         lastSyncTime: Date.now() - 300000, // 5 minutes ago
       });
@@ -217,8 +221,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows hours for sync within last day', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         lastSyncTime: Date.now() - 7200000, // 2 hours ago
       });
@@ -245,8 +248,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Conflicts Section', () => {
     it('does not render conflicts section when no conflicts', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [],
       });
@@ -257,8 +259,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('renders conflicts section when conflicts exist', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'daily_report', detectedAt: Date.now(), localData: {}, serverData: {} },
@@ -288,8 +289,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('renders Resolve button for each conflict', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'daily_report', detectedAt: Date.now(), localData: {}, serverData: {} },
@@ -305,8 +305,7 @@ describe('SyncStatusPanel', () => {
 
     it('opens conflict dialog when Resolve is clicked', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'daily_report', detectedAt: Date.now(), localData: {}, serverData: {} },
@@ -325,8 +324,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('applies warning colors to conflict items', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'daily_report', detectedAt: Date.now(), localData: {}, serverData: {} },
@@ -342,8 +340,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Pending Operations By Type', () => {
     it('does not render pending operations section when queue is empty', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [],
       });
@@ -354,8 +351,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('renders pending operations badges grouped by type', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -372,8 +368,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('counts operations correctly for each type', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'rfi', timestamp: Date.now(), retryCount: 0 },
@@ -392,8 +387,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Queue Details', () => {
     it('does not render queue details when queue is empty', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [],
       });
@@ -404,8 +398,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('renders queue details section when queue has items', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -418,8 +411,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('displays entity type and operation for each queue item', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'inspection', timestamp: Date.now(), retryCount: 0 },
@@ -436,8 +428,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows correct icon for create operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -450,8 +441,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows correct icon for update operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'update', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -464,8 +454,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows correct icon for delete operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'delete', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -478,8 +467,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('shows default icon for unknown operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'unknown', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -507,8 +495,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('does not display retry count when zero', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -521,8 +508,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('renders remove button for each queue item', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -540,8 +526,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Clear All Button', () => {
     it('renders Clear All button when queue has items', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -555,8 +540,7 @@ describe('SyncStatusPanel', () => {
 
     it('shows confirmation dialog when Clear All is clicked', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -577,8 +561,7 @@ describe('SyncStatusPanel', () => {
 
     it('calls clearSyncQueue when confirmed', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -597,8 +580,7 @@ describe('SyncStatusPanel', () => {
 
     it('does not call clearSyncQueue when cancelled', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -619,8 +601,7 @@ describe('SyncStatusPanel', () => {
   describe('Remove Item Button', () => {
     it('shows confirmation dialog when remove item is clicked', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -646,8 +627,7 @@ describe('SyncStatusPanel', () => {
 
     it('calls removePendingSync with correct id when confirmed', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: 'item-123', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -672,8 +652,7 @@ describe('SyncStatusPanel', () => {
 
     it('does not call removePendingSync when cancelled', async () => {
       const user = userEvent.setup();
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -699,8 +678,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Operation Colors', () => {
     it('applies success color to create operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -714,8 +692,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('applies info color to update operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'update', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -729,8 +706,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('applies error color to delete operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'delete', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -744,8 +720,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('applies muted color to unknown operation', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'unknown', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -761,8 +736,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Dark Mode Support', () => {
     it('applies dark mode classes to operation badges', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -776,8 +750,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('applies dark mode classes to conflict items', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'daily_report', detectedAt: Date.now(), localData: {}, serverData: {} },
@@ -793,8 +766,7 @@ describe('SyncStatusPanel', () => {
 
   describe('ScrollArea Usage', () => {
     it('uses ScrollArea for conflicts section', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         conflicts: [
           { id: 'c1', entityType: 'daily_report', detectedAt: Date.now(), localData: {}, serverData: {} },
@@ -808,8 +780,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('uses ScrollArea for queue details', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -825,8 +796,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Separators', () => {
     it('uses separators between sections', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -849,8 +819,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('provides descriptive button labels', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -867,8 +836,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('capitalizes entity types for readability', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -885,8 +853,7 @@ describe('SyncStatusPanel', () => {
 
   describe('Edge Cases', () => {
     it('handles empty entity type gracefully', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: '', timestamp: Date.now(), retryCount: 0 },
@@ -900,8 +867,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('handles multiple queue items of same type', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },
@@ -916,8 +882,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('handles large retry counts', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 99 },
@@ -930,8 +895,7 @@ describe('SyncStatusPanel', () => {
     });
 
     it('handles both conflicts and queue items simultaneously', () => {
-      const { useOfflineStore } = require('@/stores/offline-store');
-      useOfflineStore.mockReturnValue({
+      mockUseOfflineStore.mockReturnValue({
         ...defaultStoreValues,
         syncQueue: [
           { id: '1', operation: 'create', entityType: 'daily_report', timestamp: Date.now(), retryCount: 0 },

@@ -7,12 +7,11 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { useContacts, useDeleteContact } from '@/features/contacts/hooks/useContacts'
 import { ContactCard } from '@/features/contacts/components/ContactCard'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
 import {
   Plus,
   Search,
@@ -20,11 +19,9 @@ import {
   Loader2,
   AlertCircle,
   Phone,
-  Mail,
   Building2,
   Trash2,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 type ContactTypeFilter = 'all' | 'subcontractor' | 'architect' | 'engineer' | 'inspector' | 'supplier' | 'owner' | 'consultant' | 'other'
 
@@ -69,8 +66,6 @@ export function ContactsPage() {
       }
     }
   }
-
-  const isLoading = projectsLoading
 
   return (
     <AppLayout>

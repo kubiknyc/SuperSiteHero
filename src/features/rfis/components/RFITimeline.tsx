@@ -135,8 +135,8 @@ export function RFITimeline({
 
   // Get display name for user - now uses UserName component for rendering
   const renderUserName = (userId: string | null | undefined, isCurrentUser: boolean) => {
-    if (!userId) return <span>System</span>
-    if (isCurrentUser) return <span>You</span>
+    if (!userId) {return <span>System</span>}
+    if (isCurrentUser) {return <span>You</span>}
     return <UserName userId={userId} fallback="Unknown User" />
   }
 

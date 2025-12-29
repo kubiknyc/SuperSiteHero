@@ -126,7 +126,7 @@ export function RFIsList({ projectId }: RFIsListProps) {
   }, [])
 
   const handleDelete = useCallback(async () => {
-    if (!rfiToDelete) return
+    if (!rfiToDelete) {return}
     try {
       await deleteRFI.mutateAsync(rfiToDelete)
     } finally {

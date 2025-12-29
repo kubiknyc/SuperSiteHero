@@ -24,7 +24,7 @@ export function useUserProfile(userId: string | null | undefined) {
   return useQuery({
     queryKey: ['user-profile', userId],
     queryFn: async (): Promise<UserProfile | null> => {
-      if (!userId) return null
+      if (!userId) {return null}
 
       const { data, error } = await supabase
         .from('profiles')
@@ -34,7 +34,7 @@ export function useUserProfile(userId: string | null | undefined) {
 
       if (error) {
         // Don't throw for not found - just return null
-        if (error.code === 'PGRST116') return null
+        if (error.code === 'PGRST116') {return null}
         throw error
       }
 
@@ -55,14 +55,14 @@ export function useUserProfiles(userIds: (string | null | undefined)[]) {
   return useQuery({
     queryKey: ['user-profiles', validIds.sort().join(',')],
     queryFn: async (): Promise<Map<string, UserProfile>> => {
-      if (validIds.length === 0) return new Map()
+      if (validIds.length === 0) {return new Map()}
 
       const { data, error } = await supabase
         .from('profiles')
         .select('id, full_name, first_name, last_name, email, avatar_url')
         .in('id', validIds)
 
-      if (error) throw error
+      if (error) {throw error}
 
       const profileMap = new Map<string, UserProfile>()
       for (const profile of data || []) {
@@ -81,14 +81,14 @@ export function useUserProfiles(userIds: (string | null | undefined)[]) {
  * Get display name from a user profile
  */
 export function getDisplayName(profile: UserProfile | null | undefined, fallback = 'Unknown User'): string {
-  if (!profile) return fallback
+  if (!profile) {return fallback}
 
-  if (profile.full_name) return profile.full_name
+  if (profile.full_name) {return profile.full_name}
   if (profile.first_name && profile.last_name) {
     return `${profile.first_name} ${profile.last_name}`
   }
-  if (profile.first_name) return profile.first_name
-  if (profile.email) return profile.email.split('@')[0]
+  if (profile.first_name) {return profile.first_name}
+  if (profile.email) {return profile.email.split('@')[0]}
 
   return fallback
 }

@@ -3,9 +3,7 @@ import {
   useDocumentVersionHistory,
   useCreateDocumentVersion,
   useRevertDocumentVersion,
-  useCompareDocumentVersions,
 } from '../hooks/useDocuments'
-import type { Document } from '@/types/database'
 import { formatDistanceToNow } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import {
@@ -23,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { History, Upload, RotateCcw, FileText, Clock, GitCompare, MessageSquare, Activity } from 'lucide-react'
+import { History, RotateCcw, FileText, Clock, GitCompare, MessageSquare, Activity } from 'lucide-react'
 import { VersionComparisonView, MarkupVersionComparison } from './comparison'
 import { DocumentComments } from './DocumentComments'
 import { DocumentAccessLog } from './DocumentAccessLog'
@@ -43,7 +41,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
   const [comparisonMode, setComparisonMode] = useState<'basic' | 'markup'>('basic')
 
   const { data: versions, isLoading } = useDocumentVersionHistory(documentId)
-  const createVersion = useCreateDocumentVersion()
+  const _createVersion = useCreateDocumentVersion()
   const revertVersion = useRevertDocumentVersion()
 
   const handleVersionSelect = (versionId: string) => {
@@ -89,7 +87,7 @@ export function DocumentVersionHistory({ documentId, projectId }: DocumentVersio
     )
   }
 
-  const latestVersion = versions?.find((v) => v.is_latest_version)
+  const _latestVersion = versions?.find((v) => v.is_latest_version)
   const versionCount = versions?.length || 0
 
   return (

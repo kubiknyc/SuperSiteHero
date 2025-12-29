@@ -10,7 +10,6 @@ import {
   Search,
   CheckCircle,
   Clock,
-  AlertCircle,
   Loader2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -185,7 +184,7 @@ export default function DrawingRegisterPage() {
     try {
       exportDrawingsToCSV(drawings, project?.name || 'Project');
       toast.success(`Exported ${drawings.length} drawings to CSV`);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to export drawings');
     } finally {
       setIsExporting(false);
@@ -198,7 +197,7 @@ export default function DrawingRegisterPage() {
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !projectId) return;
+    if (!file || !projectId) {return;}
 
     setIsImporting(true);
     try {
@@ -235,7 +234,7 @@ export default function DrawingRegisterPage() {
       } else {
         toast.error('Failed to import drawings');
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to parse CSV file');
     } finally {
       setIsImporting(false);

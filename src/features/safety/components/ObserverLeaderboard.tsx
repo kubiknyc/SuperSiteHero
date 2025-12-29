@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { useLeaderboard, useMyPoints } from '../hooks/useSafetyObservations'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { LeaderboardEntry } from '@/types/safety-observations'
@@ -22,7 +22,6 @@ import {
   AlertTriangle,
   AlertCircle,
   Star,
-  TrendingUp,
   Crown,
 } from 'lucide-react'
 

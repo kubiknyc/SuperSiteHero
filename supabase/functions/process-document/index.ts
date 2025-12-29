@@ -16,14 +16,12 @@ import { categorizeDocument, type CategoryResult } from '../_shared/categorizati
 
 import {
   extractMetadata,
-  getFlattenedFields,
   type ExtractedMetadata,
 } from '../_shared/metadata-extraction.ts'
 
 import {
   calculateDocumentSimilarity,
   type DocumentText,
-  type SimilarityResult,
 } from '../_shared/similarity.ts'
 
 // CORS headers

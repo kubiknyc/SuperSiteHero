@@ -6,64 +6,111 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { jsPDF } from 'jspdf'
 
-// Mock jsPDF and autoTable
-const mockAddPage = vi.fn()
-const mockSetFillColor = vi.fn()
-const mockRect = vi.fn()
-const mockSetTextColor = vi.fn()
-const mockSetFontSize = vi.fn()
-const mockSetFont = vi.fn()
-const mockText = vi.fn()
-const mockSetDrawColor = vi.fn()
-const mockSetLineWidth = vi.fn()
-const mockLine = vi.fn()
-const mockRoundedRect = vi.fn()
-const mockGetTextWidth = vi.fn(() => 20)
-const mockSplitTextToSize = vi.fn((text: string) => [text])
-const mockOutput = vi.fn(() => new Blob())
+// Use vi.hoisted() for all mocks to ensure proper hoisting
+const {
+  mockAddPage,
+  mockSetFillColor,
+  mockRect,
+  mockSetTextColor,
+  mockSetFontSize,
+  mockSetFont,
+  mockText,
+  mockSetDrawColor,
+  mockSetLineWidth,
+  mockLine,
+  mockRoundedRect,
+  mockGetTextWidth,
+  mockSplitTextToSize,
+  mockOutput,
+  mockJsPDF,
+  mockAutoTable,
+  mockFormat,
+  mockGetCompanyInfo,
+  mockAddDocumentHeader,
+  mockAddFootersToAllPages,
+} = vi.hoisted(() => {
+  const addPage = vi.fn()
+  const setFillColor = vi.fn()
+  const rect = vi.fn()
+  const setTextColor = vi.fn()
+  const setFontSize = vi.fn()
+  const setFont = vi.fn()
+  const text = vi.fn()
+  const setDrawColor = vi.fn()
+  const setLineWidth = vi.fn()
+  const line = vi.fn()
+  const roundedRect = vi.fn()
+  const getTextWidth = vi.fn(() => 20)
+  const splitTextToSize = vi.fn((t: string) => [t])
+  const output = vi.fn(() => new Blob())
 
-const mockJsPDF = {
-  addPage: mockAddPage,
-  setFillColor: mockSetFillColor,
-  rect: mockRect,
-  setTextColor: mockSetTextColor,
-  setFontSize: mockSetFontSize,
-  setFont: mockSetFont,
-  text: mockText,
-  setDrawColor: mockSetDrawColor,
-  setLineWidth: mockSetLineWidth,
-  line: mockLine,
-  roundedRect: mockRoundedRect,
-  getTextWidth: mockGetTextWidth,
-  splitTextToSize: mockSplitTextToSize,
-  output: mockOutput,
-  lastAutoTable: { finalY: 100 },
-} as unknown as jsPDF
+  const jsPDFInstance = {
+    addPage,
+    setFillColor,
+    rect,
+    setTextColor,
+    setFontSize,
+    setFont,
+    text,
+    setDrawColor,
+    setLineWidth,
+    line,
+    roundedRect,
+    getTextWidth,
+    splitTextToSize,
+    output,
+    lastAutoTable: { finalY: 100 },
+  }
+
+  return {
+    mockAddPage: addPage,
+    mockSetFillColor: setFillColor,
+    mockRect: rect,
+    mockSetTextColor: setTextColor,
+    mockSetFontSize: setFontSize,
+    mockSetFont: setFont,
+    mockText: text,
+    mockSetDrawColor: setDrawColor,
+    mockSetLineWidth: setLineWidth,
+    mockLine: line,
+    mockRoundedRect: roundedRect,
+    mockGetTextWidth: getTextWidth,
+    mockSplitTextToSize: splitTextToSize,
+    mockOutput: output,
+    mockJsPDF: jsPDFInstance,
+    mockAutoTable: vi.fn(),
+    mockFormat: vi.fn((date: Date, formatStr: string) => {
+      if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2025'}
+      if (formatStr === 'yyyy-MM-dd') {return '2025-01-15'}
+      return '2025-01-15'
+    }),
+    mockGetCompanyInfo: vi.fn(),
+    mockAddDocumentHeader: vi.fn(async () => 40),
+    mockAddFootersToAllPages: vi.fn(),
+  }
+})
 
 // Mock jsPDF constructor
+// IMPORTANT: Use regular function (not arrow) so it can be used with 'new' keyword
 vi.mock('jspdf', () => ({
-  default: vi.fn(() => mockJsPDF),
+  default: vi.fn(function() { return mockJsPDF }),
 }))
 
-// Mock autoTable - use vi.fn() directly in factory
+// Mock autoTable with hoisted mock
 vi.mock('jspdf-autotable', () => ({
-  default: vi.fn(),
+  default: mockAutoTable,
 }))
 
-// Mock date-fns
+// Mock date-fns with hoisted mock
 vi.mock('date-fns', () => ({
-  format: vi.fn((date: Date, formatStr: string) => {
-    if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2025'}
-    if (formatStr === 'yyyy-MM-dd') {return '2025-01-15'}
-    return '2025-01-15'
-  }),
+  format: mockFormat,
 }))
 
-// Mock pdfBranding utilities - use vi.fn() directly in factory
+// Mock pdfBranding utilities with hoisted mocks
 vi.mock('@/lib/utils/pdfBranding', () => ({
-  getCompanyInfo: vi.fn(),
-  addDocumentHeader: vi.fn(async () => 40),
-  addFootersToAllPages: vi.fn(),
+  getCompanyInfo: mockGetCompanyInfo,
+  addDocumentHeader: mockAddDocumentHeader,
+  addFootersToAllPages: mockAddFootersToAllPages,
 }))
 
 // Import functions after mocking
@@ -254,7 +301,7 @@ describe('Daily Reports PDF Export', () => {
       })
 
       // Should not create workforce table
-      const autoTableCalls = autoTable.mock.calls.filter(
+      const autoTableCalls = (autoTable as ReturnType<typeof vi.fn>).mock.calls.filter(
         (call: any) => call[1]?.head?.[0]?.[0] === 'Trade/Team'
       )
       expect(autoTableCalls.length).toBe(0)
@@ -341,7 +388,7 @@ describe('Daily Reports PDF Export', () => {
         deliveries,
       })
 
-      const deliveryCall = autoTable.mock.calls.find(
+      const deliveryCall = (autoTable as ReturnType<typeof vi.fn>).mock.calls.find(
         (call: any) => call[1]?.head?.[0]?.[0] === 'Material'
       )
 
@@ -652,7 +699,7 @@ describe('Daily Reports PDF Export', () => {
         deliveries: deliveryWithoutTime,
       })
 
-      const deliveryCall = autoTable.mock.calls.find(
+      const deliveryCall = (autoTable as ReturnType<typeof vi.fn>).mock.calls.find(
         (call: any) => call[1]?.head?.[0]?.[0] === 'Material'
       )
 
@@ -676,7 +723,7 @@ describe('Daily Reports PDF Export', () => {
         workforce: workforceWithNullHours,
       })
 
-      const workforceCall = autoTable.mock.calls.find(
+      const workforceCall = (autoTable as ReturnType<typeof vi.fn>).mock.calls.find(
         (call: any) => call[1]?.head?.[0]?.[0] === 'Trade/Team'
       )
 
@@ -701,7 +748,7 @@ describe('Daily Reports PDF Export', () => {
         equipment: equipmentWithNulls,
       })
 
-      const equipmentCall = autoTable.mock.calls.find(
+      const equipmentCall = (autoTable as ReturnType<typeof vi.fn>).mock.calls.find(
         (call: any) => call[1]?.head?.[0]?.[0] === 'Equipment Type'
       )
 

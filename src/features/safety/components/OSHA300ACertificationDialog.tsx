@@ -9,7 +9,7 @@
  */
 
 import { useState, useRef, useEffect } from 'react'
-import { X, Pen, Type, Trash2, CheckCircle } from 'lucide-react'
+import { Pen, Type, Trash2, CheckCircle } from 'lucide-react'
 import {
   Dialog,
   DialogContent,

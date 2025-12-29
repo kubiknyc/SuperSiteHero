@@ -5,19 +5,22 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-  ShareIcon,
-  IOSInstallInstructions,
-  PWAInstallBanner,
-  PWAInstallButton,
-  PWAInstallIndicator,
-} from '../PWAInstallPrompt';
 
-// Mock usePWAInstall hook
-const mockPromptInstall = vi.fn();
-const mockDismissPrompt = vi.fn();
-const mockTrackPromptShown = vi.fn();
-const mockResetDismissed = vi.fn();
+// Use vi.hoisted() for mocks to ensure they're available during vi.mock() execution
+const { mockUsePWAInstall, mockPromptInstall, mockDismissPrompt, mockTrackPromptShown, mockResetDismissed } = vi.hoisted(() => {
+  const promptInstall = vi.fn();
+  const dismissPrompt = vi.fn();
+  const trackPromptShown = vi.fn();
+  const resetDismissed = vi.fn();
+  const usePWAInstall = vi.fn();
+  return {
+    mockUsePWAInstall: usePWAInstall,
+    mockPromptInstall: promptInstall,
+    mockDismissPrompt: dismissPrompt,
+    mockTrackPromptShown: trackPromptShown,
+    mockResetDismissed: resetDismissed,
+  };
+});
 
 const defaultPWAHookValues = {
   shouldShowBanner: true,
@@ -33,8 +36,17 @@ const defaultPWAHookValues = {
 };
 
 vi.mock('@/hooks/usePWAInstall', () => ({
-  usePWAInstall: vi.fn(() => defaultPWAHookValues),
+  usePWAInstall: mockUsePWAInstall,
 }));
+
+// Import after mocks are set up
+import {
+  ShareIcon,
+  IOSInstallInstructions,
+  PWAInstallBanner,
+  PWAInstallButton,
+  PWAInstallIndicator,
+} from '../PWAInstallPrompt';
 
 // Mock UI components
 vi.mock('@/components/ui/button', () => ({
@@ -93,6 +105,8 @@ describe('PWAInstallPrompt Components', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
+    // Set default mock return value
+    mockUsePWAInstall.mockReturnValue(defaultPWAHookValues);
   });
 
   afterEach(() => {
@@ -363,8 +377,7 @@ describe('PWAInstallPrompt Components', () => {
   describe('PWAInstallBanner', () => {
     describe('Visibility and Animation', () => {
       it('does not render when shouldShowBanner is false', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: false,
         });
@@ -375,8 +388,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders when shouldShowBanner is true', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -388,8 +400,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls trackPromptShown after delay when showing', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -404,8 +415,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('applies bottom position by default', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -417,8 +427,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('applies top position when position="top"', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -430,8 +439,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('applies custom className', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -445,8 +453,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Content Rendering', () => {
       it('renders logo icon', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -457,8 +464,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders "Install JobSight" title', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -469,8 +475,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders description with benefits', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -481,8 +486,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders Install App button with download icon', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -494,8 +498,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders "Not now" dismiss button', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -506,8 +509,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders dismiss X button', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -518,8 +520,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders "don\'t show again" checkbox', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -533,8 +534,7 @@ describe('PWAInstallPrompt Components', () => {
     describe('Install Flow - Non-iOS', () => {
       it('calls promptInstall when Install App is clicked on non-iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
           isIOS: false,
@@ -550,8 +550,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('does not show iOS instructions on non-iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
           isIOS: false,
@@ -569,8 +568,7 @@ describe('PWAInstallPrompt Components', () => {
     describe('Install Flow - iOS', () => {
       it('shows iOS instructions when Install App is clicked on iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
           isIOS: true,
@@ -589,8 +587,7 @@ describe('PWAInstallPrompt Components', () => {
       it('calls analytics callback when iOS instructions are shown', async () => {
         const user = userEvent.setup({ delay: null });
         const onAnalyticsEvent = vi.fn();
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
           isIOS: true,
@@ -606,8 +603,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('does not call promptInstall on iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
           isIOS: true,
@@ -625,8 +621,7 @@ describe('PWAInstallPrompt Components', () => {
     describe('Dismiss Functionality', () => {
       it('calls dismissPrompt when "Not now" is clicked', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -643,8 +638,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('calls dismissPrompt when X button is clicked', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -661,8 +655,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('dismisses permanently when "don\'t show again" is checked', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -683,8 +676,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Dark Mode Support', () => {
       it('applies dark mode classes to card', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -698,8 +690,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Accessibility', () => {
       it('provides aria-label for dismiss button', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
@@ -714,8 +705,7 @@ describe('PWAInstallPrompt Components', () => {
   describe('PWAInstallButton', () => {
     describe('Installed State', () => {
       it('shows installed state when isInstalled is true', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstalled: true,
         });
@@ -727,8 +717,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows installed state when isStandalone is true', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isStandalone: true,
         });
@@ -739,8 +728,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders CheckCircle icon in installed state', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstalled: true,
         });
@@ -751,8 +739,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows running in standalone mode status', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstalled: true,
         });
@@ -763,8 +750,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows app version', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstalled: true,
         });
@@ -775,8 +761,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('applies green border in installed state', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstalled: true,
         });
@@ -791,8 +776,7 @@ describe('PWAInstallPrompt Components', () => {
     describe('iOS Instructions State', () => {
       it('shows iOS instructions when clicked on iOS device', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isIOS: true,
           isInstallable: true,
@@ -811,8 +795,7 @@ describe('PWAInstallPrompt Components', () => {
       it('calls analytics callback when iOS instructions are shown', async () => {
         const user = userEvent.setup({ delay: null });
         const onAnalyticsEvent = vi.fn();
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isIOS: true,
           isInstallable: true,
@@ -828,8 +811,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('does not show "don\'t show again" in iOS instructions', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isIOS: true,
           isInstallable: true,
@@ -848,8 +830,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Not Installable State', () => {
       it('shows not installable state when not installable and not iOS', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
           isIOS: false,
@@ -861,8 +842,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows "Show Install Prompt" button in not installable state', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
           isIOS: false,
@@ -875,8 +855,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('calls resetDismissed when "Show Install Prompt" is clicked', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
           isIOS: false,
@@ -891,8 +870,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows supported browsers info', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
           isIOS: false,
@@ -904,8 +882,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders Monitor icon in not installable state', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
           isIOS: false,
@@ -919,8 +896,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Installable State', () => {
       it('shows install button when installable on non-iOS', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isIOS: false,
@@ -932,8 +908,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows "How to Install" button on iOS', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isIOS: true,
@@ -946,8 +921,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('calls promptInstall when Install App is clicked on non-iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isIOS: false,
@@ -962,8 +936,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders logo icon on non-iOS', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isIOS: false,
@@ -975,8 +948,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders smartphone icon on iOS', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isIOS: true,
@@ -988,8 +960,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('shows benefits description', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
         });
@@ -1002,8 +973,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Styling', () => {
       it('applies custom className', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
         });
@@ -1015,8 +985,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('applies primary border in installable state', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
         });
@@ -1032,8 +1001,7 @@ describe('PWAInstallPrompt Components', () => {
   describe('PWAInstallIndicator', () => {
     describe('Visibility', () => {
       it('does not render when not installable', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
         });
@@ -1044,8 +1012,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not render when dismissed', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: true,
@@ -1057,8 +1024,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders when installable and not dismissed', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1072,8 +1038,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Button Rendering', () => {
       it('renders download icon', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1085,8 +1050,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders pulse indicator dot', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1099,8 +1063,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('applies custom className', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1115,8 +1078,7 @@ describe('PWAInstallPrompt Components', () => {
     describe('Install Flow - Non-iOS', () => {
       it('calls promptInstall when clicked on non-iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1133,8 +1095,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('does not show tooltip on non-iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1153,8 +1114,7 @@ describe('PWAInstallPrompt Components', () => {
     describe('Install Flow - iOS', () => {
       it('shows iOS instructions tooltip when clicked on iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1174,8 +1134,7 @@ describe('PWAInstallPrompt Components', () => {
       it('calls analytics callback when iOS tooltip is shown', async () => {
         const user = userEvent.setup({ delay: null });
         const onAnalyticsEvent = vi.fn();
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1192,8 +1151,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('does not call promptInstall on iOS', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1210,8 +1168,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('renders compact iOS instructions in tooltip', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1231,8 +1188,7 @@ describe('PWAInstallPrompt Components', () => {
 
       it('allows dismissing iOS tooltip permanently', async () => {
         const user = userEvent.setup({ delay: null });
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,
@@ -1260,8 +1216,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Accessibility', () => {
       it('provides aria-label for install button', () => {
-        const { usePWAInstall } = require('@/hooks/usePWAInstall');
-        usePWAInstall.mockReturnValue({
+        mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
           isDismissed: false,

@@ -19,22 +19,18 @@ import {
   Users,
   Shield,
   CheckSquare,
-  Cloud,
   Truck,
   ClipboardCheck,
   AlertTriangle,
   HardHat,
-  Clock,
   TrendingUp,
   TrendingDown,
   Calendar,
   Sun,
   CloudRain,
-  Plus,
   ChevronRight,
-  Activity,
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
@@ -45,7 +41,7 @@ interface SuperintendentDashboardProps {
   projectId?: string
 }
 
-export function SuperintendentDashboard({ project, projectId }: SuperintendentDashboardProps) {
+export function SuperintendentDashboard({ project: _project, projectId }: SuperintendentDashboardProps) {
   // Mock data - replace with actual queries
   const [baseTime] = React.useState(() => Date.now())
   const dailyReportStatus = {

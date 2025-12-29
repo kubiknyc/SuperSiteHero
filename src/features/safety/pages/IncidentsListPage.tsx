@@ -28,7 +28,6 @@ import {
   Shield,
   TrendingUp,
   Calendar,
-  Filter,
   X,
   ClipboardList,
 } from 'lucide-react'
@@ -174,7 +173,7 @@ export function IncidentsListPage() {
           <div className="bg-card rounded-lg border p-4 mb-6">
             <h3 className="text-sm font-medium text-secondary mb-3 heading-subsection">By Severity</h3>
             <div className="flex flex-wrap gap-4">
-              {Object.entries(SEVERITY_CONFIG).map(([severity, config]) => {
+              {Object.entries(SEVERITY_CONFIG).map(([severity, _config]) => {
                 const count = stats.by_severity[severity as IncidentSeverity] || 0
                 return (
                   <button

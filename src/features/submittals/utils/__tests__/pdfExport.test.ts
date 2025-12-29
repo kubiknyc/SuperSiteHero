@@ -6,90 +6,140 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { jsPDF } from 'jspdf'
 
-// Mock jsPDF
-const mockAddPage = vi.fn()
-const mockSetFillColor = vi.fn()
-const mockRect = vi.fn()
-const mockSetFontSize = vi.fn()
-const mockSetFont = vi.fn()
-const mockSetTextColor = vi.fn()
-const mockText = vi.fn()
-const mockSetDrawColor = vi.fn()
-const mockSetLineWidth = vi.fn()
-const mockLine = vi.fn()
-const mockSplitTextToSize = vi.fn((text: string) => [text])
-const mockOutput = vi.fn(() => new Blob(['mock-pdf'], { type: 'application/pdf' }))
-const mockGetNumberOfPages = vi.fn(() => 1)
-const mockSetPage = vi.fn()
+// Use vi.hoisted() for all mocks to ensure they're available during vi.mock() execution
+const {
+  mockAddPage,
+  mockSetFillColor,
+  mockRect,
+  mockSetFontSize,
+  mockSetFont,
+  mockSetTextColor,
+  mockText,
+  mockSetDrawColor,
+  mockSetLineWidth,
+  mockLine,
+  mockSplitTextToSize,
+  mockOutput,
+  mockGetNumberOfPages,
+  mockSetPage,
+  mockJsPDF,
+  mockAutoTable,
+  mockFormat,
+  mockGetCompanyInfo,
+  mockAddDocumentHeader,
+  mockAddFootersToAllPages,
+  mockFormatSubmittalNumber,
+  mockGetSubmittalTypeLabel,
+  mockGetApprovalCodeLabel,
+} = vi.hoisted(() => {
+  const addPage = vi.fn()
+  const setFillColor = vi.fn()
+  const rect = vi.fn()
+  const setFontSize = vi.fn()
+  const setFont = vi.fn()
+  const setTextColor = vi.fn()
+  const text = vi.fn()
+  const setDrawColor = vi.fn()
+  const setLineWidth = vi.fn()
+  const line = vi.fn()
+  const splitTextToSize = vi.fn((t: string) => [t])
+  const output = vi.fn(() => new Blob(['mock-pdf'], { type: 'application/pdf' }))
+  const getNumberOfPages = vi.fn(() => 1)
+  const setPage = vi.fn()
 
-const mockJsPDF = {
-  addPage: mockAddPage,
-  setFillColor: mockSetFillColor,
-  rect: mockRect,
-  setFontSize: mockSetFontSize,
-  setFont: mockSetFont,
-  setTextColor: mockSetTextColor,
-  text: mockText,
-  setDrawColor: mockSetDrawColor,
-  setLineWidth: mockSetLineWidth,
-  line: mockLine,
-  splitTextToSize: mockSplitTextToSize,
-  output: mockOutput,
-  getNumberOfPages: mockGetNumberOfPages,
-  setPage: mockSetPage,
-  lastAutoTable: { finalY: 100 },
-} as unknown as jsPDF
+  const jsPDFInstance = {
+    addPage,
+    setFillColor,
+    rect,
+    setFontSize,
+    setFont,
+    setTextColor,
+    text,
+    setDrawColor,
+    setLineWidth,
+    line,
+    splitTextToSize,
+    output,
+    getNumberOfPages,
+    setPage,
+    lastAutoTable: { finalY: 100 },
+  }
 
+  return {
+    mockAddPage: addPage,
+    mockSetFillColor: setFillColor,
+    mockRect: rect,
+    mockSetFontSize: setFontSize,
+    mockSetFont: setFont,
+    mockSetTextColor: setTextColor,
+    mockText: text,
+    mockSetDrawColor: setDrawColor,
+    mockSetLineWidth: setLineWidth,
+    mockLine: line,
+    mockSplitTextToSize: splitTextToSize,
+    mockOutput: output,
+    mockGetNumberOfPages: getNumberOfPages,
+    mockSetPage: setPage,
+    mockJsPDF: jsPDFInstance,
+    mockAutoTable: vi.fn(),
+    mockFormat: vi.fn((date: Date, formatStr: string) => {
+      if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2024'}
+      if (formatStr === 'MMM d, yyyy') {return 'Jan 15, 2024'}
+      if (formatStr === 'yyyy-MM-dd') {return '2024-01-15'}
+      if (formatStr === 'MMM d, yyyy h:mm a') {return 'Jan 15, 2024 2:30 PM'}
+      return '2024-01-15'
+    }),
+    mockGetCompanyInfo: vi.fn(),
+    mockAddDocumentHeader: vi.fn(async () => 40),
+    mockAddFootersToAllPages: vi.fn(),
+    mockFormatSubmittalNumber: vi.fn((num: number, rev?: number) =>
+      rev ? `SUB-${String(num).padStart(3, '0')}-R${rev}` : `SUB-${String(num).padStart(3, '0')}`
+    ),
+    mockGetSubmittalTypeLabel: vi.fn((type: string) => {
+      const labels: Record<string, string> = {
+        product_data: 'Product Data',
+        shop_drawings: 'Shop Drawings',
+        samples: 'Samples',
+        certificates: 'Certificates',
+      }
+      return labels[type] || type
+    }),
+    mockGetApprovalCodeLabel: vi.fn((code: string) => {
+      const labels: Record<string, string> = {
+        A: 'Approved',
+        B: 'Approved as Noted',
+        C: 'Revise and Resubmit',
+        D: 'Rejected',
+      }
+      return labels[code] || code
+    }),
+  }
+})
+
+// Mock modules using hoisted mocks
+// IMPORTANT: Use regular function (not arrow) so it can be used with 'new' keyword
 vi.mock('jspdf', () => ({
-  default: vi.fn(() => mockJsPDF),
+  default: vi.fn(function() { return mockJsPDF }),
 }))
 
-// Mock autoTable - use vi.fn() directly in factory
 vi.mock('jspdf-autotable', () => ({
-  default: vi.fn(),
+  default: mockAutoTable,
 }))
 
-// Mock date-fns - use vi.fn() directly in factory
 vi.mock('date-fns', () => ({
-  format: vi.fn((date: Date, formatStr: string) => {
-    if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2024'}
-    if (formatStr === 'MMM d, yyyy') {return 'Jan 15, 2024'}
-    if (formatStr === 'yyyy-MM-dd') {return '2024-01-15'}
-    if (formatStr === 'MMM d, yyyy h:mm a') {return 'Jan 15, 2024 2:30 PM'}
-    return '2024-01-15'
-  }),
+  format: mockFormat,
 }))
 
-// Mock pdfBranding utilities - use vi.fn() directly in factory
 vi.mock('@/lib/utils/pdfBranding', () => ({
-  getCompanyInfo: vi.fn(),
-  addDocumentHeader: vi.fn(async () => 40),
-  addFootersToAllPages: vi.fn(),
+  getCompanyInfo: mockGetCompanyInfo,
+  addDocumentHeader: mockAddDocumentHeader,
+  addFootersToAllPages: mockAddFootersToAllPages,
 }))
 
-// Mock submittal type utilities - use vi.fn() directly in factory
 vi.mock('@/types/submittal', () => ({
-  formatSubmittalNumber: vi.fn((num: number, rev?: number) =>
-    rev ? `SUB-${String(num).padStart(3, '0')}-R${rev}` : `SUB-${String(num).padStart(3, '0')}`
-  ),
-  getSubmittalTypeLabel: vi.fn((type: string) => {
-    const labels: Record<string, string> = {
-      product_data: 'Product Data',
-      shop_drawings: 'Shop Drawings',
-      samples: 'Samples',
-      certificates: 'Certificates',
-    }
-    return labels[type] || type
-  }),
-  getApprovalCodeLabel: vi.fn((code: string) => {
-    const labels: Record<string, string> = {
-      A: 'Approved',
-      B: 'Approved as Noted',
-      C: 'Revise and Resubmit',
-      D: 'Rejected',
-    }
-    return labels[code] || code
-  }),
+  formatSubmittalNumber: mockFormatSubmittalNumber,
+  getSubmittalTypeLabel: mockGetSubmittalTypeLabel,
+  getApprovalCodeLabel: mockGetApprovalCodeLabel,
 }))
 
 // Import functions after mocking
@@ -116,7 +166,7 @@ describe('Submittal PDF Export', () => {
     mockGetNumberOfPages.mockReturnValue(1)
 
     // Mock company info
-    vi.mocked(getCompanyInfo).mockResolvedValue({
+    mockGetCompanyInfo.mockResolvedValue({
       name: 'Test Construction Co',
       address: '123 Main St, TestCity, TS, 12345',
     })

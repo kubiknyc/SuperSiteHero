@@ -6,77 +6,128 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { jsPDF } from 'jspdf'
 
-// Mock jsPDF
-const mockSetFillColor = vi.fn()
-const mockRect = vi.fn()
-const mockSetFontSize = vi.fn()
-const mockSetFont = vi.fn()
-const mockSetTextColor = vi.fn()
-const mockText = vi.fn()
-const mockSetDrawColor = vi.fn()
-const mockSetLineWidth = vi.fn()
-const mockLine = vi.fn()
-const mockSplitTextToSize = vi.fn((text: string) => [text])
-const mockAddPage = vi.fn()
-const mockOutput = vi.fn(() => new Blob(['mock-pdf'], { type: 'application/pdf' }))
+// Use vi.hoisted() for all mocks to ensure proper hoisting
+const {
+  mockSetFillColor,
+  mockRect,
+  mockSetFontSize,
+  mockSetFont,
+  mockSetTextColor,
+  mockText,
+  mockSetDrawColor,
+  mockSetLineWidth,
+  mockLine,
+  mockSplitTextToSize,
+  mockAddPage,
+  mockOutput,
+  mockJsPDF,
+  mockFormat,
+  mockGetCompanyInfo,
+  mockAddDocumentHeader,
+  mockAddFootersToAllPages,
+  mockGetWaiverTypeLabel,
+  mockGetStateName,
+  mockIsConditionalWaiver,
+  mockIsFinalWaiver,
+  mockFormatWaiverAmount,
+} = vi.hoisted(() => {
+  const setFillColor = vi.fn()
+  const rect = vi.fn()
+  const setFontSize = vi.fn()
+  const setFont = vi.fn()
+  const setTextColor = vi.fn()
+  const text = vi.fn()
+  const setDrawColor = vi.fn()
+  const setLineWidth = vi.fn()
+  const line = vi.fn()
+  const splitTextToSize = vi.fn((t: string) => [t])
+  const addPage = vi.fn()
+  const output = vi.fn(() => new Blob(['mock-pdf'], { type: 'application/pdf' }))
 
-const mockJsPDF = {
-  setFillColor: mockSetFillColor,
-  rect: mockRect,
-  setFontSize: mockSetFontSize,
-  setFont: mockSetFont,
-  setTextColor: mockSetTextColor,
-  text: mockText,
-  setDrawColor: mockSetDrawColor,
-  setLineWidth: mockSetLineWidth,
-  line: mockLine,
-  splitTextToSize: mockSplitTextToSize,
-  addPage: mockAddPage,
-  output: mockOutput,
-} as unknown as jsPDF
+  const jsPDFInstance = {
+    setFillColor,
+    rect,
+    setFontSize,
+    setFont,
+    setTextColor,
+    text,
+    setDrawColor,
+    setLineWidth,
+    line,
+    splitTextToSize,
+    addPage,
+    output,
+  }
 
+  return {
+    mockSetFillColor: setFillColor,
+    mockRect: rect,
+    mockSetFontSize: setFontSize,
+    mockSetFont: setFont,
+    mockSetTextColor: setTextColor,
+    mockText: text,
+    mockSetDrawColor: setDrawColor,
+    mockSetLineWidth: setLineWidth,
+    mockLine: line,
+    mockSplitTextToSize: splitTextToSize,
+    mockAddPage: addPage,
+    mockOutput: output,
+    mockJsPDF: jsPDFInstance,
+    mockFormat: vi.fn((date: Date, formatStr: string) => {
+      if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2024'}
+      if (formatStr === 'yyyy-MM-dd') {return '2024-01-15'}
+      return '2024-01-15'
+    }),
+    mockGetCompanyInfo: vi.fn(),
+    mockAddDocumentHeader: vi.fn(async () => 40),
+    mockAddFootersToAllPages: vi.fn(),
+    mockGetWaiverTypeLabel: vi.fn((type: string) => {
+      const labels: Record<string, string> = {
+        conditional_progress: 'Conditional Progress Payment',
+        unconditional_progress: 'Unconditional Progress Payment',
+        conditional_final: 'Conditional Final Payment',
+        unconditional_final: 'Unconditional Final Payment',
+      }
+      return labels[type] || type
+    }),
+    mockGetStateName: vi.fn((code: string) => {
+      const states: Record<string, string> = {
+        CA: 'California',
+        TX: 'Texas',
+        NY: 'New York',
+      }
+      return states[code] || code
+    }),
+    mockIsConditionalWaiver: vi.fn((type: string) => type.includes('conditional')),
+    mockIsFinalWaiver: vi.fn((type: string) => type.includes('final')),
+    mockFormatWaiverAmount: vi.fn((amount: number) => `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`),
+  }
+})
+
+// IMPORTANT: Use regular function (not arrow) so it can be used with 'new' keyword
 vi.mock('jspdf', () => ({
-  default: vi.fn(() => mockJsPDF),
+  default: vi.fn(function() { return mockJsPDF }),
 }))
 
-// Mock date-fns - use vi.fn() directly in factory
+// Mock date-fns with hoisted mock
 vi.mock('date-fns', () => ({
-  format: vi.fn((date: Date, formatStr: string) => {
-    if (formatStr === 'MMMM d, yyyy') {return 'January 15, 2024'}
-    if (formatStr === 'yyyy-MM-dd') {return '2024-01-15'}
-    return '2024-01-15'
-  }),
+  format: mockFormat,
 }))
 
-// Mock pdfBranding utilities - use vi.fn() directly in factory
+// Mock pdfBranding utilities with hoisted mocks
 vi.mock('@/lib/utils/pdfBranding', () => ({
-  getCompanyInfo: vi.fn(),
-  addDocumentHeader: vi.fn(async () => 40),
-  addFootersToAllPages: vi.fn(),
+  getCompanyInfo: mockGetCompanyInfo,
+  addDocumentHeader: mockAddDocumentHeader,
+  addFootersToAllPages: mockAddFootersToAllPages,
 }))
 
-// Mock lien-waiver type utilities - use vi.fn() directly in factory
+// Mock lien-waiver type utilities with hoisted mocks
 vi.mock('@/types/lien-waiver', () => ({
-  getWaiverTypeLabel: vi.fn((type: string) => {
-    const labels: Record<string, string> = {
-      conditional_progress: 'Conditional Progress Payment',
-      unconditional_progress: 'Unconditional Progress Payment',
-      conditional_final: 'Conditional Final Payment',
-      unconditional_final: 'Unconditional Final Payment',
-    }
-    return labels[type] || type
-  }),
-  getStateName: vi.fn((code: string) => {
-    const states: Record<string, string> = {
-      CA: 'California',
-      TX: 'Texas',
-      NY: 'New York',
-    }
-    return states[code] || code
-  }),
-  isConditionalWaiver: vi.fn((type: string) => type.includes('conditional')),
-  isFinalWaiver: vi.fn((type: string) => type.includes('final')),
-  formatWaiverAmount: vi.fn((amount: number) => `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`),
+  getWaiverTypeLabel: mockGetWaiverTypeLabel,
+  getStateName: mockGetStateName,
+  isConditionalWaiver: mockIsConditionalWaiver,
+  isFinalWaiver: mockIsFinalWaiver,
+  formatWaiverAmount: mockFormatWaiverAmount,
 }))
 
 // Import functions after mocking

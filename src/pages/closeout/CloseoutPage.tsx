@@ -498,7 +498,7 @@ export function CloseoutPage() {
           open={showDocumentDialog}
           onOpenChange={(open) => {
             setShowDocumentDialog(open)
-            if (!open) setEditingDocument(null)
+            if (!open) {setEditingDocument(null)}
           }}
           document={editingDocument}
           projectId={selectedProjectId}
@@ -512,7 +512,7 @@ export function CloseoutPage() {
           open={showWarrantyDialog}
           onOpenChange={(open) => {
             setShowWarrantyDialog(open)
-            if (!open) setEditingWarranty(null)
+            if (!open) {setEditingWarranty(null)}
           }}
           warranty={editingWarranty}
           projectId={selectedProjectId}

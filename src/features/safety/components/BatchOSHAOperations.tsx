@@ -9,7 +9,7 @@
  */
 
 import { useState } from 'react'
-import { Check, X, FileText, Eye, EyeOff, Hash, AlertCircle } from 'lucide-react'
+import { Check, FileText, EyeOff, Hash, AlertCircle } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -51,7 +50,7 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
   open,
   onOpenChange,
   selectedIncidents,
-  projectId,
+  _projectId,
   onOperationComplete,
 }) => {
   const [selectedOperation, setSelectedOperation] = useState<BatchOperation>('assign_case_numbers')
@@ -72,7 +71,6 @@ export const BatchOSHAOperations: React.FC<BatchOSHAOperationsProps> = ({
     setError(null)
 
     try {
-      const year = new Date().getFullYear()
       const incidentsNeedingCaseNumbers = selectedIncidents.filter(
         (incident) => !incident.case_number && incident.osha_recordable
       )

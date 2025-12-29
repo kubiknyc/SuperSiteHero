@@ -52,7 +52,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDrawings, useDrawingTransmittals } from '@/features/drawings/hooks/useDrawings';
+import { useDrawings } from '@/features/drawings/hooks/useDrawings';
 import type { DrawingTransmittal, Drawing } from '@/types/drawing';
 
 type TransmittalStatus = 'all' | 'pending' | 'acknowledged' | 'overdue';
@@ -202,7 +202,7 @@ export default function TransmittalLogPage() {
   const [dateRange, setDateRange] = useState<'all' | '7d' | '30d' | '90d'>('all');
 
   // Fetch all drawings to get transmittal data
-  const { data: drawings, isLoading: loadingDrawings } = useDrawings(projectId, {});
+  const { data: _drawings, isLoading: loadingDrawings } = useDrawings(projectId, {});
 
   // Aggregate all transmittals from drawings
   // In a real app, you'd have a dedicated API endpoint for this

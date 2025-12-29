@@ -5,7 +5,6 @@
 
 import { supabase } from '@/lib/supabase'
 import { ApiErrorClass } from '../errors'
-import { sendEmail } from '@/lib/email/email-service'
 import {
   sendBidSubmittedNotification,
   sendPortalInvitationNotification,
@@ -15,15 +14,12 @@ import { logger } from '@/lib/utils/logger'
 import type {
   SubcontractorPortalAccess,
   SubcontractorPortalAccessWithRelations,
-  CreatePortalAccessDTO,
   UpdatePortalAccessDTO,
   SubcontractorComplianceDocument,
   ComplianceDocumentWithRelations,
   CreateComplianceDocumentDTO,
-  UpdateComplianceDocumentDTO,
   ExpiringDocument,
   SubcontractorInvitation,
-  InvitationWithRelations,
   CreateInvitationDTO,
   SubcontractorBid,
   BidWithRelations,

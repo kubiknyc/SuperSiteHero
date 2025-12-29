@@ -3,27 +3,20 @@
  * Form for creating and editing transmittals
  */
 
-import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { format } from 'date-fns';
 import {
   Plus,
   Trash2,
   Send,
   Save,
   Building2,
-  User,
-  Mail,
-  Phone,
-  FileText,
   Package,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   RadixSelect as Select,
@@ -49,21 +42,19 @@ import {
   useUpdateTransmittal,
   useNextTransmittalNumber,
 } from '../hooks/useTransmittals';
-import type {
-  Transmittal,
-  TransmittalWithDetails,
-  CreateTransmittalDTO,
-  UpdateTransmittalDTO,
-  TransmittalItemType,
-  ItemActionRequired,
-  ItemFormat,
-  TransmissionMethod,
-} from '@/types/transmittal';
 import {
   TRANSMISSION_METHODS,
   TRANSMITTAL_ITEM_TYPES,
   ITEM_ACTIONS,
   ITEM_FORMATS,
+  type Transmittal,
+  type TransmittalWithDetails,
+  type CreateTransmittalDTO,
+  type UpdateTransmittalDTO,
+  type TransmittalItemType,
+  type ItemActionRequired,
+  type ItemFormat,
+  type TransmissionMethod,
 } from '@/types/transmittal';
 import { logger } from '../../../lib/utils/logger';
 

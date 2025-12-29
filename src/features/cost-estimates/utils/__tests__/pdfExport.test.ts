@@ -36,8 +36,9 @@ const mockJsPDF = {
   lastAutoTable: { finalY: 100 },
 } as unknown as jsPDF
 
+// IMPORTANT: Use regular function (not arrow) so it can be used with 'new' keyword
 vi.mock('jspdf', () => ({
-  default: vi.fn(() => mockJsPDF),
+  default: vi.fn(function() { return mockJsPDF }),
 }))
 
 // Mock autoTable - use vi.fn() directly in factory

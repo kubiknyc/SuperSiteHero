@@ -18,7 +18,6 @@ import {
   AlertCircle,
   Loader2,
   Search,
-  Filter,
   Calendar,
   Clock,
   AlertTriangle,
@@ -55,7 +54,7 @@ export function RFIsPage() {
 
   // Fetch projects and RFI workflow type
   const { data: projects, isLoading: projectsLoading } = useProjects()
-  const { data: workflowType, isLoading: workflowTypeLoading } = useRFIWorkflowType()
+  const { data: workflowType } = useRFIWorkflowType()
   const { data: rfis, isLoading: rfisLoading, error: rfisError } = useRFIs(
     selectedProjectId || undefined,
     workflowType?.id
@@ -167,8 +166,6 @@ export function RFIsPage() {
     }
     return { text: format(date, 'MMM d, yyyy'), class: 'text-secondary', isOverdue: false }
   }
-
-  const isLoading = projectsLoading || workflowTypeLoading
 
   return (
     <AppLayout>

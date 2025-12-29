@@ -3,6 +3,7 @@
  * Tests the complete lifecycle of a submittal from creation to procurement tracking
  */
 
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll, afterEach } from 'vitest';
 import { render, screen, waitFor, userEvent } from '@/__tests__/helpers';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

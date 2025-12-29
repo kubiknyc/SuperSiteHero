@@ -16,8 +16,6 @@ import {
   Search,
   Receipt,
   BarChart3,
-  Download,
-  Filter,
   RefreshCw,
   Activity,
 } from 'lucide-react'
