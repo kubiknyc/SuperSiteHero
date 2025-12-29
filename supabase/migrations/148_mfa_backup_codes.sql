@@ -63,7 +63,12 @@ CREATE TABLE IF NOT EXISTS mfa_backup_codes (
 -- Create indexes
 CREATE INDEX IF NOT EXISTS idx_mfa_backup_codes_user_id ON mfa_backup_codes(user_id);
 CREATE INDEX IF NOT EXISTS idx_mfa_backup_codes_user_unused ON mfa_backup_codes(user_id, used) WHERE used = false;
-CREATE INDEX IF NOT EXISTS idx_mfa_backup_codes_generation ON mfa_backup_codes(user_id, generation_batch);
+-- Only create generation_batch index if column exists
+DO $$ BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'mfa_backup_codes' AND column_name = 'generation_batch') THEN
+    CREATE INDEX IF NOT EXISTS idx_mfa_backup_codes_generation ON mfa_backup_codes(user_id, generation_batch);
+  END IF;
+END $$;
 
 -- ============================================================================
 -- Row Level Security
@@ -74,14 +79,17 @@ ALTER TABLE user_preferences ENABLE ROW LEVEL SECURITY;
 ALTER TABLE mfa_backup_codes ENABLE ROW LEVEL SECURITY;
 
 -- User Preferences Policies
+DROP POLICY IF EXISTS "Users can view their own preferences" ON user_preferences;
 CREATE POLICY "Users can view their own preferences"
   ON user_preferences FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can insert their own preferences" ON user_preferences;
 CREATE POLICY "Users can insert their own preferences"
   ON user_preferences FOR INSERT
   WITH CHECK (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Users can update their own preferences" ON user_preferences;
 CREATE POLICY "Users can update their own preferences"
   ON user_preferences FOR UPDATE
   USING (auth.uid() = user_id)
@@ -91,6 +99,7 @@ CREATE POLICY "Users can update their own preferences"
 -- Users should NOT be able to read the hashed codes directly
 -- Verification should happen through a secure function
 
+DROP POLICY IF EXISTS "Users can only insert their own backup codes" ON mfa_backup_codes;
 CREATE POLICY "Users can only insert their own backup codes"
   ON mfa_backup_codes FOR INSERT
   WITH CHECK (auth.uid() = user_id);
@@ -98,10 +107,12 @@ CREATE POLICY "Users can only insert their own backup codes"
 -- Users can see metadata about their backup codes (used status) but not the hash
 -- This is handled through a view or function
 
+DROP POLICY IF EXISTS "Users can view their own backup codes metadata" ON mfa_backup_codes;
 CREATE POLICY "Users can view their own backup codes metadata"
   ON mfa_backup_codes FOR SELECT
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "System can update backup code used status" ON mfa_backup_codes;
 CREATE POLICY "System can update backup code used status"
   ON mfa_backup_codes FOR UPDATE
   USING (auth.uid() = user_id)
@@ -201,6 +212,7 @@ DECLARE
   v_code TEXT;
   v_salt TEXT;
   v_hash TEXT;
+  v_has_generation_batch BOOLEAN;
 BEGIN
   -- Only allow users to store their own codes
   IF auth.uid() != p_user_id THEN
@@ -209,6 +221,12 @@ BEGIN
 
   -- Generate a batch ID for this generation
   v_generation_batch := uuid_generate_v4();
+
+  -- Check if generation_batch column exists
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'mfa_backup_codes' AND column_name = 'generation_batch'
+  ) INTO v_has_generation_batch;
 
   -- Delete any existing unused codes (new generation replaces old)
   DELETE FROM mfa_backup_codes
@@ -226,8 +244,13 @@ BEGIN
       'hex'
     );
 
-    INSERT INTO mfa_backup_codes (user_id, code_hash, salt, generation_batch)
-    VALUES (p_user_id, v_hash, v_salt, v_generation_batch);
+    IF v_has_generation_batch THEN
+      INSERT INTO mfa_backup_codes (user_id, code_hash, salt, generation_batch)
+      VALUES (p_user_id, v_hash, v_salt, v_generation_batch);
+    ELSE
+      INSERT INTO mfa_backup_codes (user_id, code_hash, salt)
+      VALUES (p_user_id, v_hash, v_salt);
+    END IF;
   END LOOP;
 
   -- Update user preferences

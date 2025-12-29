@@ -245,6 +245,9 @@ const LienWaiverDetailPage = lazy(() => import('./pages/lien-waivers/LienWaiverD
 // Owner Invoicing feature
 const InvoiceListPage = lazy(() => import('./pages/invoicing/InvoiceListPage'))
 
+// Procurement feature
+const ProcurementPage = lazy(() => import('./pages/procurement/ProcurementPage').then(m => ({ default: m.ProcurementPage })))
+
 // Look-Ahead Planning feature
 const LookAheadPage = lazy(() => import('./pages/look-ahead/LookAheadPage').then(m => ({ default: m.default })))
 const LookAheadSnapshotsPage = lazy(() => import('./pages/look-ahead/LookAheadSnapshotsPage').then(m => ({ default: m.default })))
@@ -633,6 +636,10 @@ function App() {
                 {/* Owner Invoicing feature */}
                 <Route path="/invoices" element={<ProtectedRoute><InvoiceListPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId/invoices" element={<ProtectedRoute><InvoiceListPage /></ProtectedRoute>} />
+
+                {/* Procurement feature */}
+                <Route path="/procurement" element={<ProtectedRoute><ProcurementPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/procurement" element={<ProtectedRoute><ProcurementPage /></ProtectedRoute>} />
 
                 {/* Transmittals feature */}
                 <Route path="/transmittals" element={<ProtectedRoute><TransmittalsPage /></ProtectedRoute>} />

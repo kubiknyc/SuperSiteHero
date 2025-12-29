@@ -26,6 +26,7 @@ import {
   ClipboardCheck,
   Camera,
   Receipt,
+  ShoppingCart,
 } from 'lucide-react';
 import type { NavItem, NavGroup } from '../types/navigation';
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge';
@@ -210,6 +211,12 @@ export const administrationGroup: NavGroup = {
       label: 'Equipment',
       icon: HardHat,
       path: '/equipment',
+      category: 'admin',
+    },
+    {
+      label: 'Procurement',
+      icon: ShoppingCart,
+      path: '/procurement',
       category: 'admin',
     },
     {

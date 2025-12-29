@@ -33,12 +33,14 @@ ALTER TABLE safety_benchmarks ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- industry_safety_benchmarks - Read-only reference data
+DROP POLICY IF EXISTS "industry_safety_benchmarks_read" ON industry_safety_benchmarks;
 CREATE POLICY "industry_safety_benchmarks_read" ON industry_safety_benchmarks
   FOR SELECT
   TO authenticated
   USING (true);  -- All authenticated users can read industry benchmarks
 
 -- safety_benchmarks - Read-only reference data (no company_id column)
+DROP POLICY IF EXISTS "safety_benchmarks_read" ON safety_benchmarks;
 CREATE POLICY "safety_benchmarks_read" ON safety_benchmarks
   FOR SELECT
   TO authenticated
@@ -49,6 +51,7 @@ CREATE POLICY "safety_benchmarks_read" ON safety_benchmarks
 -- ============================================================================
 
 -- document_access_log - Users can see access logs for documents they have access to
+DROP POLICY IF EXISTS "document_access_log_select" ON document_access_log;
 CREATE POLICY "document_access_log_select" ON document_access_log
   FOR SELECT
   TO authenticated
@@ -62,6 +65,7 @@ CREATE POLICY "document_access_log_select" ON document_access_log
     )
   );
 
+DROP POLICY IF EXISTS "document_access_log_insert" ON document_access_log;
 CREATE POLICY "document_access_log_insert" ON document_access_log
   FOR INSERT
   TO authenticated
@@ -77,6 +81,7 @@ CREATE POLICY "document_access_log_insert" ON document_access_log
   );
 
 -- document_comments - Users can manage comments on accessible documents
+DROP POLICY IF EXISTS "document_comments_select" ON document_comments;
 CREATE POLICY "document_comments_select" ON document_comments
   FOR SELECT
   TO authenticated
@@ -90,6 +95,7 @@ CREATE POLICY "document_comments_select" ON document_comments
     )
   );
 
+DROP POLICY IF EXISTS "document_comments_insert" ON document_comments;
 CREATE POLICY "document_comments_insert" ON document_comments
   FOR INSERT
   TO authenticated
@@ -104,11 +110,13 @@ CREATE POLICY "document_comments_insert" ON document_comments
     )
   );
 
+DROP POLICY IF EXISTS "document_comments_update" ON document_comments;
 CREATE POLICY "document_comments_update" ON document_comments
   FOR UPDATE
   TO authenticated
   USING (created_by = auth.uid());
 
+DROP POLICY IF EXISTS "document_comments_delete" ON document_comments;
 CREATE POLICY "document_comments_delete" ON document_comments
   FOR DELETE
   TO authenticated
@@ -116,6 +124,7 @@ CREATE POLICY "document_comments_delete" ON document_comments
 
 -- document_shares - Users can manage shares for accessible documents
 -- Columns: document_id, project_id, recipient_user_id, recipient_role, permission_level, shared_by
+DROP POLICY IF EXISTS "document_shares_select" ON document_shares;
 CREATE POLICY "document_shares_select" ON document_shares
   FOR SELECT
   TO authenticated
@@ -127,6 +136,7 @@ CREATE POLICY "document_shares_select" ON document_shares
     )
   );
 
+DROP POLICY IF EXISTS "document_shares_insert" ON document_shares;
 CREATE POLICY "document_shares_insert" ON document_shares
   FOR INSERT
   TO authenticated
@@ -138,6 +148,7 @@ CREATE POLICY "document_shares_insert" ON document_shares
     )
   );
 
+DROP POLICY IF EXISTS "document_shares_delete" ON document_shares;
 CREATE POLICY "document_shares_delete" ON document_shares
   FOR DELETE
   TO authenticated
@@ -151,6 +162,7 @@ CREATE POLICY "document_shares_delete" ON document_shares
 
 -- document_version_comparisons - Users can see comparisons for accessible documents
 -- Columns: version1_id, version2_id, change_regions, overall_change_percentage, summary, analyzed_by, analyzed_at
+DROP POLICY IF EXISTS "document_version_comparisons_select" ON document_version_comparisons;
 CREATE POLICY "document_version_comparisons_select" ON document_version_comparisons
   FOR SELECT
   TO authenticated
@@ -164,6 +176,7 @@ CREATE POLICY "document_version_comparisons_select" ON document_version_comparis
     )
   );
 
+DROP POLICY IF EXISTS "document_version_comparisons_insert" ON document_version_comparisons;
 CREATE POLICY "document_version_comparisons_insert" ON document_version_comparisons
   FOR INSERT
   TO authenticated
@@ -180,6 +193,7 @@ CREATE POLICY "document_version_comparisons_insert" ON document_version_comparis
 
 -- document_markup_share_history - Audit log for markup sharing
 -- Columns: markup_id, action, shared_with_type, shared_with_id, permission_level, performed_by, performed_at
+DROP POLICY IF EXISTS "document_markup_share_history_select" ON document_markup_share_history;
 CREATE POLICY "document_markup_share_history_select" ON document_markup_share_history
   FOR SELECT
   TO authenticated
@@ -196,6 +210,7 @@ CREATE POLICY "document_markup_share_history_select" ON document_markup_share_hi
     )
   );
 
+DROP POLICY IF EXISTS "document_markup_share_history_insert" ON document_markup_share_history;
 CREATE POLICY "document_markup_share_history_insert" ON document_markup_share_history
   FOR INSERT
   TO authenticated
@@ -220,12 +235,14 @@ CREATE POLICY "document_markup_share_history_insert" ON document_markup_share_hi
 -- This table tracks rate limiting for approvals - read-only for authenticated users
 -- Columns: ip_address, action_type, action_count, window_start, window_end
 -- Note: This is an internal rate limiting table, users can read but system manages writes
+DROP POLICY IF EXISTS "approval_rate_limits_read" ON approval_rate_limits;
 CREATE POLICY "approval_rate_limits_read" ON approval_rate_limits
   FOR SELECT
   TO authenticated
   USING (true);
 
 -- Allow inserts/updates for the system (via service role or triggers)
+DROP POLICY IF EXISTS "approval_rate_limits_write" ON approval_rate_limits;
 CREATE POLICY "approval_rate_limits_write" ON approval_rate_limits
   FOR ALL
   TO authenticated
