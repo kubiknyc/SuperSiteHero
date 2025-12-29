@@ -13,6 +13,7 @@ concurrency:
 
 env:
   NODE_VERSION: '20'
+  NODE_OPTIONS: '--max-old-space-size=4096'
 
 jobs:
   # ==================== QUICK CHECKS (< 2 min) ====================
@@ -34,6 +35,8 @@ jobs:
 
       - name: TypeScript type check
         run: npm run type-check
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
 
       - name: ESLint
         run: npm run lint
@@ -41,6 +44,7 @@ jobs:
       - name: Build check
         run: npm run build
         env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 

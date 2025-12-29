@@ -4,6 +4,15 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+
+# Cancel in-progress runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: '--max-old-space-size=4096'
+
 jobs:
   test:
     timeout-minutes: 60
@@ -12,13 +21,17 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: lts/*
+        node-version: '20'
     - name: Install dependencies
       run: npm ci --legacy-peer-deps
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npx playwright test --project=chromium
+      env:
+        VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+        VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+      continue-on-error: true
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:

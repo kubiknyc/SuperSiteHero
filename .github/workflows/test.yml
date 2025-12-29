@@ -11,6 +11,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  NODE_OPTIONS: '--max-old-space-size=4096'
+
 jobs:
   # ==================== LINT & TYPE CHECK ====================
   lint-and-typecheck:
@@ -34,6 +37,8 @@ jobs:
 
       - name: Run TypeScript type check
         run: npm run type-check
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
 
   # ==================== UNIT TESTS ====================
   unit-tests:
@@ -378,6 +383,8 @@ jobs:
 
       - name: Build application
         run: npm run build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
