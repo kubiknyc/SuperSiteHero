@@ -9,7 +9,6 @@ import {
   FileText,
   Download,
   Plus,
-  TrendingUp,
   DollarSign,
   Filter,
   Search

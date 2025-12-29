@@ -11,7 +11,6 @@ import type {
   LienWaiverWithDetails,
   LienWaiverTemplate,
   LienWaiverRequirement,
-  LienWaiverHistory,
   LienWaiverFilters,
   LienWaiverTemplateFilters,
   CreateLienWaiverDTO,
@@ -25,7 +24,6 @@ import type {
   ApproveWaiverDTO,
   RejectWaiverDTO,
   ProjectWaiverSummary,
-  LienWaiverStatus,
 } from '@/types/lien-waiver';
 
 // Query keys

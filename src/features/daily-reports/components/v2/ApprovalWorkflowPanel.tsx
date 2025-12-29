@@ -234,16 +234,13 @@ export function ApprovalWorkflowPanel({
     }
   }, [rejectionReasonInput, onRequestChanges]);
 
-  const handleLock = useCallback(async () => {
+  const handleLockConfirm = useCallback(async () => {
     if (!onLock) {return;}
-
-    if (!confirm('Are you sure you want to lock this report? This action cannot be undone.')) {
-      return;
-    }
 
     setProcessing(true);
     try {
       await onLock();
+      setLockDialogOpen(false);
     } catch (_error) {
       logger.error('Lock failed:', _error);
     } finally {
@@ -361,7 +358,7 @@ export function ApprovalWorkflowPanel({
               <Button
                 size="sm"
                 variant="outline"
-                onClick={handleLock}
+                onClick={() => setLockDialogOpen(true)}
                 disabled={isLoading || processing}
               >
                 <Lock className="h-4 w-4 mr-1" />
@@ -517,6 +514,32 @@ export function ApprovalWorkflowPanel({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Lock Confirmation Dialog */}
+      <AlertDialog open={lockDialogOpen} onOpenChange={setLockDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5 text-purple-600" />
+              Lock Report
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to lock this report? Once locked, the report cannot be edited
+              and will be archived for record-keeping. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={processing}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleLockConfirm}
+              disabled={processing}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              {processing ? 'Locking...' : 'Lock Report'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

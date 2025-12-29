@@ -8,11 +8,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { permitsApi } from '@/lib/api/services/permits'
 import type {
-  Permit,
   CreatePermitDTO,
   UpdatePermitDTO,
   PermitFilters,
-  PermitStatistics,
   PermitStatus,
   PermitType,
 } from '@/types/permits'

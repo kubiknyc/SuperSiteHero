@@ -5,20 +5,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { documentAiApi } from '@/lib/api/services/document-ai'
 import type {
-  DocumentOcrResult,
-  DocumentCategory,
-  DocumentExtractedMetadata,
-  DocumentProcessingQueue,
-  DocumentCategoryType,
-  ContentSearchResult,
-  SimilarDocument,
-  DocumentProcessingStatus,
-  DocumentAiStatus,
-  ProcessingQueueStats,
   TriggerOcrRequest,
   UpdateCategoryRequest,
   ApplyMetadataRequest,
-  ContentSearchRequest,
 } from '@/types/document-ai'
 
 // =============================================

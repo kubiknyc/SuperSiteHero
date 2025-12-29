@@ -11,11 +11,10 @@
  */
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import {
   RadixSelect as Select,
   SelectContent,
@@ -25,7 +24,6 @@ import {
 } from '@/components/ui/select'
 import {
   RefreshCw,
-  Download,
   TrendingUp,
   DollarSign,
   Clock,
@@ -35,7 +33,7 @@ import {
   Activity,
   Calendar,
 } from 'lucide-react'
-import { format, subDays } from 'date-fns'
+import { format } from 'date-fns'
 import { cn } from '@/lib/utils'
 
 import { EVMMetricsCards } from './EVMMetricsCards'

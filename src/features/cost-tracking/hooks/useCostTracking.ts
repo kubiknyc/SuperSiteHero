@@ -246,7 +246,7 @@ export function useCreateProjectBudget() {
 
   return useMutation({
     mutationFn: (dto: CreateProjectBudgetDTO) => costTrackingApi.budgets.createProjectBudget(dto),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: costTrackingKeys.budgets() })
       toast({
         title: 'Budget created',
@@ -390,7 +390,7 @@ export function useCreateCostTransaction() {
 
   return useMutation({
     mutationFn: (dto: CreateCostTransactionDTO) => costTrackingApi.transactions.createCostTransaction(dto),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: costTrackingKeys.transactions() })
       queryClient.invalidateQueries({ queryKey: costTrackingKeys.budgets() })  // Budgets are auto-updated
       toast({

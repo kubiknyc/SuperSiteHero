@@ -5,7 +5,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { X, Plus, Smartphone, Info, ArrowDown, ChevronRight } from 'lucide-react';
 
 /**

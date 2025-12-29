@@ -29,15 +29,12 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Package,
   FileText,
-  Users,
   Settings,
   Check,
   ChevronRight,
   ChevronLeft,
   Search,
-  Plus,
   X,
-  GripVertical,
   Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';

@@ -7,10 +7,9 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, FileText, Play, Plus, Calendar } from 'lucide-react'
+import { ArrowLeft, FileText, Play, Calendar } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { TemplateLibrary } from '@/features/reports/components/TemplateLibrary'
 import { useCreateReportTemplate } from '@/features/reports/hooks/useReportBuilder'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -21,7 +20,7 @@ import { logger } from '../../../../lib/utils/logger';
 export default function ReportTemplatesPage() {
   const { projectId } = useParams<{ projectId: string }>()
   const navigate = useNavigate()
-  const { user, userProfile } = useAuth()
+  const { userProfile } = useAuth()
   const [selectedTemplate, setSelectedTemplate] = useState<StandardTemplate | null>(null)
   const createTemplate = useCreateReportTemplate()
   const companyId = userProfile?.company_id

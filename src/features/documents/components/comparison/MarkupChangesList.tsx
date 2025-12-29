@@ -16,7 +16,6 @@ import {
 import {
   Filter,
   Search,
-  ArrowDownUp,
   ChevronRight,
   Plus,
   Minus,

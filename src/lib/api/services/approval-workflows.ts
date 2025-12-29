@@ -168,13 +168,15 @@ export const approvalWorkflowsApi = {
 
       if (workflowError) {throw workflowError}
 
-      // Create steps
+      // Create steps with role-based support
       const stepsToInsert = input.steps.map((step, index) => ({
         workflow_id: workflow.id,
         step_order: step.step_order ?? index + 1,
         name: step.name,
-        approver_type: 'user' as const, // Only user-based for now
-        approver_ids: step.approver_ids,
+        approver_type: step.approver_type || 'user',
+        approver_ids: step.approver_ids || [],
+        approver_role: step.approver_role || null,
+        approver_custom_role_id: step.approver_custom_role_id || null,
         required_approvals: step.required_approvals ?? 1,
         allow_delegation: step.allow_delegation ?? false,
         auto_approve_after_days: step.auto_approve_after_days ?? null,
@@ -251,14 +253,16 @@ export const approvalWorkflowsApi = {
 
         if (deleteError) {throw deleteError}
 
-        // Insert new steps
+        // Insert new steps with role-based support
         if (input.steps.length > 0) {
           const stepsToInsert = input.steps.map((step, index) => ({
             workflow_id: workflowId,
             step_order: step.step_order ?? index + 1,
             name: step.name,
-            approver_type: 'user' as const,
-            approver_ids: step.approver_ids,
+            approver_type: step.approver_type || 'user',
+            approver_ids: step.approver_ids || [],
+            approver_role: step.approver_role || null,
+            approver_custom_role_id: step.approver_custom_role_id || null,
             required_approvals: step.required_approvals ?? 1,
             allow_delegation: step.allow_delegation ?? false,
             auto_approve_after_days: step.auto_approve_after_days ?? null,
@@ -340,7 +344,7 @@ export const approvalWorkflowsApi = {
       // Fetch existing workflow
       const existing = await this.getWorkflow(workflowId)
 
-      // Create new workflow with same configuration
+      // Create new workflow with same configuration (including role-based settings)
       return this.createWorkflow({
         name: newName.trim(),
         description: existing.description,
@@ -349,7 +353,10 @@ export const approvalWorkflowsApi = {
         steps: (existing.steps || []).map(step => ({
           step_order: step.step_order,
           name: step.name,
+          approver_type: step.approver_type,
           approver_ids: step.approver_ids,
+          approver_role: step.approver_role,
+          approver_custom_role_id: step.approver_custom_role_id,
           required_approvals: step.required_approvals,
           allow_delegation: step.allow_delegation,
           auto_approve_after_days: step.auto_approve_after_days,

@@ -4,7 +4,7 @@
  * Calculate payment aging reports and alerts for accounts receivable
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { differenceInDays, parseISO, format, subDays } from 'date-fns'
@@ -12,7 +12,6 @@ import type {
   PaymentApplication,
   AgingBucket,
   AgingReceivable,
-  AgingBucketSummary,
   PaymentAgingReport,
   ProjectAgingSummary,
   AgingAlert,
@@ -20,8 +19,6 @@ import type {
   DSOMetrics,
   CashFlowForecastItem,
   PaymentAgingDashboard,
-  AGING_BUCKETS,
-  DEFAULT_AGING_ALERT_CONFIG,
 } from '@/types/payment-application'
 import {
   AGING_BUCKETS as BUCKETS,

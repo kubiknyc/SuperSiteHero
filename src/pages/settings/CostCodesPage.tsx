@@ -6,14 +6,12 @@
  */
 
 import { useState, useMemo, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
   Plus,
   Search,
   FolderTree,
   Edit2,
   Trash2,
-  Upload,
   Download,
   ChevronRight,
   ChevronDown,
@@ -98,7 +96,6 @@ const initialFormData: CostCodeFormData = {
 }
 
 export function CostCodesPage() {
-  const navigate = useNavigate()
   const { toast } = useToast()
   const { userProfile } = useAuth()
 

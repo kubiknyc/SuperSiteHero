@@ -15,7 +15,6 @@ import {
 import type {
   CostEstimate,
   CostEstimateItem,
-  CostEstimateStatus,
 } from '@/types/database-extensions'
 
 // Page dimensions (Letter size)
@@ -76,33 +75,7 @@ function formatDate(date: string | null | undefined): string {
   }
 }
 
-/**
- * Get status label
- */
-function getStatusLabel(status: CostEstimateStatus | string): string {
-  const labels: Record<string, string> = {
-    draft: 'Draft',
-    approved: 'Approved',
-    invoiced: 'Invoiced',
-    archived: 'Archived',
-  }
-  return labels[status] || status
-}
-
-/**
- * Get status color
- */
-function getStatusColor(status: CostEstimateStatus | string): [number, number, number] {
-  const colors: Record<string, [number, number, number]> = {
-    draft: COLORS.mediumGray,
-    approved: COLORS.accentGreen,
-    invoiced: COLORS.headerBlue,
-    archived: COLORS.darkGray,
-  }
-  return colors[status] || COLORS.mediumGray
-}
-
-// Header function removed - now using centralized JobSight branding from pdfBranding.ts
+// Status helper functions removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
  * Draw project information section

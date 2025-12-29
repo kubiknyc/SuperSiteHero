@@ -6,12 +6,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { googleCalendarApi } from '@/lib/api/services/google-calendar';
 import { useAuth } from '@/lib/auth/AuthContext';
 import type {
-  GoogleCalendarConnection,
-  GoogleCalendarConnectionStatus,
-  GoogleCalendar,
-  CalendarEventMapping,
-  CalendarSyncLog,
-  CalendarSyncStats,
   CompleteGCalConnectionDTO,
   UpdateGCalConnectionDTO,
   SyncEventDTO,

@@ -8,12 +8,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/lib/notifications/ToastContext';
 import { publicApprovalsApi } from '@/lib/api/services/public-approvals';
 import type {
-  PublicApprovalLink,
-  PublicApprovalPageData,
-  ClientApprovalResponse,
   CreatePublicLinkInput,
   SubmitClientApprovalInput,
-  PublicLinkValidation,
 } from '@/types/approval-workflow';
 
 // Query keys

@@ -43,10 +43,35 @@ export type WorkflowEntityType =
 
 /**
  * Type of approver for a step
- * Currently only 'user' is supported
- * TODO: Add 'role' | 'any_of_users' when roles system is implemented
+ * - 'user': Specific user IDs
+ * - 'role': Default system roles (owner, admin, project_manager, etc.)
+ * - 'custom_role': Company-defined custom roles
+ * - 'any': Any project member
  */
-export type ApproverType = 'user'
+export type ApproverType = 'user' | 'role' | 'custom_role' | 'any'
+
+/**
+ * Default system roles available for approval assignment
+ */
+export type DefaultRole =
+  | 'owner'
+  | 'admin'
+  | 'project_manager'
+  | 'superintendent'
+  | 'foreman'
+  | 'worker'
+
+/**
+ * Display configuration for default roles
+ */
+export const DEFAULT_ROLE_CONFIG: Record<DefaultRole, { label: string; color: string }> = {
+  owner: { label: 'Owner', color: '#7C3AED' },
+  admin: { label: 'Admin', color: '#2563EB' },
+  project_manager: { label: 'Project Manager', color: '#059669' },
+  superintendent: { label: 'Superintendent', color: '#D97706' },
+  foreman: { label: 'Foreman', color: '#DC2626' },
+  worker: { label: 'Worker', color: '#6B7280' },
+}
 
 // ============================================================================
 // Core Domain Types
@@ -78,13 +103,21 @@ export interface ApprovalStep {
   step_order: number
   name: string
   approver_type: ApproverType
-  approver_ids: string[] // User IDs for now
+  // User-based approvers (when approver_type is 'user')
+  approver_ids: string[]
+  // Role-based approvers (when approver_type is 'role')
+  approver_role: DefaultRole | null
+  // Custom role approvers (when approver_type is 'custom_role')
+  approver_custom_role_id: string | null
   required_approvals: number // How many must approve (for multiple approvers)
   allow_delegation: boolean
   auto_approve_after_days: number | null // Optional auto-approval timeout
   created_at: string
   // Joined data
   approvers?: ApprovalStepApprover[]
+  custom_role?: CustomRole | null
+  // Display helper
+  approver_display?: string
 }
 
 /**
@@ -95,6 +128,22 @@ export interface ApprovalStepApprover {
   full_name: string | null
   email: string
   avatar_url?: string | null
+}
+
+/**
+ * Custom role definition (from custom_roles table)
+ */
+export interface CustomRole {
+  id: string
+  company_id: string
+  code: string
+  name: string
+  description: string | null
+  color: string
+  is_active: boolean
+  inherits_from: string | null
+  created_at: string
+  updated_at: string
 }
 
 /**
@@ -169,7 +218,13 @@ export interface CreateWorkflowInput {
 export interface CreateStepInput {
   step_order: number
   name: string
-  approver_ids: string[]
+  approver_type: ApproverType
+  // For 'user' type
+  approver_ids?: string[]
+  // For 'role' type
+  approver_role?: DefaultRole | null
+  // For 'custom_role' type
+  approver_custom_role_id?: string | null
   required_approvals?: number
   allow_delegation?: boolean
   auto_approve_after_days?: number | null

@@ -482,8 +482,6 @@ export function resolveTies(
   results: BidEvaluationResult[],
   tieBreakPriority?: ('price' | 'technical' | 'qualification')[]
 ): BidEvaluationResult[] {
-  const resolved = [...results]
-
   // Group by overall score
   const scoreGroups = new Map<number, BidEvaluationResult[]>()
   results.forEach(result => {
@@ -494,7 +492,7 @@ export function resolveTies(
   })
 
   // For each group with ties, break them
-  scoreGroups.forEach((group, score) => {
+  scoreGroups.forEach((group, _score) => {
     if (group.length > 1) {
       // Sort group using tie-breaking logic
       group.sort((a, b) => {

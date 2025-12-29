@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge'
 import {
   ChevronUp,
   ChevronDown,
-  X,
   ChevronRight,
   ChevronLeft,
   List,

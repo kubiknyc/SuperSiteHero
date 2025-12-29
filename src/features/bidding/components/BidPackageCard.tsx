@@ -3,7 +3,7 @@
  * Card display for bid packages in list view
  */
 
-import { formatDistanceToNow, format, isPast, isBefore, addDays } from 'date-fns'
+import { formatDistanceToNow, format } from 'date-fns'
 import { Link } from 'react-router-dom'
 import {
   Building2,

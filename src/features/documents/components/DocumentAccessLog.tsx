@@ -3,7 +3,6 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { documentAccessLogApi, type AccessLogEntry, type AccessAction } from '@/lib/api/services/document-access-log'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
   Dialog,

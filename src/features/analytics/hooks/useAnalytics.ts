@@ -7,17 +7,13 @@ import { analyticsApi } from '@/lib/api/services/analytics'
 import { getPredictionService } from '@/lib/ml/inference/prediction-service'
 import type {
   ProjectSnapshot,
-  AnalyticsPrediction,
   AnalyticsRecommendation,
-  RiskAssessment,
   SnapshotFilters,
   RecommendationFilters,
-  AnalyticsDashboard,
-  ModelMetadata,
-  RecommendationStats,
-  SnapshotWithMetrics,
-  ModelPerformanceSummary,
 } from '@/types/analytics'
+// Additional types available from '@/types/analytics' if needed:
+// AnalyticsPrediction, RiskAssessment, AnalyticsDashboard, ModelMetadata,
+// RecommendationStats, SnapshotWithMetrics, ModelPerformanceSummary
 
 // =============================================
 // Query Keys

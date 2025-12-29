@@ -21,7 +21,6 @@ import {
   createCalendarEvent,
   updateCalendarEvent,
   deleteCalendarEvent,
-  getCalendarEvent,
   toMSGraphDateTime,
   createEventWithLocalRef,
   MSGraphEvent,

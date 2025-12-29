@@ -38,18 +38,18 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  User,
-  Mail,
   RefreshCw,
   Ban,
-  ExternalLink,
   Loader2,
-  AlertTriangle,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatDate } from '@/lib/utils'
-import type { DSDocumentType, DSEnvelope, DSEnvelopeRecipient } from '@/types/docusign'
-import { getEnvelopeStatusConfig, isEnvelopeTerminal, canVoidEnvelope } from '@/types/docusign'
+import { cn, formatDate } from '@/lib/utils'
+import {
+  getEnvelopeStatusConfig,
+  isEnvelopeTerminal,
+  canVoidEnvelope,
+  type DSDocumentType,
+  type DSEnvelopeRecipient,
+} from '@/types/docusign'
 
 // =============================================================================
 // Types
@@ -79,7 +79,7 @@ export function DocuSignEnvelopeStatus({
     documentId
   )
 
-  const signingUrlMutation = useGetSigningUrl()
+  const _signingUrlMutation = useGetSigningUrl()
   const voidMutation = useVoidDocuSignEnvelope()
   const resendMutation = useResendDocuSignEnvelope()
 

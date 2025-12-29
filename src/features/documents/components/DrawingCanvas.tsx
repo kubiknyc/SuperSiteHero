@@ -19,7 +19,7 @@ import {
   Cloud,
   Smartphone,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+// cn utility removed - not currently used but may be needed for future styling
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,7 +47,7 @@ interface DrawingCanvasProps {
   width?: number
   height?: number
   readOnly?: boolean
-  onSave?: () => void
+  onSave?: () => void  // Reserved for explicit save callback
   currentUserId?: string  // For "show my markups only" filter
 }
 
@@ -168,7 +168,7 @@ export function DrawingCanvas({
   width = 800,
   height = 600,
   readOnly = false,
-  onSave,
+  onSave: _onSave,
   currentUserId,
 }: DrawingCanvasProps) {
   // Mobile detection
@@ -550,16 +550,19 @@ export function DrawingCanvas({
   }
 
   // Handle delete shape
-  const handleDeleteShape = async (shapeId: string) => {
-    const newShapes = shapes.filter(s => s.id !== shapeId)
-    setShapes(newShapes)
+  const handleDeleteShape = useCallback(async (shapeId: string) => {
+    setShapes(prevShapes => {
+      const newShapes = prevShapes.filter(s => s.id !== shapeId)
+      // Add to history (done in effect to avoid stale closure)
+      setHistory(prevHistory => {
+        const newHistory = prevHistory.slice(0, historyStep + 1)
+        newHistory.push(newShapes)
+        setHistoryStep(newHistory.length - 1)
+        return newHistory
+      })
+      return newShapes
+    })
     setSelectedShapeId(null)
-
-    // Add to history
-    const newHistory = history.slice(0, historyStep + 1)
-    newHistory.push(newShapes)
-    setHistory(newHistory)
-    setHistoryStep(newHistory.length - 1)
 
     // Delete from database if it's a persisted markup
     const markup = existingMarkups?.find(m => m.id === shapeId)
@@ -571,21 +574,21 @@ export function DrawingCanvas({
         toast.error('Failed to delete annotation')
       }
     }
-  }
+  }, [existingMarkups, deleteMarkup, historyStep])
 
   // Handle undo
-  const handleUndo = () => {
-    if (historyStep === 0) {return}
+  const handleUndo = useCallback(() => {
+    if (historyStep === 0) return
     setHistoryStep(historyStep - 1)
     setShapes(history[historyStep - 1])
-  }
+  }, [historyStep, history])
 
   // Handle redo
-  const handleRedo = () => {
-    if (historyStep === history.length - 1) {return}
+  const handleRedo = useCallback(() => {
+    if (historyStep === history.length - 1) return
     setHistoryStep(historyStep + 1)
     setShapes(history[historyStep + 1])
-  }
+  }, [historyStep, history])
 
   // Handle clear all
   const handleClearAll = async () => {
@@ -606,6 +609,115 @@ export function DrawingCanvas({
       }
     }
   }
+
+  // Keyboard navigation for accessibility
+  useEffect(() => {
+    if (effectiveReadOnly) {
+      return
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't handle if user is typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return
+      }
+
+      // Tool shortcuts (1-8)
+      const toolMap: Record<string, Tool> = {
+        '1': 'select',
+        '2': 'arrow',
+        '3': 'rectangle',
+        '4': 'circle',
+        '5': 'cloud',
+        '6': 'text',
+        '7': 'freehand',
+        '8': 'eraser',
+      }
+
+      if (toolMap[e.key]) {
+        e.preventDefault()
+        setTool(toolMap[e.key])
+        return
+      }
+
+      // Escape to deselect
+      if (e.key === 'Escape') {
+        e.preventDefault()
+        setSelectedShapeId(null)
+        if (transformerRef.current) {
+          transformerRef.current.nodes([])
+          transformerRef.current.getLayer()?.batchDraw()
+        }
+        return
+      }
+
+      // Delete/Backspace to delete selected shape
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedShapeId) {
+        e.preventDefault()
+        handleDeleteShape(selectedShapeId)
+        return
+      }
+
+      // Undo: Ctrl+Z / Cmd+Z
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        handleUndo()
+        return
+      }
+
+      // Redo: Ctrl+Y / Cmd+Y or Ctrl+Shift+Z / Cmd+Shift+Z
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+        e.preventDefault()
+        handleRedo()
+        return
+      }
+
+      // Arrow keys to nudge selected shape
+      if (selectedShapeId && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault()
+        const nudgeAmount = e.shiftKey ? 10 : 1
+        let deltaX = 0
+        let deltaY = 0
+
+        switch (e.key) {
+          case 'ArrowUp': deltaY = -nudgeAmount; break
+          case 'ArrowDown': deltaY = nudgeAmount; break
+          case 'ArrowLeft': deltaX = -nudgeAmount; break
+          case 'ArrowRight': deltaX = nudgeAmount; break
+        }
+
+        setShapes(prevShapes =>
+          prevShapes.map(shape =>
+            shape.id === selectedShapeId
+              ? { ...shape, x: shape.x + deltaX, y: shape.y + deltaY }
+              : shape
+          )
+        )
+
+        // Update transformer position
+        if (transformerRef.current && layerRef.current) {
+          const selectedNode = layerRef.current.findOne(`#${selectedShapeId}`)
+          if (selectedNode) {
+            selectedNode.x(selectedNode.x() + deltaX)
+            selectedNode.y(selectedNode.y() + deltaY)
+            transformerRef.current.getLayer()?.batchDraw()
+          }
+        }
+
+        // Debounced save to database
+        const shape = shapes.find(s => s.id === selectedShapeId)
+        if (shape) {
+          debouncedUpdateShape(selectedShapeId, {
+            x: shape.x + deltaX,
+            y: shape.y + deltaY,
+          })
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [effectiveReadOnly, selectedShapeId, shapes, handleUndo, handleRedo, handleDeleteShape, debouncedUpdateShape])
 
   if (isLoading) {
     return (
@@ -629,87 +741,108 @@ export function DrawingCanvas({
       {!effectiveReadOnly && (
         <div className="absolute top-4 left-4 z-10 bg-card rounded-lg shadow-lg p-2 space-y-2">
           {/* Tool buttons */}
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" role="toolbar" aria-label="Drawing tools">
             <Button
               size="sm"
               variant={tool === 'select' ? 'default' : 'outline'}
               onClick={() => setTool('select')}
-              title="Select"
+              title="Select (1)"
+              aria-label="Select tool (press 1)"
+              aria-pressed={tool === 'select'}
             >
-              <MousePointer2 className="w-4 h-4" />
+              <MousePointer2 className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'arrow' ? 'default' : 'outline'}
               onClick={() => setTool('arrow')}
-              title="Arrow"
+              title="Arrow (2)"
+              aria-label="Arrow tool (press 2)"
+              aria-pressed={tool === 'arrow'}
             >
-              <ArrowUpRight className="w-4 h-4" />
+              <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'rectangle' ? 'default' : 'outline'}
               onClick={() => setTool('rectangle')}
-              title="Rectangle"
+              title="Rectangle (3)"
+              aria-label="Rectangle tool (press 3)"
+              aria-pressed={tool === 'rectangle'}
             >
-              <Square className="w-4 h-4" />
+              <Square className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'circle' ? 'default' : 'outline'}
               onClick={() => setTool('circle')}
-              title="Circle"
+              title="Circle (4)"
+              aria-label="Circle tool (press 4)"
+              aria-pressed={tool === 'circle'}
             >
-              <CircleIcon className="w-4 h-4" />
+              <CircleIcon className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'cloud' ? 'default' : 'outline'}
               onClick={() => setTool('cloud')}
-              title="Cloud/Callout"
+              title="Cloud/Callout (5)"
+              aria-label="Cloud callout tool (press 5)"
+              aria-pressed={tool === 'cloud'}
             >
-              <Cloud className="w-4 h-4" />
+              <Cloud className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'text' ? 'default' : 'outline'}
               onClick={() => setTool('text')}
-              title="Text"
+              title="Text (6)"
+              aria-label="Text tool (press 6)"
+              aria-pressed={tool === 'text'}
             >
-              <Type className="w-4 h-4" />
+              <Type className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'freehand' ? 'default' : 'outline'}
               onClick={() => setTool('freehand')}
-              title="Freehand"
+              title="Freehand (7)"
+              aria-label="Freehand drawing tool (press 7)"
+              aria-pressed={tool === 'freehand'}
             >
-              <Pencil className="w-4 h-4" />
+              <Pencil className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant={tool === 'eraser' ? 'default' : 'outline'}
               onClick={() => setTool('eraser')}
-              title="Eraser"
+              title="Eraser (8)"
+              aria-label="Eraser tool (press 8)"
+              aria-pressed={tool === 'eraser'}
             >
-              <Eraser className="w-4 h-4" />
+              <Eraser className="w-4 h-4" aria-hidden="true" />
             </Button>
           </div>
 
           {/* Color picker */}
           <div className="border-t pt-2">
+            <label htmlFor="markup-color" className="sr-only">Annotation color</label>
             <input
+              id="markup-color"
               type="color"
               value={color}
               onChange={(e) => setColor(e.target.value)}
               className="w-full h-8 rounded cursor-pointer"
               title="Color"
+              aria-label="Choose annotation color"
             />
           </div>
 
           {/* Stroke width */}
           <div className="border-t pt-2">
+            <label htmlFor="stroke-width" className="sr-only">Stroke width: {strokeWidth} pixels</label>
             <input
+              id="stroke-width"
               type="range"
               min="1"
               max="10"
@@ -717,37 +850,44 @@ export function DrawingCanvas({
               onChange={(e) => setStrokeWidth(parseInt(e.target.value))}
               className="w-full"
               title="Stroke Width"
+              aria-label={`Stroke width: ${strokeWidth} pixels`}
+              aria-valuemin={1}
+              aria-valuemax={10}
+              aria-valuenow={strokeWidth}
             />
-            <p className="text-xs text-center text-secondary">{strokeWidth}px</p>
+            <p className="text-xs text-center text-secondary" aria-hidden="true">{strokeWidth}px</p>
           </div>
 
           {/* Actions */}
-          <div className="border-t pt-2 flex flex-col gap-1">
+          <div className="border-t pt-2 flex flex-col gap-1" role="group" aria-label="Edit actions">
             <Button
               size="sm"
               variant="outline"
               onClick={handleUndo}
               disabled={historyStep === 0}
-              title="Undo"
+              title="Undo (Ctrl+Z)"
+              aria-label="Undo last action (Ctrl+Z)"
             >
-              <Undo className="w-4 h-4" />
+              <Undo className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant="outline"
               onClick={handleRedo}
               disabled={historyStep === history.length - 1}
-              title="Redo"
+              title="Redo (Ctrl+Y)"
+              aria-label="Redo last action (Ctrl+Y)"
             >
-              <Redo className="w-4 h-4" />
+              <Redo className="w-4 h-4" aria-hidden="true" />
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={() => setShowClearDialog(true)}
               title="Clear All"
+              aria-label="Clear all annotations"
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" aria-hidden="true" />
             </Button>
           </div>
 

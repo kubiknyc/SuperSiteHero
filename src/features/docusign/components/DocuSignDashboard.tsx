@@ -5,14 +5,13 @@
  * recent envelopes, and statistics.
  */
 
-import { useState } from 'react'
 import {
   useDocuSignDashboard,
   useDocuSignConnectionStatus,
   useVoidDocuSignEnvelope,
   useResendDocuSignEnvelope,
 } from '../hooks/useDocuSign'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -24,13 +23,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import {
   FileSignature,
-  Send,
   CheckCircle,
   XCircle,
   Clock,
   AlertTriangle,
   MoreVertical,
-  Mail,
   Eye,
   Ban,
   RefreshCw,
@@ -39,14 +36,14 @@ import {
   Users,
   TrendingUp,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatDate } from '@/lib/utils'
-import type {
-  DSEnvelope,
-  DSEnvelopeStatus,
-  DSDocumentType,
+import { cn, formatDate } from '@/lib/utils'
+import {
+  getEnvelopeStatusConfig,
+  getDocumentTypeConfig,
+  type DSEnvelope,
+  type DSEnvelopeStatus,
+  type DSDocumentType,
 } from '@/types/docusign'
-import { getEnvelopeStatusConfig, getDocumentTypeConfig } from '@/types/docusign'
 
 export function DocuSignDashboard() {
   const { data: connectionStatus } = useDocuSignConnectionStatus()
@@ -248,7 +245,6 @@ function StatCard({
 
 // Document type stats component
 function DocumentTypeStats({
-  type,
   label,
   stats,
 }: {
@@ -301,7 +297,7 @@ function EnvelopeList({ envelopes }: { envelopes: DSEnvelope[] }) {
   return (
     <div className="space-y-2">
       {envelopes.map((envelope) => {
-        const statusConfig = getEnvelopeStatusConfig(envelope.status)
+        const _statusConfig = getEnvelopeStatusConfig(envelope.status)
         const docTypeConfig = getDocumentTypeConfig(envelope.document_type)
 
         return (

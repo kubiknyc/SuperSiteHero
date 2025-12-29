@@ -8,13 +8,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { outlookCalendarApi } from '@/lib/api/services/outlook-calendar'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type {
-  OutlookCalendarConnection,
-  OutlookEventMapping,
-  OutlookSyncLog,
-  OutlookConnectionStatus,
-  OutlookSyncStats,
-  OutlookSyncDashboard,
-  OutlookCalendar,
   CompleteOutlookOAuthDTO,
   UpdateOutlookConnectionDTO,
   SyncOutlookEventDTO,
@@ -50,7 +43,7 @@ export const outlookCalendarKeys = {
  * Get Outlook Calendar connection status
  */
 export function useOutlookConnectionStatus() {
-  const { user, userProfile } = useAuth()
+  const { user } = useAuth()
   const userId = user?.id
 
   return useQuery({

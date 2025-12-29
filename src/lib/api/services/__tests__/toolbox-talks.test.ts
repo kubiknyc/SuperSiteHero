@@ -48,15 +48,18 @@ describe('Toolbox Topics API', () => {
     })
 
     it('should filter by category', async () => {
-      const mockQuery = {
+      const queryResult = { data: [], error: null }
+      const mockQuery: any = {
         select: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
-        or: vi.fn().mockResolvedValue({ data: [], error: null }),
+        or: vi.fn().mockReturnThis(),
+        then: (resolve: any) => Promise.resolve(queryResult).then(resolve),
+        catch: (reject: any) => Promise.resolve(queryResult).catch(reject),
       }
 
-      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery)
 
       await toolboxTopicsApi.getTopics({ company_id: 'company-1', category: 'safety' })
 
@@ -439,13 +442,19 @@ describe('Toolbox Certifications API', () => {
         },
       ]
 
-      const mockQuery = {
+      const queryResult = { data: mockCerts, error: null }
+      const mockQuery: any = {
         select: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
-        eq: vi.fn().mockResolvedValue({ data: mockCerts, error: null }),
+        eq: vi.fn().mockReturnThis(),
+        ilike: vi.fn().mockReturnThis(),
+        gte: vi.fn().mockReturnThis(),
+        lte: vi.fn().mockReturnThis(),
+        then: (resolve: any) => Promise.resolve(queryResult).then(resolve),
+        catch: (reject: any) => Promise.resolve(queryResult).catch(reject),
       }
 
-      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery)
 
       const result = await toolboxCertificationsApi.getCertifications({})
 
@@ -456,14 +465,19 @@ describe('Toolbox Certifications API', () => {
 
   describe('getWorkerCertifications', () => {
     it('should fetch certifications for specific worker', async () => {
-      const mockQuery = {
+      const queryResult = { data: [], error: null }
+      const mockQuery: any = {
         select: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
-        ilike: vi.fn().mockResolvedValue({ data: [], error: null }),
+        ilike: vi.fn().mockReturnThis(),
+        gte: vi.fn().mockReturnThis(),
+        lte: vi.fn().mockReturnThis(),
+        then: (resolve: any) => Promise.resolve(queryResult).then(resolve),
+        catch: (reject: any) => Promise.resolve(queryResult).catch(reject),
       }
 
-      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery)
 
       await toolboxCertificationsApi.getWorkerCertifications('company-1', 'John Doe')
 
@@ -474,13 +488,19 @@ describe('Toolbox Certifications API', () => {
 
   describe('getExpiringCertifications', () => {
     it('should fetch certifications expiring within days', async () => {
-      const mockQuery = {
+      const queryResult = { data: [], error: null }
+      const mockQuery: any = {
         select: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
-        eq: vi.fn().mockResolvedValue({ data: [], error: null }),
+        eq: vi.fn().mockReturnThis(),
+        ilike: vi.fn().mockReturnThis(),
+        gte: vi.fn().mockReturnThis(),
+        lte: vi.fn().mockReturnThis(),
+        then: (resolve: any) => Promise.resolve(queryResult).then(resolve),
+        catch: (reject: any) => Promise.resolve(queryResult).catch(reject),
       }
 
-      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery)
 
       await toolboxCertificationsApi.getExpiringCertifications('company-1', 30)
 

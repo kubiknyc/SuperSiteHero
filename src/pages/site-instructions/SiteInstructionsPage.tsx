@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Dialog,
   DialogContent,
@@ -37,7 +37,6 @@ import {
   AlertCircle,
   Clock,
   CheckCircle2,
-  XCircle,
   Users,
   Copy,
   Send,
@@ -48,15 +47,12 @@ import {
   Calendar,
   User,
   AlertTriangle,
-  ArrowRight,
   ChevronRight,
   FileCheck,
   FileWarning,
   ClipboardCheck,
   ClipboardList,
-  Download,
   Eye,
-  MoreHorizontal,
   RefreshCw,
 } from 'lucide-react'
 import { useSiteInstructions, type SiteInstructionFilters, type SiteInstructionWithRelations } from '@/features/site-instructions/hooks'
@@ -64,7 +60,7 @@ import { SiteInstructionFilters as Filters } from '@/features/site-instructions/
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { useContacts } from '@/features/contacts/hooks/useContacts'
 import type { SiteInstructionStatus, SiteInstructionPriority } from '@/types/database'
-import { format, isPast, isToday, differenceInDays } from 'date-fns'
+import { format, isPast, isToday } from 'date-fns'
 import { cn } from '@/lib/utils'
 
 // Template data for quick instruction creation

@@ -3,7 +3,7 @@
  * Expanded color options with more variety
  */
 
-import { HardHat, FileText, CheckCircle, ArrowRight, Users, Calendar, Shield, Zap, Star } from 'lucide-react';
+import { HardHat, FileText, CheckCircle, ArrowRight, Users, Calendar, Zap, Star } from 'lucide-react';
 
 // Define 6 distinct color palettes
 const palettes = [

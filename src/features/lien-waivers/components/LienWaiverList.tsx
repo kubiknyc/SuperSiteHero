@@ -17,7 +17,6 @@ import { Badge } from '@/components/ui/badge'
 import type {
   LienWaiverWithDetails,
   LienWaiverStatus,
-  LienWaiverType,
   ProjectWaiverSummary,
 } from '@/types/lien-waiver'
 import {

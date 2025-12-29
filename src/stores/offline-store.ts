@@ -239,7 +239,7 @@ export const useOfflineStore = create<OfflineStore & {
   },
 
   // Resolve a conflict
-  resolveConflict: async (conflictId: string, resolution: 'local' | 'server' | 'merge', mergedData?: unknown) => {
+  resolveConflict: async (conflictId: string, resolution: 'local' | 'server' | 'merge', _mergedData?: unknown) => {
     try {
       // Mark conflict as resolved in IndexedDB
       const { getFromStore, putInStore } = await import('@/lib/offline/indexeddb');

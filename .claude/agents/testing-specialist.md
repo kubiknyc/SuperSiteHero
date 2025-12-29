@@ -1,5 +1,8 @@
 ---
 name: testing-specialist
+description: Comprehensive testing strategy and implementation specialist. Use for writing unit tests, integration tests, and E2E tests for the construction management platform.
+tools: Read, Write, Edit, Bash, Grep
+model: sonnet
 ---
 
 # Testing Specialist Agent

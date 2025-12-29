@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Plus,
   Search,
@@ -24,6 +25,68 @@ import type { ChecklistTemplate, TemplateFilters, CreateChecklistTemplateDTO } f
 
 type ViewMode = 'grid' | 'list'
 type CategoryFilter = 'all' | 'Pre-Pour' | 'Framing' | 'MEP' | 'Finishes' | 'Safety' | 'QA/QC'
+
+/**
+ * Skeleton loader for stat cards
+ */
+function StatsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+      {[1, 2, 3, 4].map((i) => (
+        <div key={i} className="bg-card rounded-lg shadow p-4 border border-border">
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-8 w-16" />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+/**
+ * Skeleton loader for template cards (grid view)
+ */
+function TemplateCardSkeleton() {
+  return (
+    <div className="bg-card rounded-lg shadow border border-border p-4">
+      <div className="flex items-start gap-3">
+        <Skeleton className="h-10 w-10 rounded-lg" />
+        <div className="flex-1">
+          <Skeleton className="h-5 w-3/4 mb-2" />
+          <Skeleton className="h-4 w-1/2 mb-1" />
+          <Skeleton className="h-3 w-full" />
+        </div>
+      </div>
+      <div className="flex gap-2 mt-4">
+        <Skeleton className="h-5 w-16 rounded-full" />
+        <Skeleton className="h-5 w-20 rounded-full" />
+      </div>
+      <div className="flex justify-between mt-4 pt-4 border-t border-border">
+        <Skeleton className="h-8 w-20" />
+        <Skeleton className="h-8 w-24" />
+      </div>
+    </div>
+  )
+}
+
+/**
+ * Skeleton loader for template list view
+ */
+function TemplateListSkeleton() {
+  return (
+    <div className="bg-card rounded-lg shadow border border-border p-4 flex items-center gap-4">
+      <Skeleton className="h-10 w-10 rounded-lg" />
+      <div className="flex-1">
+        <Skeleton className="h-5 w-1/3 mb-2" />
+        <Skeleton className="h-4 w-1/2" />
+      </div>
+      <div className="flex gap-2">
+        <Skeleton className="h-5 w-16 rounded-full" />
+        <Skeleton className="h-5 w-12 rounded-full" />
+      </div>
+      <Skeleton className="h-8 w-24" />
+    </div>
+  )
+}
 
 /**
  * TemplatesPage Component
@@ -194,24 +257,28 @@ export function TemplatesPage() {
         </div>
 
         {/* Stats Dashboard */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-card rounded-lg shadow p-4 border border-border">
-            <div className="text-sm font-medium text-secondary">Total Templates</div>
-            <div className="text-3xl font-bold text-foreground mt-1">{stats.total}</div>
+        {isLoading ? (
+          <StatsSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+            <div className="bg-card rounded-lg shadow p-4 border border-border">
+              <div className="text-sm font-medium text-secondary">Total Templates</div>
+              <div className="text-3xl font-bold text-foreground mt-1">{stats.total}</div>
+            </div>
+            <div className="bg-card rounded-lg shadow p-4 border border-border">
+              <div className="text-sm font-medium text-secondary">System Templates</div>
+              <div className="text-3xl font-bold text-primary mt-1">{stats.system}</div>
+            </div>
+            <div className="bg-card rounded-lg shadow p-4 border border-border">
+              <div className="text-sm font-medium text-secondary">Custom Templates</div>
+              <div className="text-3xl font-bold text-success mt-1">{stats.custom}</div>
+            </div>
+            <div className="bg-card rounded-lg shadow p-4 border border-border">
+              <div className="text-sm font-medium text-secondary">Categories</div>
+              <div className="text-3xl font-bold text-purple-600 mt-1">{stats.categories}</div>
+            </div>
           </div>
-          <div className="bg-card rounded-lg shadow p-4 border border-border">
-            <div className="text-sm font-medium text-secondary">System Templates</div>
-            <div className="text-3xl font-bold text-primary mt-1">{stats.system}</div>
-          </div>
-          <div className="bg-card rounded-lg shadow p-4 border border-border">
-            <div className="text-sm font-medium text-secondary">Custom Templates</div>
-            <div className="text-3xl font-bold text-success mt-1">{stats.custom}</div>
-          </div>
-          <div className="bg-card rounded-lg shadow p-4 border border-border">
-            <div className="text-sm font-medium text-secondary">Categories</div>
-            <div className="text-3xl font-bold text-purple-600 mt-1">{stats.categories}</div>
-          </div>
-        </div>
+        )}
 
         {/* Filters and View Controls */}
         <div className="bg-card rounded-lg shadow mb-6 p-4">
@@ -323,9 +390,26 @@ export function TemplatesPage() {
 
         {/* Templates Grid/List */}
         {isLoading ? (
-          <div className="bg-card rounded-lg shadow p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-            <p className="mt-4 text-secondary">Loading templates...</p>
+          <div
+            className={
+              viewMode === 'grid'
+                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+                : 'space-y-4'
+            }
+          >
+            {viewMode === 'grid' ? (
+              <>
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <TemplateCardSkeleton key={i} />
+                ))}
+              </>
+            ) : (
+              <>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <TemplateListSkeleton key={i} />
+                ))}
+              </>
+            )}
           </div>
         ) : filteredTemplates.length === 0 ? (
           <div className="bg-card rounded-lg shadow p-12 text-center">

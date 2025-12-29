@@ -9,9 +9,9 @@ import { scheduleOptimizer } from '@/lib/ml/scoring/schedule-optimizer'
 import { useAIFeatureEnabled } from '@/features/ai/hooks/useAIConfiguration'
 import type {
   ScheduleAnalysisRequest,
-  ScheduleAnalysisResponse,
   ScheduleOptimizationRecommendation,
 } from '@/types/ai'
+// Additional types available: ScheduleAnalysisResponse
 import { toast } from 'sonner'
 
 // Query keys

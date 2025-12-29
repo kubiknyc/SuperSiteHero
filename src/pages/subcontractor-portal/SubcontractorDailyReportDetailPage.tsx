@@ -9,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Separator } from '@/components/ui/separator'
 import {
   Table,
   TableBody,
@@ -32,7 +31,6 @@ import {
   CheckCircle2,
   Clock,
   ClipboardList,
-  HardHat,
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 

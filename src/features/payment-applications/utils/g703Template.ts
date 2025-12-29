@@ -23,7 +23,6 @@ import {
   addDocumentHeader,
   addFootersToAllPages,
   getCompanyInfo,
-  type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
 
 const CONTENT_WIDTH = PAGE_WIDTH_LANDSCAPE - 2 * MARGIN
@@ -266,7 +265,6 @@ export async function generateG703PDF(data: G703PDFData): Promise<Blob> {
 
   // Add JobSight branded header with GC logo and info
   const appNumber = data.application.application_number
-  const periodTo = formatDate(data.application.period_to)
 
   let y = await addDocumentHeader(doc, {
     gcCompany,
@@ -311,22 +309,10 @@ export async function downloadG703PDF(data: G703PDFData): Promise<void> {
  * Generate combined G702/G703 PDF package
  */
 export async function generatePaymentApplicationPackage(
-  g702Data: import('@/types/payment-application').G702PDFData,
+  _g702Data: import('@/types/payment-application').G702PDFData,
   g703Data: G703PDFData
 ): Promise<Blob> {
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'letter',
-  })
-
-  // Import G702 functions
-  const { generateG702PDF } = await import('./g702Template')
-
-  // Generate G702 first (portrait)
-  const g702Blob = await generateG702PDF(g702Data)
-
-  // For simplicity, we'll return just the G703 for now
-  // A more complete implementation would merge the PDFs
+  // TODO: Implement PDF merging. For now, we return just the G703
+  // A more complete implementation would merge the G702 and G703 PDFs
   return generateG703PDF(g703Data)
 }

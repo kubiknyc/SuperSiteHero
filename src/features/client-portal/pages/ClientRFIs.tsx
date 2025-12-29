@@ -7,7 +7,7 @@
 import { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useClientRFIs } from '../hooks/useClientPortal'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -37,7 +37,6 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format, isPast } from 'date-fns'
-import type { ClientRFIView } from '@/types/client-portal'
 
 // Status configuration
 const statusConfig: Record<string, { label: string; color: string; bgColor: string; icon: React.ComponentType<{ className?: string }> }> = {

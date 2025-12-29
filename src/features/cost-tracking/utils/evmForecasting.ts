@@ -12,8 +12,6 @@ import type {
 import {
   calculateCPI,
   calculateSPI,
-  calculateEAC,
-  calculateEACWithSPI,
 } from './evmCalculations';
 import { addDays, differenceInDays, format, parseISO } from 'date-fns';
 
@@ -78,7 +76,6 @@ export function generateSCurveData(
     const daysRemaining = differenceInDays(endDate, latestDate);
 
     // Calculate daily burn rate based on current performance
-    const remainingWork = BAC - latest.EV;
     const dailyRate = (latest.EV / differenceInDays(latestDate, parseISO(projectStartDate))) || 0;
     const adjustedDailyRate = dailyRate * currentSPI;
 
@@ -91,7 +88,6 @@ export function generateSCurveData(
         latest.EV + adjustedDailyRate * i,
         BAC
       );
-      const projectedAC = latest.AC + (projectedEV - latest.EV) / currentCPI;
 
       result.push({
         date: format(forecastDate, 'yyyy-MM-dd'),
@@ -367,19 +363,17 @@ export function estimateCompletionDates(input: CompletionEstimateInput): Complet
   const {
     projectStartDate,
     plannedEndDate,
-    BAC,
+    BAC: _BAC,
     EV,
     AC,
     PV,
-    currentDate,
+    currentDate: _currentDate,
   } = input;
 
   const start = parseISO(projectStartDate);
-  const current = parseISO(currentDate);
   const planned = parseISO(plannedEndDate);
 
   const plannedDuration = differenceInDays(planned, start);
-  const elapsedDays = differenceInDays(current, start);
 
   const CPI = calculateCPI(EV, AC);
   const SPI = calculateSPI(EV, PV);

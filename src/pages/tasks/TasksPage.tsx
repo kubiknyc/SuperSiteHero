@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useTasks } from '@/features/tasks/hooks/useTasks'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Select } from '@/components/ui/select'
@@ -21,7 +21,6 @@ import {
   Eye,
   Edit,
   Calendar,
-  Flag,
 } from 'lucide-react'
 import { format, isPast } from 'date-fns'
 import type { Task } from '@/types/database'

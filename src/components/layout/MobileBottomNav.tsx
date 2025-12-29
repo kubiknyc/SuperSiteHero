@@ -4,18 +4,25 @@
 import { Link, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { Menu } from 'lucide-react'
-import { useState } from 'react'
+import { useState, memo, useCallback } from 'react'
 import { MobileNavDrawer } from './MobileNavDrawer'
 import { mobileBottomNavItems } from '@/config/navigation'
 
-export function MobileBottomNav() {
+export const MobileBottomNav = memo(function MobileBottomNav() {
   const location = useLocation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const openDrawer = useCallback(() => setIsDrawerOpen(true), [])
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), [])
 
   return (
     <>
       {/* Bottom Navigation Bar - Only visible on mobile */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card dark:bg-background border-t border-border dark:border-gray-700 safe-area-bottom">
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card dark:bg-background border-t border-border dark:border-gray-700 safe-area-bottom"
+        aria-label="Main navigation"
+        role="navigation"
+      >
         <div className="flex items-center justify-around h-16">
           {mobileBottomNavItems.map((item) => {
             const isActive = location.pathname === item.path ||
@@ -32,6 +39,8 @@ export function MobileBottomNav() {
               <Link
                 key={item.path}
                 to={item.path}
+                aria-label={`Navigate to ${item.label}`}
+                aria-current={isActive ? 'page' : undefined}
                 className={cn(
                   'flex flex-col items-center justify-center flex-1 h-full min-w-[64px] touch-target',
                   'transition-colors duration-200',
@@ -41,12 +50,15 @@ export function MobileBottomNav() {
                 )}
               >
                 <div className="relative">
-                  <Icon className={cn(
-                    'h-6 w-6 mb-1',
-                    isActive && 'stroke-[2.5px]'
-                  )} />
+                  <Icon
+                    className={cn(
+                      'h-6 w-6 mb-1',
+                      isActive && 'stroke-[2.5px]'
+                    )}
+                    aria-hidden="true"
+                  />
                   {Badge && (
-                    <div className="absolute -top-1 -right-1">
+                    <div className="absolute -top-1 -right-1" aria-hidden="true">
                       <Badge />
                     </div>
                   )}
@@ -63,13 +75,16 @@ export function MobileBottomNav() {
 
           {/* More menu button */}
           <button
-            onClick={() => setIsDrawerOpen(true)}
+            onClick={openDrawer}
+            aria-label="Open navigation menu"
+            aria-expanded={isDrawerOpen}
+            aria-haspopup="dialog"
             className={cn(
               'flex flex-col items-center justify-center flex-1 h-full min-w-[64px] touch-target',
               'text-muted dark:text-disabled active:text-secondary dark:active:text-gray-300 transition-colors duration-200'
             )}
           >
-            <Menu className="h-6 w-6 mb-1" />
+            <Menu className="h-6 w-6 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">More</span>
           </button>
         </div>
@@ -78,8 +93,8 @@ export function MobileBottomNav() {
       {/* Mobile Navigation Drawer */}
       <MobileNavDrawer
         isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={closeDrawer}
       />
     </>
   )
-}
+})

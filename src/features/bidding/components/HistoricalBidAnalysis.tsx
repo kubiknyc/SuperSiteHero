@@ -32,12 +32,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { VendorPerformanceCard } from './VendorPerformanceCard'
-import { BidAccuracyChart } from './BidAccuracyChart'
 import { BidTrendChart } from './BidTrendChart'
 import { useBidAnalysisDashboard, useExportBidAnalysis } from '../hooks/useHistoricalBidAnalysis'
 import { CSI_DIVISIONS } from '@/types/cost-tracking'
 import type { BidAnalysisFilters, TrendDirection } from '@/types/historical-bid-analysis'
-import { formatCurrency, formatPercentage, getTrendColor, getTrendIcon } from '@/types/historical-bid-analysis'
+import { formatPercentage, getTrendColor } from '@/types/historical-bid-analysis'
 
 interface SummaryCardProps {
   title: string

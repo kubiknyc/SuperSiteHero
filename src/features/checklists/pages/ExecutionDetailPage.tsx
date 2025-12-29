@@ -32,6 +32,12 @@ import { format } from 'date-fns'
 import { generateChecklistPDF } from '../utils/pdfExport'
 import toast from 'react-hot-toast'
 import { logger } from '../../../lib/utils/logger';
+import type {
+  ChecklistResponse,
+  ResponseData,
+  TextResponseData,
+  NumberResponseData,
+} from '@/types/checklists';
 
 
 export function ExecutionDetailPage() {
@@ -73,8 +79,8 @@ export function ExecutionDetailPage() {
     }))
   }, [execution?.responses, templateItems])
 
-  const renderResponseValue = (response: any, itemType: string) => {
-    const data = response.response_data as any
+  const renderResponseValue = (response: ChecklistResponse, itemType: string) => {
+    const data = response.response_data as ResponseData
 
     switch (itemType) {
       case 'checkbox':
@@ -104,19 +110,23 @@ export function ExecutionDetailPage() {
         }
         return (
           <span className="text-secondary">
-            {data?.value === 'checked' ? 'Checked' : 'Unchecked'}
+            {'value' in data && data.value === 'checked' ? 'Checked' : 'Unchecked'}
           </span>
         )
 
-      case 'text':
-        return <p className="text-secondary whitespace-pre-wrap">{data?.value || 'No response'}</p>
+      case 'text': {
+        const textData = data as TextResponseData
+        return <p className="text-secondary whitespace-pre-wrap">{textData?.value || 'No response'}</p>
+      }
 
-      case 'number':
+      case 'number': {
+        const numData = data as NumberResponseData
         return (
           <span className="text-secondary">
-            {data?.value} {data?.units || ''}
+            {numData?.value} {numData?.units || ''}
           </span>
         )
+      }
 
       case 'photo': {
         const photoUrls = response.photo_urls || []

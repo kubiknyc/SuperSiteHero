@@ -190,7 +190,7 @@ export function UnifiedDrawingCanvas({
 
   // Live cursors for real-time collaboration
   const canvasContainerRef = useRef<HTMLDivElement>(null)
-  const { cursors, setContainer, isConnected, broadcastCursorPosition } = useLiveCursors(
+  const { cursors, setContainer: _setContainer, isConnected: _isConnected, broadcastCursorPosition } = useLiveCursors(
     `canvas-${documentId}-${pageNumber || 0}`
   )
 
@@ -260,7 +260,7 @@ export function UnifiedDrawingCanvas({
     collaboratorCount,
     remoteEditHighlights,
     broadcastCreate,
-    broadcastUpdate,
+    broadcastUpdate: _broadcastUpdate,
     broadcastTransform,
     broadcastDelete,
     broadcastActionStart,
@@ -276,7 +276,7 @@ export function UnifiedDrawingCanvas({
   })
 
   // Debounced transform broadcasting for smooth updates
-  const { debouncedBroadcast: debouncedTransformBroadcast, flush: flushTransformBroadcast } = useDebouncedTransformBroadcast(broadcastTransform)
+  const { debouncedBroadcast: _debouncedTransformBroadcast, flush: flushTransformBroadcast } = useDebouncedTransformBroadcast(broadcastTransform)
 
   // Link dialog state
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false)
@@ -744,14 +744,14 @@ export function UnifiedDrawingCanvas({
   }, [markupState, shapes, history, historyStep, saveShapeToDatabase])
 
   // Handle calibration start
-  const handleCalibrationStart = useCallback((pos: { x: number; y: number }) => {
+  const handleCalibrationStart = useCallback((_pos: { x: number; y: number }) => {
     // This would start drawing a calibration line
     // For now, we'll create a simple line that users can adjust
     toast('Click and drag to draw calibration line', { icon: 'ℹ️' })
   }, [])
 
   // Handle measurement start
-  const handleMeasurementStart = useCallback((type: 'distance' | 'area', pos: { x: number; y: number }) => {
+  const handleMeasurementStart = useCallback((type: 'distance' | 'area', _pos: { x: number; y: number }) => {
     if (!markupState?.scale) {
       toast.error('Please calibrate the scale first using the calibration tool')
       return

@@ -6,7 +6,6 @@ import { Document, Page, pdfjs } from 'react-pdf'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Select } from '@/components/ui/select'
 import {
   Dialog,
@@ -14,9 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import {
-  Slider
-} from '@/components/ui/slider'
 import {
   X,
   ZoomIn,
@@ -28,7 +24,6 @@ import {
   Download,
   ChevronLeft,
   ChevronRight,
-  Move,
   Eye,
   Link2,
   Unlink2,
@@ -36,9 +31,9 @@ import {
   Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { formatDistanceToNow, format } from 'date-fns'
+import { format } from 'date-fns'
 import type { Document as DocumentType } from '@/types/database'
-import type { OverlaySettings, ChangeRegion } from '../../types/markup'
+import type { ChangeRegion } from '../../types/markup'
 import { useCompareVersions } from '../../hooks/useDocumentComparison'
 
 // PDF.js worker will be initialized lazily on component mount

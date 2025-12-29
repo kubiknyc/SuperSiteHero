@@ -19,7 +19,7 @@ import { SimilarDocumentsList } from './SimilarDocumentsList'
 
 interface DocumentAiPanelProps {
   documentId: string
-  projectId?: string
+  projectId?: string  // Reserved for future use (e.g., project-scoped AI features)
   onNavigateToDocument?: (documentId: string) => void
   className?: string
 }
@@ -43,13 +43,13 @@ type TabType = 'overview' | 'ocr' | 'metadata' | 'similar'
  */
 export function DocumentAiPanel({
   documentId,
-  projectId,
+  projectId: _projectId,
   onNavigateToDocument,
   className,
 }: DocumentAiPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>('overview')
 
-  const { data: processingStatus, isLoading: statusLoading } =
+  const { data: processingStatus, isLoading: _statusLoading } =
     useDocumentProcessingStatus(documentId)
   const { data: category } = useDocumentCategory(documentId)
   const { data: ocr } = useDocumentOcr(documentId)

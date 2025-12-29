@@ -6,7 +6,6 @@ import { Document, Page, pdfjs } from 'react-pdf'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import {
   Dialog,
   DialogContent,
@@ -29,7 +28,6 @@ import {
   Unlink2,
   AlertCircle,
   Loader2,
-  Filter,
   FileText,
   List,
 } from 'lucide-react'

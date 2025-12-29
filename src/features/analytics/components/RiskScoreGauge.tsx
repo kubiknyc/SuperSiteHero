@@ -2,7 +2,7 @@
 // Circular gauge component for displaying risk scores
 
 import { cn } from '@/lib/utils'
-import type { RiskScore, RiskLevel } from '@/types/analytics'
+import type { RiskLevel } from '@/types/analytics'
 
 interface RiskScoreGaugeProps {
   score: number
@@ -148,7 +148,8 @@ interface RiskIndicatorProps {
 }
 
 export function RiskIndicator({ level, className }: RiskIndicatorProps) {
-  const colors = RISK_COLORS[level]
+  // colors available from RISK_COLORS[level] for future styling enhancements
+  const _colors = RISK_COLORS[level]
 
   return (
     <span

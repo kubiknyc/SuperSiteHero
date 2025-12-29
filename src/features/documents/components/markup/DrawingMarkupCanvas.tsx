@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { Stage, Layer, Image as KonvaImage, Line, Rect, Circle, Arrow, Text } from 'react-konva'
 import useImage from 'use-image'
 import type {

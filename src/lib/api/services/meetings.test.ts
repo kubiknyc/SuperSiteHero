@@ -72,8 +72,64 @@ vi.mock('@/lib/utils/logger', () => ({
 import { meetingsApi, meetingNotesApi, meetingActionItemsApi, meetingAttendeesApi, meetingAttachmentsApi } from './meetings'
 
 describe('meetingsApi', () => {
+  // Shared mutable state for query results - tests update this to control resolved values
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+  let orderCallCount = 0
+  let orderResults: Array<{ data: any; error: any }> = []
+  let singleCallCount = 0
+  let singleResults: Array<{ data: any; error: any }> = []
+
+  // Helper function for tests to set query result
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
+  // Helper to set multiple order() call results (for getMeetingWithDetails which calls multiple orders)
+  const setOrderResults = (results: Array<{ data: any; error: any }>) => {
+    orderResults = results
+    orderCallCount = 0
+  }
+
+  // Helper to set multiple single() call results
+  const setSingleResults = (results: Array<{ data: any; error: any }>) => {
+    singleResults = results
+    singleCallCount = 0
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+
+    // Reset default query result
+    queryResolvedValue = { data: [], error: null }
+    orderResults = []
+    orderCallCount = 0
+    singleResults = []
+    singleCallCount = 0
+
+    // Create a chainable object that all methods will return
+    // This object is also thenable so it can be awaited
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        is: mockIs,
+        in: mockIn,
+        gte: mockGte,
+        lte: mockLte,
+        or: mockOr,
+        order: mockOrder,
+        single: mockSingle,
+        limit: mockLimit,
+        select: mockSelect,
+      }
+      // Make the object thenable (Promise-like) - reads current queryResolvedValue
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
 
     // Default chainable mock setup
     mockFrom.mockReturnValue({
@@ -83,59 +139,38 @@ describe('meetingsApi', () => {
       delete: mockDelete,
     })
 
-    mockSelect.mockReturnValue({
-      eq: mockEq,
-      is: mockIs,
-      order: mockOrder,
-      single: mockSingle,
+    // All chainable methods return a fresh chainable
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockIs.mockImplementation(() => createChainable())
+    mockIn.mockImplementation(() => createChainable())
+    mockGte.mockImplementation(() => createChainable())
+    mockLte.mockImplementation(() => createChainable())
+    mockOr.mockImplementation(() => createChainable())
+    mockLimit.mockImplementation(() => createChainable())
+
+    // mockOrder supports multiple calls with different results
+    mockOrder.mockImplementation(() => {
+      if (orderResults.length > 0) {
+        const result = orderResults[orderCallCount] || orderResults[orderResults.length - 1]
+        orderCallCount++
+        const chainable = createChainable()
+        chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+          return Promise.resolve(result).then(resolve, reject)
+        }
+        return chainable
+      }
+      return createChainable()
     })
 
-    mockEq.mockReturnValue({
-      eq: mockEq,
-      is: mockIs,
-      in: mockIn,
-      gte: mockGte,
-      lte: mockLte,
-      or: mockOr,
-      order: mockOrder,
-      single: mockSingle,
-      select: mockSelect,
-    })
-
-    mockIs.mockReturnValue({
-      eq: mockEq,
-      gte: mockGte,
-      in: mockIn,
-      order: mockOrder,
-      limit: mockLimit,
-    })
-
-    mockOrder.mockReturnValue({
-      eq: mockEq,
-      in: mockIn,
-      limit: mockLimit,
-    })
-
-    mockGte.mockReturnValue({
-      lte: mockLte,
-      order: mockOrder,
-    })
-
-    mockLte.mockReturnValue({
-      order: mockOrder,
-    })
-
-    mockOr.mockReturnValue({
-      order: mockOrder,
-    })
-
-    mockIn.mockReturnValue({
-      order: mockOrder,
-      limit: mockLimit,
-    })
-
-    mockLimit.mockReturnValue({
-      eq: mockEq,
+    // mockSingle supports multiple calls with different results
+    mockSingle.mockImplementation(() => {
+      if (singleResults.length > 0) {
+        const result = singleResults[singleCallCount] || singleResults[singleResults.length - 1]
+        singleCallCount++
+        return Promise.resolve(result)
+      }
+      return Promise.resolve(queryResolvedValue)
     })
 
     mockInsert.mockReturnValue({
@@ -153,6 +188,17 @@ describe('meetingsApi', () => {
     mockAuthGetUser.mockResolvedValue({
       user: { id: 'test-user-id' },
     })
+
+    // Storage mocks
+    mockStorageFrom.mockReturnValue({
+      upload: mockUpload,
+      getPublicUrl: mockGetPublicUrl,
+    })
+
+    // Expose helpers for tests
+    ;(globalThis as any).setQueryResult = setQueryResult
+    ;(globalThis as any).setOrderResults = setOrderResults
+    ;(globalThis as any).setSingleResults = setSingleResults
   })
 
   describe('getMeetings', () => {
@@ -162,7 +208,7 @@ describe('meetingsApi', () => {
         { id: '2', title: 'Meeting 2', meeting_date: '2025-01-14' },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockMeetings, error: null })
+      setQueryResult({ data: mockMeetings, error: null })
 
       const result = await meetingsApi.getMeetings({})
 
@@ -173,7 +219,7 @@ describe('meetingsApi', () => {
     })
 
     it('should filter meetings by project_id', async () => {
-      mockEq.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getMeetings({ project_id: 'project-123' })
 
@@ -181,7 +227,7 @@ describe('meetingsApi', () => {
     })
 
     it('should filter meetings by meeting_type', async () => {
-      mockEq.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getMeetings({ meeting_type: 'safety' })
 
@@ -189,7 +235,7 @@ describe('meetingsApi', () => {
     })
 
     it('should filter meetings by status', async () => {
-      mockEq.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getMeetings({ status: 'completed' })
 
@@ -197,7 +243,7 @@ describe('meetingsApi', () => {
     })
 
     it('should filter meetings by date range', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getMeetings({
         date_from: '2025-01-01',
@@ -209,7 +255,7 @@ describe('meetingsApi', () => {
     })
 
     it('should search meetings by title and description', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getMeetings({ search: 'safety' })
 
@@ -218,13 +264,13 @@ describe('meetingsApi', () => {
 
     it('should handle database errors', async () => {
       const mockError = new Error('Database error')
-      mockOrder.mockResolvedValue({ data: null, error: mockError })
+      setQueryResult({ data: null, error: mockError })
 
       await expect(meetingsApi.getMeetings({})).rejects.toThrow('Database error')
     })
 
     it('should return empty array when no data', async () => {
-      mockOrder.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       const result = await meetingsApi.getMeetings({})
 
@@ -240,7 +286,7 @@ describe('meetingsApi', () => {
         meeting_date: '2025-01-15',
       }
 
-      mockSingle.mockResolvedValue({ data: mockMeeting, error: null })
+      setQueryResult({ data: mockMeeting, error: null })
 
       const result = await meetingsApi.getMeetingById('meeting-123')
 
@@ -252,7 +298,7 @@ describe('meetingsApi', () => {
 
     it('should handle not found error', async () => {
       const mockError = new Error('Not found')
-      mockSingle.mockResolvedValue({ data: null, error: mockError })
+      setQueryResult({ data: null, error: mockError })
 
       await expect(meetingsApi.getMeetingById('nonexistent')).rejects.toThrow('Not found')
     })
@@ -266,11 +312,15 @@ describe('meetingsApi', () => {
       const mockAttendees = [{ id: '1', name: 'John Doe' }]
       const mockAttachments = [{ id: '1', file_name: 'doc.pdf' }]
 
-      mockSingle.mockResolvedValueOnce({ data: mockMeeting, error: null })
-      mockOrder.mockResolvedValueOnce({ data: mockNotes, error: null })
-      mockOrder.mockResolvedValueOnce({ data: mockActionItems, error: null })
-      mockOrder.mockResolvedValueOnce({ data: mockAttendees, error: null })
-      mockOrder.mockResolvedValueOnce({ data: mockAttachments, error: null })
+      // For getMeetingById (uses single())
+      setSingleResults([{ data: mockMeeting, error: null }])
+
+      // Spy on the sub-API functions to return specific data
+      // This avoids issues with concurrent Promise.all calls sharing mock counters
+      const getNotesSpy = vi.spyOn(meetingNotesApi, 'getNotes').mockResolvedValue(mockNotes as any)
+      const getActionItemsSpy = vi.spyOn(meetingActionItemsApi, 'getActionItems').mockResolvedValue(mockActionItems as any)
+      const getAttendeesSpy = vi.spyOn(meetingAttendeesApi, 'getAttendees').mockResolvedValue(mockAttendees as any)
+      const getAttachmentsSpy = vi.spyOn(meetingAttachmentsApi, 'getAttachments').mockResolvedValue(mockAttachments as any)
 
       const result = await meetingsApi.getMeetingWithDetails('meeting-123')
 
@@ -278,6 +328,12 @@ describe('meetingsApi', () => {
       expect(result.actionItems).toEqual(mockActionItems)
       expect(result.attendeesList).toEqual(mockAttendees)
       expect(result.attachments).toEqual(mockAttachments)
+
+      // Clean up spies
+      getNotesSpy.mockRestore()
+      getActionItemsSpy.mockRestore()
+      getAttendeesSpy.mockRestore()
+      getAttachmentsSpy.mockRestore()
     })
   })
 
@@ -291,7 +347,7 @@ describe('meetingsApi', () => {
         status: 'scheduled',
       }
 
-      mockSingle.mockResolvedValue({ data: mockMeeting, error: null })
+      setQueryResult({ data: mockMeeting, error: null })
 
       const dto = {
         project_id: 'project-123',
@@ -310,7 +366,7 @@ describe('meetingsApi', () => {
 
     it('should create meeting with all optional fields', async () => {
       const mockMeeting = { id: 'new-meeting' }
-      mockSingle.mockResolvedValue({ data: mockMeeting, error: null })
+      setQueryResult({ data: mockMeeting, error: null })
 
       const dto = {
         project_id: 'project-123',
@@ -341,7 +397,7 @@ describe('meetingsApi', () => {
 
     it('should handle creation errors', async () => {
       const mockError = new Error('Creation failed')
-      mockSingle.mockResolvedValue({ data: null, error: mockError })
+      setQueryResult({ data: null, error: mockError })
 
       const dto = {
         project_id: 'project-123',
@@ -357,7 +413,7 @@ describe('meetingsApi', () => {
   describe('updateMeeting', () => {
     it('should update meeting fields', async () => {
       const mockUpdated = { id: 'meeting-123', title: 'Updated Title' }
-      mockSingle.mockResolvedValue({ data: mockUpdated, error: null })
+      setQueryResult({ data: mockUpdated, error: null })
 
       const result = await meetingsApi.updateMeeting('meeting-123', {
         title: 'Updated Title',
@@ -371,7 +427,7 @@ describe('meetingsApi', () => {
     })
 
     it('should update timestamp', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      setQueryResult({ data: {}, error: null })
 
       await meetingsApi.updateMeeting('meeting-123', { title: 'Test' })
 
@@ -383,7 +439,7 @@ describe('meetingsApi', () => {
   describe('publishMinutes', () => {
     it('should publish meeting minutes', async () => {
       const mockPublished = { id: 'meeting-123', minutes_published: true }
-      mockSingle.mockResolvedValue({ data: mockPublished, error: null })
+      setQueryResult({ data: mockPublished, error: null })
 
       const result = await meetingsApi.publishMinutes('meeting-123')
 
@@ -395,7 +451,7 @@ describe('meetingsApi', () => {
 
   describe('deleteMeeting', () => {
     it('should soft delete meeting', async () => {
-      mockEq.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       await meetingsApi.deleteMeeting('meeting-123')
 
@@ -407,7 +463,7 @@ describe('meetingsApi', () => {
 
     it('should handle deletion errors', async () => {
       const mockError = new Error('Deletion failed')
-      mockEq.mockResolvedValue({ data: null, error: mockError })
+      setQueryResult({ data: null, error: mockError })
 
       await expect(meetingsApi.deleteMeeting('meeting-123')).rejects.toThrow('Deletion failed')
     })
@@ -420,7 +476,7 @@ describe('meetingsApi', () => {
         { id: '2', meeting_date: '2025-01-21' },
       ]
 
-      mockLimit.mockResolvedValue({ data: mockMeetings, error: null })
+      setQueryResult({ data: mockMeetings, error: null })
 
       const result = await meetingsApi.getUpcomingMeetings()
 
@@ -430,7 +486,7 @@ describe('meetingsApi', () => {
     })
 
     it('should filter by project_id', async () => {
-      mockLimit.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getUpcomingMeetings('project-123', 10)
 
@@ -439,7 +495,7 @@ describe('meetingsApi', () => {
     })
 
     it('should only include future meetings', async () => {
-      mockLimit.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await meetingsApi.getUpcomingMeetings()
 
@@ -453,17 +509,42 @@ describe('meetingsApi', () => {
 })
 
 describe('meetingNotesApi', () => {
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
       update: mockUpdate,
       delete: mockDelete,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ eq: mockEq, order: mockOrder, select: mockSelect, single: mockSingle })
-    mockOrder.mockReturnValue({ eq: mockEq })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => Promise.resolve(queryResolvedValue))
     mockInsert.mockReturnValue({ select: mockSelect })
     mockUpdate.mockReturnValue({ eq: mockEq })
     mockDelete.mockReturnValue({ eq: mockEq })
@@ -477,7 +558,7 @@ describe('meetingNotesApi', () => {
         { id: '2', content: 'Note 2', note_order: 1 },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockNotes, error: null })
+      setQueryResult({ data: mockNotes, error: null })
 
       const result = await meetingNotesApi.getNotes('meeting-123')
 
@@ -491,7 +572,7 @@ describe('meetingNotesApi', () => {
   describe('createNote', () => {
     it('should create a note with required fields', async () => {
       const mockNote = { id: 'note-1', content: 'Test note' }
-      mockSingle.mockResolvedValue({ data: mockNote, error: null })
+      setQueryResult({ data: mockNote, error: null })
 
       const result = await meetingNotesApi.createNote({
         meeting_id: 'meeting-123',
@@ -504,7 +585,7 @@ describe('meetingNotesApi', () => {
     })
 
     it('should create note with all fields', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      setQueryResult({ data: {}, error: null })
 
       await meetingNotesApi.createNote({
         meeting_id: 'meeting-123',
@@ -524,7 +605,7 @@ describe('meetingNotesApi', () => {
   describe('updateNote', () => {
     it('should update note content', async () => {
       const mockUpdated = { id: 'note-1', content: 'Updated' }
-      mockSingle.mockResolvedValue({ data: mockUpdated, error: null })
+      setQueryResult({ data: mockUpdated, error: null })
 
       const result = await meetingNotesApi.updateNote('note-1', {
         content: 'Updated',
@@ -537,7 +618,7 @@ describe('meetingNotesApi', () => {
 
   describe('deleteNote', () => {
     it('should delete a note', async () => {
-      mockEq.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       await meetingNotesApi.deleteNote('note-1')
 
@@ -549,7 +630,7 @@ describe('meetingNotesApi', () => {
 
   describe('reorderNotes', () => {
     it('should reorder notes', async () => {
-      mockEq.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       await meetingNotesApi.reorderNotes('meeting-123', ['note-3', 'note-1', 'note-2'])
 
@@ -562,34 +643,68 @@ describe('meetingNotesApi', () => {
 })
 
 describe('meetingActionItemsApi', () => {
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+  let singleCallCount = 0
+  let singleResults: Array<{ data: any; error: any }> = []
+
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
+  const setSingleResults = (results: Array<{ data: any; error: any }>) => {
+    singleResults = results
+    singleCallCount = 0
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+    singleResults = []
+    singleCallCount = 0
+
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+        limit: mockLimit,
+        lte: mockLte,
+        nullsFirst: vi.fn(() => createChainable()),
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
       update: mockUpdate,
       delete: mockDelete,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({
-      eq: mockEq,
-      order: mockOrder,
-      select: mockSelect,
-      single: mockSingle,
-      lte: mockLte,
-      lt: mockLt,
-      not: mockNot,
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockLimit.mockImplementation(() => createChainable())
+    mockLte.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => {
+      if (singleResults.length > 0) {
+        const result = singleResults[singleCallCount] || singleResults[singleResults.length - 1]
+        singleCallCount++
+        return Promise.resolve(result)
+      }
+      return Promise.resolve(queryResolvedValue)
     })
-    mockOrder.mockReturnValue({ nullsFirst: mockLimit })
-    mockLimit.mockResolvedValue({ data: [], error: null })
     mockInsert.mockReturnValue({ select: mockSelect })
     mockUpdate.mockReturnValue({ eq: mockEq })
     mockDelete.mockReturnValue({ eq: mockEq })
     mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
   })
-
-  const mockLt = vi.fn()
-  const mockNot = vi.fn()
 
   describe('getActionItems', () => {
     it('should get action items for a meeting', async () => {
@@ -598,7 +713,7 @@ describe('meetingActionItemsApi', () => {
         { id: '2', description: 'Task 2', item_order: 1 },
       ]
 
-      mockLimit.mockResolvedValue({ data: mockItems, error: null })
+      setQueryResult({ data: mockItems, error: null })
 
       const result = await meetingActionItemsApi.getActionItems('meeting-123')
 
@@ -611,7 +726,7 @@ describe('meetingActionItemsApi', () => {
   describe('createActionItem', () => {
     it('should create action item with defaults', async () => {
       const mockItem = { id: 'item-1', description: 'New task', status: 'pending' }
-      mockSingle.mockResolvedValue({ data: mockItem, error: null })
+      setQueryResult({ data: mockItem, error: null })
 
       const result = await meetingActionItemsApi.createActionItem({
         meeting_id: 'meeting-123',
@@ -628,7 +743,7 @@ describe('meetingActionItemsApi', () => {
   describe('completeActionItem', () => {
     it('should complete action item and set completion date', async () => {
       const mockCompleted = { id: 'item-1', status: 'completed' }
-      mockSingle.mockResolvedValue({ data: mockCompleted, error: null })
+      setQueryResult({ data: mockCompleted, error: null })
 
       await meetingActionItemsApi.completeActionItem('item-1')
 
@@ -648,9 +763,11 @@ describe('meetingActionItemsApi', () => {
       }
       const mockTask = { id: 'task-1', title: 'Task description' }
 
-      mockSingle.mockResolvedValueOnce({ data: mockActionItem, error: null })
-      mockSingle.mockResolvedValueOnce({ data: mockTask, error: null })
-      mockSingle.mockResolvedValueOnce({ data: { ...mockActionItem, task_id: 'task-1' }, error: null })
+      setSingleResults([
+        { data: mockActionItem, error: null },
+        { data: mockTask, error: null },
+        { data: { ...mockActionItem, task_id: 'task-1' }, error: null },
+      ])
 
       const result = await meetingActionItemsApi.convertToTask('item-1', 'project-123')
 
@@ -662,17 +779,82 @@ describe('meetingActionItemsApi', () => {
 })
 
 describe('meetingAttendeesApi', () => {
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+  let eqCallCount = 0
+  let eqResults: Array<{ data: any; error: any }> = []
+  let selectCallCount = 0
+  let selectResults: Array<{ data: any; error: any }> = []
+
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
+  const setEqResults = (results: Array<{ data: any; error: any }>) => {
+    eqResults = results
+    eqCallCount = 0
+  }
+
+  const setSelectResults = (results: Array<{ data: any; error: any }>) => {
+    selectResults = results
+    selectCallCount = 0
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+    eqResults = []
+    eqCallCount = 0
+    selectResults = []
+    selectCallCount = 0
+
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
       update: mockUpdate,
       delete: mockDelete,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ eq: mockEq, order: mockOrder, select: mockSelect, single: mockSingle })
-    mockOrder.mockReturnValue({ order: mockOrder })
+    mockSelect.mockImplementation(() => {
+      if (selectResults.length > 0) {
+        const result = selectResults[selectCallCount] || selectResults[selectResults.length - 1]
+        selectCallCount++
+        const chainable = createChainable()
+        chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+          return Promise.resolve(result).then(resolve, reject)
+        }
+        return chainable
+      }
+      return createChainable()
+    })
+    mockEq.mockImplementation(() => {
+      if (eqResults.length > 0) {
+        const result = eqResults[eqCallCount] || eqResults[eqResults.length - 1]
+        eqCallCount++
+        const chainable = createChainable()
+        chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+          return Promise.resolve(result).then(resolve, reject)
+        }
+        return chainable
+      }
+      return createChainable()
+    })
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => Promise.resolve(queryResolvedValue))
     mockInsert.mockReturnValue({ select: mockSelect })
     mockUpdate.mockReturnValue({ eq: mockEq })
     mockDelete.mockReturnValue({ eq: mockEq })
@@ -685,7 +867,7 @@ describe('meetingAttendeesApi', () => {
         { id: '2', name: 'Optional User', is_required: false },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockAttendees, error: null })
+      setQueryResult({ data: mockAttendees, error: null })
 
       const result = await meetingAttendeesApi.getAttendees('meeting-123')
 
@@ -699,7 +881,7 @@ describe('meetingAttendeesApi', () => {
   describe('addAttendee', () => {
     it('should add attendee with default status', async () => {
       const mockAttendee = { id: 'att-1', name: 'John Doe', attendance_status: 'invited' }
-      mockSingle.mockResolvedValue({ data: mockAttendee, error: null })
+      setQueryResult({ data: mockAttendee, error: null })
 
       const result = await meetingAttendeesApi.addAttendee({
         meeting_id: 'meeting-123',
@@ -715,7 +897,7 @@ describe('meetingAttendeesApi', () => {
 
   describe('markAttendance', () => {
     it('should mark attendee as attended', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      setQueryResult({ data: {}, error: null })
 
       await meetingAttendeesApi.markAttendance('att-1', true, '09:00', '10:00')
 
@@ -727,7 +909,7 @@ describe('meetingAttendeesApi', () => {
     })
 
     it('should mark attendee as absent', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      setQueryResult({ data: {}, error: null })
 
       await meetingAttendeesApi.markAttendance('att-1', false)
 
@@ -739,7 +921,7 @@ describe('meetingAttendeesApi', () => {
 
   describe('removeAttendee', () => {
     it('should delete attendee', async () => {
-      mockEq.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       await meetingAttendeesApi.removeAttendee('att-1')
 
@@ -759,8 +941,8 @@ describe('meetingAttendeesApi', () => {
         { id: 'att-2', name: 'Jane Engineer' },
       ]
 
-      mockEq.mockResolvedValueOnce({ data: mockProjectUsers, error: null })
-      mockSelect.mockResolvedValueOnce({ data: mockAttendees, error: null })
+      setEqResults([{ data: mockProjectUsers, error: null }])
+      setSelectResults([{ data: mockAttendees, error: null }])
 
       const result = await meetingAttendeesApi.addProjectUsersAsAttendees('meeting-123', 'project-123')
 
@@ -771,7 +953,7 @@ describe('meetingAttendeesApi', () => {
     })
 
     it('should return empty array if no project users', async () => {
-      mockEq.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       const result = await meetingAttendeesApi.addProjectUsersAsAttendees('meeting-123', 'project-123')
 
@@ -782,16 +964,41 @@ describe('meetingAttendeesApi', () => {
 })
 
 describe('meetingAttachmentsApi', () => {
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
       delete: mockDelete,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ eq: mockEq, order: mockOrder, select: mockSelect, single: mockSingle })
-    mockOrder.mockResolvedValue({ data: [], error: null })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => Promise.resolve(queryResolvedValue))
     mockInsert.mockReturnValue({ select: mockSelect })
     mockDelete.mockReturnValue({ eq: mockEq })
     mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
@@ -809,7 +1016,7 @@ describe('meetingAttachmentsApi', () => {
         { id: '2', file_name: 'doc2.pdf', created_at: '2025-01-14T10:00:00Z' },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockAttachments, error: null })
+      setQueryResult({ data: mockAttachments, error: null })
 
       const result = await meetingAttachmentsApi.getAttachments('meeting-123')
 
@@ -826,7 +1033,8 @@ describe('meetingAttachmentsApi', () => {
         file_name: 'document.pdf',
         attachment_type: 'document',
       }
-      mockSingle.mockResolvedValue({ data: mockAttachment, error: null })
+      setQueryResult({ data: mockAttachment, error: null })
+      mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } })
 
       const result = await meetingAttachmentsApi.addAttachment({
         meeting_id: 'meeting-123',
@@ -843,7 +1051,7 @@ describe('meetingAttachmentsApi', () => {
 
   describe('deleteAttachment', () => {
     it('should delete attachment', async () => {
-      mockEq.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       await meetingAttachmentsApi.deleteAttachment('att-1')
 
@@ -858,9 +1066,10 @@ describe('meetingAttachmentsApi', () => {
       const mockUrl = 'https://storage.example.com/meetings/meeting-123/12345-test.pdf'
       const mockAttachment = { id: 'att-1', file_name: 'test.pdf' }
 
+      mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } })
       mockUpload.mockResolvedValue({ error: null })
       mockGetPublicUrl.mockReturnValue({ data: { publicUrl: mockUrl } })
-      mockSingle.mockResolvedValue({ data: mockAttachment, error: null })
+      setQueryResult({ data: mockAttachment, error: null })
 
       const result = await meetingAttachmentsApi.uploadAndAttach(
         'meeting-123',
@@ -887,6 +1096,7 @@ describe('meetingAttachmentsApi', () => {
       const mockFile = new File(['content'], 'test.pdf')
       const mockError = new Error('Upload failed')
 
+      mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } })
       mockUpload.mockResolvedValue({ error: mockError })
 
       await expect(
@@ -895,7 +1105,7 @@ describe('meetingAttachmentsApi', () => {
     })
 
     it('should require authentication', async () => {
-      mockAuthGetUser.mockResolvedValue({ user: null })
+      mockAuthGetUser.mockResolvedValue({ data: { user: null } })
       const mockFile = new File(['content'], 'test.pdf')
 
       await expect(

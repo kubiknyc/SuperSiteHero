@@ -114,7 +114,7 @@ export function useDeleteEstimate() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ estimateId, projectId }: { estimateId: string; projectId: string }) =>
+    mutationFn: ({ estimateId, projectId: _projectId }: { estimateId: string; projectId: string }) =>
       costEstimatesApi.deleteEstimate(estimateId),
     onSuccess: (_, variables) => {
       // Invalidate project estimates list
@@ -178,7 +178,7 @@ export function useUpdateEstimateItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ itemId, updates, estimateId }: { itemId: string; updates: CostEstimateItemUpdate; estimateId: string }) =>
+    mutationFn: ({ itemId, updates, estimateId: _estimateId }: { itemId: string; updates: CostEstimateItemUpdate; estimateId: string }) =>
       costEstimatesApi.updateEstimateItem(itemId, updates),
     onSuccess: (_, variables) => {
       // Invalidate estimate detail and items
@@ -199,7 +199,7 @@ export function useDeleteEstimateItem() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ itemId, estimateId }: { itemId: string; estimateId: string }) =>
+    mutationFn: ({ itemId, estimateId: _estimateId }: { itemId: string; estimateId: string }) =>
       costEstimatesApi.deleteEstimateItem(itemId),
     onSuccess: (_, variables) => {
       // Invalidate estimate detail and items

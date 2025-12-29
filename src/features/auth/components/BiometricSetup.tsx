@@ -29,7 +29,6 @@ import {
   Plus,
   Loader2,
   CheckCircle,
-  XCircle,
   ShieldCheck,
   Clock,
   AlertTriangle,

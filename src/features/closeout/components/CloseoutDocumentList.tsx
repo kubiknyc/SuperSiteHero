@@ -3,7 +3,7 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+// Card imports available for future use
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -18,12 +18,10 @@ import { Progress } from '@/components/ui/progress'
 import type {
   CloseoutDocumentWithDetails,
   CloseoutStatus,
-  CloseoutDocumentType,
   CloseoutCategory,
   CloseoutStatistics,
 } from '@/types/closeout'
 import {
-  CLOSEOUT_DOCUMENT_TYPES,
   CLOSEOUT_STATUSES,
   getCloseoutDocumentTypeLabel,
   getCloseoutDocumentCategory,

@@ -1,7 +1,6 @@
 // File: /src/features/documents/components/markup/EnhancedMarkupToolbar.tsx
 // Enhanced markup toolbar with color picker, layers, measurements, stamps, and history
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,

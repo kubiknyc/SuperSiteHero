@@ -110,7 +110,7 @@ function SingleHighlight({
  */
 export function RemoteMarkupHighlights({
   highlights,
-  stageRef,
+  stageRef: _stageRef,
   layerRef,
 }: RemoteMarkupHighlightProps) {
   // Calculate bounds for each highlight

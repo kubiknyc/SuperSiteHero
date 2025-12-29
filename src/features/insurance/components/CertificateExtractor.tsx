@@ -3,7 +3,7 @@
 
 import { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -33,10 +33,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Sparkles,
-  Edit3,
   Save,
-  X,
-  Eye,
   RotateCcw,
 } from 'lucide-react'
 import { INSURANCE_TYPE_LABELS, type InsuranceType } from '@/types/insurance'
@@ -100,7 +97,7 @@ export function CertificateExtractor({
   const [status, setStatus] = useState<ExtractionStatus>('idle')
   const [progress, setProgress] = useState(0)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
-  const [extractedData, setExtractedData] = useState<ExtractedCertificateData | null>(null)
+  const [_extractedData, setExtractedData] = useState<ExtractedCertificateData | null>(null)
   const [editedData, setEditedData] = useState<ExtractedCertificateData | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -118,7 +115,7 @@ export function CertificateExtractor({
   }
 
   // Process file with OCR - moved before onDrop that uses it
-  const processFile = async (file: File) => {
+  const processFile = async (_file: File) => {
     setStatus('uploading')
     setProgress(10)
 

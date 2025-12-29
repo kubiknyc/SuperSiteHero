@@ -5,7 +5,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { aiConfigurationApi, aiUsageApi } from '@/lib/api/services/ai-provider'
-import type { UpdateAIConfigurationDTO, AIConfiguration, AIUsageStats } from '@/types/ai'
+import type { UpdateAIConfigurationDTO, AIConfiguration } from '@/types/ai'
 import { toast } from 'sonner'
 
 // Query keys

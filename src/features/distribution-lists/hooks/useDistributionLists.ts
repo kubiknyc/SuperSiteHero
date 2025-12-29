@@ -28,7 +28,7 @@ export const distributionListKeys = {
   all: ['distribution-lists'] as const,
   lists: (filters?: DistributionListFilters) => [...distributionListKeys.all, 'list', filters] as const,
   list: (id: string) => [...distributionListKeys.all, 'detail', id] as const,
-  members: (listId: string) => [...distributionListKeys.all, 'members', listId] as const,
+  members: (_listId: string) => [...distributionListKeys.all, 'members', _listId] as const,
   forProject: (projectId: string, listType?: string) =>
     [...distributionListKeys.all, 'project', projectId, listType] as const,
   expand: (listIds: string[], userIds: string[]) =>
@@ -378,7 +378,7 @@ export function useUpdateDistributionListMember() {
   return useMutation({
     mutationFn: async ({
       id,
-      listId,
+      listId: _listId,
       ...dto
     }: UpdateDistributionListMemberDTO & { id: string; listId: string }): Promise<DistributionListMember> => {
       const { data, error } = await db
@@ -407,7 +407,7 @@ export function useRemoveDistributionListMember() {
   return useMutation({
     mutationFn: async ({
       memberId,
-      listId,
+      listId: _listId,
     }: {
       memberId: string;
       listId: string;

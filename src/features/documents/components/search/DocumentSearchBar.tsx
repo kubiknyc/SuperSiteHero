@@ -5,9 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Search, X, Loader2 } from 'lucide-react'
 import { Input, Button } from '@/components/ui'
 import { useDocumentSearch } from '@/features/documents/hooks/useDocumentSearch'
-import { cn } from '@/lib/utils'
 import type { Document } from '@/types/database'
-import { logger } from '../../../../lib/utils/logger';
 
 
 interface DocumentSearchBarProps {

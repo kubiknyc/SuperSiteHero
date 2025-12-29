@@ -34,7 +34,6 @@ import {
   type FieldDiff,
   type ResolutionStrategy,
   type FieldSelection,
-  type MergePreview,
 } from '@/lib/offline/conflict-resolver';
 import { useOfflineStore, type SyncConflict } from '@/stores/offline-store';
 import { logger } from '@/lib/utils/logger';

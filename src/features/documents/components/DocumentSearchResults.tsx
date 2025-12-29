@@ -17,7 +17,7 @@ import { DocumentCategoryBadge } from './DocumentCategoryBadge'
 import type { ContentSearchResult } from '@/types/document-ai'
 
 interface DocumentSearchResultsProps {
-  projectId: string
+  projectId: string  // Used by useDocumentContentSearch hook
   initialQuery?: string
   className?: string
   onDocumentClick?: (documentId: string) => void
@@ -295,7 +295,7 @@ interface DocumentSearchInputProps {
 }
 
 export function DocumentSearchInput({
-  projectId,
+  projectId: _projectId,
   onSearch,
   className,
 }: DocumentSearchInputProps) {

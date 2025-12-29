@@ -15,7 +15,6 @@ import { VoiceInputButton } from '@/components/ui/voice-input'
 import type {
   ChecklistResponse,
   ChecklistTemplateItem,
-  ScoreValue,
   CheckboxResponseData,
   TextResponseData,
   NumberResponseData,

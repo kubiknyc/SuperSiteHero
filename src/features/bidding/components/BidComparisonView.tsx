@@ -8,13 +8,10 @@ import {
   ArrowDown,
   ArrowUp,
   BarChart3,
-  Check,
-  DollarSign,
   Download,
   Loader2,
   Medal,
   Minus,
-  Star,
   TrendingDown,
   TrendingUp,
   Trophy,
@@ -42,7 +39,6 @@ import { useBidSubmissions } from '@/features/bidding/hooks/useBidding'
 import {
   formatBidAmount,
   calculateBidSpread,
-  type BidSubmission,
   type BidSubmissionWithDetails,
 } from '@/types/bidding'
 import { cn } from '@/lib/utils'
@@ -84,9 +80,6 @@ function BidBar({ submission, maxBid, lowBid, estimatedValue }: BidBarProps) {
   const varianceFromLow = lowBid > 0
     ? ((submission.base_bid_amount - lowBid) / lowBid) * 100
     : 0
-  const varianceFromEstimate = estimatedValue
-    ? ((submission.base_bid_amount - estimatedValue) / estimatedValue) * 100
-    : null
 
   return (
     <div className="space-y-1">

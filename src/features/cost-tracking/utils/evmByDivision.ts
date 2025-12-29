@@ -7,7 +7,6 @@
 
 import type {
   EVMByDivision,
-  EVMPerformanceStatus,
   EVMThresholds,
 } from '@/types/cost-tracking';
 import {
@@ -74,7 +73,7 @@ export function aggregateByDivision(
   // Calculate metrics for each division
   const results: DivisionEVMMetrics[] = [];
 
-  for (const [division, codes] of divisionMap.entries()) {
+  for (const [_division, codes] of divisionMap.entries()) {
     const metrics = calculateDivisionMetrics(codes, thresholds);
     results.push(metrics);
   }

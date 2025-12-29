@@ -89,7 +89,7 @@ export function LogoIconLight({ className, animated = false }: { className?: str
  */
 export function Logo({
   size = 'md',
-  showText = true,
+  showText: _showText = true,
   variant = 'default',
   className,
   animated = false

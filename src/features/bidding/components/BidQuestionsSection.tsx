@@ -32,7 +32,6 @@ import {
   useAnswerBidQuestion,
 } from '@/features/bidding/hooks/useBidding'
 import type { BidQuestion, QuestionStatus } from '@/types/bidding'
-import { cn } from '@/lib/utils'
 
 interface BidQuestionsSectionProps {
   packageId: string

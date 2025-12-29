@@ -21,7 +21,6 @@ import {
   addDocumentHeader,
   addFootersToAllPages,
   getCompanyInfo,
-  type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
 
 const CONTENT_WIDTH = PAGE_WIDTH_PORTRAIT - 2 * MARGIN

@@ -11,7 +11,6 @@ import {
   FileText,
   Loader2,
   Plus,
-  X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -34,7 +33,6 @@ import {
   useCreateAddendum,
 } from '@/features/bidding/hooks/useBidding'
 import type { BidAddendum } from '@/types/bidding'
-import { cn } from '@/lib/utils'
 
 interface BidAddendaSectionProps {
   packageId: string

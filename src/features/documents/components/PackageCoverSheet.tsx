@@ -6,12 +6,12 @@
 import React, { useMemo, forwardRef } from 'react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import type {
-  DrawingPackage,
-  DrawingPackageItem,
-  DrawingDiscipline,
+import {
+  DRAWING_DISCIPLINES,
+  DRAWING_PACKAGE_TYPES,
+  type DrawingPackage,
+  type DrawingPackageItem,
 } from '@/types/drawing';
-import { DRAWING_DISCIPLINES, DRAWING_PACKAGE_TYPES } from '@/types/drawing';
 
 interface PackageCoverSheetProps {
   package: DrawingPackage;

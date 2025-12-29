@@ -13,7 +13,7 @@ import {
 } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { useExtractedMetadata, useApplyExtractedMetadata } from '../hooks/useDocumentAi'
-import type { DocumentExtractedMetadata, MetadataField } from '@/types/document-ai'
+import type { MetadataField } from '@/types/document-ai'
 
 interface ExtractedMetadataCardProps {
   documentId: string

@@ -43,12 +43,7 @@ function formatCurrency(value: number): string {
   }).format(value)
 }
 
-function formatIndex(value: number | null | undefined): string {
-  if (value === null || value === undefined || isNaN(value)) {return '—'}
-  return value.toFixed(2)
-}
-
-function IndexBadge({ value, type }: { value: number | null | undefined; type: 'cpi' | 'spi' }) {
+function IndexBadge({ value, type: _type }: { value: number | null | undefined; type: 'cpi' | 'spi' }) {
   if (value === null || value === undefined || isNaN(value)) {
     return <span className="text-muted-foreground">—</span>
   }

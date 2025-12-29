@@ -17,7 +17,6 @@ import {
   MapPin,
   Clock,
   Building2,
-  Layers,
   Settings,
   ChevronDown,
   ChevronRight,
@@ -72,8 +71,6 @@ import type {
   PhotoLocationTemplateUpdate,
   PhotoFrequency,
   PhotoCategory,
-} from '@/types/photo-templates';
-import {
   PHOTO_FREQUENCIES,
   PHOTO_CATEGORIES,
   REQUIRED_ANGLES,

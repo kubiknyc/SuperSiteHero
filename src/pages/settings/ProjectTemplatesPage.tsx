@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -45,7 +45,6 @@ import {
 import { useAuth } from '@/hooks/useAuth'
 import type {
   ProjectTemplate,
-  TemplateCategory,
   CreateProjectTemplateInput,
   UpdateProjectTemplateInput,
 } from '@/types/project-template'
@@ -57,7 +56,7 @@ export function ProjectTemplatesPage() {
   const companyId = userProfile?.company_id
 
   // State
-  const [selectedCategory, setSelectedCategory] = React.useState<TemplateCategory | 'all'>('all')
+  const [selectedCategory, setSelectedCategory] = React.useState<string>('all')
   const [formDialogOpen, setFormDialogOpen] = React.useState(false)
   const [editingTemplate, setEditingTemplate] = React.useState<ProjectTemplate | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false)

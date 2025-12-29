@@ -5,7 +5,6 @@ import {
   FileText,
   ClipboardList,
   CheckSquare,
-  AlertTriangle,
   FileCheck,
   UserCheck,
   FileQuestion,
@@ -17,7 +16,6 @@ import {
   FileSignature,
   Shield,
   HardHat,
-  Wrench,
   DollarSign,
   Users,
   BarChart3,
@@ -27,8 +25,7 @@ import {
   TrendingUp,
   ClipboardCheck,
   Camera,
-  FileStack,
-  Send,
+  Receipt,
 } from 'lucide-react';
 import type { NavItem, NavGroup } from '../types/navigation';
 import { UnreadMessagesBadge } from '@/features/messaging/components/UnreadMessagesBadge';
@@ -219,6 +216,12 @@ export const administrationGroup: NavGroup = {
       label: 'Budget',
       icon: DollarSign,
       path: '/budget',
+      category: 'admin',
+    },
+    {
+      label: 'Invoices',
+      icon: Receipt,
+      path: '/invoices',
       category: 'admin',
     },
     {

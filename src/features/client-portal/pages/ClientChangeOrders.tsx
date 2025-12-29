@@ -7,7 +7,7 @@
 import { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useClientChangeOrders } from '../hooks/useClientPortal'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

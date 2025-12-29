@@ -32,7 +32,7 @@ import {
 } from '@/features/photo-progress/hooks';
 import { useProject } from '@/features/projects/hooks/useProjects';
 import { useCompanyId } from '@/hooks/useCompanyId';
-import { format, subDays, startOfMonth } from 'date-fns';
+import { format, startOfMonth } from 'date-fns';
 import {
   FileText,
   Save,
@@ -43,7 +43,7 @@ import {
   GitCompare,
   FileBarChart,
 } from 'lucide-react';
-import { PhotoReportType, PhotoReportStatus } from '@/types/photo-progress';
+import { PhotoReportType } from '@/types/photo-progress';
 import type {
   CreatePhotoReportDTO,
   UpdatePhotoReportDTO,

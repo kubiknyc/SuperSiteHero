@@ -19,7 +19,7 @@ import {
   AlertCircle,
   CheckCircle2,
 } from 'lucide-react';
-import { useOfflineStore, useIsOnline, usePendingSyncs, useIsSyncing, useLastSyncTime } from '@/stores/offline-store';
+import { useIsOnline, usePendingSyncs, useIsSyncing, useLastSyncTime } from '@/stores/offline-store';
 import { SyncManager } from '@/lib/offline/sync-manager';
 import { formatDistanceToNow } from 'date-fns';
 

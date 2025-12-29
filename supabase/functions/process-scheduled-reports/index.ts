@@ -240,7 +240,7 @@ async function generateReportData(
 
   // Get sample data based on data source
   let data: unknown[] = []
-  let rowCount = 0
+  let _rowCount = 0
 
   switch (dataSource) {
     case 'daily_reports': {
@@ -251,7 +251,7 @@ async function generateReportData(
         .order('report_date', { ascending: false })
         .limit(100)
       data = dailyReports || []
-      rowCount = data.length
+      _rowCount = data.length
       break
     }
 
@@ -263,7 +263,7 @@ async function generateReportData(
         .order('created_at', { ascending: false })
         .limit(100)
       data = rfis || []
-      rowCount = data.length
+      _rowCount = data.length
       break
     }
 
@@ -275,7 +275,7 @@ async function generateReportData(
         .order('created_at', { ascending: false })
         .limit(100)
       data = submittals || []
-      rowCount = data.length
+      _rowCount = data.length
       break
     }
 
@@ -287,7 +287,7 @@ async function generateReportData(
         .order('created_at', { ascending: false })
         .limit(100)
       data = cos || []
-      rowCount = data.length
+      _rowCount = data.length
       break
     }
 
@@ -299,7 +299,7 @@ async function generateReportData(
         .order('incident_date', { ascending: false })
         .limit(100)
       data = incidents || []
-      rowCount = data.length
+      _rowCount = data.length
       break
     }
 
@@ -311,14 +311,14 @@ async function generateReportData(
         .order('created_at', { ascending: false })
         .limit(100)
       data = punchItems || []
-      rowCount = data.length
+      _rowCount = data.length
       break
     }
 
     default:
       // Generic query
       data = []
-      rowCount = 0
+      _rowCount = 0
   }
 
   // Generate CSV content (simplified - real implementation would support PDF/Excel)

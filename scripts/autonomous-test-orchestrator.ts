@@ -62,7 +62,7 @@ class AutonomousTestOrchestrator {
     const start = Date.now();
 
     try {
-      const { stdout, stderr } = await execAsync('npm run test:unit -- --reporter=json --outputFile=test-reports/autonomous/unit-tests.json', {
+      await execAsync('npm run test:unit -- --reporter=json --outputFile=test-reports/autonomous/unit-tests.json', {
         timeout: 300000 // 5 minutes
       });
 
@@ -108,7 +108,7 @@ class AutonomousTestOrchestrator {
 
     try {
       // Integration tests targeting API services and stores
-      const { stdout } = await execAsync('npm run test:unit -- --run --reporter=json --outputFile=test-reports/autonomous/integration-tests.json src/lib/api src/stores', {
+      await execAsync('npm run test:unit -- --run --reporter=json --outputFile=test-reports/autonomous/integration-tests.json src/lib/api src/stores', {
         timeout: 300000
       });
 
@@ -145,7 +145,7 @@ class AutonomousTestOrchestrator {
         'documents.spec.ts'
       ];
 
-      const { stdout } = await execAsync(
+      await execAsync(
         `npx playwright test ${criticalTests.join(' ')} --reporter=json --output=test-reports/autonomous/e2e-critical.json`,
         { timeout: 600000 } // 10 minutes
       );
@@ -175,7 +175,7 @@ class AutonomousTestOrchestrator {
     const start = Date.now();
 
     try {
-      const { stdout } = await execAsync(
+      await execAsync(
         'npm run test:e2e -- --reporter=json --output=test-reports/autonomous/e2e-full.json',
         { timeout: 1800000 } // 30 minutes
       );
@@ -205,7 +205,7 @@ class AutonomousTestOrchestrator {
     const start = Date.now();
 
     try {
-      const { stdout } = await execAsync(
+      await execAsync(
         'npm run test:visual -- --reporter=json',
         { timeout: 900000 } // 15 minutes
       );
@@ -235,7 +235,7 @@ class AutonomousTestOrchestrator {
     const start = Date.now();
 
     try {
-      const { stdout } = await execAsync(
+      await execAsync(
         'npx playwright test e2e/accessibility --reporter=json',
         { timeout: 600000 }
       );
@@ -265,7 +265,7 @@ class AutonomousTestOrchestrator {
     const start = Date.now();
 
     try {
-      const { stdout } = await execAsync(
+      await execAsync(
         'npx playwright test e2e/performance --reporter=json',
         { timeout: 600000 }
       );

@@ -38,7 +38,7 @@ serve(async (req) => {
     const channelId = req.headers.get('X-Goog-Channel-ID')
     const resourceId = req.headers.get('X-Goog-Resource-ID')
     const resourceState = req.headers.get('X-Goog-Resource-State')
-    const channelToken = req.headers.get('X-Goog-Channel-Token')
+    const _channelToken = req.headers.get('X-Goog-Channel-Token')
     const messageNumber = req.headers.get('X-Goog-Message-Number')
 
     console.log(`Received Google Calendar webhook: channel=${channelId}, state=${resourceState}, message=${messageNumber}`)

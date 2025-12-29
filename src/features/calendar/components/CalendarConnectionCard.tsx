@@ -4,7 +4,6 @@
  * Displays connection status and allows connect/disconnect/configure actions.
  */
 
-import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -49,7 +48,6 @@ import {
   useGCalSyncStats,
 } from '../hooks/useGoogleCalendar';
 import { formatDistanceToNow } from 'date-fns';
-import { getSyncDirectionLabel } from '@/types/google-calendar';
 import { logger } from '../../../lib/utils/logger';
 
 

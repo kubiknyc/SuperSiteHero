@@ -17,8 +17,11 @@ import {
   Play,
   Calendar as CalendarIcon,
 } from 'lucide-react'
-import type { ChecklistSchedule } from '@/types/checklist-schedules'
-import { getFrequencyLabel, getHoursUntilDue } from '@/types/checklist-schedules'
+import {
+  getFrequencyLabel,
+  getHoursUntilDue,
+  type ChecklistSchedule,
+} from '@/types/checklist-schedules'
 import { format, formatDistanceToNow } from 'date-fns'
 
 interface ScheduleRemindersNotificationProps {

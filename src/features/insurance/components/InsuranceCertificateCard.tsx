@@ -29,7 +29,6 @@ import {
 import type {
   InsuranceCertificateWithRelations,
   CertificateStatus,
-  InsuranceType,
 } from '@/types/insurance'
 import {
   INSURANCE_TYPE_LABELS,

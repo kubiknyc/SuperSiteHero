@@ -2,7 +2,7 @@
 // Side-by-side version comparison component
 
 import { useState } from 'react'
-import { ChevronLeft, ChevronRight, Download, FileText, X } from 'lucide-react'
+import { ChevronRight, Download, FileText, X } from 'lucide-react'
 import { Button, Card, CardContent, CardHeader } from '@/components/ui'
 import { PDFViewer } from './viewers/PDFViewer'
 import { formatFileSize } from '@/features/documents/utils/fileUtils'

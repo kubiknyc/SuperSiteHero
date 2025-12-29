@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { format } from 'date-fns'
-import { CalendarIcon, Plus } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import {
   RadixSelect,
@@ -65,8 +64,6 @@ const formSchema = z.object({
   contact_email: z.string().email().optional().or(z.literal('')),
   contact_phone: z.string().optional(),
 })
-
-type FormValues = z.infer<typeof formSchema>
 
 interface CreateBidPackageDialogProps {
   open: boolean

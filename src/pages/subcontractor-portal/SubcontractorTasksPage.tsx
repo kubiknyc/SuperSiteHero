@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useSubcontractorTasks } from '@/features/subcontractor-portal/hooks'
-import { TaskStatusButton, StatusBadge } from '@/features/subcontractor-portal/components'
+import { TaskStatusButton } from '@/features/subcontractor-portal/components'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'

@@ -5,7 +5,7 @@
  */
 
 import { useParams, Link } from 'react-router-dom'
-import { useClientProject, useClientDashboardStats } from '../hooks/useClientPortal'
+import { useClientProject } from '../hooks/useClientPortal'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
@@ -19,7 +19,6 @@ import {
   Clock,
   Target,
   ChevronRight,
-  ExternalLink,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'

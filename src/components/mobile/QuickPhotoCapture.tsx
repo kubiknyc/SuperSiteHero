@@ -104,9 +104,9 @@ interface QuickPhotoCaptureProps {
  */
 export function QuickPhotoCapture({
   onPhotoCapture,
-  projectId,
+  projectId: _projectId,
   entityType,
-  entityId,
+  entityId: _entityId,
   position = 'bottom-right',
   visible = true,
   className,

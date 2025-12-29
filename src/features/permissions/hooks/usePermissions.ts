@@ -10,11 +10,9 @@ import type {
   Permission,
   CustomRole,
   CustomRoleWithPermissions,
-  RolePermission,
   UserPermissionOverride,
   UserCustomRole,
   FeatureFlag,
-  CompanyFeatureFlag,
   ResolvedPermission,
   CreateCustomRoleDTO,
   UpdateCustomRoleDTO,
@@ -427,7 +425,7 @@ export function useDeletePermissionOverride() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, userId }: { id: string; userId: string }): Promise<void> => {
+    mutationFn: async ({ id }: { id: string; userId: string }): Promise<void> => {
       const { error } = await db
         .from('user_permission_overrides')
         .delete()
@@ -482,7 +480,7 @@ export function useRemoveCustomRole() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, userId }: { id: string; userId: string }): Promise<void> => {
+    mutationFn: async ({ id }: { id: string; userId: string }): Promise<void> => {
       const { error } = await db
         .from('user_custom_roles')
         .delete()

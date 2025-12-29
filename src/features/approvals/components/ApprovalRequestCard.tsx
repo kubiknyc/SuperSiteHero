@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ApprovalStatusBadge } from './ApprovalStatusBadge'
 import { ApproveWithConditionsDialog } from './ApproveWithConditionsDialog'
-import type { ApprovalRequest, ApprovalStep } from '@/types/approval-workflow'
+import type { ApprovalRequest } from '@/types/approval-workflow'
 import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
 
 interface ApprovalRequestCardProps {

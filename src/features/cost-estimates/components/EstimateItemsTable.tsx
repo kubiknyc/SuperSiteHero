@@ -1,7 +1,6 @@
 // File: /src/features/cost-estimates/components/EstimateItemsTable.tsx
 // Table displaying cost estimate line items
 
-import { useState } from 'react'
 import {
   Table,
   TableBody,

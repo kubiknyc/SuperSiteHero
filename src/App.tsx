@@ -242,6 +242,9 @@ const PaymentApplicationDetailPage = lazy(() => import('./pages/payment-applicat
 const LienWaiversPage = lazy(() => import('./pages/lien-waivers/LienWaiversPage').then(m => ({ default: m.LienWaiversPage })))
 const LienWaiverDetailPage = lazy(() => import('./pages/lien-waivers/LienWaiverDetailPage').then(m => ({ default: m.LienWaiverDetailPage })))
 
+// Owner Invoicing feature
+const InvoiceListPage = lazy(() => import('./pages/invoicing/InvoiceListPage'))
+
 // Look-Ahead Planning feature
 const LookAheadPage = lazy(() => import('./pages/look-ahead/LookAheadPage').then(m => ({ default: m.default })))
 const LookAheadSnapshotsPage = lazy(() => import('./pages/look-ahead/LookAheadSnapshotsPage').then(m => ({ default: m.default })))
@@ -626,6 +629,10 @@ function App() {
                 {/* Lien Waivers feature */}
                 <Route path="/lien-waivers" element={<ProtectedRoute><LienWaiversPage /></ProtectedRoute>} />
                 <Route path="/lien-waivers/:id" element={<ProtectedRoute><LienWaiverDetailPage /></ProtectedRoute>} />
+
+                {/* Owner Invoicing feature */}
+                <Route path="/invoices" element={<ProtectedRoute><InvoiceListPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/invoices" element={<ProtectedRoute><InvoiceListPage /></ProtectedRoute>} />
 
                 {/* Transmittals feature */}
                 <Route path="/transmittals" element={<ProtectedRoute><TransmittalsPage /></ProtectedRoute>} />

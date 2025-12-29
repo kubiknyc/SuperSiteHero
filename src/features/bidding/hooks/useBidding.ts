@@ -18,8 +18,6 @@ import type {
   BidSubmission,
   BidSubmissionWithDetails,
   BidSubmissionItem,
-  BidComparison,
-  BidEvaluationCriteria,
   BidPackageFilters,
   BidSubmissionFilters,
   BidPackageStatistics,

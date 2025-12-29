@@ -43,7 +43,6 @@ import {
   ListChecks,
   MessageSquare,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 export function ToolboxTalkDetailPage() {
   const { id } = useParams<{ id: string }>()

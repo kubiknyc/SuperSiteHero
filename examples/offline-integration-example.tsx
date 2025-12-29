@@ -27,17 +27,18 @@ interface PunchListItem {
   lastSyncedAt?: number;
 }
 
-// Example offline store (simplified - in production use Zustand)
-interface OfflineStore {
-  items: PunchListItem[];
-  pendingQueue: Array<{
-    id: string;
-    action: 'create' | 'update' | 'delete';
-    item: PunchListItem;
-    timestamp: number;
-  }>;
-  conflicts: ConflictInfo<PunchListItem>[];
-}
+// Example offline store type (simplified - in production use Zustand)
+// Note: This interface documents the expected store shape for reference
+// interface OfflineStore {
+//   items: PunchListItem[];
+//   pendingQueue: Array<{
+//     id: string;
+//     action: 'create' | 'update' | 'delete';
+//     item: PunchListItem;
+//     timestamp: number;
+//   }>;
+//   conflicts: ConflictInfo<PunchListItem>[];
+// }
 
 /**
  * Example Component: Offline-Aware Punch List
@@ -345,7 +346,7 @@ export function OfflinePunchListExample() {
 }
 
 // Mock API functions (replace with real API calls)
-async function fetchItemFromServer(id: string): Promise<PunchListItem | null> {
+async function fetchItemFromServer(_id: string): Promise<PunchListItem | null> {
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 500));
   return null; // Not found

@@ -15,7 +15,6 @@ import {
   Image,
   MapPin,
   GitCompare,
-  User,
 } from 'lucide-react';
 import type { PhotoProgressReport } from '@/types/photo-progress';
 

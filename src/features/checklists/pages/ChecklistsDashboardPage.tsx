@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { LocalErrorBoundary } from '@/components/errors'
 import {
   BarChart,
   Bar,
@@ -384,41 +385,46 @@ export function ChecklistsDashboardPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={analytics.dailyActivity}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" tick={{ fontSize: 12 }} />
-                  <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Legend />
-                  <Line
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="executions"
-                    stroke={COLORS.primary}
-                    name="Started"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    yAxisId="left"
-                    type="monotone"
-                    dataKey="completed"
-                    stroke={COLORS.secondary}
-                    name="Completed"
-                    strokeWidth={2}
-                  />
-                  <Line
-                    yAxisId="right"
-                    type="monotone"
-                    dataKey="avgScore"
-                    stroke={COLORS.warning}
-                    name="Avg Score (%)"
-                    strokeWidth={2}
-                    strokeDasharray="5 5"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <LocalErrorBoundary
+                title="Unable to load chart"
+                description="The activity chart could not be rendered."
+              >
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart data={analytics.dailyActivity}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                    <YAxis yAxisId="left" tick={{ fontSize: 12 }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Legend />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="executions"
+                      stroke={COLORS.primary}
+                      name="Started"
+                      strokeWidth={2}
+                    />
+                    <Line
+                      yAxisId="left"
+                      type="monotone"
+                      dataKey="completed"
+                      stroke={COLORS.secondary}
+                      name="Completed"
+                      strokeWidth={2}
+                    />
+                    <Line
+                      yAxisId="right"
+                      type="monotone"
+                      dataKey="avgScore"
+                      stroke={COLORS.warning}
+                      name="Avg Score (%)"
+                      strokeWidth={2}
+                      strokeDasharray="5 5"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </LocalErrorBoundary>
             </CardContent>
           </Card>
 
@@ -508,36 +514,41 @@ export function ChecklistsDashboardPage() {
               <CardTitle>Score Distribution</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={analytics.scoreDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={(entry) => `${entry.name}: ${entry.value}`}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {analytics.scoreDistribution.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={
-                          index === 0
-                            ? COLORS.fail
-                            : index === 1
-                            ? COLORS.warning
-                            : index === 2
-                            ? COLORS.primary
-                            : COLORS.pass
-                        }
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              <LocalErrorBoundary
+                title="Unable to load chart"
+                description="The score distribution chart could not be rendered."
+              >
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={analytics.scoreDistribution}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={(entry) => `${entry.name}: ${entry.value}`}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {analytics.scoreDistribution.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={
+                            index === 0
+                              ? COLORS.fail
+                              : index === 1
+                              ? COLORS.warning
+                              : index === 2
+                              ? COLORS.primary
+                              : COLORS.pass
+                          }
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </LocalErrorBoundary>
             </CardContent>
           </Card>
 
@@ -547,19 +558,24 @@ export function ChecklistsDashboardPage() {
               <CardTitle>Checklists by Category</CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={analytics.categoryBreakdown}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-                  <YAxis tick={{ fontSize: 12 }} />
-                  <Tooltip />
-                  <Bar dataKey="value" fill={COLORS.primary}>
-                    {analytics.categoryBreakdown.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
+              <LocalErrorBoundary
+                title="Unable to load chart"
+                description="The category breakdown chart could not be rendered."
+              >
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={analytics.categoryBreakdown}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} />
+                    <Tooltip />
+                    <Bar dataKey="value" fill={COLORS.primary}>
+                      {analytics.categoryBreakdown.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </LocalErrorBoundary>
             </CardContent>
           </Card>
         </div>

@@ -10,7 +10,6 @@ import {
   corsHeaders,
   refreshAccessToken,
   calculateTokenExpiry,
-  isTokenExpired,
 } from '../_shared/google-calendar.ts'
 
 interface RefreshTokenRequest {

@@ -35,7 +35,6 @@ import {
   Play,
   CheckCircle2,
   XCircle,
-  AlertTriangle,
   Zap,
 } from 'lucide-react'
 import {

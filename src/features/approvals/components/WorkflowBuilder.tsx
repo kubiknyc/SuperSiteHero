@@ -2,6 +2,7 @@
  * Workflow Builder Component
  *
  * UI for creating and editing approval workflows with steps
+ * Supports user-based, role-based, custom role, and any project member approvers
  */
 
 import * as React from 'react'
@@ -12,8 +13,11 @@ import type {
   CreateWorkflowInput,
   WorkflowEntityType,
   ApprovalWorkflow,
+  ApproverType,
+  DefaultRole,
+  CustomRole,
 } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
+import { WORKFLOW_ENTITY_CONFIG, DEFAULT_ROLE_CONFIG } from '@/types/approval-workflow'
 
 interface WorkflowBuilderProps {
   initialData?: ApprovalWorkflow
@@ -22,7 +26,24 @@ interface WorkflowBuilderProps {
   onCancel: () => void
   isLoading?: boolean
   availableUsers: Array<{ id: string; full_name: string | null; email: string }>
+  availableCustomRoles?: CustomRole[]
 }
+
+const APPROVER_TYPE_OPTIONS: Array<{ value: ApproverType; label: string; description: string }> = [
+  { value: 'user', label: 'Specific Users', description: 'Select specific team members' },
+  { value: 'role', label: 'By Role', description: 'Anyone with a specific role' },
+  { value: 'custom_role', label: 'Custom Role', description: 'Company-defined custom role' },
+  { value: 'any', label: 'Any Project Member', description: 'Any user assigned to the project' },
+]
+
+const DEFAULT_ROLES: DefaultRole[] = [
+  'owner',
+  'admin',
+  'project_manager',
+  'superintendent',
+  'foreman',
+  'worker',
+]
 
 export function WorkflowBuilder({
   initialData,
@@ -31,6 +52,7 @@ export function WorkflowBuilder({
   onCancel,
   isLoading = false,
   availableUsers,
+  availableCustomRoles = [],
 }: WorkflowBuilderProps) {
   const [name, setName] = React.useState(initialData?.name || '')
   const [description, setDescription] = React.useState(initialData?.description || '')
@@ -41,7 +63,10 @@ export function WorkflowBuilder({
     initialData?.steps?.map((s) => ({
       step_order: s.step_order,
       name: s.name,
-      approver_ids: s.approver_ids,
+      approver_type: s.approver_type || 'user',
+      approver_ids: s.approver_ids || [],
+      approver_role: s.approver_role || null,
+      approver_custom_role_id: s.approver_custom_role_id || null,
       required_approvals: s.required_approvals,
       allow_delegation: s.allow_delegation,
       auto_approve_after_days: s.auto_approve_after_days,
@@ -49,7 +74,10 @@ export function WorkflowBuilder({
       {
         step_order: 1,
         name: 'Review',
+        approver_type: 'user',
         approver_ids: [],
+        approver_role: null,
+        approver_custom_role_id: null,
         required_approvals: 1,
         allow_delegation: false,
         auto_approve_after_days: null,
@@ -63,7 +91,10 @@ export function WorkflowBuilder({
       {
         step_order: steps.length + 1,
         name: `Step ${steps.length + 1}`,
+        approver_type: 'user',
         approver_ids: [],
+        approver_role: null,
+        approver_custom_role_id: null,
         required_approvals: 1,
         allow_delegation: false,
         auto_approve_after_days: null,
@@ -97,8 +128,23 @@ export function WorkflowBuilder({
     setSteps(steps.map((step, i) => (i === index ? { ...step, ...updates } : step)))
   }
 
+  const isStepValid = (step: CreateStepInput): boolean => {
+    switch (step.approver_type) {
+      case 'user':
+        return (step.approver_ids?.length ?? 0) > 0
+      case 'role':
+        return !!step.approver_role
+      case 'custom_role':
+        return !!step.approver_custom_role_id
+      case 'any':
+        return true // Any project member is always valid
+      default:
+        return false
+    }
+  }
+
   const handleSave = () => {
-    if (!name.trim() || steps.some((s) => s.approver_ids.length === 0)) {
+    if (!name.trim() || steps.some((s) => !isStepValid(s))) {
       return
     }
 
@@ -111,7 +157,7 @@ export function WorkflowBuilder({
     })
   }
 
-  const isValid = name.trim() && steps.every((s) => s.approver_ids.length > 0)
+  const isValid = name.trim() && steps.every(isStepValid)
 
   return (
     <div className="space-y-6">
@@ -187,6 +233,7 @@ export function WorkflowBuilder({
               index={index}
               totalSteps={steps.length}
               availableUsers={availableUsers}
+              availableCustomRoles={availableCustomRoles}
               onUpdate={(updates) => handleUpdateStep(index, updates)}
               onRemove={() => handleRemoveStep(index)}
               onMoveUp={() => handleMoveStep(index, 'up')}
@@ -215,6 +262,7 @@ interface StepEditorProps {
   index: number
   totalSteps: number
   availableUsers: Array<{ id: string; full_name: string | null; email: string }>
+  availableCustomRoles: CustomRole[]
   onUpdate: (updates: Partial<CreateStepInput>) => void
   onRemove: () => void
   onMoveUp: () => void
@@ -227,13 +275,39 @@ function StepEditor({
   index,
   totalSteps,
   availableUsers,
+  availableCustomRoles,
   onUpdate,
   onRemove,
   onMoveUp,
   onMoveDown,
   disabled,
 }: StepEditorProps) {
-  const hasError = step.approver_ids.length === 0
+  const isStepValid = (): boolean => {
+    switch (step.approver_type) {
+      case 'user':
+        return (step.approver_ids?.length ?? 0) > 0
+      case 'role':
+        return !!step.approver_role
+      case 'custom_role':
+        return !!step.approver_custom_role_id
+      case 'any':
+        return true
+      default:
+        return false
+    }
+  }
+
+  const hasError = !isStepValid()
+
+  const handleApproverTypeChange = (newType: ApproverType) => {
+    // Reset approver-specific fields when changing type
+    onUpdate({
+      approver_type: newType,
+      approver_ids: newType === 'user' ? [] : undefined,
+      approver_role: newType === 'role' ? null : null,
+      approver_custom_role_id: newType === 'custom_role' ? null : null,
+    })
+  }
 
   return (
     <div
@@ -298,37 +372,136 @@ function StepEditor({
         </div>
       </div>
 
-      {/* Approvers */}
+      {/* Approver Type Selection */}
       <div className="mb-3">
         <label className="block text-xs font-medium text-secondary mb-1">
-          Approvers <span className="text-error">*</span>
+          Approver Type <span className="text-error">*</span>
         </label>
-        <select
-          multiple
-          value={step.approver_ids}
-          onChange={(e) => {
-            const selected = Array.from(e.target.selectedOptions, (option) => option.value)
-            onUpdate({ approver_ids: selected })
-          }}
-          className={cn(
-            'w-full px-2 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
-            hasError ? 'border-red-300' : 'border-input'
-          )}
-          size={Math.min(3, availableUsers.length)}
-          disabled={disabled}
-        >
-          {availableUsers.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.full_name || user.email}
-            </option>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {APPROVER_TYPE_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => handleApproverTypeChange(option.value)}
+              disabled={disabled || (option.value === 'custom_role' && availableCustomRoles.length === 0)}
+              className={cn(
+                'px-3 py-2 text-xs rounded-md border transition-colors text-left',
+                step.approver_type === option.value
+                  ? 'border-blue-500 bg-blue-50 text-blue-700'
+                  : 'border-input hover:border-gray-400 text-secondary',
+                disabled && 'opacity-50 cursor-not-allowed'
+              )}
+              title={option.description}
+            >
+              {option.label}
+            </button>
           ))}
-        </select>
-        {hasError && (
-          <p className="text-xs text-error mt-1">Select at least one approver</p>
+        </div>
+      </div>
+
+      {/* Approver Selection based on type */}
+      <div className="mb-3">
+        {step.approver_type === 'user' && (
+          <>
+            <label className="block text-xs font-medium text-secondary mb-1">
+              Select Users <span className="text-error">*</span>
+            </label>
+            <select
+              multiple
+              value={step.approver_ids || []}
+              onChange={(e) => {
+                const selected = Array.from(e.target.selectedOptions, (option) => option.value)
+                onUpdate({ approver_ids: selected })
+              }}
+              className={cn(
+                'w-full px-2 py-1 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                hasError ? 'border-red-300' : 'border-input'
+              )}
+              size={Math.min(3, availableUsers.length)}
+              disabled={disabled}
+            >
+              {availableUsers.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.full_name || user.email}
+                </option>
+              ))}
+            </select>
+            {hasError && (
+              <p className="text-xs text-error mt-1">Select at least one approver</p>
+            )}
+            <p className="text-xs text-muted mt-1">
+              Hold Ctrl/Cmd to select multiple approvers
+            </p>
+          </>
         )}
-        <p className="text-xs text-muted mt-1">
-          Hold Ctrl/Cmd to select multiple approvers
-        </p>
+
+        {step.approver_type === 'role' && (
+          <>
+            <label className="block text-xs font-medium text-secondary mb-1">
+              Select Role <span className="text-error">*</span>
+            </label>
+            <select
+              value={step.approver_role || ''}
+              onChange={(e) => onUpdate({ approver_role: e.target.value as DefaultRole })}
+              className={cn(
+                'w-full px-2 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                hasError ? 'border-red-300' : 'border-input'
+              )}
+              disabled={disabled}
+            >
+              <option value="">Select a role...</option>
+              {DEFAULT_ROLES.map((role) => (
+                <option key={role} value={role}>
+                  {DEFAULT_ROLE_CONFIG[role].label}
+                </option>
+              ))}
+            </select>
+            {hasError && (
+              <p className="text-xs text-error mt-1">Select a role</p>
+            )}
+            <p className="text-xs text-muted mt-1">
+              Any user with this role on the project can approve
+            </p>
+          </>
+        )}
+
+        {step.approver_type === 'custom_role' && (
+          <>
+            <label className="block text-xs font-medium text-secondary mb-1">
+              Select Custom Role <span className="text-error">*</span>
+            </label>
+            <select
+              value={step.approver_custom_role_id || ''}
+              onChange={(e) => onUpdate({ approver_custom_role_id: e.target.value })}
+              className={cn(
+                'w-full px-2 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
+                hasError ? 'border-red-300' : 'border-input'
+              )}
+              disabled={disabled}
+            >
+              <option value="">Select a custom role...</option>
+              {availableCustomRoles.map((role) => (
+                <option key={role.id} value={role.id}>
+                  {role.name}
+                </option>
+              ))}
+            </select>
+            {hasError && (
+              <p className="text-xs text-error mt-1">Select a custom role</p>
+            )}
+            <p className="text-xs text-muted mt-1">
+              Users assigned this custom role can approve
+            </p>
+          </>
+        )}
+
+        {step.approver_type === 'any' && (
+          <div className="px-3 py-2 bg-info-light rounded-md">
+            <p className="text-sm text-info-text">
+              Any team member assigned to the project can approve this step.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Options */}

@@ -5,7 +5,7 @@
  * Includes activity details, constraints, and PPC metrics.
  */
 
-import { format, startOfWeek, endOfWeek, addWeeks } from 'date-fns'
+import { format } from 'date-fns'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import type {
@@ -19,7 +19,6 @@ import {
   ACTIVITY_STATUS_CONFIG,
   CONSTRAINT_TYPE_CONFIG,
   calculateWeekRanges,
-  formatWeekLabel,
 } from '@/types/look-ahead'
 
 // ============================================================================

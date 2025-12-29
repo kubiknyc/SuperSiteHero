@@ -64,7 +64,7 @@ export function UploadDocumentVersion({
       const fileName = `${documentId}_v${Date.now()}.${fileExt}`
       const filePath = `${projectId}/${fileName}`
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('documents')
         .upload(filePath, file)
 

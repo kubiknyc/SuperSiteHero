@@ -14,7 +14,6 @@ import type {
   MeasurementType,
   MeasurementUnit,
   ScaleCalibration,
-  MeasurementAnnotation,
   StampType,
   EnhancedShape,
   MarkupAuthor,
@@ -111,7 +110,7 @@ export function useEnhancedMarkupState({ documentId, pageNumber = 1 }: EnhancedM
   const { data: scaleCalibration } = useScaleCalibration(documentId, pageNumber)
   const saveCalibrationMutation = useSaveScaleCalibration()
   const { data: measurements = [] } = useMeasurements(documentId, pageNumber)
-  const createMeasurementMutation = useCreateMeasurement()
+  const _createMeasurementMutation = useCreateMeasurement()
   const deleteMeasurementMutation = useDeleteMeasurement()
   const clearMeasurementsMutation = useClearMeasurements()
 

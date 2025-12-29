@@ -14,7 +14,6 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
 import {
   RadixSelect,
   SelectContent,
@@ -35,7 +34,6 @@ import {
   Plus,
   Save,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type { Photo, PhotoComparison as PhotoComparisonType, CreateComparisonDTO } from '@/types/photo-management'
 import { usePhotos, useCreateComparison, useCompleteComparison } from '../hooks/usePhotos'
 
@@ -53,7 +51,7 @@ export function PhotoComparison({
   comparison,
   beforePhoto: initialBefore,
   afterPhoto: initialAfter,
-  projectId,
+  projectId: _projectId,
   onClose,
 }: PhotoComparisonProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('slider')

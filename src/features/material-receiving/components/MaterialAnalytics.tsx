@@ -116,7 +116,7 @@ function calculateAnalytics(deliveries: MaterialDelivery[]): AnalyticsData {
   }
 }
 
-export function MaterialAnalytics({ deliveries, dateRange }: MaterialAnalyticsProps) {
+export function MaterialAnalytics({ deliveries, dateRange: _dateRange }: MaterialAnalyticsProps) {
   const analytics = useMemo(() => calculateAnalytics(deliveries), [deliveries])
 
   const topCategories = useMemo(() => {

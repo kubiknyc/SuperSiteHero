@@ -21,8 +21,6 @@ import {
   validateExportOptions,
   estimateExportSize,
   getSelectionSummary,
-  toggleAllSelection,
-  selectDrawingsWithMarkups,
   sortDrawings,
 } from '../utils/markupExportUtils'
 
@@ -121,7 +119,6 @@ export function useBulkMarkupExport(projectId: string): BulkMarkupExportHook {
     data: fetchedDrawings = [],
     isLoading,
     error: fetchError,
-    refetch,
   } = useQuery({
     queryKey: ['drawings-with-markups', projectId],
     queryFn: () => markupExportService.getDrawingsWithMarkups(projectId),
@@ -173,7 +170,7 @@ export function useBulkMarkupExport(projectId: string): BulkMarkupExportHook {
 
   // Computed: summary
   const summary = useMemo(() => {
-    const selectionInfo = getSelectionSummary(selectedDrawings)
+    const _selectionInfo = getSelectionSummary(selectedDrawings)
     const sizeEstimate = estimateExportSize(selectedDrawings, {
       format: state.format,
       mode: state.mode,

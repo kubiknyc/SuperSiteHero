@@ -23,7 +23,6 @@ import {
   Clock,
   Building2,
   CheckCircle,
-  XCircle,
   AlertCircle,
 } from 'lucide-react'
 import {

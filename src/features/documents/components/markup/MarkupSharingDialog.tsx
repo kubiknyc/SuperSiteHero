@@ -17,7 +17,6 @@ import {
 import {
   Share2,
   Users,
-  UserCheck,
   Building2,
   Lock,
   Globe,
@@ -25,7 +24,6 @@ import {
   Edit2,
   Shield,
   Check,
-  Copy,
   Link,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'

@@ -28,7 +28,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useDrawingRevisionsForComparison } from '../hooks/useDrawingComparison';
-import type { Drawing, DrawingRevision, REVISION_TYPES } from '@/types/drawing';
+import type { Drawing, DrawingRevision } from '@/types/drawing';
 
 interface RevisionSelectDialogProps {
   open: boolean;

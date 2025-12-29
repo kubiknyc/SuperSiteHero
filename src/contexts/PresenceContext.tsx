@@ -10,8 +10,7 @@ import {
   ReactNode,
 } from 'react'
 import { useLocation } from 'react-router-dom'
-import { realtimeManager, presenceManager } from '@/lib/realtime'
-import type { ConnectionState, PresenceUser } from '@/lib/realtime'
+import { realtimeManager, presenceManager, type ConnectionState, type PresenceUser } from '@/lib/realtime'
 import { useAuth } from '@/hooks/useAuth'
 
 interface PresenceContextType {

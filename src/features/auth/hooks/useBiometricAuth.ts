@@ -10,7 +10,6 @@ import {
   isWebAuthnSupported,
   isPlatformAuthenticatorAvailable,
   getBiometricSettings,
-  getUserBiometricCredentials,
   authenticateWithBiometric,
   registerBiometricCredential,
   deleteBiometricCredential,

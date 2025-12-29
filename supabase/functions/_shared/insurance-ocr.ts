@@ -101,10 +101,10 @@ export interface InsuranceOcrResult {
 }
 
 // Currency patterns: $1,000,000 or 1000000 or 1,000,000
-const CURRENCY_PATTERN = /\$?\s*([\d,]+(?:\.\d{2})?)/
+const _CURRENCY_PATTERN = /\$?\s*([\d,]+(?:\.\d{2})?)/
 
 // Date patterns
-const DATE_PATTERNS = [
+const _DATE_PATTERNS = [
   /(\d{1,2})\/(\d{1,2})\/(\d{2,4})/,  // MM/DD/YYYY or MM/DD/YY
   /(\d{4})-(\d{2})-(\d{2})/,           // YYYY-MM-DD
   /([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})/ // Month DD, YYYY

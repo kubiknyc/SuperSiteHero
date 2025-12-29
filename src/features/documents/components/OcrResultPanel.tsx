@@ -12,7 +12,6 @@ import {
 } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { useDocumentOcr, useReprocessOcr } from '../hooks/useDocumentAi'
-import type { DocumentOcrResult, CloudVisionTextAnnotation } from '@/types/document-ai'
 
 interface OcrResultPanelProps {
   documentId: string

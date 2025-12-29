@@ -1,5 +1,8 @@
 ---
 name: ui-component-generator
+description: UI component generator for creating consistent, accessible, and well-styled components following shadcn/ui patterns.
+tools: Read, Write, Edit, Grep
+model: sonnet
 ---
 
 # UI Component Generator Agent

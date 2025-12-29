@@ -22,7 +22,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+// Progress component available from '@/components/ui/progress' if needed for future enhancements
 import { Skeleton } from '@/components/ui/skeleton'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
@@ -77,11 +77,12 @@ export function ScheduleOptimizationPanel({
   const { isEnabled, isLoading: configLoading } = useAIFeatureEnabled('schedule_optimization')
 
   const {
-    analysis,
+    // analysis and resourceConflicts are available for future use
+    analysis: _analysis,
     criticalPath,
     floatOpportunities,
     constraintPriorities,
-    resourceConflicts,
+    resourceConflicts: _resourceConflicts,
     recommendations,
     criticalPathLength,
     projectDuration,

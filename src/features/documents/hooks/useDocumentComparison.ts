@@ -7,7 +7,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { Document } from '@/types/database'
 import type { VersionComparisonResult, ChangeRegion, ScaleCalibration } from '../types/markup'
 import { compareCanvasImages, analyzeChangeTypes, type DiffResult } from '../services/visual-diff'
 import { renderDocumentToCanvas, getPdfInfo, type RenderPdfOptions } from '../utils/pdf-to-canvas'
@@ -180,7 +179,7 @@ export function useCompareVersions(
  * Generate a human-readable summary of the comparison
  */
 function generateComparisonSummary(diffResult: DiffResult, regions: ChangeRegion[]): string {
-  const { overallChangePercentage, changedPixels, totalPixels } = diffResult
+  const { overallChangePercentage } = diffResult
   const regionCount = regions.length
 
   if (regionCount === 0) {

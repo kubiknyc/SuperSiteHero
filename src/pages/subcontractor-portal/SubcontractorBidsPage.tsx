@@ -6,7 +6,7 @@
 import { useState } from 'react'
 import { useSubcontractorBids } from '@/features/subcontractor-portal/hooks'
 import { BidCard } from '@/features/subcontractor-portal/components'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import { FileText } from 'lucide-react'

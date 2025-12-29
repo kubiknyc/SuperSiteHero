@@ -36,8 +36,6 @@ import {
   ArrowLeft,
   MapPin,
   Image as ImageIcon,
-  Calendar,
-  Share2,
   ArrowRight,
 } from 'lucide-react';
 import {

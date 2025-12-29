@@ -4,14 +4,14 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import type {
-  ChecklistSchedule,
-  CreateChecklistScheduleDTO,
-  UpdateChecklistScheduleDTO,
-  ScheduleFilters,
-  ScheduleStatistics,
+import {
+  calculateNextExecutionDate,
+  type ChecklistSchedule,
+  type CreateChecklistScheduleDTO,
+  type UpdateChecklistScheduleDTO,
+  type ScheduleFilters,
+  type ScheduleStatistics,
 } from '@/types/checklist-schedules'
-import { calculateNextExecutionDate } from '@/types/checklist-schedules'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { logger } from '../../../lib/utils/logger';
 

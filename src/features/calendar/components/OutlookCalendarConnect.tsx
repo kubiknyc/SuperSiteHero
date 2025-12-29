@@ -5,7 +5,7 @@
  * Provides OAuth flow, connection status, and sync settings.
  */
 
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Calendar, Check, AlertCircle, RefreshCw, Settings, Unlink, ExternalLink } from 'lucide-react'
 import {
   useOutlookConnectionStatus,

@@ -6,16 +6,9 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { evmApi } from '@/lib/api/services/earned-value-management'
-import { format } from 'date-fns'
 
 import type {
   EarnedValueMetrics,
-  EVMByDivision,
-  EVMTrendDataPoint,
-  EVMSCurveData,
-  EVMForecastScenarios,
-  ProjectEVMSummary,
-  EVMAlert,
 } from '@/types/cost-tracking'
 
 // ============================================================================
@@ -213,7 +206,7 @@ export function useUpdateManagementEstimate() {
   return useMutation({
     mutationFn: ({
       snapshotId,
-      projectId,
+      projectId: _projectId,
       managementEac,
       completionDate,
       notes,

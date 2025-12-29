@@ -18,12 +18,12 @@ import {
   useImplementRecommendation,
   useDismissRecommendation,
 } from '../hooks/useAnalytics'
-import type {
-  AnalyticsRecommendation,
-  RecommendationCategory,
-  RecommendationPriority,
-  RecommendationStatus,
-} from '@/types/analytics'
+import type { AnalyticsRecommendation } from '@/types/analytics'
+
+// Local type definitions for component config
+type RecommendationCategory = 'budget' | 'schedule' | 'risk' | 'operational' | 'resource'
+type RecommendationPriority = 'critical' | 'high' | 'medium' | 'low'
+type RecommendationStatus = 'pending' | 'acknowledged' | 'implemented' | 'dismissed'
 
 interface RecommendationsListProps {
   projectId: string
@@ -77,7 +77,8 @@ export function RecommendationsList({
   className,
 }: RecommendationsListProps) {
   const [statusFilter, setStatusFilter] = useState<RecommendationStatus[]>(['pending', 'acknowledged'])
-  const [categoryFilter, setCategoryFilter] = useState<RecommendationCategory[]>([])
+  // categoryFilter is used for API filtering; setCategoryFilter reserved for future category filter UI
+  const [categoryFilter, _setCategoryFilter] = useState<RecommendationCategory[]>([])
 
   const { data: recommendations, isLoading, error } = useRecommendations(
     projectId,

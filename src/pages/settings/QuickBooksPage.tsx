@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Link2, Settings, Activity, Table, History, ExternalLink } from 'lucide-react'
+import { Settings, Activity, Table, History, ExternalLink } from 'lucide-react'
 import {
   QBConnectionCard,
   QBSyncDashboard,

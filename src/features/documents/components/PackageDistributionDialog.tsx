@@ -5,7 +5,7 @@
 
 /* eslint-disable react-hooks/preserve-manual-memoization */
 
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   Dialog,
   DialogContent,
@@ -47,14 +47,11 @@ import {
   Plus,
   Trash2,
   Send,
-  Copy,
   Check,
   Clock,
   Eye,
   FileCheck,
   Loader2,
-  AlertCircle,
-  RefreshCw,
 } from 'lucide-react';
 import { format, formatDistanceToNow } from 'date-fns';
 import { cn } from '@/lib/utils';
@@ -68,7 +65,6 @@ import {
 import type {
   DrawingPackage,
   DrawingPackageRecipient,
-  DrawingPackageRecipientInsert,
 } from '@/types/drawing';
 import { logger } from '../../../lib/utils/logger';
 
@@ -211,7 +207,7 @@ export function PackageDistributionDialog({
 
   const handleGenerateLink = useCallback(async () => {
     try {
-      const link = await generateLink.mutateAsync({
+      await generateLink.mutateAsync({
         packageId: pkg.id,
         expiresInDays: 30,
       });

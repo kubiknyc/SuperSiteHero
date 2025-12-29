@@ -6,25 +6,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { insuranceApi } from '@/lib/api/services/insurance'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type {
-  InsuranceCertificate,
-  InsuranceCertificateWithRelations,
   CreateInsuranceCertificateDTO,
   UpdateInsuranceCertificateDTO,
-  InsuranceRequirement,
   CreateInsuranceRequirementDTO,
   UpdateInsuranceRequirementDTO,
-  ExpiringCertificate,
-  ComplianceCheckResult,
-  ComplianceSummary,
-  InsuranceDashboardStats,
-  InsuranceCertificateHistory,
   CertificateStatus,
   InsuranceType,
-  SubcontractorComplianceStatus,
-  ComplianceDashboardData,
-  InsuranceAIExtraction,
   CreateAIExtractionDTO,
-  ProjectInsuranceRequirement,
   CreateProjectRequirementDTO,
 } from '@/types/insurance'
 
@@ -748,7 +736,7 @@ export function useDeleteProjectRequirement() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: ({ requirementId, projectId }: { requirementId: string; projectId: string }) =>
+    mutationFn: ({ requirementId, projectId: _projectId }: { requirementId: string; projectId: string }) =>
       insuranceApi.deleteProjectRequirement(requirementId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({

@@ -64,8 +64,50 @@ vi.mock('@/lib/supabase', () => ({
 import * as actionItemsApi from './action-items'
 
 describe('actionItemsApi - CRUD Operations', () => {
+  // Shared mutable state for query results - tests update this to control resolved values
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+
+  // Helper function for tests to set query result
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+
+    // Reset default query result
+    queryResolvedValue = { data: [], error: null }
+
+    // Create a chainable object that all methods will return
+    // This object is also thenable so it can be awaited
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        in: mockIn,
+        is: mockIs,
+        not: mockNot,
+        gt: mockGt,
+        lt: mockLt,
+        lte: mockLte,
+        neq: mockNeq,
+        ilike: mockIlike,
+        or: mockOr,
+        order: mockOrder,
+        limit: mockLimit,
+        range: mockRange,
+        single: mockSingle,
+        select: mockSelect,
+        nullsFirst: vi.fn(() => createChainable()),
+      }
+      // Make the object thenable (Promise-like) - reads current queryResolvedValue
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
 
     // Setup default chainable mock behavior
     mockFrom.mockReturnValue({
@@ -75,77 +117,22 @@ describe('actionItemsApi - CRUD Operations', () => {
       delete: mockDelete,
     })
 
-    mockSelect.mockReturnValue({
-      eq: mockEq,
-      in: mockIn,
-      is: mockIs,
-      not: mockNot,
-      gt: mockGt,
-      lt: mockLt,
-      ilike: mockIlike,
-      or: mockOr,
-      order: mockOrder,
-    })
-
-    mockEq.mockReturnValue({
-      eq: mockEq,
-      in: mockIn,
-      is: mockIs,
-      not: mockNot,
-      gt: mockGt,
-      neq: mockNeq,
-      order: mockOrder,
-      limit: mockLimit,
-      range: mockRange,
-      single: mockSingle,
-    })
-
-    mockIn.mockReturnValue({
-      eq: mockEq,
-      limit: mockLimit,
-    })
-
-    mockIs.mockReturnValue({
-      eq: mockEq,
-    })
-
-    mockNot.mockReturnValue({
-      is: mockIs,
-    })
-
-    mockGt.mockReturnValue({
-      neq: mockNeq,
-      order: mockOrder,
-    })
-
-    mockLt.mockReturnValue({
-      not: mockNot,
-    })
-
-    mockNeq.mockReturnValue({
-      order: mockOrder,
-    })
-
-    mockIlike.mockReturnValue({
-      eq: mockEq,
-    })
-
-    mockOr.mockReturnValue({
-      order: mockOrder,
-    })
-
-    mockOrder.mockReturnValue({
-      nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      order: mockOrder,
-      limit: mockLimit,
-      range: mockRange,
-    })
-
-    mockLimit.mockReturnValue({
-      range: mockRange,
-    })
-
-    mockRange.mockResolvedValue({ data: [], error: null })
+    // All chainable methods return a fresh chainable
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockIn.mockImplementation(() => createChainable())
+    mockIs.mockImplementation(() => createChainable())
+    mockNot.mockImplementation(() => createChainable())
+    mockGt.mockImplementation(() => createChainable())
+    mockLt.mockImplementation(() => createChainable())
+    mockLte.mockImplementation(() => createChainable())
+    mockNeq.mockImplementation(() => createChainable())
+    mockIlike.mockImplementation(() => createChainable())
+    mockOr.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockLimit.mockImplementation(() => createChainable())
+    mockRange.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
 
     mockInsert.mockReturnValue({
       select: mockSelect,
@@ -158,6 +145,9 @@ describe('actionItemsApi - CRUD Operations', () => {
     mockDelete.mockReturnValue({
       eq: mockEq,
     })
+
+    // Expose setQueryResult globally for tests to use
+    ;(globalThis as any).setQueryResult = setQueryResult
   })
 
   describe('getActionItems', () => {
@@ -167,9 +157,7 @@ describe('actionItemsApi - CRUD Operations', () => {
         { id: '2', title: 'Task 2', due_date: '2025-01-25', urgency_status: 'normal' },
       ]
 
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: mockItems, error: null }),
-      })
+      setQueryResult({ data: mockItems, error: null })
 
       const result = await actionItemsApi.getActionItems({})
 
@@ -179,9 +167,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by project_id', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ project_id: 'project-123' })
 
@@ -189,9 +175,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by meeting_id', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ meeting_id: 'meeting-123' })
 
@@ -199,9 +183,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by single status', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ status: 'open' })
 
@@ -209,9 +191,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by multiple statuses', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ status: ['open', 'in_progress'] })
 
@@ -219,9 +199,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by priority', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ priority: 'high' })
 
@@ -229,9 +207,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by category', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ category: 'safety' })
 
@@ -239,9 +215,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by assigned_to', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ assigned_to: 'John' })
 
@@ -249,9 +223,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by assigned_company', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ assigned_company: 'ABC Corp' })
 
@@ -259,9 +231,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter by urgency_status', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ urgency_status: ['overdue', 'due_today'] })
 
@@ -269,9 +239,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter items with tasks', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ has_task: true })
 
@@ -279,9 +247,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter items without tasks', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ has_task: false })
 
@@ -289,9 +255,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter overdue_only items', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ overdue_only: true })
 
@@ -299,9 +263,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should filter escalated_only items', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ escalated_only: true })
 
@@ -309,9 +271,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should support search by title and description', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ search: 'concrete' })
 
@@ -319,9 +279,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should support pagination with limit', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ limit: 20 })
 
@@ -329,7 +287,7 @@ describe('actionItemsApi - CRUD Operations', () => {
     })
 
     it('should support pagination with offset', async () => {
-      mockRange.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getActionItems({ offset: 10, limit: 20 })
 
@@ -338,17 +296,13 @@ describe('actionItemsApi - CRUD Operations', () => {
 
     it('should handle database errors', async () => {
       const mockError = { message: 'Database error' }
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: null, error: mockError }),
-      })
+      setQueryResult({ data: null, error: mockError })
 
       await expect(actionItemsApi.getActionItems({})).rejects.toThrow('Failed to get action items: Database error')
     })
 
     it('should return empty array when no data', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: null, error: null }),
-      })
+      setQueryResult({ data: null, error: null })
 
       const result = await actionItemsApi.getActionItems({})
 
@@ -757,20 +711,50 @@ describe('actionItemsApi - Linking & Pipeline', () => {
 })
 
 describe('actionItemsApi - Reporting & Statistics', () => {
+  // Shared mutable state for query results
+  let queryResolvedValue = { data: [] as any[], error: null as any }
+
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+
+    // Create thenable chainable object
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        in: mockIn,
+        gt: mockGt,
+        neq: mockNeq,
+        order: mockOrder,
+        single: mockSingle,
+        limit: mockLimit,
+        select: mockSelect,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({ select: mockSelect })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({
-      eq: mockEq,
-      in: mockIn,
-      order: mockOrder,
-      single: mockSingle,
-      limit: mockLimit,
-    })
-    mockIn.mockReturnValue({ order: mockOrder, limit: mockLimit })
-    mockOrder.mockReturnValue({ order: mockOrder, limit: mockLimit, ascending: vi.fn().mockResolvedValue({ data: [], error: null }) })
-    mockLimit.mockResolvedValue({ data: [], error: null })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockIn.mockImplementation(() => createChainable())
+    mockGt.mockImplementation(() => createChainable())
+    mockNeq.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
+    mockLimit.mockImplementation(() => createChainable())
+
+    // Expose setQueryResult for tests
+    ;(globalThis as any).setQueryResult = setQueryResult
   })
 
   describe('getProjectSummary', () => {
@@ -784,7 +768,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
         deferred_items: 2,
       }
 
-      mockSingle.mockResolvedValue({ data: mockSummary, error: null })
+      setQueryResult({ data: mockSummary, error: null })
 
       const result = await actionItemsApi.getProjectSummary('project-123')
 
@@ -794,7 +778,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
     })
 
     it('should return null when no summary found', async () => {
-      mockSingle.mockResolvedValue({ data: null, error: { code: 'PGRST116' } })
+      setQueryResult({ data: null, error: { code: 'PGRST116' } })
 
       const result = await actionItemsApi.getProjectSummary('nonexistent')
 
@@ -809,7 +793,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
         { assigned_to: 'Jane Smith', open_items: 3, completed_items: 7 },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockGrouped, error: null })
+      setQueryResult({ data: mockGrouped, error: null })
 
       const result = await actionItemsApi.getItemsByAssignee('project-123')
 
@@ -826,7 +810,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
         { id: '2', title: 'Overdue task 2', urgency_status: 'overdue', due_date: '2025-01-12' },
       ]
 
-      mockLimit.mockResolvedValue({ data: mockOverdue, error: null })
+      setQueryResult({ data: mockOverdue, error: null })
 
       const result = await actionItemsApi.getOverdueItems()
 
@@ -837,7 +821,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
     })
 
     it('should filter overdue by project', async () => {
-      mockLimit.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getOverdueItems('project-123', 20)
 
@@ -848,7 +832,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
 
   describe('getItemsDueSoon', () => {
     it('should get items due today or soon', async () => {
-      mockLimit.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getItemsDueSoon()
 
@@ -863,7 +847,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
         { id: '1', title: 'Escalated task', escalation_level: 2, status: 'open' },
       ]
 
-      mockLimit.mockResolvedValue({ data: mockEscalated, error: null })
+      setQueryResult({ data: mockEscalated, error: null })
 
       const result = await actionItemsApi.getEscalatedItems()
 
@@ -884,7 +868,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
         { status: 'completed' },
       ]
 
-      mockEq.mockResolvedValue({ data: mockData, error: null })
+      setQueryResult({ data: mockData, error: null })
 
       const result = await actionItemsApi.getStatusCounts('project-123')
 
@@ -897,7 +881,7 @@ describe('actionItemsApi - Reporting & Statistics', () => {
     })
 
     it('should handle empty project', async () => {
-      mockEq.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       const result = await actionItemsApi.getStatusCounts('empty-project')
 
@@ -912,8 +896,60 @@ describe('actionItemsApi - Reporting & Statistics', () => {
 })
 
 describe('actionItemsApi - Escalation System', () => {
+  // Shared mutable state for query results
+  let queryResolvedValue = { data: null as any, error: null as any }
+  let singleCallCount = 0
+  let singleResults: Array<{ data: any; error: any }> = []
+
+  const setQueryResult = (result: { data: any; error: any }) => {
+    queryResolvedValue = result
+  }
+
+  const setSingleResults = (results: Array<{ data: any; error: any }>) => {
+    singleResults = results
+    singleCallCount = 0
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: null, error: null }
+    singleResults = []
+    singleCallCount = 0
+
+    // Create thenable chainable object
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        in: mockIn,
+        select: mockSelect,
+        single: mockSingle,
+        update: mockUpdate,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
+    mockFrom.mockReturnValue({
+      select: mockSelect,
+      update: mockUpdate,
+    })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockIn.mockImplementation(() => createChainable())
+    mockUpdate.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => {
+      if (singleResults.length > 0) {
+        const result = singleResults[singleCallCount] || singleResults[singleResults.length - 1]
+        singleCallCount++
+        return Promise.resolve(result)
+      }
+      return Promise.resolve(queryResolvedValue)
+    })
   })
 
   describe('calculateEscalationLevel', () => {
@@ -954,16 +990,12 @@ describe('actionItemsApi - Escalation System', () => {
 
   describe('escalateActionItem', () => {
     it('should escalate item to next level', async () => {
-      // Mock getActionItem
+      // Mock getActionItem (first call) and update (second call)
       const mockItem = { id: 'item-123', escalation_level: 1 }
-      mockSingle.mockResolvedValueOnce({ data: mockItem, error: null })
-
-      // Mock update
-      mockFrom.mockReturnValue({ update: mockUpdate })
-      mockUpdate.mockReturnValue({ eq: mockEq })
-      mockEq.mockReturnValue({ select: mockSelect })
-      mockSelect.mockReturnValue({ single: mockSingle })
-      mockSingle.mockResolvedValueOnce({ data: { ...mockItem, escalation_level: 2 }, error: null })
+      setSingleResults([
+        { data: mockItem, error: null },
+        { data: { ...mockItem, escalation_level: 2 }, error: null },
+      ])
 
       await actionItemsApi.escalateActionItem('item-123', 'user-123', 'manager-id', 'Critical issue')
 
@@ -974,7 +1006,7 @@ describe('actionItemsApi - Escalation System', () => {
     })
 
     it('should handle not found item', async () => {
-      mockSingle.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       await expect(
         actionItemsApi.escalateActionItem('nonexistent', 'user-123')
@@ -992,10 +1024,7 @@ describe('actionItemsApi - Escalation System', () => {
         { escalation_level: 3, due_date: '2025-01-05' }, // 18 days overdue
       ]
 
-      mockFrom.mockReturnValue({ select: mockSelect })
-      mockSelect.mockReturnValue({ in: mockIn })
-      mockIn.mockReturnValue({ eq: mockEq })
-      mockEq.mockResolvedValue({ data: mockItems, error: null })
+      setQueryResult({ data: mockItems, error: null })
 
       const result = await actionItemsApi.getEscalationStats('project-123')
 
@@ -1008,9 +1037,7 @@ describe('actionItemsApi - Escalation System', () => {
     })
 
     it('should query all projects when no projectId', async () => {
-      mockFrom.mockReturnValue({ select: mockSelect })
-      mockSelect.mockReturnValue({ in: mockIn })
-      mockIn.mockResolvedValue({ data: [], error: null })
+      setQueryResult({ data: [], error: null })
 
       await actionItemsApi.getEscalationStats()
 

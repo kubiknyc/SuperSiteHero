@@ -1,7 +1,6 @@
 // File: /src/features/analytics/components/PredictiveAnalyticsDashboard.tsx
 // Main dashboard component for predictive analytics
 
-import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import {
   Card,

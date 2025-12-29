@@ -9,11 +9,10 @@ import { activityRiskScorer } from '@/lib/ml/scoring/activity-risk-scorer'
 import { useAIFeatureEnabled } from '@/features/ai/hooks/useAIConfiguration'
 import type {
   RiskAnalysisRequest,
-  RiskAnalysisResponse,
   ActivityRiskPrediction,
   RiskAlert,
-  RiskAlertType,
 } from '@/types/ai'
+// Additional types available: RiskAnalysisResponse, RiskAlertType
 import { toast } from 'sonner'
 
 // Query keys

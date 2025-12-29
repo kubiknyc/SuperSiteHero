@@ -9,7 +9,6 @@ import {
   Calendar,
   ChevronLeft,
   ChevronRight,
-  MapPin,
   Building2,
   Image,
   Play,
@@ -35,7 +34,6 @@ import {
   DialogContent,
 } from '@/components/ui/dialog';
 import { usePhotoTemplates, useLocationProgressTimeline } from '../hooks/usePhotoTemplates';
-import type { PhotoLocationTemplate, ProgressTimelineEntry } from '@/types/photo-templates';
 import { cn } from '@/lib/utils';
 import { useEffect, useRef } from 'react';
 

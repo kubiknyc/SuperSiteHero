@@ -17,7 +17,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import {
   Select,
   SelectContent,
@@ -28,10 +27,8 @@ import {
 import {
   Link2,
   Image,
-  X,
   Plus,
   Trash2,
-  Search,
   Loader2,
   CheckCircle2,
 } from 'lucide-react';

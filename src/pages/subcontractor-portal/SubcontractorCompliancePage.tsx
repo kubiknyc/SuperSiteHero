@@ -15,10 +15,9 @@ import {
 import {
   ComplianceDocumentCard,
   ComplianceUploadDialog,
-  ExpirationBadge,
   InsuranceUploadWidget,
 } from '@/features/subcontractor-portal/components'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -31,7 +30,6 @@ import {
   XCircle,
   Clock,
 } from 'lucide-react'
-import type { ComplianceDocumentType, ComplianceDocumentStatus } from '@/types/subcontractor-portal'
 
 function ComplianceSkeleton() {
   return (

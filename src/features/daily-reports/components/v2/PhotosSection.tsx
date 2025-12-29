@@ -19,6 +19,16 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   RadixSelect as Select,
   SelectContent,
   SelectItem,
@@ -94,6 +104,8 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [photoToDelete, setPhotoToDelete] = useState<string | null>(null);
   const [editingPhoto, setEditingPhoto] = useState<PhotoEntryV2 | null>(null);
   const [formData, setFormData] = useState<Partial<PhotoEntryV2>>({});
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -223,11 +235,18 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
     setPreviewUrl(null);
   }, []);
 
-  const handleDelete = useCallback((id: string) => {
-    if (confirm('Delete this photo?')) {
-      removePhoto(id);
+  const handleDeleteClick = useCallback((id: string) => {
+    setPhotoToDelete(id);
+    setDeleteDialogOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(() => {
+    if (photoToDelete) {
+      removePhoto(photoToDelete);
+      setPhotoToDelete(null);
+      setDeleteDialogOpen(false);
     }
-  }, [removePhoto]);
+  }, [photoToDelete, removePhoto]);
 
   return (
     <>
@@ -439,13 +458,15 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                               type="button"
                               onClick={() => handleEdit(photo)}
                               className="p-1.5 bg-card rounded shadow hover:bg-blue-50"
+                              aria-label="Edit photo"
                             >
                               <Pencil className="h-3 w-3" />
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleDelete(photo.id)}
+                              onClick={() => handleDeleteClick(photo.id)}
                               className="p-1.5 bg-card rounded shadow hover:bg-error-light"
+                              aria-label="Delete photo"
                             >
                               <Trash2 className="h-3 w-3 text-error" />
                             </button>
@@ -694,6 +715,27 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Photo</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this photo? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setPhotoToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -39,8 +39,9 @@ import {
 import { useRiskManagement } from '../../hooks/useRiskPrediction'
 import { useAIFeatureEnabled } from '@/features/ai/hooks/useAIConfiguration'
 import type { ActivityRiskPrediction, RiskAlert, RiskFactor } from '@/types/ai'
+// Note: RiskAnalysisResponse and RiskAlertType types are available from '@/types/ai' if needed
 import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
+// format from 'date-fns' available if date formatting is needed
 
 interface AtRiskActivitiesPanelProps {
   projectId: string
@@ -87,7 +88,8 @@ export function AtRiskActivitiesPanel({
   const { isEnabled, isLoading: configLoading } = useAIFeatureEnabled('risk_prediction')
 
   const {
-    analysis,
+    // analysis available for future use
+    analysis: _analysis,
     alerts,
     criticalAlerts,
     highAlerts,

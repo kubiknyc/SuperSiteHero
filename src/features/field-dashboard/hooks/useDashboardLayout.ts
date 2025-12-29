@@ -7,9 +7,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import * as dashboardApi from '@/lib/api/services/dashboard'
 import type {
-  DashboardLayout,
-  DashboardLayoutWithWidgets,
-  WidgetPreference,
   CreateDashboardLayoutRequest,
   UpdateDashboardLayoutRequest,
   AddWidgetRequest,

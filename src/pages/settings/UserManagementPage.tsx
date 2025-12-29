@@ -21,7 +21,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -46,7 +45,6 @@ import {
   Users,
   UserPlus,
   MoreHorizontal,
-  Shield,
   UserX,
   UserCheck,
   Loader2,

@@ -18,7 +18,7 @@ import {
   Target,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { format, differenceInDays, isAfter, isBefore, isToday } from 'date-fns'
+import { format, differenceInDays, isAfter, isBefore } from 'date-fns'
 
 export function ClientSchedule() {
   const { projectId } = useParams<{ projectId: string }>()

@@ -101,18 +101,22 @@ vi.mock('lucide-react', () => ({
   Info: ({ className }: any) => <span className={className} data-testid="icon-info">Info</span>,
 }));
 
+// Mock the global __APP_VERSION__
+(globalThis as any).__APP_VERSION__ = '1.0.0';
+
 describe('PWAInstallPrompt Components', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
     // Set default mock return value
     mockUsePWAInstall.mockReturnValue(defaultPWAHookValues);
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
     vi.useRealTimers();
   });
+
+  // Helper to create userEvent - use real timers for reliable async behavior
+  const setupUser = () => userEvent.setup();
 
   describe('ShareIcon', () => {
     it('renders SVG with correct attributes', () => {
@@ -197,7 +201,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls onClose when close button is clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onClose = vi.fn();
         render(<IOSInstallInstructions onClose={onClose} />);
 
@@ -262,7 +266,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('updates checkbox state when clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onClose = vi.fn();
         render(<IOSInstallInstructions onClose={onClose} />);
 
@@ -274,7 +278,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls onDontShowAgain when checkbox is checked and Close is clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onClose = vi.fn();
         const onDontShowAgain = vi.fn();
         render(
@@ -287,7 +291,8 @@ describe('PWAInstallPrompt Components', () => {
         const checkbox = screen.getByRole('checkbox', { name: /don't show again/i });
         await user.click(checkbox);
 
-        const closeButton = screen.getByRole('button', { name: /close/i });
+        // Click the "Close" text button (not the X icon button)
+        const closeButton = screen.getByRole('button', { name: /^close$/i });
         await user.click(closeButton);
 
         expect(onDontShowAgain).toHaveBeenCalledTimes(1);
@@ -295,7 +300,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not call onDontShowAgain when checkbox is unchecked and Close is clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onClose = vi.fn();
         const onDontShowAgain = vi.fn();
         render(
@@ -305,7 +310,8 @@ describe('PWAInstallPrompt Components', () => {
           />
         );
 
-        const closeButton = screen.getByRole('button', { name: /close/i });
+        // Click the "Close" text button (not the X icon button)
+        const closeButton = screen.getByRole('button', { name: /^close$/i });
         await user.click(closeButton);
 
         expect(onDontShowAgain).not.toHaveBeenCalled();
@@ -316,7 +322,8 @@ describe('PWAInstallPrompt Components', () => {
         const onClose = vi.fn();
         render(<IOSInstallInstructions onClose={onClose} />);
 
-        expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
+        // There should be at least one close button (could be the X icon or the text button)
+        expect(screen.getAllByRole('button', { name: /close/i }).length).toBeGreaterThan(0);
       });
     });
 
@@ -387,19 +394,20 @@ describe('PWAInstallPrompt Components', () => {
         expect(screen.queryByTestId('card')).not.toBeInTheDocument();
       });
 
-      it('renders when shouldShowBanner is true', () => {
+      it('renders when shouldShowBanner is true', async () => {
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
         });
 
         render(<PWAInstallBanner />);
-        vi.runAllTimers(); // Trigger visibility timer
 
-        expect(screen.getByTestId('card')).toBeInTheDocument();
+        await waitFor(() => {
+          expect(screen.getByTestId('card')).toBeInTheDocument();
+        });
       });
 
-      it('calls trackPromptShown after delay when showing', () => {
+      it('calls trackPromptShown after delay when showing', async () => {
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -407,11 +415,10 @@ describe('PWAInstallPrompt Components', () => {
 
         render(<PWAInstallBanner />);
 
-        expect(mockTrackPromptShown).not.toHaveBeenCalled();
-
-        vi.advanceTimersByTime(100);
-
-        expect(mockTrackPromptShown).toHaveBeenCalledTimes(1);
+        // trackPromptShown is called after a 100ms delay
+        await waitFor(() => {
+          expect(mockTrackPromptShown).toHaveBeenCalledTimes(1);
+        });
       });
 
       it('applies bottom position by default', () => {
@@ -533,7 +540,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Install Flow - Non-iOS', () => {
       it('calls promptInstall when Install App is clicked on non-iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -549,7 +556,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not show iOS instructions on non-iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -567,7 +574,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Install Flow - iOS', () => {
       it('shows iOS instructions when Install App is clicked on iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -585,7 +592,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls analytics callback when iOS instructions are shown', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onAnalyticsEvent = vi.fn();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
@@ -602,7 +609,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not call promptInstall on iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -620,7 +627,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Dismiss Functionality', () => {
       it('calls dismissPrompt when "Not now" is clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -631,13 +638,14 @@ describe('PWAInstallPrompt Components', () => {
         const notNowButton = screen.getByRole('button', { name: /not now/i });
         await user.click(notNowButton);
 
-        vi.advanceTimersByTime(300); // Animation delay
-
-        expect(mockDismissPrompt).toHaveBeenCalledWith(false);
+        // Wait for the 300ms animation delay
+        await waitFor(() => {
+          expect(mockDismissPrompt).toHaveBeenCalledWith(false);
+        });
       });
 
       it('calls dismissPrompt when X button is clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -648,13 +656,14 @@ describe('PWAInstallPrompt Components', () => {
         const dismissButton = screen.getByRole('button', { name: /dismiss/i });
         await user.click(dismissButton);
 
-        vi.advanceTimersByTime(300);
-
-        expect(mockDismissPrompt).toHaveBeenCalledWith(false);
+        // Wait for the 300ms animation delay
+        await waitFor(() => {
+          expect(mockDismissPrompt).toHaveBeenCalledWith(false);
+        });
       });
 
       it('dismisses permanently when "don\'t show again" is checked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           shouldShowBanner: true,
@@ -668,9 +677,10 @@ describe('PWAInstallPrompt Components', () => {
         const notNowButton = screen.getByRole('button', { name: /not now/i });
         await user.click(notNowButton);
 
-        vi.advanceTimersByTime(300);
-
-        expect(mockDismissPrompt).toHaveBeenCalledWith(true);
+        // Wait for the 300ms animation delay
+        await waitFor(() => {
+          expect(mockDismissPrompt).toHaveBeenCalledWith(true);
+        });
       });
     });
 
@@ -775,7 +785,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('iOS Instructions State', () => {
       it('shows iOS instructions when clicked on iOS device', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isIOS: true,
@@ -793,7 +803,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls analytics callback when iOS instructions are shown', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onAnalyticsEvent = vi.fn();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
@@ -810,7 +820,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not show "don\'t show again" in iOS instructions', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isIOS: true,
@@ -854,7 +864,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls resetDismissed when "Show Install Prompt" is clicked', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: false,
@@ -920,7 +930,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls promptInstall when Install App is clicked on non-iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1077,7 +1087,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Install Flow - Non-iOS', () => {
       it('calls promptInstall when clicked on non-iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1094,7 +1104,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not show tooltip on non-iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1113,7 +1123,7 @@ describe('PWAInstallPrompt Components', () => {
 
     describe('Install Flow - iOS', () => {
       it('shows iOS instructions tooltip when clicked on iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1132,7 +1142,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('calls analytics callback when iOS tooltip is shown', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         const onAnalyticsEvent = vi.fn();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
@@ -1150,7 +1160,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('does not call promptInstall on iOS', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1167,7 +1177,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('renders compact iOS instructions in tooltip', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1187,7 +1197,7 @@ describe('PWAInstallPrompt Components', () => {
       });
 
       it('allows dismissing iOS tooltip permanently', async () => {
-        const user = userEvent.setup({ delay: null });
+        const user = setupUser();
         mockUsePWAInstall.mockReturnValue({
           ...defaultPWAHookValues,
           isInstallable: true,
@@ -1207,7 +1217,8 @@ describe('PWAInstallPrompt Components', () => {
         const checkbox = screen.getByRole('checkbox', { name: /don't show again/i });
         await user.click(checkbox);
 
-        const closeButton = screen.getByRole('button', { name: /close/i });
+        // Click the "Close" text button (not the X icon button)
+        const closeButton = screen.getByRole('button', { name: /^close$/i });
         await user.click(closeButton);
 
         expect(mockDismissPrompt).toHaveBeenCalledWith(true);

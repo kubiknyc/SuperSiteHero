@@ -6,7 +6,6 @@ import { Stage, Layer, Line, Image as KonvaImage, Arrow, Circle, Rect } from 're
 import type { KonvaEventObject } from 'konva/lib/Node'
 import Konva from 'konva'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import {
   Pencil,

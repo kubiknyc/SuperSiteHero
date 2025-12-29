@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -22,13 +21,14 @@ import {
   Save,
   AlertCircle,
 } from 'lucide-react'
-import type {
-  ChecklistSchedule,
-  CreateChecklistScheduleDTO,
-  RecurrenceFrequency,
-  DayOfWeek,
+import {
+  getFrequencyLabel,
+  getDayOfWeekLabel,
+  type ChecklistSchedule,
+  type CreateChecklistScheduleDTO,
+  type RecurrenceFrequency,
+  type DayOfWeek,
 } from '@/types/checklist-schedules'
-import { getFrequencyLabel, getDayOfWeekLabel } from '@/types/checklist-schedules'
 import { format } from 'date-fns'
 
 interface ScheduleDialogProps {

@@ -14,12 +14,10 @@ import {
   Calendar,
   Target,
   AlertTriangle,
-  RefreshCw,
   ChevronDown,
   Clock,
   CheckCircle2,
   XCircle,
-  Pause,
   TrendingUp,
   History,
   ArrowRight,
@@ -27,7 +25,7 @@ import {
 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
+import { Card, CardContent } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
@@ -91,7 +89,7 @@ export function MasterSchedulePage() {
     stats,
     baselines,
     hasBaseline,
-    activeBaseline,
+    activeBaseline: _activeBaseline,
     isLoading,
     refetch,
   } = useMasterScheduleData(projectId)
@@ -106,7 +104,7 @@ export function MasterSchedulePage() {
   // State
   const [selectedActivity, setSelectedActivity] = useState<ScheduleActivity | null>(null)
   const [showImportDialog, setShowImportDialog] = useState(false)
-  const [showActivityDialog, setShowActivityDialog] = useState(false)
+  const [_showActivityDialog, setShowActivityDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [editingActivity, setEditingActivity] = useState<ScheduleActivity | null>(null)
   const [isSavingBaseline, setIsSavingBaseline] = useState(false)
@@ -197,7 +195,7 @@ export function MasterSchedulePage() {
   }, [projectId, baselines.length, createBaseline, refetch])
 
   // Handle clear/change baseline
-  const handleChangeBaseline = useCallback(
+  const _handleChangeBaseline = useCallback(
     async (baseline: ScheduleBaseline) => {
       if (!projectId) {return}
       await setActiveBaseline.mutateAsync({
@@ -561,7 +559,7 @@ export function MasterSchedulePage() {
           projectId={projectId!}
           companyId={userProfile?.company_id || ''}
           activities={activities}
-          onSyncComplete={(count: number) => {
+          onSyncComplete={(_count: number) => {
             setShowLookAheadSync(false)
             // Optionally navigate to look-ahead page
           }}

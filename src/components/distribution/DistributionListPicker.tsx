@@ -10,11 +10,9 @@ import {
   Search,
   X,
   Check,
-  ChevronDown,
   ChevronUp,
   ListPlus,
   Mail,
-  Building,
   Star,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,7 +36,6 @@ import { cn } from '@/lib/utils';
 import { useProjectDistributionLists } from '@/features/distribution-lists/hooks/useDistributionLists';
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers';
 import type {
-  DistributionListWithCount,
   DistributionSelection,
   ResolvedRecipient,
   DistributionListType,
@@ -68,7 +65,7 @@ export function DistributionListPicker({
   value,
   onChange,
   disabled,
-  showRoles = false,
+  showRoles: _showRoles = false,
   label = 'Distribution List',
   description = 'Add team members who should receive copies.',
   className,

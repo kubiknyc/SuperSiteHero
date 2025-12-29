@@ -10,7 +10,6 @@ import { workflowAutomationApi } from '@/lib/api/services/workflow-automation'
 import { useToast } from '@/components/ui/use-toast'
 import type {
   EscalationRule,
-  EscalationEvent,
   CreateEscalationRuleInput,
   UpdateEscalationRuleInput,
   EscalationEventFilters,

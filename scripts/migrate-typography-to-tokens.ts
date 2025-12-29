@@ -283,7 +283,7 @@ async function migrateTypography() {
   const results: MigrationResult[] = [];
   let processedCount = 0;
 
-  files.forEach((file, index) => {
+  files.forEach((file) => {
     const result = migrateFile(file, write);
 
     if (result.changes > 0) {

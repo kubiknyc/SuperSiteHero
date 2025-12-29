@@ -7,7 +7,7 @@ import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { WorkflowsProjectView } from '@/features/workflows/components/WorkflowsProjectView'
 import { useWorkflowTypes, getWorkflowTypeIcon } from '@/features/workflows/hooks/useWorkflowTypes'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { AlertCircle } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function WorkflowsPage() {

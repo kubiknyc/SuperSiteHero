@@ -12,14 +12,6 @@
 
 import { useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
 import {
   Popover,
   PopoverContent,
@@ -42,11 +34,9 @@ import {
   Palette,
   ChevronUp,
   ChevronDown,
-  MoreHorizontal,
   Ruler,
   Stamp,
   X,
-  Check,
   Eraser,
   Highlighter,
   Cloud,

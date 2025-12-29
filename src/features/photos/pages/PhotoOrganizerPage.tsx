@@ -47,6 +47,16 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Label } from '@/components/ui/label'
 import { CameraTrigger } from '../components/CameraCapture'
 import { PhotoGrid } from '../components/PhotoGrid'
@@ -320,6 +330,8 @@ export function PhotoOrganizerPage() {
   const [showNewCollectionDialog, setShowNewCollectionDialog] = useState(false)
   const [newCollectionName, setNewCollectionName] = useState('')
   const [newCollectionDescription, setNewCollectionDescription] = useState('')
+  const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // File input ref for uploads
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -487,16 +499,28 @@ export function PhotoOrganizerPage() {
   }, [photos, selectedPhotoIds.size])
 
   // Handle bulk delete
-  const handleBulkDelete = useCallback(async () => {
-    if (selectedPhotoIds.size === 0) {return}
+  // Open bulk delete confirmation dialog
+  const handleBulkDeleteClick = useCallback(() => {
+    if (selectedPhotoIds.size === 0) {
+      return
+    }
+    setShowBulkDeleteDialog(true)
+  }, [selectedPhotoIds.size])
 
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${selectedPhotoIds.size} photo(s)?`
-    )
-    if (!confirmed) {return}
-
-    await bulkDeletePhotos.mutateAsync(Array.from(selectedPhotoIds))
-    setSelectedPhotoIds(new Set())
+  // Confirm and execute bulk delete
+  const handleBulkDeleteConfirm = useCallback(async () => {
+    setIsDeleting(true)
+    try {
+      await bulkDeletePhotos.mutateAsync(Array.from(selectedPhotoIds))
+      setSelectedPhotoIds(new Set())
+      setShowBulkDeleteDialog(false)
+      toast.success(`Deleted ${selectedPhotoIds.size} photo(s)`)
+    } catch (error) {
+      logger.error('Failed to delete photos:', error)
+      toast.error('Failed to delete photos')
+    } finally {
+      setIsDeleting(false)
+    }
   }, [selectedPhotoIds, bulkDeletePhotos])
 
   // Handle view photo
@@ -778,7 +802,7 @@ export function PhotoOrganizerPage() {
             variant="outline"
             size="sm"
             className="text-destructive hover:text-destructive"
-            onClick={handleBulkDelete}
+            onClick={handleBulkDeleteClick}
           >
             <Trash2 className="h-4 w-4 mr-1" />
             Delete
@@ -910,6 +934,33 @@ export function PhotoOrganizerPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <AlertDialog open={showBulkDeleteDialog} onOpenChange={setShowBulkDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-destructive" />
+              Delete {selectedPhotoIds.size} Photo{selectedPhotoIds.size > 1 ? 's' : ''}?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. {selectedPhotoIds.size > 1
+                ? `All ${selectedPhotoIds.size} selected photos will be permanently deleted.`
+                : 'The selected photo will be permanently deleted.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleBulkDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

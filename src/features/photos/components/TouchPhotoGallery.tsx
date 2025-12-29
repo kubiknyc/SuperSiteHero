@@ -155,7 +155,7 @@ export function TouchPhotoGallery({
   });
 
   // Pinch-to-zoom
-  const { handlers: pinchHandlers, scale: pinchScale } = usePinch<HTMLDivElement>({
+  const { handlers: pinchHandlers } = usePinch<HTMLDivElement>({
     onPinch: (event) => {
       setScale(event.scale);
       setIsZoomed(event.scale > 1.1);

@@ -6,7 +6,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
-  drawingPackagesApi,
   getDrawingPackages,
   getDrawingPackage,
   createDrawingPackage,
@@ -31,16 +30,12 @@ import {
   recordRecipientAcknowledgment,
 } from '@/lib/api/services/drawing-packages';
 import type {
-  DrawingPackage,
   DrawingPackageInsert,
   DrawingPackageUpdate,
-  DrawingPackageItem,
   DrawingPackageItemInsert,
   DrawingPackageItemUpdate,
-  DrawingPackageRecipient,
   DrawingPackageRecipientInsert,
   DrawingPackageRecipientUpdate,
-  DrawingPackageActivity,
   DrawingPackageFilters,
   DrawingPackageType,
   DrawingPackageStatus,
@@ -107,7 +102,7 @@ export function useCreateDrawingPackage() {
 
   return useMutation({
     mutationFn: (data: DrawingPackageInsert) => createDrawingPackage(data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: PACKAGE_KEYS.lists() });
       toast.success('Drawing package created successfully');
     },
@@ -244,14 +239,13 @@ export function useUpdatePackageItem() {
   return useMutation({
     mutationFn: ({
       id,
-      packageId,
       updates,
     }: {
       id: string;
       packageId: string;
       updates: DrawingPackageItemUpdate;
     }) => updatePackageItem(id, updates),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: PACKAGE_KEYS.detail(variables.packageId) });
     },
     onError: (error: Error) => {
@@ -267,7 +261,7 @@ export function useRemovePackageItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, packageId }: { id: string; packageId: string }) =>
+    mutationFn: ({ id }: { id: string; packageId: string }) =>
       removeItemFromPackage(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: PACKAGE_KEYS.detail(variables.packageId) });
@@ -352,14 +346,13 @@ export function useUpdatePackageRecipient() {
   return useMutation({
     mutationFn: ({
       id,
-      packageId,
       updates,
     }: {
       id: string;
       packageId: string;
       updates: DrawingPackageRecipientUpdate;
     }) => updatePackageRecipient(id, updates),
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       queryClient.invalidateQueries({ queryKey: PACKAGE_KEYS.detail(variables.packageId) });
     },
     onError: (error: Error) => {
@@ -375,7 +368,7 @@ export function useRemovePackageRecipient() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, packageId }: { id: string; packageId: string }) =>
+    mutationFn: ({ id }: { id: string; packageId: string }) =>
       removeRecipientFromPackage(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: PACKAGE_KEYS.detail(variables.packageId) });

@@ -7,7 +7,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import {
   DollarSign,
   TrendingUp,
-  TrendingDown,
   AlertTriangle,
   CheckCircle,
   Loader2,

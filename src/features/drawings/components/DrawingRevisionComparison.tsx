@@ -47,7 +47,7 @@ import {
 import { cn } from '@/lib/utils';
 import { useDrawingRevisionComparison, useComparisonState } from '../hooks/useDrawingComparison';
 import { BeforeAfterSlider } from '@/features/photo-progress/components/BeforeAfterSlider';
-import type { DrawingRevision, ChangeRegion, ComparisonViewMode, CHANGE_TYPE_COLORS } from '@/types/drawing';
+import type { DrawingRevision, ChangeRegion, ComparisonViewMode } from '@/types/drawing';
 
 interface DrawingRevisionComparisonProps {
   revision1Id: string;

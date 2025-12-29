@@ -5,7 +5,7 @@
 
 import { useState } from 'react'
 import { useSubcontractorPunchItems } from '@/features/subcontractor-portal/hooks'
-import { PunchItemStatusButton, StatusBadge } from '@/features/subcontractor-portal/components'
+import { PunchItemStatusButton } from '@/features/subcontractor-portal/components'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'

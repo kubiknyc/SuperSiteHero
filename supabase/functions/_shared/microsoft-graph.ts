@@ -84,7 +84,7 @@ export function classifyMSGraphError(
   statusCode: number,
   errorData?: { error?: { code?: string; message?: string } }
 ): { errorType: MSGraphErrorType; isRetryable: boolean; retryAfterMs?: number } {
-  const graphErrorCode = errorData?.error?.code
+  const _graphErrorCode = errorData?.error?.code
 
   // Network/timeout errors (no status code)
   if (!statusCode) {

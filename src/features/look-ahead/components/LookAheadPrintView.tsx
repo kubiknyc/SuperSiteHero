@@ -6,7 +6,7 @@
  */
 
 import { useMemo } from 'react'
-import { format, addWeeks, startOfWeek, endOfWeek } from 'date-fns'
+import { format } from 'date-fns'
 import { type LookAheadActivityWithDetails, ACTIVITY_STATUS_CONFIG } from '@/types/look-ahead'
 import { type PPCMetrics } from '@/types/look-ahead'
 

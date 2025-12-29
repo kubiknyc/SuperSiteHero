@@ -36,7 +36,7 @@ import {
 import { cn } from '@/lib/utils';
 import { BeforeAfterSlider } from '@/features/photo-progress/components/BeforeAfterSlider';
 import { useDrawingRevisionsForComparison } from '../hooks/useDrawingComparison';
-import type { Drawing, DrawingRevision } from '@/types/drawing';
+import type { Drawing } from '@/types/drawing';
 
 interface DrawingSliderComparisonProps {
   drawing: Drawing;

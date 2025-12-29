@@ -33,14 +33,14 @@ import {
   ChevronDown,
   ChevronUp,
 } from 'lucide-react';
-import { usePhotoHubPhotos, usePhotoHubStats, useBulkLinkPhotos } from '../hooks/useUnifiedPhotos';
+import { usePhotoHubPhotos, usePhotoHubStats } from '../hooks/useUnifiedPhotos';
 import { PhotoLinker } from './PhotoLinker';
 import type {
   PhotoEntityType,
   PhotoHubFilters,
   PhotoWithEntities,
 } from '@/types/unified-photos';
-import { ENTITY_TYPE_LABELS, ENTITY_TYPE_COLORS } from '@/types/unified-photos';
+import { ENTITY_TYPE_LABELS } from '@/types/unified-photos';
 
 interface PhotoEvidenceHubProps {
   projectId: string;

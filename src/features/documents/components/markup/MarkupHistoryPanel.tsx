@@ -2,17 +2,10 @@
 // Markup history panel showing author, creation time, and edit history
 
 import { useState, useMemo } from 'react'
-import { format, formatDistanceToNow, isToday, isYesterday, startOfDay } from 'date-fns'
+import { formatDistanceToNow, isToday, isYesterday } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import {
   Popover,
   PopoverContent,
@@ -22,19 +15,16 @@ import { Select } from '@/components/ui/select'
 import {
   History,
   User,
-  Calendar,
   Search,
-  Filter,
   Trash2,
   Eye,
   Edit2,
-  ExternalLink,
   ChevronDown,
   ChevronUp,
   Clock,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { EnhancedShape, MarkupHistoryEntry, MarkupAuthor } from '../../types/markup'
+import type { EnhancedShape, MarkupAuthor } from '../../types/markup'
 
 interface MarkupHistoryPanelProps {
   markups: EnhancedShape[]

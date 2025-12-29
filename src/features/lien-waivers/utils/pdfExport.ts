@@ -13,7 +13,6 @@ import {
   type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
 import type {
-  LienWaiver,
   LienWaiverWithDetails,
   LienWaiverType,
 } from '@/types/lien-waiver'

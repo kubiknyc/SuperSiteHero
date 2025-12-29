@@ -29,7 +29,6 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
@@ -57,7 +56,7 @@ import {
   useTestAIConfiguration,
   useAIUsageStats,
 } from '@/features/ai/hooks/useAIConfiguration'
-import type { AIProviderType, AIFeaturesEnabled } from '@/types/ai'
+import type { AIProviderType } from '@/types/ai'
 import { MODEL_PRICING, DEFAULT_MODELS } from '@/lib/api/services/ai-provider'
 
 const configSchema = z.object({

@@ -12,18 +12,13 @@ import {
   Building2,
   Calendar,
   CheckCircle2,
-  Clock,
-  DollarSign,
   Edit,
   FileText,
   HelpCircle,
   Mail,
-  MessageSquare,
   MoreHorizontal,
-  Package,
   Send,
   Settings,
-  Trophy,
   Users,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -89,7 +84,7 @@ export default function BidPackageDetailPage() {
   const { data: stats } = useBidPackageStats(packageId!)
   const { data: invitations, isLoading: isLoadingInvitations } = useBidInvitations(packageId!)
   const { data: submissions, isLoading: isLoadingSubmissions } = useBidSubmissions(packageId!)
-  const { data: questions, isLoading: isLoadingQuestions } = useBidQuestions(packageId!)
+  const { data: questions } = useBidQuestions(packageId!)
 
   const publishBidPackage = usePublishBidPackage()
   const awardBid = useAwardBid()

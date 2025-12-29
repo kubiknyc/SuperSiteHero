@@ -7,7 +7,7 @@
 
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DocuSignConnectionSettings } from '@/features/docusign/components/DocuSignConnectionSettings';
 import { DocuSignDashboard } from '@/features/docusign/components/DocuSignDashboard';
 import { useDocuSignConnectionStatus } from '@/features/docusign/hooks/useDocuSign';
@@ -19,7 +19,6 @@ import {
   CheckCircle2,
   XCircle,
   AlertCircle,
-  Loader2,
   RefreshCw,
   ExternalLink,
   Clock,

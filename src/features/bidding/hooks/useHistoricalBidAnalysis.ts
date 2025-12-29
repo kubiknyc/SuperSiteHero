@@ -457,7 +457,7 @@ export function usePrefetchVendorHistory() {
  * Combined hook for dashboard data
  */
 export function useBidAnalysisDashboard(filters?: Partial<BidAnalysisFilters>) {
-  const { userProfile } = useAuth()
+  useAuth()
 
   const dateRange = {
     from: filters?.date_from || format(subMonths(new Date(), 12), 'yyyy-MM-dd'),

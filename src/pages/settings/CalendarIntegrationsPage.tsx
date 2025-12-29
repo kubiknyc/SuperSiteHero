@@ -8,11 +8,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ArrowLeft, Calendar, RefreshCw, AlertCircle, CheckCircle2, Info } from 'lucide-react';
+import { ArrowLeft, RefreshCw, AlertCircle, CheckCircle2, Info } from 'lucide-react';
 import { CalendarConnectionCard } from '@/features/calendar/components/CalendarConnectionCard';
 import { OutlookCalendarConnect } from '@/features/calendar/components/OutlookCalendarConnect';
 import { useCompleteGCalConnection, useGCalConnectionStatus } from '@/features/calendar/hooks/useGoogleCalendar';

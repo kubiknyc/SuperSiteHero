@@ -15,7 +15,6 @@ import {
   AlertTriangle,
   Target,
   Calendar,
-  Activity,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {

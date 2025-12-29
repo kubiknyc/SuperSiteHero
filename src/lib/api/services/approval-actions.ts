@@ -296,7 +296,11 @@ export const approvalActionsApi = {
 
       // Check if user can approve (except for comments)
       if (action !== 'comment') {
-        const canApprove = currentStep.approver_ids?.includes(user.id)
+        const canApprove = await this._canUserApproveStep(
+          currentStep,
+          user.id,
+          request.project_id
+        )
         if (!canApprove) {
           throw new ApiErrorClass({
             code: 'NOT_AUTHORIZED',
@@ -486,6 +490,77 @@ export const approvalActionsApi = {
             message: `Failed to ${action} request`,
             details: error,
           })
+    }
+  },
+
+  /**
+   * Check if a user can approve a step based on approver type
+   * Supports user IDs, roles, custom roles, and any project member
+   */
+  async _canUserApproveStep(
+    step: any,
+    userId: string,
+    projectId: string
+  ): Promise<boolean> {
+    const approverType = step.approver_type || 'user'
+
+    switch (approverType) {
+      case 'user':
+        // Direct user ID check
+        return step.approver_ids?.includes(userId) ?? false
+
+      case 'role': {
+        // Check if user has the required default role and is on the project
+        const { data: userData } = await db
+          .from('users')
+          .select('role')
+          .eq('id', userId)
+          .single()
+
+        if (!userData || userData.role !== step.approver_role) {
+          return false
+        }
+
+        // Verify user is on the project
+        const { data: projectMember } = await db
+          .from('project_users')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('project_id', projectId)
+          .single()
+
+        return !!projectMember
+      }
+
+      case 'custom_role': {
+        // Check if user has the custom role (globally or for this project)
+        const { data: customRoleAssignment } = await db
+          .from('user_custom_roles')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('custom_role_id', step.approver_custom_role_id)
+          .or(`project_id.is.null,project_id.eq.${projectId}`)
+          .limit(1)
+          .single()
+
+        return !!customRoleAssignment
+      }
+
+      case 'any': {
+        // Any project member can approve
+        const { data: projectMember } = await db
+          .from('project_users')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('project_id', projectId)
+          .single()
+
+        return !!projectMember
+      }
+
+      default:
+        // Fallback to user ID check
+        return step.approver_ids?.includes(userId) ?? false
     }
   },
 }

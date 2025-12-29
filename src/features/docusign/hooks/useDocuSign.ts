@@ -9,9 +9,8 @@ import { docuSignApi } from '@/lib/api/services/docusign'
 import { useAuth } from '@/hooks/useAuth'
 import toast from 'react-hot-toast'
 import type {
-  DSEnvelope,
-  DSEnvelopeStatus,
   DSDocumentType,
+  DSEnvelopeStatus,
   InitiateDSConnectionDTO,
   CompleteDSConnectionDTO,
   CreateEnvelopeDTO,

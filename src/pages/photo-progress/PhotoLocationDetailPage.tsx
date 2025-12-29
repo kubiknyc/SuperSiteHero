@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,11 +19,10 @@ import {
   useTogglePhotoFeatured,
   useDeleteProgressPhoto,
 } from '@/features/photo-progress/hooks';
-import { ProgressPhotoCard, BeforeAfterSlider } from '@/features/photo-progress/components';
+import { ProgressPhotoCard } from '@/features/photo-progress/components';
 import { useProject } from '@/features/projects/hooks/useProjects';
-import { formatDistanceToNow, format } from 'date-fns';
+import { format } from 'date-fns';
 import {
-  MapPin,
   Camera,
   Compass,
   Calendar,

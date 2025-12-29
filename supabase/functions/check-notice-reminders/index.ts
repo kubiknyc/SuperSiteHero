@@ -26,12 +26,12 @@ interface Notice {
   created_by: string
 }
 
-interface Project {
+interface _Project {
   id: string
   name: string
 }
 
-interface User {
+interface _User {
   id: string
   email: string
   full_name?: string

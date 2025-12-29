@@ -10,7 +10,7 @@
  * - Touch state management
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef } from 'react'
 
 export interface TouchPoint {
   x: number

@@ -8,9 +8,6 @@ import { documentEntityLinkingApi } from '@/lib/api/services/document-entity-lin
 import { useAIFeatureEnabled } from '@/features/ai/hooks/useAIConfiguration'
 import type {
   EnhanceDocumentRequest,
-  EnhanceDocumentResponse,
-  DocumentLLMResult,
-  DocumentEntityLink,
 } from '@/types/ai'
 import { toast } from 'sonner'
 

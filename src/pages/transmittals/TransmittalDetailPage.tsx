@@ -41,7 +41,6 @@ import {
   AlertTriangle,
   CheckCircle2,
   Circle,
-  Loader2,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';

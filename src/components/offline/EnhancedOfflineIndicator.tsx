@@ -12,7 +12,6 @@ import {
   Wifi,
   RefreshCw,
   CheckCircle2,
-  AlertCircle,
   Clock,
   ChevronDown,
 } from 'lucide-react'
@@ -47,7 +46,7 @@ export function EnhancedOfflineIndicator({
   onSyncClick,
   showDetails = true,
 }: EnhancedOfflineIndicatorProps) {
-  const { isOnline, networkQuality, lastOnlineAt, lastOfflineAt } = useOnlineStatus()
+  const { isOnline, networkQuality, lastOfflineAt } = useOnlineStatus()
   const [isOpen, setIsOpen] = useState(false)
   const [currentTime, setCurrentTime] = useState(() => Date.now())
 

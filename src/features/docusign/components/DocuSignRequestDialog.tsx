@@ -33,14 +33,11 @@ import {
   Trash2,
   User,
   Mail,
-  Building2,
   AlertTriangle,
   Loader2,
-  GripVertical,
   ChevronUp,
   ChevronDown,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import {
   useDocuSignConnectionStatus,
   useCreatePaymentApplicationEnvelope,

@@ -7,9 +7,9 @@ import {
   CardHeader,
   CardContent,
   CardTitle,
-  CardDescription,
   Badge,
 } from '@/components/ui'
+// CardDescription available from '@/components/ui' if needed
 import type { BudgetPrediction, SchedulePrediction, FeatureImportance } from '@/types/analytics'
 
 // ============================================================================

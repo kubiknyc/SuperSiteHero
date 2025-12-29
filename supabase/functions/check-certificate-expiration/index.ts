@@ -30,18 +30,18 @@ interface Certificate {
   reminder_sent_at?: string
 }
 
-interface Project {
+interface _Project {
   id: string
   name: string
 }
 
-interface Subcontractor {
+interface _Subcontractor {
   id: string
   company_name: string
   contact_email?: string
 }
 
-interface User {
+interface _User {
   id: string
   email: string
   full_name?: string

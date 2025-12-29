@@ -29,7 +29,6 @@ dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY!
 
 if (!supabaseUrl) {
   console.error('Missing VITE_SUPABASE_URL in .env file')
@@ -53,9 +52,6 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
     persistSession: false,
   },
 })
-
-// Regular client for verification
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Test user definitions
 const TEST_USERS = [

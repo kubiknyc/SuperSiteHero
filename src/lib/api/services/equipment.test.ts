@@ -80,45 +80,55 @@ describe('equipmentApi', () => {
       delete: mockDelete,
     })
 
-    mockSelect.mockReturnValue({
-      eq: mockEq,
-      in: mockIn,
-      is: mockIs,
-      not: mockNot,
-      gt: mockGt,
-      gte: mockGte,
-      lte: mockLte,
-      or: mockOr,
-      order: mockOrder,
-      single: mockSingle,
-    })
+    // Create a shared mutable state for the resolved value
+    // Tests can update this to change what the query resolves to
+    let queryResolvedValue = { data: [], error: null }
 
-    mockEq.mockReturnValue({
-      eq: mockEq,
-      in: mockIn,
-      is: mockIs,
-      or: mockOr,
-      order: mockOrder,
-      single: mockSingle,
-      gte: mockGte,
-      lte: mockLte,
-      limit: mockLimit,
-      select: mockSelect,
-    })
+    // Create a chainable object that all methods will return
+    // This object is also thenable so it can be awaited
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        in: mockIn,
+        is: mockIs,
+        not: mockNot,
+        gt: mockGt,
+        gte: mockGte,
+        lte: mockLte,
+        or: mockOr,
+        order: mockOrder,
+        single: mockSingle,
+        limit: mockLimit,
+        select: mockSelect,
+      }
+      // Make the object thenable (Promise-like) - reads current queryResolvedValue
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
 
-    mockIn.mockReturnValue({
-      order: mockOrder,
-    })
+    // All chainable methods return a fresh chainable
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockIn.mockImplementation(() => createChainable())
+    mockIs.mockImplementation(() => createChainable())
+    mockNot.mockImplementation(() => createChainable())
+    mockGt.mockImplementation(() => createChainable())
+    mockGte.mockImplementation(() => createChainable())
+    mockLte.mockImplementation(() => createChainable())
+    mockOr.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
 
-    mockOr.mockReturnValue({
-      order: mockOrder,
-    })
-
-    mockOrder.mockReturnValue({
-      order: mockOrder,
-      eq: mockEq,
-      limit: mockLimit,
-    })
+    // Helper to set the query result for tests
+    // Tests should call this instead of mockXxx.mockResolvedValue()
+    ;(globalThis as any).setQueryResult = (result: { data: any; error: any }) => {
+      queryResolvedValue = result
+    }
 
     mockLimit.mockResolvedValue({ data: [], error: null })
 
@@ -135,9 +145,14 @@ describe('equipmentApi', () => {
     })
 
     mockAuthGetUser.mockResolvedValue({
-      user: { id: 'test-user-id' },
+      data: { user: { id: 'test-user-id' } },
     })
   })
+
+  // Declare setQueryResult type for tests
+  const setQueryResult = (result: { data: any; error: any }) => {
+    ;(globalThis as any).setQueryResult(result)
+  }
 
   describe('getEquipment', () => {
     it('should get all equipment for a company', async () => {
@@ -146,7 +161,7 @@ describe('equipmentApi', () => {
         { id: '2', equipment_number: 'EQ-002', name: 'Bulldozer', status: 'in_use' },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockEquipment, error: null })
+      setQueryResult({ data: mockEquipment, error: null })
 
       const result = await equipmentApi.getEquipment({ companyId: 'company-123' })
 
@@ -157,7 +172,7 @@ describe('equipmentApi', () => {
     })
 
     it('should filter by equipment_type (single)', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -168,7 +183,7 @@ describe('equipmentApi', () => {
     })
 
     it('should filter by equipment_type (multiple)', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -179,7 +194,7 @@ describe('equipmentApi', () => {
     })
 
     it('should filter by category', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -190,7 +205,7 @@ describe('equipmentApi', () => {
     })
 
     it('should filter by status', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -201,7 +216,7 @@ describe('equipmentApi', () => {
     })
 
     it('should filter by ownership_type', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -212,7 +227,7 @@ describe('equipmentApi', () => {
     })
 
     it('should filter by current_project_id', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -223,7 +238,7 @@ describe('equipmentApi', () => {
     })
 
     it('should search equipment by multiple fields', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      // Default chainable already resolves to { data: [], error: null }
 
       await equipmentApi.getEquipment({
         companyId: 'company-123',
@@ -235,13 +250,13 @@ describe('equipmentApi', () => {
 
     it('should handle database errors', async () => {
       const mockError = new Error('Database error')
-      mockOrder.mockResolvedValue({ data: null, error: mockError })
+      setQueryResult({ data: null, error: mockError })
 
       await expect(equipmentApi.getEquipment({ companyId: 'company-123' })).rejects.toThrow('Database error')
     })
 
     it('should return empty array when no data', async () => {
-      mockOrder.mockResolvedValue({ data: null, error: null })
+      setQueryResult({ data: null, error: null })
 
       const result = await equipmentApi.getEquipment({ companyId: 'company-123' })
 
@@ -277,11 +292,6 @@ describe('equipmentApi', () => {
   })
 
   describe('createEquipment', () => {
-    beforeEach(() => {
-      mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
-      mockSingle.mockResolvedValueOnce({ data: { company_id: 'company-123' }, error: null })
-    })
-
     it('should create equipment with required fields', async () => {
       const mockEquipment = {
         id: 'new-eq',
@@ -291,7 +301,10 @@ describe('equipmentApi', () => {
         status: 'available',
       }
 
-      mockSingle.mockResolvedValueOnce({ data: mockEquipment, error: null })
+      // First call: get user company, second call: create equipment
+      mockSingle
+        .mockResolvedValueOnce({ data: { company_id: 'company-123' }, error: null })
+        .mockResolvedValueOnce({ data: mockEquipment, error: null })
 
       const dto = {
         equipment_number: 'EQ-100',
@@ -315,7 +328,10 @@ describe('equipmentApi', () => {
     })
 
     it('should create equipment with all optional fields', async () => {
-      mockSingle.mockResolvedValueOnce({ data: {}, error: null })
+      // First call: get user company, second call: create equipment
+      mockSingle
+        .mockResolvedValueOnce({ data: { company_id: 'company-123' }, error: null })
+        .mockResolvedValueOnce({ data: {}, error: null })
 
       const dto = {
         equipment_number: 'EQ-100',
@@ -363,6 +379,7 @@ describe('equipmentApi', () => {
     })
 
     it('should handle user company not found', async () => {
+      // User company lookup returns null
       mockSingle.mockResolvedValueOnce({ data: null, error: null })
 
       const dto = {
@@ -376,7 +393,10 @@ describe('equipmentApi', () => {
 
     it('should handle creation errors', async () => {
       const mockError = new Error('Creation failed')
-      mockSingle.mockResolvedValueOnce({ data: mockError, error: null })
+      // First call: get user company succeeds, second call: create fails
+      mockSingle
+        .mockResolvedValueOnce({ data: { company_id: 'company-123' }, error: null })
+        .mockResolvedValueOnce({ data: null, error: mockError })
 
       const dto = {
         equipment_number: 'EQ-100',
@@ -384,7 +404,7 @@ describe('equipmentApi', () => {
         equipment_type: 'excavator' as const,
       }
 
-      await expect(equipmentApi.createEquipment(dto)).rejects.toThrow()
+      await expect(equipmentApi.createEquipment(dto)).rejects.toThrow('Creation failed')
     })
   })
 
@@ -526,19 +546,52 @@ describe('equipmentApi', () => {
 })
 
 describe('equipmentAssignmentsApi', () => {
+  // Sequential results queue for tests needing multiple sequential calls
+  let resultsQueue: Array<{ data: any; error: any }> = []
+
+  const setResults = (results: Array<{ data: any; error: any }>) => {
+    resultsQueue = [...results]
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    resultsQueue = [{ data: [], error: null }]
+
+    // Create a thenable chainable mock that pops results from queue
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+        insert: mockInsert,
+        update: mockUpdate,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        const result = resultsQueue.length > 1 ? resultsQueue.shift()! : resultsQueue[0]
+        return Promise.resolve(result).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        const result = resultsQueue.length > 1 ? resultsQueue.shift()! : resultsQueue[0]
+        return Promise.resolve(result).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
       update: mockUpdate,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ eq: mockEq, order: mockOrder, select: mockSelect, single: mockSingle })
-    mockOrder.mockResolvedValue({ data: [], error: null })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
     mockInsert.mockReturnValue({ select: mockSelect })
     mockUpdate.mockReturnValue({ eq: mockEq })
-    mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
+    mockAuthGetUser.mockResolvedValue({
+      data: { user: { id: 'test-user-id' } },
+    })
   })
 
   describe('getAssignments', () => {
@@ -548,7 +601,7 @@ describe('equipmentAssignmentsApi', () => {
         { id: '2', equipment_id: 'eq-123', project_id: 'proj-2', status: 'completed' },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockAssignments, error: null })
+      setResults([{ data: mockAssignments, error: null }])
 
       const result = await equipmentAssignmentsApi.getAssignments('eq-123')
 
@@ -560,7 +613,7 @@ describe('equipmentAssignmentsApi', () => {
 
   describe('getProjectEquipment', () => {
     it('should get active equipment for project', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      setResults([{ data: [], error: null }])
 
       await equipmentAssignmentsApi.getProjectEquipment('project-123')
 
@@ -578,8 +631,11 @@ describe('equipmentAssignmentsApi', () => {
         status: 'active',
       }
 
-      mockSingle.mockResolvedValueOnce({ data: mockAssignment, error: null })
-      mockEq.mockResolvedValueOnce({ data: null, error: null })
+      // First: insert assignment, Second: update equipment status
+      setResults([
+        { data: mockAssignment, error: null },
+        { data: null, error: null },
+      ])
 
       const dto = {
         equipment_id: 'eq-123',
@@ -605,8 +661,11 @@ describe('equipmentAssignmentsApi', () => {
     })
 
     it('should assign with optional fields', async () => {
-      mockSingle.mockResolvedValueOnce({ data: {}, error: null })
-      mockEq.mockResolvedValueOnce({ data: null, error: null })
+      // First: insert assignment, Second: update equipment status
+      setResults([
+        { data: {}, error: null },
+        { data: null, error: null },
+      ])
 
       const dto = {
         equipment_id: 'eq-123',
@@ -630,7 +689,7 @@ describe('equipmentAssignmentsApi', () => {
 
   describe('updateAssignment', () => {
     it('should update assignment', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      setResults([{ data: {}, error: null }])
 
       await equipmentAssignmentsApi.updateAssignment('assign-1', {
         expected_return_date: '2025-03-01',
@@ -646,9 +705,12 @@ describe('equipmentAssignmentsApi', () => {
     it('should complete assignment and update equipment status', async () => {
       const mockAssignment = { equipment_id: 'eq-123' }
 
-      mockSingle.mockResolvedValueOnce({ data: mockAssignment, error: null })
-      mockSingle.mockResolvedValueOnce({ data: { status: 'completed' }, error: null })
-      mockEq.mockResolvedValueOnce({ data: null, error: null })
+      // First: get assignment, Second: update assignment, Third: update equipment
+      setResults([
+        { data: mockAssignment, error: null },
+        { data: { status: 'completed' }, error: null },
+        { data: null, error: null },
+      ])
 
       await equipmentAssignmentsApi.returnEquipment('assign-1', '2025-01-25')
 
@@ -663,9 +725,12 @@ describe('equipmentAssignmentsApi', () => {
     })
 
     it('should use current date if not provided', async () => {
-      mockSingle.mockResolvedValueOnce({ data: { equipment_id: 'eq-123' }, error: null })
-      mockSingle.mockResolvedValueOnce({ data: {}, error: null })
-      mockEq.mockResolvedValueOnce({ data: null, error: null })
+      // First: get assignment, Second: update assignment, Third: update equipment
+      setResults([
+        { data: { equipment_id: 'eq-123' }, error: null },
+        { data: {}, error: null },
+        { data: null, error: null },
+      ])
 
       await equipmentAssignmentsApi.returnEquipment('assign-1')
 
@@ -676,8 +741,32 @@ describe('equipmentAssignmentsApi', () => {
 })
 
 describe('equipmentLogsApi', () => {
+  // Shared mutable state for query results
+  let queryResolvedValue: { data: any; error: any } = { data: [], error: null }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+
+    // Create a thenable chainable mock
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        gte: mockGte,
+        lte: mockLte,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
@@ -685,15 +774,16 @@ describe('equipmentLogsApi', () => {
       delete: mockDelete,
       rpc: mockRpc,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ eq: mockEq, gte: mockGte, lte: mockLte, order: mockOrder })
-    mockGte.mockReturnValue({ lte: mockLte })
-    mockLte.mockReturnValue({ order: mockOrder })
-    mockOrder.mockResolvedValue({ data: [], error: null })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockGte.mockImplementation(() => createChainable())
+    mockLte.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
     mockInsert.mockReturnValue({ select: mockSelect })
     mockUpdate.mockReturnValue({ eq: mockEq })
     mockDelete.mockReturnValue({ eq: mockEq })
-    mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
+    mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } })
   })
 
   describe('getLogs', () => {
@@ -702,7 +792,7 @@ describe('equipmentLogsApi', () => {
         { id: '1', equipment_id: 'eq-123', hours_used: 8, log_date: '2025-01-20' },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockLogs, error: null })
+      queryResolvedValue = { data: mockLogs, error: null }
 
       const result = await equipmentLogsApi.getLogs({ equipmentId: 'eq-123' })
 
@@ -712,7 +802,7 @@ describe('equipmentLogsApi', () => {
     })
 
     it('should filter by date range', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      queryResolvedValue = { data: [], error: null }
 
       await equipmentLogsApi.getLogs({
         dateFrom: '2025-01-01',
@@ -727,7 +817,7 @@ describe('equipmentLogsApi', () => {
   describe('createLog', () => {
     it('should create log entry', async () => {
       const mockLog = { id: 'log-1', equipment_id: 'eq-123', hours_used: 8 }
-      mockSingle.mockResolvedValue({ data: mockLog, error: null })
+      queryResolvedValue = { data: mockLog, error: null }
 
       const dto = {
         equipment_id: 'eq-123',
@@ -755,7 +845,7 @@ describe('equipmentLogsApi', () => {
         { hours_used: 6 },
       ]
 
-      mockLte.mockResolvedValue({ data: mockLogs, error: null })
+      queryResolvedValue = { data: mockLogs, error: null }
 
       const result = await equipmentLogsApi.getTotalHours('eq-123', '2025-01-01', '2025-01-31')
 
@@ -763,7 +853,7 @@ describe('equipmentLogsApi', () => {
     })
 
     it('should return 0 when no logs', async () => {
-      mockLte.mockResolvedValue({ data: null, error: null })
+      queryResolvedValue = { data: null, error: null }
 
       const result = await equipmentLogsApi.getTotalHours('eq-123', '2025-01-01', '2025-01-31')
 
@@ -786,10 +876,11 @@ describe('equipmentLogsApi', () => {
 
   describe('batchPostCosts', () => {
     it('should batch post costs and return results', async () => {
+      const mockError = new Error('Failed')
       mockRpc
         .mockResolvedValueOnce({ data: 'tx-1', error: null })
         .mockResolvedValueOnce({ data: 'tx-2', error: null })
-        .mockResolvedValueOnce({ data: null, error: { message: 'Failed' } })
+        .mockResolvedValueOnce({ data: null, error: mockError })
 
       const result = await equipmentLogsApi.batchPostCosts(['log-1', 'log-2', 'log-3'])
 
@@ -802,29 +893,54 @@ describe('equipmentLogsApi', () => {
 })
 
 describe('equipmentMaintenanceApi', () => {
+  // Shared mutable state for query results
+  let queryResolvedValue: { data: any; error: any } = { data: [], error: null }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+
+    // Create a thenable chainable mock
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        in: mockIn,
+        gte: mockGte,
+        lte: mockLte,
+        order: mockOrder,
+        select: mockSelect,
+        single: mockSingle,
+        nullsFirst: vi.fn().mockImplementation(() => createChainable()),
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
       update: mockUpdate,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ eq: mockEq, in: mockIn, gte: mockGte, lte: mockLte, order: mockOrder, single: mockSingle })
-    mockIn.mockReturnValue({ order: mockOrder })
-    mockGte.mockReturnValue({ lte: mockLte })
-    mockLte.mockReturnValue({ order: mockOrder })
-    mockOrder.mockReturnValue({ nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }) })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockIn.mockImplementation(() => createChainable())
+    mockGte.mockImplementation(() => createChainable())
+    mockLte.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
     mockInsert.mockReturnValue({ select: mockSelect })
     mockUpdate.mockReturnValue({ eq: mockEq })
-    mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
+    mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } })
   })
 
   describe('getMaintenance', () => {
     it('should get maintenance records with filters', async () => {
-      mockOrder.mockReturnValue({
-        nullsFirst: vi.fn().mockResolvedValue({ data: [], error: null }),
-      })
+      queryResolvedValue = { data: [], error: null }
 
       await equipmentMaintenanceApi.getMaintenance({
         equipmentId: 'eq-123',
@@ -841,7 +957,7 @@ describe('equipmentMaintenanceApi', () => {
   describe('scheduleMaintenance', () => {
     it('should schedule maintenance', async () => {
       const mockMaintenance = { id: 'maint-1', status: 'scheduled' }
-      mockSingle.mockResolvedValue({ data: mockMaintenance, error: null })
+      queryResolvedValue = { data: mockMaintenance, error: null }
 
       const dto = {
         equipment_id: 'eq-123',
@@ -861,7 +977,7 @@ describe('equipmentMaintenanceApi', () => {
 
   describe('completeMaintenance', () => {
     it('should complete maintenance with details', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      queryResolvedValue = { data: {}, error: null }
 
       await equipmentMaintenanceApi.completeMaintenance('maint-1', {
         completed_date: '2025-02-20',
@@ -879,7 +995,7 @@ describe('equipmentMaintenanceApi', () => {
     })
 
     it('should use current date if not provided', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      queryResolvedValue = { data: {}, error: null }
 
       await equipmentMaintenanceApi.completeMaintenance('maint-1', {})
 
@@ -890,7 +1006,7 @@ describe('equipmentMaintenanceApi', () => {
 
   describe('cancelMaintenance', () => {
     it('should cancel maintenance', async () => {
-      mockSingle.mockResolvedValue({ data: {}, error: null })
+      queryResolvedValue = { data: {}, error: null }
 
       await equipmentMaintenanceApi.cancelMaintenance('maint-1')
 
@@ -901,7 +1017,7 @@ describe('equipmentMaintenanceApi', () => {
 
   describe('getUpcomingMaintenance', () => {
     it('should get maintenance scheduled in next 30 days', async () => {
-      mockOrder.mockResolvedValue({ data: [], error: null })
+      queryResolvedValue = { data: [], error: null }
 
       await equipmentMaintenanceApi.getUpcomingMaintenance('company-123')
 
@@ -914,18 +1030,42 @@ describe('equipmentMaintenanceApi', () => {
 })
 
 describe('equipmentInspectionsApi', () => {
+  // Shared mutable state for query results
+  let queryResolvedValue: { data: any; error: any } = { data: [], error: null }
+
   beforeEach(() => {
     vi.clearAllMocks()
+    queryResolvedValue = { data: [], error: null }
+
+    // Create a thenable chainable mock
+    const createChainable = () => {
+      const chainable: any = {
+        eq: mockEq,
+        order: mockOrder,
+        limit: mockLimit,
+        select: mockSelect,
+        single: mockSingle,
+      }
+      chainable.then = (resolve: (value: any) => any, reject?: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).then(resolve, reject)
+      }
+      chainable.catch = (reject: (reason: any) => any) => {
+        return Promise.resolve(queryResolvedValue).catch(reject)
+      }
+      return chainable
+    }
+
     mockFrom.mockReturnValue({
       select: mockSelect,
       insert: mockInsert,
     })
-    mockSelect.mockReturnValue({ eq: mockEq })
-    mockEq.mockReturnValue({ order: mockOrder, limit: mockLimit, single: mockSingle })
-    mockOrder.mockResolvedValue({ data: [], error: null })
-    mockLimit.mockReturnValue({ single: mockSingle })
+    mockSelect.mockImplementation(() => createChainable())
+    mockEq.mockImplementation(() => createChainable())
+    mockOrder.mockImplementation(() => createChainable())
+    mockLimit.mockImplementation(() => createChainable())
+    mockSingle.mockImplementation(() => createChainable())
     mockInsert.mockReturnValue({ select: mockSelect })
-    mockAuthGetUser.mockResolvedValue({ user: { id: 'test-user-id' } })
+    mockAuthGetUser.mockResolvedValue({ data: { user: { id: 'test-user-id' } } })
   })
 
   describe('getInspections', () => {
@@ -934,7 +1074,7 @@ describe('equipmentInspectionsApi', () => {
         { id: '1', equipment_id: 'eq-123', overall_status: 'pass', inspection_date: '2025-01-20' },
       ]
 
-      mockOrder.mockResolvedValue({ data: mockInspections, error: null })
+      queryResolvedValue = { data: mockInspections, error: null }
 
       const result = await equipmentInspectionsApi.getInspections('eq-123')
 
@@ -947,7 +1087,7 @@ describe('equipmentInspectionsApi', () => {
   describe('createInspection', () => {
     it('should create inspection', async () => {
       const mockInspection = { id: 'insp-1', overall_status: 'pass' }
-      mockSingle.mockResolvedValue({ data: mockInspection, error: null })
+      queryResolvedValue = { data: mockInspection, error: null }
 
       const dto = {
         equipment_id: 'eq-123',
@@ -972,7 +1112,7 @@ describe('equipmentInspectionsApi', () => {
   describe('getLatestInspection', () => {
     it('should get most recent inspection', async () => {
       const mockInspection = { id: 'insp-latest', inspection_date: '2025-01-20' }
-      mockSingle.mockResolvedValue({ data: mockInspection, error: null })
+      queryResolvedValue = { data: mockInspection, error: null }
 
       const result = await equipmentInspectionsApi.getLatestInspection('eq-123')
 
@@ -982,7 +1122,7 @@ describe('equipmentInspectionsApi', () => {
     })
 
     it('should return null when no inspections exist', async () => {
-      mockSingle.mockResolvedValue({ data: null, error: { code: 'PGRST116' } })
+      queryResolvedValue = { data: null, error: { code: 'PGRST116' } }
 
       const result = await equipmentInspectionsApi.getLatestInspection('eq-123')
 

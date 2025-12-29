@@ -132,7 +132,7 @@ Deno.serve(async (req) => {
       event = await req.json()
     } else if (contentType?.includes('application/xml')) {
       // DocuSign can send XML - convert to JSON
-      const xmlText = await req.text()
+      const _xmlText = await req.text()
       // For now, return error - implement XML parsing if needed
       console.error('XML payloads not yet supported')
       return new Response(

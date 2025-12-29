@@ -13,7 +13,6 @@ import type {
   PublicApprovalPageData,
   ClientDecision,
   SubmitClientApprovalInput,
-  CLIENT_DECISION_CONFIG,
 } from '@/types/approval-workflow';
 
 interface ClientApprovalWorkflowProps {

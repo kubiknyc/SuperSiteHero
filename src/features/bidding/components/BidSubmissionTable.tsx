@@ -8,9 +8,6 @@ import { format } from 'date-fns'
 import {
   ArrowUpDown,
   Building2,
-  CheckCircle2,
-  Clock,
-  DollarSign,
   Download,
   Eye,
   FileText,

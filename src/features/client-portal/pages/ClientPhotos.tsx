@@ -32,7 +32,6 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Download,
   ZoomIn,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'

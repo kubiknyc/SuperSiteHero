@@ -1,7 +1,7 @@
 // File: /src/features/documents/components/viewers/ImageViewer.tsx
 // Image viewer with zoom and pan capabilities
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef } from 'react'
 import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
@@ -18,6 +18,7 @@ interface ImageViewerProps {
   alt?: string
   allowMarkup?: boolean
   readOnly?: boolean
+  /** @deprecated This prop is no longer used */
   onMarkupCreate?: (markup: any) => void
   height?: string
   enableMarkup?: boolean
@@ -56,7 +57,7 @@ export function ImageViewer({
   alt = 'Image',
   allowMarkup = false,
   readOnly = false,
-  onMarkupCreate,
+  onMarkupCreate: _onMarkupCreate,
   height = 'h-screen',
   enableMarkup: initialEnableMarkup = false,
   collaborative = false,

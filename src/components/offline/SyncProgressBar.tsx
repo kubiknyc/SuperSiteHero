@@ -5,10 +5,9 @@ import { useState, useEffect } from 'react';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Pause, Play, X, Clock, TrendingUp } from 'lucide-react';
+import { Pause, Play, X, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SyncManager } from '@/lib/offline/sync-manager';
-import { formatDistanceToNow } from 'date-fns';
 
 interface SyncProgressBarProps {
   className?: string;

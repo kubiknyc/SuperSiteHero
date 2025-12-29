@@ -38,6 +38,44 @@ import {
 // Mocks
 // ============================================================================
 
+// Hoisted mocks for submittalsApi and user profile
+const { mockSubmittalsApi, mockUserProfile, mockUseAuth } = vi.hoisted(() => {
+  // Create a stable mock user profile with a fixed company_id
+  const userProfile = {
+    id: 'test-user-id',
+    email: 'test@example.com',
+    full_name: 'Test User',
+    role: 'superintendent',
+    company_id: 'test-company-id',
+    phone: '555-1234',
+    avatar_url: null,
+    job_title: 'Superintendent',
+    department: 'Construction',
+    is_active: true,
+    last_login_at: new Date().toISOString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+
+  // Create mutable auth state that can be changed per test
+  const authState = { userProfile };
+  const useAuth = vi.fn(() => authState);
+
+  return {
+    mockSubmittalsApi: {
+      getSubmittalWorkflowType: vi.fn(),
+      createSubmittal: vi.fn(),
+      updateSubmittal: vi.fn(),
+      updateSubmittalStatus: vi.fn(),
+      updateProcurementStatus: vi.fn(),
+      updateSubmittalProcurementStatus: vi.fn(),
+      deleteSubmittal: vi.fn(),
+    },
+    mockUserProfile: userProfile,
+    mockUseAuth: useAuth,
+  };
+});
+
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -48,19 +86,41 @@ vi.mock('@/lib/supabase', () => ({
   },
 }));
 
-// Mock API
-vi.mock('@/lib/api/services/submittals');
+// Mock API with hoisted mocks
+vi.mock('@/lib/api/services/submittals', () => ({
+  submittalsApi: mockSubmittalsApi,
+}));
 
-// Mock Auth Context
-const mockUserProfile = createMockUser({ role: 'superintendent' });
+// Mock Auth Context with hoisted mock function
 vi.mock('@/lib/auth/AuthContext', () => ({
-  useAuth: () => ({
-    userProfile: mockUserProfile,
-  }),
+  useAuth: mockUseAuth,
 }));
 
 // Mock toast notifications
 vi.mock('react-hot-toast');
+
+// Mock ToastContext to avoid provider requirement
+vi.mock('@/lib/notifications/ToastContext', () => ({
+  useToast: () => ({
+    toast: vi.fn(),
+    showSuccess: vi.fn(),
+    showError: vi.fn(),
+    showInfo: vi.fn(),
+    showWarning: vi.fn(),
+  }),
+  ToastProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+// Mock useNotifications
+vi.mock('@/lib/notifications/useNotifications', () => ({
+  useNotifications: () => ({
+    showSuccess: vi.fn(),
+    showError: vi.fn(),
+    showInfo: vi.fn(),
+    showWarning: vi.fn(),
+    handleError: vi.fn((error: Error) => { throw error; }),
+  }),
+}));
 
 // ============================================================================
 // Test Utilities
@@ -96,7 +156,7 @@ describe('useSubmittalWorkflowType', () => {
 
   it('should fetch submittal workflow type for company', async () => {
     const mockWorkflowType = createMockWorkflowType();
-    vi.mocked(submittalsApi.getSubmittalWorkflowType).mockResolvedValue(mockWorkflowType);
+    mockSubmittalsApi.getSubmittalWorkflowType.mockResolvedValue(mockWorkflowType);
 
     const { result } = renderHook(() => useSubmittalWorkflowType(), {
       wrapper: createWrapper(),
@@ -105,12 +165,12 @@ describe('useSubmittalWorkflowType', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(mockWorkflowType);
-    expect(submittalsApi.getSubmittalWorkflowType).toHaveBeenCalledWith(mockUserProfile.company_id);
+    expect(mockSubmittalsApi.getSubmittalWorkflowType).toHaveBeenCalledWith(mockUserProfile.company_id);
   });
 
   it('should handle error when workflow type not found', async () => {
     const error = new Error('Submittal workflow type not configured');
-    vi.mocked(submittalsApi.getSubmittalWorkflowType).mockRejectedValue(error);
+    mockSubmittalsApi.getSubmittalWorkflowType.mockRejectedValue(error);
 
     const { result } = renderHook(() => useSubmittalWorkflowType(), {
       wrapper: createWrapper(),
@@ -122,39 +182,47 @@ describe('useSubmittalWorkflowType', () => {
   });
 
   it('should not fetch when company_id is missing', async () => {
-    vi.mock('@/lib/auth/AuthContext', () => ({
-      useAuth: () => ({
-        userProfile: null,
-      }),
-    }));
+    // Temporarily override useAuth to return null userProfile
+    mockUseAuth.mockReturnValue({ userProfile: null });
 
     const { result } = renderHook(() => useSubmittalWorkflowType(), {
       wrapper: createWrapper(),
     });
 
     expect(result.current.isLoading).toBe(false);
-    expect(submittalsApi.getSubmittalWorkflowType).not.toHaveBeenCalled();
+    expect(mockSubmittalsApi.getSubmittalWorkflowType).not.toHaveBeenCalled();
+
+    // Restore the default mock
+    mockUseAuth.mockReturnValue({ userProfile: mockUserProfile });
   });
 
   it('should cache workflow type for 1 hour', async () => {
     const mockWorkflowType = createMockWorkflowType();
-    vi.mocked(submittalsApi.getSubmittalWorkflowType).mockResolvedValue(mockWorkflowType);
+    mockSubmittalsApi.getSubmittalWorkflowType.mockResolvedValue(mockWorkflowType);
+
+    // Use the same QueryClient for both hooks to share cache
+    const queryClient = createTestQueryClient();
+    const sharedWrapper = ({ children }: { children: React.ReactNode }) => (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
 
     const { result } = renderHook(() => useSubmittalWorkflowType(), {
-      wrapper: createWrapper(),
+      wrapper: sharedWrapper,
     });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-    // Second call should use cache
+    // Second call should use cache (same queryClient)
     const { result: result2 } = renderHook(() => useSubmittalWorkflowType(), {
-      wrapper: createWrapper(),
+      wrapper: sharedWrapper,
     });
 
     await waitFor(() => expect(result2.current.isSuccess).toBe(true));
 
     // Should only be called once due to cache
-    expect(submittalsApi.getSubmittalWorkflowType).toHaveBeenCalledTimes(1);
+    expect(mockSubmittalsApi.getSubmittalWorkflowType).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -317,7 +385,7 @@ describe('useMySubmittals', () => {
     const mockWorkflowType = createMockWorkflowType();
     const mockSubmittals = createMockSubmittals(2, { assignees: [mockUserProfile.id] });
 
-    vi.mocked(submittalsApi.getSubmittalWorkflowType).mockResolvedValue(mockWorkflowType);
+    mockSubmittalsApi.getSubmittalWorkflowType.mockResolvedValue(mockWorkflowType);
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
@@ -349,7 +417,7 @@ describe('useMySubmittals', () => {
     const mockSubmittals = createMockSubmittals(2);
     const projectId = 'project-123';
 
-    vi.mocked(submittalsApi.getSubmittalWorkflowType).mockResolvedValue(mockWorkflowType);
+    mockSubmittalsApi.getSubmittalWorkflowType.mockResolvedValue(mockWorkflowType);
 
     const mockSelect = vi.fn().mockReturnThis();
     const mockEq = vi.fn().mockReturnThis();
@@ -579,7 +647,7 @@ describe('useCreateSubmittalWithNotification', () => {
 
     const mockData = createMockSubmittal(input);
 
-    vi.mocked(submittalsApi.createSubmittal).mockResolvedValue(mockData);
+    mockSubmittalsApi.createSubmittal.mockResolvedValue(mockData);
 
     const { result } = renderHook(() => useCreateSubmittalWithNotification(), {
       wrapper: createWrapper(),
@@ -587,7 +655,7 @@ describe('useCreateSubmittalWithNotification', () => {
 
     await result.current.mutateAsync(input);
 
-    expect(submittalsApi.createSubmittal).toHaveBeenCalledWith({
+    expect(mockSubmittalsApi.createSubmittal).toHaveBeenCalledWith({
       ...input,
       created_by: mockUserProfile.id,
     });
@@ -607,7 +675,7 @@ describe('useCreateSubmittalWithNotification', () => {
     };
 
     const mockData = createMockSubmittal(input);
-    vi.mocked(submittalsApi.createSubmittal).mockResolvedValue(mockData);
+    mockSubmittalsApi.createSubmittal.mockResolvedValue(mockData);
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
@@ -629,7 +697,7 @@ describe('useCreateSubmittalWithNotification', () => {
 
   it('should handle creation error', async () => {
     const error = new Error('Failed to create submittal');
-    vi.mocked(submittalsApi.createSubmittal).mockRejectedValue(error);
+    mockSubmittalsApi.createSubmittal.mockRejectedValue(error);
 
     const { result } = renderHook(() => useCreateSubmittalWithNotification(), {
       wrapper: createWrapper(),
@@ -651,7 +719,7 @@ describe('useUpdateSubmittalWithNotification', () => {
     const updates = { title: 'Updated Title', description: 'Updated description' };
     const mockData = createMockSubmittal({ id: submittalId, ...updates });
 
-    vi.mocked(submittalsApi.updateSubmittal).mockResolvedValue(mockData);
+    mockSubmittalsApi.updateSubmittal.mockResolvedValue(mockData);
 
     const { result } = renderHook(() => useUpdateSubmittalWithNotification(), {
       wrapper: createWrapper(),
@@ -659,7 +727,7 @@ describe('useUpdateSubmittalWithNotification', () => {
 
     await result.current.mutateAsync({ id: submittalId, updates });
 
-    expect(submittalsApi.updateSubmittal).toHaveBeenCalledWith(submittalId, updates);
+    expect(mockSubmittalsApi.updateSubmittal).toHaveBeenCalledWith(submittalId, updates);
   });
 
   it('should invalidate queries after successful update', async () => {
@@ -671,7 +739,7 @@ describe('useUpdateSubmittalWithNotification', () => {
     const updates = { title: 'Updated Title' };
     const mockData = createMockSubmittal({ id: submittalId, project_id: projectId, ...updates });
 
-    vi.mocked(submittalsApi.updateSubmittal).mockResolvedValue(mockData);
+    mockSubmittalsApi.updateSubmittal.mockResolvedValue(mockData);
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
@@ -703,7 +771,7 @@ describe('useUpdateSubmittalStatusWithNotification', () => {
     const status = 'approved';
     const mockData = createMockSubmittal({ id: submittalId, status });
 
-    vi.mocked(submittalsApi.updateSubmittalStatus).mockResolvedValue(mockData);
+    mockSubmittalsApi.updateSubmittalStatus.mockResolvedValue(mockData);
 
     const { result } = renderHook(() => useUpdateSubmittalStatusWithNotification(), {
       wrapper: createWrapper(),
@@ -711,7 +779,7 @@ describe('useUpdateSubmittalStatusWithNotification', () => {
 
     await result.current.mutateAsync({ submittalId, status });
 
-    expect(submittalsApi.updateSubmittalStatus).toHaveBeenCalledWith(submittalId, status);
+    expect(mockSubmittalsApi.updateSubmittalStatus).toHaveBeenCalledWith(submittalId, status);
   });
 
   it('should handle status transition from draft to submitted', async () => {
@@ -723,7 +791,7 @@ describe('useUpdateSubmittalStatusWithNotification', () => {
       submitted_date: new Date().toISOString(),
     });
 
-    vi.mocked(submittalsApi.updateSubmittalStatus).mockResolvedValue(mockData);
+    mockSubmittalsApi.updateSubmittalStatus.mockResolvedValue(mockData);
 
     const { result } = renderHook(() => useUpdateSubmittalStatusWithNotification(), {
       wrapper: createWrapper(),
@@ -744,7 +812,7 @@ describe('useUpdateSubmittalStatusWithNotification', () => {
       approved_date: new Date().toISOString(),
     });
 
-    vi.mocked(submittalsApi.updateSubmittalStatus).mockResolvedValue(mockData);
+    mockSubmittalsApi.updateSubmittalStatus.mockResolvedValue(mockData);
 
     const { result } = renderHook(() => useUpdateSubmittalStatusWithNotification(), {
       wrapper: createWrapper(),
@@ -770,7 +838,7 @@ describe('useUpdateSubmittalProcurementStatusWithNotification', () => {
       procurement_status: status,
     });
 
-    vi.mocked(submittalsApi.updateSubmittalProcurementStatus).mockResolvedValue(mockData);
+    mockSubmittalsApi.updateSubmittalProcurementStatus.mockResolvedValue(mockData);
 
     const { result } = renderHook(
       () => useUpdateSubmittalProcurementStatusWithNotification(),
@@ -779,7 +847,7 @@ describe('useUpdateSubmittalProcurementStatusWithNotification', () => {
 
     await result.current.mutateAsync({ procurementId, status });
 
-    expect(submittalsApi.updateSubmittalProcurementStatus).toHaveBeenCalledWith(
+    expect(mockSubmittalsApi.updateSubmittalProcurementStatus).toHaveBeenCalledWith(
       procurementId,
       status
     );
@@ -795,7 +863,7 @@ describe('useUpdateSubmittalProcurementStatusWithNotification', () => {
         procurement_status: status as any,
       });
 
-      vi.mocked(submittalsApi.updateSubmittalProcurementStatus).mockResolvedValue(mockData);
+      mockSubmittalsApi.updateSubmittalProcurementStatus.mockResolvedValue(mockData);
 
       const { result } = renderHook(
         () => useUpdateSubmittalProcurementStatusWithNotification(),
@@ -819,7 +887,7 @@ describe('useDeleteSubmittalWithNotification', () => {
 
   it('should delete submittal', async () => {
     const submittalId = 'submittal-123';
-    vi.mocked(submittalsApi.deleteSubmittal).mockResolvedValue(undefined);
+    mockSubmittalsApi.deleteSubmittal.mockResolvedValue(undefined);
 
     const { result } = renderHook(() => useDeleteSubmittalWithNotification(), {
       wrapper: createWrapper(),
@@ -827,7 +895,7 @@ describe('useDeleteSubmittalWithNotification', () => {
 
     await result.current.mutateAsync(submittalId);
 
-    expect(submittalsApi.deleteSubmittal).toHaveBeenCalledWith(submittalId);
+    expect(mockSubmittalsApi.deleteSubmittal).toHaveBeenCalledWith(submittalId);
   });
 
   it('should invalidate queries after successful deletion', async () => {
@@ -835,7 +903,7 @@ describe('useDeleteSubmittalWithNotification', () => {
     const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
 
     const submittalId = 'submittal-123';
-    vi.mocked(submittalsApi.deleteSubmittal).mockResolvedValue(undefined);
+    mockSubmittalsApi.deleteSubmittal.mockResolvedValue(undefined);
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
       <QueryClientProvider client={queryClient}>
@@ -856,7 +924,7 @@ describe('useDeleteSubmittalWithNotification', () => {
 
   it('should handle deletion error', async () => {
     const error = new Error('Failed to delete submittal');
-    vi.mocked(submittalsApi.deleteSubmittal).mockRejectedValue(error);
+    mockSubmittalsApi.deleteSubmittal.mockRejectedValue(error);
 
     const { result } = renderHook(() => useDeleteSubmittalWithNotification(), {
       wrapper: createWrapper(),
