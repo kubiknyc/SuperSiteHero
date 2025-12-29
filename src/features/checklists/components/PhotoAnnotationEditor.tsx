@@ -13,8 +13,6 @@ import {
   ArrowRight,
   Circle as CircleIcon,
   Square,
-  Type,
-  Eraser,
   Undo,
   Check,
   X,

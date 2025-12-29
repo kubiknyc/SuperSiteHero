@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Camera, Upload, X, Check, Wifi, WifiOff, Clock, FolderOpen, Pen, FileText } from 'lucide-react'
+import { Camera, Check, Wifi, WifiOff, Clock, FolderOpen, Pen, FileText } from 'lucide-react'
 import { PhotoGallery } from './PhotoGallery'
 import { PhotoAnnotationEditor } from './PhotoAnnotationEditor'
 import { PhotoWithOcrCard } from './PhotoWithOcrCard'

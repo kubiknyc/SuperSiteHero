@@ -19,7 +19,6 @@ import {
   Clock,
   Repeat,
   Bell,
-  User,
   Save,
   AlertCircle,
 } from 'lucide-react'

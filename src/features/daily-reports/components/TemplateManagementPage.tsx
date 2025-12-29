@@ -89,7 +89,6 @@ import type {
   TemplateScope,
   TemplateCategory,
   TemplateFilters,
-  UpdateTemplateRequest,
 } from '@/types/daily-reports-v2';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -604,8 +603,8 @@ function ImportTemplateDialog({ open, onOpenChange }: ImportTemplateDialogProps)
 // =============================================
 
 export function TemplateManagementPage() {
-  // URL search params for filters
-  const [searchParams, setSearchParams] = useSearchParams();
+  // URL search params for filters - available for future use
+  const [_searchParams, _setSearchParams] = useSearchParams();
 
   // Filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -629,7 +628,7 @@ export function TemplateManagementPage() {
 
   // Query hooks
   const { data: templates, isLoading, refetch } = useTemplates(filters);
-  const { data: allTags } = useTemplateTags();
+  const { data: _allTags } = useTemplateTags();
   const deleteTemplateMutation = useDeleteTemplate();
   const exportTemplateMutation = useExportTemplate();
   const queryClient = useQueryClient();

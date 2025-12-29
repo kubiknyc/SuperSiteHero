@@ -850,7 +850,7 @@ export function useSubmitRFIResponse() {
       if (error) {throw error}
       return data as RFI
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
     },
   })

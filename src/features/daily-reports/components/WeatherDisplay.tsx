@@ -22,10 +22,8 @@ import {
   Droplets,
   Thermometer,
   RefreshCw,
-  MapPin,
   AlertTriangle,
   CheckCircle,
-  Snowflake,
 } from 'lucide-react'
 import { useWeatherForDate, type ExtendedWeatherData } from '../hooks/useWeather'
 import {

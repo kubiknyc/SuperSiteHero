@@ -579,9 +579,10 @@ describe('SyncStatusPanel', () => {
       const clearButton = screen.getByRole('button', { name: /clear all/i });
       await user.click(clearButton);
 
-      // Click the action button in the AlertDialog to confirm
-      const confirmButton = screen.getByTestId('alert-dialog-action');
-      await user.click(confirmButton);
+      // Click the "Clear All" button in the dialog to confirm
+      const allClearButtons = screen.getAllByRole('button', { name: /clear all/i });
+      const confirmButton = allClearButtons.find(btn => btn.closest('[data-testid="alert-dialog"]'));
+      await user.click(confirmButton!);
 
       expect(mockClearSyncQueue).toHaveBeenCalledTimes(1);
     });
