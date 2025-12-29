@@ -26,7 +26,6 @@ import {
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type { ChartConfiguration } from '@/types/report-builder'
 import { CHART_COLOR_SCHEMES } from '@/types/report-builder'
 import { useChartData, type ChartDataPoint } from '@/features/reports/hooks/useChartData'
@@ -72,7 +71,7 @@ function renderPieLabel({
   innerRadius,
   outerRadius,
   percent,
-  name,
+  name: _name,
 }: any) {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5
   const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180)

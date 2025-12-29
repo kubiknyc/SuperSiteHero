@@ -40,7 +40,6 @@ import {
   DRAWING_DISCIPLINES,
   SHEET_SIZES,
   type Drawing,
-  type DrawingDiscipline,
   type SheetSize,
 } from '@/types/drawing';
 

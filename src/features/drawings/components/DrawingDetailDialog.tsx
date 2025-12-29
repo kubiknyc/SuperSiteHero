@@ -8,7 +8,6 @@ import {
   History,
   Send,
   Calendar,
-  MapPin,
   Hash,
   GitCompare,
 } from 'lucide-react';
@@ -22,14 +21,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   useDrawingRevisions,
   useDrawingTransmittals,
 } from '@/features/drawings/hooks/useDrawings';
-import { DRAWING_DISCIPLINES, REVISION_TYPES, type Drawing, type DrawingRevision } from '@/types/drawing';
+import { DRAWING_DISCIPLINES, REVISION_TYPES, type Drawing } from '@/types/drawing';
 import { DrawingRevisionComparison } from './DrawingRevisionComparison';
 
 interface DrawingDetailDialogProps {

@@ -28,8 +28,6 @@ import {
   GripVertical,
   Pencil,
   Trash2,
-  Check,
-  X,
   Loader2,
   FolderOpen,
   Calendar,

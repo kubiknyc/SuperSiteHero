@@ -12,17 +12,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { drawingsApi } from '@/lib/api/services/drawings';
 import type {
-  Drawing,
   DrawingInsert,
   DrawingUpdate,
-  DrawingRevision,
   DrawingRevisionInsert,
   DrawingRevisionUpdate,
-  DrawingSet,
   DrawingSetInsert,
   DrawingSetItemInsert,
   DrawingTransmittalInsert,
-  DrawingMarkup,
   DrawingMarkupInsert,
   DrawingMarkupUpdate,
   DrawingFilters,

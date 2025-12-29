@@ -10,7 +10,6 @@
  * - Filter groups (AND/OR logic)
  */
 
-import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -25,7 +24,6 @@ import {
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Trash2, Filter, Calendar, Hash, Type, ToggleLeft } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type {
   ReportTemplateFilterInput,
   ReportFilterOperator,
@@ -379,9 +377,6 @@ export function FilterBuilder({
   availableFields,
   className,
 }: FilterBuilderProps) {
-  // Track which filter group we're in (for AND/OR display)
-  const [showGroupHint, setShowGroupHint] = useState(false)
-
   const handleAddFilter = () => {
     const defaultField = availableFields[0]
     const defaultOperator = defaultField

@@ -28,13 +28,9 @@ import {
   Calendar,
   Clock,
   Mail,
-  Users,
   FileText,
-  Trash2,
   Plus,
   X,
-  AlertCircle,
-  CheckCircle,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
@@ -47,7 +43,6 @@ import { useProjects } from '@/features/projects/hooks/useProjects'
 import {
   SCHEDULE_FREQUENCY_CONFIG,
   OUTPUT_FORMAT_CONFIG,
-  getDayOfWeekLabel,
   isValidEmail,
 } from '@/types/report-builder'
 import type {

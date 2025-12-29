@@ -29,15 +29,12 @@ import {
 } from 'lucide-react';
 import {
   useWeatherSuggestions,
-  useCurrentWeather,
   useSaveWeather,
   getDelayTemplate,
-  formatWeatherDisplay,
   getWeatherSeverity,
   WEATHER_THRESHOLDS,
   type WeatherData,
   type WeatherDelaySuggestion,
-  type WeatherDelayType,
 } from '../hooks/useWeatherSuggestions';
 import type { DelayEntry, DelayType } from '@/types/daily-reports-v2';
 

@@ -17,7 +17,6 @@ import {
   ChevronRight,
   Clock,
   Tag,
-  Download,
   Eye,
   Play,
   Settings,
@@ -54,11 +53,9 @@ import {
 import {
   useStandardTemplates,
   useTemplateFilters,
-  useTemplateSelection,
   useTemplatePreview,
 } from '../hooks/useStandardTemplates'
 import type { StandardTemplate, TemplateCategory } from '../services/standardTemplates'
-import type { ReportDataSource } from '@/types/report-builder'
 import { getDataSourceLabel } from '@/types/report-builder'
 
 // ============================================================================
