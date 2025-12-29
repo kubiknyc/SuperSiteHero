@@ -44,19 +44,6 @@ export interface RFIAttachmentUploadInput {
 // RFI documents are stored in the 'documents' bucket under an 'rfis' subdirectory
 const STORAGE_BUCKET = 'documents'
 
-/**
- * Generate storage path for RFI attachment
- */
-function generateRFIStoragePath(projectId: string, rfiId: string, fileName: string): string {
-  const timestamp = Date.now()
-  const ext = getFileExtension(fileName)
-  const cleanName = fileName
-    .replace(/\.[^/.]+$/, '')
-    .replace(/[^a-zA-Z0-9-_]/g, '_')
-    .substring(0, 50)
-
-  return `${projectId}/rfis/${rfiId}/${timestamp}-${cleanName}.${ext}`
-}
 
 // =============================================
 // Query Hooks
