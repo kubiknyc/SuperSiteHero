@@ -2,8 +2,7 @@
 // Hook for presence tracking in rooms
 
 import { useEffect, useState, useCallback, useRef } from 'react'
-import { presenceManager } from '@/lib/realtime'
-import type { PresenceUser, TypingState } from '@/lib/realtime'
+import { presenceManager, type PresenceUser, type TypingState } from '@/lib/realtime'
 import { useAuth } from '@/hooks/useAuth'
 import { logger } from '../lib/utils/logger';
 

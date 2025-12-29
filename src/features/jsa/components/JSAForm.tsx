@@ -44,9 +44,7 @@ import type {
   CreateJSADTO,
   UpdateJSADTO,
   CreateJSAHazardDTO,
-  JSATemplateWithDetails,
 } from '@/types/jsa';
-import { JSA_CATEGORIES } from '@/types/jsa';
 import { logger } from '../../../lib/utils/logger';
 
 

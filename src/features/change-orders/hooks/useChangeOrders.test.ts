@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
-import { QueryClient } from '@tanstack/react-query';
 import {
   useChangeOrders,
 } from './useChangeOrders';
@@ -99,8 +98,6 @@ describe('useChangeOrders', () => {
     const mockEq = vi.fn();
     const mockIlike = vi.fn();
     const mockSingle = vi.fn();
-    const mockIs = vi.fn();
-    const mockOrder = vi.fn();
 
     // Setup workflow type query chain
     mockFrom.mockImplementation((table) => {

@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react'
-import { X, Save, Loader2 } from 'lucide-react'
+import { Save, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -46,7 +46,7 @@ export function BudgetLineForm({
     estimated_cost_at_completion: '',
     notes: '',
   })
-  const [selectedCostCode, setSelectedCostCode] = useState<CostCode | null>(null)
+  const [, setSelectedCostCode] = useState<CostCode | null>(null)
 
   const isEditing = !!budget
 

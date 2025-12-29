@@ -36,7 +36,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Loader2, Upload, Shield } from 'lucide-react'
+import { Loader2, Shield } from 'lucide-react'
 import type {
   InsuranceCertificateWithRelations,
   CreateInsuranceCertificateDTO,

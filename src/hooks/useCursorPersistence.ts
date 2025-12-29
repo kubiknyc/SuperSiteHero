@@ -15,7 +15,6 @@ import type {
   PersistedCursor,
   CursorPosition,
   CursorAction,
-  RoomType,
   UseCursorPersistenceOptions,
   UseCursorPersistenceReturn,
 } from '@/types/collaboration';

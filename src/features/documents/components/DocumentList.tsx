@@ -18,7 +18,6 @@ import { DocumentTypeIcon } from './DocumentTypeIcon'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { highlightSearchTerm } from '../hooks/useDocumentSearch'
 import type { Document } from '@/types/database'
-import { logger } from '../../../lib/utils/logger';
 
 
 interface DocumentListProps {

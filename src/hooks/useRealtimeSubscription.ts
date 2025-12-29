@@ -2,9 +2,7 @@
 // Generic hook for subscribing to Supabase Realtime table changes
 
 import { useEffect, useRef, useState } from 'react'
-import { realtimeManager } from '@/lib/realtime'
-import type { SubscriptionOptions } from '@/lib/realtime'
-import { logger } from '../lib/utils/logger';
+import { realtimeManager, type SubscriptionOptions } from '@/lib/realtime'
 
 
 interface UseRealtimeSubscriptionOptions<T = Record<string, unknown>> {

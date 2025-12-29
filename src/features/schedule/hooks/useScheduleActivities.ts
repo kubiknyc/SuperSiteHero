@@ -8,14 +8,6 @@ import { toast } from 'sonner'
 import { scheduleActivitiesApi } from '@/lib/api/services/schedule-activities'
 import { useAuth } from '@/hooks/useAuth'
 import type {
-  ScheduleActivity,
-  ScheduleActivityWithDetails,
-  ScheduleDependency,
-  ScheduleBaseline,
-  ScheduleCalendar,
-  ScheduleResource,
-  ScheduleImportLog,
-  ScheduleStats,
   CreateScheduleActivityDTO,
   UpdateScheduleActivityDTO,
   CreateScheduleDependencyDTO,

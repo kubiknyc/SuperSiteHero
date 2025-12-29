@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   FileEdit,
   DollarSign,
@@ -26,23 +26,17 @@ import {
   Search,
   ChevronRight,
   User,
-  Calendar,
   Loader2,
   CheckCircle,
-  XCircle,
   AlertTriangle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type {
-  ChangeOrder,
-  ChangeOrderStatus,
-  ChangeType,
-} from '@/types/change-order'
 import {
   formatChangeOrderNumber,
   getChangeTypeLabel,
   getChangeOrderStatusLabel,
   getChangeOrderStatusColor,
+  type ChangeOrder,
 } from '@/types/change-order'
 
 // Status configuration for filters
@@ -111,14 +105,6 @@ export function ChangeOrdersPage() {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount)
-  }
-
-  // Get status icon
-  const getStatusIcon = (status: string) => {
-    if (status === 'approved') {return <CheckCircle className="h-4 w-4 text-success" />}
-    if (status === 'rejected') {return <XCircle className="h-4 w-4 text-error" />}
-    if (status.includes('pending')) {return <Clock className="h-4 w-4 text-orange-500" />}
-    return null
   }
 
   // Render a single change order card

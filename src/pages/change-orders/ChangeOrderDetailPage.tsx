@@ -29,7 +29,6 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import {
   ArrowLeft,
   FileEdit,
-  DollarSign,
   Clock,
   User,
   Calendar,
@@ -43,11 +42,9 @@ import {
   ChevronRight,
   Send,
   Ban,
-  AlertTriangle,
   Target,
   Package,
   Plus,
-  Trash2,
   Download,
   PenTool,
   FileSignature,
@@ -57,7 +54,6 @@ import { downloadChangeOrderPDF } from '@/features/change-orders/utils/pdfExport
 import { SendViaDocuSignButton } from '@/features/docusign/components'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import type { ChangeOrder, ChangeOrderItem, ChangeOrderHistory as COHistory } from '@/types/change-order'
 import {
   formatChangeOrderNumber,
   getChangeTypeLabel,
@@ -68,6 +64,8 @@ import {
   canSubmitForApproval,
   canApproveInternally,
   canSendToOwner,
+  type ChangeOrderItem,
+  type ChangeOrderHistory as COHistory,
 } from '@/types/change-order'
 import { logger } from '../../lib/utils/logger';
 
@@ -75,7 +73,7 @@ import { logger } from '../../lib/utils/logger';
 export function ChangeOrderDetailPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { userProfile } = useAuth()
+  const { userProfile: _userProfile } = useAuth()
 
   // V2 hooks
   const { data: changeOrder, isLoading, error } = useChangeOrderV2(id)
@@ -84,7 +82,7 @@ export function ChangeOrderDetailPage() {
   const { data: history } = useChangeOrderHistory(id)
 
   // Mutation hooks
-  const updateChangeOrder = useUpdateChangeOrderV2()
+  const _updateChangeOrder = useUpdateChangeOrderV2()
   const submitEstimate = useSubmitEstimate()
   const processInternalApproval = useProcessInternalApproval()
   const submitToOwner = useSubmitToOwner()

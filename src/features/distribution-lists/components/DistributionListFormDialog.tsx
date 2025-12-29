@@ -35,11 +35,9 @@ import {
   X,
   Users,
   Mail,
-  UserPlus,
   Trash2,
   Search,
 } from 'lucide-react'
-import { useAuth } from '@/lib/auth/AuthContext'
 import {
   useCreateDistributionList,
   useUpdateDistributionList,
@@ -81,7 +79,6 @@ export function DistributionListFormDialog({
   onSuccess,
 }: DistributionListFormDialogProps) {
   const isEditing = !!list
-  const { userProfile } = useAuth()
 
   // Form state
   const [name, setName] = React.useState('')
@@ -98,8 +95,8 @@ export function DistributionListFormDialog({
   const [pendingMembers, setPendingMembers] = React.useState<CreateDistributionListMemberDTO[]>([])
 
   // Queries and mutations
-  const { data: existingMembers, isLoading: loadingMembers } = useDistributionListMembers(list?.id || '')
-  const { data: companyUsers, isLoading: loadingUsers } = useCompanyUsers()
+  const { data: existingMembers } = useDistributionListMembers(list?.id || '')
+  const { data: companyUsers } = useCompanyUsers()
   const createMutation = useCreateDistributionList()
   const updateMutation = useUpdateDistributionList()
   const addMemberMutation = useAddDistributionListMember()

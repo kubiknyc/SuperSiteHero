@@ -5,7 +5,7 @@
  * Enhanced with multi-currency support
  */
 
-import type { CurrencyCode, MultiCurrencyAmount } from './currency';
+import type { CurrencyCode } from './currency';
 
 // =============================================
 // Enums and Constants

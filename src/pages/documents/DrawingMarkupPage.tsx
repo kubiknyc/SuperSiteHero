@@ -4,12 +4,10 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Maximize2, Minimize2, Loader2, AlertCircle, GitCompare, Layers, History, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, Maximize2, Minimize2, Loader2, AlertCircle, GitCompare, Layers, History, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { PDFViewer } from '@/features/documents/components/viewers/PDFViewer'
 import { useDocument, useDocumentVersions } from '@/features/documents/hooks/useDocuments'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
-import { useAuth } from '@/lib/auth/AuthContext'
 
 // Enhanced markup components
 import { LayerManager } from '@/features/documents/components/markup/LayerManager'
@@ -22,7 +20,6 @@ import { MobileLayerDrawer } from '@/features/documents/components/markup/Mobile
 
 // Hooks
 import { useEnhancedMarkupState } from '@/features/documents/hooks/useEnhancedMarkupState'
-import { useMobileTouchGestures } from '@/features/documents/hooks/useMobileTouchGestures'
 import { useDocumentOcr } from '@/features/documents/hooks/useDocumentAi'
 import { Input } from '@/components/ui/input'
 import type { Document } from '@/types/database'
@@ -68,7 +65,6 @@ function useIsMobile() {
 export function DrawingMarkupPage() {
   const { documentId } = useParams<{ documentId: string }>()
   const navigate = useNavigate()
-  const { userProfile } = useAuth()
   const isMobile = useIsMobile()
 
   // UI State
@@ -142,8 +138,8 @@ export function DrawingMarkupPage() {
     currentUserId,
   } = markupState
 
-  // Get visible layer IDs
-  const visibleLayerIds = useMemo(() => {
+  // Get visible layer IDs (prefixed with _ as it's computed for potential future use)
+  const _visibleLayerIds = useMemo(() => {
     return layers.filter((l: MarkupLayer) => l.visible).map((l: MarkupLayer) => l.id)
   }, [layers])
 

@@ -3,7 +3,7 @@
 // Implements AIA billing standards
 
 import { useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
 import {
@@ -35,13 +35,13 @@ import {
   CheckCircle,
   XCircle,
   Send,
-  DollarSign,
+
   FileText,
   Save,
   Trash2,
   Clock,
-  Calendar,
-  Building2,
+
+
   Receipt,
   History,
   Edit,
@@ -54,12 +54,10 @@ import {
 import { DocumentSignatureDialog, type SignatureData } from '@/components/shared'
 import { cn } from '@/lib/utils'
 import {
-  buildG702Data,
-  buildG703Data,
   downloadPaymentApplicationPDFs,
 } from '@/features/payment-applications/utils/pdfExport'
 import { WaiverChecklist } from '@/features/payment-applications/components'
-import { SendViaDocuSignButton, DocuSignEnvelopeStatusBadge } from '@/features/docusign/components'
+import { SendViaDocuSignButton } from '@/features/docusign/components'
 import type { PaymentApplicationStatus, BulkUpdateSOVItemDTO } from '@/types/payment-application'
 import { logger } from '../../lib/utils/logger';
 

@@ -5,7 +5,7 @@
  * to identify safety risks before they become actual incidents.
  */
 
-import type { RootCauseCategory, IncidentSeverity } from './safety-incidents'
+import type { RootCauseCategory } from './safety-incidents'
 
 // ============================================================================
 // Enums / Union Types

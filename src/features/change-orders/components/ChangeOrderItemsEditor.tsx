@@ -25,9 +25,7 @@ import {
   Loader2,
   AlertCircle,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import type { ChangeOrderItem, CreateChangeOrderItemDTO } from '@/types/change-order'
-import { calculateItemTotal } from '@/types/change-order'
+import { calculateItemTotal, type ChangeOrderItem, type CreateChangeOrderItemDTO } from '@/types/change-order'
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -74,7 +72,7 @@ const emptyFormData: ItemFormData = {
 export function ChangeOrderItemsEditor({
   changeOrderId,
   isEditable = true,
-  onTotalChange,
+  onTotalChange: _onTotalChange,
 }: ChangeOrderItemsEditorProps) {
   const { data: items, isLoading, error } = useChangeOrderItems(changeOrderId)
   const addItem = useAddChangeOrderItem()
@@ -193,7 +191,7 @@ export function ChangeOrderItemsEditor({
         await addItem.mutateAsync({ changeOrderId, ...itemData })
       }
       cancelEditing()
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to save item:', e)
     }
   }
@@ -203,7 +201,7 @@ export function ChangeOrderItemsEditor({
     if (!confirm('Are you sure you want to delete this item?')) {return}
     try {
       await deleteItem.mutateAsync({ id, changeOrderId })
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to delete item:', e)
     }
   }
@@ -407,7 +405,7 @@ export function ChangeOrderItemsEditor({
         {/* Items list */}
         {items && items.length > 0 ? (
           <div className="space-y-2">
-            {items.map((item, index) => (
+            {items.map((item) => (
               <div key={item.id}>
                 {editingId === item.id ? (
                   renderItemForm()

@@ -12,12 +12,10 @@ import { Badge } from '@/components/ui/badge'
 import {
   Fingerprint,
   Shield,
-  Smartphone,
   Check,
   X,
   AlertTriangle,
   Info,
-  ChevronRight,
 } from 'lucide-react'
 import { BiometricSetup } from '@/features/auth/components/BiometricSetup'
 import {
@@ -62,7 +60,7 @@ export function BiometricSettings() {
     conditionalUI: false,
     checking: true,
   })
-  const [showFullSetup, setShowFullSetup] = useState(false)
+  const [_showFullSetup, _setShowFullSetup] = useState(false)
 
   useEffect(() => {
     const checkCompatibility = async () => {

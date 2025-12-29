@@ -2,18 +2,16 @@
 // Voice-to-text hook using Web Speech API for field notes
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type {
-  UseVoiceToTextOptions,
-  UseVoiceToTextReturn,
-  VoiceRecognitionStatus,
-  VoiceRecognitionError,
-  SpeechLanguage,
-} from '@/types/voice'
 import {
   isWebSpeechSupported,
   getSpeechRecognition,
   mapSpeechError,
   VOICE_ERROR_MESSAGES,
+  type UseVoiceToTextOptions,
+  type UseVoiceToTextReturn,
+  type VoiceRecognitionStatus,
+  type VoiceRecognitionError,
+  type SpeechLanguage,
 } from '@/types/voice'
 import { logger } from '../lib/utils/logger';
 

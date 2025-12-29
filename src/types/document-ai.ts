@@ -1,7 +1,7 @@
 // File: /src/types/document-ai.ts
 // TypeScript types for AI Document Processing (OCR, Categorization, Metadata Extraction)
 
-import type { OcrResult } from './ocr'
+// OcrResult type available in ./ocr if needed for future use
 
 // ============================================================================
 // ENUMS / UNION TYPES

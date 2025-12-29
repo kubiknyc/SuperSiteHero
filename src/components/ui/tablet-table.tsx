@@ -40,7 +40,7 @@ const TabletTable = React.forwardRef<HTMLDivElement, TabletTableProps>(
     {
       className,
       scrollable = true,
-      stickyHeader = true,
+      stickyHeader: _stickyHeader = true,
       maxHeight,
       selectable = false,
       selectedRows = [],
@@ -51,7 +51,7 @@ const TabletTable = React.forwardRef<HTMLDivElement, TabletTableProps>(
     },
     ref
   ) => {
-    const { isTablet, isTouchDevice } = useTabletMode();
+    const { isTablet, isTouchDevice: _isTouchDevice } = useTabletMode();
 
     // Handle select all
     const handleSelectAll = React.useCallback(

@@ -9,10 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
 import { useCreateChangeOrderV2 } from '../hooks/useChangeOrdersV2'
 import { Plus, FileEdit, AlertTriangle, Loader2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import type { CreateChangeOrderDTO, ChangeType, PricingMethod } from '@/types/change-order'
 import { logger } from '../../../lib/utils/logger';
 

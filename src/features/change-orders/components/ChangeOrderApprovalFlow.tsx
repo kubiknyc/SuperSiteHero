@@ -22,22 +22,17 @@ import {
   Clock,
   User,
   Send,
-  AlertTriangle,
   Ban,
-  ArrowRight,
   FileCheck,
   Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { ChangeOrder } from '@/types/change-order'
 import {
   ChangeOrderStatus,
-  canEditChangeOrder,
   canSubmitForApproval,
   canApproveInternally,
   canSendToOwner,
-  getChangeOrderStatusLabel,
-  getChangeOrderStatusColor,
+  type ChangeOrder,
 } from '@/types/change-order'
 import { logger } from '../../../lib/utils/logger';
 
@@ -119,7 +114,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
         proposed_days: changeOrder.proposed_days,
       })
       onStatusChange?.()
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to submit estimate:', e)
     }
   }
@@ -134,7 +129,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       })
       resetForm()
       onStatusChange?.()
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to process internal approval:', e)
     }
   }
@@ -144,7 +139,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
     try {
       await submitToOwner.mutateAsync(changeOrder.id)
       onStatusChange?.()
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to submit to owner:', e)
     }
   }
@@ -162,7 +157,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       })
       resetForm()
       onStatusChange?.()
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to process owner approval:', e)
     }
   }
@@ -174,7 +169,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: comments || 'Voided by user' })
       resetForm()
       onStatusChange?.()
-    } catch (_e) {
+    } catch (e) {
       logger.error('Failed to void change order:', e)
     }
   }

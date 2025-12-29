@@ -5,7 +5,7 @@
 
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
-import { Save, Loader2, Calendar } from 'lucide-react'
+import { Save, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -105,7 +105,7 @@ export function TransactionForm({
     }, 0);
   }, [transaction, open])
 
-  const handleCostCodeChange = (costCodeId: string, costCode: CostCode) => {
+  const handleCostCodeChange = (costCodeId: string, _costCode: CostCode) => {
     setFormData(prev => ({ ...prev, cost_code_id: costCodeId }))
   }
 

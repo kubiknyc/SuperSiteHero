@@ -31,20 +31,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Progress } from '@/components/ui/progress'
 import { cn } from '@/lib/utils'
 import {
   AlertTriangle,
   AlertCircle,
   Info,
   DollarSign,
-  Calendar,
   TrendingUp,
   TrendingDown,
   Minus,
   RefreshCw,
-  Download,
-  Filter,
   ChevronDown,
   ChevronUp,
   Building2,
@@ -54,11 +50,9 @@ import {
 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import {
-  usePaymentAgingDashboard,
   usePaymentAgingReport,
   usePaymentAgingAlerts,
   useDSOMetrics,
-  getBucketColor,
 } from '../hooks/usePaymentAging'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import type {
@@ -67,7 +61,6 @@ import type {
   AgingAlert,
   ProjectAgingSummary,
 } from '@/types/payment-application'
-import { AGING_BUCKETS } from '@/types/payment-application'
 
 // ============================================================================
 // Utility Functions
@@ -218,7 +211,7 @@ interface AgingBucketChartProps {
   total: number
 }
 
-function AgingBucketChart({ buckets, total }: AgingBucketChartProps) {
+function AgingBucketChart({ buckets, total: _total }: AgingBucketChartProps) {
   return (
     <Card>
       <CardHeader>

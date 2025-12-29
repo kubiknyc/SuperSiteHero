@@ -18,7 +18,6 @@ import { Badge } from './badge';
 import {
   type CurrencyCode,
   type Currency,
-  CURRENCIES,
   CURRENCY_LIST,
   COMMON_CURRENCIES,
   getCurrency,

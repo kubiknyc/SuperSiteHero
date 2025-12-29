@@ -4,8 +4,7 @@
  */
 
 import React from 'react';
-import type { CurrencyCode, CurrencyDisplayMode, MultiCurrencyAmount } from '@/types/currency';
-import { formatCurrency, formatMultiCurrency } from '@/types/currency';
+import { type CurrencyCode, type CurrencyDisplayMode, formatCurrency } from '@/types/currency';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 import { Badge } from './badge';
 import { ArrowRightLeft } from 'lucide-react';
@@ -157,7 +156,6 @@ export function MultiCurrencyAmountWithBadge({
   className = '',
 }: MultiCurrencyAmountWithBadgeProps) {
   const displayCurrency = displayMode === 'base' && baseAmount !== undefined ? baseCurrency : currency;
-  const displayAmount = displayMode === 'base' && baseAmount !== undefined ? baseAmount : amount;
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>

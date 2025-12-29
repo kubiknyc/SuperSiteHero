@@ -16,10 +16,7 @@ import {
   Loader2,
   AlertCircle,
   ExternalLink,
-  Clock,
-  User,
   Ruler,
-  Calendar,
   CheckCircle2,
   XCircle,
   Pencil,
@@ -59,7 +56,6 @@ import {
   useUpdateDocumentWithNotification,
   useDeleteDocumentWithNotification,
 } from '@/features/documents/hooks/useDocumentsMutations'
-import { cn } from '@/lib/utils'
 import type { Document, DocumentType, DocumentStatus } from '@/types/database'
 
 /**

@@ -24,7 +24,7 @@ import {
   Clock,
   AlertTriangle,
   FileCheck,
-  Send,
+
   ExternalLink,
   Plus,
   Loader2,
@@ -32,7 +32,7 @@ import {
   ChevronUp,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { LienWaiverWithDetails, LienWaiverStatus, LienWaiverType } from '@/types/lien-waiver'
+import type { LienWaiverWithDetails, LienWaiverStatus } from '@/types/lien-waiver'
 import {
   getWaiverTypeLabel,
   getWaiverStatusLabel,
@@ -86,14 +86,14 @@ export function WaiverChecklist({
   paymentApplicationId,
   projectId,
   applicationNumber,
-  currentPaymentDue,
+  currentPaymentDue: _currentPaymentDue,
   status: appStatus,
   onCreateWaiver,
 }: WaiverChecklistProps) {
   const [isExpanded, setIsExpanded] = useState(true)
 
   // Fetch waivers for this payment application
-  const { data: waivers, isLoading, error } = useLienWaivers({
+  const { data: waivers, isLoading, error: _error } = useLienWaivers({
     paymentApplicationId,
   })
 
@@ -291,7 +291,7 @@ export function WaiverChecklist({
 }
 
 // Individual waiver row component
-function WaiverRow({ waiver, projectId }: { waiver: LienWaiverWithDetails; projectId: string }) {
+function WaiverRow({ waiver, projectId: _projectId }: { waiver: LienWaiverWithDetails; projectId: string }) {
   const isOverdue = isWaiverOverdue(waiver)
   const statusColor = getWaiverStatusColor(waiver.status)
 

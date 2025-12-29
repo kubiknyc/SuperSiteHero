@@ -12,17 +12,12 @@ import {
 } from '../../../lib/api/services/change-orders-v2';
 import { changeOrderBudgetIntegration } from '../../../lib/api/services/change-order-budget-integration';
 import type {
-  ChangeOrder,
-  ChangeOrderItem,
-  ChangeOrderAttachment,
-  ChangeOrderHistory,
   CreateChangeOrderDTO,
   UpdateChangeOrderDTO,
   CreateChangeOrderItemDTO,
   UpdateChangeOrderItemDTO,
   CreateChangeOrderAttachmentDTO,
   ChangeOrderFilters,
-  ChangeOrderStatistics,
   SubmitEstimateDTO,
   InternalApprovalDTO,
   OwnerApprovalDTO,
@@ -303,7 +298,7 @@ export function useUpdateChangeOrderSignature() {
       id,
       signatureUrl,
       signerName,
-      signatureDate,
+      signatureDate: _signatureDate,
     }: {
       id: string;
       signatureUrl: string | null;
@@ -377,7 +372,7 @@ export function useDeleteChangeOrderItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, changeOrderId }: { id: string; changeOrderId: string }) =>
+    mutationFn: ({ id }: { id: string; changeOrderId: string }) =>
       changeOrderItemsApiV2.deleteItem(id),
     onSuccess: (_, { changeOrderId }) => {
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.items(changeOrderId) });
@@ -439,7 +434,7 @@ export function useDeleteChangeOrderAttachment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, changeOrderId }: { id: string; changeOrderId: string }) =>
+    mutationFn: ({ id }: { id: string; changeOrderId: string }) =>
       changeOrderAttachmentsApiV2.deleteAttachment(id),
     onSuccess: (_, { changeOrderId }) => {
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.attachments(changeOrderId) });

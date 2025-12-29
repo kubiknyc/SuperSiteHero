@@ -29,7 +29,6 @@ import {
   Check,
   CheckCheck,
   Trash2,
-  X,
   AlertCircle,
   FileText,
   ClipboardList,
@@ -57,8 +56,6 @@ import {
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
 import {

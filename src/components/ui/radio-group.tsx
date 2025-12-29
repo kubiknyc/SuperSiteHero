@@ -44,7 +44,7 @@ interface RadioGroupItemProps extends Omit<React.InputHTMLAttributes<HTMLInputEl
 }
 
 const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(
-  ({ className, value, id, touchFriendly = true, ...props }, ref) => {
+  ({ className, value, id: _id, touchFriendly = true, ...props }, ref) => {
     const context = React.useContext(RadioGroupContext)
     const isChecked = context.value === value
 

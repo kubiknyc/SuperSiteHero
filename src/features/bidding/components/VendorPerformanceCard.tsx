@@ -4,12 +4,11 @@
  */
 
 import React from 'react'
-import { Building2, Award, TrendingUp, Star, CheckCircle } from 'lucide-react'
+import { Building2, Star, CheckCircle } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import type { VendorRecommendation } from '@/types/historical-bid-analysis'
-import { formatPercentage, formatCurrency, getReliabilityConfig } from '@/types/historical-bid-analysis'
+import { formatPercentage, getReliabilityConfig, type VendorRecommendation } from '@/types/historical-bid-analysis'
 
 interface VendorPerformanceCardProps {
   vendor: VendorRecommendation

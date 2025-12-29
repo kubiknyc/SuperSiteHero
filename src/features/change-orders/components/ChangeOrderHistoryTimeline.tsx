@@ -23,7 +23,6 @@ import {
   RefreshCw,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { ChangeOrderHistory } from '@/types/change-order'
 
 interface ChangeOrderHistoryTimelineProps {
   changeOrderId: string

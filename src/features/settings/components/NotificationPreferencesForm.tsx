@@ -37,7 +37,6 @@ import {
 import { usePushNotifications } from '../hooks/usePushNotifications'
 import {
   type EmailNotificationPreferences,
-  type NotificationPreferences,
   NOTIFICATION_TYPE_LABELS,
   NOTIFICATION_TYPE_DESCRIPTIONS,
 } from '@/types/notification-preferences'
@@ -75,7 +74,6 @@ export function NotificationPreferencesForm() {
     isLoading: pushLoading,
     subscribe: subscribeToPush,
     unsubscribe: unsubscribeFromPush,
-    requestPermission,
     pushPreferences,
     updatePushPreferences,
     testNotification,
