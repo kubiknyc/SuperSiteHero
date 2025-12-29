@@ -289,6 +289,10 @@ const FieldDashboardPage = lazy(() => import('./pages/field-dashboard/FieldDashb
 const PublicApprovalPage = lazy(() => import('./pages/public/PublicApprovalPage').then(m => ({ default: m.PublicApprovalPage })))
 const PublicComparisonPage = lazy(() => import('./pages/photo-progress/PublicComparisonPage').then(m => ({ default: m.PublicComparisonPage })))
 
+// Legal Pages (no authentication required)
+const PrivacyPolicyPage = lazy(() => import('./pages/legal/PrivacyPolicyPage').then(m => ({ default: m.PrivacyPolicyPage })))
+const TermsOfServicePage = lazy(() => import('./pages/legal/TermsOfServicePage').then(m => ({ default: m.TermsOfServicePage })))
+
 // Error Pages - Branded 404 and 500 pages
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })))
 
@@ -413,6 +417,10 @@ function App() {
                 <Route path="/approve/:token" element={<PublicApprovalPage />} />
                 {/* Public photo comparison - No auth required */}
                 <Route path="/share/comparison/:token" element={<PublicComparisonPage />} />
+
+                {/* Legal pages - No auth required (for App Store compliance) */}
+                <Route path="/privacy" element={<PrivacyPolicyPage />} />
+                <Route path="/terms" element={<TermsOfServicePage />} />
 
                 {/* Protected routes - lazy loaded for code splitting */}
                 <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
