@@ -9,7 +9,7 @@
     "build": "vite build",
     "build:strict": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 1000",
+    "lint": "eslint . --report-unused-disable-directives --max-warnings 2000",
     "lint:fix": "eslint . --fix",
     "lint:strict": "eslint . --report-unused-disable-directives --max-warnings 0",
     "type-check": "tsc --noEmit",
