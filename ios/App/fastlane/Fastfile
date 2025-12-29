@@ -53,9 +53,9 @@ platform :ios do
       xcodeproj: "App.xcodeproj"
     )
 
-    # Build the app
+    # Build the app (using project instead of workspace for SPM-based Capacitor)
     build_app(
-      workspace: "App.xcworkspace",
+      project: "App.xcodeproj",
       scheme: "App",
       export_method: "app-store",
       output_directory: "./build",
@@ -93,9 +93,9 @@ platform :ios do
       xcodeproj: "App.xcodeproj"
     )
 
-    # Build the app
+    # Build the app (using project instead of workspace for SPM-based Capacitor)
     build_app(
-      workspace: "App.xcworkspace",
+      project: "App.xcodeproj",
       scheme: "App",
       export_method: "app-store",
       output_directory: "./build",
@@ -135,7 +135,7 @@ platform :ios do
     )
 
     build_app(
-      workspace: "App.xcworkspace",
+      project: "App.xcodeproj",
       scheme: "App",
       export_method: "app-store",
       output_directory: "./build",
