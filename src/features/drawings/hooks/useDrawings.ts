@@ -395,7 +395,7 @@ export function useUpdateRevision() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, drawingId, updates }: { id: string; drawingId: string; updates: DrawingRevisionUpdate }) =>
+    mutationFn: ({ id, updates }: { id: string; drawingId: string; updates: DrawingRevisionUpdate }) =>
       drawingsApi.updateRevision(id, updates),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: drawingKeys.revisions(variables.drawingId) });
@@ -411,7 +411,7 @@ export function useSetCurrentRevision() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ revisionId, drawingId }: { revisionId: string; drawingId: string }) =>
+    mutationFn: ({ revisionId }: { revisionId: string; drawingId: string }) =>
       drawingsApi.setCurrentRevision(revisionId),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: drawingKeys.revisions(variables.drawingId) });
@@ -507,7 +507,7 @@ export function useAcknowledgeTransmittal() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, drawingId, acknowledgedBy }: { id: string; drawingId: string; acknowledgedBy: string }) =>
+    mutationFn: ({ id, acknowledgedBy }: { id: string; drawingId: string; acknowledgedBy: string }) =>
       drawingsApi.acknowledgeDrawingTransmittal(id, acknowledgedBy),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: drawingKeys.transmittals(variables.drawingId) });
@@ -540,7 +540,7 @@ export function useUpdateDrawingMarkup() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, revisionId, updates }: { id: string; revisionId: string; updates: DrawingMarkupUpdate }) =>
+    mutationFn: ({ id, updates }: { id: string; revisionId: string; updates: DrawingMarkupUpdate }) =>
       drawingsApi.updateDrawingMarkup(id, updates),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: drawingKeys.markups(variables.revisionId) });
@@ -555,7 +555,7 @@ export function useResolveDrawingMarkup() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, revisionId, notes }: { id: string; revisionId: string; notes?: string }) =>
+    mutationFn: ({ id, notes }: { id: string; revisionId: string; notes?: string }) =>
       drawingsApi.resolveDrawingMarkup(id, notes),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: drawingKeys.markups(variables.revisionId) });

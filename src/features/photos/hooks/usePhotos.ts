@@ -12,12 +12,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import * as photoApi from '@/lib/api/services/photo-management'
 import type {
-  Photo,
-  PhotoCollection,
-  PhotoComparison,
-  PhotoAnnotation,
-  PhotoStats,
-  LocationCluster,
   CreatePhotoDTO,
   UpdatePhotoDTO,
   CreateCollectionDTO,
