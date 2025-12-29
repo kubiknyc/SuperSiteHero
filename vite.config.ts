@@ -131,6 +131,8 @@ export default defineConfig({
         ]
       },
       workbox: {
+        // Allow larger files to be precached (3MB limit)
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
         // Offline fallback
         navigateFallback: '/offline.html',
         navigateFallbackAllowlist: [/^(?!\/__).*/],
