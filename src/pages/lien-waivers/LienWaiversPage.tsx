@@ -30,19 +30,19 @@ import {
   FileCheck,
   Building2,
   ChevronRight,
-  Clock,
   CheckCircle,
   AlertTriangle,
   Send,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { LienWaiverStatus, LienWaiverWithDetails } from '@/types/lien-waiver';
 import {
   LIEN_WAIVER_STATUSES,
   LIEN_WAIVER_TYPES,
   formatWaiverAmount,
   isWaiverOverdue,
   getDaysUntilDue,
+  type LienWaiverStatus,
+  type LienWaiverWithDetails,
 } from '@/types/lien-waiver';
 
 export function LienWaiversPage() {

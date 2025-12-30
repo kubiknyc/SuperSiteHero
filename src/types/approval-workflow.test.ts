@@ -8,20 +8,18 @@ import {
   APPROVAL_STATUS_CONFIG,
   APPROVAL_ACTION_CONFIG,
   WORKFLOW_ENTITY_CONFIG,
-} from './approval-workflow'
-import type {
-  ApprovalStatus,
-  ApprovalActionType,
-  WorkflowEntityType,
-  ApprovalWorkflow,
-  ApprovalStep,
-  ApprovalRequest,
-  ApprovalActionRecord,
-  CreateWorkflowInput,
-  CreateApprovalRequestInput,
-  ApprovalRequestFilters,
-  EntityApprovalStatus,
-  PendingApprovalsSummary,
+  type ApprovalStatus,
+  type ApprovalActionType,
+  type WorkflowEntityType,
+  type ApprovalWorkflow,
+  type ApprovalStep,
+  type ApprovalRequest,
+  type ApprovalActionRecord,
+  type CreateWorkflowInput,
+  type CreateApprovalRequestInput,
+  type ApprovalRequestFilters,
+  type EntityApprovalStatus,
+  type PendingApprovalsSummary,
 } from './approval-workflow'
 
 // =============================================

@@ -28,8 +28,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { getWeatherConditionLabel } from '@/types/photo-progress';
-import type { ProgressPhotoWithDetails } from '@/types/photo-progress';
+import {
+  getWeatherConditionLabel,
+  type ProgressPhotoWithDetails,
+} from '@/types/photo-progress';
 
 interface ProgressPhotoCardProps {
   photo: ProgressPhotoWithDetails;

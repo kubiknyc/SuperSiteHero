@@ -51,12 +51,13 @@ import {
   useUnreadCountsByFolder,
 } from '../hooks/useEmails'
 import { cn } from '@/lib/utils'
-import type { EmailThread, EmailFolder } from '@/types/email'
 import {
   EMAIL_FOLDER_CONFIG,
   formatEmailDate,
   formatParticipants,
   getParticipantInitials,
+  type EmailThread,
+  type EmailFolder,
 } from '@/types/email'
 
 interface EmailInboxProps {

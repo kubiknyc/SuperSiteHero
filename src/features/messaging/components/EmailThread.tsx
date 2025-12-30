@@ -57,12 +57,14 @@ import {
   useEmailEntityLinks,
 } from '../hooks/useEmails'
 import { cn } from '@/lib/utils'
-import type { Email, EmailEntityLink, EmailAttachment } from '@/types/email'
 import {
   formatParticipants,
   formatFileSize,
   getParticipantInitials,
   LINKABLE_ENTITY_CONFIG,
+  type Email,
+  type EmailEntityLink,
+  type EmailAttachment,
 } from '@/types/email'
 
 interface EmailThreadProps {

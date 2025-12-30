@@ -12,16 +12,14 @@ import {
   getCompanyInfo,
   type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
-import type {
-  LienWaiverWithDetails,
-  LienWaiverType,
-} from '@/types/lien-waiver'
 import {
   getWaiverTypeLabel,
   getStateName,
   isConditionalWaiver,
   isFinalWaiver,
   formatWaiverAmount,
+  type LienWaiverWithDetails,
+  type LienWaiverType,
 } from '@/types/lien-waiver'
 
 // Page dimensions (Letter size)
@@ -62,8 +60,9 @@ function formatLegalDate(date: string | null | undefined): string {
 
 /**
  * Spell out dollar amount (for legal documents)
+ * Note: Currently unused but kept for future statutory form requirements
  */
-function spellOutAmount(amount: number): string {
+function _spellOutAmount(amount: number): string {
   // Simple implementation - in production, use a library like 'written-number'
   const formatted = formatWaiverAmount(amount)
   return `${formatted} (${formatted})`
@@ -116,7 +115,8 @@ function getConditionalProgressText(data: LienWaiverPDFData): string {
   const waiver = data.waiver
   const amount = formatWaiverAmount(waiver.payment_amount)
   const throughDate = formatLegalDate(waiver.through_date)
-  const checkNumber = waiver.check_number || '________________'
+  // checkNumber reserved for future statutory form requirements
+  const _checkNumber = waiver.check_number || '________________'
 
   return `Upon receipt by the undersigned of a check from ${data.generalContractor || '________________'} ` +
     `in the sum of ${amount} payable to ${waiver.claimant_company || waiver.vendor_name || '________________'} ` +
@@ -159,7 +159,8 @@ function getUnconditionalProgressText(data: LienWaiverPDFData): string {
 function getConditionalFinalText(data: LienWaiverPDFData): string {
   const waiver = data.waiver
   const amount = formatWaiverAmount(waiver.payment_amount)
-  const checkNumber = waiver.check_number || '________________'
+  // checkNumber reserved for future statutory form requirements
+  const _checkNumber = waiver.check_number || '________________'
 
   return `Upon receipt by the undersigned of a check from ${data.generalContractor || '________________'} ` +
     `in the sum of ${amount} payable to ${waiver.claimant_company || waiver.vendor_name || '________________'} ` +
@@ -180,7 +181,8 @@ function getConditionalFinalText(data: LienWaiverPDFData): string {
  */
 function getUnconditionalFinalText(data: LienWaiverPDFData): string {
   const waiver = data.waiver
-  const amount = formatWaiverAmount(waiver.payment_amount)
+  // amount reserved for future statutory form requirements
+  const _amount = formatWaiverAmount(waiver.payment_amount)
 
   return `The undersigned has been paid in full for all labor, services, equipment, or materials furnished to ` +
     `${data.generalContractor || '________________'} on the job of ${data.ownerName || '________________'} ` +
@@ -318,7 +320,8 @@ function drawNotarizationSection(doc: jsPDF, data: LienWaiverPDFData, startY: nu
   }
 
   let y = startY
-  const waiver = data.waiver
+  // waiver reserved for future notarization field expansion
+  const _waiver = data.waiver
   const contentWidth = PAGE_WIDTH - 2 * MARGIN
 
   // Check for page break

@@ -3,8 +3,7 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import type { SubmittalApprovalCode } from '@/types/submittal'
-import { SUBMITTAL_APPROVAL_CODES, getApprovalCodeLabel, getApprovalCodeColor } from '@/types/submittal'
+import { SUBMITTAL_APPROVAL_CODES, getApprovalCodeLabel, getApprovalCodeColor, type SubmittalApprovalCode } from '@/types/submittal'
 
 interface ApprovalCodeBadgeProps {
   code: SubmittalApprovalCode | null | undefined

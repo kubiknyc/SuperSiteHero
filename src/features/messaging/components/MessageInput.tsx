@@ -21,8 +21,15 @@ import {
 } from '@/components/ui'
 import { useSendMessage, useTypingIndicator, useMessageDraft, useConversation } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { SendMessageDTO, MessageAttachment, ConversationParticipant, MessagePriority } from '@/types/messaging'
-import { createMention, isValidMessageContent, MESSAGE_PRIORITY_CONFIG } from '@/types/messaging'
+import {
+  createMention,
+  isValidMessageContent,
+  MESSAGE_PRIORITY_CONFIG,
+  type SendMessageDTO,
+  type MessageAttachment,
+  type ConversationParticipant,
+  type MessagePriority,
+} from '@/types/messaging'
 
 // Note: setContent is from the useMessageDraft hook and is stable, but we include it in deps for completeness
 import { cn } from '@/lib/utils'

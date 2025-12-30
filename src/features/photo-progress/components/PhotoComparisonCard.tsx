@@ -18,8 +18,11 @@ import {
   ArrowRight,
   Play,
 } from 'lucide-react';
-import { getComparisonTypeLabel, ComparisonType } from '@/types/photo-progress';
-import type { PhotoComparisonWithDetails } from '@/types/photo-progress';
+import {
+  getComparisonTypeLabel,
+  ComparisonType,
+  type PhotoComparisonWithDetails,
+} from '@/types/photo-progress';
 
 interface PhotoComparisonCardProps {
   comparison: PhotoComparisonWithDetails;

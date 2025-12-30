@@ -21,16 +21,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
-  Calendar,
   Cloud,
-  Thermometer,
-  Users,
   AlertCircle,
   Edit,
   Trash2,
   ArrowLeft,
-  CheckCircle2,
-  Clock,
   Camera,
   Download,
   Loader2,
@@ -150,7 +145,7 @@ export function DailyReportDetailPage() {
     }
   }
 
-  const handleApprove = async () => {
+  const _handleApprove = async () => {
     try {
       await updateMutation.mutateAsync({
         id: report.id,
@@ -413,7 +408,7 @@ export function DailyReportDetailPage() {
             <CardContent className="space-y-4">
               <SignatureCapture
                 label="Approver Signature"
-                onSave={async (signatureDataUrl) => {
+                onSave={async (_signatureDataUrl) => {
                   try {
                     await updateMutation.mutateAsync({
                       id: report.id,

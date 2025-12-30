@@ -44,20 +44,18 @@ import {
   useUpdateScheduledReport,
   usePreviewReportData,
 } from '../hooks/useScheduledFieldReports'
-import type {
-  ScheduledFieldReport,
-  CreateScheduledFieldReportInput,
-  FieldReportType,
-  ReportFrequency,
-  ReportSection,
-  ReportContentConfig,
-  ReportOutputFormat,
-} from '@/types/workflow-automation'
 import {
   FIELD_REPORT_TYPES,
   REPORT_FREQUENCIES,
   REPORT_SECTIONS,
   DAYS_OF_WEEK,
+  type ScheduledFieldReport,
+  type CreateScheduledFieldReportInput,
+  type FieldReportType,
+  type ReportFrequency,
+  type ReportSection,
+  type ReportContentConfig,
+  type ReportOutputFormat,
 } from '@/types/workflow-automation'
 import { cn } from '@/lib/utils'
 

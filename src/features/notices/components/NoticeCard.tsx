@@ -12,8 +12,7 @@ import { cn } from '@/lib/utils'
 import { NoticeStatusBadge } from './NoticeStatusBadge'
 import { NoticeTypeBadge } from './NoticeTypeBadge'
 import { ResponseDueIndicator } from './ResponseDueIndicator'
-import type { Notice } from '../types'
-import { isResponseOverdue, getDaysUntilDue } from '../types'
+import { isResponseOverdue, getDaysUntilDue, type Notice } from '../types'
 
 interface NoticeCardProps {
   notice: Notice
@@ -22,7 +21,8 @@ interface NoticeCardProps {
 function NoticeCardComponent({ notice }: NoticeCardProps) {
   const overdue = isResponseOverdue(notice)
   const daysUntilDue = getDaysUntilDue(notice)
-  const isUrgent = overdue || (daysUntilDue !== null && daysUntilDue <= 3)
+  // isUrgent used in getBorderColor logic below
+  const _isUrgent = overdue || (daysUntilDue !== null && daysUntilDue <= 3)
 
   // Determine left border color based on priority/urgency
   const getBorderColor = () => {

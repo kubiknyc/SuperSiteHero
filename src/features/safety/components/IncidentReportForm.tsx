@@ -21,21 +21,19 @@ import {
 import { cn } from '@/lib/utils'
 import { logger } from '@/lib/utils/logger'
 import { supabase } from '@/lib/supabase'
-import type {
-  CreateIncidentDTO,
-  UpdateIncidentDTO,
-  SafetyIncident,
-  IncidentSeverity,
-  IncidentType,
-  RootCauseCategory,
-  OSHAInjuryIllnessType,
-} from '@/types/safety-incidents'
 import {
   SEVERITY_CONFIG,
   INCIDENT_TYPE_CONFIG,
   ROOT_CAUSE_LABELS,
   OSHA_INJURY_ILLNESS_TYPES,
   isSeriousIncident,
+  type CreateIncidentDTO,
+  type UpdateIncidentDTO,
+  type SafetyIncident,
+  type IncidentSeverity,
+  type IncidentType,
+  type RootCauseCategory,
+  type OSHAInjuryIllnessType,
 } from '@/types/safety-incidents'
 import { AlertTriangle, Info, Shield } from 'lucide-react'
 

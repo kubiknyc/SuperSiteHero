@@ -50,16 +50,14 @@ import {
   useDeleteInsuranceCertificate,
   useVoidInsuranceCertificate,
 } from '../hooks/useInsurance'
-import type {
-  InsuranceCertificateWithRelations,
-  CertificateStatus,
-  InsuranceType,
-} from '@/types/insurance'
 import {
   INSURANCE_TYPE_LABELS,
   CERTIFICATE_STATUS_LABELS,
   formatInsuranceLimit,
   getDaysUntilExpiry,
+  type InsuranceCertificateWithRelations,
+  type CertificateStatus,
+  type InsuranceType,
 } from '@/types/insurance'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'

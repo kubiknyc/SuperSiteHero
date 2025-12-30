@@ -17,8 +17,11 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Search, LayoutGrid, List, SlidersHorizontal } from 'lucide-react'
 import { TemplateCard } from './TemplateCard'
-import type { ProjectTemplate, TemplateCategory } from '@/types/project-template'
-import { TEMPLATE_CATEGORIES } from '@/types/project-template'
+import {
+  TEMPLATE_CATEGORIES,
+  type ProjectTemplate,
+  type TemplateCategory,
+} from '@/types/project-template'
 
 interface TemplateListProps {
   templates: ProjectTemplate[]

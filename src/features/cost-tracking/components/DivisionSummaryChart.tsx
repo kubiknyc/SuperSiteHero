@@ -8,8 +8,7 @@ import { BarChart3, TrendingUp, TrendingDown } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import { CSI_DIVISIONS } from '@/types/cost-tracking'
-import type { BudgetSummaryByDivision } from '@/types/cost-tracking'
+import { CSI_DIVISIONS, type BudgetSummaryByDivision } from '@/types/cost-tracking'
 
 interface DivisionSummaryChartProps {
   divisions: BudgetSummaryByDivision[]

@@ -31,8 +31,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Building2, Loader2, Phone, Mail, Globe, MapPin } from 'lucide-react';
 import { useCreateVendor, useUpdateVendor } from '../hooks/useProcurement';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { VENDOR_TYPE_CONFIG } from '@/types/procurement';
-import type { Vendor, CreateVendorDTO, VendorType } from '@/types/procurement';
+import {
+  VENDOR_TYPE_CONFIG,
+  type Vendor,
+  type CreateVendorDTO,
+  type VendorType,
+} from '@/types/procurement';
 
 interface VendorFormDialogProps {
   open: boolean;

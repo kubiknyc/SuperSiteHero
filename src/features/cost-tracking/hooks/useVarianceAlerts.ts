@@ -7,15 +7,15 @@
 
 import { useMemo } from 'react'
 import { useProjectBudgets, useProjectBudgetTotals } from './useCostTracking'
-import type {
-  BudgetVarianceAlert,
-  BudgetVarianceAlertSummary,
-  BudgetVarianceThresholds,
-  BudgetVarianceAlertSeverity,
-  ProjectBudgetWithDetails,
-  ProjectBudgetTotals,
+import {
+  DEFAULT_VARIANCE_THRESHOLDS,
+  type BudgetVarianceAlert,
+  type BudgetVarianceAlertSummary,
+  type BudgetVarianceThresholds,
+  type BudgetVarianceAlertSeverity,
+  type ProjectBudgetWithDetails,
+  type ProjectBudgetTotals,
 } from '@/types/cost-tracking'
-import { DEFAULT_VARIANCE_THRESHOLDS } from '@/types/cost-tracking'
 
 /**
  * Generate variance alerts from budget data

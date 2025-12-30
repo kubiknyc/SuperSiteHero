@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/pages/submittals/DedicatedSubmittalsPage.tsx
 // Submittals page using the dedicated submittals table with CSI MasterFormat organization
 
@@ -31,7 +30,6 @@ import {
   AlertTriangle,
   ChevronDown,
   ChevronRight,
-  Filter,
   LayoutGrid,
   List,
   Download,

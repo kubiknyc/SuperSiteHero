@@ -39,14 +39,15 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCreateDrawingPackage, useAddMultiplePackageItems } from '../hooks/useDrawingPackages';
-import type {
-  DrawingPackage,
-  DrawingPackageType,
-  DrawingPackageInsert,
-  Drawing,
-  DrawingDiscipline,
+import {
+  DRAWING_PACKAGE_TYPES,
+  DRAWING_DISCIPLINES,
+  type DrawingPackage,
+  type DrawingPackageType,
+  type DrawingPackageInsert,
+  type Drawing,
+  type DrawingDiscipline,
 } from '@/types/drawing';
-import { DRAWING_PACKAGE_TYPES, DRAWING_DISCIPLINES } from '@/types/drawing';
 import { logger } from '../../../lib/utils/logger';
 
 

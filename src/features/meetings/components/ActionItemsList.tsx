@@ -43,11 +43,9 @@ import {
   getActionItemPriorityColor,
   isActionItemOverdue,
   getDaysUntilDue,
-} from '@/types/meetings'
-import type {
-  MeetingActionItem,
-  CreateMeetingActionItemDTO,
-  UpdateMeetingActionItemDTO,
+  type MeetingActionItem,
+  type CreateMeetingActionItemDTO,
+  type UpdateMeetingActionItemDTO,
 } from '@/types/meetings'
 
 interface ActionItemsListProps {

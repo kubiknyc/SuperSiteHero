@@ -16,8 +16,7 @@ import {
   MoreVertical,
 } from 'lucide-react'
 import { ConstraintCountBadge } from './ConstraintBadge'
-import type { LookAheadActivityWithDetails, LookAheadActivityStatus } from '@/types/look-ahead'
-import { ACTIVITY_STATUS_CONFIG } from '@/types/look-ahead'
+import { ACTIVITY_STATUS_CONFIG, type LookAheadActivityWithDetails, type LookAheadActivityStatus } from '@/types/look-ahead'
 
 interface ActivityCardProps {
   activity: LookAheadActivityWithDetails

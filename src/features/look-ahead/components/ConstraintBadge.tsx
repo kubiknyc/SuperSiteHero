@@ -17,8 +17,7 @@ import {
   PenTool,
   AlertCircle,
 } from 'lucide-react'
-import type { ConstraintType, ConstraintStatus } from '@/types/look-ahead'
-import { CONSTRAINT_TYPE_CONFIG } from '@/types/look-ahead'
+import { CONSTRAINT_TYPE_CONFIG, type ConstraintType, type ConstraintStatus } from '@/types/look-ahead'
 
 interface ConstraintBadgeProps {
   type: ConstraintType

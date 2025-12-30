@@ -5,8 +5,7 @@
  */
 
 import { cn } from '@/lib/utils'
-import type { IncidentSeverity } from '@/types/safety-incidents'
-import { SEVERITY_CONFIG } from '@/types/safety-incidents'
+import { SEVERITY_CONFIG, type IncidentSeverity } from '@/types/safety-incidents'
 
 interface SeverityBadgeProps {
   severity: IncidentSeverity

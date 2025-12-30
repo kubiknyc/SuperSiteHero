@@ -40,8 +40,7 @@ import {
   Shield,
   Clock,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
 export function DocuSignConnectionSettings() {
   const [isDemo, setIsDemo] = useState(false)

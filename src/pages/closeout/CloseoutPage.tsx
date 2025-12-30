@@ -22,17 +22,17 @@ import {
   useUpdateWarranty,
 } from '@/features/closeout'
 import { useContacts } from '@/features/contacts/hooks/useContacts'
-import type {
-  CloseoutDocumentWithDetails,
-  WarrantyWithDetails,
-  CreateCloseoutDocumentDTO,
-  UpdateCloseoutDocumentDTO,
-  CreateWarrantyDTO,
-  UpdateWarrantyDTO,
+import {
+  CLOSEOUT_DOCUMENT_TYPES,
+  WARRANTY_TYPES,
+  type CloseoutDocumentWithDetails,
+  type WarrantyWithDetails,
+  type CreateCloseoutDocumentDTO,
+  type UpdateCloseoutDocumentDTO,
+  type CreateWarrantyDTO,
+  type UpdateWarrantyDTO,
 } from '@/types/closeout'
-import { CLOSEOUT_DOCUMENT_TYPES, WARRANTY_TYPES } from '@/types/closeout'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   RadixSelect as Select,
@@ -47,7 +47,6 @@ import {
   Building2,
   FileCheck,
   Shield,
-  AlertCircle,
   Loader2,
   CheckCircle2,
   Clock,
@@ -188,8 +187,8 @@ export function CloseoutPage() {
   const [editingDocument, setEditingDocument] = useState<CloseoutDocumentWithDetails | null>(null)
   const [showWarrantyDialog, setShowWarrantyDialog] = useState(false)
   const [editingWarranty, setEditingWarranty] = useState<WarrantyWithDetails | null>(null)
-  const [isExportingDocuments, setIsExportingDocuments] = useState(false)
-  const [isExportingWarranties, setIsExportingWarranties] = useState(false)
+  const [, setIsExportingDocuments] = useState(false)
+  const [, setIsExportingWarranties] = useState(false)
 
   // Fetch projects
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -226,7 +225,7 @@ export function CloseoutPage() {
   // Calculate overview stats
   const totalDocuments = documents.length
   const receivedDocuments = documents.filter((d: CloseoutDocumentWithDetails) => d.status === 'approved' || d.status === 'submitted').length
-  const pendingDocuments = documents.filter((d: CloseoutDocumentWithDetails) => d.status === 'pending' || d.status === 'under_review').length
+  const _pendingDocuments = documents.filter((d: CloseoutDocumentWithDetails) => d.status === 'pending' || d.status === 'under_review').length
   const completionPercent = totalDocuments > 0 ? Math.round((receivedDocuments / totalDocuments) * 100) : 0
 
   const totalWarranties = warranties.length
@@ -262,7 +261,7 @@ export function CloseoutPage() {
       }
       setShowDocumentDialog(false)
       setEditingDocument(null)
-    } catch (error) {
+    } catch (_error) {
       toast.error(editingDocument ? 'Failed to update document' : 'Failed to create document')
     }
   }
@@ -276,7 +275,7 @@ export function CloseoutPage() {
     try {
       exportDocumentsToCSV(documents)
       toast.success(`Exported ${documents.length} documents to CSV`)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to export documents')
     } finally {
       setIsExportingDocuments(false)
@@ -305,7 +304,7 @@ export function CloseoutPage() {
       }
       setShowWarrantyDialog(false)
       setEditingWarranty(null)
-    } catch (error) {
+    } catch (_error) {
       toast.error(editingWarranty ? 'Failed to update warranty' : 'Failed to create warranty')
     }
   }
@@ -319,7 +318,7 @@ export function CloseoutPage() {
     try {
       exportWarrantiesToCSV(warranties)
       toast.success(`Exported ${warranties.length} warranties to CSV`)
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to export warranties')
     } finally {
       setIsExportingWarranties(false)

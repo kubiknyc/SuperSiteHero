@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/features/rfis/hooks/useDedicatedRFIs.ts
 // React Query hooks for the dedicated RFIs table with ball-in-court tracking
 // Uses migration 049_dedicated_rfis.sql schema

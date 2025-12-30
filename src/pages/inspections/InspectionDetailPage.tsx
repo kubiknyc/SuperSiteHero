@@ -40,7 +40,6 @@ import {
   ClipboardCheck,
   Link as LinkIcon,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 export function InspectionDetailPage() {
   const { id } = useParams<{ id: string }>()

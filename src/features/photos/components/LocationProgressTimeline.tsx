@@ -3,7 +3,7 @@
  * Shows photos from the same location over time for progress visualization
  */
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import {
   Calendar,
@@ -35,7 +35,6 @@ import {
 } from '@/components/ui/dialog';
 import { usePhotoTemplates, useLocationProgressTimeline } from '../hooks/usePhotoTemplates';
 import { cn } from '@/lib/utils';
-import { useEffect, useRef } from 'react';
 
 interface LocationProgressTimelineProps {
   projectId: string;

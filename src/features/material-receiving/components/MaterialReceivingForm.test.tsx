@@ -5,13 +5,14 @@
  */
 
 import { describe, it, expect, vi } from 'vitest'
-import type {
-  CreateMaterialReceivedDTO,
-  UpdateMaterialReceivedDTO,
-  MaterialCondition,
-  MaterialStatus
+import {
+  MATERIAL_CONDITIONS,
+  MATERIAL_STATUSES,
+  type CreateMaterialReceivedDTO,
+  type UpdateMaterialReceivedDTO,
+  type MaterialCondition,
+  type MaterialStatus
 } from '@/types/material-receiving'
-import { MATERIAL_CONDITIONS, MATERIAL_STATUSES } from '@/types/material-receiving'
 
 describe('MaterialReceivingForm Data Structures', () => {
   describe('CreateMaterialReceivedDTO', () => {

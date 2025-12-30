@@ -35,12 +35,12 @@ import {
 } from 'lucide-react';
 import { usePhotoHubPhotos, usePhotoHubStats } from '../hooks/useUnifiedPhotos';
 import { PhotoLinker } from './PhotoLinker';
-import type {
-  PhotoEntityType,
-  PhotoHubFilters,
-  PhotoWithEntities,
+import {
+  ENTITY_TYPE_LABELS,
+  type PhotoEntityType,
+  type PhotoHubFilters,
+  type PhotoWithEntities,
 } from '@/types/unified-photos';
-import { ENTITY_TYPE_LABELS } from '@/types/unified-photos';
 
 interface PhotoEvidenceHubProps {
   projectId: string;

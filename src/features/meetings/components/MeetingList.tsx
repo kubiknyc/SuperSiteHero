@@ -13,12 +13,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import type {
-  MeetingWithDetails,
-  MeetingType,
-  MeetingStatus,
-  MeetingStatistics,
-} from '@/types/meeting-minutes'
 import {
   MEETING_TYPES,
   MEETING_STATUSES,
@@ -26,6 +20,10 @@ import {
   getMeetingStatusColor,
   formatMeetingTimeRange,
   isUpcomingMeeting,
+  type MeetingWithDetails,
+  type MeetingType,
+  type MeetingStatus,
+  type MeetingStatistics,
 } from '@/types/meeting-minutes'
 
 // =============================================

@@ -37,13 +37,13 @@ import {
   User,
   Hash,
 } from 'lucide-react'
-import type {
-  WarrantyWithDetails,
-  CreateWarrantyDTO,
-  UpdateWarrantyDTO,
-  WarrantyType,
+import {
+  WARRANTY_TYPES,
+  type WarrantyWithDetails,
+  type CreateWarrantyDTO,
+  type UpdateWarrantyDTO,
+  type WarrantyType,
 } from '@/types/closeout'
-import { WARRANTY_TYPES } from '@/types/closeout'
 
 // =============================================
 // Form Schema

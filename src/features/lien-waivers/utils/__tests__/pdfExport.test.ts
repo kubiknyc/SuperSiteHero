@@ -146,8 +146,9 @@ import {
   isConditionalWaiver,
   isFinalWaiver,
   formatWaiverAmount,
+  type LienWaiverWithDetails,
+  type LienWaiverType,
 } from '@/types/lien-waiver'
-import type { LienWaiverWithDetails, LienWaiverType } from '@/types/lien-waiver'
 
 describe('Lien Waiver PDF Export', () => {
   beforeEach(() => {

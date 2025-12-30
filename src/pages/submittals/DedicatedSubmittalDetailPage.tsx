@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/pages/submittals/DedicatedSubmittalDetailPage.tsx
 // Dedicated Submittal detail page with tabbed interface, workflow indicator, and approval codes
 
@@ -20,7 +19,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs'
 import {
   ArrowLeft,
@@ -31,16 +29,13 @@ import {
   FileText,
   Clock,
   Calendar,
-  User,
   Building2,
   CheckCircle2,
-  XCircle,
   AlertTriangle,
   History,
   Paperclip,
   Send,
   FileDown,
-  Package,
 } from 'lucide-react'
 import {
   WorkflowProgressIndicator,
@@ -176,7 +171,7 @@ export function DedicatedSubmittalDetailPage() {
   }
 
   // Add a review
-  const handleAddReview = async () => {
+  const _handleAddReview = async () => {
     if (!submittal || !selectedReviewStatus) {return}
 
     await addReview.mutateAsync({

@@ -5,12 +5,12 @@
  * These functions are isolated from API calls for easier testing and reuse.
  */
 
-import type {
-  EarnedValueMetrics,
-  EVMPerformanceStatus,
-  EVMThresholds,
+import {
+  DEFAULT_EVM_THRESHOLDS,
+  type EarnedValueMetrics,
+  type EVMPerformanceStatus,
+  type EVMThresholds,
 } from '@/types/cost-tracking';
-import { DEFAULT_EVM_THRESHOLDS } from '@/types/cost-tracking';
 
 // Re-export the defaults for convenience
 export { DEFAULT_EVM_THRESHOLDS };

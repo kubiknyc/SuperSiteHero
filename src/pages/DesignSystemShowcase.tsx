@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import {
   HardHat, Copy, Check, Palette, Type, Grid3x3,
-  Shapes, Sparkles, Layout, Component
+  Shapes, Sparkles, Component
 } from 'lucide-react'
 
 export default function DesignSystemShowcase() {

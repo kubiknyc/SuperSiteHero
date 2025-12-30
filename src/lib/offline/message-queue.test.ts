@@ -17,8 +17,8 @@ import {
   clearFailedMessages,
   retryFailedMessages,
   getQueueStats,
+  type QueuedMessage,
 } from './message-queue'
-import type { QueuedMessage } from './message-queue'
 
 // Mock dependencies
 vi.mock('./indexeddb', () => ({

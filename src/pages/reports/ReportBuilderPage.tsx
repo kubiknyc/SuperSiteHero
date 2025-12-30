@@ -47,14 +47,15 @@ import { DataSourceSelector } from '@/features/reports/components/DataSourceSele
 import { FieldPicker } from '@/features/reports/components/FieldPicker'
 import { FilterBuilder } from '@/features/reports/components/FilterBuilder'
 import { ChartBuilder } from '@/features/reports/components/ChartBuilder'
-import type {
-  ReportDataSource,
-  ReportOutputFormat,
-  ReportTemplateFieldInput,
-  ReportTemplateFilterInput,
-  ChartConfiguration,
+import {
+  OUTPUT_FORMAT_CONFIG,
+  generateDefaultTemplateName,
+  type ReportDataSource,
+  type ReportOutputFormat,
+  type ReportTemplateFieldInput,
+  type ReportTemplateFilterInput,
+  type ChartConfiguration,
 } from '@/types/report-builder'
-import { OUTPUT_FORMAT_CONFIG, generateDefaultTemplateName } from '@/types/report-builder'
 import { generateReport, downloadReport } from '@/features/reports/services/reportExportService'
 import { useToast } from '@/components/ui/use-toast'
 import { logger } from '../../lib/utils/logger';

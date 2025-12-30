@@ -32,13 +32,14 @@ import {
   ChevronUp,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { LienWaiverWithDetails, LienWaiverStatus } from '@/types/lien-waiver'
 import {
   getWaiverTypeLabel,
   getWaiverStatusLabel,
   getWaiverStatusColor,
   formatWaiverAmount,
   isWaiverOverdue,
+  type LienWaiverWithDetails,
+  type LienWaiverStatus,
 } from '@/types/lien-waiver'
 
 interface WaiverChecklistProps {

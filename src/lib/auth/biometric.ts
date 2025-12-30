@@ -94,9 +94,9 @@ export async function isConditionalMediationAvailable(): Promise<boolean> {
   }
 
   try {
-    // @ts-ignore - This is a newer API that may not be in all TypeScript definitions
+    // @ts-expect-error - PublicKeyCredential.isConditionalMediationAvailable is a newer WebAuthn API not yet in TypeScript's lib.dom.d.ts
     if (typeof PublicKeyCredential.isConditionalMediationAvailable === 'function') {
-      // @ts-ignore
+      // @ts-expect-error - PublicKeyCredential.isConditionalMediationAvailable is a newer WebAuthn API not yet in TypeScript's lib.dom.d.ts
       return await PublicKeyCredential.isConditionalMediationAvailable()
     }
     return false

@@ -140,7 +140,7 @@ export class SyncManager {
       const registration = await navigator.serviceWorker.ready;
 
       if ('sync' in registration) {
-        // @ts-ignore - Background Sync API may not be in TypeScript types
+        // @ts-expect-error - Background Sync API (registration.sync) is not included in TypeScript's ServiceWorkerRegistration types
         await registration.sync.register('offline-sync');
         logger.log('[SyncManager] Background sync registered with Service Worker');
       }

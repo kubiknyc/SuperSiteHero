@@ -89,7 +89,6 @@ import {
   useDeleteTransmittal,
 } from '@/features/transmittals/hooks/useTransmittals';
 import { useProject } from '@/features/projects/hooks/useProjects';
-import type { TransmittalStatus, TransmittalWithDetails } from '@/types/transmittal';
 import {
   getTransmittalStatusColor,
   getTransmittalStatusLabel,
@@ -100,6 +99,8 @@ import {
   canEditTransmittal,
   canSendTransmittal,
   formatTransmittalNumber,
+  type TransmittalStatus,
+  type TransmittalWithDetails,
 } from '@/types/transmittal';
 import { cn } from '@/lib/utils';
 import { toast } from 'react-hot-toast';

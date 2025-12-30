@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/pages/rfis/DedicatedRFIDetailPage.tsx
 // Dedicated RFI detail page with tabbed interface, workflow indicator, and ball-in-court tracking
 
@@ -34,7 +33,6 @@ import {
   User,
   Building2,
   CheckCircle2,
-  XCircle,
   AlertTriangle,
   History,
   Paperclip,
@@ -45,7 +43,6 @@ import {
   Image,
   Users,
   Search,
-  X,
   Check,
   UserPlus,
   Pencil,
@@ -77,14 +74,12 @@ import {
   RFI_PRIORITIES,
   BALL_IN_COURT_ROLES,
   formatRFINumber,
-  getRFIStatusColor,
-  getRFIPriorityColor,
 } from '@/features/rfis/hooks/useDedicatedRFIs'
 import { downloadRFIPDF } from '@/features/rfis/utils/pdfExport'
 import { useCreateConversation } from '@/features/messaging/hooks'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
+import type { RFIStatus, BallInCourtRole } from '@/types/database-extensions'
 import { logger } from '../../lib/utils/logger';
 
 
@@ -235,7 +230,7 @@ export function DedicatedRFIDetailPage() {
   }
 
   // Submit response
-  const handleSubmitResponse = async () => {
+  const _handleSubmitResponse = async () => {
     if (!rfi || !responseText.trim()) {return}
 
     await respondToRFI.mutateAsync({

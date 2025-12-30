@@ -46,8 +46,9 @@ import {
 import {
   WeatherCondition,
   getWeatherConditionLabel,
+  type CreateProgressPhotoDTO,
+  type PhotoLocationFilters,
 } from '@/types/photo-progress';
-import type { CreateProgressPhotoDTO, PhotoLocationFilters } from '@/types/photo-progress';
 
 interface UploadedFile {
   id: string;

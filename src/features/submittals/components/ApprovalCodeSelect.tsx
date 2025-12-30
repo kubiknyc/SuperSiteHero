@@ -11,8 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import type { SubmittalApprovalCode } from '@/types/submittal'
-import { SUBMITTAL_APPROVAL_CODES } from '@/types/submittal'
+import { SUBMITTAL_APPROVAL_CODES, type SubmittalApprovalCode } from '@/types/submittal'
 import { ApprovalCodeBadge } from './ApprovalCodeBadge'
 
 interface ApprovalCodeSelectProps {

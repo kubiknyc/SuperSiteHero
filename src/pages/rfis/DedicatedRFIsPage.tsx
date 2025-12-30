@@ -17,6 +17,7 @@ import {
   RFI_STATUSES,
   RFI_PRIORITIES,
   BALL_IN_COURT_ROLES,
+  type RFIWithDetails,
 } from '@/features/rfis/hooks/useDedicatedRFIs'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -44,7 +45,6 @@ import { cn } from '@/lib/utils'
 import { CreateDedicatedRFIDialog } from '@/features/rfis/components/CreateDedicatedRFIDialog'
 import { downloadRFIsAsExcel } from '@/features/rfis/utils/rfiExport'
 import type { RFIStatus, RFIPriority, BallInCourtRole } from '@/types/database-extensions'
-import type { RFIWithDetails } from '@/features/rfis/hooks/useDedicatedRFIs'
 import { logger } from '../../lib/utils/logger';
 
 

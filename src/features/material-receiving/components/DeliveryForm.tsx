@@ -38,19 +38,17 @@ import {
   X,
   AlertCircle,
 } from 'lucide-react';
-import type {
-  MaterialDelivery,
-  CreateMaterialDeliveryDTO,
-  DeliveryStatus,
-  ConditionStatus,
-  MaterialCategory,
-  UnitOfMeasure,
-} from '@/types/material-receiving';
 import {
   DELIVERY_STATUSES,
   CONDITION_STATUSES,
   MATERIAL_CATEGORIES,
   UNITS_OF_MEASURE,
+  type MaterialDelivery,
+  type CreateMaterialDeliveryDTO,
+  type DeliveryStatus,
+  type ConditionStatus,
+  type MaterialCategory,
+  type UnitOfMeasure,
 } from '@/types/material-receiving';
 
 // Form validation schema

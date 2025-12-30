@@ -1043,10 +1043,10 @@ export function DrawingCanvas({
                     if (!pathData) {return}
                     const path = new Path2D(pathData)
                     context.beginPath()
-                    // @ts-ignore - Path2D works with canvas context
+                    // @ts-expect-error - Konva's context._context is a private property providing access to the native CanvasRenderingContext2D for Path2D operations
                     context._context.stroke(path)
                     if (shape.fill && shape.fill !== 'transparent') {
-                      // @ts-ignore
+                      // @ts-expect-error - Konva's context._context is a private property providing access to the native CanvasRenderingContext2D for Path2D operations
                       context._context.fill(path)
                     }
                     context.fillStrokeShape(shapeInstance)
@@ -1124,7 +1124,7 @@ export function DrawingCanvas({
                     if (!pathData) {return}
                     const path = new Path2D(pathData)
                     context.beginPath()
-                    // @ts-ignore - Path2D works with canvas context
+                    // @ts-expect-error - Konva's context._context is a private property providing access to the native CanvasRenderingContext2D for Path2D operations
                     context._context.stroke(path)
                     context.fillStrokeShape(shapeInstance)
                   }}

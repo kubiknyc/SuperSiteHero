@@ -15,18 +15,16 @@ import {
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import type {
-  CloseoutDocumentWithDetails,
-  CloseoutStatus,
-  CloseoutCategory,
-  CloseoutStatistics,
-} from '@/types/closeout'
 import {
   CLOSEOUT_STATUSES,
   getCloseoutDocumentTypeLabel,
   getCloseoutDocumentCategory,
   getCloseoutStatusColor,
   groupDocumentsByCategory,
+  type CloseoutDocumentWithDetails,
+  type CloseoutStatus,
+  type CloseoutCategory,
+  type CloseoutStatistics,
 } from '@/types/closeout'
 
 // =============================================

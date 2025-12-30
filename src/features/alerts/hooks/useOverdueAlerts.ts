@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/features/alerts/hooks/useOverdueAlerts.ts
 // Hook for fetching overdue RFIs, Submittals, and other time-sensitive items
 // Used for dashboard alerts, notification badges, and email notifications

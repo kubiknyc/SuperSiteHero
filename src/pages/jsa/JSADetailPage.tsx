@@ -15,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   useJSA,
   useSubmitJSAForReview,
@@ -28,9 +27,6 @@ import {
   useRemoveJSAAcknowledgment,
 } from '@/features/jsa/hooks/useJSA';
 import {
-  JSA_STATUSES,
-  RISK_LEVELS,
-  HAZARD_TYPES,
   getJSAStatusLabel,
   getJSAStatusColor,
   getRiskLevelLabel,
@@ -38,11 +34,9 @@ import {
   calculateOverallRisk,
   getRequiredPPE,
   canEditJSA,
-  canApproveJSA,
-  canStartWork,
-  canCompleteJSA,
+  type JSAStatus,
+  type JSAHazard,
 } from '@/types/jsa';
-import type { JSAStatus, JSAHazard, JSAAcknowledgment } from '@/types/jsa';
 import {
   ArrowLeft,
   Calendar,
@@ -55,9 +49,7 @@ import {
   XCircle,
   Trash2,
   Edit,
-  FileText,
   AlertTriangle,
-  Shield,
   HardHat,
   Send,
   UserCheck,
@@ -303,8 +295,8 @@ export function JSADetailPage() {
   const navigate = useNavigate();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showSignIn, setShowSignIn] = useState(false);
-  const [approvalNotes, setApprovalNotes] = useState('');
-  const [completionNotes, setCompletionNotes] = useState('');
+  const [approvalNotes] = useState('');
+  const [completionNotes] = useState('');
 
   const { data: jsa, isLoading, error } = useJSA(jsaId || '');
 

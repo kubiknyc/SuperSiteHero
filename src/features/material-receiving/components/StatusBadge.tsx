@@ -4,8 +4,7 @@
 
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import type { MaterialStatus } from '@/types/material-receiving'
-import { MATERIAL_STATUSES } from '@/types/material-receiving'
+import { MATERIAL_STATUSES, type MaterialStatus } from '@/types/material-receiving'
 
 interface StatusBadgeProps {
   status: MaterialStatus

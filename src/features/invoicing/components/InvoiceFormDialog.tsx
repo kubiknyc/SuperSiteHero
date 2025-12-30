@@ -45,8 +45,7 @@ import {
   useCreateOwnerInvoice,
   useUpdateOwnerInvoice,
 } from '@/features/invoicing/hooks/useOwnerInvoices';
-import type { OwnerInvoice } from '@/types/owner-invoice';
-import { PAYMENT_TERMS_OPTIONS } from '@/types/owner-invoice';
+import { PAYMENT_TERMS_OPTIONS, type OwnerInvoice } from '@/types/owner-invoice';
 
 const formSchema = z.object({
   invoiceDate: z.date(),

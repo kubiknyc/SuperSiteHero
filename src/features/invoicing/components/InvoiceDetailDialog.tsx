@@ -49,8 +49,7 @@ import {
 } from '@/features/invoicing/hooks/useOwnerInvoices';
 import { LineItemFormDialog } from './LineItemFormDialog';
 import { RecordPaymentDialog } from './RecordPaymentDialog';
-import type { OwnerInvoiceStatus } from '@/types/owner-invoice';
-import { OWNER_INVOICE_STATUSES } from '@/types/owner-invoice';
+import { OWNER_INVOICE_STATUSES, type OwnerInvoiceStatus } from '@/types/owner-invoice';
 
 /**
  * Get status color class

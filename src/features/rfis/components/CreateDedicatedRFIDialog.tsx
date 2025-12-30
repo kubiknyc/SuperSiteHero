@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/features/rfis/components/CreateDedicatedRFIDialog.tsx
 // Dialog for creating a new RFI using the dedicated rfis table with ball-in-court tracking
 

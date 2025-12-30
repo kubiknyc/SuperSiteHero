@@ -70,8 +70,11 @@ import {
   useCopyToClipboard,
 } from '../hooks/useReportSharing'
 import { reportSharingApi } from '@/lib/api/services/report-sharing'
-import type { ReportTemplate, SharedReport } from '@/types/report-builder'
-import { SHARE_EXPIRATION_PRESETS } from '@/types/report-builder'
+import {
+  SHARE_EXPIRATION_PRESETS,
+  type ReportTemplate,
+  type SharedReport,
+} from '@/types/report-builder'
 
 interface ReportShareDialogProps {
   open: boolean

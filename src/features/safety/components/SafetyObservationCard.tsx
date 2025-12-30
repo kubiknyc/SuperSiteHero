@@ -9,14 +9,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
-import type { SafetyObservation } from '@/types/safety-observations'
 import {
   OBSERVATION_TYPE_CONFIG,
   CATEGORY_CONFIG,
   SEVERITY_CONFIG,
   STATUS_CONFIG,
   isPositiveObservation,
-  SafetyObservationType,
+  type SafetyObservation,
+  type SafetyObservationType,
 } from '@/types/safety-observations'
 import {
   ThumbsUp,

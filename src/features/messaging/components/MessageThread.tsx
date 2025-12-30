@@ -39,8 +39,7 @@ import {
   useConversationRealtime,
 } from '../hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { Message, MessagePriority } from '@/types/messaging'
-import { formatMentionsForDisplay, MESSAGE_PRIORITY_CONFIG } from '@/types/messaging'
+import { formatMentionsForDisplay, MESSAGE_PRIORITY_CONFIG, type Message, type MessagePriority } from '@/types/messaging'
 import { cn } from '@/lib/utils'
 
 interface MessageThreadProps {

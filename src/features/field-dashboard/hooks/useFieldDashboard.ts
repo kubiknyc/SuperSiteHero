@@ -10,13 +10,12 @@ import { realtimeManager } from '@/lib/realtime/client'
 import { usePunchItems } from '@/features/punch-lists/hooks/usePunchItems'
 import { useInspections } from '@/features/inspections/hooks/useInspections'
 import { useObservations } from '@/features/safety/hooks/useSafetyObservations'
-import { useWeatherForDate } from '@/features/daily-reports/hooks/useWeather'
+import { useWeatherForDate, type ExtendedWeatherData } from '@/features/daily-reports/hooks/useWeather'
 import { useLookAheadActivities } from '@/features/look-ahead/hooks/useLookAhead'
 import type { PunchItem } from '@/types/database'
 import type { Inspection } from '@/features/inspections/types'
 import type { SafetyObservation } from '@/types/safety-observations'
 import type { LookAheadActivity } from '@/types/look-ahead'
-import type { ExtendedWeatherData } from '@/features/daily-reports/hooks/useWeather'
 
 export interface FieldDashboardData {
   punchItems: {

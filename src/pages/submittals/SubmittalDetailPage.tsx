@@ -19,7 +19,6 @@ import { useSubmittal, useSubmittalComments, useSubmittalProcurement } from '@/f
 import { useUpdateSubmittalStatusWithNotification, useDeleteSubmittalWithNotification, useUpdateSubmittalProcurementStatusWithNotification } from '@/features/submittals/hooks/useSubmittalMutations'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { NativeSelect as Select } from '@/components/ui/select'
 import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare } from 'lucide-react'

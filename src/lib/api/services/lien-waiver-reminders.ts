@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Lien Waiver Reminder Service
  *

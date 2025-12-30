@@ -8,10 +8,10 @@ import { Link } from 'react-router-dom'
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { SeverityBadge } from './SeverityBadge'
-import type { SafetyIncident } from '@/types/safety-incidents'
 import {
   INCIDENT_TYPE_CONFIG,
   INCIDENT_STATUS_CONFIG,
+  type SafetyIncident,
 } from '@/types/safety-incidents'
 import {
   AlertTriangle,

@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/pages/meetings/MeetingFormPage.tsx
 // Create and edit meetings form
 

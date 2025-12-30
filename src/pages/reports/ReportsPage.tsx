@@ -58,8 +58,14 @@ import {
 import { ReportShareDialog } from '@/features/reports/components/ReportShareDialog'
 import { DataSourceBadge } from '@/features/reports/components/DataSourceSelector'
 import { format } from 'date-fns'
-import type { ReportTemplate, ReportDataSource } from '@/types/report-builder'
-import { DATA_SOURCE_CONFIG, getOutputFormatLabel, formatFileSize, getScheduleFrequencyLabel } from '@/types/report-builder'
+import {
+  DATA_SOURCE_CONFIG,
+  getOutputFormatLabel,
+  formatFileSize,
+  getScheduleFrequencyLabel,
+  type ReportTemplate,
+  type ReportDataSource,
+} from '@/types/report-builder'
 import { Badge } from '@/components/ui/badge'
 
 export function ReportsPage() {

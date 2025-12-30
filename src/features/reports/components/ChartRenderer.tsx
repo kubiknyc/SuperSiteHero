@@ -26,8 +26,10 @@ import {
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle } from 'lucide-react'
-import type { ChartConfiguration } from '@/types/report-builder'
-import { CHART_COLOR_SCHEMES } from '@/types/report-builder'
+import {
+  CHART_COLOR_SCHEMES,
+  type ChartConfiguration,
+} from '@/types/report-builder'
 import { useChartData, type ChartDataPoint } from '@/features/reports/hooks/useChartData'
 
 interface ChartRendererProps {

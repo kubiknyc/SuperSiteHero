@@ -60,12 +60,8 @@ import {
   useUpdateCostCode,
   useDeleteCostCode,
 } from '@/features/cost-tracking/hooks/useCostTracking'
-import { CSI_DIVISIONS, type CostType } from '@/types/cost-tracking'
-import type { CostCode, CreateCostCodeDTO, UpdateCostCodeDTO } from '@/types/cost-tracking'
+import { CSI_DIVISIONS, COST_TYPES, type CostType, type CostCode, type CreateCostCodeDTO, type UpdateCostCodeDTO } from '@/types/cost-tracking'
 import { cn } from '@/lib/utils'
-
-// Re-use the COST_TYPES from cost-tracking types
-import { COST_TYPES } from '@/types/cost-tracking'
 
 interface CostCodeFormData {
   code: string

@@ -24,8 +24,10 @@ import {
   FileText,
   MessageSquare,
 } from 'lucide-react'
-import type { ReportDataSource } from '@/types/report-builder'
-import { DATA_SOURCE_CONFIG } from '@/types/report-builder'
+import {
+  DATA_SOURCE_CONFIG,
+  type ReportDataSource,
+} from '@/types/report-builder'
 
 // Map icon names to components
 const iconMap: Record<string, React.ElementType> = {

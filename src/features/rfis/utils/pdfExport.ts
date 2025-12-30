@@ -12,12 +12,13 @@ import {
   getCompanyInfo,
   type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
-import type {
-  RFIWithDetails,
-  RFIStatus,
-  RFIPriority,
+import {
+  formatRFINumber,
+  getRFIResponseTypeLabel,
+  type RFIWithDetails,
+  type RFIStatus,
+  type RFIPriority,
 } from '@/types/rfi'
-import { formatRFINumber, getRFIResponseTypeLabel } from '@/types/rfi'
 
 // Page dimensions (Letter size)
 const PAGE_WIDTH = 215.9 // 8.5"

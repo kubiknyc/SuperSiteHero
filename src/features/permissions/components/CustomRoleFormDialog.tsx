@@ -36,8 +36,7 @@ import {
   useUpdateRolePermissions,
 } from '../hooks/usePermissions';
 import { PermissionMatrix, PermissionMatrixSkeleton } from './PermissionMatrix';
-import type { CustomRole, DefaultRole } from '@/types/permissions';
-import { DEFAULT_ROLES } from '@/types/permissions';
+import { DEFAULT_ROLES, type CustomRole, type DefaultRole } from '@/types/permissions';
 import { logger } from '../../../lib/utils/logger';
 
 

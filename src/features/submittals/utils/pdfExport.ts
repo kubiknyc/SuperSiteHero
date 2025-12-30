@@ -12,14 +12,12 @@ import {
   getCompanyInfo,
   type CompanyInfo,
 } from '@/lib/utils/pdfBranding'
-import type {
-  SubmittalWithDetails,
-  SubmittalReviewStatus,
-  SubmittalApprovalCode,
-} from '@/types/submittal'
 import {
   formatSubmittalNumber,
   getSubmittalTypeLabel,
+  type SubmittalWithDetails,
+  type SubmittalReviewStatus,
+  type SubmittalApprovalCode,
 } from '@/types/submittal'
 
 // Page dimensions (Letter size)

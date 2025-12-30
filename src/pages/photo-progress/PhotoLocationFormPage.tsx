@@ -43,8 +43,9 @@ import {
   CameraDirection,
   CameraHeight,
   getCaptureFrequencyLabel,
+  type CreatePhotoLocationDTO,
+  type UpdatePhotoLocationDTO,
 } from '@/types/photo-progress';
-import type { CreatePhotoLocationDTO, UpdatePhotoLocationDTO } from '@/types/photo-progress';
 
 export function PhotoLocationFormPage() {
   const navigate = useNavigate();

@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Permits API Service
  *

@@ -23,10 +23,11 @@ import {
   useToolboxTalkStats,
   useUpcomingToolboxTalks,
 } from '@/features/toolbox-talks/hooks'
-import type { ToolboxTalkStatus, ToolboxTopicCategory } from '@/types/toolbox-talks'
 import {
   TALK_STATUS_LABELS,
   TOPIC_CATEGORY_LABELS,
+  type ToolboxTalkStatus,
+  type ToolboxTopicCategory,
 } from '@/types/toolbox-talks'
 import { useProjectContext } from '@/lib/contexts/ProjectContext'
 import {
@@ -36,11 +37,8 @@ import {
   Users,
   CheckCircle2,
   Calendar,
-  Filter,
   X,
-  TrendingUp,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 export function ToolboxTalksPage() {
   const { currentProject } = useProjectContext()

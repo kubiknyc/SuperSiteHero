@@ -14,16 +14,13 @@ import {
 import {
   useApprovalRequests,
   usePendingApprovals,
-} from '@/features/approvals/hooks'
-import {
   useApproveRequest,
   useApproveWithConditions,
   useRejectRequest,
   useCancelApprovalRequest,
 } from '@/features/approvals/hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { WorkflowEntityType } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
+import { WORKFLOW_ENTITY_CONFIG, type WorkflowEntityType } from '@/types/approval-workflow'
 import { cn } from '@/lib/utils'
 import { logger } from '../../lib/utils/logger';
 

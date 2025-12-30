@@ -12,8 +12,6 @@ import {
   useDistributeMinutes,
   useNextMeeting,
   MEETING_TYPES,
-  MEETING_STATUSES,
-  ACTION_ITEM_PRIORITIES,
   ACTION_ITEM_CATEGORIES,
   ATTENDEE_REPRESENTING,
   type MeetingAttendee,
@@ -27,14 +25,12 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   ArrowLeft,
   Edit,
   Trash2,
   Calendar,
-  Clock,
   MapPin,
   Users,
   FileText,

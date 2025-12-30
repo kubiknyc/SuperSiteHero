@@ -5,8 +5,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import type { MaterialCondition } from '@/types/material-receiving'
-import { MATERIAL_CONDITIONS } from '@/types/material-receiving'
+import { MATERIAL_CONDITIONS, type MaterialCondition } from '@/types/material-receiving'
 
 describe('ConditionBadge', () => {
   describe('MATERIAL_CONDITIONS constant', () => {

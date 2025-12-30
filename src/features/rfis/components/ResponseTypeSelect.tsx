@@ -11,8 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import type { RFIResponseType } from '@/types/rfi'
-import { RFI_RESPONSE_TYPES } from '@/types/rfi'
+import { RFI_RESPONSE_TYPES, type RFIResponseType } from '@/types/rfi'
 import { ResponseTypeBadge } from './ResponseTypeBadge'
 
 interface ResponseTypeSelectProps {

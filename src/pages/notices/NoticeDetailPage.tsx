@@ -21,7 +21,6 @@ import {
   NoticeTypeBadge,
   ResponseDueIndicator,
   RecordResponseDialog,
-  NoticeDocumentUpload,
 } from '@/features/notices/components'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -33,10 +32,8 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Calendar,
-  User,
   FileText,
   Trash2,
-  Edit,
   ExternalLink,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'

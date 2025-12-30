@@ -4,20 +4,17 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type {
-  LookAheadActivityWithDetails,
-  LookAheadSnapshot,
-  MakeReadyStatus,
-  VarianceCategory,
-  PPCMetrics,
-} from '@/types/look-ahead'
 import {
   MAKE_READY_STATUS_CONFIG,
   VARIANCE_CATEGORY_CONFIG,
-  formatPPC,
   getPPCStatusColor,
   calculateReliabilityIndex,
   groupActivitiesByMakeReadyStatus,
+  type LookAheadActivityWithDetails,
+  type LookAheadSnapshot,
+  type MakeReadyStatus,
+  type VarianceCategory,
+  type PPCMetrics,
 } from '@/types/look-ahead'
 
 // =============================================
@@ -32,7 +29,7 @@ interface PPCGaugeProps {
 }
 
 function PPCGauge({ ppc, size = 'md', showLabel = true, className }: PPCGaugeProps) {
-  const { color, bgColor, label } = getPPCStatusColor(ppc)
+  const { color, label } = getPPCStatusColor(ppc)
 
   const sizeClasses = {
     sm: { container: 'h-16 w-16', text: 'text-lg', label: 'text-[10px]' },

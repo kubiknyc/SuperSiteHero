@@ -23,24 +23,21 @@ import {
   useCreateToolboxTalk,
   useUpdateToolboxTalk,
 } from '@/features/toolbox-talks/hooks'
-import type {
-  ToolboxTopicCategory,
-  CreateToolboxTalkDTO,
-  UpdateToolboxTalkDTO,
+import {
+  TOPIC_CATEGORY_LABELS,
+  type ToolboxTopicCategory,
+  type CreateToolboxTalkDTO,
+  type UpdateToolboxTalkDTO,
 } from '@/types/toolbox-talks'
-import { TOPIC_CATEGORY_LABELS } from '@/types/toolbox-talks'
 import { useProjectContext } from '@/lib/contexts/ProjectContext'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
   ArrowLeft,
   Save,
   Calendar,
-  Clock,
   MapPin,
   User,
-  ClipboardList,
   FileText,
-  ChevronDown,
   AlertTriangle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -51,7 +48,7 @@ export function ToolboxTalkFormPage() {
   const isEditing = !!id
 
   const { currentProject } = useProjectContext()
-  const { user, userProfile } = useAuth()
+  const { userProfile } = useAuth()
 
   // Fetch existing talk if editing
   const { data: existingTalk, isLoading: isLoadingTalk } = useToolboxTalk(id || '')

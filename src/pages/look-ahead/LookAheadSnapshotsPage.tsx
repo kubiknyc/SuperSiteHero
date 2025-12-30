@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -35,14 +35,11 @@ import {
   TrendingDown,
   Minus,
   Plus,
-  Target,
-  CheckCircle,
-  AlertTriangle,
-  Clock,
   BarChart3,
   RefreshCw,
   Download,
   FileText,
+  AlertTriangle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -55,7 +52,6 @@ import {
 import { LookAheadStats, PPCBadge } from '@/features/look-ahead/components'
 import {
   type LookAheadSnapshot,
-  type VarianceReason,
   formatPPC,
   getPPCStatusColor,
   calculateWeekRanges,
@@ -73,7 +69,7 @@ export function LookAheadSnapshotsPage() {
   // Queries
   const { data: snapshots, isLoading, refetch } = useLookAheadSnapshots(projectId, 20)
   const { data: ppcMetrics } = usePPCMetrics(projectId)
-  const { data: weekData } = useActivitiesByWeek(projectId)
+  const { data: _weekData } = useActivitiesByWeek(projectId)
 
   // Mutations
   const createSnapshot = useCreateSnapshot()

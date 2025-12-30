@@ -16,13 +16,10 @@ import {
   Send,
   Eye,
   MoreHorizontal,
-  Clock,
   CheckCircle,
   AlertTriangle,
   DollarSign,
-  TrendingUp,
   Calendar,
-  Building2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -60,8 +57,7 @@ import {
 import { InvoiceFormDialog } from '@/features/invoicing/components/InvoiceFormDialog';
 import { InvoiceDetailDialog } from '@/features/invoicing/components/InvoiceDetailDialog';
 import { formatCurrency } from '@/lib/utils';
-import type { OwnerInvoice, OwnerInvoiceStatus } from '@/types/owner-invoice';
-import { OWNER_INVOICE_STATUSES } from '@/types/owner-invoice';
+import { OWNER_INVOICE_STATUSES, type OwnerInvoice, type OwnerInvoiceStatus } from '@/types/owner-invoice';
 
 /**
  * Get status badge variant based on invoice status
@@ -108,7 +104,7 @@ function getStatusColorClass(status: OwnerInvoiceStatus): string {
 
 export default function InvoiceListPage() {
   const { projectId } = useParams<{ projectId: string }>();
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
 
   // State
   const [search, setSearch] = useState('');
@@ -169,7 +165,7 @@ export default function InvoiceListPage() {
     try {
       await sendInvoice.mutateAsync({ id: invoice.id });
       toast.success(`Invoice ${invoice.invoiceNumber} sent`);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to send invoice');
     }
   };
@@ -178,7 +174,7 @@ export default function InvoiceListPage() {
     try {
       await voidInvoice.mutateAsync(invoice.id);
       toast.success(`Invoice ${invoice.invoiceNumber} voided`);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to void invoice');
     }
   };

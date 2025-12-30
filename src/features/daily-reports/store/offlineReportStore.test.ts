@@ -9,8 +9,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 vi.unmock('@/features/daily-reports/store/offlineReportStore')
 
 // Must import after unmocking
-import { useOfflineReportStore } from './offlineReportStore'
-import type { DraftReport, WorkforceEntry, EquipmentEntry, DeliveryEntry, VisitorEntry } from './offlineReportStore'
+import { useOfflineReportStore, type DraftReport, type WorkforceEntry, type EquipmentEntry, type DeliveryEntry, type VisitorEntry } from './offlineReportStore'
 
 // Helper to get fresh state after an action
 const getState = () => useOfflineReportStore.getState()

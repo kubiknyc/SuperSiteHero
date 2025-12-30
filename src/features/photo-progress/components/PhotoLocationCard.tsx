@@ -16,8 +16,10 @@ import {
   Image,
   ChevronRight,
 } from 'lucide-react';
-import { getCaptureFrequencyLabel } from '@/types/photo-progress';
-import type { PhotoLocationWithLatest } from '@/types/photo-progress';
+import {
+  getCaptureFrequencyLabel,
+  type PhotoLocationWithLatest,
+} from '@/types/photo-progress';
 
 interface PhotoLocationCardProps {
   location: PhotoLocationWithLatest;

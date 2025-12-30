@@ -3,8 +3,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import type { LienWaiverStatus, LienWaiverType } from '@/types/lien-waiver';
-import { LIEN_WAIVER_STATUSES, LIEN_WAIVER_TYPES } from '@/types/lien-waiver';
+import { LIEN_WAIVER_STATUSES, LIEN_WAIVER_TYPES, type LienWaiverStatus, type LienWaiverType } from '@/types/lien-waiver';
 
 interface LienWaiverStatusBadgeProps {
   status: LienWaiverStatus;

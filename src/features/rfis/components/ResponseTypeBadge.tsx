@@ -3,8 +3,7 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import type { RFIResponseType } from '@/types/rfi'
-import { RFI_RESPONSE_TYPES, getRFIResponseTypeLabel, getRFIResponseTypeDescription } from '@/types/rfi'
+import { RFI_RESPONSE_TYPES, getRFIResponseTypeLabel, getRFIResponseTypeDescription, type RFIResponseType } from '@/types/rfi'
 
 interface ResponseTypeBadgeProps {
   responseType: RFIResponseType | null | undefined

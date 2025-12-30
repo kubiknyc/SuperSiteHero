@@ -3,8 +3,7 @@
 
 import { Clock, AlertTriangle, CheckCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type { Notice } from '../types'
-import { getDaysUntilDue, isResponseOverdue } from '../types'
+import { getDaysUntilDue, isResponseOverdue, type Notice } from '../types'
 
 interface ResponseDueIndicatorProps {
   notice: Notice

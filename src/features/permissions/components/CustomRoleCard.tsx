@@ -15,8 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreHorizontal, Edit, Trash2, Users, Shield, Copy } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { CustomRole } from '@/types/permissions';
-import { formatRole } from '@/types/permissions';
+import { formatRole, type CustomRole } from '@/types/permissions';
 import { formatDistanceToNow } from 'date-fns';
 
 interface CustomRoleCardProps {

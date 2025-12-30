@@ -44,11 +44,11 @@ import {
   useUpdatePurchaseOrder,
 } from '../hooks/useProcurement';
 import { useAuth } from '@/lib/auth/AuthContext';
-import { MATERIAL_UNITS } from '@/types/procurement';
-import type {
-  PurchaseOrderWithDetails,
-  CreatePurchaseOrderDTO,
-  CreatePOLineItemDTO,
+import {
+  MATERIAL_UNITS,
+  type PurchaseOrderWithDetails,
+  type CreatePurchaseOrderDTO,
+  type CreatePOLineItemDTO,
 } from '@/types/procurement';
 
 interface POFormDialogProps {
@@ -108,7 +108,6 @@ export function POFormDialog({
     reset,
     watch,
     setValue,
-    formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
       vendor_id: '',

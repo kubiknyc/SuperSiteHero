@@ -40,8 +40,8 @@ import {
 } from 'lucide-react';
 import {
   getCaptureFrequencyLabel,
+  type ProgressPhotoWithDetails,
 } from '@/types/photo-progress';
-import type { ProgressPhotoWithDetails } from '@/types/photo-progress';
 import {
   AlertDialog,
   AlertDialogAction,

@@ -48,8 +48,7 @@ import {
   PermissionMatrix,
   PermissionMatrixSkeleton,
 } from '@/features/permissions/components';
-import type { CustomRole, DefaultRole } from '@/types/permissions';
-import { DEFAULT_ROLES, formatRole } from '@/types/permissions';
+import { DEFAULT_ROLES, formatRole, type CustomRole, type DefaultRole } from '@/types/permissions';
 
 export function RolesPermissionsPage() {
   const { userProfile } = useAuth();

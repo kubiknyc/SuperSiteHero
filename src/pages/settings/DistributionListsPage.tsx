@@ -49,11 +49,11 @@ import {
   DistributionListFormDialog,
   DistributionListCard,
 } from '@/features/distribution-lists/components'
-import type {
-  DistributionListWithCount,
-  DistributionListType,
+import {
+  DISTRIBUTION_LIST_TYPES,
+  type DistributionListWithCount,
+  type DistributionListType,
 } from '@/types/distribution-list'
-import { DISTRIBUTION_LIST_TYPES } from '@/types/distribution-list'
 
 export function DistributionListsPage() {
   const { userProfile } = useAuth()

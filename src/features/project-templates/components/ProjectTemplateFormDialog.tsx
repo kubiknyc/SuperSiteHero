@@ -42,20 +42,18 @@ import {
   GripVertical,
   Trash2,
 } from 'lucide-react'
-import type {
-  ProjectTemplate,
-  CreateProjectTemplateInput,
-  UpdateProjectTemplateInput,
-  TemplateCategory,
-  TemplateEnabledFeatures,
-  TemplateFolderStructure,
-  CreateTemplatePhaseInput,
-} from '@/types/project-template'
 import {
   TEMPLATE_CATEGORIES,
   DEFAULT_FOLDER_STRUCTURES,
   DEFAULT_PHASES,
   DEFAULT_FEATURES,
+  type ProjectTemplate,
+  type CreateProjectTemplateInput,
+  type UpdateProjectTemplateInput,
+  type TemplateCategory,
+  type TemplateEnabledFeatures,
+  type TemplateFolderStructure,
+  type CreateTemplatePhaseInput,
 } from '@/types/project-template'
 
 interface ProjectTemplateFormDialogProps {

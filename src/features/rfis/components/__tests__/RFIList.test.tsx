@@ -19,8 +19,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { RFIList } from '../RFIList';
-import type { RFIListProps } from '../RFIList';
+import { RFIList, type RFIListProps } from '../RFIList';
 import {
   createMockRFI,
   createMockRFIs,

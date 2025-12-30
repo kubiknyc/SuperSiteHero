@@ -153,8 +153,7 @@ import {
 import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
 import { getCompanyInfo, addDocumentHeader, addFootersToAllPages } from '@/lib/utils/pdfBranding'
-import { formatSubmittalNumber, getSubmittalTypeLabel } from '@/types/submittal'
-import type { SubmittalWithDetails } from '@/types/submittal'
+import { formatSubmittalNumber, getSubmittalTypeLabel, type SubmittalWithDetails } from '@/types/submittal'
 
 describe('Submittal PDF Export', () => {
   beforeEach(() => {

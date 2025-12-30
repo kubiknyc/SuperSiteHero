@@ -3,8 +3,10 @@
  */
 
 import { cn } from '@/lib/utils';
-import type { POStatus } from '@/types/procurement';
-import { PO_STATUS_CONFIG } from '@/types/procurement';
+import {
+  PO_STATUS_CONFIG,
+  type POStatus,
+} from '@/types/procurement';
 
 interface POStatusBadgeProps {
   status: POStatus;

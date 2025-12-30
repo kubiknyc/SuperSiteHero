@@ -9,15 +9,15 @@ import {
   markupSyncManager,
   MarkupSyncSession,
 } from '@/lib/realtime/markup-sync';
-import type {
-  MarkupOperation,
-  CollaboratorInfo,
-  MarkupData,
-  TransformData,
-  CollaboratorAction,
-  RemoteEditHighlight,
+import {
+  MARKUP_SYNC_CONSTANTS,
+  type MarkupOperation,
+  type CollaboratorInfo,
+  type MarkupData,
+  type TransformData,
+  type CollaboratorAction,
+  type RemoteEditHighlight,
 } from '@/lib/realtime/markup-sync-types';
-import { MARKUP_SYNC_CONSTANTS } from '@/lib/realtime/markup-sync-types';
 
 interface UseMarkupCollaborationOptions {
   documentId: string;

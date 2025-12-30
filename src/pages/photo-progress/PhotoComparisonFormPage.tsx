@@ -41,12 +41,10 @@ import {
 import {
   ComparisonType,
   getComparisonTypeLabel,
-} from '@/types/photo-progress';
-import type {
-  CreatePhotoComparisonDTO,
-  UpdatePhotoComparisonDTO,
-  PhotoLocationFilters,
-  ProgressPhotoFilters,
+  type CreatePhotoComparisonDTO,
+  type UpdatePhotoComparisonDTO,
+  type PhotoLocationFilters,
+  type ProgressPhotoFilters,
 } from '@/types/photo-progress';
 
 export function PhotoComparisonFormPage() {

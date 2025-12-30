@@ -19,8 +19,7 @@ import {
 } from '@/components/ui/select'
 import { IncidentCard, SeverityBadge } from '../components'
 import { useIncidents, useIncidentStats } from '../hooks/useIncidents'
-import type { IncidentSeverity, IncidentStatus, IncidentType } from '@/types/safety-incidents'
-import { SEVERITY_CONFIG, INCIDENT_STATUS_CONFIG, INCIDENT_TYPE_CONFIG } from '@/types/safety-incidents'
+import { SEVERITY_CONFIG, INCIDENT_STATUS_CONFIG, INCIDENT_TYPE_CONFIG, type IncidentSeverity, type IncidentStatus, type IncidentType } from '@/types/safety-incidents'
 import {
   Plus,
   Search,

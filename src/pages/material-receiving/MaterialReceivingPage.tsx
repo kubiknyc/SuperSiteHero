@@ -47,16 +47,14 @@ import {
   useDeleteDelivery,
   useDelivery,
 } from '@/features/material-receiving/hooks/useMaterialDeliveries';
-import type {
-  DeliveryStatus,
-  ConditionStatus,
-  MaterialCategory,
-  CreateMaterialDeliveryDTO,
-} from '@/types/material-receiving';
 import {
   DELIVERY_STATUSES,
   CONDITION_STATUSES,
   MATERIAL_CATEGORIES,
+  type DeliveryStatus,
+  type ConditionStatus,
+  type MaterialCategory,
+  type CreateMaterialDeliveryDTO,
 } from '@/types/material-receiving';
 
 /**
@@ -190,7 +188,7 @@ export function MaterialReceivingPage() {
     try {
       exportDeliveriesToCSV(filteredDeliveries);
       toast.success(`Exported ${filteredDeliveries.length} deliveries to CSV`);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to export deliveries');
     } finally {
       setIsExporting(false);

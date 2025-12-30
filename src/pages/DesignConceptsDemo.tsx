@@ -3,7 +3,7 @@
  * Different visual design directions for JobSight
  */
 
-import { HardHat, FileText, CheckCircle, ArrowRight, Users, Calendar, Plus, BarChart3, Shield, Clock, ChevronRight } from 'lucide-react';
+import { HardHat, FileText, CheckCircle, ArrowRight, Users, BarChart3, ChevronRight } from 'lucide-react';
 
 export function DesignConceptsDemo() {
   return (

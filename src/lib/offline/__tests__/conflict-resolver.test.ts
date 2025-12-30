@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ConflictResolver } from '../conflict-resolver';
-import type { FieldDiff, ResolutionStrategy, ConflictMetadata } from '../conflict-resolver';
+import type { ConflictMetadata } from '../conflict-resolver';
 
 describe('ConflictResolver', () => {
   beforeEach(() => {

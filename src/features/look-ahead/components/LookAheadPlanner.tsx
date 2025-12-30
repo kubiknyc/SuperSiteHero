@@ -30,12 +30,13 @@ import {
   usePPCMetrics,
   useProjectOpenConstraints,
 } from '../hooks/useLookAhead'
-import type {
-  LookAheadActivityWithDetails,
-  ConstructionTrade,
-  LookAheadActivityStatus,
+import {
+  CONSTRUCTION_TRADES,
+  ACTIVITY_STATUS_CONFIG,
+  type LookAheadActivityWithDetails,
+  type ConstructionTrade,
+  type LookAheadActivityStatus,
 } from '@/types/look-ahead'
-import { CONSTRUCTION_TRADES, ACTIVITY_STATUS_CONFIG } from '@/types/look-ahead'
 
 interface LookAheadPlannerProps {
   projectId: string

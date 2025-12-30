@@ -3,8 +3,10 @@
  */
 
 import { Badge } from '@/components/ui/badge'
-import type { QBSyncStatus } from '@/types/quickbooks'
-import { getSyncStatusConfig } from '@/types/quickbooks'
+import {
+  getSyncStatusConfig,
+  type QBSyncStatus,
+} from '@/types/quickbooks'
 
 interface QBSyncStatusBadgeProps {
   status: QBSyncStatus | null | undefined

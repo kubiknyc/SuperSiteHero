@@ -14,10 +14,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { useRecordNoticeResponseWithNotification } from '../hooks'
-import { RESPONSE_STATUSES } from '../types'
+import { RESPONSE_STATUSES, type Notice } from '../types'
 import { NoticeDocumentUpload } from './NoticeDocumentUpload'
 import { CheckCircle } from 'lucide-react'
-import type { Notice } from '../types'
 import { logger } from '@/lib/utils/logger'
 
 interface RecordResponseDialogProps {

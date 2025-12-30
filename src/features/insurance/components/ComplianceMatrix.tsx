@@ -41,12 +41,13 @@ import {
   useReleasePaymentHold,
   useRecalculateComplianceStatus,
 } from '../hooks/useInsurance'
-import type {
-  SubcontractorComplianceStatus,
-  InsuranceCertificateWithRelations,
-  InsuranceType,
+import {
+  INSURANCE_TYPE_LABELS,
+  formatInsuranceLimit,
+  type SubcontractorComplianceStatus,
+  type InsuranceCertificateWithRelations,
+  type InsuranceType,
 } from '@/types/insurance'
-import { INSURANCE_TYPE_LABELS, formatInsuranceLimit } from '@/types/insurance'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/ui/use-toast'
 

@@ -21,6 +21,7 @@ import type {
   ScheduledReportFilters,
   GeneratedReportFilters,
   ReportDataSource,
+  ReportOutputFormat,
 } from '@/types/report-builder'
 
 // ============================================================================
@@ -531,7 +532,6 @@ export function useDefaultFields(dataSource: ReportDataSource | undefined) {
 // ============================================================================
 
 import { reportExportService, type ReportExportOptions } from '../services/reportExportService'
-import type { ReportOutputFormat } from '@/types/report-builder'
 
 /**
  * Hook for exporting reports to different formats

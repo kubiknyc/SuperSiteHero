@@ -3,8 +3,7 @@
 
 import type { RealtimeChannel, RealtimePresenceState } from '@supabase/supabase-js'
 import { realtimeManager } from './client'
-import type { PresenceUser, PresenceOptions, TypingState } from './types'
-import { getUserColor } from './types'
+import { getUserColor, type PresenceUser, type PresenceOptions, type TypingState } from './types'
 
 type PresenceCallback = (users: PresenceUser[]) => void
 type TypingCallback = (typingUsers: TypingState[]) => void

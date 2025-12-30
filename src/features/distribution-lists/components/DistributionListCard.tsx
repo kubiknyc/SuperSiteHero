@@ -23,8 +23,7 @@ import {
   Globe,
   FolderOpen,
 } from 'lucide-react'
-import type { DistributionListWithCount } from '@/types/distribution-list'
-import { getListTypeLabel } from '@/types/distribution-list'
+import { getListTypeLabel, type DistributionListWithCount } from '@/types/distribution-list'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 

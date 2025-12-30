@@ -13,13 +13,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import type { RFIStatus, RFIPriority, RFIResponseType, BallInCourtRole } from '@/types/rfi'
 import {
   RFI_STATUSES,
   RFI_PRIORITIES,
   BALL_IN_COURT_ROLES,
   formatRFINumber,
   getRFIStatusColor,
+  type RFIStatus,
+  type RFIPriority,
+  type RFIResponseType,
+  type BallInCourtRole,
 } from '@/types/rfi'
 import { ResponseTypeBadge } from './ResponseTypeBadge'
 

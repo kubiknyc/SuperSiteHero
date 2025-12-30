@@ -43,13 +43,13 @@ import {
   GitCompare,
   FileBarChart,
 } from 'lucide-react';
-import { PhotoReportType } from '@/types/photo-progress';
-import type {
-  CreatePhotoReportDTO,
-  UpdatePhotoReportDTO,
-  PhotoLocationFilters,
-  ProgressPhotoFilters,
-  PhotoComparisonFilters,
+import {
+  PhotoReportType,
+  type CreatePhotoReportDTO,
+  type UpdatePhotoReportDTO,
+  type PhotoLocationFilters,
+  type ProgressPhotoFilters,
+  type PhotoComparisonFilters,
 } from '@/types/photo-progress';
 
 export function PhotoReportFormPage() {

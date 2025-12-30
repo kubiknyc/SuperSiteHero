@@ -17,8 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select } from '@/components/ui/select';
 import { useCreateLienWaiver, useLienWaiverTemplates } from '../hooks/useLienWaivers';
 import { Plus, FileCheck, Loader2 } from 'lucide-react';
-import type { LienWaiverType, CreateLienWaiverDTO } from '@/types/lien-waiver';
-import { LIEN_WAIVER_TYPES, US_STATES } from '@/types/lien-waiver';
+import { LIEN_WAIVER_TYPES, US_STATES, type LienWaiverType, type CreateLienWaiverDTO } from '@/types/lien-waiver';
 import { logger } from '../../../lib/utils/logger';
 
 

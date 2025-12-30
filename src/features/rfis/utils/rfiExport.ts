@@ -2,8 +2,7 @@
 // Export utilities for RFI Log (CSV and Excel)
 
 import { format } from 'date-fns'
-import type { RFIWithDetails } from '../hooks/useDedicatedRFIs'
-import { formatRFINumber, getBallInCourtLabel, RFI_STATUSES, RFI_PRIORITIES } from '../hooks/useDedicatedRFIs'
+import { formatRFINumber, getBallInCourtLabel, RFI_STATUSES, RFI_PRIORITIES, type RFIWithDetails } from '../hooks/useDedicatedRFIs'
 
 export interface RFIExportRow {
   rfiNumber: string

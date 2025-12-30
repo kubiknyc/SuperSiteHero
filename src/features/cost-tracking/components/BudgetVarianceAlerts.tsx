@@ -17,12 +17,12 @@ import {
   X,
 } from 'lucide-react'
 import { useVarianceAlerts } from '../hooks/useVarianceAlerts'
-import type {
-  BudgetVarianceAlert,
-  BudgetVarianceAlertSeverity,
-  BudgetVarianceThresholds,
+import {
+  VARIANCE_ALERT_CONFIG,
+  type BudgetVarianceAlert,
+  type BudgetVarianceAlertSeverity,
+  type BudgetVarianceThresholds,
 } from '@/types/cost-tracking'
-import { VARIANCE_ALERT_CONFIG } from '@/types/cost-tracking'
 import { cn } from '@/lib/utils'
 
 interface BudgetVarianceAlertsProps {

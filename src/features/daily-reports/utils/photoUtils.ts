@@ -1,8 +1,7 @@
 // Photo processing utilities
 import imageCompression from 'browser-image-compression'
 import exifr from 'exifr'
-import type { GPSCoordinates, EXIFData, PhotoMetadata, PhotoUploadOptions } from '../types/photo'
-import { DEFAULT_UPLOAD_OPTIONS } from '../types/photo'
+import { DEFAULT_UPLOAD_OPTIONS, type GPSCoordinates, type EXIFData, type PhotoMetadata, type PhotoUploadOptions } from '../types/photo'
 import { logger } from '@/lib/utils/logger'
 
 /**

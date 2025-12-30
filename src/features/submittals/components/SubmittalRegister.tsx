@@ -13,8 +13,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import type { SubmittalReviewStatus, SubmittalApprovalCode } from '@/types/submittal'
-import { SUBMITTAL_REVIEW_STATUSES, getSubmittalStatusColor } from '@/types/submittal'
+import { SUBMITTAL_REVIEW_STATUSES, getSubmittalStatusColor, type SubmittalReviewStatus, type SubmittalApprovalCode } from '@/types/submittal'
 import { ApprovalCodeBadge } from './ApprovalCodeBadge'
 
 // =============================================

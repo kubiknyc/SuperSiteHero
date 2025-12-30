@@ -46,19 +46,17 @@ import {
   useRemoveDistributionListMember,
 } from '../hooks/useDistributionLists'
 import { useCompanyUsers } from '@/features/company-settings/hooks/useCompanyUsers'
-import type {
-  DistributionList,
-  DistributionListMemberWithUser,
-  CreateDistributionListDTO,
-  CreateDistributionListMemberDTO,
-  DistributionListType,
-  MemberRole,
-} from '@/types/distribution-list'
 import {
   DISTRIBUTION_LIST_TYPES,
   MEMBER_ROLES,
   getMemberDisplayName,
   getMemberEmail,
+  type DistributionList,
+  type DistributionListMemberWithUser,
+  type CreateDistributionListDTO,
+  type CreateDistributionListMemberDTO,
+  type DistributionListType,
+  type MemberRole,
 } from '@/types/distribution-list'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'

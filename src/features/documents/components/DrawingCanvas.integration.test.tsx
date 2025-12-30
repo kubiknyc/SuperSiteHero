@@ -2,8 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { DrawingCanvas } from './DrawingCanvas'
-import { markupsApi } from '@/lib/api/services/markups'
-import type { DocumentMarkup } from '@/lib/api/services/markups'
+import { markupsApi, type DocumentMarkup } from '@/lib/api/services/markups'
 
 // Mock the markups API
 vi.mock('@/lib/api/services/markups', () => ({

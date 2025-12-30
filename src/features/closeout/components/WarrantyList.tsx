@@ -14,18 +14,16 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import type {
-  WarrantyWithDetails,
-  WarrantyStatus,
-  WarrantyType,
-  WarrantyStatistics,
-} from '@/types/closeout'
 import {
   WARRANTY_TYPES,
   WARRANTY_STATUSES,
   getWarrantyStatusColor,
   getDaysUntilWarrantyExpiration,
   isWarrantyExpiringSoon,
+  type WarrantyWithDetails,
+  type WarrantyStatus,
+  type WarrantyType,
+  type WarrantyStatistics,
 } from '@/types/closeout'
 
 // =============================================

@@ -6,8 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
-import type { NoticeFilters as FilterType } from '../types'
-import { NOTICE_TYPES, NOTICE_STATUSES, NOTICE_DIRECTIONS } from '../types'
+import { NOTICE_TYPES, NOTICE_STATUSES, type NoticeFilters as FilterType } from '../types'
 
 interface NoticeFiltersProps {
   filters: FilterType

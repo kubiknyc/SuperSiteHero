@@ -26,15 +26,13 @@ import {
   Trash2,
   Ban,
 } from 'lucide-react'
-import type {
-  InsuranceCertificateWithRelations,
-  CertificateStatus,
-} from '@/types/insurance'
 import {
   INSURANCE_TYPE_LABELS,
   CERTIFICATE_STATUS_LABELS,
   formatInsuranceLimit,
   getDaysUntilExpiry,
+  type InsuranceCertificateWithRelations,
+  type CertificateStatus,
 } from '@/types/insurance'
 import { cn } from '@/lib/utils'
 

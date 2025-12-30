@@ -18,8 +18,7 @@ import {
   Building2,
   FolderOpen,
 } from 'lucide-react'
-import { useMissingWaiversSummary, useMissingWaivers } from '../hooks/useMissingWaivers'
-import type { MissingWaiver } from '../hooks/useMissingWaivers'
+import { useMissingWaiversSummary, useMissingWaivers, type MissingWaiver } from '../hooks/useMissingWaivers'
 import { cn } from '@/lib/utils'
 
 interface MissingWaiversAlertProps {

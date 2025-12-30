@@ -1,4 +1,3 @@
-// @ts-nocheck
 // File: /src/pages/meetings/MeetingsPage.tsx
 // Meetings list and management page
 

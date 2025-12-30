@@ -8,21 +8,19 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
 import { differenceInDays, parseISO, format, subDays } from 'date-fns'
-import type {
-  PaymentApplication,
-  AgingBucket,
-  AgingReceivable,
-  PaymentAgingReport,
-  ProjectAgingSummary,
-  AgingAlert,
-  AgingAlertConfig,
-  DSOMetrics,
-  CashFlowForecastItem,
-  PaymentAgingDashboard,
-} from '@/types/payment-application'
 import {
   AGING_BUCKETS as BUCKETS,
   DEFAULT_AGING_ALERT_CONFIG as DEFAULT_CONFIG,
+  type PaymentApplication,
+  type AgingBucket,
+  type AgingReceivable,
+  type PaymentAgingReport,
+  type ProjectAgingSummary,
+  type AgingAlert,
+  type AgingAlertConfig,
+  type DSOMetrics,
+  type CashFlowForecastItem,
+  type PaymentAgingDashboard,
 } from '@/types/payment-application'
 
 // ============================================================================
@@ -478,7 +476,7 @@ export function useCashFlowForecast() {
 export function usePaymentAgingDashboard() {
   const { userProfile } = useAuth()
   const companyId = userProfile?.company_id
-  const { data: report, isLoading: reportLoading, error: reportError } = usePaymentAgingReport()
+  const { data: report } = usePaymentAgingReport()
   const { data: alerts } = usePaymentAgingAlerts()
   const { data: dsoMetrics } = useDSOMetrics()
   const { data: forecast } = useCashFlowForecast()

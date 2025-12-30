@@ -19,8 +19,8 @@ import {
   usePendingPunchCount,
   usePunchDrafts,
   useUnsyncedPunchItems,
+  type DraftPunchItem,
 } from './offlinePunchStore'
-import type { DraftPunchItem } from './offlinePunchStore'
 
 // Mock localStorage
 const localStorageMock = (() => {

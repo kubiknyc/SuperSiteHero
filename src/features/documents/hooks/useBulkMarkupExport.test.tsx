@@ -8,8 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useBulkMarkupExport } from './useBulkMarkupExport'
-import { markupExportService } from '@/lib/api/services/markup-export'
-import type { DrawingWithMarkups } from '@/lib/api/services/markup-export'
+import { markupExportService, type DrawingWithMarkups } from '@/lib/api/services/markup-export'
 
 // Mock the markup export service
 vi.mock('@/lib/api/services/markup-export', () => ({

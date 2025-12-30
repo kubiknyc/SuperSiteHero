@@ -5,8 +5,7 @@
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { CheckCircle, AlertTriangle, AlertCircle, XCircle } from 'lucide-react'
-import type { MaterialCondition } from '@/types/material-receiving'
-import { MATERIAL_CONDITIONS } from '@/types/material-receiving'
+import { MATERIAL_CONDITIONS, type MaterialCondition } from '@/types/material-receiving'
 
 interface ConditionBadgeProps {
   condition: MaterialCondition

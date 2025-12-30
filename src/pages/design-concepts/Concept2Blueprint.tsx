@@ -2,7 +2,7 @@
 // Blueprint blue + white + concrete gray
 // Architectural drawings aesthetic, crisp and professional
 
-import { Ruler, Grid, Layers, Box, ArrowRight, Check } from 'lucide-react'
+import { Ruler, Box, ArrowRight, Check } from 'lucide-react'
 
 export default function Concept2Blueprint() {
   return (

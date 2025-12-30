@@ -8,17 +8,15 @@
 import { format } from 'date-fns'
 import { jsPDF } from 'jspdf'
 import autoTable from 'jspdf-autotable'
-import type {
-  LookAheadActivityWithDetails,
-  LookAheadConstraint,
-  PPCMetrics,
-  WeekRange,
-  LookAheadActivityStatus,
-} from '@/types/look-ahead'
 import {
   ACTIVITY_STATUS_CONFIG,
   CONSTRAINT_TYPE_CONFIG,
   calculateWeekRanges,
+  type LookAheadActivityWithDetails,
+  type LookAheadConstraint,
+  type PPCMetrics,
+  type WeekRange,
+  type LookAheadActivityStatus,
 } from '@/types/look-ahead'
 
 // ============================================================================
@@ -273,7 +271,7 @@ export async function exportLookAheadToPDF(data: LookAheadExportData): Promise<v
           8: { cellWidth: 10 }, // %
           9: { cellWidth: 45 }, // Constraints
         },
-        didDrawPage: (data) => {
+        didDrawPage: (_data) => {
           // Footer on each page
           doc.setFontSize(8)
           doc.setTextColor(128, 128, 128)
@@ -428,7 +426,7 @@ export async function exportLookAheadToExcel(data: LookAheadExportData): Promise
 
   // Add data rows
   const rows = activitiesToExportRows(data.activities, weeks)
-  rows.forEach((row, index) => {
+  rows.forEach((row, _index) => {
     const dataRow = overviewSheet.addRow(row)
 
     // Color code by status

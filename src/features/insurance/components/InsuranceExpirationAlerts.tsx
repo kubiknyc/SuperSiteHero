@@ -18,8 +18,7 @@ import {
   Calendar,
 } from 'lucide-react'
 import { useExpiringCertificates } from '../hooks/useInsurance'
-import type { ExpiringCertificate } from '@/types/insurance'
-import { INSURANCE_TYPE_LABELS } from '@/types/insurance'
+import { INSURANCE_TYPE_LABELS, type ExpiringCertificate } from '@/types/insurance'
 import { cn } from '@/lib/utils'
 
 interface InsuranceExpirationAlertsProps {

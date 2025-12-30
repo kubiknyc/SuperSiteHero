@@ -12,7 +12,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen, fireEvent } from '@/__tests__/helpers'
+import { render, screen, fireEvent, createMockServer, createDocuSignHandlers, successResponse, errorResponse, createDelayedHandler } from '@/__tests__/helpers'
 import {
   useDocuSignConnectionStatus,
   useInitiateConnection,
@@ -36,13 +36,6 @@ import {
   createMockUser,
   createMockProject,
 } from '@/__tests__/factories'
-import {
-  createMockServer,
-  createDocuSignHandlers,
-  successResponse,
-  errorResponse,
-  createDelayedHandler,
-} from '@/__tests__/helpers'
 import type { DSEnvelopeStatus } from '@/types/docusign'
 
 // ============================================================================

@@ -33,8 +33,10 @@ import {
   CheckCircle2,
 } from 'lucide-react';
 import { useBulkLinkPhotos, useLinkPhotoToEntity } from '../hooks/useUnifiedPhotos';
-import type { PhotoEntityType } from '@/types/unified-photos';
-import { ENTITY_TYPE_LABELS } from '@/types/unified-photos';
+import {
+  ENTITY_TYPE_LABELS,
+  type PhotoEntityType,
+} from '@/types/unified-photos';
 import { logger } from '../../../lib/utils/logger';
 
 

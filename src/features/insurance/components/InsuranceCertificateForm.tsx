@@ -37,13 +37,13 @@ import {
 } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Loader2, Shield } from 'lucide-react'
-import type {
-  InsuranceCertificateWithRelations,
-  CreateInsuranceCertificateDTO,
-  UpdateInsuranceCertificateDTO,
-  InsuranceType,
+import {
+  INSURANCE_TYPE_LABELS,
+  type InsuranceCertificateWithRelations,
+  type CreateInsuranceCertificateDTO,
+  type UpdateInsuranceCertificateDTO,
+  type InsuranceType,
 } from '@/types/insurance'
-import { INSURANCE_TYPE_LABELS } from '@/types/insurance'
 import {
   useCreateInsuranceCertificate,
   useUpdateInsuranceCertificate,

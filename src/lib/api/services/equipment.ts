@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * Equipment API Service
  *

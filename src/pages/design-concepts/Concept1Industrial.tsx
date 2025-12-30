@@ -2,11 +2,9 @@
 // Deep charcoal + steel blue + safety yellow
 // Bold, technical, construction-focused aesthetic
 
-import { useState } from 'react'
 import { HardHat, ArrowRight, Check, AlertTriangle, TrendingUp, Users, FileText, Calendar, ChevronRight } from 'lucide-react'
 
 export default function Concept1Industrial() {
-  const [activeTab, setActiveTab] = useState('overview')
 
   return (
     <div className="min-h-screen" style={{

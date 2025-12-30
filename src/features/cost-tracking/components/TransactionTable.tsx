@@ -38,8 +38,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { cn } from '@/lib/utils'
-import { TRANSACTION_TYPES, SOURCE_TYPES } from '@/types/cost-tracking'
-import type { CostTransactionWithDetails, TransactionType, SourceType } from '@/types/cost-tracking'
+import { TRANSACTION_TYPES, SOURCE_TYPES, type CostTransactionWithDetails, type TransactionType, type SourceType } from '@/types/cost-tracking'
 
 interface TransactionTableProps {
   transactions: CostTransactionWithDetails[]

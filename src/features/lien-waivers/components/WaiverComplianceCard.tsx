@@ -6,8 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, CheckCircle, Clock, FileCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ProjectWaiverSummary } from '@/types/lien-waiver';
-import { formatWaiverAmount } from '@/types/lien-waiver';
+import { formatWaiverAmount, type ProjectWaiverSummary } from '@/types/lien-waiver';
 
 interface WaiverComplianceCardProps {
   summary: ProjectWaiverSummary;

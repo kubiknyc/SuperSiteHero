@@ -14,17 +14,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
-import type {
-  OSHA300LogEntry,
-  OSHA300ASummary,
-  OSHAInjuryIllnessType,
-  IncidentSeverity,
-} from '@/types/safety-incidents'
 import {
   OSHA_INJURY_ILLNESS_TYPES,
   SEVERITY_CONFIG,
   calculateOSHAIncidentRate,
   calculateDARTRate,
+  type OSHA300LogEntry,
+  type OSHA300ASummary,
+  type OSHAInjuryIllnessType,
+  type IncidentSeverity,
 } from '@/types/safety-incidents'
 
 // =============================================

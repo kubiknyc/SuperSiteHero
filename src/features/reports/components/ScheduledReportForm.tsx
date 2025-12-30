@@ -44,12 +44,10 @@ import {
   SCHEDULE_FREQUENCY_CONFIG,
   OUTPUT_FORMAT_CONFIG,
   isValidEmail,
-} from '@/types/report-builder'
-import type {
-  CreateScheduledReportDTO,
-  UpdateScheduledReportDTO,
-  ReportScheduleFrequency,
-  ReportOutputFormat,
+  type CreateScheduledReportDTO,
+  type UpdateScheduledReportDTO,
+  type ReportScheduleFrequency,
+  type ReportOutputFormat,
 } from '@/types/report-builder'
 import { logger } from '../../../lib/utils/logger';
 

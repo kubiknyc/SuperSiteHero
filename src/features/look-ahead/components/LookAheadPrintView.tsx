@@ -7,8 +7,7 @@
 
 import { useMemo } from 'react'
 import { format } from 'date-fns'
-import { type LookAheadActivityWithDetails, ACTIVITY_STATUS_CONFIG } from '@/types/look-ahead'
-import { type PPCMetrics } from '@/types/look-ahead'
+import { ACTIVITY_STATUS_CONFIG, type LookAheadActivityWithDetails, type PPCMetrics } from '@/types/look-ahead'
 
 // ============================================================================
 // Types

@@ -30,8 +30,9 @@ import {
   INCIDENT_STATUS_CONFIG,
   INCIDENT_TYPE_CONFIG,
   ROOT_CAUSE_CATEGORY_CONFIG,
+  type IncidentStatus,
+  type CorrectiveActionStatus,
 } from '@/types/safety-incidents'
-import type { IncidentStatus, CorrectiveActionStatus } from '@/types/safety-incidents'
 import {
   ArrowLeft,
   Edit,

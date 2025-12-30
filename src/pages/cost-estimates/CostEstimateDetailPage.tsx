@@ -13,10 +13,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
 } from '@/components/ui'
 import { ArrowLeft, Plus, Pencil, FileDown, Printer } from 'lucide-react'
 import {

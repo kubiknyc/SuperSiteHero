@@ -20,14 +20,16 @@ import {
 import { Button } from '@/components/ui/button'
 import { BarChart3, LineChart, PieChart, AreaChart as AreaChartIcon, Trash2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import type {
-  ChartConfiguration,
-  ChartType,
-  ChartColorScheme,
-  ReportFieldDefinition,
-  ReportAggregationType,
+import {
+  CHART_TYPE_CONFIG,
+  CHART_COLOR_SCHEMES,
+  AGGREGATION_CONFIG,
+  type ChartConfiguration,
+  type ChartType,
+  type ChartColorScheme,
+  type ReportFieldDefinition,
+  type ReportAggregationType,
 } from '@/types/report-builder'
-import { CHART_TYPE_CONFIG, CHART_COLOR_SCHEMES, AGGREGATION_CONFIG } from '@/types/report-builder'
 import { ChartRenderer } from './ChartRenderer'
 
 interface ChartBuilderProps {

@@ -29,11 +29,11 @@ import {
   Settings,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type {
-  Permission,
-  PermissionCategory,
+import {
+  getCategoryLabel,
+  type Permission,
+  type PermissionCategory,
 } from '@/types/permissions';
-import { getCategoryLabel } from '@/types/permissions';
 
 interface PermissionMatrixProps {
   permissions: Permission[];
