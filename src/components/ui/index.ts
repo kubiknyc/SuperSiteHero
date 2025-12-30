@@ -15,6 +15,7 @@ export type { TextareaProps } from './textarea'
 
 export {
   Select,
+  NativeSelect,
   nativeSelectVariants,
   RadixSelect,
   SelectGroup,

@@ -224,6 +224,16 @@ export default defineConfig({
           // Additional chunks for larger libraries - load separately for better caching
           'vendor-forms': ['zod', 'react-hook-form'],
           'vendor-charts': ['recharts'],
+          // Heavy image/photo libraries - lazy loaded only when needed
+          'vendor-image-processing': ['browser-image-compression', 'jszip'],
+          'vendor-canvas': ['konva', 'react-konva', 'use-image'],
+          'vendor-photo-viewer': [
+            '@photo-sphere-viewer/core',
+            '@photo-sphere-viewer/gyroscope-plugin'
+          ],
+          // Heavy PDF and Excel libraries - lazy loaded
+          'vendor-pdf': ['jspdf', 'pdfjs-dist'],
+          'vendor-excel': ['exceljs'],
         }
       }
     },

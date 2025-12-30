@@ -4,7 +4,7 @@
 import { create } from 'zustand';
 import type { OfflineStore, StorageQuota } from '@/types/offline';
 import { StorageManager } from '@/lib/offline/storage-manager';
-import { countByIndex, STORES, getAllFromStore, deleteFromStore } from '@/lib/offline/indexeddb';
+import { countByIndex, STORES, getAllFromStore, deleteFromStore, getFromStore, putInStore, clearStore } from '@/lib/offline/indexeddb';
 import { logger } from '@/lib/utils/logger';
 
 /**
@@ -242,7 +242,6 @@ export const useOfflineStore = create<OfflineStore & {
   resolveConflict: async (conflictId: string, resolution: 'local' | 'server' | 'merge', _mergedData?: unknown) => {
     try {
       // Mark conflict as resolved in IndexedDB
-      const { getFromStore, putInStore } = await import('@/lib/offline/indexeddb');
       const conflict = await getFromStore<SyncConflict>(STORES.CONFLICTS, conflictId);
       if (conflict) {
         await putInStore(STORES.CONFLICTS, { ...conflict, resolved: true });
@@ -263,7 +262,6 @@ export const useOfflineStore = create<OfflineStore & {
   // Clear all items from sync queue
   clearSyncQueue: async () => {
     try {
-      const { clearStore } = await import('@/lib/offline/indexeddb');
       await clearStore(STORES.SYNC_QUEUE);
       set({ syncQueue: [], pendingSyncs: 0 });
       logger.log('Sync queue cleared');
