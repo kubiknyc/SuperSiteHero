@@ -122,7 +122,7 @@ interface OfflineReportStore {
   initializeFromPreviousReport: (
     projectId: string,
     reportDate: string,
-    previousReport: Partial<DraftReport>,
+    previousReport: Record<string, unknown>,
     relatedData?: {
       workforce?: WorkforceEntry[]
       equipment?: EquipmentEntry[]
@@ -223,7 +223,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
       initializeFromPreviousReport: (
         projectId: string,
         reportDate: string,
-        previousReport: Partial<DraftReport>,
+        previousReport: Record<string, unknown>,
         relatedData?: {
           workforce?: WorkforceEntry[]
           equipment?: EquipmentEntry[]

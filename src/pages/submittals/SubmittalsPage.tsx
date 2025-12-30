@@ -10,6 +10,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { NativeSelect as Select } from '@/components/ui/select'
 import { CreateSubmittalDialog, SubmittalStatusBadge } from '@/features/submittals/components'
+import { LiveUpdateBadge } from '@/components/realtime/LiveUpdateBadge'
+import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
+import { useWorkflowItemsRealtime } from '@/hooks/useRealtimeUpdates'
+import { usePagePresence } from '@/hooks/useRealtimePresence'
+import { useAuth } from '@/lib/auth'
 import { Plus, AlertCircle, Loader2, FileText, Clock, CheckCircle2, XCircle, Download, FileSpreadsheet } from 'lucide-react'
 import { format } from 'date-fns'
 import { useProjectSubmittals } from '@/features/submittals/hooks/useDedicatedSubmittals'
@@ -33,6 +38,7 @@ interface SubmittalsPageState {
 
 export function SubmittalsPage() {
   const { data: projects, isLoading: projectsLoading } = useMyProjects()
+  const { user } = useAuth()
 
   const [state, setState] = useState<SubmittalsPageState>({
     selectedProjectId: '',
@@ -50,6 +56,16 @@ export function SubmittalsPage() {
 
   // Fetch dedicated submittals for export (has lead time, ball-in-court tracking)
   const { data: dedicatedSubmittals } = useProjectSubmittals(projectId || undefined)
+
+  // Realtime updates - show banner when submittals change
+  const { pendingUpdates, applyUpdates, dismissUpdates } = useWorkflowItemsRealtime(
+    projectId || '',
+    'submittals',
+    true // showBanner
+  )
+
+  // Presence tracking - show who's viewing submittals
+  const { users: presenceUsers } = usePagePresence('submittals', projectId || 'all')
 
   // Get project name for export
   const selectedProject = projects?.find((p) => p.id === projectId)
@@ -95,11 +111,32 @@ export function SubmittalsPage() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
+        {/* Realtime update banner */}
+        {pendingUpdates > 0 && (
+          <LiveUpdateBadge
+            count={pendingUpdates}
+            onRefresh={applyUpdates}
+            onDismiss={dismissUpdates}
+            variant="banner"
+          />
+        )}
+
         {/* Header */}
         <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground heading-page">Submittals</h1>
-            <p className="text-secondary mt-1">Manage project submittals and approvals</p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground heading-page">Submittals</h1>
+              <p className="text-secondary mt-1">Manage project submittals and approvals</p>
+            </div>
+            {/* Presence avatars */}
+            {presenceUsers.length > 0 && (
+              <PresenceAvatars
+                users={presenceUsers}
+                maxVisible={3}
+                size="sm"
+                currentUserId={user?.id}
+              />
+            )}
           </div>
           <div className="flex items-center gap-2">
             {/* Export Dropdown */}

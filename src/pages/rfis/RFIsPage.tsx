@@ -13,6 +13,11 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { NativeSelect as Select } from '@/components/ui/select'
+import { LiveUpdateBadge } from '@/components/realtime/LiveUpdateBadge'
+import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
+import { useWorkflowItemsRealtime } from '@/hooks/useRealtimeUpdates'
+import { usePagePresence } from '@/hooks/useRealtimePresence'
+import { useAuth } from '@/lib/auth'
 import {
   Plus,
   AlertCircle,
@@ -44,6 +49,7 @@ type RFIPriorityFilter = 'all' | 'low' | 'normal' | 'high'
 
 export function RFIsPage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<RFIStatusFilter>('all')
@@ -62,6 +68,16 @@ export function RFIsPage() {
 
   // Fetch dedicated RFIs for export (has ball-in-court tracking)
   const { data: dedicatedRFIs } = useProjectRFIs(selectedProjectId || undefined)
+
+  // Realtime updates - show banner when RFIs change
+  const { pendingUpdates, applyUpdates, dismissUpdates } = useWorkflowItemsRealtime(
+    selectedProjectId || '',
+    'rfis',
+    true // showBanner
+  )
+
+  // Presence tracking - show who's viewing RFIs
+  const { users: presenceUsers } = usePagePresence('rfis', selectedProjectId || 'all')
 
   // Get project name for export
   const selectedProject = projects?.find((p) => p.id === selectedProjectId)
@@ -170,11 +186,32 @@ export function RFIsPage() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
+        {/* Realtime update banner */}
+        {pendingUpdates > 0 && (
+          <LiveUpdateBadge
+            count={pendingUpdates}
+            onRefresh={applyUpdates}
+            onDismiss={dismissUpdates}
+            variant="banner"
+          />
+        )}
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground heading-page">Requests for Information</h1>
-            <p className="text-secondary mt-1">Track and manage RFIs across your projects</p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground heading-page">Requests for Information</h1>
+              <p className="text-secondary mt-1">Track and manage RFIs across your projects</p>
+            </div>
+            {/* Presence avatars */}
+            {presenceUsers.length > 0 && (
+              <PresenceAvatars
+                users={presenceUsers}
+                maxVisible={3}
+                size="sm"
+                currentUserId={user?.id}
+              />
+            )}
           </div>
           <div className="flex items-center gap-2">
             {/* Export Dropdown */}

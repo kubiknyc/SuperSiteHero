@@ -212,12 +212,12 @@ export function MeetingDetailPage() {
             >
               {isDistributing ? (
                 <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-              ) : meeting.minutes_distributed_at ? (
+              ) : meeting.minutes_published_at ? (
                 <CheckCheck className="h-4 w-4 mr-1" />
               ) : (
                 <Send className="h-4 w-4 mr-1" />
               )}
-              {isDistributing ? 'Sending...' : meeting.minutes_distributed_at ? 'Re-distribute' : 'Distribute'}
+              {isDistributing ? 'Sending...' : meeting.minutes_published_at ? 'Re-distribute' : 'Distribute'}
             </Button>
             <Link to={`/meetings/${id}/edit`}>
               <Button variant="outline" size="sm">
@@ -592,7 +592,7 @@ export function MeetingDetailPage() {
             )}
 
             {/* Linked Meetings */}
-            {(meeting.previous_meeting_id || nextMeeting) && (
+            {(meeting.parent_meeting_id || nextMeeting) && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -602,20 +602,20 @@ export function MeetingDetailPage() {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {/* Previous Meeting */}
-                  {meeting.previous_meeting_id && (meeting as any).previous_meeting && (
+                  {meeting.parent_meeting_id && (meeting as any).parent_meeting && (
                     <Link
-                      to={`/meetings/${meeting.previous_meeting_id}`}
+                      to={`/meetings/${meeting.parent_meeting_id}`}
                       className="flex items-center gap-3 p-3 border rounded-lg hover:bg-surface transition-colors"
                     >
                       <ChevronLeft className="h-4 w-4 text-muted-foreground" />
                       <div className="flex-1 min-w-0">
                         <p className="text-xs text-muted-foreground uppercase tracking-wide">Previous Meeting</p>
                         <p className="font-medium text-sm truncate">
-                          {(meeting as any).previous_meeting.title ||
-                            MEETING_TYPES.find(t => t.value === (meeting as any).previous_meeting.meeting_type)?.label}
+                          {(meeting as any).parent_meeting.title ||
+                            MEETING_TYPES.find(t => t.value === (meeting as any).parent_meeting.meeting_type)?.label}
                         </p>
                         <p className="text-xs text-muted">
-                          {format(parseISO((meeting as any).previous_meeting.meeting_date), 'MMM d, yyyy')}
+                          {format(parseISO((meeting as any).parent_meeting.meeting_date), 'MMM d, yyyy')}
                         </p>
                       </div>
                     </Link>
@@ -747,12 +747,12 @@ export function MeetingDetailPage() {
                     </p>
                   </div>
                 )}
-                {meeting.minutes_distributed_at && (
+                {meeting.minutes_published_at && (
                   <div>
-                    <p className="text-muted">Minutes Distributed</p>
+                    <p className="text-muted">Minutes Published</p>
                     <p className="text-foreground flex items-center gap-1">
                       <CheckCheck className="h-4 w-4 text-success" />
-                      {format(parseISO(meeting.minutes_distributed_at), 'MMM d, yyyy h:mm a')}
+                      {format(parseISO(meeting.minutes_published_at), 'MMM d, yyyy h:mm a')}
                     </p>
                   </div>
                 )}

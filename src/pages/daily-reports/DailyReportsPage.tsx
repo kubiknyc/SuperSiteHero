@@ -16,6 +16,11 @@ import { NativeSelect as Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { MultiSelectFilter } from '@/components/ui/multi-select-filter'
+import { LiveUpdateBadge } from '@/components/realtime/LiveUpdateBadge'
+import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
+import { useDailyReportsRealtime } from '@/hooks/useRealtimeUpdates'
+import { usePagePresence } from '@/hooks/useRealtimePresence'
+import { useAuth } from '@/lib/auth'
 import {
   Plus,
   FileText,
@@ -50,6 +55,7 @@ interface WorkerRange {
 export function DailyReportsPage() {
   'use no memo'
   const { data: projects } = useMyProjects()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -127,6 +133,15 @@ export function DailyReportsPage() {
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
 
   const { data: reports, isLoading, error } = useDailyReports(activeProjectId)
+
+  // Realtime updates - show banner when new reports are available
+  const { pendingUpdates, applyUpdates, dismissUpdates } = useDailyReportsRealtime(
+    activeProjectId || '',
+    true // showBanner
+  )
+
+  // Presence tracking - show who's viewing this page
+  const { users: presenceUsers } = usePagePresence('daily-reports', activeProjectId || 'all')
 
   // Comprehensive filtering logic
   const filteredReports = useMemo(() => {
@@ -382,13 +397,34 @@ export function DailyReportsPage() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
+        {/* Realtime update banner */}
+        {pendingUpdates > 0 && (
+          <LiveUpdateBadge
+            count={pendingUpdates}
+            onRefresh={applyUpdates}
+            onDismiss={dismissUpdates}
+            variant="banner"
+          />
+        )}
+
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="heading-page text-foreground dark:text-white heading-page">Daily Reports</h1>
-            <p className="text-secondary mt-1">
-              Track daily activities, weather, and workforce
-            </p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="heading-page text-foreground dark:text-white heading-page">Daily Reports</h1>
+              <p className="text-secondary mt-1">
+                Track daily activities, weather, and workforce
+              </p>
+            </div>
+            {/* Presence avatars - show who's viewing */}
+            {presenceUsers.length > 0 && (
+              <PresenceAvatars
+                users={presenceUsers}
+                maxVisible={3}
+                size="sm"
+                currentUserId={user?.id}
+              />
+            )}
           </div>
           <div className="flex items-center gap-3">
             {/* View Toggle */}

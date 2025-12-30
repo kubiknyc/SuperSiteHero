@@ -60,7 +60,7 @@ import {
 /**
  * Export deliveries to CSV format
  */
-function exportDeliveriesToCSV(deliveries: { material_name: string; vendor_name: string; delivery_ticket_number?: string; material_category: string; delivery_status: string; condition_status: string; quantity_received: number; delivery_date: string; notes?: string }[]): void {
+function exportDeliveriesToCSV(deliveries: { material_name: string; vendor_name: string; delivery_ticket_number?: string; material_category: string; delivery_status: string; condition_status: string; quantity_delivered: number; delivery_date: string; notes?: string }[]): void {
   const headers = [
     'Material',
     'Vendor',
@@ -80,7 +80,7 @@ function exportDeliveriesToCSV(deliveries: { material_name: string; vendor_name:
     MATERIAL_CATEGORIES.find((c) => c.value === d.material_category)?.label || d.material_category,
     DELIVERY_STATUSES.find((s) => s.value === d.delivery_status)?.label || d.delivery_status,
     CONDITION_STATUSES.find((s) => s.value === d.condition_status)?.label || d.condition_status,
-    String(d.quantity_received || 0),
+    String(d.quantity_delivered || 0),
     d.delivery_date ? format(new Date(d.delivery_date), 'yyyy-MM-dd') : '',
     d.notes || '',
   ]);

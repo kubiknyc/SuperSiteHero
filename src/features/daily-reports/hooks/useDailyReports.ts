@@ -150,8 +150,18 @@ export function usePreviousDayReport(projectId: string | undefined, excludeDate?
   })
 }
 
+// Helper to convert null values to undefined for DraftReport compatibility
+function nullToUndefined<T extends Record<string, unknown>>(obj: T): { [K in keyof T]: T[K] extends null ? undefined : T[K] } {
+  const result: Record<string, unknown> = {}
+  for (const key in obj) {
+    result[key] = obj[key] === null ? undefined : obj[key]
+  }
+  return result as { [K in keyof T]: T[K] extends null ? undefined : T[K] }
+}
+
 // Helper to extract copyable fields from a daily report
-export function extractCopyableFields(report: DailyReport): Partial<DailyReport> {
+// Returns fields compatible with DraftReport (null values converted to undefined)
+export function extractCopyableFields(report: DailyReport): Record<string, unknown> {
   // Fields that should be copied from the previous report
   // Excludes: id, report_date, status, created_at, updated_at, submitted_at, approved_at
   const {
@@ -166,5 +176,6 @@ export function extractCopyableFields(report: DailyReport): Partial<DailyReport>
     ...copyableFields
   } = report
 
-  return copyableFields
+  // Convert null values to undefined for DraftReport compatibility
+  return nullToUndefined(copyableFields)
 }

@@ -69,8 +69,8 @@ function exportCertificatesToCSV(certificates: InsuranceCertificateWithRelations
     'Subcontractor',
     'Effective Date',
     'Expiration Date',
-    'Coverage Amount',
-    'Deductible',
+    'Each Occurrence Limit',
+    'General Aggregate Limit',
   ];
 
   const rows = certificates.map((cert) => [
@@ -82,8 +82,8 @@ function exportCertificatesToCSV(certificates: InsuranceCertificateWithRelations
     cert.subcontractor?.company_name || '',
     cert.effective_date ? format(new Date(cert.effective_date), 'yyyy-MM-dd') : '',
     cert.expiration_date ? format(new Date(cert.expiration_date), 'yyyy-MM-dd') : '',
-    String(cert.coverage_amount || 0),
-    String(cert.deductible_amount || 0),
+    String(cert.each_occurrence_limit || 0),
+    String(cert.general_aggregate_limit || 0),
   ]);
 
   const csvContent = [

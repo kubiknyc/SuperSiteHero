@@ -1,7 +1,7 @@
 // File: /src/pages/dashboard/components/StatCard.tsx
 // Optimized memoized stat card component for dashboard
 
-import { memo } from 'react'
+import { memo, ReactElement } from 'react'
 import { LucideIcon, TrendingUp, TrendingDown } from 'lucide-react'
 
 export interface StatCardData {
@@ -23,7 +23,7 @@ interface StatCardProps {
   onBlur: () => void
   onMouseEnter: () => void
   onMouseLeave: () => void
-  renderSparkline: (data: number[], color: string) => JSX.Element
+  renderSparkline: (data: number[], color: string) => ReactElement
 }
 
 /**

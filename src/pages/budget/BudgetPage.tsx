@@ -161,8 +161,8 @@ export function BudgetPage() {
       (acc, b) => ({
         original: acc.original + (b.original_budget || 0),
         revised: acc.revised + (b.revised_budget || 0),
-        committed: acc.committed + (b.committed_costs || 0),
-        actual: acc.actual + (b.actual_costs || 0),
+        committed: acc.committed + (b.committed_cost || 0),
+        actual: acc.actual + (b.actual_cost || 0),
       }),
       { original: 0, revised: 0, committed: 0, actual: 0 }
     ) || { original: 0, revised: 0, committed: 0, actual: 0 }
@@ -179,8 +179,8 @@ export function BudgetPage() {
       if (search) {
         const searchLower = search.toLowerCase()
         return (
-          b.cost_code?.code?.toLowerCase().includes(searchLower) ||
-          b.cost_code?.description?.toLowerCase().includes(searchLower)
+          b.cost_code?.toLowerCase().includes(searchLower) ||
+          b.cost_code_name?.toLowerCase().includes(searchLower)
         )
       }
       return true
@@ -240,17 +240,17 @@ export function BudgetPage() {
     ]
 
     const rows = filteredBudgets.map(budget => {
-      const lineVariance = (budget.revised_budget || 0) - (budget.actual_costs || 0)
+      const lineVariance = (budget.revised_budget || 0) - (budget.actual_cost || 0)
       const status = lineVariance < 0 ? 'Over Budget' : lineVariance / (budget.revised_budget || 1) > 0.1 ? 'Under Budget' : 'On Track'
 
       return [
-        budget.cost_code?.code || '',
-        budget.cost_code?.description || '',
+        budget.cost_code || '',
+        budget.cost_code_name || '',
         budget.original_budget || 0,
         budget.approved_changes || 0,
         budget.revised_budget || 0,
-        budget.committed_costs || 0,
-        budget.actual_costs || 0,
+        budget.committed_cost || 0,
+        budget.actual_cost || 0,
         lineVariance,
         status,
       ]
@@ -502,7 +502,7 @@ export function BudgetPage() {
                       </TableHeader>
                       <TableBody>
                         {paginatedBudgets.map((budget) => {
-                          const lineVariance = (budget.revised_budget || 0) - (budget.actual_costs || 0)
+                          const lineVariance = (budget.revised_budget || 0) - (budget.actual_cost || 0)
                           const isLineOver = lineVariance < 0
                           const rowBgClass = getRowBackgroundClass(lineVariance, budget.revised_budget || 0)
 
@@ -512,10 +512,10 @@ export function BudgetPage() {
                               className={rowBgClass}
                             >
                               <TableCell className="font-mono text-sm">
-                                {budget.cost_code?.code || '-'}
+                                {budget.cost_code || '-'}
                               </TableCell>
                               <TableCell>
-                                {budget.cost_code?.description || '-'}
+                                {budget.cost_code_name || '-'}
                               </TableCell>
                               <TableCell className="text-right">
                                 {formatCurrency(budget.original_budget || 0)}
@@ -527,10 +527,10 @@ export function BudgetPage() {
                                 {formatCurrency(budget.revised_budget || 0)}
                               </TableCell>
                               <TableCell className="text-right">
-                                {formatCurrency(budget.committed_costs || 0)}
+                                {formatCurrency(budget.committed_cost || 0)}
                               </TableCell>
                               <TableCell className="text-right">
-                                {formatCurrency(budget.actual_costs || 0)}
+                                {formatCurrency(budget.actual_cost || 0)}
                               </TableCell>
                               <TableCell className={`text-right font-medium ${isLineOver ? 'text-error' : 'text-success'}`}>
                                 {isLineOver ? '-' : '+'}{formatCurrency(Math.abs(lineVariance))}

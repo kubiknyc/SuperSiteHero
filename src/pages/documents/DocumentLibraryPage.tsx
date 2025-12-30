@@ -33,6 +33,10 @@ import { DocumentUpload } from '@/features/documents/components/DocumentUpload'
 import { DocumentList } from '@/features/documents/components/DocumentList'
 import { DocumentTypeIcon } from '@/features/documents/components/DocumentTypeIcon'
 import { DocumentStatusBadge } from '@/features/documents/components/DocumentStatusBadge'
+import { LiveUpdateBadge } from '@/components/realtime/LiveUpdateBadge'
+import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
+import { useDocumentsRealtime } from '@/hooks/useRealtimeUpdates'
+import { usePagePresence } from '@/hooks/useRealtimePresence'
 import { useDocuments, useFolders } from '@/features/documents/hooks/useDocuments'
 import {
   useCreateFolderWithNotification,
@@ -40,6 +44,7 @@ import {
   useUpdateDocumentWithNotification,
 } from '@/features/documents/hooks/useDocumentsMutations'
 import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useAuth } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import type { Document, Folder as FolderType, DocumentStatus, DocumentType } from '@/types/database'
 import { logger } from '../../lib/utils/logger';
@@ -66,6 +71,7 @@ import { logger } from '../../lib/utils/logger';
  */
 function DocumentLibraryPage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   // State
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
@@ -96,6 +102,15 @@ function DocumentLibraryPage() {
   const createFolder = useCreateFolderWithNotification()
   const deleteDocument = useDeleteDocumentWithNotification()
   const updateDocument = useUpdateDocumentWithNotification()
+
+  // Realtime updates - show banner when documents change
+  const { pendingUpdates, applyUpdates, dismissUpdates } = useDocumentsRealtime(
+    selectedProjectId || '',
+    true // showBanner
+  )
+
+  // Presence tracking - show who's viewing documents
+  const { users: presenceUsers } = usePagePresence('documents', selectedProjectId || 'all')
 
   // Build folder tree structure
   const folderTree = useMemo(() => {
@@ -297,14 +312,35 @@ function DocumentLibraryPage() {
   return (
     <AppLayout>
       <div className="h-screen flex flex-col">
+        {/* Realtime update banner */}
+        {pendingUpdates > 0 && (
+          <LiveUpdateBadge
+            count={pendingUpdates}
+            onRefresh={applyUpdates}
+            onDismiss={dismissUpdates}
+            variant="banner"
+          />
+        )}
+
         {/* Header */}
         <div className="border-b bg-card px-6 py-4">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground heading-page">Document Library</h1>
-              <p className="text-sm text-secondary mt-1">
-                Manage drawings, specifications, and project documents
-              </p>
+            <div className="flex items-center gap-4">
+              <div>
+                <h1 className="text-2xl font-bold text-foreground heading-page">Document Library</h1>
+                <p className="text-sm text-secondary mt-1">
+                  Manage drawings, specifications, and project documents
+                </p>
+              </div>
+              {/* Presence avatars */}
+              {presenceUsers.length > 0 && (
+                <PresenceAvatars
+                  users={presenceUsers}
+                  maxVisible={3}
+                  size="sm"
+                  currentUserId={user?.id}
+                />
+              )}
             </div>
 
             {/* Mobile sidebar toggle */}

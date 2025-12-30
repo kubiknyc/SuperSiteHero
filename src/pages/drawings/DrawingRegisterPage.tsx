@@ -48,7 +48,7 @@ function exportDrawingsToCSV(drawings: Drawing[], projectName: string): void {
     'IFC Status',
     'IFC Date',
     'Date Added',
-    'Notes',
+    'Description',
   ];
 
   const rows = drawings.map((d) => [
@@ -59,7 +59,7 @@ function exportDrawingsToCSV(drawings: Drawing[], projectName: string): void {
     d.isIssuedForConstruction ? 'Yes' : 'No',
     d.ifcDate ? format(new Date(d.ifcDate), 'yyyy-MM-dd') : '',
     d.createdAt ? format(new Date(d.createdAt), 'yyyy-MM-dd') : '',
-    d.notes || '',
+    d.description || '',
   ]);
 
   const csvContent = [
@@ -119,8 +119,8 @@ function parseCSVToDrawings(csvContent: string): Partial<Drawing>[] {
         drawing.currentRevision = value;
       } else if (header.includes('ifc') && header.includes('status')) {
         drawing.isIssuedForConstruction = value.toLowerCase() === 'yes' || value === '1' || value.toLowerCase() === 'true';
-      } else if (header.includes('notes')) {
-        drawing.notes = value;
+      } else if (header.includes('description')) {
+        drawing.description = value;
       }
     });
 
@@ -216,12 +216,12 @@ export default function DrawingRegisterPage() {
         try {
           await createDrawing.mutateAsync({
             projectId,
+            companyId: project?.companyId || '',
             drawingNumber: drawing.drawingNumber || `DWG-${Date.now()}`,
             title: drawing.title || 'Untitled Drawing',
             discipline: drawing.discipline || 'architectural',
-            currentRevision: drawing.currentRevision || 'A',
             isIssuedForConstruction: drawing.isIssuedForConstruction || false,
-            notes: drawing.notes,
+            description: drawing.description,
           });
           successCount++;
         } catch {

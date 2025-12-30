@@ -15,7 +15,8 @@ import { Button } from '@/components/ui/button'
 import { PunchListsProjectView } from '@/features/punch-lists/components'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-
+import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
+import { useProjectPresence } from '@/hooks/useRealtimePresence'
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate, CheckCircle, WifiOff } from 'lucide-react'
 import { format } from 'date-fns'
@@ -43,6 +44,9 @@ export function ProjectDetailPage() {
     startPrefetch,
     error: _prefetchError,
   } = useDataPrefetch(projectId || '')
+
+  // Presence tracking - show who's viewing this project
+  const { users: presenceUsers } = useProjectPresence(projectId || '')
 
   // Early return after all hooks are called
   if (!projectId) {
@@ -124,10 +128,21 @@ export function ProjectDetailPage() {
 
         {/* Header - Enhanced typography */}
         <div className="flex items-start justify-between mb-8">
-          <div>
-            <h1 className="heading-page text-foreground dark:text-white tracking-tight leading-tight heading-page">{project.name}</h1>
-            {project.project_number && (
-              <p className="body-base text-secondary dark:text-disabled mt-2">#{project.project_number}</p>
+          <div className="flex items-center gap-4">
+            <div>
+              <h1 className="heading-page text-foreground dark:text-white tracking-tight leading-tight heading-page">{project.name}</h1>
+              {project.project_number && (
+                <p className="body-base text-secondary dark:text-disabled mt-2">#{project.project_number}</p>
+              )}
+            </div>
+            {/* Presence avatars - show who's viewing this project */}
+            {presenceUsers.length > 0 && (
+              <PresenceAvatars
+                users={presenceUsers}
+                maxVisible={4}
+                size="md"
+                currentUserId={user?.id}
+              />
             )}
           </div>
           <div className="flex gap-2">
