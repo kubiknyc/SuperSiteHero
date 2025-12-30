@@ -57,36 +57,28 @@ export function createMockRFI(options: RFIFactoryOptions = {}): WorkflowItem {
   const createdAt = faker.date.past().toISOString();
   const raisedBy = options.raised_by ?? faker.string.uuid();
 
-  return {
+  // Create base object matching database schema
+  const baseItem = {
     id,
     project_id: projectId,
     workflow_type_id: workflowTypeId,
     number: options.number ?? faker.number.int({ min: 1, max: 999 }),
     title: options.title ?? `RFI: ${faker.lorem.sentence(5)}`,
     description: options.description ?? faker.lorem.paragraph(),
-    more_information: faker.lorem.paragraph(2),
     status: options.status ?? 'pending',
     priority: options.priority ?? 'normal',
-    discipline: faker.helpers.arrayElement(['Structural', 'MEP', 'Civil', 'Architectural', 'General']),
     due_date: options.due_date !== undefined ? options.due_date : faker.date.future().toISOString().split('T')[0],
     assignees: options.assignees ?? [faker.string.uuid(), faker.string.uuid()],
-    raised_by: raisedBy,
     created_by: options.created_by ?? raisedBy,
-    opened_date: null,
     closed_date: null,
     deleted_at: null,
-    response_required_date: null,
-    responded_date: null,
-    response_type: null,
-    resolution: null,
-    estimated_cost_impact: null,
-    estimated_schedule_impact: null,
-    tags: [],
-    custom_fields: {},
-    company_id: faker.string.uuid(),
+    cost_impact: null,
+    schedule_impact: null,
     created_at: createdAt,
     updated_at: faker.date.between({ from: createdAt, to: new Date() }).toISOString(),
-  } as WorkflowItem;
+  };
+
+  return baseItem as unknown as WorkflowItem;
 }
 
 /**
@@ -112,13 +104,7 @@ export function createMockSubmittedRFI(options: Omit<RFIFactoryOptions, 'status'
  */
 export function createMockApprovedRFI(options: Omit<RFIFactoryOptions, 'status'> = {}): WorkflowItem {
   const rfi = createMockRFI({ ...options, status: 'approved' });
-  return {
-    ...rfi,
-    opened_date: faker.date.recent({ days: 14 }).toISOString(),
-    responded_date: faker.date.recent({ days: 3 }).toISOString(),
-    response_type: 'approved',
-    resolution: faker.lorem.paragraph(),
-  };
+  return rfi;
 }
 
 /**
@@ -126,13 +112,7 @@ export function createMockApprovedRFI(options: Omit<RFIFactoryOptions, 'status'>
  */
 export function createMockRejectedRFI(options: Omit<RFIFactoryOptions, 'status'> = {}): WorkflowItem {
   const rfi = createMockRFI({ ...options, status: 'rejected' });
-  return {
-    ...rfi,
-    opened_date: faker.date.recent({ days: 14 }).toISOString(),
-    responded_date: faker.date.recent({ days: 3 }).toISOString(),
-    response_type: 'rejected',
-    resolution: faker.lorem.paragraph(),
-  };
+  return rfi;
 }
 
 /**
@@ -142,12 +122,8 @@ export function createMockClosedRFI(options: Omit<RFIFactoryOptions, 'status'> =
   const rfi = createMockRFI({ ...options, status: 'closed' });
   return {
     ...rfi,
-    opened_date: faker.date.recent({ days: 30 }).toISOString(),
-    responded_date: faker.date.recent({ days: 10 }).toISOString(),
     closed_date: faker.date.recent({ days: 2 }).toISOString(),
-    response_type: 'approved',
-    resolution: faker.lorem.paragraph(),
-  };
+  } as WorkflowItem;
 }
 
 /**
@@ -230,15 +206,18 @@ export function createMockRFIHistory(options: RFIHistoryFactoryOptions = {}): Wo
   const id = options.id ?? faker.string.uuid();
   const fieldName = options.field_name ?? faker.helpers.arrayElement(['status', 'priority', 'assignees', 'title', 'due_date']);
 
-  return {
+  const baseHistory = {
     id,
     workflow_item_id: options.workflow_item_id ?? faker.string.uuid(),
-    field_name: fieldName,
+    action: 'update',
+    field_changed: fieldName,
     old_value: options.old_value !== undefined ? options.old_value : faker.lorem.word(),
     new_value: options.new_value !== undefined ? options.new_value : faker.lorem.word(),
     changed_by: options.changed_by ?? faker.string.uuid(),
     changed_at: faker.date.recent().toISOString(),
-  } as WorkflowItemHistory;
+  };
+
+  return baseHistory as unknown as WorkflowItemHistory;
 }
 
 /**
@@ -276,39 +255,21 @@ export function createMockRFIHistoryEntries(
  * Create an RFI workflow type configuration
  */
 export function createMockRFIWorkflowType(options: WorkflowTypeFactoryOptions = {}): WorkflowType {
-  return {
+  const baseType = {
     id: options.id ?? faker.string.uuid(),
     company_id: options.company_id ?? faker.string.uuid(),
     name_singular: options.name_singular ?? 'RFI',
     name_plural: options.name_plural ?? 'RFIs',
     prefix: options.prefix ?? 'RFI',
-    description: 'Request for Information',
-    icon: 'MessageSquare',
-    color: '#3b82f6',
     is_active: true,
-    default_status: 'pending',
-    status_workflow: ['pending', 'submitted', 'approved', 'rejected', 'closed'],
-    allowed_transitions: {
-      pending: ['submitted', 'closed'],
-      submitted: ['approved', 'rejected', 'closed'],
-      approved: ['closed'],
-      rejected: ['closed'],
-      closed: [],
-    },
-    required_fields: ['title', 'description'],
-    optional_fields: ['more_information', 'discipline', 'priority', 'due_date'],
-    custom_fields_schema: {},
-    default_priority: 'normal',
-    auto_numbering: true,
-    numbering_pattern: '{prefix}-{project_number}-{item_number}',
-    notification_settings: {
-      on_create: ['assignees'],
-      on_status_change: ['created_by', 'assignees'],
-      on_comment: ['created_by', 'assignees', 'mentioned_users'],
-    },
+    has_cost_impact: false,
+    has_schedule_impact: false,
     created_at: faker.date.past().toISOString(),
     updated_at: faker.date.recent().toISOString(),
-  } as WorkflowType;
+    deleted_at: null,
+  };
+
+  return baseType as unknown as WorkflowType;
 }
 
 /**

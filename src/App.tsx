@@ -393,18 +393,17 @@ function App() {
       <TwentyFirstToolbar
         config={{
           plugins: [ReactPlugin],
-          style: {
-            colorScheme: 'auto' // Ensures proper contrast for theme
-          }
-        }}
+        } as any}
       />
       <ErrorBoundary>
       <ThemeProvider defaultTheme="system">
         <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
+          {...{
+            future: {
+              v7_startTransition: true,
+              v7_relativeSplatPath: true,
+            }
+          } as any}
         >
           <ToastProvider>
             <AuthProvider>

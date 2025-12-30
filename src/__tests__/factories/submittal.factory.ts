@@ -18,9 +18,20 @@ export interface MockWorkflowItem extends Omit<WorkflowItem, 'metadata' | 'custo
   custom_fields?: Record<string, any> | null;
 }
 
-export interface MockWorkflowType extends Omit<WorkflowType, 'default_fields' | 'custom_fields'> {
+export interface MockWorkflowType {
+  id: string;
+  company_id: string;
+  name_singular: string;
+  name_plural: string;
+  description?: string;
+  icon?: string;
+  color?: string;
   default_fields?: Record<string, any> | null;
   custom_fields?: Record<string, any> | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string | null;
 }
 
 export interface MockSubmittalProcurement extends Omit<SubmittalProcurement, 'metadata'> {

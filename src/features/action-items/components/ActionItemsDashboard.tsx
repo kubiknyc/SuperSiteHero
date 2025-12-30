@@ -65,7 +65,7 @@ import {
 } from '@/types/action-items'
 
 interface ActionItemsDashboardProps {
-  projectId: string
+  projectId?: string
 }
 
 export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
@@ -556,4 +556,5 @@ const ActionItemRow = memo(function ActionItemRow({ item }: { item: ActionItemWi
   )
 })
 
+export { ActionItemRow }
 export default ActionItemsDashboard
