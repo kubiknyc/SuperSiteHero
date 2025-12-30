@@ -47,6 +47,7 @@ import type {
   ProjectTemplate,
   CreateProjectTemplateInput,
   UpdateProjectTemplateInput,
+  TemplateCategory,
 } from '@/types/project-template'
 import { logger } from '../../lib/utils/logger';
 
@@ -56,7 +57,7 @@ export function ProjectTemplatesPage() {
   const companyId = userProfile?.company_id
 
   // State
-  const [selectedCategory, setSelectedCategory] = React.useState<string>('all')
+  const [selectedCategory, setSelectedCategory] = React.useState<TemplateCategory | 'all'>('all')
   const [formDialogOpen, setFormDialogOpen] = React.useState(false)
   const [editingTemplate, setEditingTemplate] = React.useState<ProjectTemplate | null>(null)
   const [deleteConfirmOpen, setDeleteConfirmOpen] = React.useState(false)

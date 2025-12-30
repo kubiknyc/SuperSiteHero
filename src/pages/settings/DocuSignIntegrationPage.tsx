@@ -83,7 +83,7 @@ function ConnectionStatusBanner() {
   }
 
   const isConnected = status?.isConnected;
-  const lastSync = status?.lastSyncedAt;
+  const lastSync = status?.lastConnectedAt;
 
   return (
     <Card className={cn(

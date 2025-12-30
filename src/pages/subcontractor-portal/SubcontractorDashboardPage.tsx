@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import { useSubcontractorDashboard } from '@/features/subcontractor-portal/hooks'
 import { DashboardStats, BidCard, StatusBadge } from '@/features/subcontractor-portal/components'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import {

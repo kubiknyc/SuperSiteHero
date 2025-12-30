@@ -72,6 +72,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 1,
         name: 'Approval',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: true,
@@ -92,6 +93,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 1,
         name: 'Initial Review',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: true,
@@ -100,6 +102,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 2,
         name: 'Final Approval',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: false,
@@ -120,6 +123,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 1,
         name: 'Technical Review',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: true,
@@ -128,6 +132,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 2,
         name: 'Project Manager Approval',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: true,
@@ -136,6 +141,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 3,
         name: 'Executive Sign-off',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: false,
@@ -156,6 +162,7 @@ const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
       {
         step_order: 1,
         name: 'Committee Approval',
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 2,
         allow_delegation: true,
@@ -736,6 +743,7 @@ function WorkflowBuilderWithPreview({
     initialData?.steps?.map((s) => ({
       step_order: s.step_order,
       name: s.name,
+      approver_type: s.approver_type || 'user',
       approver_ids: s.approver_ids,
       required_approvals: s.required_approvals,
       allow_delegation: s.allow_delegation,
@@ -746,6 +754,7 @@ function WorkflowBuilderWithPreview({
         {
           step_order: 1,
           name: 'Review',
+          approver_type: 'user',
           approver_ids: [],
           required_approvals: 1,
           allow_delegation: false,
@@ -788,6 +797,7 @@ function WorkflowBuilderWithPreview({
       {
         step_order: steps.length + 1,
         name: `Step ${steps.length + 1}`,
+        approver_type: 'user',
         approver_ids: [],
         required_approvals: 1,
         allow_delegation: false,

@@ -64,14 +64,8 @@ import { CSI_DIVISIONS, type CostType } from '@/types/cost-tracking'
 import type { CostCode, CreateCostCodeDTO, UpdateCostCodeDTO } from '@/types/cost-tracking'
 import { cn } from '@/lib/utils'
 
-// Cost type options
-const COST_TYPES: { value: CostType; label: string }[] = [
-  { value: 'labor', label: 'Labor' },
-  { value: 'material', label: 'Material' },
-  { value: 'equipment', label: 'Equipment' },
-  { value: 'subcontract', label: 'Subcontract' },
-  { value: 'other', label: 'Other' },
-]
+// Re-use the COST_TYPES from cost-tracking types
+import { COST_TYPES } from '@/types/cost-tracking'
 
 interface CostCodeFormData {
   code: string
@@ -90,7 +84,7 @@ const initialFormData: CostCodeFormData = {
   description: '',
   division: '',
   section: '',
-  costType: 'material',
+  costType: 'direct',
   parentCodeId: '',
   isActive: true,
 }
@@ -370,8 +364,8 @@ export function CostCodesPage() {
                   <SelectContent>
                     <SelectItem value="all">All Divisions</SelectItem>
                     {CSI_DIVISIONS.map((div) => (
-                      <SelectItem key={div.code} value={div.code}>
-                        {div.code} - {div.name}
+                      <SelectItem key={div.division} value={div.division}>
+                        {div.division} - {div.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -433,7 +427,7 @@ export function CostCodesPage() {
             ) : (
               <div className="divide-y">
                 {groupedCodes.map(([division, codes]) => {
-                  const divisionInfo = CSI_DIVISIONS.find((d) => d.code === division)
+                  const divisionInfo = CSI_DIVISIONS.find((d) => d.division === division)
                   const isExpanded = expandedDivisions.has(division)
 
                   return (
@@ -548,8 +542,8 @@ export function CostCodesPage() {
                   </SelectTrigger>
                   <SelectContent>
                     {CSI_DIVISIONS.map((div) => (
-                      <SelectItem key={div.code} value={div.code}>
-                        {div.code} - {div.name}
+                      <SelectItem key={div.division} value={div.division}>
+                        {div.division} - {div.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

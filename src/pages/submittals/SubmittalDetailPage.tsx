@@ -21,7 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare } from 'lucide-react'
 import { SubmittalStatusBadge } from '@/features/submittals/components'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'

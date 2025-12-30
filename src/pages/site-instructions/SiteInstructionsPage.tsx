@@ -406,7 +406,7 @@ function SubcontractorCompliancePanel({
     }> = {}
 
     instructions.forEach((instruction) => {
-      if (!instruction.subcontractor_id) return
+      if (!instruction.subcontractor_id) {return}
 
       const subId = instruction.subcontractor_id
       if (!groups[subId]) {
@@ -603,10 +603,10 @@ export default function SiteInstructionsPage() {
   // Build filters object
   const filters: SiteInstructionFilters = useMemo(() => {
     const f: SiteInstructionFilters = {}
-    if (statusFilter !== 'all') f.status = statusFilter as SiteInstructionStatus
-    if (priorityFilter !== 'all') f.priority = priorityFilter as SiteInstructionPriority
-    if (subcontractorFilter !== 'all') f.subcontractorId = subcontractorFilter
-    if (search) f.search = search
+    if (statusFilter !== 'all') {f.status = statusFilter as SiteInstructionStatus}
+    if (priorityFilter !== 'all') {f.priority = priorityFilter as SiteInstructionPriority}
+    if (subcontractorFilter !== 'all') {f.subcontractorId = subcontractorFilter}
+    if (search) {f.search = search}
     return f
   }, [statusFilter, priorityFilter, subcontractorFilter, search])
 
@@ -664,7 +664,7 @@ export default function SiteInstructionsPage() {
 
   const handleBulkAssign = useCallback((subcontractorIds: string[]) => {
     // Would trigger bulk assignment API call
-    console.log('Bulk assign to:', subcontractorIds, 'instructions:', Array.from(selectedInstructions))
+    console.info('Bulk assign to:', subcontractorIds, 'instructions:', Array.from(selectedInstructions))
     setShowBulkAssignDialog(false)
     setSelectedInstructions(new Set())
   }, [selectedInstructions])

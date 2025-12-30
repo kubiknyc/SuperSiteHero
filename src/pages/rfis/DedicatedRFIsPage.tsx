@@ -23,7 +23,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import {
   Plus,
   AlertCircle,
