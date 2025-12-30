@@ -1,18 +1,20 @@
 // File: /src/pages/rfis/RFIDetailPage.tsx
 // RFI detail page with status management and answers
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useRFI, useRFIComments, useRFIWorkflowType } from '@/features/rfis/hooks/useRFIs'
 import { useUpdateRFIWithNotification, useChangeRFIStatusWithNotification, useDeleteRFIWithNotification } from '@/features/rfis/hooks/useRFIMutations'
+import { useEditConflictDetection } from '@/hooks/useEditConflictDetection'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { NativeSelect as Select } from '@/components/ui/select'
+import { EditConflictBanner } from '@/components/realtime/EditConflictBanner'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,8 +30,10 @@ import { cn } from '@/lib/utils'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import { useCreateConversation } from '@/features/messaging/hooks'
+import { useQueryClient } from '@tanstack/react-query'
 import { logger } from '../../lib/utils/logger';
 import { UserName } from '@/components/shared'
+import type { WorkflowItem } from '@/types/database'
 
 
 export function RFIDetailPage() {
@@ -40,6 +44,7 @@ export function RFIDetailPage() {
   const [showAnswerForm, setShowAnswerForm] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
+  const queryClient = useQueryClient()
   const { data: rfi, isLoading, error } = useRFI(rfiId)
   const { data: comments } = useRFIComments(rfiId)
   const { data: workflowType } = useRFIWorkflowType()
@@ -48,6 +53,28 @@ export function RFIDetailPage() {
   const updateRFI = useUpdateRFIWithNotification()
   const deleteRFI = useDeleteRFIWithNotification()
   const createConversation = useCreateConversation()
+
+  // Detect if another user updates this RFI while we're viewing/editing
+  const {
+    hasConflict,
+    dismissConflict,
+    acceptServerChanges,
+    resolveWithLocalChanges,
+  } = useEditConflictDetection<WorkflowItem>({
+    table: 'workflow_items',
+    recordId: rfiId,
+    enabled: !!rfiId,
+    onConflict: () => {
+      logger.info('[RFIDetail] Conflict detected - another user updated this RFI')
+    },
+  })
+
+  // Handle accepting server changes - refetch the RFI data
+  const handleAcceptServerChanges = useCallback(() => {
+    acceptServerChanges()
+    // Invalidate the query to refetch latest data
+    queryClient.invalidateQueries({ queryKey: ['rfi', rfiId] })
+  }, [acceptServerChanges, queryClient, rfiId])
 
   // Start a messaging conversation about this RFI
   const handleDiscussRFI = async () => {
@@ -184,6 +211,16 @@ export function RFIDetailPage() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
+        {/* Conflict detection banner */}
+        {hasConflict && (
+          <EditConflictBanner
+            message="This RFI was updated by another user"
+            onAcceptServer={handleAcceptServerChanges}
+            onKeepLocal={resolveWithLocalChanges}
+            onDismiss={dismissConflict}
+          />
+        )}
+
         {/* Back button */}
         <div>
           <Button variant="outline" onClick={() => navigate(-1)}>

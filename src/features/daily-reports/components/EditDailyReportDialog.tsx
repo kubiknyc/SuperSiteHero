@@ -1,13 +1,15 @@
 // File: /src/features/daily-reports/components/EditDailyReportDialog.tsx
 // Dialog for editing an existing daily report
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useUpdateDailyReportWithNotification } from '../hooks/useDailyReportsMutations'
 import { useFormValidation, dailyReportUpdateSchema } from '@/lib/validation'
+import { useEditConflictDetection } from '@/hooks/useEditConflictDetection'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError } from '@/components/form/ValidationError'
+import { EditConflictBanner } from '@/components/realtime/EditConflictBanner'
 import type { DailyReport } from '@/types/database'
 import { logger } from '../../../lib/utils/logger';
 
@@ -37,6 +39,40 @@ export function EditDailyReportDialog({
 
   const updateReport = useUpdateDailyReportWithNotification()
   const { validate, getFieldError, clearErrors } = useFormValidation(dailyReportUpdateSchema)
+
+  // Detect if another user updates this report while we're editing
+  const {
+    hasConflict,
+    conflict,
+    dismissConflict,
+    acceptServerChanges,
+    resolveWithLocalChanges,
+  } = useEditConflictDetection<DailyReport>({
+    table: 'daily_reports',
+    recordId: report?.id,
+    enabled: open,
+    onConflict: () => {
+      logger.info('[EditDailyReport] Conflict detected - another user updated this report')
+    },
+  })
+
+  // Handle accepting server changes
+  const handleAcceptServerChanges = useCallback(() => {
+    const serverData = acceptServerChanges()
+    if (serverData) {
+      setFormData({
+        project_id: serverData.project_id || '',
+        report_date: serverData.report_date || '',
+        weather_condition: serverData.weather_condition || '',
+        temperature_high: serverData.temperature_high?.toString() || '',
+        temperature_low: serverData.temperature_low?.toString() || '',
+        total_workers: serverData.total_workers?.toString() || '',
+        weather_delays: serverData.weather_delays || false,
+        other_delays: serverData.weather_delay_notes || '',
+        notes: serverData.comments || '',
+      })
+    }
+  }, [acceptServerChanges])
 
   // Initialize form with report data
   useEffect(() => {
@@ -125,6 +161,16 @@ export function EditDailyReportDialog({
               Update report information
             </DialogDescription>
           </DialogHeader>
+
+          {/* Conflict detection banner */}
+          {hasConflict && (
+            <EditConflictBanner
+              onAcceptServer={handleAcceptServerChanges}
+              onKeepLocal={resolveWithLocalChanges}
+              onDismiss={dismissConflict}
+              className="mt-2"
+            />
+          )}
 
           <div className="space-y-4 py-4">
             {/* Date */}

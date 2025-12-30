@@ -1,7 +1,7 @@
 // File: /src/pages/submittals/SubmittalDetailPage.tsx
 // Submittal detail page with status management and procurement tracking
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,17 +17,21 @@ import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useSubmittal, useSubmittalComments, useSubmittalProcurement } from '@/features/submittals/hooks/useSubmittals'
 import { useUpdateSubmittalStatusWithNotification, useDeleteSubmittalWithNotification, useUpdateSubmittalProcurementStatusWithNotification } from '@/features/submittals/hooks/useSubmittalMutations'
+import { useEditConflictDetection } from '@/hooks/useEditConflictDetection'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { NativeSelect as Select } from '@/components/ui/select'
+import { EditConflictBanner } from '@/components/realtime/EditConflictBanner'
 import { ArrowLeft, AlertCircle, Trash2, Loader2, MessageSquare } from 'lucide-react'
 import { SubmittalStatusBadge } from '@/features/submittals/components'
 import { SubmitForApprovalButton, ApprovalStatusBadge } from '@/features/approvals/components'
 import { useEntityApprovalStatus } from '@/features/approvals/hooks'
 import { useCreateConversation } from '@/features/messaging/hooks'
+import { useQueryClient } from '@tanstack/react-query'
 import { UserName } from '@/components/shared'
 import { logger } from '../../lib/utils/logger';
+import type { WorkflowItem } from '@/types/database'
 
 
 export function SubmittalDetailPage() {
@@ -35,6 +39,7 @@ export function SubmittalDetailPage() {
   const navigate = useNavigate()
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
 
+  const queryClient = useQueryClient()
   const { data: submittal, isLoading, error } = useSubmittal(submittalId)
   const { data: comments } = useSubmittalComments(submittalId)
   const { data: procurementRecords } = useSubmittalProcurement(submittalId)
@@ -43,6 +48,28 @@ export function SubmittalDetailPage() {
   const updateProcurementStatus = useUpdateSubmittalProcurementStatusWithNotification()
   const deleteSubmittal = useDeleteSubmittalWithNotification()
   const createConversation = useCreateConversation()
+
+  // Detect if another user updates this submittal while we're viewing/editing
+  const {
+    hasConflict,
+    dismissConflict,
+    acceptServerChanges,
+    resolveWithLocalChanges,
+  } = useEditConflictDetection<WorkflowItem>({
+    table: 'workflow_items',
+    recordId: submittalId,
+    enabled: !!submittalId,
+    onConflict: () => {
+      logger.info('[SubmittalDetail] Conflict detected - another user updated this submittal')
+    },
+  })
+
+  // Handle accepting server changes - refetch the submittal data
+  const handleAcceptServerChanges = useCallback(() => {
+    acceptServerChanges()
+    // Invalidate the query to refetch latest data
+    queryClient.invalidateQueries({ queryKey: ['submittal', submittalId] })
+  }, [acceptServerChanges, queryClient, submittalId])
 
   // Start a messaging conversation about this submittal
   const handleDiscussSubmittal = async () => {
@@ -152,6 +179,16 @@ export function SubmittalDetailPage() {
   return (
     <AppLayout>
       <div className="p-6 space-y-6">
+        {/* Conflict detection banner */}
+        {hasConflict && (
+          <EditConflictBanner
+            message="This submittal was updated by another user"
+            onAcceptServer={handleAcceptServerChanges}
+            onKeepLocal={resolveWithLocalChanges}
+            onDismiss={dismissConflict}
+          />
+        )}
+
         {/* Back button */}
         <div>
           <Button variant="outline" onClick={() => navigate(-1)}>
