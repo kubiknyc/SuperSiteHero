@@ -62,7 +62,7 @@ const AUTH_URL = `${SUPABASE_URL}/auth/v1`;
 /**
  * Create a successful API response
  */
-export function successResponse(data: unknown, options: HandlerOptions = {}) {
+export function successResponse(data: JsonBodyType, options: HandlerOptions = {}) {
   const { status = 200 } = options;
   return HttpResponse.json(data, { status });
 }
@@ -162,7 +162,7 @@ export function serverErrorResponse(message: string = 'Internal server error') {
 export function createSupabaseHandler(
   method: HttpMethod,
   table: string,
-  response: unknown,
+  response: JsonBodyType | (() => JsonBodyType),
   options: HandlerOptions = {}
 ): HttpHandler {
   const { delay = 0, status = 200 } = options;
@@ -175,7 +175,7 @@ export function createSupabaseHandler(
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
 
-    const data = typeof response === 'function' ? (response as () => unknown)() : response;
+    const data = typeof response === 'function' ? response() : response;
     return HttpResponse.json(Array.isArray(data) ? data : [data], { status });
   });
 }
@@ -345,7 +345,7 @@ export function overrideHandler(server: SetupServerApi, handler: HttpHandler): v
 export function createTrackedHandler(
   method: HttpMethod,
   path: string,
-  responseData: unknown
+  responseData: JsonBodyType
 ): {
   handler: HttpHandler;
   requests: Request[];
@@ -375,8 +375,8 @@ export function createTrackedHandler(
 export function createFailAfterHandler(
   method: HttpMethod,
   path: string,
-  successData: unknown,
-  failData: unknown,
+  successData: JsonBodyType,
+  failData: JsonBodyType,
   failAfter: number,
   failStatus: number = 500
 ): HttpHandler {
@@ -397,7 +397,7 @@ export function createFailAfterHandler(
 export function createDelayedHandler(
   method: HttpMethod,
   path: string,
-  responseData: unknown,
+  responseData: JsonBodyType,
   delayMs: number
 ): HttpHandler {
   return http[method](path, async () => {
@@ -412,8 +412,8 @@ export function createDelayedHandler(
 export function createFlakyHandler(
   method: HttpMethod,
   path: string,
-  successData: unknown,
-  failData: unknown,
+  successData: JsonBodyType,
+  failData: JsonBodyType,
   failureProbability: number = 0.5,
   failStatus: number = 500
 ): HttpHandler {

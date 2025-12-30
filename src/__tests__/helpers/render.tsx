@@ -111,12 +111,6 @@ export function createTestQueryClient(): QueryClient {
         retry: false,
       },
     },
-    // Silence console errors during tests
-    logger: {
-      log: console.info,
-      warn: console.warn,
-      error: () => {},
-    },
   });
 }
 

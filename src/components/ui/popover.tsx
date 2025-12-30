@@ -77,6 +77,7 @@ interface PopoverContentProps {
   className?: string
   align?: 'start' | 'center' | 'end'
   side?: 'top' | 'right' | 'bottom' | 'left'
+  sideOffset?: number
 }
 
 export function PopoverContent({
@@ -84,6 +85,7 @@ export function PopoverContent({
   className,
   align = 'center',
   side = 'bottom',
+  sideOffset: _sideOffset,
 }: PopoverContentProps) {
   const { open, setOpen } = React.useContext(PopoverContext)
   const ref = React.useRef<HTMLDivElement>(null)
