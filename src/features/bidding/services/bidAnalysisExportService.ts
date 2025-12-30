@@ -209,10 +209,10 @@ async function exportToPdf(
 
     const vendorTableData = data.recommendations.map((vendor) => [
       vendor.vendor_name || vendor.vendor_id,
-      vendor.total_bids.toLocaleString(),
+      vendor.same_trade_bids.toLocaleString(),
       `${(vendor.win_rate * 100).toFixed(1)}%`,
-      vendor.avg_bid_accuracy ? `${(vendor.avg_bid_accuracy * 100).toFixed(1)}%` : 'N/A',
-      (vendor.recommendation_score * 100).toFixed(0),
+      vendor.quality_score ? `${vendor.quality_score.toFixed(1)}%` : 'N/A',
+      vendor.score.toFixed(0),
     ])
 
     autoTable(doc, {
@@ -317,7 +317,7 @@ async function exportToExcel(
         period: trend.period,
         bid_count: trend.bid_count,
         average_bid: trend.average_bid,
-        total_value: trend.total_value,
+        total_value: trend.total_bid_value,
         win_rate: trend.win_rate ? `${(trend.win_rate * 100).toFixed(1)}%` : 'N/A',
         trend: trend.trend_direction || 'stable',
       })
@@ -353,16 +353,16 @@ async function exportToExcel(
     data.recommendations.forEach((vendor) => {
       vendorsSheet.addRow({
         vendor_name: vendor.vendor_name || vendor.vendor_id,
-        total_bids: vendor.total_bids,
+        total_bids: vendor.same_trade_bids,
         win_rate: `${(vendor.win_rate * 100).toFixed(1)}%`,
-        avg_accuracy: vendor.avg_bid_accuracy
-          ? `${(vendor.avg_bid_accuracy * 100).toFixed(1)}%`
+        avg_accuracy: vendor.quality_score
+          ? `${vendor.quality_score.toFixed(1)}%`
           : 'N/A',
-        avg_response: vendor.avg_response_time_days
-          ? `${vendor.avg_response_time_days.toFixed(1)} days`
+        avg_response: vendor.on_time_delivery
+          ? `${vendor.on_time_delivery.toFixed(1)}%`
           : 'N/A',
-        score: (vendor.recommendation_score * 100).toFixed(0),
-        recommendation: vendor.recommendation_reason || '',
+        score: vendor.score.toFixed(0),
+        recommendation: vendor.reasons.join('; '),
       })
     })
 
@@ -395,10 +395,10 @@ async function exportToExcel(
         period: trend.period,
         bid_count: trend.bid_count,
         average_bid: trend.average_bid,
-        total_value: trend.total_value,
-        winning_bids: trend.winning_bids || 0,
+        total_value: trend.total_bid_value,
+        winning_bids: trend.win_count || 0,
         win_rate: trend.win_rate || 0,
-        change_percent: trend.change_from_previous_percent || 0,
+        change_percent: trend.month_over_month_change || 0,
         trend_direction: trend.trend_direction || 'stable',
       })
     })
@@ -463,7 +463,7 @@ async function exportToCsv(
         escapeCSV(trend.period),
         escapeCSV(trend.bid_count),
         escapeCSV(trend.average_bid),
-        escapeCSV(trend.total_value),
+        escapeCSV(trend.total_bid_value),
         escapeCSV(trend.win_rate ? `${(trend.win_rate * 100).toFixed(1)}%` : 'N/A'),
         escapeCSV(trend.trend_direction || 'stable'),
       ].join(',')
@@ -481,13 +481,13 @@ async function exportToCsv(
       lines.push(
         [
           escapeCSV(vendor.vendor_name || vendor.vendor_id),
-          escapeCSV(vendor.total_bids),
+          escapeCSV(vendor.same_trade_bids),
           escapeCSV(`${(vendor.win_rate * 100).toFixed(1)}%`),
           escapeCSV(
-            vendor.avg_bid_accuracy ? `${(vendor.avg_bid_accuracy * 100).toFixed(1)}%` : 'N/A'
+            vendor.quality_score ? `${vendor.quality_score.toFixed(1)}%` : 'N/A'
           ),
-          escapeCSV((vendor.recommendation_score * 100).toFixed(0)),
-          escapeCSV(vendor.recommendation_reason || ''),
+          escapeCSV(vendor.score.toFixed(0)),
+          escapeCSV(vendor.reasons.join('; ')),
         ].join(',')
       )
     })

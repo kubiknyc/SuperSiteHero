@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import { useUpdateChangeOrderWithNotification } from '../hooks/useChangeOrderMutations'
 import type { Database } from '@/types/database'
 import { logger } from '../../../lib/utils/logger';

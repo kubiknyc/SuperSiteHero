@@ -136,7 +136,7 @@ export function useBidAccuracyAnalysis(
       }
 
       const response = await historicalBidAnalysisApi.getBidAccuracyAnalysis(projectId, {
-        companyId: userProfile?.company_id,
+        companyId: userProfile?.company_id ?? undefined,
         includeIncomplete: options?.includeIncomplete,
       })
 
@@ -285,7 +285,7 @@ export function useBidPerformanceReport(
     enabled: !!userProfile?.company_id && (options?.enabled !== false),
     // Cache for longer since reports are expensive to generate
     staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 30 * 60 * 1000, // 30 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
   })
 }
 
@@ -397,7 +397,7 @@ export function useExportBidAnalysis() {
         includeCharts: request.include_charts,
         includeVendorDetails: request.include_vendor_details,
         includeRawData: request.include_raw_data,
-        companyName: userProfile?.company_name || undefined,
+        companyName: userProfile?.full_name ?? undefined,
       })
 
       // Trigger download

@@ -80,7 +80,7 @@ async function fetchProjectUsers(projectId: string): Promise<ProjectUser[]> {
   if (error) {throw error}
 
   return (data || [])
-    .map((pu) => (pu as { user: ProjectUser | null }).user)
+    .map((pu) => (pu as unknown as { user: ProjectUser | null }).user)
     .filter((u): u is ProjectUser => u !== null)
 }
 

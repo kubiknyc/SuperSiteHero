@@ -27,7 +27,7 @@ import type { OutlookEntityType } from '@/types/outlook-calendar'
 interface OutlookSyncButtonProps {
   entityType: OutlookEntityType
   entityId: string | undefined
-  variant?: 'default' | 'outline' | 'ghost' | 'icon'
+  variant?: 'default' | 'outline' | 'ghost' | 'destructive' | 'secondary' | 'link'
   size?: 'default' | 'sm' | 'lg' | 'icon'
   showLabel?: boolean
   className?: string

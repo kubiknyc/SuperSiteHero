@@ -53,12 +53,14 @@ export function useCreatePublicApprovalLink() {
       });
       showToast({
         type: 'success',
+        title: 'Link Created',
         message: 'Approval link created successfully',
       });
     },
     onError: (error: Error) => {
       showToast({
         type: 'error',
+        title: 'Error',
         message: error.message || 'Failed to create approval link',
       });
     },
@@ -86,12 +88,14 @@ export function useRevokePublicApprovalLink() {
       });
       showToast({
         type: 'success',
+        title: 'Link Revoked',
         message: 'Approval link revoked',
       });
     },
     onError: (error: Error) => {
       showToast({
         type: 'error',
+        title: 'Error',
         message: error.message || 'Failed to revoke approval link',
       });
     },
@@ -117,12 +121,14 @@ export function useSendApprovalLinkEmail() {
     onSuccess: () => {
       showToast({
         type: 'success',
+        title: 'Email Sent',
         message: 'Approval link email sent',
       });
     },
     onError: (error: Error) => {
       showToast({
         type: 'error',
+        title: 'Error',
         message: error.message || 'Failed to send email',
       });
     },

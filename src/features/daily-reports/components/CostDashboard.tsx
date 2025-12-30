@@ -13,7 +13,7 @@ import {
 } from '../hooks/useDailyReportCosts'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import {
   BarChart3,
   Users,
