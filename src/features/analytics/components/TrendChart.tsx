@@ -98,7 +98,7 @@ export function RiskTrendChart({
                 borderRadius: '8px',
                 fontSize: '12px',
               }}
-              formatter={(value: number) => [`${value.toFixed(0)}`, 'Risk Score']}
+              formatter={(value) => [`${Number(value).toFixed(0)}`, 'Risk Score']}
             />
             <Area
               type="monotone"
@@ -192,7 +192,7 @@ export function ProgressTrendChart({
                 borderRadius: '8px',
                 fontSize: '12px',
               }}
-              formatter={(value: number) => [`${value.toFixed(1)}%`]}
+              formatter={(value) => [`${Number(value).toFixed(1)}%`]}
             />
             {plannedData && (
               <Line
@@ -303,8 +303,8 @@ export function CostTrendChart({
                 borderRadius: '8px',
                 fontSize: '12px',
               }}
-              formatter={(value: number) => [
-                showAsPercentage ? `${value.toFixed(1)}%` : `$${value.toFixed(0)}`,
+              formatter={(value) => [
+                showAsPercentage ? `${Number(value).toFixed(1)}%` : `$${Number(value).toFixed(0)}`,
                 'Change Orders',
               ]}
             />
@@ -401,7 +401,7 @@ export function MultiMetricChart({
                 borderRadius: '8px',
                 fontSize: '12px',
               }}
-              formatter={(value: number) => [`${value.toFixed(1)}`]}
+              formatter={(value) => [`${Number(value).toFixed(1)}`]}
             />
             <Legend />
             <Line

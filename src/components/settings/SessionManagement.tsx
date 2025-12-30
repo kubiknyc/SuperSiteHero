@@ -135,7 +135,7 @@ export function SessionManagement() {
       const mockSessions: Session[] = [
         {
           id: currentSessionId,
-          created_at: sessionData?.session?.created_at || new Date().toISOString(),
+          created_at: sessionData?.session?.user?.created_at || new Date().toISOString(),
           updated_at: new Date().toISOString(),
           user_agent: navigator.userAgent,
           ip: 'Current Device',

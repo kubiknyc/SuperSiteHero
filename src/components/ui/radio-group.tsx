@@ -38,15 +38,20 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
 )
 RadioGroup.displayName = "RadioGroup"
 
-interface RadioGroupItemProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
+interface RadioGroupItemProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'role'> {
   value: string
   touchFriendly?: boolean
 }
 
-const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(
-  ({ className, value, id: _id, touchFriendly = true, ...props }, ref) => {
+const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItemProps>(
+  ({ className, value, touchFriendly = true, onClick, ...props }, ref) => {
     const context = React.useContext(RadioGroupContext)
     const isChecked = context.value === value
+
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      context.onValueChange?.(value)
+      onClick?.(e)
+    }
 
     const radioButton = (
       <button
@@ -59,9 +64,9 @@ const RadioGroupItem = React.forwardRef<HTMLInputElement, RadioGroupItemProps>(
           isChecked && "border-primary",
           className
         )}
-        onClick={() => context.onValueChange?.(value)}
+        onClick={handleClick}
         {...props}
-        ref={ref as React.Ref<HTMLButtonElement>}
+        ref={ref}
       >
         {isChecked && (
           <span className="flex items-center justify-center">

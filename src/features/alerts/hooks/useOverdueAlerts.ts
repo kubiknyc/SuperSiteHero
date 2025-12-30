@@ -176,7 +176,7 @@ export function useOverduePunchItems(projectId?: string) {
     queryFn: async () => {
       const today = new Date().toISOString().split('T')[0]
 
-      let query = supabase
+      const baseQuery = supabase
         .from('punch_list_items')
         .select(`
           id,
@@ -189,11 +189,9 @@ export function useOverduePunchItems(projectId?: string) {
           projects!inner(name)
         `)
         .lt('due_date', today)
-        .not('status', 'in', '("completed","closed","verified")') as any
+        .not('status', 'in', '("completed","closed","verified")')
 
-      if (projectId) {
-        query = query.eq('project_id', projectId)
-      }
+      const query = projectId ? baseQuery.eq('project_id', projectId) : baseQuery
 
       const { data, error } = await query
 
@@ -236,8 +234,8 @@ export function useAllOverdueItems(projectId?: string) {
     if (b.days_overdue !== a.days_overdue) {
       return b.days_overdue - a.days_overdue
     }
-    const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 }
-    return priorityOrder[b.priority] - priorityOrder[a.priority]
+    const priorityOrder: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1 }
+    return (priorityOrder[b.priority] || 0) - (priorityOrder[a.priority] || 0)
   })
 
   const stats: OverdueStats = {
