@@ -512,7 +512,7 @@ export const evmApi = {
         await this.createSnapshot(project.id, companyId, today)
         count++
       } catch (_e) {
-        logger.error(`Failed to create snapshot for project ${project.id}:`, e)
+        logger.error(`Failed to create snapshot for project ${project.id}:`, _e)
       }
     }
 

@@ -11,7 +11,7 @@ import {
   useChangeOrderStatisticsV2,
 } from '@/features/change-orders/hooks/useChangeOrdersV2'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'

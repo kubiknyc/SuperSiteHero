@@ -12,7 +12,7 @@ import { DailyReportsCalendar } from '@/features/daily-reports/components/DailyR
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { MultiSelectFilter } from '@/components/ui/multi-select-filter'

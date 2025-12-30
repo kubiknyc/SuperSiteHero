@@ -20,7 +20,7 @@ import {
   Card,
   CardContent,
   Button,
-  Select,
+  NativeSelect as Select,
   Label,
   Dialog,
   DialogContent,

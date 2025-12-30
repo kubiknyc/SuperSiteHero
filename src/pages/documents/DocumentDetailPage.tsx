@@ -38,7 +38,7 @@ import {
   DialogDescription,
   DialogFooter,
   Input,
-  Select,
+  NativeSelect as Select,
   Textarea,
 } from '@/components/ui'
 import { DocumentTypeIcon } from '@/features/documents/components/DocumentTypeIcon'
