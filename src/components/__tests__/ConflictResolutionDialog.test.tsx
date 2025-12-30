@@ -683,7 +683,7 @@ describe('ConflictResolutionDialog', () => {
       await user.click(resolveButton);
 
       await waitFor(() => {
-        expect(mockResolveConflict).toHaveBeenCalledWith('conflict-123', conflict.localData);
+        expect(mockResolveConflict).toHaveBeenCalledWith('conflict-123', 'local', conflict.localData);
       });
     });
 
@@ -699,7 +699,7 @@ describe('ConflictResolutionDialog', () => {
       await user.click(resolveButton);
 
       await waitFor(() => {
-        expect(mockResolveConflict).toHaveBeenCalledWith('conflict-123', conflict.serverData);
+        expect(mockResolveConflict).toHaveBeenCalledWith('conflict-123', 'server', conflict.serverData);
       });
     });
 

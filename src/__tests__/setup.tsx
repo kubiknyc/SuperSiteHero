@@ -1,11 +1,9 @@
 import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react';
-import { vi, afterEach } from 'vitest';
+import { vi } from 'vitest';
 
-// Cleanup after each test
-afterEach(() => {
-  cleanup();
-});
+// Note: @testing-library/react cleanup is handled automatically by Vitest
+// with the jsdom environment. Manual afterEach cleanup can cause runner
+// initialization issues in Vitest 4.0.x with globals: true
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

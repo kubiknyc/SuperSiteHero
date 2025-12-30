@@ -46,7 +46,8 @@ describe('Photo Templates API', () => {
         select: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
-        order: vi.fn().mockResolvedValue({ data: [], error: null }),
+        order: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: [], error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
@@ -164,7 +165,8 @@ describe('Photo Templates API', () => {
         order: vi.fn().mockReturnThis(),
         in: vi.fn().mockReturnThis(),
         gte: vi.fn().mockReturnThis(),
-        lte: vi.fn().mockResolvedValue({ data: mockRequirements, error: null }),
+        lte: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: mockRequirements, error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)

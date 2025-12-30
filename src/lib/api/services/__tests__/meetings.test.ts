@@ -38,7 +38,8 @@ describe('Meetings API', () => {
         select: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
         eq: vi.fn().mockReturnThis(),
-        order: vi.fn().mockResolvedValue({ data: mockMeetings, error: null }),
+        order: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: mockMeetings, error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
@@ -55,7 +56,8 @@ describe('Meetings API', () => {
         is: vi.fn().mockReturnThis(),
         gte: vi.fn().mockReturnThis(),
         lte: vi.fn().mockReturnThis(),
-        order: vi.fn().mockResolvedValue({ data: [], error: null }),
+        order: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: [], error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
@@ -74,7 +76,8 @@ describe('Meetings API', () => {
         select: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
         or: vi.fn().mockReturnThis(),
-        order: vi.fn().mockResolvedValue({ data: [], error: null }),
+        order: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: [], error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
@@ -202,7 +205,8 @@ describe('Meetings API', () => {
         gte: vi.fn().mockReturnThis(),
         in: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue({ data: [], error: null }),
+        limit: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: [], error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)

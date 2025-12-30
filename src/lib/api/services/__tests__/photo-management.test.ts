@@ -36,7 +36,8 @@ describe('Photo Management API', () => {
         eq: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
-        limit: vi.fn().mockResolvedValue({ data: mockPhotos, error: null }),
+        limit: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: mockPhotos, error: null })),
       }
 
       vi.mocked(db.from).mockReturnValue(mockQuery as any)

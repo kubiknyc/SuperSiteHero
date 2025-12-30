@@ -234,6 +234,12 @@ describe('useBiometricAuth', () => {
         wrapper: createWrapper(),
       })
 
+      // Wait for initialization to complete
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
+        expect(result.current.isLoading).toBe(false)
+      })
+
       let registeredCredential: BiometricCredential | undefined
 
       await act(async () => {
@@ -243,6 +249,7 @@ describe('useBiometricAuth', () => {
       expect(registeredCredential).toEqual(newCredential)
       expect(biometricLib.registerBiometricCredential).toHaveBeenCalledWith(
         mockUser.id,
+        mockUser.email,
         'New Device'
       )
     })
@@ -260,12 +267,18 @@ describe('useBiometricAuth', () => {
         wrapper: createWrapper(),
       })
 
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
+      })
+
       await act(async () => {
         await result.current.registerDevice()
       })
 
       expect(biometricLib.registerBiometricCredential).toHaveBeenCalledWith(
         mockUser.id,
+        mockUser.email,
         undefined
       )
     })
@@ -277,6 +290,11 @@ describe('useBiometricAuth', () => {
 
       const { result } = renderHook(() => useBiometricAuth(), {
         wrapper: createWrapper(),
+      })
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
       })
 
       await expect(async () => {
@@ -296,6 +314,11 @@ describe('useBiometricAuth', () => {
 
       const { result } = renderHook(() => useBiometricAuth(), {
         wrapper: createWrapper(),
+      })
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
       })
 
       await act(async () => {
@@ -353,6 +376,11 @@ describe('useBiometricAuth', () => {
         wrapper: createWrapper(),
       })
 
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
       await expect(async () => {
         await act(async () => {
           await result.current.removeDevice('cred-1')
@@ -367,6 +395,11 @@ describe('useBiometricAuth', () => {
 
       const { result } = renderHook(() => useBiometricAuth(), {
         wrapper: createWrapper(),
+      })
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
       })
 
       let success = false
@@ -386,6 +419,11 @@ describe('useBiometricAuth', () => {
         wrapper: createWrapper(),
       })
 
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
+      })
+
       let success = true
 
       await act(async () => {
@@ -402,6 +440,11 @@ describe('useBiometricAuth', () => {
 
       const { result } = renderHook(() => useBiometricAuth(), {
         wrapper: createWrapper(),
+      })
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isAvailable).toBe(true)
       })
 
       await expect(async () => {
@@ -436,6 +479,11 @@ describe('useBiometricAuth', () => {
         wrapper: createWrapper(),
       })
 
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+
       await act(async () => {
         await result.current.setReauthInterval('four_hours')
       })
@@ -450,6 +498,11 @@ describe('useBiometricAuth', () => {
 
       const { result } = renderHook(() => useBiometricAuth(), {
         wrapper: createWrapper(),
+      })
+
+      // Wait for initialization
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
       })
 
       await act(async () => {
@@ -469,6 +522,11 @@ describe('useBiometricAuth', () => {
 
       const { result } = renderHook(() => useBiometricAuth(), {
         wrapper: createWrapper(),
+      })
+
+      // Wait for settings to load
+      await waitFor(() => {
+        expect(result.current.settings).not.toBeNull()
       })
 
       await waitFor(() => {

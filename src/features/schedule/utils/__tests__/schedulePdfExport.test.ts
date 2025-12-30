@@ -39,7 +39,10 @@ const mockJsPDF = {
 } as unknown as jsPDF
 
 vi.mock('jspdf', () => ({
-  jsPDF: vi.fn(() => mockJsPDF),
+  jsPDF: vi.fn(function(this: any) {
+    Object.assign(this, mockJsPDF)
+    return this
+  }),
 }))
 
 // Mock autoTable - use vi.fn() directly in factory

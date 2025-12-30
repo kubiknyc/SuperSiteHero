@@ -54,7 +54,8 @@ describe('Material Receiving API', () => {
         lte: vi.fn().mockReturnThis(),
         ilike: vi.fn().mockReturnThis(),
         not: vi.fn().mockReturnThis(),
-        or: vi.fn().mockResolvedValue({ data: mockReceipts, error: null }),
+        or: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ data: mockReceipts, error: null })),
       }
 
       vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
@@ -135,7 +136,10 @@ describe('Material Receiving API', () => {
       }
 
       const mockPhotoQuery = {
-        select: vi.fn().mockResolvedValue({ count: 5 }),
+        select: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
+        is: vi.fn().mockReturnThis(),
+        then: vi.fn((resolve) => resolve({ count: 5 })),
       }
 
       const mockQuery = {
@@ -417,12 +421,10 @@ describe('Material Receiving API', () => {
       })
     })
 
-    it('should return default stats when rpc fails', async () => {
+    it('should throw error when rpc fails', async () => {
       vi.mocked(supabase.rpc).mockResolvedValue({ data: null, error: new Error('Failed') } as any)
 
-      const result = await materialReceivingApi.getStats('project-1')
-
-      expect(result.total_deliveries).toBe(0)
+      await expect(materialReceivingApi.getStats('project-1')).rejects.toThrow()
     })
   })
 
