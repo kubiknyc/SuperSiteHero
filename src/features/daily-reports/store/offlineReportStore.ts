@@ -247,7 +247,7 @@ export const useOfflineReportStore = create<OfflineReportStore>()(
             submitted_at: undefined,
             approved_at: undefined,
             approved_by: undefined,
-          },
+          } as DraftReport,
           // Copy related data with new IDs if provided, otherwise start fresh
           workforce: copyWithNewIds(relatedData?.workforce),
           equipment: copyWithNewIds(relatedData?.equipment),
