@@ -8,7 +8,7 @@ import { useSubmittalWorkflowType, useSubmittals } from '@/features/submittals/h
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { NativeSelect as Select } from '@/components/ui/select'
 import { CreateSubmittalDialog, SubmittalStatusBadge } from '@/features/submittals/components'
 import { Plus, AlertCircle, Loader2, FileText, Clock, CheckCircle2, XCircle, Download, FileSpreadsheet } from 'lucide-react'
 import { format } from 'date-fns'

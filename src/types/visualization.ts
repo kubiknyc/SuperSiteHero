@@ -20,6 +20,7 @@ export interface Model3DMetadata {
   uploadedBy: string;
   projectId: string;
   description?: string;
+  thumbnailUrl?: string;
   tags?: string[];
   boundingBox?: BoundingBox;
   centerPoint?: Vector3D;

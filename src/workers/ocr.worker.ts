@@ -116,16 +116,26 @@ async function extractText(
   // Extract data from tesseract result
   const { data } = result
 
+  // Type assertion for tesseract.js data which may have additional properties
+  // not fully typed in the library's TypeScript definitions
+  const typedData = data as {
+    text: string
+    confidence: number
+    words?: Array<{ text: string; confidence: number; bbox: { x0: number; y0: number; x1: number; y1: number } }>
+    lines?: Array<{ text: string; confidence: number; bbox: { x0: number; y0: number; x1: number; y1: number }; words?: Array<{ text: string; confidence: number; bbox: { x0: number; y0: number; x1: number; y1: number } }> }>
+    blocks?: Array<{ text: string; confidence: number; bbox: { x0: number; y0: number; x1: number; y1: number }; lines?: Array<{ text: string; confidence: number; bbox: { x0: number; y0: number; x1: number; y1: number }; words?: Array<{ text: string; confidence: number; bbox: { x0: number; y0: number; x1: number; y1: number } }> }> }>
+  }
+
   // Build OCR result
   const ocrResult: OcrResult = {
-    text: data.text.trim(),
-    confidence: data.confidence,
-    words: (data.words || []).map((word) => ({
+    text: typedData.text.trim(),
+    confidence: typedData.confidence,
+    words: (typedData.words || []).map((word) => ({
       text: word.text,
       confidence: word.confidence,
       bbox: word.bbox,
     })),
-    lines: (data.lines || []).map((line) => ({
+    lines: (typedData.lines || []).map((line) => ({
       text: line.text,
       confidence: line.confidence,
       words: (line.words || []).map((word) => ({
@@ -135,7 +145,7 @@ async function extractText(
       })),
       bbox: line.bbox,
     })),
-    blocks: (data.blocks || []).map((block) => ({
+    blocks: (typedData.blocks || []).map((block) => ({
       text: block.text,
       confidence: block.confidence,
       lines: (block.lines || []).map((line) => ({
